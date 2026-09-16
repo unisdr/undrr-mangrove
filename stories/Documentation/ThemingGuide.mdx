@@ -61,7 +61,7 @@ Mangrove uses two token systems:
 
 The type scale is a custom property set: `--mg-font-size-100` … `--mg-font-size-1100`. Re-value a step in a theme block to change every component that uses it, or set a component token such as `--mg-status-label-font-size` to change one component. New component font-size tokens are named `--mg-{component}-{element}-font-size`; the older `--mg-font-size-button`, `--mg-font-size-tab` and `--mg-font-size-form-input` predate that convention and keep their names.
 
-Line heights are custom properties as well: `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`).
+Line heights are custom properties as well: `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`). A theme can re-value them, including as a unitless number such as `1.5`. Unitless values inherit differently from `em`: descendants recompute the line height against their own font size instead of inheriting a fixed length.
 
 Remaining SCSS variables:
 

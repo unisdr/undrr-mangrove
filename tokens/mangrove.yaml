@@ -406,8 +406,16 @@ font-line-height:
   $type: dimension
   $format: literal
   $sass: true
-  '500': { $value: '1.25em' }
-  '700': { $value: '1.5em' }
+  '500':
+    $value: '1.25em'
+    $description: >-
+      Tight line height. An em value, so it resolves against the font size
+      of the element where the property is used.
+  '700':
+    $value: '1.5em'
+    $description: >-
+      Body line height. An em value, so it resolves against the font size
+      of the element where the property is used.
 
 radius:
   $type: dimension
