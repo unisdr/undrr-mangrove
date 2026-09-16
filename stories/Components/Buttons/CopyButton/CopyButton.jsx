@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 export const CopyButton = ({
-  textToCopy,
+  textToCopy = '',
   className,
   ariaLabel = 'Copy to clipboard',
   copiedLabel = 'Copied to clipboard.',
@@ -93,7 +93,7 @@ export const CopyButton = ({
 };
 
 CopyButton.propTypes = {
-  textToCopy: PropTypes.string.isRequired,
+  textToCopy: PropTypes.string,
   className: PropTypes.string,
   ariaLabel: PropTypes.string,
   copiedLabel: PropTypes.string,
@@ -101,3 +101,5 @@ CopyButton.propTypes = {
   variant: PropTypes.oneOf(['outline', 'primary', 'secondary']),
   size: PropTypes.oneOf(['small', 'large']),
 };
+
+export default CopyButton;

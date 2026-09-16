@@ -229,6 +229,7 @@ const COMPONENT_IDS = {
   Pager: 'components-pager',
   ShareButtons: 'components-buttons-sharebuttons',
   UserFeedback: 'components-user-feedback',
+  CopyButton: 'components-buttons-copybutton',
   Drawer: 'components-navigation-drawer',
   Tree: 'components-navigation-tree',
   Range: 'components-forms-range',
@@ -417,6 +418,10 @@ function buildSampleProps(React) {
         { text: 'Publications' },
         { text: 'Global Assessment Report 2024' },
       ],
+    },
+    CopyButton: {
+      textToCopy: 'https://preventionweb.net',
+      ariaLabel: 'Copy URL to clipboard',
     },
     Tab: {
       tabdata: [

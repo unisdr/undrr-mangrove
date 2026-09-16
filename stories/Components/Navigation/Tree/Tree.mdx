@@ -1,4 +1,4 @@
-import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import { Meta, Controls } from '@storybook/addon-docs/blocks';
 import { Tree, TreeItem } from './Tree';
 
 <Meta title="Components/Navigation/Tree" component={Tree} />
@@ -7,27 +7,57 @@ import { Tree, TreeItem } from './Tree';
 
 # Tree
 
-Accessible tree / nested hierarchy view component.
+The `Tree` component provides an accessible hierarchical navigation structure conforming to the [W3C ARIA Treeview Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/).
+
+## Features
+
+- **ARIA APG Treeview Navigation**: Full roving tabindex and arrow keyboard navigation.
+- **Controlled & Uncontrolled State**: Support for `expandedIds` / `defaultExpandedIds` and `selectedId` / `defaultSelectedId`.
+- **Linked Parent Sections**: Independent toggle control (`mg-tree__toggle`) and navigation link (`mg-tree__label`).
+- **Mangrove Tokens**: Built with canonical interactive and neutral color tokens.
 
 ## Usage
 
-The Tree component provides an accessible nested list structure with expand/collapse functionality and optional link support.
-
-### Basic example
+### Basic tree
 
 ```jsx
-<Tree>
-  <TreeItem id="1" label="Item 1">
-    <TreeItem id="1-1" label="Item 1.1" />
-    <TreeItem id="1-2" label="Item 1.2" />
+import { Tree, TreeItem } from '@undrr/undrr-mangrove';
+
+<Tree defaultExpandedIds={['1']}>
+  <TreeItem id="1" label="Section 1">
+    <TreeItem id="1-1" label="Topic 1.1" />
+    <TreeItem id="1-2" label="Topic 1.2" />
   </TreeItem>
-  <TreeItem id="2" label="Item 2" />
-</Tree>
+  <TreeItem id="2" label="Section 2" />
+</Tree>;
+```
+
+### Controlled tree
+
+```jsx
+const [expandedIds, setExpandedIds] = useState(['1']);
+const [selectedId, setSelectedId] = useState('1-1');
+
+<Tree
+  expandedIds={expandedIds}
+  selectedId={selectedId}
+  onToggle={(id, isExpanded) => {
+    setExpandedIds(prev =>
+      isExpanded ? [...prev, id] : prev.filter(item => item !== id)
+    );
+  }}
+  onSelect={id => setSelectedId(id)}
+>
+  <TreeItem id="1" label="Parent">
+    <TreeItem id="1-1" label="Child 1" />
+    <TreeItem id="1-2" label="Child 2" />
+  </TreeItem>
+</Tree>;
 ```
 
 ### With links
 
-Parent items can also be links. Clicking the arrow toggles, clicking the label navigates.
+Parent and leaf items can also function as standard links.
 
 ```jsx
 <Tree>
@@ -38,10 +68,23 @@ Parent items can also be links. Clicking the arrow toggles, clicking the label n
 </Tree>
 ```
 
-### Props
+## Keyboard Interaction (ARIA APG)
+
+| Key               | Expected behaviour                                                  |
+| ----------------- | ------------------------------------------------------------------- |
+| `↓` Arrow         | Move focus to next visible treeitem                                 |
+| `↑` Arrow         | Move focus to previous visible treeitem                             |
+| `→` Arrow         | Expand collapsed node; or move focus to first child if already open |
+| `←` Arrow         | Collapse expanded node; or move focus to parent treeitem            |
+| `Home`            | Move focus to first visible treeitem                                |
+| `End`             | Move focus to last visible treeitem                                 |
+| `Enter` / `Space` | Select focused treeitem (and follow link if configured)             |
+
+## Props
 
 <Controls />
 
 ## Changelog
 
-- **v1.0.0** — 2024-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with expand/collapse and optional link support
+- **v1.1.0** — 2026-09-16 ([#1161](https://github.com/unisdr/undrr-mangrove/issues/1161)): Implemented full ARIA APG keyboard navigation (Arrow keys, Home, End, Enter, Space), roving tabindex, controlled `expandedIds`/`selectedId` props, canonical color tokens, and `mg-icon` chevron integration.
+- **v1.0.0** — 2026-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with expand/collapse and optional link support.

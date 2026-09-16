@@ -8,7 +8,7 @@ import * as CopyButtonStories from './CopyButton.stories';
 
 # Copy button
 
-The Copy button allows users to quickly copy a string to their clipboard, featuring a visual micro-feedback tooltip and accessible status announcements via aria-live.
+The `CopyButton` allows users to quickly copy a string to their clipboard, featuring a visual micro-feedback tooltip and accessible status announcements via `aria-live`.
 
 ## Default
 
@@ -16,18 +16,58 @@ The Copy button allows users to quickly copy a string to their clipboard, featur
 
 ## In context
 
-Typically used alongside code blocks or shareable URLs.
+Typically used alongside code blocks, citation blocks, or shareable URLs.
 
 <Canvas of={CopyButtonStories.InContext} />
+
+## Drupal / Server-rendered HTML (Layer 2 Hydration)
+
+In Drupal Twig templates or server-rendered pages, output a button with `data-mg-copy-button` attributes:
+
+```html
+<button
+  type="button"
+  class="mg-button mg-button-primary mg-button-outline mg-button--icon mg-copy-button"
+  data-mg-copy-button
+  data-text-to-copy="https://preventionweb.net/drr-glossary"
+  data-aria-label="Copy glossary link"
+  data-tooltip-label="Copied!"
+>
+  <span class="mg-icon mg-icon-copy mg-button__icon" aria-hidden="true"></span>
+  <span class="mg-copy-button__feedback" role="status" aria-hidden="true">
+    Copied!
+  </span>
+  <span class="mg-u-sr-only" aria-live="polite"></span>
+</button>
+```
+
+```js
+import createHydrator from '@undrr/undrr-mangrove/hydrate';
+import CopyButton, {
+  fromElement,
+} from '@undrr/undrr-mangrove/components/CopyButton';
+
+createHydrator({
+  selector: '[data-mg-copy-button]',
+  component: CopyButton,
+  fromElement,
+});
+```
+
+| Attribute            | Default                  | Description                                                   |
+| -------------------- | ------------------------ | ------------------------------------------------------------- |
+| `data-text-to-copy`  | `''`                     | Text string to be written to the clipboard                    |
+| `data-aria-label`    | `'Copy to clipboard'`    | Accessible button name for screen readers                     |
+| `data-tooltip-label` | `'Copied!'`              | Text displayed inside the transient micro-feedback badge      |
+| `data-copied-label`  | `'Copied to clipboard.'` | Text announced to `aria-live` upon successful copy            |
+| `data-variant`       | `'outline'`              | Button visual style (`'outline'`, `'primary'`, `'secondary'`) |
+| `data-size`          | `—`                      | Button icon size (`'small'`, `'large'`)                       |
 
 ## Props
 
 <Controls />
 
-## Prototype notice
-
-This component is a prototype and subject to change. The API and behavior may be updated based on user feedback and usability testing.
-
 ## Changelog
 
-- **v1.0.0** — 2024-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements
+- **v1.1.0** — 2026-09-16 ([#1161](https://github.com/unisdr/undrr-mangrove/issues/1161)): Added `CopyButton.fromElement.js` and `CopyButton.hydrate.js` for vanilla HTML and Drupal progressive hydration.
+- **v1.0.0** — 2026-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements.

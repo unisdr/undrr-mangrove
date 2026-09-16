@@ -84,12 +84,6 @@ export const REQUIRES_REACT = {
     'FormErrorSummary translation label sets for ES, FR, JA, ZH, AR, RU. Pass title prop.',
   'components-tab-translations':
     'Tab translation label sets for ES, FR, JA, ZH, AR, RU. Pass filterPlaceholder prop.',
-  'components-buttons-copybutton':
-    'CopyButton provides a one-click copy button with micro-feedback tooltip and aria-live announcements. Requires React for clipboard interaction and feedback state.',
-  'components-navigation-drawer':
-    'Drawer provides an off-canvas drawer and floating panel with backdrop overlay and keyboard navigation. Requires React for open/close state and keyboard events.',
-  'components-navigation-tree':
-    'Tree provides an accessible hierarchical tree navigation with expand/collapse toggles and optional links. Requires React for expand/collapse state.',
 };
 
 // ---------------------------------------------------------------------------

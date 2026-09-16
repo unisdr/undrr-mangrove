@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 export const Drawer = ({
-  isOpen,
-  onClose,
+  isOpen = false,
+  onClose = () => {},
   position = 'start',
   title,
   children,
@@ -65,19 +65,33 @@ export const Drawer = ({
             &times;
           </button>
         </div>
-        <div className={`${baseClass}__body`}>{children}</div>
-        {footer && <div className={`${baseClass}__footer`}>{footer}</div>}
+        <div className={`${baseClass}__body`}>
+          {typeof children === 'string' ? (
+            <div dangerouslySetInnerHTML={{ __html: children }} />
+          ) : (
+            children
+          )}
+        </div>
+        {footer && (
+          <div className={`${baseClass}__footer`}>
+            {typeof footer === 'string' ? (
+              <div dangerouslySetInnerHTML={{ __html: footer }} />
+            ) : (
+              footer
+            )}
+          </div>
+        )}
       </div>
     </>
   );
 };
 
 Drawer.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
   position: PropTypes.oneOf(['start', 'end', 'bottom']),
   title: PropTypes.node,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   footer: PropTypes.node,
   className: PropTypes.string,
   backdrop: PropTypes.bool,

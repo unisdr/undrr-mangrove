@@ -1,4 +1,4 @@
-import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import { Meta, Controls } from '@storybook/addon-docs/blocks';
 import { Drawer } from './Drawer';
 
 <Meta title="Components/Navigation/Drawer" component={Drawer} />
@@ -7,29 +7,75 @@ import { Drawer } from './Drawer';
 
 # Drawer
 
-Generic off-canvas drawer and floating panel component.
+The `Drawer` component provides an accessible off-canvas drawer and floating panel for navigation, filters, settings, and secondary actions.
+
+## Features
+
+- **Positions**: `start` (left in LTR, right in RTL), `end` (right in LTR, left in RTL), and `bottom` (sheet).
+- **Variants**: Off-canvas drawer (with optional backdrop) and floating panel (`isFloatingPanel`).
+- **Accessibility**: ARIA complementary/dialog landmarks, `aria-hidden` toggling, focus trap friendly, and Escape key dismissal.
+- **Hydration ready**: Supports server-rendered Drupal HTML and progressive hydration via `createHydrator`.
 
 ## Usage
 
-The Drawer component provides an accessible off-canvas panel that can be positioned on the start, end, or bottom of the screen. It includes keyboard navigation (Escape to close) and backdrop support.
-
-### Basic example
+### React
 
 ```jsx
+import { Drawer } from '@undrr/undrr-mangrove';
+
 <Drawer
   isOpen={isOpen}
   onClose={() => setIsOpen(false)}
-  title="Drawer Title"
+  title="Filter options"
   position="start"
 >
   <p>Drawer content goes here.</p>
-</Drawer>
+</Drawer>;
 ```
 
-### Props
+### Drupal / Server-rendered HTML (Layer 2 Hydration)
+
+```html
+<div
+  data-mg-drawer
+  data-position="start"
+  data-title="Filter options"
+  data-backdrop="true"
+  data-is-open="false"
+>
+  <div class="mg-drawer__body">
+    <p>Server rendered drawer content.</p>
+  </div>
+  <div class="mg-drawer__footer">
+    <button type="button" class="mg-button mg-button-primary">Apply</button>
+  </div>
+</div>
+```
+
+```js
+import createHydrator from '@undrr/undrr-mangrove/hydrate';
+import Drawer, { fromElement } from '@undrr/undrr-mangrove/components/Drawer';
+
+createHydrator({
+  selector: '[data-mg-drawer]',
+  component: Drawer,
+  fromElement,
+});
+```
+
+| Attribute                | Default   | Description                                                            |
+| ------------------------ | --------- | ---------------------------------------------------------------------- |
+| `data-position`          | `'start'` | Drawer edge placement (`'start'`, `'end'`, `'bottom'`)                 |
+| `data-title`             | `—`       | Drawer header title text                                               |
+| `data-backdrop`          | `'true'`  | Whether to render the semi-transparent backdrop (`'true'` / `'false'`) |
+| `data-is-floating-panel` | `'false'` | Whether to render as floating panel dialog                             |
+| `data-is-open`           | `'false'` | Initial open state                                                     |
+
+## Props
 
 <Controls />
 
 ## Changelog
 
-- **v1.0.0** — 2024-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with accessible off-canvas drawer and floating panel support
+- **v1.1.0** — 2026-09-16 ([#1161](https://github.com/unisdr/undrr-mangrove/issues/1161)): Added `Drawer.fromElement.js` and `Drawer.hydrate.js` for Drupal progressive enhancement and hydration.
+- **v1.0.0** — 2026-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with accessible off-canvas drawer and floating panel support.

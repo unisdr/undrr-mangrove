@@ -100,6 +100,9 @@ export default [
       StatsCard: './stories/Components/Cards/StatsCard/StatsCard.hydrate.js',
       Pager: './stories/Components/Pager/Pager.hydrate.js',
       TextCta: './stories/Components/TextCta/TextCta.hydrate.js',
+      CopyButton:
+        './stories/Components/Buttons/CopyButton/CopyButton.hydrate.js',
+      Drawer: './stories/Components/Navigation/Drawer/Drawer.hydrate.js',
       // Vanilla components (bundled for AI manifest auto-rendering)
       Chips: './stories/Components/Buttons/Chips/Chips.jsx',
       CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.entry.js',
@@ -130,7 +133,6 @@ export default [
       SkipLink: './stories/Utilities/SkipLink/SkipLink.entry.js',
       Range: './stories/Components/Forms/Range/Range.jsx',
       Legend: './stories/Components/DataViz/Legend/Legend.jsx',
-      Drawer: './stories/Components/Navigation/Drawer/Drawer.jsx',
       Tree: './stories/Components/Navigation/Tree/Tree.jsx',
     },
     externals: {
