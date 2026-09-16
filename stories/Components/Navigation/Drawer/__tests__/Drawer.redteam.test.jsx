@@ -39,9 +39,7 @@ describe('Drawer Red-Team Security & Stress Regressions', () => {
       fireEvent.click(toggleBtn);
     }
 
-    expect(
-      screen.getByRole('complementary', { hidden: true })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { hidden: true })).toBeInTheDocument();
   });
 
   it('unmounts cleanly while open without leaving orphaned event listeners', () => {
@@ -57,12 +55,12 @@ describe('Drawer Red-Team Security & Stress Regressions', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
-  it('handles malformed / empty / hostile HTML strings in children and footer safely', () => {
+  it('renders hostile strings in children and footer as text, not HTML', () => {
     const maliciousChild =
       '<div id="injected-child">Safe HTML</div><img src="invalid" onerror="console.log(1)" />';
     const maliciousFooter = '<p id="injected-footer">Footer text</p>';
 
-    render(
+    const { container } = render(
       <Drawer
         isOpen={true}
         title="Hostile Payload"
@@ -71,8 +69,28 @@ describe('Drawer Red-Team Security & Stress Regressions', () => {
       />
     );
 
-    expect(document.getElementById('injected-child')).toBeInTheDocument();
-    expect(document.getElementById('injected-footer')).toBeInTheDocument();
+    expect(document.getElementById('injected-child')).toBeNull();
+    expect(document.getElementById('injected-footer')).toBeNull();
+    expect(container.querySelector('img')).toBeNull();
+    expect(screen.getByText(maliciousChild)).toBeInTheDocument();
+  });
+
+  it('sanitises bodyHtml and footerHtml', () => {
+    const { container } = render(
+      <Drawer
+        isOpen={true}
+        title="Hydrated"
+        bodyHtml={
+          '<p id="kept">Kept</p><img src="x" onerror="alert(1)"><script>alert(1)</script>'
+        }
+        footerHtml={'<a href="javascript:alert(1)" id="bad">Bad</a>'}
+      />
+    );
+
+    expect(document.getElementById('kept')).toBeInTheDocument();
+    expect(container.querySelector('img')?.getAttribute('onerror')).toBeFalsy();
+    expect(container.querySelector('script')).toBeNull();
+    expect(document.getElementById('bad')?.getAttribute('href')).toBeFalsy();
   });
 
   it('fromElement extracts gracefully from edge case and empty DOM nodes', () => {
@@ -83,7 +101,7 @@ describe('Drawer Red-Team Security & Stress Regressions', () => {
     expect(props.position).toBe('start');
     expect(props.backdrop).toBe(true);
     expect(props.isFloatingPanel).toBe(false);
-    expect(props.children || '').toBe('');
-    expect(props.footer || '').toBe('');
+    expect(props.bodyHtml).toBeUndefined();
+    expect(props.footerHtml).toBeUndefined();
   });
 });

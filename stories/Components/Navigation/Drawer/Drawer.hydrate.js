@@ -1,2 +1,6 @@
-export { Drawer, Drawer as default } from './Drawer.jsx';
+export { Drawer } from './Drawer.jsx';
+export {
+  HydratedDrawer,
+  HydratedDrawer as default,
+} from './HydratedDrawer.jsx';
 export { default as fromElement } from './Drawer.fromElement.js';

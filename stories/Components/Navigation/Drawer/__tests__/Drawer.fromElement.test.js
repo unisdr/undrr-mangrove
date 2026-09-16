@@ -22,8 +22,10 @@ describe('drawerFromElement', () => {
       title: undefined,
       backdrop: true,
       isFloatingPanel: false,
-      children: '',
-      footer: undefined,
+      bodyHtml: undefined,
+      footerHtml: undefined,
+      labels: undefined,
+      controlsId: undefined,
       className: undefined,
     });
   });
@@ -35,8 +37,7 @@ describe('drawerFromElement', () => {
       title: 'Filter Options',
       backdrop: 'false',
       'is-floating-panel': 'true',
-      content: 'Custom content',
-      footer: 'Footer note',
+      'close-label': 'Fermer',
       'class-name': 'custom-drawer-class',
     });
     const props = drawerFromElement(el);
@@ -46,8 +47,7 @@ describe('drawerFromElement', () => {
     expect(props.title).toBe('Filter Options');
     expect(props.backdrop).toBe(false);
     expect(props.isFloatingPanel).toBe(true);
-    expect(props.children).toBe('Custom content');
-    expect(props.footer).toBe('Footer note');
+    expect(props.labels).toEqual({ closeLabel: 'Fermer' });
     expect(props.className).toBe('custom-drawer-class');
   });
 
@@ -61,8 +61,8 @@ describe('drawerFromElement', () => {
     const props = drawerFromElement(el);
 
     expect(props.title).toBe('DOM Title');
-    expect(props.children).toBe('<p>Rendered paragraph</p>');
-    expect(props.footer).toBe('<button>Confirm</button>');
+    expect(props.bodyHtml).toBe('<p>Rendered paragraph</p>');
+    expect(props.footerHtml).toBe('<button>Confirm</button>');
     expect(props.position).toBe('end');
   });
 
@@ -73,5 +73,11 @@ describe('drawerFromElement', () => {
 
     expect(props.isOpen).toBe(true);
     expect(props.isFloatingPanel).toBe(true);
+  });
+
+  it('passes the container id so triggers can find the drawer', () => {
+    const el = makeContainer();
+    el.id = 'filters';
+    expect(drawerFromElement(el).controlsId).toBe('filters');
   });
 });

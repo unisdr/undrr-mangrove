@@ -11,10 +11,11 @@ The `Drawer` component provides an accessible off-canvas drawer and floating pan
 
 ## Features
 
-- **Positions**: `start` (left in LTR, right in RTL), `end` (right in LTR, left in RTL), and `bottom` (sheet).
-- **Variants**: Off-canvas drawer (with optional backdrop) and floating panel (`isFloatingPanel`).
-- **Accessibility**: ARIA complementary/dialog landmarks, `aria-hidden` toggling, focus trap friendly, and Escape key dismissal.
-- **Hydration ready**: Supports server-rendered Drupal HTML and progressive hydration via `createHydrator`.
+- **Positions**: `start` and `end` follow text direction (they swap in RTL), plus `bottom` for a sheet.
+- **Variants**: a modal off-canvas drawer (with backdrop) or a non-modal floating panel (`isFloatingPanel`).
+- **Accessibility**: `role="dialog"` named by the title, `aria-modal` while a backdrop drawer is open, focus moves to the close button on open, Tab stays inside a modal drawer, focus returns to the trigger on close, and Escape closes it. A closed drawer is `inert` and hidden, so its controls cannot be reached.
+- **Content safety**: string `children` and `footer` render as plain text. Server-rendered markup goes through `bodyHtml` / `footerHtml`, which are sanitised with DOMPurify.
+- **Translations**: the close button label comes from `labels.closeLabel`.
 
 ## Usage
 
@@ -28,20 +29,27 @@ import { Drawer } from '@undrr/undrr-mangrove';
   onClose={() => setIsOpen(false)}
   title="Filter options"
   position="start"
+  labels={{ closeLabel: 'Close' }}
 >
   <p>Drawer content goes here.</p>
 </Drawer>;
 ```
 
-### Drupal / Server-rendered HTML (Layer 2 Hydration)
+### Drupal and server-rendered HTML (hydration)
+
+Give the container an `id` and point one or more trigger buttons at it with `data-mg-drawer-trigger`:
 
 ```html
+<button type="button" data-mg-drawer-trigger="filters">Filter options</button>
+
 <div
+  id="filters"
   data-mg-drawer
   data-position="start"
   data-title="Filter options"
   data-backdrop="true"
   data-is-open="false"
+  data-close-label="Close"
 >
   <div class="mg-drawer__body">
     <p>Server rendered drawer content.</p>
@@ -53,8 +61,10 @@ import { Drawer } from '@undrr/undrr-mangrove';
 ```
 
 ```js
-import createHydrator from '@undrr/undrr-mangrove/hydrate';
-import Drawer, { fromElement } from '@undrr/undrr-mangrove/components/Drawer';
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
+import Drawer, {
+  fromElement,
+} from '@undrr/undrr-mangrove/components/Drawer.js';
 
 createHydrator({
   selector: '[data-mg-drawer]',
@@ -63,19 +73,28 @@ createHydrator({
 });
 ```
 
+The hydrated drawer keeps its own open state. Clicking a trigger toggles it and updates the trigger's `aria-expanded`. Scripts can also dispatch `mg-drawer:open`, `mg-drawer:close` or `mg-drawer:toggle` on the container.
+
 | Attribute                | Default   | Description                                                            |
 | ------------------------ | --------- | ---------------------------------------------------------------------- |
+| `id`                     | —         | Required for `data-mg-drawer-trigger` buttons to find the drawer       |
 | `data-position`          | `'start'` | Drawer edge placement (`'start'`, `'end'`, `'bottom'`)                 |
-| `data-title`             | `—`       | Drawer header title text                                               |
+| `data-title`             | —         | Drawer header title text                                               |
 | `data-backdrop`          | `'true'`  | Whether to render the semi-transparent backdrop (`'true'` / `'false'`) |
-| `data-is-floating-panel` | `'false'` | Whether to render as floating panel dialog                             |
+| `data-is-floating-panel` | `'false'` | Whether to render as a floating panel                                  |
 | `data-is-open`           | `'false'` | Initial open state                                                     |
+| `data-close-label`       | `'Close'` | Translated close button label                                          |
 
 ## Props
 
 <Controls />
 
+## Prototype notice
+
+This component is a prototype and subject to change. The API and behavior may be updated based on user feedback and usability testing.
+
 ## Changelog
 
-- **v1.1.0** — 2026-09-16 ([#1161](https://github.com/unisdr/undrr-mangrove/issues/1161)): Added `Drawer.fromElement.js` and `Drawer.hydrate.js` for Drupal progressive enhancement and hydration.
-- **v1.0.0** — 2026-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with accessible off-canvas drawer and floating panel support.
+- **1.0.0** — 2026-09-16 ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)): Initial implementation of the off-canvas drawer and floating panel.
+  - Hydration via `Drawer.fromElement.js` and `Drawer.hydrate.js` ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
+  - Before rc.1: string content renders as text with sanitised `bodyHtml` / `footerHtml` for hydration; closed drawers are inert and hidden; dialog naming, focus management and a modal focus trap; translatable close label; `data-mg-drawer-trigger` and open/close events for hydrated drawers; theme tokens and RTL-aware positioning.

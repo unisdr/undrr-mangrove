@@ -1,143 +1,151 @@
 /**
- * @file
- * Drawer component stylesheet.
- * Off-canvas drawer and floating panel component with backdrop overlay and positioning.
- * @see https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Navigation/Drawer/Drawer.mdx
+ * Drawer
+ *
+ * Off-canvas drawer and floating panel with an optional modal backdrop.
+ * The close control reuses .mg-icon-button and its shared focus ring.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Navigation/Drawer/Drawer.mdx
  */
 
-.mg-drawer {
-  position: fixed;
-  z-index: var(--mg-z-index-drawer, 2000);
-  display: flex;
+.mg-drawer,
+.mg-floating-panel {
   flex-direction: column;
-  background: var(--mg-color-background, #fff);
+  background: var(--mg-surface-raised);
+  color: rgb(var(--mg-color-neutral-900));
+  font-family: var(--mg-font-family-text);
+  box-sizing: border-box;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mg-spacing-100);
+    padding: var(--mg-spacing-150) var(--mg-spacing-200);
+    border-block-end: 1px solid rgb(var(--mg-color-neutral-200));
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--mg-font-family-ui);
+    font-size: $mg-font-size-400;
+    line-height: 1.3;
+  }
+
+  &__close {
+    margin-inline-start: auto;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: rgb(var(--mg-color-neutral-600));
+
+    &:hover {
+      color: rgb(var(--mg-color-neutral-900));
+      background-color: rgb(var(--mg-color-neutral-900) / 0.08);
+    }
+  }
+
+  &__body {
+    padding: var(--mg-spacing-200);
+    overflow-y: auto;
+  }
+
+  &__footer {
+    padding: var(--mg-spacing-150) var(--mg-spacing-200);
+    border-block-start: 1px solid rgb(var(--mg-color-neutral-200));
+  }
+}
+
+.mg-drawer {
+  --mg-drawer-size: #{mg-rem(320)};
+  --mg-drawer-offset: -100%;
+
+  position: fixed;
+  z-index: var(--mg-z-index-drawer);
+  display: flex;
   box-shadow: 0 8px 32px rgb(0 0 0 / 0.2);
-  transition: transform 0.3s ease-in-out;
+
+  // Hide after the slide-out so the closed drawer cannot be seen or reached.
+  visibility: hidden;
+  transition:
+    transform var(--mg-motion-duration-medium) var(--mg-motion-easing-standard),
+    visibility 0s linear var(--mg-motion-duration-medium);
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }
 
-  &--start {
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 320px;
-    max-width: 100vw;
-    transform: translateX(-100%);
+  &.is-open {
+    visibility: visible;
+    transform: none;
+    transition-delay: 0s;
+  }
 
-    &.is-open {
-      transform: translateX(0);
+  &--start,
+  &--end {
+    inset-block: 0;
+    inline-size: var(--mg-drawer-size);
+    max-inline-size: 100vw;
+  }
+
+  &--start {
+    inset-inline-start: 0;
+    transform: translateX(var(--mg-drawer-offset));
+
+    &:dir(rtl) {
+      --mg-drawer-offset: 100%;
     }
   }
 
   &--end {
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 320px;
-    max-width: 100vw;
-    transform: translateX(100%);
+    --mg-drawer-offset: 100%;
 
-    &.is-open {
-      transform: translateX(0);
+    inset-inline-end: 0;
+    transform: translateX(var(--mg-drawer-offset));
+
+    &:dir(rtl) {
+      --mg-drawer-offset: -100%;
     }
   }
 
   &--bottom {
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 320px;
-    max-height: 100vh;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--mg-drawer-size);
+    max-block-size: 100vh;
     transform: translateY(100%);
-
-    &.is-open {
-      transform: translateY(0);
-    }
-  }
-
-  &__backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgb(0 0 0 / 0.5);
-    z-index: calc(var(--mg-z-index-drawer, 2000) - 1);
-  }
-
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem;
-    border-bottom: 1px solid var(--mg-color-border, #ccc);
-  }
-
-  &__title {
-    margin: 0;
-    font-size: 1.25rem;
-  }
-
-  &__close {
-    background: transparent;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
   }
 
   &__body {
     flex: 1;
-    overflow-y: auto;
-    padding: 1rem;
   }
 
-  &__footer {
-    padding: 1rem;
-    border-top: 1px solid var(--mg-color-border, #ccc);
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.5);
+    z-index: calc(var(--mg-z-index-drawer) - 1);
   }
 }
 
 .mg-floating-panel {
   position: absolute;
-  z-index: var(--mg-z-index-drawer, 2000);
-  flex-direction: column;
-  background: var(--mg-color-background, #fff);
-  box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
-  border-radius: 8px;
-  width: 300px;
-  max-width: 90vw;
+  z-index: var(--mg-z-index-drawer);
   display: none;
+  inline-size: mg-rem(300);
+  max-inline-size: 90vw;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+  border-radius: var(--mg-card-border-radius);
 
   &.is-open {
     display: flex;
   }
 
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--mg-color-border, #ccc);
-    cursor: grab;
-  }
-
   &__title {
-    margin: 0;
-    font-size: 1rem;
-  }
-
-  &__close {
-    background: transparent;
-    border: none;
-    font-size: 1.25rem;
-    cursor: pointer;
+    font-size: $mg-font-size-300;
   }
 
   &__body {
-    padding: 1rem;
-    max-height: 400px;
-    overflow-y: auto;
+    max-block-size: mg-rem(400);
   }
 }
