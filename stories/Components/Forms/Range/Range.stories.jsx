@@ -1,8 +1,28 @@
-import { Range } from './Range';
-import { FormGroup } from '../FormGroup/FormGroup';
 import React, { useState } from 'react';
+import { Range } from './Range';
 
-const meta = {
+const RangeDemo = ({ label, ...args }) => {
+  const [value, setValue] = useState(args.defaultValue ?? 0);
+  const tickLabel = args.ticks?.find(
+    tick => String(tick.value) === String(value)
+  )?.label;
+  return (
+    <div>
+      <label className="mg-form-label" htmlFor={args.id}>
+        {label}
+      </label>
+      <Range
+        {...args}
+        defaultValue={undefined}
+        value={value}
+        onChange={event => setValue(event.target.value)}
+      />
+      <p aria-live="polite">Selected value: {tickLabel ?? value}</p>
+    </div>
+  );
+};
+
+export default {
   title: 'Components/Forms/Range',
   component: Range,
   tags: ['autodocs'],
@@ -14,26 +34,8 @@ const meta = {
   },
 };
 
-export default meta;
-
 export const Continuous = {
-  render: args => {
-    const [val, setVal] = useState(args.defaultValue || 50);
-    return (
-      <FormGroup label="Range Example" id={args.id}>
-        <Range {...args} value={val} onChange={e => setVal(e.target.value)} />
-        <div
-          style={{
-            marginTop: '1rem',
-            fontSize: '14px',
-            color: 'rgb(var(--mg-color-neutral-600))',
-          }}
-        >
-          Selected value: {val}
-        </div>
-      </FormGroup>
-    );
-  },
+  render: args => <RangeDemo label="Range example" {...args} />,
   args: {
     id: 'range-continuous',
     name: 'range_continuous',
@@ -44,24 +46,7 @@ export const Continuous = {
 };
 
 export const Stepped = {
-  render: args => {
-    const [val, setVal] = useState(args.defaultValue || 1);
-    return (
-      <FormGroup label="Climate Targets" id={args.id}>
-        <Range {...args} value={val} onChange={e => setVal(e.target.value)} />
-        <div
-          style={{
-            marginTop: '1rem',
-            fontSize: '14px',
-            color: 'rgb(var(--mg-color-neutral-600))',
-          }}
-        >
-          Selected value:{' '}
-          {args.ticks.find(t => t.value.toString() === val.toString())?.label}
-        </div>
-      </FormGroup>
-    );
-  },
+  render: args => <RangeDemo label="Climate targets" {...args} />,
   args: {
     id: 'range-stepped',
     name: 'range_stepped',
@@ -79,13 +64,17 @@ export const Stepped = {
 };
 
 export const Disabled = {
-  render: args => {
-    return (
-      <FormGroup label="Disabled Range" id={args.id}>
-        <Range {...args} />
-      </FormGroup>
-    );
-  },
+  render: args => (
+    <div>
+      <label
+        className="mg-form-label mg-form-label--disabled"
+        htmlFor={args.id}
+      >
+        Disabled range
+      </label>
+      <Range {...args} />
+    </div>
+  ),
   args: {
     id: 'range-disabled',
     name: 'range_disabled',

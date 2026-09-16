@@ -17,6 +17,12 @@ export const Range = ({
   ...props
 }) => {
   const isStepped = ticks && ticks.length > 0;
+  // Announce the tick label (for example "+2°C") rather than the raw number.
+  const current = value ?? defaultValue;
+  const currentTick =
+    isStepped && current !== undefined
+      ? ticks.find(tick => String(tick.value) === String(current))
+      : undefined;
 
   return (
     <div className={classNames('mg-range-wrapper', className)}>
@@ -35,6 +41,7 @@ export const Range = ({
           'mg-range--stepped': isStepped,
         })}
         list={isStepped ? `${id}-ticks` : undefined}
+        aria-valuetext={currentTick?.label}
         {...props}
       />
 

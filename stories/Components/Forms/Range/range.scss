@@ -1,64 +1,95 @@
 /**
- * @file
- * Range component stylesheet.
- * Range slider component supporting continuous and stepped intervals with datalist tick marks.
- * @see https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Forms/Range/Range.mdx
+ * Range
+ *
+ * Range slider supporting continuous and stepped intervals with labelled tick marks.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Forms/Range/Range.mdx
  */
 
-@use "sass:math";
+@mixin mg-range-thumb {
+  appearance: none;
+  background-color: rgb(var(--mg-color-interactive));
+  border: 2px solid rgb(var(--mg-color-neutral-0));
+  border-radius: 50%;
+  block-size: 1.5rem;
+  inline-size: 1.5rem;
+  margin-block-start: calc(-0.75rem + 2px);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  transition:
+    background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard),
+    transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+@mixin mg-range-thumb-hover {
+  background-color: var(--mg-color-button-background--hover);
+  transform: scale(1.1);
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+  }
+}
+
+@mixin mg-range-thumb-disabled {
+  background-color: rgb(var(--mg-color-neutral-400));
+  border-color: rgb(var(--mg-color-neutral-200));
+  transform: none;
+  box-shadow: none;
+}
+
+@mixin mg-range-track {
+  background-color: rgb(var(--mg-color-neutral-300));
+  border-radius: 999px;
+  block-size: 4px;
+  inline-size: 100%;
+}
 
 .mg-range {
   appearance: none;
   background: transparent;
   cursor: pointer;
-  width: 100%;
-  margin: var(--mg-spacing-200) 0;
+  inline-size: 100%;
+  margin-block: var(--mg-spacing-200);
   display: block;
 
-  @mixin thumb {
-    appearance: none;
-    background-color: rgb(var(--mg-color-interactive));
-    border: 2px solid rgb(var(--mg-color-white));
-    border-radius: 50%;
-    height: 1.5rem;
-    width: 1.5rem;
-    margin-top: calc(-0.75rem + 2px);
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
-    transition:
-      background-color 0.2s,
-      transform 0.1s;
-
-    &:hover {
-      background-color: rgb(var(--mg-color-interactive-hover));
-      transform: scale(1.1);
-    }
-  }
-
-  @mixin track {
-    background-color: rgb(var(--mg-color-neutral-300));
-    border-radius: var(--mg-radius-full);
-    height: 4px;
-    width: 100%;
-  }
-
+  // Vendor pseudo-elements stay in separate rules: a browser drops a whole
+  // selector list that contains a pseudo-element it does not recognise.
   &::-webkit-slider-thumb {
-    @include thumb;
+    @include mg-range-thumb;
   }
+
   &::-moz-range-thumb {
-    @include thumb;
+    @include mg-range-thumb;
   }
+
+  &:hover:not(:disabled)::-webkit-slider-thumb {
+    @include mg-range-thumb-hover;
+  }
+
+  &:hover:not(:disabled)::-moz-range-thumb {
+    @include mg-range-thumb-hover;
+  }
+
   &::-webkit-slider-runnable-track {
-    @include track;
+    @include mg-range-track;
   }
+
   &::-moz-range-track {
-    @include track;
+    @include mg-range-track;
   }
 
   &:focus-visible {
     outline: none;
+
     &::-webkit-slider-thumb {
       @include mg-focus-ring;
     }
+
     &::-moz-range-thumb {
       @include mg-focus-ring;
     }
@@ -66,14 +97,19 @@
 
   &:disabled {
     cursor: not-allowed;
-    &::-webkit-slider-thumb,
-    &::-moz-range-thumb {
-      background-color: rgb(var(--mg-color-neutral-400));
-      border-color: rgb(var(--mg-color-neutral-200));
-      transform: none;
-      box-shadow: none;
+
+    &::-webkit-slider-thumb {
+      @include mg-range-thumb-disabled;
     }
-    &::-webkit-slider-runnable-track,
+
+    &::-moz-range-thumb {
+      @include mg-range-thumb-disabled;
+    }
+
+    &::-webkit-slider-runnable-track {
+      background-color: rgb(var(--mg-color-neutral-200));
+    }
+
     &::-moz-range-track {
       background-color: rgb(var(--mg-color-neutral-200));
     }
@@ -83,25 +119,24 @@
 .mg-range__ticks {
   display: flex;
   justify-content: space-between;
-  padding: 0 calc(1.5rem / 2);
-  margin-top: calc(var(--mg-spacing-100) * -1);
+  padding-inline: 0.75rem;
+  margin-block-start: calc(var(--mg-spacing-100) * -1);
   color: rgb(var(--mg-color-neutral-600));
-  font-size: var(--mg-text-size-sm);
+  font-family: var(--mg-font-family-ui);
+  font-size: $mg-font-size-200;
 
-  option {
+  span {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
-    padding: 0;
+
     &::before {
       content: "";
       display: block;
-      width: 2px;
-      height: 6px;
+      inline-size: 2px;
+      block-size: 6px;
+      margin-block-end: var(--mg-spacing-50);
       background-color: rgb(var(--mg-color-neutral-400));
-      margin-bottom: var(--mg-spacing-100);
-      margin-top: calc(var(--mg-spacing-100) * -1);
     }
   }
 }

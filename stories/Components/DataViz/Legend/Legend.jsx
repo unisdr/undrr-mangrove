@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useId } from 'react';
 import PropTypes from 'prop-types';
+
+// Evenly space ticks without a position; a single tick sits at the start.
+const tickPosition = (tick, index, count) =>
+  tick.position || (count > 1 ? `${(index / (count - 1)) * 100}%` : '0%');
 
 export const Legend = ({
   type = 'continuous',
@@ -14,6 +18,7 @@ export const Legend = ({
   ...props
 }) => {
   const baseClass = 'mg-legend';
+  const titleId = useId();
   const typeClass = `${baseClass}--${type}`;
   const orientationClass =
     orientation === 'vertical' ? `${baseClass}--vertical` : '';
@@ -34,6 +39,7 @@ export const Legend = ({
       <div
         className={`${baseClass}__bar ${rampClass}`}
         style={customRamp ? { background: customRamp } : {}}
+        aria-hidden="true"
       />
       {ticks.length > 0 && (
         <div className={`${baseClass}__ticks`}>
@@ -42,8 +48,7 @@ export const Legend = ({
               key={index}
               className={`${baseClass}__tick`}
               style={{
-                '--mg-legend-tick-pos':
-                  tick.position || `${(index / (ticks.length - 1)) * 100}%`,
+                '--mg-legend-tick-pos': tickPosition(tick, index, ticks.length),
               }}
             >
               <span className={`${baseClass}__tick-label`}>{tick.label}</span>
@@ -64,7 +69,9 @@ export const Legend = ({
             key={index}
             className={`${baseClass}__step`}
             style={item.color ? { backgroundColor: item.color } : {}}
-          ></div>
+          >
+            <span className="mg-u-sr-only">{item.label}</span>
+          </div>
         ))}
       </div>
       {ticks.length > 0 && (
@@ -74,8 +81,7 @@ export const Legend = ({
               key={index}
               className={`${baseClass}__tick`}
               style={{
-                '--mg-legend-tick-pos':
-                  tick.position || `${(index / (ticks.length - 1)) * 100}%`,
+                '--mg-legend-tick-pos': tickPosition(tick, index, ticks.length),
               }}
             >
               <span className={`${baseClass}__tick-label`}>{tick.label}</span>
@@ -104,8 +110,17 @@ export const Legend = ({
   );
 
   return (
-    <div className={classes} {...props}>
-      {title && <div className={`${baseClass}__title`}>{title}</div>}
+    <div
+      className={classes}
+      role="group"
+      aria-labelledby={title ? titleId : undefined}
+      {...props}
+    >
+      {title && (
+        <p id={titleId} className={`${baseClass}__title`}>
+          {title}
+        </p>
+      )}
       {type === 'continuous' && renderContinuous()}
       {type === 'stepped' && renderStepped()}
       {type === 'categorical' && renderCategorical()}
