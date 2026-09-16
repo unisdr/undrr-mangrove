@@ -9,7 +9,8 @@ Use this checklist when building or reviewing a component. Each item links to th
 - [ ] Component follows BEM naming with `mg-` prefix
 - [ ] Files follow the standard layout: `ComponentName.jsx`, `component-name.scss`, `ComponentName.stories.jsx`, `ComponentName.mdx`
 - [ ] SCSS file begins with a docblock comment describing the component and linking to its full MDX documentation file on GitHub
-- [ ] SCSS uses `var(--mg-color-*)`, `var(--mg-spacing-*)` and `var(--mg-font-family-*)` for colors, spacing and type (no hardcoded values); SCSS variables from `_variables.scss` are used only for build-time tokens (breakpoints, font sizes); use `$mg-z-index-*` tokens for global stacking contexts — fixed, sticky, or portaled elements; derive backdrops with `$token - 1`
+- [ ] SCSS uses `var(--mg-color-*)`, `var(--mg-spacing-*)` and `var(--mg-font-family-*)` for colors, spacing and type (no hardcoded values); SCSS variables from `_variables.scss` are used only for build-time tokens (breakpoints, font sizes); use `--mg-z-index-*` CSS custom properties for global stacking contexts — fixed, sticky, or portaled elements (derive backdrops with `calc(var(--mg-z-index-*) - 1)`); local stacking contexts within a component use raw integer values with an explanatory comment
+- [ ] Color tokens using sRGB channel triples are wrapped in `rgb(...)`, e.g. `color: rgb(var(--mg-color-interactive));` (check `tokens.json` for the 22 non-wrapped exception tokens like `--mg-border-color-button`)
 - [ ] SCSS imported in `stories/assets/scss/_components.scss`
 - [ ] `font-family` names a role custom property and nothing else — `var(--mg-font-family-text)`, `-heading`, `-display`, `-ui` or `-code`. Never a face variable (`$mg-font-face-*`), never a literal family name. Component title, label, value, tag and compact navigation-chrome classes (`__title`, `__label`, `__value`, `__link`) take `ui`. Buttons take `text`, every one of them. The hero title is the only `display` user. Do not declare a family on `h1`–`h6`, `p`, `th`, `td` or a bare `header`: h4–h6 and the rest inherit `text` from `body`, and h1–h3 get `heading` from `_foundational.scss` in Arabic only. That rule is deliberately scoped to `:lang(ar)` — an unconditional `h1, h2, h3` declaration is a matched declaration that ties with a consuming theme's own heading rule and wins on source order, which costs sites like MCR and ARISE their licensed brand face.
 - [ ] No `:lang(ar)` font rule anywhere in the component stylesheet. Script routing lives in `_fonts.scss` and nowhere else: it re-points the five roles for Arabic, so a component that names a role gets correct Arabic typography for free. A component-level `:lang(ar)` override now takes the component *out* of that routing.
@@ -22,7 +23,8 @@ See [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/co
 - [ ] Semantic HTML elements used where appropriate
 - [ ] ARIA attributes included (labels, roles, live regions)
 - [ ] Keyboard navigation works (Tab, Enter, Escape, arrow keys as relevant)
-- [ ] Focus states are visible
+- [ ] Focus states use `@include mg-focus-ring;` or `@include mg-focus-ring-inset;` to ensure dual-band contrast and forced-colors mode visibility
+- [ ] Icon-only buttons include an accessible `aria-label` attribute (WCAG 4.1.2) and meet touch target minimums (24x24px WCAG 2.5.8 minimum, 36x36px standard)
 - [ ] Color contrast meets WCAG 2.2 AA (4.5:1 for text, 3:1 for UI elements)
 - [ ] jest-axe test included in the test file
 - [ ] Heading hierarchy is logical (no skipped levels)
@@ -87,9 +89,12 @@ See the RTL support section in [Component standards](https://unisdr.github.io/un
 See [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs) for the full pattern.
   - Source: [`HYDRATION-AUTHORING.md`](HYDRATION-AUTHORING.md)
 
-## AI discoverability (optional)
+## AI discoverability and manifests
 
-- [ ] Component appears in the AI manifest after running `yarn validate-manifest`
+- [ ] If component HTML markup or CSS classes changed, updated `scripts/ai-manifest/component-data.js`
+- [ ] If new utility classes were created, indexed in `scripts/ai-manifest/css-utilities.js`
+- [ ] Component `## Changelog` in MDX follows standard format and is automatically indexed in `ai-components/{id}.json` and `releases.json`
+- [ ] `yarn validate-manifest` passes with 0 errors
 
 See [AI and MCP integration](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs).
   - Source: [`AI-MCP-INTEGRATION.md`](AI-MCP-INTEGRATION.md)
