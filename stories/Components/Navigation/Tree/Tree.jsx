@@ -21,12 +21,48 @@ export const TreeItem = ({
     if (onToggle) onToggle(id, !expanded);
   };
 
-  const handleSelect = e => {
-    e.stopPropagation();
-    if (onSelect) onSelect(id);
+  const handleLabelClick = e => {
+    if (asLink && href) {
+      if (hasChildren) {
+        handleToggle(e);
+      } else {
+        if (onSelect) onSelect(id);
+      }
+    } else if (hasChildren) {
+      handleToggle(e);
+    }
   };
 
   const hasChildren = React.Children.count(children) > 0;
+
+  const LabelContent = () => (
+    <>
+      {hasChildren && (
+        <button
+          type="button"
+          className="mg-tree__toggle"
+          onClick={handleToggle}
+          aria-label={expanded ? 'Collapse' : 'Expand'}
+          aria-expanded={expanded}
+        >
+          <span
+            className={classNames('mg-tree__icon', {
+              'is-expanded': expanded,
+            })}
+          >
+            ▶
+          </span>
+        </button>
+      )}
+      {asLink && href ? (
+        <a href={href} className="mg-tree__label" onClick={handleLabelClick}>
+          {label}
+        </a>
+      ) : (
+        <span className="mg-tree__label">{label}</span>
+      )}
+    </>
+  );
 
   return (
     <li
@@ -37,43 +73,8 @@ export const TreeItem = ({
       aria-expanded={hasChildren ? expanded : undefined}
       aria-selected={isSelected}
     >
-      <div className="mg-tree__label-container">
-        <div
-          className="mg-tree__toggle-container"
-          onClick={hasChildren ? handleToggle : undefined}
-        >
-          {hasChildren && (
-            <button
-              type="button"
-              className="mg-tree__toggle"
-              onClick={handleToggle}
-              aria-label={expanded ? 'Collapse' : 'Expand'}
-              aria-expanded={expanded}
-            >
-              <span
-                className={classNames('mg-tree__icon', {
-                  'is-expanded': expanded,
-                })}
-              >
-                ▶
-              </span>
-            </button>
-          )}
-        </div>
-        {asLink && href ? (
-          <a href={href} className="mg-tree__label" onClick={hasChildren ? handleSelect : undefined}>
-            {label}
-          </a>
-        ) : (
-          <span
-            className={classNames('mg-tree__label', {
-              'mg-tree__label--clickable': !hasChildren,
-            })}
-            onClick={hasChildren ? undefined : handleSelect}
-          >
-            {label}
-          </span>
-        )}
+      <div className="mg-tree__label-container" onClick={handleLabelClick}>
+        <LabelContent />
       </div>
       {hasChildren && expanded && (
         <ul className="mg-tree__group" role="group">
