@@ -138,7 +138,7 @@ export const ServiceNotice = ({
             >
               {statusUrlLabel}
               <span
-                className="mg-icon mg-icon-external mg-button__icon"
+                className="mg-icon mg-icon-external-link mg-button__icon"
                 aria-hidden="true"
               />
             </a>
