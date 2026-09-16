@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { DEFAULT_SERVICE_NOTICE_LABELS } from './_labels';
@@ -24,6 +24,8 @@ export const ServiceNotice = ({
   ...props
 }) => {
   const [countdown, setCountdown] = useState(initialCountdown);
+  const onRetryRef = useRef(onRetry);
+  onRetryRef.current = onRetry;
 
   const effectiveVariant =
     variant || (status === 'offline' ? 'negative' : 'warning');
@@ -50,9 +52,6 @@ export const ServiceNotice = ({
       setCountdown(prev => {
         if (prev <= 1) {
           clearInterval(interval);
-          if (onRetry) {
-            onRetry();
-          }
           return 0;
         }
         return prev - 1;
@@ -60,7 +59,14 @@ export const ServiceNotice = ({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [initialCountdown, onRetry]);
+  }, [initialCountdown]);
+
+  // Execute onRetry when countdown reaches 0
+  useEffect(() => {
+    if (countdown === 0 && onRetryRef.current) {
+      onRetryRef.current();
+    }
+  }, [countdown]);
 
   const noticeClasses = classNames(
     'mg-service-notice',
@@ -82,7 +88,7 @@ export const ServiceNotice = ({
           className={classNames('mg-icon mg-service-notice__icon', {
             'mg-icon-exclamation-triangle':
               status === 'degraded' || effectiveVariant === 'warning',
-            'mg-icon-cross-circle':
+            'mg-icon-close':
               status === 'offline' || effectiveVariant === 'negative',
           })}
           aria-hidden="true"
@@ -118,7 +124,7 @@ export const ServiceNotice = ({
           {onRetry && (
             <button
               type="button"
-              className="mg-button mg-button-primary mg-button--small"
+              className="mg-button mg-button-primary"
               onClick={onRetry}
             >
               <span
@@ -134,7 +140,7 @@ export const ServiceNotice = ({
               href={statusUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mg-button mg-button-secondary mg-button-outline mg-button--small"
+              className="mg-button mg-button-secondary mg-button-outline"
             >
               {statusUrlLabel}
               <span

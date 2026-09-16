@@ -9,19 +9,19 @@
 
 .mg-service-notice {
   --mg-service-notice-border-color: rgb(
-    var(--mg-color-warning, 217 119 6) / 0.5
+    var(--mg-color-gold-800, 134 98 0) / 0.5
   );
-  --mg-service-notice-bg: rgb(var(--mg-color-warning, 217 119 6) / 0.06);
-  --mg-service-notice-icon-color: var(--mg-color-warning-dark, #b45309);
+  --mg-service-notice-bg: rgb(var(--mg-color-accent-100, 244 228 150) / 0.18);
+  --mg-service-notice-icon-color: rgb(var(--mg-color-gold-800, 134 98 0));
 
   display: flex;
   flex-direction: column;
-  gap: var(--mg-spacing-3, 0.75rem);
-  padding: var(--mg-spacing-4, 1rem) var(--mg-spacing-5, 1.25rem);
+  gap: var(--mg-spacing-100);
+  padding: var(--mg-spacing-150) var(--mg-spacing-200);
   background-color: var(--mg-service-notice-bg);
   border: 1px solid var(--mg-service-notice-border-color);
-  border-left-width: 4px;
-  border-radius: var(--mg-radius-md, 4px);
+  border-inline-start-width: 4px;
+  border-radius: var(--mg-radius-button);
   font-family: var(--mg-font-family-text);
   color: rgb(var(--mg-color-neutral-900));
   box-sizing: border-box;
@@ -29,31 +29,31 @@
   &--degraded,
   &--warning {
     --mg-service-notice-border-color: rgb(
-      var(--mg-color-warning, 217 119 6) / 0.5
+      var(--mg-color-gold-800, 134 98 0) / 0.5
     );
-    --mg-service-notice-bg: rgb(var(--mg-color-warning, 217 119 6) / 0.06);
-    --mg-service-notice-icon-color: var(--mg-color-warning-dark, #b45309);
+    --mg-service-notice-bg: rgb(var(--mg-color-accent-100, 244 228 150) / 0.18);
+    --mg-service-notice-icon-color: rgb(var(--mg-color-gold-800, 134 98 0));
   }
 
   &--offline,
   &--negative {
     --mg-service-notice-border-color: rgb(
-      var(--mg-color-negative, 220 38 38) / 0.5
+      var(--mg-color-red-900, 193 9 32) / 0.4
     );
-    --mg-service-notice-bg: rgb(var(--mg-color-negative, 220 38 38) / 0.06);
-    --mg-service-notice-icon-color: var(--mg-color-negative-dark, #991b1b);
+    --mg-service-notice-bg: rgb(var(--mg-color-red-50, 249 230 233));
+    --mg-service-notice-icon-color: rgb(var(--mg-color-red-900, 193 9 32));
   }
 
   &--compact {
-    padding: var(--mg-spacing-2, 0.5rem) var(--mg-spacing-3, 0.75rem);
-    gap: var(--mg-spacing-2, 0.5rem);
+    padding: var(--mg-spacing-75) var(--mg-spacing-100);
+    gap: var(--mg-spacing-75);
 
     .mg-service-notice__title {
-      font-size: 0.9375rem;
+      font-size: var(--mg-font-size-250, 0.9375rem);
     }
 
     .mg-service-notice__description {
-      font-size: 0.8125rem;
+      font-size: var(--mg-font-size-200, 0.8125rem);
     }
   }
 
@@ -64,18 +64,18 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    background-color: rgb(255 255 255 / 0.94);
+    background-color: rgb(var(--mg-color-neutral-0) / 0.94);
     backdrop-filter: blur(2px);
     border: 1px solid var(--mg-service-notice-border-color);
-    border-left-width: 1px;
+    border-inline-start-width: 1px;
     border-radius: inherit;
-    padding: var(--mg-spacing-6, 1.5rem);
+    padding: var(--mg-spacing-250);
   }
 
   &__header {
     display: flex;
     align-items: center;
-    gap: var(--mg-spacing-2, 0.5rem);
+    gap: var(--mg-spacing-75);
     flex-wrap: wrap;
   }
 
@@ -88,7 +88,8 @@
 
   &__title {
     margin: 0;
-    font-size: 1rem;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-300, 1rem);
     font-weight: 600;
     line-height: 1.35;
     color: rgb(var(--mg-color-neutral-900));
@@ -97,12 +98,12 @@
 
   &__description {
     margin: 0;
-    font-size: 0.875rem;
+    font-size: var(--mg-font-size-250, 0.875rem);
     line-height: 1.5;
     color: rgb(var(--mg-color-neutral-700));
 
     p {
-      margin: 0 0 0.5rem;
+      margin: 0 0 var(--mg-spacing-50);
 
       &:last-child {
         margin-bottom: 0;
@@ -113,14 +114,23 @@
   &__actions {
     display: flex;
     align-items: center;
-    gap: var(--mg-spacing-3, 0.75rem);
+    gap: var(--mg-spacing-100);
     flex-wrap: wrap;
-    margin-top: var(--mg-spacing-1, 0.25rem);
+    margin-block-start: var(--mg-spacing-50);
   }
 
   &__countdown {
     margin: 0;
-    font-size: 0.8125rem;
+    font-size: var(--mg-font-size-200, 0.8125rem);
     color: rgb(var(--mg-color-neutral-600));
+  }
+
+  // Scoped status label indicator colors
+  .mg-status-label--warning .mg-status-label__indicator {
+    background-color: rgb(var(--mg-color-gold-800));
+  }
+
+  .mg-status-label--negative .mg-status-label__indicator {
+    background-color: rgb(var(--mg-color-red-900));
   }
 }
