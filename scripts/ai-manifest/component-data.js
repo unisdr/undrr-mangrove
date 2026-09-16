@@ -1085,16 +1085,29 @@ npm run build</code></pre>
 
   'components-error-pages': {
     description:
-      'Error page templates (404, 500, etc.) with heading, message, and return link.',
-    cssClasses: [],
+      'Branded full-page error templates (404, 500, Cloudflare challenges) with status banner, search field, diagnostic details, and action buttons.',
+    cssClasses: [
+      'mg-error-page',
+      'mg-error-page__container',
+      'mg-error-page__search',
+      'mg-error-page--challenge',
+    ],
     examples: [
       {
         name: '404 error page',
-        html: `<div class="mg-container mg-container--padded" style="text-align: center;">
-  <h1>404</h1>
-  <p>Page not found. The page you requested could not be located.</p>
-  <a class="mg-button mg-button-primary" href="/">Return to homepage</a>
-</div>`,
+        html: `<main class="mg-error-page">
+  <div class="mg-error-page__container">
+    <div class="undrr-logo" role="img" aria-label="UNDRR logo"></div>
+    <h1>404</h1>
+    <h2>Page not found</h2>
+    <p>The page you requested could not be located.</p>
+    <div class="mg-error-page__search">
+      <input type="search" placeholder="Search UNDRR..." aria-label="Search UNDRR" />
+      <button class="mg-button mg-button-primary" type="submit">Search</button>
+    </div>
+    <a class="mg-button mg-button-primary" href="/">Return to homepage</a>
+  </div>
+</main>`,
       },
     ],
   },

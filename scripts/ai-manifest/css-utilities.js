@@ -110,7 +110,7 @@ export default {
     },
 
     // ---------------------------------------------------------------
-    // 1b. Page composition
+    // 1b. Page composition & data layout
     // ---------------------------------------------------------------
     {
       name: 'Reading column',
@@ -123,6 +123,20 @@ export default {
             'Reading column. Add mg-reading--with-contents to place a table of contents in a sticky right sidebar above 48rem.',
           usage:
             '<div class="mg-reading mg-reading--with-contents">\n  <div class="mg-table-of-contents">…</div>\n  <div class="mg-reading__article">…</div>\n</div>',
+        },
+      ],
+    },
+    {
+      name: 'Table scroll region',
+      description:
+        'Accessible scrolling container for wide tabular data on smaller viewports.',
+      classes: [
+        {
+          class: 'mg-table-scroll-region',
+          description:
+            'Horizontal scrolling wrapper for wide HTML tables. Requires role="region", a descriptive aria-label, and tabindex="0" for keyboard navigation.',
+          usage:
+            '<div class="mg-table-scroll-region" role="region" aria-label="Data table" tabindex="0">\n  <table class="mg-table">\n    …\n  </table>\n</div>',
         },
       ],
     },

@@ -115,6 +115,61 @@ const LOGOS = {
   squareBlue: `${ASSETS_BASE}/static/logos/undrr/undrr-logo-square-blue.svg`,
 };
 
+const VANILLA_SCRIPTS = [
+  {
+    name: 'Tabs',
+    file: 'js/tabs.js',
+    url: `${CDN_BASE}/js/tabs.min.js`,
+    selector: '[data-mg-js-tabs]',
+    initFunction: 'mgTabs(scope, activateDeepLinkOnLoad)',
+    description:
+      'Initializes accessible horizontal tabs and stacked disclosure accordions. In SPAs or dynamically loaded DOM, call mgTabs(containerElement) to re-initialize.',
+  },
+  {
+    name: 'Show More',
+    file: 'js/show-more.js',
+    url: `${CDN_BASE}/js/show-more.min.js`,
+    selector: '[data-mg-show-more]',
+    initFunction: 'mgShowMore(scope)',
+    description:
+      'Initializes progressive content truncation toggle buttons. Call mgShowMore(containerElement) for dynamic content.',
+  },
+  {
+    name: 'Table of Contents',
+    file: 'js/table-of-contents.js',
+    url: `${CDN_BASE}/js/table-of-contents.min.js`,
+    selector: '[data-mg-table-of-contents]',
+    initFunction: 'mgTableOfContents(scope)',
+    description:
+      'Generates an in-page table of contents and scrollspy highlighting from headings in the article.',
+  },
+  {
+    name: 'On This Page Nav',
+    file: 'js/on-this-page-nav.js',
+    url: `${CDN_BASE}/js/on-this-page-nav.min.js`,
+    selector: '[data-mg-on-this-page-nav]',
+    initFunction: 'mgOnThisPageNav(scope)',
+    description:
+      'In-page jump navigation bar with horizontal scroll controls and active section indicator.',
+  },
+  {
+    name: 'Preview Access',
+    file: 'js/preview-access.js',
+    url: `${CDN_BASE}/js/preview-access.min.js`,
+    selector: '[data-mg-preview-access]',
+    initFunction: 'mgPreviewAccess(scope)',
+    description:
+      'Password gate and preview notice bar for staging and pre-publication review.',
+  },
+  {
+    name: 'UNDRR Rollup Bundle',
+    file: 'js/undrr.js',
+    url: `${CDN_BASE}/js/undrr.min.js`,
+    description:
+      'Combined bundle containing all vanilla JavaScript utilities in a single file.',
+  },
+];
+
 // ---------------------------------------------------------------------------
 // Component rendering: ID mapping and sample props
 // ---------------------------------------------------------------------------
@@ -532,6 +587,8 @@ const themeCss = replaceVersion(THEME_CSS);
 const requiredScripts = replaceVersion(REQUIRED_SCRIPTS);
 const requiredStylesheets = replaceVersion(REQUIRED_STYLESHEETS);
 const logos = replaceVersion(LOGOS);
+const vanillaScripts = replaceVersion(VANILLA_SCRIPTS);
+const cdnBase = CDN_BASE.replace('{{version}}', pkg.version);
 const generatedAt = new Date().toISOString();
 
 /**
@@ -1336,7 +1393,8 @@ async function main() {
     if (component.import && !validImport) droppedImportCount++;
 
     // --- Index entry (lightweight) ---
-    const indexEntry = { id, name, description };
+    const summary = description;
+    const indexEntry = { id, name, summary, description };
     if (validImport) indexEntry.import = validImport;
     indexEntry.docsUrl = docsUrl(id);
     indexEntry.detailsUrl = `${DOCS_BASE}ai-components/${id}.json`;
@@ -1350,7 +1408,7 @@ async function main() {
     indexEntries.push(indexEntry);
 
     // --- Full component file ---
-    const detail = { name, description };
+    const detail = { name, summary, description };
     if (validImport) detail.import = validImport;
     detail.docsUrl = docsUrl(id);
 
@@ -1471,6 +1529,7 @@ async function main() {
         scripts: requiredScripts,
         logos,
       },
+      vanillaScripts,
     },
     components: indexEntries,
     generatedAt,
@@ -1570,6 +1629,17 @@ ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with
 ${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import via npm: import { ComponentName } from "@undrr/undrr-mangrove".
 
 Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's reactNote field for details.
+
+### Vanilla JavaScript modules and dynamic DOM re-initialization
+
+Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (or \`${cdnBase}/js/*.min.js\`) that auto-initialize on \`DOMContentLoaded\`. When working with Single Page Applications (SPAs) or dynamically rendering content into the DOM (e.g. after AJAX fetches, client routing, modal dialogs), invoke the exported initialization functions manually:
+
+- **Tabs** (\`js/tabs.js\`): Call \`mgTabs(scope)\` to initialize or re-initialize \`[data-mg-js-tabs]\` tab containers within a container element. Call \`destroyTabs(scope)\` on unmount.
+- **Show More** (\`js/show-more.js\`): Call \`mgShowMore(scope)\` to initialize \`[data-mg-show-more]\` content truncation toggles.
+- **Table of Contents** (\`js/table-of-contents.js\`): Call \`mgTableOfContents(scope)\` to generate an article TOC with scrollspy tracking.
+- **On This Page Nav** (\`js/on-this-page-nav.js\`): Call \`mgOnThisPageNav(scope)\` for in-page jump nav with horizontal scrolling.
+- **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize password gating for staging environments.
+- **Rollup Bundle** (\`js/undrr.js\`): Single bundle containing all vanilla JavaScript enhancements together.
 
 ### CSS utilities
 
@@ -1721,6 +1791,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         })),
         logos,
       },
+      vanillaScripts,
       conventions: {
         cssPrefix: 'mg-',
         naming: 'BEM',
