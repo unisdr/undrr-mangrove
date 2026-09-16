@@ -2,16 +2,24 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export const TreeItem = ({ id, label, children, isExpanded = false, isSelected = false, onToggle, onSelect }) => {
+export const TreeItem = ({
+  id,
+  label,
+  children,
+  isExpanded = false,
+  isSelected = false,
+  onToggle,
+  onSelect,
+}) => {
   const [expanded, setExpanded] = useState(isExpanded);
-  
-  const handleToggle = (e) => {
+
+  const handleToggle = e => {
     e.stopPropagation();
     setExpanded(!expanded);
     if (onToggle) onToggle(id, !expanded);
   };
 
-  const handleSelect = (e) => {
+  const handleSelect = e => {
     e.stopPropagation();
     if (onSelect) onSelect(id);
   };
@@ -35,7 +43,13 @@ export const TreeItem = ({ id, label, children, isExpanded = false, isSelected =
             onClick={handleToggle}
             aria-label={expanded ? 'Collapse' : 'Expand'}
           >
-            <span className={classNames('mg-tree__icon', { 'is-expanded': expanded })}>▶</span>
+            <span
+              className={classNames('mg-tree__icon', {
+                'is-expanded': expanded,
+              })}
+            >
+              ▶
+            </span>
           </button>
         )}
         <span className="mg-tree__label">{label}</span>
@@ -62,7 +76,11 @@ TreeItem.propTypes = {
 export const Tree = ({ children, guides = true, className, ...props }) => {
   return (
     <ul
-      className={classNames('mg-tree', { 'mg-tree--guides': guides }, className)}
+      className={classNames(
+        'mg-tree',
+        { 'mg-tree--guides': guides },
+        className
+      )}
       role="tree"
       {...props}
     >

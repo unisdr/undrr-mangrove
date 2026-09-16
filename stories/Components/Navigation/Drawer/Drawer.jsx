@@ -17,7 +17,7 @@ export const Drawer = ({
   const drawerRef = useRef(null);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       if (e.key === 'Escape' && isOpen) {
         onClose();
       }
@@ -27,7 +27,7 @@ export const Drawer = ({
   }, [isOpen, onClose]);
 
   const baseClass = isFloatingPanel ? 'mg-floating-panel' : 'mg-drawer';
-  
+
   const classes = classNames(
     baseClass,
     {
@@ -40,7 +40,11 @@ export const Drawer = ({
   return (
     <>
       {backdrop && !isFloatingPanel && isOpen && (
-        <div className="mg-drawer__backdrop" onClick={onClose} aria-hidden="true" />
+        <div
+          className="mg-drawer__backdrop"
+          onClick={onClose}
+          aria-hidden="true"
+        />
       )}
       <div
         ref={drawerRef}

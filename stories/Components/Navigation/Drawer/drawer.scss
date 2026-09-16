@@ -6,7 +6,7 @@
   background: var(--mg-color-background, #fff);
   box-shadow: 0 8px 32px rgb(0 0 0 / 0.2);
   transition: transform 0.3s ease-in-out;
-  
+
   @media (prefers-reduced-motion: reduce) {
     transition: none;
   }

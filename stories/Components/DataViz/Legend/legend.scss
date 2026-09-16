@@ -36,7 +36,11 @@
     border-radius: 6px;
     width: 100%;
     /* Default continuous ramp */
-    background: linear-gradient(to right, rgb(var(--mg-color-neutral-100)), rgb(var(--mg-color-neutral-900)));
+    background: linear-gradient(
+      to right,
+      rgb(var(--mg-color-neutral-100)),
+      rgb(var(--mg-color-neutral-900))
+    );
   }
 
   &__bar--stepped {
@@ -122,11 +126,15 @@
     .mg-legend__bar {
       width: 12px;
       height: 100%;
-      background: linear-gradient(to bottom, rgb(var(--mg-color-neutral-900)), rgb(var(--mg-color-neutral-100)));
+      background: linear-gradient(
+        to bottom,
+        rgb(var(--mg-color-neutral-900)),
+        rgb(var(--mg-color-neutral-100))
+      );
     }
     .mg-legend__bar--stepped {
       flex-direction: column;
-      
+
       .mg-legend__step {
         width: 100%;
         height: auto;

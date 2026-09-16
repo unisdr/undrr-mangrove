@@ -17,7 +17,7 @@ export const Range = ({
   ...props
 }) => {
   const isStepped = ticks && ticks.length > 0;
-  
+
   return (
     <div className={classNames('mg-range-wrapper', className)}>
       <input
@@ -37,15 +37,19 @@ export const Range = ({
         list={isStepped ? `${id}-ticks` : undefined}
         {...props}
       />
-      
+
       {isStepped && (
         <>
           <datalist id={`${id}-ticks`}>
             {ticks.map((tick, index) => (
-              <option key={index} value={tick.value} label={tick.label}></option>
+              <option
+                key={index}
+                value={tick.value}
+                label={tick.label}
+              ></option>
             ))}
           </datalist>
-          
+
           <div className="mg-range__ticks" aria-hidden="true">
             {ticks.map((tick, index) => (
               <span key={index}>{tick.label}</span>
@@ -70,7 +74,8 @@ Range.propTypes = {
   className: PropTypes.string,
   ticks: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+        .isRequired,
       label: PropTypes.string,
     })
   ),

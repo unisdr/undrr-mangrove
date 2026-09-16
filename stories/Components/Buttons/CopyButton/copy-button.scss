@@ -10,8 +10,9 @@
   color: rgb(var(--mg-color-interactive));
   cursor: pointer;
   transition: all 0.2s;
-  
-  &:hover, &:focus-visible {
+
+  &:hover,
+  &:focus-visible {
     background-color: rgb(var(--mg-color-neutral-100));
     border-color: rgb(var(--mg-color-interactive));
   }
@@ -39,19 +40,22 @@
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.2s, visibility 0.2s;
+    transition:
+      opacity 0.2s,
+      visibility 0.2s;
     pointer-events: none;
-    
+
     // Triangle pointer
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 100%;
       left: 50%;
       transform: translateX(-50%);
       border-width: 4px;
       border-style: solid;
-      border-color: rgb(var(--mg-color-neutral-800)) transparent transparent transparent;
+      border-color: rgb(var(--mg-color-neutral-800)) transparent transparent
+        transparent;
     }
 
     &--visible {
