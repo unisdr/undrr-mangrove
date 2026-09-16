@@ -80,7 +80,7 @@ export const ServiceNotice = ({
       <div className="mg-service-notice__header">
         <span
           className={classNames('mg-icon mg-service-notice__icon', {
-            'mg-icon-alert':
+            'mg-icon-exclamation-triangle':
               status === 'degraded' || effectiveVariant === 'warning',
             'mg-icon-cross-circle':
               status === 'offline' || effectiveVariant === 'negative',
