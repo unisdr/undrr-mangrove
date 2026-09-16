@@ -37,7 +37,7 @@ yarn validate-manifest
 
 The validation checks for stale curated data keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 
-Then preview the npm tarball exactly as the publish workflow will assemble it, and compare it with the last published version. The diff should list only files that genuinely changed this release:
+Then preview the npm tarball exactly as the publish workflow will assemble it, and compare it with the last published version. The comparison lists files added, removed, or with changed content, and should show only what genuinely changed this release. Compiled component bundles always differ in their `Compiled on:` build timestamp; those files are counted but not listed as changed:
 
 ```bash
 yarn pack:preview --compare <previous-version>   # e.g. --compare 2.0.0-rc.1
@@ -158,6 +158,8 @@ If a tag-push publish fails but **Actions is still available**, re-run it manual
 2. Click "Run workflow"
 3. Optionally enter a specific git tag (leave empty for latest)
 
+A manual re-run for a tag created before `scripts/assemble-npm-package.mjs` existed fails at "Prepare package files", because the workflow checks out the tag and the script is not in it. It fails safely and nothing is published. For those tags, follow the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable) from a checkout that has the script (for example, copy `scripts/assemble-npm-package.mjs` into the tag checkout and run `node scripts/assemble-npm-package.mjs`).
+
 ## Break-glass: fully local release (CI/Actions unavailable)
 
 Use this **only** when GitHub Actions cannot run at all (for example, org
@@ -192,6 +194,8 @@ The `npm-publish.yml` workflow does **not** publish the repo root. It runs `scri
 yarn pack:assemble   # replaces npm-package/ (gitignored)
 ```
 
+The script only deletes an output directory that is inside the repo, outside its source directories, and either empty or a previous package build. Anything else stops it with an error. It also fails if a `dist/` directory it copies from exists but is empty, as the old `cp -r dir/*` step did.
+
 Two quirks worth knowing, both intentional and matching every prior release:
 
 - The slim `files` array **excludes `dist/`**, so `main: "dist/index.js"` is a dangling pointer — the published tarball has no `dist/`. Consumers import from the subpath dirs (`components/`, `css/`, …), so this has never mattered. Don't "fix" it, or you change what's published.
@@ -207,7 +211,7 @@ Confirm contents against the previous published release — the diff should be *
 yarn pack:preview --compare <previous-version>
 ```
 
-This re-assembles `npm-package/`, prints the file count and unpacked size from `npm pack --dry-run`, fetches the published `<previous-version>` tarball listing from npm, and prints the files only in one or the other.
+This re-assembles `npm-package/`, prints the file count and unpacked size from `npm pack --dry-run`, downloads the published `<previous-version>` tarball from npm to a temp directory, and prints the files only in one or the other plus the files whose content changed. Files that differ only in the `Compiled on:` build timestamp are counted in a final line, not listed. For a rebuild of an already published version, expect no added, removed or changed files.
 
 ### 4. Publish
 
