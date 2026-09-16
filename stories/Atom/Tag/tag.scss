@@ -75,9 +75,9 @@
 // Subtle, non-interactive metadata badge (e.g. file formats PDF, SVG, JSON)
 .mg-tag--subtle,
 .mg-badge {
-  --mg-tag-background: rgb(var(--mg-color-neutral-100));
+  --mg-tag-background: rgb(var(--mg-color-neutral-50));
   --mg-tag-background-hover: rgb(
-    var(--mg-color-neutral-100)
+    var(--mg-color-neutral-50)
   ); // match resting; non-interactive
 
   --mg-tag-foreground: rgb(var(--mg-color-neutral-800));
