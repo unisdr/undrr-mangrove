@@ -1,7 +1,6 @@
 @use "sass:math";
 
 .mg-range {
-  // Reset native input styles
   appearance: none;
   background: transparent;
   cursor: pointer;
@@ -9,19 +8,15 @@
   margin: var(--mg-spacing-200) 0;
   display: block;
 
-  // Thumb mixin for cross-browser consistency
   @mixin thumb {
     appearance: none;
     background-color: rgb(var(--mg-color-interactive));
     border: 2px solid rgb(var(--mg-color-white));
     border-radius: 50%;
-    height: 1.5rem; // 24px
+    height: 1.5rem;
     width: 1.5rem;
-    margin-top: calc(
-      -0.75rem + 2px
-    ); // Align to center of track (track height is 4px)
-
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+    margin-top: calc(-0.75rem + 2px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     transition:
       background-color 0.2s,
       transform 0.1s;
@@ -32,7 +27,6 @@
     }
   }
 
-  // Track mixin
   @mixin track {
     background-color: rgb(var(--mg-color-neutral-300));
     border-radius: var(--mg-radius-full);
@@ -43,26 +37,21 @@
   &::-webkit-slider-thumb {
     @include thumb;
   }
-
   &::-moz-range-thumb {
     @include thumb;
   }
-
   &::-webkit-slider-runnable-track {
     @include track;
   }
-
   &::-moz-range-track {
     @include track;
   }
 
   &:focus-visible {
     outline: none;
-
     &::-webkit-slider-thumb {
       @include mg-focus-ring;
     }
-
     &::-moz-range-thumb {
       @include mg-focus-ring;
     }
@@ -70,40 +59,24 @@
 
   &:disabled {
     cursor: not-allowed;
-
-    &::-webkit-slider-thumb {
-      background-color: rgb(var(--mg-color-neutral-400));
-      border-color: rgb(var(--mg-color-neutral-200));
-      transform: none;
-      box-shadow: none;
-    }
-
-    &::-webkit-slider-runnable-track {
-      background-color: rgb(var(--mg-color-neutral-200));
-    }
-
+    &::-webkit-slider-thumb,
     &::-moz-range-thumb {
       background-color: rgb(var(--mg-color-neutral-400));
       border-color: rgb(var(--mg-color-neutral-200));
       transform: none;
       box-shadow: none;
     }
-
+    &::-webkit-slider-runnable-track,
     &::-moz-range-track {
       background-color: rgb(var(--mg-color-neutral-200));
     }
-  }
-
-  // Stepped modifier with ticks
-  &--stepped {
-    // Styling for ticks container if needed, mostly logic is in html
   }
 }
 
 .mg-range__ticks {
   display: flex;
   justify-content: space-between;
-  padding: 0 calc(1.5rem / 2); // align with center of thumb at ends
+  padding: 0 calc(1.5rem / 2);
   margin-top: calc(var(--mg-spacing-100) * -1);
   color: rgb(var(--mg-color-neutral-600));
   font-size: var(--mg-text-size-sm);
@@ -114,7 +87,6 @@
     align-items: center;
     position: relative;
     padding: 0;
-
     &::before {
       content: "";
       display: block;

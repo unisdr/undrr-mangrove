@@ -1,0 +1,26 @@
+import { Meta, Story, Canvas, Controls } from '@storybook/blocks';
+import * as CopyButtonStories from './CopyButton.stories';
+
+<Meta of={CopyButtonStories} />
+
+# Copy Button
+
+The Copy Button allows users to quickly copy a string to their clipboard, featuring a visual micro-feedback tooltip and accessible status announcements via aria-live.
+
+## Default
+
+<Canvas of={CopyButtonStories.Default} />
+
+## In Context
+
+Typically used alongside code blocks or shareable URLs.
+
+<Canvas of={CopyButtonStories.InContext} />
+
+## Props
+
+<Controls />
+
+## Changelog
+
+- **Issue #1155**: Initial implementation of the CopyButton primitive.

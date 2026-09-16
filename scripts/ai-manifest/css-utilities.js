@@ -237,12 +237,14 @@ export default {
             '<button type="button" class="mg-button mg-button-secondary mg-button--icon" aria-label="Copy to clipboard">\n  <span class="mg-icon mg-icon-copy" aria-hidden="true"></span>\n</button>',
         },
         {
-          class: "mg-range",
-          description: "A styled input[type=\"range\"] slider component supporting continuous and stepped variants.",
+          class: 'mg-range',
+          description:
+            'A styled input[type="range"] slider component supporting continuous and stepped variants.',
         },
         {
-          class: "mg-copy-button",
-          description: "Compact action button that copies a value to the clipboard and shows a brief micro-feedback badge.",
+          class: 'mg-copy-button',
+          description:
+            'Compact action button that copies a value to the clipboard and shows a brief micro-feedback badge.',
         },
       ],
     },
@@ -727,34 +729,6 @@ export default {
             '<a class="mg-skip-link" href="#main-content">Skip to main content</a>\n<header id="header">...</header>\n<main id="main-content" tabindex="-1">...</main>',
         },
       ],
-    },
-  
-    // ---------------------------------------------------------------
-    // 15. Drawer & Floating Panel
-    // ---------------------------------------------------------------
-    {
-      name: 'Drawer',
-      description: 'Generic off-canvas drawer and floating panel.',
-      classes: [
-        { class: 'mg-drawer', description: 'Base drawer component' },
-        { class: 'mg-drawer--start', description: 'Drawer positioned at start' },
-        { class: 'mg-drawer--end', description: 'Drawer positioned at end' },
-        { class: 'mg-drawer--bottom', description: 'Drawer positioned at bottom' },
-        { class: 'mg-floating-panel', description: 'Floating tool container' }
-      ]
-    },
-    // ---------------------------------------------------------------
-    // 16. Tree
-    // ---------------------------------------------------------------
-    {
-      name: 'Tree',
-      description: 'Accessible tree / nested hierarchy view.',
-      classes: [
-        { class: 'mg-tree', description: 'Base tree component' },
-        { class: 'mg-tree--guides', description: 'Tree with guide lines' },
-        { class: 'mg-tree__item', description: 'Tree item' },
-        { class: 'mg-tree__item--selected', description: 'Selected tree item' }
-      ]
     },
   ],
 };

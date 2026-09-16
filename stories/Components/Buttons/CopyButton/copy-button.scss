@@ -19,17 +19,16 @@
 
   &:focus-visible {
     outline: none;
-
     @include mg-focus-ring;
   }
 
   i.mg-icon-copy {
-    font-size: 1.25rem; // Adjust to standard icon size
+    font-size: 1.25rem;
   }
 
   &__feedback {
     position: absolute;
-    bottom: 120%; // Pop up above
+    bottom: 120%;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgb(var(--mg-color-neutral-800));
@@ -45,7 +44,6 @@
       visibility 0.2s;
     pointer-events: none;
 
-    // Triangle pointer
     &::after {
       content: "";
       position: absolute;
