@@ -15,7 +15,7 @@ Thank you for contributing to the UNDRR Mangrove component library.
 - See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the build system, distribution channels, and Drupal integration flow.
 - See [`docs/COMPONENT-GUIDE.md`](docs/COMPONENT-GUIDE.md) for a step-by-step tutorial on building a new component.
 - See [`docs/AI-CODING-AGENTS.md`](docs/AI-CODING-AGENTS.md) if you are an AI coding agent (Claude Code, Cursor, Copilot, etc.) — covers the workflow gaps between human and agent contributors, including the `react-doctor` quality check and the project's house conventions for JSX text.
-- For code standards and review process, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).
+- For code standards and review process, see the [component contribution guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).
   - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
 
 ## Writing guidelines
@@ -30,7 +30,7 @@ To keep copy consistent and high quality across UI, docs, and developer messages
 
 Use Storybook's global locale toolbar for translated component content and text direction. Stories should read `context.globals.locale` directly or use a shared locale-label decorator; do not create one story export per language.
 
-Keep a dedicated RTL, long-label, or translation-stress story only when it exercises a distinct layout or interaction condition that the ordinary toolbar-driven story cannot demonstrate clearly. See the [RTL support and locale-toolbar guidance](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#rtl-support) in the component contribution guide.
+Keep a dedicated RTL, long-label, or translation-stress story only when it exercises a distinct layout or interaction condition that the ordinary toolbar-driven story cannot demonstrate clearly. See the [RTL support and locale-toolbar guidance](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#rtl-support) in the component contribution guide.
 
 ## Component changelogs
 
@@ -38,7 +38,7 @@ Every component MDX file must include a `## Changelog` section tracking its vers
 
 The manifest pipeline automatically parses each `## Changelog` into machine-readable format for `releases.json` and the component's `ai-components/{id}.json` detail file.
 
-See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full format specification, issue link guidance, and examples.
+See the [component contribution guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full format specification, issue link guidance, and examples.
 
 - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
 
@@ -65,7 +65,7 @@ Tips for better manifest output:
 
 ## Reviewing PRs
 
-Use the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs) when reviewing component PRs.
+Use the [review checklist](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs) when reviewing component PRs.
 
 - Source: [`docs/REVIEW-CHECKLIST.md`](docs/REVIEW-CHECKLIST.md)
 
@@ -81,6 +81,6 @@ Use the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/c
 8. Validate against the [review checklist](docs/REVIEW-CHECKLIST.md).
 9. Reference the relevant issue in your PR description.
 
-For more details on component standards and workflow, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).
+For more details on component standards and workflow, see the [component contribution guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).
 
 - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)

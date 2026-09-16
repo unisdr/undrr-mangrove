@@ -1,6 +1,6 @@
 # CDN reference
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs).
 
 Authoritative path reference for UNDRR CDN assets. Browse the full index at [assets.undrr.org](https://assets.undrr.org/sitemap.html).
 
@@ -111,7 +111,7 @@ React 19 removed UMD builds. Use import maps with esm.sh:
 </script>
 ```
 
-Bundled components export `fromElement`; pair with `/components/hydrate.js` to avoid manual `createRoot` lifecycle code. See [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
+Bundled components export `fromElement`; pair with `/components/hydrate.js` to avoid manual `createRoot` lifecycle code. See [Hydration guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
 
 ## Analytics
 
@@ -135,7 +135,7 @@ Base URL: `https://assets.undrr.org/favicons/{brand}/v1/`
 
 Canonical set per brand: `favicon.ico`, `apple-touch-icon.png`, `favicon-192.png`, `favicon-512.png`.
 
-See [Favicons](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-favicons--docs) for all 10 brand directories and markup guidance.
+See [Favicons](https://preventionweb.github.io/undrr-mangrove/?path=/docs/design-decisions-favicons--docs) for all 10 brand directories and markup guidance.
 
 ## Logos
 
@@ -181,7 +181,7 @@ https://assets.undrr.org/testing/static/mangrove/{version}/
 
 ## See also
 
-- [Vanilla HTML/CSS integration](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
-- [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs)
-- [Analytics enhancements](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs)
-- [Critical messaging](https://unisdr.github.io/undrr-mangrove/?path=/docs/platform-services-critical-messaging--docs)
+- [Vanilla HTML/CSS integration](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
+- [Hydration guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs)
+- [Analytics enhancements](https://preventionweb.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs)
+- [Critical messaging](https://preventionweb.github.io/undrr-mangrove/?path=/docs/platform-services-critical-messaging--docs)

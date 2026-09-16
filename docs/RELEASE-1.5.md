@@ -6,7 +6,7 @@ The main change in 1.5: icons now render via CSS `mask-image` instead of a font.
 
 1.4.1 was a documentation-only patch with no functional changes. These notes cover everything since 1.4.0. Full diff: [v1.4.0...v1.5.0 on GitHub](https://github.com/unisdr/undrr-mangrove/compare/v1.4.0...v1.5.0).
 
-> _Edits here show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.5.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v1-5--docs)._
+> _Edits here show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.5.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v1-5--docs)._
 
 ## Find your path
 
@@ -51,14 +51,14 @@ Full diff: [v1.5.0...v1.5.1 on GitHub](https://github.com/unisdr/undrr-mangrove/
 
 ### New components
 
-- **OnThisPageNav — sticky horizontal page navigation** ([#879](https://github.com/unisdr/undrr-mangrove/pull/879)): A vanilla JS component that builds a sticky "On this page" bar from page headings (h2/h3/h4) or an explicit link list. Uses IntersectionObserver for scroll-spy with `aria-current` tracking, un-sticks on short viewports per [GOV.UK accessibility research](https://technology.blog.gov.uk/2018/05/21/sticky-elements-functionality-and-accessibility-testing/), and supports RTL, configurable heading depth, and an optional pinned CTA. Best on long landing pages and reports — [TableOfContents](https://unisdr.github.io/undrr-mangrove/?path=/docs/atoms-navigation-tableofcontents--docs) is lighter for short pages.
+- **OnThisPageNav — sticky horizontal page navigation** ([#879](https://github.com/unisdr/undrr-mangrove/pull/879)): A vanilla JS component that builds a sticky "On this page" bar from page headings (h2/h3/h4) or an explicit link list. Uses IntersectionObserver for scroll-spy with `aria-current` tracking, un-sticks on short viewports per [GOV.UK accessibility research](https://technology.blog.gov.uk/2018/05/21/sticky-elements-functionality-and-accessibility-testing/), and supports RTL, configurable heading depth, and an optional pinned CTA. Best on long landing pages and reports — [TableOfContents](https://preventionweb.github.io/undrr-mangrove/?path=/docs/atoms-navigation-tableofcontents--docs) is lighter for short pages.
 
   > **Known limitation:** The overflow fade gradient doesn't flip in RTL. Tracked, fix coming.
 
 ### New features
 
 - **Icon system overhaul — CSS mask-image rendering (phases 1–2):** Replaces Fontello/FontAwesome 4 glyph rendering with `mask-image` rules backed by SVG data URIs. Sources: [Lucide](https://lucide.dev) for UI icons, [OCHA Humanitarian Icons](https://github.com/UN-OCHA/humanitarian-icons) for domain icons, custom SVGs for social logos. The old `@font-face` and `fa-*` selectors are kept for backward compatibility. No markup changes. See [Migration: icon system change](#migration-icon-system-change-150) and the [roadmap](#icon-migration-roadmap-fa--mg-icon-) below. ([#907](https://github.com/unisdr/undrr-mangrove/pull/907))
-- **TableOfContents and OnThisPageNav: published as standalone vanilla JS assets:** `table-of-contents.js` and `on-this-page-nav.js` are now published to `dist/js/` and the CDN, following the same convention as `tabs.js` and `show-more.js`. See the updated [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) for the new module paths. ([#901](https://github.com/unisdr/undrr-mangrove/pull/901))
+- **TableOfContents and OnThisPageNav: published as standalone vanilla JS assets:** `table-of-contents.js` and `on-this-page-nav.js` are now published to `dist/js/` and the CDN, following the same convention as `tabs.js` and `show-more.js`. See the updated [CDN reference](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) for the new module paths. ([#901](https://github.com/unisdr/undrr-mangrove/pull/901))
 - **Named z-index tokens for global stacking contexts** ([#889](https://github.com/unisdr/undrr-mangrove/pull/889)): Nine new `$mg-z-index-*` SCSS variables replace scattered magic numbers. Nav-zone values (`nav: 10`, `sticky: 11`, `nav-toggle: 14`, `header: 22`) are frozen; above that: `drawer: 2000`, `dropdown: 2500`, `modal: 5000`, `toast: 5500`; `$mg-z-index-behind: -1` for pseudo-element backgrounds. Range 23–1999 is unclaimed — available for custom Drupal elements above the header but below drawers. See the new "Z-index layers" page in Storybook.
 - **OnThisPageNav: horizontal overflow scroll arrows:** `<` / `>` buttons appear when the nav bar has more items than fit in view. Buttons are RTL-aware, manage keyboard focus when hidden (WCAG 2.4.3 Focus Order; 2.1.1 Keyboard), and respect `prefers-reduced-motion` (WCAG 2.3.3). ([#888](https://github.com/unisdr/undrr-mangrove/pull/888))
 - **Vanilla JS lifecycle contract standardized** ([#886](https://github.com/unisdr/undrr-mangrove/pull/886)): `show-more.js`, `tabs.js`, and `on-this-page-nav.js` share a consistent initialization contract: auto-init on `DOMContentLoaded`, `data-mg-*-skip-auto-init` opt-out, idempotency guard, single-element scope. All three are safe to load as `type="module"` directly from the CDN.
@@ -173,7 +173,7 @@ UI control icons (search, menu, arrows) are most visibly changed. Domain icons o
 
 1. Update your dependency: `yarn add @undrr/undrr-mangrove@^1.5.0` (or update `package.json` and run `yarn install`)
 2. If you load Mangrove CSS from the CDN, update the version number in your `<link>` tags
-3. Copy the updated compiled CSS to your Drupal child themes. **If you are on a legacy theme (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.), copy the updated legacy file — not `style.css`.** See the [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) for the full source-to-destination mapping.
+3. Copy the updated compiled CSS to your Drupal child themes. **If you are on a legacy theme (`style-legacy.css`, `style-preventionweb-legacy.css`, etc.), copy the updated legacy file — not `style.css`.** See the [CDN reference](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) for the full source-to-destination mapping.
 4. Check for `mg-button-arrow` and `For_Primary` usages — see [Breaking changes](#breaking-changes)
 
 ```

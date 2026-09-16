@@ -1,6 +1,6 @@
 # Accessibility
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-accessibility--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-accessibility--docs).
 
 Accessible design improves usability for everyone. Mangrove components target [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA, but product-level implementation still determines final accessibility.
 
@@ -285,6 +285,6 @@ Mangrove ships five themes (UNDRR, PreventionWeb, IRP, MCR2030, DELTA Resilience
 ## Next steps
 
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist (12 accessibility items)
-- [Best practices](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices--docs) — architecture and styling patterns
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — accessibility requirements for component authors
-- [Testing](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) — jest-axe and manual accessibility testing
+- [Best practices](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-best-practices--docs) — architecture and styling patterns
+- [Component standards](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — accessibility requirements for component authors
+- [Testing](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-testing--docs) — jest-axe and manual accessibility testing

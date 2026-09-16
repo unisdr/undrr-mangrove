@@ -24,7 +24,7 @@ If you only need the release highlights, start here:
 >
 > **If you import Mangrove SCSS directly** or override `$mg-color-*` / `$mg-spacing-*` variables in your own stylesheets: see the [breaking changes](#breaking-changes) below.
 
-> _Edits here show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs)._
+> _Edits here show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs)._
 
 ## Try the prerelease
 
@@ -93,7 +93,7 @@ Alpha.2 applies a shared experience direction without mechanically homogenising 
 - Every compiled CSS bundle includes a preserved Mangrove version banner synchronized from `package.json`, making deployed asset versions visible in source and diagnostics.
 - The Yarn lockfile is synchronized with the first alpha's dependency removals, so immutable installs succeed from the release commit.
 
-Alpha.2 has been checked across desktop and mobile layouts, Chromium and Firefox, RTL, long labels, keyboard focus, reduced motion, forced colours and representative UNDRR themes. See the [Experience principles](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-experience-principles--docs) for the design guardrails behind these changes.
+Alpha.2 has been checked across desktop and mobile layouts, Chromium and Firefox, RTL, long labels, keyboard focus, reduced motion, forced colours and representative UNDRR themes. See the [Experience principles](https://preventionweb.github.io/undrr-mangrove/?path=/docs/design-decisions-experience-principles--docs) for the design guardrails behind these changes.
 
 ### Alpha.3 token pipeline and colour methodology
 
@@ -321,7 +321,7 @@ Only Regular (400) and Bold (700) are published in the UNDRR asset library for e
 
 Per the CSS font-matching rules a target of `600` resolves up to Bold, but a target of `400`-`500` resolves *down*, so `font-weight: 500` renders Regular in Arabic. That is less of a divergence from Latin than it first appears: Roboto publishes a Medium, but **Roboto Condensed does not**, so compact chrome set in the condensed face already renders Regular at 500 in both scripts. Only the `font-weight: 500` declarations sitting on the Roboto body face actually differ. This was equally true of Dubai.
 
-**One typographic inconsistency went with it.** Arabic buttons now take the body family, matching the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs) and the CtaButton, Chips and ShareButtons components. A bare `<button>` and `.mg-preview-access__submit` previously took the headings family, so two buttons on one page could render in two typefaces — invisible for as long as both Arabic tokens resolved to Dubai.
+**One typographic inconsistency went with it.** Arabic buttons now take the body family, matching the [review checklist](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs) and the CtaButton, Chips and ShareButtons components. A bare `<button>` and `.mg-preview-access__submit` previously took the headings family, so two buttons on one page could render in two typefaces — invisible for as long as both Arabic tokens resolved to Dubai.
 
 **Two costs worth stating plainly.**
 
@@ -394,7 +394,7 @@ Otherwise the token rewrite carries the values it started with, apart from [thre
 
 **Sub-brand consumers (PreventionWeb, IRP, MCR, DELTA) have one required change.** Brand colors previously baked into every component rule at compile time; they now live in a `.mg-theme-{brand}` selector block. Add `class="mg-theme-{brand}"` to `<body>` or a wrapping element, or components render with the default UNDRR palette instead of the brand palette. See [Sub-brand theming migration](#sub-brand-theming-migration).
 
-**Browser floor changed.** 2.0 now *requires* CSS custom property support: because every color and spacing value resolves through `var(--mg-*)` at runtime, a browser without custom-property support loses **all** Mangrove color and spacing — not just an effect here and there. (In 1.x those values were baked in, so an old browser still rendered.) Alpha-composited colors — overlays, hover tints, modal scrims — additionally use the `rgb(var() / alpha)` syntax. Every browser in the [supported matrix](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-browser-support--docs) handles both correctly; this only matters for browsers below that floor.
+**Browser floor changed.** 2.0 now *requires* CSS custom property support: because every color and spacing value resolves through `var(--mg-*)` at runtime, a browser without custom-property support loses **all** Mangrove color and spacing — not just an effect here and there. (In 1.x those values were baked in, so an old browser still rendered.) Alpha-composited colors — overlays, hover tints, modal scrims — additionally use the `rgb(var() / alpha)` syntax. Every browser in the [supported matrix](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-browser-support--docs) handles both correctly; this only matters for browsers below that floor.
 
 ## Breaking changes
 
@@ -580,18 +580,18 @@ Faces are declared outside the brand mixins, so that assignment applies to **eve
 
 #### One font import, imported once
 
-`_fonts.scss` is the single font import. It owns the `@font-face` blocks and the Arabic script map, and every build path already reaches it: the seven entry points, the shared import list every UNDRR Drupal theme compiles (`undrr_common/scss/_mangrove-components.scss`, which names `fonts` but reaches no entry point), and the per-component recipe in the [Sass integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-sass-integration--docs). An earlier draft put the map in a second file that only the entry points reached, which would have shipped every production site the role definitions with no Arabic map behind them — Arabic asking for Roboto, which has no Arabic coverage.
+`_fonts.scss` is the single font import. It owns the `@font-face` blocks and the Arabic script map, and every build path already reaches it: the seven entry points, the shared import list every UNDRR Drupal theme compiles (`undrr_common/scss/_mangrove-components.scss`, which names `fonts` but reaches no entry point), and the per-component recipe in the [Sass integration guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-sass-integration--docs). An earlier draft put the map in a second file that only the entry points reached, which would have shipped every production site the role definitions with no Arabic map behind them — Arabic asking for Roboto, which has no Arabic coverage.
 
 **Import it exactly once.** Sass's legacy `@import` re-emits, so a second import duplicates all 32 `@font-face` blocks. A test counts them in every bundle and in the consumer import list.
 
 #### If you write SCSS against Mangrove
 
-Two authoring rules changed, and both are in the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs).
+Two authoring rules changed, and both are in the [review checklist](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs).
 
 - **Do not write `:lang(ar)` font rules.** Nineteen component-level blocks were deleted. Script routing lives in `_fonts.scss` and nowhere else; a component that names a role gets Arabic for free, and a component-level override takes it back out of the map. This supersedes the pattern that [#1091](https://github.com/unisdr/undrr-mangrove/pull/1091) and [#1093](https://github.com/unisdr/undrr-mangrove/pull/1093) both worked on.
 - **Do not declare a family on `h1`–`h6`, `p`, `th`, `td` or a bare `header`.** They inherit `text` from `body`; h1–h3 additionally get `heading` from `_foundational.scss`, and that rule is scoped to `:lang(ar)` on purpose. In Latin `heading` and `text` are the same face, so an unconditional declaration would buy nothing and cost a great deal: at (0,0,1) it ties with a consuming theme's own `h1` rule and wins on source order, because `mangrove.css` loads last. Latin headings therefore stay on pure inheritance, exactly as in 1.x, and a theme's brand face survives.
 
-Full reference: [Fonts](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-fonts--docs).
+Full reference: [Fonts](https://preventionweb.github.io/undrr-mangrove/?path=/docs/design-decisions-fonts--docs).
 
 ## Sub-brand theming migration
 
@@ -651,7 +651,7 @@ color: rgb(var(--mg-color-interactive));
 background: rgb(var(--mg-color-interactive) / 0.1);  /* with alpha */
 ```
 
-Full token list: [Design decisions/Colors](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-colors--docs), [Design decisions/Spacing](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-spacing--docs).
+Full token list: [Design decisions/Colors](https://preventionweb.github.io/undrr-mangrove/?path=/docs/design-decisions-colors--docs), [Design decisions/Spacing](https://preventionweb.github.io/undrr-mangrove/?path=/docs/design-decisions-spacing--docs).
 
 ## Feedback
 

@@ -83,7 +83,7 @@ mgShowMore([myButton]);
 
 ### Skipping auto-initialization
 
-Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This is useful when another script must run first (e.g. Drupal behaviors):
+Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This is useful when another script must run first (e.g. Drupal behaviors). Call `mgShowMore` yourself once that setup is complete:
 
 <Source language="html" code={`
 <a data-mg-show-more data-mg-show-more-skip-auto-init
@@ -91,8 +91,7 @@ Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This i
 
 <script type="module">
   import {mgShowMore} from
-  'https://assets.undrr.org/mangrove/2.0.0-beta.3/js/show-more.js'; //
-  Initialize after other setup is complete
+  'https://assets.undrr.org/mangrove/2.0.0-beta.3/js/show-more.js';
   mgShowMore([document.querySelector('[data-mg-show-more-skip-auto-init]')]);
 </script>
 

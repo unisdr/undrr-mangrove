@@ -17,7 +17,7 @@ You are writing documentation for **Mangrove**, UNDRR's Storybook-powered React 
   - **Markdown files** in `docs/` — developer guides (HYDRATION.md, TESTING.md, RELEASES.md, WRITING.md, etc.)
   - **JSDoc** in component source — prop documentation auto-extracted by Storybook's react-docgen
   - **CLAUDE.md** — AI assistant instructions (meta-documentation)
-- **Storybook docs**: Published at https://unisdr.github.io/undrr-mangrove/
+- **Storybook docs**: Published at https://preventionweb.github.io/undrr-mangrove/
 - **Writing style**: Follow `docs/WRITING-SHORT.md` — plain language, front-load key info, sentence case, gender-neutral terms (UN guidelines)
 - **Component API docs**: JSDoc on each prop, PropTypes for validation, documented in MDX with usage examples
 - **Gold standard**: `stories/Components/Pager/` — has excellent MDX, JSDoc, and story coverage

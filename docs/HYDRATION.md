@@ -1,10 +1,10 @@
 # Hydration guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
 
 Mangrove hydrates React components into server-rendered containers (`data-mg-*`). Use `createHydrator` to query DOM nodes, extract props with `fromElement`, manage roots, and recover original HTML on mount errors.
 
-Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803) · Component authoring guide: [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs).
+Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803) · Component authoring guide: [Adding hydration support](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs).
 
 ## Hydration flow
 
@@ -165,8 +165,8 @@ This is Layer 3: consumer-owned mapping logic on top of shared hydration lifecyc
 
 ## Related docs
 
-- [Getting started guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs)
-- [Vanilla HTML/CSS guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
-- [React integration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-react-integration--docs)
-- [CDN reference](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs)
-- [Adding hydration support](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs)
+- [Getting started guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-getting-started-guide--docs)
+- [Vanilla HTML/CSS guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
+- [React integration guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-react-integration--docs)
+- [CDN reference](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs)
+- [Adding hydration support](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs)

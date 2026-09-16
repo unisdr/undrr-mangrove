@@ -1,10 +1,10 @@
 # Adding hydration support
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION-AUTHORING.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION-AUTHORING.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-hydration--docs).
 
 How to add layered hydration support so a Mangrove component can render into
 server-generated HTML containers. For consumer usage, see the
-[Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
+[Hydration guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs).
 
 ## Quick reference
 
@@ -210,6 +210,6 @@ if (contentWrapper) {
 
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
-- [Hydration guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs) — consumer-facing guide for using hydrated components
+- [Hydration guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-hydration-guide--docs) — consumer-facing guide for using hydrated components
 - [Architecture](ARCHITECTURE.md) — build system and distribution channels
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference
+- [Component standards](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference

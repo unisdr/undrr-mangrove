@@ -1,8 +1,8 @@
 # Component guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-step-by-step--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-step-by-step--docs).
 
-A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) in Storybook.
+A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component standards](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) in Storybook.
 
 ## Decision tree: what files do I need?
 
@@ -48,11 +48,11 @@ Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.jsx` as a 
 
 > **Accessibility first**: Before writing JSX, review the [accessibility requirements](ACCESSIBILITY.md) for semantic HTML, keyboard interaction patterns, and ARIA attributes. It's much easier to build in accessibility from the start than to add it later.
 
-See `Pager.jsx` for a complete example and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for React and PropTypes standards.
+See `Pager.jsx` for a complete example and the [component standards](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for React and PropTypes standards.
 
 ## Step 2: Create the SCSS file
 
-Create `stories/Components/{Category}/{ComponentName}/component-name.scss` using SCSS variables from `_variables.scss` and BEM naming. For z-index: use `$mg-z-index-*` tokens for global stacking (fixed, sticky, portaled elements) and derive backdrops with `$token - 1` arithmetic; use raw values with comments for local stacking inside a component's own stacking context — see [Design decisions/Z-index layers](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-z-index-layers--docs). See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for styling guidelines.
+Create `stories/Components/{Category}/{ComponentName}/component-name.scss` using SCSS variables from `_variables.scss` and BEM naming. For z-index: use `$mg-z-index-*` tokens for global stacking (fixed, sticky, portaled elements) and derive backdrops with `$token - 1` arithmetic; use raw values with comments for local stacking inside a component's own stacking context — see [Design decisions/Z-index layers](https://preventionweb.github.io/undrr-mangrove/?path=/docs/design-decisions-z-index-layers--docs). See the [component standards](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for styling guidelines.
 
 Every component stylesheet must begin with a docblock comment containing a concise 1–2 sentence description of what the component does and a link to its full `.mdx` documentation file on GitHub:
 
@@ -79,7 +79,7 @@ This is required — without it, your styles won't be included in any theme's co
 
 Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.stories.jsx` using CSF3 object syntax (not `Template.bind({})`). Set `component` in the default export for autodocs.
 
-Use `{ args: {} }` for simple stories, `{ render: (args) => ... }` when you need custom JSX wrapping. See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for story format details.
+Use `{ args: {} }` for simple stories, `{ render: (args) => ... }` when you need custom JSX wrapping. See the [component standards](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for story format details.
 
 ### Storybook ID derivation
 
@@ -95,7 +95,7 @@ Create `stories/Components/{Category}/{ComponentName}/__tests__/{ComponentName}.
 
 ## Step 5: Write MDX documentation
 
-Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for documentation requirements.
+Create `stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx` with overview, usage examples, props table, CSS class reference, and changelog. See `Pager.mdx` for the full structure and the [component standards](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for documentation requirements.
 
 Import Storybook doc blocks from `@storybook/addon-docs/blocks` (not `@storybook/blocks`, which was removed in Storybook 9):
 
@@ -257,4 +257,4 @@ Run through the [review checklist](REVIEW-CHECKLIST.md) before submitting.
 - [Hydration guide](HYDRATION.md) — consumer-facing `createHydrator` API and integration examples
 - [Testing guide](TESTING.md) — unit, visual, and accessibility testing
 - [Writing guidelines](WRITING-SHORT.md) — UX writing standards
-- [Component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference (Storybook)
+- [Component standards](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) — code standards reference (Storybook)
