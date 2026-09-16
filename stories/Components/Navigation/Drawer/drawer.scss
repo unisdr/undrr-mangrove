@@ -1,0 +1,136 @@
+.mg-drawer {
+  position: fixed;
+  z-index: var(--mg-z-index-drawer, 2000);
+  display: flex;
+  flex-direction: column;
+  background: var(--mg-color-background, #fff);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.2);
+  transition: transform 0.3s ease-in-out;
+  
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &--start {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 100vw;
+    transform: translateX(-100%);
+
+    &.is-open {
+      transform: translateX(0);
+    }
+  }
+
+  &--end {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 100vw;
+    transform: translateX(100%);
+
+    &.is-open {
+      transform: translateX(0);
+    }
+  }
+
+  &--bottom {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 320px;
+    max-height: 100vh;
+    transform: translateY(100%);
+
+    &.is-open {
+      transform: translateY(0);
+    }
+  }
+
+  &__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(0 0 0 / 0.5);
+    z-index: calc(var(--mg-z-index-drawer, 2000) - 1);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid var(--mg-color-border, #ccc);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  &__close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  &__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+  }
+
+  &__footer {
+    padding: 1rem;
+    border-top: 1px solid var(--mg-color-border, #ccc);
+  }
+}
+
+.mg-floating-panel {
+  position: absolute;
+  z-index: var(--mg-z-index-drawer, 2000);
+  flex-direction: column;
+  background: var(--mg-color-background, #fff);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+  border-radius: 8px;
+  width: 300px;
+  max-width: 90vw;
+  display: none;
+
+  &.is-open {
+    display: flex;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--mg-color-border, #ccc);
+    cursor: grab;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  &__close {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+
+  &__body {
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+}

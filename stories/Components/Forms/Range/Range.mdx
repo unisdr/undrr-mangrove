@@ -1,0 +1,34 @@
+import { Meta, Story, Canvas, Controls } from '@storybook/blocks';
+import * as RangeStories from './Range.stories';
+
+<Meta of={RangeStories} />
+
+# Range
+
+The Range component allows users to select a value or range of values from a defined set. It is styled to fit within the UNDRR Mangrove Design System, supporting continuous and discrete (stepped) options.
+
+## Continuous
+
+A standard continuous range slider.
+
+<Canvas of={RangeStories.Continuous} />
+
+## Stepped
+
+A stepped range slider with predefined options, such as climate targets.
+
+<Canvas of={RangeStories.Stepped} />
+
+## Disabled
+
+A disabled range slider.
+
+<Canvas of={RangeStories.Disabled} />
+
+## Props
+
+<Controls />
+
+## Changelog
+
+- **Issue #1155**: Initial implementation of the Range slider component.

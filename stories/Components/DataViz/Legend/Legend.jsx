@@ -15,37 +15,21 @@ export const Legend = ({
 }) => {
   const baseClass = 'mg-legend';
   const typeClass = `${baseClass}--${type}`;
-  const orientationClass =
-    orientation === 'vertical' ? `${baseClass}--vertical` : '';
+  const orientationClass = orientation === 'vertical' ? `${baseClass}--vertical` : '';
   const layoutClass = layout !== 'default' ? `${baseClass}--${layout}` : '';
 
-  const classes = [
-    baseClass,
-    typeClass,
-    orientationClass,
-    layoutClass,
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = [baseClass, typeClass, orientationClass, layoutClass, className].filter(Boolean).join(' ');
 
   const renderContinuous = () => (
     <div className={`${baseClass}__bar-wrapper`}>
-      <div
-        className={`${baseClass}__bar ${rampClass}`}
+      <div 
+        className={`${baseClass}__bar ${rampClass}`} 
         style={customRamp ? { background: customRamp } : {}}
       />
       {ticks.length > 0 && (
         <div className={`${baseClass}__ticks`}>
           {ticks.map((tick, index) => (
-            <div
-              key={index}
-              className={`${baseClass}__tick`}
-              style={{
-                '--mg-legend-tick-pos':
-                  tick.position || `${(index / (ticks.length - 1)) * 100}%`,
-              }}
-            >
+            <div key={index} className={`${baseClass}__tick`} style={{ '--mg-legend-tick-pos': tick.position || `${(index / (ticks.length - 1)) * 100}%` }}>
               <span className={`${baseClass}__tick-label`}>{tick.label}</span>
             </div>
           ))}
@@ -56,28 +40,15 @@ export const Legend = ({
 
   const renderStepped = () => (
     <div className={`${baseClass}__bar-wrapper`}>
-      <div
-        className={`${baseClass}__bar ${baseClass}__bar--stepped ${rampClass}`}
-      >
+      <div className={`${baseClass}__bar ${baseClass}__bar--stepped ${rampClass}`}>
         {items.map((item, index) => (
-          <div
-            key={index}
-            className={`${baseClass}__step`}
-            style={item.color ? { backgroundColor: item.color } : {}}
-          ></div>
+          <div key={index} className={`${baseClass}__step`} style={item.color ? { backgroundColor: item.color } : {}}></div>
         ))}
       </div>
       {ticks.length > 0 && (
         <div className={`${baseClass}__ticks`}>
           {ticks.map((tick, index) => (
-            <div
-              key={index}
-              className={`${baseClass}__tick`}
-              style={{
-                '--mg-legend-tick-pos':
-                  tick.position || `${(index / (ticks.length - 1)) * 100}%`,
-              }}
-            >
+            <div key={index} className={`${baseClass}__tick`} style={{ '--mg-legend-tick-pos': tick.position || `${(index / (ticks.length - 1)) * 100}%` }}>
               <span className={`${baseClass}__tick-label`}>{tick.label}</span>
             </div>
           ))}
@@ -90,14 +61,12 @@ export const Legend = ({
     <ul className={`${baseClass}__list`}>
       {items.map((item, index) => (
         <li key={index} className={`${baseClass}__item`}>
-          <span
-            className={`${baseClass}__swatch`}
+          <span 
+            className={`${baseClass}__swatch`} 
             style={item.color ? { backgroundColor: item.color } : {}}
           />
           <span className={`${baseClass}__label`}>{item.label}</span>
-          {item.value && (
-            <span className={`${baseClass}__value`}>{item.value}</span>
-          )}
+          {item.value && <span className={`${baseClass}__value`}>{item.value}</span>}
         </li>
       ))}
     </ul>
