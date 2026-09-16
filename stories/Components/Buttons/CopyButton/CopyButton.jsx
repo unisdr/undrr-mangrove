@@ -34,7 +34,14 @@ export const CopyButton = ({
     labels.tooltipLabel ||
     DEFAULT_COPY_BUTTON_LABELS.tooltipLabel;
 
-  const [copied, setCopied] = useState(false);
+  // idle | copied | failed
+  const [status, setStatus] = useState('idle');
+  const copied = status === 'copied';
+  const failed = status === 'failed';
+  const failedLabel =
+    labels.failedLabel || DEFAULT_COPY_BUTTON_LABELS.failedLabel;
+  const failedTooltipLabel =
+    labels.failedTooltipLabel || DEFAULT_COPY_BUTTON_LABELS.failedTooltipLabel;
   const timeoutRef = useRef(null);
 
   useEffect(() => {
@@ -45,20 +52,24 @@ export const CopyButton = ({
     };
   }, []);
 
+  const showStatus = (next, duration) => {
+    setStatus(next);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setStatus('idle');
+    }, duration);
+  };
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(textToCopy);
-      setCopied(true);
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      showStatus('copied', 2000);
     } catch (err) {
       console.error('Failed to copy!', err);
+      // Longer, so the reader has time to act on the manual-copy hint.
+      showStatus('failed', 5000);
     }
   };
 
@@ -95,16 +106,17 @@ export const CopyButton = ({
       */}
       <span
         className={classNames('mg-copy-button__feedback', {
-          'mg-copy-button__feedback--visible': copied,
+          'mg-copy-button__feedback--visible': copied || failed,
+          'mg-copy-button__feedback--error': failed,
         })}
-        role="status"
         aria-hidden="true"
       >
-        {tooltipLabel}
+        {failed ? failedTooltipLabel : tooltipLabel}
       </span>
 
       <span className="mg-u-sr-only" aria-live="polite">
         {copied ? copiedLabel : ''}
+        {failed ? failedLabel : ''}
       </span>
     </button>
   );
@@ -117,6 +129,8 @@ CopyButton.propTypes = {
     ariaLabel: PropTypes.string,
     copiedLabel: PropTypes.string,
     tooltipLabel: PropTypes.string,
+    failedLabel: PropTypes.string,
+    failedTooltipLabel: PropTypes.string,
   }),
   ariaLabel: PropTypes.string,
   copiedLabel: PropTypes.string,

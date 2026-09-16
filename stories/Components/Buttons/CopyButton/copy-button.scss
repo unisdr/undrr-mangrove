@@ -1,8 +1,10 @@
 /**
- * @file
- * CopyButton component stylesheet.
- * One-click copy button with micro-feedback tooltip and aria-live announcements.
- * @see https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Buttons/CopyButton/CopyButton.mdx
+ * Copy button
+ *
+ * One-click copy button with a transient feedback tooltip and aria-live announcements.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Buttons/CopyButton/CopyButton.mdx
  */
 
 .mg-copy-button {
@@ -23,19 +25,25 @@
     padding: var(--mg-spacing-50) var(--mg-spacing-100);
     border-radius: var(--mg-radius-button);
     font-family: var(--mg-font-family-ui);
-    font-size: var(--mg-font-size-100);
+    font-size: $mg-font-size-200;
     font-weight: 500;
     line-height: 1.2;
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    z-index: var(--mg-z-index-tooltip, 3000);
+
+    // Local stacking: only needs to sit above neighbouring page content.
+    z-index: 10;
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
     transition:
-      opacity 150ms ease,
-      transform 150ms ease,
-      visibility 150ms ease;
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      visibility var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
 
     &::after {
       content: "";
@@ -47,6 +55,17 @@
       border-style: solid;
       border-color: rgb(var(--mg-color-neutral-900)) transparent transparent
         transparent;
+    }
+
+    &--error {
+      white-space: normal;
+      inline-size: max-content;
+      max-inline-size: 16rem;
+      background-color: rgb(var(--mg-color-red-900));
+
+      &::after {
+        border-top-color: rgb(var(--mg-color-red-900));
+      }
     }
 
     &--visible {

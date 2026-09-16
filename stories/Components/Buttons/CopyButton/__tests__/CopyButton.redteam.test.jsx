@@ -76,6 +76,13 @@ describe('CopyButton Red-Team Security & Stress Regressions', () => {
     expect(consoleErrorSpy).toHaveBeenCalled();
     // Visual copied state should not be applied on failed copy
     expect(btn).not.toHaveClass('mg-copy-button--copied');
+    // The reader is told the copy failed and what to do instead
+    expect(
+      screen.getByText('Copy failed. Select the text and copy it manually.')
+    ).toBeInTheDocument();
+    expect(btn.querySelector('.mg-copy-button__feedback')).toHaveClass(
+      'mg-copy-button__feedback--error'
+    );
   });
 
   it('handles component unmount during active feedback countdown safely', async () => {
@@ -134,11 +141,18 @@ describe('CopyButton Red-Team Security & Stress Regressions', () => {
     btn.setAttribute('data-text-to-copy', 'fallback');
     document.body.appendChild(btn);
 
+    const live = document.createElement('span');
+    live.className = 'mg-u-sr-only';
+    btn.appendChild(live);
+
     mgCopyButton(btn);
     btn.click();
     await Promise.resolve();
 
     expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(live.textContent).toBe(
+      'Copy failed. Select the text and copy it manually.'
+    );
     document.body.removeChild(btn);
   });
 });

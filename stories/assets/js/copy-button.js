@@ -9,9 +9,11 @@
  *   data-mg-copy-button
  *   data-text-to-copy="https://example.org"
  *   data-tooltip-label="Copied!"
- *   data-copied-label="Copied to clipboard.">
+ *   data-copied-label="Copied to clipboard."
+ *   data-failed-tooltip-label="Copy failed"
+ *   data-failed-label="Copy failed. Select the text and copy it manually.">
  *   <span class="mg-icon mg-icon-copy mg-button__icon" aria-hidden="true"></span>
- *   <span class="mg-copy-button__feedback" role="status" aria-hidden="true">Copied!</span>
+ *   <span class="mg-copy-button__feedback" aria-hidden="true">Copied!</span>
  *   <span class="mg-u-sr-only" aria-live="polite"></span>
  * </button>
  *
@@ -92,6 +94,33 @@ export function mgCopyButton(scope) {
         }, 2000);
       } catch (err) {
         console.error('[mg-copy-button] Failed to copy text:', err);
+
+        const feedbackEl = button.querySelector('.mg-copy-button__feedback');
+        if (feedbackEl) {
+          feedbackEl.textContent =
+            button.dataset.failedTooltipLabel || 'Copy failed';
+          feedbackEl.classList.add(
+            'mg-copy-button__feedback--visible',
+            'mg-copy-button__feedback--error'
+          );
+        }
+        const liveRegion = button.querySelector('.mg-u-sr-only');
+        if (liveRegion) {
+          liveRegion.textContent =
+            button.dataset.failedLabel ||
+            'Copy failed. Select the text and copy it manually.';
+        }
+
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          if (feedbackEl) {
+            feedbackEl.classList.remove(
+              'mg-copy-button__feedback--visible',
+              'mg-copy-button__feedback--error'
+            );
+          }
+          if (liveRegion) liveRegion.textContent = '';
+        }, 5000);
       }
     });
   });

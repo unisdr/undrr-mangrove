@@ -48,7 +48,14 @@ export default function copyButtonFromElement(container) {
     ariaLabel,
     copiedLabel,
     tooltipLabel,
-    labels: Object.keys(parsedLabels).length > 0 ? parsedLabels : undefined,
+    labels: (() => {
+      const merged = { ...parsedLabels };
+      if (dataset.failedLabel) merged.failedLabel = dataset.failedLabel;
+      if (dataset.failedTooltipLabel) {
+        merged.failedTooltipLabel = dataset.failedTooltipLabel;
+      }
+      return Object.keys(merged).length > 0 ? merged : undefined;
+    })(),
     variant: dataset.variant || 'outline',
     size: dataset.size || undefined,
     className: dataset.className || undefined,

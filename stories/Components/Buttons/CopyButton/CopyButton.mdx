@@ -67,10 +67,10 @@ Drupal.behaviors.copyButton = {
 If your Drupal site uses Mangrove's shared React hydration runtime with import maps:
 
 ```js
-import createHydrator from '@undrr/undrr-mangrove/hydrate';
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
 import CopyButton, {
   fromElement,
-} from '@undrr/undrr-mangrove/components/CopyButton';
+} from '@undrr/undrr-mangrove/components/CopyButton.js';
 
 createHydrator({
   selector: '[data-mg-copy-button]',
@@ -110,5 +110,6 @@ import { CopyButton } from '@undrr/undrr-mangrove';
 
 ## Changelog
 
-- **v1.1.0** — 2026-09-16 ([#1161](https://github.com/unisdr/undrr-mangrove/issues/1161)): Added standalone zero-dependency vanilla JS script (`stories/assets/js/copy-button.js`) and Layer 2 React hydration (`CopyButton.fromElement.js`, `CopyButton.hydrate.js`).
-- **v1.0.0** — 2026-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements.
+- **1.0.0** — 2026-09-16 ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements.
+  - Standalone zero-dependency vanilla script (`stories/assets/js/copy-button.js`) and Layer 2 React hydration (`CopyButton.fromElement.js`, `CopyButton.hydrate.js`) ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
+  - Before rc.1: a failed copy shows an error tooltip and announces a manual-copy hint (`failedLabel`, `failedTooltipLabel`, translated); tooltip motion respects reduced-motion; real font-size token and a local z-index instead of an undefined tooltip token.
