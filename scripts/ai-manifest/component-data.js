@@ -209,13 +209,14 @@ export const COMPONENT_DATA = {
       'mg-copy-button--copied',
       'mg-copy-button__feedback',
       'mg-copy-button__feedback--visible',
+      'mg-copy-button__feedback--error',
     ],
     examples: [
       {
         name: 'Default copy button',
         html: `<button type="button" class="mg-button mg-button-primary mg-button-outline mg-button--icon mg-copy-button" data-mg-copy-button data-text-to-copy="https://preventionweb.net" aria-label="Copy link to clipboard">
   <span class="mg-icon mg-icon-copy mg-button__icon" aria-hidden="true"></span>
-  <span class="mg-copy-button__feedback" role="status" aria-hidden="true">Copied!</span>
+  <span class="mg-copy-button__feedback" aria-hidden="true">Copied!</span>
   <span class="mg-u-sr-only" aria-live="polite"></span>
 </button>`,
       },
@@ -1011,7 +1012,7 @@ npm run build</code></pre>
   },
   'components-forms-range': {
     description:
-      'Range slider component supporting continuous and stepped intervals with datalist tick marks.',
+      'Prototype. Range slider supporting continuous and stepped intervals with labelled tick marks; stepped sliders announce the tick label via aria-valuetext.',
     cssClasses: ['mg-range', 'mg-range__ticks'],
   },
 
@@ -1569,7 +1570,7 @@ npm run build</code></pre>
   // --- Data Viz (v1 prototypes) ---
   'components-dataviz-legend': {
     description:
-      'Map and chart data visualization legend supporting continuous ramps, stepped intervals, and categorical swatches.',
+      'Prototype. Map and chart data visualization legend supporting continuous ramps, stepped intervals, and categorical swatches. Rendered as a group named by its title.',
     cssClasses: [
       'mg-legend',
       'mg-legend__title',
@@ -1594,7 +1595,7 @@ npm run build</code></pre>
   // --- Navigation ---
   'components-navigation-drawer': {
     description:
-      'Slide-over off-canvas drawer and floating panel for secondary navigation, filters, or details. Supports backdrop dismissal, escape key closure, and server-rendered HTML hydration via createHydrator with data-mg-drawer.',
+      'Prototype. Slide-over off-canvas drawer and floating panel for secondary navigation, filters, or details. Modal dialog with focus management, backdrop and Escape dismissal; string content renders as text. Hydration via createHydrator with data-mg-drawer (container needs an id) and data-mg-drawer-trigger buttons; server-rendered body markup is sanitised.',
     cssClasses: [
       'mg-drawer',
       'mg-drawer--start',
@@ -1616,7 +1617,7 @@ npm run build</code></pre>
   },
   'components-navigation-tree': {
     description:
-      'Accessible tree and nested hierarchy view conforming to the ARIA Treeview pattern. Supports roving tabindex, full keyboard navigation (arrows, Home, End, Enter, Space), guides, controlled/uncontrolled state, and separate toggle buttons for linked parent sections.',
+      'Prototype. Accessible tree and nested hierarchy view conforming to the ARIA Treeview pattern. Supports roving tabindex, full keyboard navigation (arrows, Home, End, Enter, Space), guides, controlled/uncontrolled state, and separate toggle buttons for linked parent sections.',
     cssClasses: [
       'mg-tree',
       'mg-tree__group',
