@@ -8,6 +8,11 @@
 .mg-copy-button {
   position: relative;
 
+  // Floating micro-feedback tooltip. Scoped here because icon-only copy
+  // controls need transient overlay confirmation without text-swapping layout shifts.
+  // If Mangrove later abstracts a generic Tooltip/Popover primitive (e.g. for
+  // multi-directional positioning, collision detection, or hover cards), this
+  // pattern can migrate to consume that shared atom.
   &__feedback {
     position: absolute;
     bottom: calc(100% + var(--mg-spacing-100));

@@ -67,6 +67,14 @@ export const CopyButton = ({
         aria-hidden="true"
       />
 
+      {/*
+        Micro-feedback tooltip: Scoped directly to CopyButton because icon-only
+        copy actions need transient floating feedback without disturbing the
+        button layout (unlike ShareButtons which swaps text in-place). If Mangrove
+        later introduces a shared Tooltip/Popover primitive with collision
+        detection and directional placement across multiple components, this
+        micro-feedback can be refactored to consume that shared component.
+      */}
       <span
         className={classNames('mg-copy-button__feedback', {
           'mg-copy-button__feedback--visible': copied,
