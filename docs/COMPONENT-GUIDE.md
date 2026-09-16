@@ -54,6 +54,19 @@ See `Pager.jsx` for a complete example and the [component standards](https://uni
 
 Create `stories/Components/{Category}/{ComponentName}/component-name.scss` using SCSS variables from `_variables.scss` and BEM naming. For z-index: use `$mg-z-index-*` tokens for global stacking (fixed, sticky, portaled elements) and derive backdrops with `$token - 1` arithmetic; use raw values with comments for local stacking inside a component's own stacking context — see [Design decisions/Z-index layers](https://unisdr.github.io/undrr-mangrove/?path=/docs/design-decisions-z-index-layers--docs). See the [component standards](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs) for styling guidelines.
 
+Every component stylesheet must begin with a docblock comment containing a concise 1–2 sentence description of what the component does and a link to its full `.mdx` documentation file on GitHub:
+
+```scss
+/**
+ * Component Name (ComponentName)
+ *
+ * Brief 1-2 sentence description of the component purpose, layout, and behaviors.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx
+ */
+```
+
 **Then add the import to `stories/assets/scss/_components.scss`:**
 
 ```scss

@@ -37,7 +37,8 @@ Keep a dedicated RTL, long-label, or translation-stress story only when it exerc
 Every component MDX file must include a `## Changelog` section tracking its version history. When submitting a PR that modifies a component, add a new changelog entry. This is separate from the project-level [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases).
 
 See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full format specification, issue link guidance, and examples.
-  - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
+
+- Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
 
 ## AI manifest for component discovery
 
@@ -54,20 +55,29 @@ Tips for better manifest output:
 - **Consider auto-rendering.** If your component renders cleanly in Node.js (no browser APIs), add a webpack entry in `webpack.config.js`, a `COMPONENT_IDS` mapping, and a `buildSampleProps()` entry — both in `scripts/ai-manifest/generate-ai-manifest.js`. Auto-rendered HTML stays in sync automatically and requires no manual maintenance.
 - **Run `yarn validate-manifest`** after changes to curated data. It checks for stale keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 
+## Component stylesheets and CSS documentation
+
+- **Docblocks on every stylesheet**: Every component SCSS file must begin with a docblock comment containing a concise 1–2 sentence description of what the component does and a direct link to its full `.mdx` file on GitHub (e.g., `https://github.com/unisdr/undrr-mangrove/blob/main/stories/.../Component.mdx`).
+- **Compiled CSS banners**: Build banners automatically guide developers and LLMs to Storybook docs (`https://preventionweb.github.io/undrr-mangrove/`) and the machine-readable LLM context (`https://preventionweb.github.io/undrr-mangrove/llms.txt`).
+- **Registration**: All component SCSS files must be imported in `stories/assets/scss/_components.scss`.
+
 ## Reviewing PRs
 
 Use the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-build-a-component-review-checklist--docs) when reviewing component PRs.
-  - Source: [`docs/REVIEW-CHECKLIST.md`](docs/REVIEW-CHECKLIST.md)
+
+- Source: [`docs/REVIEW-CHECKLIST.md`](docs/REVIEW-CHECKLIST.md)
 
 ## Submitting changes
 
 1. Create a feature branch from `main`.
 2. Write clear commits using Conventional Commits.
 3. Add or update Storybook docs if behavior or usage changes.
-4. If you changed component markup or CSS classes, update `scripts/ai-manifest/component-data.js`.
-5. Run tests and linters before you open a pull request (`yarn test`, `yarn lint`). For component-quality findings, also run `npx -y react-doctor@latest .` — see [`docs/AI-CODING-AGENTS.md`](docs/AI-CODING-AGENTS.md) for the house conventions it enforces.
-6. Validate against the [review checklist](docs/REVIEW-CHECKLIST.md).
-7. Reference the relevant issue in your PR description.
+4. Ensure the component SCSS file has a top docblock linking to its `.mdx` file and is imported in `_components.scss`.
+5. If you changed component markup or CSS classes, update `scripts/ai-manifest/component-data.js`.
+6. Run tests and linters before you open a pull request (`yarn test`, `yarn lint`). For component-quality findings, also run `npx -y react-doctor@latest .` — see [`docs/AI-CODING-AGENTS.md`](docs/AI-CODING-AGENTS.md) for the house conventions it enforces.
+7. Validate against the [review checklist](docs/REVIEW-CHECKLIST.md).
+8. Reference the relevant issue in your PR description.
 
 For more details on component standards and workflow, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).
-  - Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)
+
+- Source: [`stories/Documentation/ComponentContribution.mdx`](stories/Documentation/ComponentContribution.mdx)

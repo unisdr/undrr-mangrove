@@ -12,6 +12,7 @@ When you touch a component's JSX, SCSS, stories, or tests, read the [review chec
 
 Common misses:
 
+- **SCSS docblock comment**: every component stylesheet must begin with a docblock describing the component and linking to its full `.mdx` file on GitHub
 - **Changelog entry** in the component's MDX file (date + what changed)
 - **No `defaultProps`** — use destructured default parameters (deprecated in React 19)
 - **BEM naming** with `mg-` prefix on all CSS classes

@@ -217,6 +217,7 @@ All components must include comprehensive JSDoc comments to document their purpo
    - For components with complex nested props, document the structure clearly
    - Use array and object notation to indicate nested properties
    - Example:
+
    ```jsx
    /**
     * MegaMenu component that displays a navigation menu with sections and items
@@ -236,6 +237,21 @@ All components must include comprehensive JSDoc comments to document their purpo
    export function MegaMenu({ sections, delay = 300 }) {
      // Implementation
    }
+   ```
+
+4. **SCSS Stylesheet Documentation**
+   - Every component stylesheet (`.scss`) must begin with a docblock comment
+   - Include the component name, a concise 1–2 sentence description of what the component does, and a link to its full `.mdx` documentation file on GitHub
+   - Example:
+   ```scss
+   /**
+    * CTA Button (CtaButton)
+    *
+    * Primary, secondary, and tertiary call-to-action button styles with size variants and motion effects.
+    *
+    * Full documentation:
+    * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/CtaButton.mdx
+    */
    ```
 
 ### TypeScript components
