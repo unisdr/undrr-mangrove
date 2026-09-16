@@ -112,3 +112,14 @@ function MyPage() {
 ## Component Props
 
 <Controls />
+
+## Accessibility
+
+- Default status notices render with `role="status"` and `aria-live="polite"` so screen readers are informed of context changes politely without interrupting user flow.
+- Emergency and negative alert notices render with `role="alert"` and `aria-live="assertive"` for critical disruption messaging.
+- Close buttons on dismissible notices include explicit `aria-label` attribute and accessible focus rings.
+- Contrast between background surfaces, text, and border highlights conforms to WCAG 2.2 AA (minimum 4.5:1 text contrast).
+
+## Changelog
+
+- **2.0.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Initial implementation of the universal `Notice` / Alert banner component (`mg-notice`).

@@ -123,10 +123,10 @@ function MapWidget() {
 
 ## Accessibility
 
-- Container renders as an `<aside>` landmark with `role="status"` and `aria-live="polite"` so screen readers are informed of status changes without disrupting user focus.
+- Container renders as a `<div>` container with `role="status"` and `aria-live="polite"` so screen readers are informed of status changes without disrupting user focus.
 - Status labels use both visible text and color indicators, satisfying WCAG 2.2 SC 1.4.1 (Use of Color).
 - External status links include `target="_blank"`, `rel="noopener noreferrer"`, and an external icon with accessible text.
 
 ## Changelog
 
-- **March 2026**: Initial implementation of `.mg-service-notice` component with degraded and offline states, retry actions, overlay mode, Layer 2 hydration, and UN translations ([Issue #1155](https://github.com/unisdr/undrr-mangrove/issues/1155)).
+- **2.0.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Initial implementation of the `.mg-service-notice` component with degraded and offline states, retry actions, overlay mode, Layer 2 hydration, and UN translations ([Issue #1155](https://github.com/unisdr/undrr-mangrove/issues/1155)).
