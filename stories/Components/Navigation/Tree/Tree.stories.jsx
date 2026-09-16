@@ -15,3 +15,13 @@ export const Default = () => (
     <TreeItem id="2" label="Item 2" />
   </Tree>
 );
+
+export const WithLinks = () => (
+  <Tree>
+    <TreeItem id="1" label="Item 1" href="/item-1" asLink>
+      <TreeItem id="1-1" label="Item 1.1" href="/item-1-1" asLink />
+      <TreeItem id="1-2" label="Item 1.2" href="/item-1-2" asLink />
+    </TreeItem>
+    <TreeItem id="2" label="Item 2" href="/item-2" asLink />
+  </Tree>
+);
