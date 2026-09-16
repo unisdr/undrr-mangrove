@@ -61,7 +61,7 @@ details.mg-details {
       content: "+";
       display: flex;
       font-family: var(--mg-font-family-text);
-      font-size: $mg-font-size-400;
+      font-size: var(--mg-font-size-400);
       font-weight: 400;
       height: mg-rem(30);
       inset-inline-end: mg-rem(10);
@@ -131,7 +131,7 @@ details.mg-details {
 .mg-accordion {
   background-color: rgb(var(--mg-color-neutral-0));
   border: 1px solid rgb(var(--mg-color-neutral-300));
-  border-radius: var(--mg-radius-default, mg-rem(4));
+  border-radius: mg-rem(4);
   overflow: hidden;
 
   > details {

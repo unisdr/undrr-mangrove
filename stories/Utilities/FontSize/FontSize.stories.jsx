@@ -16,47 +16,52 @@ const sizes = [
   {
     className: 'mg-u-font-size-150',
     label: '150',
-    description: '1.125rem (no responsive scaling)',
+    description: '--mg-font-size-150 (0.703rem), no responsive scaling',
   },
   {
     className: 'mg-u-font-size-200',
     label: '200',
-    description: '1.25rem (no responsive scaling)',
+    description: '--mg-font-size-200 (0.781rem), no responsive scaling',
   },
   {
     className: 'mg-u-font-size-250',
     label: '250',
-    description: '1.4rem (no responsive scaling)',
+    description: '--mg-font-size-250 (0.875rem), no responsive scaling',
   },
   {
     className: 'mg-u-font-size-300',
     label: '300',
-    description: '1.6rem (no responsive scaling)',
+    description: '--mg-font-size-300 (1rem), no responsive scaling',
   },
   {
     className: 'mg-u-font-size-400',
     label: '400',
-    description: '1.6rem / 1.8rem at medium',
+    description:
+      '--mg-font-size-300 (1rem); --mg-font-size-400 (1.125rem) at medium',
   },
   {
     className: 'mg-u-font-size-500',
     label: '500',
-    description: '1.8rem / 2.3rem at medium',
+    description:
+      '--mg-font-size-400 (1.125rem); --mg-font-size-500 (1.438rem) at medium',
   },
   {
     className: 'mg-u-font-size-600',
     label: '600',
-    description: '2.3rem / 3.2rem at medium',
+    description:
+      '--mg-font-size-500 (1.438rem); --mg-font-size-600 (2rem) at medium',
   },
   {
     className: 'mg-u-font-size-800',
     label: '800',
-    description: '3.2rem / 3.6rem at medium',
+    description:
+      '--mg-font-size-600 (2rem); --mg-font-size-800 (2.25rem) at medium',
   },
   {
     className: 'mg-u-font-size-900',
     label: '900',
-    description: '3.6rem / 4rem at medium',
+    description:
+      '--mg-font-size-800 (2.25rem); --mg-font-size-900 (2.5rem) at medium',
   },
 ];
 

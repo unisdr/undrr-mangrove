@@ -276,7 +276,7 @@ export const AllVariants = {
         <div
           className="mg-hero mg-hero--contained"
           style={{
-            background: 'var(--mg-hero-bg, #004f91)',
+            background: 'rgb(var(--mg-color-hero))',
             padding: '2rem',
             margin: 0,
             width: 'auto',
