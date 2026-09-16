@@ -88,6 +88,63 @@ export const Accent = {
   ),
 };
 
+export const Subtle = {
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+      <span className="mg-tag mg-tag--subtle">Reference</span>
+      <span className="mg-tag mg-tag--subtle">Internal draft</span>
+      <span className="mg-tag mg-tag--subtle">Archived 2024</span>
+    </div>
+  ),
+};
+
+export const Badges = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '8px',
+          alignItems: 'center',
+        }}
+      >
+        <strong style={{ minWidth: '110px' }}>Standard</strong>
+        <span className="mg-badge">Verified</span>
+        <span className="mg-badge">Official</span>
+        <span className="mg-badge">v2.0</span>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '8px',
+          alignItems: 'center',
+        }}
+      >
+        <strong style={{ minWidth: '110px' }}>Format badges</strong>
+        <span className="mg-badge mg-badge--code">PDF</span>
+        <span className="mg-badge mg-badge--code">JSON</span>
+        <span className="mg-badge mg-badge--code">CSV</span>
+        <span className="mg-badge mg-badge--code">SVG</span>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '8px',
+          alignItems: 'center',
+        }}
+      >
+        <strong style={{ minWidth: '110px' }}>Code tags</strong>
+        <span className="mg-tag mg-tag--code">API v2</span>
+        <span className="mg-tag mg-tag--code">schema.org</span>
+      </div>
+    </div>
+  ),
+  name: 'Badges and format tags',
+};
+
 export const AllVariants = {
   play: async ({ canvasElement }) => {
     const tags = [...canvasElement.querySelectorAll('.mg-tag')];

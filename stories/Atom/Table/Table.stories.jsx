@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { expect, within } from 'storybook/test';
 import { TableTag } from './Table';
 
@@ -269,5 +270,94 @@ export const NarrowScroll = {
     expect(region.scrollWidth).toBeGreaterThan(region.clientWidth);
     expect(region.getBoundingClientRect().width).toBeLessThanOrEqual(280);
     expect(region).toHaveAttribute('tabindex', '0');
+  },
+};
+
+export const DataTable = {
+  name: 'Data table',
+  render: () => {
+    const [sortAsc, setSortAsc] = useState(true);
+    const rows = [
+      {
+        name: 'style.min.css',
+        type: 'CSS',
+        size: '42.8 KB',
+        status: 'Published',
+      },
+      {
+        name: 'tokens.json',
+        type: 'JSON',
+        size: '18.2 KB',
+        status: 'Published',
+      },
+      {
+        name: 'releases.json',
+        type: 'JSON',
+        size: '64.5 KB',
+        status: 'Published',
+      },
+      { name: 'index.json', type: 'JSON', size: '128.4 KB', status: 'Draft' },
+      { name: 'bundle.js', type: 'JS', size: '256.0 KB', status: 'Published' },
+    ];
+    const sorted = [...rows].sort((a, b) =>
+      sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+    );
+
+    return (
+      <div
+        className="mg-table-scroll-region"
+        role="region"
+        aria-label="Asset listing"
+        tabIndex="0"
+        style={{ maxHeight: '260px', overflow: 'auto' }}
+      >
+        <table className="mg-table mg-table--data">
+          <thead>
+            <tr>
+              <th
+                className="mg-table__th--sticky mg-table__th--sortable"
+                aria-sort={sortAsc ? 'ascending' : 'descending'}
+                scope="col"
+              >
+                <button
+                  type="button"
+                  className="mg-table__sort-btn"
+                  onClick={() => setSortAsc(!sortAsc)}
+                >
+                  <span>Filename</span>
+                  <span className="mg-table__sort-icon" aria-hidden="true">
+                    ▼
+                  </span>
+                </button>
+              </th>
+              <th className="mg-table__th--sticky" scope="col">
+                Type
+              </th>
+              <th
+                className="mg-table__th--sticky mg-table__th--numeric"
+                scope="col"
+              >
+                Size
+              </th>
+              <th className="mg-table__th--sticky" scope="col">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map(row => (
+              <tr key={row.name}>
+                <td className="mg-table__td--code">{row.name}</td>
+                <td>
+                  <span className="mg-badge mg-badge--code">{row.type}</span>
+                </td>
+                <td className="mg-table__td--numeric">{row.size}</td>
+                <td>{row.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
   },
 };

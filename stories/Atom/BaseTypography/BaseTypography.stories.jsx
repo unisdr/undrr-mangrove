@@ -594,6 +594,72 @@ export const TypographyDetailsBaseline = Template(
   getLocaleForDetails
 );
 
+export const TypographyAccordion = {
+  render: () => (
+    <div className="mg-accordion">
+      <details className="mg-details" open>
+        <summary>What is the Sendai Framework?</summary>
+        <div>
+          <p>
+            The Sendai Framework for Disaster Risk Reduction 2015-2030 is the
+            global roadmap for reducing human and economic loss as a direct
+            result of disasters.
+          </p>
+        </div>
+      </details>
+      <details className="mg-details">
+        <summary>What are the four Sendai priorities for action?</summary>
+        <div>
+          <p>
+            1. Understanding disaster risk. 2. Strengthening disaster risk
+            governance. 3. Investing in disaster risk reduction for resilience.
+            4. Enhancing disaster preparedness for effective response.
+          </p>
+        </div>
+      </details>
+      <details className="mg-details">
+        <summary>How does UNDRR support implementation?</summary>
+        <div>
+          <p>
+            UNDRR supports countries in monitoring progress, developing national
+            DRR strategies, and sharing evidence-based risk knowledge.
+          </p>
+        </div>
+      </details>
+    </div>
+  ),
+  name: 'Accordion',
+};
+
+export const TypographyAccordionFlush = {
+  render: () => (
+    <div
+      className="mg-accordion mg-accordion--flush"
+      style={{ maxWidth: '400px' }}
+    >
+      <details className="mg-details" open>
+        <summary>Map Layers & Overlays</summary>
+        <div>
+          <p>
+            Configure hazard exposure, vulnerability indices, and critical
+            infrastructure layers.
+          </p>
+        </div>
+      </details>
+      <details className="mg-details">
+        <summary>Filter by Region</summary>
+        <div>
+          <p>
+            Filter data across Africa, Americas, Arab States, Asia-Pacific, and
+            Europe.
+          </p>
+        </div>
+      </details>
+    </div>
+  ),
+  name: 'Accordion (flush)',
+};
+
 export const TypographyFigcaption = Template(
   FigcaptionComponent,
   getLocaleForFigcaption

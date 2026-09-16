@@ -309,7 +309,12 @@ Bare `<details>` with Mangrove's baseline styling — native disclosure marker, 
 
 ### Accordion pattern (`.mg-accordion`)
 
-Wrap multiple `<details>` elements inside a `.mg-accordion` container for grouped disclosures with flush borders, animated rotating chevrons, and consistent spacing (e.g. FAQ lists, layer toggles, secondary metadata panels). Use `.mg-accordion--flush` to remove lateral borders when nesting inside sidebars or panels.
+Wrap multiple `<details>` elements inside a `.mg-accordion` container for grouped disclosures with flush borders, animated rotating chevrons, and consistent spacing (e.g. FAQ lists, layer toggles, secondary metadata panels).
+
+<Canvas
+  of={BaseTypographyStories.TypographyAccordion}
+  meta={BaseTypographyStories}
+/>
 
 ```html
 <div class="mg-accordion">
@@ -327,6 +332,13 @@ Wrap multiple `<details>` elements inside a `.mg-accordion` container for groupe
   </details>
 </div>
 ```
+
+Use `.mg-accordion--flush` to remove lateral borders when nesting inside sidebars, cards, or narrow panels:
+
+<Canvas
+  of={BaseTypographyStories.TypographyAccordionFlush}
+  meta={BaseTypographyStories}
+/>
 
 <Anchor storyId="foundation-typography-basetypography--figcaption" />
 

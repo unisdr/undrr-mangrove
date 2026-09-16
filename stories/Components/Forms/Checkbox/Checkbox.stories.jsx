@@ -130,3 +130,63 @@ export const CheckboxGroup = {
     );
   },
 };
+
+export const Switch = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <label className="mg-switch">
+        <input type="checkbox" role="switch" className="mg-switch__input" />
+        <span className="mg-switch__track" aria-hidden="true">
+          <span className="mg-switch__thumb"></span>
+        </span>
+        <span className="mg-switch__label">Active map layer</span>
+      </label>
+      <label className="mg-switch">
+        <input
+          type="checkbox"
+          role="switch"
+          className="mg-switch__input"
+          defaultChecked
+        />
+        <span className="mg-switch__track" aria-hidden="true">
+          <span className="mg-switch__thumb"></span>
+        </span>
+        <span className="mg-switch__label">Real-time alerts enabled</span>
+      </label>
+    </div>
+  ),
+  name: 'Switch toggle',
+};
+
+export const SwitchDisabled = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <label className="mg-switch">
+        <input
+          type="checkbox"
+          role="switch"
+          className="mg-switch__input"
+          disabled
+        />
+        <span className="mg-switch__track" aria-hidden="true">
+          <span className="mg-switch__thumb"></span>
+        </span>
+        <span className="mg-switch__label">Unavailable layer</span>
+      </label>
+      <label className="mg-switch">
+        <input
+          type="checkbox"
+          role="switch"
+          className="mg-switch__input"
+          defaultChecked
+          disabled
+        />
+        <span className="mg-switch__track" aria-hidden="true">
+          <span className="mg-switch__thumb"></span>
+        </span>
+        <span className="mg-switch__label">Locked active layer</span>
+      </label>
+    </div>
+  ),
+  name: 'Switch disabled',
+};

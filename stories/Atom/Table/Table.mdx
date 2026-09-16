@@ -73,6 +73,12 @@ Clear cell boundaries for when you need extra visual definition. Uses the `.mg-t
 
 <Canvas of={TableStories.BorderedTable} meta={TableStories} />
 
+### Data table (`.mg-table--data`)
+
+High-density data tables designed for dataset tables, asset and file listings, and technical registries. Features compact padding, sticky header support (`.mg-table__th--sticky`), sortable header buttons (`.mg-table__th--sortable`), monospace code cells (`.mg-table__td--code`), and right-aligned tabular numeric values (`.mg-table__td--numeric`).
+
+<Canvas of={TableStories.DataTable} meta={TableStories} />
+
 ### Column alignment
 
 Table content starts at the logical inline edge by default, so text remains easy to scan in both left-to-right and right-to-left layouts. Apply `.mg-table__cell--center` only to content that benefits from centring, such as a compact status, and `.mg-table__cell--end` to numeric columns that should align for comparison. `.mg-table__cell--start` explicitly restores the default when a cell must override a broader alignment rule.

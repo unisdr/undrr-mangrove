@@ -50,6 +50,8 @@ The checkbox component lets users select or deselect individual options. Each ch
 
 For immediate binary state switches (e.g., activating map layers, live filtering, feature toggles) where a standard form checkbox reads as an unanswered form field, use `.mg-switch` with `role="switch"`.
 
+<Canvas of={CheckboxStories.Switch} />
+
 ```html
 <label class="mg-switch">
   <input type="checkbox" role="switch" class="mg-switch__input" />
@@ -61,6 +63,8 @@ For immediate binary state switches (e.g., activating map layers, live filtering
 ```
 
 Disabled state (use the HTML `disabled` attribute, not CSS-only styling):
+
+<Canvas of={CheckboxStories.SwitchDisabled} />
 
 ```html
 <label class="mg-switch">
