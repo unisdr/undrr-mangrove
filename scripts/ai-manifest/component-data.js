@@ -1497,4 +1497,40 @@ npm run build</code></pre>
     description:
       'Interactive newsletter promotion pattern demonstrating email input validation, topic preferences checkboxes, submission states, and confirmation messaging.',
   },
+
+  // --- Navigation (v1 prototypes) ---
+  'components-navigation-drawer': {
+    description:
+      'Off-canvas drawer and floating panel component. Supports start/end/bottom positioning, backdrop overlay, and Escape key to close. Can be hydrated on vanilla HTML pages.',
+    cssClasses: [
+      'mg-drawer',
+      'mg-drawer--start',
+      'mg-drawer--end',
+      'mg-drawer--bottom',
+      'mg-drawer--open',
+      'mg-drawer__backdrop',
+      'mg-drawer__header',
+      'mg-drawer__title',
+      'mg-drawer__close',
+      'mg-drawer__body',
+      'mg-drawer__footer',
+    ],
+  },
+  'components-navigation-tree': {
+    description:
+      'Accessible tree/nested hierarchy view. Parent items can be links with separate toggle behavior. Supports expand/collapse with arrow icon and optional selection state.',
+    cssClasses: [
+      'mg-tree',
+      'mg-tree--guides',
+      'mg-tree__item',
+      'mg-tree__item--selected',
+      'mg-tree__label-container',
+      'mg-tree__toggle-container',
+      'mg-tree__toggle',
+      'mg-tree__icon',
+      'is-expanded',
+      'mg-tree__label',
+      'mg-tree__group',
+    ],
+  },
 };
