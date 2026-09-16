@@ -17,7 +17,7 @@ Four variants (`info`, `warning`, `negative`, `positive`) share one set of token
 | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | A persistent message about the page, a section, or a system condition | **Notice**                                                                                    |
 | A service or embed on the page is degraded or offline                 | [ServiceNotice](/docs/components-notice-service-notice--docs)                                 |
-| Short, temporary feedback after an action (saved, copied, failed)     | [Snackbar](/docs/components-snackbar--docs), a floating Notice that auto-dismisses            |
+| Short, temporary feedback after an action (saved, copied, failed)     | [Snackbar](/docs/components-notice-snackbar--docs), a floating Notice that auto-dismisses     |
 | Editorial emphasis inside content (key facts, pull-out boxes)         | [HighlightBox](/docs/components-highlightbox--docs), which carries no severity or live region |
 | A record's workflow state inside a list or table                      | [StatusLabel](/docs/components-status-label--docs)                                            |
 
@@ -136,10 +136,6 @@ const hydrator = createHydrator({
 ### Positive confirmation
 
 <Canvas of={NoticeStories.PositiveConfirmation} />
-
-### Compact mode
-
-<Canvas of={NoticeStories.CompactMode} />
 
 ### Dismissible
 

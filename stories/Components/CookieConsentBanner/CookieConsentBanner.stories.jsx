@@ -2,7 +2,7 @@ import React from 'react';
 import CookieConsentBanner from './CookieConsentBanner';
 
 export default {
-  title: 'Components/CookieConsentBanner',
+  title: 'Components/Notice/CookieConsentBanner',
   component: CookieConsentBanner,
   argTypes: {
     config: {

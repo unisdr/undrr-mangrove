@@ -222,7 +222,7 @@ const COMPONENT_IDS = {
   FormGroup: 'components-forms-formgroup',
   FormAction: 'components-forms-form-action',
   FormErrorSummary: 'components-forms-formerrorsummary',
-  MegaMenu: 'components-megamenu',
+  MegaMenu: 'components-navigation-megamenu',
   SyndicationSearchWidget: 'components-syndicated-search',
   ScrollContainer: 'components-scrollcontainer',
   Gallery: 'components-gallery',

@@ -103,15 +103,6 @@ export const PositiveConfirmation = {
   },
 };
 
-export const CompactMode = {
-  args: {
-    variant: 'warning',
-    isCompact: true,
-    title: 'Draft mode active',
-    description: 'Only authorized reviewers can view unpublished indicators.',
-  },
-};
-
 export const Dismissible = {
   args: {
     variant: 'info',

@@ -46,15 +46,15 @@ export const REQUIRES_REACT = {
     'SyndicationSearchWidget layout variants — facets sidebar, horizontal facet strip, and external-region portals (facetsTarget, searchTarget). Requires React 19. Same hydration pattern as the main widget.',
   'components-syndicated-search-toggles':
     'SyndicationSearchWidget UI visibility toggles (showPager, showSearchMetrics). Requires React 19. Same hydration pattern as the main widget.',
-  'components-megamenu':
+  'components-navigation-megamenu':
     'MegaMenu manages complex open/close state and keyboard navigation. Below 900px it provides bounded progressive navigation (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, section headings linked to their landing pages and immediately visible authored banner content. Existing sections and hydration attributes remain supported; additional optional labels are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. Requires React. Can be hydrated via createHydrator. Adds mg-mega-wrapper--js-active on mount so pointer-events restrictions only apply when the sidebar is available; plain HTML nav markup and failed-hydration states remain fully clickable on mobile.',
   'components-gallery':
     'Gallery provides a lightbox image viewer. Requires React for modal state and keyboard navigation. Can be hydrated via createHydrator.',
   'components-pager':
     'Pager manages pagination state. Requires React. Import via npm. Supports translated labels via props: prevLabel, nextLabel, goPrevLabel, goNextLabel, pageLabel, currentPageLabel, pageOfLabel (all string or function). Can be hydrated via createHydrator using data-prev-label, data-next-label, etc. attributes.',
-  'components-cookieconsentbanner':
+  'components-notice-cookieconsentbanner':
     'CookieConsentBanner manages consent state and cookie storage. Requires React.',
-  'components-snackbar':
+  'components-notice-snackbar':
     'Snackbar manages auto-dismiss timing and state. Requires React.',
   'components-scrollcontainer':
     'ScrollContainer manages horizontal scroll state with navigation buttons. Requires React. Can be hydrated via createHydrator.',
@@ -68,9 +68,9 @@ export const REQUIRES_REACT = {
     'ShareButtons translation label sets for ES, FR, JA, ZH, AR, RU. Pass via the labels prop.',
   'components-gallery-translations':
     'Gallery translation label sets for ES, FR, JA, ZH, AR, RU. Pass galleryAriaLabel, prevLabel, nextLabel, loadingLabel props.',
-  'components-megamenu-translations':
+  'components-navigation-megamenu-translations':
     'MegaMenu translation label sets for ES, FR, JA, ZH, AR, RU. Pass navLabel, closeMobileNavLabel props.',
-  'components-snackbar-translations':
+  'components-notice-snackbar-translations':
     'Snackbar translation label sets for ES, FR, JA, ZH, AR, RU. Pass closeLabel, closeAriaLabel props.',
   'components-scrollcontainer-translations':
     'ScrollContainer translation label sets for ES, FR, JA, ZH, AR, RU. Pass scrollLeftLabel, scrollRightLabel props.',

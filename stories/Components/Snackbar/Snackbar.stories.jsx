@@ -24,7 +24,7 @@ const withLocaleLabels = (Story, context) => {
 };
 
 export default {
-  title: 'Components/Snackbar',
+  title: 'Components/Notice/Snackbar',
   component: ShowOffSnackbar,
   decorators: [withLocaleLabels],
   parameters: {

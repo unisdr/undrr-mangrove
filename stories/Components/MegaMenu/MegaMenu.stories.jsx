@@ -24,7 +24,7 @@ const withLocaleLabels = (Story, context) => {
 };
 
 export default {
-  title: 'Components/MegaMenu',
+  title: 'Components/Navigation/MegaMenu',
   component: MegaMenu,
   decorators: [withLocaleLabels],
   parameters: {

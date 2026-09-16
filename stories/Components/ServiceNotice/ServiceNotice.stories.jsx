@@ -73,16 +73,6 @@ export const Offline = {
   },
 };
 
-export const Compact = {
-  args: {
-    title: 'Feed connection degraded',
-    description: 'Updates may be delayed by up to 5 minutes.',
-    status: 'degraded',
-    isCompact: true,
-    onRetry: () => {},
-  },
-};
-
 export const EmbedOverlay = {
   render: args => (
     <div
@@ -91,6 +81,7 @@ export const EmbedOverlay = {
         height: '320px',
         width: '100%',
         maxWidth: '600px',
+        marginInline: 'auto',
         backgroundColor: '#e5e7eb',
         borderRadius: '8px',
         overflow: 'hidden',
