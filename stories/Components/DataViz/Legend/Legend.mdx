@@ -1,7 +1,8 @@
 import { Meta, Story, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import { Legend } from './Legend';
 import * as LegendStories from './Legend.stories';
 
-<Meta of={LegendStories} />
+<Meta title="Components/DataViz/Legend" component={Legend} />
 
 # Legend
 
@@ -44,6 +45,10 @@ Continuous and stepped legends can be displayed vertically.
 
 <Canvas of={LegendStories.VerticalContinuous} />
 
+## Prototype notice
+
+This component is a prototype and subject to change. The API and behavior may be updated based on user feedback and usability testing.
+
 ## Changelog
 
-- **Issue #1155**: Added map and chart legend primitives (`continuous`, `categorical`, `stepped`).
+- **v1.0.0** — 2024-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Added map and chart legend primitives (`continuous`, `categorical`, `stepped`)

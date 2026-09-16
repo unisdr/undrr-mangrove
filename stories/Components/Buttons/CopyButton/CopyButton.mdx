@@ -1,7 +1,8 @@
 import { Meta, Story, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import { CopyButton } from './CopyButton';
 import * as CopyButtonStories from './CopyButton.stories';
 
-<Meta of={CopyButtonStories} />
+<Meta title="Components/Buttons/CopyButton" component={CopyButton} />
 
 # Copy Button
 
@@ -21,6 +22,10 @@ Typically used alongside code blocks or shareable URLs.
 
 <Controls />
 
+## Prototype notice
+
+This component is a prototype and subject to change. The API and behavior may be updated based on user feedback and usability testing.
+
 ## Changelog
 
-- **Issue #1155**: Initial implementation of the CopyButton primitive.
+- **v1.0.0** — 2024-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements
