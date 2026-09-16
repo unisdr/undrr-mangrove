@@ -232,6 +232,7 @@ const COMPONENT_IDS = {
   CopyButton: 'components-buttons-copybutton',
   Drawer: 'components-navigation-drawer',
   Tree: 'components-navigation-tree',
+  ServiceNotice: 'components-servicenotice',
   Range: 'components-forms-range',
   Legend: 'components-dataviz-legend',
 };
@@ -345,6 +346,14 @@ function buildSampleProps(React) {
         { position: '100%', label: 'High' },
       ],
       title: 'Hazard level',
+    },
+    ServiceNotice: {
+      status: 'degraded',
+      title: 'Real-time hazard feeds unavailable',
+      description:
+        'Showing cached data from 10 minutes ago. Live updates will resume automatically.',
+      onRetry: () => {},
+      statusUrl: 'https://status.example.org',
     },
     VerticalCard: {
       data: [

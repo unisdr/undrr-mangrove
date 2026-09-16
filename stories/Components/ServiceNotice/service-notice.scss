@@ -1,0 +1,126 @@
+/**
+ * Service Notice
+ *
+ * In-page degraded state container for unreachable third-party embeds or external APIs with retry and status actions.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/ServiceNotice/ServiceNotice.mdx
+ */
+
+.mg-service-notice {
+  --mg-service-notice-border-color: rgb(
+    var(--mg-color-warning, 217 119 6) / 0.5
+  );
+  --mg-service-notice-bg: rgb(var(--mg-color-warning, 217 119 6) / 0.06);
+  --mg-service-notice-icon-color: var(--mg-color-warning-dark, #b45309);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-spacing-3, 0.75rem);
+  padding: var(--mg-spacing-4, 1rem) var(--mg-spacing-5, 1.25rem);
+  background-color: var(--mg-service-notice-bg);
+  border: 1px solid var(--mg-service-notice-border-color);
+  border-left-width: 4px;
+  border-radius: var(--mg-radius-md, 4px);
+  font-family: var(--mg-font-family-text);
+  color: rgb(var(--mg-color-neutral-900));
+  box-sizing: border-box;
+
+  &--degraded,
+  &--warning {
+    --mg-service-notice-border-color: rgb(
+      var(--mg-color-warning, 217 119 6) / 0.5
+    );
+    --mg-service-notice-bg: rgb(var(--mg-color-warning, 217 119 6) / 0.06);
+    --mg-service-notice-icon-color: var(--mg-color-warning-dark, #b45309);
+  }
+
+  &--offline,
+  &--negative {
+    --mg-service-notice-border-color: rgb(
+      var(--mg-color-negative, 220 38 38) / 0.5
+    );
+    --mg-service-notice-bg: rgb(var(--mg-color-negative, 220 38 38) / 0.06);
+    --mg-service-notice-icon-color: var(--mg-color-negative-dark, #991b1b);
+  }
+
+  &--compact {
+    padding: var(--mg-spacing-2, 0.5rem) var(--mg-spacing-3, 0.75rem);
+    gap: var(--mg-spacing-2, 0.5rem);
+
+    .mg-service-notice__title {
+      font-size: 0.9375rem;
+    }
+
+    .mg-service-notice__description {
+      font-size: 0.8125rem;
+    }
+  }
+
+  &--overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: rgb(255 255 255 / 0.94);
+    backdrop-filter: blur(2px);
+    border: 1px solid var(--mg-service-notice-border-color);
+    border-left-width: 1px;
+    border-radius: inherit;
+    padding: var(--mg-spacing-6, 1.5rem);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--mg-spacing-2, 0.5rem);
+    flex-wrap: wrap;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    color: var(--mg-service-notice-icon-color);
+    font-size: 1.125rem;
+    line-height: 1;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: rgb(var(--mg-color-neutral-900));
+    flex-grow: 1;
+  }
+
+  &__description {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: rgb(var(--mg-color-neutral-700));
+
+    p {
+      margin: 0 0 0.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--mg-spacing-3, 0.75rem);
+    flex-wrap: wrap;
+    margin-top: var(--mg-spacing-1, 0.25rem);
+  }
+
+  &__countdown {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: rgb(var(--mg-color-neutral-600));
+  }
+}

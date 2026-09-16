@@ -28,7 +28,10 @@ export {
   default as CopyButton,
   DEFAULT_COPY_BUTTON_LABELS,
 } from '../stories/Components/Buttons/CopyButton/CopyButton';
-export { Drawer, default as DrawerDefault } from '../stories/Components/Navigation/Drawer/Drawer';
+export {
+  Drawer,
+  default as DrawerDefault,
+} from '../stories/Components/Navigation/Drawer/Drawer';
 export {
   Tree,
   TreeItem,
@@ -38,8 +41,12 @@ export {
   default as UserFeedback,
   DEFAULT_USER_FEEDBACK_LABELS,
 } from '../stories/Components/UserFeedback/UserFeedback';
+export {
+  ServiceNotice,
+  DEFAULT_SERVICE_NOTICE_LABELS,
+  default as ServiceNoticeDefault,
+} from '../stories/Components/ServiceNotice/ServiceNotice';
 export { SkipLink } from '../stories/Utilities/SkipLink/SkipLink';
 
 // Import global styles
 import '../stories/assets/scss/style.scss';
-

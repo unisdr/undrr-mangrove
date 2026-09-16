@@ -103,6 +103,8 @@ export default [
       CopyButton:
         './stories/Components/Buttons/CopyButton/CopyButton.hydrate.js',
       Drawer: './stories/Components/Navigation/Drawer/Drawer.hydrate.js',
+      ServiceNotice:
+        './stories/Components/ServiceNotice/ServiceNotice.hydrate.js',
       // Vanilla components (bundled for AI manifest auto-rendering)
       Chips: './stories/Components/Buttons/Chips/Chips.jsx',
       CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.entry.js',

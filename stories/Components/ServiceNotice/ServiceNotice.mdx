@@ -1,0 +1,132 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as ServiceNoticeStories from './ServiceNotice.stories';
+
+<Meta of={ServiceNoticeStories} />
+
+> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+
+# Service notice
+
+An accessible in-page notification container and card overlay displayed when an embedded third-party service (such as MapX, an external analytics feed, or an API endpoint) is temporarily unreachable or operating in a degraded state.
+
+Features a warning/offline indicator, downtime explanation, primary retry action, external status link, and optional automatic countdown retry indicator.
+
+## Integration
+
+### 1. Pure HTML / CSS
+
+```html
+<div
+  class="mg-service-notice mg-service-notice--degraded"
+  role="status"
+  aria-live="polite"
+>
+  <div class="mg-service-notice__header">
+    <span
+      class="mg-icon mg-icon-alert mg-service-notice__icon"
+      aria-hidden="true"
+    ></span>
+    <h3 class="mg-service-notice__title">MapX layer service degraded</h3>
+    <span class="mg-status-label mg-status-label--warning">
+      <span class="mg-status-label__indicator" aria-hidden="true"></span>
+      Degraded
+    </span>
+  </div>
+  <div class="mg-service-notice__description">
+    <p>
+      Geospatial tiles are taking longer than usual to render. Cached layers
+      remain accessible.
+    </p>
+  </div>
+  <div class="mg-service-notice__actions">
+    <button type="button" class="mg-button mg-button-primary mg-button--small">
+      <span
+        class="mg-icon mg-icon-refresh mg-button__icon"
+        aria-hidden="true"
+      ></span>
+      Retry connection
+    </button>
+    <a
+      href="https://status.undrr.org"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="mg-button mg-button-secondary mg-button-outline mg-button--small"
+    >
+      View status page
+      <span
+        class="mg-icon mg-icon-external mg-button__icon"
+        aria-hidden="true"
+      ></span>
+    </a>
+  </div>
+</div>
+```
+
+### 2. Drupal Twig with React Hydration
+
+```twig
+<div data-mg-service-notice
+  data-title="{{ 'MapX service unreachable'|t }}"
+  data-description="{{ 'Unable to establish a secure connection to the map tile server.'|t }}"
+  data-status="offline"
+  data-retry-label="{{ 'Reconnect'|t }}"
+  data-status-url="https://status.undrr.org"
+  data-status-url-label="{{ 'Check status'|t }}"
+  data-countdown-seconds="30">
+</div>
+```
+
+```javascript
+import createHydrator from '@undrr/undrr-mangrove/src/hydrate';
+import ServiceNotice, {
+  fromElement,
+} from '@undrr/undrr-mangrove/stories/Components/ServiceNotice/ServiceNotice.hydrate';
+
+const hydrator = createHydrator({
+  selector: '[data-mg-service-notice]',
+  component: ServiceNotice,
+  fromElement,
+});
+
+Drupal.behaviors.mangroveServiceNotice = {
+  attach(context) {
+    hydrator.update(context);
+  },
+};
+```
+
+### 3. React Component
+
+```jsx
+import { ServiceNotice } from '@undrr/undrr-mangrove';
+
+function MapWidget() {
+  return (
+    <div style={{ position: 'relative', height: '400px' }}>
+      <ServiceNotice
+        title="Map service temporarily unavailable"
+        description="The tile server returned 503. Interactive features are disabled."
+        status="offline"
+        isOverlay
+        onRetry={() => refetchLayers()}
+        statusUrl="https://status.undrr.org"
+        countdownSeconds={30}
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+<Controls />
+
+## Accessibility
+
+- Container renders as an `<aside>` landmark with `role="status"` and `aria-live="polite"` so screen readers are informed of status changes without disrupting user focus.
+- Status labels use both visible text and color indicators, satisfying WCAG 2.2 SC 1.4.1 (Use of Color).
+- External status links include `target="_blank"`, `rel="noopener noreferrer"`, and an external icon with accessible text.
+
+## Changelog
+
+- **March 2026**: Initial implementation of `.mg-service-notice` component with degraded and offline states, retry actions, overlay mode, Layer 2 hydration, and UN translations ([Issue #1155](https://github.com/unisdr/undrr-mangrove/issues/1155)).

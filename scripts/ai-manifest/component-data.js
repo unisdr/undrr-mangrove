@@ -854,6 +854,25 @@ npm run build</code></pre>
     ],
   },
 
+  // --- Service notice (auto-rendered + hydration) ---
+  'components-servicenotice': {
+    description:
+      'In-page degraded state or partial outage notice for live feeds, interactive maps, or remote APIs with status link and optional retry action or auto-countdown timer.',
+    cssClasses: [
+      'mg-service-notice',
+      'mg-service-notice--degraded',
+      'mg-service-notice--offline',
+      'mg-service-notice--compact',
+      'mg-service-notice--overlay',
+      'mg-service-notice__header',
+      'mg-service-notice__icon',
+      'mg-service-notice__title',
+      'mg-service-notice__description',
+      'mg-service-notice__actions',
+      'mg-service-notice__countdown',
+    ],
+  },
+
   // --- Footer (auto-rendered + embed) ---
   'components-footer': {
     description:
