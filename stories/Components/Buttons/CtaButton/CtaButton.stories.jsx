@@ -1,4 +1,5 @@
 import { CtaButton } from './CtaButton';
+import { Icon } from '../../Atom/Icons/Icon';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -88,65 +89,186 @@ export const AllVariants = {
     return (
       <>
         {/* Light background */}
-        <div style={{ marginBottom: '2rem' }}>
+        <div style={{ marginBottom: '2.5rem' }}>
           <p
             style={{
-              marginBottom: '0.75rem',
-              fontWeight: 600,
-              fontSize: '14px',
+              marginBottom: '1rem',
+              fontWeight: 700,
+              fontSize: '15px',
             }}
           >
             Light background
           </p>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '10px',
-              alignItems: 'center',
-            }}
-          >
-            <a href="#" className="mg-button mg-button-primary">
-              {caption.detail}
-            </a>
-            <a href="#" className="mg-button mg-button-secondary">
-              {caption.detail}
-            </a>
-            <a
-              href="#"
-              className="mg-button mg-button-primary mg-button-outline"
+
+          {/* Text buttons */}
+          <div style={{ marginBottom: '1.25rem' }}>
+            <p
+              style={{
+                margin: '0 0 0.5rem',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#666',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}
             >
-              {caption.detail}
-            </a>
-            <a
-              href="#"
-              className="mg-button mg-button-secondary mg-button-outline"
+              Text & CTA
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '10px',
+                alignItems: 'center',
+              }}
             >
-              {caption.detail}
-            </a>
-            <a
-              className="mg-button mg-button-primary disabled"
-              aria-disabled="true"
-            >
-              {caption.detail}
-            </a>
-            <CtaButton label={caption.detail} Variant="CTA" />
+              <a href="#" className="mg-button mg-button-primary">
+                {caption.detail}
+              </a>
+              <a href="#" className="mg-button mg-button-secondary">
+                {caption.detail}
+              </a>
+              <a
+                href="#"
+                className="mg-button mg-button-primary mg-button-outline"
+              >
+                {caption.detail}
+              </a>
+              <a
+                href="#"
+                className="mg-button mg-button-secondary mg-button-outline"
+              >
+                {caption.detail}
+              </a>
+              <a
+                className="mg-button mg-button-primary disabled"
+                aria-disabled="true"
+              >
+                {caption.detail}
+              </a>
+              <CtaButton label={caption.detail} Variant="CTA" />
+            </div>
           </div>
-          <div
-            style={{
-              marginTop: '0.5rem',
-              display: 'flex',
-              gap: '10px',
-              fontSize: '12px',
-              color: '#666',
-            }}
-          >
-            <span style={{ minWidth: '100px' }}>Primary</span>
-            <span style={{ minWidth: '100px' }}>Secondary</span>
-            <span style={{ minWidth: '100px' }}>Primary outline</span>
-            <span style={{ minWidth: '100px' }}>Secondary outline</span>
-            <span>Disabled</span>
-            <span>Editorial CTA</span>
+
+          {/* Icon + text and responsive */}
+          <div style={{ marginBottom: '1.25rem' }}>
+            <p
+              style={{
+                margin: '0 0 0.5rem',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#666',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}
+            >
+              Icon + Text & Responsive
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '10px',
+                alignItems: 'center',
+              }}
+            >
+              <button type="button" className="mg-button mg-button-primary">
+                <Icon name="download" />
+                <span>{caption.detail}</span>
+              </button>
+              <button type="button" className="mg-button mg-button-secondary">
+                <Icon name="search" />
+                <span>Search</span>
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-primary mg-button-outline"
+              >
+                <span>External</span>
+                <Icon name="share" />
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-primary mg-button--responsive-icon"
+              >
+                <Icon name="search" />
+                <span className="mg-button__label">Responsive</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Icon-only */}
+          <div>
+            <p
+              style={{
+                margin: '0 0 0.5rem',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#666',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}
+            >
+              Icon-Only (Square, Round, Small)
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '10px',
+                alignItems: 'center',
+              }}
+            >
+              <button
+                type="button"
+                className="mg-button mg-button-primary mg-button--icon"
+                aria-label="Search"
+              >
+                <Icon name="search" />
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-secondary mg-button--icon"
+                aria-label="Download"
+              >
+                <Icon name="download" />
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-primary mg-button-outline mg-button--icon"
+                aria-label="Share"
+              >
+                <Icon name="share" />
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-primary mg-button--icon mg-button--icon--round"
+                aria-label="Search map"
+              >
+                <Icon name="search" />
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-secondary mg-button--icon mg-button--icon--round"
+                aria-label="Share map"
+              >
+                <Icon name="share" />
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-secondary mg-button--icon mg-button--icon--small"
+                aria-label="Close"
+              >
+                <Icon name="times" />
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-secondary mg-button-outline mg-button--icon mg-button--icon--small"
+                aria-label="Download small"
+              >
+                <Icon name="download" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -172,9 +294,9 @@ export const AllVariants = {
           >
             <p
               style={{
-                marginBottom: '0.75rem',
-                fontWeight: 600,
-                fontSize: '14px',
+                marginBottom: '1rem',
+                fontWeight: 700,
+                fontSize: '15px',
                 color: '#fff',
               }}
             >
@@ -186,6 +308,7 @@ export const AllVariants = {
                 flexWrap: 'wrap',
                 gap: '10px',
                 alignItems: 'center',
+                marginBottom: '1.25rem',
               }}
             >
               <a href="#" className="mg-button mg-button-primary">
@@ -196,18 +319,52 @@ export const AllVariants = {
               </a>
               <CtaButton label={caption.detail} Variant="CTA" />
             </div>
-            <div
+
+            <p
               style={{
-                marginTop: '0.5rem',
-                display: 'flex',
-                gap: '10px',
+                margin: '0 0 0.5rem',
                 fontSize: '12px',
+                fontWeight: 600,
                 color: 'rgba(255,255,255,0.7)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
               }}
             >
-              <span style={{ minWidth: '100px' }}>Primary</span>
-              <span>Secondary</span>
-              <span>Editorial CTA</span>
+              Icon Buttons on Dark Surface
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '10px',
+                alignItems: 'center',
+              }}
+            >
+              <button type="button" className="mg-button mg-button-primary">
+                <Icon name="download" />
+                <span>{caption.detail}</span>
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-primary mg-button--icon"
+                aria-label="Search"
+              >
+                <Icon name="search" />
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-secondary mg-button--icon"
+                aria-label="Download"
+              >
+                <Icon name="download" />
+              </button>
+              <button
+                type="button"
+                className="mg-button mg-button-primary mg-button--icon mg-button--icon--round"
+                aria-label="Share"
+              >
+                <Icon name="share" />
+              </button>
             </div>
           </div>
         </div>
@@ -221,78 +378,6 @@ export const AllVariants = {
     controls: { disable: true },
   },
 };
-
-const SearchIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <circle cx="11" cy="11" r="8" />
-    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-  </svg>
-);
-
-const DownloadIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-    <polyline points="7 10 12 15 17 10" />
-    <line x1="12" y1="15" x2="12" y2="3" />
-  </svg>
-);
-
-const ShareIcon = () => (
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <circle cx="18" cy="5" r="3" />
-    <circle cx="6" cy="12" r="3" />
-    <circle cx="18" cy="19" r="3" />
-    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
 
 export const IconButtons = {
   name: 'Icon-only buttons',
@@ -308,21 +393,21 @@ export const IconButtons = {
             className="mg-button mg-button-primary mg-button--icon"
             aria-label="Search records"
           >
-            <SearchIcon />
+            <Icon name="search" />
           </button>
           <button
             type="button"
             className="mg-button mg-button-secondary mg-button--icon"
             aria-label="Download publication"
           >
-            <DownloadIcon />
+            <Icon name="download" />
           </button>
           <button
             type="button"
             className="mg-button mg-button-primary mg-button-outline mg-button--icon"
             aria-label="Share resource"
           >
-            <ShareIcon />
+            <Icon name="share" />
           </button>
         </div>
       </div>
@@ -337,14 +422,14 @@ export const IconButtons = {
             className="mg-button mg-button-primary mg-button--icon mg-button--icon--round"
             aria-label="Search map"
           >
-            <SearchIcon />
+            <Icon name="search" />
           </button>
           <button
             type="button"
             className="mg-button mg-button-secondary mg-button--icon mg-button--icon--round"
             aria-label="Share map view"
           >
-            <ShareIcon />
+            <Icon name="share" />
           </button>
         </div>
       </div>
@@ -359,16 +444,94 @@ export const IconButtons = {
             className="mg-button mg-button-secondary mg-button--icon mg-button--icon--small"
             aria-label="Close dialog"
           >
-            <CloseIcon />
+            <Icon name="times" />
           </button>
           <button
             type="button"
             className="mg-button mg-button-secondary mg-button-outline mg-button--icon mg-button--icon--small"
             aria-label="Download CSV"
           >
-            <DownloadIcon />
+            <Icon name="download" />
           </button>
         </div>
+      </div>
+    </div>
+  ),
+};
+
+export const IconWithLabel = {
+  name: 'Icon with text label',
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div>
+        <p style={{ margin: '0 0 8px', fontWeight: 600, fontSize: '14px' }}>
+          Leading icon (download, search, filter actions)
+        </p>
+        <div className="mg-buttons">
+          <button type="button" className="mg-button mg-button-primary">
+            <Icon name="download" />
+            <span>Download report (PDF)</span>
+          </button>
+          <button type="button" className="mg-button mg-button-secondary">
+            <Icon name="search" />
+            <span>Search datasets</span>
+          </button>
+          <button
+            type="button"
+            className="mg-button mg-button-primary mg-button-outline"
+          >
+            <Icon name="share" />
+            <span>Share</span>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <p style={{ margin: '0 0 8px', fontWeight: 600, fontSize: '14px' }}>
+          Trailing icon (external links, directional prompts)
+        </p>
+        <div className="mg-buttons">
+          <a href="#" className="mg-button mg-button-secondary">
+            <span>External registry</span>
+            <Icon name="share" />
+          </a>
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+export const ResponsiveIconButton = {
+  name: 'Responsive icon button',
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <p style={{ margin: 0, fontSize: '14px', color: '#555' }}>
+        Renders full icon + text label on tablet/desktop, and automatically
+        collapses to a compact 36×36px square icon button on mobile. Screen
+        readers announce the full label across all screen widths.
+      </p>
+      <div className="mg-buttons">
+        <button
+          type="button"
+          className="mg-button mg-button-primary mg-button--responsive-icon"
+        >
+          <Icon name="search" />
+          <span className="mg-button__label">Search publications</span>
+        </button>
+        <button
+          type="button"
+          className="mg-button mg-button-secondary mg-button--responsive-icon"
+        >
+          <Icon name="download" />
+          <span className="mg-button__label">Download data</span>
+        </button>
+        <button
+          type="button"
+          className="mg-button mg-button-primary mg-button-outline mg-button--responsive-icon"
+        >
+          <Icon name="share" />
+          <span className="mg-button__label">Share map</span>
+        </button>
       </div>
     </div>
   ),

@@ -29,6 +29,7 @@
   font-family: var(--mg-font-family-text);
   font-size: var(--mg-font-size-button);
   font-weight: 600;
+  gap: var(--mg-spacing-50);
   line-height: 1;
   border-radius: var(--mg-radius-button);
   color: rgb(var(--mg-color-button));
@@ -69,6 +70,17 @@
   gap: var(--mg-spacing-75);
 }
 
+// Icon embedded in text buttons
+.mg-button__icon {
+  display: inline-block;
+  flex-shrink: 0;
+  height: 1.15em;
+  pointer-events: none;
+  shape-rendering: geometricPrecision;
+  vertical-align: middle;
+  width: 1.15em;
+}
+
 // Icon-only button variant for map actions, dismiss/copy controls, and compact toolbars
 .mg-button--icon,
 .mg-icon-button {
@@ -106,6 +118,29 @@
   .mg-icon {
     font-size: 1.25em;
     line-height: 1;
+  }
+}
+
+// Responsive icon button: icon + text on desktop, collapses to compact icon-only on mobile
+.mg-button--responsive-icon {
+  @media (max-width: #{$mg-breakpoint-tablet - 1px}) {
+    aspect-ratio: 1;
+    block-size: mg-rem(36);
+    inline-size: mg-rem(36);
+    min-block-size: mg-rem(36);
+    min-inline-size: mg-rem(36);
+    padding: 0;
+
+    .mg-button__label {
+      clip-path: inset(50%);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
   }
 }
 

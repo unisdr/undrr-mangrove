@@ -34,19 +34,18 @@ Mangrove's standard button component for call-to-action elements like "Read more
 
 #### Variants
 
-| Class                                              | Purpose                                                 |
-| -------------------------------------------------- | ------------------------------------------------------- |
-| `.mg-button.mg-button-primary`                     | Main call to action — filled background, high contrast  |
-| `.mg-button.mg-button-secondary`                   | Supporting action — lower visual weight than primary    |
-| `.mg-button.mg-button-primary.mg-button-outline`   | Primary emphasis with a transparent surface             |
-| `.mg-button.mg-button-secondary.mg-button-outline` | Secondary emphasis with a transparent surface           |
-| `.mg-button.mg-button-primary.mg-button-cta`       | Editorial navigation with a circular direction badge    |
-| `.mg-button--icon`, `.mg-icon-button`              | Compact square icon-only button (toolbars, map actions) |
-| `.mg-button--icon.mg-button--icon--round`          | Circular floating action button                         |
-| `.mg-button--icon.mg-button--icon--small`          | Dense toolbar icon button (28px, use with spacing)      |
-| `.mg-button.disabled`                              | Inactive state — not clickable                          |
-
-> **Accessibility:** Icon-only buttons **must** include `aria-label` describing the action (e.g. `aria-label="Copy to clipboard"`). Without visible text, the button has no accessible name and fails WCAG 4.1.2. The `--small` variant (28 &times; 28px) meets the WCAG 2.5.8 minimum (24px) but not the enhanced target (44px); use it only in dense toolbars where spacing between targets provides the additional hit area.
+| Class                                              | Purpose                                                  |
+| -------------------------------------------------- | -------------------------------------------------------- |
+| `.mg-button.mg-button-primary`                     | Main call to action — filled background, high contrast   |
+| `.mg-button.mg-button-secondary`                   | Supporting action — lower visual weight than primary     |
+| `.mg-button.mg-button-primary.mg-button-outline`   | Primary emphasis with a transparent surface              |
+| `.mg-button.mg-button-secondary.mg-button-outline` | Secondary emphasis with a transparent surface            |
+| `.mg-button.mg-button-primary.mg-button-cta`       | Editorial navigation with a circular direction badge     |
+| `.mg-button--icon`, `.mg-icon-button`              | Compact square icon-only button (toolbars, map actions)  |
+| `.mg-button--icon.mg-button--icon--round`          | Circular floating action button                          |
+| `.mg-button--icon.mg-button--icon--small`          | Dense toolbar icon button (28px, use with spacing)       |
+| `.mg-button--responsive-icon`                      | Icon + text on desktop, collapses to icon-only on mobile |
+| `.mg-button.disabled`                              | Inactive state — not clickable                           |
 
 ## Content
 
@@ -71,11 +70,71 @@ Primary, secondary, and disabled buttons on light and dark backgrounds. Switch t
 
 <Canvas of={CtaButtonStories.AllVariants} meta={CtaButtonStories} />
 
-## Icon-only buttons
+## Buttons with icons
 
-Compact square (`.mg-button--icon`), circular (`.mg-button--icon--round`), and dense toolbar (`.mg-button--icon--small`) buttons for actions without visible text labels.
+Icons help users recognize frequent actions (download, search, share, filter) faster.
+
+### Icon with text label
+
+When a visible text label is present, the icon is purely decorative and must have `aria-hidden="true"`. The button derives its accessible name directly from the visible text:
+
+```html
+<button type="button" class="mg-button mg-button-primary">
+  <span class="mg-icon mg-icon-download" aria-hidden="true"></span>
+  <span>Download report (PDF)</span>
+</button>
+```
+
+```jsx
+<button type="button" className="mg-button mg-button-primary">
+  <Icon name="download" />
+  <span>Download report (PDF)</span>
+</button>
+```
+
+<Canvas of={CtaButtonStories.IconWithLabel} meta={CtaButtonStories} />
+
+### Icon-only buttons
+
+Compact square (`.mg-button--icon`), circular (`.mg-button--icon--round`), and dense toolbar (`.mg-button--icon--small`) buttons for actions without visible text labels (e.g. toolbars, map controls, modal close buttons).
+
+```html
+<button
+  type="button"
+  class="mg-button mg-button-primary mg-button--icon"
+  aria-label="Search publications"
+>
+  <span class="mg-icon mg-icon-search" aria-hidden="true"></span>
+</button>
+```
 
 <Canvas of={CtaButtonStories.IconButtons} meta={CtaButtonStories} />
+
+### Responsive icon buttons
+
+For toolbars and headers where screen space is tight on mobile, use `.mg-button--responsive-icon` with a child `<span class="mg-button__label">`. On tablet and desktop, the button displays both the icon and text label. On mobile screens (`< 768px`), it automatically collapses to a compact 36&times;36px icon-only square button while preserving the full text label in the DOM for screen readers.
+
+```html
+<button
+  type="button"
+  class="mg-button mg-button-primary mg-button--responsive-icon"
+>
+  <span class="mg-icon mg-icon-search" aria-hidden="true"></span>
+  <span class="mg-button__label">Search publications</span>
+</button>
+```
+
+<Canvas of={CtaButtonStories.ResponsiveIconButton} meta={CtaButtonStories} />
+
+## Accessibility guidelines for icon buttons
+
+| Pattern                 | Markup Technique                                                                   | Screen Reader Announcement         | WCAG Compliance                                                   |
+| :---------------------- | :--------------------------------------------------------------------------------- | :--------------------------------- | :---------------------------------------------------------------- |
+| **Icon + visible text** | Visible `<span>Label</span>`, `<span class="mg-icon *" aria-hidden="true"></span>` | Reads visible text directly        | ✅ WCAG 2.5.3 (Label in Name) — DO NOT add redundant `aria-label` |
+| **Icon-only**           | `aria-label="Action description"`, `<span class="mg-icon *" aria-hidden="true">`   | Reads `aria-label` attribute       | ✅ WCAG 4.1.2 (Name, Role, Value) — `aria-label` is mandatory     |
+| **Responsive icon**     | `<span class="mg-button__label">Label</span>`                                      | Reads clipped label on all screens | ✅ WCAG 2.5.3 & 4.1.2 — seamless across mobile and desktop        |
+
+> **Target size notice:** The `--small` variant (28 &times; 28px) meets the WCAG 2.5.8 minimum target size (24px) but not the enhanced target (44px); use it only in dense toolbars where surrounding spacing provides the necessary hit area.
 
 ## Usage
 
@@ -88,9 +147,8 @@ Compact square (`.mg-button--icon`), circular (`.mg-button--icon--round`), and d
 
 - Hover state applies to the entire button
 
-## Changelog
+- **1.5.0** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-button--icon` and `.mg-icon-button` icon-only button variants with square aspect ratio, centered icons, and `.mg-button--icon--round` circular floating action treatment. Added `.mg-button--responsive-icon` for responsive icon+text buttons that collapse to icon-only on mobile, and added intrinsic `gap` spacing and `.mg-button__icon` rules for buttons with leading or trailing icons.
 
-- **1.5.0** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-button--icon` and `.mg-icon-button` icon-only button variants with square aspect ratio, centered icons, and `.mg-button--icon--round` circular floating action treatment for toolbars and map actions.
 - **1.4.1** — 2026-09-15: Define brand-owned secondary button tokens for PreventionWeb, MCR2030, and IRP themes, resolving an issue where secondary buttons fell back to default UNDRR corporate blue.
 
 - **1.4** — 2026-09-10 ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)): The arrow bubble slides a few pixels toward its destination on hover, flipped in RTL and suppressed under `prefers-reduced-motion`, where the shift would be a jump rather than a gesture.
