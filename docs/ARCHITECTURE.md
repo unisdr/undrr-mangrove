@@ -62,7 +62,7 @@ stories/assets/scss/
 
 **When adding a new component SCSS file:** add its `@import` to `_components.scss` so it ships in all theme builds.
 
-**Important:** Color and spacing tokens are CSS custom properties overridden at runtime by a `.mg-theme-{name}` selector block in each theme's `_theme-{name}.scss` file. The type scale is also a set of custom properties (`--mg-font-size-*`). Build-time-only tokens (breakpoints, font faces, `$mg-html-font-size`, `$mg-tabs-border-bottom`) remain as SCSS `!default` variables and are resolved at compile time.
+**Important:** Color and spacing tokens are CSS custom properties overridden at runtime by a `.mg-theme-{name}` selector block in each theme's `_theme-{name}.scss` file. The type scale and line heights are also custom properties (`--mg-font-size-*`, `--mg-font-line-height-*`). Build-time-only tokens (breakpoints, font faces, `$mg-html-font-size`, `$mg-tabs-border-bottom`) remain as SCSS `!default` variables and are resolved at compile time.
 
 ## Component distribution channels
 
@@ -246,7 +246,7 @@ Mangrove uses two distinct token mechanisms:
 
 **Build-time SCSS `!default` variables**: used for tokens that must be resolved at compile time and cannot be overridden at runtime. This includes breakpoints (`$mg-breakpoint-*`), font faces (`$mg-font-face-*`, which `@font-face` and Sass interpolation need at compile time), and `$mg-tabs-border-bottom`. Font *families* are not on this list: components read the `--mg-font-family-*` role custom properties, which are re-pointed per script at runtime. These carry `!default` so a consuming project can override them before importing Mangrove; include it on any new build-time variable for the same reason. (`$mg-html-font-size` is the exception — it is fixed at `16`, see below.)
 
-The type scale used to be on this list. It is now emitted as `--mg-font-size-*` custom properties, which components read with `var()`; the `$mg-font-size-*` Sass variables remain as deprecated aliases for Sass consumers and will be removed in 3.0. See [unisdr/undrr-mangrove#1167](https://github.com/unisdr/undrr-mangrove/issues/1167).
+The type scale used to be on this list. It is now emitted as `--mg-font-size-*` custom properties, which components read with `var()`; the `$mg-font-size-*` Sass variables remain as deprecated aliases for Sass consumers and will be removed in 3.0. See [unisdr/undrr-mangrove#1167](https://github.com/unisdr/undrr-mangrove/issues/1167). Line heights followed: `--mg-font-line-height-500` and `--mg-font-line-height-700` are custom properties, with `$mg-font-line-height-*` kept as deprecated aliases until 3.0. See [unisdr/undrr-mangrove#1085](https://github.com/unisdr/undrr-mangrove/issues/1085).
 
 ### Why a custom token generator
 

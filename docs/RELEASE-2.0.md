@@ -454,6 +454,8 @@ The following remain as SCSS variables (BUILD-TIME ONLY — no CSS custom proper
 
 The type scale is **not** on this list. It is emitted as `--mg-font-size-100` … `--mg-font-size-1100` custom properties, which components read with `var()` and a theme can re-value at runtime. The `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` Sass variables still compile but are deprecated and will be removed in 3.0; Sass consumers should switch to `var(--mg-font-size-*)`. Overriding `$mg-font-tag` no longer changes Mangrove's own components. See [#1167](https://github.com/unisdr/undrr-mangrove/issues/1167).
 
+Line heights are not on the list either. `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`) are custom properties; `$mg-font-line-height-500` and `$mg-font-line-height-700` still compile but are deprecated and will be removed in 3.0. See [#1085](https://github.com/unisdr/undrr-mangrove/issues/1085).
+
 ### 2. Sub-brand `_variables-*.scss` files deleted
 
 The four sub-brand variable override files are gone. Each is replaced by a `_theme-{name}.scss` file.

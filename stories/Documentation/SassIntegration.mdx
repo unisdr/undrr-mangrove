@@ -143,7 +143,7 @@ Generated from `tokens/mangrove.yaml` into `generated/_tokens-mangrove.scss` as 
 | `--mg-font-size-1000` | `3rem`     | 48px                  |                   |
 | `--mg-font-size-1100` | `4rem`     | 64px                  |                   |
 
-The matching `$mg-font-size-*` Sass variables, and the `$mg-font-body` / `$mg-font-tag` aliases, still compile but are **deprecated** and will be removed in 3.0. Use the custom properties in new Sass. Line-height aliases: `$mg-font-line-height-500` (`1.25em`), `$mg-font-line-height-700` (`1.5em`).
+The matching `$mg-font-size-*` Sass variables, and the `$mg-font-body` / `$mg-font-tag` aliases, still compile but are **deprecated** and will be removed in 3.0. Use the custom properties in new Sass. Line heights are custom properties too: `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`). The `em` resolves against the font size of the element that reads the `var()`. The `$mg-font-line-height-500` / `$mg-font-line-height-700` Sass variables are deprecated aliases and will be removed in 3.0.
 
 ### Font faces and font roles
 
