@@ -1,5 +1,5 @@
 import { CtaButton } from './CtaButton';
-import { Icon } from '../../Atom/Icons/Icon';
+import { Icon } from '../../../Atom/Icons/Icon';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
