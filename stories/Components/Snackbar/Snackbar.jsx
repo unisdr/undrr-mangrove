@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Notice } from '../Notice/Notice';
 
@@ -16,6 +16,10 @@ export const DEFAULT_SNACKBAR_LABELS = {
   closeLabel: 'Close',
   closeAriaLabel: 'Close notification',
 };
+
+// Longer than the wrapper's slide transition; unmounts the body when no
+// transitionend fires (reduced motion, or the element never painted).
+const EXIT_FALLBACK_MS = 400;
 
 const SEVERITY_TO_VARIANT = {
   error: 'negative',
@@ -73,9 +77,18 @@ const Snackbar = ({
     ...labels,
   };
   const closeButtonRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const returnFocusRef = useRef(null);
   const onCloseRef = useRef(onClose);
   const prevOpenedRef = useRef(false);
   onCloseRef.current = onClose;
+
+  // Keep the body mounted while the toast slides out, so it does not vanish
+  // before the animation finishes.
+  // Set during render (not in an effect) so the closing render still has it.
+  const [isRendered, setIsRendered] = useState(opened);
+  if (opened && !isRendered) setIsRendered(true);
+  const showBody = opened || isRendered;
 
   // close the snackbar after the openedMiliseconds if it is set
   useEffect(() => {
@@ -90,7 +103,6 @@ const Snackbar = ({
     }
   }, [opened, openedMiliseconds]);
 
-  // Add keyboard support and focus management
   useEffect(() => {
     const handleKeyDown = event => {
       if (opened && event.key === 'Escape') {
@@ -100,26 +112,60 @@ const Snackbar = ({
 
     document.addEventListener('keydown', handleKeyDown);
 
-    // Focus the close button only when transitioning to open
-    if (opened && !prevOpenedRef.current && closeButtonRef.current) {
-      closeButtonRef.current.focus();
+    if (opened && !prevOpenedRef.current) {
+      returnFocusRef.current = document.activeElement;
+      // An auto-dismissing toast must not take focus: it would vanish from
+      // under the reader. Only a persistent toast moves focus to its action.
+      if (!openedMiliseconds && closeButtonRef.current) {
+        closeButtonRef.current.focus();
+      }
+    }
+
+    if (!opened && prevOpenedRef.current) {
+      const wrapper = wrapperRef.current;
+      const target = returnFocusRef.current;
+      if (wrapper && wrapper.contains(document.activeElement)) {
+        if (target && target.isConnected && target.focus) {
+          target.focus();
+        } else {
+          document.activeElement.blur();
+        }
+      }
+      returnFocusRef.current = null;
     }
     prevOpenedRef.current = opened;
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [opened]);
+  }, [opened, openedMiliseconds]);
 
-  // The body is only mounted while open: role="alert" announces on insertion,
-  // and a closed toast leaves no off-screen close button in the tab order.
+  useEffect(() => {
+    if (opened || !isRendered) return undefined;
+    const timerId = setTimeout(() => setIsRendered(false), EXIT_FALLBACK_MS);
+    return () => clearTimeout(timerId);
+  }, [opened, isRendered]);
+
+  // A closing toast stays visible for its exit animation but must not be
+  // read or focused. React 18 has no inert prop, so set the DOM property.
+  useEffect(() => {
+    if (wrapperRef.current) wrapperRef.current.inert = !opened;
+  }, [opened, showBody]);
+
   return (
     <aside
+      ref={wrapperRef}
       className={`mg-snackbar-wrapper ${
         opened ? 'mg-snackbar-wrapper__open' : ''
       }`}
+      aria-hidden={opened ? undefined : 'true'}
+      onTransitionEnd={event => {
+        if (!opened && event.target === event.currentTarget) {
+          setIsRendered(false);
+        }
+      }}
     >
-      {opened && (
+      {showBody && (
         <SnackbarBody
           severity={severity}
           message={message}

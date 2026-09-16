@@ -55,6 +55,55 @@ describe('Snackbar', () => {
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
+  it('does not take focus when it auto-dismisses', () => {
+    const trigger = document.createElement('button');
+    document.body.appendChild(trigger);
+    trigger.focus();
+
+    const { rerender } = render(
+      <Snackbar {...defaultProps} opened={false} openedMiliseconds={3000} />
+    );
+    rerender(<Snackbar {...defaultProps} opened openedMiliseconds={3000} />);
+
+    expect(trigger).toHaveFocus();
+    trigger.remove();
+  });
+
+  it('returns focus to the previously focused element when closed', () => {
+    const trigger = document.createElement('button');
+    document.body.appendChild(trigger);
+    trigger.focus();
+
+    const { rerender } = render(<Snackbar {...defaultProps} opened={false} />);
+    rerender(<Snackbar {...defaultProps} opened />);
+    expect(
+      screen.getByRole('button', { name: 'Close notification' })
+    ).toHaveFocus();
+
+    rerender(<Snackbar {...defaultProps} opened={false} />);
+    expect(trigger).toHaveFocus();
+    trigger.remove();
+  });
+
+  it('keeps the body hidden but mounted during the exit animation', () => {
+    jest.useFakeTimers();
+    const { container, rerender } = render(
+      <Snackbar {...defaultProps} opened />
+    );
+
+    rerender(<Snackbar {...defaultProps} opened={false} />);
+    const wrapper = container.querySelector('.mg-snackbar-wrapper');
+    expect(wrapper).toHaveAttribute('aria-hidden', 'true');
+    expect(container.querySelector('.mg-snackbar')).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+
+    act(() => {
+      jest.advanceTimersByTime(400);
+    });
+    expect(container.querySelector('.mg-snackbar')).not.toBeInTheDocument();
+    jest.useRealTimers();
+  });
+
   it('focuses the close button when opened', () => {
     const { rerender } = render(<Snackbar {...defaultProps} opened={false} />);
     rerender(<Snackbar {...defaultProps} opened />);

@@ -16,7 +16,7 @@ import * as SnackbarStories from './Snackbar.stories';
 
 Brief notifications or feedback messages about an operation's status. Appears temporarily at the top of the screen and automatically disappears after a set time.
 
-The toast body is a [Notice](/docs/components-notice--docs), so severities share Notice's colours, icons and spacing: `error` maps to `negative`, `success` to `positive`.
+The toast body is a [Notice](/docs/components-notice-notice--docs), so severities share Notice's colours, icons and spacing: `error` maps to `negative`, `success` to `positive`.
 
 <Primary />
 <Controls />
@@ -111,7 +111,9 @@ function MyComponent() {
 - Announces severity for screen readers
 - While closed there is no off-screen close button in the tab order
 - Dismissible with Escape key
-- Close button auto-focuses for easy dismissal and uses the shared button focus ring
+- A persistent toast (no `openedMiliseconds`) moves focus to its close button; an auto-dismissing toast leaves focus where it is, so it cannot vanish from under the reader
+- On close, focus returns to the element that had it before the toast opened
+- While sliding out, the toast is `aria-hidden` and inert, then unmounted
 
 ## Mobile considerations
 
@@ -125,7 +127,7 @@ function MyComponent() {
 
 ## Changelog
 
-- **2.0.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): **Breaking (visual):** the toast now renders through Notice instead of its own filled colour styles, so it matches Notice and ServiceNotice. Hardcoded severity colours, `SnackbarIcons.jsx` and the custom close-button styles are removed. The body mounts only while open, and the redundant `aria-live` wrapper is gone. The props API is unchanged.
+- **2.0.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): **Breaking (visual):** the toast now renders through Notice instead of its own filled colour styles, so it matches Notice and ServiceNotice. Hardcoded severity colours, `SnackbarIcons.jsx` and the custom close-button styles are removed. The body mounts only while open (staying hidden and inert through the slide-out), focus returns to its previous element on close, auto-dismissing toasts no longer take focus, and the redundant `aria-live` wrapper is gone. The props API is unchanged.
 - **1.4** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Aligned the action with the shared 44px target, button radius and motion tokens; replaced physical message spacing with logical spacing for RTL; removed a duplicate error-state rule and redundant per-language story exports in favour of the global locale toolbar.
 - **1.3** — 2026-06-19 ([mangrove#1056](https://github.com/unisdr/undrr-mangrove/pull/1056)): Consolidated `closeLabel` and `closeAriaLabel` props into a single `labels` object with `DEFAULT_SNACKBAR_LABELS` export. Backwards compatible — `DEFAULT_SNACKBAR_LABELS` covers all keys. Co-located `_labels.js` provides `LABELS_ES/FR/JA/ZH/AR/RU`; locale toolbar now switches translated strings in all stories.
 
