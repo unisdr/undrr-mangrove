@@ -37,8 +37,12 @@
 
 import fs from 'fs';
 import path from 'path';
+import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+
+const require = createRequire(import.meta.url);
+const { buildTokensDictionary } = require('../build-tokens.cjs');
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -1572,6 +1576,17 @@ async function main() {
   );
 
   // -------------------------------------------------------------------------
+  // Write tokens.json
+  // -------------------------------------------------------------------------
+
+  const tokensDict = buildTokensDictionary();
+  tokensDict.version = pkg.version;
+  tokensDict.generatedAt = generatedAt;
+  const tokensJson = JSON.stringify(tokensDict, null, 2);
+  fs.writeFileSync(path.join(buildDir, 'tokens.json'), tokensJson);
+  fs.writeFileSync(path.join(outputDir, 'tokens.json'), tokensJson);
+
+  // -------------------------------------------------------------------------
   // Write llms.txt
   // -------------------------------------------------------------------------
 
@@ -1589,6 +1604,7 @@ async function main() {
 - Repository: https://github.com/unisdr/undrr-mangrove
 - npm: https://www.npmjs.com/package/${pkg.name}
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
+- Design tokens dictionary: ${DOCS_BASE}tokens.json
 
 ## For AI agents
 
@@ -1599,6 +1615,9 @@ ${DOCS_BASE}ai-components/index.json
 
 CSS utility class reference (~${utilityClassCount} classes):
 ${DOCS_BASE}ai-components/utilities.json
+
+Design tokens dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
+${DOCS_BASE}tokens.json
 
 Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs
@@ -1655,13 +1674,14 @@ Use the --mg-z-index-* custom properties for global stacking contexts (fixed, st
 
 Colour, spacing, radii and component tokens are CSS custom properties, so they are themeable at runtime from a \`:root\` block or a \`.mg-theme-*\` block. No rebuild of Mangrove is needed.
 
-Where they come from (raw sources, browsable on GitHub):
+Where they come from:
 
+- Compiled design tokens dictionary: ${DOCS_BASE}tokens.json
 - \`tokens/mangrove.yaml\` — the brand-neutral base: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/tokens/mangrove.yaml
 - \`tokens/undrr.yaml\`, \`preventionweb.yaml\`, \`irp.yaml\`, \`mcr.yaml\`, \`delta.yaml\` — brand layers merged over the base, same directory.
 - \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/stories/assets/scss/_tokens-data-viz.scss
 
-Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. They borrow DTCG's vocabulary but are NOT DTCG-conformant — several vendor keys sit outside \`$extensions\` (which is unused) and dimensions are bare numbers. Do not feed them to DTCG tooling. These links track \`main\`; for exactly this version, use the matching \`v${pkg.version}\` tag.
+Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
 
 What you actually write against is the compiled result: the \`--mg-*\` custom properties in the theme stylesheets above.
 
@@ -1676,7 +1696,9 @@ color: var(--mg-color-interactive);         /* INVALID — silently dropped */
 background: rgb(var(--mg-color-interactive) / 0.1);   /* alpha for free */
 \`\`\`
 
-Getting it wrong produces a declaration the browser discards with no console error, so it fails by looking almost right. Three tokens are full colours as of ${pkg.version} and must NOT be wrapped, because a brand needs to be able to put \`transparent\` there and a triple cannot express it: \`--mg-color-button-background\`, \`--mg-color-button-background--hover\`, \`--mg-border-color-button\`. In the YAML these are the tokens declaring \`$format: srgb-rgb-function\` — check there rather than assuming the list is still three.
+Getting it wrong produces a declaration the browser discards with no console error, so it fails by looking almost right. Full colour tokens must NOT be wrapped in \`rgb()\`, because they already evaluate to complete color expressions or keyword colours (e.g. \`transparent\`).
+Check \`${DOCS_BASE}tokens.json\` for the authoritative, machine-readable list. As of ${pkg.version}, the tokens that must NOT be wrapped in \`rgb()\` are:
+${tokensDict.wrappingRules.exceptions.map(e => `- \`${e}\``).join('\n')}
 
 **2. Focus rings.** \`--mg-color-focus-ring\` is the ring colour (deliberately not a brand colour: a brand-coloured ring vanishes against the brand's own filled surfaces). \`--mg-color-focus-ring-inverse\` is for a ring painted on an already-dark surface — a button on a filled hero banner, the Snackbar action, the dark Card variants. Geometry is \`--mg-focus-ring-width\`, \`-offset\` and \`-radius\`. Components should \`@include mg-focus-ring;\` or \`@include mg-focus-ring-inset;\` (\`stories/assets/scss/_mixins.scss\`) rather than hand-rolling an outline: the mixin draws two bands so the indicator is legible on any surface, and keeps the ring as an \`outline\` so it survives forced-colors mode.
 
@@ -1781,6 +1803,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         npm: `https://www.npmjs.com/package/${pkg.name}`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
+        tokens: `${DOCS_BASE}tokens.json`,
         css: themeCss,
       },
       requiredAssets: {

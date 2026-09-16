@@ -711,6 +711,108 @@ function build({ tokensDir = TOKENS_DIR } = {}) {
   return files;
 }
 
+/**
+ * Builds a structured, machine-readable design tokens dictionary.
+ * Maps every public CSS custom property to its type, format, rgb-wrapping rule,
+ * description, and per-brand resolved values.
+ */
+function buildTokensDictionary() {
+  const { base, brands } = loadSources(TOKENS_DIR);
+  const defaultBrand = brands.find(brand => brand.meta.default);
+  const byId = new Map(brands.map(brand => [brand.meta.id, brand]));
+
+  const brandDicts = {};
+  const resolvedTargets = brands.map(brand => {
+    const layers = layersFor(brand, base, byId);
+    const tokens = mergeLayers(layers);
+    const output = brand.meta.output || brand.meta.id;
+    const resolved = resolve(tokens, output);
+    brandDicts[brand.meta.id] = {
+      id: brand.meta.id,
+      title: brand.meta.title,
+      selector: brand.meta.selector,
+      default: !!brand.meta.default,
+      output,
+      resolved,
+      tokens,
+    };
+    return brandDicts[brand.meta.id];
+  });
+
+  const allTokenIds = new Set();
+  for (const b of resolvedTargets) {
+    for (const [id, record] of b.resolved.emitted.entries()) {
+      if (record.name && !record.token.private) {
+        allTokenIds.add(id);
+      }
+    }
+  }
+
+  const tokensList = [];
+  const rgbExceptions = new Set();
+
+  for (const id of allTokenIds) {
+    const defaultRecord =
+      brandDicts[defaultBrand.meta.id]?.resolved.emitted.get(id);
+    const tokenMeta = defaultRecord?.token || resolvedTargets[0].tokens.get(id);
+    const cssName = defaultRecord?.name || propertyName(tokenMeta);
+    const format =
+      tokenMeta.format ||
+      (tokenMeta.type === 'color' ? 'srgb-channels' : 'literal');
+    const isColor = tokenMeta.type === 'color';
+    const wrapInRgb = isColor && format === 'srgb-channels';
+
+    if (isColor && !wrapInRgb && cssName) {
+      rgbExceptions.add(cssName);
+    }
+
+    const values = {};
+    for (const b of resolvedTargets) {
+      const rec = b.resolved.emitted.get(id);
+      if (rec && rec.value != null) {
+        values[b.id] = rec.value;
+      }
+    }
+
+    tokensList.push({
+      name: cssName,
+      id,
+      type: tokenMeta.type || 'literal',
+      format,
+      wrapInRgb,
+      description: tokenMeta.description || null,
+      values,
+    });
+  }
+
+  tokensList.sort((a, b) => a.name.localeCompare(b.name));
+
+  return {
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    description:
+      'Mangrove 2.0 Design Tokens Dictionary and Format Specifications',
+    wrappingRules: {
+      srgbChannels:
+        'Must be wrapped in rgb(var(--token)) or rgb(var(--token) / <alpha>). Passing a raw var() in CSS color properties fails silently in browsers without console warnings.',
+      color: 'Complete color expression; do NOT wrap in rgb().',
+      exceptions: [...rgbExceptions].sort(),
+    },
+    brands: Object.fromEntries(
+      resolvedTargets.map(b => [
+        b.id,
+        {
+          title: b.title,
+          selector: b.selector,
+          default: b.default,
+        },
+      ])
+    ),
+    totalTokens: tokensList.length,
+    tokens: tokensList,
+  };
+}
+
+
 /* ------------------------------------------------------------------ *
  * Output baseline
  *
@@ -842,6 +944,7 @@ if (require.main === module) {
 
 module.exports = {
   build,
+  buildTokensDictionary,
   TokenError,
   BASELINE_PATH,
   baselineOf,
