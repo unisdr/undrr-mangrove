@@ -1,39 +1,42 @@
 /**
- * @file
- * Tree component stylesheet.
+ * Tree
+ *
  * Accessible tree and nested hierarchy view with expand/collapse and selection states.
- * @see https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Navigation/Tree/Tree.mdx
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Navigation/Tree/Tree.mdx
  */
 
 .mg-tree {
   list-style: none;
   padding: 0;
   margin: 0;
+  font-family: var(--mg-font-family-text);
 
   &__group {
     list-style: none;
-    padding: 0 0 0 1.5rem;
+    padding: 0;
+    padding-inline-start: var(--mg-spacing-300);
     margin: 0;
   }
 
   &--guides &__group {
-    border-left: 1px dashed rgb(var(--mg-color-neutral-300));
-    margin-left: 0.5rem;
-    padding-left: 1rem;
+    border-inline-start: 1px dashed rgb(var(--mg-color-neutral-300));
+    margin-inline-start: var(--mg-spacing-100);
+    padding-inline-start: var(--mg-spacing-200);
   }
 
   &__item {
-    margin: 0.25rem 0;
+    margin-block: var(--mg-spacing-50);
     outline: none;
 
     &:focus-visible > .mg-tree__label-container {
-      outline: 2px solid rgb(var(--mg-color-interactive));
-      outline-offset: -2px;
+      @include mg-focus-ring-inset;
     }
 
     &--selected > .mg-tree__label-container {
       background-color: rgb(var(--mg-color-interactive) / 0.12);
-      font-weight: bold;
+      font-weight: 700;
       color: rgb(var(--mg-color-interactive));
     }
   }
@@ -41,15 +44,10 @@
   &__label-container {
     display: flex;
     align-items: center;
-    padding: 0.25rem 0.5rem;
+    gap: var(--mg-spacing-100);
+    padding: var(--mg-spacing-50) var(--mg-spacing-100);
     cursor: pointer;
-    border-radius: 4px;
-    outline: none;
-
-    &:focus-visible {
-      outline: 2px solid rgb(var(--mg-color-interactive));
-      outline-offset: -2px;
-    }
+    border-radius: var(--mg-radius-button);
 
     &:hover {
       background-color: rgb(var(--mg-color-interactive) / 0.06);
@@ -57,32 +55,30 @@
   }
 
   &__toggle {
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin-right: 0.5rem;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1rem;
-    height: 1rem;
-    outline: none;
-
-    &:focus-visible {
-      outline: 2px solid rgb(var(--mg-color-interactive));
-    }
+    inline-size: 1rem;
+    block-size: 1rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
   }
 
   &__icon {
-    font-size: 0.75rem;
-    width: 0.75rem;
-    height: 0.75rem;
     display: inline-block;
-    transition: transform 0.2s ease;
+    font-size: 0.75rem;
+    transition: transform var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
+    }
+
+    &:dir(rtl) {
+      transform: scaleX(-1);
     }
 
     &.is-expanded {
@@ -91,8 +87,9 @@
   }
 
   &__label {
-    user-select: none;
+    font-family: var(--mg-font-family-ui);
     color: inherit;
     text-decoration: none;
+    user-select: none;
   }
 }

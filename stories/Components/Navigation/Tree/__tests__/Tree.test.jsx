@@ -48,14 +48,15 @@ describe('Tree and TreeItem', () => {
     const item1 = document.getElementById('mg-treeitem-1');
     expect(item1).toHaveAttribute('aria-expanded', 'false');
 
-    const toggleBtn = screen.getByRole('button', { name: /expand/i });
+    const toggleBtn = item1.querySelector('.mg-tree__toggle');
+    expect(toggleBtn).toHaveAttribute('aria-hidden', 'true');
     fireEvent.click(toggleBtn);
 
     expect(item1).toHaveAttribute('aria-expanded', 'true');
     expect(onToggle).toHaveBeenCalledWith('1', true);
     expect(screen.getByText('Node 1.1')).toBeInTheDocument();
 
-    const collapseBtn = screen.getByRole('button', { name: /collapse/i });
+    const collapseBtn = item1.querySelector('.mg-tree__toggle');
     fireEvent.click(collapseBtn);
 
     expect(item1).toHaveAttribute('aria-expanded', 'false');
@@ -143,6 +144,28 @@ describe('Tree and TreeItem', () => {
       const item1_1 = document.getElementById('mg-treeitem-1-1');
       fireEvent.keyDown(item1, { key: 'ArrowRight' });
       expect(document.activeElement).toBe(item1_1);
+    });
+
+    it('swaps ArrowRight and ArrowLeft in RTL', () => {
+      render(
+        <div dir="rtl" style={{ direction: 'rtl' }}>
+          <Tree>
+            <TreeItem id="1" label="Node 1">
+              <TreeItem id="1-1" label="Node 1.1" />
+            </TreeItem>
+          </Tree>
+        </div>
+      );
+      const item1 = document.getElementById('mg-treeitem-1');
+      act(() => {
+        item1.focus();
+      });
+
+      fireEvent.keyDown(item1, { key: 'ArrowLeft' });
+      expect(item1).toHaveAttribute('aria-expanded', 'true');
+
+      fireEvent.keyDown(item1, { key: 'ArrowRight' });
+      expect(item1).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('collapses expanded node on ArrowLeft, and moves to parent on child ArrowLeft', () => {

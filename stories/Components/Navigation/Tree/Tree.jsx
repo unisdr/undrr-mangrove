@@ -114,13 +114,14 @@ export const TreeItem = ({
     >
       <div className="mg-tree__label-container" onClick={handleLabelClick}>
         {hasChildren && (
+          // The treeitem already exposes aria-expanded and handles the
+          // keyboard, so the chevron is a pointer-only affordance.
           <button
             type="button"
             className="mg-tree__toggle"
             onClick={handleToggle}
             tabIndex={-1}
-            aria-label={isExpanded ? 'Collapse' : 'Expand'}
-            aria-expanded={isExpanded}
+            aria-hidden="true"
           >
             <span
               className={classNames('mg-tree__icon mg-icon mg-icon-right', {
@@ -266,8 +267,16 @@ export const Tree = ({
       if (currentIndex === -1) return;
 
       const currentEl = visibleItems[currentIndex];
+      // In RTL the tree grows leftwards, so the expand and collapse arrows swap.
+      const dirEl = treeRef.current.closest('[dir]');
+      const isRtl = dirEl
+        ? dirEl.getAttribute('dir').toLowerCase() === 'rtl'
+        : getComputedStyle(treeRef.current).direction === 'rtl';
+      let { key } = e;
+      if (isRtl && key === 'ArrowRight') key = 'ArrowLeft';
+      else if (isRtl && key === 'ArrowLeft') key = 'ArrowRight';
 
-      switch (e.key) {
+      switch (key) {
         case 'ArrowDown': {
           e.preventDefault();
           if (currentIndex < visibleItems.length - 1) {

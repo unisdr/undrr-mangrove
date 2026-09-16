@@ -14,7 +14,8 @@ The `Tree` component provides an accessible hierarchical navigation structure co
 - **ARIA APG Treeview Navigation**: Full roving tabindex and arrow keyboard navigation.
 - **Controlled & Uncontrolled State**: Support for `expandedIds` / `defaultExpandedIds` and `selectedId` / `defaultSelectedId`.
 - **Linked Parent Sections**: Independent toggle control (`mg-tree__toggle`) and navigation link (`mg-tree__label`).
-- **Mangrove Tokens**: Built with canonical interactive and neutral color tokens.
+- **Mangrove tokens**: built with canonical interactive and neutral colour tokens.
+- **RTL**: ArrowRight and ArrowLeft swap and the chevron mirrors in right-to-left layouts.
 
 ## Usage
 
@@ -84,7 +85,12 @@ Parent and leaf items can also function as standard links.
 
 <Controls />
 
+## Prototype notice
+
+This component is a prototype and subject to change. The API and behavior may be updated based on user feedback and usability testing.
+
 ## Changelog
 
-- **v1.1.0** — 2026-09-16 ([#1161](https://github.com/unisdr/undrr-mangrove/issues/1161)): Implemented full ARIA APG keyboard navigation (Arrow keys, Home, End, Enter, Space), roving tabindex, controlled `expandedIds`/`selectedId` props, canonical color tokens, and `mg-icon` chevron integration.
-- **v1.0.0** — 2026-09-16 ([#1162](https://github.com/unisdr/undrr-mangrove/pull/1162)): Initial implementation with expand/collapse and optional link support.
+- **1.0.0** — 2026-09-16 ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)): Initial implementation with expand/collapse and optional link support.
+  - Full ARIA APG keyboard navigation (arrow keys, Home, End, Enter, Space), roving tabindex, controlled `expandedIds` / `selectedId`, colour tokens and `mg-icon` chevron ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
+  - Before rc.1: arrow keys and chevron mirror in RTL, logical properties, shared inset focus ring, and the chevron button is presentational so `aria-expanded` is not repeated and no English label is hardcoded.
