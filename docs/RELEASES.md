@@ -37,6 +37,14 @@ yarn validate-manifest
 
 The validation checks for stale curated data keys, accessibility anti-patterns in HTML examples, and PropTypes coverage.
 
+Then preview the npm tarball exactly as the publish workflow will assemble it, and compare it with the last published version. The diff should list only files that genuinely changed this release:
+
+```bash
+yarn pack:preview --compare <previous-version>   # e.g. --compare 2.0.0-rc.1
+```
+
+Never run `npm pack` at the repo root. The root `package.json` has no `files` field, so it packs the **entire repo** (600+ files including source and config), which is not what gets published. See [Package contents](#package-contents).
+
 ### 2. Update the version
 
 Edit `version` in `package.json` to the new version number:
@@ -89,7 +97,7 @@ git push origin main --tags
 The tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml), which automatically:
 
 - Builds the project
-- Packages distribution files and SCSS sources
+- Packages distribution files and SCSS sources (`scripts/assemble-npm-package.mjs`, the same script as `yarn pack:preview`)
 - Publishes to the npm registry
 
 ### 7. Create a GitHub Release
@@ -178,28 +186,16 @@ Follow the normal [Release steps](#release-steps) 1–5 (version bump, CDN links
 
 ### 2. Assemble the package exactly as CI does
 
-The `npm-publish.yml` workflow does **not** publish the repo root — it builds a curated `npm-package/` directory from `dist/` (compiled `components/`, `css/`, `js/`, `fonts/`, `error-pages/`, the `scss/` sources, and a slimmed `package.json`). Reproduce its "Prepare package files" step from the repo root after a clean `yarn build`:
+The `npm-publish.yml` workflow does **not** publish the repo root. It runs `scripts/assemble-npm-package.mjs`, which builds a curated `npm-package/` directory from `dist/` (compiled `components/`, `css/`, `js/`, `fonts/`, `error-pages/`, the `scss/` sources, and a slimmed `package.json`). Run the same script from the repo root after a clean `yarn build`:
 
 ```bash
-rm -rf npm-package && mkdir -p npm-package/dist && cp -r dist/* npm-package/dist/
-[ -d dist/assets/js ]          && { mkdir -p npm-package/js;          cp -r dist/assets/js/* npm-package/js/; }
-[ -d dist/assets/css ]         && { mkdir -p npm-package/css;         cp -r dist/assets/css/* npm-package/css/; }
-[ -d dist/assets/error-pages ] && { mkdir -p npm-package/error-pages; cp -r dist/assets/error-pages/* npm-package/error-pages/; }
-[ -d dist/fonts ]              && { mkdir -p npm-package/fonts;       cp -r dist/fonts/* npm-package/fonts/; }
-[ -d dist/components ]         && { mkdir -p npm-package/components;   cp -r dist/components/* npm-package/components/; }
-mkdir -p npm-package/scss
-find stories -name '*.scss' -type f | while read f; do
-  mkdir -p "npm-package/scss/$(dirname "$f" | sed 's|^stories/||')"
-  cp "$f" "npm-package/scss/$(echo "$f" | sed 's|^stories/||')"
-done
-cp package.json README.md LICENSE npm-package/
-node -e 'const p=require("./package.json");require("fs").writeFileSync("npm-package/package.json",JSON.stringify({name:p.name,version:p.version,description:p.description,main:"dist/index.js",files:["components/**/*","css/**/*","js/**/*","scss/**/*.scss","error-pages/**/*","fonts/**/*"],repository:p.repository,keywords:p.keywords,author:p.author,license:p.license},null,2))'
+yarn pack:assemble   # replaces npm-package/ (gitignored)
 ```
 
 Two quirks worth knowing, both intentional and matching every prior release:
 
 - The slim `files` array **excludes `dist/`**, so `main: "dist/index.js"` is a dangling pointer — the published tarball has no `dist/`. Consumers import from the subpath dirs (`components/`, `css/`, …), so this has never mattered. Don't "fix" it, or you change what's published.
-- `npm-package/` is **not** gitignored. Publish from inside it, and don't `git add -A` on `main` while it exists or you'll commit 8 MB of build output.
+- `npm-package/` is gitignored, but still delete it once the release is done so a stale copy is never published later.
 
 ### 3. Verify the tarball before publishing
 
@@ -208,11 +204,10 @@ Never `npm pack` at the repo root — the root `package.json` has no `files` fie
 Confirm contents against the previous published release — the diff should be *only* files that genuinely changed this release:
 
 ```bash
-cd npm-package && npm pack --dry-run --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s)[0];console.log(j.entryCount,"files,",(j.unpackedSize/1048576).toFixed(2)+"MB")})'
-# parity check against the last release actually on npm:
-cd /tmp && npm pack @undrr/undrr-mangrove@<previous-version>   # downloads the real published tarball
-# then compare the two file lists (tar tzf ... | sed 's|^package/||' | sort) with diff/comm.
+yarn pack:preview --compare <previous-version>
 ```
+
+This re-assembles `npm-package/`, prints the file count and unpacked size from `npm pack --dry-run`, fetches the published `<previous-version>` tarball listing from npm, and prints the files only in one or the other.
 
 ### 4. Publish
 
@@ -316,6 +311,8 @@ Published npm packages include:
 - `/scss/**/*` — source SCSS files
 - `/error-pages/**/*` — static error page templates
 - `/fonts/**/*` — Mangrove icon font
+
+The layout and the slimmed `package.json` are produced by `scripts/assemble-npm-package.mjs`, used by both the publish workflow and `yarn pack:assemble` / `yarn pack:preview`. Change that script, not the workflow, to change what is published.
 
 ## CDN distribution
 
