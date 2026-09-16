@@ -88,9 +88,7 @@ export const REQUIRES_REACT = {
 
 // ---------------------------------------------------------------------------
 // Curated component data (descriptions, HTML examples, flags)
-// ---------------------------------------------------------------------------
-
-export default {
+export const COMPONENT_DATA = {
   // --- Layout ---
   'design-decisions-container': {
     description:
@@ -1158,7 +1156,7 @@ npm run build</code></pre>
   // --- Page templates ---
   'components-reading-column': {
     description:
-      'Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 48rem up, stacking it above the article below that. The sidebar split itself is mg-grid\'s --article variant (see design-decisions-grid-layout) — pair mg-reading--with-contents with mg-grid mg-grid--article in markup.',
+      "Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 48rem up, stacking it above the article below that. The sidebar split itself is mg-grid's --article variant (see design-decisions-grid-layout) — pair mg-reading--with-contents with mg-grid mg-grid--article in markup.",
     cssClasses: [
       'mg-reading',
       'mg-reading--with-contents',
@@ -1551,7 +1549,7 @@ npm run build</code></pre>
   // --- Navigation ---
   'components-navigation-drawer': {
     description:
-      'Off-canvas drawer and floating panel component. Supports start/end/bottom positioning, backdrop overlay, Escape key dismissal, and Layer 2 progressive hydration.',
+      'Slide-over off-canvas drawer and floating panel for secondary navigation, filters, or details. Supports backdrop dismissal, escape key closure, and server-rendered HTML hydration via createHydrator with data-mg-drawer.',
     cssClasses: [
       'mg-drawer',
       'mg-drawer--start',
@@ -1570,35 +1568,6 @@ npm run build</code></pre>
       'mg-floating-panel__close',
       'mg-floating-panel__body',
     ],
-    examples: [
-      {
-        name: 'Drawer (off-canvas)',
-        html: `<div class="mg-drawer mg-drawer--start is-open" data-mg-drawer role="complementary" aria-hidden="false">
-  <div class="mg-drawer__header">
-    <h2 class="mg-drawer__title">Filter options</h2>
-    <button type="button" class="mg-drawer__close" aria-label="Close">&times;</button>
-  </div>
-  <div class="mg-drawer__body">
-    <p>Drawer body content.</p>
-  </div>
-  <div class="mg-drawer__footer">
-    <button type="button" class="mg-button mg-button-primary">Apply</button>
-  </div>
-</div>`,
-      },
-      {
-        name: 'Floating panel',
-        html: `<div class="mg-floating-panel is-open" data-mg-drawer data-is-floating-panel="true" role="dialog" aria-hidden="false">
-  <div class="mg-floating-panel__header">
-    <h2 class="mg-floating-panel__title">Quick settings</h2>
-    <button type="button" class="mg-floating-panel__close" aria-label="Close">&times;</button>
-  </div>
-  <div class="mg-floating-panel__body">
-    <p>Floating panel content.</p>
-  </div>
-</div>`,
-      },
-    ],
   },
   'components-navigation-tree': {
     description:
@@ -1615,37 +1584,7 @@ npm run build</code></pre>
       'is-expanded',
       'mg-tree__label',
     ],
-    examples: [
-      {
-        name: 'Tree navigation with guides',
-        html: `<ul class="mg-tree mg-tree--guides" role="tree">
-  <li class="mg-tree__item" role="treeitem" aria-expanded="true" tabindex="0">
-    <div class="mg-tree__label-container">
-      <button type="button" class="mg-tree__toggle" tabindex="-1" aria-label="Collapse" aria-expanded="true">
-        <span class="mg-tree__icon mg-icon mg-icon-right is-expanded" aria-hidden="true"></span>
-      </button>
-      <span class="mg-tree__label">Disaster Risk Reduction</span>
-    </div>
-    <ul class="mg-tree__group" role="group">
-      <li class="mg-tree__item mg-tree__item--selected" role="treeitem" aria-selected="true" tabindex="-1">
-        <div class="mg-tree__label-container">
-          <span class="mg-tree__label">Early Warning Systems</span>
-        </div>
-      </li>
-      <li class="mg-tree__item" role="treeitem" tabindex="-1">
-        <div class="mg-tree__label-container">
-          <span class="mg-tree__label">Climate Adaptation</span>
-        </div>
-      </li>
-    </ul>
-  </li>
-  <li class="mg-tree__item" role="treeitem" tabindex="-1">
-    <div class="mg-tree__label-container">
-      <span class="mg-tree__label">Global Frameworks</span>
-    </div>
-  </li>
-</ul>`,
-      },
-    ],
   },
 };
+
+export default COMPONENT_DATA;

@@ -52,7 +52,5 @@ it('keeps dry runs read-only and supports prerelease testing URLs', () => {
   execFileSync(process.execPath, [script, `--root=${root}`, '--dry-run']);
   expect(fs.readFileSync(file, 'utf8')).toBe(url(old));
   execFileSync(process.execPath, [script, `--root=${root}`, '--testing']);
-  expect(fs.readFileSync(file, 'utf8')).toBe(
-    url(target, 'testing/mangrove')
-  );
+  expect(fs.readFileSync(file, 'utf8')).toBe(url(target, 'testing/mangrove'));
 });

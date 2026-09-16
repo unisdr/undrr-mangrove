@@ -19,7 +19,9 @@ if (!fs.existsSync(packageJsonPath)) {
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 const version = packageJson.version;
 
-console.log(`Scanning ${rootDir} to update Mangrove CDN links to version ${version} ${useTesting ? '(testing)' : '(prod)'}${isDryRun ? ' [dry-run]' : ''}...`);
+console.log(
+  `Scanning ${rootDir} to update Mangrove CDN links to version ${version} ${useTesting ? '(testing)' : '(prod)'}${isDryRun ? ' [dry-run]' : ''}...`
+);
 
 // Build replacement target
 const targetBase = useTesting
@@ -52,12 +54,25 @@ const ignoredDirectories = new Set([
 
 // File extensions considered safe to rewrite as text
 const allowedExtensions = new Set([
-  '.md', '.mdx', '.markdown',
-  '.js', '.jsx', '.ts', '.tsx',
-  '.json', '.yml', '.yaml',
-  '.html', '.htm', '.txt', '.sh',
-  '.css', '.scss', '.sass',
-  '.twig', '.php',
+  '.md',
+  '.mdx',
+  '.markdown',
+  '.js',
+  '.jsx',
+  '.ts',
+  '.tsx',
+  '.json',
+  '.yml',
+  '.yaml',
+  '.html',
+  '.htm',
+  '.txt',
+  '.sh',
+  '.css',
+  '.scss',
+  '.sass',
+  '.twig',
+  '.php',
 ]);
 
 /**
@@ -148,7 +163,9 @@ if (changedCount === 0) {
   console.log('No CDN links needed updating.');
 } else {
   const modeLabel = isDryRun ? 'Would update' : 'Updated';
-  console.log(`\n${modeLabel} ${changedCount} file(s) to point to ${targetBase}`);
+  console.log(
+    `\n${modeLabel} ${changedCount} file(s) to point to ${targetBase}`
+  );
   for (const f of changedFiles) {
     console.log(`- ${path.relative(rootDir, f)}`);
   }

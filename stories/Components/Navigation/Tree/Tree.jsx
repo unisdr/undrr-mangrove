@@ -86,11 +86,13 @@ export const TreeItem = ({
 
   const handleKeyDown = e => {
     if (context) {
+      e.stopPropagation();
       context.handleKeyDown(e, id, hasChildren, isExpanded, handleToggle);
     }
   };
 
-  const handleFocus = () => {
+  const handleFocus = e => {
+    if (e) e.stopPropagation();
     if (context) {
       context.setFocusedId(id);
     }
@@ -244,7 +246,20 @@ export const Tree = ({
         treeRef.current.querySelectorAll(
           'li[role="treeitem"][data-mg-treeitem-id]'
         )
-      );
+      ).filter(el => {
+        let parentGroup = el.parentElement?.closest('ul[role="group"]');
+        while (parentGroup) {
+          const parentItem = parentGroup.closest(
+            'li[role="treeitem"][data-mg-treeitem-id]'
+          );
+          if (!parentItem) break;
+          const parentId = parentItem.getAttribute('data-mg-treeitem-id');
+          if (!expandedIds.has(parentId)) return false;
+          parentGroup = parentItem.parentElement?.closest('ul[role="group"]');
+        }
+        return true;
+      });
+
       const currentIndex = visibleItems.findIndex(
         el => el.getAttribute('data-mg-treeitem-id') === currentId
       );
@@ -352,7 +367,7 @@ export const Tree = ({
           break;
       }
     },
-    [selectItem]
+    [expandedIds, selectItem]
   );
 
   const contextValue = useMemo(
