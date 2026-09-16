@@ -23,7 +23,9 @@ import { fileURLToPath } from 'node:url';
 import { assemble, PACKAGE_NAME } from './assemble-npm-package.mjs';
 
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-const TIMESTAMP_LINE = /^.*Compiled on:.*$/gm;
+// Matches only the webpack banner's ISO timestamp, never the rest of a line.
+const TIMESTAMP =
+  /Compiled on:\s+\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z/g;
 
 function runNpm(args, cwd) {
   return execFileSync(npm, args, {
@@ -68,13 +70,23 @@ const summary = info =>
 
 const hash = buf => crypto.createHash('sha256').update(buf).digest('hex');
 
-// 'same', 'timestamp' (differs only in `Compiled on:` lines) or 'changed'.
-function compareFiles(a, b) {
-  const bufA = fs.readFileSync(a);
-  const bufB = fs.readFileSync(b);
+// 'same', 'timestamp' (differs only in the `Compiled on:` banner timestamp)
+// or 'changed'. latin1 maps every byte to one character, so binary files
+// (fonts, images) cannot collapse to equal strings the way invalid UTF-8
+// would; and a file only counts as timestamp-only if both sides carry the
+// banner.
+export function compareBuffers(bufA, bufB) {
   if (bufA.equals(bufB)) return 'same';
-  const strip = buf => buf.toString('utf8').replace(TIMESTAMP_LINE, '');
-  return hash(strip(bufA)) === hash(strip(bufB)) ? 'timestamp' : 'changed';
+  const textA = bufA.toString('latin1');
+  const textB = bufB.toString('latin1');
+  const hasBanner = text => new RegExp(TIMESTAMP.source).test(text);
+  if (!hasBanner(textA) || !hasBanner(textB)) return 'changed';
+  const strip = text => text.replace(TIMESTAMP, 'Compiled on:');
+  return hash(strip(textA)) === hash(strip(textB)) ? 'timestamp' : 'changed';
+}
+
+function compareFiles(a, b) {
+  return compareBuffers(fs.readFileSync(a), fs.readFileSync(b));
 }
 
 export function parseArgs(argv) {

@@ -234,9 +234,13 @@ export function parseArgs(argv) {
   const opts = {};
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
-    if (arg === '--root') opts.root = argv[(i += 1)];
-    else if (arg.startsWith('--root=')) opts.root = arg.slice(7);
-    else if (!arg.startsWith('-') && !opts.outDir) opts.outDir = arg;
+    if (arg === '--root' || arg.startsWith('--root=')) {
+      const value = arg === '--root' ? argv[(i += 1)] : arg.slice(7);
+      if (!value || value.startsWith('-')) {
+        throw new Error('--root needs a directory path');
+      }
+      opts.root = value;
+    } else if (!arg.startsWith('-') && !opts.outDir) opts.outDir = arg;
     else throw new Error(`Unknown argument: ${arg}`);
   }
   return opts;

@@ -273,3 +273,15 @@ describe('output directory guard', () => {
     expect(snapshot()).toEqual(before);
   });
 });
+
+test.each([[['--root']], [['--root=']], [['--root', '--foo']]])(
+  'rejects %j as a --root value',
+  args => {
+    const result = spawnSync(process.execPath, [script, ...args], {
+      encoding: 'utf8',
+      cwd: os.tmpdir(),
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toMatch(/--root needs a directory path/);
+  }
+);
