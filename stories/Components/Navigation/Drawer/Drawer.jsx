@@ -97,3 +97,5 @@ Drawer.propTypes = {
   backdrop: PropTypes.bool,
   isFloatingPanel: PropTypes.bool,
 };
+
+export default Drawer;

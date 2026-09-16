@@ -106,15 +106,21 @@ Returns: `{ roots, update, unmountAll }`
 
 | Component | Tier | Selector | Key attributes |
 |-----------|------|----------|---------------|
+| CopyButton | Simple | `[data-mg-copy-button]` | `data-text-to-copy`, `data-aria-label`, `data-tooltip-label`, `data-copied-label`, `data-variant`, `data-size`, `data-labels` (JSON) |
+| Drawer | Simple/Medium | `[data-mg-drawer]`, `[data-mg-floating-panel]` | `data-is-open`, `data-position`, `data-title`, `data-backdrop`, `data-is-floating-panel` |
+| TextCta | Simple | `[data-mg-text-cta]` | `data-title`, `data-cta-label`, `data-cta-url`, `data-variant` |
 | ShareButtons | Simple | `[data-mg-share-buttons]` | `data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body` |
 | QuoteHighlight | Simple | `[data-mg-quote-highlight]` | `data-quote`, `data-attribution`, `data-variant`, `data-alignment` |
 | ScrollContainer | Medium | `[data-mg-scroll-container]` | `data-height`, `data-show-arrows`, `data-step-size`, `.mg-scroll__content` children |
 | Gallery | Medium | `[data-mg-gallery]` | `data-media` (JSON), `data-show-thumbnails`, `data-arrow-style` |
 | IconCard | Medium | `[data-mg-icon-card]` | `data-items` (JSON), `data-centered`, `data-variant` |
 | StatsCard | Medium | `[data-mg-stats-card]` | `data-stats` (JSON), `data-title`, `data-variant` |
+| UserFeedback | Medium | `[data-mg-user-feedback]` | `data-title`, `data-description`, `data-labels` (JSON), `data-api-endpoint` |
 | MegaMenu | Complex | `[data-mg-mega-menu]` | `data-delay`, `data-hover-delay`, `data-sections` (JSON, optional) |
 | SyndicationSearchWidget | Complex | `[data-mg-search-widget]` | `data-search-endpoint`, `data-results-per-page`, `data-default-filters` (JSON) |
 | Pager | Medium | `[data-mg-pager]` | `data-page`, `data-total-pages`, `data-show-jump-to`, `data-aria-label` |
+
+> **Note on Micro-Interactions**: For lightweight interactions like `CopyButton`, Mangrove also provides a **zero-dependency vanilla JS script** (`dist/js/copy-button.min.js` or CDN `/js/copy-button.js`) with 0 kB React runtime requirement. Use React hydration when your architecture standardizes on `createHydrator`, or use the standalone script for pure HTML/PHP/Twig sites.
 
 Tier definitions:
 - **Simple**: scalar attributes

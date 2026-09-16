@@ -15,16 +15,19 @@
  *   <span class="mg-u-sr-only" aria-live="polite"></span>
  * </button>
  *
- * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to initialize.
- *   Accepts a NodeList, array, or a single HTMLElement.
- *   Defaults to all [data-mg-copy-button] in the document.
+ * @param {NodeList|HTMLElement[]|HTMLElement|Document} [scope] - Elements or container to search within.
  */
+function buttonsIn(scope = document) {
+  if (!scope) return [];
+  if (!scope.querySelectorAll) return Array.from(scope).flatMap(buttonsIn);
+  return [
+    ...(scope.matches?.('[data-mg-copy-button]') ? [scope] : []),
+    ...scope.querySelectorAll('[data-mg-copy-button]'),
+  ];
+}
+
 export function mgCopyButton(scope) {
-  const elements = scope
-    ? scope instanceof HTMLElement
-      ? [scope]
-      : scope
-    : document.querySelectorAll('[data-mg-copy-button]');
+  const elements = buttonsIn(scope);
 
   elements.forEach(button => {
     // Guard against double initialization

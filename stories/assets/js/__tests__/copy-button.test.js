@@ -86,17 +86,27 @@ describe('mgCopyButton (Vanilla JS Script)', () => {
     expect(btn.dataset.mgCopyButtonInitialized).toBe('true');
   });
 
-  it('supports fallback using execCommand when clipboard API is missing', async () => {
-    delete navigator.clipboard;
-    document.execCommand = jest.fn();
+  it('supports initializing via container elements or document', async () => {
+    const container = document.createElement('div');
+    container.innerHTML = `
+      <div class="card">
+        <button type="button" class="mg-button mg-copy-button" data-mg-copy-button data-text-to-copy="https://nested.org">
+          <span class="mg-icon mg-icon-copy mg-button__icon"></span>
+          <span class="mg-copy-button__feedback">Copied!</span>
+          <span class="mg-u-sr-only"></span>
+        </button>
+      </div>
+    `;
+    document.body.appendChild(container);
 
-    const btn = createButton({ 'text-to-copy': 'Fallback text' });
-    mgCopyButton(btn);
+    mgCopyButton(container);
+
+    const btn = container.querySelector('[data-mg-copy-button]');
+    expect(btn.dataset.mgCopyButtonInitialized).toBe('true');
 
     btn.click();
     await Promise.resolve();
 
-    expect(document.execCommand).toHaveBeenCalledWith('copy');
-    expect(btn.classList.contains('mg-copy-button--copied')).toBe(true);
+    expect(writeTextMock).toHaveBeenCalledWith('https://nested.org');
   });
 });

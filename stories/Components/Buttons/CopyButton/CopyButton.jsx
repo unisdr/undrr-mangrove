@@ -5,10 +5,18 @@ import { DEFAULT_COPY_BUTTON_LABELS } from './_labels';
 
 export { DEFAULT_COPY_BUTTON_LABELS };
 
+const EMPTY_LABELS = {};
+
+const VARIANT_CLASSES = {
+  outline: 'mg-button-primary mg-button-outline',
+  primary: 'mg-button-primary',
+  secondary: 'mg-button-secondary mg-button-outline',
+};
+
 export const CopyButton = ({
   textToCopy = '',
   className,
-  labels = {},
+  labels = EMPTY_LABELS,
   ariaLabel: customAriaLabel,
   copiedLabel: customCopiedLabel,
   tooltipLabel: customTooltipLabel,
@@ -54,21 +62,16 @@ export const CopyButton = ({
     }
   };
 
-  const variantClasses = {
-    outline: 'mg-button-primary mg-button-outline',
-    primary: 'mg-button-primary',
-    secondary: 'mg-button-secondary mg-button-outline',
-  };
-
   return (
     <button
       type="button"
       className={classNames(
         'mg-button',
-        variantClasses[variant] || variantClasses.outline,
+        VARIANT_CLASSES[variant] || VARIANT_CLASSES.outline,
         'mg-button--icon',
         {
-          [`mg-button--icon--${size}`]: size,
+          'mg-button--small': size === 'small',
+          'mg-button--large': size === 'large',
           'mg-copy-button--copied': copied,
         },
         'mg-copy-button',

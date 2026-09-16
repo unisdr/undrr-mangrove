@@ -44,6 +44,7 @@ The DELTA Resilience theme has no legacy variant.
 | Show More | `/js/show-more.js` | Expand/collapse sections |
 | On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
 | Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
+| Copy Button | `/js/copy-button.js` | Zero-dependency copy-to-clipboard button |
 
 ```html
 <script type="module">
@@ -59,6 +60,9 @@ Runtime: `/components/hydrate.js`
 | Module | Path |
 |--------|------|
 | Hydration runtime | `/components/hydrate.js` |
+| CopyButton | `/components/CopyButton.js` |
+| Drawer | `/components/Drawer.js` |
+| TextCta | `/components/TextCta.js` |
 | ShareButtons | `/components/ShareButtons.js` |
 | MegaMenu | `/components/MegaMenu.js` |
 | ScrollContainer | `/components/ScrollContainer.js` |

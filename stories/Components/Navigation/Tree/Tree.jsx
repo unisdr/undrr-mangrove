@@ -5,11 +5,13 @@ import React, {
   createContext,
   useCallback,
   useEffect,
+  useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const TreeContext = createContext(null);
+const EMPTY_EXPANDED_IDS = [];
 
 export const TreeItem = ({
   id,
@@ -164,7 +166,7 @@ export const Tree = ({
   children,
   guides = true,
   expandedIds: controlledExpandedIds,
-  defaultExpandedIds = [],
+  defaultExpandedIds = EMPTY_EXPANDED_IDS,
   selectedId: controlledSelectedId,
   defaultSelectedId = null,
   onToggle,
@@ -353,15 +355,26 @@ export const Tree = ({
     [selectItem]
   );
 
-  const contextValue = {
-    expandedIds,
-    selectedId,
-    focusedId,
-    setFocusedId,
-    toggleItem,
-    selectItem,
-    handleKeyDown,
-  };
+  const contextValue = useMemo(
+    () => ({
+      expandedIds,
+      selectedId,
+      focusedId,
+      setFocusedId,
+      toggleItem,
+      selectItem,
+      handleKeyDown,
+    }),
+    [
+      expandedIds,
+      selectedId,
+      focusedId,
+      setFocusedId,
+      toggleItem,
+      selectItem,
+      handleKeyDown,
+    ]
+  );
 
   return (
     <TreeContext.Provider value={contextValue}>

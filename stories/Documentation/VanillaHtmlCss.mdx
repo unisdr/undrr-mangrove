@@ -241,24 +241,30 @@ Some components (like Tabs) have lightweight JavaScript modules:
 
 ### Precompiled React components
 
-For complex interactive components (MegaMenu, charts, maps), use precompiled React bundles without a build process.
+For complex interactive components (MegaMenu, charts, maps, drawers), use precompiled React bundles without a build process.
 
 **Available components:**
 
-| Component               | CDN Path                                 | Use case                       |
-| ----------------------- | ---------------------------------------- | ------------------------------ |
-| ShareButtons            | `/components/ShareButtons.js`            | Social sharing                 |
-| MegaMenu                | `/components/MegaMenu.js`                | Full navigation with dropdowns |
-| ScrollContainer         | `/components/ScrollContainer.js`         | Horizontal scrolling           |
-| BarChart                | `/components/BarChart.js`                | Data visualization             |
-| MapComponent            | `/components/MapComponent.js`            | Interactive maps               |
-| QuoteHighlight          | `/components/QuoteHighlight.js`          | Styled pull quotes             |
-| Fetcher                 | `/components/Fetcher.js`                 | Data fetching wrapper          |
-| SyndicationSearchWidget | `/components/SyndicationSearchWidget.js` | PreventionWeb search           |
-| IconCard                | `/components/IconCard.js`                | Icon-based info cards          |
-| Gallery                 | `/components/Gallery.js`                 | Image gallery with thumbnails  |
-| StatsCard               | `/components/StatsCard.js`               | Statistics display             |
-| Pager                   | `/components/Pager.js`                   | Pagination controls            |
+| Component               | CDN Path                                 | Use case                                    |
+| ----------------------- | ---------------------------------------- | ------------------------------------------- |
+| CopyButton              | `/components/CopyButton.js`              | Copy-to-clipboard button (React hydrated)   |
+| Drawer                  | `/components/Drawer.js`                  | Slide-over drawer and floating panel dialog |
+| TextCta                 | `/components/TextCta.js`                 | Call-to-action text block                   |
+| ShareButtons            | `/components/ShareButtons.js`            | Social sharing                              |
+| MegaMenu                | `/components/MegaMenu.js`                | Full navigation with dropdowns              |
+| ScrollContainer         | `/components/ScrollContainer.js`         | Horizontal scrolling                        |
+| BarChart                | `/components/BarChart.js`                | Data visualization                          |
+| MapComponent            | `/components/MapComponent.js`            | Interactive maps                            |
+| QuoteHighlight          | `/components/QuoteHighlight.js`          | Styled pull quotes                          |
+| Fetcher                 | `/components/Fetcher.js`                 | Data fetching wrapper                       |
+| SyndicationSearchWidget | `/components/SyndicationSearchWidget.js` | PreventionWeb search                        |
+| IconCard                | `/components/IconCard.js`                | Icon-based info cards                       |
+| Gallery                 | `/components/Gallery.js`                 | Image gallery with thumbnails               |
+| UserFeedback            | `/components/UserFeedback.js`            | Feedback collection widget                  |
+| StatsCard               | `/components/StatsCard.js`               | Statistics display                          |
+| Pager                   | `/components/Pager.js`                   | Pagination controls                         |
+
+> **Zero-dependency Alternative**: For lightweight interactions like tabs, show-more toggles, and copy buttons, prefer the zero-dependency vanilla JS scripts from `/js/*.js` (e.g. `/js/copy-button.js`, `/js/tabs.js`, `/js/show-more.js`) which require **no React runtime**.
 
 React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/) to provide React dependencies:
 
