@@ -24,6 +24,14 @@ export const TreeItem = ({
     if (onSelect) onSelect(id);
   };
 
+  const handleContainerClick = e => {
+    if (hasChildren) {
+      handleToggle(e);
+    } else {
+      handleSelect(e);
+    }
+  };
+
   const hasChildren = React.Children.count(children) > 0;
 
   return (
@@ -35,7 +43,7 @@ export const TreeItem = ({
       aria-expanded={hasChildren ? expanded : undefined}
       aria-selected={isSelected}
     >
-      <div className="mg-tree__label-container" onClick={handleSelect}>
+      <div className="mg-tree__label-container" onClick={handleContainerClick}>
         {hasChildren && (
           <button
             type="button"
