@@ -10,6 +10,7 @@
 // :where() gives auto-styled children the same specificity as .mg-tag, so
 // explicit modifiers win regardless of which markup a Drupal view emits.
 .mg-tag,
+.mg-badge,
 .mg-tag-container > :where(span, div, a, li) {
   --mg-tag-background: var(--tag-color-background, rgb(var(--mg-color-tag)));
   --mg-tag-background-hover: var(
@@ -69,6 +70,26 @@
     --tag-color-background-accent-hover,
     rgb(var(--mg-color-tag-accent--hover))
   );
+}
+
+// Subtle, non-interactive metadata badge (e.g. file formats PDF, SVG, JSON)
+.mg-tag--subtle,
+.mg-badge {
+  --mg-tag-background: rgb(var(--mg-color-neutral-100));
+  --mg-tag-background-hover: rgb(var(--mg-color-neutral-200));
+  --mg-tag-foreground: rgb(var(--mg-color-neutral-800));
+
+  border-color: rgb(var(--mg-color-neutral-300));
+  cursor: default;
+  font-weight: 500;
+}
+
+.mg-tag--code,
+.mg-badge--code {
+  font-family: var(--mg-font-family-code);
+  font-size: $mg-font-size-200;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 // Only destinations are interactive. No hover affordance on static metadata

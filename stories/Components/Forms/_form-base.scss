@@ -250,6 +250,96 @@
 }
 
 // -----------------------------------------------------------------------------
+// Accessible Switch Control (.mg-switch / role="switch")
+// Binary toggle for immediate on/off states (map layers, dashboard filters)
+// -----------------------------------------------------------------------------
+.mg-switch {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--mg-spacing-75);
+  min-height: mg-rem(36);
+  position: relative;
+  user-select: none;
+
+  &__input {
+    appearance: none;
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+
+    &:focus-visible + .mg-switch__track {
+      @include mg-focus-ring;
+    }
+
+    &:checked + .mg-switch__track {
+      background-color: rgb(var(--mg-color-interactive));
+
+      .mg-switch__thumb {
+        transform: translateX(mg-rem(18));
+      }
+    }
+
+    &:disabled + .mg-switch__track {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    &:disabled ~ .mg-switch__label {
+      color: rgb(var(--mg-color-neutral-400));
+      cursor: not-allowed;
+    }
+  }
+
+  &__track {
+    align-items: center;
+    background-color: rgb(var(--mg-color-neutral-400));
+    border-radius: mg-rem(12);
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-shrink: 0;
+    height: mg-rem(24);
+    padding: mg-rem(2);
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+    width: mg-rem(42);
+  }
+
+  &__thumb {
+    background-color: rgb(var(--mg-color-neutral-0));
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+    display: block;
+    height: mg-rem(20);
+    transition: transform var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+    width: mg-rem(20);
+  }
+
+  &__label {
+    color: rgb(var(--mg-color-neutral-900));
+    font-size: $mg-font-size-300;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__track,
+    &__thumb {
+      transition: none;
+    }
+  }
+}
+
+[dir="rtl"] .mg-switch__input:checked + .mg-switch__track .mg-switch__thumb {
+  transform: translateX(mg-rem(-18));
+}
+
+// -----------------------------------------------------------------------------
 // Help text
 // -----------------------------------------------------------------------------
 .mg-form-help {

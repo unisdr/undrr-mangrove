@@ -68,6 +68,38 @@
   gap: var(--mg-spacing-75);
 }
 
+// Icon-only button variant for map actions, dismiss/copy controls, and compact toolbars
+.mg-button--icon,
+.mg-icon-button {
+  align-items: center;
+  aspect-ratio: 1;
+  block-size: mg-rem(36);
+  border-radius: var(--mg-radius-button);
+  display: inline-flex;
+  inline-size: mg-rem(36);
+  justify-content: center;
+  min-block-size: mg-rem(36);
+  min-inline-size: mg-rem(36);
+  padding: var(--mg-spacing-75);
+
+  &--round {
+    border-radius: 50%;
+  }
+
+  &--small {
+    block-size: mg-rem(28);
+    inline-size: mg-rem(28);
+    min-block-size: mg-rem(28);
+    min-inline-size: mg-rem(28);
+    padding: var(--mg-spacing-50);
+  }
+
+  .mg-icon {
+    font-size: 1.25em;
+    line-height: 1;
+  }
+}
+
 // Removed: a bare `button:focus-visible { box-shadow: 0 0 4px
 // var(--mg-color-button-background); outline: 0; }` rule used to live here.
 

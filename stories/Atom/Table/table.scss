@@ -147,3 +147,99 @@
     @include mg-focus-ring-inset;
   }
 }
+
+// Data table variant: compact density, subtle borders, styled header row
+.mg-table--data {
+  font-size: $mg-font-size-250;
+
+  th,
+  td {
+    border-bottom: 1px solid rgb(var(--mg-color-neutral-200));
+    padding: var(--mg-spacing-50) var(--mg-spacing-100);
+  }
+
+  thead th {
+    background-color: rgb(var(--mg-color-neutral-50));
+    border-bottom: 2px solid rgb(var(--mg-color-neutral-300));
+    color: rgb(var(--mg-color-neutral-800));
+    font-size: $mg-font-size-200;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  tbody tr:hover {
+    background-color: rgb(var(--mg-color-neutral-25));
+  }
+}
+
+// Sticky header cell for scrolling tables and data grids
+.mg-table__th--sticky {
+  background-color: rgb(var(--mg-color-neutral-0));
+  box-shadow: 0 1px 0 rgb(var(--mg-color-neutral-300));
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+// Right-aligned tabular numeric cells
+.mg-table__td--numeric,
+.mg-table__th--numeric {
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+// Monospace code / file path cells
+.mg-table__td--code {
+  font-family: var(--mg-font-family-code);
+  font-size: $mg-font-size-200;
+}
+
+// Sortable header button with accessible sort indicators
+.mg-table__th--sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+
+  .mg-table__sort-btn {
+    all: unset;
+    align-items: center;
+    color: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    gap: var(--mg-spacing-50);
+    justify-content: space-between;
+    width: 100%;
+
+    &:focus-visible {
+      @include mg-focus-ring-inset;
+    }
+  }
+
+  .mg-table__sort-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    height: 0.75em;
+    opacity: 0.35;
+    transition:
+      transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+    width: 0.75em;
+  }
+
+  &:hover .mg-table__sort-icon {
+    opacity: 0.8;
+  }
+
+  &[aria-sort="ascending"] .mg-table__sort-icon {
+    opacity: 1;
+    transform: rotate(180deg);
+  }
+
+  &[aria-sort="descending"] .mg-table__sort-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+}

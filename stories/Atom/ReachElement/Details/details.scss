@@ -122,4 +122,97 @@ details.mg-details {
   }
 }
 
+/* ==========================================================================
+   Accordion Pattern (.mg-accordion)
+   Grouped <details> disclosures with flush separators, chevron rotation,
+   and clean nesting for layer panels, FAQs, and secondary controls.
+   ========================================================================== */
+
+.mg-accordion {
+  background-color: rgb(var(--mg-color-neutral-0));
+  border: 1px solid rgb(var(--mg-color-neutral-300));
+  border-radius: var(--mg-radius-default, mg-rem(4));
+  overflow: hidden;
+
+  > details {
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgb(var(--mg-color-neutral-300));
+    }
+
+    > summary {
+      @extend %paragraph-font-300;
+
+      align-items: center;
+      background-color: rgb(var(--mg-color-neutral-0));
+      color: rgb(var(--mg-color-interactive));
+      cursor: pointer;
+      display: flex;
+      font-weight: 600;
+      justify-content: space-between;
+      list-style-type: none;
+      margin: 0;
+      min-height: mg-rem(44);
+      padding: var(--mg-spacing-100) var(--mg-spacing-150);
+      position: relative;
+      user-select: none;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::after {
+        border-bottom: 2px solid currentColor;
+        border-right: 2px solid currentColor;
+        content: "";
+        display: inline-block;
+        flex-shrink: 0;
+        height: mg-rem(8);
+        margin-inline-start: var(--mg-spacing-100);
+        transform: rotate(45deg);
+        transition: transform var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard);
+        width: mg-rem(8);
+      }
+
+      &:hover {
+        background-color: rgb(var(--mg-color-blue-900) / 0.04);
+      }
+
+      &:focus-visible {
+        @include mg-focus-ring-inset;
+      }
+    }
+
+    &[open] {
+      > summary {
+        border-bottom: 1px solid rgb(var(--mg-color-neutral-200));
+
+        &::after {
+          transform: rotate(-135deg);
+        }
+      }
+
+      > :not(summary) {
+        padding: var(--mg-spacing-150);
+      }
+    }
+  }
+
+  &--flush {
+    border-inline: none;
+    border-radius: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-accordion > details > summary::after {
+    transition: none;
+  }
+}
+
 /* details tag end */

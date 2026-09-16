@@ -135,9 +135,11 @@ Striped tables work especially well for financial data or any content where user
 ### CSS class structure
 
 - **Base:** `mg-table` (required on all tables)
-- **Size:** `mg-table--small` (large is default)
+- **Data & Density:** `mg-table--data` (compact dataset & file listings), `mg-table--small`
 - **Styling:** `mg-table--striped`, `mg-table--border`
-- **Responsive:** `mg-table--stacked`, `mg-table--scroll`
+- **Responsive:** `mg-table--stacked`, `mg-table--scroll`, `mg-table-scroll-region`
+- **Header modifiers:** `mg-table__th--sticky`, `mg-table__th--sortable`
+- **Cell & data types:** `mg-table__td--numeric`, `mg-table__th--numeric`, `mg-table__td--code`
 - **Cell alignment:** `mg-table__cell--start`, `mg-table__cell--center`, `mg-table__cell--end`
 
 ### Class combinations
@@ -145,6 +147,37 @@ Striped tables work especially well for financial data or any content where user
 Combine modifier classes to get the right table for your context:
 
 ```html
+<!-- High-density data table with sticky header and numeric columns -->
+<div
+  class="mg-table-scroll-region"
+  role="region"
+  aria-label="Asset listing"
+  tabindex="0"
+>
+  <table class="mg-table mg-table--data">
+    <thead>
+      <tr>
+        <th
+          class="mg-table__th--sticky mg-table__th--sortable"
+          aria-sort="ascending"
+        >
+          <button type="button" class="mg-table__sort-btn">
+            <span>Filename</span>
+            <span class="mg-table__sort-icon" aria-hidden="true">▼</span>
+          </button>
+        </th>
+        <th class="mg-table__th--sticky mg-table__th--numeric">Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="mg-table__td--code">style.min.css</td>
+        <td class="mg-table__td--numeric">42.8 KB</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <!-- Small, striped, stacks on mobile -->
 <table class="mg-table mg-table--small mg-table--striped mg-table--stacked">
   …

@@ -127,9 +127,9 @@ export default {
       ],
     },
     {
-      name: 'Table scroll region',
+      name: 'Table & data utilities',
       description:
-        'Accessible scrolling container for wide tabular data on smaller viewports.',
+        'Accessible scrolling container, data table styling, and column/cell modifiers for tabular datasets.',
       classes: [
         {
           class: 'mg-table-scroll-region',
@@ -137,6 +137,104 @@ export default {
             'Horizontal scrolling wrapper for wide HTML tables. Requires role="region", a descriptive aria-label, and tabindex="0" for keyboard navigation.',
           usage:
             '<div class="mg-table-scroll-region" role="region" aria-label="Data table" tabindex="0">\n  <table class="mg-table">\n    …\n  </table>\n</div>',
+        },
+        {
+          class: 'mg-table--data',
+          description:
+            'High-density data table styling with compact padding, subtle dividers, and uppercase styled headers.',
+          usage: '<table class="mg-table mg-table--data">…</table>',
+        },
+        {
+          class: 'mg-table__th--sticky',
+          description:
+            'Sticky header cell that remains anchored at the top during table scrolling.',
+          usage: '<th class="mg-table__th--sticky">Column Header</th>',
+        },
+        {
+          class: 'mg-table__th--sortable',
+          description:
+            'Sortable table header cell containing an accessible button with rotating indicator arrow and aria-sort state.',
+          usage:
+            '<th class="mg-table__th--sortable" aria-sort="ascending">\n  <button type="button" class="mg-table__sort-btn">\n    <span>Name</span>\n    <span class="mg-table__sort-icon" aria-hidden="true">▼</span>\n  </button>\n</th>',
+        },
+        {
+          class: 'mg-table__td--numeric',
+          description:
+            'Right-aligned tabular numeric cell using font-variant-numeric: tabular-nums.',
+          usage: '<td class="mg-table__td--numeric">1,245,600</td>',
+        },
+        {
+          class: 'mg-table__td--code',
+          description:
+            'Monospace code or technical path cell styled with var(--mg-font-family-code).',
+          usage: '<td class="mg-table__td--code">/data/v1/indicators.json</td>',
+        },
+      ],
+    },
+    {
+      name: 'Badges & subtle tags',
+      description:
+        'Compact non-interactive metadata badges and format pills for technical readouts, file extensions, and status labels.',
+      classes: [
+        {
+          class: 'mg-tag--subtle',
+          description:
+            'Non-interactive subtle tag with neutral background and border for secondary metadata.',
+          usage: '<span class="mg-tag mg-tag--subtle">Reference</span>',
+        },
+        {
+          class: 'mg-badge',
+          description:
+            'Compact non-interactive metadata badge pill (alias for subtle tag).',
+          usage: '<span class="mg-badge">Verified</span>',
+        },
+        {
+          class: 'mg-badge--code',
+          description:
+            'Monospace uppercase badge pill ideal for file formats (e.g. PDF, JSON, SVG, CSV).',
+          usage: '<span class="mg-badge mg-badge--code">JSON</span>',
+        },
+      ],
+    },
+    {
+      name: 'Accordion',
+      description:
+        'Grouped <details>/<summary> disclosure stack with clean border separators and animated rotating chevrons.',
+      classes: [
+        {
+          class: 'mg-accordion',
+          description:
+            'Container wrapping multiple <details> elements into a cohesive accordion card.',
+          usage:
+            '<div class="mg-accordion">\n  <details>\n    <summary>Layer settings</summary>\n    <p>Content…</p>\n  </details>\n</div>',
+        },
+        {
+          class: 'mg-accordion--flush',
+          description:
+            'Flush accordion variant without outer lateral borders, designed for nesting inside sidebars or panels.',
+          usage:
+            '<div class="mg-accordion mg-accordion--flush">\n  <details>…</details>\n</div>',
+        },
+      ],
+    },
+    {
+      name: 'Interactive controls',
+      description:
+        'Accessible binary toggles and compact icon action buttons for toolbars, map layers, and settings.',
+      classes: [
+        {
+          class: 'mg-switch',
+          description:
+            'Accessible binary switch toggle with animated sliding thumb and focus ring integration.',
+          usage:
+            '<label class="mg-switch">\n  <input type="checkbox" role="switch" class="mg-switch__input" />\n  <span class="mg-switch__track" aria-hidden="true"><span class="mg-switch__thumb"></span></span>\n  <span class="mg-switch__label">Active layer</span>\n</label>',
+        },
+        {
+          class: 'mg-button--icon',
+          description:
+            'Square or circular icon-only action button with centered icon, equal aspect ratio, and touch-target padding.',
+          usage:
+            '<button type="button" class="mg-button mg-button-secondary mg-button--icon" aria-label="Copy to clipboard">\n  <span class="mg-icon mg-icon-copy" aria-hidden="true"></span>\n</button>',
         },
       ],
     },
