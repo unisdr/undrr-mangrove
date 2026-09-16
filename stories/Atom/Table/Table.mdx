@@ -199,6 +199,8 @@ The table component handles all the responsive heavy lifting for you, so you can
 - Tables include proper semantic structure with `thead` and `tbody`
 - Scrollable tables are keyboard navigable with `tabIndex="0"`
 - RTL (right-to-left) language support is built-in
+- **Sortable tables require JavaScript.** The `aria-sort` attribute on `<th>` must be toggled between `ascending`, `descending`, and `none` when the user activates the sort button. Only one column should carry `aria-sort` at a time (remove it from others). A static `aria-sort` without JS updates is worse than omitting it, because it gives screen reader users stale information.
+- Sort buttons get their accessible name from their text content. For richer context, consider adding visually-hidden text (e.g. `<span class="mg-u-sr-only">Sort by </span>Filename`)
 
 ## Changelog
 

@@ -100,6 +100,11 @@
   }
 }
 
+// Standalone .mg-icon-button may lack the .mg-button base class focus styles
+.mg-icon-button:focus-visible {
+  @include mg-focus-ring;
+}
+
 // Removed: a bare `button:focus-visible { box-shadow: 0 0 4px
 // var(--mg-color-button-background); outline: 0; }` rule used to live here.
 

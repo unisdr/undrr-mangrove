@@ -40,6 +40,10 @@ import path from 'path';
 import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+import {
+  buildReleasesManifest,
+  parseComponentChangelog,
+} from './parse-changelog.js';
 
 const require = createRequire(import.meta.url);
 const { buildTokensDictionary } = require('../build-tokens.cjs');
@@ -1375,6 +1379,7 @@ async function main() {
 
   const indexEntries = [];
   const componentFiles = [];
+  const componentChangelogs = {};
   let droppedImportCount = 0;
 
   for (const [, component] of Object.entries(manifest.components)) {
@@ -1484,6 +1489,24 @@ async function main() {
       detail.availableIcons = iconInventory.icons;
     }
 
+    // Component changelog parsed from Storybook MDX documentation
+    let compChangelog = [];
+    if (component.docs) {
+      for (const doc of Object.values(component.docs)) {
+        if (doc.content && doc.content.includes('## Changelog')) {
+          compChangelog = parseComponentChangelog(doc.content);
+          if (compChangelog.length > 0) break;
+        }
+      }
+    }
+    if (compChangelog.length > 0) {
+      detail.changelog = compChangelog;
+      componentChangelogs[id] = {
+        name,
+        entries: compChangelog,
+      };
+    }
+
     componentFiles.push({ id, content: detail });
   }
 
@@ -1524,6 +1547,10 @@ async function main() {
       },
       utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
       iconsUrl: `${DOCS_BASE}ai-components/components-icons.json`,
+      tokensUrl: `${DOCS_BASE}tokens.json`,
+      releasesUrl: `${DOCS_BASE}releases.json`,
+      changelogUrl:
+        'https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md',
       quickstart: {
         css: `<link rel="stylesheet" href="${themeCss.undrr}" />`,
         cssThemes: themeCss,
@@ -1587,6 +1614,22 @@ async function main() {
   fs.writeFileSync(path.join(outputDir, 'tokens.json'), tokensJson);
 
   // -------------------------------------------------------------------------
+  // Write releases.json
+  // -------------------------------------------------------------------------
+
+  const changelogPath = path.resolve(process.cwd(), 'CHANGELOG.md');
+  const releasesData = buildReleasesManifest({
+    changelogPath,
+    pkg,
+    generatedAt,
+    docsBase: DOCS_BASE,
+    componentChangelogs,
+  });
+  const releasesJson = JSON.stringify(releasesData, null, 2);
+  fs.writeFileSync(path.join(buildDir, 'releases.json'), releasesJson);
+  fs.writeFileSync(path.join(outputDir, 'releases.json'), releasesJson);
+
+  // -------------------------------------------------------------------------
   // Write llms.txt
   // -------------------------------------------------------------------------
 
@@ -1603,6 +1646,9 @@ async function main() {
 - Storybook: ${DOCS_BASE}
 - Repository: https://github.com/unisdr/undrr-mangrove
 - npm: https://www.npmjs.com/package/${pkg.name}
+- Release changelog (machine-readable): ${DOCS_BASE}releases.json
+- Project changelog (markdown): https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md
+- v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
 - Design tokens dictionary: ${DOCS_BASE}tokens.json
 
@@ -1612,6 +1658,9 @@ The Storybook site is a single-page app, so fetching pages directly won't give y
 
 Component index (all ${indexEntries.length} components):
 ${DOCS_BASE}ai-components/index.json
+
+Release changelog & version history (~${releasesData.releases.length} releases, machine-readable):
+${DOCS_BASE}releases.json
 
 CSS utility class reference (~${utilityClassCount} classes):
 ${DOCS_BASE}ai-components/utilities.json
@@ -1666,6 +1715,18 @@ Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (or \`$
 
 The utilities.json file lists ~${utilityClassCount} utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, and show-more patterns. All use the mg- prefix.
 
+### Releases and changelog
+
+To inspect changes between versions, tags, and pre-releases without parsing raw git commits:
+
+- **Machine-readable releases endpoint**: ${DOCS_BASE}releases.json
+  Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs.
+- **Repository changelog**: https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md
+  Cross-cutting library release notes.
+- **v2.0 migration notes & breaking changes**: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
+  Full breaking change catalogue, architectural shifts, and token migration recipes.
+- **Component-level changelogs**: Each component's detail file (${DOCS_BASE}ai-components/{id}.json) contains a \`changelog\` array with granular version updates, dates, descriptions, and PR links.
+
 ### Z-index layers
 
 Use the --mg-z-index-* custom properties for global stacking contexts (fixed, sticky, portaled, or deliberately negative elements). One token per UI concept: --mg-z-index-behind, -nav, -sticky, -nav-toggle, -header, -drawer, -dropdown, -modal, -toast. Derive backdrops with calc(), e.g. z-index: calc(var(--mg-z-index-drawer) - 1). For local stacking within a component's own isolated stacking context (e.g. inside position: relative), use a raw value with a comment instead of a token. The navigation zone tokens (-nav through -header, values 10-22) are frozen; do not change their numeric values. These were $mg-z-index-* Sass variables before 2.0 and no longer exist in that form. See the "Design decisions/Z-index layers" Storybook page for the full layer table and philosophy.
@@ -1698,7 +1759,7 @@ background: rgb(var(--mg-color-interactive) / 0.1);   /* alpha for free */
 
 Getting it wrong produces a declaration the browser discards with no console error, so it fails by looking almost right. Full colour tokens must NOT be wrapped in \`rgb()\`, because they already evaluate to complete color expressions or keyword colours (e.g. \`transparent\`).
 Check \`${DOCS_BASE}tokens.json\` for the authoritative, machine-readable list. As of ${pkg.version}, the tokens that must NOT be wrapped in \`rgb()\` are:
-${tokensDict.wrappingRules.exceptions.map(e => `- \`${e}\``).join('\n')}
+${tokensDict.wrappingRules.exceptions.length ? tokensDict.wrappingRules.exceptions.map(e => `- \`${e}\``).join('\n') : '- (None as of this version)'}
 
 **2. Focus rings.** \`--mg-color-focus-ring\` is the ring colour (deliberately not a brand colour: a brand-coloured ring vanishes against the brand's own filled surfaces). \`--mg-color-focus-ring-inverse\` is for a ring painted on an already-dark surface — a button on a filled hero banner, the Snackbar action, the dark Card variants. Geometry is \`--mg-focus-ring-width\`, \`-offset\` and \`-radius\`. Components should \`@include mg-focus-ring;\` or \`@include mg-focus-ring-inset;\` (\`stories/assets/scss/_mixins.scss\`) rather than hand-rolling an outline: the mixin draws two bands so the indicator is legible on any surface, and keeps the ring as an \`outline\` so it survives forced-colors mode.
 
@@ -1801,11 +1862,16 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         storybook: DOCS_BASE,
         repository: 'https://github.com/unisdr/undrr-mangrove',
         npm: `https://www.npmjs.com/package/${pkg.name}`,
+        releases: `${DOCS_BASE}releases.json`,
+        changelog:
+          'https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md',
+        releaseNotesV2: `${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
         tokens: `${DOCS_BASE}tokens.json`,
         css: themeCss,
       },
+      latestRelease: releasesData.latest,
       requiredAssets: {
         _note:
           'Every UNDRR-branded page should include these. The page header and footer structures are non-negotiable branding elements — use them exactly as documented.',
@@ -1851,6 +1917,9 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
 
   console.log('AI manifest generated:');
   console.log(`  ${llmsTxtPath} (llms.txt + llms.json)`);
+  console.log(
+    `  ${path.join(buildDir, 'releases.json')} (${releasesData.releases.length} releases parsed)`
+  );
   console.log(
     `  ${outputDir}/index.json (${indexEntries.length} components, ${indexSizeKB} KB)`
   );

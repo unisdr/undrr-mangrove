@@ -192,6 +192,7 @@ Each component gets its own JSON file (roughly 0.3-21 KB) with some of:
 - **Story examples** with JSX code snippets (from Storybook)
 - **Rendered HTML** — copy-pasteable HTML showing the actual DOM structure. Some components are auto-rendered from the built React bundles using `renderToStaticMarkup`; others have curated HTML examples.
 - **CSS classes** — list of the classes the component uses. Only curated components carry this (about a third of the files); `renderedHtml` is on roughly three quarters. Check for the key rather than assuming it is there.
+- **Changelog** — structured version history with release dates, notes, and PR links (from the component's MDX docs)
 - **Branding flags** — `doNotModify` warnings on components like PageHeader and Footer where the markup is a UNDRR branding requirement
 
 Components with syndication support (Footer) include a `vanillaHtmlEmbed` field with the complete script-tag embed pattern and configuration options.
@@ -199,6 +200,10 @@ Components with syndication support (Footer) include a `vanillaHtmlEmbed` field 
 ### CSS utilities (`ai-components/utilities.json`)
 
 The [utilities reference](https://preventionweb.github.io/undrr-mangrove/ai-components/utilities.json) lists all CSS utility classes grouped by category. Each class has a description and usage example.
+
+### Release changelog (`releases.json`)
+
+The [releases endpoint](https://preventionweb.github.io/undrr-mangrove/releases.json) provides machine-readable version history across all library tags, pre-releases, and individual components. It summarizes what changed between releases, links PRs, categorizes changes (Features, Bug fixes, Tooling, Security), and includes granular component changelogs.
 
 ### Page templates
 
@@ -229,12 +234,12 @@ A single script runs after Storybook and webpack finish:
 storybook build → manifests/components.json (props, types, stories)
 webpack build   → dist/components/*.js (compiled React bundles)
         ↓
-generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilities.json
+generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilities.json, tokens.json, releases.json
 ```
 
-`generate-ai-manifest.js` auto-renders React components from `dist/` using `renderToStaticMarkup`, then merges three data sources: the Storybook manifest (props, types), auto-rendered HTML, and curated data from `component-data.js` (descriptions, CSS classes, flags, page templates). Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs fall back to curated HTML examples. When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns, and PropTypes coverage.
+`generate-ai-manifest.js` auto-renders React components from `dist/` using `renderToStaticMarkup`, then merges four data sources: the Storybook manifest (props, types), auto-rendered HTML, curated data from `component-data.js` (descriptions, CSS classes, flags, page templates), and release/changelog data from `CHANGELOG.md` via `parse-changelog.js`. Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs fall back to curated HTML examples. When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns, and PropTypes coverage.
 
-The pipeline is 3 files in `scripts/ai-manifest/`: `generate-ai-manifest.js`, `component-data.js`, and `css-utilities.js`.
+The pipeline is 4 files in `scripts/ai-manifest/`: `generate-ai-manifest.js`, `parse-changelog.js`, `component-data.js`, and `css-utilities.js`.
 
 To regenerate by hand:
 

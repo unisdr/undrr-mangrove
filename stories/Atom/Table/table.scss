@@ -180,7 +180,7 @@
   box-shadow: 0 1px 0 rgb(var(--mg-color-neutral-300));
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 2; // local stacking context within table scroll region
 }
 
 // Right-aligned tabular numeric cells
@@ -241,5 +241,11 @@
   &[aria-sort="descending"] .mg-table__sort-icon {
     opacity: 1;
     transform: rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-table__th--sortable .mg-table__sort-icon {
+    transition: none;
   }
 }

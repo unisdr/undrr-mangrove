@@ -43,7 +43,10 @@ Mangrove's standard button component for call-to-action elements like "Read more
 | `.mg-button.mg-button-primary.mg-button-cta`       | Editorial navigation with a circular direction badge    |
 | `.mg-button--icon`, `.mg-icon-button`              | Compact square icon-only button (toolbars, map actions) |
 | `.mg-button--icon.mg-button--icon--round`          | Circular floating action button                         |
+| `.mg-button--icon.mg-button--icon--small`          | Dense toolbar icon button (28px, use with spacing)      |
 | `.mg-button.disabled`                              | Inactive state — not clickable                          |
+
+> **Accessibility:** Icon-only buttons **must** include `aria-label` describing the action (e.g. `aria-label="Copy to clipboard"`). Without visible text, the button has no accessible name and fails WCAG 4.1.2. The `--small` variant (28 &times; 28px) meets the WCAG 2.5.8 minimum (24px) but not the enhanced target (44px); use it only in dense toolbars where spacing between targets provides the additional hit area.
 
 ## Content
 

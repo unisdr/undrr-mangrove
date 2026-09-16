@@ -754,8 +754,16 @@ function buildTokensDictionary() {
   for (const id of allTokenIds) {
     const defaultRecord =
       brandDicts[defaultBrand.meta.id]?.resolved.emitted.get(id);
-    const tokenMeta = defaultRecord?.token || resolvedTargets[0].tokens.get(id);
-    const cssName = defaultRecord?.name || propertyName(tokenMeta);
+    // Fall back to the first brand that actually emitted this token, not just
+    // resolvedTargets[0] which may not have it (sub-brand-only tokens).
+    const emittingRecord =
+      defaultRecord ||
+      resolvedTargets
+        .map(b => b.resolved.emitted.get(id))
+        .find(r => r != null);
+    const tokenMeta = emittingRecord?.token;
+    if (!tokenMeta) continue; // skip tokens with no resolvable metadata
+    const cssName = defaultRecord?.name || emittingRecord?.name || propertyName(tokenMeta);
     const format =
       tokenMeta.format ||
       (tokenMeta.type === 'color' ? 'srgb-channels' : 'literal');
@@ -788,7 +796,8 @@ function buildTokensDictionary() {
   tokensList.sort((a, b) => a.name.localeCompare(b.name));
 
   return {
-    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    $id: 'mangrove-design-tokens-dictionary',
+    schemaVersion: '1.0',
     description:
       'Mangrove 2.0 Design Tokens Dictionary and Format Specifications',
     wrappingRules: {

@@ -76,7 +76,10 @@
 .mg-tag--subtle,
 .mg-badge {
   --mg-tag-background: rgb(var(--mg-color-neutral-100));
-  --mg-tag-background-hover: rgb(var(--mg-color-neutral-200));
+  --mg-tag-background-hover: rgb(
+    var(--mg-color-neutral-100)
+  ); // match resting; non-interactive
+
   --mg-tag-foreground: rgb(var(--mg-color-neutral-800));
 
   border-color: rgb(var(--mg-color-neutral-300));

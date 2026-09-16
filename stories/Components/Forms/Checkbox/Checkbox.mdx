@@ -60,6 +60,20 @@ For immediate binary state switches (e.g., activating map layers, live filtering
 </label>
 ```
 
+Disabled state (use the HTML `disabled` attribute, not CSS-only styling):
+
+```html
+<label class="mg-switch">
+  <input type="checkbox" role="switch" class="mg-switch__input" disabled />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Unavailable layer</span>
+</label>
+```
+
+> **Note:** The native `<input type="checkbox">` manages the checked/unchecked state for assistive technologies automatically. When toggling the switch via JavaScript, update the `checked` property on the input element rather than managing `aria-checked` separately.
+
 ## Accessibility
 
 - The label is programmatically associated with the checkbox via `htmlFor`/`id`.
