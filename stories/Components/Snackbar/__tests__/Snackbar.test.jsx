@@ -36,11 +36,31 @@ describe('Snackbar', () => {
     expect(screen.getByRole('alert')).toBeInTheDocument();
   });
 
-  it('renders aria-live="assertive" on wrapper', () => {
+  it('does not double the alert with an aria-live wrapper', () => {
     const { container } = render(<Snackbar {...defaultProps} />);
+    expect(container.querySelector('[aria-live]')).not.toBeInTheDocument();
+  });
+
+  it('renders through Notice with the mapped variant', () => {
+    const { container } = render(
+      <Snackbar {...defaultProps} severity="success" />
+    );
+    expect(container.querySelector('.mg-notice--positive')).toBeInTheDocument();
+    expect(container.querySelector('.mg-notice__icon svg')).toBeInTheDocument();
+  });
+
+  it('renders no body or close button while closed', () => {
+    render(<Snackbar {...defaultProps} opened={false} />);
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('focuses the close button when opened', () => {
+    const { rerender } = render(<Snackbar {...defaultProps} opened={false} />);
+    rerender(<Snackbar {...defaultProps} opened />);
     expect(
-      container.querySelector('[aria-live="assertive"]')
-    ).toBeInTheDocument();
+      screen.getByRole('button', { name: 'Close notification' })
+    ).toHaveFocus();
   });
 
   // --------------------------------------------------

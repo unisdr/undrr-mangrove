@@ -2,11 +2,11 @@
  * Snackbar / Toast
  *
  * Temporary toast notification messages for feedback, alerts, and system confirmations.
+ * The toast body is a Notice (.mg-notice); this file only positions and animates it.
  *
  * Full documentation:
  * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Snackbar/Snackbar.mdx
  */
-@use "sass:color";
 
 .mg-snackbar-wrapper {
   position: fixed;
@@ -15,128 +15,35 @@
   display: flex;
   justify-content: center;
   transform: translate(-50%, -300%);
-  transition: transform 0.3s ease-in-out;
+  transition: transform var(--mg-motion-duration-fast)
+    var(--mg-motion-easing-standard);
   z-index: var(--mg-z-index-toast); // above modals and all page chrome
-  width: calc(100% - 32px); // Ensure it works on small screens
-  max-width: 600px; // Limit width on large screens
+  width: calc(100% - var(--mg-spacing-400));
+  max-width: 600px;
 
   &__open {
-    transform: translate(-50%, 0%);
+    transform: translate(-50%, var(--mg-spacing-100));
   }
 
   @media (max-width: $mg-breakpoint-mobile) {
-    width: calc(100% - 16px); // Smaller margin on mobile
-    top: 8px; // Small space from top
+    width: calc(100% - var(--mg-spacing-200));
   }
 }
 
-.mg-snackbar {
-  display: flex;
-  align-items: center;
-  background-color: rgb(var(--mg-color-interactive));
-  color: rgb(var(--mg-color-white));
-  border-radius: var(--mg-radius-tab);
-  padding: var(--mg-padding-button);
-  box-shadow: 0 0 10px rgb(0 0 0 / 0.2);
-  fill: rgb(var(--mg-color-white));
+// Doubled class so the opaque surface wins over .mg-notice regardless of
+// stylesheet order.
+.mg-notice.mg-snackbar {
   width: 100%;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.2);
 
-  // severity - use colors with sufficient contrast ratio
-  &__error {
-    background-color: rgb(var(--mg-color-red-900));
-    color: rgb(var(--mg-color-white));
-  }
+  // The notice tints are translucent; layer them over an opaque surface so
+  // page content does not show through a floating toast.
+  background:
+    linear-gradient(var(--mg-notice-bg), var(--mg-notice-bg)),
+    rgb(var(--mg-color-neutral-0));
 
-  &__warning {
-    background-color: color.adjust(
-      #e09d04,
-      $lightness: -10%
-    ); // Dark amber color for warning state
-
-    color: rgb(
-      var(--mg-color-white)
-    ); // Use white text to be consistent with other severity types
-  }
-
-  &__info {
-    background-color: rgb(var(--mg-color-interactive));
-    color: rgb(var(--mg-color-white));
-  }
-
-  &__success {
-    background-color: #14527a; // Slightly darker for better distinction (blue-900 darkened 5% lightness)
-    color: rgb(var(--mg-color-white));
-  }
-
-  &__content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--mg-spacing-100);
-    width: 100%;
-
-    @media (max-width: $mg-breakpoint-mobile) {
-      flex-wrap: wrap; // Allow wrapping on small screens
-      flex-direction: column;
-      align-items: flex-start;
-
-      // On mobile, make the close button span the full width
-      .mg-button {
-        margin-top: var(--mg-spacing-100);
-        width: 100%;
-        min-height: 44px; // Ensure touchable area is large enough
-      }
-    }
-  }
-
-  &__message {
-    margin-inline-end: var(--mg-spacing-200);
-    flex: 1; // Allow message to take up available space
-    overflow-wrap: break-word; // Prevent overflow of long words
-  }
-
-  // Make button larger on touch devices for better usability
-  .mg-button {
-    min-width: 88px;
-    min-height: 44px;
-    padding: var(--mg-spacing-50) var(--mg-spacing-150);
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: var(--mg-radius-button);
-    border: 1px solid rgb(255 255 255 / 0.5);
-    background-color: rgb(255 255 255 / 0.1);
-    color: inherit;
-    transition: background-color var(--mg-motion-duration-fast)
-      var(--mg-motion-easing-standard);
-
-    &:hover {
-      background-color: rgb(255 255 255 / 0.2);
-    }
-
-    &:active {
-      background-color: rgb(255 255 255 / 0.3);
-    }
-
-    &:focus-visible {
-      outline: 2px solid rgb(var(--mg-color-focus-ring-inverse));
-      outline-offset: 2px;
-    }
-
-    @media (max-width: $mg-breakpoint-mobile) {
-      min-height: 44px; // Larger touch target on mobile
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-}
-
-.mg-snackbar__icon {
-  width: 25px;
-  height: 25px;
-  flex-shrink: 0; // Prevent icon from shrinking on small screens
-
-  svg {
-    fill: currentColor; // Ensure icons match the text color for better visibility
+  .mg-snackbar__message {
+    flex: 1;
+    overflow-wrap: anywhere;
   }
 }
