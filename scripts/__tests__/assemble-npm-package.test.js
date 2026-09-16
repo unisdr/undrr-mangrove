@@ -27,11 +27,16 @@ const listFiles = dir =>
 const run = (...args) =>
   spawnSync(process.execPath, [script, ...args], { encoding: 'utf8' });
 
+const PREVIOUS_BUILD_PACKAGE = JSON.stringify({
+  name: '@undrr/undrr-mangrove',
+  version: '9.9.8',
+});
+
 let root;
 let out;
 beforeEach(() => {
   root = fs.mkdtempSync(path.join(os.tmpdir(), 'mangrove-assemble-root-'));
-  out = fs.mkdtempSync(path.join(os.tmpdir(), 'mangrove-assemble-out-'));
+  out = path.join(root, 'npm-package');
   write(
     root,
     'package.json',
@@ -67,11 +72,9 @@ beforeEach(() => {
 
 afterEach(() => {
   fs.rmSync(root, { recursive: true, force: true });
-  fs.rmSync(out, { recursive: true, force: true });
 });
 
 test('copies dist subpaths and SCSS sources into the CI layout', () => {
-  write(out, 'stale.txt');
   const result = run(out, '--root', root);
   expect(result.status).toBe(0);
 
@@ -152,8 +155,121 @@ test('fails with a build hint when dist is missing', () => {
   expect(result.stderr).toMatch(/yarn build/);
 });
 
-test('refuses to use the repo root as the output directory', () => {
-  const result = run(root, '--root', root);
+test('fails like `cp -r dir/*` when a source directory is empty', () => {
+  fs.rmSync(path.join(root, 'dist/fonts'), { recursive: true });
+  fs.mkdirSync(path.join(root, 'dist/fonts'));
+  const result = run(out, '--root', root);
   expect(result.status).toBe(1);
-  expect(fs.existsSync(path.join(root, 'package.json'))).toBe(true);
+  expect(result.stderr).toMatch(/no files to copy/);
+});
+
+test('defaults to npm-package inside the root', () => {
+  expect(run('--root', root).status).toBe(0);
+  expect(fs.existsSync(path.join(root, 'npm-package/package.json'))).toBe(true);
+});
+
+test('clears a previous package build', () => {
+  write(out, 'package.json', PREVIOUS_BUILD_PACKAGE);
+  write(out, 'stale.txt');
+  write(out, 'components/Old.js');
+  expect(run(out, '--root', root).status).toBe(0);
+  expect(fs.existsSync(path.join(out, 'stale.txt'))).toBe(false);
+  expect(fs.existsSync(path.join(out, 'components/Old.js'))).toBe(false);
+  expect(fs.existsSync(path.join(out, 'components/MegaMenu.js'))).toBe(true);
+});
+
+describe('output directory guard', () => {
+  let sentinelParent;
+  beforeEach(() => {
+    // A throwaway parent so `..` points somewhere disposable, never a real
+    // directory, even if the guard were broken.
+    sentinelParent = fs.mkdtempSync(
+      path.join(os.tmpdir(), 'mangrove-assemble-parent-')
+    );
+    const nestedRoot = path.join(sentinelParent, 'repo');
+    fs.cpSync(root, nestedRoot, { recursive: true });
+    fs.rmSync(root, { recursive: true, force: true });
+    root = nestedRoot;
+    out = path.join(root, 'npm-package');
+    write(sentinelParent, 'keep.txt');
+    write(root, '.git/HEAD', 'ref: refs/heads/main');
+    write(root, 'src/index.js');
+  });
+  afterEach(() => {
+    fs.rmSync(sentinelParent, { recursive: true, force: true });
+  });
+
+  const snapshot = () => listFiles(sentinelParent);
+
+  // Checked with the guard alone, so a broken guard can never reach the
+  // delete for a directory this test does not own.
+  test.each([
+    ['the filesystem root', () => path.parse(root).root],
+    ['a doubled filesystem root', () => '//'],
+    ['a directory outside the root', () => os.tmpdir()],
+  ])('guard refuses %s', (label, target) => {
+    const result = spawnSync(
+      process.execPath,
+      [
+        '--input-type=module',
+        '-e',
+        `import path from 'node:path';
+        import { assertSafeOutDir } from ${JSON.stringify(script)};
+        const [root, target] = process.argv.slice(1);
+        assertSafeOutDir(root, path.resolve(root, target));`,
+        root,
+        target(),
+      ],
+      { encoding: 'utf8' }
+    );
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toMatch(/Refusing to use/);
+  });
+
+  test.each([
+    ['the repo root', () => root],
+    ['. (relative to the root)', () => '.'],
+    ['.. (relative to the root)', () => '..'],
+    ['the parent directory', () => sentinelParent],
+    ['stories', () => 'stories'],
+    ['a directory nested in stories', () => 'stories/Components'],
+    ['.git', () => '.git'],
+    ['src', () => 'src'],
+    ['dist', () => 'dist'],
+    ['DIST (case variant)', () => 'DIST'],
+  ])('refuses %s', (label, target) => {
+    const before = snapshot();
+    const result = spawnSync(
+      process.execPath,
+      [script, target(), '--root', root],
+      { encoding: 'utf8', cwd: root }
+    );
+    expect(result.status).toBe(1);
+    expect(result.stderr).toMatch(/Refusing to use/);
+    expect(snapshot()).toEqual(before);
+  });
+
+  test('refuses a non-empty directory that is not a package build', () => {
+    write(root, 'notes/important.txt');
+    const before = snapshot();
+    const result = run('notes', '--root', root);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toMatch(/not a previous/);
+    expect(snapshot()).toEqual(before);
+  });
+
+  test('refuses a package build that contains .git', () => {
+    write(out, 'package.json', PREVIOUS_BUILD_PACKAGE);
+    write(out, '.git/HEAD');
+    const before = snapshot();
+    expect(run(out, '--root', root).status).toBe(1);
+    expect(snapshot()).toEqual(before);
+  });
+
+  test('refuses a symlink that points at the repo root', () => {
+    fs.symlinkSync(root, path.join(root, 'link'));
+    const before = snapshot();
+    expect(run('link', '--root', root).status).toBe(1);
+    expect(snapshot()).toEqual(before);
+  });
 });

@@ -14,7 +14,10 @@
  *   node scripts/assemble-npm-package.mjs [outDir] [--root <repoRoot>]
  *
  * outDir defaults to `npm-package` (relative to the repo root) and is
- * replaced on every run.
+ * replaced on every run. Because it is deleted first, it must resolve to a
+ * directory strictly inside the repo root, outside the repo's own source
+ * directories, and be either absent, empty, or a previous package build
+ * (a package.json named @undrr/undrr-mangrove and no .git).
  *
  * Intentional quirks, kept to match every published release:
  * - The whole of dist/ is copied to <outDir>/dist, but the generated
@@ -22,11 +25,14 @@
  *   `main: "dist/index.js"` points at nothing. Consumers import from the
  *   top-level subpath directories. Changing either changes what is published.
  * - Top-level dotfiles of each copied directory are skipped, matching the
- *   shell glob (`cp -r dir/*`) the workflow used before this script.
+ *   shell glob (`cp -r dir/*`) the workflow used before this script. As with
+ *   that glob, a source directory that exists but has nothing to copy fails.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+export const PACKAGE_NAME = '@undrr/undrr-mangrove';
 
 export const PACKAGE_FILES = [
   'components/**/*',
@@ -47,15 +53,105 @@ const DIST_COPIES = [
   ['dist/components', 'components'],
 ];
 
+// Top-level names in the repo that must never be used as (or contain) the
+// output directory, even though they are inside the repo root. Compared
+// case-insensitively because macOS and Windows filesystems usually are.
+const PROTECTED_DIRS = new Set(
+  [
+    '.git',
+    '.github',
+    '.storybook',
+    '.yarn',
+    'dist',
+    'docs',
+    'githooks',
+    'node_modules',
+    'schemas',
+    'scripts',
+    'src',
+    'stories',
+    'tokens',
+  ].map(name => name.toLowerCase())
+);
+
 const isDir = p => fs.existsSync(p) && fs.statSync(p).isDirectory();
 
-// Equivalent of `mkdir -p dest && cp -r src/* dest/`.
+// Canonical path, following symlinks (and, with .native, normalising case on
+// macOS) for the part of the path that exists.
+function realish(p) {
+  const missing = [];
+  let current = p;
+  for (;;) {
+    try {
+      return path.join(fs.realpathSync.native(current), ...missing.reverse());
+    } catch (err) {
+      if (err.code !== 'ENOENT' && err.code !== 'ENOTDIR') throw err;
+      const parent = path.dirname(current);
+      if (parent === current) return p;
+      missing.push(path.basename(current));
+      current = parent;
+    }
+  }
+}
+
+function isPreviousBuild(dir) {
+  if (fs.existsSync(path.join(dir, '.git'))) return false;
+  try {
+    const pkg = JSON.parse(
+      fs.readFileSync(path.join(dir, 'package.json'), 'utf8')
+    );
+    return pkg.name === PACKAGE_NAME;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Throw unless `out` is safe to delete: strictly inside rootDir, not in a
+ * protected repo directory, and absent, empty or a previous package build.
+ */
+export function assertSafeOutDir(rootDir, out) {
+  const refuse = reason => {
+    throw new Error(
+      `Refusing to use ${out} as the output directory: ${reason}.`
+    );
+  };
+  const realRoot = realish(rootDir);
+  const realOut = realish(out);
+  const rel = path.relative(realRoot, realOut);
+  if (
+    !rel ||
+    rel === '..' ||
+    rel.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(rel)
+  ) {
+    refuse(`it must be a directory inside ${realRoot}`);
+  }
+  const [first] = rel.split(path.sep);
+  if (PROTECTED_DIRS.has(first.toLowerCase())) {
+    refuse(`${first}/ is part of the repository`);
+  }
+  if (!fs.existsSync(out)) return;
+  if (!fs.statSync(realOut).isDirectory()) refuse('it is not a directory');
+  if (fs.readdirSync(realOut).length > 0 && !isPreviousBuild(realOut)) {
+    refuse(
+      `it is not empty and is not a previous ${PACKAGE_NAME} package build`
+    );
+  }
+}
+
+// Equivalent of `mkdir -p dest && cp -r src/* dest/`, including failing when
+// the glob matches nothing.
 function copyContents(src, dest) {
+  const entries = fs.readdirSync(src).filter(entry => !entry.startsWith('.'));
+  if (entries.length === 0) {
+    throw new Error(`${src} exists but has no files to copy.`);
+  }
   fs.mkdirSync(dest, { recursive: true });
-  for (const entry of fs.readdirSync(src)) {
-    if (entry.startsWith('.')) continue;
+  for (const entry of entries) {
     fs.cpSync(path.join(src, entry), path.join(dest, entry), {
       recursive: true,
+      verbatimSymlinks: true,
     });
   }
 }
@@ -96,10 +192,7 @@ export function assemble({
       `No dist/ directory found in ${rootDir}. Run \`yarn build\` first.`
     );
   }
-  // Guard the rm below against an outDir that would delete the repo itself.
-  if (out === rootDir || rootDir.startsWith(out + path.sep) || out === dist) {
-    throw new Error(`Refusing to use ${out} as the output directory.`);
-  }
+  assertSafeOutDir(rootDir, out);
 
   fs.rmSync(out, { recursive: true, force: true });
 
