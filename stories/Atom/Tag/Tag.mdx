@@ -117,6 +117,9 @@ The `.mg-tag-container` class auto-styles direct child elements (`span`, `div`, 
 | `.mg-tag--secondary` | Neutral gray variant for de-emphasised tags      |
 | `.mg-tag--outline`   | Border-only variant with transparent background  |
 | `.mg-tag--accent`    | Theme-owned accent variant for featured content  |
+| `.mg-tag--subtle`    | Neutral subtle variant for non-interactive data  |
+| `.mg-badge`          | Compact non-interactive metadata badge pill      |
+| `.mg-badge--code`    | Monospace uppercase format badge (PDF, JSON)     |
 | `.mg-tag-container`  | Wrapper that auto-styles direct children as tags |
 
 ## Design tokens
@@ -138,6 +141,7 @@ Container children and individually classed tags share the same styling. Explici
 
 ## Changelog
 
+- **1.3.0** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-tag--subtle` and `.mg-badge` for non-interactive secondary metadata, along with monospace uppercase format badge variants (`.mg-badge--code`, `.mg-tag--code`) for technical extensions (PDF, JSON, SVG).
 - **1.2.0** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refreshed v2 spacing/geometry and aligned auto-styled tags with UI font/modifier rules. Added stronger focus/forced-colour handling for links, disabled hover treatment on static tags, and improved RTL/long-label wrapping behavior.
 
 - **1.1.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tag typography now follows the `ui` font role (`Noto Sans Arabic`), and the component-level `:lang(ar)` override was removed. Latin rendering is unchanged.
