@@ -761,6 +761,8 @@ function getDescription(id, component, data) {
 
   if (data?.description) return data.description;
 
+  if (REQUIRES_REACT[id]) return REQUIRES_REACT[id];
+
   return '';
 }
 

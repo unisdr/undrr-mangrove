@@ -1487,4 +1487,14 @@ npm run build</code></pre>
       },
     ],
   },
+
+  'example-form-validation': {
+    description:
+      'Interactive form validation example demonstrating error summary blocks, field-level error messages, and snackbar toast notifications with multi-language support.',
+  },
+
+  'example-newsletter-promotion': {
+    description:
+      'Interactive newsletter promotion pattern demonstrating email input validation, topic preferences checkboxes, submission states, and confirmation messaging.',
+  },
 };
