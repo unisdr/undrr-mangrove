@@ -324,6 +324,10 @@ $mg-tabs-border-bottom: true !default;
   );
   --mg-status-label-indicator--published: rgb(var(--mg-color-accent-400));
 
+  // Service health states, shared with ServiceNotice.
+  --mg-status-label-indicator--warning: rgb(var(--mg-color-gold-800));
+  --mg-status-label-indicator--negative: rgb(var(--mg-color-red-900));
+
   // Empty state
   // Layout follows the DELTA "Empty State" boards (centred glyph above a short
   // message, compact variant for indicator tiles and chart wells). The boards

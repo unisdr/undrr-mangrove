@@ -1,4 +1,6 @@
-import serviceNoticeFromElement from '../ServiceNotice.fromElement';
+import serviceNoticeFromElement, {
+  RETRY_EVENT,
+} from '../ServiceNotice.fromElement';
 
 describe('serviceNoticeFromElement', () => {
   function makeContainer(attrs = {}, innerHTML = '') {
@@ -35,16 +37,39 @@ describe('serviceNoticeFromElement', () => {
     expect(props.countdownSeconds).toBe(15);
     expect(props.isCompact).toBe(true);
     expect(props.isOverlay).toBe(true);
+    expect(props.onRetry).toBeUndefined();
+  });
+
+  it('dispatches a bubbling retry event when data-retry is present', () => {
+    const el = makeContainer({ retry: '', 'max-auto-retries': '2' });
+    const parent = document.createElement('div');
+    parent.appendChild(el);
+    const listener = jest.fn();
+    parent.addEventListener(RETRY_EVENT, listener);
+
+    const props = serviceNoticeFromElement(el);
+    props.onRetry();
+
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(props.maxAutoRetries).toBe(2);
+  });
+
+  it('does not re-inject child markup as HTML', () => {
+    const el = makeContainer(
+      {},
+      '<div class="mg-notice__description"><img src=x onerror="alert(1)">Down</div>'
+    );
+    expect(serviceNoticeFromElement(el).description).toBe('Down');
   });
 
   it('extracts title and description from child DOM elements when data attributes are absent', () => {
     const el = makeContainer(
       {},
       `
-      <div class="mg-service-notice__header">
-        <h3 class="mg-service-notice__title">Embedded Map Service</h3>
+      <div class="mg-notice__header">
+        <h3 class="mg-notice__title">Embedded Map Service</h3>
       </div>
-      <div class="mg-service-notice__description">
+      <div class="mg-notice__description">
         <p>Map tiles cannot be loaded.</p>
       </div>
     `
@@ -53,7 +78,7 @@ describe('serviceNoticeFromElement', () => {
     const props = serviceNoticeFromElement(el);
 
     expect(props.title).toBe('Embedded Map Service');
-    expect(props.description).toBe('<p>Map tiles cannot be loaded.</p>');
+    expect(props.description).toBe('Map tiles cannot be loaded.');
     expect(props.status).toBe('degraded');
   });
 

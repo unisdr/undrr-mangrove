@@ -7,9 +7,15 @@ import * as ServiceNoticeStories from './ServiceNotice.stories';
 
 # Service notice
 
-An accessible in-page notification container and card overlay displayed when an embedded third-party service (such as MapX, an external analytics feed, or an API endpoint) is temporarily unreachable or operating in a degraded state.
+An in-page notice or card overlay shown when an embedded third-party service (such as MapX, an external analytics feed, or an API endpoint) is unreachable or running in a degraded state.
 
-Features a warning/offline indicator, downtime explanation, primary retry action, external status link, and optional automatic countdown retry indicator.
+It shows a degraded or offline status badge, an explanation, a retry action, a link to an external status page, and optional automatic retries. It renders through the [Notice](/docs/components-notice--docs) component, so it inherits its layout, tokens, compact and overlay modifiers.
+
+## Automatic retry
+
+Set `countdownSeconds` together with `onRetry` to retry automatically. After each attempt the wait doubles (for example 15s, 30s, 60s), and after `maxAutoRetries` attempts (default 3) the countdown stops and only the manual retry button remains. This keeps a hard outage from being polled indefinitely.
+
+When the service recovers, remove the notice. Changing `countdownSeconds` starts a new retry cycle.
 
 ## Integration
 
@@ -17,29 +23,27 @@ Features a warning/offline indicator, downtime explanation, primary retry action
 
 ```html
 <div
-  class="mg-service-notice mg-service-notice--degraded"
-  role="status"
-  aria-live="polite"
+  class="mg-notice mg-notice--warning mg-service-notice mg-service-notice--degraded"
 >
-  <div class="mg-service-notice__header">
+  <div class="mg-notice__header">
     <span
-      class="mg-icon mg-icon-exclamation-triangle mg-service-notice__icon"
+      class="mg-icon mg-icon-exclamation-triangle mg-notice__icon"
       aria-hidden="true"
     ></span>
-    <h3 class="mg-service-notice__title">MapX layer service degraded</h3>
+    <h3 class="mg-notice__title">MapX layer service degraded</h3>
     <span class="mg-status-label mg-status-label--warning">
       <span class="mg-status-label__indicator" aria-hidden="true"></span>
       Degraded
     </span>
   </div>
-  <div class="mg-service-notice__description">
+  <div class="mg-notice__description">
     <p>
       Geospatial tiles are taking longer than usual to render. Cached layers
       remain accessible.
     </p>
   </div>
-  <div class="mg-service-notice__actions">
-    <button type="button" class="mg-button mg-button-primary mg-button--small">
+  <div class="mg-notice__actions mg-buttons">
+    <button type="button" class="mg-button mg-button-primary">
       <span
         class="mg-icon mg-icon-refresh mg-button__icon"
         aria-hidden="true"
@@ -50,7 +54,7 @@ Features a warning/offline indicator, downtime explanation, primary retry action
       href="https://status.undrr.org"
       target="_blank"
       rel="noopener noreferrer"
-      class="mg-button mg-button-secondary mg-button-outline mg-button--small"
+      class="mg-button mg-button-secondary mg-button-outline"
     >
       View status page
       <span
@@ -62,17 +66,21 @@ Features a warning/offline indicator, downtime explanation, primary retry action
 </div>
 ```
 
-### 2. Drupal Twig with React Hydration
+The markup is a [Notice](/docs/components-notice--docs) with a [StatusLabel](/docs/components-status-label--docs) in its header; `mg-service-notice` adds only the countdown style. The offline state swaps in `mg-notice--negative`, `mg-service-notice--offline`, `mg-icon-power-off` and `mg-status-label--negative`. Static HTML should announce the outage itself if it is injected after page load (for example with a `role="status"` region).
+
+### 2. Drupal Twig with React hydration
 
 ```twig
 <div data-mg-service-notice
   data-title="{{ 'MapX service unreachable'|t }}"
   data-description="{{ 'Unable to establish a secure connection to the map tile server.'|t }}"
   data-status="offline"
+  data-retry
   data-retry-label="{{ 'Reconnect'|t }}"
   data-status-url="https://status.undrr.org"
   data-status-url-label="{{ 'Check status'|t }}"
-  data-countdown-seconds="30">
+  data-countdown-seconds="30"
+  data-max-auto-retries="3">
 </div>
 ```
 
@@ -91,11 +99,16 @@ const hydrator = createHydrator({
 Drupal.behaviors.mangroveServiceNotice = {
   attach(context) {
     hydrator.update(context);
+    context.querySelectorAll?.('[data-mg-service-notice]').forEach(el => {
+      el.addEventListener('mg-service-notice:retry', () => reloadMapEmbed());
+    });
   },
 };
 ```
 
-### 3. React Component
+With `data-retry` present, the retry button and every automatic retry dispatch a bubbling `mg-service-notice:retry` event on the container. Without `data-retry`, no retry button or countdown is rendered. Title and description are read as plain text.
+
+### 3. React component
 
 ```jsx
 import { ServiceNotice } from '@undrr/undrr-mangrove';
@@ -110,12 +123,31 @@ function MapWidget() {
         isOverlay
         onRetry={() => refetchLayers()}
         statusUrl="https://status.undrr.org"
-        countdownSeconds={30}
+        countdownSeconds={15}
+        maxAutoRetries={3}
       />
     </div>
   );
 }
 ```
+
+## Storybook variations
+
+### Degraded
+
+<Canvas of={ServiceNoticeStories.Degraded} />
+
+### Offline with automatic retry
+
+<Canvas of={ServiceNoticeStories.Offline} />
+
+### Compact
+
+<Canvas of={ServiceNoticeStories.Compact} />
+
+### Embed overlay
+
+<Canvas of={ServiceNoticeStories.EmbedOverlay} />
 
 ## Props
 
@@ -123,10 +155,16 @@ function MapWidget() {
 
 ## Accessibility
 
-- Container renders as a `<div>` container with `role="status"` and `aria-live="polite"` so screen readers are informed of status changes without disrupting user focus.
-- Status labels use both visible text and color indicators, satisfying WCAG 2.2 SC 1.4.1 (Use of Color).
-- External status links include `target="_blank"`, `rel="noopener noreferrer"`, and an external icon with accessible text.
+- The component includes a visually hidden `role="status"` region. It is filled just after mount, so the status and title are announced even when the notice appears already populated (for example as an overlay). It is updated again when an automatic retry is scheduled and when automatic retries stop.
+- The visible countdown is `aria-hidden`, because announcing every second would drown out everything else. Screen reader users hear "Retrying automatically in N seconds" once per attempt instead.
+- The status badge pairs a coloured dot with visible text (Degraded / Offline), satisfying WCAG 2.2 SC 1.4.1 (Use of Color).
+- The status page link opens in a new tab with `rel="noopener noreferrer"`.
+- `headingLevel` lets the title fit the page's heading outline instead of forcing `h3`.
+
+## Translations
+
+Labels are provided for the six UN official languages. The non-English strings are drafts and need native-speaker review before release.
 
 ## Changelog
 
-- **2.0.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Initial implementation of the `.mg-service-notice` component with degraded and offline states, retry actions, overlay mode, Layer 2 hydration, and UN translations ([Issue #1155](https://github.com/unisdr/undrr-mangrove/issues/1155)).
+- **v1.0.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Initial implementation of the `.mg-service-notice` component with degraded and offline states, retry actions, capped automatic retries with backoff, overlay mode, Layer 2 hydration with a retry event, and UN translations ([#1155](https://github.com/unisdr/undrr-mangrove/issues/1155)).

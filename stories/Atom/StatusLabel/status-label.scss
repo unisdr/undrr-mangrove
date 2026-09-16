@@ -61,6 +61,15 @@
   background-color: var(--mg-status-label-indicator--published);
 }
 
+// Service health states (degraded / offline), used by ServiceNotice.
+.mg-status-label--warning .mg-status-label__indicator {
+  background-color: var(--mg-status-label-indicator--warning);
+}
+
+.mg-status-label--negative .mg-status-label__indicator {
+  background-color: var(--mg-status-label-indicator--negative);
+}
+
 // A list of statuses — a legend, or a filter summary.
 .mg-status-label-group {
   display: flex;

@@ -2,7 +2,7 @@
  * Service Notice
  *
  * In-page degraded state container for unreachable third-party embeds or external APIs with retry and status actions.
- * Core styling is provided by the shared .mg-notice foundation in notice.scss.
+ * The component renders through Notice (.mg-notice) and StatusLabel; only the countdown is styled here.
  *
  * Full documentation:
  * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/ServiceNotice/ServiceNotice.mdx
@@ -11,16 +11,7 @@
 .mg-service-notice {
   &__countdown {
     margin: 0;
-    font-size: var(--mg-font-size-200, 0.8125rem);
+    font-size: $mg-font-size-200;
     color: rgb(var(--mg-color-neutral-600));
-  }
-
-  // Scoped status label indicator colors
-  .mg-status-label--warning .mg-status-label__indicator {
-    background-color: rgb(var(--mg-color-gold-800));
-  }
-
-  .mg-status-label--negative .mg-status-label__indicator {
-    background-color: rgb(var(--mg-color-red-900));
   }
 }

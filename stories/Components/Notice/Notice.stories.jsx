@@ -10,7 +10,11 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['info', 'warning', 'negative', 'emergency', 'positive'],
+      options: ['info', 'warning', 'negative', 'positive'],
+    },
+    headingLevel: {
+      control: 'select',
+      options: ['h2', 'h3', 'h4', 'h5', 'h6'],
     },
     isCompact: { control: 'boolean' },
     isProminent: { control: 'boolean' },
@@ -51,7 +55,7 @@ export const NegativeAlert = {
     description:
       'Unable to connect to the central Sendai Framework monitoring registry. Changes have been saved locally in your browser.',
     actions: (
-      <div style={{ display: 'flex', gap: '0.75rem' }}>
+      <>
         <button type="button" className="mg-button mg-button-primary">
           Retry sync
         </button>
@@ -61,14 +65,14 @@ export const NegativeAlert = {
         >
           Export local backup
         </button>
-      </div>
+      </>
     ),
   },
 };
 
 export const EmergencyBroadcast = {
   args: {
-    variant: 'emergency',
+    variant: 'negative',
     isProminent: true,
     title: 'Flash Flood Warning: Coastal Region Sector 4',
     description:
@@ -93,9 +97,9 @@ export const EmergencyBroadcast = {
 export const PositiveConfirmation = {
   args: {
     variant: 'positive',
-    title: 'Report successfully submitted',
+    title: 'Report submitted',
     description:
-      'Your voluntary national report on disaster risk reduction progress has been received and queued for editorial review.',
+      'Your voluntary national report has been received and queued for editorial review.',
   },
 };
 
@@ -112,7 +116,6 @@ export const Dismissible = {
   args: {
     variant: 'info',
     isDismissible: true,
-    onDismiss: () => alert('Notice dismissed'),
     title: 'New analytical dashboard features available',
     description:
       'Explore multi-hazard risk correlations with the updated 2026 data explorer.',

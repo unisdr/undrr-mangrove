@@ -38,7 +38,12 @@ const meta = {
     },
     isCompact: { control: 'boolean' },
     isOverlay: { control: 'boolean' },
+    headingLevel: {
+      control: 'select',
+      options: ['h2', 'h3', 'h4', 'h5', 'h6'],
+    },
     countdownSeconds: { control: 'number' },
+    maxAutoRetries: { control: 'number' },
   },
 };
 
@@ -50,7 +55,7 @@ export const Degraded = {
     description:
       'Geospatial tiles may take longer than usual to render. Cached data remains available.',
     status: 'degraded',
-    onRetry: () => alert('Retrying connection...'),
+    onRetry: () => {},
     statusUrl: 'https://status.undrr.org',
   },
 };
@@ -61,9 +66,10 @@ export const Offline = {
     description:
       'The remote service returned 503 Service Unavailable. Inspection tools and data layers are temporarily disabled.',
     status: 'offline',
-    onRetry: () => alert('Retrying connection...'),
+    onRetry: () => {},
     statusUrl: 'https://status.undrr.org',
-    countdownSeconds: 30,
+    countdownSeconds: 15,
+    maxAutoRetries: 3,
   },
 };
 
@@ -73,7 +79,7 @@ export const Compact = {
     description: 'Updates may be delayed by up to 5 minutes.',
     status: 'degraded',
     isCompact: true,
-    onRetry: () => alert('Retrying connection...'),
+    onRetry: () => {},
   },
 };
 
@@ -105,7 +111,7 @@ export const EmbedOverlay = {
       'Unable to connect to the tile server. Check your network or retry below.',
     status: 'offline',
     isOverlay: true,
-    onRetry: () => alert('Retrying map connection...'),
+    onRetry: () => {},
     statusUrl: 'https://status.undrr.org',
   },
 };

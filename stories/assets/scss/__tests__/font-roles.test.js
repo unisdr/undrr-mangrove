@@ -743,8 +743,6 @@ describe('every component names the role it is meant to', () => {
     ['.mg-preview-access__submit', 'text'],
     ['.mg-preview-access__title', 'ui'],
     ['.mg-search__input', 'text'],
-    ['.mg-service-notice', 'text'],
-    ['.mg-service-notice__title', 'ui'],
     ['.mg-share__copy-button', 'text'],
     ['.mg-skip-link:focus', 'ui'],
     ['.mg-share__header', 'text'],

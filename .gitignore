@@ -26,6 +26,3 @@ npm-debug.log
 .gstack/
 debug-storybook.log
 .superpowers/
-.agents/
-.claude/
-skills-lock.json

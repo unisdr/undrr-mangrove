@@ -7,16 +7,26 @@ import * as NoticeStories from './Notice.stories';
 
 # Notice / Alert Banner
 
-A universal container for in-page informational notices, contextual warnings, error alerts, and emergency broadcast messages.
+An in-page container for informational notices, contextual warnings, error alerts, and emergency banners. It stays in the page flow until the condition changes or the reader dismisses it.
 
-Provides consistent token-driven styling across all severity states (`info`, `warning`, `negative`, `positive`), with support for compact card slots, prominent sitewide emergency banners, and canvas overlays.
+Four variants (`info`, `warning`, `negative`, `positive`) share one set of tokens, with modifiers for compact slots, prominent sitewide banners, and canvas overlays. ServiceNotice and the Snackbar toast both render through this component.
+
+## When to use
+
+| Need                                                                  | Use                                                                                           |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| A persistent message about the page, a section, or a system condition | **Notice**                                                                                    |
+| A service or embed on the page is degraded or offline                 | [ServiceNotice](/docs/components-servicenotice--docs)                                         |
+| Short, temporary feedback after an action (saved, copied, failed)     | [Snackbar](/docs/components-snackbar--docs), a floating Notice that auto-dismisses            |
+| Editorial emphasis inside content (key facts, pull-out boxes)         | [HighlightBox](/docs/components-highlightbox--docs), which carries no severity or live region |
+| A record's workflow state inside a list or table                      | [StatusLabel](/docs/components-status-label--docs)                                            |
 
 ## Integration
 
 ### 1. Pure HTML / CSS
 
 ```html
-<div class="mg-notice mg-notice--warning" role="status" aria-live="polite">
+<div class="mg-notice mg-notice--warning" role="status">
   <div class="mg-notice__header">
     <span
       class="mg-icon mg-icon-exclamation-triangle mg-notice__icon"
@@ -27,7 +37,7 @@ Provides consistent token-driven styling across all severity states (`info`, `wa
   <div class="mg-notice__description">
     <p>Live hazard updates are operating with a 15-minute delay.</p>
   </div>
-  <div class="mg-notice__actions">
+  <div class="mg-notice__actions mg-buttons">
     <button type="button" class="mg-button mg-button-primary">
       Refresh data
     </button>
@@ -35,20 +45,18 @@ Provides consistent token-driven styling across all severity states (`info`, `wa
 </div>
 ```
 
-### 2. Emergency Broadcast Banner (`.mg-notice--prominent`)
+Pick the heading element that fits the surrounding outline; `h3` is only the default.
+
+### 2. Emergency banner (`negative` + `--prominent`)
 
 ```html
-<div
-  class="mg-notice mg-notice--emergency mg-notice--prominent"
-  role="alert"
-  aria-live="assertive"
->
+<div class="mg-notice mg-notice--negative mg-notice--prominent" role="alert">
   <div class="mg-notice__header">
     <span
-      class="mg-icon mg-icon-close mg-notice__icon"
+      class="mg-icon mg-icon-exclamation-triangle mg-notice__icon"
       aria-hidden="true"
     ></span>
-    <h3 class="mg-notice__title">Severe Weather Advisory</h3>
+    <h2 class="mg-notice__title">Severe weather advisory</h2>
   </div>
   <div class="mg-notice__description">
     <p>High winds and localized flooding expected in coastal regions.</p>
@@ -56,7 +64,7 @@ Provides consistent token-driven styling across all severity states (`info`, `wa
 </div>
 ```
 
-### 3. React Component
+### 3. React component
 
 ```jsx
 import { Notice } from '@undrr/undrr-mangrove';
@@ -67,8 +75,9 @@ function MyPage() {
       variant="warning"
       title="Unsaved changes"
       description="You have modified draft indicators that have not yet been published."
+      headingLevel="h2"
       isDismissible
-      onDismiss={() => console.log('dismissed')}
+      onDismiss={() => trackDismiss()}
       actions={
         <button type="button" className="mg-button mg-button-primary">
           Save now
@@ -79,29 +88,56 @@ function MyPage() {
 }
 ```
 
-## Storybook Variations
+String `description` values render as plain text. To include links or formatting, pass React nodes as `description` or `children`.
 
-### Info Notice
+### 4. Drupal Twig with React hydration
+
+```twig
+<div data-mg-notice
+  data-title="{{ 'Scheduled maintenance'|t }}"
+  data-description="{{ 'Services will be briefly unavailable tonight.'|t }}"
+  data-variant="warning"
+  data-heading-level="h2"
+  data-is-dismissible="true">
+</div>
+```
+
+```javascript
+import createHydrator from '@undrr/undrr-mangrove/src/hydrate';
+import Notice, {
+  fromElement,
+} from '@undrr/undrr-mangrove/stories/Components/Notice/Notice.hydrate';
+
+const hydrator = createHydrator({
+  selector: '[data-mg-notice]',
+  component: Notice,
+  fromElement,
+});
+```
+
+## Storybook variations
+
+### Info notice
 
 <Canvas of={NoticeStories.InfoNotice} />
 
-### Warning Banner
+### Warning banner
 
 <Canvas of={NoticeStories.WarningBanner} />
 
-### Negative Alert
+### Negative alert
 
 <Canvas of={NoticeStories.NegativeAlert} />
 
-### Emergency Broadcast
+### Emergency broadcast
 
 <Canvas of={NoticeStories.EmergencyBroadcast} />
 
-### Positive Confirmation
+### Positive confirmation
 
 <Canvas of={NoticeStories.PositiveConfirmation} />
 
-### Compact Mode
+### Compact mode
 
 <Canvas of={NoticeStories.CompactMode} />
 
@@ -109,17 +145,18 @@ function MyPage() {
 
 <Canvas of={NoticeStories.Dismissible} />
 
-## Component Props
+## Component props
 
 <Controls />
 
 ## Accessibility
 
-- Default status notices render with `role="status"` and `aria-live="polite"` so screen readers are informed of context changes politely without interrupting user flow.
-- Emergency and negative alert notices render with `role="alert"` and `aria-live="assertive"` for critical disruption messaging.
-- Close buttons on dismissible notices include explicit `aria-label` attribute and accessible focus rings.
-- Contrast between background surfaces, text, and border highlights conforms to WCAG 2.2 AA (minimum 4.5:1 text contrast).
+- `info` and `warning` notices render with `role="status"` (a polite live region); `negative` notices render with `role="alert"` (assertive). No separate `aria-live` attribute is added, because the roles already imply it and doubling up causes repeat announcements in some screen readers.
+- A `role="status"` region is only announced when its content changes after it is in the page. For a notice that should be heard when it first appears, render the container first and fill it afterwards, or use `negative` (`role="alert"`). Pass `role={null}` for a static notice that should not be a live region at all.
+- Colour is never the only cue: each notice has a title and an icon, and the severity is repeated in the border and background.
+- The dismiss button has an accessible name (`dismissLabel`) and a visible 2px focus outline using `--mg-color-focus-ring`. The notice hides itself when dismissed, whether or not `onDismiss` is supplied.
+- `headingLevel` lets the title fit the page's heading outline instead of forcing `h3`.
 
 ## Changelog
 
-- **2.0.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Initial implementation of the universal `Notice` / Alert banner component (`mg-notice`).
+- **v1.0.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Initial implementation of the `Notice` / alert banner component (`mg-notice`) with `info`, `warning`, `negative` and `positive` variants, compact, prominent and overlay modifiers, self-managed dismissal, configurable heading level, and Layer 2 hydration ([#1155](https://github.com/unisdr/undrr-mangrove/issues/1155)).

@@ -1,2 +1,2 @@
-export { default, ServiceNotice } from './ServiceNotice';
-export { default as fromElement } from './ServiceNotice.fromElement';
+export { ServiceNotice, ServiceNotice as default } from './ServiceNotice.jsx';
+export { default as fromElement } from './ServiceNotice.fromElement.js';

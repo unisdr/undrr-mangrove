@@ -857,32 +857,37 @@ npm run build</code></pre>
   // --- Service notice (auto-rendered + hydration) ---
   'components-servicenotice': {
     description:
-      'In-page degraded state or partial outage notice for live feeds, interactive maps, or remote APIs with status link and optional retry action or auto-countdown timer.',
+      'In-page degraded state or partial outage notice for live feeds, interactive maps, or remote APIs with status link, optional retry action, and capped automatic retries with backoff.',
     cssClasses: [
       'mg-service-notice',
       'mg-service-notice--degraded',
       'mg-service-notice--offline',
-      'mg-service-notice--compact',
-      'mg-service-notice--overlay',
-      'mg-service-notice__header',
-      'mg-service-notice__icon',
-      'mg-service-notice__title',
-      'mg-service-notice__description',
-      'mg-service-notice__actions',
       'mg-service-notice__countdown',
+      'mg-notice',
+      'mg-notice--warning',
+      'mg-notice--negative',
+      'mg-notice--compact',
+      'mg-notice--overlay',
+      'mg-notice__header',
+      'mg-notice__icon',
+      'mg-notice__title',
+      'mg-notice__description',
+      'mg-notice__actions',
+      'mg-status-label',
+      'mg-status-label--warning',
+      'mg-status-label--negative',
     ],
   },
 
-  // --- Notice / Alert Banner (auto-rendered) ---
+  // --- Notice / Alert Banner (auto-rendered + hydration) ---
   'components-notice': {
     description:
-      'Universal in-page notice and alert banner container for informational callouts, contextual warnings, error alerts, and emergency broadcast messages.',
+      'Universal in-page notice and alert banner container for informational callouts, contextual warnings, and error alerts. Combine negative with the prominent modifier for emergency banners.',
     cssClasses: [
       'mg-notice',
       'mg-notice--info',
       'mg-notice--warning',
       'mg-notice--negative',
-      'mg-notice--emergency',
       'mg-notice--positive',
       'mg-notice--compact',
       'mg-notice--prominent',

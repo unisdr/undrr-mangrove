@@ -1,14 +1,27 @@
+export const RETRY_EVENT = 'mg-service-notice:retry';
+
 /**
  * Layer 2: Extract ServiceNotice props from a DOM container.
  *
  * Expected HTML:
- * <aside data-mg-service-notice
+ * <div data-mg-service-notice
  *   data-title="MapX layer service unreachable"
  *   data-description="The geospatial tile service is temporarily offline."
  *   data-status="offline"
+ *   data-retry
  *   data-status-url="https://status.example.org"
- *   data-countdown-seconds="30">
- * </aside>
+ *   data-countdown-seconds="30"
+ *   data-max-auto-retries="3">
+ * </div>
+ *
+ * Retry: when `data-retry` is present the retry button (and each automatic
+ * retry) dispatches a bubbling `mg-service-notice:retry` CustomEvent on the
+ * container, so page scripts can reload the embed:
+ *
+ *   container.addEventListener('mg-service-notice:retry', reloadMap);
+ *
+ * Without `data-retry` no retry button or countdown is rendered.
+ * Title and description are read as plain text; markup is not re-injected.
  *
  * @param {Element} container - DOM element with data attributes
  * @returns {object} Props for the ServiceNotice component
@@ -27,39 +40,44 @@ export default function serviceNoticeFromElement(container) {
 
   const title =
     dataset.title ||
-    container.querySelector('.mg-service-notice__title')?.textContent?.trim() ||
+    container.querySelector('.mg-notice__title')?.textContent?.trim() ||
     null;
 
-  const descEl = container.querySelector('.mg-service-notice__description');
   const description =
     dataset.description ||
-    (descEl ? descEl.innerHTML.trim() : null) ||
-    (!title && container.innerHTML.trim() ? container.innerHTML.trim() : null);
+    container.querySelector('.mg-notice__description')?.textContent?.trim() ||
+    null;
 
-  const status =
-    dataset.status || (dataset.variant === 'negative' ? 'offline' : 'degraded');
-  const isCompact =
-    dataset.isCompact === 'true' ||
-    container.classList.contains('mg-service-notice--compact');
-  const isOverlay =
-    dataset.isOverlay === 'true' ||
-    container.classList.contains('mg-service-notice--overlay');
+  const toInt = value => {
+    const parsed = parseInt(value, 10);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  };
 
-  const countdownSeconds = dataset.countdownSeconds
-    ? parseInt(dataset.countdownSeconds, 10)
-    : null;
+  const onRetry =
+    'retry' in dataset
+      ? () =>
+          container.dispatchEvent(
+            new CustomEvent(RETRY_EVENT, { bubbles: true })
+          )
+      : undefined;
 
   return {
     title,
     description,
-    status,
-    variant: dataset.variant || undefined,
-    isCompact,
-    isOverlay,
+    status: dataset.status === 'offline' ? 'offline' : 'degraded',
+    headingLevel: dataset.headingLevel || undefined,
+    isCompact:
+      dataset.isCompact === 'true' ||
+      container.classList.contains('mg-service-notice--compact'),
+    isOverlay:
+      dataset.isOverlay === 'true' ||
+      container.classList.contains('mg-service-notice--overlay'),
+    onRetry,
     retryLabel: dataset.retryLabel || undefined,
     statusUrl: dataset.statusUrl || undefined,
     statusUrlLabel: dataset.statusUrlLabel || undefined,
-    countdownSeconds: Number.isNaN(countdownSeconds) ? null : countdownSeconds,
+    countdownSeconds: toInt(dataset.countdownSeconds) ?? null,
+    maxAutoRetries: toInt(dataset.maxAutoRetries),
     labels: Object.keys(parsedLabels).length > 0 ? parsedLabels : undefined,
   };
 }

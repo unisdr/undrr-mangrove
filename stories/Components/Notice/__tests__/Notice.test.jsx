@@ -24,19 +24,51 @@ describe('Notice', () => {
     expect(screen.getByRole('status')).toHaveClass('mg-notice--info');
   });
 
-  it('renders negative/emergency variant with alert role', () => {
+  it('renders negative variant with alert role and no redundant aria-live', () => {
     render(
       <Notice
-        variant="emergency"
+        variant="negative"
+        isProminent
         title="Flash flood warning"
         description="Immediate evacuation ordered."
       />
     );
 
     const alertElement = screen.getByRole('alert');
-    expect(alertElement).toBeInTheDocument();
-    expect(alertElement).toHaveClass('mg-notice--emergency');
-    expect(alertElement).toHaveAttribute('aria-live', 'assertive');
+    expect(alertElement).toHaveClass('mg-notice--negative');
+    expect(alertElement).toHaveClass('mg-notice--prominent');
+    expect(alertElement).not.toHaveAttribute('aria-live');
+  });
+
+  it('falls back to info for unknown variants', () => {
+    render(<Notice variant="emergency" title="Unknown" />);
+    expect(screen.getByRole('status')).toHaveClass('mg-notice--info');
+  });
+
+  it('renders no live region when role is null', () => {
+    const { container } = render(<Notice role={null} title="Static" />);
+    expect(container.firstChild).not.toHaveAttribute('role');
+  });
+
+  it('renders string descriptions as text, not HTML', () => {
+    const { container } = render(
+      <Notice
+        title="Injected"
+        description={'<img src=x onerror="alert(1)">Hello'}
+      />
+    );
+
+    expect(container.querySelector('img')).toBeNull();
+    expect(
+      screen.getByText('<img src=x onerror="alert(1)">Hello')
+    ).toBeInTheDocument();
+  });
+
+  it('uses the requested heading level', () => {
+    render(<Notice title="Section notice" headingLevel="h2" />);
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Section notice' })
+    ).toBeInTheDocument();
   });
 
   it('handles dismiss button click', () => {
@@ -55,6 +87,16 @@ describe('Notice', () => {
 
     fireEvent.click(dismissButton);
     expect(onDismiss).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText('Dismissible notice')).not.toBeInTheDocument();
+  });
+
+  it('shows a working dismiss button without onDismiss', () => {
+    render(<Notice title="Self-managed" isDismissible />);
+
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Dismiss notification' })
+    );
+    expect(screen.queryByText('Self-managed')).not.toBeInTheDocument();
   });
 
   it('renders actions and children properly', () => {

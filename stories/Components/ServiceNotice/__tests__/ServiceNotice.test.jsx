@@ -18,12 +18,27 @@ describe('ServiceNotice', () => {
       />
     );
 
-    expect(screen.getByRole('status')).toBeInTheDocument();
     expect(screen.getByText('MapX tile service degraded')).toBeInTheDocument();
     expect(
       screen.getByText('Tiles are taking longer than usual to render.')
     ).toBeInTheDocument();
     expect(screen.getByText('Degraded')).toBeInTheDocument();
+  });
+
+  it('announces status and title through a live region after mount', () => {
+    render(<ServiceNotice title="Map offline" status="offline" />);
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Offline. Map offline'
+    );
+  });
+
+  it('renders string descriptions as text, not HTML', () => {
+    const { container } = render(
+      <ServiceNotice title="X" description={'<img src=x onerror="alert(1)">'} />
+    );
+
+    expect(container.querySelector('img')).toBeNull();
   });
 
   it('renders offline variant with negative status label', () => {
@@ -35,10 +50,11 @@ describe('ServiceNotice', () => {
       />
     );
 
-    expect(screen.getByText('Offline')).toBeInTheDocument();
-    expect(screen.getByRole('status')).toHaveClass(
-      'mg-service-notice--offline'
-    );
+    expect(screen.getAllByText('Offline').length).toBeGreaterThan(0);
+    const { container } = render(<ServiceNotice status="offline" />);
+    expect(container.firstChild).toHaveClass('mg-service-notice--offline');
+    expect(container.firstChild).not.toHaveClass('mg-service-notice--degraded');
+    expect(container.querySelector('.mg-icon-power-off')).not.toBeNull();
   });
 
   it('calls onRetry callback when retry button is clicked', () => {
@@ -65,29 +81,78 @@ describe('ServiceNotice', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('counts down and triggers onRetry when timer reaches 0', () => {
+  it('counts down, retries, and backs off between automatic attempts', () => {
     jest.useFakeTimers();
     const onRetry = jest.fn();
     render(
       <ServiceNotice
         title="Reconnecting"
-        countdownSeconds={3}
+        countdownSeconds={2}
+        maxAutoRetries={2}
         onRetry={onRetry}
       />
     );
 
-    expect(screen.getByText(/Next automatic retry in/i)).toBeInTheDocument();
-    expect(screen.getByText('3s')).toBeInTheDocument();
-
-    act(() => {
-      jest.advanceTimersByTime(1000);
-    });
     expect(screen.getByText('2s')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Retrying automatically in 2 seconds'
+    );
 
     act(() => {
       jest.advanceTimersByTime(2000);
     });
-    expect(onRetry).toHaveBeenCalled();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('4s')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Retrying automatically in 4 seconds'
+    );
+
+    act(() => {
+      jest.advanceTimersByTime(4000);
+    });
+    expect(onRetry).toHaveBeenCalledTimes(2);
+    expect(screen.queryByText(/Next automatic retry in/i)).toBeNull();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Automatic retries stopped'
+    );
+
+    act(() => {
+      jest.advanceTimersByTime(60000);
+    });
+    expect(onRetry).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not keep retrying when the parent re-renders', () => {
+    jest.useFakeTimers();
+    const onRetry = jest.fn();
+    const { rerender } = render(
+      <ServiceNotice
+        countdownSeconds={1}
+        maxAutoRetries={1}
+        onRetry={onRetry}
+      />
+    );
+
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    rerender(
+      <ServiceNotice
+        countdownSeconds={1}
+        maxAutoRetries={1}
+        onRetry={() => onRetry()}
+      />
+    );
+    act(() => {
+      jest.advanceTimersByTime(10000);
+    });
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores countdownSeconds without onRetry', () => {
+    jest.useFakeTimers();
+    render(<ServiceNotice title="No retry" countdownSeconds={5} />);
+    expect(screen.queryByText(/Next automatic retry in/i)).toBeNull();
   });
 
   it('supports localized labels', () => {
