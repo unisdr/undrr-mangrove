@@ -210,6 +210,8 @@ export function buildReleasesManifest({
     version: pkg.version,
     description:
       'Machine-readable release history, tag diffs, and component changelogs for UNDRR Mangrove.',
+    _note:
+      '100% automated by the build. Generated from CHANGELOG.md and component MDX documentation stories. Do not edit manually.',
     generatedAt: generatedAt || new Date().toISOString(),
     urls: {
       releases: `${docsBase}releases.json`,

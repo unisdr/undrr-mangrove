@@ -675,6 +675,8 @@ Every component MDX file must end with a `## Changelog` section (H2 level) that 
 
 **Do not** use subheadings within changelog entries, date-only entries without version numbers, bare version numbers without descriptions, or mixed separator styles.
 
+> **Automated extraction:** The build pipeline (`scripts/ai-manifest/generate-ai-manifest.js`) automatically parses this `## Changelog` section into structured JSON for `ai-components/{id}.json` and the library-wide `releases.json` endpoint. Adhering to the format ensures automated tooling and AI coding agents receive accurate version history.
+
 ### Title capitalization rules
 
 All titles and headings in the Mangrove documentation follow **sentence case capitalization**:

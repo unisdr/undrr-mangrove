@@ -34,7 +34,9 @@ Keep a dedicated RTL, long-label, or translation-stress story only when it exerc
 
 ## Component changelogs
 
-Every component MDX file must include a `## Changelog` section tracking its version history. When submitting a PR that modifies a component, add a new changelog entry. This is separate from the project-level [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases).
+Every component MDX file must include a `## Changelog` section tracking its version history. When submitting a PR that modifies a component, add a new changelog entry (e.g. `- **X.Y.Z** — YYYY-MM-DD ([#PR](https://...)): Description`).
+
+The manifest pipeline automatically parses each `## Changelog` into machine-readable format for `releases.json` and the component's `ai-components/{id}.json` detail file.
 
 See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the full format specification, issue link guidance, and examples.
 
@@ -42,9 +44,9 @@ See the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?
 
 ## AI manifest for component discovery
 
-Mangrove publishes an AI-friendly manifest alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers and a CSS utility class inventory. The pipeline lives in `scripts/ai-manifest/` (3 files).
+Mangrove publishes an AI-friendly manifest (`llms.txt`, `llms.json`, `releases.json`, `tokens.json`, and `ai-components/`) alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers, a CSS utility class inventory, and machine-readable design token definitions. The pipeline lives in `scripts/ai-manifest/` (4 files).
 
-Most of the manifest auto-generates from Storybook and component rendering. Two things need manual maintenance:
+Most of the manifest auto-generates from Storybook, component rendering, tokens, and `CHANGELOG.md`. Two things need manual maintenance when adding or modifying components:
 
 - **`scripts/ai-manifest/component-data.js`** — per-component metadata (descriptions, CSS class lists, curated HTML examples) and the `REQUIRES_REACT` map. Update when you change a component's HTML structure, add a new component, or rename BEM classes.
 - **`scripts/ai-manifest/css-utilities.js`** — inventory of CSS utility classes. Update when you add, rename, or remove utility classes.
@@ -72,11 +74,12 @@ Use the [review checklist](https://unisdr.github.io/undrr-mangrove/?path=/docs/c
 1. Create a feature branch from `main`.
 2. Write clear commits using Conventional Commits.
 3. Add or update Storybook docs if behavior or usage changes.
-4. Ensure the component SCSS file has a top docblock linking to its `.mdx` file and is imported in `_components.scss`.
-5. If you changed component markup or CSS classes, update `scripts/ai-manifest/component-data.js`.
-6. Run tests and linters before you open a pull request (`yarn test`, `yarn lint`). For component-quality findings, also run `npx -y react-doctor@latest .` — see [`docs/AI-CODING-AGENTS.md`](docs/AI-CODING-AGENTS.md) for the house conventions it enforces.
-7. Validate against the [review checklist](docs/REVIEW-CHECKLIST.md).
-8. Reference the relevant issue in your PR description.
+4. Add a version entry to the component's `## Changelog` in its `.mdx` file citing your PR or issue.
+5. Ensure the component SCSS file has a top docblock linking to its `.mdx` file and is imported in `_components.scss`.
+6. If you changed component markup or CSS classes, update `scripts/ai-manifest/component-data.js` and `scripts/ai-manifest/css-utilities.js`.
+7. Run tests and linters before opening a pull request (`yarn test`, `yarn lint`, `yarn prettier:check`, `yarn validate-manifest`). For component-quality findings, also run `npx -y react-doctor@latest .` — see [`docs/AI-CODING-AGENTS.md`](docs/AI-CODING-AGENTS.md) for the house conventions it enforces.
+8. Validate against the [review checklist](docs/REVIEW-CHECKLIST.md).
+9. Reference the relevant issue in your PR description.
 
 For more details on component standards and workflow, see the [component contribution guide](https://unisdr.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs).
 
