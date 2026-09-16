@@ -742,16 +742,16 @@ MDX files are rendered inside Storybook's iframe. Relative file paths (e.g. `../
 
 **How to derive the path ID** from a story's `title`:
 
-1. Take the `title` from the story's default export (e.g. `'Components/On this page nav'`)
+1. Take the `title` from the story's default export (e.g. `'Components/Navigation/On this page nav'`)
 2. Lowercase everything
 3. Replace spaces and slashes with hyphens
 4. Append `--docs`
 
-| Story title                     | Path ID                                           |
-| ------------------------------- | ------------------------------------------------- |
-| `Components/Tabs`               | `?path=/docs/components-tabs--docs`               |
-| `Components/On this page nav`   | `?path=/docs/components-on-this-page-nav--docs`   |
-| `Getting started/Accessibility` | `?path=/docs/getting-started-accessibility--docs` |
+| Story title                              | Path ID                                                    |
+| ---------------------------------------- | ---------------------------------------------------------- |
+| `Components/Tabs`                        | `?path=/docs/components-tabs--docs`                        |
+| `Components/Navigation/On this page nav` | `?path=/docs/components-navigation-on-this-page-nav--docs` |
+| `Getting started/Accessibility`          | `?path=/docs/getting-started-accessibility--docs`          |
 
 For external URLs (GitHub, GitLab, external sites), use a standard absolute URL. Do not use relative paths for anything outside the MDX file's own imports.
 

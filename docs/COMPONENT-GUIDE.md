@@ -146,7 +146,7 @@ All MDX docs and embedded JSX stories render inside Storybook's **preview iframe
 ```mdx
 import LinkTo from '@storybook/addon-links/react';
 
-See the <LinkTo kind="components-pager" story="docs">Pager</LinkTo> component.
+See the <LinkTo kind="components-navigation-pager" story="docs">Pager</LinkTo> component.
 ```
 
 **Use `linkTo` + `addons.getChannel()` for interactive navigation** (e.g., a card that navigates AND switches a global like the theme). Do NOT use Storybook hooks (`useGlobals`, `useArgs`) in regular React components — they only work inside story/decorator functions. Use `addons.getChannel().emit()` instead:

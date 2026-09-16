@@ -36,7 +36,7 @@ If you know which component you need, point straight at its detail file:
 
 ```
 Fetch the Pager component metadata:
-https://preventionweb.github.io/undrr-mangrove/ai-components/components-pager.json
+https://preventionweb.github.io/undrr-mangrove/ai-components/components-navigation-pager.json
 
 Create a similar paginated list using this component.
 ```

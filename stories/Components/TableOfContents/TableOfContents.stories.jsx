@@ -188,7 +188,7 @@ const getCaptionForLocale = locale => {
 };
 
 export default {
-  title: 'Components/Table of Contents',
+  title: 'Components/Navigation/Table of Contents',
   component: TableOfContents,
   argTypes: {
     showNumbers: { control: 'boolean' },

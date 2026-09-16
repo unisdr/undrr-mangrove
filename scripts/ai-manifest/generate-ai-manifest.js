@@ -226,7 +226,7 @@ const COMPONENT_IDS = {
   SyndicationSearchWidget: 'components-syndicated-search',
   ScrollContainer: 'components-scrollcontainer',
   Gallery: 'components-gallery',
-  Pager: 'components-pager',
+  Pager: 'components-navigation-pager',
   ShareButtons: 'components-buttons-sharebuttons',
   UserFeedback: 'components-user-feedback',
   CopyButton: 'components-buttons-copybutton',

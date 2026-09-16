@@ -268,7 +268,6 @@ const count = text.length;
 export default {
   title: 'Components/Typography/Typography integration example',
   component: TypographyIntegrationExample,
-  tags: ['hidden'],
 };
 
 export const Default = {

@@ -3,7 +3,7 @@ import { userEvent, within } from 'storybook/test';
 import { SkipLink } from './SkipLink';
 
 export default {
-  title: 'Components/Skip link',
+  title: 'Components/Navigation/Skip link',
   component: SkipLink,
   parameters: {
     docs: {

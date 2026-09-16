@@ -30,7 +30,7 @@ const withLocaleLabels = (Story, context) => {
 };
 
 export default {
-  title: 'Components/On this page nav',
+  title: 'Components/Navigation/On this page nav',
   component: OnThisPageNav,
   decorators: [withLocaleLabels],
   parameters: {
