@@ -427,10 +427,11 @@ The following remain as SCSS variables (BUILD-TIME ONLY — no CSS custom proper
 | Variable | Reason |
 |---|---|
 | `$mg-breakpoint-*` | `@media` queries require static values at compile time |
-| `$mg-font-size-*` | Resolved at compile time for interpolation |
 | `$mg-font-face-*` | `@font-face` and Sass interpolation need a compile-time value. These are the typefaces; the families components read are the `--mg-font-family-*` roles, which are custom properties — see [#8](#8-font-family-variables-replaced-by-five-roles) |
 | `$mg-html-font-size` | Base rem anchor, compile-time only |
 | `$mg-tabs-border-bottom` | `@if` conditional, compile-time only |
+
+The type scale is **not** on this list. It is emitted as `--mg-font-size-100` … `--mg-font-size-1100` custom properties, which components read with `var()` and a theme can re-value at runtime. The `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` Sass variables still compile but are deprecated and will be removed in 3.0; Sass consumers should switch to `var(--mg-font-size-*)`. Overriding `$mg-font-tag` no longer changes Mangrove's own components. See [#1167](https://github.com/unisdr/undrr-mangrove/issues/1167).
 
 ### 2. Sub-brand `_variables-*.scss` files deleted
 

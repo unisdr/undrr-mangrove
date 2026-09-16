@@ -126,24 +126,24 @@ Static because `@media` cannot read `var()`. Note that these are the raw values;
 
 ### Font sizes
 
-Generated from `tokens/mangrove.yaml` into `generated/_tokens-mangrove.scss`, and exported as Sass because they are interpolated and passed to Sass functions at compile time.
+Generated from `tokens/mangrove.yaml` into `generated/_tokens-mangrove.scss` as CSS custom properties. Components read them with `var(--mg-font-size-*)`, so a theme can re-value a step at runtime.
 
-| Variable             | Value         | Pixels at a 16px root | Notes             |
-| -------------------- | ------------- | --------------------- | ----------------- |
-| `$mg-font-size-100`  | `0.625rem`    | 10px                  |                   |
-| `$mg-font-size-150`  | `0.703125rem` | 11.25px               |                   |
-| `$mg-font-size-200`  | `0.78125rem`  | 12.5px                |                   |
-| `$mg-font-size-250`  | `0.875rem`    | 14px                  |                   |
-| `$mg-font-size-300`  | `1rem`        | 16px                  | Regular body text |
-| `$mg-font-size-400`  | `1.125rem`    | 18px                  |                   |
-| `$mg-font-size-500`  | `1.4375rem`   | 23px                  |                   |
-| `$mg-font-size-600`  | `2rem`        | 32px                  |                   |
-| `$mg-font-size-800`  | `2.25rem`     | 36px                  |                   |
-| `$mg-font-size-900`  | `2.5rem`      | 40px                  |                   |
-| `$mg-font-size-1000` | `3rem`        | 48px                  |                   |
-| `$mg-font-size-1100` | `4rem`        | 64px                  |                   |
+| Custom property       | Value      | Pixels at a 16px root | Notes             |
+| --------------------- | ---------- | --------------------- | ----------------- |
+| `--mg-font-size-100`  | `0.625rem` | 10px                  |                   |
+| `--mg-font-size-150`  | `0.703rem` | 11.25px               |                   |
+| `--mg-font-size-200`  | `0.781rem` | 12.5px                |                   |
+| `--mg-font-size-250`  | `0.875rem` | 14px                  |                   |
+| `--mg-font-size-300`  | `1rem`     | 16px                  | Regular body text |
+| `--mg-font-size-400`  | `1.125rem` | 18px                  |                   |
+| `--mg-font-size-500`  | `1.438rem` | 23px                  |                   |
+| `--mg-font-size-600`  | `2rem`     | 32px                  |                   |
+| `--mg-font-size-800`  | `2.25rem`  | 36px                  |                   |
+| `--mg-font-size-900`  | `2.5rem`   | 40px                  |                   |
+| `--mg-font-size-1000` | `3rem`     | 48px                  |                   |
+| `--mg-font-size-1100` | `4rem`     | 64px                  |                   |
 
-Aliases over that scale: `$mg-font-body` (`$mg-font-size-300`), `$mg-font-tag` (`$mg-font-size-250`), `$mg-font-line-height-500` (`1.25em`), `$mg-font-line-height-700` (`1.5em`).
+The matching `$mg-font-size-*` Sass variables, and the `$mg-font-body` / `$mg-font-tag` aliases, still compile but are **deprecated** and will be removed in 3.0. Use the custom properties in new Sass. Line-height aliases: `$mg-font-line-height-500` (`1.25em`), `$mg-font-line-height-700` (`1.5em`).
 
 ### Font faces and font roles
 

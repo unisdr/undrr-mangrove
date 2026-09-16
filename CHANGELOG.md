@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **Type scale is now public custom properties:** `--mg-font-size-100` … `--mg-font-size-1100` are emitted in every theme, and all component stylesheets read them with `var()` instead of the Sass variables. Compiled sizes are unchanged. `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` remain as deprecated Sass aliases until 3.0; overriding `$mg-font-tag` no longer affects Mangrove's own components. A new test fails the build on any `var(--mg-*)` that nothing defines, apart from documented input hooks. This also resolves dormant references in AuthorImage, Details and several Storybook examples without changing how they render. ([#1167](https://github.com/unisdr/undrr-mangrove/issues/1167))
+
 ## 2.0.0-beta.3 — 2026-09-15
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.3) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.

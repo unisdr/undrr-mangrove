@@ -53,7 +53,7 @@ stories/assets/scss/
 ├── style-mcr.scss              → MCR2030 theme
 ├── style-delta.scss            → DELTA Resilience theme
 ├── _components.scss            → Imports all component SCSS files
-├── _variables.scss             → Build-time SCSS tokens (breakpoints, font sizes, families); color/spacing tokens are CSS custom properties
+├── _variables.scss             → Build-time SCSS tokens (breakpoints, font faces); color, spacing and font-size tokens are CSS custom properties
 ├── _breakpoints.scss           → Responsive breakpoint mixins
 └── _mixins.scss                → Shared SCSS mixins
 ```
@@ -62,7 +62,7 @@ stories/assets/scss/
 
 **When adding a new component SCSS file:** add its `@import` to `_components.scss` so it ships in all theme builds.
 
-**Important:** Color and spacing tokens are CSS custom properties overridden at runtime by a `.mg-theme-{name}` selector block in each theme's `_theme-{name}.scss` file. Build-time-only tokens (breakpoints, font sizes, font families, `$mg-html-font-size`, `$mg-tabs-border-bottom`) remain as SCSS `!default` variables and are resolved at compile time.
+**Important:** Color and spacing tokens are CSS custom properties overridden at runtime by a `.mg-theme-{name}` selector block in each theme's `_theme-{name}.scss` file. The type scale is also a set of custom properties (`--mg-font-size-*`). Build-time-only tokens (breakpoints, font faces, `$mg-html-font-size`, `$mg-tabs-border-bottom`) remain as SCSS `!default` variables and are resolved at compile time.
 
 ## Component distribution channels
 
@@ -244,7 +244,9 @@ Mangrove uses two distinct token mechanisms:
 
 **CSS custom properties** (`--mg-color-*`, `--mg-spacing-*`): color and spacing tokens defined in the compiled output. Themes override these at runtime via a `.mg-theme-{name} { }` selector block in `_theme-{name}.scss`. Applying the class to `<body>` or a wrapping element activates the theme without any CSS rebuild.
 
-**Build-time SCSS `!default` variables**: used for tokens that must be resolved at compile time and cannot be overridden at runtime. This includes breakpoints (`$mg-breakpoint-*`), font sizes (`$mg-font-size-*`), font faces (`$mg-font-face-*`, which `@font-face` and Sass interpolation need at compile time), and `$mg-tabs-border-bottom`. Font *families* are not on this list: components read the `--mg-font-family-*` role custom properties, which are re-pointed per script at runtime. These carry `!default` so a consuming project can override them before importing Mangrove; include it on any new build-time variable for the same reason. (`$mg-html-font-size` is the exception — it is fixed at `16`, see below.)
+**Build-time SCSS `!default` variables**: used for tokens that must be resolved at compile time and cannot be overridden at runtime. This includes breakpoints (`$mg-breakpoint-*`), font faces (`$mg-font-face-*`, which `@font-face` and Sass interpolation need at compile time), and `$mg-tabs-border-bottom`. Font *families* are not on this list: components read the `--mg-font-family-*` role custom properties, which are re-pointed per script at runtime. These carry `!default` so a consuming project can override them before importing Mangrove; include it on any new build-time variable for the same reason. (`$mg-html-font-size` is the exception — it is fixed at `16`, see below.)
+
+The type scale used to be on this list. It is now emitted as `--mg-font-size-*` custom properties, which components read with `var()`; the `$mg-font-size-*` Sass variables remain as deprecated aliases for Sass consumers and will be removed in 3.0. See [unisdr/undrr-mangrove#1167](https://github.com/unisdr/undrr-mangrove/issues/1167).
 
 ### Why a custom token generator
 
@@ -287,7 +289,7 @@ $mg-html-font-size: 16;
 
 // Usage — pass the intended pixel value:
 $mg-spacing-100: mg-rem(10);   // → 0.625rem
-$mg-font-size-300: mg-rem(16); // → 1rem
+$example-offset: mg-rem(24);   // → 1.5rem
 ```
 
 When writing component SCSS, use `mg-rem()` or an existing token. Never hard-code a rem value:
