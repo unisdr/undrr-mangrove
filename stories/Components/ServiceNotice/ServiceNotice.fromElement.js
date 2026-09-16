@@ -22,6 +22,7 @@ export const RETRY_EVENT = 'mg-service-notice:retry';
  *
  * Without `data-retry` no retry button or countdown is rendered.
  * Title and description are read as plain text; markup is not re-injected.
+ * A data-status-url that is not http or https is ignored by the component.
  *
  * @param {Element} container - DOM element with data attributes
  * @returns {object} Props for the ServiceNotice component

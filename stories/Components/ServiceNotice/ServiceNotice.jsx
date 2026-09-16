@@ -7,6 +7,17 @@ import { DEFAULT_SERVICE_NOTICE_LABELS } from './_labels';
 export { DEFAULT_SERVICE_NOTICE_LABELS };
 
 const EMPTY_LABELS = {};
+
+// Only http(s) status links render, so a javascript: or data: URL from CMS
+// or hydration data can never become a clickable href.
+const isSafeUrl = url => {
+  try {
+    const { protocol } = new URL(url, window.location.href);
+    return protocol === 'http:' || protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
 const HEADING_LEVELS = ['h2', 'h3', 'h4', 'h5', 'h6'];
 
 export const ServiceNotice = ({
@@ -31,6 +42,7 @@ export const ServiceNotice = ({
   const retryLabel = customRetryLabel || t.retryLabel;
   const statusUrlLabel = customStatusUrlLabel || t.statusUrlLabel;
   const statusText = isOffline ? t.statusOffline : t.statusDegraded;
+  const safeStatusUrl = statusUrl && isSafeUrl(statusUrl) ? statusUrl : null;
 
   const onRetryRef = useRef(onRetry);
   onRetryRef.current = onRetry;
@@ -38,6 +50,13 @@ export const ServiceNotice = ({
   const autoRetryEnabled =
     typeof onRetry === 'function' && countdownSeconds > 0;
   const [attempt, setAttempt] = useState(0);
+  // Reset the cycle during render, not in an effect, so the countdown effect
+  // never starts with the previous cycle's attempt count.
+  const [cycleSeconds, setCycleSeconds] = useState(countdownSeconds);
+  if (cycleSeconds !== countdownSeconds) {
+    setCycleSeconds(countdownSeconds);
+    setAttempt(0);
+  }
   const [countdown, setCountdown] = useState(null);
   const [hasMounted, setHasMounted] = useState(false);
   const autoRetriesExhausted = autoRetryEnabled && attempt >= maxAutoRetries;
@@ -49,10 +68,6 @@ export const ServiceNotice = ({
   useEffect(() => {
     setHasMounted(true);
   }, []);
-
-  useEffect(() => {
-    setAttempt(0);
-  }, [countdownSeconds]);
 
   useEffect(() => {
     if (!autoRetryEnabled || attempt >= maxAutoRetries) {
@@ -98,7 +113,7 @@ export const ServiceNotice = ({
   const showCountdown = countdown != null && countdown > 0;
 
   const actions =
-    onRetry || statusUrl ? (
+    onRetry || safeStatusUrl ? (
       <>
         {onRetry && (
           <button
@@ -114,9 +129,9 @@ export const ServiceNotice = ({
           </button>
         )}
 
-        {statusUrl && (
+        {safeStatusUrl && (
           <a
-            href={statusUrl}
+            href={safeStatusUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="mg-button mg-button-secondary mg-button-outline"
@@ -189,7 +204,7 @@ ServiceNotice.propTypes = {
   onRetry: PropTypes.func,
   /** Retry button text (overrides labels.retryLabel) */
   retryLabel: PropTypes.string,
-  /** External status page URL */
+  /** External status page URL (http or https only; other schemes are not rendered) */
   statusUrl: PropTypes.string,
   /** Status link text (overrides labels.statusUrlLabel) */
   statusUrlLabel: PropTypes.string,

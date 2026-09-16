@@ -31,9 +31,23 @@ describe('Snackbar', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders with role="alert"', () => {
-    render(<Snackbar {...defaultProps} />);
+  it('uses a polite status role for info and success', () => {
+    render(<Snackbar {...defaultProps} severity="success" />);
+    expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it.each(['error', 'warning'])('uses role="alert" for %s', severity => {
+    render(<Snackbar {...defaultProps} severity={severity} />);
     expect(screen.getByRole('alert')).toBeInTheDocument();
+  });
+
+  it('defaults severity to info', () => {
+    const { container } = render(
+      <Snackbar opened message="Hi" onClose={() => {}} />
+    );
+    expect(container.querySelector('.mg-snackbar__info')).toBeInTheDocument();
+    expect(container.querySelector('.mg-snackbar__undefined')).toBeNull();
   });
 
   it('does not double the alert with an aria-live wrapper', () => {
@@ -51,7 +65,7 @@ describe('Snackbar', () => {
 
   it('renders no body or close button while closed', () => {
     render(<Snackbar {...defaultProps} opened={false} />);
-    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
@@ -95,7 +109,7 @@ describe('Snackbar', () => {
     const wrapper = container.querySelector('.mg-snackbar-wrapper');
     expect(wrapper).toHaveAttribute('aria-hidden', 'true');
     expect(container.querySelector('.mg-snackbar')).toBeInTheDocument();
-    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
 
     act(() => {
       jest.advanceTimersByTime(400);

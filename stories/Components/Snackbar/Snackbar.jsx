@@ -35,10 +35,16 @@ const SnackbarBody = ({
   closeLabel,
   closeAriaLabel,
   closeButtonRef,
-  role = 'alert',
+  role,
 }) => (
   <Notice
-    role={role}
+    role={
+      role === undefined
+        ? severity === 'error' || severity === 'warning'
+          ? 'alert'
+          : 'status'
+        : role
+    }
     variant={SEVERITY_TO_VARIANT[severity] || 'info'}
     icon={Boolean(SEVERITY_TO_VARIANT[severity])}
     className={`mg-snackbar mg-snackbar__${severity}`}
@@ -65,7 +71,7 @@ const SnackbarBody = ({
 );
 
 const Snackbar = ({
-  severity,
+  severity = 'info',
   opened,
   message,
   onClose,

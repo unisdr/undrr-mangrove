@@ -155,6 +155,42 @@ describe('ServiceNotice', () => {
     expect(screen.queryByText(/Next automatic retry in/i)).toBeNull();
   });
 
+  it('does not render non-http status links', () => {
+    render(
+      <ServiceNotice
+        title="Unsafe"
+        statusUrl="javascript:alert(1)" // eslint-disable-line no-script-url
+      />
+    );
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+  });
+
+  it('restarts the retry cycle when countdownSeconds changes', () => {
+    jest.useFakeTimers();
+    const onRetry = jest.fn();
+    const { rerender } = render(
+      <ServiceNotice
+        countdownSeconds={1}
+        maxAutoRetries={1}
+        onRetry={onRetry}
+      />
+    );
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    expect(onRetry).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText(/Next automatic retry in/i)).toBeNull();
+
+    rerender(
+      <ServiceNotice
+        countdownSeconds={5}
+        maxAutoRetries={1}
+        onRetry={onRetry}
+      />
+    );
+    expect(screen.getByText('5s')).toBeInTheDocument();
+  });
+
   it('supports localized labels', () => {
     render(
       <ServiceNotice
