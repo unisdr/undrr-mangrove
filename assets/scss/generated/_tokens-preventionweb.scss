@@ -33,6 +33,15 @@
   // color.button-background--hover
   --mg-color-button-background--hover: rgb(var(--mg-color-orange-900));
 
+  // color.button-secondary-background
+  // Lighter partner of the brand teal for secondary button fill, meeting WCAG
+  // AA (5.5:1) while providing lower visual weight than primary.
+  --mg-color-button-secondary-background: 12 117 117;
+
+  // color.button-secondary-background--hover
+  // PreventionWeb teal. The one primitive this brand states.
+  --mg-color-button-secondary-background--hover: 10 105 105;
+
   // color.button-outline-primary
   --mg-color-button-outline-primary: 10 105 105;
 

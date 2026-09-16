@@ -152,27 +152,27 @@
 
 /* placeholder start */
 %paragraph-font-100 {
-  font-size: $mg-font-size-100;
+  font-size: var(--mg-font-size-100);
 
   @include devicebreak(medium) {
-    font-size: $mg-font-size-200;
+    font-size: var(--mg-font-size-200);
   }
 }
 
 %paragraph-font-200 {
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   line-height: 1.4;
 
   @include devicebreak(medium) {
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
   }
 }
 
 %paragraph-font-300 {
-  font-size: $mg-font-size-300;
+  font-size: var(--mg-font-size-300);
 
   @include devicebreak(medium) {
-    font-size: $mg-font-size-400;
+    font-size: var(--mg-font-size-400);
   }
 }
 

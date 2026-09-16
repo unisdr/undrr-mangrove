@@ -31,9 +31,13 @@ const os = require('os');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '../../../..');
-const { build, TokenError, baselineOf, readBaseline } = require(
-  path.join(ROOT, 'scripts/build-tokens.cjs')
-);
+const {
+  build,
+  buildTokensDictionary,
+  TokenError,
+  baselineOf,
+  readBaseline,
+} = require(path.join(ROOT, 'scripts/build-tokens.cjs'));
 
 const BRANDS = ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'];
 
@@ -458,5 +462,51 @@ brand:
       )
     );
     expect(sub()).toContain('--mg-brand-primary: 0 0 0;');
+  });
+});
+
+describe('buildTokensDictionary', () => {
+  test('returns a valid machine-readable tokens schema with wrapping rules and per-brand values', () => {
+    const dict = buildTokensDictionary();
+    expect(dict).toBeDefined();
+    expect(dict.$id).toBe('mangrove-design-tokens-dictionary');
+    expect(dict.schemaVersion).toBe('1.0');
+    expect(dict.totalTokens).toBeGreaterThan(150);
+    expect(dict.wrappingRules).toBeDefined();
+    expect(Array.isArray(dict.wrappingRules.exceptions)).toBe(true);
+    expect(dict.wrappingRules.exceptions).toContain('--mg-border-color-button');
+    expect(dict.wrappingRules.exceptions).toContain(
+      '--mg-color-button-background'
+    );
+
+    const interactive = dict.tokens.find(
+      t => t.name === '--mg-color-interactive'
+    );
+    expect(interactive).toBeDefined();
+    expect(interactive.wrapInRgb).toBe(true);
+    expect(interactive.format).toBe('srgb-channels');
+    expect(interactive.values.undrr).toBeDefined();
+    expect(interactive.values.preventionweb).toBeDefined();
+  });
+
+  test('every token has a valid format and consistent wrapInRgb flag', () => {
+    const dict = buildTokensDictionary();
+    const validFormats = new Set([
+      'srgb-channels',
+      'srgb-rgb-function',
+      'literal',
+      'rem',
+      'font-family-stack',
+    ]);
+    for (const token of dict.tokens) {
+      expect(token.name).toBeTruthy();
+      expect(validFormats).toContain(token.format);
+      if (token.type === 'color' && token.format === 'srgb-channels') {
+        expect(token.wrapInRgb).toBe(true);
+      }
+      if (token.type === 'color' && token.format !== 'srgb-channels') {
+        expect(token.wrapInRgb).toBe(false);
+      }
+    }
   });
 });

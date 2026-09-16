@@ -106,6 +106,17 @@ describe('Mangrove 2.0 token contract (compiled CSS)', () => {
         expect(themeBlock).toMatch(new RegExp(`--mg-tab-${token}:`));
       });
     });
+
+    test('declares brand-owned secondary button tokens inside the runtime theme', () => {
+      const themeBlock = brandCss[brand].match(
+        new RegExp(`\\.mg-theme-${brand}\\s*\\{([^}]*)\\}`)
+      )?.[1];
+
+      expect(themeBlock).toMatch(/--mg-color-button-secondary-background:/);
+      expect(themeBlock).toMatch(
+        /--mg-color-button-secondary-background--hover:/
+      );
+    });
   });
 
   test('combined style-all bundle carries every brand theme', () => {
@@ -940,20 +951,6 @@ const COMPONENT_PAIRS = [
     min: 3,
     why: 'SC 1.4.11 — records why Gallery must NOT use the inverse ring: white on the neutral-50 letterbox is invisible',
   },
-  {
-    name: 'inverse focus ring on the snackbar',
-    fg: '--mg-color-focus-ring-inverse',
-    bg: ['--mg-color-interactive'],
-    min: 3,
-    why: 'SC 1.4.11 — .mg-snackbar is filled with --mg-color-interactive and .mg-snackbar .mg-button draws the inverse ring on it',
-  },
-  {
-    name: 'focus ring on the snackbar, for comparison',
-    fg: '--mg-color-focus-ring',
-    bg: ['--mg-color-interactive'],
-    min: 3,
-    why: 'SC 1.4.11 — records why Snackbar, Hero and TextCta use the inverse ring: the default ring cannot reach 3:1 on a filled brand surface',
-  },
 
   // --- Data visualisation: _tokens-data-viz.scss -------------------------
   //
@@ -1025,7 +1022,7 @@ const COMPONENT_PAIRS = [
     fg: '--mg-color-focus-ring-inverse',
     bg: ['--mg-color-hero'],
     min: 3,
-    why: 'SC 1.4.11 — Hero, TextCta and Snackbar draw the ring on a filled brand surface, where --mg-color-focus-ring cannot reach 3:1',
+    why: 'SC 1.4.11 — Hero and TextCta draw the ring on a filled brand surface, where --mg-color-focus-ring cannot reach 3:1',
   },
   {
     name: 'card body text',

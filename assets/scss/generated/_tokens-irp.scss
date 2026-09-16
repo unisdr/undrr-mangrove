@@ -33,6 +33,15 @@
   // color.button-background--hover
   --mg-color-button-background--hover: rgb(var(--mg-color-orange-900));
 
+  // color.button-secondary-background
+  // Deeper partner of the IRP interactive blue for secondary button fill,
+  // meeting WCAG AA (6.0:1).
+  --mg-color-button-secondary-background: 13 103 163;
+
+  // color.button-secondary-background--hover
+  // IRP blue. The interactive colour.
+  --mg-color-button-secondary-background--hover: 15 120 191;
+
   // color.button-outline-primary
   --mg-color-button-outline-primary: 15 120 191;
 
