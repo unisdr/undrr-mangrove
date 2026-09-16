@@ -158,7 +158,7 @@
     background: none;
     color: rgb(var(--mg-color-neutral-0));
     font-family: inherit;
-    font-size: $mg-font-tag;
+    font-size: var(--mg-font-size-250);
     cursor: pointer;
 
     &:hover {
@@ -241,7 +241,7 @@
     border: none;
     background-color: transparent;
     direction: inherit;
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
     opacity: 0;
     cursor: pointer;
     outline: none;

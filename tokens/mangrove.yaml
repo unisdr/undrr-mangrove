@@ -359,14 +359,14 @@ width:
   '400': { $value: 400 }
   '600': { $value: 600 }
 
-# Type scale. Private: the scale itself is a build-time vocabulary exported
-# as Sass variables ($mg-font-size-300 and friends, still read across the
-# component Sass). Component font sizes below resolve against it at build
-# time, which is exactly what `#{$mg-font-size-250}` did by hand.
+# Type scale. Public: emitted as --mg-font-size-* custom properties, which
+# components read with var(), so a theme can re-value a step at runtime.
+# Also emitted as deprecated $mg-font-size-* Sass variables for Sass
+# consumers; they will be removed in 3.0. Component font-size tokens below
+# still resolve against the scale at build time. See unisdr/undrr-mangrove#1167.
 font-size:
   $type: dimension
   $format: rem
-  $private: true
   $sass: true
   '100': { $value: 10 }
   '150': { $value: 11.25 }

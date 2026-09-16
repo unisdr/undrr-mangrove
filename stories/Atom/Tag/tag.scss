@@ -29,7 +29,7 @@
   border: 1px solid transparent;
   border-radius: var(--mg-radius-tag);
   font-family: var(--mg-font-family-ui);
-  font-size: $mg-font-size-250;
+  font-size: var(--mg-font-size-250);
   font-weight: 500;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -90,7 +90,7 @@
 .mg-tag--code,
 .mg-badge--code {
   font-family: var(--mg-font-family-code);
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }

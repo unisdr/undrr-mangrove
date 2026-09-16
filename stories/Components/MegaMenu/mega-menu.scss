@@ -136,7 +136,7 @@
       }
     }
 
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
     color: rgb(var(--mg-color-interactive));
     font-weight: bold;
     list-style: none;
@@ -241,7 +241,7 @@
   // Desktop: Make the top level button links larger
   @media screen and (min-width: $mg-breakpoint-tablet) {
     &__item-link {
-      font-size: $mg-font-size-400;
+      font-size: var(--mg-font-size-400);
     }
   }
 }
@@ -300,7 +300,7 @@
     padding: var(--mg-spacing-250);
     header {
       font-family: var(--mg-font-family-ui);
-      font-size: $mg-font-size-500;
+      font-size: var(--mg-font-size-500);
       font-weight: bold;
       padding-bottom: var(--mg-spacing-100);
     }
@@ -968,7 +968,7 @@
 
   .mg-mega-mobile-sidebar__title {
     font-family: var(--mg-font-family-ui);
-    font-size: $mg-font-size-500;
+    font-size: var(--mg-font-size-500);
     font-weight: 700;
     line-height: 1.25;
     margin: 0 0 var(--mg-spacing-150);
@@ -999,7 +999,7 @@
     border: 0;
     border-radius: var(--mg-spacing-50);
     font-family: var(--mg-font-family-ui);
-    font-size: $mg-font-size-400;
+    font-size: var(--mg-font-size-400);
     font-weight: 600;
     line-height: 1.35;
     text-align: start;
@@ -1015,7 +1015,7 @@
     min-height: mg-rem(44);
     padding-block: var(--mg-spacing-100);
     font-family: var(--mg-font-family-text);
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
     font-weight: 400;
     line-height: 1.5;
   }

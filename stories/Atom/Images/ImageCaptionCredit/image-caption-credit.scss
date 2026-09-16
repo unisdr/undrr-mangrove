@@ -50,7 +50,7 @@
       width: 25%;
 
       p {
-        font-size: $mg-font-size-200;
+        font-size: var(--mg-font-size-200);
         line-height: 1.4;
         margin-bottom: var(--mg-spacing-50);
         padding: 0;
@@ -71,7 +71,7 @@
   }
 
   .mg-author-caption {
-    font-size: $mg-font-size-200;
+    font-size: var(--mg-font-size-200);
     line-height: 1.5;
   }
 }

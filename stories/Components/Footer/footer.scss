@@ -28,14 +28,14 @@
 
 .mg-footer--about-footer--links {
   font-family: var(--mg-font-family-ui);
-  font-size: $mg-font-size-500;
+  font-size: var(--mg-font-size-500);
   display: inline-flex;
   flex-wrap: wrap;
   gap: mg-rem(7.5) mg-rem(20);
 }
 
 .mg-footer--about-footer--description {
-  font-size: $mg-font-size-400;
+  font-size: var(--mg-font-size-400);
 }
 
 // Utility footer bar — secondary navigation below the main footer
@@ -43,7 +43,7 @@
 .mg-footer-bar {
   border-top: 1px solid rgb(var(--mg-color-neutral-200));
   padding: var(--mg-spacing-150) 0;
-  font-size: $mg-font-size-300;
+  font-size: var(--mg-font-size-300);
   color: rgb(var(--mg-color-neutral-600));
 
   &__row {

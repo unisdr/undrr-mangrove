@@ -39,7 +39,7 @@
 
 .mg-user-feedback__question {
   font-family: var(--mg-font-family-text);
-  font-size: $mg-font-size-250;
+  font-size: var(--mg-font-size-250);
   font-weight: 700;
   line-height: 1.4;
 }

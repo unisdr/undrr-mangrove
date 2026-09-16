@@ -17,7 +17,7 @@
   cursor: pointer;
   display: inline-flex;
   font-family: var(--mg-font-family-text);
-  font-size: $mg-font-size-250;
+  font-size: var(--mg-font-size-250);
   font-weight: 500;
   justify-content: center;
   line-height: 1.25;

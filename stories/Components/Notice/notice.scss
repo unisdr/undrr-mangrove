@@ -57,11 +57,11 @@
     }
 
     .mg-notice__title {
-      font-size: $mg-font-size-250;
+      font-size: var(--mg-font-size-250);
     }
 
     .mg-notice__description {
-      font-size: $mg-font-size-200;
+      font-size: var(--mg-font-size-200);
     }
   }
 
@@ -76,7 +76,7 @@
     }
 
     .mg-notice__title {
-      font-size: $mg-font-size-400;
+      font-size: var(--mg-font-size-400);
     }
   }
 
@@ -139,7 +139,7 @@
   &__title {
     margin: 0;
     font-family: var(--mg-font-family-ui);
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
     font-weight: 600;
     line-height: 1.35;
     flex-grow: 1;
@@ -161,12 +161,12 @@
   // Secondary line in the actions row, such as ServiceNotice's retry countdown.
   &__meta {
     margin: 0;
-    font-size: $mg-font-size-200;
+    font-size: var(--mg-font-size-200);
     color: rgb(var(--mg-color-neutral-600));
   }
 
   &__description {
-    font-size: $mg-font-size-250;
+    font-size: var(--mg-font-size-250);
     line-height: 1.5;
     color: rgb(var(--mg-color-neutral-700));
 

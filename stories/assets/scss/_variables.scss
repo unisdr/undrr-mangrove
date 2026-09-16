@@ -123,27 +123,27 @@ $mg-font-line-height-700: 1.5em;
 // until we more fully rationalise our design decisions
 @mixin mg-typography($size) {
   @if $size == "extra-small" {
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
   } @else if $size == "small" {
-    font-size: $mg-font-size-400;
+    font-size: var(--mg-font-size-400);
   } @else if $size == "medium" {
-    font-size: $mg-font-size-500;
+    font-size: var(--mg-font-size-500);
     padding-top: var(--mg-spacing-250);
     padding-bottom: var(--mg-spacing-150);
   } @else if $size == "large" {
-    font-size: $mg-font-size-600;
+    font-size: var(--mg-font-size-600);
     padding-top: var(--mg-spacing-250);
     padding-bottom: var(--mg-spacing-150);
   } @else if $size == "xlarge" {
-    font-size: $mg-font-size-900;
+    font-size: var(--mg-font-size-900);
     padding-top: var(--mg-spacing-300);
     padding-bottom: var(--mg-spacing-175);
   } @else if $size == "huge" {
-    font-size: $mg-font-size-1000;
+    font-size: var(--mg-font-size-1000);
     padding-top: var(--mg-spacing-300);
     padding-bottom: var(--mg-spacing-250);
   } @else if $size == "xhuge" {
-    font-size: $mg-font-size-1100;
+    font-size: var(--mg-font-size-1100);
     padding-top: var(--mg-spacing-400);
     padding-bottom: var(--mg-spacing-300);
   }
@@ -308,7 +308,7 @@ $mg-tabs-border-bottom: true !default;
   // ring (5.74:1 on white) gives every indicator a visible edge. Set
   // --mg-status-label-indicator-border-width to 0 to drop it.
   --mg-status-label-gap: var(--mg-spacing-75);
-  --mg-status-label-font-size: #{$mg-font-size-300};
+  --mg-status-label-font-size: var(--mg-font-size-300);
   --mg-status-label-color: rgb(var(--mg-color-text));
   --mg-status-label-indicator-size: #{mg-rem(14)};
   --mg-status-label-indicator-radius: 50%;
@@ -337,9 +337,9 @@ $mg-tabs-border-bottom: true !default;
   --mg-empty-state-gap: var(--mg-spacing-100);
   --mg-empty-state-padding: var(--mg-spacing-300) var(--mg-spacing-150);
   --mg-empty-state-max-inline-size: #{mg-rem(440)};
-  --mg-empty-state-title-font-size: #{$mg-font-size-400};
+  --mg-empty-state-title-font-size: var(--mg-font-size-400);
   --mg-empty-state-title-color: rgb(var(--mg-color-text));
-  --mg-empty-state-text-font-size: #{$mg-font-size-300};
+  --mg-empty-state-text-font-size: var(--mg-font-size-300);
   --mg-empty-state-text-color: rgb(var(--mg-color-neutral-500));
   --mg-empty-state-media-size: #{mg-rem(56)};
 
@@ -352,7 +352,7 @@ $mg-tabs-border-bottom: true !default;
   --mg-empty-state-panel-radius: var(--mg-card-border-radius);
   --mg-empty-state-compact-padding: var(--mg-spacing-150);
   --mg-empty-state-compact-media-size: #{mg-rem(34)};
-  --mg-empty-state-compact-font-size: #{$mg-font-size-250};
+  --mg-empty-state-compact-font-size: var(--mg-font-size-250);
 }
 
 // Header height

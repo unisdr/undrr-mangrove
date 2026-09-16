@@ -8,10 +8,10 @@
  */
 mark {
   background: var(--mg-color-yellow-light);
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   padding: var(--mg-spacing-25);
 
   @include devicebreak(medium) {
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
   }
 }

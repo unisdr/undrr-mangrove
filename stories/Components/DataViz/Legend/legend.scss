@@ -24,7 +24,7 @@
   &__tick-label {
     font-family: var(--mg-font-family-ui);
     color: rgb(var(--mg-color-neutral-800));
-    font-size: $mg-font-size-200;
+    font-size: var(--mg-font-size-200);
   }
 
   /* Continuous / Stepped Wrappers */

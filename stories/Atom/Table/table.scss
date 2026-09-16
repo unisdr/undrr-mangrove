@@ -17,7 +17,7 @@
   &.mg-table--small {
     th,
     td {
-      font-size: $mg-font-size-250;
+      font-size: var(--mg-font-size-250);
       -webkit-text-size-adjust: 100%;
     }
   }
@@ -83,7 +83,7 @@
 
 .mg-table th,
 .mg-table td {
-  font-size: $mg-font-size-300;
+  font-size: var(--mg-font-size-300);
   line-height: 1.4;
   padding: var(--mg-spacing-100) var(--mg-spacing-150);
   text-align: start;
@@ -150,7 +150,7 @@
 
 // Data table variant: compact density, subtle borders, styled header row
 .mg-table--data {
-  font-size: $mg-font-size-250;
+  font-size: var(--mg-font-size-250);
 
   th,
   td {
@@ -162,7 +162,7 @@
     background-color: rgb(var(--mg-color-neutral-50));
     border-bottom: 2px solid rgb(var(--mg-color-neutral-300));
     color: rgb(var(--mg-color-neutral-800));
-    font-size: $mg-font-size-200;
+    font-size: var(--mg-font-size-200);
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -193,7 +193,7 @@
 // Monospace code / file path cells
 .mg-table__td--code {
   font-family: var(--mg-font-family-code);
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
 }
 
 // Sortable header button with accessible sort indicators

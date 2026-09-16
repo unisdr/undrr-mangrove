@@ -123,7 +123,7 @@
   margin-block-start: calc(var(--mg-spacing-100) * -1);
   color: rgb(var(--mg-color-neutral-600));
   font-family: var(--mg-font-family-ui);
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
 
   span {
     display: flex;

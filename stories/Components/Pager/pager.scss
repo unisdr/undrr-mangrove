@@ -48,7 +48,7 @@
   min-width: mg-rem(44);
   min-height: mg-rem(44);
   padding: 0;
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   font-weight: 600;
   color: rgb(var(--mg-color-text));
   background: transparent;
@@ -120,7 +120,7 @@
 
 .mg-pager__ellipsis {
   color: rgb(var(--mg-color-neutral-500));
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
 }
 
 // ----------------------------------------
@@ -146,7 +146,7 @@
 .mg-pager__range {
   margin: 0;
   color: rgb(var(--mg-color-neutral-500));
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   white-space: nowrap;
 }
 
@@ -163,7 +163,7 @@
 
 .mg-pager__jump-label {
   color: rgb(var(--mg-color-neutral-500));
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   white-space: nowrap;
 }
 
@@ -171,7 +171,7 @@
   width: 4em;
   min-height: mg-rem(44);
   padding: var(--mg-spacing-25) var(--mg-spacing-50);
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   color: rgb(var(--mg-color-text));
   background: rgb(var(--mg-color-neutral-50));
   border: 1px solid rgb(var(--mg-color-neutral-600) / 0.22);
@@ -192,7 +192,7 @@
   justify-content: center;
   min-height: mg-rem(44);
   padding: var(--mg-spacing-25) var(--mg-spacing-75);
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   font-weight: 500;
   color: rgb(var(--mg-color-neutral-0));
   background: rgb(var(--mg-color-interactive));
@@ -235,7 +235,7 @@
 .mg-pager__notice {
   text-align: center;
   color: rgb(var(--mg-color-neutral-500));
-  font-size: $mg-font-size-200;
+  font-size: var(--mg-font-size-200);
   padding: var(--mg-spacing-100) 0;
 }
 

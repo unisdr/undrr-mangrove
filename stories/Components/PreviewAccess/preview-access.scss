@@ -58,7 +58,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__eyebrow {
     margin: 0 0 var(--mg-spacing-50);
     font-family: var(--mg-font-family-ui);
-    font-size: $mg-font-size-250;
+    font-size: var(--mg-font-size-250);
     font-weight: 700;
     color: rgb(var(--mg-color-neutral-700));
   }
@@ -66,7 +66,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__title {
     margin: 0 0 var(--mg-spacing-150);
     font-family: var(--mg-font-family-ui);
-    font-size: $mg-font-size-500;
+    font-size: var(--mg-font-size-500);
     line-height: 1.2;
     color: rgb(var(--mg-color-neutral-800));
   }
@@ -74,7 +74,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
   &__body {
     margin: 0 0 var(--mg-spacing-250);
     font-family: var(--mg-font-family-text);
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
     line-height: 1.5;
     color: rgb(var(--mg-color-neutral-700));
   }
@@ -87,7 +87,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     display: block;
     margin: 0 0 var(--mg-spacing-50);
     font-family: var(--mg-font-family-ui);
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
     font-weight: 700;
     color: rgb(var(--mg-color-neutral-700));
   }
@@ -103,7 +103,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     min-width: 0;
     padding: var(--mg-spacing-100) var(--mg-spacing-150);
     font-family: var(--mg-font-family-text);
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
     color: rgb(var(--mg-color-neutral-800));
     background: rgb(var(--mg-color-white));
     border: 1px solid rgb(var(--mg-color-neutral-200));
@@ -129,7 +129,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     // Arabic, so the change is Latin-only: Roboto Condensed to Roboto, which is
     // what every other Mangrove button already renders in.
     font-family: var(--mg-font-family-text);
-    font-size: $mg-font-size-300;
+    font-size: var(--mg-font-size-300);
     font-weight: 600;
     color: rgb(var(--mg-color-white));
     background: rgb(var(--mg-color-interactive));
@@ -154,7 +154,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     min-height: var(--mg-spacing-200);
     margin: 0 0 var(--mg-spacing-150);
     font-family: var(--mg-font-family-text);
-    font-size: $mg-font-size-250;
+    font-size: var(--mg-font-size-250);
     color: rgb(var(--mg-color-red-900));
   }
 
@@ -162,7 +162,7 @@ html:has(body [data-mg-preview-access]:not(.mg-preview-access--unlocked)) {
     margin: 0;
     padding-top: var(--mg-spacing-150);
     font-family: var(--mg-font-family-text);
-    font-size: $mg-font-size-250;
+    font-size: var(--mg-font-size-250);
     color: rgb(var(--mg-color-neutral-600));
     border-top: 1px solid rgb(var(--mg-color-neutral-100));
 

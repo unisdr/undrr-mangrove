@@ -18,7 +18,7 @@
   font-family: var(--mg-font-family-text);
   color: rgb(var(--mg-color-text));
   font-weight: 600;
-  font-size: $mg-font-size-300;
+  font-size: var(--mg-font-size-300);
   margin: 0;
 }
 
@@ -68,7 +68,7 @@
   flex: 0 0 mg-rem(40);
   inline-size: mg-rem(40);
   block-size: mg-rem(40);
-  font-size: $mg-font-size-400;
+  font-size: var(--mg-font-size-400);
 }
 
 .mg-share__copy-button {
@@ -102,7 +102,7 @@
 .mg-share__copy-text {
   min-inline-size: 0;
   flex: 1;
-  font-size: $mg-font-size-250;
+  font-size: var(--mg-font-size-250);
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
