@@ -195,7 +195,7 @@
     font-family: var(--mg-font-family-ui);
     font-size: var(--mg-font-size-500);
     font-weight: bold;
-    line-height: $mg-font-line-height-500;
+    line-height: var(--mg-font-line-height-500);
     padding-bottom: var(--mg-spacing-75);
     padding-top: var(--mg-spacing-100);
     text-wrap: balance;
@@ -596,7 +596,7 @@ span.mg-card__label {
     margin: 0;
     font-size: var(--mg-font-size-500);
     font-weight: bold;
-    line-height: $mg-font-line-height-500;
+    line-height: var(--mg-font-line-height-500);
 
     a {
       color: rgb(var(--mg-color-interactive));

@@ -396,6 +396,19 @@ font-size:
     $private: false
     $sass: false
 
+# Line heights. Public: emitted as --mg-font-line-height-* custom properties,
+# which components read with var(), so a theme can re-value a step at runtime.
+# The em unit is resolved where var() is substituted, so each use still
+# computes against its own element's font size, exactly as the Sass value did.
+# Also emitted as deprecated $mg-font-line-height-* Sass variables for Sass
+# consumers; they will be removed in 3.0. See unisdr/undrr-mangrove#1085.
+font-line-height:
+  $type: dimension
+  $format: literal
+  $sass: true
+  '500': { $value: '1.25em' }
+  '700': { $value: '1.5em' }
+
 radius:
   $type: dimension
   tag: { $value: '{spacing.50}' }
