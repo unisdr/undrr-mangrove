@@ -9,14 +9,14 @@ import * as NoticeStories from './Notice.stories';
 
 An in-page container for informational notices, contextual warnings, error alerts, and emergency banners. It stays in the page flow until the condition changes or the reader dismisses it.
 
-Four variants (`info`, `warning`, `negative`, `positive`) share one set of tokens, with modifiers for compact slots, prominent sitewide banners, and canvas overlays. ServiceNotice and the Snackbar toast both render through this component.
+Four variants (`info`, `warning`, `negative`, `positive`) share one set of tokens, with modifiers for compact slots, prominent sitewide banners, and canvas overlays. ServiceNotice and the Snackbar toast both render through this component and add no notice styles of their own. `.mg-notice__meta` styles a secondary line in the actions row, such as a countdown.
 
 ## When to use
 
 | Need                                                                  | Use                                                                                           |
 | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | A persistent message about the page, a section, or a system condition | **Notice**                                                                                    |
-| A service or embed on the page is degraded or offline                 | [ServiceNotice](/docs/components-servicenotice--docs)                                         |
+| A service or embed on the page is degraded or offline                 | [ServiceNotice](/docs/components-notice-service-notice--docs)                                 |
 | Short, temporary feedback after an action (saved, copied, failed)     | [Snackbar](/docs/components-snackbar--docs), a floating Notice that auto-dismisses            |
 | Editorial emphasis inside content (key facts, pull-out boxes)         | [HighlightBox](/docs/components-highlightbox--docs), which carries no severity or live region |
 | A record's workflow state inside a list or table                      | [StatusLabel](/docs/components-status-label--docs)                                            |

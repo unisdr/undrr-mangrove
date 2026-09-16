@@ -108,6 +108,8 @@ Returns: `{ roots, update, unmountAll }`
 |-----------|------|----------|---------------|
 | CopyButton | Simple | `[data-mg-copy-button]` | `data-text-to-copy`, `data-aria-label`, `data-tooltip-label`, `data-copied-label`, `data-variant`, `data-size`, `data-labels` (JSON) |
 | Drawer | Simple/Medium | `[data-mg-drawer]`, `[data-mg-floating-panel]` | `data-is-open`, `data-position`, `data-title`, `data-backdrop`, `data-is-floating-panel` |
+| Notice | Simple | `[data-mg-notice]` | `data-title`, `data-description`, `data-variant`, `data-heading-level`, `data-is-compact`, `data-is-prominent`, `data-is-overlay`, `data-is-dismissible`, `data-dismiss-label` |
+| ServiceNotice | Simple | `[data-mg-service-notice]` | `data-title`, `data-description`, `data-status`, `data-retry` (dispatches `mg-service-notice:retry`), `data-countdown-seconds`, `data-max-auto-retries`, `data-status-url`, `data-labels` (JSON) |
 | TextCta | Simple | `[data-mg-text-cta]` | `data-title`, `data-cta-label`, `data-cta-url`, `data-variant` |
 | ShareButtons | Simple | `[data-mg-share-buttons]` | `data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body` |
 | QuoteHighlight | Simple | `[data-mg-quote-highlight]` | `data-quote`, `data-attribution`, `data-variant`, `data-alignment` |

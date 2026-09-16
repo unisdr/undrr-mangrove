@@ -62,6 +62,8 @@ Runtime: `/components/hydrate.js`
 | Hydration runtime | `/components/hydrate.js` |
 | CopyButton | `/components/CopyButton.js` |
 | Drawer | `/components/Drawer.js` |
+| Notice | `/components/Notice.js` |
+| ServiceNotice | `/components/ServiceNotice.js` |
 | TextCta | `/components/TextCta.js` |
 | ShareButtons | `/components/ShareButtons.js` |
 | MegaMenu | `/components/MegaMenu.js` |

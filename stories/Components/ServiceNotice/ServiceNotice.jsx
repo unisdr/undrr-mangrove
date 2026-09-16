@@ -130,7 +130,7 @@ export const ServiceNotice = ({
         )}
 
         {showCountdown && (
-          <p className="mg-service-notice__countdown" aria-hidden="true">
+          <p className="mg-notice__meta" aria-hidden="true">
             {t.countdownPrefix} <strong>{countdown}s</strong>
           </p>
         )}
@@ -149,11 +149,7 @@ export const ServiceNotice = ({
       isCompact={isCompact}
       isOverlay={isOverlay}
       actions={actions}
-      className={classNames(
-        'mg-service-notice',
-        `mg-service-notice--${isOffline ? 'offline' : 'degraded'}`,
-        className
-      )}
+      className={className}
       headerContent={
         <>
           <span

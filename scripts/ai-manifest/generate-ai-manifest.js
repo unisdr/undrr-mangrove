@@ -232,8 +232,8 @@ const COMPONENT_IDS = {
   CopyButton: 'components-buttons-copybutton',
   Drawer: 'components-navigation-drawer',
   Tree: 'components-navigation-tree',
-  ServiceNotice: 'components-servicenotice',
-  Notice: 'components-notice',
+  ServiceNotice: 'components-notice-service-notice',
+  Notice: 'components-notice-notice',
   Range: 'components-forms-range',
   Legend: 'components-dataviz-legend',
 };

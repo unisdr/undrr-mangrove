@@ -25,7 +25,7 @@ const withLocaleLabels = (Story, context) => {
 };
 
 const meta = {
-  title: 'Components/ServiceNotice',
+  title: 'Components/Notice/Service notice',
   component: ServiceNotice,
   decorators: [withLocaleLabels],
   tags: ['autodocs'],

@@ -855,14 +855,11 @@ npm run build</code></pre>
   },
 
   // --- Service notice (auto-rendered + hydration) ---
-  'components-servicenotice': {
+  'components-notice-service-notice': {
     description:
       'In-page degraded state or partial outage notice for live feeds, interactive maps, or remote APIs with status link, optional retry action, and capped automatic retries with backoff.',
     cssClasses: [
-      'mg-service-notice',
-      'mg-service-notice--degraded',
-      'mg-service-notice--offline',
-      'mg-service-notice__countdown',
+      'mg-notice__meta',
       'mg-notice',
       'mg-notice--warning',
       'mg-notice--negative',
@@ -880,7 +877,7 @@ npm run build</code></pre>
   },
 
   // --- Notice / Alert Banner (auto-rendered + hydration) ---
-  'components-notice': {
+  'components-notice-notice': {
     description:
       'Universal in-page notice and alert banner container for informational callouts, contextual warnings, and error alerts. Combine negative with the prominent modifier for emergency banners.',
     cssClasses: [
@@ -897,6 +894,7 @@ npm run build</code></pre>
       'mg-notice__title',
       'mg-notice__description',
       'mg-notice__actions',
+      'mg-notice__meta',
       'mg-notice__dismiss',
     ],
   },

@@ -68,10 +68,10 @@ export default function serviceNoticeFromElement(container) {
     headingLevel: dataset.headingLevel || undefined,
     isCompact:
       dataset.isCompact === 'true' ||
-      container.classList.contains('mg-service-notice--compact'),
+      container.classList.contains('mg-notice--compact'),
     isOverlay:
       dataset.isOverlay === 'true' ||
-      container.classList.contains('mg-service-notice--overlay'),
+      container.classList.contains('mg-notice--overlay'),
     onRetry,
     retryLabel: dataset.retryLabel || undefined,
     statusUrl: dataset.statusUrl || undefined,

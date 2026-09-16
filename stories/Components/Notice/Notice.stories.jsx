@@ -2,7 +2,7 @@ import React from 'react';
 import { Notice } from './Notice';
 
 const meta = {
-  title: 'Components/Notice',
+  title: 'Components/Notice/Notice',
   component: Notice,
   parameters: {
     layout: 'padded',

@@ -52,8 +52,8 @@ describe('ServiceNotice', () => {
 
     expect(screen.getAllByText('Offline').length).toBeGreaterThan(0);
     const { container } = render(<ServiceNotice status="offline" />);
-    expect(container.firstChild).toHaveClass('mg-service-notice--offline');
-    expect(container.firstChild).not.toHaveClass('mg-service-notice--degraded');
+    expect(container.firstChild).toHaveClass('mg-notice--negative');
+    expect(container.firstChild).not.toHaveClass('mg-notice--warning');
     expect(container.querySelector('.mg-icon-power-off')).not.toBeNull();
   });
 
