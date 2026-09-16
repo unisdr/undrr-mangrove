@@ -597,7 +597,7 @@ export const TypographyDetailsBaseline = Template(
 export const TypographyAccordion = {
   render: () => (
     <div className="mg-accordion">
-      <details className="mg-details" open>
+      <details open>
         <summary>What is the Sendai Framework?</summary>
         <div>
           <p>
@@ -607,7 +607,7 @@ export const TypographyAccordion = {
           </p>
         </div>
       </details>
-      <details className="mg-details">
+      <details>
         <summary>What are the four Sendai priorities for action?</summary>
         <div>
           <p>
@@ -617,7 +617,7 @@ export const TypographyAccordion = {
           </p>
         </div>
       </details>
-      <details className="mg-details">
+      <details>
         <summary>How does UNDRR support implementation?</summary>
         <div>
           <p>
@@ -637,7 +637,7 @@ export const TypographyAccordionFlush = {
       className="mg-accordion mg-accordion--flush"
       style={{ maxWidth: '400px' }}
     >
-      <details className="mg-details" open>
+      <details open>
         <summary>Map Layers & Overlays</summary>
         <div>
           <p>
@@ -646,7 +646,7 @@ export const TypographyAccordionFlush = {
           </p>
         </div>
       </details>
-      <details className="mg-details">
+      <details>
         <summary>Filter by Region</summary>
         <div>
           <p>

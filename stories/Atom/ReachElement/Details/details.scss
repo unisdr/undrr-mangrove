@@ -137,8 +137,38 @@ details.mg-details {
   > details {
     border: none;
     border-radius: 0;
+    box-shadow: none;
     margin: 0;
     padding: 0;
+
+    &:hover {
+      box-shadow: none;
+    }
+
+    // Guard against clashing indicator if .mg-details is also applied to child details
+    &.mg-details {
+      border: none;
+      box-shadow: none;
+      padding: 0;
+
+      > summary {
+        padding: var(--mg-spacing-100) var(--mg-spacing-150);
+
+        &::before {
+          content: none;
+          display: none;
+        }
+      }
+
+      &[open] > summary {
+        border-bottom: 1px solid rgb(var(--mg-color-neutral-200));
+
+        &::before {
+          content: none;
+          display: none;
+        }
+      }
+    }
 
     &:not(:last-child) {
       border-bottom: 1px solid rgb(var(--mg-color-neutral-300));
