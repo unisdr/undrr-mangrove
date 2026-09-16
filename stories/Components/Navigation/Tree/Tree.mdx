@@ -1,0 +1,49 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import { Tree, TreeItem } from './Tree';
+
+<Meta title="Components/Navigation/Tree" component={Tree} />
+
+# Tree
+
+Accessible tree / nested hierarchy view component.
+
+## Usage
+
+The Tree component provides an accessible nested list structure with expand/collapse functionality and optional link support.
+
+### Basic example
+
+```jsx
+<Tree>
+  <TreeItem id="1" label="Item 1">
+    <TreeItem id="1-1" label="Item 1.1" />
+    <TreeItem id="1-2" label="Item 1.2" />
+  </TreeItem>
+  <TreeItem id="2" label="Item 2" />
+</Tree>
+```
+
+### With links
+
+Parent items can also be links. Clicking the arrow toggles, clicking the label navigates.
+
+```jsx
+<Tree>
+  <TreeItem id="1" label="Parent" href="/parent" asLink>
+    <TreeItem id="1-1" label="Child 1" href="/child1" asLink />
+    <TreeItem id="1-2" label="Child 2" href="/child2" asLink />
+  </TreeItem>
+</Tree>
+```
+
+### Props
+
+<Controls />
+
+## Prototype notice
+
+This component is a prototype and subject to change. The API and behavior may be updated based on user feedback and usability testing.
+
+## Changelog
+
+- **2.0.0** — 2024-09-16: Prototype implementation with expand/collapse and optional link support

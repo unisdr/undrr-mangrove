@@ -1,0 +1,33 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import { Drawer } from './Drawer';
+
+<Meta title="Components/Navigation/Drawer" component={Drawer} />
+
+# Drawer
+
+Generic off-canvas drawer and floating panel component.
+
+## Usage
+
+The Drawer component provides an accessible off-canvas panel that can be positioned on the start, end, or bottom of the screen. It includes keyboard navigation (Escape to close) and backdrop support.
+
+### Basic example
+
+```jsx
+<Drawer
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Drawer Title"
+  position="start"
+>
+  <p>Drawer content goes here.</p>
+</Drawer>
+```
+
+### Props
+
+<Controls />
+
+## Changelog
+
+- **2.0.0** — 2024-09-16: Prototype implementation with basic functionality and accessibility support
