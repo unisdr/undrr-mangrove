@@ -197,6 +197,8 @@ Each component gets its own JSON file (roughly 0.3-21 KB) with some of:
 
 Components with syndication support (Footer) include a `vanillaHtmlEmbed` field with the complete script-tag embed pattern and configuration options.
 
+Components whose static `renderedHtml` is not interactive on its own (ServiceNotice) include a `hydration` field: the container selector, CDN module URLs, every `data-*` attribute, the custom events the component dispatches, and a complete vanilla HTML example.
+
 ### CSS utilities (`ai-components/utilities.json`)
 
 The [utilities reference](https://preventionweb.github.io/undrr-mangrove/ai-components/utilities.json) lists all CSS utility classes grouped by category. Each class has a description and usage example.

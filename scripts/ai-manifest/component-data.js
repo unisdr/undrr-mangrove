@@ -11,6 +11,10 @@
 //                     Only needed for components that can't auto-render in Node.js.
 //   doNotModify      (string, optional)   — Warning text for branding-critical components.
 //   vanillaHtmlEmbed (object, optional)   — Embed instructions for syndication widgets.
+//   hydration        (object, optional)   — Vanilla hydration contract for components
+//                     whose static renderedHtml is not interactive on its own:
+//                     { note, selector, modules, dataAttributes, events, example }.
+//                     `{version}` in any string is replaced with the package version.
 //
 // Auto-rendered entry (minimal):
 //   'components-buttons-buttons': { description: 'Primary and secondary CTA buttons.' },
@@ -875,6 +879,73 @@ npm run build</code></pre>
       'mg-status-label--warning',
       'mg-status-label--negative',
     ],
+    hydration: {
+      note: 'renderedHtml is static markup: its retry button has no handler, no countdown runs and nothing is announced. For a working retry, render an empty data-mg-service-notice container and hydrate it, then listen for the mg-service-notice:retry event.',
+      selector: '[data-mg-service-notice]',
+      modules: {
+        hydrate:
+          'https://assets.undrr.org/mangrove/{version}/components/hydrate.js',
+        component:
+          'https://assets.undrr.org/mangrove/{version}/components/ServiceNotice.js',
+      },
+      dataAttributes: {
+        'data-mg-service-notice': 'Marks the container to hydrate (required).',
+        'data-title': 'Heading text (plain text).',
+        'data-description': 'Explanation (plain text).',
+        'data-status': '"degraded" (default) or "offline".',
+        'data-heading-level': 'h2 to h6 (default h3).',
+        'data-is-compact': '"true" for compact padding and typography.',
+        'data-is-overlay': '"true" for a centered overlay inside a positioned embed container.',
+        'data-retry':
+          'Boolean attribute. When present, a retry button renders and each retry dispatches mg-service-notice:retry on the container. Without it, no retry button or countdown renders.',
+        'data-retry-label': 'Retry button text.',
+        'data-status-url':
+          'External status page URL (http or https only; other schemes are ignored). Opens in a new tab.',
+        'data-status-url-label': 'Status link text.',
+        'data-countdown-seconds':
+          'Seconds before the first automatic retry; doubles after each attempt. Needs data-retry.',
+        'data-max-auto-retries':
+          'Automatic retries before the countdown stops (default 3).',
+        'data-labels':
+          'JSON object of translated UI strings: retryLabel, statusUrlLabel, opensInNewTab, statusDegraded, statusOffline, countdownPrefix, countdownAnnouncement, autoRetryStopped.',
+      },
+      events: [
+        {
+          name: 'mg-service-notice:retry',
+          target: 'The data-mg-service-notice container',
+          bubbles: true,
+          when: 'The retry button is pressed or an automatic retry fires. Only dispatched when data-retry is present.',
+        },
+      ],
+      example: `<script type="importmap">
+  { "imports": {
+    "react": "https://esm.sh/react@19.2.4",
+    "react-dom": "https://esm.sh/react-dom@19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@19.2.4/"
+  }}
+</script>
+
+<div id="map-notice"
+  data-mg-service-notice
+  data-title="Map service temporarily unavailable"
+  data-description="Unable to connect to the tile server."
+  data-status="offline"
+  data-retry
+  data-status-url="https://messaging.undrr.org/"
+  data-countdown-seconds="30"
+  data-max-auto-retries="3"></div>
+
+<script type="module">
+  import createHydrator from 'https://assets.undrr.org/mangrove/{version}/components/hydrate.js';
+  import ServiceNotice, { fromElement } from 'https://assets.undrr.org/mangrove/{version}/components/ServiceNotice.js';
+
+  createHydrator({ selector: '[data-mg-service-notice]', component: ServiceNotice, fromElement });
+
+  document
+    .getElementById('map-notice')
+    .addEventListener('mg-service-notice:retry', () => reloadMap());
+</script>`,
+    },
   },
 
   // --- Notice / Alert Banner (auto-rendered + hydration) ---

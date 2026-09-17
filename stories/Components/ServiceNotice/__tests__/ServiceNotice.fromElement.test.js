@@ -19,7 +19,7 @@ describe('serviceNoticeFromElement', () => {
       description: 'The server responded with an error.',
       status: 'offline',
       'retry-label': 'Reconnect now',
-      'status-url': 'https://status.undrr.org',
+      'status-url': 'https://messaging.undrr.org/',
       'status-url-label': 'Check status',
       'countdown-seconds': '15',
       'is-compact': 'true',
@@ -32,7 +32,7 @@ describe('serviceNoticeFromElement', () => {
     expect(props.description).toBe('The server responded with an error.');
     expect(props.status).toBe('offline');
     expect(props.retryLabel).toBe('Reconnect now');
-    expect(props.statusUrl).toBe('https://status.undrr.org');
+    expect(props.statusUrl).toBe('https://messaging.undrr.org/');
     expect(props.statusUrlLabel).toBe('Check status');
     expect(props.countdownSeconds).toBe(15);
     expect(props.isCompact).toBe(true);

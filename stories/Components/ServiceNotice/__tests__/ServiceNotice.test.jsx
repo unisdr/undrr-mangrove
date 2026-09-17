@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { ServiceNotice } from '../ServiceNotice';
+import serviceNoticeFromElement from '../ServiceNotice.fromElement';
 
 expect.extend(toHaveNoViolations);
 
@@ -213,6 +214,70 @@ describe('ServiceNotice', () => {
     expect(
       screen.getByRole('link', { name: /Statut du service/i })
     ).toBeInTheDocument();
+  });
+
+  it('tells screen reader users the status link opens in a new tab', () => {
+    render(
+      <ServiceNotice title="Down" statusUrl="https://status.example.org" />
+    );
+
+    const link = screen.getByRole('link', {
+      name: 'View status page (opens in a new tab)',
+    });
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(screen.getByText('(opens in a new tab)')).toHaveClass(
+      'mg-u-sr-only'
+    );
+  });
+
+  it('translates the new tab hint through labels', () => {
+    render(
+      <ServiceNotice
+        title="Hors ligne"
+        statusUrl="https://status.example.org"
+        labels={{
+          statusUrlLabel: 'Statut du service',
+          opensInNewTab: "(s'ouvre dans un nouvel onglet)",
+        }}
+      />
+    );
+
+    expect(
+      screen.getByRole('link', {
+        name: "Statut du service (s'ouvre dans un nouvel onglet)",
+      })
+    ).toBeInTheDocument();
+  });
+
+  it('renders the same markup from hydration attributes as from props', () => {
+    const el = document.createElement('div');
+    el.setAttribute('data-mg-service-notice', '');
+    el.setAttribute('data-title', 'Map offline');
+    el.setAttribute('data-status', 'offline');
+    el.setAttribute('data-retry', '');
+    el.setAttribute('data-status-url', 'https://status.example.org');
+    el.setAttribute(
+      'data-labels',
+      JSON.stringify({ opensInNewTab: '(se abre en una pestaña nueva)' })
+    );
+
+    const { container: hydrated } = render(
+      <ServiceNotice {...serviceNoticeFromElement(el)} />
+    );
+    const { container: direct } = render(
+      <ServiceNotice
+        title="Map offline"
+        status="offline"
+        onRetry={() => {}}
+        statusUrl="https://status.example.org"
+        labels={{ opensInNewTab: '(se abre en una pestaña nueva)' }}
+      />
+    );
+
+    expect(hydrated.innerHTML).toBe(direct.innerHTML);
+    expect(hydrated.querySelector('a .mg-u-sr-only')).toHaveTextContent(
+      '(se abre en una pestaña nueva)'
+    );
   });
 
   it('has no automated accessibility violations', async () => {

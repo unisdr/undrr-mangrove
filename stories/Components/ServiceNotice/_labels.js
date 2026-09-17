@@ -4,6 +4,7 @@
 export const DEFAULT_SERVICE_NOTICE_LABELS = {
   retryLabel: 'Retry connection',
   statusUrlLabel: 'View status page',
+  opensInNewTab: '(opens in a new tab)',
   statusDegraded: 'Degraded',
   statusOffline: 'Offline',
   countdownPrefix: 'Next automatic retry in',
@@ -15,6 +16,7 @@ export const DEFAULT_SERVICE_NOTICE_LABELS = {
 export const LABELS_ES = {
   retryLabel: 'Reintentar conexión',
   statusUrlLabel: 'Ver página de estado',
+  opensInNewTab: '(se abre en una pestaña nueva)',
   statusDegraded: 'Rendimiento reducido',
   statusOffline: 'Fuera de servicio',
   countdownPrefix: 'Próximo reintento automático en',
@@ -26,6 +28,7 @@ export const LABELS_ES = {
 export const LABELS_FR = {
   retryLabel: 'Réessayer la connexion',
   statusUrlLabel: 'Voir la page de statut',
+  opensInNewTab: "(s'ouvre dans un nouvel onglet)",
   statusDegraded: 'Performances réduites',
   statusOffline: 'Hors ligne',
   countdownPrefix: 'Prochaine tentative automatique dans',
@@ -38,6 +41,7 @@ export const LABELS_FR = {
 export const LABELS_JA = {
   retryLabel: '接続を再試行',
   statusUrlLabel: 'ステータスページを表示',
+  opensInNewTab: '（新しいタブで開きます）',
   statusDegraded: 'パフォーマンス低下',
   statusOffline: 'オフライン',
   countdownPrefix: '次の自動再試行まで',
@@ -48,6 +52,7 @@ export const LABELS_JA = {
 export const LABELS_ZH = {
   retryLabel: '重试连接',
   statusUrlLabel: '查看状态页面',
+  opensInNewTab: '（在新标签页中打开）',
   statusDegraded: '性能下降',
   statusOffline: '离线',
   countdownPrefix: '距下次自动重试',
@@ -58,6 +63,7 @@ export const LABELS_ZH = {
 export const LABELS_AR = {
   retryLabel: 'إعادة محاولة الاتصال',
   statusUrlLabel: 'عرض صفحة الحالة',
+  opensInNewTab: '(يفتح في علامة تبويب جديدة)',
   statusDegraded: 'أداء منخفض',
   statusOffline: 'غير متصل',
   countdownPrefix: 'المحاولة التلقائية التالية خلال',
@@ -69,6 +75,7 @@ export const LABELS_AR = {
 export const LABELS_RU = {
   retryLabel: 'Повторить подключение',
   statusUrlLabel: 'Страница статуса',
+  opensInNewTab: '(откроется в новой вкладке)',
   statusDegraded: 'Снижена производительность',
   statusOffline: 'Офлайн',
   countdownPrefix: 'Следующая автоматическая попытка через',

@@ -49,12 +49,13 @@ When the service recovers, remove the notice. Changing `countdownSeconds` starts
       Retry connection
     </button>
     <a
-      href="https://status.undrr.org"
+      href="https://messaging.undrr.org/"
       target="_blank"
       rel="noopener noreferrer"
       class="mg-button mg-button-secondary mg-button-outline"
     >
       View status page
+      <span class="mg-u-sr-only">(opens in a new tab)</span>
       <span
         class="mg-icon mg-icon-external-link mg-button__icon"
         aria-hidden="true"
@@ -66,6 +67,8 @@ When the service recovers, remove the notice. Changing `countdownSeconds` starts
 
 The markup is a [Notice](/docs/components-notice-notice--docs) with a [StatusLabel](/docs/components-status-label--docs) in its header; there is no separate `mg-service-notice` stylesheet. A retry countdown uses `mg-notice__meta` inside the actions row. The offline state swaps in `mg-notice--negative`, `mg-icon-power-off` and `mg-status-label--negative`. Static HTML should announce the outage itself if it is injected after page load (for example with a `role="status"` region).
 
+This markup is presentation only. The retry button has no handler, no countdown runs and nothing is announced. If you need a working retry without React code of your own, use the hydration contract below instead of copying this HTML.
+
 ### 2. Drupal Twig with React hydration
 
 ```twig
@@ -75,7 +78,7 @@ The markup is a [Notice](/docs/components-notice-notice--docs) with a [StatusLab
   data-status="offline"
   data-retry
   data-retry-label="{{ 'Reconnect'|t }}"
-  data-status-url="https://status.undrr.org"
+  data-status-url="https://messaging.undrr.org/"
   data-status-url-label="{{ 'Check status'|t }}"
   data-countdown-seconds="30"
   data-max-auto-retries="3">
@@ -106,7 +109,78 @@ Drupal.behaviors.mangroveServiceNotice = {
 
 With `data-retry` present, the retry button and every automatic retry dispatch a bubbling `mg-service-notice:retry` event on the container. Without `data-retry`, no retry button or countdown is rendered. Title and description are read as plain text.
 
-### 3. React component
+### 3. Vanilla HTML page (CDN)
+
+No build step is needed. Load React through an import map, render an empty container and hydrate it from the CDN. Replace `{version}` with the Mangrove release you use.
+
+```html
+<script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@19.2.4",
+      "react-dom": "https://esm.sh/react-dom@19.2.4",
+      "react-dom/": "https://esm.sh/react-dom@19.2.4/"
+    }
+  }
+</script>
+
+<div
+  id="map-notice"
+  data-mg-service-notice
+  data-title="Map service temporarily unavailable"
+  data-description="Unable to connect to the tile server."
+  data-status="offline"
+  data-retry
+  data-status-url="https://messaging.undrr.org/"
+  data-countdown-seconds="30"
+  data-max-auto-retries="3"
+></div>
+
+<script type="module">
+  import createHydrator from 'https://assets.undrr.org/mangrove/{version}/components/hydrate.js';
+  import ServiceNotice, {
+    fromElement,
+  } from 'https://assets.undrr.org/mangrove/{version}/components/ServiceNotice.js';
+
+  createHydrator({
+    selector: '[data-mg-service-notice]',
+    component: ServiceNotice,
+    fromElement,
+  });
+
+  document
+    .getElementById('map-notice')
+    .addEventListener('mg-service-notice:retry', () => reloadMap());
+</script>
+```
+
+### Hydration contract
+
+The container must carry `data-mg-service-notice`. Everything else is optional.
+
+| Attribute | Maps to | Notes |
+| --- | --- | --- |
+| `data-title` | `title` | Plain text. Falls back to the text of a child `.mg-notice__title`. |
+| `data-description` | `description` | Plain text. Falls back to the text of a child `.mg-notice__description`. |
+| `data-status` | `status` | `offline`; any other value gives `degraded`. |
+| `data-heading-level` | `headingLevel` | `h2` to `h6`. |
+| `data-is-compact` | `isCompact` | `"true"`, or the `mg-notice--compact` class on the container. |
+| `data-is-overlay` | `isOverlay` | `"true"`, or the `mg-notice--overlay` class on the container. |
+| `data-retry` | `onRetry` | Boolean attribute. Renders the retry button and dispatches `mg-service-notice:retry`. |
+| `data-retry-label` | `retryLabel` | Retry button text. |
+| `data-status-url` | `statusUrl` | http or https only; other schemes are ignored. |
+| `data-status-url-label` | `statusUrlLabel` | Status link text. |
+| `data-countdown-seconds` | `countdownSeconds` | Needs `data-retry`. |
+| `data-max-auto-retries` | `maxAutoRetries` | Defaults to 3. |
+| `data-labels` | `labels` | JSON object of translated strings, using the keys listed under Translations. |
+
+| Event | Dispatched on | When |
+| --- | --- | --- |
+| `mg-service-notice:retry` | The container (bubbles) | The retry button is pressed or an automatic retry fires. Only when `data-retry` is present. |
+
+The same contract is published for AI agents in the `hydration` field of `ai-components/components-notice-service-notice.json`.
+
+### 4. React component
 
 ```jsx
 import { ServiceNotice } from '@undrr/undrr-mangrove';
@@ -120,7 +194,7 @@ function MapWidget() {
         status="offline"
         isOverlay
         onRetry={() => refetchLayers()}
-        statusUrl="https://status.undrr.org"
+        statusUrl="https://messaging.undrr.org/"
         countdownSeconds={15}
         maxAutoRetries={3}
       />
@@ -152,13 +226,17 @@ function MapWidget() {
 - The component includes a visually hidden `role="status"` region. It is filled just after mount, so the status and title are announced even when the notice appears already populated (for example as an overlay). It is updated again when an automatic retry is scheduled and when automatic retries stop.
 - The visible countdown is `aria-hidden`, because announcing every second would drown out everything else. Screen reader users hear "Retrying automatically in N seconds" once per attempt instead.
 - The status badge pairs a coloured dot with visible text (Degraded / Offline), satisfying WCAG 2.2 SC 1.4.1 (Use of Color).
-- The status page link opens in a new tab with `rel="noopener noreferrer"`.
+- The status page link opens in a new tab with `rel="noopener noreferrer"`. Visually hidden text ("(opens in a new tab)", overridable with `labels.opensInNewTab`) tells screen reader users before they follow it (WCAG 2.2 SC 3.2.5).
 - `headingLevel` lets the title fit the page's heading outline instead of forcing `h3`.
 
 ## Translations
 
 Labels are provided for the six UN official languages. The non-English strings are drafts and need native-speaker review before release.
 
+Pass overrides with the `labels` prop, or the `data-labels` JSON attribute when hydrating. The keys are `retryLabel`, `statusUrlLabel`, `opensInNewTab`, `statusDegraded`, `statusOffline`, `countdownPrefix`, `countdownAnnouncement` (with a `{seconds}` token) and `autoRetryStopped`.
+
 ## Changelog
+
+- **v1.1.0** — 2026-09-17 ([#1172](https://github.com/unisdr/undrr-mangrove/issues/1172)): The status link now includes visually hidden "(opens in a new tab)" text, translatable with the new `labels.opensInNewTab` key. Server rendering (no `window`) no longer drops the status link. Documented the vanilla hydration contract (data attributes and the `mg-service-notice:retry` event) with a CDN example, and published it in the AI manifest's `hydration` field. Examples use `https://messaging.undrr.org/` instead of the redirecting `status.undrr.org`.
 
 - **v1.0.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Initial implementation of the `ServiceNotice` component (rendered through Notice, no stylesheet of its own) with degraded and offline states, retry actions, capped automatic retries with backoff, overlay mode, Layer 2 hydration with a retry event, and UN translations ([#1155](https://github.com/unisdr/undrr-mangrove/issues/1155)).

@@ -1538,6 +1538,13 @@ async function main() {
       detail.vanillaHtmlEmbed = data.vanillaHtmlEmbed;
     }
 
+    // Vanilla hydration contract (data attributes, events, CDN modules)
+    if (data?.hydration) {
+      detail.hydration = JSON.parse(
+        JSON.stringify(data.hydration).replaceAll('{version}', pkg.version)
+      );
+    }
+
     // Do-not-modify flag for branding-critical components
     if (data?.doNotModify) {
       detail.doNotModify = data.doNotModify;
