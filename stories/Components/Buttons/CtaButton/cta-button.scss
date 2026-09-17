@@ -189,6 +189,28 @@
 // .mg-button, which already takes the two-band ring above. Deleting the rule
 // hands unowned buttons back their UA outline, which is the correct default.
 
+// Filled variants paint their fill under the border, so a transparent stroke
+// matches the fill (including hover and context overrides such as Hero) and
+// filled buttons render the same size as outline buttons. Themes can give the
+// stroke a colour through --mg-border-color-button-primary/-secondary.
+.mg-button-primary:not(.mg-button-outline),
+.mg-button-secondary:not(.mg-button-outline),
+.mg-button.disabled {
+  background-clip: border-box;
+}
+
+.mg-button-primary:not(.mg-button-outline) {
+  border-color: var(--mg-border-color-button-primary);
+}
+
+.mg-button-secondary:not(.mg-button-outline) {
+  border-color: var(--mg-border-color-button-secondary);
+}
+
+.mg-button.disabled {
+  border-color: transparent;
+}
+
 .mg-button-primary {
   background-color: var(--mg-color-button-background);
 

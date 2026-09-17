@@ -15,6 +15,10 @@
 //   margin: 0 auto;
 // }
 .mg-hero {
+  // Filled buttons can share the hero colour, so give them a light tinted
+  // stroke to keep an edge on the dark surface.
+  --mg-border-color-button-primary: rgb(var(--mg-color-neutral-0) / 0.72);
+  --mg-border-color-button-secondary: rgb(var(--mg-color-neutral-0) / 0.72);
   --mg-hero-cta-color: var(--mg-color-hero);
   --mg-hero-gradient-color: var(--mg-color-hero);
   --mg-hero-gradient-start: var(--mg-hero-gradient-start-opacity);

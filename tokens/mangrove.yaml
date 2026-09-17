@@ -326,6 +326,20 @@ border-color:
       `border:` shorthand, and a bare triplet makes the whole declaration
       invalid, which silently drops border-style to none. .mg-button-outline
       rendered as bare text for the entire time this was a triplet.
+  button-primary:
+    $value: transparent
+    $format: literal
+    $description: >-
+      Stroke on filled primary buttons. The fill is painted under the border,
+      so `transparent` makes the stroke match the fill and keeps filled and
+      outline buttons the same size. A theme can set a colour here (for
+      example a darker shade of the fill) to give filled buttons a visible
+      edge.
+  button-secondary:
+    $value: transparent
+    $format: literal
+    $description: >-
+      Stroke on filled secondary buttons. See border-color.button-primary.
   hero-button-secondary: { $value: '{color.neutral-0}' }
 
 # Spacing scale. The px numbers are converted to rem against a 16px document

@@ -188,6 +188,10 @@
 
   // Strong surfaces need inverse buttons; soft surfaces use normal buttons.
   &:where(:not(.mg-cta--soft)) {
+    // Light tinted stroke keeps filled buttons visible on the strong surface.
+    --mg-border-color-button-primary: rgb(var(--mg-color-neutral-0) / 0.72);
+    --mg-border-color-button-secondary: rgb(var(--mg-color-neutral-0) / 0.72);
+
     // Button overrides for dark backgrounds (matches Hero pattern)
     a.mg-button:not(.mg-button-cta),
     a.mg-button:not(.mg-button-cta):hover,
