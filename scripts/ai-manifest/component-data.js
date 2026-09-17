@@ -14,7 +14,7 @@
 //   hydration        (object, optional)   — Vanilla hydration contract for components
 //                     whose static renderedHtml is not interactive on its own:
 //                     { note, selector, modules, dataAttributes, events, example }.
-//                     `{version}` in any string is replaced with the package version.
+//                     `{{version}}` in any string is replaced with the package version.
 //
 // Auto-rendered entry (minimal):
 //   'components-buttons-buttons': { description: 'Primary and secondary CTA buttons.' },
@@ -884,18 +884,22 @@ npm run build</code></pre>
       selector: '[data-mg-service-notice]',
       modules: {
         hydrate:
-          'https://assets.undrr.org/mangrove/{version}/components/hydrate.js',
+          'https://assets.undrr.org/mangrove/{{version}}/components/hydrate.js',
         component:
-          'https://assets.undrr.org/mangrove/{version}/components/ServiceNotice.js',
+          'https://assets.undrr.org/mangrove/{{version}}/components/ServiceNotice.js',
       },
       dataAttributes: {
         'data-mg-service-notice': 'Marks the container to hydrate (required).',
-        'data-title': 'Heading text (plain text).',
-        'data-description': 'Explanation (plain text).',
+        'data-title':
+          'Heading text (plain text). Falls back to the text of a child .mg-notice__title.',
+        'data-description':
+          'Explanation (plain text). Falls back to the text of a child .mg-notice__description.',
         'data-status': '"degraded" (default) or "offline".',
         'data-heading-level': 'h2 to h6 (default h3).',
-        'data-is-compact': '"true" for compact padding and typography.',
-        'data-is-overlay': '"true" for a centered overlay inside a positioned embed container.',
+        'data-is-compact':
+          '"true" for compact padding and typography. The mg-notice--compact class on the container does the same.',
+        'data-is-overlay':
+          '"true" for a centered overlay inside a positioned embed container. The mg-notice--overlay class on the container does the same.',
         'data-retry':
           'Boolean attribute. When present, a retry button renders and each retry dispatches mg-service-notice:retry on the container. Without it, no retry button or countdown renders.',
         'data-retry-label': 'Retry button text.',
@@ -917,7 +921,9 @@ npm run build</code></pre>
           when: 'The retry button is pressed or an automatic retry fires. Only dispatched when data-retry is present.',
         },
       ],
-      example: `<script type="importmap">
+      example: `<link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css" />
+
+<script type="importmap">
   { "imports": {
     "react": "https://esm.sh/react@19.2.4",
     "react-dom": "https://esm.sh/react-dom@19.2.4",
@@ -936,8 +942,8 @@ npm run build</code></pre>
   data-max-auto-retries="3"></div>
 
 <script type="module">
-  import createHydrator from 'https://assets.undrr.org/mangrove/{version}/components/hydrate.js';
-  import ServiceNotice, { fromElement } from 'https://assets.undrr.org/mangrove/{version}/components/ServiceNotice.js';
+  import createHydrator from 'https://assets.undrr.org/mangrove/{{version}}/components/hydrate.js';
+  import ServiceNotice, { fromElement } from 'https://assets.undrr.org/mangrove/{{version}}/components/ServiceNotice.js';
 
   createHydrator({ selector: '[data-mg-service-notice]', component: ServiceNotice, fromElement });
 
