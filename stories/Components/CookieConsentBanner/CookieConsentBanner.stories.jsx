@@ -29,6 +29,25 @@ export default {
 
 export const Default = {
   args: {},
+  render: args => (
+    <div>
+      <p>
+        <strong>Nothing renders below on purpose.</strong> The component itself
+        returns <code>null</code>: it loads the cookie consent library and
+        configuration from the UNDRR CDN and hands control to them. The console
+        logs <code>Cookie banner initialized successfully</code> once that has
+        happened.
+      </p>
+      <p>
+        The consent bar is drawn by the CDN library, not by Mangrove, and it
+        decides for itself whether to show. It stays hidden here, so use this
+        story to confirm the component loads and initialises; see the
+        &ldquo;Reset banner&rdquo; story for the consent API, and a real site
+        for the bar itself.
+      </p>
+      <CookieConsentBanner {...args} />
+    </div>
+  ),
 };
 
 export const WithResetButton = {
