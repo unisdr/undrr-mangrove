@@ -1,6 +1,6 @@
 # Mangrove 2.0 release notes
 
-Mangrove 2.0 spans the runtime theming foundation in `2.0.0-alpha.1`, the interaction baseline in `2.0.0-alpha.2`, the token pipeline in `2.0.0-alpha.3`, typography and navigation refinements in `2.0.0-alpha.4`, beta polish in `2.0.0-beta.2`, the round-up in `2.0.0-beta.3`, and the component, token and discoverability additions in the first release candidate, `2.0.0-rc.1`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for alpha.1, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2, and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3.
+Mangrove 2.0 spans the runtime theming foundation in `2.0.0-alpha.1`, the interaction baseline in `2.0.0-alpha.2`, the token pipeline in `2.0.0-alpha.3`, typography and navigation refinements in `2.0.0-alpha.4`, beta polish in `2.0.0-beta.2`, the round-up in `2.0.0-beta.3`, the component, token and discoverability additions in the first release candidate, `2.0.0-rc.1`, and the integration fixes in `2.0.0-rc.2`. See [PR #1061](https://github.com/unisdr/undrr-mangrove/pull/1061) for alpha.1, [PR #1086](https://github.com/unisdr/undrr-mangrove/pull/1086) for alpha.2, and [PR #1087](https://github.com/unisdr/undrr-mangrove/pull/1087) for alpha.3.
 
 ## Key changes for 2.0
 
@@ -14,6 +14,7 @@ If you only need the release highlights, start here:
 - **Beta.2 adds release polish**: translated logos and locale-aware PageHeader resolution, stronger CTA contrast, the higher-value utility and OCHA icon additions, Author image layout/link/no-image variants, and AI-manifest/docs cleanup.
 - **Beta.3 adds polish and paper cuts**: sub-brand secondary button tokens, hero title width cap removal, card height fill, mega menu tab transition, scroll container scrollbar theming, and Prettier formatting.
 - **RC.1 adds components, a public type scale and discoverability**: the Notice foundation with ServiceNotice (Snackbar now renders through it), `--mg-font-size-*` custom properties with a check for undefined tokens, prototype Drawer, Tree, Legend and Range, a new CopyButton with a vanilla script, machine-readable `releases.json` and `tokens.json`, and regrouped Storybook navigation.
+- **RC.2 adds integration fixes**: filled button strokes and centred button icons with new `--mg-border-color-button-*` tokens, a scoped `.mg-icon-button`, Tree hydration from a nested list (its default export is now `HydratedTree`), ServiceNotice hydration contract and accessibility fixes, public `--mg-font-line-height-*` custom properties, and page-wide unique hydration id prefixes.
 
 > **If you consume the base UNDRR compiled CSS (CDN or prebuilt), no sub-brand theming:** the alpha.1 theming migration requires no integration change. Alpha.2 intentionally refreshes component presentation and interaction while retaining existing Drupal hydration and BEM contracts, apart from the deprecated Pagination removal.
 >
@@ -29,7 +30,7 @@ If you only need the release highlights, start here:
 
 ## Try the prerelease
 
-2.0 ships under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. `2.0.0-rc.1` is the latest documented candidate.
+2.0 ships under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. `2.0.0-rc.2` is the latest documented candidate.
 
 ```bash
 # npm (prerelease tag — does not become your default version)
@@ -38,8 +39,8 @@ npm install @undrr/undrr-mangrove@next
 
 ```html
 <!-- CDN, versioned path (pick the base or a sub-brand stylesheet) -->
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.1/css/style.css">
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.1/css/style-preventionweb.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.2/css/style.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.2/css/style-preventionweb.css">
 ```
 
 For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet href above, and for a sub-brand add `class="mg-theme-{brand}"` to `<body>` or a wrapping element. Found a problem? See [where to report](#feedback).
@@ -55,7 +56,8 @@ For a compiled-CSS consumer the entire trial is two lines: swap the stylesheet h
 | `2.0.0-beta.1` | Published under `next` | Pattern expansion (Content Hub, Landing Pages, Article Story), bypass-block SkipLink, card-link semantics, MegaMenu/PageHeader a11y fixes, CDN URL canonicalisation, React 19.3 and release-tooling updates, plus a pre-beta.1 paper-cuts pass (PageHeader `languageDisplay="links"` and icon-only nav polish, animated MegaMenu desktop flyout) |
 | `2.0.0-beta.2` | Tagged; not published to npm | Translated logos and locale-aware PageHeader resolution, CTA contrast fixes, higher-value utility and OCHA icons, Author image layout/link/no-image variants, and docs/AI manifest cleanup |
 | `2.0.0-beta.3` | Published under `next` | Sub-brand secondary button tokens, hero title width cap removal, card height fill, mega menu tab transition, scroll container scrollbar theming, code formatting |
-| `2.0.0-rc.1` | Release candidate; not yet published | Notice and ServiceNotice (Snackbar rendered through Notice), public `--mg-font-size-*` type scale, prototype Drawer, Tree, Legend and Range, CopyButton with a vanilla script, data table/badge/accordion/switch/icon-button styles, `releases.json` and `tokens.json`, Storybook regrouping |
+| `2.0.0-rc.1` | Published under `next` | Notice and ServiceNotice (Snackbar rendered through Notice), public `--mg-font-size-*` type scale, prototype Drawer, Tree, Legend and Range, CopyButton with a vanilla script, data table/badge/accordion/switch/icon-button styles, `releases.json` and `tokens.json`, Storybook regrouping |
+| `2.0.0-rc.2` | Release candidate; not yet published | Filled button stroke and icon centring, scoped `.mg-icon-button`, Tree hydration and `toggleIcon`, ServiceNotice hydration contract and fixes, public `--mg-font-line-height-*`, unique hydration id prefixes; Tabs cleanup ([#1180](https://github.com/unisdr/undrr-mangrove/issues/1180)) pending |
 
 ## 2.0.0-beta.2 (since beta.1)
 
@@ -93,8 +95,29 @@ The following changes landed in `v2.0.0-rc.1`:
 - **Snackbar** keeps its props, but the toast now renders as a Notice with a light surface instead of a filled coloured bar. If you hand-wrote Snackbar markup, the `.mg-snackbar__content` and `.mg-snackbar__icon` elements and the filled `.mg-snackbar__error`, `__warning`, `__info` and `__success` colour styles are gone (the modifier classes remain only as hooks), and `SnackbarIcons.jsx` is removed. Snackbar was not used in production before this change. `severity` now defaults to `info` (it was previously unset). `info` and `success` toasts announce politely (`role="status"`), a toast with `openedMiliseconds` no longer takes focus, and focus returns to its previous element on close.
 - **Type scale:** use `var(--mg-font-size-*)` in new styles. `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` still compile but are deprecated; overriding `$mg-font-tag` no longer changes Mangrove's own components.
 - **Prototypes:** Drawer, Tree, Legend and Range are prototypes. Their APIs may change before 2.0 is stable. Drawer's `children` and `footer` strings now render as text; pass markup through `bodyHtml` / `footerHtml`, which are sanitised.
-- **Icon button:** a bare `.mg-icon-button` no longer picks up `display: flex` and `10px` padding from a global MegaMenu rule; it is now the 36px `inline-flex` square the primitive defines. If you relied on the extra padding, add it in your own styles. ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173))
 - **Storybook links:** bookmarks or external docs pointing at `components-snackbar`, `components-cookieconsentbanner`, `components-megamenu`, `components-pager`, `components-on-this-page-nav`, `components-table-of-contents` or `components-skip-link` need the new `components-notice-*` or `components-navigation-*` ids. Storybook itself is published at `preventionweb.github.io/undrr-mangrove`.
+
+## 2.0.0-rc.2 (since rc.1)
+
+The following changes landed after `v2.0.0-rc.1` and are queued for `v2.0.0-rc.2`:
+
+- **TODO before tagging, Tabs cleanup ([#1180](https://github.com/unisdr/undrr-mangrove/issues/1180)):** placeholder for Tabs accepting an `AbortSignal` or cleaning up automatically when its container is removed. Not merged yet; replace this line once it lands, or remove it if rc.2 ships without it.
+- **Buttons:** filled primary, secondary and disabled buttons paint their fill under the border (`background-clip: border-box`), so the stroke matches the fill and they render the same size as outline buttons. New `--mg-border-color-button-primary` and `--mg-border-color-button-secondary` tokens default to `transparent`; Hero and strong TextCta surfaces set a light tinted stroke so filled buttons keep an edge on dark backgrounds. Icons in buttons are vertically centred, icon-only buttons use an 18px icon, and buttons with an icon and a label are 36px tall, the same as text-only buttons. A standalone `.mg-icon-button` now owns its ghost styling and switches to the light button foreground on hover (MCR2030 was 1.75:1). ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173), [#1171](https://github.com/unisdr/undrr-mangrove/issues/1171))
+- **Tree hydration:** non-React pages can hydrate a nested `<ul>` inside a `data-mg-tree` container with `createHydrator` and `Tree.fromElement`. `Tree` and `TreeItem` gain `toggleIcon` (`data-toggle-icon` when hydrated), and `TreeItem` gains `current`. Tree is flagged `requiresReact` in the AI manifest. Also fixes the RTL chevron, Enter/Space on unlinked parents, Tab focus on the selected item and the selected-label contrast in IRP. ([#1176](https://github.com/unisdr/undrr-mangrove/pull/1176), [#1172](https://github.com/unisdr/undrr-mangrove/issues/1172))
+- **ServiceNotice:** the status link carries visually hidden "(opens in a new tab)" text (`labels.opensInNewTab`) and is kept in server-rendered output. The vanilla hydration contract is documented in the MDX and published through a new AI manifest `hydration` field. DELTA's status link meets 4.5:1 through the new Notice `--mg-notice-action-secondary` token. The Drupal behavior example attaches its retry listener with `once()`. ([#1175](https://github.com/unisdr/undrr-mangrove/pull/1175), [#1178](https://github.com/unisdr/undrr-mangrove/pull/1178), [#1172](https://github.com/unisdr/undrr-mangrove/issues/1172))
+- **Line heights are public:** `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`) are emitted in every theme and read by body text, the font-size utilities and Card. Compiled line heights are unchanged. ([#1170](https://github.com/unisdr/undrr-mangrove/pull/1170), [#1085](https://github.com/unisdr/undrr-mangrove/issues/1085))
+- **Hydration id prefixes:** `createHydrator` numbers roots from a page-wide counter shared by every hydrator and every copy of the runtime, so `update(context)` no longer reuses a prefix and pages that load two copies of React no longer get duplicate DOM ids. ([#1178](https://github.com/unisdr/undrr-mangrove/pull/1178))
+- **StatusLabel and EmptyState:** StatusLabel `--warning` / `--negative` documented as service-health modifiers, EmptyState heading-level guidance, and a StatusLabel group in RTL no longer picks up the global list padding. ([#1174](https://github.com/unisdr/undrr-mangrove/pull/1174))
+- **Repo tooling** (no change to the published package): `yarn pack:assemble` / `yarn pack:preview` ([#1169](https://github.com/unisdr/undrr-mangrove/pull/1169)), Storybook "Show code" restored on every docs page ([#1179](https://github.com/unisdr/undrr-mangrove/pull/1179)), and `preview-stats.json` dropped from the Pages artifact ([#1181](https://github.com/unisdr/undrr-mangrove/pull/1181)).
+
+**Upgrade notes for rc.2:**
+
+- **Icon button:** a bare `.mg-icon-button` no longer picks up `display: flex` and `10px` padding from a global MegaMenu rule; it is now the 36px `inline-flex` square the primitive defines. If you relied on the extra padding, add it in your own styles. ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173))
+- **Buttons:** filled primary, secondary and disabled buttons no longer show the light `--mg-border-color-button` stroke around a smaller fill; the fill runs under a transparent border. To give a filled button a visible stroke, set `--mg-border-color-button-primary` or `--mg-border-color-button-secondary`. Buttons with an icon and a label are now 36px tall, so check tight toolbars.
+- **Tree:** `import Tree from '.../components/Tree.js'` now gives `HydratedTree`, which takes the same props and children; import `{ Tree }` if you need the component itself. Item DOM ids are scoped per tree and are no longer `mg-treeitem-{id}`, so in-page links or scripts that target those ids should use `data-mg-treeitem-id` instead. Tree remains a prototype.
+- **ServiceNotice hydration:** `mg-notice--compact` and `mg-notice--overlay` on a `data-mg-service-notice` container are read and then removed from the container, so they no longer style it as a second notice. Prefer `data-is-compact` and `data-is-overlay`.
+- **Hydration `identifierPrefix`:** the number in generated prefixes (`<slug>-<n>-`) is now page-wide rather than the root's index in the scanned context. Don't rely on a specific number. A page that mixes this runtime with an older copy can still collide.
+- **Line heights:** use `var(--mg-font-line-height-*)`; `$mg-font-line-height-500` and `$mg-font-line-height-700` still compile but are deprecated until 3.0.
 
 ### Alpha.2 experience and interaction baseline
 

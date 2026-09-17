@@ -29,8 +29,8 @@ Related: [GitHub issue #803](https://github.com/unisdr/undrr-mangrove/issues/803
 <section data-mg-share-buttons data-main-label="Share this"></section>
 
 <script type="module">
-  import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0-rc.1/components/hydrate.js';
-  import ShareButtons, { fromElement } from 'https://assets.undrr.org/mangrove/2.0.0-rc.1/components/ShareButtons.js';
+  import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0-rc.2/components/hydrate.js';
+  import ShareButtons, { fromElement } from 'https://assets.undrr.org/mangrove/2.0.0-rc.2/components/ShareButtons.js';
   createHydrator({ selector: '[data-mg-share-buttons]', component: ShareButtons, fromElement });
 </script>
 ```
