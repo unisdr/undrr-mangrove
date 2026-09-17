@@ -174,6 +174,34 @@ export const InATable = {
   },
 };
 
+export const HeadingLevel = {
+  render: () => (
+    <section aria-labelledby="empty-state-heading-level-demo">
+      <h2 id="empty-state-heading-level-demo">Recent disaster records</h2>
+      <div className="mg-empty-state mg-empty-state--panel">
+        <div className="mg-empty-state__media">
+          <TrayGlyph />
+        </div>
+        <h3 className="mg-empty-state__title">No records this month</h3>
+        <p className="mg-empty-state__description">
+          Records published in the last 30 days will appear here.
+        </p>
+      </div>
+    </section>
+  ),
+  name: 'Heading level',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The empty state sits under the section heading, so its title is an ' +
+          '`<h3>`. `__title` is a class, not a tag: pick the level one below the ' +
+          'nearest heading above it.',
+      },
+    },
+  },
+};
+
 export const StartAligned = {
   render: () => (
     <div className="mg-empty-state mg-empty-state--start">

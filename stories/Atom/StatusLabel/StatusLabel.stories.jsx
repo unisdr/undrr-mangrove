@@ -8,8 +8,9 @@ export default {
         component:
           'A workflow status shown as a coloured indicator followed by the status name. ' +
           'The four modifiers cover the DELTA/DLDTS record and event workflow ' +
-          '(draft, waiting for validation, waiting for more information, published); ' +
-          'the base class on its own gives a neutral indicator for any other status. ' +
+          '(draft, waiting for validation, waiting for more information, published). ' +
+          'Two service health modifiers (warning, negative) cover degraded and offline ' +
+          'services. The base class on its own gives a neutral indicator for any other status. ' +
           'CSS only — no JavaScript, no React component.',
       },
     },
@@ -69,6 +70,30 @@ export const Neutral = {
           'Without a status modifier the indicator is neutral grey. Use this for ' +
           'states outside the DELTA workflow rather than borrowing a colour that ' +
           'already means something else.',
+      },
+    },
+  },
+};
+
+export const ServiceHealth = {
+  render: () => (
+    <ul className="mg-status-label-group">
+      <li>
+        <Label modifier="warning" label="Degraded" />
+      </li>
+      <li>
+        <Label modifier="negative" label="Offline" />
+      </li>
+    </ul>
+  ),
+  name: 'Service health',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `--warning` and `--negative` modifiers show the health of a ' +
+          'service or system. ServiceNotice uses them for its degraded and ' +
+          'offline badges; use them wherever else a service state needs showing.',
       },
     },
   },
