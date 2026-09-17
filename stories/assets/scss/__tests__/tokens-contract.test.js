@@ -592,6 +592,13 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.3 — .mg-button-secondary:hover label text',
   },
   {
+    name: 'standalone icon button glyph, hover fill',
+    fg: '--mg-color-button',
+    bg: ['--mg-color-interactive-active'],
+    min: 4.5,
+    why: 'SC 1.4.3 / 1.4.11 — .mg-icon-button:hover fills with interactive-active and recolours the glyph',
+  },
+  {
     name: 'outline primary button label on the page',
     fg: '--mg-color-button-outline-primary',
     bg: [],

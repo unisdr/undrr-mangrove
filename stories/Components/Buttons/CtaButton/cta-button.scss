@@ -157,7 +157,15 @@
 
   &:hover {
     background-color: rgb(var(--mg-color-interactive-active));
-    color: rgb(var(--mg-color-button--hover));
+    color: rgb(var(--mg-color-button));
+  }
+
+  // Forced colours discard the hover fill, so draw an outline instead. It is
+  // scoped to :not(:focus-visible) so the mg-focus-ring outline still wins.
+  @media (forced-colors: active) {
+    &:hover:not(:focus-visible) {
+      outline: 1px solid ButtonText;
+    }
   }
 }
 
