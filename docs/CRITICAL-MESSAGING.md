@@ -1,6 +1,6 @@
 # Critical messaging
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CRITICAL-MESSAGING.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/platform-services-critical-messaging--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CRITICAL-MESSAGING.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/platform-services-critical-messaging--docs).
 
 Failsafe messaging system that broadcasts urgent messages across UNDRR properties, even when the main CMS is down.
 
@@ -53,4 +53,4 @@ https://www.undrr.org/#enableMessagingDebug=true
 
 ## See also
 
-- [Analytics enhancements](https://preventionweb.github.io/undrr-mangrove/?path=/docs/platform-services-analytics-enhancements--docs) — GA4 tracking
+- [Analytics enhancements](https://mangrove.undrr.org/?path=/docs/platform-services-analytics-enhancements--docs) — GA4 tracking

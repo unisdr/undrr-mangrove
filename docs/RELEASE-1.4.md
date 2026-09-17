@@ -1,6 +1,6 @@
 # Mangrove 1.4 release notes
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v1-4--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v1-4--docs).
 
 Beginning with 1.4, Mangrove includes detailed release notes for each minor release so there is a clear record of what changed and why.
 
@@ -30,7 +30,7 @@ Our last release was 1.3.3. For the complete diff, see the [v1.3.3...v1.4.0 comp
 - DELTA Resilience theme — an initial proof of concept for integration testing, with a landing page template and component adjustments for the DELTA initiative ([#835](https://github.com/unisdr/undrr-mangrove/pull/835))
 - Stacked tabs now support `defaultOpen`, `singleOpen`, and keyword filtering, along with accessibility fixes for keyboard navigation and ARIA attributes. Tabs can now be used in a FAQ-style accordion layout. ([#860](https://github.com/unisdr/undrr-mangrove/pull/860))
 - Search widget now includes native filters for content type, country, and date range, plus a four-card syndication layout ([#834](https://github.com/unisdr/undrr-mangrove/pull/834))
-- AI component manifest: `manifest.json` and `llms.txt` so AI coding tools can discover and render Mangrove components. Includes vanilla HTML examples, CSS utility inventory, and auto-rendered previews. See the [AI and MCP integration guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-ai-and-mcp-integration--docs) in Storybook. ([#845](https://github.com/unisdr/undrr-mangrove/pull/845), [#846](https://github.com/unisdr/undrr-mangrove/pull/846), [#847](https://github.com/unisdr/undrr-mangrove/pull/847))
+- AI component manifest: `manifest.json` and `llms.txt` so AI coding tools can discover and render Mangrove components. Includes vanilla HTML examples, CSS utility inventory, and auto-rendered previews. See the [AI and MCP integration guide](https://mangrove.undrr.org/?path=/docs/getting-started-ai-and-mcp-integration--docs) in Storybook. ([#845](https://github.com/unisdr/undrr-mangrove/pull/845), [#846](https://github.com/unisdr/undrr-mangrove/pull/846), [#847](https://github.com/unisdr/undrr-mangrove/pull/847))
 
 ### Fixes
 
@@ -56,7 +56,7 @@ Our last release was 1.3.3. For the complete diff, see the [v1.3.3...v1.4.0 comp
 
 ### Documentation
 
-- Storybook sidebar reorganized, semantic CSS rationale written up, and the [About Mangrove](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-about-mangrove--docs) page rewritten to clarify what Mangrove is and is not ([#833](https://github.com/unisdr/undrr-mangrove/pull/833), [#848](https://github.com/unisdr/undrr-mangrove/pull/848))
+- Storybook sidebar reorganized, semantic CSS rationale written up, and the [About Mangrove](https://mangrove.undrr.org/?path=/docs/getting-started-about-mangrove--docs) page rewritten to clarify what Mangrove is and is not ([#833](https://github.com/unisdr/undrr-mangrove/pull/833), [#848](https://github.com/unisdr/undrr-mangrove/pull/848))
 - Component creation and maintenance guides are easier to find, for both developers and LLMs ([#862](https://github.com/unisdr/undrr-mangrove/pull/862))
 
 ## Migration: root font-size change
@@ -298,5 +298,5 @@ Three rules for SCSS inside Mangrove:
 
 ## Related documentation
 
-- [Architecture: root font-size and mg-rem()](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-architecture--docs) — technical details on how the function works
-- [Release process](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-release-process--docs) — how Mangrove versions are published
+- [Architecture: root font-size and mg-rem()](https://mangrove.undrr.org/?path=/docs/contributing-architecture--docs) — technical details on how the function works
+- [Release process](https://mangrove.undrr.org/?path=/docs/contributing-release-process--docs) — how Mangrove versions are published

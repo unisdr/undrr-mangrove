@@ -35,7 +35,7 @@ jobs:
     concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     runs-on: ubuntu-latest
     env:
-      MANGROVE_DOCS_BASE_URL: https://preventionweb.github.io/undrr-mangrove/
+      MANGROVE_DOCS_BASE_URL: https://mangrove.undrr.org/
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v7

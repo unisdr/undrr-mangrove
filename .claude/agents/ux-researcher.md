@@ -17,7 +17,7 @@ You are researching the user experience of **Mangrove**, UNDRR's React component
 - **Languages**: English, Arabic (RTL), Japanese — diverse linguistic needs
 - **Accessibility**: WCAG 2.1 AA required — users include people with disabilities
 - **Component library**: Components are used in Drupal via `data-mg-*` attributes and wrapper scripts
-- **Storybook**: Component demos at https://preventionweb.github.io/undrr-mangrove/
+- **Storybook**: Component demos at https://mangrove.undrr.org/
 - **4 themes**: Each site has its own visual identity but shares component structure
 
 ### Research dimensions for Mangrove

@@ -1,6 +1,6 @@
 # Release process guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASES.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-release-process--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASES.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-release-process--docs).
 
 This guide explains the release process for the UNDRR Mangrove component library.
 
@@ -283,7 +283,7 @@ Prefer restoring CI over repeating this. Every published version through 1.8.1 s
 
 Mangrove tracks changes at two levels:
 
-- **Component changelogs** (in each component's MDX file): Track per-component version history. Update these whenever a PR modifies a component's behavior, API, or appearance. See the [component standards](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format) for the required format (source: `stories/Documentation/ComponentContribution.mdx` → "Changelog format").
+- **Component changelogs** (in each component's MDX file): Track per-component version history. Update these whenever a PR modifies a component's behavior, API, or appearance. See the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs#changelog-format) for the required format (source: `stories/Documentation/ComponentContribution.mdx` → "Changelog format").
 - **Project releases** (GitHub Releases): Track library-wide releases. Created during the release process above.
 
 Component changelogs and project releases serve different audiences — component changelogs help developers working with a specific component, while project releases help consumers of the npm package understand what changed between versions.

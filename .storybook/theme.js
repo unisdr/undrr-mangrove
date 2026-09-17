@@ -11,7 +11,7 @@ export default create({
 
   // Brand
   brandTitle: 'UNDRR Mangrove',
-  brandUrl: 'https://preventionweb.github.io/undrr-mangrove',
+  brandUrl: 'https://mangrove.undrr.org',
   brandImage: './images/undrr-logo-square-blue.svg',
   brandTarget: '_self',
 
