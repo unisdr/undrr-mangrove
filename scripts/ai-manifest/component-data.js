@@ -1062,7 +1062,19 @@ npm run build</code></pre>
   },
   'components-forms-checkbox': {
     description:
-      'Styled checkbox with label. Error and disabled states available.',
+      'Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label.',
+    cssClasses: [
+      'mg-form-check',
+      'mg-form-check__input',
+      'mg-form-check__input--checkbox',
+      'mg-form-check__label',
+      'mg-switch',
+      'mg-switch--pending',
+      'mg-switch__input',
+      'mg-switch__track',
+      'mg-switch__thumb',
+      'mg-switch__label',
+    ],
   },
   'components-forms-radio': {
     description:
