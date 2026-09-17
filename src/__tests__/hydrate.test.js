@@ -253,8 +253,53 @@ describe('createHydrator', () => {
     // Each call should receive an options object with identifierPrefix
     const firstOpts = mockCreateRoot.mock.calls[0][1];
     const secondOpts = mockCreateRoot.mock.calls[1][1];
-    expect(firstOpts.identifierPrefix).toMatch(/-0-$/);
-    expect(secondOpts.identifierPrefix).toMatch(/-1-$/);
+    expect(firstOpts.identifierPrefix).toMatch(/^target-\d+-$/);
+    expect(secondOpts.identifierPrefix).toMatch(/^target-\d+-$/);
+    expect(firstOpts.identifierPrefix).not.toBe(secondOpts.identifierPrefix);
+  });
+
+  it('keeps identifierPrefix unique across update() calls', () => {
+    document.body.innerHTML = '<div id="first"><div class="target"></div></div>';
+
+    const result = createHydrator({
+      selector: '.target',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+    });
+
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = '<div class="target"></div>';
+    document.body.appendChild(wrapper);
+    result.update(wrapper);
+
+    expect(mockCreateRoot).toHaveBeenCalledTimes(2);
+    const prefixes = mockCreateRoot.mock.calls.map(
+      ([, opts]) => opts.identifierPrefix
+    );
+    expect(new Set(prefixes).size).toBe(2);
+  });
+
+  it('keeps identifierPrefix unique across hydrators with the same prefix', () => {
+    document.body.innerHTML = '<div class="one"></div><div class="two"></div>';
+
+    createHydrator({
+      selector: '.one',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+      options: { identifierPrefix: 'shared' },
+    });
+    createHydrator({
+      selector: '.two',
+      component: DummyComponent,
+      fromElement: () => ({ text: 'test' }),
+      options: { identifierPrefix: 'shared' },
+    });
+
+    const prefixes = mockCreateRoot.mock.calls.map(
+      ([, opts]) => opts.identifierPrefix
+    );
+    expect(prefixes).toHaveLength(2);
+    expect(new Set(prefixes).size).toBe(2);
   });
 
   it('uses custom identifierPrefix from options', () => {
@@ -268,7 +313,7 @@ describe('createHydrator', () => {
     });
 
     const opts = mockCreateRoot.mock.calls[0][1];
-    expect(opts.identifierPrefix).toBe('custom-0-');
+    expect(opts.identifierPrefix).toMatch(/^custom-\d+-$/);
   });
 
   it('passes error callbacks to createRoot', () => {
