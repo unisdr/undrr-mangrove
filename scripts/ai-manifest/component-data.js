@@ -93,6 +93,56 @@ export const REQUIRES_REACT = {
 };
 
 // ---------------------------------------------------------------------------
+// Shared pieces for hydration contracts
+//
+// Every React hydration contract points at the same two CDN modules and needs
+// the same import map, so they are built here rather than repeated 16 times.
+// `{{version}}` is replaced with the package version when the manifest is
+// generated.
+// ---------------------------------------------------------------------------
+const CDN = 'https://assets.undrr.org/mangrove/{{version}}';
+
+const hydrationModules = name => ({
+  hydrate: `${CDN}/components/hydrate.js`,
+  component: `${CDN}/components/${name}.js`,
+});
+
+const STYLESHEET_TAG = `<link rel="stylesheet" href="${CDN}/css/style.css" />`;
+
+const IMPORT_MAP = `<script type="importmap">
+  { "imports": {
+    "react": "https://esm.sh/react@19.3.0",
+    "react-dom": "https://esm.sh/react-dom@19.3.0",
+    "react-dom/": "https://esm.sh/react-dom@19.3.0/"
+  }}
+</script>`;
+
+/**
+ * Build a runnable hydration example: stylesheet, import map, the consumer's
+ * markup, and the three-line createHydrator call.
+ *
+ * @param {object} options
+ * @param {string} options.name     Module name under /components/ (e.g. 'Pager').
+ * @param {string} options.selector CSS selector passed to createHydrator.
+ * @param {string} options.markup   Server-rendered container markup.
+ * @param {string} [options.extra]  Extra script body appended inside the module.
+ * @returns {string} A complete HTML snippet.
+ */
+const hydrationExample = ({ name, selector, markup, extra = '' }) =>
+  `${STYLESHEET_TAG}
+
+${IMPORT_MAP}
+
+${markup}
+
+<script type="module">
+  import createHydrator from '${CDN}/components/hydrate.js';
+  import ${name}, { fromElement } from '${CDN}/components/${name}.js';
+
+  createHydrator({ selector: '${selector}', component: ${name}, fromElement });${extra}
+</script>`;
+
+// ---------------------------------------------------------------------------
 // Curated component data (descriptions, HTML examples, flags)
 export const COMPONENT_DATA = {
   // --- Layout ---
@@ -227,6 +277,117 @@ export const COMPONENT_DATA = {
 </button>`,
       },
     ],
+    vanillaModule: {
+      note: 'Preferred for plain HTML pages: no React, no import map. renderedHtml is inert until js/copy-button.js runs. The script enhances every [data-mg-copy-button] on load and dispatches no events; it writes the tooltip into .mg-copy-button__feedback and the announcement into the .mg-u-sr-only aria-live span, so include both in the button markup. Call mgCopyButton(scope) again after inserting buttons; already-initialised buttons are skipped. Clipboard writes need a secure context (https or localhost); the script falls back to execCommand and, on failure, shows the failed tooltip and manual-copy hint for 5 seconds.',
+      selector: '[data-mg-copy-button]',
+      modules: {
+        script: `${CDN}/js/copy-button.js`,
+      },
+      dataAttributes: {
+        'data-mg-copy-button': 'Marks the button to enhance (required).',
+        'data-text-to-copy':
+          'Text written to the clipboard. data-text and data-copy-text are accepted aliases.',
+        'data-tooltip-label':
+          'Visible confirmation in the tooltip (default "Copied!"). data-feedback-text is an accepted alias.',
+        'data-copied-label':
+          'Screen-reader announcement on success (default "Copied to clipboard."). data-aria-live-text is an accepted alias.',
+        'data-failed-tooltip-label':
+          'Visible tooltip when the copy fails (default "Copy failed").',
+        'data-failed-label':
+          'Screen-reader announcement when the copy fails (default "Copy failed. Select the text and copy it manually.").',
+        'data-mg-copy-button-initialized':
+          'Set by the script. Do not author it.',
+        'aria-label':
+          'Accessible name of the icon-only button. Author it; the script does not add one.',
+      },
+      events: [],
+      example: `${STYLESHEET_TAG}
+
+<button type="button"
+  class="mg-button mg-button-primary mg-button-outline mg-button--icon mg-copy-button"
+  data-mg-copy-button
+  data-text-to-copy="https://www.undrr.org/publication/global-assessment-report"
+  data-tooltip-label="Copied!"
+  data-copied-label="Link copied to clipboard."
+  aria-label="Copy link to clipboard">
+  <span class="mg-icon mg-icon-copy mg-button__icon" aria-hidden="true"></span>
+  <span class="mg-copy-button__feedback" aria-hidden="true">Copied!</span>
+  <span class="mg-u-sr-only" aria-live="polite"></span>
+</button>
+
+<script type="module" src="${CDN}/js/copy-button.js"></script>`,
+    },
+    hydration: {
+      note: 'React alternative to js/copy-button.js — use one or the other, not both. Hydrate an empty button container; the component renders the icon, tooltip and live region itself. renderedHtml plus js/copy-button.js is simpler for a page that needs no other React component.',
+      selector: '[data-mg-copy-button]',
+      modules: hydrationModules('CopyButton'),
+      dataAttributes: {
+        'data-mg-copy-button': 'Marks the container to hydrate (required).',
+        'data-text-to-copy':
+          'Text written to the clipboard. data-text and data-copy-text are accepted aliases.',
+        'data-aria-label':
+          'Accessible name of the button. data-label and data-copy-label are accepted aliases.',
+        'data-copied-label':
+          'Screen-reader announcement on success. data-aria-live-text is an accepted alias.',
+        'data-tooltip-label':
+          'Visible confirmation in the tooltip. data-feedback-text is an accepted alias.',
+        'data-failed-label': 'Screen-reader announcement when the copy fails.',
+        'data-failed-tooltip-label': 'Visible tooltip when the copy fails.',
+        'data-labels':
+          'JSON object of translated UI strings: ariaLabel, copiedLabel, tooltipLabel, failedLabel, failedTooltipLabel. The individual attributes above win over the JSON.',
+        'data-variant': 'Button variant (default "outline").',
+        'data-size': 'Button size, e.g. "small".',
+        'data-class-name': 'Extra class on the button.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'CopyButton',
+        selector: '[data-mg-copy-button]',
+        markup: `<span data-mg-copy-button
+  data-text-to-copy="https://www.undrr.org/publication/global-assessment-report"
+  data-aria-label="Copy link to clipboard"
+  data-tooltip-label="Copied!"
+  data-copied-label="Link copied to clipboard."></span>`,
+      }),
+    },
+  },
+
+  'components-buttons-sharebuttons': {
+    description:
+      'Row of share controls for the current page: social networks, email, a QR code modal and a copy-link button with confirmation. Labels and the email subject and body come from props or data attributes, so every string can be translated.',
+    cssClasses: [
+      'mg-share',
+      'mg-share__header',
+      'mg-share__buttons',
+      'mg-share__button',
+      'mg-share__copy-button',
+      'mg-share__copy-text',
+    ],
+    hydration: {
+      note: 'renderedHtml is inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. Every attribute is optional; the component supplies English defaults. The component reads the current page URL itself, so there is no URL attribute.',
+      selector: '[data-mg-share-buttons]',
+      modules: hydrationModules('ShareButtons'),
+      dataAttributes: {
+        'data-mg-share-buttons': 'Marks the container to hydrate (required).',
+        'data-main-label':
+          'Heading above the share row (default "Share this").',
+        'data-on-copy-label':
+          'Confirmation after the link is copied (default "Link copied").',
+        'data-sharing-subject':
+          'Subject line for the email share (default "Sharing Link").',
+        'data-sharing-body': 'Body text placed before the link in the email.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'ShareButtons',
+        selector: '[data-mg-share-buttons]',
+        markup: `<section data-mg-share-buttons
+  data-main-label="Share this"
+  data-on-copy-label="Link copied"
+  data-sharing-subject="From PreventionWeb"
+  data-sharing-body="I thought this might interest you: "></section>`,
+      }),
+    },
   },
 
   // --- Cards ---
@@ -375,6 +536,29 @@ export const COMPONENT_DATA = {
   'components-cards-icon-card': {
     description:
       'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
+    hydration: {
+      note: 'The whole card set comes from one JSON attribute, so renderedHtml is only a preview of the markup the component produces. Render an empty data-mg-icon-card container carrying data-items and hydrate it. Malformed JSON is swallowed and renders an empty set, so validate the attribute server-side.',
+      selector: '[data-mg-icon-card]',
+      modules: hydrationModules('IconCard'),
+      dataAttributes: {
+        'data-mg-icon-card': 'Marks the container to hydrate (required).',
+        'data-items':
+          'JSON array of card objects, mapped to the data prop (required). title is required on every object; the rest — icon, imgback, imgalt, imageScale, iconColor, iconFgColor, borderColor, label, visualLabel, summaryText, link, linkText, button, buttonType — are the per-card options in the component props. Invalid JSON renders nothing.',
+        'data-centered': '"true" to centre the card contents.',
+        'data-variant': '"default" (default) or "negative" for dark surfaces.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'IconCard',
+        selector: '[data-mg-icon-card]',
+        markup: `<div data-mg-icon-card
+  data-variant="default"
+  data-items='[
+    {"title":"Sendai Framework","summaryText":"Priorities, targets and indicators.","icon":"mg-icon mg-icon-book","link":"/sendai-framework","linkText":"Read the framework"},
+    {"title":"Terminology","summaryText":"Agreed definitions for disaster risk reduction.","icon":"mg-icon mg-icon-search","link":"/terminology","linkText":"Browse terms"}
+  ]'></div>`,
+      }),
+    },
   },
   'components-cards-book-card': {
     description: 'Minimal card for publications: cover image and title only.',
@@ -420,6 +604,33 @@ export const COMPONENT_DATA = {
   'components-cards-stats-card': {
     description:
       'Grid of numeric statistics with optional icons, labels, and descriptions. Variants: default, compact, highlighted, negative.',
+    hydration: {
+      note: 'The figures come from one JSON attribute, so renderedHtml is a preview of the markup, not a template to fill in. Render an empty data-mg-stats-card container carrying data-stats and hydrate it. Malformed JSON is swallowed and renders an empty card, so validate the attribute server-side.',
+      selector: '[data-mg-stats-card]',
+      modules: hydrationModules('StatsCard'),
+      dataAttributes: {
+        'data-mg-stats-card': 'Marks the container to hydrate (required).',
+        'data-stats':
+          'JSON array of stat objects (required; one to three recommended). value is required on every object; icon, label, bottomLabel, summaryText and link are optional. summaryText allows inline HTML links. Invalid JSON renders nothing.',
+        'data-title': 'Optional heading above the figures.',
+        'data-variant':
+          '"default", "compact", "highlighted" or "negative" (for dark surfaces).',
+        'data-class-name': 'Extra class on the card.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'StatsCard',
+        selector: '[data-mg-stats-card]',
+        markup: `<div data-mg-stats-card
+  data-title="Disaster losses, 2005 to 2024"
+  data-variant="default"
+  data-stats='[
+    {"label":"People affected","value":"4.2 billion","bottomLabel":"across 160 countries"},
+    {"label":"Economic losses","value":"US$ 2.3 trillion"},
+    {"label":"Countries reporting","value":"128","link":"/sendai-framework/monitor"}
+  ]'></div>`,
+      }),
+    },
   },
 
   // --- Status and empty states ---
@@ -786,6 +997,35 @@ npm run build</code></pre>
   'components-quotehighlight': {
     description:
       'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.',
+    hydration: {
+      note: 'QuoteHighlight has no interactive behaviour, so the static renderedHtml is fully usable on its own — hydrate only when the surrounding page is already React. Every value comes from a data attribute; markup inside the container is discarded, not read.',
+      selector: '[data-mg-quote-highlight]',
+      modules: hydrationModules('QuoteHighlight'),
+      dataAttributes: {
+        'data-mg-quote-highlight': 'Marks the container to hydrate (required).',
+        'data-quote': 'Quote text (required; plain text).',
+        'data-attribution': 'Name of the person quoted.',
+        'data-attribution-title': 'Their role or organization.',
+        'data-image-src': 'Portrait or feature image URL.',
+        'data-image-alt':
+          'Alt text for the image. Empty for a decorative portrait.',
+        'data-background-color': '"light" (default), "dark" or "bright".',
+        'data-variant': '"line" (default) or "image".',
+        'data-alignment': '"full" (default), "left" or "right".',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'QuoteHighlight',
+        selector: '[data-mg-quote-highlight]',
+        markup: `<div data-mg-quote-highlight
+  data-quote="Countries need to reduce risk in every decision, action, and investment they make."
+  data-attribution="Mami Mizutori"
+  data-attribution-title="Special Representative of the UN Secretary-General for Disaster Risk Reduction and head of UNDRR"
+  data-variant="line"
+  data-background-color="light"
+  data-alignment="full"></div>`,
+      }),
+    },
   },
 
   // --- Hero ---
@@ -869,6 +1109,37 @@ npm run build</code></pre>
       'mg-user-feedback__issue',
       'mg-user-feedback__confirmation',
     ],
+    hydration: {
+      note: 'renderedHtml is static: the Yes and No buttons do nothing and the confirmation never appears. Render an empty data-mg-user-feedback container and hydrate it. Hydration has no onResponse hook, so a hydrated prompt records nothing — attach your own analytics listener to the buttons, or mount the React component, if you need the answer. Mangrove never stores responses.',
+      selector: '[data-mg-user-feedback]',
+      modules: hydrationModules('UserFeedback'),
+      dataAttributes: {
+        'data-mg-user-feedback': 'Marks the container to hydrate (required).',
+        'data-feedback-url':
+          'Where the "report an issue" link points (default https://www.undrr.org/contact/website-feedback).',
+        'data-question': 'The prompt, e.g. "Is this page useful?".',
+        'data-yes-label': 'Label for the positive answer.',
+        'data-no-label': 'Label for the negative answer.',
+        'data-report-issue-label': 'Label for the report-an-issue link.',
+        'data-confirmation-before-link':
+          'Confirmation text before the link. With data-confirmation-separator, data-confirmation-link and data-confirmation-after-link it composes the thank-you line.',
+        'data-confirmation-separator':
+          'Separator between the confirmation text and the link.',
+        'data-confirmation-link': 'Link text inside the confirmation.',
+        'data-confirmation-after-link': 'Confirmation text after the link.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'UserFeedback',
+        selector: '[data-mg-user-feedback]',
+        markup: `<div data-mg-user-feedback
+  data-feedback-url="/contact/website-feedback"
+  data-question="Is this page useful?"
+  data-yes-label="Yes"
+  data-no-label="No"
+  data-report-issue-label="Report an issue on this page"></div>`,
+      }),
+    },
   },
 
   // --- Service notice (auto-rendered + hydration) ---
@@ -990,6 +1261,40 @@ npm run build</code></pre>
       'mg-notice__meta',
       'mg-notice__dismiss',
     ],
+    hydration: {
+      note: 'A plain CSS notice needs no JavaScript — copy renderedHtml and stop there unless the notice is dismissible, because the dismiss button in the static markup has no handler. Hydration also lets a Drupal template pass translated strings as attributes. The title and description are read as plain text: markup inside .mg-notice__title or .mg-notice__description is not preserved, so pass rich content through React instead. The component hides itself when dismissed, with or without a handler.',
+      selector: '[data-mg-notice]',
+      modules: hydrationModules('Notice'),
+      dataAttributes: {
+        'data-mg-notice': 'Marks the container to hydrate (required).',
+        'data-title':
+          'Heading text (plain text). Falls back to the text of a child .mg-notice__title.',
+        'data-description':
+          'Body text (plain text). Falls back to the text of a child .mg-notice__description.',
+        'data-variant': '"info", "warning", "negative" or "positive".',
+        'data-heading-level':
+          'h2 to h6 (default h3). Pick the level that fits the page outline.',
+        'data-is-compact': '"true" for compact padding and typography.',
+        'data-is-prominent':
+          '"true" for a sitewide banner. With variant "negative" this is the emergency banner.',
+        'data-is-overlay':
+          '"true" for a centred overlay inside a positioned embed container.',
+        'data-is-dismissible': '"true" to render the dismiss button.',
+        'data-dismiss-label': 'Accessible name of the dismiss button.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'Notice',
+        selector: '[data-mg-notice]',
+        markup: `<div data-mg-notice
+  data-title="Scheduled maintenance"
+  data-description="PreventionWeb will be briefly unavailable on Sunday from 02:00 to 04:00 UTC."
+  data-variant="warning"
+  data-heading-level="h2"
+  data-is-dismissible="true"
+  data-dismiss-label="Dismiss"></div>`,
+      }),
+    },
   },
 
   // --- Footer (auto-rendered + embed) ---
@@ -1216,6 +1521,46 @@ npm run build</code></pre>
       'mg-cta__custom-content',
       'mg-cta__image',
     ],
+    hydration: {
+      note: 'The CTA banner is plain CSS, so renderedHtml works on its own. Hydrate when a Drupal template needs to pass translated text and a button list as attributes. The hydrator supports the text-and-buttons model only: arbitrary child markup is discarded, so render CTA classes directly around a form rather than hydrating one. data-text is sanitised with DOMPurify.',
+      selector: '[data-mg-text-cta]',
+      modules: hydrationModules('TextCta'),
+      dataAttributes: {
+        'data-mg-text-cta': 'Marks the container to hydrate (required).',
+        'data-eyebrow': 'Short label above the headline.',
+        'data-headline': 'Banner heading text.',
+        'data-headline-size':
+          'Font size token, e.g. "400", "600" (default) or "800".',
+        'data-headline-level':
+          'Semantic heading level, 2 to 6 (default 2). Out-of-range values fall back to 2.',
+        'data-text': 'Body HTML, sanitised with DOMPurify.',
+        'data-buttons':
+          'JSON array of button objects: { label, url, type }. type is "Primary" or "Secondary". Invalid JSON renders no buttons.',
+        'data-variant':
+          '"primary" (default), "secondary", "tertiary" or "quaternary".',
+        'data-tone': '"strong" (default) or "soft".',
+        'data-background-color': 'CSS background colour override.',
+        'data-padding': 'CSS padding override.',
+        'data-image': 'Image URL; supplying one switches to the split layout.',
+        'data-image-alt': 'Alt text for the image.',
+        'data-centered': '"false" to left-align (default "true").',
+        'data-layout': '"stacked" (default) or "inline".',
+        'data-class-name': 'Extra class on the banner.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'TextCta',
+        selector: '[data-mg-text-cta]',
+        markup: `<div data-mg-text-cta
+  data-eyebrow="Registration open"
+  data-headline="Global Platform for Disaster Risk Reduction"
+  data-headline-level="2"
+  data-text="<p>Join governments, scientists and practitioners in Geneva.</p>"
+  data-buttons='[{"label":"Register","url":"/global-platform/register"},{"label":"Read the programme","url":"/global-platform","type":"Secondary"}]'
+  data-variant="primary"
+  data-layout="inline"></div>`,
+      }),
+    },
   },
 
   // --- Images ---
@@ -1746,6 +2091,146 @@ npm run build</code></pre>
       'Interactive newsletter promotion pattern demonstrating email input validation, topic preferences checkboxes, submission states, and confirmation messaging.',
   },
 
+  // --- Media and scrolling collections (hydration) ---
+  'components-gallery': {
+    description:
+      'Media gallery with a main stage, optional thumbnail rail, navigation arrows, captions and keyboard support. Handles images, videos and embedded players.',
+    hydration: {
+      note: 'renderedHtml shows the first slide and nothing else: arrows, thumbnails and keyboard navigation are all React behaviour. Render an empty data-mg-gallery container carrying data-media and hydrate it. Every media object whose type is "image" (or has no type) needs an alt value — WCAG 1.1.1. Malformed JSON is swallowed and renders an empty gallery, so validate the attribute server-side.',
+      selector: '[data-mg-gallery]',
+      modules: hydrationModules('Gallery'),
+      dataAttributes: {
+        'data-mg-gallery': 'Marks the container to hydrate (required).',
+        'data-media':
+          'JSON array of media objects (required): { id, type, src, alt, title, caption }. type is "image" (default) or "video". Invalid JSON renders nothing.',
+        'data-initial-index': 'Index of the first slide shown (default 0).',
+        'data-show-thumbnails':
+          '"false" to hide the thumbnail rail (default "true").',
+        'data-thumbnail-position': '"left" (default) or "bottom".',
+        'data-show-arrows': '"false" to hide the arrows (default "true").',
+        'data-arrow-style': '"overlay" (default) or "corner".',
+        'data-show-description':
+          '"false" to hide the title and caption (default "true").',
+        'data-enable-keyboard':
+          '"false" to switch off arrow-key navigation (default "true").',
+        'data-loop': '"true" to wrap from the last slide to the first.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'Gallery',
+        selector: '[data-mg-gallery]',
+        markup: `<div data-mg-gallery
+  data-show-thumbnails="true"
+  data-thumbnail-position="left"
+  data-arrow-style="overlay"
+  data-media='[
+    {"id":"1","src":"/images/flood-response.jpg","alt":"Volunteers clearing debris from a flooded street","title":"Flood response, Cebu"},
+    {"id":"2","src":"/images/early-warning.jpg","alt":"A community radio operator broadcasting a storm warning","title":"Early warning in practice"}
+  ]'></div>`,
+      }),
+    },
+  },
+  'components-scrollcontainer': {
+    description:
+      'Horizontally scrolling rail for a row of cards or media, with optional arrow controls, drag scrolling, scroll snapping and equal-height items.',
+    hydration: {
+      note: 'Unusually, this hydrator reads your server-rendered content rather than a JSON attribute: put the items inside a .mg-scroll__content wrapper in the container and each child becomes a slide. Without that wrapper the whole container innerHTML becomes a single item. The markup is re-rendered from HTML strings, so any event handlers bound to it before hydration are lost. renderedHtml scrolls natively but has no arrow controls or snapping.',
+      selector: '[data-mg-scroll-container]',
+      modules: hydrationModules('ScrollContainer'),
+      dataAttributes: {
+        'data-mg-scroll-container':
+          'Marks the container to hydrate (required).',
+        'data-height': 'Container height as a CSS value (default "auto").',
+        'data-min-width': 'Minimum width as a CSS value (default "auto").',
+        'data-item-width':
+          'Width of each item as a CSS value (default "auto").',
+        'data-padding': 'Container padding (default "0").',
+        'data-show-arrows': '"true" to render the arrow controls.',
+        'data-stretch-items':
+          '"true" to give mixed-length items a shared row height.',
+        'data-step-size': 'Arrow scroll step in pixels.',
+        '.mg-scroll__content':
+          'Wrapper inside the container. Each of its children becomes one item.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'ScrollContainer',
+        selector: '[data-mg-scroll-container]',
+        markup: `<div data-mg-scroll-container
+  data-item-width="280px"
+  data-show-arrows="true"
+  data-stretch-items="true"
+  data-step-size="300">
+  <div class="mg-scroll__content">
+    <div class="mg-card">First publication</div>
+    <div class="mg-card">Second publication</div>
+    <div class="mg-card">Third publication</div>
+  </div>
+</div>`,
+      }),
+    },
+  },
+  'components-syndicated-search': {
+    description:
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Every UI string is translatable through the labels prop or a data-labels JSON attribute.',
+    hydration: {
+      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so there is no useful static markup — renderedHtml is a placeholder. Render an empty data-mg-search-widget container and hydrate it. fromElement returns { config, labels }: only attributes you set are included, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
+      selector: '[data-mg-search-widget]',
+      modules: hydrationModules('SyndicationSearchWidget'),
+      dataAttributes: {
+        'data-mg-search-widget': 'Marks the container to hydrate (required).',
+        'data-search-endpoint': 'Search API URL.',
+        'data-results-per-page': 'Results per page.',
+        'data-debounce-delay':
+          'Milliseconds to wait before searching as you type.',
+        'data-min-search-length': 'Minimum query length before a search runs.',
+        'data-default-query': 'Query the widget starts with.',
+        'data-default-sort': 'Initial sort key.',
+        'data-display-mode': 'Result layout: list, card or card-book.',
+        'data-grid-columns': 'Columns in the card grid.',
+        'data-query-append': 'Extra query string appended to every search.',
+        'data-facets':
+          '"false", "sidebar" or "horizontal". Drupal sends attributes as strings, so the literal "false" is read as boolean false.',
+        'data-facets-target':
+          'CSS selector of an element to portal the facets into.',
+        'data-search-target':
+          'CSS selector of an element to portal the search box into.',
+        'data-show-search-box': '"false" to hide the search box.',
+        'data-show-results-count': '"false" to hide the result count.',
+        'data-show-facets': '"false" to hide the facets.',
+        'data-show-active-filters': '"false" to hide the active-filter chips.',
+        'data-show-pager': '"false" to hide the pager.',
+        'data-show-search-metrics': '"true" to show search metrics.',
+        'data-show-search-timer': '"true" to show the search timer.',
+        'data-enable-hash-sync':
+          '"auto" (default), "true" or "false". "auto" lets the Drupal wrapper switch hash sync off when more than one widget is on the page, so keep the literal string.',
+        'data-require-image': '"true" to return only results with an image.',
+        'data-default-filters':
+          'JSON object of filters applied to every search.',
+        'data-allowed-types': 'JSON array of content types to include.',
+        'data-custom-filters': 'JSON array of extra filter definitions.',
+        'data-custom-facets': 'JSON array of extra facet definitions.',
+        'data-visible-teaser-fields':
+          'JSON array of teaser fields to show on each result.',
+        'data-interestingness-tiers': 'JSON tier configuration for ranking.',
+        'data-longevity-tiers': 'JSON tier configuration for ranking.',
+        'data-labels':
+          'JSON object of translated UI strings. Label sets ship for ES, FR, JA, ZH (Simplified), AR and RU.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'SyndicationSearchWidget',
+        selector: '[data-mg-search-widget]',
+        markup: `<div data-mg-search-widget
+  data-search-endpoint="https://www.preventionweb.net/api/v1/search"
+  data-results-per-page="10"
+  data-display-mode="list"
+  data-facets="sidebar"
+  data-default-filters='{"type":["publication"]}'></div>`,
+      }),
+    },
+  },
+
   // --- Data Viz (v1 prototypes) ---
   'components-dataviz-legend': {
     description:
@@ -1772,6 +2257,113 @@ npm run build</code></pre>
   },
 
   // --- Navigation ---
+  'components-navigation-megamenu': {
+    description:
+      'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API.',
+    hydration: {
+      note: 'MegaMenu needs React: open and close state, keyboard navigation and the mobile drill-down are all component behaviour, so renderedHtml is not a working menu. This is a complex-tier component — fromElement reads only timing, logo and an optional inline data-sections attribute, and most integrations pass sections from an API in a consumer wrapper instead. Plain nav markup stays clickable before hydration and if hydration fails; the mg-mega-wrapper--js-active class is added on mount, so pointer-events restrictions apply only once the sidebar exists.',
+      selector: '[data-mg-mega-menu]',
+      modules: hydrationModules('MegaMenu'),
+      dataAttributes: {
+        'data-mg-mega-menu': 'Marks the container to hydrate (required).',
+        'data-sections':
+          'JSON array of menu sections. Optional: most consumers pass sections from an API through a wrapper. Invalid JSON renders an empty menu.',
+        'data-delay':
+          'Milliseconds before the menu closes on mouse leave (default 300).',
+        'data-hover-delay':
+          'Milliseconds before the menu opens on hover (default 180).',
+        'data-logo-src': 'Logo image URL.',
+        'data-logo-alt':
+          "Alt text for the logo; also becomes the logo link's accessible name.",
+        'data-logo-href':
+          'Where the logo links to, e.g. /ar/ for a language-prefixed root (default /).',
+        'data-logo-width': 'Explicit logo width, to avoid layout shift.',
+        'data-logo-height': 'Explicit logo height, to avoid layout shift.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'MegaMenu',
+        selector: '[data-mg-mega-menu]',
+        markup: `<div data-mg-mega-menu
+  data-delay="300"
+  data-hover-delay="180"
+  data-logo-src="https://assets.undrr.org/logos/pw/pw-logo.svg"
+  data-logo-alt="PreventionWeb"
+  data-logo-href="/"
+  data-sections='[
+    {"title":"Knowledge base","items":[{"label":"Sendai Framework","href":"/sendai-framework"},{"label":"Terminology","href":"/terminology"}]},
+    {"title":"News and events","items":[{"label":"Latest news","href":"/news"}]}
+  ]'></div>`,
+      }),
+    },
+  },
+  'components-navigation-pager': {
+    description:
+      'Pagination for a result list: previous and next controls, numbered pages with ellipses, an optional result-range line and jump-to-page field, and a mini-pager when the total page count is unknown.',
+    cssClasses: [
+      'mg-pager',
+      'mg-pager__list',
+      'mg-pager__item',
+      'mg-pager__item--ellipsis',
+      'mg-pager__item--prev',
+      'mg-pager__item--next',
+      'mg-pager__link',
+      'mg-pager__link--current',
+      'mg-pager__link--disabled',
+      'mg-pager__link--prev',
+      'mg-pager__link--next',
+      'mg-pager__icon',
+      'mg-pager__text',
+      'mg-pager__ellipsis',
+      'mg-pager__bar',
+      'mg-pager__range',
+      'mg-pager__jump',
+      'mg-pager__jump-label',
+      'mg-pager__jump-input',
+      'mg-pager__jump-btn',
+      'mg-pager__notice',
+      'mg-pager__notice-action',
+    ],
+    hydration: {
+      note: "renderedHtml shows a pager at a fixed page: its controls change nothing. Hydration does not give you navigation either — onPageChange is deliberately not read from the DOM, because paging is the consuming application's job. Hydrate for the keyboard and ARIA behaviour and the jump-to-page field, then pass your own onPageChange in a consumer wrapper (a Drupal behavior that re-runs the AJAX view, for example). For links that simply navigate, server-rendered <a href> markup is the better answer.",
+      selector: '[data-mg-pager]',
+      modules: hydrationModules('Pager'),
+      dataAttributes: {
+        'data-mg-pager': 'Marks the container to hydrate (required).',
+        'data-page': 'Current page, 1-based (default 1).',
+        'data-total-pages':
+          'Total pages. Omit it for the mini-pager, which shows only previous and next.',
+        'data-layout': '"centered" (default) or "bar".',
+        'data-show-jump-to': '"true" to render the jump-to-page field.',
+        'data-aria-label':
+          'Accessible name of the pager nav (default "Pagination").',
+        'data-range-label':
+          'Result range line, e.g. "Showing 21-40 of 200". Bar layout only.',
+        'data-jump-to-label': 'Label for the jump-to-page field.',
+        'data-jump-to-action': 'Label for the jump-to-page submit button.',
+        'data-prev-label': 'Visible "Previous" text.',
+        'data-next-label': 'Visible "Next" text.',
+        'data-go-prev-label': 'Accessible name of the previous control.',
+        'data-go-next-label': 'Accessible name of the next control.',
+        'data-page-label': 'Accessible name pattern for a page link.',
+        'data-current-page-label':
+          'Accessible name pattern for the current page.',
+        'data-page-of-label': 'Pattern for the "page X of Y" text.',
+      },
+      events: [],
+      example: hydrationExample({
+        name: 'Pager',
+        selector: '[data-mg-pager]',
+        markup: `<nav data-mg-pager
+  data-page="3"
+  data-total-pages="20"
+  data-layout="bar"
+  data-show-jump-to="true"
+  data-aria-label="Pagination"
+  data-range-label="Showing 41-60 of 400"></nav>`,
+      }),
+    },
+  },
   'components-navigation-drawer': {
     description:
       'Prototype. Slide-over off-canvas drawer and floating panel for secondary navigation, filters, or details. Modal dialog with focus management, backdrop and Escape dismissal; string content renders as text. Hydration via createHydrator with data-mg-drawer (container needs an id) and data-mg-drawer-trigger buttons; server-rendered body markup is sanitised.',
@@ -1793,6 +2385,79 @@ npm run build</code></pre>
       'mg-floating-panel__close',
       'mg-floating-panel__body',
     ],
+    hydration: {
+      note: 'renderedHtml is a drawer that cannot open or close: nothing opens it, Escape does nothing and focus is not managed. Give the container an id, point one or more data-mg-drawer-trigger buttons at that id, and hydrate. The default export of components/Drawer.js is HydratedDrawer, which owns the open state; the named Drawer export is the controlled component. Body and footer markup inside .mg-drawer__body / .mg-drawer__footer is passed as bodyHtml / footerHtml and sanitised with DOMPurify; the title is read as text.',
+      selector: '[data-mg-drawer]',
+      modules: hydrationModules('Drawer'),
+      dataAttributes: {
+        id: 'Required, so data-mg-drawer-trigger buttons can find the drawer.',
+        'data-mg-drawer': 'Marks the container to hydrate (required).',
+        'data-position':
+          '"start" (default), "end" or "bottom". start and end follow text direction and swap in RTL.',
+        'data-title':
+          'Header title text. Falls back to the text of a child .mg-drawer__title (or .mg-floating-panel__title).',
+        'data-backdrop':
+          '"false" to drop the backdrop. With a backdrop the drawer is a modal dialog with a focus trap.',
+        'data-is-floating-panel':
+          '"true" for a non-modal floating panel. The mg-floating-panel class on the container has the same effect.',
+        'data-is-open':
+          '"true" to start open. The is-open class on the container has the same effect.',
+        'data-close-label': 'Translated close button label (default "Close").',
+        'data-class-name': 'Extra class on the drawer.',
+        'data-mg-drawer-trigger':
+          'On a button elsewhere in the page: its value is the drawer container id. Clicking toggles the drawer, and the button gets aria-expanded and aria-controls.',
+        '.mg-drawer__body':
+          'Optional server-rendered body markup, sanitised on mount. Without it the container innerHTML is used.',
+        '.mg-drawer__footer':
+          'Optional server-rendered footer markup, sanitised on mount.',
+      },
+      events: [
+        {
+          name: 'mg-drawer:open',
+          target: 'The data-mg-drawer container',
+          bubbles: false,
+          when: 'Dispatch it yourself to open the drawer from script.',
+        },
+        {
+          name: 'mg-drawer:close',
+          target: 'The data-mg-drawer container',
+          bubbles: false,
+          when: 'Dispatch it yourself to close the drawer from script.',
+        },
+        {
+          name: 'mg-drawer:toggle',
+          target: 'The data-mg-drawer container',
+          bubbles: false,
+          when: 'Dispatch it yourself to toggle the drawer from script.',
+        },
+      ],
+      example: hydrationExample({
+        name: 'Drawer',
+        selector: '[data-mg-drawer]',
+        markup: `<button type="button" data-mg-drawer-trigger="filters" class="mg-button mg-button-primary">
+  Filter publications
+</button>
+
+<div id="filters"
+  data-mg-drawer
+  data-position="start"
+  data-title="Filter publications"
+  data-backdrop="true"
+  data-is-open="false"
+  data-close-label="Close">
+  <div class="mg-drawer__body">
+    <p>Narrow the publications list by hazard, region and year.</p>
+  </div>
+  <div class="mg-drawer__footer">
+    <button type="button" class="mg-button mg-button-primary">Show 128 results</button>
+  </div>
+</div>`,
+        extra: `
+
+  // Open or close it from your own code:
+  // document.getElementById('filters').dispatchEvent(new CustomEvent('mg-drawer:open'));`,
+      }),
+    },
   },
   'components-navigation-tree': {
     description:
