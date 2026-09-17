@@ -24,6 +24,7 @@ The GitHub Actions publish workflow (`npm-publish.yml`) copies `dist/assets/js/*
 | `tabs.js`             | [Tab](../../Components/Tab/)                       | Tabbed content with keyboard navigation and deep linking               |
 | `show-more.js`        | [ShowMore](../../../Utilities/ShowMore/)           | Expand/collapse toggle for content sections                            |
 | `copy-button.js`      | [CopyButton](../../Components/Buttons/CopyButton/) | Zero-dependency clipboard copy button with transient feedback          |
+| `switch-pending.js`   | [Checkbox](../../Components/Forms/Checkbox/)       | Pending state for `.mg-switch`: announces, guards, times out, reverts  |
 | `undrr.js`            | —                                                  | Shared constants (key codes, breakpoints) and `window.UNDRR` namespace |
 
 ## Adding a new script

@@ -117,6 +117,16 @@ describe('Mangrove 2.0 token contract (compiled CSS)', () => {
         /--mg-color-button-secondary-background--hover:/
       );
     });
+
+    // A var() chain resolved at :root would keep the base colour under a
+    // theme class on a wrapper, so the brand block has to restate it.
+    test('restates the notice secondary action token inside the runtime theme', () => {
+      const themeBlock = brandCss[brand].match(
+        new RegExp(`\\.mg-theme-${brand}\\s*\\{([^}]*)\\}`)
+      )?.[1];
+
+      expect(themeBlock).toMatch(/--mg-notice-action-secondary:/);
+    });
   });
 
   test('combined style-all bundle carries every brand theme', () => {
@@ -403,7 +413,7 @@ const measurements = () => {
   for (const theme of ALL_THEMES) {
     const vars = themeVars(theme);
     const resolve = token =>
-      token.startsWith('--') ? deref(vars, vars[token]) : token;
+      deref(vars, token.startsWith('--') ? vars[token] : token);
     for (const pair of COMPONENT_PAIRS) {
       let backdrop = WHITE;
       let resolved = true;
@@ -552,6 +562,21 @@ describe('brand-owned surfaces resolve from semantic tokens', () => {
   });
 });
 
+// What _form-base.scss compiles for each switch hook read: the custom
+// property with its default. Kept verbatim so the pairs below measure the
+// stylesheet's own text.
+const SWITCH = {
+  track: 'var(--mg-switch-track-background, rgb(var(--mg-color-neutral-400)))',
+  trackChecked:
+    'var(--mg-switch-track-background--checked, rgb(var(--mg-color-interactive)))',
+  thumb: 'var(--mg-switch-thumb-background, rgb(var(--mg-color-neutral-0)))',
+  overlayPending:
+    'var(--mg-switch-track-overlay--pending, rgb(var(--mg-color-neutral-500)/0.4))',
+  overlayDisabled:
+    'var(--mg-switch-track-overlay--disabled, rgb(var(--mg-color-neutral-0)/0.55))',
+  ring: 'var(--mg-switch-pending-ring-color, rgb(var(--mg-color-interactive)))',
+};
+
 // The page itself. Asserted rather than assumed, because every pair whose
 // lowest layer is translucent composites down onto it.
 const PAGE = '--mg-color-neutral-0';
@@ -559,6 +584,8 @@ const PAGE = '--mg-color-neutral-0';
 /**
  * fg  — the painted foreground token, or a literal the component hardcodes.
  * bg  — background layers, nearest first; the page is the implicit floor.
+ *       A literal may contain var(), for a surface a stylesheet builds from
+ *       a token plus an alpha rather than reading one token.
  * min — 4.5 (SC 1.4.3 normal text) or 3 (SC 1.4.3 large text / SC 1.4.11).
  */
 const COMPONENT_PAIRS = [
@@ -590,6 +617,13 @@ const COMPONENT_PAIRS = [
     bg: ['--mg-color-button-secondary-background--hover'],
     min: 4.5,
     why: 'SC 1.4.3 — .mg-button-secondary:hover label text',
+  },
+  {
+    name: 'standalone icon button glyph, hover fill',
+    fg: '--mg-color-button',
+    bg: ['--mg-color-interactive-active'],
+    min: 4.5,
+    why: 'SC 1.4.3 / 1.4.11 — .mg-icon-button:hover fills with interactive-active and recolours the glyph',
   },
   {
     name: 'outline primary button label on the page',
@@ -784,6 +818,29 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.11 — selected pill border remains distinct from its inner fill',
   },
 
+  // --- Tree: tree.scss -------------------------------------------------------
+  {
+    name: 'tree selected label on its tint',
+    fg: '--mg-tree-item-color--selected',
+    bg: ['--mg-tree-item-background--selected'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-tree__item--selected label, 16px bold, on the interactive tint (also its hover state)',
+  },
+  {
+    name: 'tree label on the hover tint',
+    fg: '--mg-color-text',
+    bg: ['--mg-tree-item-background--hover'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-tree__label-container:hover; labels and links inherit the text colour',
+  },
+  {
+    name: 'focus ring on the tree selected tint',
+    fg: '--mg-color-focus-ring',
+    bg: ['--mg-tree-item-background--selected'],
+    min: 3,
+    why: 'SC 1.4.11 — mg-focus-ring-inset draws its separator band at the edge, so the ring meets the selected tint on its inner side',
+  },
+
   // --- Form controls: _form-base.scss ------------------------------------
   {
     name: 'input value text',
@@ -847,6 +904,92 @@ const COMPONENT_PAIRS = [
     bg: ['--mg-color-form-check--checked'],
     min: 3,
     why: 'SC 1.4.11 — the tick is an inline SVG stroked #fff by _form-base.scss',
+  },
+  // Switch (.mg-switch). The track is the control boundary against the page
+  // and the thumb's position carries the state, so both are non-text. The
+  // switch reads its --mg-switch-* hooks with the default at the point of use,
+  // so these pairs measure the same var(hook, default) text the stylesheet
+  // compiles to; 'switch pairs measure what _form-base.scss compiles' below
+  // fails if the two drift apart.
+  {
+    name: 'switch track, off',
+    fg: SWITCH.track,
+    bg: [],
+    min: 3,
+    why: 'SC 1.4.11 — the off track is the whole visible boundary of the switch',
+  },
+  {
+    name: 'switch track, on',
+    fg: SWITCH.trackChecked,
+    bg: [],
+    min: 3,
+    why: 'SC 1.4.11 — the brand fill is how on is identified',
+  },
+  {
+    name: 'switch thumb on the off track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.track],
+    min: 3,
+    why: 'SC 1.4.11 — the thumb position carries the state',
+  },
+  {
+    name: 'switch thumb on the on track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.trackChecked],
+    min: 3,
+    why: 'SC 1.4.11 — the thumb position carries the state',
+  },
+  // Pending layers the overlay over the track as a background-image, so the
+  // stack is overlay-on-track. The page is white, like the thumb, so the thumb
+  // pair also stands in for track-against-page.
+  {
+    name: 'switch thumb on the pending off track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.overlayPending, SWITCH.track],
+    min: 3,
+    why: 'SC 1.4.11 — the greyed track must still hold the thumb and the boundary while a change is pending',
+  },
+  {
+    name: 'switch thumb on the pending on track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.overlayPending, SWITCH.trackChecked],
+    min: 3,
+    why: 'SC 1.4.11 — the greyed track must still hold the thumb and the boundary while a change is pending',
+  },
+  {
+    name: 'switch pending ring on the thumb',
+    fg: SWITCH.ring,
+    bg: [SWITCH.thumb],
+    min: 3,
+    why: 'SC 1.4.11 — the ring inside the thumb is the pending indicator',
+  },
+  // aria-disabled stays focusable. The track draws the focus ring and carries
+  // no opacity (switch.styles.test.js fails if it does), so the ring meets
+  // the page at full strength rather than composited at 0.45.
+  {
+    name: 'switch focus ring on a focused aria-disabled switch',
+    fg: '--mg-color-focus-ring',
+    bg: [PAGE],
+    min: 3,
+    why: 'SC 1.4.11 — aria-disabled keeps the switch focusable, so its focus indicator is not exempt',
+  },
+  // aria-disabled dims the track with a page-coloured layer instead of
+  // opacity. SC 1.4.11 exempts inactive controls, so these are recorded
+  // failures in WCAG_EXCEPTIONS and PERCEPTUAL_EXCEPTIONS, kept so the dimming
+  // cannot drift fainter than :disabled's unnoticed.
+  {
+    name: 'switch thumb on the aria-disabled off track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.overlayDisabled, SWITCH.track],
+    min: 3,
+    why: 'SC 1.4.11 — exempt as an inactive control; recorded at the weight of :disabled',
+  },
+  {
+    name: 'switch thumb on the aria-disabled on track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.overlayDisabled, SWITCH.trackChecked],
+    min: 3,
+    why: 'SC 1.4.11 — exempt as an inactive control; recorded at the weight of :disabled',
   },
   {
     name: 'field error message',
@@ -1153,6 +1296,33 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.3 — the variant CTA on the white pill',
   },
 
+  // --- Notice actions: notice.scss ----------------------------------------
+  //
+  // ServiceNotice's status link is an outline secondary button inside the
+  // notice, so its label sits on the notice surface rather than the page. The
+  // backgrounds are the literals notice.scss paints for each variant.
+  {
+    name: 'notice secondary action on the degraded (warning) notice',
+    fg: '--mg-notice-action-secondary',
+    bg: ['rgb(var(--mg-color-accent-100) / 0.18)'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-notice--warning .mg-button-secondary.mg-button-outline label text',
+  },
+  {
+    name: 'notice secondary action on the offline (negative) notice',
+    fg: '--mg-notice-action-secondary',
+    bg: ['--mg-color-red-50'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-notice--negative .mg-button-secondary.mg-button-outline label text',
+  },
+  {
+    name: 'notice secondary action on the overlay over a black embed',
+    fg: '--mg-notice-action-secondary',
+    bg: ['rgb(var(--mg-color-neutral-0) / 0.94)', '#000000'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-notice--overlay is 94% white over the embed, so a black embed is the worst case',
+  },
+
   // --- Status label: _variables.scss + status-label.scss ------------------
   {
     name: 'status label text',
@@ -1239,6 +1409,36 @@ const WCAG_EXCEPTIONS = {
       [1.24, 'decorative by design; the axis and labels carry the meaning'],
     ])
   ),
+
+  // An aria-disabled switch is deliberately faint. SC 1.4.11 exempts inactive
+  // controls, and the dimming matches :disabled's 0.45 opacity. Recorded so
+  // the dimming cannot drift fainter unnoticed.
+  ...Object.fromEntries(
+    ALL_THEMES.map(theme => [
+      `${theme}|switch thumb on the aria-disabled off track`,
+      [1.71, 'inactive control, dimmed to match :disabled'],
+    ])
+  ),
+  'base|switch thumb on the aria-disabled on track': [
+    2.28,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'preventionweb|switch thumb on the aria-disabled on track': [
+    2.09,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'irp|switch thumb on the aria-disabled on track': [
+    1.9,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'mcr|switch thumb on the aria-disabled on track': [
+    2.58,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'delta|switch thumb on the aria-disabled on track': [
+    2.28,
+    'inactive control, dimmed to match :disabled',
+  ],
 
   // orange-900 is 2.95:1 against white. Affects the primary button and the
   // outline button's hover fill, which share the token chain.
@@ -1377,6 +1577,34 @@ const WCAG_EXCEPTIONS = {
  * bottom of this file is the list of exactly those pairs.
  */
 const PERCEPTUAL_EXCEPTIONS = {
+  // Mirrors of the aria-disabled switch WCAG exceptions above.
+  ...Object.fromEntries(
+    ALL_THEMES.map(theme => [
+      `${theme}|switch thumb on the aria-disabled off track`,
+      [22.5, 'inactive control, dimmed to match :disabled'],
+    ])
+  ),
+  'base|switch thumb on the aria-disabled on track': [
+    38.3,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'preventionweb|switch thumb on the aria-disabled on track': [
+    34.5,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'irp|switch thumb on the aria-disabled on track': [
+    29,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'mcr|switch thumb on the aria-disabled on track': [
+    42.5,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'delta|switch thumb on the aria-disabled on track': [
+    38.3,
+    'inactive control, dimmed to match :disabled',
+  ],
+
   // Mirrors of the focus-ring and dataviz WCAG exceptions above: each pair
   // that is a recorded failure on the WCAG measure is also one here, for the
   // same reason.
@@ -1487,6 +1715,21 @@ const PERCEPTUAL_EXCEPTIONS = {
   'delta|error summary text on its tinted panel': [
     59.5,
     'red-900 on red-50; a warm hue at this lightness is not body-readable (WCAG 2 disagrees: 5.27:1 clears the 4.5:1 minimum)',
+  ],
+
+  // Teal and mid-blue secondary actions on the notice surfaces. WCAG 2 passes
+  // all of them; DELTA was darkened because it failed WCAG 2 as well.
+  'preventionweb|notice secondary action on the offline (negative) notice': [
+    59.8,
+    'PreventionWeb teal on red-50 (WCAG 2 disagrees: 4.59:1 clears the 4.5:1 minimum)',
+  ],
+  'preventionweb|notice secondary action on the overlay over a black embed': [
+    62.1,
+    'PreventionWeb teal on the 94% white overlay over black, the worst case (WCAG 2 disagrees: 4.81:1)',
+  ],
+  'irp|notice secondary action on the offline (negative) notice': [
+    61.3,
+    'IRP blue on red-50 (WCAG 2 disagrees: 5.03:1 clears the 4.5:1 minimum)',
   ],
 
   'base|card title, secondary variant': [42.5, 'orange-800 title link'],
@@ -1606,8 +1849,8 @@ const EXCEPTION_KEYS = new Set([
  *
  * Every pair below is derived from a component stylesheet: the foreground
  * token is one a rule actually paints on the background token beneath it, read
- * out of cta-button.scss, tag.scss, tab.scss, _form-base.scss, card.scss,
- * hero.scss and _variables.scss. Pairs that merely look related by name are
+ * out of cta-button.scss, tag.scss, tab.scss, tree.scss, _form-base.scss,
+ * card.scss, hero.scss and _variables.scss. Pairs that merely look related by name are
  * noise and are not here.
  *
  * Thresholds are per-pair, not global:
@@ -1656,11 +1899,20 @@ describe('component token contrast, including hover and active states', () => {
     );
   });
 
+  test('switch pairs measure what _form-base.scss compiles', () => {
+    const css = compile('style');
+    Object.values(SWITCH).forEach(value => {
+      expect(`${value}: ${css.includes(value) ? 'compiled' : 'missing'}`).toBe(
+        `${value}: compiled`
+      );
+    });
+  });
+
   describe.each(ALL_THEMES)('%s theme', theme => {
     test.each(PAIRS.map(pair => [pair.name, pair]))('%s', (name, pair) => {
       const vars = themeVars(theme);
       const resolve = token =>
-        token.startsWith('--') ? deref(vars, vars[token]) : token;
+        deref(vars, token.startsWith('--') ? vars[token] : token);
 
       const foreground = parseColor(resolve(pair.fg));
       // A missing token is a contract bug, not a silent pass.
@@ -1759,9 +2011,12 @@ describe('where the two contrast measures disagree', () => {
     'preventionweb | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'preventionweb | notice secondary action on the offline (negative) notice | WCAG 2 PASSES 4.59:1 (min 4.5) | perceptual fails 59.8 (BODY_TEXT needs 63)',
+    'preventionweb | notice secondary action on the overlay over a black embed | WCAG 2 PASSES 4.81:1 (min 4.5) | perceptual fails 62.1 (BODY_TEXT needs 63)',
     'irp | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'irp | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'irp | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'irp | notice secondary action on the offline (negative) notice | WCAG 2 PASSES 5.03:1 (min 4.5) | perceptual fails 61.3 (BODY_TEXT needs 63)',
     'mcr | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'mcr | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'mcr | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',

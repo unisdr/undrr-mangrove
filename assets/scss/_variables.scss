@@ -1,10 +1,10 @@
 /**
  * UNDRR Mangrove component library
  *
- * Storybook:    https://preventionweb.github.io/undrr-mangrove/
- * LLMs context: https://preventionweb.github.io/undrr-mangrove/llms.txt
+ * Storybook:    https://mangrove.undrr.org/
+ * LLMs context: https://mangrove.undrr.org/llms.txt
  * Repository:   https://github.com/unisdr/undrr-mangrove
- * Version: 2.0.0-rc.1
+ * Version: 2.0.0-rc.2
  *
  *   ██╗   ██╗███╗   ██╗██████╗ ██████╗ ██████╗
  *   ██║   ██║████╗  ██║██╔══██╗██╔══██╗██╔══██╗
@@ -116,8 +116,6 @@ $img-path-Iconfourback: "~/stories/assets/icons"; // BUILD-TIME ONLY
 
 $mg-font-body: $mg-font-size-300;
 $mg-font-tag: $mg-font-size-250 !default;
-$mg-font-line-height-500: 1.25em;
-$mg-font-line-height-700: 1.5em;
 
 // This is not really a "varaible" but kept here for now
 // until we more fully rationalise our design decisions

@@ -18,7 +18,7 @@ body {
   color: rgb(var(--mg-color-text));
   font-family: var(--mg-font-family-text);
   font-size: var(--mg-font-size-300);
-  line-height: $mg-font-line-height-700;
+  line-height: var(--mg-font-line-height-700);
 }
 
 // Buttons take the text role, not ui: they are Roboto today in Latin, and in

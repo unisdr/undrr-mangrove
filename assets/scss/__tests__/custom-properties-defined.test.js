@@ -43,6 +43,17 @@ const INPUT_HOOKS = {
   '--mg-legend-tick-pos': 'Legend tick position, set inline per tick',
   '--mg-on-this-page-nav-offset':
     'Page-level docking offset for fixed headers, set by the consuming page',
+  // The switch reads each hook with its default where it is used, so a
+  // wrapper or theme can set it; declaring it on .mg-switch would shadow that.
+  '--mg-switch-pending-ring-color': 'Switch theming hook, set by a wrapper',
+  '--mg-switch-pending-ring-gap-color': 'Switch theming hook, set by a wrapper',
+  '--mg-switch-thumb-background': 'Switch theming hook, set by a wrapper',
+  '--mg-switch-track-background': 'Switch theming hook, set by a wrapper',
+  '--mg-switch-track-background--checked':
+    'Switch theming hook, set by a wrapper',
+  '--mg-switch-track-overlay--disabled':
+    'Switch theming hook, set by a wrapper',
+  '--mg-switch-track-overlay--pending': 'Switch theming hook, set by a wrapper',
 };
 
 const withoutComments = css => css.replace(/\/\*[\s\S]*?\*\//g, '');

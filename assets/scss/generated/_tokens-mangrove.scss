@@ -44,6 +44,16 @@ $mg-font-size-1000: 3rem;
 // font-size.1100 (rem)
 $mg-font-size-1100: 4rem;
 
+// font-line-height.500 (literal)
+// Tight line height. An em value, so it resolves against the font size of the
+// element where the property is used.
+$mg-font-line-height-500: 1.25em;
+
+// font-line-height.700 (literal)
+// Body line height. An em value, so it resolves against the font size of the
+// element where the property is used.
+$mg-font-line-height-700: 1.5em;
+
 // The :root token block.
 @mixin mg-tokens-mangrove {
   // color.neutral-0
@@ -298,6 +308,17 @@ $mg-font-size-1100: 4rem;
   // rendered as bare text for the entire time this was a triplet.
   --mg-border-color-button: rgb(var(--mg-color-text-button));
 
+  // border-color.button-primary
+  // Stroke on filled primary buttons. The fill is painted under the border,
+  // so `transparent` makes the stroke match the fill and keeps filled and
+  // outline buttons the same size. A theme can set a colour here (for example
+  // a darker shade of the fill) to give filled buttons a visible edge.
+  --mg-border-color-button-primary: transparent;
+
+  // border-color.button-secondary
+  // Stroke on filled secondary buttons. See border-color.button-primary.
+  --mg-border-color-button-secondary: transparent;
+
   // border-color.hero-button-secondary
   --mg-border-color-hero-button-secondary: var(--mg-color-neutral-0);
 
@@ -411,6 +432,16 @@ $mg-font-size-1100: 4rem;
   // font-size.form-input
   // Regular body text.
   --mg-font-size-form-input: 1rem;
+
+  // font-line-height.500
+  // Tight line height. An em value, so it resolves against the font size of
+  // the element where the property is used.
+  --mg-font-line-height-500: 1.25em;
+
+  // font-line-height.700
+  // Body line height. An em value, so it resolves against the font size of
+  // the element where the property is used.
+  --mg-font-line-height-700: 1.5em;
 
   // radius.tag
   --mg-radius-tag: var(--mg-spacing-50);
@@ -529,6 +560,9 @@ $mg-font-size-1100: 4rem;
 
   // card.icon-badge-radius
   --mg-card-icon-badge-radius: 20%;
+
+  // notice.action-secondary
+  --mg-notice-action-secondary: rgb(var(--mg-color-button-outline-secondary));
 
   // hero-overlay.max-width
   --mg-hero-overlay-max-width: 37.5rem;

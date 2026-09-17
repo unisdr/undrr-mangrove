@@ -1,9 +1,9 @@
 /*!
  * UNDRR Mangrove component library
- * Storybook:    https://preventionweb.github.io/undrr-mangrove/
- * LLMs context: https://preventionweb.github.io/undrr-mangrove/llms.txt
+ * Storybook:    https://mangrove.undrr.org/
+ * LLMs context: https://mangrove.undrr.org/llms.txt
  * Repository:   https://github.com/unisdr/undrr-mangrove
- * Compiled on:  2026-09-16T20:25:59.498Z
+ * Compiled on:  2026-09-17T16:54:09.846Z
  */
 /*! For license information please see SkipLink.js.LICENSE.txt */
 import"react";var e={2694(e,t,r){var n=r(6925);function o(){}function a(){}a.resetWarningCache=o,e.exports=function(){function e(e,t,r,o,a,s){if(s!==n){var c=new Error("Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types");throw c.name="Invariant Violation",c}}function t(){return e}e.isRequired=e;var r={array:e,bigint:e,bool:e,func:e,number:e,object:e,string:e,symbol:e,any:e,arrayOf:t,element:e,elementType:e,instanceOf:t,node:e,objectOf:t,oneOf:t,oneOfType:t,shape:t,exact:t,checkPropTypes:a,resetWarningCache:o};return r.PropTypes=r,r}},5556(e,t,r){e.exports=r(2694)()},6925(e){e.exports="SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED"}};const t={};function r(n){const o=t[n];if(void 0!==o)return o.exports;const a=t[n]={exports:{}};return e[n](a,a.exports,r),a.exports}r.n=e=>{const t=e&&e.__esModule?()=>e.default:()=>e;return r.d(t,{a:t}),t},r.cw=e=>{var t;return()=>{if(e){var r=e;e=0,t={exports:{}},r.call(t.exports,t,t.exports)}return t.exports}},r.d=(e,t)=>{for(var n in t)r.o(t,n)&&!r.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:t[n]})},r.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t);var n=r.cw(function(e,t){var r=Symbol.for("react.transitional.element");Symbol.for("react.fragment"),t.jsx=function(e,t,n){var o=null;if(void 0!==n&&(o=""+n),void 0!==t.key&&(o=""+t.key),"key"in t)for(var a in n={},t)"key"!==a&&(n[a]=t[a]);else n=t;return t=n.ref,{$$typeof:r,type:e,key:o,ref:void 0!==t?t:null,props:n}}}),o=r.cw(function(e,t){e.exports=n()}),a=r(5556),s=r.n(a);function c({targetId:e="main-content",label:t="Skip to main content",className:r,onClick:o,...a}){const s=["mg-skip-link",r].filter(Boolean).join(" ");return(0,n().jsx)("a",{className:s,href:`#${e}`,onClick:t=>{const r="undefined"==typeof document?null:document.getElementById(e);r&&r.focus(),o&&o(t)},...a,children:t})}o(),c.propTypes={targetId:s().string,label:s().string,className:s().string,onClick:s().func};const i=c;export{c as SkipLink,i as default};
