@@ -1,6 +1,8 @@
 import React from 'react';
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
+import { transformSource } from './docsSource';
+
 // Import theme SCSS files as lazy-loaded modules (via lazyStyleTag in main.js)
 // These provide .use() and .unuse() methods to toggle styles on/off
 import themeUNDRR from '../stories/assets/scss/style.scss';
@@ -189,6 +191,8 @@ const preview = {
     docs: {
       source: {
         format: 'dedent',
+        // CSS-only story files (no meta.component) show rendered HTML.
+        transform: transformSource,
       },
     },
     viewport: {
