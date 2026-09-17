@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **Release notes format:** `docs/RELEASES.md` now defines a standard format and template for GitHub Release notes (intro, full-detail link, and fixed section order: breaking and visible changes, new features, bug fixes and hardening, documentation and discoverability, dependencies, CDN), based on the 2.0.0-rc.1 and 2.0.0-rc.2 releases.
+
 ## 2.0.0-rc.2 — 2026-09-17
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.2) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.

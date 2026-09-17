@@ -104,36 +104,67 @@ The tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr
 
 Go to [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) and create a release from the tag.
 
-Write release notes as a **curated, themed narrative**, not a flat commit list.
-Start from commits since the previous tag:
+Write release notes as a **curated, themed narrative**, not a flat commit list, using the standard format below. Every release from `v2.0.0-rc.1` on follows it; see [v2.0.0-rc.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.1) and [v2.0.0-rc.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.2) for worked examples.
+
+Start from the PRs merged since the previous tag, and read each PR's description rather than relying on commit subjects:
 
 ```bash
-git log v1.7.0..v1.8.0 --oneline
+git log v2.0.0-rc.1..v2.0.0-rc.2 --oneline
 ```
 
-Group the work into themed sections that match what actually landed. Common sections (use what fits, skip what doesn't):
+Use GitHub "Generate release notes" as a checklist of what landed, then rewrite it into the format.
 
-- **Breaking changes** — always first if present; include a migration path
-- **New features** — user-visible additions, one bullet per meaningful feature with a PR link
-- **Bug fixes** — notable fixes worth calling out
-- **Security** — any dependency patches or policy changes
-- **Documentation & code quality** — significant doc or internal quality improvements
-- **Dependencies** — batched dep updates (one line is fine)
+#### Release notes format
 
-Each bullet should use a **bold component/feature name**, PR link(s), and one
-sentence explaining consumer impact. Use GitHub "Generate release notes" as a
-checklist, then rewrite into themed prose.
+1. **Title:** the version without the `v` prefix (`2.0.0-rc.2`). Tick **Set as a pre-release** for any version with a hyphen.
+2. **Intro paragraph:** one or two sentences saying what kind of release this is and its main themes, written for consumers. No section heading above it.
+3. **Full detail link:** for a major version line with its own release notes page, link it and its source file on the next line. Otherwise, link the relevant `CHANGELOG.md` section.
+4. **Sections**, as `##` headings, in this order. Leave out any section with nothing in it, and don't add others:
+   - **Breaking and visible changes**: anything a consumer may need to act on or will notice (API or default export changes, changed defaults, appearance changes, renamed ids, moved URLs). Each bullet says what to do.
+   - **New features**: user-visible additions.
+   - **Bug fixes and hardening**: notable fixes, accessibility and contrast fixes, security and robustness.
+   - **Documentation and discoverability**: docs, Storybook, AI manifests (`llms.txt`, `ai-components/`), and the docs host.
+   - **Dependencies**: batched dependency updates, on one line where possible.
+   - **CDN**: always last, with the stylesheet snippet for the new version.
+5. **Bullets:** start with a **bold component or feature name** followed by a colon (or a bold one-sentence summary ending in a full stop for breaking changes), then one or two sentences on consumer impact. End with the PR links, then any issue links, in parentheses, as full URLs. Group closely related sub-items as nested bullets under one parent.
+6. **Leave out** repo-only tooling that doesn't change the published package, Storybook site or manifests (for example pack scripts or CI artifact tweaks). Those belong in `CHANGELOG.md`.
+7. **No attribution lines** (such as "Generated with …") and no commit hashes.
 
-Close with a CDN snippet so consumers can copy-paste the new version:
+#### Template
 
 ~~~markdown
+The Nth release candidate for Mangrove X.Y. It <main themes, in consumer terms>.
+
+Full detail and migration steps: [vX.Y release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-vX-Y--docs) (source: [`docs/RELEASE-X.Y.md`](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-X.Y.md)).
+
+## Breaking and visible changes
+
+- **<What changed, as a sentence>.** <What consumers see and what to do.> ([#NNNN](https://github.com/unisdr/undrr-mangrove/pull/NNNN))
+
+## New features
+
+- **<Component or feature>:** <what it adds and how to use it>. ([#NNNN](https://github.com/unisdr/undrr-mangrove/pull/NNNN), [#NNNN](https://github.com/unisdr/undrr-mangrove/issues/NNNN))
+
+## Bug fixes and hardening
+
+- **<Area>:** <what was wrong and what is fixed>. ([#NNNN](https://github.com/unisdr/undrr-mangrove/pull/NNNN))
+
+## Documentation and discoverability
+
+- **<Area>:** <what changed for readers or agents>. ([#NNNN](https://github.com/unisdr/undrr-mangrove/pull/NNNN))
+
 ## CDN
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.2/css/style.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/X.Y.Z/css/style.css">
 ```
 ~~~
 
-See [past releases](https://github.com/unisdr/undrr-mangrove/releases) for worked examples of this format.
+To create the release from the command line instead of the web UI, save the notes to a file and run:
+
+```bash
+gh release create vX.Y.Z --title X.Y.Z --verify-tag --notes-file release-notes.md
+# add --prerelease for any version with a hyphen
+```
 
 ### 8. Verify
 
