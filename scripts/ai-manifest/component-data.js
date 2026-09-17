@@ -11,6 +11,10 @@
 //                     Only needed for components that can't auto-render in Node.js.
 //   doNotModify      (string, optional)   — Warning text for branding-critical components.
 //   vanillaHtmlEmbed (object, optional)   — Embed instructions for syndication widgets.
+//   hydration        (object, optional)   — Vanilla hydration contract for components
+//                     whose static renderedHtml is not interactive on its own:
+//                     { note, selector, modules, dataAttributes, events, example }.
+//                     `{{version}}` in any string is replaced with the package version.
 //
 // Auto-rendered entry (minimal):
 //   'components-buttons-buttons': { description: 'Primary and secondary CTA buttons.' },
@@ -422,7 +426,7 @@ export const COMPONENT_DATA = {
   'components-status-label': {
     name: 'Status label',
     description:
-      'Status of a record or event, as a coloured indicator dot plus the status name in text. Variants: draft, waiting-validation, waiting-information, published, plus a neutral default with no modifier. The dot is decorative: the status name is always present as text, so meaning never depends on colour. Wrap several in mg-status-label-group.',
+      'Status of a record or event, as a coloured indicator dot plus the status name in text. Workflow variants: draft, waiting-validation, waiting-information, published. Service health variants: warning (degraded) and negative (offline), also used by ServiceNotice. Without a modifier the indicator is neutral. The dot is decorative: the status name is always present as text, so meaning never depends on colour. Wrap several in mg-status-label-group.',
     cssClasses: [
       'mg-status-label',
       'mg-status-label__indicator',
@@ -430,6 +434,8 @@ export const COMPONENT_DATA = {
       'mg-status-label--waiting-validation',
       'mg-status-label--waiting-information',
       'mg-status-label--published',
+      'mg-status-label--warning',
+      'mg-status-label--negative',
       'mg-status-label-group',
     ],
     examples: [
@@ -442,6 +448,10 @@ export const COMPONENT_DATA = {
         html: '<ul class="mg-status-label-group">\n  <li>\n    <span class="mg-status-label mg-status-label--draft">\n      <span class="mg-status-label__indicator"></span>\n      Draft\n    </span>\n  </li>\n  <li>\n    <span class="mg-status-label mg-status-label--waiting-information">\n      <span class="mg-status-label__indicator"></span>\n      Waiting for more information\n    </span>\n  </li>\n  <li>\n    <span class="mg-status-label mg-status-label--waiting-validation">\n      <span class="mg-status-label__indicator"></span>\n      Waiting for validation\n    </span>\n  </li>\n  <li>\n    <span class="mg-status-label mg-status-label--published">\n      <span class="mg-status-label__indicator"></span>\n      Published\n    </span>\n  </li>\n</ul>',
       },
       {
+        name: 'Service health states',
+        html: '<ul class="mg-status-label-group">\n  <li>\n    <span class="mg-status-label mg-status-label--warning">\n      <span class="mg-status-label__indicator"></span>\n      Degraded\n    </span>\n  </li>\n  <li>\n    <span class="mg-status-label mg-status-label--negative">\n      <span class="mg-status-label__indicator"></span>\n      Offline\n    </span>\n  </li>\n</ul>',
+      },
+      {
         name: 'Neutral status (no modifier)',
         html: '<span class="mg-status-label">\n  <span class="mg-status-label__indicator"></span>\n  Archived\n</span>',
       },
@@ -450,7 +460,7 @@ export const COMPONENT_DATA = {
   'components-empty-state': {
     name: 'Empty state',
     description:
-      'Message shown where a collection, table or panel has no content. Optional media slot for a glyph, a title, a description and an optional actions slot. Variants: panel, compact, start-aligned. Inside a table, place it in a single td with colspan so the row structure and column headers survive for screen readers.',
+      'Message shown where a collection, table or panel has no content. Optional media slot for a glyph, a title, a description and an optional actions slot. Variants: panel, compact, start-aligned. mg-empty-state__title is a class, not a tag: choose the element to fit the surrounding outline, one level below the heading of the section or card that contains it (h3 in a section headed h2, even after an h3 subsection; h4 inside a card titled h3) and never skipping levels; use a p where a heading would be out of place, such as a table cell or dashboard tile. Examples use h2 only because they stand alone. Inside a table, place it in a single td with colspan so the row structure and column headers survive for screen readers.',
     cssClasses: [
       'mg-empty-state',
       'mg-empty-state--panel',
@@ -474,6 +484,10 @@ export const COMPONENT_DATA = {
       {
         name: 'Compact, for a dashboard tile',
         html: '<div class="mg-empty-state mg-empty-state--compact mg-empty-state--panel">\n  <p class="mg-empty-state__description">No data</p>\n</div>',
+      },
+      {
+        name: 'Heading level to fit the outline',
+        html: '<div>\n  <h2>Recent disaster records</h2>\n  <div class="mg-empty-state mg-empty-state--panel">\n    <h3 class="mg-empty-state__title">No records this month</h3>\n    <p class="mg-empty-state__description">\n      Records published in the last 30 days will appear here.\n    </p>\n  </div>\n</div>',
       },
       {
         name: 'Start-aligned',
@@ -877,6 +891,82 @@ npm run build</code></pre>
       'mg-status-label--warning',
       'mg-status-label--negative',
     ],
+    hydration: {
+      note: 'renderedHtml is static markup: its retry button has no handler, no countdown runs and nothing is announced. For a working retry, render an empty data-mg-service-notice container and hydrate it, then listen for the mg-service-notice:retry event.',
+      selector: '[data-mg-service-notice]',
+      modules: {
+        hydrate:
+          'https://assets.undrr.org/mangrove/{{version}}/components/hydrate.js',
+        component:
+          'https://assets.undrr.org/mangrove/{{version}}/components/ServiceNotice.js',
+      },
+      dataAttributes: {
+        'data-mg-service-notice': 'Marks the container to hydrate (required).',
+        'data-title':
+          'Heading text (plain text). Falls back to the text of a child .mg-notice__title.',
+        'data-description':
+          'Explanation (plain text). Falls back to the text of a child .mg-notice__description.',
+        'data-status': '"degraded" (default) or "offline".',
+        'data-heading-level': 'h2 to h6 (default h3).',
+        'data-is-compact':
+          '"true" for compact padding and typography (preferred). The mg-notice--compact class on the container also works and is removed on hydration so the container is not styled twice.',
+        'data-is-overlay':
+          '"true" for a centered overlay inside a positioned embed container (preferred). The mg-notice--overlay class on the container also works and is removed on hydration so the container is not styled twice.',
+        'data-retry':
+          'Boolean attribute. When present, a retry button renders and each retry dispatches mg-service-notice:retry on the container. Without it, no retry button or countdown renders.',
+        'data-retry-label': 'Retry button text.',
+        'data-status-url':
+          'External status page URL (http or https only; other schemes are ignored). Opens in a new tab.',
+        'data-status-url-label': 'Status link text.',
+        'data-countdown-seconds':
+          'Seconds before the first automatic retry; doubles after each attempt. Needs data-retry.',
+        'data-max-auto-retries':
+          'Automatic retries before the countdown stops (default 3).',
+        'data-labels':
+          'JSON object of translated UI strings: retryLabel, statusUrlLabel, opensInNewTab, statusDegraded, statusOffline, countdownPrefix, countdownAnnouncement, autoRetryStopped.',
+      },
+      events: [
+        {
+          name: 'mg-service-notice:retry',
+          target: 'The data-mg-service-notice container',
+          bubbles: true,
+          when: 'The retry button is pressed or an automatic retry fires. Only dispatched when data-retry is present.',
+        },
+      ],
+      example: `<link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css" />
+
+<script type="importmap">
+  { "imports": {
+    "react": "https://esm.sh/react@19.3.0",
+    "react-dom": "https://esm.sh/react-dom@19.3.0",
+    "react-dom/": "https://esm.sh/react-dom@19.3.0/"
+  }}
+</script>
+
+<div id="map-notice"
+  data-mg-service-notice
+  data-title="Map service temporarily unavailable"
+  data-description="Unable to connect to the tile server."
+  data-status="offline"
+  data-retry
+  data-status-url="https://messaging.undrr.org/"
+  data-countdown-seconds="30"
+  data-max-auto-retries="3"></div>
+
+<script type="module">
+  import createHydrator from 'https://assets.undrr.org/mangrove/{{version}}/components/hydrate.js';
+  import ServiceNotice, { fromElement } from 'https://assets.undrr.org/mangrove/{{version}}/components/ServiceNotice.js';
+
+  createHydrator({ selector: '[data-mg-service-notice]', component: ServiceNotice, fromElement });
+
+  document
+    .getElementById('map-notice')
+    .addEventListener('mg-service-notice:retry', () => {
+      // Re-fetch your data here, then remove the notice once it loads.
+      console.log('Retry requested');
+    });
+</script>`,
+    },
   },
 
   // --- Notice / Alert Banner (auto-rendered + hydration) ---

@@ -56,7 +56,7 @@ export const Degraded = {
       'Geospatial tiles may take longer than usual to render. Cached data remains available.',
     status: 'degraded',
     onRetry: () => {},
-    statusUrl: 'https://status.undrr.org',
+    statusUrl: 'https://messaging.undrr.org/',
   },
 };
 
@@ -67,7 +67,7 @@ export const Offline = {
       'The remote service returned 503 Service Unavailable. Inspection tools and data layers are temporarily disabled.',
     status: 'offline',
     onRetry: () => {},
-    statusUrl: 'https://status.undrr.org',
+    statusUrl: 'https://messaging.undrr.org/',
     countdownSeconds: 15,
     maxAutoRetries: 3,
   },
@@ -103,6 +103,6 @@ export const EmbedOverlay = {
     status: 'offline',
     isOverlay: true,
     onRetry: () => {},
-    statusUrl: 'https://status.undrr.org',
+    statusUrl: 'https://messaging.undrr.org/',
   },
 };

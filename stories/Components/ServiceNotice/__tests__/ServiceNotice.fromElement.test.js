@@ -19,7 +19,7 @@ describe('serviceNoticeFromElement', () => {
       description: 'The server responded with an error.',
       status: 'offline',
       'retry-label': 'Reconnect now',
-      'status-url': 'https://status.undrr.org',
+      'status-url': 'https://messaging.undrr.org/',
       'status-url-label': 'Check status',
       'countdown-seconds': '15',
       'is-compact': 'true',
@@ -32,12 +32,37 @@ describe('serviceNoticeFromElement', () => {
     expect(props.description).toBe('The server responded with an error.');
     expect(props.status).toBe('offline');
     expect(props.retryLabel).toBe('Reconnect now');
-    expect(props.statusUrl).toBe('https://status.undrr.org');
+    expect(props.statusUrl).toBe('https://messaging.undrr.org/');
     expect(props.statusUrlLabel).toBe('Check status');
     expect(props.countdownSeconds).toBe(15);
     expect(props.isCompact).toBe(true);
     expect(props.isOverlay).toBe(true);
     expect(props.onRetry).toBeUndefined();
+  });
+
+  it('reads the compact and overlay class fallbacks, then removes them from the container', () => {
+    const el = makeContainer({ status: 'offline' });
+    el.className = 'map-embed mg-notice--compact mg-notice--overlay';
+
+    const props = serviceNoticeFromElement(el);
+
+    expect(props.isCompact).toBe(true);
+    expect(props.isOverlay).toBe(true);
+    // Left in place, the container would be styled as a second notice.
+    expect(el.classList.contains('mg-notice--compact')).toBe(false);
+    expect(el.classList.contains('mg-notice--overlay')).toBe(false);
+    expect(el.classList.contains('map-embed')).toBe(true);
+  });
+
+  it('leaves the container classes alone when data-is-* is used', () => {
+    const el = makeContainer({ 'is-compact': 'true', 'is-overlay': 'false' });
+    el.className = 'map-embed';
+
+    const props = serviceNoticeFromElement(el);
+
+    expect(props.isCompact).toBe(true);
+    expect(props.isOverlay).toBe(false);
+    expect(el.className).toBe('map-embed');
   });
 
   it('dispatches a bubbling retry event when data-retry is present', () => {

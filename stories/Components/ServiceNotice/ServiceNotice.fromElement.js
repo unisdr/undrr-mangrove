@@ -18,9 +18,14 @@ export const RETRY_EVENT = 'mg-service-notice:retry';
  * retry) dispatches a bubbling `mg-service-notice:retry` CustomEvent on the
  * container, so page scripts can reload the embed:
  *
- *   container.addEventListener('mg-service-notice:retry', reloadMap);
+ *   container.addEventListener('mg-service-notice:retry', () => {
+ *     // Re-fetch your data here
+ *   });
  *
  * Without `data-retry` no retry button or countdown is rendered.
+ * Prefer `data-is-compact` and `data-is-overlay`. The `mg-notice--compact` and
+ * `mg-notice--overlay` classes on the container are also read, then removed
+ * so the container is not styled as a second notice.
  * Title and description are read as plain text; markup is not re-injected.
  * A data-status-url that is not http or https is ignored by the component.
  *
@@ -54,6 +59,14 @@ export default function serviceNoticeFromElement(container) {
     return Number.isNaN(parsed) ? undefined : parsed;
   };
 
+  // The rendered Notice carries its own modifier classes. Left on the
+  // container, the fallback classes would style it as a second notice (extra
+  // padding for compact, a second absolute layer for overlay), so they are
+  // removed once read.
+  const isCompactClass = container.classList.contains('mg-notice--compact');
+  const isOverlayClass = container.classList.contains('mg-notice--overlay');
+  container.classList.remove('mg-notice--compact', 'mg-notice--overlay');
+
   const onRetry =
     'retry' in dataset
       ? () =>
@@ -67,12 +80,8 @@ export default function serviceNoticeFromElement(container) {
     description,
     status: dataset.status === 'offline' ? 'offline' : 'degraded',
     headingLevel: dataset.headingLevel || undefined,
-    isCompact:
-      dataset.isCompact === 'true' ||
-      container.classList.contains('mg-notice--compact'),
-    isOverlay:
-      dataset.isOverlay === 'true' ||
-      container.classList.contains('mg-notice--overlay'),
+    isCompact: dataset.isCompact === 'true' || isCompactClass,
+    isOverlay: dataset.isOverlay === 'true' || isOverlayClass,
     onRetry,
     retryLabel: dataset.retryLabel || undefined,
     statusUrl: dataset.statusUrl || undefined,

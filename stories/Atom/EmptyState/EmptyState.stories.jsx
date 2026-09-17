@@ -174,6 +174,34 @@ export const InATable = {
   },
 };
 
+export const HeadingLevel = {
+  render: () => (
+    <div>
+      <h2>Recent disaster records</h2>
+      <div className="mg-empty-state mg-empty-state--panel">
+        <div className="mg-empty-state__media">
+          <TrayGlyph />
+        </div>
+        <h3 className="mg-empty-state__title">No records this month</h3>
+        <p className="mg-empty-state__description">
+          Records published in the last 30 days will appear here.
+        </p>
+      </div>
+    </div>
+  ),
+  name: 'Heading level',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The empty state sits under the section heading, so its title is an ' +
+          '`<h3>`. `__title` is a class, not a tag: pick the level one below the ' +
+          'heading of the section or card that contains it.',
+      },
+    },
+  },
+};
+
 export const StartAligned = {
   render: () => (
     <div className="mg-empty-state mg-empty-state--start">

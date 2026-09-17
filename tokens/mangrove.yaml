@@ -326,6 +326,20 @@ border-color:
       `border:` shorthand, and a bare triplet makes the whole declaration
       invalid, which silently drops border-style to none. .mg-button-outline
       rendered as bare text for the entire time this was a triplet.
+  button-primary:
+    $value: transparent
+    $format: literal
+    $description: >-
+      Stroke on filled primary buttons. The fill is painted under the border,
+      so `transparent` makes the stroke match the fill and keeps filled and
+      outline buttons the same size. A theme can set a colour here (for
+      example a darker shade of the fill) to give filled buttons a visible
+      edge.
+  button-secondary:
+    $value: transparent
+    $format: literal
+    $description: >-
+      Stroke on filled secondary buttons. See border-color.button-primary.
   hero-button-secondary: { $value: '{color.neutral-0}' }
 
 # Spacing scale. The px numbers are converted to rem against a 16px document
@@ -515,6 +529,16 @@ card:
   shadow: { $type: shadow, $value: '{shadow.raised}' }
   shadow-hover: { $type: shadow, $value: '{shadow.raised-hover}' }
   icon-badge-radius: { $type: dimension, $value: '20%' }
+
+# Notice actions sit on the notice's tinted surface, not the page, so a brand
+# whose outline secondary colour only clears 4.5:1 on white can darken it here
+# without changing outline buttons anywhere else. It is a var() chain onto a
+# theme-owned colour, so every sub-brand restates it in its own block.
+notice:
+  action-secondary:
+    $type: color
+    $value: '{color.button-outline-secondary}'
+    $format: srgb-rgb-function
 
 hero-overlay:
   max-width: { $type: dimension, $value: 600, $format: rem }

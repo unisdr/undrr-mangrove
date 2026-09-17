@@ -988,6 +988,42 @@ if (malformedExamples.length > 0) {
 }
 
 // ---------------------------------------------------------------------------
+// Check curated hydration contract shape
+//
+// Agents that find a `hydration` field act on it directly, so a contract
+// without a selector, module URLs or a runnable example is worse than none.
+// ---------------------------------------------------------------------------
+const malformedHydration = [];
+for (const [componentId, data] of Object.entries(curatedData)) {
+  if (data?.hydration === undefined) continue;
+  const { hydration } = data;
+  if (typeof hydration !== 'object' || hydration === null) {
+    malformedHydration.push(`${componentId}: hydration is not an object`);
+    continue;
+  }
+  if (typeof hydration.selector !== 'string' || !hydration.selector) {
+    malformedHydration.push(`${componentId}: hydration has no selector`);
+  }
+  if (
+    typeof hydration.modules !== 'object' ||
+    hydration.modules === null ||
+    Object.keys(hydration.modules).length === 0
+  ) {
+    malformedHydration.push(`${componentId}: hydration has no modules`);
+  }
+  if (typeof hydration.example !== 'string' || !hydration.example) {
+    malformedHydration.push(`${componentId}: hydration has no example`);
+  }
+}
+
+if (malformedHydration.length > 0) {
+  console.warn(
+    'Curated hydration contracts missing required fields (selector, modules, example):'
+  );
+  for (const problem of malformedHydration) console.warn(`  ${problem}`);
+}
+
+// ---------------------------------------------------------------------------
 // Check that every documented CSS class actually exists
 //
 // A class list in component-data.js is hand-maintained, so it drifts when a
@@ -1374,6 +1410,15 @@ if (validateOnly) {
     failed = true;
   }
 
+  if (malformedHydration.length > 0) {
+    console.error(
+      `Validation failed: ${malformedHydration.length} hydration contract ` +
+        'problem(s). A curated hydration object needs selector, modules and ' +
+        'example.'
+    );
+    failed = true;
+  }
+
   if (missingCssClasses.length > 0) {
     console.error(
       `Validation failed: ${missingCssClasses.length} documented CSS class(es) ` +
@@ -1473,6 +1518,7 @@ async function main() {
     } else {
       indexEntry.vanillaHtml = true;
     }
+    if (data?.hydration) indexEntry.hydration = true;
 
     indexEntries.push(indexEntry);
 
@@ -1537,6 +1583,10 @@ async function main() {
     if (data?.vanillaHtmlEmbed) {
       detail.vanillaHtmlEmbed = data.vanillaHtmlEmbed;
     }
+
+    // Vanilla hydration contract (data attributes, events, CDN modules).
+    // {{version}} is already resolved: curatedData went through replaceVersion.
+    if (data?.hydration) detail.hydration = data.hydration;
 
     // Do-not-modify flag for branding-critical components
     if (data?.doNotModify) {
@@ -1756,7 +1806,7 @@ ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with
 
 ${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import via npm: import { ComponentName } from "@undrr/undrr-mangrove".
 
-Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's reactNote field for details.
+Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's \`hydration\` field (or \`reactNote\`) for details; components with a \`hydration\` field are flagged \`hydration: true\` in the index.
 
 ### Vanilla JavaScript modules and dynamic DOM re-initialization
 

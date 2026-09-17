@@ -2,10 +2,10 @@
   "$comment": "GENERATED FILE - DO NOT EDIT BY HAND. SHA-256 of every file scripts/build-tokens.cjs emits. The generated partials are not committed, so this is the only committed record of what the generator produces. Regenerate with `node scripts/build-tokens.cjs --baseline` in the same commit as the tokens/*.yaml change that moved it. MERGE CONFLICTS: never resolve one by hand or by picking a side on merit - these values are a function of the generator and the token sources, not of either branch's intent, so a hand-merged digest is simply wrong. Take either side to clear the conflict, then re-run --baseline and commit what it writes. A branch that changes what the generator emits (for example by adding a mixin) will legitimately have its own baseline, and taking the other side without re-running leaves a digest that no longer describes anything.",
   "algorithm": "sha256",
   "files": {
-    "stories/assets/scss/generated/_tokens-delta.scss": "b9770b7f5c081e2cc89aadc8cd1ff58826455ee53ea1bc206d42753276e72e3f",
-    "stories/assets/scss/generated/_tokens-irp.scss": "d07b20beab9b335116fcd1eba45f927c9a2945cad28039f1372295065a172586",
-    "stories/assets/scss/generated/_tokens-mcr.scss": "15bda46008f081b367c451b8302f847028761da5382e8bbfa517227d4383f2d3",
-    "stories/assets/scss/generated/_tokens-preventionweb.scss": "6137060035e76a36496b1bc6fb422bf59bfddfea3b1229b4cc628dbd29786fd9",
-    "stories/assets/scss/generated/_tokens-mangrove.scss": "2e53aca2b363d71f79a55c1ba113e2e1c59efec47fcd961ebdce3c465584c89c"
+    "stories/assets/scss/generated/_tokens-delta.scss": "df70adbab3a40c085cbecac9db68915b1f05473c23e73f3596a12ff8f4769e29",
+    "stories/assets/scss/generated/_tokens-irp.scss": "7987de02c975bc0b79137b1def4d657ff47ed36bc196b668edb64c71e367adbc",
+    "stories/assets/scss/generated/_tokens-mcr.scss": "e6ab19e0b46c00be659c522e7c64a8a7a1589a21eef597d506fe877d6ce2f3a1",
+    "stories/assets/scss/generated/_tokens-preventionweb.scss": "aae86f4ae1c41c300958c1acf8e9f01cc0bd60edd11fc5c1443a5acf9ebb754c",
+    "stories/assets/scss/generated/_tokens-mangrove.scss": "4db8a98ce26cd203d0570ce09b83bc6bbc9025381b0fe9f32656d8a0edcd1545"
   }
 }

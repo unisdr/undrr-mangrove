@@ -14,6 +14,7 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
 - **Line heights are now public custom properties:** `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`) are emitted in every theme, and base body text, the font-size utilities and Card read them with `var()`. Compiled line heights are unchanged. `$mg-font-line-height-500` and `$mg-font-line-height-700` remain as deprecated Sass aliases until 3.0. With this, every runtime-themeable typography token (sizes, line heights and family roles) is a custom property; `$mg-font-face-*`, `$mg-html-font-size` and breakpoints stay Sass by design. ([#1085](https://github.com/unisdr/undrr-mangrove/issues/1085))
+- **AI manifest `hydration` field:** component detail files can now carry a vanilla hydration contract (selector, CDN modules, `data-*` attributes, dispatched events and an HTML example), curated in `scripts/ai-manifest/component-data.js`. ServiceNotice is the first to use it, so agents copying its static `renderedHtml` learn the retry button needs hydration and the `mg-service-notice:retry` event. ([#1175](https://github.com/unisdr/undrr-mangrove/pull/1175), [#1172](https://github.com/unisdr/undrr-mangrove/issues/1172))
 
 ## 2.0.0-rc.1 — 2026-09-16
 

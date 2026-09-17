@@ -40,7 +40,7 @@ The indicator is an empty `<span>`, not an icon font or an image, so it needs no
 | `.mg-status-label--warning`  | Degraded      | `--mg-color-gold-800` |
 | `.mg-status-label--negative` | Offline       | `--mg-color-red-900`  |
 
-These are used by [ServiceNotice](/docs/components-notice-service-notice--docs) and suit any service or system health state.
+They are used by [ServiceNotice](/docs/components-notice-service-notice--docs) and suit any service or system health state.
 
 Used without a modifier the indicator is neutral grey. Prefer that for a status outside this workflow rather than borrowing a colour that already means something else.
 
@@ -76,6 +76,10 @@ Two of the four colours were already in Mangrove: `--mg-color-accent-100` is `#f
 ### All statuses
 
 <Canvas of={StatusLabelStories.AllStatuses} />
+
+### Service health
+
+<Canvas of={StatusLabelStories.ServiceHealth} />
 
 ### Neutral
 
@@ -122,6 +126,8 @@ No sub-brand overrides these tokens. PreventionWeb, IRP and MCR2030 have no defi
 
 ## Changelog
 
+- **1.1.1** — 2026-09-17 ([#1174](https://github.com/unisdr/undrr-mangrove/pull/1174)): Added a service health story and AI manifest coverage for the `--warning` and `--negative` modifiers (#1172).
+  - In right-to-left layouts, `.mg-status-label-group` no longer picks up inline padding from the global list rules, so labels sit flush with the inline start.
 - **1.1.0** — 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): Added `--warning` and `--negative` service health modifiers and their indicator tokens, used by ServiceNotice.
 - **1.0.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a status label whose own language is not Arabic.
 - **1.0** — 2026-09-02: Initial release. Colours, geometry and status names sourced from the DELTA design system board "Status Labels for Records and Events".

@@ -9,10 +9,15 @@ export { DEFAULT_SERVICE_NOTICE_LABELS };
 const EMPTY_LABELS = {};
 
 // Only http(s) status links render, so a javascript: or data: URL from CMS
-// or hydration data can never become a clickable href.
+// or hydration data can never become a clickable href. The base falls back
+// outside the browser so server rendering keeps the link instead of dropping it.
 const isSafeUrl = url => {
   try {
-    const { protocol } = new URL(url, window.location.href);
+    const base =
+      typeof window !== 'undefined'
+        ? window.location.href
+        : 'https://localhost/';
+    const { protocol } = new URL(url, base);
     return protocol === 'http:' || protocol === 'https:';
   } catch {
     return false;
@@ -136,7 +141,8 @@ export const ServiceNotice = ({
             rel="noopener noreferrer"
             className="mg-button mg-button-secondary mg-button-outline"
           >
-            {statusUrlLabel}
+            {statusUrlLabel}{' '}
+            <span className="mg-u-sr-only">{t.opensInNewTab}</span>
             <span
               className="mg-icon mg-icon-external-link mg-button__icon"
               aria-hidden="true"
@@ -216,6 +222,7 @@ ServiceNotice.propTypes = {
   labels: PropTypes.shape({
     retryLabel: PropTypes.string,
     statusUrlLabel: PropTypes.string,
+    opensInNewTab: PropTypes.string,
     statusDegraded: PropTypes.string,
     statusOffline: PropTypes.string,
     countdownPrefix: PropTypes.string,
