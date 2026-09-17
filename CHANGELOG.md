@@ -13,6 +13,7 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **Contrast exceptions are documented, not implied:** `docs/COLOUR-CONTRAST-METHODOLOGY.md` gains a "Recorded exceptions" section naming every component that ships white text on the Sendai orange accent (`Tag --accent`, `TextCta --secondary`, `Hero --secondary`, `Card --secondary`, `AuthorImage --secondary`), with the measured value per pair, why neither available fix belongs to the library, and what consumers should do until the brand decision is taken. `docs/REVIEW-CHECKLIST.md` now says how to record a pair that cannot meet AA instead of leaving the checklist looking like an unqualified promise. The contrast suite gains the Text CTA, author-image and quote-highlight pairs it was not measuring, so none of them can drift unnoticed. No colour changed. ([#TBD](https://github.com/unisdr/undrr-mangrove/pull/TBD))
 - **Release notes format:** `docs/RELEASES.md` now defines a standard format and template for GitHub Release notes (intro, full-detail link, and fixed section order: breaking and visible changes, new features, bug fixes and hardening, documentation and discoverability, dependencies, CDN), based on the 2.0.0-rc.1 and 2.0.0-rc.2 releases.
 
 ## 2.0.0-rc.2 — 2026-09-17

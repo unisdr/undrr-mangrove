@@ -93,3 +93,71 @@ calibrates the measure on dark backgrounds; treat those scores as indicative.
 - Disabled and inactive components are exempt, as WCAG 2 exempts them.
 - Where the two measures disagree, that pair is worth a human look. That is the
   signal this approach exists to produce.
+
+## Recorded exceptions: text on the Sendai orange accent
+
+`docs/REVIEW-CHECKLIST.md` asks every component for WCAG 2.2 AA. Some shipped
+components do not meet it, and the honest position is to name them rather than
+let the checklist imply a promise the library does not keep. The full register
+lives in `stories/assets/scss/__tests__/tokens-contract.test.js`
+(`WCAG_EXCEPTIONS` and `PERCEPTUAL_EXCEPTIONS`), where every entry carries its
+measured value and the assertion still bites: a pair must STILL fail, and must
+not get worse. The largest group is described here because it is one decision,
+not eight.
+
+### What fails
+
+Sendai orange, `#eb752a` (`orange-900`), and its one-step tint `#ed833f`
+(`orange-800`), used as a text-bearing surface or as ink on white. Measured on
+the resolved token chain; the values are identical in all five themes, because
+no sub-brand overrides `color.secondary`, `color.tag-accent` or
+`color.hero--secondary`.
+
+| Pair | Token chain | WCAG 2 | Oklab |
+| --- | --- | --- | --- |
+| Accent tag label | `#fff` on `tag-accent` → `orange-900` | 2.95 | 46.7 |
+| Accent tag label, hover | `#fff` on `tag-accent--hover` → `orange-800` | 2.65 | 42.5 |
+| CTA eyebrow, secondary | `#fff` on `hero--secondary` → `orange-800` | 2.65 | 42.5 |
+| CTA headline, secondary | `#fff` on `hero--secondary` | 2.65 | 42.5 |
+| CTA body, secondary | `#fff` at 90% on `hero--secondary` | 2.42 | 36.4 |
+| Hero body, secondary | `#fff` on `orange-800` | 2.65 | 42.5 |
+| Hero CTA label, secondary | `orange-800` on the white pill | 2.65 | 42.5 |
+| Card title, secondary | `secondary` → `orange-800` on the card | 2.65 | 42.5 |
+| Author image title, secondary | `secondary` on white | 2.65 | 42.5 |
+
+Components covered: `Tag` (`--accent`), `TextCta` (`--secondary`), `Hero`
+(`--secondary`, which the split-balanced story uses), `Card` (`--secondary`) and
+`AuthorImage` (`--secondary`). Everything else in those components passes.
+
+### Why it is recorded rather than fixed
+
+Neither available fix is the library's to make.
+
+**Darkening the surface changes the brand colour.** White text needs the fill at
+roughly `#b2571d` to clear 4.5:1 and the perceptual body-text floor together —
+Oklab lightness 56 against Sendai orange's 69. That is a rust, not the Sendai
+orange, and it would repaint every accent tag, every secondary CTA and every
+secondary hero on every site at once.
+
+**Switching the label to dark ink satisfies WCAG 2 and not this measure.**
+`#1a1a1a` on `orange-900` is 5.89:1, a comfortable WCAG 2 pass, and 47.8 on the
+perceptual scale against a 63 body-text floor. Even pure black reaches only
+61.1. On this hue there is no text colour that satisfies both measures; the
+surface itself has to move. This is the worked example at the top of this
+document, met in production.
+
+So the choice is a brand decision with a brand owner behind it, and until it is
+taken the failures stay measured, listed and visible.
+
+### What consumers should do meanwhile
+
+- Do not put essential information in an accent tag or a secondary CTA and
+  nowhere else; the surrounding markup must carry it too.
+- Prefer `Tag`'s default, secondary or outline variants for anything a reader
+  has to act on. `--accent` is a decorative emphasis.
+- The secondary `Hero`, `TextCta` and `Card` variants are safe for short,
+  duplicated, large-type copy and not for body text.
+- If your site must clear AA today, override `--mg-color-tag-accent`,
+  `--mg-color-tag-accent--hover`, `--mg-color-secondary` and
+  `--mg-color-hero--secondary` in your theme layer. `#b2571d` and `#914516`
+  clear both measures.
