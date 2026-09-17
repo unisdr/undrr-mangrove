@@ -1,18 +1,19 @@
 /**
  * @file _switchPending.jsx
  * @description Story helpers for the `.mg-switch` pending state: localised
- * captions, a static pending row and the interactive demo. The demo mirrors
- * the vanilla example in Checkbox.mdx, so its tests cover that logic too.
+ * captions, a static pending row and the interactive demo. The demo runs the
+ * shipped vanilla helper, so the story and the docs describe one behaviour.
  */
 
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef } from 'react';
 import PropTypes from 'prop-types';
+import {
+  mgSwitchPending,
+  PENDING_TIMEOUT_MS,
+  STILL_SAVING_INTERVAL_MS,
+} from '../../../assets/js/switch-pending';
 
-/** A request that has not settled by then reverts the switch. */
-export const PENDING_TIMEOUT_MS = 10000;
-
-/** "Still saving" is announced at most this often. */
-export const STILL_SAVING_INTERVAL_MS = 3000;
+export { PENDING_TIMEOUT_MS, STILL_SAVING_INTERVAL_MS };
 
 export const getSwitchCaptionForLocale = locale => {
   switch (locale) {
@@ -126,15 +127,9 @@ export const simulateSave =
     });
 
 /**
- * Interactive pending switch.
- *
- * - The thumb moves at once; `aria-busy` follows a frame later, so the new
- *   checked state is announced before the control is marked busy.
- * - Presses while pending are ignored and "Still saving" is announced, at most
- *   once every STILL_SAVING_INTERVAL_MS.
- * - Only the request in flight can settle the switch, so a late response
- *   after a timeout is ignored.
- * - A request that has not settled after `timeoutMs` is aborted and reverts.
+ * Interactive pending switch, driven by the shipped vanilla helper
+ * (`stories/assets/js/switch-pending.js`), so the story and non-React sites
+ * run the same code.
  *
  * @param {Object} props
  * @param {Object} props.caption  Localised strings
@@ -146,90 +141,41 @@ export function PendingSwitchDemo({
   save,
   timeoutMs = PENDING_TIMEOUT_MS,
 }) {
-  const [checked, setChecked] = useState(false);
-  const [busy, setBusy] = useState(false);
-  // Each message gets a new key, so repeating a message re-announces it.
-  const [status, setStatus] = useState({ text: '', key: 0 });
-  const current = useRef(null);
-  const lastNudge = useRef(-Infinity);
+  const inputRef = useRef(null);
+  const statusRef = useRef(null);
 
-  useEffect(
-    () => () => {
-      const request = current.current;
-      current.current = null;
-      if (request) {
-        clearTimeout(request.timer);
-        cancelAnimationFrame(request.frame);
-        request.controller.abort();
-      }
-    },
-    []
-  );
-
-  const announce = text => setStatus(prev => ({ text, key: prev.key + 1 }));
-
-  const handleChange = event => {
-    if (current.current) {
-      // Not updating `checked` leaves the switch where it is.
-      const now = Date.now();
-      if (now - lastNudge.current >= STILL_SAVING_INTERVAL_MS) {
-        lastNudge.current = now;
-        announce(caption.stillSaving);
-      }
-      return;
-    }
-
-    const requested = event.target.checked;
-    const request = { controller: new AbortController() };
-    current.current = request;
-    setChecked(requested);
-    announce(caption.saving);
-    request.frame = requestAnimationFrame(() => {
-      if (current.current === request) setBusy(true);
+  useEffect(() => {
+    const helper = mgSwitchPending(inputRef.current, {
+      save,
+      timeout: timeoutMs,
+      status: statusRef.current,
+      labels: {
+        saving: caption.saving,
+        stillSaving: caption.stillSaving,
+        error: caption.failed,
+        on: caption.enabled,
+        off: caption.disabled,
+      },
     });
-
-    const settle = ok => {
-      // Stale: this request already timed out, or the demo unmounted.
-      if (current.current !== request) return;
-      current.current = null;
-      clearTimeout(request.timer);
-      cancelAnimationFrame(request.frame);
-      setBusy(false);
-      if (ok) {
-        announce(requested ? caption.enabled : caption.disabled);
-        return;
-      }
-      request.controller.abort();
-      setChecked(!requested);
-      announce(caption.failed);
-    };
-
-    request.timer = setTimeout(() => settle(false), timeoutMs);
-    save(requested, request.controller.signal).then(
-      () => settle(true),
-      () => settle(false)
-    );
-  };
+    return () => helper.destroy();
+  }, [caption, save, timeoutMs]);
 
   return (
     <div>
       <label className="mg-switch">
         <input
+          ref={inputRef}
           type="checkbox"
           role="switch"
           className="mg-switch__input"
-          checked={checked}
-          aria-busy={busy}
-          onChange={handleChange}
+          aria-busy="false"
         />
         <span className="mg-switch__track" aria-hidden="true">
           <span className="mg-switch__thumb"></span>
         </span>
         <span className="mg-switch__label">{caption.alertsLabel}</span>
       </label>
-      <p className="mg-form-help" role="status">
-        <span key={status.key}>{status.text}</span>
-      </p>
+      <p className="mg-form-help" role="status" ref={statusRef}></p>
     </div>
   );
 }

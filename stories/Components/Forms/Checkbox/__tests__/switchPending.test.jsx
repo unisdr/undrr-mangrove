@@ -86,7 +86,11 @@ describe('PendingSwitchDemo', () => {
       jest.advanceTimersByTime(STILL_SAVING_INTERVAL_MS);
     });
     fireEvent.click(control);
-    // Same text, new node, so a live region announces it again.
+    // Same text: cleared, then written again, so a live region re-announces it.
+    expect(status).toHaveTextContent('');
+    act(() => {
+      jest.advanceTimersByTime(100);
+    });
     expect(status.firstChild).not.toBe(firstNudge);
     expect(status).toHaveTextContent(caption.stillSaving);
     expect(save).toHaveBeenCalledTimes(1);
