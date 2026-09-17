@@ -86,10 +86,10 @@ React 19 removed UMD builds. Use import maps with esm.sh:
 <script type="importmap">
   {
     "imports": {
-      "react": "https://esm.sh/react@19.2.4",
-      "react/jsx-runtime": "https://esm.sh/react@19.2.4/jsx-runtime",
-      "react-dom": "https://esm.sh/react-dom@19.2.4",
-      "react-dom/": "https://esm.sh/react-dom@19.2.4/"
+      "react": "https://esm.sh/react@19.3.0",
+      "react/jsx-runtime": "https://esm.sh/react@19.3.0/jsx-runtime",
+      "react-dom": "https://esm.sh/react-dom@19.3.0",
+      "react-dom/": "https://esm.sh/react-dom@19.3.0/"
     }
   }
 </script>
