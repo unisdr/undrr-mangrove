@@ -139,7 +139,7 @@ See [Writing guidelines — Write for two audiences](WRITING.md) for the full pr
 
 ### Linking within Storybook docs
 
-All MDX docs and embedded JSX stories render inside Storybook's **preview iframe** at `iframe.html`. Plain `<a href>` clicks navigate the iframe directly — stripping the Storybook UI shell and breaking on GitHub Pages where the site is deployed to a subpath (`/undrr-mangrove/`).
+All MDX docs and embedded JSX stories render inside Storybook's **preview iframe** at `iframe.html`. Plain `<a href>` clicks navigate the iframe directly — stripping the Storybook UI shell, and root-relative `href`s also break on any copy of Storybook served from a subpath rather than a domain root.
 
 **Use `<LinkTo>` for prose story links** — it sends a channel message to the Storybook manager and works on any deployment path:
 
