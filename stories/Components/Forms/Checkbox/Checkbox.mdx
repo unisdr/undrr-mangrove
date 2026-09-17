@@ -156,7 +156,7 @@ Try it below. Toggle the switch with the mouse or the Space key, then press it a
 </script>
 ```
 
-Without a `status` option, the helper uses the element named by `data-mg-switch-status` (an id), or an `aria-describedby` target with `role="status"` or `aria-live`. If there is neither, it adds a visually hidden `role="status"` element after the label. Keep a status region outside the label, or its messages become part of the switch's name; the helper warns if it finds one inside. Several switches can share one region. Nothing is announced for a switch that has left the page when its save settles, though its events still fire.
+Without a `status` option, the helper uses the element named by `data-mg-switch-status` (an id), or an `aria-describedby` target with `role="status"` or `aria-live`. If there is neither, it adds a visually hidden `role="status"` element after the label. Keep a status region outside the label, or its messages become part of the switch's name; the helper warns if it finds one inside. Several switches can share one region. Nothing is announced for a switch that has left the page when its save settles, though its events still fire, and a region the helper created is taken off the page with it. Call `destroy()` before removing a switch that is not saving, so its region does not stay behind.
 
 **From npm:**
 
