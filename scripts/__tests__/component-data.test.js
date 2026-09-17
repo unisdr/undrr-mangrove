@@ -54,14 +54,21 @@ describe('components-empty-state manifest data', () => {
       'stories/Atom/EmptyState/empty-state.scss',
       'mg-empty-state'
     );
+    expect(modifiers).toEqual(
+      expect.arrayContaining([
+        'mg-empty-state--panel',
+        'mg-empty-state--compact',
+        'mg-empty-state--start',
+      ])
+    );
     expect(data.cssClasses).toEqual(expect.arrayContaining(modifiers));
   });
 
   it('gives heading-level guidance', () => {
-    expect(data.description).toMatch(/surrounding outline/);
+    expect(data.description).toMatch(/heading level|outline/i);
   });
 
-  it('includes an example whose title is not an h2', () => {
+  it('includes h3 and p title examples', () => {
     const titles = data.examples
       .map(e => e.html.match(/<(h[1-6]|p) class="mg-empty-state__title"/))
       .filter(Boolean)

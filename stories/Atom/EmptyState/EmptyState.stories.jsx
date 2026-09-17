@@ -176,8 +176,8 @@ export const InATable = {
 
 export const HeadingLevel = {
   render: () => (
-    <section aria-labelledby="empty-state-heading-level-demo">
-      <h2 id="empty-state-heading-level-demo">Recent disaster records</h2>
+    <div>
+      <h2>Recent disaster records</h2>
       <div className="mg-empty-state mg-empty-state--panel">
         <div className="mg-empty-state__media">
           <TrayGlyph />
@@ -187,7 +187,7 @@ export const HeadingLevel = {
           Records published in the last 30 days will appear here.
         </p>
       </div>
-    </section>
+    </div>
   ),
   name: 'Heading level',
   parameters: {
@@ -196,7 +196,9 @@ export const HeadingLevel = {
         story:
           'The empty state sits under the section heading, so its title is an ' +
           '`<h3>`. `__title` is a class, not a tag: pick the level one below the ' +
-          'nearest heading above it.',
+          'heading of the section or card that contains it. On this docs page ' +
+          'the demo `<h2>` also sits inside the page outline, a limitation of ' +
+          'the Storybook canvas.',
       },
     },
   },
