@@ -124,6 +124,10 @@ createHydrator({
 });
 ```
 
+The bare specifiers above resolve through a bundler or an import map. Without a bundler, map `react`, `react-dom` and `react-dom/` (the hydration runtime imports `react-dom/client`) and import the modules from the CDN, as the [hydration guide](?path=/docs/getting-started-integration-hydration-guide--docs) shows. See the [CDN reference](?path=/docs/getting-started-integration-cdn-reference--docs) for paths.
+
+The page also needs a Mangrove stylesheet for the tree styles. A theme class such as `mg-theme-irp` only takes effect with that brand's stylesheet (`style-irp.css`) or the combined `style-all.css`; `style.css` has no brand blocks. See the [theming guide](?path=/docs/getting-started-integration-theming-guide--docs).
+
 The default export of `components/Tree.js` is `HydratedTree`. It renders the same `Tree` and `TreeItem` components from an `items` array, so keyboard navigation and ARIA match the React version. Without `items` it takes `TreeItem` children like `Tree`. The named `Tree` and `TreeItem` exports are unchanged.
 
 Container attributes:
@@ -147,19 +151,21 @@ Each `<li>` in the first `<ul>` or `<ol>` becomes a tree item. Nested lists beco
 | `data-expanded` or `aria-expanded="true"`                  | Starts expanded (items with children only)                                                                                                                          |
 | `data-selected`, or `aria-current` on the link             | Starts selected, and its parent items start expanded. The first match wins. `aria-current` is kept on the rendered link                                             |
 
-Hydrated items get the DOM id `mg-treeitem-{id}`, so in-page links to the original `<li>` ids will not resolve after hydration.
+Item DOM ids get a generated prefix for each tree, so two trees built from the same ids, such as a desktop and a mobile menu, do not repeat ids on one page. The ids are not stable: in-page links to the original `<li>` ids will not resolve after hydration. Use `data-mg-treeitem-id="{id}"` to find an item from script.
 
 ## Keyboard Interaction (ARIA APG)
 
-| Key               | Expected behaviour                                                  |
-| ----------------- | ------------------------------------------------------------------- |
-| `↓` Arrow         | Move focus to next visible treeitem                                 |
-| `↑` Arrow         | Move focus to previous visible treeitem                             |
-| `→` Arrow         | Expand collapsed node; or move focus to first child if already open |
-| `←` Arrow         | Collapse expanded node; or move focus to parent treeitem            |
-| `Home`            | Move focus to first visible treeitem                                |
-| `End`             | Move focus to last visible treeitem                                 |
-| `Enter` / `Space` | Select focused treeitem (and follow link if configured)             |
+When the tree receives focus, focus goes to the selected item. If the selected item is inside a collapsed parent, focus goes to its nearest visible parent, and with no selection, to the first item.
+
+| Key               | Expected behaviour                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| `↓` Arrow         | Move focus to next visible treeitem                                                         |
+| `↑` Arrow         | Move focus to previous visible treeitem                                                     |
+| `→` Arrow         | Expand collapsed node; or move focus to first child if already open                         |
+| `←` Arrow         | Collapse expanded node; or move focus to parent treeitem                                    |
+| `Home`            | Move focus to first visible treeitem                                                        |
+| `End`             | Move focus to last visible treeitem                                                         |
+| `Enter` / `Space` | Select focused treeitem; follow its own link, or expand or collapse a parent without a link |
 
 ## Props
 
@@ -176,6 +182,11 @@ This component is a prototype and subject to change. The API and behavior may be
   - `TreeItem` takes a `current` prop that sets `aria-current` on its link. Hydration keeps `aria-current` from the source link and expands the selected item's parents so it is visible on load.
   - Hydration reads links wrapped in one element (`<li><span><a>`), labels image-only links from `aria-label` or the image `alt`, and also drops `vbscript:` URLs.
   - Fixed the chevron in RTL: it pointed the wrong way when collapsed and up when expanded. It now points to the inline end when collapsed and down when expanded, for any `toggleIcon`.
+  - Fixed Enter and Space on an expanded parent without a link: they followed the first child's link. They now select the parent and expand or collapse it.
+  - Tabbing into the tree focuses the selected item, or its nearest visible parent, instead of always the first item.
+  - Item DOM ids are scoped to each tree, so two trees with the same item ids no longer repeat DOM ids. Ids are no longer `mg-treeitem-{id}`; use `data-mg-treeitem-id` to find an item.
+  - The selected label uses the text colour on the interactive tint, which fixes a 4.02:1 contrast failure in the IRP theme. New `--mg-tree-item-background--hover`, `--mg-tree-item-background--selected` and `--mg-tree-item-color--selected` component tokens.
+  - Link items are underlined, with a thicker underline on hover, and leaf labels line up with sibling parents.
 - **1.0.0** — 2026-09-16 ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)): Initial implementation with expand/collapse and optional link support.
   - Full ARIA APG keyboard navigation (arrow keys, Home, End, Enter, Space), roving tabindex, controlled `expandedIds` / `selectedId`, colour tokens and `mg-icon` chevron ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
   - Before rc.1: arrow keys and chevron mirror in RTL, logical properties, shared inset focus ring, and the chevron button is presentational so `aria-expanded` is not repeated and no English label is hardcoded.
