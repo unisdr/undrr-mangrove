@@ -77,12 +77,21 @@
       transition: none;
     }
 
-    &:dir(rtl) {
+    // RTL: mirror the glyph itself, not this span, so the expanded rotation
+    // below does not replace the mirror. This matches the global
+    // [dir="rtl"] rule for the built-in right-pointing icons and extends it to
+    // any toggleIcon. A mirrored glyph points left, so it turns the other way
+    // to point down.
+    &:dir(rtl)::before {
       transform: scaleX(-1);
     }
 
     &.is-expanded {
       transform: rotate(90deg);
+    }
+
+    &.is-expanded:dir(rtl) {
+      transform: rotate(-90deg);
     }
   }
 
