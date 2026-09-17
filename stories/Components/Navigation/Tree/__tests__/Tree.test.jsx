@@ -228,6 +228,28 @@ describe('Tree and TreeItem', () => {
 
     const link = screen.getByRole('link', { name: 'Link Item' });
     expect(link).toHaveAttribute('href', '/test-path');
+    expect(link).not.toHaveAttribute('aria-current');
+  });
+
+  it('sets aria-current on the link when current is given', () => {
+    render(
+      <Tree>
+        <TreeItem
+          id="link-1"
+          label="Link Item"
+          href="/test-path"
+          asLink
+          current="page"
+        />
+        <TreeItem id="plain" label="Plain Item" current="page" />
+      </Tree>
+    );
+
+    expect(screen.getByRole('link', { name: 'Link Item' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+    expect(screen.getByText('Plain Item')).not.toHaveAttribute('aria-current');
   });
 
   describe('toggleIcon', () => {

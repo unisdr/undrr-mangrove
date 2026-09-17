@@ -3,8 +3,15 @@ import PropTypes from 'prop-types';
 import { Tree, TreeItem } from './Tree';
 
 const renderItems = items =>
-  items.map(({ id, label, href, children }) => (
-    <TreeItem key={id} id={id} label={label} href={href} asLink={Boolean(href)}>
+  items.map(({ id, label, href, current, children }) => (
+    <TreeItem
+      key={id}
+      id={id}
+      label={label}
+      href={href}
+      asLink={Boolean(href)}
+      current={current}
+    >
       {children && children.length > 0 ? renderItems(children) : undefined}
     </TreeItem>
   ));
@@ -23,6 +30,7 @@ const itemShape = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   href: PropTypes.string,
+  current: PropTypes.string,
 };
 itemShape.children = PropTypes.arrayOf(PropTypes.shape(itemShape));
 

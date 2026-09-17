@@ -110,6 +110,89 @@ describe('treeFromElement', () => {
       )
     );
     expect(props.defaultSelectedId).toBe('a1');
+    expect(props.defaultExpandedIds).toEqual(['a']);
+  });
+
+  it('expands every ancestor of the selected item', () => {
+    const props = treeFromElement(
+      makeContainer(
+        {},
+        `<ul>
+          <li data-id="a" data-expanded>A<ul>
+            <li data-id="b">B<ul>
+              <li data-id="c" data-selected>C</li>
+            </ul></li>
+          </ul></li>
+        </ul>`
+      )
+    );
+    expect(props.defaultSelectedId).toBe('c');
+    expect(props.defaultExpandedIds).toEqual(['a', 'b']);
+  });
+
+  it('expands the ancestors of a data-selected-id fallback', () => {
+    const props = treeFromElement(
+      makeContainer(
+        { 'selected-id': 'b1' },
+        '<ul><li data-id="b">B<ul><li data-id="b1">B1</li></ul></li></ul>'
+      )
+    );
+    expect(props.defaultExpandedIds).toEqual(['b']);
+  });
+
+  it('keeps aria-current from the source link', () => {
+    const props = treeFromElement(
+      makeContainer(
+        {},
+        `<ul>
+          <li data-id="a"><a href="/a" aria-current="page">A</a></li>
+          <li data-id="b"><a href="/b" aria-current="false">B</a></li>
+          <li data-id="c"><a href="/c">C</a></li>
+        </ul>`
+      )
+    );
+    expect(props.items).toEqual([
+      { id: 'a', label: 'A', href: '/a', current: 'page' },
+      { id: 'b', label: 'B', href: '/b' },
+      { id: 'c', label: 'C', href: '/c' },
+    ]);
+  });
+
+  it('reads a link wrapped in another element', () => {
+    const props = treeFromElement(
+      makeContainer(
+        {},
+        `<ul>
+          <li data-id="a">
+            <span><a href="/a" aria-current="page">A</a></span>
+            <ul><li data-id="a1"><span><a href="/a1">A1</a></span></li></ul>
+          </li>
+        </ul>`
+      )
+    );
+    expect(props.items).toEqual([
+      {
+        id: 'a',
+        label: 'A',
+        href: '/a',
+        current: 'page',
+        children: [{ id: 'a1', label: 'A1', href: '/a1' }],
+      },
+    ]);
+    expect(props.defaultSelectedId).toBe('a');
+  });
+
+  it('labels an image-only link from its aria-label or image alt', () => {
+    const props = treeFromElement(
+      makeContainer(
+        {},
+        `<ul>
+          <li><a href="/a" aria-label="Home"><img src="x.png" alt="Logo"></a></li>
+          <li><a href="/b"> <img src="x.png" alt="Reports"> </a></li>
+        </ul>`
+      )
+    );
+    expect(props.items.map(item => item.label)).toEqual(['Home', 'Reports']);
   });
 
   it('drops unsafe link URLs but keeps the label', () => {
@@ -120,11 +203,17 @@ describe('treeFromElement', () => {
           <li><a href="javascript:alert(1)">Script</a></li>
           <li><a href=" java&#9;script:alert(1)">Tabbed</a></li>
           <li><a href="data:text/html,hi">Data</a></li>
+          <li><a href="vbscript:msgbox(1)">VBScript</a></li>
+          <li><a href=" JavaScript:alert(1)">Mixed case</a></li>
+          <li><a href="&#1;javascript:alert(1)">Control character</a></li>
           <li><a href="https://www.undrr.org/">Safe</a></li>
         </ul>`
       )
     );
     expect(props.items.map(item => item.href)).toEqual([
+      undefined,
+      undefined,
+      undefined,
       undefined,
       undefined,
       undefined,

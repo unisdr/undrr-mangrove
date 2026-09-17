@@ -139,13 +139,13 @@ Container attributes:
 
 Each `<li>` in the first `<ul>` or `<ol>` becomes a tree item. Nested lists become child groups.
 
-| Item markup                                    | Result                                                                       |
-| ---------------------------------------------- | ---------------------------------------------------------------------------- |
-| `data-id`                                      | Item id. Falls back to the `<li>` id, then its position (`1-2`)              |
-| Direct child `<a href>`                        | Link item; its text is the label. `javascript:` and `data:` URLs are dropped |
-| Text without a link                            | Plain label. Read as text; markup is not kept                                |
-| `data-expanded` or `aria-expanded="true"`      | Starts expanded (items with children only)                                   |
-| `data-selected`, or `aria-current` on the link | Starts selected. The first match wins                                        |
+| Item markup                                                | Result                                                                                                                                                              |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-id`                                                  | Item id. Must be unique in the tree; a repeated id gets a numeric suffix (`x-2`). Without `data-id` the `<li>` id is used, and without either, its position (`1-2`) |
+| Child `<a href>`, direct or wrapped once (`<li><span><a>`) | Link item; its text is the label, or its `aria-label` or image `alt` if it has no text. `javascript:`, `data:` and `vbscript:` URLs are dropped                     |
+| Text without a link                                        | Plain label. Read as text; markup is not kept                                                                                                                       |
+| `data-expanded` or `aria-expanded="true"`                  | Starts expanded (items with children only)                                                                                                                          |
+| `data-selected`, or `aria-current` on the link             | Starts selected, and its parent items start expanded. The first match wins. `aria-current` is kept on the rendered link                                             |
 
 Hydrated items get the DOM id `mg-treeitem-{id}`, so in-page links to the original `<li>` ids will not resolve after hydration.
 
@@ -172,6 +172,10 @@ This component is a prototype and subject to change. The API and behavior may be
 ## Changelog
 
 - **1.1.0** — 2026-09-17 ([#1176](https://github.com/unisdr/undrr-mangrove/pull/1176)): Hydration from a nested list with `Tree.fromElement.js`, `Tree.hydrate.js` and `HydratedTree`, and a `toggleIcon` prop on `Tree` and `TreeItem` (`data-toggle-icon` when hydrated).
+  - The default export of `components/Tree.js` is now `HydratedTree` ([#1172](https://github.com/unisdr/undrr-mangrove/issues/1172)), which takes the same props and children as `Tree`; import `{ Tree }` if you need the component itself.
+  - `TreeItem` takes a `current` prop that sets `aria-current` on its link. Hydration keeps `aria-current` from the source link and expands the selected item's parents so it is visible on load.
+  - Hydration reads links wrapped in one element (`<li><span><a>`), labels image-only links from `aria-label` or the image `alt`, and also drops `vbscript:` URLs.
+  - Fixed the chevron in RTL: it pointed the wrong way when collapsed and up when expanded. It now points to the inline end when collapsed and down when expanded, for any `toggleIcon`.
 - **1.0.0** — 2026-09-16 ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)): Initial implementation with expand/collapse and optional link support.
   - Full ARIA APG keyboard navigation (arrow keys, Home, End, Enter, Space), roving tabindex, controlled `expandedIds` / `selectedId`, colour tokens and `mg-icon` chevron ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
   - Before rc.1: arrow keys and chevron mirror in RTL, logical properties, shared inset focus ring, and the chevron button is presentational so `aria-expanded` is not repeated and no English label is hardcoded.

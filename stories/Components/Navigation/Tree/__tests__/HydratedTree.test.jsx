@@ -77,9 +77,16 @@ describe('HydratedTree', () => {
       'aria-selected',
       'true'
     );
+    expect(screen.getByText('Team').closest('a')).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
     expect(screen.getByText('History').closest('a')).toHaveAttribute(
       'href',
       '/about/history'
+    );
+    expect(screen.getByText('History').closest('a')).not.toHaveAttribute(
+      'aria-current'
     );
     expect(screen.queryByText('Floods')).not.toBeInTheDocument();
 

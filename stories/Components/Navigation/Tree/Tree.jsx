@@ -24,6 +24,7 @@ export const TreeItem = ({
   onSelect: customSelect,
   href,
   asLink = false,
+  current,
   toggleIcon,
 }) => {
   const context = useContext(TreeContext);
@@ -141,6 +142,7 @@ export const TreeItem = ({
             href={href}
             tabIndex={-1}
             className="mg-tree__label"
+            aria-current={current || undefined}
             onClick={handleLabelClick}
           >
             {label}
@@ -168,6 +170,11 @@ TreeItem.propTypes = {
   onSelect: PropTypes.func,
   href: PropTypes.string,
   asLink: PropTypes.bool,
+  /**
+   * aria-current value for the item's link, e.g. "page" when the link points
+   * at the current page. Only rendered when the item is a link.
+   */
+  current: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   /**
    * Icon class for this item's expand toggle, e.g. "mg-icon-arrow-right".
    * Overrides the Tree's toggleIcon. The glyph should point towards the
