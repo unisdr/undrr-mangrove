@@ -159,6 +159,7 @@ Linked and unlinked cards frequently sit in the same row. They should read as on
 
 ## Changelog
 
+- **1.5.2** — 2026-09-17 ([#1187](https://github.com/unisdr/undrr-mangrove/pull/1187)): The card label's trailing gap uses `margin-inline-end`, so consecutive labels space correctly in RTL.
 - **1.5.1** — 2026-09-15 ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153)): The card now fills 100% of its container's block size by default (excluding the book variant), not just when a shared flex/grid row's `align-items: stretch` happens to equalise it against sibling cards. Cards placed in their own separate column `<div>`s — a common CMS-templated three-up layout — previously stayed at their own content height even when the column itself was taller, with nothing visually tying same-row cards together. `block-size: 100%` resolves against the nearest ancestor with a real height and falls back to `auto` with none (a lone card with nothing to fill), so this is additive with no opt-in required.
 - **1.5.0** — 2026-09-10: Plain-text titles for unlinked cards, visible labels, `buttonLink` prop, and `card.scss` fixes for empty `href`.
 - **1.4.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Stretch to grid/flex row height; keep images intrinsic and CTAs at bottom.

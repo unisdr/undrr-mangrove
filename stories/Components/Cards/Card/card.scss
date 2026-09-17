@@ -184,7 +184,7 @@
     cursor: pointer;
     display: inline-block;
     font-size: var(--mg-font-size-250);
-    margin-right: var(--mg-spacing-50);
+    margin-inline-end: var(--mg-spacing-50);
 
     &:hover {
       color: rgb(var(--mg-color-tag));

@@ -13,6 +13,7 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **Logical properties in RTL:** Hero, FormErrorSummary, Syndicated search, Card, StatsCard, Author image and the legacy `.fa-before` icon gap use logical properties (`margin-inline-start`, `padding-inline-end`, `border-inline-start`, `inset-inline-end`, `text-align: start`) instead of physical left/right ones. The visible fix is the split hero, which broke out of the viewport in Arabic at mobile widths and gave the whole page a horizontal scrollbar; the syndicated search clear button also grew to a 36x36 target. LTR rendering is unchanged. ([#1187](https://github.com/unisdr/undrr-mangrove/pull/1187))
 - **Release notes format:** `docs/RELEASES.md` now defines a standard format and template for GitHub Release notes (intro, full-detail link, and fixed section order: breaking and visible changes, new features, bug fixes and hardening, documentation and discoverability, dependencies, CDN), based on the 2.0.0-rc.1 and 2.0.0-rc.2 releases.
 
 ## 2.0.0-rc.2 — 2026-09-17
