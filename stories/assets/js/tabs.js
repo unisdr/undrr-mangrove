@@ -2,6 +2,8 @@
 const instances = new WeakMap();
 const responsiveInstances = new WeakMap();
 const pendingStates = new WeakMap();
+// Per tab set: whether it has been attached, and how to release its AbortSignal.
+const lifecycles = new WeakMap();
 const MOBILE_BREAKPOINT = 480;
 const isStacked = container => container.dataset.mgJsTabsVariant === 'stacked';
 
@@ -38,21 +40,86 @@ function containersIn(scope = document) {
   ];
 }
 
-export function mgTabs(scope, activateDeepLinkOnLoad = true) {
+const isInitialised = container =>
+  responsiveInstances.has(container) || instances.has(container);
+
+/**
+ * Initialise tab sets.
+ *
+ * @param {Element|Document|NodeList|Array} [scope] - containers, or elements that contain them; defaults to every tab set on the page
+ * @param {boolean} [activateDeepLinkOnLoad=true] - open the panel named by the URL hash
+ * @param {{ signal?: AbortSignal }} [options] - aborting `signal` destroys the tab sets this call initialised; an aborted signal skips initialisation
+ */
+export function mgTabs(scope, activateDeepLinkOnLoad = true, options = {}) {
+  const signal = options?.signal;
+  if (signal?.aborted) return;
   containersIn(scope).forEach(container => {
     if (!scope && container.hasAttribute('data-mg-js-tabs-skip-auto-init'))
       return;
+    const wasInitialised = isInitialised(container);
     const retained = pendingStates.get(container);
     const requestedVariant = isStacked(container) ? 'stacked' : 'horizontal';
     const initialState =
       retained?.requestedVariant === requestedVariant ? retained : undefined;
     pendingStates.delete(container);
     initContainer(container, activateDeepLinkOnLoad, { initialState });
+    if (!wasInitialised && isInitialised(container))
+      trackLifecycle(container, signal);
   });
 }
 
-export function mgTabsRuntime(scope = document, activateDeepLinkOnLoad = true) {
-  mgTabs(scope, activateDeepLinkOnLoad);
+/**
+ * Initialise tab sets within a container or parent element (default: document).
+ * Accepts the same `{ signal }` option as `mgTabs`.
+ */
+export function mgTabsRuntime(
+  scope = document,
+  activateDeepLinkOnLoad = true,
+  options = {}
+) {
+  mgTabs(scope, activateDeepLinkOnLoad, options);
+}
+
+function trackLifecycle(container, signal) {
+  const lifecycle = { attached: container.isConnected };
+  if (signal) {
+    const onAbort = () => destroyContainer(container);
+    signal.addEventListener('abort', onAbort, { once: true });
+    // Destroying by any other route must not leave a long-lived signal holding the container.
+    lifecycle.release = () => signal.removeEventListener('abort', onAbort);
+  }
+  lifecycles.set(container, lifecycle);
+}
+
+function destroyContainer(container, preserveState = false) {
+  const state = preserveState ? mgTabsGetState(container) : undefined;
+  if (state)
+    pendingStates.set(container, { ...state, restoreOpenPanels: true });
+  else pendingStates.delete(container);
+  lifecycles.get(container)?.release?.();
+  lifecycles.delete(container);
+  (responsiveInstances.get(container) || instances.get(container))?.destroy();
+}
+
+/**
+ * Guard for handlers registered outside the container. A tab set that was in
+ * the document and has since been removed without mgTabsDestroy() is destroyed
+ * instead of doing work. Events arrive asynchronously, so a synchronous move
+ * (remove, then insert elsewhere) is never mistaken for a removal. A tab set
+ * initialised while detached is left alone until it has been attached once.
+ */
+function isLive(container) {
+  const lifecycle = lifecycles.get(container);
+  if (container.isConnected) {
+    if (lifecycle) lifecycle.attached = true;
+    return true;
+  }
+  if (!lifecycle?.attached) return true;
+  // Restore the markup as mgTabsDestroy() does, so a detached node never keeps
+  // enhanced roles without behaviour, and retain the selection in case the
+  // node is re-attached and initialised again.
+  destroyContainer(container, true);
+  return false;
 }
 
 /**
@@ -63,15 +130,7 @@ export function mgTabsRuntime(scope = document, activateDeepLinkOnLoad = true) {
 export function mgTabsDestroy(scope = document, preserveState = false) {
   containersIn(scope)
     .reverse()
-    .forEach(container => {
-      const state = preserveState ? mgTabsGetState(container) : undefined;
-      if (state)
-        pendingStates.set(container, { ...state, restoreOpenPanels: true });
-      else pendingStates.delete(container);
-      (
-        responsiveInstances.get(container) || instances.get(container)
-      )?.destroy();
-    });
+    .forEach(container => destroyContainer(container, preserveState));
 }
 
 /** Capture selection and focus before replacing a responsive layout. */
@@ -166,10 +225,13 @@ function initResponsiveContainer(
       initialState: state,
     });
   };
+  const onViewportChange = () => {
+    if (isLive(container)) update();
+  };
   responsiveInstances.set(container, {
     destroy() {
-      window.removeEventListener('resize', update);
-      window.removeEventListener('orientationchange', update);
+      window.removeEventListener('resize', onViewportChange);
+      window.removeEventListener('orientationchange', onViewportChange);
       instances.get(container)?.destroy();
       restoreVisibility();
       generated.forEach(item => item.remove());
@@ -178,8 +240,8 @@ function initResponsiveContainer(
     },
   });
   update();
-  window.addEventListener('resize', update);
-  window.addEventListener('orientationchange', update);
+  window.addEventListener('resize', onViewportChange);
+  window.addEventListener('orientationchange', onViewportChange);
 }
 
 function initContainer(container, activateDeepLinkOnLoad, options = {}) {
@@ -504,7 +566,9 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
       setDisclosureState(tab, panels[index], openIds.has(panels[index].id))
     );
   }
-  listen(window, 'hashchange', activateHash);
+  listen(window, 'hashchange', () => {
+    if (isLive(container)) activateHash();
+  });
   if (
     stacked &&
     !options.responsiveMobile &&
@@ -517,7 +581,7 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
   if (scroller) {
     listen(scroller, 'scroll', updateOverflow, { passive: true });
     const refresh = () => {
-      if (alive) reveal(activeTab);
+      if (alive && isLive(container)) reveal(activeTab);
     };
     listen(window, 'resize', refresh);
     listen(window, 'orientationchange', refresh);
