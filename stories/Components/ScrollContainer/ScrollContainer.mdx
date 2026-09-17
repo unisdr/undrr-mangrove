@@ -31,7 +31,7 @@ Sets a custom container height.
 
 ## With minimum width
 
-Sets a minimum container width.
+Sets a minimum width on the scrollable content, so the container scrolls horizontally rather than growing past its parent.
 
 <Canvas
   of={ScrollContainerStories.WithMinWidth}
@@ -101,7 +101,7 @@ const MyComponent = () => (
 | ------------ | ------- | -------- | --------------------------------------------------- |
 | children     | node    | Required | Content to be displayed inside the scroll container |
 | height       | string  | 'auto'   | Custom height for the container                     |
-| minWidth     | string  | 'auto'   | Minimum width for the container                     |
+| minWidth     | string  | 'auto'   | Minimum width of the scrollable content             |
 | itemWidth    | string  | 'auto'   | Width for individual items within the container     |
 | padding      | string  | '0'      | Padding inside the container                        |
 | className    | string  | ''       | Additional CSS class names                          |
@@ -172,15 +172,15 @@ ScrollContainer supports [layered hydration](https://github.com/unisdr/undrr-man
 </div>
 ```
 
-| Attribute            | Default   | Description                                       |
-| -------------------- | --------- | ------------------------------------------------- |
-| `data-height`        | `'auto'`  | Container height (CSS value)                      |
-| `data-min-width`     | `'auto'`  | Minimum width (CSS value)                         |
-| `data-item-width`    | `'auto'`  | Width for individual items (CSS value)            |
-| `data-padding`       | `'0'`     | Container padding                                 |
-| `data-show-arrows`   | `'false'` | Show navigation arrows (`'true'` or `'false'`)    |
-| `data-stretch-items` | `'false'` | Stretch mixed-length items to a shared row height |
-| `data-step-size`     | `null`    | Scroll step in pixels for arrow navigation        |
+| Attribute            | Default   | Description                                         |
+| -------------------- | --------- | --------------------------------------------------- |
+| `data-height`        | `'auto'`  | Container height (CSS value)                        |
+| `data-min-width`     | `'auto'`  | Minimum width of the scrollable content (CSS value) |
+| `data-item-width`    | `'auto'`  | Width for individual items (CSS value)              |
+| `data-padding`       | `'0'`     | Container padding                                   |
+| `data-show-arrows`   | `'false'` | Show navigation arrows (`'true'` or `'false'`)      |
+| `data-stretch-items` | `'false'` | Stretch mixed-length items to a shared row height   |
+| `data-step-size`     | `null`    | Scroll step in pixels for arrow navigation          |
 
 Child elements are extracted from a `.mg-scroll__content` wrapper inside the container. If no wrapper is found, the container's `innerHTML` is used directly.
 
@@ -200,6 +200,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.3.3** — 2026-09-17 ([#PRNUM](https://github.com/unisdr/undrr-mangrove/pull/PRNUM)): **Behaviour change.** `minWidth` (and `data-min-width`) now sets the minimum width of the scrollable content rather than of the scroll box itself. A `min-width` on the box beat its own `max-width: 100%`, so `minWidth="1500px"` made the container wider than the page and the whole document scrolled sideways instead of the container scrolling internally. Anything relying on the old behaviour to widen the container should set a width on the container's parent instead.
 - **1.3.2** — 2026-09-15 ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153)): The desktop scrollbar now has a themed appearance instead of the unstyled browser default — a fixed blue thumb (calm at rest, full colour on hover) and a barely-there translucent track, on `scrollbar-color`/`scrollbar-width` (Firefox) and `::-webkit-scrollbar-*` (Chromium/Safari). Uses fixed literal colours rather than `var(--mg-color-*)` tokens, since at least one WebKit version silently drops the whole declaration if it contains a `var()` value there. Desktop-only in practice; mobile browsers generally hide or ignore scrollbar styling regardless. Known pre-existing limitation noted: macOS Safari below 100% zoom can fail to register clicks on this component's arrow buttons and its native scrollbar, due to a longstanding WebKit viewport-coordinate bug unrelated to this component.
 
 - **1.3.1** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Card stories enable the existing `stretchItems` option to demonstrate equal-height rows. The component default remains `false`.

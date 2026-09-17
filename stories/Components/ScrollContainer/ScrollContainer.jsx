@@ -321,6 +321,7 @@ const ScrollContainer = ({
 ScrollContainer.propTypes = {
   children: PropTypes.node.isRequired,
   height: PropTypes.string,
+  /** Minimum width of the scrollable content, e.g. `'1500px'`. The container itself never grows past its parent. */
   minWidth: PropTypes.string,
   itemWidth: PropTypes.string,
   padding: PropTypes.string,

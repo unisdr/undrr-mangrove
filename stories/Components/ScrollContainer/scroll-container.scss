@@ -161,7 +161,14 @@
     }
 
     &--custom-width {
-      min-width: var(--scroll-min-width, auto);
+      // minWidth sizes the scrollable track, not the scroll box. Putting it
+      // on the box itself made the container wider than its parent, so a
+      // value like 1500px pushed the whole page sideways instead of
+      // scrolling internally — which is the one thing a scroll container is
+      // for. Applying it to the content keeps the overflow inside the box.
+      .mg-scroll__content {
+        min-width: var(--scroll-min-width, auto);
+      }
     }
 
     &--custom-padding {
