@@ -145,6 +145,15 @@
     flex-grow: 1;
   }
 
+  // The tinted notice surfaces are darker than the page the outline secondary
+  // colour is chosen for, so the resting label and border read
+  // --mg-notice-action-secondary, which a theme can darken (DELTA does).
+  // Hover keeps the button's own fill and label.
+  &__actions .mg-button-secondary.mg-button-outline:not(:hover) {
+    border-color: var(--mg-notice-action-secondary);
+    color: var(--mg-notice-action-secondary);
+  }
+
   &__dismiss {
     margin-inline-start: auto;
     background: transparent;

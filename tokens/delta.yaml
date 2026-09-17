@@ -161,6 +161,17 @@ card:
   border-radius: { $type: dimension, $value: '{spacing.50}' }
   icon-badge-radius: { $type: dimension, $value: '15%' }
 
+notice:
+  action-secondary:
+    $type: color
+    $value: '{=brand.secondary-800}'
+    $format: srgb-rgb-function
+    $description: >-
+      UNDRR Teal #007b7a is 5.10:1 on white but 4.26:1 on the offline notice's
+      red-50 tint, which fails WCAG 1.4.3 for the status link. The hover
+      partner #006968 from DELTA's own teal ramp is 5.44:1 there and 4.5:1 or
+      more on every notice surface.
+
 opacity:
   $type: number
   hero: { $value: '1' }

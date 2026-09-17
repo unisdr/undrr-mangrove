@@ -117,6 +117,16 @@ describe('Mangrove 2.0 token contract (compiled CSS)', () => {
         /--mg-color-button-secondary-background--hover:/
       );
     });
+
+    // A var() chain resolved at :root would keep the base colour under a
+    // theme class on a wrapper, so the brand block has to restate it.
+    test('restates the notice secondary action token inside the runtime theme', () => {
+      const themeBlock = brandCss[brand].match(
+        new RegExp(`\\.mg-theme-${brand}\\s*\\{([^}]*)\\}`)
+      )?.[1];
+
+      expect(themeBlock).toMatch(/--mg-notice-action-secondary:/);
+    });
   });
 
   test('combined style-all bundle carries every brand theme', () => {
@@ -403,7 +413,7 @@ const measurements = () => {
   for (const theme of ALL_THEMES) {
     const vars = themeVars(theme);
     const resolve = token =>
-      token.startsWith('--') ? deref(vars, vars[token]) : token;
+      deref(vars, token.startsWith('--') ? vars[token] : token);
     for (const pair of COMPONENT_PAIRS) {
       let backdrop = WHITE;
       let resolved = true;
@@ -559,6 +569,8 @@ const PAGE = '--mg-color-neutral-0';
 /**
  * fg  — the painted foreground token, or a literal the component hardcodes.
  * bg  — background layers, nearest first; the page is the implicit floor.
+ *       A literal may contain var(), for a surface a stylesheet builds from
+ *       a token plus an alpha rather than reading one token.
  * min — 4.5 (SC 1.4.3 normal text) or 3 (SC 1.4.3 large text / SC 1.4.11).
  */
 const COMPONENT_PAIRS = [
@@ -1153,6 +1165,33 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.3 — the variant CTA on the white pill',
   },
 
+  // --- Notice actions: notice.scss ----------------------------------------
+  //
+  // ServiceNotice's status link is an outline secondary button inside the
+  // notice, so its label sits on the notice surface rather than the page. The
+  // backgrounds are the literals notice.scss paints for each variant.
+  {
+    name: 'notice secondary action on the degraded (warning) notice',
+    fg: '--mg-notice-action-secondary',
+    bg: ['rgb(var(--mg-color-accent-100) / 0.18)'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-notice--warning .mg-button-secondary.mg-button-outline label text',
+  },
+  {
+    name: 'notice secondary action on the offline (negative) notice',
+    fg: '--mg-notice-action-secondary',
+    bg: ['--mg-color-red-50'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-notice--negative .mg-button-secondary.mg-button-outline label text',
+  },
+  {
+    name: 'notice secondary action on the overlay over a black embed',
+    fg: '--mg-notice-action-secondary',
+    bg: ['rgb(var(--mg-color-neutral-0) / 0.94)', '#000000'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-notice--overlay is 94% white over the embed, so a black embed is the worst case',
+  },
+
   // --- Status label: _variables.scss + status-label.scss ------------------
   {
     name: 'status label text',
@@ -1489,6 +1528,21 @@ const PERCEPTUAL_EXCEPTIONS = {
     'red-900 on red-50; a warm hue at this lightness is not body-readable (WCAG 2 disagrees: 5.27:1 clears the 4.5:1 minimum)',
   ],
 
+  // Teal and mid-blue secondary actions on the notice surfaces. WCAG 2 passes
+  // all of them; DELTA was darkened because it failed WCAG 2 as well.
+  'preventionweb|notice secondary action on the offline (negative) notice': [
+    59.8,
+    'PreventionWeb teal on red-50 (WCAG 2 disagrees: 4.59:1 clears the 4.5:1 minimum)',
+  ],
+  'preventionweb|notice secondary action on the overlay over a black embed': [
+    62.1,
+    'PreventionWeb teal on the 94% white overlay over black, the worst case (WCAG 2 disagrees: 4.81:1)',
+  ],
+  'irp|notice secondary action on the offline (negative) notice': [
+    61.3,
+    'IRP blue on red-50 (WCAG 2 disagrees: 5.03:1 clears the 4.5:1 minimum)',
+  ],
+
   'base|card title, secondary variant': [42.5, 'orange-800 title link'],
   'preventionweb|card title, secondary variant': [
     42.5,
@@ -1660,7 +1714,7 @@ describe('component token contrast, including hover and active states', () => {
     test.each(PAIRS.map(pair => [pair.name, pair]))('%s', (name, pair) => {
       const vars = themeVars(theme);
       const resolve = token =>
-        token.startsWith('--') ? deref(vars, vars[token]) : token;
+        deref(vars, token.startsWith('--') ? vars[token] : token);
 
       const foreground = parseColor(resolve(pair.fg));
       // A missing token is a contract bug, not a silent pass.
@@ -1759,9 +1813,12 @@ describe('where the two contrast measures disagree', () => {
     'preventionweb | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'preventionweb | notice secondary action on the offline (negative) notice | WCAG 2 PASSES 4.59:1 (min 4.5) | perceptual fails 59.8 (BODY_TEXT needs 63)',
+    'preventionweb | notice secondary action on the overlay over a black embed | WCAG 2 PASSES 4.81:1 (min 4.5) | perceptual fails 62.1 (BODY_TEXT needs 63)',
     'irp | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'irp | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'irp | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'irp | notice secondary action on the offline (negative) notice | WCAG 2 PASSES 5.03:1 (min 4.5) | perceptual fails 61.3 (BODY_TEXT needs 63)',
     'mcr | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'mcr | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'mcr | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',

@@ -82,6 +82,14 @@ color:
   text-tab--hover: { $value: '{color.neutral-700}', $format: srgb-rgb-function }
   text-tab-active: { $value: '{color.neutral-900}', $format: srgb-rgb-function }
 
+# Restated so it re-resolves against this theme's outline secondary colour
+# inside .mg-theme-preventionweb instead of keeping the :root value.
+notice:
+  action-secondary:
+    $type: color
+    $value: '{color.button-outline-secondary}'
+    $format: srgb-rgb-function
+
 radius:
   $type: dimension
   button: { $value: '{spacing.50}' }

@@ -516,6 +516,16 @@ card:
   shadow-hover: { $type: shadow, $value: '{shadow.raised-hover}' }
   icon-badge-radius: { $type: dimension, $value: '20%' }
 
+# Notice actions sit on the notice's tinted surface, not the page, so a brand
+# whose outline secondary colour only clears 4.5:1 on white can darken it here
+# without changing outline buttons anywhere else. It is a var() chain onto a
+# theme-owned colour, so every sub-brand restates it in its own block.
+notice:
+  action-secondary:
+    $type: color
+    $value: '{color.button-outline-secondary}'
+    $format: srgb-rgb-function
+
 hero-overlay:
   max-width: { $type: dimension, $value: 600, $format: rem }
   padding: { $type: dimension, $value: '{spacing.300}' }
