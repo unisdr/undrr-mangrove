@@ -27,10 +27,19 @@
     margin: 0;
   }
 
+  // The guide sits under the centre of the parent's toggle: the label
+  // container's inline padding plus half the 1rem toggle, less half the 1px
+  // border. The padding gives the same amount back so child items keep their
+  // position.
   &--guides &__group {
+    --mg-tree-guide-offset: calc(var(--mg-spacing-100) + 0.5rem - 0.5px);
+    --mg-tree-group-indent: calc(var(--mg-spacing-100) + var(--mg-spacing-200));
+
     border-inline-start: 1px dashed rgb(var(--mg-color-neutral-300));
-    margin-inline-start: var(--mg-spacing-100);
-    padding-inline-start: var(--mg-spacing-200);
+    margin-inline-start: var(--mg-tree-guide-offset);
+    padding-inline-start: calc(
+      var(--mg-tree-group-indent) - var(--mg-tree-guide-offset)
+    );
   }
 
   &__item {

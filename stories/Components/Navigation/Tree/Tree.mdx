@@ -181,6 +181,7 @@ This component is a prototype and subject to change. The API and behavior may be
   - The default export of `components/Tree.js` is now `HydratedTree` ([#1172](https://github.com/unisdr/undrr-mangrove/issues/1172)), which takes the same props and children as `Tree`; import `{ Tree }` if you need the component itself.
   - `TreeItem` takes a `current` prop that sets `aria-current` on its link. Hydration keeps `aria-current` from the source link and expands the selected item's parents so it is visible on load.
   - The AI manifest describes the hydration contract in the structured `hydration` field, and Tree is flagged `hydration: true` in the component index.
+  - The indentation guide now runs directly under the parent's toggle arrow instead of about 8px before it. Child items keep their position.
   - Hydration reads links wrapped in one element (`<li><span><a>`), labels image-only links from `aria-label` or the image `alt`, and also drops `vbscript:` URLs.
   - Fixed the chevron in RTL: it pointed the wrong way when collapsed and up when expanded. It now points to the inline end when collapsed and down when expanded, for any `toggleIcon`.
   - Fixed Enter and Space on an expanded parent without a link: they followed the first child's link. They now select the parent and expand or collapse it.
