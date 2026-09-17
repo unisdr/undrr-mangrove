@@ -56,6 +56,9 @@ jobs:
         run: |
           yarn run build
           node scripts/ai-manifest/generate-ai-manifest.js --validate
+          # preview-stats.json feeds Chromatic's TurboSnap (the chromatic
+          # workflow runs its own build); the published site never reads it.
+          rm -f docs-build-temp/preview-stats.json
           mv docs-build-temp _site
           cp dist _site -r
       - name: Run tests with Jest 🧪
