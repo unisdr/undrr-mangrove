@@ -442,7 +442,9 @@ describe('mgSwitchPending', () => {
       let seen;
       const listener = event => {
         seen = event;
-        event.detail.respondWith(Promise.resolve());
+        // Destructured, as in the docs: respondWith does not rely on `this`.
+        const { respondWith } = event.detail;
+        respondWith(Promise.resolve());
       };
       document.addEventListener('mg-switch:save', listener);
       mgSwitchPending(input);
@@ -614,7 +616,6 @@ describe('auto-initialisation', () => {
       ${switchMarkup({ id: 'auto', inputAttrs: 'data-mg-switch-pending' })}
       ${switchMarkup({ id: 'skip', labelAttrs: 'data-mg-switch-pending data-mg-switch-pending-skip-auto-init' })}`;
     jest.isolateModules(() => {
-      // eslint-disable-next-line global-require
       require('../../../../assets/js/switch-pending');
     });
     expect(document.getElementById('auto')).toHaveAttribute(
