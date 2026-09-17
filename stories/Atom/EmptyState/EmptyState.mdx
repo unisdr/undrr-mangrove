@@ -52,6 +52,8 @@ The glyph is a slot, not a fixed asset. Anything inside `__media` is sized to `-
 - **Use a `<p>` when a heading would be out of place:** inside a table cell, a dashboard tile, or anywhere the empty state replaces content rather than introducing a section.
 - **Omit the title** for the compact "No data" form, where the description alone carries the message.
 
+In this example the empty state sits under a section `<h2>`, so its title is an `<h3>`. On this docs page the demo `<h2>` also lands inside the page outline. That is a limit of the Storybook canvas, not a pattern to copy.
+
 <Canvas of={EmptyStateStories.HeadingLevel} />
 
 ### Writing the message

@@ -196,9 +196,7 @@ export const HeadingLevel = {
         story:
           'The empty state sits under the section heading, so its title is an ' +
           '`<h3>`. `__title` is a class, not a tag: pick the level one below the ' +
-          'heading of the section or card that contains it. On this docs page ' +
-          'the demo `<h2>` also sits inside the page outline, a limitation of ' +
-          'the Storybook canvas.',
+          'heading of the section or card that contains it.',
       },
     },
   },
