@@ -116,9 +116,19 @@
   }
 
   .mg-icon {
-    font-size: 1.25em;
+    // A whole-pixel size keeps the centred glyph on the pixel grid in the
+    // 36px and 28px boxes.
+    font-size: mg-rem(18);
     line-height: 1;
   }
+}
+
+// The icon mask is an inline-block that sits on the text baseline, which leaves
+// the font's descender space below it and lifts the glyph about 1.5px above
+// centre. As a block it fills the icon box, so flex centring is exact.
+.mg-button .mg-icon:not([class*="fa-"])::before,
+.mg-icon-button .mg-icon:not([class*="fa-"])::before {
+  display: block;
 }
 
 // Responsive icon button: icon + text on desktop, collapses to compact icon-only on mobile
