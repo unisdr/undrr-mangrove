@@ -156,7 +156,7 @@ Try it below. Toggle the switch with the mouse or the Space key, then press it a
 </script>
 ```
 
-Without a `status` option, the helper uses the element named by `data-mg-switch-status` (an id), or an `aria-describedby` target with `role="status"` or `aria-live`. If there is neither, it adds a visually hidden `role="status"` element after the label.
+Without a `status` option, the helper uses the element named by `data-mg-switch-status` (an id), or an `aria-describedby` target with `role="status"` or `aria-live`. If there is neither, it adds a visually hidden `role="status"` element after the label. Keep a status region outside the label, or its messages become part of the switch's name; the helper warns if it finds one inside. Several switches can share one region. Nothing is announced for a switch that has left the page when its save settles, though its events still fire.
 
 **From npm:**
 
@@ -172,7 +172,7 @@ helper.destroy();
 
 Sites that cannot pass a function to each switch, such as a CMS that renders the markup, can mark switches with `data-mg-switch-pending` and answer one event instead. The script enhances marked switches when the page loads.
 
-With no `save` function, each change dispatches a cancelable `mg-switch:save` event on the input. It bubbles, so one listener on `document` serves every switch. Call `event.detail.respondWith()` with the save promise while the event is dispatched, not later. If no listener responds, the switch reverts and a warning is logged to the console.
+With no `save` function, each change dispatches a cancelable `mg-switch:save` event on the input. It bubbles, so one listener on `document` serves every switch. Call `event.detail.respondWith()` with the save promise while the event is dispatched. If no listener responds or calls `preventDefault()`, the switch reverts and a warning is logged to the console.
 
 ```html
 <label class="mg-switch" data-mg-switch-pending>
@@ -211,7 +211,29 @@ With no `save` function, each change dispatches a cancelable `mg-switch:save` ev
 </script>
 ```
 
-The listener can be added before or after the script loads, as long as it is in place before someone uses a switch. To enhance switches added later, call `mgSwitchPendingInit(container)`. Add `data-mg-switch-pending-skip-auto-init` next to `data-mg-switch-pending` to leave a switch for your own call.
+**If the save awaits something first**, such as a CSRF token, put the whole save in one async function and pass its promise to `respondWith()` straight away. A rejection anywhere in it, including from the token request, reverts the switch at once.
+
+```js
+document.addEventListener('mg-switch:save', event => {
+  const { checked, signal, respondWith } = event.detail;
+  respondWith(
+    (async () => {
+      const token = await getCsrfToken();
+      const response = await fetch(event.target.dataset.settingUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token },
+        body: JSON.stringify({ enabled: checked }),
+        signal,
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    })()
+  );
+});
+```
+
+Do not `await` before calling `respondWith()`: by the time the listener resumes, the switch has reverted and the late call throws. If the listener cannot avoid it, call `event.preventDefault()` before the first `await`. That claims the save, so `respondWith()` can follow later; a claimed save that never responds times out after `timeout` milliseconds.
+
+The listener can be added before or after the script loads, as long as it is in place before someone uses a switch. The script enhances marked switches as soon as it runs, if the page has already been parsed. To enhance switches added later, call `mgSwitchPendingInit(container)`: the script does not watch for new content. An explicit `mgSwitchPending()` or `mgSwitchPendingInit()` call takes over a switch that auto-initialization enhanced, with the options you pass. Add `data-mg-switch-pending-skip-auto-init` next to `data-mg-switch-pending` to keep auto-initialization away from a switch altogether.
 
 #### Drupal behaviors
 
@@ -270,19 +292,19 @@ document.addEventListener('mg-switch:save', event => {
 });
 ```
 
-This example calls `mgSwitchPendingDestroy()` instead of using a signal because switches present at page load may already have been enhanced by auto-initialization, and a signal only applies to switches its own call enhanced. To use a signal instead, add `data-mg-switch-pending-skip-auto-init` to the markup, pass `{ signal }` to `mgSwitchPendingInit()` and abort it in `detach`.
+`attach` takes over switches that auto-initialization enhanced when the page loaded, so `mgSwitchPendingDestroy(context)` in `detach` releases them all. A signal passed to `mgSwitchPendingInit()` only destroys the helpers that call returned, so prefer `mgSwitchPendingDestroy()` here.
 
 #### API
 
-`mgSwitchPending(input, options)` enhances one `.mg-switch__input` and returns `{ destroy() }`. Calling it again for the same input returns the same helper; destroy it first to change the options.
+`mgSwitchPending(input, options)` enhances one `.mg-switch__input` and returns `{ destroy() }`. Calling it again for the same input returns the same helper; destroy it first to change the options. The one exception is a switch enhanced only by page-load auto-initialization: an explicit call replaces that helper. If the page loads the script twice, for example from the CDN and from a bundle, both copies share one registry, so a switch is still enhanced once.
 
-| Option    | Type                                                 | Default | Description                                                                                                        |
-| --------- | ---------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
-| `save`    | `(checked: boolean, signal: AbortSignal) => Promise` | none    | Saves the requested position. Resolve for success, reject for failure. Without it, `mg-switch:save` is dispatched. |
-| `status`  | `Element` or selector string                         | none    | Live region for announcements. See above for what is used without it.                                              |
-| `timeout` | `number` (milliseconds)                              | `10000` | A save that has not settled by then is aborted with a `TimeoutError` and reverts.                                  |
-| `labels`  | `object`                                             | English | Announcements, below.                                                                                              |
-| `signal`  | `AbortSignal`                                        | none    | Aborting it destroys the helper. An already aborted signal enhances nothing.                                       |
+| Option    | Type                                                 | Default | Description                                                                                                                                                                                     |
+| --------- | ---------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `save`    | `(checked: boolean, signal: AbortSignal) => Promise` | none    | Saves the requested position. Resolve for success, reject or throw for failure. Return the promise: any other value counts as an immediate success. Without it, `mg-switch:save` is dispatched. |
+| `status`  | `Element` or selector string                         | none    | Live region for announcements. See above for what is used without it.                                                                                                                           |
+| `timeout` | `number` (milliseconds)                              | `10000` | A save that has not settled by then is aborted with a `TimeoutError` and reverts.                                                                                                               |
+| `labels`  | `object`                                             | English | Announcements, below.                                                                                                                                                                           |
+| `signal`  | `AbortSignal`                                        | none    | Aborting it destroys the helper. An already aborted signal enhances nothing.                                                                                                                    |
 
 | Label         | Default                                 | Announced when                       |
 | ------------- | --------------------------------------- | ------------------------------------ |
@@ -292,7 +314,7 @@ This example calls `mgSwitchPendingDestroy()` instead of using a signal because 
 | `on`          | `{label} turned on`                     | A save to on succeeds                |
 | `off`         | `{label} turned off`                    | A save to off succeeds               |
 
-A label is a string, where `{label}` is replaced with the switch's label text, or a function called with `(labelText, input)`. In HTML, set them as JSON in `data-mg-switch-labels` on the input or the label. Options win over the input, and the input wins over the label.
+A label is a string, where `{label}` is replaced with the switch's label text, or a function called with `(labelText, input)`. The label text follows the accessible name: `aria-labelledby`, then `aria-label`, then `.mg-switch__label` or the label's text, leaving out any live region inside it. Results are trimmed, so `{label} turned on` reads "turned on" for a switch with no label text. In HTML, set them as JSON in `data-mg-switch-labels` on the input or the label. Options win over the input, and the input wins over the label.
 
 ```html
 <label
@@ -319,12 +341,12 @@ A label is a string, where `{label}` is replaced with the switch's label text, o
 
 Events are dispatched on the input and bubble:
 
-| Event               | Cancelable | `detail`                                    | When                                                                                             |
-| ------------------- | ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `mg-switch:pending` | No         | `{ checked }`                               | A save starts. `checked` is the requested position.                                              |
-| `mg-switch:save`    | Yes        | `{ checked, signal, respondWith(promise) }` | Only without a `save` option. Call `respondWith()` during dispatch.                              |
-| `mg-switch:settled` | No         | `{ checked, ok: true }`                     | The save succeeded.                                                                              |
-| `mg-switch:failed`  | No         | `{ checked, requested, reason, error }`     | The save failed. `checked` is the position it reverted to. `reason` is `'error'` or `'timeout'`. |
+| Event               | Cancelable | `detail`                                    | When                                                                                                                                 |
+| ------------------- | ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `mg-switch:pending` | No         | `{ checked }`                               | A save starts. `checked` is the requested position.                                                                                  |
+| `mg-switch:save`    | Yes        | `{ checked, signal, respondWith(promise) }` | Only without a `save` option. Call `respondWith()` during dispatch, or `preventDefault()` during dispatch and `respondWith()` later. |
+| `mg-switch:settled` | No         | `{ checked, ok: true }`                     | The save succeeded. `checked` is set to the saved position, even if a form reset moved it meanwhile.                                 |
+| `mg-switch:failed`  | No         | `{ checked, requested, reason, error }`     | The save failed. `checked` is the position it reverted to. `reason` is `'error'` or `'timeout'`.                                     |
 
 **Without the helper.** If you only want the styles, set `aria-busy="true"` on the input while your own request runs and `false` when it ends, and follow the accessibility notes below. The CSS needs nothing else.
 
@@ -380,8 +402,9 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
   - The pending example and interactive story announce "Saving…", "Still saving…" for ignored presses, and the outcome; guard `change` as well as `click`; ignore stale responses; and time out a request that never answers.
   - Added `js/switch-pending.js`, a dependency-free helper that does this for plain HTML and Drupal sites, replacing the copy-paste example. The interactive story runs the same helper.
     - `mgSwitchPending(input, { save, status, timeout, labels, signal })` returns `{ destroy() }`. `mgSwitchPendingInit(scope, options)` and `mgSwitchPendingDestroy(scope)` work on `[data-mg-switch-pending]` inputs or labels.
-    - Without a `save` function, a cancelable `mg-switch:save` event asks a site-wide listener to call `respondWith(promise)`. If none does, the switch reverts with a console warning.
-    - Marked switches are enhanced on page load unless they carry `data-mg-switch-pending-skip-auto-init`.
+    - Without a `save` function, a cancelable `mg-switch:save` event asks a site-wide listener to call `respondWith(promise)`. A listener that awaits first calls `preventDefault()` before its first `await`. If no listener does either, the switch reverts with a console warning.
+    - Marked switches are enhanced on page load unless they carry `data-mg-switch-pending-skip-auto-init`. An explicit call takes over a switch that auto-initialization enhanced. Copies of the script loaded twice share one registry.
+    - Switches can share a live region. The announced label follows the accessible name.
     - Dispatches `mg-switch:pending`, `mg-switch:settled` and `mg-switch:failed`. Announcements can be translated with `labels` or `data-mg-switch-labels` JSON.
 - **2.1** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-switch` accessible binary toggle switch control (`role="switch"`) with sliding thumb, interactive brand fill on check, focus ring integration, RTL translation support, and reduced-motion support.
 - **2.0** — 2026-02-24: **Breaking:** Rewritten with BEM classes, PropTypes, and accessibility
