@@ -46,10 +46,15 @@ function stackedMarkup(prefix) {
     </article>`;
 }
 
+// Every container a test creates, so afterEach can destroy detached ones too
+// and each test starts with an empty registry.
+const created = [];
+
 function mount(html) {
   const host = document.createElement('div');
   host.innerHTML = html;
   document.body.append(host);
+  created.push(host);
   return { host, container: host.querySelector('[data-mg-js-tabs]') };
 }
 
@@ -75,6 +80,9 @@ function trackListeners(target, types) {
 }
 
 const baseline = types => Object.fromEntries(types.map(type => [type, 0]));
+// The runtime's single page-wide sweep listener, registered while any tab set
+// is tracked (including suspended ones).
+const SWEEP_ONLY = { resize: 1, orientationchange: 0, hashchange: 1 };
 
 describe('tabs lifecycle', () => {
   let observers;
@@ -116,6 +124,7 @@ describe('tabs lifecycle', () => {
   });
 
   afterEach(() => {
+    mgTabsDestroy(created.splice(0));
     mgTabsDestroy(document);
     document.body.innerHTML = '';
     window.history.replaceState(null, '', window.location.pathname);
@@ -136,10 +145,11 @@ describe('tabs lifecycle', () => {
 
       mgTabs([container], false, { signal: controller.signal });
       expect(container).toHaveAttribute('data-mg-tabs-initialized', 'true');
+      // Responsive and rail listeners, plus the page-wide sweep listener.
       expect(windowListeners()).toEqual({
-        resize: 2,
+        resize: 3,
         orientationchange: 2,
-        hashchange: 1,
+        hashchange: 2,
       });
       expect(fontListeners()).toEqual({ loadingdone: 1 });
 
@@ -236,12 +246,12 @@ describe('tabs lifecycle', () => {
       );
       const resumeListeners = trackListeners(container, RESUME_EVENTS);
       mgTabsRuntime(container, false);
-      expect(windowListeners().resize).toBe(2);
+      expect(windowListeners().resize).toBe(3);
 
       host.remove();
       fireEvent.resize(window);
 
-      expect(windowListeners()).toEqual(baseline(GLOBAL_EVENTS));
+      expect(windowListeners()).toEqual(SWEEP_ONLY);
       expect(fontListeners()).toEqual(baseline(['loadingdone']));
       expect(observers[0].disconnect).toHaveBeenCalledTimes(1);
       expect(container).toHaveAttribute('data-mg-tabs-initialized', 'true');
@@ -261,7 +271,7 @@ describe('tabs lifecycle', () => {
 
       host.remove();
       observers[0].trigger();
-      expect(windowListeners()).toEqual(baseline(GLOBAL_EVENTS));
+      expect(windowListeners()).toEqual(SWEEP_ONLY);
 
       document.body.append(host);
       const second = container.querySelectorAll('.mg-tabs__link')[1];
@@ -308,13 +318,13 @@ describe('tabs lifecycle', () => {
       const windowListeners = trackListeners(window, GLOBAL_EVENTS);
       const { host, container } = mount(stackedMarkup('hash'));
       mgTabsRuntime(container, false);
-      expect(windowListeners().hashchange).toBe(1);
+      expect(windowListeners().hashchange).toBe(2);
 
       host.remove();
       window.history.replaceState(null, '', '#hash-2');
       fireEvent(window, new HashChangeEvent('hashchange'));
 
-      expect(windowListeners()).toEqual(baseline(GLOBAL_EVENTS));
+      expect(windowListeners()).toEqual(SWEEP_ONLY);
       expect(container).toHaveAttribute('data-mg-tabs-initialized', 'true');
     });
 
@@ -322,21 +332,21 @@ describe('tabs lifecycle', () => {
       const windowListeners = trackListeners(window, GLOBAL_EVENTS);
       const stacked = mount(stackedMarkup('swept'));
       mgTabsRuntime(stacked.container, false);
-      expect(windowListeners().hashchange).toBe(1);
+      expect(windowListeners().hashchange).toBe(2);
 
       stacked.host.remove();
       const other = mount(horizontalMarkup('other'));
       mgTabsRuntime(other.container, false);
-      // Only the new horizontal set is listening.
+      // Only the new horizontal set and the sweep listener are listening.
       expect(windowListeners()).toEqual({
-        resize: 1,
+        resize: 2,
         orientationchange: 1,
-        hashchange: 1,
+        hashchange: 2,
       });
 
       document.body.append(stacked.host);
       mgTabsRuntime(other.container, false);
-      expect(windowListeners().hashchange).toBe(2);
+      expect(windowListeners().hashchange).toBe(3);
       window.history.replaceState(null, '', '#swept-2');
       fireEvent(window, new HashChangeEvent('hashchange'));
       expect(
@@ -404,6 +414,7 @@ describe('tabs lifecycle', () => {
         .createRange()
         .createContextualFragment(horizontalMarkup('offscreen'))
         .querySelector('[data-mg-js-tabs]');
+      created.push(container);
       mgTabsRuntime(container, false);
       const active = windowListeners();
       fireEvent.resize(window);
@@ -415,7 +426,7 @@ describe('tabs lifecycle', () => {
       fireEvent.resize(window);
       container.remove();
       fireEvent.resize(window);
-      expect(windowListeners()).toEqual(baseline(GLOBAL_EVENTS));
+      expect(windowListeners()).toEqual(SWEEP_ONLY);
       expect(container).toHaveAttribute('data-mg-tabs-initialized', 'true');
     });
 
@@ -454,16 +465,18 @@ describe('tabs lifecycle', () => {
       fireEvent.resize(window);
       window.innerWidth = 400;
       document.body.append(host);
+      // The layout switches once the press has been handled.
       fireEvent.pointerDown(container);
+      fireEvent.click(container);
 
       const triggers = container.querySelectorAll('.mg-tabs__mobile-link');
       expect(triggers[1]).toHaveAttribute('role', 'button');
       expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
-      // Stacked on mobile: only the responsive and hash listeners remain.
+      // Stacked on mobile: the responsive, hash and sweep listeners remain.
       expect(windowListeners()).toEqual({
-        resize: 1,
+        resize: 2,
         orientationchange: 1,
-        hashchange: 1,
+        hashchange: 2,
       });
 
       controller.abort();
@@ -479,7 +492,9 @@ describe('tabs lifecycle', () => {
       mgTabsRuntime(document, false);
       host.remove();
       mgTabsRuntime(document, false);
-      expect(windowListeners()).toEqual(baseline(GLOBAL_EVENTS));
+      // The sweep listener refers to no container; it stays until the dropped
+      // node is collected and pruned from the registry.
+      expect(windowListeners()).toEqual(SWEEP_ONLY);
       expect(fontListeners()).toEqual(baseline(['loadingdone']));
     });
   });
@@ -528,7 +543,7 @@ describe('tabs lifecycle', () => {
 
       host.remove();
       expect(() => observers[0].trigger()).toThrow('disconnect failed');
-      expect(windowListeners()).toEqual(baseline(GLOBAL_EVENTS));
+      expect(windowListeners()).toEqual(SWEEP_ONLY);
 
       controller.abort();
       expect(container).not.toHaveAttribute('data-mg-tabs-initialized');
@@ -599,6 +614,249 @@ describe('tabs lifecycle', () => {
         'aria-selected',
         'true'
       );
+    });
+  });
+  describe('hash changes while suspended', () => {
+    const tabsOf = container => container.querySelectorAll('[role="tab"]');
+    const suspend = host => {
+      host.remove();
+      observers.forEach(observer => observer.trigger());
+    };
+    const navigate = hash => {
+      const oldURL = window.location.href;
+      window.history.replaceState(null, '', hash);
+      fireEvent(
+        window,
+        new HashChangeEvent('hashchange', {
+          oldURL,
+          newURL: window.location.href,
+        })
+      );
+    };
+
+    it('selects the hash tab when re-initialised with retained state', () => {
+      const { host, container } = mount(horizontalMarkup('missed'));
+      mgTabsRuntime(container, true);
+
+      suspend(host);
+      navigate('#missed-2');
+      document.body.append(host);
+      mgTabsDestroy(container, true);
+      mgTabsRuntime(container, true);
+
+      expect(tabsOf(container)[1]).toHaveAttribute('aria-selected', 'true');
+    });
+
+    it('selects the hash tab when a sweep resumes the set', () => {
+      const { host, container } = mount(stackedMarkup('swept-hash'));
+      const resumeListeners = trackListeners(container, RESUME_EVENTS);
+      mgTabsRuntime(container, true);
+
+      host.remove();
+      navigate('#swept-hash-2');
+      expect(resumeListeners().click).toBe(1);
+      document.body.append(host);
+      fireEvent.resize(window);
+
+      expect(resumeListeners()).toEqual(baseline(RESUME_EVENTS));
+      expect(container.querySelectorAll('[role="button"]')[1]).toHaveAttribute(
+        'aria-expanded',
+        'true'
+      );
+    });
+
+    it('lets the clicked tab win over a missed hash change, without scrolling first', () => {
+      const { host, container } = mount(horizontalMarkup('press'));
+      mgTabsRuntime(container, true);
+
+      suspend(host);
+      navigate('#press-2');
+      document.body.append(host);
+      HTMLElement.prototype.scrollBy.mockClear();
+      const first = tabsOf(container)[0];
+      fireEvent.pointerDown(first);
+      expect(HTMLElement.prototype.scrollBy).not.toHaveBeenCalled();
+      expect(first).toHaveAttribute('aria-selected', 'true');
+      fireEvent.click(first);
+
+      expect(first).toHaveAttribute('aria-selected', 'true');
+      expect(tabsOf(container)[1]).toHaveAttribute('aria-selected', 'false');
+    });
+
+    it('applies a missed hash change after a press that selects nothing', () => {
+      const { host, container } = mount(horizontalMarkup('elsewhere'));
+      mgTabsRuntime(container, true);
+
+      suspend(host);
+      navigate('#elsewhere-2');
+      document.body.append(host);
+      fireEvent.pointerDown(container);
+      expect(tabsOf(container)[0]).toHaveAttribute('aria-selected', 'true');
+      fireEvent.click(container);
+
+      expect(tabsOf(container)[1]).toHaveAttribute('aria-selected', 'true');
+    });
+
+    it('keeps the selection when the hash did not change', () => {
+      const { host, container } = mount(horizontalMarkup('unchanged'));
+      mgTabsRuntime(container, true);
+      fireEvent.click(tabsOf(container)[1]);
+
+      suspend(host);
+      document.body.append(host);
+      mgTabsDestroy(container, true);
+      mgTabsRuntime(container, true);
+
+      expect(tabsOf(container)[1]).toHaveAttribute('aria-selected', 'true');
+    });
+  });
+
+  describe('breakpoint crossed while suspended', () => {
+    it('acts on the tapped tab before switching to the mobile layout', () => {
+      const { host, container } = mount(
+        horizontalMarkup('tap', 'data-mg-js-tabs-stack-on-mobile')
+      );
+      mgTabsRuntime(container, false);
+
+      host.remove();
+      fireEvent.resize(window);
+      window.innerWidth = 400;
+      document.body.append(host);
+      const second = container.querySelectorAll('[role="tab"]')[1];
+      fireEvent.pointerDown(second);
+      // Still the layout the press started on.
+      expect(second).toHaveAttribute('role', 'tab');
+      expect(second.closest('.mg-tabs__item')).not.toHaveAttribute('hidden');
+      fireEvent.click(second);
+
+      const triggers = container.querySelectorAll('.mg-tabs__mobile-link');
+      expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
+      expect(triggers[1]).toHaveAttribute('aria-expanded', 'true');
+      expect(container.querySelector('#tap-2')).toBeVisible();
+    });
+
+    it('does not scroll on the first observer notification after a rebuild', () => {
+      window.innerWidth = 400;
+      const { host, container } = mount(
+        horizontalMarkup('settle', 'data-mg-js-tabs-stack-on-mobile')
+      );
+      mgTabsRuntime(container, false);
+      host.remove();
+      fireEvent.resize(window);
+
+      window.innerWidth = 1024;
+      document.body.append(host);
+      mgTabsRuntime(container, false);
+      expect(container.querySelectorAll('[role="tab"]')).toHaveLength(2);
+      HTMLElement.prototype.scrollBy.mockClear();
+      observers[observers.length - 1].trigger();
+
+      expect(HTMLElement.prototype.scrollBy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('sweeping', () => {
+    it('resumes a nested tab set after an interaction with the outer set', () => {
+      const windowListeners = trackListeners(window, GLOBAL_EVENTS);
+      const { host, container } = mount(horizontalMarkup('outer'));
+      container
+        .querySelector('#outer-1')
+        .insertAdjacentHTML('beforeend', stackedMarkup('inner'));
+      const inner = container.querySelector('#outer-1 [data-mg-js-tabs]');
+      const innerResume = trackListeners(inner, RESUME_EVENTS);
+      mgTabsRuntime(document, false);
+      const active = windowListeners();
+
+      host.remove();
+      fireEvent.resize(window);
+      expect(innerResume().click).toBe(1);
+      document.body.append(host);
+      const second = container.querySelectorAll('[role="tab"]')[1];
+      fireEvent.pointerDown(second);
+      fireEvent.click(second);
+
+      expect(innerResume()).toEqual(baseline(RESUME_EVENTS));
+      expect(windowListeners()).toEqual(active);
+    });
+
+    it.each([
+      [
+        'hashchange',
+        () => fireEvent(window, new HashChangeEvent('hashchange')),
+      ],
+      ['resize', () => fireEvent.resize(window)],
+    ])(
+      'suspends a stacked set attached and removed between sweeps on the next %s',
+      (name, dispatch) => {
+        const windowListeners = trackListeners(window, GLOBAL_EVENTS);
+        const container = document
+          .createRange()
+          .createContextualFragment(stackedMarkup(`between-${name}`))
+          .querySelector('[data-mg-js-tabs]');
+        created.push(container);
+        const resumeListeners = trackListeners(container, RESUME_EVENTS);
+        mgTabsRuntime(container, false);
+        document.body.append(container);
+        container.remove();
+
+        dispatch();
+        expect(resumeListeners().click).toBe(1);
+        expect(windowListeners()).toEqual(SWEEP_ONLY);
+      }
+    );
+
+    it('removes the sweep listener when the registry empties', () => {
+      const windowListeners = trackListeners(window, GLOBAL_EVENTS);
+      const first = mount(stackedMarkup('empty-a')).container;
+      const second = mount(stackedMarkup('empty-b')).container;
+      mgTabsRuntime(first, false);
+      expect(windowListeners()).toEqual({ ...SWEEP_ONLY, hashchange: 2 });
+      mgTabsRuntime(second, false);
+      expect(windowListeners()).toEqual({ ...SWEEP_ONLY, hashchange: 3 });
+
+      mgTabsDestroy(first);
+      expect(windowListeners()).toEqual({ ...SWEEP_ONLY, hashchange: 2 });
+      mgTabsDestroy(second);
+      expect(windowListeners()).toEqual(baseline(GLOBAL_EVENTS));
+    });
+
+    it('reports an error in one set and still initialises another', () => {
+      const reportError = jest.fn();
+      window.reportError = reportError;
+      try {
+        const a = mount(horizontalMarkup('sweep-a'));
+        mgTabsRuntime(a.container, false);
+        observers[0].disconnect.mockImplementationOnce(() => {
+          throw new Error('disconnect failed');
+        });
+        a.host.remove();
+
+        const b = mount(horizontalMarkup('sweep-b')).container;
+        expect(() => mgTabsRuntime(b, false)).not.toThrow();
+        expect(b).toHaveAttribute('data-mg-tabs-initialized', 'true');
+        expect(reportError).toHaveBeenCalledWith(
+          expect.objectContaining({ message: 'disconnect failed' })
+        );
+      } finally {
+        delete window.reportError;
+      }
+    });
+  });
+
+  describe('mgTabsDestroy with several sets', () => {
+    it('destroys every set when one throws, then rethrows', () => {
+      const windowListeners = trackListeners(window, GLOBAL_EVENTS);
+      const first = mount(horizontalMarkup('destroy-a')).container;
+      const second = mount(horizontalMarkup('destroy-b')).container;
+      mgTabsRuntime(document, false);
+      observers[1].disconnect.mockImplementationOnce(() => {
+        throw new Error('disconnect failed');
+      });
+
+      expect(() => mgTabsDestroy(document)).toThrow('disconnect failed');
+      expect(first).not.toHaveAttribute('data-mg-tabs-initialized');
+      expect(second).not.toHaveAttribute('data-mg-tabs-initialized');
+      expect(windowListeners()).toEqual(baseline(GLOBAL_EVENTS));
     });
   });
 });

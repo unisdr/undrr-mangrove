@@ -12,8 +12,19 @@ const lifecycles = new WeakMap();
 const canWeakRef = typeof WeakRef === 'function';
 const tracked = new Set();
 let sweeping = false;
+// One page-wide resize and hashchange listener sweeps the registry while it
+// holds anything, so removed sets whose own listeners never fire are still
+// found. It refers to no container.
+const SWEEP_EVENTS = ['resize', 'hashchange'];
+let sweepListening = false;
 const RESUME_EVENTS = ['pointerdown', 'focusin', 'keydown', 'click'];
 const RESUME_OPTIONS = { capture: true };
+// After a pointer press is released, how long to wait for its click before
+// running work deferred by the resume. Touch browsers can dispatch the click
+// in a later task than pointerup.
+const CLICK_WAIT_MS = 400;
+// Upper bound for a press that never reports pointerup or pointercancel.
+const PRESS_WAIT_MS = 5000;
 const MOBILE_BREAKPOINT = 480;
 const isStacked = container => container.dataset.mgJsTabsVariant === 'stacked';
 
@@ -69,6 +80,80 @@ function runAll(tasks) {
     }
   });
   if (failed) throw failure;
+}
+
+// Surface an error without unwinding the caller, so one broken tab set cannot
+// stop another from initialising.
+function report(error) {
+  if (typeof globalThis.reportError === 'function')
+    globalThis.reportError(error);
+  else
+    setTimeout(() => {
+      throw error;
+    });
+}
+
+/**
+ * Run `run` once the interaction that started with `event` has been handled:
+ * after the click that follows a pointer press, or in the next task for focus
+ * and key presses. Work that changes layout or selection must not happen
+ * between a pointerdown and its click, or the click can land on something else.
+ * Returns a function that cancels without running.
+ */
+function afterInteraction(event, run) {
+  let timer;
+  const offs = [];
+  const stop = () => {
+    clearTimeout(timer);
+    runAll(offs.splice(0).reverse());
+  };
+  const finish = () => {
+    stop();
+    run();
+  };
+  const on = (type, handler, capture = false) => {
+    window.addEventListener(type, handler, capture);
+    offs.push(() => window.removeEventListener(type, handler, capture));
+  };
+  const wait = ms => {
+    clearTimeout(timer);
+    timer = setTimeout(finish, ms);
+  };
+  // Bubble phase on window: the control's own click handler has already run.
+  on('click', finish);
+  if (event.type === 'pointerdown') {
+    const released = () => wait(CLICK_WAIT_MS);
+    on('pointerup', released, true);
+    on('pointercancel', released, true);
+    wait(PRESS_WAIT_MS);
+  } else wait(0);
+  return stop;
+}
+
+// The hash before a hashchange event, so a set suspended while handling that
+// event still treats the new hash as a change it has not followed.
+function hashBefore(event) {
+  if (event?.type !== 'hashchange' || !event.oldURL) return undefined;
+  try {
+    return new URL(event.oldURL).hash;
+  } catch {
+    return undefined;
+  }
+}
+
+function syncSweepListener() {
+  const listen = tracked.size > 0;
+  if (listen === sweepListening) return;
+  sweepListening = listen;
+  SWEEP_EVENTS.forEach(type => {
+    if (listen) window.addEventListener(type, sweep);
+    else window.removeEventListener(type, sweep);
+  });
+}
+
+function untrack(ref) {
+  tracked.delete(ref);
+  syncSweepListener();
 }
 
 // Registrations outside the container (window, document.fonts, observers).
@@ -157,6 +242,7 @@ function trackLifecycle(container, signal) {
   }
   lifecycles.set(container, lifecycle);
   tracked.add(lifecycle.ref);
+  syncSweepListener();
 }
 
 function destroyContainer(container, preserveState = false) {
@@ -173,10 +259,26 @@ function destroyContainer(container, preserveState = false) {
   } finally {
     if (lifecycle) {
       lifecycles.delete(container);
-      tracked.delete(lifecycle.ref);
-      runAll([lifecycle.cancelResume, lifecycle.release].filter(Boolean));
+      untrack(lifecycle.ref);
+      runAll(
+        [
+          lifecycle.cancelResume,
+          lifecycle.cancelDeferred,
+          lifecycle.release,
+        ].filter(Boolean)
+      );
     }
   }
+}
+
+/**
+ * Whether a detached tab set may be suspended. A set that has been seen on
+ * the page may. So may one that never was, unless it has a scrolling rail: its
+ * resize observer reveals the selected tab once the set is first laid out, so
+ * a set built off-screen and inserted later keeps its observer until then.
+ */
+function canSuspend(container, lifecycle) {
+  return lifecycle.attached || !instanceOf(container)?.needsLayout;
 }
 
 /**
@@ -185,12 +287,12 @@ function destroyContainer(container, preserveState = false) {
  * as they are, so a node that is re-attached keeps working, and a node the app
  * has dropped holds no outside references and can be garbage collected.
  */
-function suspendContainer(container) {
+function suspendContainer(container, event) {
   const lifecycle = lifecycles.get(container);
   const instance = instanceOf(container);
   if (!lifecycle || lifecycle.suspended || !instance) return;
   lifecycle.suspended = true;
-  const onUse = () => resumeContainer(container);
+  const onUse = event => resumeContainer(container, event);
   RESUME_EVENTS.forEach(type =>
     container.addEventListener(type, onUse, RESUME_OPTIONS)
   );
@@ -198,47 +300,78 @@ function suspendContainer(container) {
     RESUME_EVENTS.forEach(type =>
       container.removeEventListener(type, onUse, RESUME_OPTIONS)
     );
-  instance.suspend();
+  const cancelDeferred = lifecycle.cancelDeferred;
+  lifecycle.cancelDeferred = undefined;
+  runAll(
+    [cancelDeferred, () => instance.suspend(hashBefore(event))].filter(Boolean)
+  );
 }
 
-function resumeContainer(container) {
+/**
+ * Resume a suspended tab set that is back on the page. Given the interaction
+ * that triggered it, work that could move or rebuild what the pointer is on
+ * (hash reconciliation, revealing the selected tab, a responsive layout
+ * change) waits until that interaction has been handled, and then every other
+ * tracked set is swept, so nested sets resume too.
+ */
+function resumeContainer(container, event) {
   const lifecycle = lifecycles.get(container);
   if (!lifecycle?.suspended || !container.isConnected) return;
   lifecycle.suspended = false;
   lifecycle.attached = true;
   const cancel = lifecycle.cancelResume;
   lifecycle.cancelResume = undefined;
+  let defer;
+  if (event) {
+    const deferred = [];
+    defer = task => deferred.push(task);
+    lifecycle.cancelDeferred = afterInteraction(event, () => {
+      lifecycle.cancelDeferred = undefined;
+      try {
+        runAll(deferred);
+      } finally {
+        sweep();
+      }
+    });
+  }
   try {
     cancel?.();
   } finally {
-    instanceOf(container)?.resume();
+    instanceOf(container)?.resume({ defer });
   }
 }
 
 /**
  * Suspend tracked tab sets that have left the document and resume those that
- * are back. Runs on every mgTabs()/mgTabsRuntime() call and whenever a handler
- * notices a removal, so sets without a firing outside listener (stacked sets
- * only listen for hash changes) are released too.
+ * are back. Runs on every mgTabs()/mgTabsRuntime() call, on window resize and
+ * hashchange while any set is tracked, after an interaction resumes a set, and
+ * whenever a handler notices a removal. An error in one set is reported and
+ * the sweep continues, so it cannot stop the caller from initialising.
  */
-function sweep() {
+function sweep(event) {
   if (sweeping) return;
   sweeping = true;
   try {
     tracked.forEach(ref => {
-      const container = canWeakRef ? ref.deref() : ref;
-      const lifecycle = container && lifecycles.get(container);
-      if (lifecycle?.ref !== ref) {
-        tracked.delete(ref);
-        return;
+      try {
+        const container = canWeakRef ? ref.deref() : ref;
+        const lifecycle = container && lifecycles.get(container);
+        if (lifecycle?.ref !== ref) {
+          tracked.delete(ref);
+          return;
+        }
+        if (container.isConnected) {
+          lifecycle.attached = true;
+          resumeContainer(container);
+        } else if (canSuspend(container, lifecycle))
+          suspendContainer(container, event);
+      } catch (error) {
+        report(error);
       }
-      if (container.isConnected) {
-        lifecycle.attached = true;
-        resumeContainer(container);
-      } else if (lifecycle.attached) suspendContainer(container);
     });
   } finally {
     sweeping = false;
+    syncSweepListener();
   }
 }
 
@@ -247,19 +380,20 @@ function sweep() {
  * the document and has since been removed without mgTabsDestroy() is suspended
  * instead of doing work. Events arrive asynchronously, so a synchronous move
  * (remove, then insert elsewhere) is never mistaken for a removal. A tab set
- * initialised while detached is left alone until it has been attached once.
+ * with a rail that was initialised while detached is left alone until it has
+ * been attached once.
  */
-function isLive(container) {
+function isLive(container, event) {
   const lifecycle = lifecycles.get(container);
   if (container.isConnected) {
     if (lifecycle) lifecycle.attached = true;
     return true;
   }
-  if (!lifecycle?.attached) return true;
+  if (!lifecycle || !canSuspend(container, lifecycle)) return true;
   try {
-    suspendContainer(container);
+    suspendContainer(container, event);
   } finally {
-    sweep();
+    sweep(event);
   }
   return false;
 }
@@ -268,11 +402,15 @@ function isLive(container) {
  * Remove enhancement, listeners and observers so a container can be initialised again.
  * Set preserveState for a same-layout refresh; unmounting or an explicit reset
  * should use the default. Retained state is keyed weakly and consumed once.
+ * Every tab set in scope is destroyed even if one throws; the first error is
+ * rethrown afterwards.
  */
 export function mgTabsDestroy(scope = document, preserveState = false) {
-  containersIn(scope)
-    .reverse()
-    .forEach(container => destroyContainer(container, preserveState));
+  runAll(
+    containersIn(scope)
+      .reverse()
+      .map(container => () => destroyContainer(container, preserveState))
+  );
 }
 
 /** Capture selection and focus before replacing a responsive layout. */
@@ -344,7 +482,7 @@ function initResponsiveContainer(
     );
     root.classList.remove('mg-tabs--responsive-stacked');
   };
-  const update = () => {
+  const update = (resumed = false) => {
     const nextMobile = window.innerWidth < MOBILE_BREAKPOINT;
     if (nextMobile === mobile) return;
     const state = mgTabsGetState(container) || initialState;
@@ -365,6 +503,7 @@ function initResponsiveContainer(
       responsive: false,
       responsiveMobile: mobile,
       initialState: state,
+      resumed,
     });
   };
   const onViewportChange = () => {
@@ -375,18 +514,31 @@ function initResponsiveContainer(
     on(window, 'orientationchange', onViewportChange);
   });
   responsiveInstances.set(container, {
-    suspend() {
+    get needsLayout() {
+      return Boolean(instances.get(container)?.needsLayout);
+    },
+    suspend(hash) {
       runAll([
         () => outside.disconnect(),
-        () => instances.get(container)?.suspend(),
+        () => instances.get(container)?.suspend(hash),
       ]);
     },
-    resume() {
+    resume({ defer } = {}) {
       outside.connect();
-      // The viewport may have crossed the breakpoint while suspended; a new
-      // inner instance registers its own outside listeners.
-      update();
-      instances.get(container)?.resume();
+      // The viewport may have crossed the breakpoint while suspended. A
+      // rebuilt inner instance registers its own outside listeners and takes
+      // the suspended instance's state, including the hash it recorded. After
+      // an interaction the rebuild waits until the interaction has been
+      // handled, so the press acts on the layout it started on.
+      if (defer) {
+        instances.get(container)?.resume({ defer });
+        defer(() => {
+          if (responsiveInstances.has(container)) update(true);
+        });
+      } else {
+        update(true);
+        instances.get(container)?.resume();
+      }
     },
     destroy() {
       try {
@@ -572,6 +724,10 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
   };
   let activeTab;
   let lastInteracted;
+  // The hash when the set was suspended, and, after a resume that deferred
+  // reconciling it, the hash still to compare against.
+  let suspendedHash;
+  let reconcileFrom;
   const reveal = (tab, animate = false) => {
     if (!scroller || !tab) return;
     const view = scroller.getBoundingClientRect();
@@ -604,6 +760,9 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
   ) => {
     const index = tabs.indexOf(tab);
     lastInteracted = tab;
+    // Any selection made after a resume is newer than a hash change missed
+    // while suspended.
+    reconcileFrom = undefined;
     if (stacked) {
       const open = toggle ? panels[index].hasAttribute('hidden') : true;
       if (
@@ -755,8 +914,8 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
     if (alive && isLive(container)) reveal(activeTab);
   };
   const outside = outsideRegistrations((on, onRelease, resumed) => {
-    on(window, 'hashchange', () => {
-      if (alive && isLive(container)) activateHash();
+    on(window, 'hashchange', event => {
+      if (alive && isLive(container, event)) activateHash();
     });
     if (!scroller) return;
     on(window, 'resize', refresh);
@@ -781,10 +940,11 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
       on(document.fonts, 'loadingdone', refresh);
     }
   });
-  outside.connect();
+  outside.connect(options.resumed === true);
   cleanups.push(() => outside.disconnect());
   container.setAttribute('data-mg-tabs-initialized', 'true');
   instances.set(container, {
+    needsLayout: Boolean(scroller),
     getState() {
       const focused = document.activeElement;
       const triggerIndex = tabs.indexOf(focused);
@@ -818,7 +978,9 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
           ? { query: filterInput.value, focused: filterInput === focused }
           : undefined,
         panelId: panels[index].id,
-        hash: window.location.hash,
+        // While suspended, report the hash from before suspension so a hash
+        // change that was not observed still wins on re-initialisation.
+        hash: suspendedHash ?? reconcileFrom ?? window.location.hash,
         requestedVariant,
         focus,
         stacked,
@@ -827,12 +989,32 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
           .map(panel => panel.id),
       };
     },
-    suspend() {
+    suspend(hash) {
+      suspendedHash = reconcileFrom ?? hash ?? window.location.hash;
+      reconcileFrom = undefined;
       outside.disconnect();
     },
-    resume() {
+    resume({ defer } = {}) {
+      reconcileFrom = suspendedHash;
+      suspendedHash = undefined;
       outside.connect(true);
       updateOverflow();
+      // Follow a hash change that happened while suspended, as the hashchange
+      // listener would have. After an interaction this waits until it has been
+      // handled, and a selection the interaction made wins.
+      const reconcile = () => {
+        const from = reconcileFrom;
+        reconcileFrom = undefined;
+        if (
+          alive &&
+          activateDeepLinkOnLoad &&
+          from !== undefined &&
+          from !== window.location.hash
+        )
+          activateHash();
+      };
+      if (defer) defer(reconcile);
+      else reconcile();
     },
     destroy() {
       alive = false;

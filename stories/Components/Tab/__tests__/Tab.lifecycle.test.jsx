@@ -95,6 +95,76 @@ describe('Tab wrapper lifecycle', () => {
     );
   });
 
+  const navigate = hash => {
+    const oldURL = window.location.href;
+    window.history.replaceState(null, '', hash);
+    fireEvent(
+      window,
+      new HashChangeEvent('hashchange', {
+        oldURL,
+        newURL: window.location.href,
+      })
+    );
+  };
+
+  it('follows a hash change made while suspended when re-rendered', () => {
+    const result = render(<PortalTab target={target} />);
+    expect(screen.getByRole('tab', { name: 'First' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+
+    target.remove();
+    triggerObservers();
+    navigate('#mg-tabs__section-portal-second');
+    document.body.append(target);
+    result.rerender(
+      <PortalTab target={target} labels={{ tabListLabel: 'Updated' }} />
+    );
+
+    expect(screen.getByRole('tab', { name: 'Second' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+  });
+
+  it('lets a tap win over a hash change made while suspended', () => {
+    render(<PortalTab target={target} />);
+
+    target.remove();
+    triggerObservers();
+    navigate('#mg-tabs__section-portal-second');
+    document.body.append(target);
+    const first = screen.getByRole('tab', { name: 'First' });
+    fireEvent.pointerDown(first);
+    fireEvent.click(first);
+
+    expect(first).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'Second' })).toHaveAttribute(
+      'aria-selected',
+      'false'
+    );
+    expect(screen.getByText('First panel')).toBeVisible();
+  });
+
+  it('keeps the selection across a suspension with no hash change and a re-render', () => {
+    const result = render(<PortalTab target={target} />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Second' }));
+
+    target.remove();
+    triggerObservers();
+    fireEvent.resize(window);
+    document.body.append(target);
+    result.rerender(
+      <PortalTab target={target} labels={{ tabListLabel: 'Again' }} />
+    );
+
+    expect(screen.getByRole('tab', { name: 'Second' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+  });
+
   it('releases window listeners on unmount', () => {
     const added = new Set();
     const add = window.addEventListener;
