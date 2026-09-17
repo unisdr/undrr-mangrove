@@ -1303,12 +1303,16 @@ npm run build</code></pre>
     examples: [
       {
         name: 'Show more / collapse pattern',
-        html: `<div class="mg-show-more--collapsed" data-mg-show-more id="extra-content" style="--mg-show-more-height: 150px;">
+        // `data-mg-show-more` marks the toggle, not the content;
+        // `data-mg-show-more-target` points at what it reveals. mgShowMore()
+        // adds aria-expanded and aria-controls and keeps them in sync, so do
+        // not hand-write them.
+        html: `<div class="mg-show-more--collapsed" id="extra-content" style="--mg-show-more-height: 150px;">
   <p>This is long content that will be collapsed behind a gradient fade. Only the first 150px is visible initially.</p>
   <p>Additional content hidden until the user clicks the button.</p>
   <p>More content here...</p>
 </div>
-<button class="mg-show-more--button" data-mg-show-more-toggle aria-expanded="false" aria-controls="extra-content">Show more</button>`,
+<button type="button" class="mg-button mg-button-primary mg-show-more--button" data-mg-show-more data-mg-show-more-target="#extra-content" data-mg-show-more-label-collapsed="Show more" data-mg-show-more-label-open="Show less">Show more</button>`,
       },
     ],
   },

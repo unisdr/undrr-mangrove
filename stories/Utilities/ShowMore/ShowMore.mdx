@@ -35,15 +35,31 @@ The `mgShowMore()` function finds all elements with `data-mg-show-more` and wire
 
 <!-- Toggle button (can be anywhere on the page) -->
 
-<a href="#"
+<button type="button"
    class="mg-button mg-button-primary mg-show-more--button"
    data-mg-show-more="true"
    data-mg-show-more-target=".my-content"
    data-mg-show-more-label-open="Show less"
    data-mg-show-more-label-collapsed="Show more">
   Show more
-</a>
+</button>
 `} />
+
+The toggle must be a `<button type="button">`. Earlier versions of these docs
+showed an `<a href="#">`; that anchor announced as a link, offered a dead
+destination when the script failed to load, and never told assistive
+technology that the content had expanded. `mgShowMore()` still adds
+`role="button"` to an anchor it finds, so existing markup keeps working, but
+new markup should use a button.
+
+### Accessibility
+
+`mgShowMore()` wires the disclosure pattern for you — do not hand-write these:
+
+- `aria-expanded` on the toggle, kept in sync with the collapsed state.
+- `aria-controls` on the toggle, pointing at the content container. If the
+  container has no `id`, the script assigns one (`mg-show-more-target-N`).
+- `role="button"` on a toggle that is not already a `<button>`.
 
 ### Data attributes
 
@@ -86,8 +102,8 @@ mgShowMore([myButton]);
 Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This is useful when another script must run first (e.g. Drupal behaviors). Call `mgShowMore` yourself once that setup is complete:
 
 <Source language="html" code={`
-<a data-mg-show-more data-mg-show-more-skip-auto-init
-   data-mg-show-more-target=".my-content">Show more</a>
+<button type="button" data-mg-show-more data-mg-show-more-skip-auto-init
+   data-mg-show-more-target=".my-content">Show more</button>
 
 <script type="module">
   import {mgShowMore} from

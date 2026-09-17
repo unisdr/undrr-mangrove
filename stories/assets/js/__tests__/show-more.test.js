@@ -64,6 +64,64 @@ describe('mgShowMore', () => {
     });
   });
 
+  describe('disclosure semantics', () => {
+    it('points aria-controls at the target and assigns it an id when needed', () => {
+      const btn = setupButton();
+      mgShowMore();
+
+      const target = document.querySelector('.mg-show-more--container');
+      expect(target.id).toMatch(/^mg-show-more-target-\d+$/);
+      expect(btn.getAttribute('aria-controls')).toBe(target.id);
+    });
+
+    it('keeps an id the consumer already set', () => {
+      document.body.innerHTML = `
+        <button data-mg-show-more data-mg-show-more-target="#my-content">Show more</button>
+        <div id="my-content" class="mg-show-more--collapsed"></div>
+      `;
+      const btn = document.querySelector('[data-mg-show-more]');
+      mgShowMore();
+
+      expect(btn.getAttribute('aria-controls')).toBe('my-content');
+    });
+
+    it('keeps aria-expanded in sync with the collapsed state', () => {
+      const btn = setupButton();
+      const target = document.querySelector('.mg-show-more--container');
+      mgShowMore();
+
+      // Init clicks once, so the content starts expanded.
+      expect(target.classList.contains('mg-show-more--collapsed')).toBe(false);
+      expect(btn.getAttribute('aria-expanded')).toBe('true');
+
+      btn.click();
+      expect(target.classList.contains('mg-show-more--collapsed')).toBe(true);
+      expect(btn.getAttribute('aria-expanded')).toBe('false');
+
+      btn.click();
+      expect(btn.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('does not add role="button" to a real button', () => {
+      const btn = setupButton();
+      mgShowMore();
+      expect(btn.hasAttribute('role')).toBe(false);
+    });
+
+    it('gives a legacy anchor toggle button semantics', () => {
+      document.body.innerHTML = `
+        <a href="#" data-mg-show-more>Show more</a>
+        <div class="mg-show-more--container mg-show-more--collapsed"></div>
+      `;
+      const link = document.querySelector('[data-mg-show-more]');
+      mgShowMore();
+
+      expect(link.getAttribute('role')).toBe('button');
+      expect(link.getAttribute('aria-expanded')).toBe('true');
+      expect(link.hasAttribute('aria-controls')).toBe(true);
+    });
+  });
+
   describe('single-element scope', () => {
     it('accepts a single HTMLElement without throwing', () => {
       const btn = setupButton();
