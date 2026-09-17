@@ -29,3 +29,4 @@ npm-debug.log
 debug-storybook.log
 .superpowers/
 .worktrees/
+.claude/worktrees/
