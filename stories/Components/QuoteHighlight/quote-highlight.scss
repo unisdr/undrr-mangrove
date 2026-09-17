@@ -223,7 +223,12 @@
   }
 
   &--dark {
-    background-color: rgb(var(--mg-color-blue-900) / 0.7);
+    // Opaque, not a 0.7 wash. Under alpha the quote's contrast depends on
+    // whatever the component is placed over, so the library could only promise
+    // AA on a white page — and on white the wash composited to #4d84b2, which
+    // put the quote, the name and the title at 3.99:1. Solid blue-900 is
+    // 8.31:1 against white text on any backdrop.
+    background-color: rgb(var(--mg-color-blue-900));
     color: rgb(var(--mg-color-white));
 
     .mg-quote-highlight__quote {
