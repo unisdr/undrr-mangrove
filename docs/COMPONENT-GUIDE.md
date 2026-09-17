@@ -167,12 +167,12 @@ function NavCard({ theme }) {
 
 **Never use `href="/?path=..."` or `href="?path=..."` in MDX or stories.** Both navigate the iframe directly.
 
-**Add a review checklist reference** right after the `<Meta>` block. Adjust the relative path based on file depth (`../../../` for depth-3 components like `Pager/`, `../../../../` for depth-4 like `Cards/Card/`):
+**Add a review checklist reference** right after the `<Meta>` block. Copy the line as-is — the published Storybook URL is absolute because a relative path to a repo file 404s once the docs are built:
 
 ```mdx
 <Meta of={ComponentNameStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Component name
 ```

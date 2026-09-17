@@ -46,11 +46,11 @@ Mangrove ships five built-in themes. Colour, spacing, radius and component token
 
 A sub-brand stylesheet includes both `:root` defaults and a `.mg-theme-*` block. **The class activates the brand**; without it, components use the default UNDRR palette. `style-all.css` includes all brand blocks for multi-brand pages or runtime switching. Load one Mangrove stylesheet per page.
 
-DELTA's interactive colour is UNDRR blue by design: alpha.3 replaced the navy Mangrove had been using with DELTA's real sourced palette. See [DELTA's palette is corrected](/docs/getting-started-release-notes-v2-0--docs) in the v2.0 release notes.
+DELTA's interactive colour is UNDRR blue by design: alpha.3 replaced the navy Mangrove had been using with DELTA's real sourced palette. See [DELTA's palette is corrected](?path=/docs/getting-started-release-notes-v2-0--docs) in the v2.0 release notes.
 
 ### Legacy 10px root (removed in 2.0)
 
-The `-legacy` theme variants and the 10px root font-size they preserved were removed in Mangrove 2.0. Mangrove now assumes a standard 16px document root and ships only the standard themes. Sites migrating off the old 10px root must serve a 16px root and convert their own rem-based CSS to a 16px basis — see the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs) (breaking change #5).
+The `-legacy` theme variants and the 10px root font-size they preserved were removed in Mangrove 2.0. Mangrove now assumes a standard 16px document root and ships only the standard themes. Sites migrating off the old 10px root must serve a 16px root and convert their own rem-based CSS to a 16px basis — see the [v2.0 release notes](?path=/docs/getting-started-release-notes-v2-0--docs) (breaking change #5).
 
 ## Two token systems
 
@@ -135,7 +135,7 @@ Assign these a finished colour, never channels:
 }
 ```
 
-All three changed shape in `2.0.0-alpha.3`. An override still written as channels produces an invalid declaration that the browser drops silently — the symptom is buttons losing their fill. See [breaking change #7](/docs/getting-started-release-notes-v2-0--docs) in the release notes.
+All three changed shape in `2.0.0-alpha.3`. An override still written as channels produces an invalid declaration that the browser drops silently — the symptom is buttons losing their fill. See [breaking change #7](?path=/docs/getting-started-release-notes-v2-0--docs) in the release notes.
 
 ### The focus ring is not a brand colour
 
@@ -269,7 +269,7 @@ Four things to check as you go:
 3. **The sub-brand `_variables-*.scss` files are gone**, replaced by `_theme-*.scss`.
 4. **Compiled-CSS consumers of a sub-brand must add the `mg-theme-*` class**, or they get the UNDRR palette.
 
-The full list, including the 10px root removal and the button token shape change, is in the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs).
+The full list, including the 10px root removal and the button token shape change, is in the [v2.0 release notes](?path=/docs/getting-started-release-notes-v2-0--docs).
 
 ## RTL considerations
 

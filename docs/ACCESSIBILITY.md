@@ -108,12 +108,26 @@ function Modal({ isOpen, onClose, children }) {
 
 **Sufficient contrast**
 
+Take colors from the design tokens rather than picking hex values. Each theme redefines the tokens, so a component that reads them keeps its contrast in UNDRR, PreventionWeb, IRP, MCR2030 and DELTA. Color tokens hold sRGB channel triples, so wrap them in `rgb(...)`.
+
 ```scss
-// Ensure WCAG AA compliance (4.5:1 for normal text)
-$mg-text-color: #212529; // High contrast on white
-$mg-text-muted: #6c757d; // 4.5:1 contrast ratio
-$mg-link-color: #0066cc; // Accessible blue
-$mg-error-color: #dc3545; // High contrast red
+// Tokens are checked against WCAG 2.2 AA (4.5:1 for normal text)
+.mg-component {
+  color: rgb(var(--mg-color-text)); // Body text
+  background-color: rgb(var(--mg-color-neutral-0)); // Page surface
+}
+
+.mg-component__meta {
+  color: rgb(var(--mg-color-neutral-500)); // Muted text
+}
+
+.mg-component__link {
+  color: rgb(var(--mg-color-interactive)); // Link
+}
+
+.mg-component__error {
+  color: rgb(var(--mg-color-red-900)); // Error
+}
 ```
 
 **Don't rely solely on color**
