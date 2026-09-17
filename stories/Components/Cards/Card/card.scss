@@ -358,9 +358,15 @@ span.mg-card__label {
   text-wrap: pretty;
 }
 
-.mg-card__summary a,
+// Links inside running summary text carry a permanent underline: the
+// interactive blue sits at 2.09:1 against the body colour, so colour alone
+// cannot distinguish them (WCAG 1.4.1 Use of Colour). Button-styled links
+// inside a summary keep their own treatment.
+.mg-card__summary a:not(.mg-button),
 .mg-card__text-link {
   color: rgb(var(--mg-color-interactive));
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 .mg-card__summary a,
@@ -376,9 +382,9 @@ span.mg-card__label {
   font-weight: 700;
 }
 
-.mg-card__summary a:hover,
+.mg-card__summary a:not(.mg-button):hover,
 .mg-card__text-link:hover {
-  text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 // Book Card variant
