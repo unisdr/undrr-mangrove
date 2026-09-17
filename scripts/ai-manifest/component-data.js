@@ -897,9 +897,9 @@ npm run build</code></pre>
         'data-status': '"degraded" (default) or "offline".',
         'data-heading-level': 'h2 to h6 (default h3).',
         'data-is-compact':
-          '"true" for compact padding and typography. The mg-notice--compact class on the container does the same.',
+          '"true" for compact padding and typography (preferred). The mg-notice--compact class on the container also works and is removed on hydration so the container is not styled twice.',
         'data-is-overlay':
-          '"true" for a centered overlay inside a positioned embed container. The mg-notice--overlay class on the container does the same.',
+          '"true" for a centered overlay inside a positioned embed container (preferred). The mg-notice--overlay class on the container also works and is removed on hydration so the container is not styled twice.',
         'data-retry':
           'Boolean attribute. When present, a retry button renders and each retry dispatches mg-service-notice:retry on the container. Without it, no retry button or countdown renders.',
         'data-retry-label': 'Retry button text.',
@@ -925,9 +925,9 @@ npm run build</code></pre>
 
 <script type="importmap">
   { "imports": {
-    "react": "https://esm.sh/react@19.2.4",
-    "react-dom": "https://esm.sh/react-dom@19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@19.2.4/"
+    "react": "https://esm.sh/react@19.3.0",
+    "react-dom": "https://esm.sh/react-dom@19.3.0",
+    "react-dom/": "https://esm.sh/react-dom@19.3.0/"
   }}
 </script>
 
@@ -949,7 +949,10 @@ npm run build</code></pre>
 
   document
     .getElementById('map-notice')
-    .addEventListener('mg-service-notice:retry', () => reloadMap());
+    .addEventListener('mg-service-notice:retry', () => {
+      // Re-fetch your data here, then remove the notice once it loads.
+      console.log('Retry requested');
+    });
 </script>`,
     },
   },
