@@ -239,6 +239,13 @@ Some components (like Tabs) have lightweight JavaScript modules:
 </script>
 ```
 
+| Module         | CDN path                | Use case                                                                                                                                                                                            |
+| -------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tabs           | `/js/tabs.js`           | Tabs and stacked disclosures                                                                                                                                                                        |
+| Show More      | `/js/show-more.js`      | Expand/collapse sections                                                                                                                                                                            |
+| Copy Button    | `/js/copy-button.js`    | Copy-to-clipboard button                                                                                                                                                                            |
+| Switch pending | `/js/switch-pending.js` | Saving state for `.mg-switch`. Pass a `save` function, or answer one `mg-switch:save` event for every `data-mg-switch-pending` switch. See [Checkbox](?path=/docs/components-forms-checkbox--docs). |
+
 ### Precompiled React components
 
 For complex interactive components (MegaMenu, charts, maps, drawers), use precompiled React bundles without a build process.
@@ -267,7 +274,7 @@ For complex interactive components (MegaMenu, charts, maps, drawers), use precom
 | StatsCard               | `/components/StatsCard.js`               | Statistics display                          |
 | Pager                   | `/components/Pager.js`                   | Pagination controls                         |
 
-> **Zero-dependency Alternative**: For lightweight interactions like tabs, show-more toggles, and copy buttons, prefer the zero-dependency vanilla JS scripts from `/js/*.js` (e.g. `/js/copy-button.js`, `/js/tabs.js`, `/js/show-more.js`) which require **no React runtime**.
+> **Zero-dependency Alternative**: For lightweight interactions like tabs, show-more toggles, and copy buttons, prefer the zero-dependency vanilla JS scripts from `/js/*.js` (e.g. `/js/copy-button.js`, `/js/tabs.js`, `/js/show-more.js`, `/js/switch-pending.js`) which require **no React runtime**.
 
 React 19 dropped UMD builds, so we use [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap) with [esm.sh](https://esm.sh/) to provide React dependencies:
 
