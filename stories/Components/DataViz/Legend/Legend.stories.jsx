@@ -1,4 +1,3 @@
-import React from 'react';
 import { Legend } from './Legend';
 
 export default {
@@ -91,26 +90,4 @@ export const CategoricalGrid = {
     ...Categorical.args,
     layout: 'grid',
   },
-};
-
-export const DarkTheme = {
-  args: {
-    ...Categorical.args,
-  },
-  parameters: {
-    backgrounds: { default: 'dark' },
-    themes: {
-      themeOverride: 'Dark',
-    },
-  },
-  decorators: [
-    Story => (
-      <div
-        className="mg-theme-dark"
-        style={{ padding: '2rem', background: '#000', color: '#fff' }}
-      >
-        <Story />
-      </div>
-    ),
-  ],
 };

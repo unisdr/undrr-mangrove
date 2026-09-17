@@ -14,6 +14,8 @@ The `Legend` component provides primitives for building map and chart legends, i
 
 Legends help users interpret the colors or symbols used in data visualizations like maps, charts, and graphs.
 
+Legend text is styled for light surfaces. There is no dark-surface variant: on a dark background, set the text colours yourself or place the legend on a light panel.
+
 <Canvas of={LegendStories.Continuous} />
 
 ## Properties
@@ -53,5 +55,6 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.0.1** — 2026-09-17 ([#PRNUM](https://github.com/unisdr/undrr-mangrove/pull/PRNUM)): Removed the "Dark theme" story. It wrapped the legend in an `mg-theme-dark` class that the library never defined and set a `Dark` theme override that does not exist, so it rendered labels at 1.2:1 and implied a dark-surface API that Legend does not have. The docs now say plainly that Legend is styled for light surfaces.
 - **1.0.0** — 2026-09-16 ([#1159](https://github.com/unisdr/undrr-mangrove/pull/1159)): Added map and chart legend primitives (`continuous`, `categorical`, `stepped`).
   - Before rc.1: legend is a group named by its title, stepped colours have text alternatives, a single tick no longer divides by zero, font size uses a real token, and tick placement uses logical properties.
