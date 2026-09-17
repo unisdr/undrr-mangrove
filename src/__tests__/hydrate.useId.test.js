@@ -56,6 +56,9 @@ afterEach(() => {
 });
 
 describe('createHydrator useId uniqueness', () => {
+  // A single copy of React already keeps useId values apart, so this passes
+  // without the page-wide counter too; it guards the behaviour rather than
+  // reproducing the bug. The two-copy tests below are the regression tests.
   it('gives distinct ids to roots mounted in separate update() calls', () => {
     const copy = loadCopy();
     document.body.innerHTML = '<div class="id-target"></div>';

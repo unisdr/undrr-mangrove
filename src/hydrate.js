@@ -8,7 +8,8 @@ import { createRoot } from 'react-dom/client';
 const ROOT_COUNTER_KEY = Symbol.for('undrr.mangrove.hydrate.rootCounter');
 
 function nextRootId() {
-  const id = globalThis[ROOT_COUNTER_KEY] ?? 0;
+  const current = globalThis[ROOT_COUNTER_KEY];
+  const id = Number.isSafeInteger(current) && current >= 0 ? current : 0;
   globalThis[ROOT_COUNTER_KEY] = id + 1;
   return id;
 }

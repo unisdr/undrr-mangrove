@@ -302,6 +302,27 @@ describe('createHydrator', () => {
     expect(new Set(prefixes).size).toBe(2);
   });
 
+  it('restarts numbering when the shared root counter is not a valid integer', () => {
+    const key = Symbol.for('undrr.mangrove.hydrate.rootCounter');
+    const saved = globalThis[key];
+    globalThis[key] = Number.NaN;
+    document.body.innerHTML = '<div class="target"></div>';
+
+    try {
+      createHydrator({
+        selector: '.target',
+        component: DummyComponent,
+        fromElement: () => ({ text: 'test' }),
+      });
+
+      const [, opts] = mockCreateRoot.mock.calls[0];
+      expect(opts.identifierPrefix).toBe('target-0-');
+      expect(globalThis[key]).toBe(1);
+    } finally {
+      globalThis[key] = saved;
+    }
+  });
+
   it('uses custom identifierPrefix from options', () => {
     document.body.innerHTML = '<div class="target"></div>';
 
