@@ -209,7 +209,7 @@ export const COMPONENT_DATA = {
   },
   'components-buttons-copybutton': {
     description:
-      'One-click copy button with micro-feedback tooltip and aria-live announcements. Supports zero-dependency vanilla JS (dist/js/copy-button.min.js), Layer 2 React hydration via createHydrator, and React JSX.',
+      'One-click copy button with micro-feedback tooltip and aria-live announcements. Supports zero-dependency vanilla JS (js/copy-button.js), Layer 2 React hydration via createHydrator, and React JSX.',
     cssClasses: [
       'mg-copy-button',
       'mg-copy-button--copied',
@@ -1063,8 +1063,8 @@ npm run build</code></pre>
   'components-forms-checkbox': {
     description:
       'Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces "Saving…", "Still saving…" and the outcome in a role="status" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener.',
-    hydration: {
-      note: 'No React or hydrate.js: this is a plain ES module. renderedHtml switches toggle but do not save. Marked switches are enhanced on load. Without a save function, each change dispatches a cancelable mg-switch:save event; a listener must call event.detail.respondWith(promise) during dispatch, or the switch reverts with a console warning. Call mgSwitchPendingDestroy(scope), or abort the { signal } passed to mgSwitchPendingInit, before removing switches. Exports: mgSwitchPending(input, { save, status, timeout, labels, signal }) returning { destroy() }, mgSwitchPendingInit(scope, options) returning the new helpers, mgSwitchPendingDestroy(scope).',
+    vanillaModule: {
+      note: 'Plain ES module: no React, no hydrate.js, no import map. renderedHtml switches toggle but do not save. Marked switches are enhanced on load; an explicit mgSwitchPending or mgSwitchPendingInit call takes over those switches with its options. Without a save function, each change dispatches a cancelable mg-switch:save event; a listener must call event.detail.respondWith(promise) synchronously (wrap awaited work in an async function and pass its promise), or call event.preventDefault() synchronously and respondWith later. Otherwise the switch reverts with a console warning. Call mgSwitchPendingDestroy(scope), or abort the { signal } passed to mgSwitchPendingInit, before removing switches. Exports: mgSwitchPending(input, { save, status, timeout, labels, signal }) returning { destroy() }, mgSwitchPendingInit(scope, options) returning the new helpers, mgSwitchPendingDestroy(scope).',
       selector: '[data-mg-switch-pending]',
       modules: {
         script:
@@ -1087,7 +1087,7 @@ npm run build</code></pre>
           name: 'mg-switch:save',
           target: 'The .mg-switch__input',
           bubbles: true,
-          when: 'A change starts a save and no save function was passed. Cancelable. detail: { checked, signal, respondWith(promise) }; resolve for success, reject for failure.',
+          when: 'A change starts a save and no save function was passed. Cancelable: preventDefault() during dispatch claims the save, so respondWith can follow an await. detail: { checked, signal, respondWith(promise) }; resolve for success, reject for failure.',
         },
         {
           name: 'mg-switch:pending',
