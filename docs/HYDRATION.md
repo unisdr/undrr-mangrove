@@ -100,7 +100,7 @@ Returns: `{ roots, update, unmountAll }`
 - Applies React root error hooks:
   - `onCaughtError` and `onUncaughtError`: `console.error` + optional `onError`
   - `onRecoverableError`: `console.warn`
-- Prevents `useId()` collisions across multiple independent roots by deriving unique `identifierPrefix` values (override with `options.identifierPrefix`)
+- Prevents `useId()` collisions across multiple independent roots: each root's `identifierPrefix` is the selector-based slug (override with `options.identifierPrefix`) plus a page-wide root number, so prefixes stay unique across `update()` calls, across hydrators, and when a page loads more than one copy of the runtime (all copies must include this change; an older copy does not read the shared counter)
 
 ## Supported hydrated components
 

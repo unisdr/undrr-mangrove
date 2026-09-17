@@ -48,8 +48,8 @@ https://www.undrr.org/#enableMessagingDebug=true
 ## Resources
 
 - [Messaging system docs](https://messaging.undrr.org/) — implementation and editor guide
-- [GitHub repository](https://github.com/unisdr/undrr-messaging) — source (private)
 - [Status page](https://status.undrr.org/) — system status
+- [GitLab repository](https://gitlab.com/undrr/undrr-messaging) — source (private)
 
 ## See also
 
