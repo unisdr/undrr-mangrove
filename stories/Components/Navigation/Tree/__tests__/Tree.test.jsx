@@ -230,6 +230,48 @@ describe('Tree and TreeItem', () => {
     expect(link).toHaveAttribute('href', '/test-path');
   });
 
+  describe('toggleIcon', () => {
+    it('uses mg-icon-right by default', () => {
+      const { container } = renderSampleTree();
+      const icon = container.querySelector('.mg-tree__icon');
+      expect(icon).toHaveClass('mg-icon', 'mg-icon-right');
+    });
+
+    it('applies a Tree-level toggleIcon to every toggle', () => {
+      const { container } = renderSampleTree({
+        toggleIcon: 'mg-icon-arrow-right',
+        defaultExpandedIds: ['1'],
+      });
+      const icons = container.querySelectorAll('.mg-tree__icon');
+      expect(icons.length).toBe(2);
+      icons.forEach(icon => {
+        expect(icon).toHaveClass('mg-icon', 'mg-icon-arrow-right');
+        expect(icon).not.toHaveClass('mg-icon-right');
+      });
+    });
+
+    it('lets a TreeItem override the Tree toggleIcon', () => {
+      const { container } = renderSampleTree(
+        { toggleIcon: 'mg-icon-arrow-right' },
+        { toggleIcon: 'mg-icon-plus' }
+      );
+      const icon = container.querySelector(
+        '#mg-treeitem-1 > .mg-tree__label-container .mg-tree__icon'
+      );
+      expect(icon).toHaveClass('mg-icon-plus');
+      expect(icon).not.toHaveClass('mg-icon-arrow-right');
+    });
+
+    it('keeps the expanded class with a custom glyph', () => {
+      const { container } = renderSampleTree({
+        toggleIcon: 'mg-icon-arrow-right',
+        defaultExpandedIds: ['1'],
+      });
+      const icon = container.querySelector('.mg-tree__icon');
+      expect(icon).toHaveClass('mg-icon-arrow-right', 'is-expanded');
+    });
+  });
+
   it('passes axe accessibility tests', async () => {
     const { container } = renderSampleTree({ defaultExpandedIds: ['1'] });
     const results = await axe(container);

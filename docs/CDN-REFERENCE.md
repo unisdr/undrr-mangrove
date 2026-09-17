@@ -63,6 +63,7 @@ Runtime: `/components/hydrate.js`
 | CopyButton | `/components/CopyButton.js` |
 | Drawer | `/components/Drawer.js` |
 | Notice | `/components/Notice.js` |
+| Tree | `/components/Tree.js` |
 | ServiceNotice | `/components/ServiceNotice.js` |
 | TextCta | `/components/TextCta.js` |
 | ShareButtons | `/components/ShareButtons.js` |

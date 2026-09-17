@@ -60,6 +60,8 @@ export const REQUIRES_REACT = {
     'ScrollContainer manages horizontal scroll state with navigation buttons. Requires React. Can be hydrated via createHydrator.',
   'components-user-feedback':
     'UserFeedback manages a binary page response, confirmation state and focus. Requires React for button behavior and can be hydrated via createHydrator with data-mg-user-feedback. Place it as a separate sibling immediately before Footer when the pattern is used.',
+  'components-navigation-tree':
+    'Tree needs JavaScript: keyboard navigation (roving tabindex, arrow keys, Home, End, Enter, Space) and expand/collapse come from React, so the static renderedHtml has the tree roles but is not keyboard operable and must not be copied as a working tree. On non-React pages, render a nested <ul>/<li> list inside <div data-mg-tree data-aria-label="..."> and hydrate it with createHydrator({ selector: "[data-mg-tree]", component: Tree, fromElement }) from components/Tree.js. Per <li>: data-id (item id), a direct child <a href> (link and label) or plain text (label), data-expanded, and data-selected or aria-current on the link. Container: data-aria-label or data-aria-labelledby, data-toggle-icon (default mg-icon-right), data-guides, data-selected-id. The list works as plain links before hydration.',
   'components-buttons-sharebuttons':
     'ShareButtons manages share URLs and clipboard state. Requires React. Can be hydrated via createHydrator with data-mg-share-buttons.',
   'components-navigation-table-of-contents':
@@ -1617,7 +1619,7 @@ npm run build</code></pre>
   },
   'components-navigation-tree': {
     description:
-      'Prototype. Accessible tree and nested hierarchy view conforming to the ARIA Treeview pattern. Supports roving tabindex, full keyboard navigation (arrows, Home, End, Enter, Space), guides, controlled/uncontrolled state, and separate toggle buttons for linked parent sections.',
+      'Prototype. Accessible tree and nested hierarchy view conforming to the ARIA Treeview pattern. Supports roving tabindex, full keyboard navigation (arrows, Home, End, Enter, Space), guides, controlled/uncontrolled state, a configurable toggle icon (toggleIcon), and separate toggle buttons for linked parent sections. Requires React or hydration via createHydrator with data-mg-tree around a nested list; see reactNote.',
     cssClasses: [
       'mg-tree',
       'mg-tree__group',

@@ -69,6 +69,86 @@ Parent and leaf items can also function as standard links.
 </Tree>
 ```
 
+### Toggle icon
+
+The expand toggle uses `mg-icon-right` by default. Set `toggleIcon` on `Tree` to change it for every item, or on a `TreeItem` to change one. Pick a glyph that points towards the inline end: it turns a quarter turn when expanded and mirrors in right-to-left layouts.
+
+```jsx
+<Tree toggleIcon="mg-icon-arrow-right">
+  <TreeItem id="1" label="Section 1">
+    <TreeItem id="1-1" label="Topic 1.1" />
+  </TreeItem>
+</Tree>
+```
+
+Give the tree an accessible name with `aria-label` or `aria-labelledby`. Other props are passed to the `<ul role="tree">`.
+
+### Drupal and server-rendered HTML (hydration)
+
+The static HTML in the AI manifest has the tree roles but no keyboard support. For non-React pages, render a plain nested list inside a `data-mg-tree` container and hydrate it. Before JavaScript runs, and if it fails, the list still works as ordinary links.
+
+```html
+<div
+  data-mg-tree
+  data-aria-label="Section navigation"
+  data-toggle-icon="mg-icon-arrow-right"
+>
+  <ul>
+    <li data-id="about" data-expanded>
+      <a href="/about">About</a>
+      <ul>
+        <li data-id="team">
+          <a href="/about/team" aria-current="page">Team</a>
+        </li>
+        <li data-id="history"><a href="/about/history">History</a></li>
+      </ul>
+    </li>
+    <li data-id="topics">
+      Topics
+      <ul>
+        <li data-id="floods"><a href="/topics/floods">Floods</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+```
+
+```js
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
+import Tree, { fromElement } from '@undrr/undrr-mangrove/components/Tree.js';
+
+createHydrator({
+  selector: '[data-mg-tree]',
+  component: Tree,
+  fromElement,
+});
+```
+
+The default export of `components/Tree.js` is `HydratedTree`. It renders the same `Tree` and `TreeItem` components from an `items` array, so keyboard navigation and ARIA match the React version. Without `items` it takes `TreeItem` children like `Tree`. The named `Tree` and `TreeItem` exports are unchanged.
+
+Container attributes:
+
+| Attribute              | Default           | Description                                                      |
+| ---------------------- | ----------------- | ---------------------------------------------------------------- |
+| `data-aria-label`      | —                 | Accessible name for the tree. Set this or `data-aria-labelledby` |
+| `data-aria-labelledby` | —                 | id of a visible heading that names the tree                      |
+| `data-toggle-icon`     | `'mg-icon-right'` | Icon class for the expand toggles                                |
+| `data-guides`          | `'true'`          | Show indentation guides (`'true'` / `'false'`)                   |
+| `data-selected-id`     | —                 | Selected item id, used when no item is marked selected           |
+| `data-class-name`      | —                 | Extra class on the tree                                          |
+
+Each `<li>` in the first `<ul>` or `<ol>` becomes a tree item. Nested lists become child groups.
+
+| Item markup                                    | Result                                                                       |
+| ---------------------------------------------- | ---------------------------------------------------------------------------- |
+| `data-id`                                      | Item id. Falls back to the `<li>` id, then its position (`1-2`)              |
+| Direct child `<a href>`                        | Link item; its text is the label. `javascript:` and `data:` URLs are dropped |
+| Text without a link                            | Plain label. Read as text; markup is not kept                                |
+| `data-expanded` or `aria-expanded="true"`      | Starts expanded (items with children only)                                   |
+| `data-selected`, or `aria-current` on the link | Starts selected. The first match wins                                        |
+
+Hydrated items get the DOM id `mg-treeitem-{id}`, so in-page links to the original `<li>` ids will not resolve after hydration.
+
 ## Keyboard Interaction (ARIA APG)
 
 | Key               | Expected behaviour                                                  |
@@ -91,6 +171,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.1.0** — 2026-09-17 ([#1172](https://github.com/unisdr/undrr-mangrove/issues/1172)): Hydration from a nested list with `Tree.fromElement.js`, `Tree.hydrate.js` and `HydratedTree`, and a `toggleIcon` prop on `Tree` and `TreeItem` (`data-toggle-icon` when hydrated).
 - **1.0.0** — 2026-09-16 ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)): Initial implementation with expand/collapse and optional link support.
   - Full ARIA APG keyboard navigation (arrow keys, Home, End, Enter, Space), roving tabindex, controlled `expandedIds` / `selectedId`, colour tokens and `mg-icon` chevron ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
   - Before rc.1: arrow keys and chevron mirror in RTL, logical properties, shared inset focus ring, and the chevron button is presentational so `aria-expanded` is not repeated and no English label is hardcoded.

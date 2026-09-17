@@ -12,6 +12,7 @@ import classNames from 'classnames';
 
 const TreeContext = createContext(null);
 const EMPTY_EXPANDED_IDS = [];
+const DEFAULT_TOGGLE_ICON = 'mg-icon-right';
 
 export const TreeItem = ({
   id,
@@ -23,6 +24,7 @@ export const TreeItem = ({
   onSelect: customSelect,
   href,
   asLink = false,
+  toggleIcon,
 }) => {
   const context = useContext(TreeContext);
   const [localExpanded, setLocalExpanded] = useState(
@@ -46,6 +48,9 @@ export const TreeItem = ({
         : false;
 
   const isFocused = context ? context.focusedId === id : false;
+
+  const iconClass =
+    toggleIcon || (context && context.toggleIcon) || DEFAULT_TOGGLE_ICON;
 
   const handleToggle = e => {
     if (e) e.stopPropagation();
@@ -124,7 +129,7 @@ export const TreeItem = ({
             aria-hidden="true"
           >
             <span
-              className={classNames('mg-tree__icon mg-icon mg-icon-right', {
+              className={classNames('mg-tree__icon mg-icon', iconClass, {
                 'is-expanded': isExpanded,
               })}
               aria-hidden="true"
@@ -163,6 +168,12 @@ TreeItem.propTypes = {
   onSelect: PropTypes.func,
   href: PropTypes.string,
   asLink: PropTypes.bool,
+  /**
+   * Icon class for this item's expand toggle, e.g. "mg-icon-arrow-right".
+   * Overrides the Tree's toggleIcon. The glyph should point towards the
+   * inline end; it rotates a quarter turn when expanded.
+   */
+  toggleIcon: PropTypes.string,
 };
 
 export const Tree = ({
@@ -174,6 +185,7 @@ export const Tree = ({
   defaultSelectedId = null,
   onToggle,
   onSelect,
+  toggleIcon = DEFAULT_TOGGLE_ICON,
   className,
   ...props
 }) => {
@@ -388,6 +400,7 @@ export const Tree = ({
       toggleItem,
       selectItem,
       handleKeyDown,
+      toggleIcon,
     }),
     [
       expandedIds,
@@ -397,6 +410,7 @@ export const Tree = ({
       toggleItem,
       selectItem,
       handleKeyDown,
+      toggleIcon,
     ]
   );
 
@@ -427,6 +441,12 @@ Tree.propTypes = {
   defaultSelectedId: PropTypes.string,
   onToggle: PropTypes.func,
   onSelect: PropTypes.func,
+  /**
+   * Icon class for the expand toggles, e.g. "mg-icon-arrow-right". The glyph
+   * should point towards the inline end; it rotates a quarter turn when
+   * expanded and mirrors in RTL.
+   */
+  toggleIcon: PropTypes.string,
   className: PropTypes.string,
 };
 

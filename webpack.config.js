@@ -103,6 +103,7 @@ export default [
       CopyButton:
         './stories/Components/Buttons/CopyButton/CopyButton.hydrate.js',
       Drawer: './stories/Components/Navigation/Drawer/Drawer.hydrate.js',
+      Tree: './stories/Components/Navigation/Tree/Tree.hydrate.js',
       ServiceNotice:
         './stories/Components/ServiceNotice/ServiceNotice.hydrate.js',
       Notice: './stories/Components/Notice/Notice.hydrate.js',
@@ -136,7 +137,6 @@ export default [
       SkipLink: './stories/Utilities/SkipLink/SkipLink.entry.js',
       Range: './stories/Components/Forms/Range/Range.jsx',
       Legend: './stories/Components/DataViz/Legend/Legend.jsx',
-      Tree: './stories/Components/Navigation/Tree/Tree.jsx',
     },
     externals: {
       react: 'react',
