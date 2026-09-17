@@ -51,7 +51,7 @@ Full diff: [v1.5.0...v1.5.1 on GitHub](https://github.com/unisdr/undrr-mangrove/
 
 ### New components
 
-- **OnThisPageNav — sticky horizontal page navigation** ([#879](https://github.com/unisdr/undrr-mangrove/pull/879)): A vanilla JS component that builds a sticky "On this page" bar from page headings (h2/h3/h4) or an explicit link list. Uses IntersectionObserver for scroll-spy with `aria-current` tracking, un-sticks on short viewports per [GOV.UK accessibility research](https://technology.blog.gov.uk/2018/05/21/sticky-elements-functionality-and-accessibility-testing/), and supports RTL, configurable heading depth, and an optional pinned CTA. Best on long landing pages and reports — [TableOfContents](https://mangrove.undrr.org/?path=/docs/atoms-navigation-tableofcontents--docs) is lighter for short pages.
+- **OnThisPageNav — sticky horizontal page navigation** ([#879](https://github.com/unisdr/undrr-mangrove/pull/879)): A vanilla JS component that builds a sticky "On this page" bar from page headings (h2/h3/h4) or an explicit link list. Uses IntersectionObserver for scroll-spy with `aria-current` tracking, un-sticks on short viewports per [GOV.UK accessibility research](https://technology.blog.gov.uk/2018/05/21/sticky-elements-functionality-and-accessibility-testing/), and supports RTL, configurable heading depth, and an optional pinned CTA. Best on long landing pages and reports — [TableOfContents](https://mangrove.undrr.org/?path=/docs/components-navigation-table-of-contents--docs) is lighter for short pages.
 
   > **Known limitation:** The overflow fade gradient doesn't flip in RTL. Tracked, fix coming.
 
