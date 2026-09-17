@@ -38,8 +38,14 @@ export function Tab({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    mgTabsRuntime(container, true);
-    return () => mgTabsDestroy(container, true);
+    const controller = new AbortController();
+    mgTabsRuntime(container, true, { signal: controller.signal });
+    return () => {
+      // Destroying first keeps the selection for the next run and releases
+      // the signal, so the abort is only a fallback and never destroys twice.
+      mgTabsDestroy(container, true);
+      controller.abort();
+    };
   }, [
     tabdata,
     variant,

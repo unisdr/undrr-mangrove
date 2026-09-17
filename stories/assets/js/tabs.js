@@ -2,8 +2,18 @@
 const instances = new WeakMap();
 const responsiveInstances = new WeakMap();
 const pendingStates = new WeakMap();
-// Per tab set: whether it has been attached, and how to release its AbortSignal.
+// Per tab set: whether it has been attached, whether it is suspended, and how
+// to release its AbortSignal and resume listener.
 const lifecycles = new WeakMap();
+// Tab sets initialised through mgTabs(), so a removed set can be suspended even
+// when none of its outside listeners ever fire. WeakRef keeps a dropped node
+// collectable; without it (very old browsers) the Set holds each tracked node
+// until it is destroyed, which trades a small retention for the sweep.
+const canWeakRef = typeof WeakRef === 'function';
+const tracked = new Set();
+let sweeping = false;
+const RESUME_EVENTS = ['pointerdown', 'focusin', 'keydown', 'click'];
+const RESUME_OPTIONS = { capture: true };
 const MOBILE_BREAKPOINT = 480;
 const isStacked = container => container.dataset.mgJsTabsVariant === 'stacked';
 
@@ -42,6 +52,52 @@ function containersIn(scope = document) {
 
 const isInitialised = container =>
   responsiveInstances.has(container) || instances.has(container);
+const instanceOf = container =>
+  responsiveInstances.get(container) || instances.get(container);
+
+// Run every task even if one throws, then rethrow the first error, so a
+// failing cleanup cannot leave the remaining listeners registered.
+function runAll(tasks) {
+  let failed = false;
+  let failure;
+  tasks.forEach(task => {
+    try {
+      task();
+    } catch (error) {
+      if (!failed) failure = error;
+      failed = true;
+    }
+  });
+  if (failed) throw failure;
+}
+
+// Registrations outside the container (window, document.fonts, observers).
+// They can be released while the markup and in-container listeners stay in
+// place, and registered again later. `register(on, onRelease, resumed)`.
+function outsideRegistrations(register) {
+  let release;
+  return {
+    connect(resumed = false) {
+      if (release) return;
+      const offs = [];
+      release = () => {
+        release = undefined;
+        runAll(offs.reverse());
+      };
+      register(
+        (target, type, handler) => {
+          target.addEventListener(type, handler);
+          offs.push(() => target.removeEventListener(type, handler));
+        },
+        off => offs.push(off),
+        resumed
+      );
+    },
+    disconnect() {
+      release?.();
+    },
+  };
+}
 
 /**
  * Initialise tab sets.
@@ -52,19 +108,26 @@ const isInitialised = container =>
  */
 export function mgTabs(scope, activateDeepLinkOnLoad = true, options = {}) {
   const signal = options?.signal;
+  sweep();
   if (signal?.aborted) return;
   containersIn(scope).forEach(container => {
+    if (signal?.aborted) return;
     if (!scope && container.hasAttribute('data-mg-js-tabs-skip-auto-init'))
       return;
-    const wasInitialised = isInitialised(container);
+    if (isInitialised(container)) {
+      resumeContainer(container);
+      return;
+    }
     const retained = pendingStates.get(container);
     const requestedVariant = isStacked(container) ? 'stacked' : 'horizontal';
     const initialState =
       retained?.requestedVariant === requestedVariant ? retained : undefined;
     pendingStates.delete(container);
     initContainer(container, activateDeepLinkOnLoad, { initialState });
-    if (!wasInitialised && isInitialised(container))
-      trackLifecycle(container, signal);
+    if (!isInitialised(container)) return;
+    // A handler run during initialisation may have aborted the signal.
+    if (signal?.aborted) destroyContainer(container);
+    else trackLifecycle(container, signal);
   });
 }
 
@@ -81,7 +144,11 @@ export function mgTabsRuntime(
 }
 
 function trackLifecycle(container, signal) {
-  const lifecycle = { attached: container.isConnected };
+  const lifecycle = {
+    attached: container.isConnected,
+    suspended: false,
+    ref: canWeakRef ? new WeakRef(container) : container,
+  };
   if (signal) {
     const onAbort = () => destroyContainer(container);
     signal.addEventListener('abort', onAbort, { once: true });
@@ -89,21 +156,95 @@ function trackLifecycle(container, signal) {
     lifecycle.release = () => signal.removeEventListener('abort', onAbort);
   }
   lifecycles.set(container, lifecycle);
+  tracked.add(lifecycle.ref);
 }
 
 function destroyContainer(container, preserveState = false) {
-  const state = preserveState ? mgTabsGetState(container) : undefined;
-  if (state)
-    pendingStates.set(container, { ...state, restoreOpenPanels: true });
-  else pendingStates.delete(container);
-  lifecycles.get(container)?.release?.();
-  lifecycles.delete(container);
-  (responsiveInstances.get(container) || instances.get(container))?.destroy();
+  if (preserveState) {
+    // Without a live instance there is nothing to capture; keep any state
+    // retained by an earlier destroy instead of discarding it.
+    const state = mgTabsGetState(container);
+    if (state)
+      pendingStates.set(container, { ...state, restoreOpenPanels: true });
+  } else pendingStates.delete(container);
+  const lifecycle = lifecycles.get(container);
+  try {
+    instanceOf(container)?.destroy();
+  } finally {
+    if (lifecycle) {
+      lifecycles.delete(container);
+      tracked.delete(lifecycle.ref);
+      runAll([lifecycle.cancelResume, lifecycle.release].filter(Boolean));
+    }
+  }
+}
+
+/**
+ * Release everything a tab set registered outside its own markup, and resume
+ * on the next interaction. Markup, in-container listeners and selection stay
+ * as they are, so a node that is re-attached keeps working, and a node the app
+ * has dropped holds no outside references and can be garbage collected.
+ */
+function suspendContainer(container) {
+  const lifecycle = lifecycles.get(container);
+  const instance = instanceOf(container);
+  if (!lifecycle || lifecycle.suspended || !instance) return;
+  lifecycle.suspended = true;
+  const onUse = () => resumeContainer(container);
+  RESUME_EVENTS.forEach(type =>
+    container.addEventListener(type, onUse, RESUME_OPTIONS)
+  );
+  lifecycle.cancelResume = () =>
+    RESUME_EVENTS.forEach(type =>
+      container.removeEventListener(type, onUse, RESUME_OPTIONS)
+    );
+  instance.suspend();
+}
+
+function resumeContainer(container) {
+  const lifecycle = lifecycles.get(container);
+  if (!lifecycle?.suspended || !container.isConnected) return;
+  lifecycle.suspended = false;
+  lifecycle.attached = true;
+  const cancel = lifecycle.cancelResume;
+  lifecycle.cancelResume = undefined;
+  try {
+    cancel?.();
+  } finally {
+    instanceOf(container)?.resume();
+  }
+}
+
+/**
+ * Suspend tracked tab sets that have left the document and resume those that
+ * are back. Runs on every mgTabs()/mgTabsRuntime() call and whenever a handler
+ * notices a removal, so sets without a firing outside listener (stacked sets
+ * only listen for hash changes) are released too.
+ */
+function sweep() {
+  if (sweeping) return;
+  sweeping = true;
+  try {
+    tracked.forEach(ref => {
+      const container = canWeakRef ? ref.deref() : ref;
+      const lifecycle = container && lifecycles.get(container);
+      if (lifecycle?.ref !== ref) {
+        tracked.delete(ref);
+        return;
+      }
+      if (container.isConnected) {
+        lifecycle.attached = true;
+        resumeContainer(container);
+      } else if (lifecycle.attached) suspendContainer(container);
+    });
+  } finally {
+    sweeping = false;
+  }
 }
 
 /**
  * Guard for handlers registered outside the container. A tab set that was in
- * the document and has since been removed without mgTabsDestroy() is destroyed
+ * the document and has since been removed without mgTabsDestroy() is suspended
  * instead of doing work. Events arrive asynchronously, so a synchronous move
  * (remove, then insert elsewhere) is never mistaken for a removal. A tab set
  * initialised while detached is left alone until it has been attached once.
@@ -115,10 +256,11 @@ function isLive(container) {
     return true;
   }
   if (!lifecycle?.attached) return true;
-  // Restore the markup as mgTabsDestroy() does, so a detached node never keeps
-  // enhanced roles without behaviour, and retain the selection in case the
-  // node is re-attached and initialised again.
-  destroyContainer(container, true);
+  try {
+    suspendContainer(container);
+  } finally {
+    sweep();
+  }
   return false;
 }
 
@@ -228,20 +370,40 @@ function initResponsiveContainer(
   const onViewportChange = () => {
     if (isLive(container)) update();
   };
+  const outside = outsideRegistrations(on => {
+    on(window, 'resize', onViewportChange);
+    on(window, 'orientationchange', onViewportChange);
+  });
   responsiveInstances.set(container, {
+    suspend() {
+      runAll([
+        () => outside.disconnect(),
+        () => instances.get(container)?.suspend(),
+      ]);
+    },
+    resume() {
+      outside.connect();
+      // The viewport may have crossed the breakpoint while suspended; a new
+      // inner instance registers its own outside listeners.
+      update();
+      instances.get(container)?.resume();
+    },
     destroy() {
-      window.removeEventListener('resize', onViewportChange);
-      window.removeEventListener('orientationchange', onViewportChange);
-      instances.get(container)?.destroy();
-      restoreVisibility();
-      generated.forEach(item => item.remove());
-      restoreVariant();
-      responsiveInstances.delete(container);
+      try {
+        runAll([
+          () => outside.disconnect(),
+          () => instances.get(container)?.destroy(),
+          restoreVisibility,
+          () => generated.forEach(item => item.remove()),
+          restoreVariant,
+        ]);
+      } finally {
+        responsiveInstances.delete(container);
+      }
     },
   });
   update();
-  window.addEventListener('resize', onViewportChange);
-  window.addEventListener('orientationchange', onViewportChange);
+  outside.connect();
 }
 
 function initContainer(container, activateDeepLinkOnLoad, options = {}) {
@@ -515,18 +677,30 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
     if (stacked) listen(panel, 'beforematch', () => activate(tab));
   });
 
-  const activateHash = () => {
+  const hashIndex = () => {
     let hash = window.location.hash.slice(1);
     try {
       hash = decodeURIComponent(hash);
     } catch {
       /* Keep malformed fragments literal. */
     }
-    const index = panels.findIndex(panel => panel.id === hash);
+    return panels.findIndex(panel => panel.id === hash);
+  };
+  const activateHash = () => {
+    const index = hashIndex();
     if (index < 0) return false;
     activate(tabs[index]);
     return true;
   };
+  const retained = options.initialState;
+  // A fragment that changed after the state was captured is a newer request
+  // than the retained selection. An unchanged fragment is not: the retained
+  // selection already reflects what the user chose after following it.
+  const hashWins =
+    activateDeepLinkOnLoad &&
+    retained &&
+    retained.hash !== window.location.hash &&
+    hashIndex() >= 0;
   if (stacked) mgTabsApplyStackedDefaults(container, tabs, panels);
   else
     activate(
@@ -539,8 +713,8 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
     );
   }
   if (activateDeepLinkOnLoad) activateHash();
-  if (options.initialState) {
-    const { panelId, focus } = options.initialState;
+  if (retained && !hashWins) {
+    const { panelId, focus } = retained;
     const index = panels.findIndex(panel => panel.id === panelId);
     if (index >= 0) {
       if (stacked)
@@ -566,9 +740,7 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
       setDisclosureState(tab, panels[index], openIds.has(panels[index].id))
     );
   }
-  listen(window, 'hashchange', () => {
-    if (isLive(container)) activateHash();
-  });
+  if (hashWins) activateHash();
   if (
     stacked &&
     !options.responsiveMobile &&
@@ -578,24 +750,39 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
       mgTabsInitFilter(container, tabs, panels, options.initialState?.filter)
     );
   let alive = true;
-  if (scroller) {
-    listen(scroller, 'scroll', updateOverflow, { passive: true });
-    const refresh = () => {
-      if (alive && isLive(container)) reveal(activeTab);
-    };
-    listen(window, 'resize', refresh);
-    listen(window, 'orientationchange', refresh);
+  if (scroller) listen(scroller, 'scroll', updateOverflow, { passive: true });
+  const refresh = () => {
+    if (alive && isLive(container)) reveal(activeTab);
+  };
+  const outside = outsideRegistrations((on, onRelease, resumed) => {
+    on(window, 'hashchange', () => {
+      if (alive && isLive(container)) activateHash();
+    });
+    if (!scroller) return;
+    on(window, 'resize', refresh);
+    on(window, 'orientationchange', refresh);
     if (typeof ResizeObserver !== 'undefined') {
-      const observer = new ResizeObserver(refresh);
+      // A resume usually starts with a pointerdown. Scrolling the rail to the
+      // selected tab before the click lands could move the tab under the
+      // pointer, so the first notification after a resume only updates the
+      // overflow indicators.
+      let settle = resumed;
+      const observer = new ResizeObserver(() => {
+        if (!settle) refresh();
+        else if (alive && isLive(container)) updateOverflow();
+        settle = false;
+      });
       observer.observe(scroller);
       observer.observe(list);
-      cleanups.push(() => observer.disconnect());
+      onRelease(() => observer.disconnect());
     }
     if (document.fonts) {
-      document.fonts.ready.then(refresh);
-      listen(document.fonts, 'loadingdone', refresh);
+      if (!resumed) document.fonts.ready?.then(refresh);
+      on(document.fonts, 'loadingdone', refresh);
     }
-  }
+  });
+  outside.connect();
+  cleanups.push(() => outside.disconnect());
   container.setAttribute('data-mg-tabs-initialized', 'true');
   instances.set(container, {
     getState() {
@@ -631,6 +818,7 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
           ? { query: filterInput.value, focused: filterInput === focused }
           : undefined,
         panelId: panels[index].id,
+        hash: window.location.hash,
         requestedVariant,
         focus,
         stacked,
@@ -639,17 +827,30 @@ function initContainer(container, activateDeepLinkOnLoad, options = {}) {
           .map(panel => panel.id),
       };
     },
+    suspend() {
+      outside.disconnect();
+    },
+    resume() {
+      outside.connect(true);
+      updateOverflow();
+    },
     destroy() {
       alive = false;
-      cleanups.reverse().forEach(cleanup => cleanup());
-      snapshots.forEach((attributes, element) => {
-        attributes.forEach(([name, value]) => {
-          if (value === null) element.removeAttribute(name);
-          else element.setAttribute(name, value);
-        });
-        element.classList.remove('is-active', 'mg-tabs__stacked--open');
-      });
-      instances.delete(container);
+      try {
+        runAll([
+          ...cleanups.slice().reverse(),
+          () =>
+            snapshots.forEach((attributes, element) => {
+              attributes.forEach(([name, value]) => {
+                if (value === null) element.removeAttribute(name);
+                else element.setAttribute(name, value);
+              });
+              element.classList.remove('is-active', 'mg-tabs__stacked--open');
+            }),
+        ]);
+      } finally {
+        instances.delete(container);
+      }
     },
   });
 }
