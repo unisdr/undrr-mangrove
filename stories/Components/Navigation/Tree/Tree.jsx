@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useId,
 } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -13,6 +14,29 @@ import classNames from 'classnames';
 const TreeContext = createContext(null);
 const EMPTY_EXPANDED_IDS = [];
 const DEFAULT_TOGGLE_ICON = 'mg-icon-right';
+const ITEM_SELECTOR = 'li[role="treeitem"][data-mg-treeitem-id]';
+
+const itemIdOf = el => el.getAttribute('data-mg-treeitem-id');
+
+// Ids of the items that contain targetId, outermost first, read from the
+// TreeItem elements. Returns null when targetId is not in the tree.
+const findAncestorIds = (nodes, targetId, trail = []) => {
+  let found = null;
+  React.Children.forEach(nodes, child => {
+    if (found || !React.isValidElement(child)) return;
+    const { id, children } = child.props;
+    if (id === targetId) {
+      found = trail;
+      return;
+    }
+    found = findAncestorIds(
+      children,
+      targetId,
+      id !== undefined && id !== null ? [...trail, id] : trail
+    );
+  });
+  return found;
+};
 
 export const TreeItem = ({
   id,
@@ -48,7 +72,7 @@ export const TreeItem = ({
         ? context.selectedId === id
         : false;
 
-  const isFocused = context ? context.focusedId === id : false;
+  const isTabStop = context ? context.tabStopId === id : false;
 
   const iconClass =
     toggleIcon || (context && context.toggleIcon) || DEFAULT_TOGGLE_ICON;
@@ -106,7 +130,7 @@ export const TreeItem = ({
 
   return (
     <li
-      id={`mg-treeitem-${id}`}
+      id={context ? `${context.domIdPrefix}${id}` : `mg-treeitem-${id}`}
       data-mg-treeitem-id={id}
       className={classNames('mg-tree__item', {
         'mg-tree__item--selected': isSelected,
@@ -114,7 +138,7 @@ export const TreeItem = ({
       role="treeitem"
       aria-expanded={hasChildren ? isExpanded : undefined}
       aria-selected={isSelected}
-      tabIndex={isFocused ? 0 : -1}
+      tabIndex={isTabStop ? 0 : -1}
       onKeyDown={handleKeyDown}
       onFocus={handleFocus}
     >
@@ -194,16 +218,24 @@ export const Tree = ({
   onSelect,
   toggleIcon = DEFAULT_TOGGLE_ICON,
   className,
+  onBlur,
   ...props
 }) => {
   const treeRef = useRef(null);
+  // Scopes the item DOM ids to this tree, so two trees built from the same
+  // data (a desktop and a mobile menu) do not repeat ids on one page.
+  const reactId = useId();
+  const domIdPrefix = `mg-tree${reactId.replace(/[^\w-]/g, '')}item-`;
 
   const [uncontrolledExpanded, setUncontrolledExpanded] = useState(
     () => new Set(defaultExpandedIds)
   );
   const [uncontrolledSelected, setUncontrolledSelected] =
     useState(defaultSelectedId);
+  // The item that holds focus while focus is inside the tree.
   const [focusedId, setFocusedId] = useState(null);
+  // The one item with tabindex="0".
+  const [tabStopId, setTabStopId] = useState(null);
 
   const expandedIds = controlledExpandedIds
     ? new Set(controlledExpandedIds)
@@ -214,17 +246,40 @@ export const Tree = ({
       ? controlledSelectedId
       : uncontrolledSelected;
 
-  // Initialize focus on mount or when tree items render
+  // Keep the roving tab stop on an item that is rendered. While focus is in
+  // the tree it follows the focused item. Otherwise Tab lands on the selected
+  // item, or its nearest visible ancestor when it sits in a collapsed parent,
+  // and then on the first item (ARIA APG treeview).
   useEffect(() => {
-    if (!focusedId && treeRef.current) {
-      const firstItem = treeRef.current.querySelector(
-        'li[role="treeitem"][data-mg-treeitem-id]'
-      );
-      if (firstItem) {
-        setFocusedId(firstItem.getAttribute('data-mg-treeitem-id'));
-      }
+    if (!treeRef.current) return;
+    const rendered = new Set(
+      Array.from(treeRef.current.querySelectorAll(ITEM_SELECTOR), itemIdOf)
+    );
+    if (rendered.size === 0) return;
+
+    let next = null;
+    if (focusedId !== null && rendered.has(focusedId)) {
+      next = focusedId;
+    } else if (selectedId !== null && selectedId !== undefined) {
+      const candidates = [
+        selectedId,
+        ...(findAncestorIds(children, selectedId) || []).reverse(),
+      ];
+      next = candidates.find(id => rendered.has(id)) ?? null;
     }
-  }, [focusedId, children]);
+    if (next === null) {
+      next = itemIdOf(treeRef.current.querySelector(ITEM_SELECTOR));
+    }
+    setTabStopId(prev => (prev === next ? prev : next));
+  }, [focusedId, selectedId, expandedIds, children]);
+
+  // Once focus leaves the tree, the next Tab in returns to the selected item.
+  const handleTreeBlur = e => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setFocusedId(null);
+    }
+    if (onBlur) onBlur(e);
+  };
 
   const toggleItem = useCallback(
     (id, nextState) => {
@@ -263,15 +318,11 @@ export const Tree = ({
       if (!treeRef.current) return;
 
       const visibleItems = Array.from(
-        treeRef.current.querySelectorAll(
-          'li[role="treeitem"][data-mg-treeitem-id]'
-        )
+        treeRef.current.querySelectorAll(ITEM_SELECTOR)
       ).filter(el => {
         let parentGroup = el.parentElement?.closest('ul[role="group"]');
         while (parentGroup) {
-          const parentItem = parentGroup.closest(
-            'li[role="treeitem"][data-mg-treeitem-id]'
-          );
+          const parentItem = parentGroup.closest(ITEM_SELECTOR);
           if (!parentItem) break;
           const parentId = parentItem.getAttribute('data-mg-treeitem-id');
           if (!expandedIds.has(parentId)) return false;
@@ -326,7 +377,7 @@ export const Tree = ({
             } else {
               // Move focus to first child
               const firstChild = currentEl.querySelector(
-                'ul[role="group"] > li[role="treeitem"]'
+                ':scope > ul[role="group"] > li[role="treeitem"]'
               );
               if (firstChild) {
                 const childId = firstChild.getAttribute('data-mg-treeitem-id');
@@ -344,9 +395,7 @@ export const Tree = ({
             toggleFn();
           } else {
             // Move focus to parent treeitem
-            const parentItem = currentEl.parentElement?.closest(
-              'li[role="treeitem"][data-mg-treeitem-id]'
-            );
+            const parentItem = currentEl.parentElement?.closest(ITEM_SELECTOR);
             if (parentItem) {
               const parentId = parentItem.getAttribute('data-mg-treeitem-id');
               setFocusedId(parentId);
@@ -382,7 +431,11 @@ export const Tree = ({
         case ' ': {
           e.preventDefault();
           selectItem(currentId);
-          const link = currentEl.querySelector('a');
+          // Only the item's own link: an expanded parent also contains its
+          // children's links.
+          const link = currentEl.querySelector(
+            ':scope > .mg-tree__label-container > a'
+          );
           if (link) {
             link.click();
           } else if (hasChildren) {
@@ -402,7 +455,8 @@ export const Tree = ({
     () => ({
       expandedIds,
       selectedId,
-      focusedId,
+      tabStopId,
+      domIdPrefix,
       setFocusedId,
       toggleItem,
       selectItem,
@@ -412,7 +466,8 @@ export const Tree = ({
     [
       expandedIds,
       selectedId,
-      focusedId,
+      tabStopId,
+      domIdPrefix,
       setFocusedId,
       toggleItem,
       selectItem,
@@ -432,6 +487,7 @@ export const Tree = ({
         )}
         role="tree"
         {...props}
+        onBlur={handleTreeBlur}
       >
         {children}
       </ul>

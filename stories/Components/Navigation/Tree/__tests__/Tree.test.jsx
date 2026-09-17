@@ -5,6 +5,8 @@ import { Tree, TreeItem } from '../Tree';
 
 expect.extend(toHaveNoViolations);
 
+const getItem = id => document.querySelector(`[data-mg-treeitem-id="${id}"]`);
+
 describe('Tree and TreeItem', () => {
   const renderSampleTree = (props = {}, itemProps = {}) => {
     return render(
@@ -34,8 +36,8 @@ describe('Tree and TreeItem', () => {
   it('sets roving tabindex="0" on first treeitem and "-1" on others', () => {
     renderSampleTree();
 
-    const item1 = document.getElementById('mg-treeitem-1');
-    const item2 = document.getElementById('mg-treeitem-2');
+    const item1 = getItem('1');
+    const item2 = getItem('2');
 
     expect(item1).toHaveAttribute('tabindex', '0');
     expect(item2).toHaveAttribute('tabindex', '-1');
@@ -45,7 +47,7 @@ describe('Tree and TreeItem', () => {
     const onToggle = jest.fn();
     renderSampleTree({ onToggle });
 
-    const item1 = document.getElementById('mg-treeitem-1');
+    const item1 = getItem('1');
     expect(item1).toHaveAttribute('aria-expanded', 'false');
 
     const toggleBtn = item1.querySelector('.mg-tree__toggle');
@@ -71,7 +73,7 @@ describe('Tree and TreeItem', () => {
     fireEvent.click(screen.getByText('Node 2'));
     expect(onSelect).toHaveBeenCalledWith('2');
 
-    const item2 = document.getElementById('mg-treeitem-2');
+    const item2 = getItem('2');
     expect(item2).toHaveClass('mg-tree__item--selected');
     expect(item2).toHaveAttribute('aria-selected', 'true');
   });
@@ -85,8 +87,8 @@ describe('Tree and TreeItem', () => {
       </Tree>
     );
 
-    const parent = document.getElementById('mg-treeitem-1');
-    const child = document.getElementById('mg-treeitem-1-1');
+    const parent = getItem('1');
+    const child = getItem('1-1');
 
     expect(parent).toHaveAttribute('aria-expanded', 'true');
     expect(child).toHaveAttribute('aria-selected', 'true');
@@ -110,8 +112,8 @@ describe('Tree and TreeItem', () => {
     it('navigates with ArrowDown and ArrowUp', () => {
       renderSampleTree();
 
-      const item1 = document.getElementById('mg-treeitem-1');
-      const item2 = document.getElementById('mg-treeitem-2');
+      const item1 = getItem('1');
+      const item2 = getItem('2');
 
       act(() => {
         item1.focus();
@@ -130,7 +132,7 @@ describe('Tree and TreeItem', () => {
     it('expands collapsed node on ArrowRight, and focuses child on second ArrowRight', () => {
       renderSampleTree();
 
-      const item1 = document.getElementById('mg-treeitem-1');
+      const item1 = getItem('1');
       act(() => {
         item1.focus();
       });
@@ -141,7 +143,7 @@ describe('Tree and TreeItem', () => {
       expect(document.activeElement).toBe(item1);
 
       // Second ArrowRight moves to first child
-      const item1_1 = document.getElementById('mg-treeitem-1-1');
+      const item1_1 = getItem('1-1');
       fireEvent.keyDown(item1, { key: 'ArrowRight' });
       expect(document.activeElement).toBe(item1_1);
     });
@@ -156,7 +158,7 @@ describe('Tree and TreeItem', () => {
           </Tree>
         </div>
       );
-      const item1 = document.getElementById('mg-treeitem-1');
+      const item1 = getItem('1');
       act(() => {
         item1.focus();
       });
@@ -171,8 +173,8 @@ describe('Tree and TreeItem', () => {
     it('collapses expanded node on ArrowLeft, and moves to parent on child ArrowLeft', () => {
       renderSampleTree({ defaultExpandedIds: ['1'] });
 
-      const item1 = document.getElementById('mg-treeitem-1');
-      const item1_1 = document.getElementById('mg-treeitem-1-1');
+      const item1 = getItem('1');
+      const item1_1 = getItem('1-1');
 
       act(() => {
         item1_1.focus();
@@ -189,8 +191,8 @@ describe('Tree and TreeItem', () => {
     it('moves to first item on Home and last item on End', () => {
       renderSampleTree({ defaultExpandedIds: ['1', '1-2'] });
 
-      const item1 = document.getElementById('mg-treeitem-1');
-      const item2 = document.getElementById('mg-treeitem-2');
+      const item1 = getItem('1');
+      const item2 = getItem('2');
 
       act(() => {
         item1.focus();
@@ -206,7 +208,7 @@ describe('Tree and TreeItem', () => {
       const onSelect = jest.fn();
       renderSampleTree({ onSelect });
 
-      const item2 = document.getElementById('mg-treeitem-2');
+      const item2 = getItem('2');
       act(() => {
         item2.focus();
       });
@@ -217,6 +219,127 @@ describe('Tree and TreeItem', () => {
       fireEvent.keyDown(item2, { key: ' ' });
       expect(onSelect).toHaveBeenCalledWith('2');
     });
+  });
+
+  describe('Enter and Space on a parent', () => {
+    const renderParents = props =>
+      render(
+        <Tree defaultExpandedIds={['topics', 'about']} {...props}>
+          <TreeItem id="topics" label="Topics">
+            <TreeItem id="floods" label="Floods" href="#floods" asLink />
+          </TreeItem>
+          <TreeItem id="about" label="About" href="#about" asLink>
+            <TreeItem id="team" label="Team" href="#team" asLink />
+          </TreeItem>
+        </Tree>
+      );
+
+    const spyOnLink = name => {
+      const spy = jest.fn(e => e.preventDefault());
+      screen.getByRole('link', { name }).addEventListener('click', spy);
+      return spy;
+    };
+
+    it.each(['Enter', ' '])(
+      'toggles and selects an expanded unlinked parent on %p, without following its first child link',
+      key => {
+        const onSelect = jest.fn();
+        renderParents({ onSelect });
+        const floods = spyOnLink('Floods');
+        const topics = getItem('topics');
+        act(() => topics.focus());
+
+        fireEvent.keyDown(topics, { key });
+
+        expect(floods).not.toHaveBeenCalled();
+        expect(onSelect).toHaveBeenCalledTimes(1);
+        expect(onSelect).toHaveBeenCalledWith('topics');
+        expect(topics).toHaveAttribute('aria-selected', 'true');
+        expect(topics).toHaveAttribute('aria-expanded', 'false');
+      }
+    );
+
+    it('follows the parent own link, not its child link, on Enter', () => {
+      renderParents();
+      const about = spyOnLink('About');
+      const team = spyOnLink('Team');
+      const aboutItem = getItem('about');
+      act(() => aboutItem.focus());
+
+      fireEvent.keyDown(aboutItem, { key: 'Enter' });
+
+      expect(about).toHaveBeenCalledTimes(1);
+      expect(team).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('tab stop', () => {
+    it('is the selected item rather than the first item', () => {
+      renderSampleTree({
+        defaultExpandedIds: ['1', '1-2'],
+        defaultSelectedId: '1-2-1',
+      });
+      expect(getItem('1-2-1')).toHaveAttribute('tabindex', '0');
+      expect(getItem('1')).toHaveAttribute('tabindex', '-1');
+      expect(
+        document.querySelectorAll('[role="treeitem"][tabindex="0"]')
+      ).toHaveLength(1);
+    });
+
+    it('falls back to the nearest visible ancestor of a hidden selected item', () => {
+      renderSampleTree({
+        defaultExpandedIds: ['1'],
+        defaultSelectedId: '1-2-1',
+      });
+      expect(getItem('1-2')).toHaveAttribute('tabindex', '0');
+      expect(getItem('1')).toHaveAttribute('tabindex', '-1');
+    });
+
+    it('falls back to the first item when the selected id is not in the tree', () => {
+      renderSampleTree({ selectedId: 'missing' });
+      expect(getItem('1')).toHaveAttribute('tabindex', '0');
+    });
+
+    it('follows focus in the tree and returns to the selected item when focus leaves', () => {
+      const onBlur = jest.fn();
+      render(
+        <>
+          <Tree defaultSelectedId="2" onBlur={onBlur}>
+            <TreeItem id="1" label="Node 1" />
+            <TreeItem id="2" label="Node 2" />
+            <TreeItem id="3" label="Node 3" />
+          </Tree>
+          <button type="button">Outside</button>
+        </>
+      );
+      const item2 = getItem('2');
+      act(() => item2.focus());
+      fireEvent.keyDown(item2, { key: 'ArrowDown' });
+      expect(getItem('3')).toHaveAttribute('tabindex', '0');
+
+      act(() => screen.getByRole('button', { name: 'Outside' }).focus());
+      expect(onBlur).toHaveBeenCalled();
+      expect(getItem('2')).toHaveAttribute('tabindex', '0');
+      expect(getItem('3')).toHaveAttribute('tabindex', '-1');
+    });
+  });
+
+  it('scopes item DOM ids to each tree', () => {
+    render(
+      <>
+        <Tree aria-label="Desktop">
+          <TreeItem id="1" label="Desktop node" />
+        </Tree>
+        <Tree aria-label="Mobile">
+          <TreeItem id="1" label="Mobile node" />
+        </Tree>
+      </>
+    );
+    const [desktop, mobile] = screen.getAllByRole('treeitem');
+    expect(desktop.id).toMatch(/^mg-tree.*item-1$/);
+    expect(mobile.id).toMatch(/^mg-tree.*item-1$/);
+    expect(desktop.id).not.toBe(mobile.id);
+    expect(document.getElementById(desktop.id)).toBe(desktop);
   });
 
   it('renders link when asLink and href are provided', () => {
@@ -278,7 +401,7 @@ describe('Tree and TreeItem', () => {
         { toggleIcon: 'mg-icon-plus' }
       );
       const icon = container.querySelector(
-        '#mg-treeitem-1 > .mg-tree__label-container .mg-tree__icon'
+        '[data-mg-treeitem-id="1"] > .mg-tree__label-container .mg-tree__icon'
       );
       expect(icon).toHaveClass('mg-icon-plus');
       expect(icon).not.toHaveClass('mg-icon-arrow-right');

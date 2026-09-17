@@ -8,6 +8,8 @@ import fromElement from '../Tree.fromElement';
 
 expect.extend(toHaveNoViolations);
 
+const getItem = id => document.querySelector(`[data-mg-treeitem-id="${id}"]`);
+
 const MARKUP = `
   <ul>
     <li data-id="about" data-expanded>
@@ -67,16 +69,10 @@ describe('HydratedTree', () => {
     expect(container).toHaveAttribute('data-mg-hydrated', 'true');
     expect(tree).toHaveClass('mg-tree', 'mg-tree--guides');
 
-    const about = document.getElementById('mg-treeitem-about');
+    const about = getItem('about');
     expect(about).toHaveAttribute('aria-expanded', 'true');
-    expect(document.getElementById('mg-treeitem-topics')).toHaveAttribute(
-      'aria-expanded',
-      'false'
-    );
-    expect(document.getElementById('mg-treeitem-team')).toHaveAttribute(
-      'aria-selected',
-      'true'
-    );
+    expect(getItem('topics')).toHaveAttribute('aria-expanded', 'false');
+    expect(getItem('team')).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByText('Team').closest('a')).toHaveAttribute(
       'aria-current',
       'page'
@@ -98,31 +94,85 @@ describe('HydratedTree', () => {
     mountContainer();
     hydrate();
 
-    const about = document.getElementById('mg-treeitem-about');
-    expect(about).toHaveAttribute('tabindex', '0');
+    // The selected item, not the first one, is the tab stop.
+    const about = getItem('about');
+    expect(about).toHaveAttribute('tabindex', '-1');
+    expect(getItem('team')).toHaveAttribute('tabindex', '0');
 
     act(() => about.focus());
     act(() => {
       fireEvent.keyDown(about, { key: 'ArrowDown' });
     });
-    const team = document.getElementById('mg-treeitem-team');
+    const team = getItem('team');
     expect(document.activeElement).toBe(team);
     expect(team).toHaveAttribute('tabindex', '0');
 
     act(() => {
       fireEvent.keyDown(document.activeElement, { key: 'End' });
     });
-    expect(document.activeElement).toBe(
-      document.getElementById('mg-treeitem-contact')
-    );
+    expect(document.activeElement).toBe(getItem('contact'));
 
-    const topics = document.getElementById('mg-treeitem-topics');
+    const topics = getItem('topics');
     act(() => topics.focus());
     act(() => {
       fireEvent.keyDown(topics, { key: 'ArrowRight' });
     });
     expect(topics).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByText('Floods')).toBeInTheDocument();
+  });
+
+  it('toggles an unlinked parent on Enter without following a child link', () => {
+    const container = mountContainer();
+    container.innerHTML = container.innerHTML.replace(
+      '<li data-id="floods">Floods</li>',
+      '<li data-id="floods"><a href="#floods">Floods</a></li>'
+    );
+    hydrate();
+
+    const topics = getItem('topics');
+    act(() => topics.focus());
+    act(() => {
+      fireEvent.keyDown(topics, { key: 'ArrowRight' });
+    });
+    const floodsLink = screen.getByRole('link', { name: 'Floods' });
+    const followed = jest.fn(e => e.preventDefault());
+    floodsLink.addEventListener('click', followed);
+
+    act(() => {
+      fireEvent.keyDown(topics, { key: 'Enter' });
+    });
+    expect(followed).not.toHaveBeenCalled();
+    expect(topics).toHaveAttribute('aria-expanded', 'false');
+    expect(topics).toHaveAttribute('aria-selected', 'true');
+    expect(getItem('team')).toHaveAttribute('aria-selected', 'false');
+  });
+
+  it('gives two trees with the same data-ids unique DOM ids', () => {
+    mountContainer();
+    mountContainer();
+    hydrate();
+
+    const trees = screen.getAllByRole('tree');
+    expect(trees).toHaveLength(2);
+    const ids = Array.from(document.querySelectorAll('[id]'), el => el.id);
+    expect(new Set(ids).size).toBe(ids.length);
+
+    const [first, second] = trees.map(tree =>
+      tree.querySelector('[data-mg-treeitem-id="team"]')
+    );
+    expect(first.id).not.toBe(second.id);
+
+    // Keyboard navigation stays within each tree.
+    act(() => second.focus());
+    act(() => {
+      fireEvent.keyDown(second, { key: 'ArrowDown' });
+    });
+    expect(document.activeElement).toBe(
+      trees[1].querySelector('[data-mg-treeitem-id="history"]')
+    );
+    expect(
+      trees[0].querySelector('[data-mg-treeitem-id="team"]')
+    ).toHaveAttribute('tabindex', '0');
   });
 
   it('applies data-toggle-icon to every toggle', () => {

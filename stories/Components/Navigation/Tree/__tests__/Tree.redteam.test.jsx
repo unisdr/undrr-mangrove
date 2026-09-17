@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { Tree, TreeItem } from '../Tree';
 
+const getItem = id => document.querySelector(`[data-mg-treeitem-id="${id}"]`);
+
 describe('Tree Red-Team Security & Stress Regressions', () => {
   it('supports deeply nested hierarchies (6+ levels) with continuous roving tabindex', () => {
     const { container } = render(
@@ -20,7 +22,7 @@ describe('Tree Red-Team Security & Stress Regressions', () => {
       </Tree>
     );
 
-    const l1 = document.getElementById('mg-treeitem-l1');
+    const l1 = getItem('l1');
 
     act(() => {
       l1.focus();
@@ -31,7 +33,7 @@ describe('Tree Red-Team Security & Stress Regressions', () => {
     act(() => {
       fireEvent.keyDown(l1, { key: 'End' });
     });
-    const l6 = document.getElementById('mg-treeitem-l6');
+    const l6 = getItem('l6');
     expect(document.activeElement).toBe(l6);
     expect(l6).toHaveAttribute('tabindex', '0');
 
@@ -39,7 +41,7 @@ describe('Tree Red-Team Security & Stress Regressions', () => {
     act(() => {
       fireEvent.keyDown(l6, { key: 'Home' });
     });
-    const topItem = document.getElementById('mg-treeitem-l1');
+    const topItem = getItem('l1');
     expect(document.activeElement).toBe(topItem);
     expect(topItem).toHaveAttribute('tabindex', '0');
   });
