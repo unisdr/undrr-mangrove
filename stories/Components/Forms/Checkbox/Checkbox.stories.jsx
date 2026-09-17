@@ -1,6 +1,12 @@
 import React from 'react';
 import { Checkbox } from './Checkbox';
 import { FormGroup } from '../FormGroup/FormGroup';
+import {
+  getSwitchCaptionForLocale,
+  PendingSwitchDemo,
+  PendingSwitchRow,
+  simulateSave,
+} from './_switchPending';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -189,4 +195,44 @@ export const SwitchDisabled = {
     </div>
   ),
   name: 'Switch disabled',
+};
+
+export const SwitchPending = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getSwitchCaptionForLocale(locale);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <PendingSwitchRow
+          label={caption.layerLabel}
+          note={caption.turningOn}
+          checked
+        />
+        <PendingSwitchRow
+          label={caption.alertsLabel}
+          note={caption.turningOff}
+        />
+      </div>
+    );
+  },
+  name: 'Switch pending',
+};
+
+export const SwitchPendingInteractive = {
+  args: { outcome: 'success' },
+  argTypes: {
+    outcome: {
+      control: 'radio',
+      options: ['success', 'failure', 'timeout'],
+      description:
+        'How the simulated save ends. `timeout` never responds, so the 5 second timeout reverts the switch.',
+    },
+  },
+  render: ({ outcome }, { globals: { locale } }) => (
+    <PendingSwitchDemo
+      caption={getSwitchCaptionForLocale(locale)}
+      save={simulateSave(outcome)}
+      timeoutMs={5000}
+    />
+  ),
+  name: 'Switch pending, interactive',
 };

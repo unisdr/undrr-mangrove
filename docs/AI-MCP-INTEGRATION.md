@@ -182,7 +182,7 @@ The index also includes library-level metadata:
 - **`utilitiesUrl`** — link to the CSS utility class reference
 - **`iconsUrl`** — link to the authoritative static icon inventory JSON
 
-Agents can filter by `vanillaHtml: true` (works as plain HTML/CSS) or `requiresReact: true` (needs React runtime). Entries flagged `hydration: true` have a vanilla hydration contract in their detail file (see below).
+Agents can filter by `vanillaHtml: true` (works as plain HTML/CSS) or `requiresReact: true` (needs React runtime). Entries flagged `hydration: true` have a vanilla hydration contract in their detail file, and entries flagged `vanillaModule: true` have a plain ES module contract (see below).
 
 ### Per-component details (`ai-components/{id}.json`)
 
@@ -198,6 +198,8 @@ Each component gets its own JSON file (roughly 0.3-21 KB) with some of:
 Components with syndication support (Footer) include a `vanillaHtmlEmbed` field with the complete script-tag embed pattern and configuration options.
 
 Components whose static `renderedHtml` is not interactive on its own (ServiceNotice) include a `hydration` field: the container selector, CDN module URLs, every `data-*` attribute, the custom events the component dispatches, and a complete vanilla HTML example (stylesheet, import map, container and module script). Module and stylesheet URLs carry the current package version. The index entry for such a component has `hydration: true`, and `yarn validate-manifest` fails if a curated `hydration` object is missing `selector`, `modules` or `example`. Curate it in `scripts/ai-manifest/component-data.js`, using `{{version}}` in URLs like the rest of the curated data.
+
+Components enhanced by a dependency-free module from `/js/` instead of React (the `.mg-switch` pending state on Checkbox) use a `vanillaModule` field with the same shape and validation. It needs neither React, `hydrate.js` nor an import map, so it is kept apart from `hydration`, and the index flags it `vanillaModule: true`.
 
 ### CSS utilities (`ai-components/utilities.json`)
 
@@ -222,7 +224,7 @@ The [PageTemplateExample](https://mangrove.undrr.org/ai-components/example-page-
 1. Fetch `llms.json` for URLs and conventions.
 2. Fetch `ai-components/index.json` and filter `vanillaHtml: true`.
 3. Use `quickstart` + `requiredAssets`, then component `renderedHtml`.
-4. For entries with `hydration: true`, use the detail file's `hydration.example` instead of the static `renderedHtml` when the component needs to be interactive.
+4. For entries with `hydration: true`, use the detail file's `hydration.example` instead of the static `renderedHtml` when the component needs to be interactive. For entries with `vanillaModule: true`, use `vanillaModule.example`, which loads a plain module script and no React.
 
 **React consumers**
 1. Fetch `ai-components/index.json`.

@@ -123,7 +123,7 @@ Returns: `{ roots, update, unmountAll }`
 | SyndicationSearchWidget | Complex | `[data-mg-search-widget]` | `data-search-endpoint`, `data-results-per-page`, `data-default-filters` (JSON) |
 | Pager | Medium | `[data-mg-pager]` | `data-page`, `data-total-pages`, `data-show-jump-to`, `data-aria-label` |
 
-> **Note on Micro-Interactions**: For lightweight interactions like `CopyButton`, Mangrove also provides a **zero-dependency vanilla JS script** (`js/copy-button.js` in the npm package, or `/js/copy-button.js` on the CDN) with 0 kB React runtime requirement. Use React hydration when your architecture standardizes on `createHydrator`, or use the standalone script for pure HTML/PHP/Twig sites.
+> **Note on Micro-Interactions**: For lightweight interactions like `CopyButton`, Mangrove also provides a **zero-dependency vanilla JS script** (`js/copy-button.js` in the npm package, or `/js/copy-button.js` on the CDN) with 0 kB React runtime requirement. Use React hydration when your architecture standardizes on `createHydrator`, or use the standalone script for pure HTML/PHP/Twig sites. The `.mg-switch` pending state has no React component: use `js/switch-pending.js` (see the Checkbox docs).
 
 Tier definitions:
 - **Simple**: scalar attributes

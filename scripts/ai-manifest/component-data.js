@@ -209,7 +209,7 @@ export const COMPONENT_DATA = {
   },
   'components-buttons-copybutton': {
     description:
-      'One-click copy button with micro-feedback tooltip and aria-live announcements. Supports zero-dependency vanilla JS (dist/js/copy-button.min.js), Layer 2 React hydration via createHydrator, and React JSX.',
+      'One-click copy button with micro-feedback tooltip and aria-live announcements. Supports zero-dependency vanilla JS (js/copy-button.js), Layer 2 React hydration via createHydrator, and React JSX.',
     cssClasses: [
       'mg-copy-button',
       'mg-copy-button--copied',
@@ -1062,7 +1062,94 @@ npm run build</code></pre>
   },
   'components-forms-checkbox': {
     description:
-      'Styled checkbox with label. Error and disabled states available.',
+      'Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces "Saving…", "Still saving…" and the outcome in a role="status" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener.',
+    vanillaModule: {
+      note: 'Plain ES module: no React, no hydrate.js, no import map. renderedHtml switches toggle but do not save. Marked switches are enhanced on load; an explicit mgSwitchPending or mgSwitchPendingInit call takes over those switches with its options. Without a save function, each change dispatches a cancelable mg-switch:save event; a listener must call event.detail.respondWith(promise) synchronously (wrap awaited work in an async function and pass its promise), or call event.preventDefault() synchronously and respondWith later. Otherwise the switch reverts with a console warning. Call mgSwitchPendingDestroy(scope), or abort the { signal } passed to mgSwitchPendingInit, before removing switches. Exports: mgSwitchPending(input, { save, status, timeout, labels, signal }) returning { destroy() }, mgSwitchPendingInit(scope, options) returning the new helpers, mgSwitchPendingDestroy(scope).',
+      selector: '[data-mg-switch-pending]',
+      modules: {
+        script:
+          'https://assets.undrr.org/mangrove/{{version}}/js/switch-pending.js',
+      },
+      dataAttributes: {
+        'data-mg-switch-pending':
+          'On the .mg-switch__input or its label. Enhanced on page load, or by mgSwitchPendingInit(scope).',
+        'data-mg-switch-pending-skip-auto-init':
+          'Presence-based. Skips the switch during page-load auto-init; call mgSwitchPendingInit yourself.',
+        'data-mg-switch-labels':
+          'JSON on the input or label: saving, stillSaving, error, on, off. "{label}" is replaced with the switch label text. Defaults are English ("Saving…", "Still saving…", "Could not save the change. Try again.", "{label} turned on", "{label} turned off"). Input wins over label; JS labels option wins over both.',
+        'data-mg-switch-status':
+          'id of a role="status" element for announcements. Otherwise an aria-describedby target with role="status" or aria-live, else a visually hidden mg-u-sr-only region is added after the label and removed on destroy.',
+        'data-mg-switch-pending-enhanced':
+          'Set by the script on enhanced inputs. Do not author it.',
+      },
+      events: [
+        {
+          name: 'mg-switch:save',
+          target: 'The .mg-switch__input',
+          bubbles: true,
+          when: 'A change starts a save and no save function was passed. Cancelable: preventDefault() during dispatch claims the save, so respondWith can follow an await. detail: { checked, signal, respondWith(promise) }; resolve for success, reject for failure.',
+        },
+        {
+          name: 'mg-switch:pending',
+          target: 'The .mg-switch__input',
+          bubbles: true,
+          when: 'A save starts. detail: { checked } (the requested position).',
+        },
+        {
+          name: 'mg-switch:settled',
+          target: 'The .mg-switch__input',
+          bubbles: true,
+          when: 'The save succeeded. detail: { checked, ok: true }.',
+        },
+        {
+          name: 'mg-switch:failed',
+          target: 'The .mg-switch__input',
+          bubbles: true,
+          when: "The save failed or timed out and the switch reverted. detail: { checked (reverted position), requested, reason: 'error' | 'timeout', error }.",
+        },
+      ],
+      example: `<link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css" />
+
+<label class="mg-switch" data-mg-switch-pending>
+  <input type="checkbox" role="switch" class="mg-switch__input" name="alerts" />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Real-time alerts</span>
+</label>
+
+<script type="module" src="https://assets.undrr.org/mangrove/{{version}}/js/switch-pending.js"></script>
+<script>
+  document.addEventListener('mg-switch:save', event => {
+    const { checked, signal, respondWith } = event.detail;
+    respondWith(
+      fetch('/api/settings/' + event.target.name, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: checked }),
+        signal,
+      }).then(response => {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+      })
+    );
+  });
+</script>`,
+    },
+    cssClasses: [
+      'mg-form-check',
+      'mg-form-check__input',
+      'mg-form-check__input--checkbox',
+      'mg-form-check__input--disabled',
+      'mg-form-check__input--error',
+      'mg-form-check__label',
+      'mg-form-error',
+      'mg-switch',
+      'mg-switch--pending',
+      'mg-switch__input',
+      'mg-switch__track',
+      'mg-switch__thumb',
+      'mg-switch__label',
+    ],
   },
   'components-forms-radio': {
     description:

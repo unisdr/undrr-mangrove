@@ -77,6 +77,7 @@ Scripts in `stories/assets/js/` are auto-discovered by webpack and published to 
 | `on-this-page-nav.js` | `js/on-this-page-nav.js` | Sticky horizontal nav with scroll-spy |
 | `tabs.js` | `js/tabs.js` | Tabbed content with keyboard nav |
 | `show-more.js` | `js/show-more.js` | Expand/collapse toggle |
+| `switch-pending.js` | `js/switch-pending.js` | Pending state for `.mg-switch` while a change saves |
 | `undrr.js` | `js/undrr.js` | Shared constants and namespace |
 
 See [`stories/assets/js/README.md`](../stories/assets/js/README.md) for the full pipeline and authoring guide.

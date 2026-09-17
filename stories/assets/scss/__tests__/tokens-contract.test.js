@@ -562,6 +562,21 @@ describe('brand-owned surfaces resolve from semantic tokens', () => {
   });
 });
 
+// What _form-base.scss compiles for each switch hook read: the custom
+// property with its default. Kept verbatim so the pairs below measure the
+// stylesheet's own text.
+const SWITCH = {
+  track: 'var(--mg-switch-track-background, rgb(var(--mg-color-neutral-400)))',
+  trackChecked:
+    'var(--mg-switch-track-background--checked, rgb(var(--mg-color-interactive)))',
+  thumb: 'var(--mg-switch-thumb-background, rgb(var(--mg-color-neutral-0)))',
+  overlayPending:
+    'var(--mg-switch-track-overlay--pending, rgb(var(--mg-color-neutral-500)/0.4))',
+  overlayDisabled:
+    'var(--mg-switch-track-overlay--disabled, rgb(var(--mg-color-neutral-0)/0.55))',
+  ring: 'var(--mg-switch-pending-ring-color, rgb(var(--mg-color-interactive)))',
+};
+
 // The page itself. Asserted rather than assumed, because every pair whose
 // lowest layer is translucent composites down onto it.
 const PAGE = '--mg-color-neutral-0';
@@ -889,6 +904,92 @@ const COMPONENT_PAIRS = [
     bg: ['--mg-color-form-check--checked'],
     min: 3,
     why: 'SC 1.4.11 — the tick is an inline SVG stroked #fff by _form-base.scss',
+  },
+  // Switch (.mg-switch). The track is the control boundary against the page
+  // and the thumb's position carries the state, so both are non-text. The
+  // switch reads its --mg-switch-* hooks with the default at the point of use,
+  // so these pairs measure the same var(hook, default) text the stylesheet
+  // compiles to; 'switch pairs measure what _form-base.scss compiles' below
+  // fails if the two drift apart.
+  {
+    name: 'switch track, off',
+    fg: SWITCH.track,
+    bg: [],
+    min: 3,
+    why: 'SC 1.4.11 — the off track is the whole visible boundary of the switch',
+  },
+  {
+    name: 'switch track, on',
+    fg: SWITCH.trackChecked,
+    bg: [],
+    min: 3,
+    why: 'SC 1.4.11 — the brand fill is how on is identified',
+  },
+  {
+    name: 'switch thumb on the off track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.track],
+    min: 3,
+    why: 'SC 1.4.11 — the thumb position carries the state',
+  },
+  {
+    name: 'switch thumb on the on track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.trackChecked],
+    min: 3,
+    why: 'SC 1.4.11 — the thumb position carries the state',
+  },
+  // Pending layers the overlay over the track as a background-image, so the
+  // stack is overlay-on-track. The page is white, like the thumb, so the thumb
+  // pair also stands in for track-against-page.
+  {
+    name: 'switch thumb on the pending off track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.overlayPending, SWITCH.track],
+    min: 3,
+    why: 'SC 1.4.11 — the greyed track must still hold the thumb and the boundary while a change is pending',
+  },
+  {
+    name: 'switch thumb on the pending on track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.overlayPending, SWITCH.trackChecked],
+    min: 3,
+    why: 'SC 1.4.11 — the greyed track must still hold the thumb and the boundary while a change is pending',
+  },
+  {
+    name: 'switch pending ring on the thumb',
+    fg: SWITCH.ring,
+    bg: [SWITCH.thumb],
+    min: 3,
+    why: 'SC 1.4.11 — the ring inside the thumb is the pending indicator',
+  },
+  // aria-disabled stays focusable. The track draws the focus ring and carries
+  // no opacity (switch.styles.test.js fails if it does), so the ring meets
+  // the page at full strength rather than composited at 0.45.
+  {
+    name: 'switch focus ring on a focused aria-disabled switch',
+    fg: '--mg-color-focus-ring',
+    bg: [PAGE],
+    min: 3,
+    why: 'SC 1.4.11 — aria-disabled keeps the switch focusable, so its focus indicator is not exempt',
+  },
+  // aria-disabled dims the track with a page-coloured layer instead of
+  // opacity. SC 1.4.11 exempts inactive controls, so these are recorded
+  // failures in WCAG_EXCEPTIONS and PERCEPTUAL_EXCEPTIONS, kept so the dimming
+  // cannot drift fainter than :disabled's unnoticed.
+  {
+    name: 'switch thumb on the aria-disabled off track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.overlayDisabled, SWITCH.track],
+    min: 3,
+    why: 'SC 1.4.11 — exempt as an inactive control; recorded at the weight of :disabled',
+  },
+  {
+    name: 'switch thumb on the aria-disabled on track',
+    fg: SWITCH.thumb,
+    bg: [SWITCH.overlayDisabled, SWITCH.trackChecked],
+    min: 3,
+    why: 'SC 1.4.11 — exempt as an inactive control; recorded at the weight of :disabled',
   },
   {
     name: 'field error message',
@@ -1309,6 +1410,36 @@ const WCAG_EXCEPTIONS = {
     ])
   ),
 
+  // An aria-disabled switch is deliberately faint. SC 1.4.11 exempts inactive
+  // controls, and the dimming matches :disabled's 0.45 opacity. Recorded so
+  // the dimming cannot drift fainter unnoticed.
+  ...Object.fromEntries(
+    ALL_THEMES.map(theme => [
+      `${theme}|switch thumb on the aria-disabled off track`,
+      [1.71, 'inactive control, dimmed to match :disabled'],
+    ])
+  ),
+  'base|switch thumb on the aria-disabled on track': [
+    2.28,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'preventionweb|switch thumb on the aria-disabled on track': [
+    2.09,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'irp|switch thumb on the aria-disabled on track': [
+    1.9,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'mcr|switch thumb on the aria-disabled on track': [
+    2.58,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'delta|switch thumb on the aria-disabled on track': [
+    2.28,
+    'inactive control, dimmed to match :disabled',
+  ],
+
   // orange-900 is 2.95:1 against white. Affects the primary button and the
   // outline button's hover fill, which share the token chain.
   'preventionweb|button label on primary background, hover': [
@@ -1446,6 +1577,34 @@ const WCAG_EXCEPTIONS = {
  * bottom of this file is the list of exactly those pairs.
  */
 const PERCEPTUAL_EXCEPTIONS = {
+  // Mirrors of the aria-disabled switch WCAG exceptions above.
+  ...Object.fromEntries(
+    ALL_THEMES.map(theme => [
+      `${theme}|switch thumb on the aria-disabled off track`,
+      [22.5, 'inactive control, dimmed to match :disabled'],
+    ])
+  ),
+  'base|switch thumb on the aria-disabled on track': [
+    38.3,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'preventionweb|switch thumb on the aria-disabled on track': [
+    34.5,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'irp|switch thumb on the aria-disabled on track': [
+    29,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'mcr|switch thumb on the aria-disabled on track': [
+    42.5,
+    'inactive control, dimmed to match :disabled',
+  ],
+  'delta|switch thumb on the aria-disabled on track': [
+    38.3,
+    'inactive control, dimmed to match :disabled',
+  ],
+
   // Mirrors of the focus-ring and dataviz WCAG exceptions above: each pair
   // that is a recorded failure on the WCAG measure is also one here, for the
   // same reason.
@@ -1738,6 +1897,15 @@ describe('component token contrast, including hover and active states', () => {
     expect(source).toMatch(
       /--mg-tag-foreground:\s*rgb\(var\(--mg-color-neutral-0\)\);/
     );
+  });
+
+  test('switch pairs measure what _form-base.scss compiles', () => {
+    const css = compile('style');
+    Object.values(SWITCH).forEach(value => {
+      expect(`${value}: ${css.includes(value) ? 'compiled' : 'missing'}`).toBe(
+        `${value}: compiled`
+      );
+    });
   });
 
   describe.each(ALL_THEMES)('%s theme', theme => {

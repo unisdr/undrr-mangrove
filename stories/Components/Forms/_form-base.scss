@@ -253,6 +253,50 @@
 // Accessible Switch Control (.mg-switch / role="switch")
 // Binary toggle for immediate on/off states (map layers, dashboard filters)
 // -----------------------------------------------------------------------------
+// Theming hooks. Each custom property is read with its default where it is
+// used, not declared on .mg-switch, so a value set on the switch or on any
+// ancestor (a region, a .mg-theme-* container) reaches it. The defaults are
+// var() chains, which resolve on the element that uses them, so they follow
+// whichever theme wraps the switch.
+$mg-switch-disabled-opacity: 0.45;
+$mg-switch-track: var(
+  --mg-switch-track-background,
+  rgb(var(--mg-color-neutral-400))
+);
+$mg-switch-track-checked: var(
+  --mg-switch-track-background--checked,
+  rgb(var(--mg-color-interactive))
+);
+$mg-switch-thumb: var(
+  --mg-switch-thumb-background,
+  rgb(var(--mg-color-neutral-0))
+);
+
+// Pending greys the track by layering a translucent neutral over it. A
+// lighter track (opacity) would drop IRP's checked track below 3:1 against
+// the page; darkening towards grey keeps every theme above it.
+$mg-switch-overlay-pending: var(
+  --mg-switch-track-overlay--pending,
+  rgb(var(--mg-color-neutral-500) / 0.4)
+);
+
+// aria-disabled keeps the switch focusable, and the track draws the focus
+// ring, so the track cannot take :disabled's opacity. A page-coloured layer at
+// (1 - opacity) paints the same track colour on the page and leaves the ring
+// at full strength.
+$mg-switch-overlay-disabled: var(
+  --mg-switch-track-overlay--disabled,
+  rgb(var(--mg-color-neutral-0) / #{1 - $mg-switch-disabled-opacity})
+);
+$mg-switch-ring: var(
+  --mg-switch-pending-ring-color,
+  rgb(var(--mg-color-interactive))
+);
+$mg-switch-ring-gap: var(
+  --mg-switch-pending-ring-gap-color,
+  rgb(var(--mg-color-neutral-300))
+);
+
 .mg-switch {
   align-items: center;
   cursor: pointer;
@@ -279,27 +323,96 @@
     }
 
     &:checked + .mg-switch__track {
-      background-color: rgb(var(--mg-color-interactive));
+      background-color: $mg-switch-track-checked;
 
       .mg-switch__thumb {
         transform: translateX(mg-rem(18));
       }
     }
 
+    // A disabled input cannot take focus, so fading the whole track (and
+    // with it the focus ring) is safe here.
     &:disabled + .mg-switch__track {
       cursor: not-allowed;
-      opacity: 0.45;
+      opacity: $mg-switch-disabled-opacity;
     }
 
-    &:disabled ~ .mg-switch__label {
+    // Never opacity on the track: see $mg-switch-overlay-disabled. Fading the
+    // thumb's shadow and the pending ring by the same amount completes the
+    // match with :disabled, whose opacity leaves a white thumb white.
+    &[aria-disabled="true"] + .mg-switch__track {
+      background-image: linear-gradient(
+        $mg-switch-overlay-disabled,
+        $mg-switch-overlay-disabled
+      );
+      cursor: not-allowed;
+
+      .mg-switch__thumb {
+        box-shadow: 0 1px 3px rgb(0 0 0 / #{0.25 * $mg-switch-disabled-opacity});
+      }
+
+      .mg-switch__thumb::after {
+        opacity: $mg-switch-disabled-opacity;
+      }
+    }
+
+    &:disabled ~ .mg-switch__label,
+    &[aria-disabled="true"] ~ .mg-switch__label {
       color: rgb(var(--mg-color-neutral-400));
       cursor: not-allowed;
     }
   }
 
+  // Pending: the request behind the switch has not settled. `checked` already
+  // holds the requested value, so the thumb sits at its destination and a
+  // ring inside the thumb says "not confirmed yet", in either direction.
+  &__input[aria-busy="true"] + &__track,
+  &--pending &__track {
+    background-image: linear-gradient(
+      $mg-switch-overlay-pending,
+      $mg-switch-overlay-pending
+    );
+    cursor: progress;
+
+    .mg-switch__thumb::after {
+      border: mg-rem(2) dotted $mg-switch-ring;
+      border-radius: 50%;
+      box-sizing: border-box;
+      content: "";
+      inset: mg-rem(4);
+      position: absolute;
+    }
+
+    // Reduced motion keeps the static dotted ring above; everyone else gets
+    // the Loader's spinning arc. The duration is a literal because the motion
+    // tokens are transition lengths (160ms, 300ms), not a spinner cycle; the
+    // Loader keeps its own literal for the same reason.
+    @media (prefers-reduced-motion: no-preference) {
+      .mg-switch__thumb::after {
+        animation: mg-switch-pending-spin 0.8s linear infinite;
+        border-block-start-color: $mg-switch-ring-gap;
+        border-style: solid;
+      }
+    }
+  }
+
+  // Pending and aria-disabled together: both layers, dimming on top.
+  &__input[aria-disabled="true"][aria-busy="true"] + &__track,
+  &--pending &__input[aria-disabled="true"] + &__track {
+    background-image:
+      linear-gradient($mg-switch-overlay-disabled, $mg-switch-overlay-disabled),
+      linear-gradient($mg-switch-overlay-pending, $mg-switch-overlay-pending);
+  }
+
+  &__input[aria-busy="true"] ~ &__label,
+  &--pending,
+  &:has(&__input[aria-busy="true"]) {
+    cursor: progress;
+  }
+
   &__track {
     align-items: center;
-    background-color: rgb(var(--mg-color-neutral-400));
+    background-color: $mg-switch-track;
     border-radius: mg-rem(12);
     box-sizing: border-box;
     display: inline-flex;
@@ -312,11 +425,12 @@
   }
 
   &__thumb {
-    background-color: rgb(var(--mg-color-neutral-0));
+    background-color: $mg-switch-thumb;
     border-radius: 50%;
     box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
     display: block;
     height: mg-rem(20);
+    position: relative;
     transition: transform var(--mg-motion-duration-fast)
       var(--mg-motion-easing-standard);
     width: mg-rem(20);
@@ -337,6 +451,124 @@
 
 [dir="rtl"] .mg-switch__input:checked + .mg-switch__track .mg-switch__thumb {
   transform: translateX(mg-rem(-18));
+}
+
+// Forced colours paint every background as Canvas, which erased the track and
+// thumb entirely. The switch opts out of forcing and repaints itself in system
+// colours: a bordered track, a CanvasText thumb, and a Highlight fill when on.
+// The pending ring takes whichever colour contrasts with the thumb it sits in.
+// Nothing here uses opacity: faded system colours lose their contrast.
+@media (forced-colors: active) {
+  .mg-switch__track {
+    // A border, not an outline, so the focus outline adds to the boundary
+    // rather than replacing it. The border takes 1px from the padding, so the
+    // track stays 42x24 and the thumb keeps its size and travel.
+    background-color: Canvas;
+    border: 1px solid CanvasText;
+    forced-color-adjust: none;
+    padding: 1px;
+  }
+
+  .mg-switch__thumb {
+    background-color: CanvasText;
+    box-shadow: none;
+  }
+
+  .mg-switch__input:checked + .mg-switch__track {
+    background-color: Highlight;
+    border-color: Highlight;
+
+    .mg-switch__thumb {
+      background-color: HighlightText;
+    }
+  }
+
+  // forced-color-adjust: none would keep mg-focus-ring's white separator band.
+  .mg-switch__input:focus-visible + .mg-switch__track {
+    box-shadow: none;
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  // Disabled, on or off: a Canvas track with GrayText parts. The :checked
+  // selectors carry an extra class to outrank the Highlight fill above.
+  .mg-switch__input:disabled + .mg-switch__track,
+  .mg-switch__input[aria-disabled="true"] + .mg-switch__track,
+  .mg-switch .mg-switch__input:disabled:checked + .mg-switch__track,
+  .mg-switch
+    .mg-switch__input[aria-disabled="true"]:checked
+    + .mg-switch__track {
+    background-color: Canvas;
+    background-image: none;
+    border-color: GrayText;
+    opacity: 1;
+
+    .mg-switch__thumb {
+      background-color: GrayText;
+      box-shadow: none;
+    }
+
+    .mg-switch__thumb::after {
+      opacity: 1;
+    }
+  }
+
+  .mg-switch__input[aria-busy="true"] + .mg-switch__track,
+  .mg-switch--pending .mg-switch__track {
+    background-image: none;
+
+    .mg-switch__thumb::after {
+      border-color: Canvas;
+    }
+  }
+
+  // The combined pending and aria-disabled layers outrank the rule above.
+  .mg-switch__input[aria-disabled="true"][aria-busy="true"] + .mg-switch__track,
+  .mg-switch--pending
+    .mg-switch__input[aria-disabled="true"]
+    + .mg-switch__track {
+    background-image: none;
+  }
+
+  .mg-switch__input[aria-busy="true"]:checked + .mg-switch__track,
+  .mg-switch--pending .mg-switch__input:checked + .mg-switch__track {
+    .mg-switch__thumb::after {
+      border-color: Highlight;
+    }
+  }
+
+  // A disabled thumb is GrayText even when on, so its ring goes back to Canvas.
+  .mg-switch .mg-switch__input:disabled:checked + .mg-switch__track,
+  .mg-switch
+    .mg-switch__input[aria-disabled="true"]:checked
+    + .mg-switch__track {
+    .mg-switch__thumb::after {
+      border-color: Canvas;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    // Every ring colour selector above is repeated here, so the gap outranks
+    // or follows each one; without a gap the spin would be invisible.
+    .mg-switch__input[aria-busy="true"] + .mg-switch__track,
+    .mg-switch__input[aria-busy="true"]:checked + .mg-switch__track,
+    .mg-switch--pending .mg-switch__track,
+    .mg-switch--pending .mg-switch__input:checked + .mg-switch__track,
+    .mg-switch .mg-switch__input:disabled:checked + .mg-switch__track,
+    .mg-switch
+      .mg-switch__input[aria-disabled="true"]:checked
+      + .mg-switch__track {
+      .mg-switch__thumb::after {
+        border-block-start-color: transparent;
+      }
+    }
+  }
+}
+
+@keyframes mg-switch-pending-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 // -----------------------------------------------------------------------------

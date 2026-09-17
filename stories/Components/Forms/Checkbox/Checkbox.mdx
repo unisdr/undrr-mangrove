@@ -78,6 +78,311 @@ Disabled state (use the HTML `disabled` attribute, not CSS-only styling):
 
 > **Note:** The native `<input type="checkbox">` manages the checked/unchecked state for assistive technologies automatically. When toggling the switch via JavaScript, update the `checked` property on the input element rather than managing `aria-checked` separately.
 
+### Pending state
+
+Use the pending state when flipping a switch starts something that takes a moment to confirm, such as saving a setting to a server. It works in both directions: off to on, and on to off.
+
+The switch moves straight to the requested position. A small ring inside the thumb shows that the change is not confirmed yet, the track turns slightly greyer, and the cursor changes to `progress`. When the request settles, remove the pending state. If it failed, move the switch back.
+
+<Canvas of={CheckboxStories.SwitchPending} />
+
+Set `aria-busy="true"` on the input while the request runs. The helper below does this for you:
+
+```html
+<label class="mg-switch">
+  <input
+    type="checkbox"
+    role="switch"
+    class="mg-switch__input"
+    id="alerts-switch"
+    aria-busy="true"
+    checked
+  />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Real-time alerts</span>
+</label>
+<p class="mg-form-help" id="alerts-status" role="status"></p>
+```
+
+If your markup cannot add attributes to the input, add `mg-switch--pending` to the label instead. Prefer `aria-busy`, because it also tells assistive technology the control is busy.
+
+#### Use the helper
+
+`switch-pending.js` does the work for you. It has no dependencies and does not need React. While a save runs, it:
+
+- announces "Saving…", "Still saving…" for ignored presses (at most every 3 seconds) and the outcome in a live region
+- ignores clicks and `change` events
+- sets `aria-busy="true"` one frame after the change
+- lets only the latest request settle the switch, and times out, aborts and reverts a request that fails
+
+Try it below. Toggle the switch with the mouse or the Space key, then press it again while it is saving. Set `outcome` in the controls to `failure` or `timeout` to see the switch revert. The story runs the same helper.
+
+<Canvas of={CheckboxStories.SwitchPendingInteractive} />
+
+<Controls of={CheckboxStories.SwitchPendingInteractive} />
+
+**From the CDN**, pass a `save` function. It receives the requested position and an `AbortSignal`, and returns a promise that resolves when the change is saved. Pass `signal` to `fetch()`, so a timeout cancels the request.
+
+```html
+<label class="mg-switch">
+  <input
+    type="checkbox"
+    role="switch"
+    class="mg-switch__input"
+    id="alerts-switch"
+  />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Real-time alerts</span>
+</label>
+
+<script type="module">
+  import { mgSwitchPending } from 'https://assets.undrr.org/mangrove/2.0.0-rc.1/js/switch-pending.js';
+
+  mgSwitchPending(document.querySelector('#alerts-switch'), {
+    async save(checked, signal) {
+      const response = await fetch('/api/alerts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: checked }),
+        signal,
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    },
+  });
+</script>
+```
+
+Without a `status` option, the helper uses the element named by `data-mg-switch-status` (an id), or an `aria-describedby` target with `role="status"` or `aria-live`. If there is neither, it adds a visually hidden `role="status"` element after the label. Keep a status region outside the label, or its messages become part of the switch's name; the helper warns if it finds one inside. Several switches can share one region. Nothing is announced for a switch that has left the page when its save settles, though its events still fire, and a region the helper created is taken off the page with it. Call `destroy()` before removing a switch that is not saving, so its region does not stay behind.
+
+**From npm:**
+
+```js
+import { mgSwitchPending } from '@undrr/undrr-mangrove/js/switch-pending.js';
+
+const helper = mgSwitchPending(input, { save: saveSetting });
+// Later, before removing the switch:
+helper.destroy();
+```
+
+#### One listener for every switch
+
+Sites that cannot pass a function to each switch, such as a CMS that renders the markup, can mark switches with `data-mg-switch-pending` and answer one event instead. The script enhances marked switches when the page loads.
+
+With no `save` function, each change dispatches a cancelable `mg-switch:save` event on the input. It bubbles, so one listener on `document` serves every switch. Call `event.detail.respondWith()` with the save promise while the event is dispatched. If no listener responds or calls `preventDefault()`, the switch reverts and a warning is logged to the console.
+
+```html
+<label class="mg-switch" data-mg-switch-pending>
+  <input
+    type="checkbox"
+    role="switch"
+    class="mg-switch__input"
+    name="alerts"
+    data-setting-url="/api/settings/alerts"
+  />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Real-time alerts</span>
+</label>
+
+<script
+  type="module"
+  src="https://assets.undrr.org/mangrove/2.0.0-rc.1/js/switch-pending.js"
+></script>
+<script>
+  document.addEventListener('mg-switch:save', event => {
+    const input = event.target;
+    const { checked, signal, respondWith } = event.detail;
+    respondWith(
+      fetch(input.dataset.settingUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: checked }),
+        signal,
+      }).then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      })
+    );
+  });
+</script>
+```
+
+**If the save awaits something first**, such as a CSRF token, put the whole save in one async function and pass its promise to `respondWith()` straight away. A rejection anywhere in it, including from the token request, reverts the switch at once.
+
+```js
+document.addEventListener('mg-switch:save', event => {
+  const { checked, signal, respondWith } = event.detail;
+  respondWith(
+    (async () => {
+      const token = await getCsrfToken();
+      const response = await fetch(event.target.dataset.settingUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token },
+        body: JSON.stringify({ enabled: checked }),
+        signal,
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    })()
+  );
+});
+```
+
+Do not `await` before calling `respondWith()`: by the time the listener resumes, the switch has reverted and the late call throws. If the listener cannot avoid it, call `event.preventDefault()` before the first `await`. That claims the save, so `respondWith()` can follow later; a claimed save that never responds times out after `timeout` milliseconds.
+
+The listener can be added before or after the script loads, as long as it is in place before someone uses a switch. The script enhances marked switches as soon as it runs, if the page has already been parsed. To enhance switches added later, call `mgSwitchPendingInit(container)`: the script does not watch for new content. An explicit `mgSwitchPending()` or `mgSwitchPendingInit()` call takes over a switch that auto-initialization enhanced, with the options you pass. Add `data-mg-switch-pending-skip-auto-init` next to `data-mg-switch-pending` to keep auto-initialization away from a switch altogether.
+
+#### Drupal behaviors
+
+Enhance switches in `attach` and release them in `detach`. Drupal calls `detach` with the trigger `'unload'` before AJAX replaces or removes content. Use `once()` from `core/once` (add it to your library's dependencies) so each switch is set up once, however many times `attach` runs.
+
+The snippet uses `import`, so the behavior file must load as a module. Declare it with `attributes: { type: module }` in your `*.libraries.yml`, and keep it out of JavaScript aggregation:
+
+```yaml
+mangrove-switch-pending:
+  js:
+    # Aggregation can merge this file with classic scripts, where import is a syntax error.
+    js/mangrove-switch-pending.js:
+      { attributes: { type: module }, preprocess: false }
+  dependencies:
+    - core/drupal
+    - core/once
+```
+
+```js
+import {
+  mgSwitchPendingInit,
+  mgSwitchPendingDestroy,
+} from 'https://assets.undrr.org/mangrove/2.0.0-rc.1/js/switch-pending.js';
+
+Drupal.behaviors.mangroveSwitchPending = {
+  attach(context) {
+    once('mg-switch-pending', '[data-mg-switch-pending]', context).forEach(
+      element => mgSwitchPendingInit(element)
+    );
+  },
+  detach(context, settings, trigger) {
+    // 'move' and 'serialize' keep the element on the page.
+    if (trigger !== 'unload') return;
+    // Includes context itself, and switches enhanced when the page loaded.
+    mgSwitchPendingDestroy(context);
+    once.remove('mg-switch-pending', '[data-mg-switch-pending]', context);
+    if (context.matches?.('[data-mg-switch-pending]')) {
+      once.remove('mg-switch-pending', context);
+    }
+  },
+};
+
+// One listener answers every switch. Drupal.url() adds the base path.
+document.addEventListener('mg-switch:save', event => {
+  const { checked, signal, respondWith } = event.detail;
+  respondWith(
+    fetch(Drupal.url(`api/settings/${event.target.name}`), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enabled: checked }),
+      signal,
+    }).then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    })
+  );
+});
+```
+
+`attach` takes over switches that auto-initialization enhanced when the page loaded, so `mgSwitchPendingDestroy(context)` in `detach` releases them all. A signal passed to `mgSwitchPendingInit()` only destroys the helpers that call returned, so prefer `mgSwitchPendingDestroy()` here.
+
+#### API
+
+`mgSwitchPending(input, options)` enhances one `.mg-switch__input` and returns `{ destroy() }`. Calling it again for the same input returns the same helper; destroy it first to change the options. The one exception is a switch enhanced only by page-load auto-initialization: an explicit call replaces that helper. If the page loads the script twice, for example from the CDN and from a bundle, both copies share one registry, so a switch is still enhanced once.
+
+| Option    | Type                                                 | Default | Description                                                                                                                                                                                     |
+| --------- | ---------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `save`    | `(checked: boolean, signal: AbortSignal) => Promise` | none    | Saves the requested position. Resolve for success, reject or throw for failure. Return the promise: any other value counts as an immediate success. Without it, `mg-switch:save` is dispatched. |
+| `status`  | `Element` or selector string                         | none    | Live region for announcements. See above for what is used without it.                                                                                                                           |
+| `timeout` | `number` (milliseconds)                              | `10000` | A save that has not settled by then is aborted with a `TimeoutError` and reverts.                                                                                                               |
+| `labels`  | `object`                                             | English | Announcements, below.                                                                                                                                                                           |
+| `signal`  | `AbortSignal`                                        | none    | Aborting it destroys the helper. An already aborted signal enhances nothing.                                                                                                                    |
+
+| Label         | Default                                 | Announced when                       |
+| ------------- | --------------------------------------- | ------------------------------------ |
+| `saving`      | `Saving…`                               | A save starts                        |
+| `stillSaving` | `Still saving…`                         | A press is ignored, at most every 3s |
+| `error`       | `Could not save the change. Try again.` | A save fails or times out            |
+| `on`          | `{label} turned on`                     | A save to on succeeds                |
+| `off`         | `{label} turned off`                    | A save to off succeeds               |
+
+A label is a string, where `{label}` is replaced with the switch's label text, or a function called with `(labelText, input)`. The label text follows the accessible name: `aria-labelledby`, then `aria-label`, then `.mg-switch__label` or the label's text, leaving out any live region inside it. Results are trimmed, so `{label} turned on` reads "turned on" for a switch with no label text. In HTML, set them as JSON in `data-mg-switch-labels` on the input or the label. Options win over the input, and the input wins over the label.
+
+```html
+<label
+  class="mg-switch"
+  dir="rtl"
+  data-mg-switch-pending
+  data-mg-switch-labels='{"saving":"جارٍ الحفظ…","stillSaving":"لا يزال الحفظ جاريًا…","error":"تعذّر حفظ التغيير. حاول مرة أخرى.","on":"تم تفعيل {label}","off":"تم إيقاف {label}"}'
+>
+  <input type="checkbox" role="switch" class="mg-switch__input" />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">التنبيهات الفورية</span>
+</label>
+```
+
+| Function                                         | Description                                                                                                                                                                                                                                                        |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `mgSwitchPending(input, options)`                | Enhances one input. Returns `{ destroy() }`.                                                                                                                                                                                                                       |
+| `mgSwitchPendingInit(scope = document, options)` | Enhances each `[data-mg-switch-pending]` input, or the switch input inside a marked label, in `scope`: an element (including itself), the document or a list of elements. Skips enhanced inputs. Takes the options above except `status`. Returns the new helpers. |
+| `mgSwitchPendingDestroy(scope = document)`       | Destroys every enhanced switch in `scope`, including `scope` itself.                                                                                                                                                                                               |
+
+`destroy()` removes the listeners, cancels pending timers, aborts a save in flight without announcing it, and removes `aria-busy` if a save was in flight. It also removes a status region it created and the `data-mg-switch-pending-enhanced` marker. It leaves `checked` as it is.
+
+Events are dispatched on the input and bubble:
+
+| Event               | Cancelable | `detail`                                    | When                                                                                                                                 |
+| ------------------- | ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `mg-switch:pending` | No         | `{ checked }`                               | A save starts. `checked` is the requested position.                                                                                  |
+| `mg-switch:save`    | Yes        | `{ checked, signal, respondWith(promise) }` | Only without a `save` option. Call `respondWith()` during dispatch, or `preventDefault()` during dispatch and `respondWith()` later. |
+| `mg-switch:settled` | No         | `{ checked, ok: true }`                     | The save succeeded. `checked` is set to the saved position, even if a form reset moved it meanwhile.                                 |
+| `mg-switch:failed`  | No         | `{ checked, requested, reason, error }`     | The save failed. `checked` is the position it reverted to. `reason` is `'error'` or `'timeout'`.                                     |
+
+**Without the helper.** If you only want the styles, set `aria-busy="true"` on the input while your own request runs and `false` when it ends, and follow the accessibility notes below. The CSS needs nothing else.
+
+**Accessibility**
+
+- Set `aria-busy="true"` on the input while saving, and `false` (or remove it) when done. `aria-busy` is a global ARIA attribute, so it is valid on `role="switch"`. Screen readers rarely announce it on a form control, so do not rely on it alone.
+- Announce each step in a polite live region, such as an element with `role="status"`: "Saving…" when the request starts, then the outcome ("Real-time alerts turned on") or an error that says what to do next.
+- Presses while pending are ignored, and each ignored press announces "Still saving…", at most once every few seconds so a repeated key does not flood the region. Clearing the region before writing lets the same message be announced again.
+- Guard `change` as well as `click`, because a script can change the switch too. Let only the request in flight settle the switch, and time out a request that never answers, so a hung request cannot leave the switch locked.
+- On failure or timeout, set `checked` back to its previous value and announce the error.
+- Keep focus on the switch. Do not move focus to the message.
+- Pending does not disable the input. The `disabled` attribute would drop focus and hide the control from some assistive technology. If you want the control to look unavailable as well, add `aria-disabled="true"`. It keeps the switch focusable, dims the track without fading the focus ring, and does not stop the switch toggling, so you still need the guards the helper adds.
+
+**Order of announcements.** The helper sets `aria-busy` one frame after the change, not in the same task. Assistive technology may hold back updates from an element marked busy, so marking it busy straight away could swallow the announcement of the new checked state. The ignore guard applies at once; only the attribute waits. This order has not yet been tested with real screen readers. Before relying on it, test a focused switch with NVDA and JAWS on Windows and VoiceOver on macOS and iOS: check that the new state, "Saving…", "Still saving…" and the outcome are each announced once.
+
+**Reduced motion and forced colours**
+
+- With `prefers-reduced-motion: reduce`, the ring does not spin. It shows as a static dotted ring, so the pending state stays visible without motion.
+- In forced colours mode (such as Windows high contrast), the switch uses system colours: a bordered track, a solid thumb, a `Highlight` fill when on, and a ring in a colour that contrasts with the thumb. Disabled switches, on or off, use a `Canvas` track with `GrayText` parts. The focus ring is a `Highlight` outline outside the track border. This also fixes the track and thumb, which were invisible in forced colours before.
+
+**Theming**
+
+The switch reads these custom properties, each with the default shown. Set them on the switch or on any ancestor, such as a region of the page or a theme wrapper.
+
+| Custom property                         | Default                                  |
+| --------------------------------------- | ---------------------------------------- |
+| `--mg-switch-track-background`          | `rgb(var(--mg-color-neutral-400))`       |
+| `--mg-switch-track-background--checked` | `rgb(var(--mg-color-interactive))`       |
+| `--mg-switch-thumb-background`          | `rgb(var(--mg-color-neutral-0))`         |
+| `--mg-switch-track-overlay--pending`    | `rgb(var(--mg-color-neutral-500) / 0.4)` |
+| `--mg-switch-track-overlay--disabled`   | `rgb(var(--mg-color-neutral-0) / 0.55)`  |
+| `--mg-switch-pending-ring-color`        | `rgb(var(--mg-color-interactive))`       |
+| `--mg-switch-pending-ring-gap-color`    | `rgb(var(--mg-color-neutral-300))`       |
+
+Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more against the pending track. The disabled overlay should match the page colour, because it stands in for `disabled`'s 0.45 opacity.
+
 ## Accessibility
 
 - The label is programmatically associated with the checkbox via `htmlFor`/`id`.
@@ -90,6 +395,17 @@ Disabled state (use the HTML `disabled` attribute, not CSS-only styling):
 
 ## Changelog
 
+- **2.2** — 2026-09-17 ([#1184](https://github.com/unisdr/undrr-mangrove/pull/1184)): Added a pending state for `.mg-switch`, set with `aria-busy="true"` or `.mg-switch--pending`, with a static indicator for reduced motion. Styled `aria-disabled` switches, made the switch visible in forced colours, and added `--mg-switch-*` custom properties.
+  - `aria-disabled` dims the track with a page-coloured layer instead of opacity, so the focus ring stays at full strength.
+  - Forced colours: disabled switches, on or off, use a `Canvas` track with `GrayText` parts and no opacity; the track boundary is a border, so the focus outline no longer replaces it, and the white focus band is dropped; the `.mg-switch--pending` ring spins with a visible gap when off.
+  - The `--mg-switch-*` properties are read with their defaults where used, so they can be set on any ancestor. Added `--mg-switch-track-overlay--disabled`.
+  - The pending example and interactive story announce "Saving…", "Still saving…" for ignored presses, and the outcome; guard `change` as well as `click`; ignore stale responses; and time out a request that never answers.
+  - Added `js/switch-pending.js`, a dependency-free helper that does this for plain HTML and Drupal sites, replacing the copy-paste example. The interactive story runs the same helper.
+    - `mgSwitchPending(input, { save, status, timeout, labels, signal })` returns `{ destroy() }`. `mgSwitchPendingInit(scope, options)` and `mgSwitchPendingDestroy(scope)` work on `[data-mg-switch-pending]` inputs or labels.
+    - Without a `save` function, a cancelable `mg-switch:save` event asks a site-wide listener to call `respondWith(promise)`. A listener that awaits first calls `preventDefault()` before its first `await`. If no listener does either, the switch reverts with a console warning.
+    - Marked switches are enhanced on page load unless they carry `data-mg-switch-pending-skip-auto-init`. An explicit call takes over a switch that auto-initialization enhanced. Copies of the script loaded twice share one registry.
+    - Switches can share a live region. The announced label follows the accessible name.
+    - Dispatches `mg-switch:pending`, `mg-switch:settled` and `mg-switch:failed`. Announcements can be translated with `labels` or `data-mg-switch-labels` JSON.
 - **2.1** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-switch` accessible binary toggle switch control (`role="switch"`) with sliding thumb, interactive brand fill on check, focus ring integration, RTL translation support, and reduced-motion support.
 - **2.0** — 2026-02-24: **Breaking:** Rewritten with BEM classes, PropTypes, and accessibility
 - **1.0** — 2022-12-12: Initial release

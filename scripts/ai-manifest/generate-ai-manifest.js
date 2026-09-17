@@ -127,7 +127,7 @@ const VANILLA_SCRIPTS = [
   {
     name: 'Tabs',
     file: 'js/tabs.js',
-    url: `${CDN_BASE}/js/tabs.min.js`,
+    url: `${CDN_BASE}/js/tabs.js`,
     selector: '[data-mg-js-tabs]',
     initFunction: 'mgTabs(scope, activateDeepLinkOnLoad)',
     description:
@@ -136,7 +136,7 @@ const VANILLA_SCRIPTS = [
   {
     name: 'Show More',
     file: 'js/show-more.js',
-    url: `${CDN_BASE}/js/show-more.min.js`,
+    url: `${CDN_BASE}/js/show-more.js`,
     selector: '[data-mg-show-more]',
     initFunction: 'mgShowMore(scope)',
     description:
@@ -145,7 +145,7 @@ const VANILLA_SCRIPTS = [
   {
     name: 'Table of Contents',
     file: 'js/table-of-contents.js',
-    url: `${CDN_BASE}/js/table-of-contents.min.js`,
+    url: `${CDN_BASE}/js/table-of-contents.js`,
     selector: '[data-mg-table-of-contents]',
     initFunction: 'mgTableOfContents(scope)',
     description:
@@ -154,27 +154,37 @@ const VANILLA_SCRIPTS = [
   {
     name: 'On This Page Nav',
     file: 'js/on-this-page-nav.js',
-    url: `${CDN_BASE}/js/on-this-page-nav.min.js`,
+    url: `${CDN_BASE}/js/on-this-page-nav.js`,
     selector: '[data-mg-on-this-page-nav]',
     initFunction: 'mgOnThisPageNav(scope)',
     description:
       'In-page jump navigation bar with horizontal scroll controls and active section indicator.',
   },
   {
+    name: 'Switch pending',
+    file: 'js/switch-pending.js',
+    url: `${CDN_BASE}/js/switch-pending.js`,
+    selector: '[data-mg-switch-pending]',
+    initFunction:
+      'mgSwitchPendingInit(scope, { save, labels, timeout, signal })',
+    description:
+      'Pending state for .mg-switch while a change saves: announces progress, ignores presses, times out and reverts on failure. Load as type="module". Call mgSwitchPending(input, { save }) per switch, or mark switches with data-mg-switch-pending (auto-initialised on load) and answer the cancelable mg-switch:save event with event.detail.respondWith(promise). Call mgSwitchPendingDestroy(scope) or abort { signal } before removing switches.',
+  },
+  {
     name: 'Preview Access',
     file: 'js/preview-access.js',
-    url: `${CDN_BASE}/js/preview-access.min.js`,
+    url: `${CDN_BASE}/js/preview-access.js`,
     selector: '[data-mg-preview-access]',
     initFunction: 'mgPreviewAccess(scope)',
     description:
       'Password gate and preview notice bar for staging and pre-publication review.',
   },
   {
-    name: 'UNDRR Rollup Bundle',
+    name: 'UNDRR shared constants',
     file: 'js/undrr.js',
-    url: `${CDN_BASE}/js/undrr.min.js`,
+    url: `${CDN_BASE}/js/undrr.js`,
     description:
-      'Combined bundle containing all vanilla JavaScript utilities in a single file.',
+      'Shared constants (key codes, breakpoints) on the window.UNDRR namespace. It does not include the other modules.',
   },
 ];
 
@@ -988,37 +998,41 @@ if (malformedExamples.length > 0) {
 }
 
 // ---------------------------------------------------------------------------
-// Check curated hydration contract shape
+// Check curated hydration and vanilla module contract shape
 //
-// Agents that find a `hydration` field act on it directly, so a contract
-// without a selector, module URLs or a runnable example is worse than none.
+// Agents that find a `hydration` (React hydrate.js) or `vanillaModule` (plain
+// ES module, no React) field act on it directly, so a contract without a
+// selector, module URLs or a runnable example is worse than none.
 // ---------------------------------------------------------------------------
+const CONTRACT_FIELDS = ['hydration', 'vanillaModule'];
 const malformedHydration = [];
 for (const [componentId, data] of Object.entries(curatedData)) {
-  if (data?.hydration === undefined) continue;
-  const { hydration } = data;
-  if (typeof hydration !== 'object' || hydration === null) {
-    malformedHydration.push(`${componentId}: hydration is not an object`);
-    continue;
-  }
-  if (typeof hydration.selector !== 'string' || !hydration.selector) {
-    malformedHydration.push(`${componentId}: hydration has no selector`);
-  }
-  if (
-    typeof hydration.modules !== 'object' ||
-    hydration.modules === null ||
-    Object.keys(hydration.modules).length === 0
-  ) {
-    malformedHydration.push(`${componentId}: hydration has no modules`);
-  }
-  if (typeof hydration.example !== 'string' || !hydration.example) {
-    malformedHydration.push(`${componentId}: hydration has no example`);
+  for (const field of CONTRACT_FIELDS) {
+    if (data?.[field] === undefined) continue;
+    const contract = data[field];
+    if (typeof contract !== 'object' || contract === null) {
+      malformedHydration.push(`${componentId}: ${field} is not an object`);
+      continue;
+    }
+    if (typeof contract.selector !== 'string' || !contract.selector) {
+      malformedHydration.push(`${componentId}: ${field} has no selector`);
+    }
+    if (
+      typeof contract.modules !== 'object' ||
+      contract.modules === null ||
+      Object.keys(contract.modules).length === 0
+    ) {
+      malformedHydration.push(`${componentId}: ${field} has no modules`);
+    }
+    if (typeof contract.example !== 'string' || !contract.example) {
+      malformedHydration.push(`${componentId}: ${field} has no example`);
+    }
   }
 }
 
 if (malformedHydration.length > 0) {
   console.warn(
-    'Curated hydration contracts missing required fields (selector, modules, example):'
+    'Curated hydration or vanillaModule contracts missing required fields (selector, modules, example):'
   );
   for (const problem of malformedHydration) console.warn(`  ${problem}`);
 }
@@ -1412,8 +1426,8 @@ if (validateOnly) {
 
   if (malformedHydration.length > 0) {
     console.error(
-      `Validation failed: ${malformedHydration.length} hydration contract ` +
-        'problem(s). A curated hydration object needs selector, modules and ' +
+      `Validation failed: ${malformedHydration.length} hydration or ` +
+        'vanillaModule contract problem(s). Each curated contract needs selector, modules and ' +
         'example.'
     );
     failed = true;
@@ -1519,6 +1533,7 @@ async function main() {
       indexEntry.vanillaHtml = true;
     }
     if (data?.hydration) indexEntry.hydration = true;
+    if (data?.vanillaModule) indexEntry.vanillaModule = true;
 
     indexEntries.push(indexEntry);
 
@@ -1587,6 +1602,8 @@ async function main() {
     // Vanilla hydration contract (data attributes, events, CDN modules).
     // {{version}} is already resolved: curatedData went through replaceVersion.
     if (data?.hydration) detail.hydration = data.hydration;
+    // Plain ES module contract (no React, no hydrate.js), same shape.
+    if (data?.vanillaModule) detail.vanillaModule = data.vanillaModule;
 
     // Do-not-modify flag for branding-critical components
     if (data?.doNotModify) {
@@ -1806,18 +1823,19 @@ ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with
 
 ${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import via npm: import { ComponentName } from "@undrr/undrr-mangrove".
 
-Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's \`hydration\` field (or \`reactNote\`) for details; components with a \`hydration\` field are flagged \`hydration: true\` in the index.
+Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's \`hydration\` field (or \`reactNote\`) for details; components with a \`hydration\` field are flagged \`hydration: true\` in the index. A \`vanillaModule\` field (flagged \`vanillaModule: true\`) has the same shape but describes a plain ES module from \`/js/\`: it needs neither React nor \`hydrate.js\`.
 
 ### Vanilla JavaScript modules and dynamic DOM re-initialization
 
-Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (or \`${cdnBase}/js/*.min.js\`) that auto-initialize on \`DOMContentLoaded\`. When working with Single Page Applications (SPAs) or dynamically rendering content into the DOM (e.g. after AJAX fetches, client routing, modal dialogs), invoke the exported initialization functions manually:
+Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (\`${cdnBase}/js/*.js\`, loaded with \`type="module"\`) that auto-initialize on \`DOMContentLoaded\`. When working with Single Page Applications (SPAs) or dynamically rendering content into the DOM (e.g. after AJAX fetches, client routing, modal dialogs), invoke the exported initialization functions manually:
 
-- **Tabs** (\`js/tabs.js\`): Call \`mgTabs(scope)\` to initialize or re-initialize \`[data-mg-js-tabs]\` tab containers within a container element. Call \`destroyTabs(scope)\` on unmount.
+- **Tabs** (\`js/tabs.js\`): Call \`mgTabs(scope)\` to initialize or re-initialize \`[data-mg-js-tabs]\` tab containers within a container element. Call \`mgTabsDestroy(scope)\` on unmount.
 - **Show More** (\`js/show-more.js\`): Call \`mgShowMore(scope)\` to initialize \`[data-mg-show-more]\` content truncation toggles.
 - **Table of Contents** (\`js/table-of-contents.js\`): Call \`mgTableOfContents(scope)\` to generate an article TOC with scrollspy tracking.
 - **On This Page Nav** (\`js/on-this-page-nav.js\`): Call \`mgOnThisPageNav(scope)\` for in-page jump nav with horizontal scrolling.
+- **Switch pending** (\`js/switch-pending.js\`): Call \`mgSwitchPendingInit(scope)\` for new \`[data-mg-switch-pending]\` switches, or \`mgSwitchPending(input, { save })\` for one switch. Call \`mgSwitchPendingDestroy(scope)\` before removing them.
 - **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize password gating for staging environments.
-- **Rollup Bundle** (\`js/undrr.js\`): Single bundle containing all vanilla JavaScript enhancements together.
+- **Shared constants** (\`js/undrr.js\`): Key codes and breakpoints on \`window.UNDRR\`. It does not bundle the other modules.
 
 ### CSS utilities
 

@@ -45,6 +45,7 @@ The DELTA Resilience theme has no legacy variant.
 | On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
 | Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
 | Copy Button | `/js/copy-button.js` | Zero-dependency copy-to-clipboard button |
+| Switch pending | `/js/switch-pending.js` | Saving state for `.mg-switch`: announcements, guards, timeout and revert |
 
 ```html
 <script type="module">

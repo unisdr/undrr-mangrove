@@ -230,6 +230,13 @@ export default {
             '<label class="mg-switch">\n  <input type="checkbox" role="switch" class="mg-switch__input" />\n  <span class="mg-switch__track" aria-hidden="true"><span class="mg-switch__thumb"></span></span>\n  <span class="mg-switch__label">Active layer</span>\n</label>',
         },
         {
+          class: 'mg-switch--pending',
+          description:
+            'Pending (busy) switch: the thumb sits at the requested position with a spinning ring (static dotted ring under reduced motion) until the change is confirmed. Prefer aria-busy="true" on .mg-switch__input, which applies the same styles; use this modifier on the label only when the input cannot take attributes. Announce "Saving…", ignored presses ("Still saving…") and the outcome in a role="status" region; revert checked on failure or timeout. Add aria-disabled="true" to also look unavailable: it dims the track without fading the focus ring.',
+          usage:
+            '<label class="mg-switch">\n  <input type="checkbox" role="switch" class="mg-switch__input" aria-busy="true" checked />\n  <span class="mg-switch__track" aria-hidden="true"><span class="mg-switch__thumb"></span></span>\n  <span class="mg-switch__label">Real-time alerts</span>\n</label>\n<p class="mg-form-help" role="status"></p>',
+        },
+        {
           class: 'mg-button--icon',
           description:
             'Square or circular icon-only action button with centered icon, equal aspect ratio, and touch-target padding.',
