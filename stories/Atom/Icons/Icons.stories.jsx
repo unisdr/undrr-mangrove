@@ -149,6 +149,11 @@ export const ColoredIcons = {
           Icons inherit <code>color</code>, so the existing{' '}
           <code>mg-u-color--*</code> utility classes work directly.
         </p>
+        <p style={{ margin: '0 0 0.5rem', fontSize: '0.875rem' }}>
+          <strong>Note:</strong> icons are shown at their default pairing so the
+          full set of values is visible. Check contrast before using a
+          combination.
+        </p>
         <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
           <div style={{ textAlign: 'center' }}>
             <Icon name="globe" size="xl" className="mg-u-color--interactive" />
