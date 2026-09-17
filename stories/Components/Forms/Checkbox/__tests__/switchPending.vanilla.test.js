@@ -672,6 +672,32 @@ describe('mgSwitchPending', () => {
     expect(settled).toHaveBeenCalledTimes(1);
   });
 
+  it('removes its own region when the switch leaves mid-request, and follows a moved switch', async () => {
+    document.body.innerHTML = `<div id="old">${switchMarkup()}</div><div id="new"></div>`;
+    const input = document.querySelector('.mg-switch__input');
+    const label = input.closest('label');
+    const { save, requests } = controlledSave();
+    mgSwitchPending(input, { save });
+
+    fireEvent.click(input);
+    label.remove();
+    requests[0].resolve();
+    await flush();
+    expect(
+      document.querySelectorAll('[data-mg-switch-status-created]')
+    ).toHaveLength(0);
+
+    document.getElementById('new').append(label);
+    fireEvent.click(input);
+    expect(label.nextElementSibling).toHaveAttribute(
+      'data-mg-switch-status-created'
+    );
+    expect(label.nextElementSibling).toHaveTextContent('Saving…');
+    expect(
+      document.querySelectorAll('[data-mg-switch-status-created]')
+    ).toHaveLength(1);
+  });
+
   describe('label text', () => {
     const announceOn = async (input, labels) => {
       const { save, requests } = controlledSave();

@@ -172,15 +172,20 @@ function enhance(input, options, auto) {
 
   let status = resolveStatus(input, options.status);
   let createdStatus = null;
+  // After the label, never inside it, so announcements are not part of the
+  // switch's accessible name.
+  const placeCreatedStatus = () => {
+    const anchor = input.closest('label') || input;
+    if (anchor.nextElementSibling !== createdStatus) {
+      anchor.insertAdjacentElement('afterend', createdStatus);
+    }
+  };
   if (!status) {
     createdStatus = input.ownerDocument.createElement('span');
     createdStatus.className = 'mg-u-sr-only';
     createdStatus.setAttribute('role', 'status');
     createdStatus.setAttribute(CREATED_ATTR, '');
-    // After the label, never inside it, so announcements are not part of the
-    // switch's accessible name.
-    const anchor = input.closest('label') || input;
-    anchor.insertAdjacentElement('afterend', createdStatus);
+    placeCreatedStatus();
     status = createdStatus;
   } else if (Array.from(input.labels || []).some(l => l.contains(status))) {
     console.warn(
@@ -195,8 +200,17 @@ function enhance(input, options, auto) {
   const owner = {};
 
   const write = text => {
-    // A removed switch cannot be used, so say nothing about it.
-    if (!input.isConnected) return;
+    // A removed switch cannot be used, so say nothing about it, and do not
+    // leave the region this helper created behind on the page.
+    if (!input.isConnected) {
+      cancelWrite(status, owner);
+      if (createdStatus) {
+        createdStatus.remove();
+        createdStatus.textContent = '';
+      }
+      return;
+    }
+    if (createdStatus) placeCreatedStatus();
     cancelWrite(status);
     if (status.textContent === text) {
       status.textContent = '';
