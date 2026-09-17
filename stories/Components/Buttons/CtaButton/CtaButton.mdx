@@ -110,6 +110,10 @@ Compact square (`.mg-button--icon`), circular (`.mg-button--icon--round`), and d
 
 <Canvas of={CtaButtonStories.IconButtons} meta={CtaButtonStories} />
 
+A bare `.mg-icon-button` is a borderless ghost button that can sit on its own or inline within text.
+
+<Canvas of={CtaButtonStories.StandaloneIconButton} meta={CtaButtonStories} />
+
 ### Responsive icon buttons
 
 For toolbars and headers where screen space is tight on mobile, use `.mg-button--responsive-icon` with a child `<span class="mg-button__label">`. On tablet and desktop, the button displays both the icon and text label. On mobile screens (`< 768px`), it automatically collapses to a compact 36&times;36px icon-only square button while preserving the full text label in the DOM for screen readers.
@@ -150,6 +154,7 @@ For toolbars and headers where screen space is tight on mobile, use `.mg-button-
 ## Changelog
 
 - **1.5.1** — 2026-09-17 ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173)): Fixes #1171. A standalone `.mg-icon-button` now owns its ghost styling (transparent fill, no border, pointer cursor) and its hover sets a light foreground on the dark interactive fill, so the icon stays visible in every theme (it was 1.75:1 on MCR2030). In forced-colors mode the hover shows an outline. A MegaMenu rule no longer overrides the primitive's `inline-flex` display and zero padding.
+  - Added a "Standalone icon button" story that shows a bare `.mg-icon-button` on its own and inline within text.
 
 - **1.5.0** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-button--icon` and `.mg-icon-button` icon-only button variants with square aspect ratio, centered icons, and `.mg-button--icon--round` circular floating action treatment. Added `.mg-button--responsive-icon` for responsive icon+text buttons that collapse to icon-only on mobile, and added intrinsic `gap` spacing and `.mg-button__icon` rules for buttons with leading or trailing icons.
 
