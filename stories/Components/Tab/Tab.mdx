@@ -281,13 +281,13 @@ The filter input, screen-reader-only hint, and status region are injected automa
 
 Exported functions:
 
-| Function                                              | Description                                                                                                                                                                                                                                                                                                                                                 |
-| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `mgTabs(scope?, activateDeepLinkOnLoad?)`             | Initializes all tab containers. `scope` is an optional `NodeList`; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`.                                                                                                                                                                                               |
-| `mgTabsRuntime(scope?, activateDeepLinkOnLoad?)`      | Initializes tabs within a single container element or a parent that contains tab sets; defaults to `document`. Use this for tabs injected after page load.                                                                                                                                                                                                  |
-| `mgTabsDestroy(scope?, preserveState?)`               | Removes listeners and observers, restores progressively enhanced markup and makes content visible. Call before removing vanilla tab sets. Pass `true` as the second argument to retain selection, disclosure and filter state for the next initialisation of the same layout; the React wrapper uses this during updates and handles cleanup automatically. |
-| `mgTabsApplyStackedDefaults(container, tabs, panels)` | Re-applies default open/close state for stacked tabs. Useful after programmatically resetting filter state.                                                                                                                                                                                                                                                 |
-| `setDisclosureState(trigger, panel, open)`            | Sets the open/close state of a stacked disclosure panel. `open` is a boolean.                                                                                                                                                                                                                                                                               |
+| Function                                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mgTabs(scope?, activateDeepLinkOnLoad?, options?)`        | Initializes all tab containers. `scope` is an optional `NodeList`; defaults to all `[data-mg-js-tabs]` elements. `activateDeepLinkOnLoad` defaults to `true`. `options.signal` is an optional `AbortSignal`: aborting it destroys the tab sets this call initialized, and an already-aborted signal skips initialization. See [Removing tabs](#removing-tabs).                                                                                      |
+| `mgTabsRuntime(scope?, activateDeepLinkOnLoad?, options?)` | Initializes tabs within a single container element or a parent that contains tab sets; defaults to `document`. Use this for tabs injected after page load. Accepts the same `options.signal` as `mgTabs`.                                                                                                                                                                                                                                           |
+| `mgTabsDestroy(scope?, preserveState?)`                    | Removes listeners and observers, restores progressively enhanced markup and makes content visible. Call before removing vanilla tab sets, or use `options.signal` ([Removing tabs](#removing-tabs)). Pass `true` as the second argument to retain selection, disclosure and filter state for the next initialisation of the same layout; the React wrapper uses this during updates and handles cleanup automatically. Safe to call more than once. |
+| `mgTabsApplyStackedDefaults(container, tabs, panels)`      | Re-applies default open/close state for stacked tabs. Useful after programmatically resetting filter state.                                                                                                                                                                                                                                                                                                                                         |
+| `setDisclosureState(trigger, panel, open)`                 | Sets the open/close state of a stacked disclosure panel. `open` is a boolean.                                                                                                                                                                                                                                                                                                                                                                       |
 
 If you inject tab markup dynamically (e.g. from an API response), call `mgTabsRuntime()` on the new container:
 
@@ -295,6 +295,59 @@ If you inject tab markup dynamically (e.g. from an API response), call `mgTabsRu
 const newContainer = document.querySelector('#dynamic-tabs');
 mgTabsRuntime(newContainer);
 ```
+
+#### Removing tabs
+
+A tab set listens for events outside its own markup: window `resize`, `orientationchange` and `hashchange`, `document.fonts` `loadingdone`, and a `ResizeObserver` on the rail. Release them before you remove or replace the markup, for example on a route change, when re-rendering a region from an API response, or in a Drupal AJAX update. The React wrapper does this for you.
+
+**Call `mgTabsDestroy()`** with the container, or a parent that contains tab sets, before removing it. It restores the original markup, and calling it again does nothing.
+
+```js
+mgTabsDestroy(container);
+container.remove();
+```
+
+**Or pass an `AbortSignal`** as the third argument and abort it when the tabs go away. This ties the tabs to something your app already cleans up, such as a route or view controller. Aborting destroys only the tab sets that call initialized. A tab set that was already initialized is left as it is, and a signal that is already aborted initializes nothing.
+
+```js
+const controller = new AbortController();
+mgTabsRuntime(region, true, { signal: controller.signal });
+
+// Later, when the region is replaced:
+controller.abort();
+```
+
+**Automatic cleanup is a safety net, not a replacement.** If a tab set is removed from the document without either of the above, the runtime notices the next time one of its outside listeners fires (a resize, orientation change, hash change, font load or rail resize) and destroys it then. Until that happens, the listeners and the detached markup stay in memory, and a stacked tab set only listens for hash changes, so it may never be cleaned up. Automatic cleanup:
+
+- restores the markup and remembers the selection, so if you re-attach the same element, call `mgTabsRuntime()` again to pick up where the user left off
+- does not affect a tab set that is moved (removed and inserted elsewhere in the same task)
+- ignores a tab set that was initialized before being added to the page until one of its listeners has fired while it is on the page, so building tabs off-screen and inserting them later is safe
+
+**Drupal behaviors** should release tabs in `detach`. Drupal calls `detach` with the trigger `'unload'` before AJAX replaces or removes content. Use `once()` from `core/once` (add it to your library's dependencies) so each container is set up and torn down once, however many times `attach` runs:
+
+```js
+import {
+  mgTabsRuntime,
+  mgTabsDestroy,
+} from 'https://assets.undrr.org/mangrove/2.0.0-rc.1/js/tabs.js';
+
+Drupal.behaviors.mangroveTabs = {
+  attach(context) {
+    once('mg-tabs', '[data-mg-js-tabs]', context).forEach(container => {
+      mgTabsRuntime(container);
+    });
+  },
+  detach(context, settings, trigger) {
+    // 'move' and 'serialize' keep the element on the page.
+    if (trigger !== 'unload') return;
+    once
+      .remove('mg-tabs', '[data-mg-js-tabs]', context)
+      .forEach(container => mgTabsDestroy(container));
+  },
+};
+```
+
+This example calls `mgTabsDestroy()` instead of using a signal because tabs present at page load may already have been set up by auto-initialization, and a signal only applies to tab sets its own call initialized. To use a signal in a behavior, add `data-mg-js-tabs-skip-auto-init` to the markup.
 
 #### Skipping auto-initialization
 
@@ -412,6 +465,7 @@ You can also select triggers by class (`.mg-tabs__link`) — this works in all v
 
 ## Changelog
 
+- **2.11** — 2026-09-17 ([#1180](https://github.com/unisdr/undrr-mangrove/issues/1180)): `mgTabs()` and `mgTabsRuntime()` accept an optional `{ signal }` third argument; aborting it destroys the tab sets that call initialized. Tab sets removed from the page without `mgTabsDestroy()` now release their window, font and resize listeners the next time one of them fires. New "Removing tabs" docs with a Drupal `detach` example.
 - **2.10.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic tab links now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-tabs__link` reads the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
 - **2.10.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a tab link whose own language is not Arabic.
 - **2.10** — 2026-09-08 ([#1094](https://github.com/unisdr/undrr-mangrove/issues/1094)): Refined horizontal tabs with centered groups, mobile scrolling, overflow fades, and RTL-aware keyboard behavior. Improved tablist/panel semantics and lifecycle cleanup; React updates preserve selection/disclosure/filter state. `stackOnMobile` remains available for disclosure-style mobile behavior.
