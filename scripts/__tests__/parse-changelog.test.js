@@ -142,7 +142,7 @@ describe('buildReleasesManifest', () => {
       changelogPath: '/non-existent/CHANGELOG.md',
       pkg: { name: '@undrr/undrr-mangrove', version: '2.0.0-beta.3' },
       generatedAt: '2026-09-16T00:00:00.000Z',
-      docsBase: 'https://preventionweb.github.io/undrr-mangrove/',
+      docsBase: 'https://mangrove.undrr.org/',
       componentChangelogs: {
         'components-table': {
           name: 'Table',
@@ -158,7 +158,7 @@ describe('buildReleasesManifest', () => {
     );
     expect(manifest.version).toBe('2.0.0-beta.3');
     expect(manifest.urls.releases).toBe(
-      'https://preventionweb.github.io/undrr-mangrove/releases.json'
+      'https://mangrove.undrr.org/releases.json'
     );
     expect(manifest.componentChangelogs['components-table'].name).toBe('Table');
   });

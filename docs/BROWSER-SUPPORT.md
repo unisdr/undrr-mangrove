@@ -1,6 +1,6 @@
 # Browser support
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/BROWSER-SUPPORT.md) and in [Storybook](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-browser-support--docs).
+> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/BROWSER-SUPPORT.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-browser-support--docs).
 
 Mangrove is tested in major modern browsers. Support covers the latest stable
 release plus the two prior versions for each browser. Older browsers are
@@ -45,9 +45,9 @@ software where possible.
 
 ## Screen width
 
-For guidance on supported screen widths, see [the Breakpoints section](https://preventionweb.github.io/undrr-mangrove/?path=/docs/design-decisions-breakpoint--docs).
+For guidance on supported screen widths, see [the Breakpoints section](https://mangrove.undrr.org/?path=/docs/design-decisions-breakpoint--docs).
 
 ## Next steps
 
-- [Getting started](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-about-mangrove--docs) — what Mangrove provides and how to use it
-- [CDN reference](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-integration-cdn-reference--docs) — pre-built CSS and JS URLs for quick integration
+- [Getting started](https://mangrove.undrr.org/?path=/docs/getting-started-about-mangrove--docs) — what Mangrove provides and how to use it
+- [CDN reference](https://mangrove.undrr.org/?path=/docs/getting-started-integration-cdn-reference--docs) — pre-built CSS and JS URLs for quick integration
