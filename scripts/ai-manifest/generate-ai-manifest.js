@@ -161,6 +161,16 @@ const VANILLA_SCRIPTS = [
       'In-page jump navigation bar with horizontal scroll controls and active section indicator.',
   },
   {
+    name: 'Switch pending',
+    file: 'js/switch-pending.js',
+    url: `${CDN_BASE}/js/switch-pending.js`,
+    selector: '[data-mg-switch-pending]',
+    initFunction:
+      'mgSwitchPendingInit(scope, { save, labels, timeout, signal })',
+    description:
+      'Pending state for .mg-switch while a change saves: announces progress, ignores presses, times out and reverts on failure. Load as type="module". Call mgSwitchPending(input, { save }) per switch, or mark switches with data-mg-switch-pending (auto-initialised on load) and answer the cancelable mg-switch:save event with event.detail.respondWith(promise). Call mgSwitchPendingDestroy(scope) or abort { signal } before removing switches.',
+  },
+  {
     name: 'Preview Access',
     file: 'js/preview-access.js',
     url: `${CDN_BASE}/js/preview-access.min.js`,
@@ -1816,6 +1826,7 @@ Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (or \`$
 - **Show More** (\`js/show-more.js\`): Call \`mgShowMore(scope)\` to initialize \`[data-mg-show-more]\` content truncation toggles.
 - **Table of Contents** (\`js/table-of-contents.js\`): Call \`mgTableOfContents(scope)\` to generate an article TOC with scrollspy tracking.
 - **On This Page Nav** (\`js/on-this-page-nav.js\`): Call \`mgOnThisPageNav(scope)\` for in-page jump nav with horizontal scrolling.
+- **Switch pending** (\`js/switch-pending.js\`): Call \`mgSwitchPendingInit(scope)\` for new \`[data-mg-switch-pending]\` switches, or \`mgSwitchPending(input, { save })\` for one switch. Call \`mgSwitchPendingDestroy(scope)\` before removing them.
 - **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize password gating for staging environments.
 - **Rollup Bundle** (\`js/undrr.js\`): Single bundle containing all vanilla JavaScript enhancements together.
 
