@@ -116,9 +116,19 @@
   }
 
   .mg-icon {
-    font-size: 1.25em;
+    // A whole-pixel size keeps the centred glyph on the pixel grid in the
+    // 36px and 28px boxes.
+    font-size: mg-rem(18);
     line-height: 1;
   }
+}
+
+// The icon mask is an inline-block that sits on the text baseline, which leaves
+// the font's descender space below it and lifts the glyph about 1.5px above
+// centre. As a block it fills the icon box, so flex centring is exact.
+.mg-button .mg-icon:not([class*="fa-"])::before,
+.mg-icon-button .mg-icon:not([class*="fa-"])::before {
+  display: block;
 }
 
 // Responsive icon button: icon + text on desktop, collapses to compact icon-only on mobile
@@ -144,6 +154,31 @@
   }
 }
 
+// Standalone .mg-icon-button is a ghost control: it is not paired with a
+// .mg-button-* variant, so it resets the user-agent button chrome itself.
+// The hover fill is the dark interactive colour in every theme, so the icon
+// must switch to the light button foreground with it (WCAG 1.4.11).
+// Components such as Notice and Drawer override the hover with their own
+// neutral treatment.
+.mg-icon-button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgb(var(--mg-color-interactive-active));
+    color: rgb(var(--mg-color-button));
+  }
+
+  // Forced colours discard the hover fill, so draw an outline instead. It is
+  // scoped to :not(:focus-visible) so the mg-focus-ring outline still wins.
+  @media (forced-colors: active) {
+    &:hover:not(:focus-visible) {
+      outline: 1px solid ButtonText;
+    }
+  }
+}
+
 // Standalone .mg-icon-button may lack the .mg-button base class focus styles
 .mg-icon-button:focus-visible {
   @include mg-focus-ring;
@@ -163,6 +198,28 @@
 // .mg-button-primary/-secondary/-outline are only ever used alongside
 // .mg-button, which already takes the two-band ring above. Deleting the rule
 // hands unowned buttons back their UA outline, which is the correct default.
+
+// Filled variants paint their fill under the border, so a transparent stroke
+// matches the fill (including hover and context overrides such as Hero) and
+// filled buttons render the same size as outline buttons. Themes can give the
+// stroke a colour through --mg-border-color-button-primary/-secondary.
+.mg-button-primary:not(.mg-button-outline),
+.mg-button-secondary:not(.mg-button-outline),
+.mg-button.disabled {
+  background-clip: border-box;
+}
+
+.mg-button-primary:not(.mg-button-outline) {
+  border-color: var(--mg-border-color-button-primary);
+}
+
+.mg-button-secondary:not(.mg-button-outline) {
+  border-color: var(--mg-border-color-button-secondary);
+}
+
+.mg-button.disabled {
+  border-color: transparent;
+}
 
 .mg-button-primary {
   background-color: var(--mg-color-button-background);

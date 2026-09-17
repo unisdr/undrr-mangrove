@@ -536,3 +536,60 @@ export const ResponsiveIconButton = {
     </div>
   ),
 };
+
+const getStandaloneIconButtonText = locale => {
+  switch (locale) {
+    case 'arabic':
+      return {
+        label: 'نسخ الرابط',
+        before: 'انسخ رابط هذه الصفحة',
+        after: 'لمشاركته مع زملائك.',
+      };
+    case 'japanese':
+      return {
+        label: 'リンクをコピー',
+        before: 'このページのリンクをコピー',
+        after: 'して同僚と共有できます。',
+      };
+    default:
+      return {
+        label: 'Copy link',
+        before: 'Copy the link to this page',
+        after: 'to share it with colleagues.',
+      };
+  }
+};
+
+export const StandaloneIconButton = {
+  name: 'Standalone icon button',
+  render: (_args, { globals: { locale } }) => {
+    const text = getStandaloneIconButtonText(locale);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div>
+          <button
+            type="button"
+            className="mg-icon-button"
+            aria-label={text.label}
+          >
+            <span className="mg-icon mg-icon-copy" aria-hidden="true"></span>
+          </button>
+        </div>
+        <p style={{ margin: 0 }}>
+          {text.before}{' '}
+          <button
+            type="button"
+            className="mg-icon-button"
+            aria-label={text.label}
+          >
+            <span className="mg-icon mg-icon-copy" aria-hidden="true"></span>
+          </button>{' '}
+          {text.after}
+        </p>
+      </div>
+    );
+  },
+  parameters: {
+    controls: { disable: true },
+  },
+};

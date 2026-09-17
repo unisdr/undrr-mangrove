@@ -78,4 +78,11 @@
   padding: 0;
   margin: 0;
   list-style: none;
+
+  // The global RTL list rules add inline padding to ul/ol and li with a more
+  // specific selector, which pushed the labels away from the inline start.
+  [dir="rtl"] &,
+  [dir="rtl"] & > li {
+    padding: 0;
+  }
 }

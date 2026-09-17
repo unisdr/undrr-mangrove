@@ -424,7 +424,7 @@ export const COMPONENT_DATA = {
   'components-status-label': {
     name: 'Status label',
     description:
-      'Status of a record or event, as a coloured indicator dot plus the status name in text. Variants: draft, waiting-validation, waiting-information, published, plus a neutral default with no modifier. The dot is decorative: the status name is always present as text, so meaning never depends on colour. Wrap several in mg-status-label-group.',
+      'Status of a record or event, as a coloured indicator dot plus the status name in text. Workflow variants: draft, waiting-validation, waiting-information, published. Service health variants: warning (degraded) and negative (offline), also used by ServiceNotice. Without a modifier the indicator is neutral. The dot is decorative: the status name is always present as text, so meaning never depends on colour. Wrap several in mg-status-label-group.',
     cssClasses: [
       'mg-status-label',
       'mg-status-label__indicator',
@@ -432,6 +432,8 @@ export const COMPONENT_DATA = {
       'mg-status-label--waiting-validation',
       'mg-status-label--waiting-information',
       'mg-status-label--published',
+      'mg-status-label--warning',
+      'mg-status-label--negative',
       'mg-status-label-group',
     ],
     examples: [
@@ -444,6 +446,10 @@ export const COMPONENT_DATA = {
         html: '<ul class="mg-status-label-group">\n  <li>\n    <span class="mg-status-label mg-status-label--draft">\n      <span class="mg-status-label__indicator"></span>\n      Draft\n    </span>\n  </li>\n  <li>\n    <span class="mg-status-label mg-status-label--waiting-information">\n      <span class="mg-status-label__indicator"></span>\n      Waiting for more information\n    </span>\n  </li>\n  <li>\n    <span class="mg-status-label mg-status-label--waiting-validation">\n      <span class="mg-status-label__indicator"></span>\n      Waiting for validation\n    </span>\n  </li>\n  <li>\n    <span class="mg-status-label mg-status-label--published">\n      <span class="mg-status-label__indicator"></span>\n      Published\n    </span>\n  </li>\n</ul>',
       },
       {
+        name: 'Service health states',
+        html: '<ul class="mg-status-label-group">\n  <li>\n    <span class="mg-status-label mg-status-label--warning">\n      <span class="mg-status-label__indicator"></span>\n      Degraded\n    </span>\n  </li>\n  <li>\n    <span class="mg-status-label mg-status-label--negative">\n      <span class="mg-status-label__indicator"></span>\n      Offline\n    </span>\n  </li>\n</ul>',
+      },
+      {
         name: 'Neutral status (no modifier)',
         html: '<span class="mg-status-label">\n  <span class="mg-status-label__indicator"></span>\n  Archived\n</span>',
       },
@@ -452,7 +458,7 @@ export const COMPONENT_DATA = {
   'components-empty-state': {
     name: 'Empty state',
     description:
-      'Message shown where a collection, table or panel has no content. Optional media slot for a glyph, a title, a description and an optional actions slot. Variants: panel, compact, start-aligned. Inside a table, place it in a single td with colspan so the row structure and column headers survive for screen readers.',
+      'Message shown where a collection, table or panel has no content. Optional media slot for a glyph, a title, a description and an optional actions slot. Variants: panel, compact, start-aligned. mg-empty-state__title is a class, not a tag: choose the element to fit the surrounding outline, one level below the heading of the section or card that contains it (h3 in a section headed h2, even after an h3 subsection; h4 inside a card titled h3) and never skipping levels; use a p where a heading would be out of place, such as a table cell or dashboard tile. Examples use h2 only because they stand alone. Inside a table, place it in a single td with colspan so the row structure and column headers survive for screen readers.',
     cssClasses: [
       'mg-empty-state',
       'mg-empty-state--panel',
@@ -476,6 +482,10 @@ export const COMPONENT_DATA = {
       {
         name: 'Compact, for a dashboard tile',
         html: '<div class="mg-empty-state mg-empty-state--compact mg-empty-state--panel">\n  <p class="mg-empty-state__description">No data</p>\n</div>',
+      },
+      {
+        name: 'Heading level to fit the outline',
+        html: '<div>\n  <h2>Recent disaster records</h2>\n  <div class="mg-empty-state mg-empty-state--panel">\n    <h3 class="mg-empty-state__title">No records this month</h3>\n    <p class="mg-empty-state__description">\n      Records published in the last 30 days will appear here.\n    </p>\n  </div>\n</div>',
       },
       {
         name: 'Start-aligned',

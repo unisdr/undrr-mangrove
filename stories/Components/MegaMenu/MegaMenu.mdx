@@ -188,6 +188,7 @@ is still accepted but no longer displayed.
 
 ## Changelog
 
+- **1.4.2** — 2026-09-17 ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173)): Fixes #1171. Removed an unscoped `.mg-icon-button` rule from the MegaMenu stylesheet. The menu does not use that class (its controls use `.mg-mega-topbar-mobile__icon-button`), but the rule leaked into every icon button on the page and broke the primitive's layout and hover contrast. The menu itself renders the same.
 - **1.4.1** — 2026-09-15 ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153)): The desktop tab active-state underline now transitions in and out (grows from the centre, fades) instead of flipping instantly, so switching between neighbouring tabs no longer looks like an abrupt off/on flicker. Respects `prefers-reduced-motion`.
 - **1.4.0** — 2026-09-10 ([#1114](https://github.com/unisdr/undrr-mangrove/issues/1114)): Fixed desktop a11y semantics (landmarks, nav roles, and `aria-expanded`) and added a desktop-state axe assertion. Also fixed mobile overlay clipping in constrained containers by anchoring it to the top bar instead of `100vw`.
 - **1.3.0** — 2026-09-08 ([#1099](https://github.com/unisdr/undrr-mangrove/issues/1099)): Added progressive mobile navigation (nested levels, back/close controls, translated labels, focus/scroll restoration, and reduced-motion handling) while keeping existing data/integration contracts compatible.
