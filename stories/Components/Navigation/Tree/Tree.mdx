@@ -198,6 +198,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.1.1** — 2026-09-17 ([#PRNUMBER](https://github.com/unisdr/undrr-mangrove/pull/PRNUMBER)): Documentation only. The docs page now embeds its stories, so the default, linked, custom-toggle-icon and hydrated trees each have a live example. The placeholder "Item 1 / Item 2" labels are replaced with a knowledge base section tree, and every story now gives the tree an `aria-label`.
 - **1.1.0** — 2026-09-17 ([#1176](https://github.com/unisdr/undrr-mangrove/pull/1176)): Hydration from a nested list with `Tree.fromElement.js`, `Tree.hydrate.js` and `HydratedTree`, and a `toggleIcon` prop on `Tree` and `TreeItem` (`data-toggle-icon` when hydrated).
   - The default export of `components/Tree.js` is now `HydratedTree` ([#1172](https://github.com/unisdr/undrr-mangrove/issues/1172)), which takes the same props and children as `Tree`; import `{ Tree }` if you need the component itself.
   - `TreeItem` takes a `current` prop that sets `aria-current` on its link. Hydration keeps `aria-current` from the source link and expands the selected item's parents so it is visible on load.

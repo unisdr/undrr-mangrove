@@ -60,13 +60,9 @@ const PublicationFilters = () => (
   </>
 );
 
-const PublicationFiltersFooter = ({ onClose }) => (
+const PublicationFiltersFooter = () => (
   <div className="mg-buttons">
-    <button
-      type="button"
-      className="mg-button mg-button-primary"
-      onClick={onClose}
-    >
+    <button type="button" className="mg-button mg-button-primary">
       Show 128 results
     </button>
     <button type="button" className="mg-button mg-button-secondary">
@@ -120,7 +116,6 @@ const MapLayers = () => (
  */
 const DrawerDemo = ({ args, triggerLabel, footer, children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const close = () => setIsOpen(false);
   return (
     <>
       <button
@@ -134,8 +129,8 @@ const DrawerDemo = ({ args, triggerLabel, footer, children }) => {
       <Drawer
         {...args}
         isOpen={isOpen}
-        onClose={close}
-        footer={footer ? footer(close) : undefined}
+        onClose={() => setIsOpen(false)}
+        footer={footer}
       >
         {children}
       </Drawer>
@@ -167,7 +162,7 @@ export const Default = {
     <DrawerDemo
       args={args}
       triggerLabel="Filter publications"
-      footer={close => <PublicationFiltersFooter onClose={close} />}
+      footer={<PublicationFiltersFooter />}
     >
       <PublicationFilters />
     </DrawerDemo>
@@ -212,7 +207,7 @@ export const Bottom = {
     <DrawerDemo
       args={args}
       triggerLabel="Filter publications"
-      footer={close => <PublicationFiltersFooter onClose={close} />}
+      footer={<PublicationFiltersFooter />}
     >
       <PublicationFilters />
     </DrawerDemo>

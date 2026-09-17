@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **AI manifest hydration coverage:** every component that ships a `*.hydrate.js` now carries a structured `hydration` contract — note, selector, CDN modules, data attributes, events and a runnable example. Previously only ServiceNotice and Tree did, so an agent copying `renderedHtml` for CopyButton, ShareButtons, IconCard, StatsCard, Gallery, MegaMenu, Pager, QuoteHighlight, ScrollContainer, TextCta, UserFeedback, Syndicated search, Drawer or Notice got markup with no behaviour and nothing saying so. CopyButton also gains a `vanillaModule` contract for `js/copy-button.js`. ShareButtons, Gallery, MegaMenu, Pager, ScrollContainer and Syndicated search had no `component-data.js` entry at all and gain one. ([#PRNUMBER](https://github.com/unisdr/undrr-mangrove/pull/PRNUMBER))
+- **Drawer, Tree and Legend docs:** the Drawer and Tree docs pages embed their stories instead of showing prose and a props table with no example, the placeholder "Item 1 / Item 2" and "Drawer content goes here." copy is replaced with realistic content, and Legend's duplicated canvas is gone and the page is filled out to match its peers. ([#PRNUMBER](https://github.com/unisdr/undrr-mangrove/pull/PRNUMBER))
 - **Release notes format:** `docs/RELEASES.md` now defines a standard format and template for GitHub Release notes (intro, full-detail link, and fixed section order: breaking and visible changes, new features, bug fixes and hardening, documentation and discoverability, dependencies, CDN), based on the 2.0.0-rc.1 and 2.0.0-rc.2 releases.
 
 ## 2.0.0-rc.2 — 2026-09-17

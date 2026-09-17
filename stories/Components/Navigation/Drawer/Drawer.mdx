@@ -125,6 +125,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.0.1** — 2026-09-17 ([#PRNUMBER](https://github.com/unisdr/undrr-mangrove/pull/PRNUMBER)): Documentation only. The docs page now embeds its stories, so the default drawer, the end edge, the bottom sheet and the floating panel each have a live example; `Bottom` and `FloatingPanel` are new story exports. Placeholder body copy is replaced with a publications filter panel and a country report panel. The AI manifest gained the structured `hydration` contract for Drawer, so agents reading `renderedHtml` are told it cannot open on its own.
 - **1.0.0** — 2026-09-16 ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)): Initial implementation of the off-canvas drawer and floating panel.
   - Hydration via `Drawer.fromElement.js` and `Drawer.hydrate.js` ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
   - Before rc.1: string content renders as text with sanitised `bodyHtml` / `footerHtml` for hydration; closed drawers are inert and hidden; dialog naming, focus management and a modal focus trap; translatable close label; `data-mg-drawer-trigger` and open/close events for hydrated drawers; theme tokens and RTL-aware positioning.
