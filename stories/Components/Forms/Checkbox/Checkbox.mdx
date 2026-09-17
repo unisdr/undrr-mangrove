@@ -78,6 +78,97 @@ Disabled state (use the HTML `disabled` attribute, not CSS-only styling):
 
 > **Note:** The native `<input type="checkbox">` manages the checked/unchecked state for assistive technologies automatically. When toggling the switch via JavaScript, update the `checked` property on the input element rather than managing `aria-checked` separately.
 
+### Pending state
+
+Use the pending state when flipping a switch starts something that takes a moment to confirm, such as saving a setting to a server. It works in both directions: off to on, and on to off.
+
+The switch moves straight to the requested position. A small ring inside the thumb shows that the change is not confirmed yet, the track turns slightly greyer, and the cursor changes to `progress`. When the request settles, remove the pending state. If it failed, move the switch back.
+
+<Canvas of={CheckboxStories.SwitchPending} />
+
+Set `aria-busy="true"` on the input while the request runs:
+
+```html
+<label class="mg-switch">
+  <input
+    type="checkbox"
+    role="switch"
+    class="mg-switch__input"
+    id="alerts-switch"
+    aria-busy="true"
+    checked
+  />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Real-time alerts</span>
+</label>
+<p class="mg-form-help" id="alerts-status" role="status"></p>
+```
+
+If your markup cannot add attributes to the input, add `mg-switch--pending` to the label instead. Prefer `aria-busy`, because it also tells assistive technology the control is busy.
+
+Try it below. Toggle the switch with the mouse or the Space key. Turn on `simulateFailure` in the controls to see a failed save revert the switch.
+
+<Canvas of={CheckboxStories.SwitchPendingInteractive} />
+
+<Controls of={CheckboxStories.SwitchPendingInteractive} />
+
+```js
+const input = document.querySelector('#alerts-switch');
+const status = document.querySelector('#alerts-status');
+
+input.addEventListener('click', event => {
+  // Ignore clicks until the current request settles.
+  if (input.getAttribute('aria-busy') === 'true') event.preventDefault();
+});
+
+input.addEventListener('change', async () => {
+  const requested = input.checked;
+  input.setAttribute('aria-busy', 'true');
+  status.textContent = '';
+  try {
+    await saveSetting(requested);
+    status.textContent = requested
+      ? 'Real-time alerts enabled'
+      : 'Real-time alerts turned off';
+  } catch {
+    input.checked = !requested;
+    status.textContent = 'Could not save the change. Try again.';
+  } finally {
+    input.setAttribute('aria-busy', 'false');
+  }
+});
+```
+
+**Accessibility**
+
+- Set `aria-busy="true"` on the input while saving, and `false` (or remove it) when done. `aria-busy` is a global ARIA attribute, so it is valid on `role="switch"`. Screen readers rarely announce it on a form control, so do not rely on it alone.
+- Announce the outcome in a polite live region, such as an element with `role="status"`: "Real-time alerts enabled", or an error that says what to do next.
+- On failure, set `checked` back to its previous value and announce the error.
+- Keep focus on the switch. Do not move focus to the message.
+- Pending does not disable the input. The `disabled` attribute would drop focus and hide the control from some assistive technology. Instead, ignore or queue changes while pending, as in the example above. If you want the control to look unavailable as well, add `aria-disabled="true"`, which is styled like `disabled` but keeps the switch focusable. `aria-disabled` does not stop the switch toggling, so you still need to cancel the click.
+
+**Reduced motion and forced colours**
+
+- With `prefers-reduced-motion: reduce`, the ring does not spin. It shows as a static dotted ring, so the pending state stays visible without motion.
+- In forced colours mode (such as Windows high contrast), the switch uses system colours: an outlined track, a solid thumb, a `Highlight` fill when on, and a ring in a colour that contrasts with the thumb. This also fixes the track and thumb, which were invisible in forced colours before.
+
+**Theming**
+
+The switch reads these custom properties, declared on `.mg-switch`. To retheme a switch, override them on the `.mg-switch` label itself, for example with a modifier class. A value set on a wrapper element is shadowed by the declaration on the label.
+
+| Custom property                         | Default                                  |
+| --------------------------------------- | ---------------------------------------- |
+| `--mg-switch-track-background`          | `rgb(var(--mg-color-neutral-400))`       |
+| `--mg-switch-track-background--checked` | `rgb(var(--mg-color-interactive))`       |
+| `--mg-switch-thumb-background`          | `rgb(var(--mg-color-neutral-0))`         |
+| `--mg-switch-track-overlay--pending`    | `rgb(var(--mg-color-neutral-500) / 0.4)` |
+| `--mg-switch-pending-ring-color`        | `rgb(var(--mg-color-interactive))`       |
+| `--mg-switch-pending-ring-gap-color`    | `rgb(var(--mg-color-neutral-300))`       |
+
+Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more against the pending track.
+
 ## Accessibility
 
 - The label is programmatically associated with the checkbox via `htmlFor`/`id`.
@@ -90,6 +181,7 @@ Disabled state (use the HTML `disabled` attribute, not CSS-only styling):
 
 ## Changelog
 
+- **2.2** — 2026-09-17 ([#PRNUM](https://github.com/unisdr/undrr-mangrove/pull/PRNUM)): Added a pending state for `.mg-switch`, set with `aria-busy="true"` or `.mg-switch--pending`, with a static indicator for reduced motion. Styled `aria-disabled` switches, made the switch visible in forced colours, and added `--mg-switch-*` custom properties.
 - **2.1** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-switch` accessible binary toggle switch control (`role="switch"`) with sliding thumb, interactive brand fill on check, focus ring integration, RTL translation support, and reduced-motion support.
 - **2.0** — 2026-02-24: **Breaking:** Rewritten with BEM classes, PropTypes, and accessibility
 - **1.0** — 2022-12-12: Initial release

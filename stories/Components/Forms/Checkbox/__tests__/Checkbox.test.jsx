@@ -173,3 +173,71 @@ describe('Checkbox', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+// The switch is CSS-only markup, so these render the documented HTML directly.
+describe('Switch pending state markup', () => {
+  const PendingSwitch = ({
+    checked = false,
+    busy = true,
+    modifier = false,
+  }) => (
+    <div>
+      <label className={`mg-switch${modifier ? ' mg-switch--pending' : ''}`}>
+        <input
+          type="checkbox"
+          role="switch"
+          className="mg-switch__input"
+          aria-busy={busy}
+          defaultChecked={checked}
+        />
+        <span className="mg-switch__track" aria-hidden="true">
+          <span className="mg-switch__thumb"></span>
+        </span>
+        <span className="mg-switch__label">Real-time alerts</span>
+      </label>
+      <p className="mg-form-help" role="status"></p>
+    </div>
+  );
+
+  it('keeps the switch role, name and requested state while pending', () => {
+    render(<PendingSwitch checked />);
+    const control = screen.getByRole('switch', { name: 'Real-time alerts' });
+    expect(control).toBeChecked();
+    expect(control).toHaveAttribute('aria-busy', 'true');
+    expect(control).toBeEnabled();
+  });
+
+  it('has no a11y violations when pending off', async () => {
+    const { container } = render(<PendingSwitch />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no a11y violations when pending on', async () => {
+    const { container } = render(<PendingSwitch checked />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no a11y violations with the pending modifier class', async () => {
+    const { container } = render(<PendingSwitch busy={false} modifier />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no a11y violations when aria-disabled while pending', async () => {
+    const { container } = render(
+      <label className="mg-switch">
+        <input
+          type="checkbox"
+          role="switch"
+          className="mg-switch__input"
+          aria-busy="true"
+          aria-disabled="true"
+        />
+        <span className="mg-switch__track" aria-hidden="true">
+          <span className="mg-switch__thumb"></span>
+        </span>
+        <span className="mg-switch__label">Real-time alerts</span>
+      </label>
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});

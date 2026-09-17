@@ -254,6 +254,19 @@
 // Binary toggle for immediate on/off states (map layers, dashboard filters)
 // -----------------------------------------------------------------------------
 .mg-switch {
+  // Declared on the component rather than at :root so each var() chain
+  // resolves under whichever .mg-theme-* wrapper the switch sits in.
+  --mg-switch-track-background: rgb(var(--mg-color-neutral-400));
+  --mg-switch-track-background--checked: rgb(var(--mg-color-interactive));
+  --mg-switch-thumb-background: rgb(var(--mg-color-neutral-0));
+
+  // Pending greys the track by layering a translucent neutral over it. A
+  // lighter track (opacity) would drop IRP's checked track below 3:1 against
+  // the page; darkening towards grey keeps every theme above it.
+  --mg-switch-track-overlay--pending: rgb(var(--mg-color-neutral-500) / 0.4);
+  --mg-switch-pending-ring-color: rgb(var(--mg-color-interactive));
+  --mg-switch-pending-ring-gap-color: rgb(var(--mg-color-neutral-300));
+
   align-items: center;
   cursor: pointer;
   display: inline-flex;
@@ -279,27 +292,66 @@
     }
 
     &:checked + .mg-switch__track {
-      background-color: rgb(var(--mg-color-interactive));
+      background-color: var(--mg-switch-track-background--checked);
 
       .mg-switch__thumb {
         transform: translateX(mg-rem(18));
       }
     }
 
-    &:disabled + .mg-switch__track {
+    &:disabled + .mg-switch__track,
+    &[aria-disabled="true"] + .mg-switch__track {
       cursor: not-allowed;
       opacity: 0.45;
     }
 
-    &:disabled ~ .mg-switch__label {
+    &:disabled ~ .mg-switch__label,
+    &[aria-disabled="true"] ~ .mg-switch__label {
       color: rgb(var(--mg-color-neutral-400));
       cursor: not-allowed;
     }
   }
 
+  // Pending: the request behind the switch has not settled. `checked` already
+  // holds the requested value, so the thumb sits at its destination and a
+  // ring inside the thumb says "not confirmed yet", in either direction.
+  &__input[aria-busy="true"] + &__track,
+  &--pending &__track {
+    background-image: linear-gradient(
+      var(--mg-switch-track-overlay--pending),
+      var(--mg-switch-track-overlay--pending)
+    );
+    cursor: progress;
+
+    .mg-switch__thumb::after {
+      border: mg-rem(2) dotted var(--mg-switch-pending-ring-color);
+      border-radius: 50%;
+      box-sizing: border-box;
+      content: "";
+      inset: mg-rem(4);
+      position: absolute;
+    }
+
+    // Reduced motion keeps the static dotted ring above; everyone else gets
+    // the Loader's spinning arc.
+    @media (prefers-reduced-motion: no-preference) {
+      .mg-switch__thumb::after {
+        animation: mg-switch-pending-spin 0.8s linear infinite;
+        border-block-start-color: var(--mg-switch-pending-ring-gap-color);
+        border-style: solid;
+      }
+    }
+  }
+
+  &__input[aria-busy="true"] ~ &__label,
+  &--pending,
+  &:has(&__input[aria-busy="true"]) {
+    cursor: progress;
+  }
+
   &__track {
     align-items: center;
-    background-color: rgb(var(--mg-color-neutral-400));
+    background-color: var(--mg-switch-track-background);
     border-radius: mg-rem(12);
     box-sizing: border-box;
     display: inline-flex;
@@ -312,11 +364,12 @@
   }
 
   &__thumb {
-    background-color: rgb(var(--mg-color-neutral-0));
+    background-color: var(--mg-switch-thumb-background);
     border-radius: 50%;
     box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
     display: block;
     height: mg-rem(20);
+    position: relative;
     transition: transform var(--mg-motion-duration-fast)
       var(--mg-motion-easing-standard);
     width: mg-rem(20);
@@ -337,6 +390,81 @@
 
 [dir="rtl"] .mg-switch__input:checked + .mg-switch__track .mg-switch__thumb {
   transform: translateX(mg-rem(-18));
+}
+
+// Forced colours paint every background as Canvas, which erased the track and
+// thumb entirely. The switch opts out of forcing and repaints itself in system
+// colours: an outlined track, a CanvasText thumb, and a Highlight fill when on.
+// The pending ring takes whichever colour contrasts with the thumb it sits in.
+@media (forced-colors: active) {
+  .mg-switch__track {
+    background-color: Canvas;
+    forced-color-adjust: none;
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
+  .mg-switch__thumb {
+    background-color: CanvasText;
+    box-shadow: none;
+  }
+
+  .mg-switch__input:checked + .mg-switch__track {
+    background-color: Highlight;
+    outline-color: Highlight;
+
+    .mg-switch__thumb {
+      background-color: HighlightText;
+    }
+  }
+
+  .mg-switch__input:focus-visible + .mg-switch__track {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  .mg-switch__input:disabled + .mg-switch__track,
+  .mg-switch__input[aria-disabled="true"] + .mg-switch__track {
+    outline-color: GrayText;
+
+    .mg-switch__thumb {
+      background-color: GrayText;
+    }
+  }
+
+  .mg-switch__input[aria-busy="true"] + .mg-switch__track,
+  .mg-switch--pending .mg-switch__track {
+    background-image: none;
+
+    .mg-switch__thumb::after {
+      border-color: Canvas;
+    }
+  }
+
+  .mg-switch__input[aria-busy="true"]:checked + .mg-switch__track,
+  .mg-switch--pending .mg-switch__input:checked + .mg-switch__track {
+    .mg-switch__thumb::after {
+      border-color: Highlight;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    // Listed with the :checked selectors so the gap outranks the Highlight
+    // ring colour above; without a gap the spin would be invisible.
+    .mg-switch__input[aria-busy="true"] + .mg-switch__track,
+    .mg-switch__input[aria-busy="true"]:checked + .mg-switch__track,
+    .mg-switch--pending .mg-switch__input:checked + .mg-switch__track {
+      .mg-switch__thumb::after {
+        border-block-start-color: transparent;
+      }
+    }
+  }
+}
+
+@keyframes mg-switch-pending-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 // -----------------------------------------------------------------------------

@@ -890,6 +890,63 @@ const COMPONENT_PAIRS = [
     min: 3,
     why: 'SC 1.4.11 — the tick is an inline SVG stroked #fff by _form-base.scss',
   },
+  // Switch (.mg-switch). The track is the control boundary against the page
+  // and the thumb's position carries the state, so both are non-text.
+  {
+    name: 'switch track, off',
+    fg: '--mg-switch-track-background',
+    bg: [],
+    min: 3,
+    why: 'SC 1.4.11 — the off track is the whole visible boundary of the switch',
+  },
+  {
+    name: 'switch track, on',
+    fg: '--mg-switch-track-background--checked',
+    bg: [],
+    min: 3,
+    why: 'SC 1.4.11 — the brand fill is how on is identified',
+  },
+  {
+    name: 'switch thumb on the off track',
+    fg: '--mg-switch-thumb-background',
+    bg: ['--mg-switch-track-background'],
+    min: 3,
+    why: 'SC 1.4.11 — the thumb position carries the state',
+  },
+  {
+    name: 'switch thumb on the on track',
+    fg: '--mg-switch-thumb-background',
+    bg: ['--mg-switch-track-background--checked'],
+    min: 3,
+    why: 'SC 1.4.11 — the thumb position carries the state',
+  },
+  // Pending layers --mg-switch-track-overlay--pending over the track as a
+  // background-image, so the stack is overlay-on-track. The page is white,
+  // like the thumb, so the thumb pair also stands in for track-against-page.
+  {
+    name: 'switch thumb on the pending off track',
+    fg: '--mg-switch-thumb-background',
+    bg: ['--mg-switch-track-overlay--pending', '--mg-switch-track-background'],
+    min: 3,
+    why: 'SC 1.4.11 — the greyed track must still hold the thumb and the boundary while a change is pending',
+  },
+  {
+    name: 'switch thumb on the pending on track',
+    fg: '--mg-switch-thumb-background',
+    bg: [
+      '--mg-switch-track-overlay--pending',
+      '--mg-switch-track-background--checked',
+    ],
+    min: 3,
+    why: 'SC 1.4.11 — the greyed track must still hold the thumb and the boundary while a change is pending',
+  },
+  {
+    name: 'switch pending ring on the thumb',
+    fg: '--mg-switch-pending-ring-color',
+    bg: ['--mg-switch-thumb-background'],
+    min: 3,
+    why: 'SC 1.4.11 — the ring inside the thumb is the pending indicator',
+  },
   {
     name: 'field error message',
     fg: '--mg-color-red-900',
