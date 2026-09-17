@@ -149,6 +149,8 @@ For toolbars and headers where screen space is tight on mobile, use `.mg-button-
 
 ## Changelog
 
+- **1.5.1** — 2026-09-17 ([#1171](https://github.com/unisdr/undrr-mangrove/issues/1171)): A standalone `.mg-icon-button` now owns its ghost styling (transparent fill, no border, pointer cursor) and its hover sets a light foreground on the dark interactive fill, so the icon stays visible in every theme (it was 1.75:1 on MCR2030). A MegaMenu rule no longer overrides the primitive's `inline-flex` display and zero padding.
+
 - **1.5.0** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-button--icon` and `.mg-icon-button` icon-only button variants with square aspect ratio, centered icons, and `.mg-button--icon--round` circular floating action treatment. Added `.mg-button--responsive-icon` for responsive icon+text buttons that collapse to icon-only on mobile, and added intrinsic `gap` spacing and `.mg-button__icon` rules for buttons with leading or trailing icons.
 
 - **1.4.1** — 2026-09-15: Define brand-owned secondary button tokens for PreventionWeb, MCR2030, and IRP themes, resolving an issue where secondary buttons fell back to default UNDRR corporate blue.

@@ -144,6 +144,23 @@
   }
 }
 
+// Standalone .mg-icon-button is a ghost control: it is not paired with a
+// .mg-button-* variant, so it resets the user-agent button chrome itself.
+// The hover fill is the dark interactive colour in every theme, so the icon
+// must switch to the light button foreground with it (WCAG 1.4.11).
+// Components such as Notice and Drawer override the hover with their own
+// neutral treatment.
+.mg-icon-button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgb(var(--mg-color-interactive-active));
+    color: rgb(var(--mg-color-button--hover));
+  }
+}
+
 // Standalone .mg-icon-button may lack the .mg-button base class focus styles
 .mg-icon-button:focus-visible {
   @include mg-focus-ring;

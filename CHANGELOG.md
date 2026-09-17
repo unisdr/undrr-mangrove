@@ -14,6 +14,7 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
 - **Line heights are now public custom properties:** `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`) are emitted in every theme, and base body text, the font-size utilities and Card read them with `var()`. Compiled line heights are unchanged. `$mg-font-line-height-500` and `$mg-font-line-height-700` remain as deprecated Sass aliases until 3.0. With this, every runtime-themeable typography token (sizes, line heights and family roles) is a custom property; `$mg-font-face-*`, `$mg-html-font-size` and breakpoints stay Sass by design. ([#1085](https://github.com/unisdr/undrr-mangrove/issues/1085))
+- **Icon button no longer overridden by MegaMenu:** `mega-menu.scss` shipped a global `.mg-icon-button` rule that came later in `style-all.css` than the primitive, so every standalone icon button computed to `display: flex` with `10px` padding, and its hover darkened the fill without changing the icon colour (1.75:1 on `.mg-theme-mcr`). The rule is gone; the primitive in `cta-button.scss` now owns the ghost reset and sets a light hover foreground (4.71:1 or better in all five themes). ([#1171](https://github.com/unisdr/undrr-mangrove/issues/1171))
 
 ## 2.0.0-rc.1 — 2026-09-16
 

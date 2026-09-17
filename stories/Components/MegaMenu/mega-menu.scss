@@ -599,20 +599,6 @@
   }
 }
 
-.mg-icon-button {
-  padding: var(--mg-spacing-100);
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    background-color: rgb(var(--mg-color-interactive-active));
-  }
-}
-
 .mg-mega-sidebar-section {
   list-style: none;
 
