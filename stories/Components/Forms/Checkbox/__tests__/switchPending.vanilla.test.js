@@ -456,11 +456,88 @@ describe('mgSwitchPending', () => {
       expect(seen.detail.checked).toBe(true);
       expect(seen.detail.signal).toBeInstanceOf(AbortSignal);
       expect(() => seen.detail.respondWith(Promise.resolve())).toThrow(
-        /while mg-switch:save is dispatched/
+        /already called/
       );
       await flush();
       expect(input.checked).toBe(true);
       expect(statusOf(input)).toHaveTextContent('Real-time alerts turned on');
+      document.removeEventListener('mg-switch:save', listener);
+    });
+
+    it('lets a listener that called preventDefault() respond after an await', async () => {
+      const input = mount();
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      let finishSave;
+      const listener = async event => {
+        event.preventDefault();
+        await Promise.resolve('token');
+        event.detail.respondWith(
+          new Promise(resolve => {
+            finishSave = resolve;
+          })
+        );
+      };
+      document.addEventListener('mg-switch:save', listener);
+      mgSwitchPending(input);
+
+      fireEvent.click(input);
+      await flush();
+      expect(warn).not.toHaveBeenCalled();
+      expect(input.checked).toBe(true);
+      expect(statusOf(input)).toHaveTextContent('Saving…');
+
+      finishSave();
+      await flush();
+      await flush();
+      expect(input.checked).toBe(true);
+      expect(statusOf(input)).toHaveTextContent('Real-time alerts turned on');
+      document.removeEventListener('mg-switch:save', listener);
+    });
+
+    it('times out a claimed save that never responds, and ignores a later response', async () => {
+      const input = mount();
+      const failed = jest.fn();
+      input.addEventListener('mg-switch:failed', failed);
+      let claimed;
+      const listener = event => {
+        event.preventDefault();
+        claimed = event;
+      };
+      document.addEventListener('mg-switch:save', listener);
+      mgSwitchPending(input, { timeout: 5000 });
+
+      fireEvent.click(input);
+      advance(5000);
+      expect(input.checked).toBe(false);
+      expect(failed.mock.calls[0][0].detail.reason).toBe('timeout');
+      expect(claimed.detail.signal.aborted).toBe(true);
+
+      expect(() => claimed.detail.respondWith(Promise.resolve())).not.toThrow();
+      await flush();
+      expect(input.checked).toBe(false);
+      expect(failed).toHaveBeenCalledTimes(1);
+      document.removeEventListener('mg-switch:save', listener);
+    });
+
+    it('explains a late respondWith() from a listener that did not claim the save', async () => {
+      const input = mount();
+      jest.spyOn(console, 'warn').mockImplementation(() => {});
+      let late;
+      const listener = async event => {
+        await Promise.resolve();
+        try {
+          event.detail.respondWith(Promise.resolve());
+        } catch (error) {
+          late = error;
+        }
+      };
+      document.addEventListener('mg-switch:save', listener);
+      mgSwitchPending(input);
+
+      fireEvent.click(input);
+      await flush();
+      expect(input.checked).toBe(false);
+      expect(late.message).toMatch(/preventDefault\(\)/);
       document.removeEventListener('mg-switch:save', listener);
     });
 
@@ -500,6 +577,186 @@ describe('mgSwitchPending', () => {
         'Could not save the change. Try again.'
       );
     });
+  });
+
+  it('treats a plain value or a thenable from save as the result', async () => {
+    document.body.innerHTML = `${switchMarkup({ id: 'plain' })}${switchMarkup({ id: 'thenable' })}`;
+    const plain = document.getElementById('plain');
+    const thenable = document.getElementById('thenable');
+    let rejectThenable;
+    mgSwitchPending(plain, { save: () => true });
+    mgSwitchPending(thenable, {
+      save: () => ({
+        then(onFulfilled, onRejected) {
+          rejectThenable = onRejected;
+        },
+      }),
+    });
+
+    fireEvent.click(plain);
+    fireEvent.click(thenable);
+    await flush();
+    await flush();
+    expect(plain.checked).toBe(true);
+    expect(plain).toHaveAttribute('aria-busy', 'false');
+    expect(thenable.checked).toBe(true);
+
+    rejectThenable(new Error('nope'));
+    await flush();
+    expect(thenable.checked).toBe(false);
+  });
+
+  it('keeps the saved position when a form reset moves the switch mid-request', async () => {
+    document.body.innerHTML = `<form>${switchMarkup()}</form>`;
+    const input = document.querySelector('.mg-switch__input');
+    const { save, requests } = controlledSave();
+    mgSwitchPending(input, { save });
+
+    fireEvent.click(input);
+    input.form.reset();
+    expect(input.checked).toBe(false);
+    requests[0].resolve();
+    await flush();
+    expect(input.checked).toBe(true);
+    expect(statusOf(input)).toHaveTextContent('Real-time alerts turned on');
+  });
+
+  it('does not let one switch cancel or overwrite another in a shared region', () => {
+    document.body.innerHTML = `
+      ${switchMarkup({ id: 'a', label: 'Alerts' })}
+      ${switchMarkup({ id: 'b', label: 'Layers' })}
+      <p id="shared" role="status"></p>`;
+    const a = document.getElementById('a');
+    const b = document.getElementById('b');
+    const status = document.getElementById('shared');
+    const { save } = controlledSave();
+    const helperA = mgSwitchPending(a, { save, status });
+    mgSwitchPending(b, { save, status });
+
+    fireEvent.click(a);
+    fireEvent.click(a);
+    advance(STILL_SAVING_INTERVAL_MS);
+    // Same text again: cleared, with a rewrite scheduled.
+    fireEvent.click(a);
+    expect(status.textContent).toBe('');
+    fireEvent.click(b);
+    expect(status).toHaveTextContent('Saving…');
+    advance(200);
+    expect(status).toHaveTextContent('Saving…');
+
+    // Destroying A does not cancel a rewrite B scheduled.
+    fireEvent.click(b);
+    advance(STILL_SAVING_INTERVAL_MS);
+    fireEvent.click(b);
+    expect(status.textContent).toBe('');
+    helperA.destroy();
+    advance(100);
+    expect(status).toHaveTextContent('Still saving…');
+  });
+
+  it('says nothing about a switch that left the page, but still settles it', async () => {
+    document.body.innerHTML = `<div id="wrap">${switchMarkup()}</div><p id="page-status" role="status"></p>`;
+    const input = document.querySelector('.mg-switch__input');
+    const status = document.getElementById('page-status');
+    const settled = jest.fn();
+    input.addEventListener('mg-switch:settled', settled);
+    const { save, requests } = controlledSave();
+    mgSwitchPending(input, { save, status });
+
+    fireEvent.click(input);
+    document.getElementById('wrap').remove();
+    status.textContent = '';
+    requests[0].resolve();
+    await flush();
+    expect(status.textContent).toBe('');
+    expect(settled).toHaveBeenCalledTimes(1);
+  });
+
+  describe('label text', () => {
+    const announceOn = async (input, labels) => {
+      const { save, requests } = controlledSave();
+      mgSwitchPending(input, { save, labels });
+      fireEvent.click(input);
+      requests[0].resolve();
+      await flush();
+    };
+
+    it('follows aria-labelledby, then aria-label, then the label', async () => {
+      document.body.innerHTML = `
+        <span id="name-a">Flood</span> <span id="name-b">warnings</span>
+        ${switchMarkup({ id: 'by', inputAttrs: 'aria-labelledby="name-a name-b" aria-label="Ignored"' })}
+        ${switchMarkup({ id: 'aria', label: '', inputAttrs: 'aria-label="Map layer"' })}`;
+      await announceOn(document.getElementById('by'));
+      await announceOn(document.getElementById('aria'));
+      const regions = document.querySelectorAll(
+        '[data-mg-switch-status-created]'
+      );
+      expect(regions[0]).toHaveTextContent('Flood warnings turned on');
+      expect(regions[1]).toHaveTextContent('Map layer turned on');
+    });
+
+    it('trims a {label} placeholder when the switch has no label text', async () => {
+      const input = mount({ label: '' });
+      await announceOn(input, { on: '{label} on' });
+      expect(statusOf(input).textContent).toBe('on');
+    });
+
+    it('leaves live regions out of the label text, and warns about one inside the label', async () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      document.body.innerHTML = `
+        <label class="mg-switch">
+          <input type="checkbox" role="switch" class="mg-switch__input" />
+          Real-time alerts
+          <span class="inside" role="status">Old message</span>
+        </label>`;
+      const input = document.querySelector('.mg-switch__input');
+      const { save, requests } = controlledSave();
+      mgSwitchPending(input, { save, status: '.inside' });
+      expect(warn.mock.calls[0][0]).toMatch(/inside the switch label/);
+
+      fireEvent.click(input);
+      requests[0].resolve();
+      await flush();
+      expect(document.querySelector('.inside').textContent).toBe(
+        'Real-time alerts turned on'
+      );
+    });
+  });
+
+  it('places a created region after the label, outside the accessible name', () => {
+    const input = mount();
+    mgSwitchPending(input, { save: controlledSave().save });
+    fireEvent.click(input);
+    const label = input.closest('label');
+    expect(label.querySelector('[role="status"]')).toBeNull();
+    expect(label.nextElementSibling).toHaveAttribute(
+      'data-mg-switch-status-created'
+    );
+    expect(label.textContent).not.toMatch(/Saving/);
+  });
+
+  it('releases every listener across repeated init and destroy on a long-lived signal', () => {
+    document.body.innerHTML = switchMarkup({
+      inputAttrs: 'data-mg-switch-pending',
+    });
+    const input = document.querySelector('.mg-switch__input');
+    const controller = new AbortController();
+    const inputListeners = trackListeners(input);
+    const signalListeners = trackListeners(controller.signal);
+    const { save } = controlledSave();
+
+    for (let i = 0; i < 50; i += 1) {
+      mgSwitchPendingInit(document, { save, signal: controller.signal });
+      fireEvent.click(input);
+      nextFrame();
+      mgSwitchPendingDestroy(document);
+    }
+
+    expect(inputListeners()).toBe(0);
+    expect(signalListeners()).toBe(0);
+    expect(jest.getTimerCount()).toBe(0);
+    expect(document.querySelectorAll('[role="status"]')).toHaveLength(0);
+    expect(input).not.toHaveAttribute('aria-busy');
   });
 
   it('has no a11y violations while pending', async () => {
@@ -624,5 +881,67 @@ describe('auto-initialisation', () => {
     expect(document.getElementById('skip')).not.toHaveAttribute(
       'data-mg-switch-pending-enhanced'
     );
+  });
+
+  it('hands auto-initialised switches to a later explicit call with options', () => {
+    document.body.innerHTML = switchMarkup({
+      id: 'auto',
+      inputAttrs: 'data-mg-switch-pending',
+    });
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    let module;
+    jest.isolateModules(() => {
+      module = require('../../../../assets/js/switch-pending');
+    });
+    const input = document.getElementById('auto');
+    expect(input).toHaveAttribute('data-mg-switch-pending-enhanced');
+
+    const save = jest.fn(() => new Promise(() => {}));
+    expect(module.mgSwitchPendingInit(document, { save })).toHaveLength(1);
+    expect(document.querySelectorAll('[role="status"]')).toHaveLength(1);
+    fireEvent.click(input);
+    expect(save).toHaveBeenCalledTimes(1);
+    expect(warn).not.toHaveBeenCalled();
+
+    // Explicit helpers are not taken over again.
+    expect(module.mgSwitchPendingInit(document, { save: jest.fn() })).toEqual(
+      []
+    );
+    module.mgSwitchPendingDestroy(document);
+    warn.mockRestore();
+  });
+
+  it('shares one registry between two copies of the module', () => {
+    document.body.innerHTML = switchMarkup({
+      id: 'twice',
+      inputAttrs: 'data-mg-switch-pending',
+    });
+    let first;
+    let second;
+    jest.isolateModules(() => {
+      first = require('../../../../assets/js/switch-pending');
+    });
+    jest.isolateModules(() => {
+      second = require('../../../../assets/js/switch-pending');
+    });
+    const input = document.getElementById('twice');
+    expect(document.querySelectorAll('[role="status"]')).toHaveLength(1);
+
+    const save = jest.fn(() => new Promise(() => {}));
+    const helper = first.mgSwitchPending(input, { save });
+    const otherSave = jest.fn();
+    expect(second.mgSwitchPending(input, { save: otherSave })).toBe(helper);
+    expect(second.mgSwitchPendingInit(document)).toEqual([]);
+
+    const pending = jest.fn();
+    input.addEventListener('mg-switch:pending', pending);
+    fireEvent.click(input);
+    expect(save).toHaveBeenCalledTimes(1);
+    expect(otherSave).not.toHaveBeenCalled();
+    expect(pending).toHaveBeenCalledTimes(1);
+
+    second.mgSwitchPendingDestroy(document);
+    expect(input).not.toHaveAttribute('data-mg-switch-pending-enhanced');
+    expect(document.querySelectorAll('[role="status"]')).toHaveLength(0);
   });
 });

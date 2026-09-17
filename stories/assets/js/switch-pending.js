@@ -16,6 +16,7 @@ const INPUT_SELECTOR = '.mg-switch__input';
 const ENHANCED_ATTR = 'data-mg-switch-pending-enhanced';
 const SKIP_ATTR = 'data-mg-switch-pending-skip-auto-init';
 const CREATED_ATTR = 'data-mg-switch-status-created';
+const LIVE_SELECTOR = '[role="status"], [role="alert"], [aria-live]';
 
 export const SWITCH_PENDING_DEFAULT_LABELS = Object.freeze({
   saving: 'Saving…',
@@ -25,7 +26,18 @@ export const SWITCH_PENDING_DEFAULT_LABELS = Object.freeze({
   off: label => (label ? `${label} turned off` : 'Turned off'),
 });
 
-const instances = new WeakMap();
+// Shared by every copy of this module on the page (a CDN copy and a bundled
+// one, or two versions), so a switch is never enhanced twice and copies that
+// share a live region do not overwrite each other's delayed writes.
+const REGISTRY_KEY = Symbol.for('@undrr/mangrove/switch-pending@1');
+const registry =
+  globalThis[REGISTRY_KEY] ||
+  (globalThis[REGISTRY_KEY] = {
+    // input -> { handle, auto }
+    instances: new WeakMap(),
+    // live region -> { timer, owner, view } for a pending re-announcement
+    writes: new WeakMap(),
+  });
 
 function readLabels(element) {
   const raw = element?.getAttribute('data-mg-switch-labels');
@@ -38,19 +50,44 @@ function readLabels(element) {
   }
 }
 
+const clean = text =>
+  String(text ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+// Text of an element without any live regions inside it, so a status region
+// placed in the label is not read back as part of the label.
+function textWithoutLiveRegions(element) {
+  if (!element) return '';
+  if (!element.querySelector(LIVE_SELECTOR)) return element.textContent;
+  const copy = element.cloneNode(true);
+  copy.querySelectorAll(LIVE_SELECTOR).forEach(region => region.remove());
+  return copy.textContent;
+}
+
+// Follows accessible name order: aria-labelledby, aria-label, then the label.
 function labelText(input) {
+  const doc = input.ownerDocument;
+  const labelledBy = clean(
+    (input.getAttribute('aria-labelledby') || '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(id => textWithoutLiveRegions(doc.getElementById(id)))
+      .join(' ')
+  );
+  if (labelledBy) return labelledBy;
+  const ariaLabel = clean(input.getAttribute('aria-label'));
+  if (ariaLabel) return ariaLabel;
   const label = input.labels?.[0] || input.closest('label');
-  const text =
-    label?.querySelector('.mg-switch__label')?.textContent ??
-    label?.textContent ??
-    input.getAttribute('aria-label') ??
-    '';
-  return text.replace(/\s+/g, ' ').trim();
+  return (
+    clean(textWithoutLiveRegions(label?.querySelector('.mg-switch__label'))) ||
+    clean(textWithoutLiveRegions(label))
+  );
 }
 
 function formatLabel(value, label, input) {
-  if (typeof value === 'function') return String(value(label, input) ?? '');
-  return String(value ?? '').replace(/\{label\}/g, label);
+  if (typeof value === 'function') return clean(value(label, input));
+  return clean(String(value ?? '').replace(/\{label\}/g, label));
 }
 
 function resolveStatus(input, option) {
@@ -84,31 +121,40 @@ function toInput(element) {
   return element.querySelector(INPUT_SELECTOR);
 }
 
+function cancelWrite(status, owner) {
+  const pending = registry.writes.get(status);
+  if (!pending || (owner && pending.owner !== owner)) return;
+  pending.view.clearTimeout(pending.timer);
+  registry.writes.delete(status);
+}
+
+// Built outside mgSwitchPending, so the listener a long-lived signal holds
+// references the helper only weakly: a switch removed without destroy() can
+// still be garbage collected.
+function destroyOnAbort(handle) {
+  const ref =
+    typeof WeakRef === 'function'
+      ? new WeakRef(handle)
+      : { deref: () => handle };
+  return () => ref.deref()?.destroy();
+}
+
 function noResponderError() {
   return new Error(
-    'mg-switch: no mg-switch:save listener called respondWith(), so the change was reverted.'
+    'mg-switch: no mg-switch:save listener called respondWith() or preventDefault(), so the change was reverted.'
   );
 }
 
-/**
- * Adds the pending state to one `.mg-switch__input`.
- *
- * @param {HTMLInputElement} input
- * @param {Object} [options]
- * @param {(checked: boolean, signal: AbortSignal) => Promise<unknown>} [options.save]
- *   Saves the new position; resolving means success. Without it, a cancelable
- *   `mg-switch:save` event is dispatched for a listener to answer.
- * @param {Element|string} [options.status] Live region, or a selector for one
- * @param {number} [options.timeout=10000] Milliseconds before a save fails
- * @param {Object} [options.labels] `{ saving, stillSaving, error, on, off }`
- * @param {AbortSignal} [options.signal] Aborting it destroys the helper
- * @returns {{ destroy: () => void }}
- */
-export function mgSwitchPending(input, options = {}) {
+function enhance(input, options, auto) {
   const noop = { destroy() {} };
   if (!input || typeof input.addEventListener !== 'function') return noop;
-  const existing = instances.get(input);
-  if (existing) return existing;
+  const existing = registry.instances.get(input);
+  if (existing) {
+    // An explicit call takes over a switch that page-load auto-init enhanced,
+    // so its options are not silently ignored.
+    if (!existing.auto || auto) return existing.handle;
+    existing.handle.destroy();
+  }
   const { signal } = options;
   if (signal?.aborted) return noop;
 
@@ -131,25 +177,37 @@ export function mgSwitchPending(input, options = {}) {
     createdStatus.className = 'mg-u-sr-only';
     createdStatus.setAttribute('role', 'status');
     createdStatus.setAttribute(CREATED_ATTR, '');
+    // After the label, never inside it, so announcements are not part of the
+    // switch's accessible name.
     const anchor = input.closest('label') || input;
     anchor.insertAdjacentElement('afterend', createdStatus);
     status = createdStatus;
+  } else if (Array.from(input.labels || []).some(l => l.contains(status))) {
+    console.warn(
+      'mg-switch: the status region is inside the switch label, so announcements become part of its name. Place it after the label.',
+      input
+    );
   }
 
   let current = null;
   let lastNudge = -Infinity;
-  let writeTimer = null;
   let destroyed = false;
+  const owner = {};
 
   const write = text => {
-    view.clearTimeout(writeTimer);
-    writeTimer = null;
+    // A removed switch cannot be used, so say nothing about it.
+    if (!input.isConnected) return;
+    cancelWrite(status);
     if (status.textContent === text) {
       status.textContent = '';
-      writeTimer = view.setTimeout(() => {
-        writeTimer = null;
-        status.textContent = text;
-      }, REANNOUNCE_DELAY_MS);
+      registry.writes.set(status, {
+        owner,
+        view,
+        timer: view.setTimeout(() => {
+          registry.writes.delete(status);
+          status.textContent = text;
+        }, REANNOUNCE_DELAY_MS),
+      });
       return;
     }
     status.textContent = text;
@@ -179,22 +237,24 @@ export function mgSwitchPending(input, options = {}) {
       return options.save(checked, requestSignal);
     }
     let response = null;
-    let open = true;
+    let dispatching = true;
+    let answer = null;
     let saveEvent = null;
     const detail = {
       checked,
       signal: requestSignal,
       respondWith(promise) {
-        if (!open) {
-          throw new Error(
-            'mg-switch: respondWith() must be called while mg-switch:save is dispatched.'
-          );
-        }
         if (response) {
           throw new Error('mg-switch: respondWith() was already called.');
         }
+        if (!dispatching && !answer) {
+          throw new Error(
+            'mg-switch: respondWith() was called after mg-switch:save was dispatched. Call it synchronously, or call event.preventDefault() synchronously first and respondWith() later.'
+          );
+        }
         response = Promise.resolve(promise);
-        saveEvent.preventDefault();
+        if (dispatching) saveEvent.preventDefault();
+        else answer(response);
       },
     };
     saveEvent = new CustomEvent('mg-switch:save', {
@@ -203,13 +263,18 @@ export function mgSwitchPending(input, options = {}) {
       detail,
     });
     input.dispatchEvent(saveEvent);
-    open = false;
-    if (!response) {
-      const error = noResponderError();
-      console.warn(error.message, input);
-      return Promise.reject(error);
+    dispatching = false;
+    if (response) return response;
+    if (saveEvent.defaultPrevented) {
+      // Claimed: respondWith() may follow after an await. The timeout covers
+      // a listener that never calls it.
+      return new Promise(resolve => {
+        answer = resolve;
+      });
     }
-    return response;
+    const error = noResponderError();
+    console.warn(error.message, input);
+    return Promise.reject(error);
   };
 
   const onChange = () => {
@@ -238,6 +303,8 @@ export function mgSwitchPending(input, options = {}) {
       input.setAttribute('aria-busy', 'false');
       const label = labelText(input);
       if (ok) {
+        // A form reset or a script may have moved it without a change event.
+        input.checked = requested;
         write(formatLabel(requested ? labels.on : labels.off, label, input));
         emit('mg-switch:settled', { checked: requested, ok: true });
         return;
@@ -277,8 +344,6 @@ export function mgSwitchPending(input, options = {}) {
     );
   };
 
-  const onAbort = () => handle.destroy();
-
   const handle = {
     destroy() {
       if (destroyed) return;
@@ -286,7 +351,7 @@ export function mgSwitchPending(input, options = {}) {
       input.removeEventListener('click', onClick);
       input.removeEventListener('change', onChange);
       signal?.removeEventListener('abort', onAbort);
-      view.clearTimeout(writeTimer);
+      cancelWrite(status, owner);
       const request = current;
       current = null;
       if (request) {
@@ -296,17 +361,38 @@ export function mgSwitchPending(input, options = {}) {
         input.removeAttribute('aria-busy');
       }
       createdStatus?.remove();
-      input.removeAttribute(ENHANCED_ATTR);
-      instances.delete(input);
+      if (registry.instances.get(input)?.handle === handle) {
+        registry.instances.delete(input);
+        input.removeAttribute(ENHANCED_ATTR);
+      }
     },
   };
+  const onAbort = destroyOnAbort(handle);
 
   input.addEventListener('click', onClick);
   input.addEventListener('change', onChange);
   signal?.addEventListener('abort', onAbort, { once: true });
   input.setAttribute(ENHANCED_ATTR, '');
-  instances.set(input, handle);
+  registry.instances.set(input, { handle, auto });
   return handle;
+}
+
+/**
+ * Adds the pending state to one `.mg-switch__input`.
+ *
+ * @param {HTMLInputElement} input
+ * @param {Object} [options]
+ * @param {(checked: boolean, signal: AbortSignal) => Promise<unknown>} [options.save]
+ *   Saves the new position; resolving means success. Without it, a cancelable
+ *   `mg-switch:save` event is dispatched for a listener to answer.
+ * @param {Element|string} [options.status] Live region, or a selector for one
+ * @param {number} [options.timeout=10000] Milliseconds before a save fails
+ * @param {Object} [options.labels] `{ saving, stillSaving, error, on, off }`
+ * @param {AbortSignal} [options.signal] Aborting it destroys the helper
+ * @returns {{ destroy: () => void }}
+ */
+export function mgSwitchPending(input, options = {}) {
+  return enhance(input, options || {}, false);
 }
 
 function collect(scope, selector) {
@@ -323,27 +409,34 @@ function collect(scope, selector) {
   return Array.from(found);
 }
 
+function initAll(elements, options, auto) {
+  if (options.signal?.aborted) return [];
+  // Each switch finds its own live region.
+  const shared = { ...options };
+  delete shared.status;
+  const handles = [];
+  elements.forEach(element => {
+    const input = toInput(element);
+    if (!input) return;
+    const existing = registry.instances.get(input);
+    if (existing && (!existing.auto || auto)) return;
+    handles.push(enhance(input, shared, auto));
+  });
+  return handles;
+}
+
 /**
  * Enhances every `[data-mg-switch-pending]` input, or the switch input inside
- * a `[data-mg-switch-pending]` label, in `scope`. Already enhanced inputs are
- * skipped.
+ * a `[data-mg-switch-pending]` label, in `scope`. Inputs enhanced by an
+ * explicit call are skipped; inputs enhanced only by page-load auto-init are
+ * taken over with these options.
  *
  * @param {Document|Element|Iterable<Element>} [scope=document]
  * @param {Object} [options] Same as mgSwitchPending, except `status`
  * @returns {Array<{ destroy: () => void }>} Handles for the inputs this call enhanced
  */
 export function mgSwitchPendingInit(scope = document, options = {}) {
-  if (options.signal?.aborted) return [];
-  // Each switch finds its own live region.
-  const shared = { ...options };
-  delete shared.status;
-  const handles = [];
-  collect(scope, SELECTOR).forEach(element => {
-    const input = toInput(element);
-    if (!input || instances.has(input)) return;
-    handles.push(mgSwitchPending(input, shared));
-  });
-  return handles;
+  return initAll(collect(scope, SELECTOR), options || {}, false);
 }
 
 /**
@@ -353,7 +446,7 @@ export function mgSwitchPendingInit(scope = document, options = {}) {
  */
 export function mgSwitchPendingDestroy(scope = document) {
   collect(scope, `[${ENHANCED_ATTR}]`).forEach(input => {
-    instances.get(input)?.destroy();
+    registry.instances.get(input)?.handle.destroy();
   });
 }
 
@@ -361,7 +454,7 @@ function autoInit() {
   const elements = collect(document, SELECTOR).filter(
     element => !element.hasAttribute(SKIP_ATTR)
   );
-  mgSwitchPendingInit(elements);
+  initAll(elements, {}, true);
 }
 
 if (typeof document !== 'undefined') {
