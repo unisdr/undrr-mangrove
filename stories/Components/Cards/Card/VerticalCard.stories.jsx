@@ -324,7 +324,11 @@ export const InSeparateColumns = {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        // auto-fit rather than a fixed repeat(3, …): three columns above
+        // ~800px, fewer below, so the demo does not push a 375px page
+        // sideways. Each column is still its own box, which is what the
+        // equal-height behaviour below is demonstrating.
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(240px, 100%), 1fr))',
         gap: '1rem',
         maxWidth: '900px',
       }}
