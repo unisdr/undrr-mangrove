@@ -8,6 +8,13 @@
  */
 
 .mg-tree {
+  // The selected label uses the text colour, not the interactive colour: IRP's
+  // interactive blue measures 4.02:1 on the selected tint, under SC 1.4.3.
+  // The tint and bold weight carry the selected state in every theme.
+  --mg-tree-item-background--hover: rgb(var(--mg-color-interactive) / 0.06);
+  --mg-tree-item-background--selected: rgb(var(--mg-color-interactive) / 0.12);
+  --mg-tree-item-color--selected: rgb(var(--mg-color-text));
+
   list-style: none;
   padding: 0;
   margin: 0;
@@ -34,10 +41,11 @@
       @include mg-focus-ring-inset;
     }
 
-    &--selected > .mg-tree__label-container {
-      background-color: rgb(var(--mg-color-interactive) / 0.12);
+    &--selected > .mg-tree__label-container,
+    &--selected > .mg-tree__label-container:hover {
+      background-color: var(--mg-tree-item-background--selected);
       font-weight: 700;
-      color: rgb(var(--mg-color-interactive));
+      color: var(--mg-tree-item-color--selected);
     }
   }
 
@@ -50,7 +58,7 @@
     border-radius: var(--mg-radius-button);
 
     &:hover {
-      background-color: rgb(var(--mg-color-interactive) / 0.06);
+      background-color: var(--mg-tree-item-background--hover);
     }
   }
 
@@ -100,5 +108,24 @@
     color: inherit;
     text-decoration: none;
     user-select: none;
+
+    // A leaf has no toggle, so a toggle-sized inset lines its label up with
+    // sibling parents.
+    &:first-child {
+      margin-inline-start: calc(1rem + var(--mg-spacing-100));
+    }
+  }
+
+  // Links are underlined so they read differently from plain-text items. The
+  // colour stays inherited: the interactive colour on the hover tint is below
+  // 4.5:1 in IRP, so hover thickens the underline instead.
+  a.mg-tree__label {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+
+    &:hover {
+      color: inherit;
+      text-decoration-thickness: 2px;
+    }
   }
 }

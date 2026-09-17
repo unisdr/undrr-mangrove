@@ -784,6 +784,29 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.11 — selected pill border remains distinct from its inner fill',
   },
 
+  // --- Tree: tree.scss -------------------------------------------------------
+  {
+    name: 'tree selected label on its tint',
+    fg: '--mg-tree-item-color--selected',
+    bg: ['--mg-tree-item-background--selected'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-tree__item--selected label, 16px bold, on the interactive tint (also its hover state)',
+  },
+  {
+    name: 'tree label on the hover tint',
+    fg: '--mg-color-text',
+    bg: ['--mg-tree-item-background--hover'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-tree__label-container:hover; labels and links inherit the text colour',
+  },
+  {
+    name: 'focus ring on the tree selected tint',
+    fg: '--mg-color-focus-ring',
+    bg: ['--mg-tree-item-background--selected'],
+    min: 3,
+    why: 'SC 1.4.11 — mg-focus-ring-inset draws its separator band at the edge, so the ring meets the selected tint on its inner side',
+  },
+
   // --- Form controls: _form-base.scss ------------------------------------
   {
     name: 'input value text',
@@ -1606,8 +1629,8 @@ const EXCEPTION_KEYS = new Set([
  *
  * Every pair below is derived from a component stylesheet: the foreground
  * token is one a rule actually paints on the background token beneath it, read
- * out of cta-button.scss, tag.scss, tab.scss, _form-base.scss, card.scss,
- * hero.scss and _variables.scss. Pairs that merely look related by name are
+ * out of cta-button.scss, tag.scss, tab.scss, tree.scss, _form-base.scss,
+ * card.scss, hero.scss and _variables.scss. Pairs that merely look related by name are
  * noise and are not here.
  *
  * Thresholds are per-pair, not global:
