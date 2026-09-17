@@ -108,55 +108,97 @@ Set `aria-busy="true"` on the input while the request runs:
 
 If your markup cannot add attributes to the input, add `mg-switch--pending` to the label instead. Prefer `aria-busy`, because it also tells assistive technology the control is busy.
 
-Try it below. Toggle the switch with the mouse or the Space key. Turn on `simulateFailure` in the controls to see a failed save revert the switch.
+Try it below. Toggle the switch with the mouse or the Space key, then press it again while it is saving. Set `outcome` in the controls to `failure` or `timeout` to see the switch revert.
 
 <Canvas of={CheckboxStories.SwitchPendingInteractive} />
 
 <Controls of={CheckboxStories.SwitchPendingInteractive} />
 
+The example below does what the story does. `saveSetting` is your own request, and it should pass `signal` to `fetch()` so a timeout cancels it.
+
 ```js
 const input = document.querySelector('#alerts-switch');
 const status = document.querySelector('#alerts-status');
+const TIMEOUT_MS = 10000;
+let current = null; // the request in flight
+let lastNudge = 0;
+
+// Presses while saving are ignored and announced, at most every 3 seconds.
+function stillSaving() {
+  if (Date.now() - lastNudge < 3000) return;
+  lastNudge = Date.now();
+  status.textContent = '';
+  setTimeout(() => {
+    if (current) status.textContent = 'Still saving…';
+  }, 100);
+}
 
 input.addEventListener('click', event => {
-  // Ignore clicks until the current request settles.
-  if (input.getAttribute('aria-busy') === 'true') event.preventDefault();
+  if (!current) return;
+  event.preventDefault(); // keeps checked where it is
+  stillSaving();
 });
 
-input.addEventListener('change', async () => {
+input.addEventListener('change', () => {
+  if (current) {
+    // A script changed the switch mid-request: undo it.
+    input.checked = !input.checked;
+    stillSaving();
+    return;
+  }
   const requested = input.checked;
-  input.setAttribute('aria-busy', 'true');
-  status.textContent = '';
-  try {
-    await saveSetting(requested);
-    status.textContent = requested
-      ? 'Real-time alerts enabled'
-      : 'Real-time alerts turned off';
-  } catch {
+  const request = { controller: new AbortController() };
+  current = request;
+  status.textContent = 'Saving…';
+  // Mark busy a frame later, so the new state is announced first.
+  requestAnimationFrame(() => {
+    if (current === request) input.setAttribute('aria-busy', 'true');
+  });
+
+  const settle = ok => {
+    if (current !== request) return; // stale: this request timed out
+    current = null;
+    clearTimeout(request.timer);
+    input.setAttribute('aria-busy', 'false');
+    if (ok) {
+      status.textContent = requested
+        ? 'Real-time alerts turned on'
+        : 'Real-time alerts turned off';
+      return;
+    }
+    request.controller.abort();
     input.checked = !requested;
     status.textContent = 'Could not save the change. Try again.';
-  } finally {
-    input.setAttribute('aria-busy', 'false');
-  }
+  };
+
+  request.timer = setTimeout(() => settle(false), TIMEOUT_MS);
+  saveSetting(requested, request.controller.signal).then(
+    () => settle(true),
+    () => settle(false)
+  );
 });
 ```
 
 **Accessibility**
 
 - Set `aria-busy="true"` on the input while saving, and `false` (or remove it) when done. `aria-busy` is a global ARIA attribute, so it is valid on `role="switch"`. Screen readers rarely announce it on a form control, so do not rely on it alone.
-- Announce the outcome in a polite live region, such as an element with `role="status"`: "Real-time alerts enabled", or an error that says what to do next.
-- On failure, set `checked` back to its previous value and announce the error.
+- Announce each step in a polite live region, such as an element with `role="status"`: "Saving…" when the request starts, then the outcome ("Real-time alerts turned on") or an error that says what to do next.
+- Presses while pending are ignored, and each ignored press announces "Still saving…", at most once every few seconds so a repeated key does not flood the region. Clearing the region before writing lets the same message be announced again.
+- Guard `change` as well as `click`, because a script can change the switch too. Let only the request in flight settle the switch, and time out a request that never answers, so a hung request cannot leave the switch locked.
+- On failure or timeout, set `checked` back to its previous value and announce the error.
 - Keep focus on the switch. Do not move focus to the message.
-- Pending does not disable the input. The `disabled` attribute would drop focus and hide the control from some assistive technology. Instead, ignore or queue changes while pending, as in the example above. If you want the control to look unavailable as well, add `aria-disabled="true"`, which is styled like `disabled` but keeps the switch focusable. `aria-disabled` does not stop the switch toggling, so you still need to cancel the click.
+- Pending does not disable the input. The `disabled` attribute would drop focus and hide the control from some assistive technology. If you want the control to look unavailable as well, add `aria-disabled="true"`. It keeps the switch focusable, dims the track without fading the focus ring, and does not stop the switch toggling, so you still need the guards above.
+
+**Order of announcements.** The example sets `aria-busy` one frame after the change, not in the same task. Assistive technology may hold back updates from an element marked busy, so marking it busy straight away could swallow the announcement of the new checked state. The ignore guard applies at once; only the attribute waits. This order has not yet been tested with real screen readers. Before relying on it, test a focused switch with NVDA and JAWS on Windows and VoiceOver on macOS and iOS: check that the new state, "Saving…", "Still saving…" and the outcome are each announced once.
 
 **Reduced motion and forced colours**
 
 - With `prefers-reduced-motion: reduce`, the ring does not spin. It shows as a static dotted ring, so the pending state stays visible without motion.
-- In forced colours mode (such as Windows high contrast), the switch uses system colours: an outlined track, a solid thumb, a `Highlight` fill when on, and a ring in a colour that contrasts with the thumb. This also fixes the track and thumb, which were invisible in forced colours before.
+- In forced colours mode (such as Windows high contrast), the switch uses system colours: a bordered track, a solid thumb, a `Highlight` fill when on, and a ring in a colour that contrasts with the thumb. Disabled switches, on or off, use a `Canvas` track with `GrayText` parts. The focus ring is a `Highlight` outline outside the track border. This also fixes the track and thumb, which were invisible in forced colours before.
 
 **Theming**
 
-The switch reads these custom properties, declared on `.mg-switch`. To retheme a switch, override them on the `.mg-switch` label itself, for example with a modifier class. A value set on a wrapper element is shadowed by the declaration on the label.
+The switch reads these custom properties, each with the default shown. Set them on the switch or on any ancestor, such as a region of the page or a theme wrapper.
 
 | Custom property                         | Default                                  |
 | --------------------------------------- | ---------------------------------------- |
@@ -164,10 +206,11 @@ The switch reads these custom properties, declared on `.mg-switch`. To retheme a
 | `--mg-switch-track-background--checked` | `rgb(var(--mg-color-interactive))`       |
 | `--mg-switch-thumb-background`          | `rgb(var(--mg-color-neutral-0))`         |
 | `--mg-switch-track-overlay--pending`    | `rgb(var(--mg-color-neutral-500) / 0.4)` |
+| `--mg-switch-track-overlay--disabled`   | `rgb(var(--mg-color-neutral-0) / 0.55)`  |
 | `--mg-switch-pending-ring-color`        | `rgb(var(--mg-color-interactive))`       |
 | `--mg-switch-pending-ring-gap-color`    | `rgb(var(--mg-color-neutral-300))`       |
 
-Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more against the pending track.
+Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more against the pending track. The disabled overlay should match the page colour, because it stands in for `disabled`'s 0.45 opacity.
 
 ## Accessibility
 
@@ -182,6 +225,10 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 ## Changelog
 
 - **2.2** — 2026-09-17 ([#1184](https://github.com/unisdr/undrr-mangrove/pull/1184)): Added a pending state for `.mg-switch`, set with `aria-busy="true"` or `.mg-switch--pending`, with a static indicator for reduced motion. Styled `aria-disabled` switches, made the switch visible in forced colours, and added `--mg-switch-*` custom properties.
+  - `aria-disabled` dims the track with a page-coloured layer instead of opacity, so the focus ring stays at full strength.
+  - Forced colours: disabled switches, on or off, use a `Canvas` track with `GrayText` parts and no opacity; the track boundary is a border, so the focus outline no longer replaces it, and the white focus band is dropped; the `.mg-switch--pending` ring spins with a visible gap when off.
+  - The `--mg-switch-*` properties are read with their defaults where used, so they can be set on any ancestor. Added `--mg-switch-track-overlay--disabled`.
+  - The pending example and interactive story announce "Saving…", "Still saving…" for ignored presses, and the outcome; guard `change` as well as `click`; ignore stale responses; and time out a request that never answers.
 - **2.1** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-switch` accessible binary toggle switch control (`role="switch"`) with sliding thumb, interactive brand fill on check, focus ring integration, RTL translation support, and reduced-motion support.
 - **2.0** — 2026-02-24: **Breaking:** Rewritten with BEM classes, PropTypes, and accessibility
 - **1.0** — 2022-12-12: Initial release

@@ -1,6 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Checkbox } from './Checkbox';
 import { FormGroup } from '../FormGroup/FormGroup';
+import {
+  getSwitchCaptionForLocale,
+  PendingSwitchDemo,
+  PendingSwitchRow,
+  simulateSave,
+} from './_switchPending';
 
 const getCaptionForLocale = locale => {
   switch (locale) {
@@ -39,41 +45,6 @@ const getCaptionForLocale = locale => {
           { label: 'Resilience', value: 'resilience' },
         ],
         errorText: 'You must accept the terms and conditions',
-      };
-  }
-};
-
-const getSwitchCaptionForLocale = locale => {
-  switch (locale) {
-    case 'arabic':
-      return {
-        alertsLabel: 'تنبيهات فورية',
-        layerLabel: 'طبقة الخريطة النشطة',
-        turningOn: 'قيد التشغيل',
-        turningOff: 'قيد الإيقاف',
-        enabled: 'تم تفعيل التنبيهات الفورية',
-        disabled: 'تم إيقاف التنبيهات الفورية',
-        failed: 'تعذّر حفظ التغيير. حاول مرة أخرى.',
-      };
-    case 'japanese':
-      return {
-        alertsLabel: 'リアルタイム通知',
-        layerLabel: '表示中の地図レイヤー',
-        turningOn: 'オンに切り替え中',
-        turningOff: 'オフに切り替え中',
-        enabled: 'リアルタイム通知をオンにしました',
-        disabled: 'リアルタイム通知をオフにしました',
-        failed: '変更を保存できませんでした。もう一度お試しください。',
-      };
-    default:
-      return {
-        alertsLabel: 'Real-time alerts',
-        layerLabel: 'Active map layer',
-        turningOn: 'Turning on',
-        turningOff: 'Turning off',
-        enabled: 'Real-time alerts enabled',
-        disabled: 'Real-time alerts turned off',
-        failed: 'Could not save the change. Try again.',
       };
   }
 };
@@ -229,99 +200,38 @@ export const SwitchDisabled = {
 export const SwitchPending = {
   render: (args, { globals: { locale } }) => {
     const caption = getSwitchCaptionForLocale(locale);
-    const rows = [
-      { label: caption.layerLabel, note: caption.turningOn, checked: true },
-      { label: caption.alertsLabel, note: caption.turningOff, checked: false },
-    ];
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {rows.map(row => (
-          <div key={row.label}>
-            <label className="mg-switch">
-              <input
-                type="checkbox"
-                role="switch"
-                className="mg-switch__input"
-                aria-busy="true"
-                defaultChecked={row.checked}
-              />
-              <span className="mg-switch__track" aria-hidden="true">
-                <span className="mg-switch__thumb"></span>
-              </span>
-              <span className="mg-switch__label">{row.label}</span>
-            </label>
-            <p className="mg-form-help">{row.note}</p>
-          </div>
-        ))}
+        <PendingSwitchRow
+          label={caption.layerLabel}
+          note={caption.turningOn}
+          checked
+        />
+        <PendingSwitchRow
+          label={caption.alertsLabel}
+          note={caption.turningOff}
+        />
       </div>
     );
   },
   name: 'Switch pending',
 };
 
-const PENDING_MS = 1500;
-
-function PendingSwitchDemo({ simulateFailure, caption }) {
-  const [checked, setChecked] = useState(false);
-  const [pending, setPending] = useState(false);
-  const [message, setMessage] = useState('');
-  const timer = useRef(null);
-
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const handleChange = event => {
-    // Ignore further changes until the current request settles.
-    if (pending) return;
-    const requested = event.target.checked;
-    setChecked(requested);
-    setPending(true);
-    setMessage('');
-    timer.current = setTimeout(() => {
-      setPending(false);
-      if (simulateFailure) {
-        setChecked(!requested);
-        setMessage(caption.failed);
-        return;
-      }
-      setMessage(requested ? caption.enabled : caption.disabled);
-    }, PENDING_MS);
-  };
-
-  return (
-    <div>
-      <label className="mg-switch">
-        <input
-          type="checkbox"
-          role="switch"
-          className="mg-switch__input"
-          checked={checked}
-          aria-busy={pending}
-          onChange={handleChange}
-        />
-        <span className="mg-switch__track" aria-hidden="true">
-          <span className="mg-switch__thumb"></span>
-        </span>
-        <span className="mg-switch__label">{caption.alertsLabel}</span>
-      </label>
-      <p className="mg-form-help" role="status">
-        {message}
-      </p>
-    </div>
-  );
-}
-
 export const SwitchPendingInteractive = {
-  args: { simulateFailure: false },
+  args: { outcome: 'success' },
   argTypes: {
-    simulateFailure: {
-      control: 'boolean',
-      description: 'Fail the simulated request and revert the switch',
+    outcome: {
+      control: 'radio',
+      options: ['success', 'failure', 'timeout'],
+      description:
+        'How the simulated save ends. `timeout` never responds, so the 5 second timeout reverts the switch.',
     },
   },
-  render: ({ simulateFailure }, { globals: { locale } }) => (
+  render: ({ outcome }, { globals: { locale } }) => (
     <PendingSwitchDemo
-      simulateFailure={simulateFailure}
       caption={getSwitchCaptionForLocale(locale)}
+      save={simulateSave(outcome)}
+      timeoutMs={5000}
     />
   ),
   name: 'Switch pending, interactive',
