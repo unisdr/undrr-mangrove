@@ -28,3 +28,4 @@ npm-debug.log
 .gstack/
 debug-storybook.log
 .superpowers/
+.worktrees/

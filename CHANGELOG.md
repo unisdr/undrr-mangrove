@@ -3,9 +3,9 @@
 Detailed change records live in two places:
 
 - **Project releases**: [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) — library-wide version history.
-- **Component changelogs**: Each component's MDX file has a `## Changelog` section with per-component version history. Browse them in [Storybook](https://preventionweb.github.io/undrr-mangrove/) or in the `stories/` directory.
+- **Component changelogs**: Each component's MDX file has a `## Changelog` section with per-component version history. Browse them in [Storybook](https://mangrove.undrr.org/) or in the `stories/` directory.
 
-For the changelog format specification, see the [component contribution guide](https://preventionweb.github.io/undrr-mangrove/?path=/docs/contributing-component-standards--docs#changelog-format).
+For the changelog format specification, see the [component contribution guide](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs#changelog-format).
 
 This file collects only cross-cutting library-wide notes that don't fit either location above (e.g. repo-wide build / tooling / policy changes).
 
@@ -22,7 +22,7 @@ _Notable cross-cutting changes between releases land here. Per-component changes
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.1) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
 
-This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
 
 - **Notice foundation:** new `Notice` component (`info`, `warning`, `negative`, `positive`; compact, prominent and overlay modifiers; hydration) with `ServiceNotice` for degraded or offline embeds, including capped automatic retry and UN-language labels. **Snackbar now renders through Notice** (visual change; see upgrade notes). StatusLabel gains `--warning` / `--negative`. ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164))
 - **Type scale is public:** `--mg-font-size-100` … `--mg-font-size-1100` custom properties are emitted in every theme and read by all components with `var()`; compiled sizes are unchanged. `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` are deprecated Sass aliases until 3.0. A new test fails the build on any `var(--mg-*)` that nothing defines. ([#1168](https://github.com/unisdr/undrr-mangrove/pull/1168), [#1167](https://github.com/unisdr/undrr-mangrove/issues/1167))
@@ -30,13 +30,13 @@ This section is intentionally brief. Full detail and migration steps are in the 
 - **CopyButton:** new copy-to-clipboard button ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)) with React hydration and a zero-dependency vanilla script, `js/copy-button.js` (`window.UNDRR.copyButton`), plus UN-language labels ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)). It reports failed copies with a manual-copy hint ([#1166](https://github.com/unisdr/undrr-mangrove/pull/1166)).
 - **New styles:** data table, badge, accordion, switch and icon-button styles. ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157))
 - **Discoverability:** machine-readable `releases.json` and `tokens.json`, CSS/JS banners and SCSS docblocks linking to Storybook and `llms.txt`, and expanded AI manifest coverage. ([#1156](https://github.com/unisdr/undrr-mangrove/pull/1156), [#1157](https://github.com/unisdr/undrr-mangrove/pull/1157), [#1162](https://github.com/unisdr/undrr-mangrove/pull/1162))
-- **Storybook organisation and docs:** messaging components are grouped under Components/Notice and page navigation under Components/Navigation, so those Storybook URLs and AI manifest ids changed. Documentation links now point at `preventionweb.github.io/undrr-mangrove`. ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164), [#1166](https://github.com/unisdr/undrr-mangrove/pull/1166))
+- **Storybook organisation and docs:** messaging components are grouped under Components/Notice and page navigation under Components/Navigation, so those Storybook URLs and AI manifest ids changed. Documentation links now point at `mangrove.undrr.org`. ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164), [#1166](https://github.com/unisdr/undrr-mangrove/pull/1166))
 
 ## 2.0.0-beta.3 — 2026-09-15
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.3) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
 
-This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
 
 - **Sub-brand button tokens** defined secondary button background and hover tokens for PreventionWeb, MCR, and IRP themes. ([#1150](https://github.com/unisdr/undrr-mangrove/pull/1150))
 - **Hero title** removed the `max-width: 12ch` constraint from `.mg-hero--immersive:not(.mg-hero--split) .mg-hero__title` so headings flow naturally across the overlay container. ([#1151](https://github.com/unisdr/undrr-mangrove/pull/1151))
@@ -47,7 +47,7 @@ This section is intentionally brief. Full detail and migration steps are in the 
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.2) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
 
-This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
 
 - **Translated logos and PageHeader** now resolve locale-specific wordmarks through the shared asset helper, with `crop="autocrop"` kept for the default English wordmark only. ([#1148](https://github.com/unisdr/undrr-mangrove/pull/1148))
 - **Author image and icons** gained the new stacked/link/no-image layout options plus the higher-value utility and OCHA icon additions. ([#1147](https://github.com/unisdr/undrr-mangrove/pull/1147), [#1145](https://github.com/unisdr/undrr-mangrove/pull/1145))
@@ -57,7 +57,7 @@ This section is intentionally brief. Full detail and migration steps are in the 
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.1) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
 
-This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
 
 - Storybook inline Docs canvases now receive the selected locale’s language and direction, fixing Arabic examples that inherited an explicit English canvas boundary and preserving RTL across theme or control changes. ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109))
 - CDN references now use the canonical `assets.undrr.org/` root across documentation, examples, font URLs and component defaults. The release URL updater emits canonical paths while continuing to accept legacy paths as migration inputs.
@@ -67,7 +67,7 @@ This section is intentionally brief. Full detail and migration steps are in the 
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4) for the release when published. This prerelease is prepared for the npm `next` tag; `latest` stays on 1.x.
 
-This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+This section is intentionally brief. Full detail and migration steps are in the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
 
 - Arabic typography and font roles were finalized for v2.0 (including removal of legacy font-family SCSS variables). ([#1089](https://github.com/unisdr/undrr-mangrove/issues/1089), [#1092](https://github.com/unisdr/undrr-mangrove/issues/1092), [#1098](https://github.com/unisdr/undrr-mangrove/issues/1098))
 - Tabs and MegaMenu received the alpha.4 navigation refinements. ([#1097](https://github.com/unisdr/undrr-mangrove/pull/1097), [#1100](https://github.com/unisdr/undrr-mangrove/pull/1100))
@@ -75,7 +75,7 @@ This section is intentionally brief. Full detail and migration steps are in the 
 
 ## 2.0.0 — unreleased
 
-This section is intentionally brief. The complete 2.0 record, migration guidance, and numbered breaking changes are in the [v2.0 release notes](https://preventionweb.github.io/undrr-mangrove/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
+This section is intentionally brief. The complete 2.0 record, migration guidance, and numbered breaking changes are in the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)).
 
 Development releases:
 

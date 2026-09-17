@@ -16,7 +16,7 @@
  *        ai-components/utilities.json   — CSS utility class inventory
  *
  * Usage:
- *   node scripts/ai-manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--docs-base=https://preventionweb.github.io/undrr-mangrove/] [--validate]
+ *   node scripts/ai-manifest/generate-ai-manifest.js [--build-dir=docs-build-temp] [--docs-base=https://mangrove.undrr.org/] [--validate]
  *
  * Flags:
  *   --validate   Check curated data keys and a11y lint. Exits non-zero on failure.
@@ -54,7 +54,7 @@ const { buildTokensDictionary } = require('../build-tokens.cjs');
 
 const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 const ASSETS_BASE = 'https://assets.undrr.org';
-const DEFAULT_DOCS_BASE = 'https://preventionweb.github.io/undrr-mangrove/';
+const DEFAULT_DOCS_BASE = 'https://mangrove.undrr.org/';
 
 // One bundle per theme, plus the combined bundle.
 //

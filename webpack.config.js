@@ -153,8 +153,8 @@ export default [
     plugins: [
       new webpack.BannerPlugin({
         banner: `UNDRR Mangrove component library
-Storybook:    https://preventionweb.github.io/undrr-mangrove/
-LLMs context: https://preventionweb.github.io/undrr-mangrove/llms.txt
+Storybook:    https://mangrove.undrr.org/
+LLMs context: https://mangrove.undrr.org/llms.txt
 Repository:   https://github.com/unisdr/undrr-mangrove
 Compiled on:  ${new Date().toISOString()}`,
         raw: false,
