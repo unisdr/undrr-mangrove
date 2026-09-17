@@ -109,4 +109,37 @@ describe('mgCopyButton (Vanilla JS Script)', () => {
 
     expect(writeTextMock).toHaveBeenCalledWith('https://nested.org');
   });
+
+  describe('accessible name', () => {
+    it('copies data-aria-label onto aria-label on an unnamed button', () => {
+      const btn = createButton({ 'aria-label': 'Copy glossary link' });
+
+      mgCopyButton();
+
+      expect(btn.getAttribute('aria-label')).toBe('Copy glossary link');
+    });
+
+    it('does not override an aria-label the consumer set', () => {
+      const btn = createButton({ 'aria-label': 'From the data attribute' });
+      btn.setAttribute('aria-label', 'Copy knowledge base URL');
+
+      mgCopyButton();
+
+      expect(btn.getAttribute('aria-label')).toBe('Copy knowledge base URL');
+    });
+
+    it('does not override aria-labelledby', () => {
+      const label = document.createElement('span');
+      label.id = 'copy-label';
+      label.textContent = 'Copy the citation';
+      document.body.appendChild(label);
+
+      const btn = createButton({ 'aria-label': 'From the data attribute' });
+      btn.setAttribute('aria-labelledby', 'copy-label');
+
+      mgCopyButton();
+
+      expect(btn.hasAttribute('aria-label')).toBe(false);
+    });
+  });
 });
