@@ -65,7 +65,7 @@ export const REQUIRES_REACT = {
   'components-user-feedback':
     'UserFeedback manages a binary page response, confirmation state and focus. Requires React for button behavior and can be hydrated via createHydrator with data-mg-user-feedback. Place it as a separate sibling immediately before Footer when the pattern is used.',
   'components-navigation-tree':
-    'Tree needs JavaScript: keyboard navigation and expand/collapse come from React, so the static renderedHtml is not a working tree. On non-React pages, put a nested <ul>/<li> list of links inside <div data-mg-tree data-aria-label="..."> and hydrate it with createHydrator({ selector: "[data-mg-tree]", component: Tree, fromElement }) from components/Tree.js. Mark items with unique data-id, data-expanded, and aria-current="page" on the current link. See the Tree docs for all attributes.',
+    'Tree needs JavaScript: keyboard navigation and expand/collapse come from React, so the static renderedHtml is not a working tree. On non-React pages, hydrate a nested list inside a data-mg-tree container; see the hydration field for the full contract.',
   'components-buttons-sharebuttons':
     'ShareButtons manages share URLs and clipboard state. Requires React. Can be hydrated via createHydrator with data-mg-share-buttons.',
   'components-navigation-table-of-contents':
@@ -1709,7 +1709,7 @@ npm run build</code></pre>
   },
   'components-navigation-tree': {
     description:
-      'Prototype. Accessible tree and nested hierarchy view conforming to the ARIA Treeview pattern. Supports roving tabindex, full keyboard navigation (arrows, Home, End, Enter, Space), guides, controlled/uncontrolled state, a configurable toggle icon (toggleIcon), and separate toggle buttons for linked parent sections. Requires React or hydration via createHydrator with data-mg-tree around a nested list; see reactNote.',
+      'Prototype. Accessible tree and nested hierarchy view conforming to the ARIA Treeview pattern. Supports roving tabindex, full keyboard navigation (arrows, Home, End, Enter, Space), guides, controlled/uncontrolled state, a configurable toggle icon (toggleIcon), and separate toggle buttons for linked parent sections. Requires React or hydration via createHydrator with data-mg-tree around a nested list; see the hydration field.',
     cssClasses: [
       'mg-tree',
       'mg-tree__group',
@@ -1722,6 +1722,71 @@ npm run build</code></pre>
       'is-expanded',
       'mg-tree__label',
     ],
+    hydration: {
+      note: 'renderedHtml has the tree roles but no keyboard support or expand/collapse. Render a plain nested <ul>/<li> list of links inside a data-mg-tree container and hydrate it; before JavaScript runs, the list still works as ordinary links. Theme classes (mg-theme-*) need the brand stylesheet or style-all.css.',
+      selector: '[data-mg-tree]',
+      modules: {
+        hydrate:
+          'https://assets.undrr.org/mangrove/{{version}}/components/hydrate.js',
+        component:
+          'https://assets.undrr.org/mangrove/{{version}}/components/Tree.js',
+      },
+      dataAttributes: {
+        'data-mg-tree': 'Marks the container to hydrate (required).',
+        'data-aria-label':
+          'Accessible name for the tree. Set this or data-aria-labelledby.',
+        'data-aria-labelledby': 'id of a visible heading that names the tree.',
+        'data-toggle-icon':
+          'Icon class for the expand toggles (default mg-icon-right).',
+        'data-guides': 'Show indentation guides, "true" (default) or "false".',
+        'data-selected-id':
+          'Selected item id, used when no item is marked selected.',
+        'data-class-name': 'Extra class on the tree.',
+        'li data-id':
+          'Item id. Must be unique in the tree; a repeated id gets a numeric suffix. Falls back to the li id, then its position (1-2).',
+        'li > a[href]':
+          'Link item, direct child or wrapped once (li > span > a). Its text is the label, or its aria-label or image alt if it has no text. javascript:, data: and vbscript: URLs are dropped.',
+        'li data-expanded / aria-expanded="true"':
+          'Starts expanded (items with children only).',
+        'li data-selected / a[aria-current]':
+          'Starts selected and its parent items start expanded. The first match wins. aria-current is kept on the rendered link.',
+      },
+      events: [],
+      example: `<link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css" />
+
+<script type="importmap">
+  { "imports": {
+    "react": "https://esm.sh/react@19.3.0",
+    "react-dom": "https://esm.sh/react-dom@19.3.0",
+    "react-dom/": "https://esm.sh/react-dom@19.3.0/"
+  }}
+</script>
+
+<div data-mg-tree data-aria-label="Section navigation">
+  <ul>
+    <li data-id="about">
+      <a href="/about">About</a>
+      <ul>
+        <li data-id="team"><a href="/about/team" aria-current="page">Team</a></li>
+        <li data-id="history"><a href="/about/history">History</a></li>
+      </ul>
+    </li>
+    <li data-id="topics">
+      Topics
+      <ul>
+        <li data-id="floods"><a href="/topics/floods">Floods</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<script type="module">
+  import createHydrator from 'https://assets.undrr.org/mangrove/{{version}}/components/hydrate.js';
+  import Tree, { fromElement } from 'https://assets.undrr.org/mangrove/{{version}}/components/Tree.js';
+
+  createHydrator({ selector: '[data-mg-tree]', component: Tree, fromElement });
+</script>`,
+    },
   },
 };
 
