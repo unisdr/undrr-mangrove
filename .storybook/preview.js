@@ -191,7 +191,7 @@ const preview = {
     docs: {
       source: {
         format: 'dedent',
-        // CSS-only story files (no meta.component) show rendered HTML.
+        // Story files with docs.source.html: true show rendered HTML.
         transform: transformSource,
       },
     },

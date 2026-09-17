@@ -833,6 +833,8 @@ Stories demonstrate the component's usage and variants:
 
    The `component` property is **required** in the default export — it enables autodocs prop tables and type inference.
 
+   CSS-only components have no React component to pass. Set `parameters: { docs: { source: { html: true } } }` in their default export instead, so "Show code" shows the rendered HTML to copy rather than JSX.
+
    ```jsx
    import { MyComponent } from './MyComponent';
 

@@ -4,6 +4,8 @@ export default {
   title: 'Components/Status label',
   parameters: {
     docs: {
+      // CSS only: "Show code" shows the rendered HTML.
+      source: { html: true },
       description: {
         component:
           'A workflow status shown as a coloured indicator followed by the status name. ' +

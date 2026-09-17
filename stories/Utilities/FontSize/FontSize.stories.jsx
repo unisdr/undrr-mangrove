@@ -4,6 +4,8 @@ export default {
   title: 'Components/Font size utilities',
   parameters: {
     docs: {
+      // CSS only: "Show code" shows the rendered HTML.
+      source: { html: true },
       description: {
         component:
           'Font size utility classes that apply Mangrove design tokens with responsive scaling. Base size applies on mobile; scales up at the medium breakpoint (48em).',

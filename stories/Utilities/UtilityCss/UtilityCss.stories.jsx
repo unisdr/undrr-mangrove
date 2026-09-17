@@ -4,6 +4,8 @@ export default {
   title: 'Components/Utility CSS',
   parameters: {
     docs: {
+      // CSS only: "Show code" shows the rendered HTML.
+      source: { html: true },
       description: {
         component: 'Interactive examples of all Mangrove utility CSS classes.',
       },

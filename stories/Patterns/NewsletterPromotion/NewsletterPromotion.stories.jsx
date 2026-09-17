@@ -224,7 +224,11 @@ function Promotion({
 
 export default {
   title: 'Example/Newsletter promotion',
-  parameters: { layout: 'padded' },
+  parameters: {
+    layout: 'padded',
+    // Composed from CSS classes: "Show code" shows the rendered HTML.
+    docs: { source: { html: true } },
+  },
   args: { response: 'success' },
   argTypes: {
     response: {

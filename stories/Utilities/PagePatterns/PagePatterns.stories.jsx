@@ -3,7 +3,11 @@ import { Reading } from './PagePatterns';
 
 export default {
   title: 'Components/Reading column',
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    // CSS utilities: "Show code" shows the rendered HTML.
+    docs: { source: { html: true } },
+  },
 };
 
 export const ReadingColumn = {

@@ -1,64 +1,68 @@
-import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
-
 /**
  * "Show code" source for docs pages.
  *
- * Story files without a `component` in their meta document CSS-only
- * patterns: the markup is the whole API, so consumers need HTML they can
- * paste into Drupal, Twig or a plain page. For those stories the snippet is
- * the story rendered to static HTML. Story files with a `component` keep
- * Storybook's JSX snippet.
+ * By default Storybook's own snippet is shown: JSX from args, or the story
+ * source for `render` stories. Story files for CSS-only components opt in to
+ * HTML with `parameters.docs.source.html: true` in their meta (or on one
+ * story). For those, the snippet is the story rendered to formatted static
+ * HTML that consumers can paste into Drupal, Twig or a plain page.
  *
- * Opt out per story or file with `parameters.docs.source.html: false`, or
- * force HTML for a component story with `html: true`.
+ * The renderer (react-dom/server and Prettier) is a separate chunk, fetched
+ * the first time an opted-in story's code is needed.
  */
 
-const formatHtml = async html => {
-  const [prettier, htmlPlugin] = await Promise.all([
-    import('prettier/standalone'),
-    import('prettier/plugins/html'),
-  ]);
-  const formatted = await prettier.format(html, {
-    parser: 'html',
-    plugins: [htmlPlugin],
-    printWidth: 80,
-    tabWidth: 2,
-    htmlWhitespaceSensitivity: 'ignore',
-  });
-  return formatted.trim();
-};
+const loadRenderer = () =>
+  import(/* webpackChunkName: "docs-source-render" */ './docsSourceRender');
+
+const DEFAULT_CACHE_SIZE = 100;
+
+const wantsHtml = storyContext =>
+  storyContext.parameters?.docs?.source?.html === true;
 
 /**
- * Render a story's own markup (without global decorators) to formatted HTML.
+ * Build a cache key from the story id, all globals and the args.
+ *
+ * Functions, symbols and React elements cannot be serialised faithfully, so
+ * any of them in args or globals means the result is not cached.
  *
  * @param {object} storyContext Storybook story context.
- * @param {Function} [format] Formats an HTML string; defaults to Prettier.
- * @returns {Promise<string>} Formatted HTML, or '' when the story renders nothing.
+ * @returns {string|undefined} The key, or undefined when not cacheable.
  */
-export const renderStoryToHtml = async (storyContext, format = formatHtml) => {
-  const { originalStoryFn, args } = storyContext;
-  // Render inside a component so stories that call React hooks work.
-  const StorySource = () => originalStoryFn(args, storyContext);
-  const markup = renderToStaticMarkup(React.createElement(StorySource));
-  return markup.trim() ? (await format(markup)).trim() : '';
-};
-
-const wantsHtml = storyContext => {
-  const preference = storyContext.parameters?.docs?.source?.html;
-  if (typeof preference === 'boolean') return preference;
-  return !storyContext.component;
+export const cacheKey = storyContext => {
+  try {
+    return JSON.stringify(
+      [storyContext.id, storyContext.globals ?? {}, storyContext.args ?? {}],
+      (name, value) => {
+        if (
+          typeof value === 'function' ||
+          typeof value === 'symbol' ||
+          (value && typeof value === 'object' && '$$typeof' in value)
+        ) {
+          throw new Error('Not serialisable');
+        }
+        return value;
+      }
+    );
+  } catch {
+    return undefined;
+  }
 };
 
 /**
  * Create a `parameters.docs.source.transform` function.
  *
  * @param {object} [options]
- * @param {Function} [options.format] Formats an HTML string; defaults to Prettier.
+ * @param {Function} [options.load] Resolves to the renderer module; defaults
+ *   to a lazy import of `./docsSourceRender`.
+ * @param {number} [options.cacheSize] Most rendered snippets to keep.
  * @returns {Function} Transform taking (code, storyContext) and returning the
  *   snippet to show, or a promise of it.
  */
-export const createSourceTransform = ({ format = formatHtml } = {}) => {
+export const createSourceTransform = ({
+  load = loadRenderer,
+  cacheSize = DEFAULT_CACHE_SIZE,
+} = {}) => {
+  // Least recently used first: Map keeps insertion order.
   const cache = new Map();
 
   return (code, storyContext) => {
@@ -69,23 +73,11 @@ export const createSourceTransform = ({ format = formatHtml } = {}) => {
       return code;
     }
 
-    // The docs Source block calls the transform on every render, so reuse the
-    // result for the same story, locale and args.
-    let key;
-    try {
-      key = JSON.stringify([
-        storyContext.id,
-        storyContext.globals?.locale,
-        storyContext.args,
-      ]);
-    } catch {
-      key = undefined;
-    }
-
     const render = () =>
       // Wrapped so a synchronous throw also becomes a rejected promise.
       Promise.resolve()
-        .then(() => renderStoryToHtml(storyContext, format))
+        .then(load)
+        .then(renderer => renderer.renderStoryToHtml(storyContext))
         .catch(error => {
           // Stories that need the live preview (Storybook hooks, DOM access)
           // cannot render on their own; fall back to the story source.
@@ -96,13 +88,24 @@ export const createSourceTransform = ({ format = formatHtml } = {}) => {
           return '';
         });
 
+    // The docs Source block calls the transform on every render, so reuse the
+    // result for the same story, globals and args.
+    const key = cacheKey(storyContext);
     if (key === undefined) {
       return render().then(html => html || code);
     }
-    if (!cache.has(key)) {
-      cache.set(key, render());
+
+    let result = cache.get(key);
+    if (result) {
+      cache.delete(key);
+    } else {
+      result = render();
     }
-    return cache.get(key).then(html => html || code);
+    cache.set(key, result);
+    while (cache.size > cacheSize) {
+      cache.delete(cache.keys().next().value);
+    }
+    return result.then(html => html || code);
   };
 };
 

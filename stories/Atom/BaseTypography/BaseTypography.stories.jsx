@@ -466,6 +466,8 @@ export default {
   title: 'Components/Typography',
   parameters: {
     viewMode: 'docs',
+    // Base HTML elements: "Show code" shows the rendered HTML.
+    docs: { source: { html: true } },
     previewTabs: {
       canvas: { hidden: true },
     },

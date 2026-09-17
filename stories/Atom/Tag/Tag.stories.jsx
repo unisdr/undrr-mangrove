@@ -5,6 +5,8 @@ export default {
   title: 'Components/Tag',
   parameters: {
     docs: {
+      // CSS only: "Show code" shows the rendered HTML.
+      source: { html: true },
       description: {
         component:
           'A compact tag used to categorise content (content type, country, theme, etc.). ' +

@@ -4,6 +4,8 @@ export default {
   title: 'Components/Empty state',
   parameters: {
     docs: {
+      // CSS only: "Show code" shows the rendered HTML.
+      source: { html: true },
       description: {
         component:
           'What a list, table, chart or dashboard tile shows when it has nothing to show. ' +
