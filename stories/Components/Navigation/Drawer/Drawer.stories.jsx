@@ -67,15 +67,18 @@ const PublicationFiltersFooter = () => (
   </div>
 );
 
+// Illustrative figures. No country is named and no submission is described,
+// because a screenshot of a UNDRR component library reads as a real reporting
+// figure for whichever Member State it names.
 const ReportDetails = () => (
   <>
     <p>
-      Philippines submitted its latest Sendai Framework Monitor report in March
-      2026, covering disaster losses for the 2025 reporting year.
+      Sample data. A country profile uses a drawer like this to summarise the
+      latest Sendai Framework Monitor submission without leaving the page.
     </p>
     <dl>
       <dt>Reporting focal point</dt>
-      <dd>Office of Civil Defence</dd>
+      <dd>National disaster management authority</dd>
       <dt>Last updated</dt>
       <dd>12 March 2026</dd>
       <dt>Indicators reported</dt>
@@ -184,14 +187,14 @@ export const End = {
     </DrawerDemo>
   ),
   args: {
-    title: 'Philippines: report details',
+    title: 'Country report details (sample data)',
     position: 'end',
   },
   parameters: {
     docs: {
       description: {
         story:
-          '`start` and `end` follow text direction, so both swap sides in right-to-left layouts. Switch the locale toolbar to Arabic to see it.',
+          '`start` and `end` follow text direction, so both swap sides in right-to-left layouts. Switch the locale toolbar to Arabic to see it. The figures are sample data, not a real country submission.',
       },
     },
   },
