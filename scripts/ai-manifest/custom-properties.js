@@ -266,7 +266,7 @@ export const PROPERTY_DOCS = {
   '--mg-mega-enter-offset':
     'Inline distance the mobile sidebar slides in from. The component flips its sign in RTL.',
   '--mg-mega-mobile-viewport':
-    'Viewport height the mobile sidebar is bounded against, so the panel never fills the screen.',
+    "Viewport height the mobile sidebar is bounded against, so the panel never fills the screen. Only .mg-mega-mobile-sidebar--progressive declares it, at 90vh and at 90dvh where dynamic viewport units are supported, so it has no value at rest and no `default` here; set it on that element itself, because the component's own declaration beats an inherited one.",
 
   // OnThisPageNav
   '--mg-on-this-page-nav-offset':
@@ -278,9 +278,9 @@ export const PROPERTY_DOCS = {
   '--mg-tree-item-color--selected':
     'Label colour on the selected item. It is the text colour, not the interactive colour, because the interactive blue does not clear 4.5:1 on the selected tint in every theme.',
   '--mg-tree-group-indent':
-    'Indent of a nested group on .mg-tree--guides, measured from the parent row.',
+    "Indent of a nested group on .mg-tree--guides, measured from the parent row. Only .mg-tree--guides .mg-tree__group declares it, so it has no value at rest and no `default` here; set it on that element, because the component's own declaration beats an inherited one.",
   '--mg-tree-guide-offset':
-    'Distance from the parent row to the dashed guide line on .mg-tree--guides. The group padding gives the same amount back, so child rows keep their position.',
+    "Distance from the parent row to the dashed guide line on .mg-tree--guides. The group padding gives the same amount back, so child rows keep their position. Only .mg-tree--guides .mg-tree__group declares it, so it has no value at rest and no `default` here; set it on that element, because the component's own declaration beats an inherited one.",
 
   // Notice
   '--mg-notice-bg':
