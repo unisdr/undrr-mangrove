@@ -291,6 +291,7 @@ function SyndicationSearchWidgetInner() {
 
   return (
     <div
+      id={widgetId}
       className={`mg-search-widget ${isLoading || isPending ? 'mg-search-widget--loading' : ''}`}
       data-mg-search-widget
       data-mg-search-debug={showSearchMetrics ? 'true' : undefined}

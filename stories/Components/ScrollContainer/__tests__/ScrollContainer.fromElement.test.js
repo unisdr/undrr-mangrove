@@ -89,6 +89,96 @@ describe('scrollContainerFromElement', () => {
     expect(props.children[0]).toBe('<p>Some content</p>');
   });
 
+  it('reads each container on a page with two of them', () => {
+    document.body.innerHTML = `
+      <div id="first" data-mg-scroll-container>
+        <div class="mg-scroll__content">
+          <div class="card">First A</div>
+          <div class="card">First B</div>
+        </div>
+      </div>
+      <div id="second" data-mg-scroll-container>
+        <div class="mg-scroll__content">
+          <div class="card">Second A</div>
+        </div>
+      </div>
+    `;
+
+    const first = scrollContainerFromElement(
+      document.getElementById('first')
+    ).children;
+    const second = scrollContainerFromElement(
+      document.getElementById('second')
+    ).children;
+
+    expect(first).toHaveLength(2);
+    expect(first[0]).toContain('First A');
+    expect(first[1]).toContain('First B');
+    expect(second).toHaveLength(1);
+    expect(second[0]).toContain('Second A');
+    expect(second.join('')).not.toContain('First');
+
+    document.body.innerHTML = '';
+  });
+
+  it('ignores a content wrapper that belongs to a nested scroll container', () => {
+    const html = `
+      <p>Outer content</p>
+      <div data-mg-scroll-container>
+        <div class="mg-scroll__content">
+          <div class="card">Nested card</div>
+        </div>
+      </div>
+    `;
+    const container = createContainer({}, html);
+    const props = scrollContainerFromElement(container);
+
+    // The outer container has no wrapper of its own, so it keeps all of its
+    // markup rather than adopting the nested container's cards.
+    expect(props.children).toHaveLength(1);
+    expect(props.children[0]).toContain('Outer content');
+    expect(props.children[0]).toContain('Nested card');
+  });
+
+  it('prefers its own wrapper over a nested one', () => {
+    const html = `
+      <div class="mg-scroll__content">
+        <div class="card">Own card</div>
+      </div>
+      <div data-mg-scroll-container>
+        <div class="mg-scroll__content">
+          <div class="card">Nested card</div>
+        </div>
+      </div>
+    `;
+    const container = createContainer({}, html);
+    const props = scrollContainerFromElement(container);
+
+    expect(props.children).toHaveLength(1);
+    expect(props.children[0]).toContain('Own card');
+  });
+
+  it('prefers a direct-child wrapper over a deeper one earlier in the markup', () => {
+    // Document order puts the deeper wrapper first, so only the direct-child
+    // preference picks the container's own wrapper here.
+    const html = `
+      <section class="promo">
+        <div class="mg-scroll__content">
+          <div class="card">Deep card</div>
+        </div>
+      </section>
+      <div class="mg-scroll__content">
+        <div class="card">Own card</div>
+      </div>
+    `;
+    const container = createContainer({}, html);
+    const props = scrollContainerFromElement(container);
+
+    expect(props.children).toHaveLength(1);
+    expect(props.children[0]).toContain('Own card');
+    expect(props.children[0]).not.toContain('Deep card');
+  });
+
   it('returns empty children for empty container', () => {
     const container = createContainer();
     const props = scrollContainerFromElement(container);

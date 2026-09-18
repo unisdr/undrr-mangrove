@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import createHydrator from '../../../src/hydrate';
 import ScrollContainer from './ScrollContainer.jsx';
+import scrollContainerFromElement from './ScrollContainer.fromElement.js';
 import {
   ScrollExampleCard,
   scrollCardExamples,
@@ -126,5 +128,61 @@ export const WithCustomStepSize = {
     showArrows: true,
     stepSize: 200,
     itemWidth: '350px',
+  },
+};
+
+const hydrationRow = (rowLabel, itemLabel) => `
+  <h3 class="mg-heading-300">${rowLabel}</h3>
+  <div data-mg-scroll-container data-show-arrows="true" data-item-width="240px" data-padding="16">
+    <div class="mg-scroll__content">
+      ${[1, 2, 3, 4, 5, 6]
+        .map(
+          card => `<div style="padding:1rem;min-width:220px;border:1px solid #767676">
+            <p><strong>${itemLabel} ${card}</strong></p>
+            <p>Server-rendered card, hydrated in place.</p>
+          </div>`
+        )
+        .join('')}
+    </div>
+  </div>`;
+
+const HYDRATION_MARKUP =
+  hydrationRow('Row one', 'First row card') +
+  hydrationRow('Row two', 'Second row card');
+
+const TwoOnOnePageDemo = () => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const host = ref.current;
+    host.innerHTML = HYDRATION_MARKUP;
+    const hydrator = createHydrator({
+      selector: '[data-mg-scroll-container]',
+      component: ScrollContainer,
+      fromElement: scrollContainerFromElement,
+    });
+    return () => {
+      // Unmount outside React's commit phase to avoid unmounting one root
+      // while another is still rendering.
+      setTimeout(() => {
+        hydrator.unmountAll();
+        host.innerHTML = '';
+      });
+    };
+  }, []);
+
+  return <div ref={ref} />;
+};
+
+export const TwoHydratedOnOnePage = {
+  name: 'Two hydrated on one page',
+  render: () => <TwoOnOnePageDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Two server-rendered scroll containers hydrated with `createHydrator`. Each row keeps its own cards: the content lookup reads only the container it is hydrating.',
+      },
+    },
   },
 };
