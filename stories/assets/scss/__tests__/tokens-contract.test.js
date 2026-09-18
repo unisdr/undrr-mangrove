@@ -1362,6 +1362,19 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.3 — .mg-quote-highlight--light tints both the fill and the text',
   },
 
+  // --- Hub header: hub-header.scss ---------------------------------------
+  //
+  // Every link and heading in the header is --mg-hub-header-ink, white, on
+  // --mg-hub-header-surface. The secondary surface is the same orange accent
+  // the hero and the CTA use, so the header inherits the same failure.
+  {
+    name: 'hub header text on the secondary surface',
+    fg: '--mg-color-neutral-0',
+    bg: ['--mg-color-hero--secondary'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-hub-header--surface-secondary paints links and headings white on the banner',
+  },
+
   // --- Notice actions: notice.scss ----------------------------------------
   //
   // ServiceNotice's status link is an outline secondary button inside the
@@ -1648,6 +1661,10 @@ const WCAG_EXCEPTIONS = {
         `${theme}|author image title, secondary variant`,
         [2.65, 'orange-800 ink on white; the same token read as text'],
       ],
+      [
+        `${theme}|hub header text on the secondary surface`,
+        [2.65, 'white header links and headings on orange-800'],
+      ],
     ])
   ),
 
@@ -1780,6 +1797,10 @@ const PERCEPTUAL_EXCEPTIONS = {
       [
         `${theme}|author image title, secondary variant`,
         [42.5, 'orange-800 ink on white'],
+      ],
+      [
+        `${theme}|hub header text on the secondary surface`,
+        [42.5, 'white header links and headings on orange-800'],
       ],
     ])
   ),
