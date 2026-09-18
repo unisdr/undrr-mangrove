@@ -14,6 +14,10 @@ import React from 'react';
 import { act } from 'react';
 import createHydrator from '../hydrate';
 
+// act() only gives its flush guarantee when the environment opts in; without
+// this React logs "not configured to support act(...)" on every render.
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
 /** Mirrors the widget: the rendered root repeats the hydration marker. */
 function MarkerRenderingComponent({ text }) {
   return React.createElement(
@@ -35,8 +39,7 @@ beforeEach(() => {
 
 describe('createHydrator nested-marker handling', () => {
   it('leaves exactly one root when update() re-scans a component that renders its own marker', () => {
-    document.body.innerHTML =
-      '<div data-mg-widget data-text="one"></div>';
+    document.body.innerHTML = '<div data-mg-widget data-text="one"></div>';
 
     let hydrator;
     act(() => {
@@ -62,8 +65,7 @@ describe('createHydrator nested-marker handling', () => {
   });
 
   it('still hydrates markup added after the first pass', () => {
-    document.body.innerHTML =
-      '<div data-mg-widget data-text="one"></div>';
+    document.body.innerHTML = '<div data-mg-widget data-text="one"></div>';
 
     let hydrator;
     act(() => {
@@ -122,9 +124,77 @@ describe('createHydrator nested-marker handling', () => {
     expect(document.querySelectorAll('.inner-plain')).toHaveLength(1);
   });
 
+  it('skips markup a consumer appends inside an already-hydrated container', () => {
+    document.body.innerHTML = '<div id="host" data-mg-widget></div>';
+
+    let hydrator;
+    act(() => {
+      hydrator = createHydrator({
+        selector: '[data-mg-widget]',
+        component: PlainComponent,
+        fromElement,
+      });
+    });
+
+    // Everything below a hydrated container belongs to React, so markup put
+    // there is not a hydration target: the consumer must add it outside the
+    // container, or unmountAll() first.
+    const added = document.createElement('div');
+    added.setAttribute('data-mg-widget', '');
+    document.getElementById('host').appendChild(added);
+
+    let newRoots;
+    act(() => {
+      newRoots = hydrator.update();
+    });
+
+    expect(newRoots).toHaveLength(0);
+    expect(added.dataset.mgHydrated).toBeUndefined();
+  });
+
+  it('hydrates inside a detached context, which is scoped by contains() not isConnected', () => {
+    let hydrator;
+    act(() => {
+      hydrator = createHydrator({
+        selector: '[data-mg-widget]',
+        component: PlainComponent,
+        fromElement,
+      });
+    });
+
+    // A fragment the consumer builds off-document and hydrates before
+    // inserting it. The detached-node check is scoped to the scan context, so
+    // this still works.
+    const fragment = document.createDocumentFragment();
+    const inFragment = document.createElement('div');
+    inFragment.setAttribute('data-mg-widget', '');
+    fragment.appendChild(inFragment);
+
+    let fragmentRoots;
+    act(() => {
+      fragmentRoots = hydrator.update(fragment);
+    });
+
+    expect(fragmentRoots).toHaveLength(1);
+    expect(inFragment.dataset.mgHydrated).toBe('true');
+
+    // Same for an element subtree that is not in the document.
+    const detached = document.createElement('div');
+    detached.innerHTML = '<div data-mg-widget id="detached-child"></div>';
+
+    let detachedRoots;
+    act(() => {
+      detachedRoots = hydrator.update(detached);
+    });
+
+    expect(detachedRoots).toHaveLength(1);
+    expect(detached.querySelector('#detached-child').dataset.mgHydrated).toBe(
+      'true'
+    );
+  });
+
   it('unmountAll then a fresh scan re-hydrates the original container once', () => {
-    document.body.innerHTML =
-      '<div data-mg-widget data-text="one"></div>';
+    document.body.innerHTML = '<div data-mg-widget data-text="one"></div>';
 
     let hydrator;
     act(() => {
