@@ -192,6 +192,7 @@ Each component gets its own JSON file (roughly 0.3-21 KB) with some of:
 - **Story examples** with JSX code snippets (from Storybook)
 - **Rendered HTML** — copy-pasteable HTML showing the actual DOM structure. Some components are auto-rendered from the built React bundles using `renderToStaticMarkup`; others have curated HTML examples.
 - **CSS classes** — list of the classes the component uses. Only curated components carry this (about a third of the files); `renderedHtml` is on roughly three quarters. Check for the key rather than assuming it is there.
+- **CSS custom properties** — under `customProperties`, the properties the component exposes for theming. Present on the 20 components that have any; the index entry carries the count. See below.
 - **Changelog** — structured version history with release dates, notes, and PR links (from the component's MDX docs)
 - **Branding flags** — `doNotModify` warnings on components like PageHeader and Footer where the markup is a UNDRR branding requirement
 
@@ -200,6 +201,26 @@ Components with syndication support (Footer) include a `vanillaHtmlEmbed` field 
 Components whose static `renderedHtml` is not interactive on its own (ServiceNotice) include a `hydration` field: the container selector, CDN module URLs, every `data-*` attribute, the custom events the component dispatches, and a complete vanilla HTML example (stylesheet, import map, container and module script). Module and stylesheet URLs carry the current package version. The index entry for such a component has `hydration: true`, and `yarn validate-manifest` fails if a curated `hydration` object is missing `selector`, `modules` or `example`. Curate it in `scripts/ai-manifest/component-data.js`, using `{{version}}` in URLs like the rest of the curated data.
 
 Components enhanced by a dependency-free module from `/js/` instead of React (the `.mg-switch` pending state on Checkbox) use a `vanillaModule` field with the same shape and validation. It needs neither React, `hydrate.js` nor an import map, so it is kept apart from `hydration`, and the index flags it `vanillaModule: true`.
+
+### CSS custom properties (`customProperties`)
+
+A component's custom properties are how it is restyled. Writing rules against its classes instead is more fragile — a rule of equal specificity replaces what the component draws, and several components build their geometry on a property the rule would then be fighting. They are **not** in `tokens.json`, which is a theme token dictionary; they are in each component's detail file.
+
+Each record carries the property name, what it does, its resting value, and one of two types:
+
+- `type: "default"` — the stylesheet already gives it the value in `default`. Setting it replaces that value.
+- `type: "hook"` — no stylesheet defines it. `default` is the fallback it resolves to, and a wrapper, an inline style or a React prop supplies the real value. `--mg-icon-fg` is one: IconCard's `iconFgColor` prop sets it.
+
+```json
+{
+  "name": "--mg-status-label-indicator-size",
+  "type": "default",
+  "description": "Size of the indicator. Every shape is a multiple of it, and the wider shapes are pulled back with a compensating margin so each one occupies the same inline space.",
+  "default": "0.875rem"
+}
+```
+
+The names, types and defaults are extracted from the compiled CSS bundles on every build, so a renamed property or a changed default reaches the manifest with no edit. Only the descriptions are written by hand, in `scripts/ai-manifest/custom-properties.js`. `yarn validate-manifest` fails on a description for a property the CSS no longer has, on a property the CSS exposes that nothing describes, and on one that belongs to no component — so the list cannot go quietly stale in either direction.
 
 ### CSS utilities (`ai-components/utilities.json`)
 
@@ -244,7 +265,7 @@ generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilitie
 
 `generate-ai-manifest.js` auto-renders React components from `dist/` using `renderToStaticMarkup`, then merges four data sources: the Storybook manifest (props, types), auto-rendered HTML, curated data from `component-data.js` (descriptions, CSS classes, flags, page templates), and release/changelog data from `CHANGELOG.md` via `parse-changelog.js`. Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs fall back to curated HTML examples. When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns, and PropTypes coverage.
 
-The pipeline is 4 files in `scripts/ai-manifest/`: `generate-ai-manifest.js`, `parse-changelog.js`, `component-data.js`, and `css-utilities.js`.
+The pipeline is 5 files in `scripts/ai-manifest/`: `generate-ai-manifest.js`, `parse-changelog.js`, `component-data.js`, `css-utilities.js`, and `custom-properties.js`.
 
 To regenerate by hand:
 

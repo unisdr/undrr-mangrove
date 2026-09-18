@@ -1,0 +1,501 @@
+// Component CSS custom properties for the AI manifest.
+//
+// A component's custom properties are its theming API: the supported way to
+// restyle it without writing rules that fight its own. `tokens.json` covers
+// the THEME tokens only — the --mg-* properties generated from tokens/*.yaml —
+// so component-scoped properties appeared nowhere machine-readable and a
+// consuming team had to grep the compiled CSS to find them
+// (unisdr/undrr-mangrove#1200, #1207).
+//
+// How the list is produced: hybrid, extraction-first.
+//
+//   Names, kinds and defaults are EXTRACTED from the compiled CSS bundles in
+//   stories/assets/css/. That is the artefact consumers actually load, so a
+//   property that is renamed, removed or given a new default changes the
+//   manifest on the next build with no edit here. Prose is AUTHORED below,
+//   because no stylesheet can say what a property is for.
+//
+//   Nothing goes stale silently: every extracted property must be claimed by a
+//   component (OWNERS) and described (PROPERTY_DOCS) or listed in NOT_PUBLIC
+//   with a reason, and every description must match a property the CSS really
+//   has. `yarn validate-manifest` fails on any of those, in both directions.
+//
+// Two kinds, the same distinction
+// stories/assets/scss/__tests__/custom-properties-defined.test.js draws:
+//
+//   type: 'default' — the stylesheet defines it, so it already has a value and
+//                     an override replaces that value.
+//   type: 'hook'    — nothing defines it. It resolves to its var() fallback,
+//                     or to nothing at all, until a wrapper, an inline style,
+//                     a prop or a consuming page sets it.
+
+import fs from 'fs';
+import path from 'path';
+
+// A --mg-* custom property name, rejecting the interpolated fragments
+// (`--mg-color-#{$name}`) that a plain regex over SCSS would otherwise catch.
+const PROPERTY_NAME = /^--mg-[A-Za-z0-9]+(?:-{1,2}[A-Za-z0-9]+)*$/;
+
+// Properties that are global rather than component-scoped, and so belong to
+// the theme layer even though tokens.json does not list them: the data-viz
+// palettes and Sendai ramps from _tokens-data-viz.scss, the font roles, and
+// the legacy one-off colours. `--mg-color-*` and `--mg-font-family-*` are
+// page-wide by definition.
+const GLOBAL_PREFIXES = [
+  '--mg-color-',
+  '--mg-dataviz-',
+  '--mg-font-family-',
+  '--mg-sendai-',
+];
+
+// Properties the CSS exposes that are NOT public API, each with the reason.
+// Listing one here is how a property opts out of the "exposed but not
+// documented" check; anything not listed and not described fails validation.
+export const NOT_PUBLIC = {
+  '--mg-gutenberg-spacer':
+    'Declared on .mg-footer and read by nothing. A leftover of the Gutenberg spacing work that --mg-container-spacer replaced; see the note in Container/container.scss.',
+};
+
+// Which component owns which properties.
+//
+// A key is a Storybook component ID, as in component-data.js. A value is a
+// list of matchers: one ending in "-" claims every property starting with it,
+// anything else claims that exact name.
+export const OWNERS = {
+  'components-images-author-image': ['--mg-author-image-'],
+  'components-buttons-buttons': ['--mg-cta-arrow-shift'],
+  'components-cards-icon-card': [
+    '--mg-card-border',
+    '--mg-card-icon-size',
+    '--mg-icon-bg',
+    '--mg-icon-fg',
+  ],
+  'components-cta': ['--mg-cta-accent', '--mg-cta-bg'],
+  'components-dataviz-legend': ['--mg-legend-tick-pos'],
+  'components-empty-state': ['--mg-empty-state-'],
+  'components-forms-checkbox': ['--mg-switch-'],
+  'components-hero-hero': ['--mg-hero-'],
+  'components-icons': ['--mg-icon-svg'],
+  'components-navigation-drawer': ['--mg-drawer-'],
+  'components-navigation-megamenu': ['--mg-mega-'],
+  'components-navigation-on-this-page-nav': ['--mg-on-this-page-nav-'],
+  'components-navigation-tree': ['--mg-tree-'],
+  'components-notice-notice': ['--mg-notice-'],
+  'components-reading-column': ['--mg-reading-with-contents-width'],
+  'components-showmore': ['--mg-show-more-'],
+  'components-status-label': ['--mg-status-label-'],
+  'components-tabs': ['--mg-tab-'],
+  'components-tag': ['--mg-tag-'],
+  'patterns-content-hub': ['--mg-hub-header-'],
+};
+
+// What each property is for. One sentence where one will do; the extracted
+// default is not repeated here, because the generator carries it separately
+// and a repeated value is a value that goes stale.
+export const PROPERTY_DOCS = {
+  // AuthorImage
+  '--mg-author-image-accent': 'Colour of the ring drawn around the avatar.',
+  '--mg-author-image-avatar-size': 'Width and height of the circular avatar.',
+  '--mg-author-image-hover-tint':
+    'Colour of the gradient tint laid over the avatar on hover.',
+
+  // Buttons (CTA button)
+  '--mg-cta-arrow-shift':
+    'Inline distance the CTA arrow travels on hover. The component sets it only where motion is welcome and flips its sign in RTL, so override the distance rather than the translate shorthand, which also carries the vertical centring.',
+
+  // IconCard — every one is an input hook the React props set inline
+  '--mg-card-border':
+    'Colour of the 2px border on .mg-card__icon--bordered. The borderColor prop sets it as an inline style.',
+  '--mg-card-icon-size':
+    'Size of the card visual on the variants that own it, such as the horizontal card. The iconSize prop sets it as an inline style.',
+  '--mg-icon-bg':
+    'Background colour of .mg-card__icon-wrap--colored. The iconColor prop sets it as an inline style; unset, the badge paints no fill.',
+  '--mg-icon-fg':
+    'Glyph colour of the card icon. The iconFgColor prop sets it as an inline style.',
+
+  // TextCta
+  '--mg-cta-accent':
+    'Accent colour of the CTA banner. The --primary, --secondary, --tertiary and --quaternary modifiers re-point it at the matching hero colour.',
+  '--mg-cta-bg':
+    'Background colour of the CTA banner. Nothing declares it, so the banner stays transparent until a wrapper or an inline style sets it.',
+
+  // Legend
+  '--mg-legend-tick-pos':
+    'Position of one tick along the legend ramp — inline start on the horizontal legend, block start on the vertical one. Set per tick as an inline style.',
+
+  // EmptyState
+  '--mg-empty-state-gap':
+    'Vertical rhythm between the glyph, the title, the description and the actions.',
+  '--mg-empty-state-padding': 'Padding inside the empty state.',
+  '--mg-empty-state-max-inline-size':
+    'Measure the description text is held to.',
+  '--mg-empty-state-title-font-size': 'Size of the title.',
+  '--mg-empty-state-title-color': 'Colour of the title.',
+  '--mg-empty-state-text-font-size': 'Size of the description.',
+  '--mg-empty-state-text-color': 'Colour of the description.',
+  '--mg-empty-state-media-size': 'Size of the glyph box above the message.',
+  '--mg-empty-state-media-color':
+    'Colour of the glyph. The glyph is decorative, but the default still clears 3:1 so it stays legible on a tinted panel.',
+  '--mg-empty-state-actions-gap': 'Space between the action buttons.',
+  '--mg-empty-state-panel-background':
+    'Fill of the .mg-empty-state--panel variant.',
+  '--mg-empty-state-panel-radius':
+    'Corner radius of the .mg-empty-state--panel variant.',
+  '--mg-empty-state-compact-padding':
+    'Padding on the .mg-empty-state--compact variant.',
+  '--mg-empty-state-compact-media-size':
+    'Glyph box on the .mg-empty-state--compact variant.',
+  '--mg-empty-state-compact-font-size':
+    'Text size on the .mg-empty-state--compact variant.',
+
+  // Switch (documented on the Checkbox page)
+  '--mg-switch-size':
+    'Size of the whole switch. Set this one unless you need a single part on its own — the track, the thumb, the thumb travel and the pending ring all derive from it, in both directions.',
+  '--mg-switch-track-block-size': 'Height of the track.',
+  '--mg-switch-track-inline-size': 'Width of the track.',
+  '--mg-switch-track-inset':
+    'Space around the thumb, drawn as a transparent border. It is what the error state and forced colours colour.',
+  '--mg-switch-thumb-size': 'Size of the thumb.',
+  '--mg-switch-track-background': 'Track fill at rest.',
+  '--mg-switch-track-background--checked': 'Track fill when the switch is on.',
+  '--mg-switch-track-border-color--error':
+    'Boundary colour of the track in the error state.',
+  '--mg-switch-thumb-background': 'Thumb fill.',
+  '--mg-switch-track-overlay--pending':
+    'Overlay laid over the track while a change is saving.',
+  '--mg-switch-track-overlay--disabled':
+    'Overlay laid over the track when the switch is disabled.',
+  '--mg-switch-pending-ring-color': 'Colour of the pending progress ring.',
+  '--mg-switch-pending-ring-gap-color':
+    'Colour of the gap behind the pending progress ring.',
+
+  // Hero
+  '--mg-hero-cta-color':
+    'Colour of the hero CTA button. Each colour variant re-points it.',
+  '--mg-hero-gradient-color':
+    'Base colour of the overlay gradient. Each colour variant re-points it.',
+  '--mg-hero-gradient-start': 'Alpha of the overlay gradient at its start.',
+  '--mg-hero-gradient-middle': 'Alpha of the overlay gradient at its midpoint.',
+  '--mg-hero-gradient-end': 'Alpha of the overlay gradient at its end.',
+  '--mg-hero-link-color':
+    'Colour of links inside the hero text regions. It does not reach author-provided media HTML.',
+
+  // Icons
+  '--mg-icon-svg':
+    'The icon artwork, as an SVG data URI, used as the mask — or as the background image on .mg-icon--multicolor. Each .mg-icon--<name> class sets it, so choose an icon by class; set it yourself only to introduce artwork Mangrove does not ship.',
+
+  // Drawer
+  '--mg-drawer-size':
+    'Width of a start or end drawer, height of a bottom drawer.',
+  '--mg-drawer-offset':
+    'Translation that holds the drawer off-screen while it is closed. The component flips it per edge and per text direction, so set the size instead unless you are replacing that behaviour deliberately.',
+
+  // MegaMenu
+  '--mg-mega-enter-offset':
+    'Inline distance the mobile sidebar slides in from. The component flips its sign in RTL.',
+  '--mg-mega-mobile-viewport':
+    'Viewport height the mobile sidebar is bounded against, so the panel never fills the screen.',
+
+  // OnThisPageNav
+  '--mg-on-this-page-nav-offset':
+    'Docking offset for a fixed header above the nav. Accepts any CSS length, and the scroll position calculations use it too. Nothing declares it, so set it in your theme CSS to dock below a sticky header.',
+
+  // Tree
+  '--mg-tree-item-background--hover': 'Row tint on hover.',
+  '--mg-tree-item-background--selected': 'Row tint on the selected item.',
+  '--mg-tree-item-color--selected':
+    'Label colour on the selected item. It is the text colour, not the interactive colour, because the interactive blue does not clear 4.5:1 on the selected tint in every theme.',
+  '--mg-tree-group-indent':
+    'Indent of a nested group on .mg-tree--guides, measured from the parent row.',
+  '--mg-tree-guide-offset':
+    'Distance from the parent row to the dashed guide line on .mg-tree--guides. The group padding gives the same amount back, so child rows keep their position.',
+
+  // Notice
+  '--mg-notice-bg':
+    'Panel fill. Each status modifier (--warning, --negative, --positive) re-points it, so set it on .mg-notice or an ancestor rather than per modifier.',
+  '--mg-notice-border-color': 'Border colour, re-pointed by each status.',
+  '--mg-notice-border-width':
+    'Width of the leading edge that carries the status. --prominent widens it, --overlay narrows it.',
+  '--mg-notice-icon-color': 'Colour of the status icon.',
+
+  // Reading column
+  '--mg-reading-with-contents-width':
+    'Maximum inline size of the .mg-reading--with-contents layout: the text measure, the gap and the side rail together.',
+
+  // ShowMore
+  '--mg-show-more-height':
+    'Collapsed height of a truncated block. The fade mask is derived from it, so setting this is enough.',
+
+  // StatusLabel
+  '--mg-status-label-color': 'Colour of the label text.',
+  '--mg-status-label-font-size': 'Size of the label text.',
+  '--mg-status-label-gap': 'Space between the indicator and the text.',
+  '--mg-status-label-indicator-size':
+    'Size of the indicator. Every shape is a multiple of it, and the wider shapes are pulled back with a compensating margin so each one occupies the same inline space.',
+  '--mg-status-label-indicator-radius':
+    'Corner radius of the base indicator. It rounds the base and published circles only; the other five shapes set their own geometry.',
+  '--mg-status-label-indicator-border-width':
+    'Width of the ring, the same on every edge of all seven shapes. Set it to 0 to drop the ring, bearing in mind it is the only part of the four pale marks clearing 3:1.',
+  '--mg-status-label-indicator-border-color': 'Colour of the ring.',
+  '--mg-status-label-indicator':
+    'Fill of the base indicator, with no modifier.',
+  '--mg-status-label-indicator--draft': 'Fill of the draft indicator.',
+  '--mg-status-label-indicator--waiting-information':
+    'Fill of the waiting-for-more-information indicator.',
+  '--mg-status-label-indicator--waiting-validation':
+    'Fill of the waiting-for-validation indicator.',
+  '--mg-status-label-indicator--published': 'Fill of the published indicator.',
+  '--mg-status-label-indicator--warning':
+    'Fill of the warning / degraded indicator, shared with ServiceNotice.',
+  '--mg-status-label-indicator--negative':
+    'Fill of the negative / offline indicator, shared with ServiceNotice.',
+  '--mg-status-label-indicator-ring':
+    'Internal. Carries the ring width into the inner polygons of the clip-path shapes. Set --mg-status-label-indicator-border-width instead.',
+
+  // Tabs
+  '--mg-tab-color': 'Label colour of a tab at rest.',
+  '--mg-tab-color--hover': 'Label colour of a tab on hover.',
+  '--mg-tab-color--active': 'Label colour of the active tab.',
+  '--mg-tab-background--hover': 'Tab fill on hover.',
+  '--mg-tab-background--active': 'Tab fill on the active tab.',
+  '--mg-tab-indicator--hover': 'Indicator colour on hover.',
+  '--mg-tab-indicator--active':
+    'Indicator colour on the active tab, drawn as its border.',
+  '--mg-tab-radius': 'Corner radius of a tab.',
+  '--mg-tab-rail-background':
+    'Fill of the rail the tabs sit in. The scroll fades are drawn from it, so a rail of another colour needs only this.',
+  '--mg-tab-rail-border': 'Border colour of the rail.',
+  '--mg-tab-rail-padding':
+    'Padding inside the rail. It also sets the scroll padding and margin, so a focused tab is never scrolled flush to the edge.',
+  '--mg-tab-rail-gap': 'Space between tabs in the rail.',
+  '--mg-tab-rail-fade-size':
+    'Width of the fade at each end of a scrollable rail.',
+  '--mg-tab-panel-gap': 'Space between the rail and the panel below it.',
+
+  // Tag
+  '--mg-tag-background':
+    'Tag fill. Every variant re-points it, so set it on the tag itself rather than per variant.',
+  '--mg-tag-background-hover': 'Tag fill on hover, for linked tags.',
+  '--mg-tag-foreground': 'Tag label colour.',
+
+  // HubHeader
+  '--mg-hub-header-surface': 'Surface colour of the navigation bar.',
+  '--mg-hub-header-banner-surface': 'Surface colour of the banner below it.',
+  '--mg-hub-header-ink': 'Colour of the header title.',
+  '--mg-hub-header-link': 'Link colour in the bar.',
+  '--mg-hub-header-link-hover':
+    'Link colour on hover. On a coloured bar the link holds its colour and the underline carries the hover, because the global interactive-active colour is meant for white backgrounds.',
+  '--mg-hub-header-marker': 'Colour of the marker on the current item.',
+  '--mg-hub-header-rule': 'Colour of the rule under the bar.',
+  '--mg-hub-header-rule-alpha': 'Opacity of that rule.',
+  '--mg-hub-header-focus': 'Focus ring colour inside the header.',
+  '--mg-hub-header-bar-tint':
+    'RGB channels of the tint that stratifies the bar from the banner, so a hero image meeting the bar reads as a boundary rather than a fault.',
+  '--mg-hub-header-bar-tint-alpha':
+    'Opacity of that tint. The detached surface sets it to 0, having nothing to stratify from.',
+};
+
+const isGlobal = name =>
+  GLOBAL_PREFIXES.some(prefix => name.startsWith(prefix));
+
+const claims = (matcher, name) =>
+  matcher.endsWith('-') ? name.startsWith(matcher) : name === matcher;
+
+/** The component ID that claims `name`, by longest matcher, or null. */
+function ownerOf(name) {
+  let owner = null;
+  let best = 0;
+  for (const [componentId, matchers] of Object.entries(OWNERS)) {
+    for (const matcher of matchers) {
+      if (claims(matcher, name) && matcher.length > best) {
+        owner = componentId;
+        best = matcher.length;
+      }
+    }
+  }
+  return owner;
+}
+
+/** A CSS value, with the whitespace a formatter left inside it collapsed. */
+const tidy = value =>
+  value
+    .replace(/\s+/g, ' ')
+    .replace(/\(\s+/g, '(')
+    .replace(/\s+\)/g, ')')
+    .trim();
+
+// A selector for a modifier or a state re-points a property rather than
+// setting its default — `.mg-switch--small` and `.mg-notice--warning` both do.
+// The default belongs to the plain selector, so a modifier value is used only
+// when nothing plainer declares the property.
+const isModifierSelector = selector =>
+  /--[a-z]/i.test(selector) || selector.includes(':');
+
+/**
+ * Every --mg-* property declared in `css`, as name → { value, modifierOnly }.
+ *
+ * Read per rule block so a modifier's value is never mistaken for the
+ * default: `.mg-switch--small` sets --mg-switch-size too, and it happens to
+ * come first in the bundle.
+ */
+function declarationsIn(css) {
+  const found = new Map();
+
+  for (const block of css.matchAll(/([^{}]*)\{([^{}]*)\}/g)) {
+    const [, selector, body] = block;
+    const modifierOnly = isModifierSelector(selector);
+    for (const match of body.matchAll(
+      /(--mg-[A-Za-z0-9_-]+)\s*:\s*([^;}]*)/g
+    )) {
+      const [, name, value] = match;
+      if (!PROPERTY_NAME.test(name)) continue;
+      const seen = found.get(name);
+      if (seen && (modifierOnly || !seen.modifierOnly)) continue;
+      found.set(name, { value: tidy(value), modifierOnly });
+    }
+  }
+  return found;
+}
+
+/**
+ * Every --mg-* property read through var() in `css`, with its fallback.
+ *
+ * Parsed rather than matched, because a fallback is routinely another
+ * function call — `var(--mg-icon-fg, rgb(var(--mg-color-neutral-700)))` — and
+ * a regex stops at the first closing parenthesis.
+ */
+function readsIn(css) {
+  const found = new Map();
+  for (const match of css.matchAll(/var\(\s*(--mg-[A-Za-z0-9_-]+)/g)) {
+    const name = match[1];
+    if (!PROPERTY_NAME.test(name)) continue;
+    let index = match.index + match[0].length;
+    while (css[index] === ' ') index++;
+    let fallback = '';
+    if (css[index] === ',') {
+      let depth = 0;
+      for (index++; index < css.length; index++) {
+        const char = css[index];
+        if (char === '(') depth++;
+        else if (char === ')') {
+          if (depth === 0) break;
+          depth--;
+        }
+        fallback += char;
+      }
+    }
+    if (!found.has(name)) found.set(name, tidy(fallback));
+  }
+  return found;
+}
+
+/**
+ * Read the compiled bundles and group their component-scoped custom
+ * properties by component.
+ *
+ * @param {string} cssDir Directory holding the compiled style*.css bundles.
+ * @param {Iterable<string>} themeTokenNames Every property tokens.json
+ *   already documents, from buildTokensDictionary(). Those are the theme
+ *   layer, not a component's API, so they are left out here — which is what
+ *   keeps this list and the dictionary's `scope` field consistent.
+ * @returns {{
+ *   byComponent: Record<string, Array<{name, type, default?, description}>>,
+ *   unattributed: string[],   // exposed, claimed by no component
+ *   undocumented: string[],   // exposed and owned, but not described
+ *   absent: string[],         // described, but no bundle has it
+ *   skipped: string|null,     // why nothing was read, if nothing was
+ * }}
+ */
+export function collectCustomProperties(cssDir, themeTokenNames = []) {
+  const themeTokens = new Set(themeTokenNames);
+  const empty = {
+    byComponent: {},
+    unattributed: [],
+    undocumented: [],
+    absent: [],
+    skipped: null,
+  };
+
+  if (!fs.existsSync(cssDir)) {
+    return {
+      ...empty,
+      skipped: `${cssDir} not found — run "yarn scss" first.`,
+    };
+  }
+  const bundles = fs
+    .readdirSync(cssDir)
+    .filter(file => /^style.*\.css$/.test(file));
+  if (bundles.length === 0) {
+    return {
+      ...empty,
+      skipped: `no compiled style*.css bundle in ${cssDir} — run "yarn scss" first.`,
+    };
+  }
+
+  const declared = new Map();
+  const read = new Map();
+  for (const bundle of bundles) {
+    const css = fs.readFileSync(path.join(cssDir, bundle), 'utf8');
+    for (const [name, declaration] of declarationsIn(css)) {
+      const seen = declared.get(name);
+      if (seen && (declaration.modifierOnly || !seen.modifierOnly)) continue;
+      declared.set(name, declaration);
+    }
+    for (const [name, fallback] of readsIn(css)) {
+      if (!read.has(name)) read.set(name, fallback);
+    }
+  }
+
+  const exposed = [...new Set([...declared.keys(), ...read.keys()])]
+    .filter(name => !isGlobal(name) && !themeTokens.has(name))
+    .sort();
+
+  const byComponent = {};
+  const unattributed = [];
+  const undocumented = [];
+
+  for (const name of exposed) {
+    if (name in NOT_PUBLIC) continue;
+    const componentId = ownerOf(name);
+    if (!componentId) {
+      unattributed.push(name);
+      continue;
+    }
+    const description = PROPERTY_DOCS[name];
+    if (!description) {
+      undocumented.push(`${componentId}: ${name}`);
+      continue;
+    }
+
+    const declaration = declared.get(name);
+    const property = {
+      name,
+      type: declaration ? 'default' : 'hook',
+      description,
+    };
+
+    // The value that applies at rest: the plainest rule that declares one,
+    // and otherwise the var() fallback the component reads it with. A
+    // property declared only under a modifier — --mg-switch-size, set by
+    // .mg-switch--small alone — takes its resting value from that fallback.
+    const fallback = read.get(name);
+    const value =
+      declaration && !declaration.modifierOnly
+        ? declaration.value
+        : fallback || declaration?.value;
+
+    // Anything longer than this is artwork rather than a value a reader
+    // wants: --mg-icon-svg carries a whole SVG data URI. Its description
+    // says as much.
+    if (value && value.length <= 240) property.default = value;
+
+    (byComponent[componentId] ||= []).push(property);
+  }
+
+  const known = new Set(exposed);
+  const absent = Object.keys(PROPERTY_DOCS)
+    .filter(name => !known.has(name))
+    .sort();
+
+  return { byComponent, unattributed, undocumented, absent, skipped: null };
+}

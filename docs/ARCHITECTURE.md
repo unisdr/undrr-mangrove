@@ -219,7 +219,7 @@ yarn dev    # Start Storybook — use the paintbrush toolbar to switch themes
 
 The build produces AI-friendly component metadata alongside Storybook so coding agents can discover and use components accurately. The pipeline auto-generates from Storybook and component rendering, with some curated data maintained manually.
 
-The pipeline lives in `scripts/ai-manifest/` (3 files: `generate-ai-manifest.js`, `component-data.js`, `css-utilities.js`). See the header comment in `generate-ai-manifest.js` for details.
+The pipeline lives in `scripts/ai-manifest/` (5 files: `generate-ai-manifest.js`, `component-data.js`, `css-utilities.js`, `custom-properties.js`, `parse-changelog.js`). See the header comment in `generate-ai-manifest.js` for details.
 
 ## Known technical constraints
 

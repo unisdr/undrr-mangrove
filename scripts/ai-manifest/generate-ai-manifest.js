@@ -40,6 +40,7 @@ import path from 'path';
 import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+import { collectCustomProperties } from './custom-properties.js';
 import {
   buildReleasesManifest,
   parseComponentChangelog,
@@ -1121,6 +1122,30 @@ if (missingCssClasses.length > 0) {
   for (const problem of missingCssClasses) console.warn(`  ${problem}`);
 }
 
+// ---------------------------------------------------------------------------
+// Collect each component's CSS custom properties
+//
+// Names, kinds and defaults come out of the compiled bundles; the prose comes
+// from scripts/ai-manifest/custom-properties.js. See that file's header for
+// why the list is produced that way. Checked in both directions below: a
+// described property the CSS does not have, and a property the CSS exposes
+// that nothing describes, both fail validation.
+// ---------------------------------------------------------------------------
+const customProperties = collectCustomProperties(
+  path.resolve(process.cwd(), 'stories/assets/css'),
+  buildTokensDictionary().tokens.map(token => token.name)
+);
+const customPropertyCount = Object.values(customProperties.byComponent).reduce(
+  (total, list) => total + list.length,
+  0
+);
+
+if (customProperties.skipped) {
+  console.warn(
+    `Note: ${customProperties.skipped} Skipping the custom property inventory.`
+  );
+}
+
 // Check COMPONENT_IDS entries that won't render due to missing data
 const orphanedIds = Object.entries(COMPONENT_IDS)
   .filter(([, id]) => !curatedData[id] && !REQUIRES_REACT[id])
@@ -1444,6 +1469,47 @@ if (validateOnly) {
     failed = true;
   }
 
+  // Custom properties, checked in both directions. The first mirrors the
+  // documented-class check above. The second is the one this field exists
+  // for: a property a component exposes that nobody wrote down is exactly the
+  // gap that sent a consuming team grepping the compiled CSS.
+  if (customProperties.absent.length > 0) {
+    console.error(
+      `Validation failed: ${customProperties.absent.length} documented custom ` +
+        'property(ies) are defined by no stylesheet and read by none. Either ' +
+        'the property was renamed or removed, or PROPERTY_DOCS in ' +
+        'custom-properties.js names one that never existed:'
+    );
+    for (const name of customProperties.absent) console.error(`  - ${name}`);
+    failed = true;
+  }
+
+  if (customProperties.undocumented.length > 0) {
+    console.error(
+      `Validation failed: ${customProperties.undocumented.length} custom ` +
+        'property(ies) are exposed by the compiled CSS but have no ' +
+        'description. Add each to PROPERTY_DOCS in custom-properties.js, or ' +
+        'to NOT_PUBLIC with the reason it is not part of the theming API:'
+    );
+    for (const item of customProperties.undocumented) {
+      console.error(`  - ${item}`);
+    }
+    failed = true;
+  }
+
+  if (customProperties.unattributed.length > 0) {
+    console.error(
+      `Validation failed: ${customProperties.unattributed.length} custom ` +
+        'property(ies) belong to no component. Claim each in OWNERS in ' +
+        'custom-properties.js, or — if it is a theme token — add it to a ' +
+        'tokens/*.yaml source so tokens.json documents it:'
+    );
+    for (const name of customProperties.unattributed) {
+      console.error(`  - ${name}`);
+    }
+    failed = true;
+  }
+
   const developmentJsxBundles = findDevelopmentJsxBundles();
   if (developmentJsxBundles.length > 0) {
     console.error(
@@ -1535,6 +1601,11 @@ async function main() {
     if (data?.hydration) indexEntry.hydration = true;
     if (data?.vanillaModule) indexEntry.vanillaModule = true;
 
+    const componentCustomProperties = customProperties.byComponent[id];
+    if (componentCustomProperties?.length) {
+      indexEntry.customProperties = componentCustomProperties.length;
+    }
+
     indexEntries.push(indexEntry);
 
     // --- Full component file ---
@@ -1592,6 +1663,23 @@ async function main() {
     // CSS classes used by this component
     if (data?.cssClasses?.length) {
       detail.cssClasses = data.cssClasses;
+    }
+
+    // CSS custom properties this component exposes — its theming API. Set
+    // these instead of writing rules against the classes above: a class rule
+    // of equal specificity replaces what the component draws, while a
+    // property is the override point the component was built around.
+    if (componentCustomProperties?.length) {
+      detail.customProperties = {
+        _ai:
+          'Set these on the component or any ancestor to restyle it. ' +
+          'type "default" means the stylesheet already gives it the value in ' +
+          '`default`, and yours replaces it. type "hook" means no stylesheet ' +
+          'defines it: `default` is the fallback it resolves to until a ' +
+          'wrapper, an inline style or a prop sets it. These are NOT in ' +
+          `${DOCS_BASE}tokens.json, which covers theme tokens only.`,
+        properties: componentCustomProperties,
+      };
     }
 
     // Vanilla HTML embed instructions (for syndication components)
@@ -1673,6 +1761,16 @@ async function main() {
       utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
       iconsUrl: `${DOCS_BASE}ai-components/components-icons.json`,
       tokensUrl: `${DOCS_BASE}tokens.json`,
+      customProperties: {
+        _note:
+          `${customPropertyCount} component-scoped CSS custom properties ` +
+          `across ${Object.keys(customProperties.byComponent).length} ` +
+          "components. They are a component's theming API and are NOT in " +
+          'tokens.json, which documents theme tokens only. Each component ' +
+          'that has them lists a count here and the full set, with defaults ' +
+          'and descriptions, in its detail JSON.',
+        field: 'customProperties',
+      },
       releasesUrl: `${DOCS_BASE}releases.json`,
       changelogUrl:
         'https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md',
@@ -1793,7 +1891,7 @@ ${DOCS_BASE}ai-components/utilities.json
 Theme token dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
 ${DOCS_BASE}tokens.json
 
-This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define. Component-scoped custom properties (the --mg-switch-* set, --mg-card-border, --mg-empty-state-*, --mg-notice-*, --mg-tree-*, --mg-drawer-size, --mg-icon-fg, --mg-legend-tick-pos, --mg-show-more-height and the rest) are public API but are not in it. Read the component's ai-components/{id}.json entry or its Storybook docs page for those. The data-viz palette (--mg-dataviz-*) is not component-scoped — it is defined on :root by stories/assets/scss/_tokens-data-viz.scss — but it is absent from tokens.json too, because the dictionary is built from the tokens/*.yaml sources only. The dictionary's own \`scope\` field says the same thing; a machine-readable per-component list is tracked in https://github.com/unisdr/undrr-mangrove/issues/1207.
+This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. The data-viz palette (--mg-dataviz-*) is in neither: it is global like a theme token, defined on :root by stories/assets/scss/_tokens-data-viz.scss, but absent from tokens.json because the dictionary is built from the tokens/*.yaml sources only. The dictionary's own \`scope\` field says the same thing.
 
 Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs
@@ -1872,7 +1970,7 @@ Where they come from:
 
 Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
 
-\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define, and nothing else. A component may also define its own \`--mg-{component}-*\` properties with their own defaults (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-tree-*\`, \`--mg-drawer-size\`), or read an input hook that no stylesheet defines so you can set it (\`--mg-switch-*\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`). Those are public API and are NOT in \`tokens.json\`; grep the compiled CSS and you will find them, which is not how you should have to. Read the component's \`ai-components/{id}.json\` or its Storybook page instead. Tracked for a structural fix in https://github.com/unisdr/undrr-mangrove/issues/1207.
+\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define from the YAML sources, and nothing else. A component's own properties live in its manifest entry instead, under \`customProperties\` in \`ai-components/{id}.json\` — ${customPropertyCount} of them across ${Object.keys(customProperties.byComponent).length} components, each with what it does and the value it holds at rest. They come in two kinds: \`type: "default"\`, which the stylesheet already gives a value (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-tree-*\`, \`--mg-status-label-*\`, \`--mg-tab-*\`), and \`type: "hook"\`, which no stylesheet defines, so it holds its fallback until a wrapper, an inline style or a React prop sets it (\`--mg-switch-track-*\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`). Restyle a component by setting these, not by writing rules against its classes: a class rule of equal specificity replaces what the component draws, and several components build their geometry on a property whose value your rule would then be fighting.
 
 What you actually write against is the compiled result: the \`--mg-*\` custom properties in the theme stylesheets above.
 
@@ -1930,7 +2028,7 @@ If you are writing a list of your own with \`list-style: none\` and no Mangrove 
 The component index is not the whole library. Two things live elsewhere, and searching only the index will tell you they do not exist:
 
 - **CSS utility classes are in \`utilities.json\`, not the index.** Some patterns ship as utility classes with no component entry at all — the accordion (\`.mg-accordion\`) is one, and the data-table modifiers (\`.mg-table--data\` and the \`.mg-table__th--sortable\` / \`--sticky\` / \`.mg-table__td--numeric\` family) are documented there rather than on the Table entry. Fetch \`utilities.json\` before concluding Mangrove has no accordion or no sortable table.
-- **Component custom properties are not in \`tokens.json\`.** It is a theme token dictionary; see the "Design tokens" section above.
+- **Component custom properties are not in \`tokens.json\`.** It is a theme token dictionary. A component's own properties are in its \`ai-components/{id}.json\` entry, under \`customProperties\`; see the "Design tokens" section above.
 
 ### Brand guide
 
@@ -2030,6 +2128,18 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         logos,
       },
       vanillaScripts,
+      customProperties: {
+        _note:
+          'A component is restyled by setting its CSS custom properties, not ' +
+          'by overriding its class rules. Every component that exposes any ' +
+          'lists them under `customProperties` in its detail JSON, each with ' +
+          'its type ("default" or "hook"), its resting value and what it ' +
+          'does. These are component-scoped and are NOT in tokens.json, ' +
+          'which covers theme tokens only — see its `scope` field.',
+        total: customPropertyCount,
+        components: Object.keys(customProperties.byComponent).length,
+        componentIndex: `${DOCS_BASE}ai-components/index.json`,
+      },
       conventions: {
         cssPrefix: 'mg-',
         naming: 'BEM',
