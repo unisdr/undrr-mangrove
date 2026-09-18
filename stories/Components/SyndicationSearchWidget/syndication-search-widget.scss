@@ -185,7 +185,9 @@ $search-input-padding-x: mg-rem(44);
   display: flex;
   flex-wrap: wrap;
   gap: var(--mg-spacing-50);
-  list-style: none;
+
+  @include mg-list-unmarked;
+
   margin: 0;
   padding: 0;
 }
