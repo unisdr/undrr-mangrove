@@ -5,10 +5,12 @@
  * find the widget root. A re-scan must not mount a second copy into that
  * React-rendered marker. See undrr/undrr-mangrove#1227.
  *
- * The guard is scoped to each hydrator's own mounts. A different component's
- * hydration host nested inside a hydrated container must still hydrate:
- * `hydrate.cross-component.test.js` covers that against the real
- * ScrollContainer and IconCard.
+ * The guard is scoped by selector, not to each hydrator's own mounts: it walks
+ * the DOM for a hydrated ancestor that `selector` also matches. A different
+ * component's hydration host nested inside a hydrated container must still
+ * hydrate — `hydrate.cross-component.test.js` covers that against the real
+ * ScrollContainer and IconCard — while two hydrators sharing one selector must
+ * not reopen #1227, which the last test here pins.
  *
  * This file renders through the real `react-dom/client`, unlike
  * `hydrate.test.js`, which mocks it: the bug only appears once React has put
@@ -103,8 +105,9 @@ describe('createHydrator nested-marker handling', () => {
     `;
 
     // A host hydrated by one hydrator puts a second hydrator's marker in its
-    // output. The guard is scoped to each hydrator's own mounts, so this is
-    // still a target — which is what keeps ScrollContainer and Drawer working:
+    // output. The hydrated ancestor does not match the second hydrator's
+    // selector, so this is still a target — which is what keeps ScrollContainer
+    // and Drawer working:
     // both re-emit the consumer's markup through dangerouslySetInnerHTML, so a
     // nested hydration host reaches the DOM as React output it did not author.
     function HostComponent() {

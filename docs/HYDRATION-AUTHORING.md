@@ -55,8 +55,14 @@ markers, and five React components render those markers into their own output:
 `ShowMore.jsx` (`data-mg-show-more`), `Tab.jsx` (`data-mg-js-tabs`),
 `TableOfContents.jsx` (`data-mg-table-of-contents`), `OnThisPageNav.jsx`
 (`data-mg-on-this-page-nav`) and `PreviewAccess.jsx` (`data-mg-preview-access`).
-Those are safe because each runtime writes a per-element `…Initialized` flag and
-returns early on a second pass. A new vanilla runtime needs the same flag.
+Those are safe because each runtime records which elements it has already
+initialised and returns early on a second pass. Four of them write a per-element
+`…Initialized` dataset flag (`mgShowMoreInitialized`,
+`mgTableOfContentsInitialized`, `mgOnThisPageNavInitialized`,
+`mgPreviewAccessInitialized`); `tabs.js` instead keys two module-scope
+`WeakMap`s on the container and checks them in `isInitialised()`. A new vanilla
+runtime needs one or the other. Prefer the dataset flag: it survives a second
+copy of the runtime on the page, which a module-scope `WeakMap` does not.
 
 ---
 
