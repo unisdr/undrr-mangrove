@@ -97,8 +97,7 @@ export const REQUIRES_REACT = {
 //
 // Every React hydration contract points at the same two CDN modules and needs
 // the same import map, so they are built here rather than repeated per entry.
-// The ServiceNotice and Tree contracts predate these helpers and still inline
-// the same boilerplate; migrate them when their examples next change.
+// Every hydration contract goes through them; none inlines the boilerplate.
 // `{{version}}` is replaced with the package version when the manifest is
 // generated.
 // ---------------------------------------------------------------------------
@@ -320,7 +319,7 @@ export const COMPONENT_DATA = {
 <script type="module" src="${CDN}/js/copy-button.js"></script>`,
     },
     hydration: {
-      note: 'React alternative to js/copy-button.js — use one or the other, not both. Hydrate an empty button container; the component renders the icon, tooltip and live region itself. renderedHtml plus js/copy-button.js is simpler for a page that needs no other React component.',
+      note: 'React alternative to js/copy-button.js — use one or the other, not both. Hydrate an empty non-interactive container such as a span or div — the component renders its own button element, so never hydrate a button (that would nest a button inside a button). The component renders the icon, tooltip and live region itself. renderedHtml plus js/copy-button.js is simpler for a page that needs no other React component.',
       selector: '[data-mg-copy-button]',
       modules: hydrationModules('CopyButton'),
       dataAttributes: {
@@ -338,7 +337,8 @@ export const COMPONENT_DATA = {
         'data-labels':
           'JSON object of translated UI strings: ariaLabel, copiedLabel, tooltipLabel, failedLabel, failedTooltipLabel. The individual attributes above win over the JSON.',
         'data-variant': 'Button variant (default "outline").',
-        'data-size': 'Button size, e.g. "small".',
+        'data-size':
+          'Button size: "small" or "large". Omit it for the default size.',
         'data-class-name': 'Extra class on the button.',
       },
       events: [],
@@ -1115,7 +1115,7 @@ npm run build</code></pre>
       'mg-user-feedback__confirmation',
     ],
     hydration: {
-      note: 'renderedHtml is static: the Yes and No buttons do nothing and the confirmation never appears. Render an empty data-mg-user-feedback container and hydrate it. Hydration has no onResponse hook, so a hydrated prompt records nothing — attach your own analytics listener to the buttons, or mount the React component, if you need the answer. Mangrove never stores responses.',
+      note: 'renderedHtml is static: the Yes and No buttons do nothing and the confirmation never appears. Render an empty data-mg-user-feedback container and hydrate it. Hydration has no onResponse hook, so Mangrove itself records nothing — attach your own analytics listener to the buttons, or mount the React component, if you need the answer. The markup does carry analytics hooks for a tag manager to bind to: data-vf-google-analytics-region="undrr-feedback-container" on the container and data-mg-user-feedback-type on each button, so on a page that loads such a tag manager the answer is recorded by that tool, not by Mangrove. Mangrove never stores responses itself.',
       selector: '[data-mg-user-feedback]',
       modules: hydrationModules('UserFeedback'),
       dataAttributes: {
@@ -1209,17 +1209,10 @@ npm run build</code></pre>
           when: 'The retry button is pressed or an automatic retry fires. Only dispatched when data-retry is present.',
         },
       ],
-      example: `<link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css" />
-
-<script type="importmap">
-  { "imports": {
-    "react": "https://esm.sh/react@19.3.0",
-    "react-dom": "https://esm.sh/react-dom@19.3.0",
-    "react-dom/": "https://esm.sh/react-dom@19.3.0/"
-  }}
-</script>
-
-<div id="map-notice"
+      example: hydrationExample({
+        name: 'ServiceNotice',
+        selector: '[data-mg-service-notice]',
+        markup: `<div id="map-notice"
   data-mg-service-notice
   data-title="Map service temporarily unavailable"
   data-description="Unable to connect to the tile server."
@@ -1227,21 +1220,16 @@ npm run build</code></pre>
   data-retry
   data-status-url="https://messaging.undrr.org/"
   data-countdown-seconds="30"
-  data-max-auto-retries="3"></div>
-
-<script type="module">
-  import createHydrator from 'https://assets.undrr.org/mangrove/{{version}}/components/hydrate.js';
-  import ServiceNotice, { fromElement } from 'https://assets.undrr.org/mangrove/{{version}}/components/ServiceNotice.js';
-
-  createHydrator({ selector: '[data-mg-service-notice]', component: ServiceNotice, fromElement });
+  data-max-auto-retries="3"></div>`,
+        extra: `
 
   document
     .getElementById('map-notice')
     .addEventListener('mg-service-notice:retry', () => {
       // Re-fetch your data here, then remove the notice once it loads.
       console.log('Retry requested');
-    });
-</script>`,
+    });`,
+      }),
     },
   },
 
@@ -2265,7 +2253,7 @@ npm run build</code></pre>
   // --- Navigation ---
   'components-navigation-megamenu': {
     description:
-      'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API.',
+      'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API. Below 900px the overlay is bounded (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, and section headings linked to their landing pages. Optional label props are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. mg-mega-wrapper--js-active is added on mount, so pointer-events restrictions apply only once the sidebar is available; plain HTML nav markup and failed-hydration states stay clickable on mobile.',
     hydration: {
       note: 'MegaMenu needs React: open and close state, keyboard navigation and the mobile drill-down are all component behaviour, so renderedHtml is not a working menu. This is a complex-tier component — fromElement reads only timing, logo and an optional inline data-sections attribute, and most integrations pass sections from an API in a consumer wrapper instead. Plain nav markup stays clickable before hydration and if hydration fails; the mg-mega-wrapper--js-active class is added on mount, so pointer-events restrictions apply only once the sidebar exists.',
       selector: '[data-mg-mega-menu]',
@@ -2412,9 +2400,9 @@ npm run build</code></pre>
         'data-mg-drawer-trigger':
           'On a button elsewhere in the page: its value is the drawer container id. Clicking toggles the drawer, and the button gets aria-expanded and aria-controls.',
         '.mg-drawer__body':
-          'Optional server-rendered body markup, sanitised on mount. Without it the container innerHTML is used.',
+          'Optional server-rendered body markup, sanitised on mount. The whole container innerHTML is used as the body only when there is no .mg-drawer__body, no .mg-drawer__title and no .mg-drawer__footer; with any one of those present, content outside .mg-drawer__body is dropped. Floating panels read .mg-floating-panel__body instead.',
         '.mg-drawer__footer':
-          'Optional server-rendered footer markup, sanitised on mount.',
+          'Optional server-rendered footer markup, sanitised on mount. Floating panels read .mg-floating-panel__footer instead.',
       },
       events: [
         {
@@ -2509,17 +2497,10 @@ npm run build</code></pre>
           'Starts selected and its parent items start expanded. The first match wins. aria-current is kept on the rendered link.',
       },
       events: [],
-      example: `<link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css" />
-
-<script type="importmap">
-  { "imports": {
-    "react": "https://esm.sh/react@19.3.0",
-    "react-dom": "https://esm.sh/react-dom@19.3.0",
-    "react-dom/": "https://esm.sh/react-dom@19.3.0/"
-  }}
-</script>
-
-<div data-mg-tree data-aria-label="Section navigation">
+      example: hydrationExample({
+        name: 'Tree',
+        selector: '[data-mg-tree]',
+        markup: `<div data-mg-tree data-aria-label="Section navigation">
   <ul>
     <li data-id="about">
       <a href="/about">About</a>
@@ -2535,14 +2516,8 @@ npm run build</code></pre>
       </ul>
     </li>
   </ul>
-</div>
-
-<script type="module">
-  import createHydrator from 'https://assets.undrr.org/mangrove/{{version}}/components/hydrate.js';
-  import Tree, { fromElement } from 'https://assets.undrr.org/mangrove/{{version}}/components/Tree.js';
-
-  createHydrator({ selector: '[data-mg-tree]', component: Tree, fromElement });
-</script>`,
+</div>`,
+      }),
     },
   },
 };
