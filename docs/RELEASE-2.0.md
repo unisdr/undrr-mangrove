@@ -617,6 +617,8 @@ A story fixture hygiene sweep cleared demo-only defects found in the 2.0 audit: 
 
 **The publish workflow was never affected.** `.github/workflows/npm-publish.yml` does not pack from the repo root: it runs `yarn build`, assembles a separate `npm-package/` directory from `dist/` plus a filesystem walk for SCSS, and writes its own `package.json`. Released packages were always correct. That change fixes local and third-party `npm pack` only.
 
+**Jest specs no longer ship.** `js/__tests__/copy-button.test.js`, `show-more.test.js` and `table-of-contents.test.js` were in every npm tarball up to `2.0.0-rc.2`, and are committed under every versioned folder in the CDN asset repository. They travelled because two steps copy whole directories: webpack copies `stories/assets` into `dist/assets`, and `scripts/assemble-npm-package.mjs` then copies `dist/assets/js` into the package, so anything sitting beside a source went with it. Both steps now skip `__tests__`, `__snapshots__`, `__mocks__`, `__fixtures__`, `*.test.*` and `*.spec.*` from one shared rule, the generated `package.json` `files` array carries the same exclusions as a second line of defence, and a test fails if a development-only file reaches the assembled package again. Nothing a consumer imports changes. ([#1219](https://github.com/unisdr/undrr-mangrove/pull/1219), [#1218](https://github.com/unisdr/undrr-mangrove/issues/1218))
+
 The rest changes nothing in the published package:
 
 - `yarn pack:assemble` and `yarn pack:preview` build and inspect the package locally. ([#1169](https://github.com/unisdr/undrr-mangrove/pull/1169))
