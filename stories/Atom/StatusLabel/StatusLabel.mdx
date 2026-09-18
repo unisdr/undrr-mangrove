@@ -65,17 +65,28 @@ Two of the four colours were already in Mangrove: `--mg-color-accent-100` is `#f
 
 Each status has its own shape. This is not a fix for a WCAG failure — the status name is always rendered as text next to the indicator, so the meaning is not carried by colour alone. Three other things make the second cue worth having.
 
-**Some of the colours are close to each other under colour vision deficiency.** Simulating the six indicator colours (Machado et al. matrices, full severity) and comparing them as CIE76 deltaE gives:
+**Some of the colours are close to each other under colour vision deficiency.** The seven fills were simulated at full severity and compared pairwise. Two things matter for reading the numbers below. The simulation matrices must be applied in **linear** RGB: run against gamma-encoded sRGB they put Degraded and Offline 36 CIE76 apart and hide the collision completely. And CIE76 overstates separation in the yellow-green region this palette lives in, so CIEDE2000 is quoted beside it — roughly **2.3 dE2000 is the just-noticeable difference**, below which two colours are the same colour.
 
-| Pair                                                  | Normal | Protanopia | Deuteranopia | Tritanopia |
-| ----------------------------------------------------- | ------ | ---------- | ------------ | ---------- |
-| Degraded / Offline                                    | 58.6   | 25.2       | **3.4**      | 59.4       |
-| Draft / Waiting for more information                  | 19.6   | **19.5**   | **19.5**     | **19.0**   |
-| Neutral / Draft                                       | 42.9   | 43.8       | 43.0         | **18.3**   |
-| Waiting for more information / Waiting for validation | 43.7   | 40.6       | 40.3         | **20.3**   |
-| Neutral / Published                                   | 48.9   | 40.5       | 44.4         | 48.6       |
+Two models are quoted because one model's answer is not a finding. Machado et al. (2009) and Viénot et al. (1999) agree closely on protanopia and deuteranopia; they disagree on tritanopia, where Viénot's linear S-cone approximation is the weaker of the two and its tritan column should not be read on its own.
 
-Degraded and Offline are effectively the same olive dot for a reader with deuteranopia. Draft and "waiting for more information" sit around 19 deltaE for everyone, colour-blind or not. Under tritanopia the four pale statuses converge into one cluster.
+Each cell is CIE76 / dE2000, Machado above and Viénot below.
+
+| Pair                                                  | Normal      | Protanopia  | Deuteranopia  | Tritanopia  |
+| ----------------------------------------------------- | ----------- | ----------- | ------------- | ----------- |
+| Degraded / Offline                                    | 58.6 / 33.8 | 25.3 / 12.6 | **3.3 / 1.1** | 59.4 / 17.0 |
+|                                                       | 58.6 / 33.8 | 30.0 / 14.9 | **1.7 / 0.6** | 11.6 / 8.9  |
+| Draft / Waiting for more information                  | 19.6 / 13.4 | 19.4 / 13.5 | 19.6 / 13.3   | 19.2 / 13.3 |
+|                                                       | 19.6 / 13.4 | 19.5 / 13.5 | 19.6 / 13.4   | 25.3 / 13.6 |
+| Draft / Waiting for validation                        | 41.7 / 15.0 | 39.7 / 12.6 | 37.3 / 11.2   | 21.6 / 12.3 |
+|                                                       | 41.7 / 15.0 | 36.4 / 12.2 | 41.1 / 11.9   | 4.6 / 2.3   |
+| Neutral / Draft                                       | 42.9 / 24.2 | 43.7 / 24.0 | 42.8 / 24.2   | 18.3 / 17.5 |
+|                                                       | 42.9 / 24.2 | 43.0 / 24.6 | 45.3 / 25.7   | 98.6 / 39.3 |
+| Waiting for more information / Waiting for validation | 43.7 / 16.1 | 40.7 / 12.5 | 40.4 / 13.8   | 20.4 / 11.6 |
+|                                                       | 43.7 / 16.1 | 37.6 / 12.1 | 44.0 / 14.1   | 20.7 / 11.3 |
+| Neutral / Published                                   | 48.9 / 41.4 | 40.4 / 34.4 | 44.5 / 38.9   | 48.6 / 40.2 |
+|                                                       | 48.9 / 41.4 | 40.1 / 34.2 | 44.4 / 38.8   | 78.6 / 43.6 |
+
+The one result both models agree on is the one that matters: **Degraded and Offline are the same olive mark to a reader with deuteranopia**, at 1.1 and 0.6 dE2000 against a 2.3 threshold. Nothing about that is marginal. Draft and "waiting for more information" sit around 13 dE2000 for everyone, colour-blind or not — visible, but the closest pair in normal vision. The draft/validation tritan figure of 2.3 is Viénot only; Machado puts the same pair at 12.3, so treat it as a caution rather than a measurement.
 
 **The component is CSS only.** Consumers write their own markup, so the indicator will be reused without its label — in a table cell, a card corner, a filter chip. Mangrove cannot stop that, and when it happens the colour really is the only cue. A shape keeps those uses legible.
 
@@ -93,7 +104,21 @@ The mapping is conventional rather than arbitrary, so the marks carry their usua
 | Degraded                     | Triangle        | The caution triangle.                                                                                                                  |
 | Offline                      | Octagon         | The stop sign.                                                                                                                         |
 
-Published and the neutral base share the circle. Their colours are the pair that stays furthest apart in every simulation (40+ deltaE), so shape is not what has to separate them.
+Published and the neutral base share the circle. Their colours are the pair that stays furthest apart in every simulation (34+ dE2000), so shape is not what has to separate them.
+
+### Why the palette is not rebalanced instead
+
+The obvious response to the table above is to pick better colours rather than add shapes. That was measured, and it does not work. Recording the result here so the question does not get reopened without the numbers.
+
+Two goals pull against each other. Non-text contrast wants every fill dark enough to hold 3:1 against a white page, which compresses all seven into the bottom third of the lightness range. Colour-vision separation wants them spread across lightness, because a dichromat has one fewer hue axis and reads most of the difference as lightness. The seven statuses cannot have both.
+
+That is not specific to these colours. Mangrove already measured the same wall for charts and wrote the answer into `--mg-dataviz-categorical-safe-count: 4`: the data-visualisation palette, assembled from documented Sendai target colours and ordered specifically to degrade well, holds up to four series on colour alone and falls to 2.2 dE2000 at seven. **Seven unordered categories is past what colour can carry, for anyone's palette.**
+
+Searching every combination the design system already owns, with the hue associations held (grey neutral, amber waiting, teal published, red offline) and every fill required to clear 3:1 on white, the best achievable worst-pair is **2.34 dE2000** — still at the just-noticeable difference, merely moved from Degraded/Offline onto a different pair. It costs all four DELTA status colours, replaces them with four browns whose worst normal-vision pair drops from 13.4 to 6.8 dE2000 (so the set gets harder to read for the majority of users in exchange), and it leaves the four fills so dark that the neutral-500 ring falls to 1.0-1.8:1 against them and stops reading as a ring at all.
+
+Nor is there a one-token fix. Moving only Degraded off `--mg-color-gold-800` onto a lighter orange lifts that pair from 0.6 to 11.9 dE2000, but the collision reappears between Degraded and "waiting for more information" at 1.5 dE2000, while Degraded's own contrast falls from 5.58:1 to 3.15:1 and it no longer matches the `--mg-color-gold-800` icon and rule of the notice it sits inside.
+
+So the palette stays as the DELTA board defines it, and the second cue is a shape. A shape is free of all three costs: it does not move a brand colour, it survives forced colours where the fills do not, and it works at seven categories where colour stops at four.
 
 ### Why the marks look like one set
 
@@ -109,7 +134,9 @@ Five of the seven are a rounded rectangle underneath — the circle is a full ra
 
 - **SC 1.4.1 Use of colour.** The status name is always rendered as text, so the indicator is reinforcement, never the message. Do not build an indicator-only variant. The shapes are a second cue on top of that, not the thing that satisfies the criterion.
 - **SC 1.4.3 Contrast (minimum).** The label text resolves to `--mg-color-text` (`#1a1a1a`), 17.40:1 on a white page and 15.63:1 on a tinted panel.
-- **SC 1.4.11 Non-text contrast.** The four indicator fills are 1.28:1 (draft), 1.63:1 (waiting for validation), 2.24:1 (waiting for more information) and 6.49:1 (published) against white. Three of the four would be close to invisible unbounded, so every indicator carries a 1px `--mg-color-neutral-500` ring at 5.74:1. Because the dots are decorative the ring is not strictly required by 1.4.11, but without it the component looks broken on a white page. Set `--mg-status-label-indicator-border-width: 0` to remove it.
+- **SC 1.4.11 Non-text contrast.** The four indicator fills are 1.28:1 (draft), 1.63:1 (waiting for validation), 2.24:1 (waiting for more information) and 6.49:1 (published) against white; the neutral base is 1.60:1, degraded 5.58:1 and offline 6.31:1. On the surfaces these actually appear on the ratios are slightly lower again — multiply by about 0.83 for a status sitting on `--mg-color-red-50`, which is where the offline mark appears inside a negative notice. Four of the seven would be close to invisible unbounded, so every indicator carries a 1px `--mg-color-neutral-500` ring at 5.74:1. Because the dots are decorative the ring is not strictly required by 1.4.11, but without it the component looks broken on a white page. Set `--mg-status-label-indicator-border-width: 0` to remove it.
+
+  **The ring is load-bearing, and dropping it is a real choice rather than a cosmetic one.** It is the only part of the four pale marks that clears 3:1, so on a `0` ring those four statuses are carried by their fill alone at 1.3-2.2:1. In forced colours it does more than that: the base indicator is drawn as a `Canvas` centre inside a `CanvasText` ring, which is what keeps it the one hollow mark, so at `0` it has neither ring nor contrasting fill and disappears from the row entirely. Drop the ring only where the indicator sits on a surface dark enough to give the fills their own boundary, and never on a page that may be read in forced colours.
 
   The ring is exactly `--mg-status-label-indicator-border-width` wide on every edge of every shape. On the five marks that are a rounded rectangle underneath it is a real CSS `border`. The triangle and the octagon need a `clip-path`, which cuts through a border, so those two paint the ring colour as their own background and lay the fill on a `::before` clipped to an inner polygon — one whose vertices are moved along their own angle bisectors by the miter offset, which shifts every edge in by the ring width rather than shrinking the whole shape. Measured on a 160px indicator with a 10px ring, every edge of both shapes falls within a pixel of 10px. Before this, the `::before` was inset and re-clipped to the same polygon, which scaled it: the ring came out 1px on the octagon, 0.71px on the diamond, 0.32px at the plus's inner corners and nothing at all at the triangle's apex ([#1208](https://github.com/unisdr/undrr-mangrove/issues/1208)).
 
@@ -186,7 +213,8 @@ No sub-brand overrides these tokens. PreventionWeb, IRP and MCR2030 have no defi
 ## Changelog
 
 - **1.2.0** — 2026-09-18 ([#1206](https://github.com/unisdr/undrr-mangrove/pull/1206)): Each status now has a shape as well as a colour — draft a rounded square, waiting for more information a capsule, waiting for validation a rounded diamond, degraded a chamfered triangle, offline an octagon. Published and the base indicator keep the circle. This is a visible change on every existing status label, and it needs no markup change: the shapes come from CSS on the same empty `<span>`.
-  - The shapes are a second cue, not a fix for a WCAG failure: the status name is still always present as text. They matter because several of the colours are close under colour vision deficiency (degraded and offline are 3.4 CIE76 deltaE apart simulated for deuteranopia), because a CSS-only component gets reused without its label, and because a redundant cue is faster to scan.
+  - The shapes are a second cue, not a fix for a WCAG failure: the status name is still always present as text. They matter because several of the colours are close under colour vision deficiency (degraded and offline are 3.3 CIE76 / 1.1 dE2000 apart simulated for deuteranopia, against a just-noticeable difference of about 2.3), because a CSS-only component gets reused without its label, and because a redundant cue is faster to scan.
+  - The palette itself is unchanged, and that is a measured decision rather than an omission — see "Why the palette is not rebalanced instead". The seven fills were re-measured in two simulation models applied in linear RGB, and no palette assembled from the tokens this system owns does better than 2.34 dE2000 at the worst pair while holding 3:1 on white and the hue associations, which is no real improvement and costs the DELTA colours, the normal-vision separation and the ring.
   - The seven marks are drawn as one family: all convex, all softened at one corner radius proportional to the indicator size, all carrying the same ring. Five of them are a rounded rectangle underneath — the diamond is the draft square rotated 45° — so they keep a real CSS `border`; only the triangle and the octagon need a `clip-path`.
   - The ring is now exactly `--mg-status-label-indicator-border-width` on every edge of every shape ([#1208](https://github.com/unisdr/undrr-mangrove/issues/1208)). The two clipped marks clip their fill to an inner polygon offset along each vertex's angle bisector instead of insetting the box and rescaling the same polygon, which used to give a different ring width on every edge and none at all on the two palest statuses.
   - `.mg-status-label-group` hides its bullet with `list-style-type: ""` instead of `list-style: none`, so Safari keeps the list role and VoiceOver announces the item count the docs promise ([#1209](https://github.com/unisdr/undrr-mangrove/issues/1209)). No `role="list"` is needed on the `<ul>`.
