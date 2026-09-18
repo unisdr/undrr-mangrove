@@ -5,6 +5,7 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import webpack from 'webpack';
 import webpackEntry from './webpack.entries.js';
+import { DEV_ONLY_GLOBS } from './scripts/assemble-npm-package.mjs';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const currentFilePath = fileURLToPath(import.meta.url);
@@ -62,6 +63,10 @@ export default [
     plugins: [
       new MiniCssExtractPlugin(),
       new CopyPlugin({
+        // These copy whole source trees, so Jest specs that sit beside the
+        // sources would otherwise land in dist/ and from there in the npm
+        // tarball and every versioned CDN folder. See issue
+        // unisdr/undrr-mangrove#1218.
         patterns: [
           { from: 'stories/assets', to: 'assets' },
           {
@@ -72,7 +77,10 @@ export default [
             from: 'stories/assets/fonts/mangrove-icon-set',
             to: 'fonts/mangrove-icon-set',
           },
-        ],
+        ].map(pattern => ({
+          ...pattern,
+          globOptions: { ignore: DEV_ONLY_GLOBS },
+        })),
       }),
     ],
   },
