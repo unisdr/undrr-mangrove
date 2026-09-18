@@ -4,7 +4,7 @@
  * ESLint says nothing useful about a file no config claims. It is not an
  * error, and unless the file is named on the command line there is not even a
  * warning — `yarn lint:check` walks past it and exits 0. Plain `.jsx` sat in
- * that blind spot for the life of the library: 199 component files, every rule
+ * that blind spot for the life of the library: 205 component files, every rule
  * the config enables applying to none of them. `src/` sat in a second one, a
  * whole directory that no lint or format script passed to either tool.
  *
