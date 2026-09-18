@@ -180,7 +180,7 @@ describe('Tab wrapper lifecycle', () => {
     jest
       .spyOn(window, 'removeEventListener')
       .mockImplementation(
-        function mockAddEventListener(type, handler, options) {
+        function mockRemoveEventListener(type, handler, options) {
           added.delete(handler);
           return remove.call(this, type, handler, options);
         }
