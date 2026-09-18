@@ -148,6 +148,8 @@ Ensure that the sections referenced in the TableOfContents have proper heading t
 
 ## Changelog
 
+- **1.9** — 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Breaking — deleted the deprecated `TableOfContents.scss` alias, which only forwarded to `table-of-contents.scss` and emitted a deprecation `@warn`. The npm package no longer ships `scss/Components/TableOfContents/TableOfContents.scss`; import `scss/Components/TableOfContents/table-of-contents` instead. No CSS behaviour change.
+
 - **1.8** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Added divider/rhythm/focus refinements and aligned React anchor scrolling with reduced-motion behavior.
 
 - **1.7** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Removed redundant per-language story exports; use the global Storybook locale toolbar for translated content and RTL direction.
