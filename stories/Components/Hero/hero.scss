@@ -261,15 +261,12 @@
   }
 }
 
-// Stylistic variants. Known exception on "secondary": orange-800 is a non-text
-// accent — white body copy on it is 2.65, and the orange-800 CTA label on the
-// white pill is the same 2.65 the other way round. The split-balanced story
-// uses this variant. No text
-// colour clears AA on the orange, so removing the pairing is a brand decision,
-// tracked in https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy
-// it: docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+// Stylistic variants. Each entry is a surface: the flat fill for split, the
+// gradient over the photo for the background layout, and the CTA label's ink on
+// the white pill. So only a colour that carries text belongs in this map, which
+// is why "secondary" is not in it — the orange accent is 2.65 under white copy
+// and the same 2.65 as ink on the pill. It is handled below instead, as a rule.
 $variant-colour-props: (
-  "secondary": "--mg-color-orange-800",
   "tertiary": "--mg-color-neutral-900",
   "quaternary": "--mg-color-red-800",
 );
@@ -296,6 +293,17 @@ $variant-colour-props: (
       }
     }
   }
+}
+
+// The secondary hero keeps the theme's own hero surface, which already carries
+// white copy in all five themes, and wears the Sendai orange as a solid rule
+// along its leading edge — a block of colour with no copy over it. It reads the
+// published token rather than the ramp step, so a theme that retargets
+// --mg-color-hero--secondary moves the rule with it. Before this, the map above
+// hardcoded --mg-color-orange-800 here, which resolved to the same colour and
+// hid the split.
+.mg-hero--secondary {
+  border-inline-start: mg-rem(8) solid rgb(var(--mg-color-hero--secondary));
 }
 
 // RTL tweaks (background layout only).

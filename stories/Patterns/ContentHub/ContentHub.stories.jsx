@@ -53,3 +53,17 @@ export const HubDetailDetachedHeader = {
     headerSurface: 'detached',
   },
 };
+
+// `surface="secondary"` is the one header surface the accent still touches: it
+// keeps the theme's own hero colour and wears the Sendai orange as a rule under
+// the bar. That rule is the only thing telling it from the default surface, so
+// it needs a story a reviewer can actually look at in each theme.
+// See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+export const HubDetailSecondaryHeader = {
+  name: 'Hub detail with the secondary header surface',
+  args: {
+    initialPage: 'how-to-report',
+    withHero: true,
+    headerSurface: 'secondary',
+  },
+};

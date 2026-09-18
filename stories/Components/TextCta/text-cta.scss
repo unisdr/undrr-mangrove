@@ -147,16 +147,16 @@
     background-color: rgb(var(--mg-color-hero));
   }
 
-  // Known exception: this paints the orange accent flat and sets an eyebrow, a
-  // headline and a 90%-white body on it — 2.65, 2.65 and 2.42. The orange
-  // carries no text at any size, so a secondary CTA must not be the only place
-  // its message appears. Removing the pairing is a brand decision, tracked in
-  // https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy it:
+  // The orange accent carries no text at any size, so this variant no longer
+  // paints it flat under an eyebrow, a headline and a 90%-white body. It takes
+  // the soft treatment below — a white surface under an 8% wash of the accent,
+  // with dark copy — and keeps the accent as a solid leading rule, which no
+  // copy sits on. See
   // docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   &--secondary {
     --mg-cta-accent: var(--mg-color-hero--secondary);
 
-    background-color: rgb(var(--mg-color-hero--secondary));
+    border-inline-start: mg-rem(6) solid rgb(var(--mg-cta-accent));
   }
 
   &--tertiary {
@@ -171,7 +171,8 @@
     background-color: rgb(var(--mg-color-hero--quaternary));
   }
 
-  &--soft {
+  &--soft,
+  &--secondary {
     background-color: rgb(var(--mg-color-neutral-0));
     background-image: linear-gradient(
       rgb(var(--mg-cta-accent) / 0.08),
@@ -193,7 +194,8 @@
   }
 
   // Strong surfaces need inverse buttons; soft surfaces use normal buttons.
-  &:where(:not(.mg-cta--soft)) {
+  // --secondary is a soft surface too, since the orange accent left its fill.
+  &:where(:not(.mg-cta--soft, .mg-cta--secondary)) {
     // Light tinted stroke keeps filled buttons visible on the strong surface.
     --mg-border-color-button-primary: rgb(var(--mg-color-neutral-0) / 0.72);
     --mg-border-color-button-secondary: rgb(var(--mg-color-neutral-0) / 0.72);

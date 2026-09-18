@@ -274,14 +274,15 @@
   }
 }
 
-// Color variants (shared accent colours from _variables.scss). Known exception
-// on "secondary": it resolves to the orange accent, and a card title painted
-// with it is 2.65 as ink on the card surface. Removing the
-// pairing is a brand decision, tracked in
-// https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy it:
+// Color variants (shared accent colours from _variables.scss). This map is ink:
+// every value here paints a card title, so only a colour that carries text
+// belongs in it. "secondary" resolves to the Sendai orange accent, which is
+// 2.65 on the card surface and 2.37 on DELTA's tinted one, so its title takes
+// the interactive colour like any other card link and the accent moves to a
+// rule instead — see below.
 // docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 $card-variant-colours: (
-  "secondary": rgb(var(--mg-color-secondary)),
+  "secondary": rgb(var(--mg-color-interactive)),
   "tertiary": rgb(var(--mg-color-tertiary)),
   "quaternary": rgb(var(--mg-color-quaternary)),
 );
@@ -290,6 +291,12 @@ $card-variant-colours: (
   .mg-card--#{$name} .mg-card__title a {
     color: #{$color};
   }
+}
+
+// What now tells a secondary card apart: a solid accent rule along its leading
+// edge, with no copy over it.
+.mg-card--secondary {
+  border-inline-start: mg-rem(4) solid rgb(var(--mg-color-secondary));
 }
 
 // Opt-out modifier: plain title (no blue, no underline, no chevron)

@@ -728,19 +728,37 @@ const COMPONENT_PAIRS = [
     min: 4.5,
     why: 'SC 1.4.3 — .mg-tag--secondary:hover',
   },
+  // The accent tag is the exception to both: the Sendai orange carries no
+  // text, so the chip is filled with the pale end of the same ramp and takes
+  // --mg-color-text as its label. The orange is the border, measured on its
+  // own below.
   {
     name: 'accent tag label',
-    fg: '--mg-color-neutral-0',
-    bg: ['--mg-color-tag-accent'],
+    fg: '--mg-color-text',
+    bg: ['--mg-color-orange-50'],
     min: 4.5,
-    why: 'SC 1.4.3 — .mg-tag--accent',
+    why: 'SC 1.4.3 — .mg-tag--accent sets --mg-tag-foreground to --mg-color-text on the orange-50 fill',
   },
   {
     name: 'accent tag label, hover',
-    fg: '--mg-color-neutral-0',
-    bg: ['--mg-color-tag-accent--hover'],
+    fg: '--mg-color-text',
+    bg: ['--mg-color-orange-100'],
     min: 4.5,
-    why: 'SC 1.4.3 — .mg-tag--accent:hover',
+    why: 'SC 1.4.3 — .mg-tag--accent:hover deepens the fill to orange-100 and keeps the label',
+  },
+  {
+    name: 'accent tag border',
+    fg: '--mg-color-tag-accent',
+    bg: ['--mg-color-orange-50'],
+    min: 3,
+    why: 'SC 1.4.11 — .mg-tag--accent wears the accent as its border; decorative emphasis, not the chip boundary',
+  },
+  {
+    name: 'accent tag border, hover',
+    fg: '--mg-color-tag-accent',
+    bg: ['--mg-color-orange-100'],
+    min: 3,
+    why: 'SC 1.4.11 — the border is held steady across states, so this is the resting rule on the hover fill; tag-accent--hover is orange-800, lighter than the resting orange-900, and would have faded the rule to 2.15 exactly when the chip responds',
   },
   {
     name: 'outline tag label on the page',
@@ -1190,10 +1208,17 @@ const COMPONENT_PAIRS = [
   },
   {
     name: 'card title, secondary variant',
+    fg: '--mg-color-interactive',
+    bg: ['--mg-card-background'],
+    min: 3,
+    why: 'SC 1.4.3 large text — .mg-card__title is 23px bold, over 18.66px bold; the secondary variant takes the interactive colour like any other card link',
+  },
+  {
+    name: 'secondary card accent rule',
     fg: '--mg-color-secondary',
     bg: ['--mg-card-background'],
     min: 3,
-    why: 'SC 1.4.3 large text — .mg-card__title is 23px bold, over 18.66px bold',
+    why: 'SC 1.4.11 — .mg-card--secondary draws a leading rule in the accent; decorative emphasis, not the card boundary',
   },
   {
     name: 'card title, tertiary variant',
@@ -1253,19 +1278,29 @@ const COMPONENT_PAIRS = [
     min: 3,
     why: 'SC 1.4.11 — the border is the pill boundary against the hero',
   },
+  // The secondary variant is no longer in hero.scss's $variant-colour-props,
+  // so it paints neither the surface nor the CTA ink: both stay the theme's
+  // own hero colour, and the accent is a leading rule instead.
   {
     name: 'hero body text, secondary variant',
     fg: PAGE,
-    bg: ['--mg-color-orange-800'],
+    bg: ['--mg-color-hero'],
     min: 4.5,
-    why: 'SC 1.4.3 — .mg-hero--split.mg-hero--secondary paints orange-800 flat',
+    why: 'SC 1.4.3 — .mg-hero--split.mg-hero--secondary keeps the theme hero surface',
   },
   {
     name: 'hero CTA label, secondary variant',
-    fg: '--mg-color-orange-800',
+    fg: '--mg-color-hero',
     bg: [PAGE],
     min: 4.5,
-    why: 'SC 1.4.3 — the variant CTA is orange-800 on the white pill',
+    why: 'SC 1.4.3 — the variant leaves --mg-hero-cta-color at its default, so the CTA is hero-coloured on the white pill',
+  },
+  {
+    name: 'secondary hero accent rule',
+    fg: '--mg-color-hero--secondary',
+    bg: ['--mg-color-hero'],
+    min: 3,
+    why: 'SC 1.4.11 — .mg-hero--secondary draws an 8px leading rule in the accent against the hero fill it now shares with the default hero',
   },
   {
     name: 'hero body text, tertiary variant',
@@ -1301,26 +1336,37 @@ const COMPONENT_PAIRS = [
   // The strong CTA surfaces are the same token chain as the hero variants,
   // but the CTA paints them flat and adds an eyebrow and a 90%-white body, so
   // it fails harder than the hero does and needs its own rows.
+  //
+  // The secondary variant is the exception: the accent carries no text, so it
+  // takes the soft treatment instead — a white surface under an 8% wash of the
+  // accent, with dark copy on it — and the accent is a leading rule.
   {
     name: 'CTA eyebrow, secondary variant',
-    fg: PAGE,
-    bg: ['--mg-color-hero--secondary'],
+    fg: '--mg-color-neutral-900',
+    bg: ['rgb(var(--mg-color-hero--secondary) / 0.08)', '--mg-color-neutral-0'],
     min: 4.5,
-    why: 'SC 1.4.3 — .mg-cta__eyebrow is 12px bold on .mg-cta--secondary',
+    why: 'SC 1.4.3 — .mg-cta__eyebrow is 12px bold on the soft .mg-cta--secondary surface',
   },
   {
     name: 'CTA headline, secondary variant',
-    fg: '--mg-color-white',
-    bg: ['--mg-color-hero--secondary'],
+    fg: '--mg-color-neutral-900',
+    bg: ['rgb(var(--mg-color-hero--secondary) / 0.08)', '--mg-color-neutral-0'],
     min: 3,
     why: 'SC 1.4.3 large text — .mg-cta__headline is a bold heading',
   },
   {
     name: 'CTA body text, secondary variant',
-    fg: 'rgb(var(--mg-color-neutral-0) / 0.9)',
-    bg: ['--mg-color-hero--secondary'],
+    fg: '--mg-color-neutral-800',
+    bg: ['rgb(var(--mg-color-hero--secondary) / 0.08)', '--mg-color-neutral-0'],
     min: 4.5,
-    why: 'SC 1.4.3 — .mg-cta__text is 90% white, so it composites on the fill',
+    why: 'SC 1.4.3 — .mg-cta__text is neutral-800 on the soft surface, no longer 90% white on a fill',
+  },
+  {
+    name: 'secondary CTA accent rule',
+    fg: '--mg-color-hero--secondary',
+    bg: ['rgb(var(--mg-color-hero--secondary) / 0.08)', '--mg-color-neutral-0'],
+    min: 3,
+    why: 'SC 1.4.11 — .mg-cta--secondary draws a 6px leading rule in the accent on its own soft surface',
   },
   {
     name: 'CTA body text, tertiary variant',
@@ -1340,10 +1386,10 @@ const COMPONENT_PAIRS = [
   // --- Author image: author-image.scss -----------------------------------
   {
     name: 'author image title, secondary variant',
-    fg: '--mg-color-secondary',
+    fg: '--mg-color-text',
     bg: [PAGE],
     min: 4.5,
-    why: 'SC 1.4.3 — .mg-author-image__title is bold body text, not large text',
+    why: 'SC 1.4.3 — .mg-author-image__title is bold body text, not large text; the variant accent stays on the avatar ring',
   },
 
   // --- Quote highlight: quote-highlight.scss -----------------------------
@@ -1365,14 +1411,22 @@ const COMPONENT_PAIRS = [
   // --- Hub header: hub-header.scss ---------------------------------------
   //
   // Every link and heading in the header is --mg-hub-header-ink, white, on
-  // --mg-hub-header-surface. The secondary surface is the same orange accent
-  // the hero and the CTA use, so the header inherits the same failure.
+  // --mg-hub-header-surface. The secondary modifier no longer retargets that
+  // surface — the accent carries no text, so it draws the bar's bottom rule
+  // instead and the banner keeps the theme's hero colour.
   {
     name: 'hub header text on the secondary surface',
     fg: '--mg-color-neutral-0',
-    bg: ['--mg-color-hero--secondary'],
+    bg: ['--mg-color-hero'],
     min: 4.5,
-    why: 'SC 1.4.3 — .mg-hub-header--surface-secondary paints links and headings white on the banner',
+    why: 'SC 1.4.3 — .mg-hub-header--surface-secondary paints links and headings white on the hero-coloured banner',
+  },
+  {
+    name: 'hub header secondary bar rule',
+    fg: '--mg-color-hero--secondary',
+    bg: ['rgb(0 0 0 / 0.14)', '--mg-color-hero'],
+    min: 3,
+    why: 'SC 1.4.11 — the rule under .mg-hub-header__bar, measured on the tinted bar it sits against; it is the only mark distinguishing this surface from the default',
   },
 
   // --- Notice actions: notice.scss ----------------------------------------
@@ -1519,45 +1573,93 @@ const WCAG_EXCEPTIONS = {
     'inactive control, dimmed to match :disabled',
   ],
 
-  // orange-900 is 2.95:1 against white. Affects the primary button and the
-  // outline button's hover fill, which share the token chain.
-  'preventionweb|button label on primary background, hover': [
-    2.95,
-    'orange-900 hover fill; needs ~orange-1000 or a dark label',
+  // The Sendai orange is under 3:1 against both white (2.95) and its own pale
+  // steps, so an orange rule is emphasis only and never the sole identifier of
+  // a component or a state — the fill and the label carry that. Recorded
+  // rather than raised so the rules cannot drift paler unnoticed.
+  ...Object.fromEntries(
+    ALL_THEMES.flatMap(theme => [
+      [
+        `${theme}|accent tag border`,
+        [2.66, 'orange-900 rule on orange-50; emphasis, not the chip boundary'],
+      ],
+      [
+        `${theme}|accent tag border, hover`,
+        [
+          2.4,
+          'orange-900 rule on orange-100; emphasis, not the state indicator',
+        ],
+      ],
+    ])
+  ),
+  'base|secondary card accent rule': [
+    2.65,
+    'orange-800 rule on the card surface; emphasis, not the card boundary',
   ],
-  'irp|button label on primary background, hover': [
-    2.95,
-    'orange-900 hover fill; needs ~orange-1000 or a dark label',
+  'preventionweb|secondary card accent rule': [
+    2.65,
+    'orange-800 rule on the card surface; emphasis, not the card boundary',
   ],
-  'preventionweb|outline primary button label, hover fill': [
-    2.95,
-    'same orange-900 chain as the primary hover',
+  'irp|secondary card accent rule': [
+    2.65,
+    'orange-800 rule on the card surface; emphasis, not the card boundary',
   ],
-  'irp|outline primary button label, hover fill': [
-    2.95,
-    'same orange-900 chain as the primary hover',
+  'mcr|secondary card accent rule': [
+    2.65,
+    'orange-800 rule on the card surface; emphasis, not the card boundary',
+  ],
+  'delta|secondary card accent rule': [
+    2.37,
+    "orange-800 rule on DELTA's tinted card surface; emphasis, not the card boundary",
   ],
 
-  // The accent tag is white on orange in every theme, at rest and on hover.
-  'base|accent tag label': [
-    2.95,
-    'orange-900 fill under #fff; darken the fill or use --mg-color-text',
+  // The other three rules this library draws in the accent. They are recorded
+  // here for the same reason as the ones above — an unmeasured rule is an
+  // unexamined judgement — but two of them are weaker cases than the card's,
+  // and the notes say so rather than reusing the card's wording.
+  //
+  // The CTA rule is the easy one: .mg-cta--secondary already differs from
+  // --soft by the hue of its 8% wash, so the rule is genuinely emphasis.
+  'base|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
   ],
-  'preventionweb|accent tag label': [2.95, 'orange-900 fill under #fff'],
-  'irp|accent tag label': [2.95, 'orange-900 fill under #fff'],
-  'mcr|accent tag label': [2.95, 'orange-900 fill under #fff'],
-  'delta|accent tag label': [2.95, 'orange-900 fill under #fff'],
-  'base|accent tag label, hover': [
-    2.65,
-    'hover LIGHTENS to orange-800, so hover is worse than rest',
+  'preventionweb|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
   ],
-  'preventionweb|accent tag label, hover': [
-    2.65,
-    'hover lightens to orange-800',
+  'irp|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
   ],
-  'irp|accent tag label, hover': [2.65, 'hover lightens to orange-800'],
-  'mcr|accent tag label, hover': [2.65, 'hover lightens to orange-800'],
-  'delta|accent tag label, hover': [2.65, 'hover lightens to orange-800'],
+  'mcr|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
+  ],
+  'delta|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
+  ],
+
+  // The hero and hub-header rules are the weaker cases. Since #1196 took the
+  // accent off both surfaces, a --secondary hero and a --surface-secondary
+  // header are pixel-identical to their defaults APART from this rule, so it
+  // is closer to identification than to emphasis. It clears 3:1 in the base,
+  // MCR and DELTA themes and does not in PreventionWeb or IRP, where the
+  // orange sits on a mid blue or teal of nearly its own luminance. Recorded,
+  // not waved through: see unisdr/undrr-mangrove#1196 review notes.
+  'preventionweb|secondary hero accent rule': [
+    2.45,
+    'orange-800 rule on the PreventionWeb teal hero; the variant has no other mark, so this is a weak identifier rather than emphasis',
+  ],
+  'irp|secondary hero accent rule': [
+    1.78,
+    'orange-800 rule on the IRP blue hero; near-equal luminance, and the variant has no other mark — the weakest rule in the set',
+  ],
+  'irp|hub header secondary bar rule': [
+    2.26,
+    'orange-800 rule on the IRP tinted bar; the surface is otherwise identical to the default header',
+  ],
 
   // IRP's tag colour is its lighter interactive blue; the blue-50 hover wash
   // takes it under 4.5.
@@ -1582,91 +1684,6 @@ const WCAG_EXCEPTIONS = {
   ],
 
   // v2 tabs.
-
-  // Card and hero share the orange secondary accent.
-  'base|card title, secondary variant': [
-    2.65,
-    'orange-800 title link; fails even the large-text 3:1',
-  ],
-  'preventionweb|card title, secondary variant': [
-    2.65,
-    'orange-800 title link',
-  ],
-  'irp|card title, secondary variant': [2.65, 'orange-800 title link'],
-  'mcr|card title, secondary variant': [2.65, 'orange-800 title link'],
-  'delta|card title, secondary variant': [
-    2.37,
-    "orange-800 on DELTA's tinted card surface",
-  ],
-  'base|hero body text, secondary variant': [
-    2.65,
-    'white body copy on orange-800',
-  ],
-  'preventionweb|hero body text, secondary variant': [
-    2.65,
-    'white body copy on orange-800',
-  ],
-  'irp|hero body text, secondary variant': [
-    2.65,
-    'white body copy on orange-800',
-  ],
-  'mcr|hero body text, secondary variant': [
-    2.65,
-    'white body copy on orange-800',
-  ],
-  'delta|hero body text, secondary variant': [
-    2.65,
-    'white body copy on orange-800',
-  ],
-  'base|hero CTA label, secondary variant': [
-    2.65,
-    'orange-800 label on the white pill',
-  ],
-  'preventionweb|hero CTA label, secondary variant': [
-    2.65,
-    'orange-800 label on the white pill',
-  ],
-  'irp|hero CTA label, secondary variant': [
-    2.65,
-    'orange-800 label on the white pill',
-  ],
-  'mcr|hero CTA label, secondary variant': [
-    2.65,
-    'orange-800 label on the white pill',
-  ],
-  'delta|hero CTA label, secondary variant': [
-    2.65,
-    'orange-800 label on the white pill',
-  ],
-
-  // Text CTA, secondary variant. Same orange-800 surface as the hero, but the
-  // CTA paints it flat behind an eyebrow, a headline and a 90%-white body, so
-  // all three rows fail in all five themes. Covered by the exception register
-  // in docs/COLOUR-CONTRAST-METHODOLOGY.md.
-  ...Object.fromEntries(
-    ALL_THEMES.flatMap(theme => [
-      [
-        `${theme}|CTA eyebrow, secondary variant`,
-        [2.65, 'white eyebrow on orange-800'],
-      ],
-      [
-        `${theme}|CTA headline, secondary variant`,
-        [2.65, 'white headline on orange-800; fails even the large-text 3:1'],
-      ],
-      [
-        `${theme}|CTA body text, secondary variant`,
-        [2.42, '90% white body on orange-800, the worst pair in the set'],
-      ],
-      [
-        `${theme}|author image title, secondary variant`,
-        [2.65, 'orange-800 ink on white; the same token read as text'],
-      ],
-      [
-        `${theme}|hub header text on the secondary surface`,
-        [2.65, 'white header links and headings on orange-800'],
-      ],
-    ])
-  ),
 
   // IRP's hero blue under a 90% white pill.
   'irp|hero secondary CTA label': [
@@ -1772,64 +1789,106 @@ const PERCEPTUAL_EXCEPTIONS = {
     'why Snackbar/Hero/TextCta use the inverse ring',
   ],
 
-  // Mirrors of the Text CTA and author-image WCAG exceptions above. The
-  // quaternary CTA body appears here only: 90% white on red-800 clears WCAG 2
-  // at 4.82 but lands under the perceptual body-text floor, which is exactly
-  // the mid-tone disagreement this second measure exists to surface.
+  // The quaternary CTA body appears here only: 90% white on red-800 clears
+  // WCAG 2 at 4.82 but lands under the perceptual body-text floor, which is
+  // exactly the mid-tone disagreement this second measure exists to surface.
   ...Object.fromEntries(
-    ALL_THEMES.flatMap(theme => [
-      [
-        `${theme}|CTA eyebrow, secondary variant`,
-        [42.5, 'white eyebrow on orange-800'],
-      ],
-      [
-        `${theme}|CTA headline, secondary variant`,
-        [42.5, 'white headline on orange-800'],
-      ],
-      [
-        `${theme}|CTA body text, secondary variant`,
-        [36.4, '90% white body on orange-800'],
-      ],
-      [
-        `${theme}|CTA body text, quaternary variant`,
-        [57.7, '90% white body on red-800; WCAG 2 passes, this does not'],
-      ],
-      [
-        `${theme}|author image title, secondary variant`,
-        [42.5, 'orange-800 ink on white'],
-      ],
-      [
-        `${theme}|hub header text on the secondary surface`,
-        [42.5, 'white header links and headings on orange-800'],
-      ],
+    ALL_THEMES.map(theme => [
+      `${theme}|CTA body text, quaternary variant`,
+      [57.7, '90% white body on red-800; WCAG 2 passes, this does not'],
     ])
   ),
 
-  'base|accent tag label': [46.7, 'orange-900 fill under #fff'],
-  'preventionweb|accent tag label': [46.7, 'orange-900 fill under #fff'],
-  'irp|accent tag label': [46.7, 'orange-900 fill under #fff'],
-  'mcr|accent tag label': [46.7, 'orange-900 fill under #fff'],
-  'delta|accent tag label': [46.7, 'orange-900 fill under #fff'],
+  // Mirrors of the orange accent-rule WCAG exceptions above: the Sendai orange
+  // is under 3:1 against both white and its own pale steps, so an orange rule
+  // is emphasis only and never the sole identifier of a component or a state —
+  // the fill and the label carry that.
+  ...Object.fromEntries(
+    ALL_THEMES.flatMap(theme => [
+      [
+        `${theme}|accent tag border`,
+        [40, 'orange-900 rule on orange-50; emphasis, not the chip boundary'],
+      ],
+      [
+        `${theme}|accent tag border, hover`,
+        [
+          33.1,
+          'orange-900 rule on orange-100; emphasis, not the state indicator',
+        ],
+      ],
+    ])
+  ),
+  'base|secondary card accent rule': [
+    42.5,
+    'orange-800 rule on the card surface; emphasis, not the card boundary',
+  ],
+  'preventionweb|secondary card accent rule': [
+    42.5,
+    'orange-800 rule on the card surface; emphasis, not the card boundary',
+  ],
+  'irp|secondary card accent rule': [
+    42.5,
+    'orange-800 rule on the card surface; emphasis, not the card boundary',
+  ],
+  'mcr|secondary card accent rule': [
+    42.5,
+    'orange-800 rule on the card surface; emphasis, not the card boundary',
+  ],
+  'delta|secondary card accent rule': [
+    34.7,
+    "orange-800 rule on DELTA's tinted card surface; emphasis, not the card boundary",
+  ],
 
-  'base|accent tag label, hover': [
-    42.5,
-    'hover lightens to orange-800, so hover is worse than rest',
+  // The other three accent rules. None of them clears the non-text floor
+  // perceptually; the WCAG table above carries the per-rule reasoning.
+  ...Object.fromEntries(
+    ALL_THEMES.map(theme => [
+      `${theme}|secondary CTA accent rule`,
+      [
+        37.6,
+        'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
+      ],
+    ])
+  ),
+  'base|secondary hero accent rule': [
+    31.4,
+    'orange-800 rule on the hero fill; the variant has no other mark, so this is a weak identifier rather than emphasis',
   ],
-  'preventionweb|accent tag label, hover': [
-    42.5,
-    'hover lightens to orange-800, so hover is worse than rest',
+  'preventionweb|secondary hero accent rule': [
+    24.9,
+    'orange-800 rule on the PreventionWeb teal hero; the variant has no other mark',
   ],
-  'irp|accent tag label, hover': [
-    42.5,
-    'hover lightens to orange-800, so hover is worse than rest',
+  'irp|secondary hero accent rule': [
+    11.5,
+    'orange-800 rule on the IRP blue hero; the weakest rule in the set on either measure',
   ],
-  'mcr|accent tag label, hover': [
-    42.5,
-    'hover lightens to orange-800, so hover is worse than rest',
+  'mcr|secondary hero accent rule': [
+    40,
+    'orange-800 rule on the MCR purple hero; the variant has no other mark',
   ],
-  'delta|accent tag label, hover': [
-    42.5,
-    'hover lightens to orange-800, so hover is worse than rest',
+  'delta|secondary hero accent rule': [
+    31.4,
+    'orange-800 rule on the DELTA hero fill; the variant has no other mark',
+  ],
+  'base|hub header secondary bar rule': [
+    36.4,
+    'orange-800 rule on the tinted bar; the surface is otherwise identical to the default header',
+  ],
+  'preventionweb|hub header secondary bar rule': [
+    31.3,
+    'orange-800 rule on the tinted bar; the surface is otherwise identical to the default header',
+  ],
+  'irp|hub header secondary bar rule': [
+    21.1,
+    'orange-800 rule on the IRP tinted bar; the surface is otherwise identical to the default header',
+  ],
+  'mcr|hub header secondary bar rule': [
+    43.3,
+    'orange-800 rule on the tinted bar; the surface is otherwise identical to the default header',
+  ],
+  'delta|hub header secondary bar rule': [
+    36.4,
+    'orange-800 rule on the tinted bar; the surface is otherwise identical to the default header',
   ],
 
   'base|legacy tab label, active': [
@@ -1871,75 +1930,6 @@ const PERCEPTUAL_EXCEPTIONS = {
   'irp|notice secondary action on the offline (negative) notice': [
     61.3,
     'IRP blue on red-50 (WCAG 2 disagrees: 5.03:1 clears the 4.5:1 minimum)',
-  ],
-
-  'base|card title, secondary variant': [42.5, 'orange-800 title link'],
-  'preventionweb|card title, secondary variant': [
-    42.5,
-    'orange-800 title link',
-  ],
-  'irp|card title, secondary variant': [42.5, 'orange-800 title link'],
-  'mcr|card title, secondary variant': [42.5, 'orange-800 title link'],
-  'delta|card title, secondary variant': [34.7, 'orange-800 title link'],
-
-  'base|hero body text, secondary variant': [
-    42.5,
-    'white body copy on orange-800',
-  ],
-  'preventionweb|hero body text, secondary variant': [
-    42.5,
-    'white body copy on orange-800',
-  ],
-  'irp|hero body text, secondary variant': [
-    42.5,
-    'white body copy on orange-800',
-  ],
-  'mcr|hero body text, secondary variant': [
-    42.5,
-    'white body copy on orange-800',
-  ],
-  'delta|hero body text, secondary variant': [
-    42.5,
-    'white body copy on orange-800',
-  ],
-
-  'base|hero CTA label, secondary variant': [
-    42.5,
-    'orange-800 label on the white pill',
-  ],
-  'preventionweb|hero CTA label, secondary variant': [
-    42.5,
-    'orange-800 label on the white pill',
-  ],
-  'irp|hero CTA label, secondary variant': [
-    42.5,
-    'orange-800 label on the white pill',
-  ],
-  'mcr|hero CTA label, secondary variant': [
-    42.5,
-    'orange-800 label on the white pill',
-  ],
-  'delta|hero CTA label, secondary variant': [
-    42.5,
-    'orange-800 label on the white pill',
-  ],
-
-  'preventionweb|button label on primary background, hover': [
-    46.7,
-    'orange-900 hover fill under a white label',
-  ],
-  'irp|button label on primary background, hover': [
-    46.7,
-    'orange-900 hover fill under a white label',
-  ],
-
-  'preventionweb|outline primary button label, hover fill': [
-    46.7,
-    'same orange-900 chain as the primary hover',
-  ],
-  'irp|outline primary button label, hover fill': [
-    46.7,
-    'same orange-900 chain as the primary hover',
   ],
 
   'irp|outline tag label, hover fill': [54.7, 'IRP tag blue on blue-50'],
@@ -2038,6 +2028,39 @@ describe('component token contrast, including hover and active states', () => {
     expect(source).toMatch(
       /--mg-tag-foreground:\s*rgb\(var\(--mg-color-neutral-0\)\);/
     );
+  });
+
+  // The pairs above are token pairs: they measure what the tokens resolve to,
+  // not what a stylesheet actually paints. That is the register's blind spot —
+  // putting .mg-tag--accent's fill back to the solid Sendai orange restores the
+  // exact 2.95:1 failure unisdr/undrr-mangrove#1196 removed and every pair here
+  // still passes, because no pair names the tag's fill. This binds the one
+  // accent surface the issue was about to the pair that measures it. The wider
+  // gap — a register entry per painted surface — is a separate piece of work.
+  test('tag.scss paints the accent chip with the pair the register measures', () => {
+    const source = fs.readFileSync(
+      path.resolve(__dirname, '../../../Atom/Tag/tag.scss'),
+      'utf8'
+    );
+    const accent = source.slice(source.indexOf('.mg-tag--accent {'));
+    const block = accent.slice(0, accent.indexOf('\n}\n') + 3);
+
+    // The fill is the pale end of the ramp, and the label is --mg-color-text:
+    // the 'accent tag label' pair. Neither may become the accent itself.
+    expect(block).toMatch(/rgb\(var\(--mg-color-orange-50\)\)/);
+    expect(block).toMatch(/rgb\(var\(--mg-color-orange-100\)\)/);
+    expect(block).toMatch(
+      /--mg-tag-foreground:\s*rgb\(var\(--mg-color-text\)\);/
+    );
+    // The accent may only be the border here — the 'accent tag border' pair.
+    expect(block).toMatch(
+      /border-color:\s*rgb\(var\(--mg-color-tag-accent\)\);/
+    );
+    // ...and only the border. Scoped to the two fill declarations, so the
+    // border-color line below them cannot satisfy the match by accident.
+    const fills = block.match(/--mg-tag-background(?:-hover)?:[\s\S]*?\);/g);
+    expect(fills).toHaveLength(2);
+    for (const fill of fills) expect(fill).not.toMatch(/--mg-color-tag-accent/);
   });
 
   test('switch pairs measure what _form-base.scss compiles', () => {
@@ -2149,11 +2172,14 @@ describe('where the two contrast measures disagree', () => {
     'base | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'base | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'base | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'base | secondary hero accent rule | WCAG 2 PASSES 3.13:1 (min 3) | perceptual fails 31.4 (NON_TEXT needs 50)',
     'base | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
+    'base | hub header secondary bar rule | WCAG 2 PASSES 3.74:1 (min 3) | perceptual fails 36.4 (NON_TEXT needs 50)',
     'preventionweb | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'preventionweb | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
+    'preventionweb | hub header secondary bar rule | WCAG 2 PASSES 3.01:1 (min 3) | perceptual fails 31.3 (NON_TEXT needs 50)',
     'preventionweb | notice secondary action on the offline (negative) notice | WCAG 2 PASSES 4.59:1 (min 4.5) | perceptual fails 59.8 (BODY_TEXT needs 63)',
     'preventionweb | notice secondary action on the overlay over a black embed | WCAG 2 PASSES 4.81:1 (min 4.5) | perceptual fails 62.1 (BODY_TEXT needs 63)',
     'irp | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
@@ -2164,12 +2190,16 @@ describe('where the two contrast measures disagree', () => {
     'mcr | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'mcr | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'mcr | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'mcr | secondary hero accent rule | WCAG 2 PASSES 4.54:1 (min 3) | perceptual fails 40 (NON_TEXT needs 50)',
     'mcr | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
+    'mcr | hub header secondary bar rule | WCAG 2 PASSES 5.09:1 (min 3) | perceptual fails 43.3 (NON_TEXT needs 50)',
     'delta | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'delta | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'delta | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'delta | hero title on the split hero | WCAG 2 PASSES 3.07:1 (min 3) | perceptual fails 27.2 (LARGE_TEXT needs 50)',
+    'delta | secondary hero accent rule | WCAG 2 PASSES 3.13:1 (min 3) | perceptual fails 31.4 (NON_TEXT needs 50)',
     'delta | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
+    'delta | hub header secondary bar rule | WCAG 2 PASSES 3.74:1 (min 3) | perceptual fails 36.4 (NON_TEXT needs 50)',
   ];
 
   test('the two measures disagree about exactly these pairs', () => {
