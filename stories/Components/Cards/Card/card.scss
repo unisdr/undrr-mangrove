@@ -274,7 +274,12 @@
   }
 }
 
-// Color variants (shared accent colours from _variables.scss)
+// Color variants (shared accent colours from _variables.scss). Known exception
+// on "secondary": it resolves to the orange accent, and a card title painted
+// with it is 2.65 as ink on the card surface. Removing the
+// pairing is a brand decision, tracked in
+// https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy it:
+// docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 $card-variant-colours: (
   "secondary": rgb(var(--mg-color-secondary)),
   "tertiary": rgb(var(--mg-color-tertiary)),

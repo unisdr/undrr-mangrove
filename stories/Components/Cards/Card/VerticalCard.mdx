@@ -69,6 +69,8 @@ Use the `variant` prop to change the title accent color. These match the Hero co
 
 Use the variant control below the canvas to preview each option.
 
+**Contrast:** `secondary` is the orange accent, and a title painted with it measures 2.65 against WCAG's 4.5 on the card surface. The orange carries no text at any size. Use `primary`, `tertiary` or `quaternary` for a card whose title has to be read. Removing the pairing is a brand decision, tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+
 ## Title link visibility
 
 Card titles show: blue color, underline (3px offset), and a right-pointing chevron (flips in RTL). On hover, underline intensifies.
@@ -159,6 +161,7 @@ Linked and unlinked cards frequently sit in the same row. They should read as on
 
 ## Changelog
 
+- **1.5.2** — 2026-09-18 ([#TBD](https://github.com/unisdr/undrr-mangrove/pull/TBD)): Documented the `secondary` variant as a recorded contrast exception — an orange-accent title is 2.65 on the card surface, and no text colour clears AA on that hue. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
 - **1.5.1** — 2026-09-15 ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153)): The card now fills 100% of its container's block size by default (excluding the book variant), not just when a shared flex/grid row's `align-items: stretch` happens to equalise it against sibling cards. Cards placed in their own separate column `<div>`s — a common CMS-templated three-up layout — previously stayed at their own content height even when the column itself was taller, with nothing visually tying same-row cards together. `block-size: 100%` resolves against the nearest ancestor with a real height and falls back to `auto` with none (a lone card with nothing to fill), so this is additive with no opt-in required.
 - **1.5.0** — 2026-09-10: Plain-text titles for unlinked cards, visible labels, `buttonLink` prop, and `card.scss` fixes for empty `href`.
 - **1.4.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Stretch to grid/flex row height; keep images intrinsic and CTAs at bottom.
