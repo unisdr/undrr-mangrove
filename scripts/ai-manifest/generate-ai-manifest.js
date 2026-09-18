@@ -1775,7 +1775,7 @@ async function main() {
 - Project changelog (markdown): https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
-- Design tokens dictionary: ${DOCS_BASE}tokens.json
+- Theme token dictionary: ${DOCS_BASE}tokens.json (theme tokens only — component custom properties are documented per component)
 
 ## For AI agents
 
@@ -1790,8 +1790,10 @@ ${DOCS_BASE}releases.json
 CSS utility class reference (~${utilityClassCount} classes):
 ${DOCS_BASE}ai-components/utilities.json
 
-Design tokens dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
+Theme token dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
 ${DOCS_BASE}tokens.json
+
+This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define. Component-scoped custom properties (the --mg-switch-* set, --mg-card-border, --mg-empty-state-*, --mg-notice-*, --mg-tree-*, --mg-drawer-size, --mg-icon-fg, --mg-legend-tick-pos, --mg-dataviz-surface, --mg-show-more-height and the rest) are public API but are not in it. Read the component's ai-components/{id}.json entry or its Storybook docs page for those. The dictionary's own \`scope\` field says the same thing; a machine-readable per-component list is tracked in https://github.com/unisdr/undrr-mangrove/issues/1207.
 
 Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs
@@ -1863,12 +1865,14 @@ Colour, spacing, radii and component tokens are CSS custom properties, so they a
 
 Where they come from:
 
-- Compiled design tokens dictionary: ${DOCS_BASE}tokens.json
+- Compiled theme token dictionary: ${DOCS_BASE}tokens.json — theme tokens only; see its \`scope\` field
 - \`tokens/mangrove.yaml\` — the brand-neutral base: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/tokens/mangrove.yaml
 - \`tokens/undrr.yaml\`, \`preventionweb.yaml\`, \`irp.yaml\`, \`mcr.yaml\`, \`delta.yaml\` — brand layers merged over the base, same directory.
 - \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/stories/assets/scss/_tokens-data-viz.scss
 
 Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
+
+\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define, and nothing else. A component may also define its own \`--mg-{component}-*\` properties with their own defaults (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-tree-*\`, \`--mg-drawer-size\`), or read an input hook that no stylesheet defines so you can set it (\`--mg-switch-*\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`). Those are public API and are NOT in \`tokens.json\`; grep the compiled CSS and you will find them, which is not how you should have to. Read the component's \`ai-components/{id}.json\` or its Storybook page instead. Tracked for a structural fix in https://github.com/unisdr/undrr-mangrove/issues/1207.
 
 What you actually write against is the compiled result: the \`--mg-*\` custom properties in the theme stylesheets above.
 
@@ -1903,6 +1907,18 @@ Font families, breakpoints, and \`$mg-tabs-border-bottom\` remain SCSS-only buil
 - Locales: en, ar, my, ja (RTL supported)
 - Semantic HTML, WCAG accessible
 
+### List semantics: do not add role="list"
+
+Do NOT put \`role="list"\` on a \`<ul>\` or \`<ol>\` you give a Mangrove class to. Mangrove's own rendered HTML does not, and the components do not need it.
+
+Every Mangrove class that hides list markers does it with \`list-style: none\` followed by \`list-style-type: ""\`. Safari drops the implicit \`list\` role from a list whose marker is \`none\`, which is the bug \`role="list"\` is usually added to work around; an empty string is still a marker, so the role survives, renders nothing and reserves no space. The \`none\` before it is the fallback for browsers too old to parse a string marker. Fixing it in the stylesheet is what reaches consumers who hand-write the markup, which is most of them.
+
+This covers \`.mg-breadcrumb\`, \`.mg-pager__list\`, \`.mg-on-this-page-nav__list\`, \`.mg-status-label-group\`, \`.mg-legend__list\`, \`.mg-hub-header__nav\`, the MegaMenu nav and sidebar lists, and the search widget's active-filter list.
+
+Some lists carry a different ARIA role on purpose — \`.mg-tree\` is \`role="tree"\`, its groups are \`role="group"\`, the mega-menu panels are \`role="menu"\`, the select dropdown is \`role="listbox"\`, and \`.mg-tabs__list\` becomes \`role="tablist"\` once \`js/tabs.js\` initialises it. That role replaces list semantics. Keep it, and do not add \`role="list"\` alongside it.
+
+If you are writing a list of your own with \`list-style: none\` and no Mangrove class, the Safari bug is yours to handle: either add \`list-style-type: ""\` after it, or add \`role="list"\`.
+
 ### How to use
 
 1. Fetch ${DOCS_BASE}ai-components/index.json
@@ -1910,6 +1926,11 @@ Font families, breakpoints, and \`$mg-tabs-border-bottom\` remain SCSS-only buil
 3. Check vanillaHtml / requiresReact to know if you need React
 4. Fetch its detailsUrl for rendered HTML, props, and code examples
 5. For CSS utilities, fetch ${DOCS_BASE}ai-components/utilities.json
+
+The component index is not the whole library. Two things live elsewhere, and searching only the index will tell you they do not exist:
+
+- **CSS utility classes are in \`utilities.json\`, not the index.** Some patterns ship as utility classes with no component entry at all — the accordion (\`.mg-accordion\`) is one, and the data-table modifiers (\`.mg-table--data\` and the \`.mg-table__th--sortable\` / \`--sticky\` / \`.mg-table__td--numeric\` family) are documented there rather than on the Table entry. Fetch \`utilities.json\` before concluding Mangrove has no accordion or no sortable table.
+- **Component custom properties are not in \`tokens.json\`.** It is a theme token dictionary; see the "Design tokens" section above.
 
 ### Brand guide
 
