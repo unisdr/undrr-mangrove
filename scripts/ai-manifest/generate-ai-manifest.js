@@ -61,6 +61,10 @@ const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 const ASSETS_BASE = 'https://assets.undrr.org';
 const DEFAULT_DOCS_BASE = 'https://mangrove.undrr.org/';
 
+// Longest a component's `summary` may be before component-data.js has to
+// supply a short one of its own. Roughly one full sentence.
+const SUMMARY_MAX_LENGTH = 200;
+
 // One bundle per theme, plus the combined bundle.
 //
 // Each single-theme bundle carries its own token block and nothing else, so
@@ -809,42 +813,73 @@ function parseJsDocParams(jsDocTags) {
   return params;
 }
 
+/** First line of a component's react-docgen docblock, tags stripped. */
+function docgenLine(component) {
+  if (!component.reactDocgen?.description) return '';
+  const desc = component.reactDocgen.description
+    .replace(/@param\s+\{[^}]*\}\s+\S+\s*/g, '')
+    .replace(/@returns?\s+.*/g, '')
+    .trim();
+  return desc ? desc.split('\n')[0] : '';
+}
+
 /**
- * Get the best description for a component, with curated fallback.
+ * Get the best description for a component.
  *
- * For most entries JSDoc wins over component-data.js: the source-level doc
- * comment was written to describe that specific export and is normally more
- * accurate/current than a hand-maintained manifest entry, which is why this
- * order is the default rather than something to "fix" globally.
+ * The curated component-data.js description wins over the source docblock.
+ * Both are written by hand, but they are written for different readers: the
+ * docblock describes the export to someone already looking at the source,
+ * while the curated entry is the manifest's own editorial surface, written
+ * for an agent that only ever sees index.json. When a maintainer writes a
+ * usage contract into component-data.js, that is the text meant to reach the
+ * manifest — see undrr-mangrove#1231, where #1225's icon-button contract
+ * never reached index.json because CtaButton.jsx's docblock outranked it.
  *
- * stories/Patterns/* is the deliberate exception. Each pattern's exported
- * function already carries a JSDoc comment written for Storybook's docs page
- * (describing the demo, not the manifest), so under the default order a
- * curated component-data.js description for a pattern is silently never
- * used — see undrr-mangrove#1129. A pattern also isn't a reusable export the
- * way a Component/Atom/Molecule is: it exists to demonstrate a composition,
- * so the manifest-facing description is worth curating deliberately rather
- * than inheriting Storybook's docs-page copy. Curated data therefore wins
- * for `patterns-*` ids when present, before JSDoc is even considered.
+ * This replaces a narrower `patterns-*` exception added for
+ * undrr-mangrove#1129, which was the same failure on the pattern stories.
+ * One rule, applied everywhere, rather than a list of ids that need it.
+ *
+ * A curated description may be long — a full contract paragraph, not a
+ * sentence. That is what `summary` is for: see getSummary().
  */
 function getDescription(id, component, data) {
-  if (id.startsWith('patterns-') && data?.description) return data.description;
+  if (data?.description) return data.description;
 
   if (component.description) return component.description;
 
-  if (component.reactDocgen?.description) {
-    const desc = component.reactDocgen.description
-      .replace(/@param\s+\{[^}]*\}\s+\S+\s*/g, '')
-      .replace(/@returns?\s+.*/g, '')
-      .trim();
-    if (desc) return desc.split('\n')[0];
-  }
-
-  if (data?.description) return data.description;
+  const docgen = docgenLine(component);
+  if (docgen) return docgen;
 
   if (REQUIRES_REACT[id]) return REQUIRES_REACT[id];
 
   return '';
+}
+
+/**
+ * Get the one-line summary shown in index.json beside the full description.
+ *
+ * `summary` and `description` used to hold the same string. They no longer
+ * do: a curated description carries the whole contract, which is what an
+ * agent grepping the index needs to find, but it does not read as a label in
+ * a list of 82 components. A curated entry whose description runs past
+ * SUMMARY_MAX_LENGTH therefore carries its own short `summary`, and
+ * `yarn validate-manifest` fails when it does not.
+ */
+function getSummary(id, component, data, description) {
+  if (data?.summary) return data.summary;
+
+  if (description.length <= SUMMARY_MAX_LENGTH) return description;
+
+  // Safety net for a long description nobody has summarised yet (validation
+  // catches the curated case): prefer the docblock line, else the first
+  // sentence.
+  const docgen = docgenLine(component);
+  if (docgen && docgen.length <= SUMMARY_MAX_LENGTH) return docgen;
+
+  const firstSentence = description.match(/^.*?[.!?](?=\s|$)/)?.[0];
+  return firstSentence && firstSentence.length <= SUMMARY_MAX_LENGTH
+    ? firstSentence
+    : description;
 }
 
 /** Build the Storybook docs URL for a component. */
@@ -922,8 +957,13 @@ async function renderComponents() {
       } catch {
         formatted = html;
       }
-      const desc = curatedData[componentId]?.description || fileName;
-      results.set(componentId, [{ name: desc, html: formatted }]);
+      // Name the example, not the component. This used to be the curated
+      // description, which reads as a label only while a description is one
+      // sentence long — see undrr-mangrove#1231. The description is published
+      // in the same file, on the component.
+      results.set(componentId, [
+        { name: `${fileName} — default render`, html: formatted },
+      ]);
       rendered++;
     } catch (e) {
       console.warn(`  skip ${fileName}: ${e.message.split('\n')[0]}`);
@@ -959,6 +999,35 @@ if (uncoveredIds.length > 0) {
     `Note: ${uncoveredIds.length} component(s) have no entry in component-data:`
   );
   for (const id of uncoveredIds) console.warn(`  - ${id}`);
+}
+
+// ---------------------------------------------------------------------------
+// Check that a long curated description carries a short summary
+//
+// The curated description reaches `description` in index.json and in every
+// detail file, which is the point: an agent greps the index and finds the
+// contract. `summary` is the other half of that entry — the line a human or
+// an agent reads when scanning 82 components — so a description written as a
+// paragraph needs a sentence written for that slot instead.
+// ---------------------------------------------------------------------------
+const missingSummaries = [];
+for (const [componentId, data] of Object.entries(curatedData)) {
+  if (typeof data?.description !== 'string') continue;
+  if (data.summary) {
+    if (data.summary.length > SUMMARY_MAX_LENGTH) {
+      missingSummaries.push(
+        `${componentId}: summary is ${data.summary.length} characters ` +
+          `(max ${SUMMARY_MAX_LENGTH})`
+      );
+    }
+    continue;
+  }
+  if (data.description.length > SUMMARY_MAX_LENGTH) {
+    missingSummaries.push(
+      `${componentId}: description is ${data.description.length} characters ` +
+        `and there is no summary (max ${SUMMARY_MAX_LENGTH})`
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -1477,6 +1546,17 @@ if (validateOnly) {
     failed = true;
   }
 
+  if (missingSummaries.length > 0) {
+    console.error(
+      `Validation failed: ${missingSummaries.length} curated description(s) ` +
+        'run past the summary length with no short `summary` of their own. ' +
+        'The description is published in full; add a one-sentence `summary` ' +
+        'beside it in component-data.js for the index listing:'
+    );
+    for (const problem of missingSummaries) console.error(`  - ${problem}`);
+    failed = true;
+  }
+
   if (malformedExamples.length > 0) {
     console.error(
       `Validation failed: ${malformedExamples.length} curated example(s) are ` +
@@ -1675,7 +1755,7 @@ async function main() {
     if (component.import && !validImport) droppedImportCount++;
 
     // --- Index entry (lightweight) ---
-    const summary = description;
+    const summary = getSummary(id, component, data, description);
     const indexEntry = { id, name, summary, description };
     if (validImport) indexEntry.import = validImport;
     indexEntry.docsUrl = docsUrl(id);

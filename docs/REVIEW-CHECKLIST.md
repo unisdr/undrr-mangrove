@@ -95,6 +95,7 @@ See [Adding hydration support](https://mangrove.undrr.org/?path=/docs/contributi
 ## AI discoverability and manifests
 
 - [ ] If component HTML markup or CSS classes changed, updated `scripts/ai-manifest/component-data.js`
+- [ ] The curated `description` in `component-data.js` still matches what the component does — it is published ahead of the component's docblock, so it is what an agent grepping `index.json` reads. A description over 200 characters carries a one-sentence `summary` for the index listing
 - [ ] If new utility classes were created, indexed in `scripts/ai-manifest/css-utilities.js`
 - [ ] If the component gained or renamed a CSS custom property, described it in `scripts/ai-manifest/custom-properties.js`
 - [ ] If a CSS custom property left the public API, `MIN_PROPERTIES` came down with it and the CHANGELOG says so
