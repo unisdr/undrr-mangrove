@@ -241,3 +241,78 @@ describe('Switch pending state markup', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Switch error state markup', () => {
+  // The switch is CSS only, so what a consumer has to get right is the
+  // markup: aria-invalid on the input, the message outside the label so it
+  // does not join the accessible name, and aria-describedby joining the two.
+  const ErrorSwitch = () => (
+    <div>
+      <label className="mg-switch">
+        <input
+          type="checkbox"
+          role="switch"
+          className="mg-switch__input"
+          id="layer"
+          defaultChecked
+          aria-invalid="true"
+          aria-describedby="layer-error"
+        />
+        <span className="mg-switch__track" aria-hidden="true">
+          <span className="mg-switch__thumb"></span>
+        </span>
+        <span className="mg-switch__label">Seismic hazard layer</span>
+      </label>
+      <p className="mg-form-error" id="layer-error" role="alert">
+        This layer could not load. Try again.
+      </p>
+    </div>
+  );
+
+  // Latest intent wins: the error says the layer failed, it does not undo
+  // what the user asked for. See unisdr/undrr-mangrove#1187.
+  it('marks the switch invalid without changing its position', () => {
+    render(<ErrorSwitch />);
+    const input = screen.getByRole('switch');
+    expect(input).toBeChecked();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('describes the switch with the error message, as the other controls do', () => {
+    render(<ErrorSwitch />);
+    expect(screen.getByRole('switch')).toHaveAccessibleDescription(
+      'This layer could not load. Try again.'
+    );
+  });
+
+  // Inside the label the message would become part of the switch's name.
+  it('keeps the message out of the accessible name', () => {
+    render(<ErrorSwitch />);
+    expect(screen.getByRole('switch')).toHaveAccessibleName(
+      'Seismic hazard layer'
+    );
+  });
+
+  it('announces the message, so a failure reaches assistive technology', () => {
+    render(<ErrorSwitch />);
+    expect(screen.getByRole('alert')).toHaveClass('mg-form-error');
+  });
+
+  it('has no a11y violations', async () => {
+    const { container } = render(<ErrorSwitch />);
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('has no a11y violations at the small size', async () => {
+    const { container } = render(
+      <label className="mg-switch mg-switch--small">
+        <input type="checkbox" role="switch" className="mg-switch__input" />
+        <span className="mg-switch__track" aria-hidden="true">
+          <span className="mg-switch__thumb"></span>
+        </span>
+        <span className="mg-switch__label">Show disabled layers</span>
+      </label>
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});

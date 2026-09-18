@@ -78,6 +78,89 @@ Disabled state (use the HTML `disabled` attribute, not CSS-only styling):
 
 > **Note:** The native `<input type="checkbox">` manages the checked/unchecked state for assistive technologies automatically. When toggling the switch via JavaScript, update the `checked` property on the input element rather than managing `aria-checked` separately.
 
+### Error state
+
+The switch shows an error the same way every other control in Mangrove does: `aria-invalid="true"` on the input, a red boundary on the control, and a `.mg-form-error` message joined to it with `aria-describedby`. A consumer who has used the error state on a text input has nothing new to learn here, and `FormErrorSummary` links to the switch by `id` exactly as it links to any other field.
+
+The story below shows a switch and a text input in error side by side.
+
+<Canvas of={CheckboxStories.SwitchError} />
+
+```html
+<label class="mg-switch">
+  <input
+    type="checkbox"
+    role="switch"
+    class="mg-switch__input"
+    id="hazard-layer"
+    aria-invalid="true"
+    aria-describedby="hazard-layer-error"
+    checked
+  />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Seismic hazard layer</span>
+</label>
+<p class="mg-form-error" id="hazard-layer-error" role="alert">
+  This layer could not load. Try again.
+</p>
+```
+
+Three markups are styled, in that order of preference:
+
+| Markup                                 | Use it when                                                                                               |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `aria-invalid="true"` on the input     | Always, if you can. It is the only one assistive technology can see, so the other two are cosmetic alone. |
+| `mg-switch__input--error` on the input | The `--error` element modifier the other controls carry. Add `aria-invalid` as well.                      |
+| `mg-switch--error` on the label        | Your template can only reach the label, as with `.mg-switch--pending`. Add `aria-invalid` as well.        |
+
+Notes on using it:
+
+- **Keep the message outside the `<label>`.** Anything inside the label becomes part of the switch's accessible name.
+- **The switch stays where the user put it.** Unlike the pending state, the error state does not move the thumb. For "the thing this switch controls failed", that is usually what you want: a controller whose latest intent wins would contradict the user by reverting. If the change itself failed to save and you are reverting, use the pending helper, which moves the switch back and announces the failure — see below.
+- **The boundary is the track's inset, coloured.** The track carries its inset as a transparent border, so the error is a `border-color` change and nothing else. It cannot displace the focus ring, which is an outline plus a separator band. Do not paint an error with `box-shadow` on the track: that band is a `box-shadow`, and a consumer rule at the same specificity replaces it.
+- **Forced colours.** The track sets `forced-color-adjust: none`, so an author red would be painted unchanged while every state around it adapts. Mangrove's own error state goes back to `CanvasText` and shows a dashed edge instead, which survives a palette with no red in it.
+- Set `--mg-switch-track-border-color--error` to change the colour.
+
+### Size
+
+Every length in the switch derives from one custom property, so a smaller or larger switch means setting a number, never re-declaring the thumb's `transform`. Overriding the transform is the trap this replaced: Mangrove pairs its own travel with a `[dir="rtl"]` counterpart, and a consumer rule of equal specificity wins in both directions, so the thumb slid the wrong way by the wrong distance in Arabic.
+
+<Canvas of={CheckboxStories.SwitchSizes} />
+
+There is a shared small size for a toolbar, a table row or a panel header. Prefer it to a size of your own:
+
+```html
+<label class="mg-switch mg-switch--small">
+  <input type="checkbox" role="switch" class="mg-switch__input" />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Show disabled layers</span>
+</label>
+```
+
+For any other size, set `--mg-switch-size` on the switch or on any ancestor:
+
+```css
+.panel-header .mg-switch {
+  --mg-switch-size: 1.125rem;
+}
+```
+
+| Custom property                 | Default                            | What it sets                                                          |
+| ------------------------------- | ---------------------------------- | --------------------------------------------------------------------- |
+| `--mg-switch-size`              | `1.5rem` (24px)                    | The whole switch. Set this one unless you need a part on its own.     |
+| `--mg-switch-track-block-size`  | `--mg-switch-size`                 | The track's height                                                    |
+| `--mg-switch-track-inline-size` | `1.75 ×` the track's block size    | The track's width                                                     |
+| `--mg-switch-track-inset`       | `1/12` of the track's block size   | The space around the thumb, drawn as a border the error state colours |
+| `--mg-switch-thumb-size`        | The block size less its two insets | The thumb                                                             |
+
+The thumb's travel is the track's inline size less the thumb and its two insets, in both directions, and the pending ring is a fraction of the thumb, so all of it follows whatever you set. `.mg-switch--small` sets `--mg-switch-size: 1.125rem` and tightens the row gap to match; it re-declares no length inside the switch.
+
+Two things do not scale, deliberately: the row keeps its `36px` minimum height, so a small switch still has a large enough target (WCAG 2.5.8), and the focus ring keeps its standard width.
+
 ### Pending state
 
 Use the pending state when flipping a switch starts something that takes a moment to confirm, such as saving a setting to a server. It works in both directions: off to on, and on to off.
@@ -117,7 +200,9 @@ If your markup cannot add attributes to the input, add `mg-switch--pending` to t
 - sets `aria-busy="true"` one frame after the change
 - lets only the latest request settle the switch, and times out, aborts and reverts a request that fails
 
-Try it below. Toggle the switch with the mouse or the Space key, then press it again while it is saving. Set `outcome` in the controls to `failure` or `timeout` to see the switch revert. The story runs the same helper.
+Both of the last two are optional. `revert: false` leaves the switch where the user put it, for an app that reports a failure in its own way, and `timeout: 0` takes the deadline off for a save that legitimately runs long. The announcements are also available on their own, as [`mgSwitchAnnouncer()`](#announcements-on-their-own).
+
+Try it below. Toggle the switch with the mouse or the Space key, then press it again while it is saving. Set `outcome` in the controls to `failure` or `timeout` to see the switch revert, and turn `revert` off to see it stay put instead. The story runs the same helper.
 
 <Canvas of={CheckboxStories.SwitchPendingInteractive} />
 
@@ -302,9 +387,41 @@ document.addEventListener('mg-switch:save', event => {
 | --------- | ---------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `save`    | `(checked: boolean, signal: AbortSignal) => Promise` | none    | Saves the requested position. Resolve for success, reject or throw for failure. Return the promise: any other value counts as an immediate success. Without it, `mg-switch:save` is dispatched. |
 | `status`  | `Element` or selector string                         | none    | Live region for announcements. See above for what is used without it.                                                                                                                           |
-| `timeout` | `number` (milliseconds)                              | `10000` | A save that has not settled by then is aborted with a `TimeoutError` and reverts.                                                                                                               |
+| `timeout` | `number` (milliseconds)                              | `10000` | A save that has not settled by then is aborted with a `TimeoutError` and fails. `0` or `Infinity` means no deadline. Any other unusable value falls back to the default.                        |
+| `revert`  | `boolean`                                            | `true`  | Whether a failed save moves the switch back. `false` keeps the requested position and sets `aria-invalid="true"` instead.                                                                       |
 | `labels`  | `object`                                             | English | Announcements, below.                                                                                                                                                                           |
 | `signal`  | `AbortSignal`                                        | none    | Aborting it destroys the helper. An already aborted signal enhances nothing.                                                                                                                    |
+
+`timeout` and `revert` can also be written in HTML, for markup a CMS renders and the one-listener pattern below: `data-mg-switch-timeout` (milliseconds, `0` for no deadline) and `data-mg-switch-revert="false"`. As with `data-mg-switch-labels`, the input wins over the label, and an option passed in JavaScript wins over both.
+
+#### Keeping the switch where the user put it
+
+Some apps are latest-intent-wins: the control shows what the user last asked for while the app catches up, and a failure is reported in the row rather than by moving the control. Pass `revert: false`.
+
+The switch then keeps the requested position when a save fails, and the helper sets `aria-invalid="true"` on the input, because the position no longer matches what is saved. It is undone when the next save starts, and by `destroy()`: whatever the input had there before, including nothing, is put back, so an `aria-invalid` the page set itself survives the failure.
+
+`aria-invalid` alone is not enough. It tells assistive technology that the value is not accepted and gives you a CSS hook (`.mg-switch__input[aria-invalid='true']`), and it now also turns on the switch's error state, so the track takes its red boundary. What it does not do is say what went wrong or how to try again — and a boundary on its own is colour alone, so the message is not optional. Handle `mg-switch:failed` and put a message next to the switch, in the row or region the switch controls. Its `detail.reverted` says which of the two happened.
+
+```js
+mgSwitchPending(input, {
+  revert: false,
+  save: saveLayer,
+});
+
+input.addEventListener('mg-switch:failed', event => {
+  // detail.checked is what the switch still shows; detail.requested matches it.
+  row.querySelector('.layer-error').textContent =
+    'This layer could not be loaded. Try again.';
+});
+```
+
+#### Saves that run long
+
+A save with no deadline is a save the helper cannot end. Pass `timeout: 0` (or `Infinity`) only when the promise you return always settles, such as a `fetch()` with its own timeout: until it does, the switch keeps `aria-busy="true"` and stays uninteractive, and `destroy()` is the only other way out.
+
+So that a screen reader user is not left on "Saving…" against a control marked busy with nothing further, the helper announces "Still saving…" once when the save passes ten seconds, the point where the default deadline would have been. Nothing more is announced until the save settles or the user presses the switch again.
+
+If your save can hang rather than run long, prefer a generous deadline to none: `timeout: 120000` still frees the switch in the end.
 
 | Label         | Default                                 | Announced when                       |
 | ------------- | --------------------------------------- | ------------------------------------ |
@@ -336,17 +453,48 @@ A label is a string, where `{label}` is replaced with the switch's label text, o
 | `mgSwitchPending(input, options)`                | Enhances one input. Returns `{ destroy() }`.                                                                                                                                                                                                                       |
 | `mgSwitchPendingInit(scope = document, options)` | Enhances each `[data-mg-switch-pending]` input, or the switch input inside a marked label, in `scope`: an element (including itself), the document or a list of elements. Skips enhanced inputs. Takes the options above except `status`. Returns the new helpers. |
 | `mgSwitchPendingDestroy(scope = document)`       | Destroys every enhanced switch in `scope`, including `scope` itself.                                                                                                                                                                                               |
+| `mgSwitchAnnouncer(element, options)`            | The announcements on their own, below. Takes `status` and `labels`.                                                                                                                                                                                                |
 
-`destroy()` removes the listeners, cancels pending timers, aborts a save in flight without announcing it, and removes `aria-busy` if a save was in flight. It also removes a status region it created and the `data-mg-switch-pending-enhanced` marker. It leaves `checked` as it is.
+`destroy()` removes the listeners, cancels pending timers, aborts a save in flight without announcing it, and removes `aria-busy` if a save was in flight, and undoes an `aria-invalid` it set. It also removes a status region it created and the `data-mg-switch-pending-enhanced` marker. It leaves `checked` as it is.
 
 Events are dispatched on the input and bubble:
 
-| Event               | Cancelable | `detail`                                    | When                                                                                                                                 |
-| ------------------- | ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `mg-switch:pending` | No         | `{ checked }`                               | A save starts. `checked` is the requested position.                                                                                  |
-| `mg-switch:save`    | Yes        | `{ checked, signal, respondWith(promise) }` | Only without a `save` option. Call `respondWith()` during dispatch, or `preventDefault()` during dispatch and `respondWith()` later. |
-| `mg-switch:settled` | No         | `{ checked, ok: true }`                     | The save succeeded. `checked` is set to the saved position, even if a form reset moved it meanwhile.                                 |
-| `mg-switch:failed`  | No         | `{ checked, requested, reason, error }`     | The save failed. `checked` is the position it reverted to. `reason` is `'error'` or `'timeout'`.                                     |
+| Event               | Cancelable | `detail`                                          | When                                                                                                                                                                                |
+| ------------------- | ---------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mg-switch:pending` | No         | `{ checked }`                                     | A save starts. `checked` is the requested position.                                                                                                                                 |
+| `mg-switch:save`    | Yes        | `{ checked, signal, respondWith(promise) }`       | Only without a `save` option. Call `respondWith()` during dispatch, or `preventDefault()` during dispatch and `respondWith()` later.                                                |
+| `mg-switch:settled` | No         | `{ checked, ok: true }`                           | The save succeeded. `checked` is set to the saved position, even if a form reset moved it meanwhile.                                                                                |
+| `mg-switch:failed`  | No         | `{ checked, requested, reverted, reason, error }` | The save failed. `checked` is the position the switch is left in, `requested` what the user asked for, and `reverted` whether the two differ. `reason` is `'error'` or `'timeout'`. |
+
+#### Announcements on their own
+
+The hard part of the pending state is not the state machine: it is announcing "Saving…", "Still saving…" and the outcome in a way screen readers actually read out, because `aria-busy` on a form control is rarely announced. An app that owns the switch's position and its own request handling should not have to re-implement that, so the announcements ship separately as well.
+
+`mgSwitchAnnouncer(element, { status, labels })` sets up the live region and returns the methods below. It adds no listeners, sets no attributes on the switch and holds no state about a save: it only writes text. `element` is a `.mg-switch__input` or a wrapper such as its label.
+
+```js
+import { mgSwitchAnnouncer } from '@undrr/undrr-mangrove/js/switch-pending.js';
+
+const announcer = mgSwitchAnnouncer(input, { labels: strings });
+
+toggleLayer(input.checked)
+  .then(() => announcer.settled(input.checked))
+  .catch(() => announcer.announce('{label} could not be loaded. Try again.'));
+```
+
+| Method               | Announces                                                                                                               |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `pending()`          | The `saving` label.                                                                                                     |
+| `stillSaving(force)` | The `stillSaving` label, at most once every 3 seconds unless `force` is `true`. Returns whether it announced.           |
+| `settled(checked)`   | The `on` or `off` label for that position.                                                                              |
+| `failed()`           | The `error` label.                                                                                                      |
+| `announce(text)`     | Anything else, in your own words: a string where `{label}` is replaced, or a function called with `(labelText, input)`. |
+| `label()`            | Nothing. Returns the switch's label text, resolved as the accessible name is.                                           |
+| `destroy()`          | Nothing. Cancels a scheduled re-announcement and removes a region it created.                                           |
+
+`status` is the region the announcer resolves or creates, or `null`. `labels` is the merged set of labels. Resolution, placement, `data-mg-switch-labels`, `{label}` replacement, the re-announce trick for a repeated message, and staying silent about a switch that has left the page all work exactly as they do for the full helper, because the full helper runs this code. Several announcers and helpers can share one region, as long as you point them all at it with `status` or `data-mg-switch-status`: the region each call creates for itself belongs to that call alone, so an announcer added to a switch the helper already enhanced would announce into a second region.
+
+An announcer takes no `save`, `timeout`, `revert` or `signal`: there is no save for it to manage. If you want the guards as well — ignoring presses while a save runs, `aria-busy`, only the latest request settling — use `mgSwitchPending()` with `revert: false` and `timeout: 0` instead.
 
 **Without the helper.** If you only want the styles, set `aria-busy="true"` on the input while your own request runs and `false` when it ends, and follow the accessibility notes below. The CSS needs nothing else.
 
@@ -356,7 +504,7 @@ Events are dispatched on the input and bubble:
 - Announce each step in a polite live region, such as an element with `role="status"`: "Saving…" when the request starts, then the outcome ("Real-time alerts turned on") or an error that says what to do next.
 - Presses while pending are ignored, and each ignored press announces "Still saving…", at most once every few seconds so a repeated key does not flood the region. Clearing the region before writing lets the same message be announced again.
 - Guard `change` as well as `click`, because a script can change the switch too. Let only the request in flight settle the switch, and time out a request that never answers, so a hung request cannot leave the switch locked.
-- On failure or timeout, set `checked` back to its previous value and announce the error.
+- On failure or timeout, set `checked` back to its previous value and announce the error. If your app keeps the switch where the user put it instead, mark the mismatch with `aria-invalid="true"` and say what went wrong next to the switch.
 - Keep focus on the switch. Do not move focus to the message.
 - Pending does not disable the input. The `disabled` attribute would drop focus and hide the control from some assistive technology. If you want the control to look unavailable as well, add `aria-disabled="true"`. It keeps the switch focusable, dims the track without fading the focus ring, and does not stop the switch toggling, so you still need the guards the helper adds.
 
@@ -369,11 +517,12 @@ Events are dispatched on the input and bubble:
 
 **Theming**
 
-The switch reads these custom properties, each with the default shown. Set them on the switch or on any ancestor, such as a region of the page or a theme wrapper.
+The switch reads these custom properties, each with the default shown. Set them on the switch or on any ancestor, such as a region of the page or a theme wrapper. The size hooks are listed under [Size](#size).
 
 | Custom property                         | Default                                  |
 | --------------------------------------- | ---------------------------------------- |
 | `--mg-switch-track-background`          | `rgb(var(--mg-color-neutral-400))`       |
+| `--mg-switch-track-border-color--error` | `rgb(var(--mg-color-red-900))`           |
 | `--mg-switch-track-background--checked` | `rgb(var(--mg-color-interactive))`       |
 | `--mg-switch-thumb-background`          | `rgb(var(--mg-color-neutral-0))`         |
 | `--mg-switch-track-overlay--pending`    | `rgb(var(--mg-color-neutral-500) / 0.4)` |
@@ -395,6 +544,19 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 
 ## Changelog
 
+- **2.4** — 2026-09-18 ([#1214](https://github.com/unisdr/undrr-mangrove/pull/1214)): Gave `.mg-switch` an error state and size hooks. A default switch renders exactly as before.
+  - Error state ([#1187](https://github.com/unisdr/undrr-mangrove/issues/1187)): `aria-invalid="true"` on the input, `.mg-switch__input--error`, or `.mg-switch--error` on the label, each giving the track a red boundary, with a `.mg-form-error` message joined by `aria-describedby` — the same pattern, class naming and error summary relationship as the text input, select, radio and checkbox. Unlike the pending state it does not move the thumb, so a controller whose latest intent wins does not contradict the user. `--mg-switch-track-border-color--error` sets the colour.
+  - The track's inset around the thumb is now a transparent border rather than padding. The box, the thumb and the travel are unchanged; the error state has a `border-color` to set, so it cannot displace the focus ring's outline and separator band the way a consumer `box-shadow` did. In forced colours, where the track opts out of colour forcing, the error is `CanvasText` and a dashed edge instead of an author red.
+  - Size hooks ([#1199](https://github.com/unisdr/undrr-mangrove/issues/1199)): `--mg-switch-size` sizes the whole switch, with `--mg-switch-track-inline-size`, `--mg-switch-track-block-size`, `--mg-switch-track-inset` and `--mg-switch-thumb-size` for a single part. The thumb's travel, its RTL counterpart and the pending ring all derive from them, so resizing a switch no longer means re-declaring the `transform` — an override that also beat Mangrove's `[dir="rtl"]` rule and sent the thumb the wrong way in Arabic.
+  - Added `.mg-switch--small` (a 1.125rem switch) for a toolbar, table row or panel header, so a shared size exists instead of each consumer inventing one. The row keeps its 36px minimum height for the touch target.
+  - Forced colours no longer takes 1px off the track's padding to make room for its border; it colours the border the track already has, so the travel holds at any size. The visible boundary is the track's inset rather than a fixed 1px, so at the default size it is 2px rather than 1px.
+  - Added "Switch error" and "Switch sizes" stories. The error story shows a text input in error beside the switch.
+- **2.3** — 2026-09-18 ([#1213](https://github.com/unisdr/undrr-mangrove/pull/1213)): Made revert-on-failure and the timeout optional in `js/switch-pending.js`, and released the announcements on their own ([#1189](https://github.com/unisdr/undrr-mangrove/issues/1189)). Defaults are unchanged. One caveat for existing callers: `timeout: 0` was a silent no-op in rc.2 — it failed a `> 0` check and fell back to the ten-second deadline — so anyone already passing `0`, or a `parseInt` that produced it, loses that safety net and a hung save now leaves the switch busy until `destroy()`.
+  - `revert: false` (or `data-mg-switch-revert="false"`) keeps the position the user asked for when a save fails, for apps that report a failure in the row rather than by moving the control. The helper sets `aria-invalid="true"` on the input instead, and puts back whatever was there when the next save starts or on `destroy()`, so an `aria-invalid` the page set itself survives.
+  - `timeout: 0` or `Infinity` (or `data-mg-switch-timeout`) switches the deadline off for a save that legitimately runs long. `aria-busy` then stays true until the save settles, so the helper announces "Still saving…" once at ten seconds, where the deadline would have been.
+  - Added `mgSwitchAnnouncer(element, { status, labels })`: the live region, label resolution, re-announce trick and rate limit, with `pending()`, `stillSaving()`, `settled()`, `failed()`, `announce()`, `label()` and `destroy()`, and no listeners or state. `mgSwitchPending()` runs it, so there is one implementation.
+  - `mg-switch:failed` now carries `reverted`, and its `checked` is the position the switch is left in either way.
+  - The interactive story has `revert` and `timeout` controls.
 - **2.2** — 2026-09-17 ([#1184](https://github.com/unisdr/undrr-mangrove/pull/1184)): Added a pending state for `.mg-switch`, set with `aria-busy="true"` or `.mg-switch--pending`, with a static indicator for reduced motion. Styled `aria-disabled` switches, made the switch visible in forced colours, and added `--mg-switch-*` custom properties.
   - `aria-disabled` dims the track with a page-coloured layer instead of opacity, so the focus ring stays at full strength.
   - Forced colours: disabled switches, on or off, use a `Canvas` track with `GrayText` parts and no opacity; the track boundary is a border, so the focus outline no longer replaces it, and the white focus band is dropped; the `.mg-switch--pending` ring spins with a visible gap when off.

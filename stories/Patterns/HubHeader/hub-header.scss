@@ -239,7 +239,9 @@
       overflow-x: auto;
       scrollbar-width: none;
       scroll-padding-inline: var(--mg-spacing-150);
-      list-style: none;
+
+      @include mg-list-unmarked;
+
       padding: 0;
       margin: 0;
       gap: var(--mg-spacing-50);

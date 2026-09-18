@@ -798,7 +798,19 @@ function buildTokensDictionary() {
     $id: 'mangrove-design-tokens-dictionary',
     schemaVersion: '1.0',
     description:
-      'Mangrove 2.0 Design Tokens Dictionary and Format Specifications',
+      'Mangrove 2.0 Theme Token Dictionary and Format Specifications. Theme tokens only — see `scope` for what is not here.',
+    scope: {
+      includes:
+        'Every --mg-* custom property emitted by the theme stylesheets from the tokens/*.yaml sources. Each one is defined on :root (or a .mg-theme-* block) in the bundles listed under `brands`, so it resolves on any element on the page.',
+      excludes:
+        'Mostly component-scoped custom properties. These are public API, several of them announced in the release notes, but none of them appear in `tokens`. Three kinds: (1) properties a component stylesheet defines itself, with its own default, such as --mg-empty-state-*, --mg-notice-* (except --mg-notice-action-secondary, which is a theme token), --mg-tree-*, --mg-drawer-size and --mg-drawer-offset; (2) input hooks a component reads but no stylesheet defines, so a wrapper, an inline style or a consuming page supplies the value — such as the --mg-switch-* set, --mg-card-border, --mg-icon-fg, --mg-icon-bg, --mg-cta-bg, --mg-legend-tick-pos and --mg-on-this-page-nav-offset. An input hook with no value set resolves to nothing and its declaration is dropped, so check the component documentation for whether it has a fallback. (3) The data-viz palette, --mg-dataviz-*, which is defined on :root by stories/assets/scss/_tokens-data-viz.scss rather than by a tokens/*.yaml source, so it is global like a theme token but still absent here.',
+      componentProperties: {
+        where:
+          "A component's own custom properties are documented on its Storybook docs page and in its ai-components/{id}.json entry, whose `description` names them and their defaults. There is no single machine-readable index of them yet.",
+        docs: 'https://mangrove.undrr.org/ai-components/index.json',
+        tracking: 'https://github.com/unisdr/undrr-mangrove/issues/1207',
+      },
+    },
     wrappingRules: {
       srgbChannels:
         'Must be wrapped in rgb(var(--token)) or rgb(var(--token) / <alpha>). Passing a raw var() in CSS color properties fails silently in browsers without console warnings.',

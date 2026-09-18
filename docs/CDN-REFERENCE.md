@@ -45,7 +45,11 @@ The DELTA Resilience theme has no legacy variant.
 | On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
 | Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
 | Copy Button | `/js/copy-button.js` | Zero-dependency copy-to-clipboard button |
-| Switch pending | `/js/switch-pending.js` | Saving state for `.mg-switch`: announcements, guards, timeout and revert |
+| Switch pending | `/js/switch-pending.js` | Saving state for `.mg-switch`: announcements, guards, and an optional timeout and revert. `mgSwitchAnnouncer()` exports the announcements alone |
+| Preview access | `/js/preview-access.js` | Preview-access gate form |
+| Shared constants | `/js/undrr.js` | Key codes, breakpoints and the `window.UNDRR` namespace |
+
+That table is the complete list. **There is no `/js/main.js` and no combined bundle** — every module is loaded on its own, so a `<script src=".../js/main.js">` returns 404. Load only the modules the page needs:
 
 ```html
 <script type="module">

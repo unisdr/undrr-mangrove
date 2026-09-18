@@ -127,6 +127,9 @@ The final item receives `aria-current="page"` and renders as plain text (not a l
 
 ## Changelog
 
+- **1.5.1** — 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)):
+  - The list inside `nav.mg-breadcrumb` is now styled whether it is a `<ul>` or an `<ol>`. The selector only matched `> ul`, but every curated breadcrumb example in the AI manifest uses `<ol>` — so a consumer copying the documented snippet got default numbering and no flex row. Both arms now share one `> :is(ul, ol)` rule.
+  - Markers are hidden with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin) instead of `list-style: none` alone. Safari drops the implicit `list` role from a markerless list; an empty string is still a marker, so the role survives and the count is announced again. You do not need `role="list"` on the list — the guidance that asked for it disagreed with the component's own rendered HTML.
 - **1.5** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Quieter link typography distinguishes the current page; logical separators, wrapping and keyboard focus work for both React and legacy list markup, including RTL and inverse variants.
 
 - **1.4.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a breadcrumb whose own language is not Arabic.

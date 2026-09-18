@@ -85,27 +85,53 @@ Use `iconColor` to add a circular colored background behind the icon (or as a st
 
 These properties align with VerticalCard and HorizontalCard for consistency:
 
-| Property      | Type    | Required    | Description                                                                                                                                               |
-| ------------- | ------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `icon`        | String  | Optional    | Icon class name (e.g., `"mg-icon fa-globe"`)                                                                                                              |
-| `imgback`     | String  | Optional    | Image URL (alternative to `icon`)                                                                                                                         |
-| `imgalt`      | String  | Optional    | Alt text for image                                                                                                                                        |
-| `iconColor`   | String  | -           | Background color for the icon badge (CSS color value). Can be used without `icon` to render a color-only swatch.                                          |
-| `iconFgColor` | String  | -           | Foreground (glyph) color for the icon. Pass any CSS color value to override the default gray (e.g., `'#ffffff'` for white).                               |
-| `borderColor` | String  | -           | Border color for the card (CSS color value). Renders a 2px solid border via `--mg-card-border` custom property.                                           |
-| `iconSize`    | Number  | `72`        | Width/height of icon in pixels (ignored when `imageScale` is set)                                                                                         |
-| `imageScale`  | String  | -           | Scale for icons and images: `'small'` (72px), `'medium'` (50%), `'large'` (75%), `'full'` (100%). Icons scale proportionally using container query units. |
-| `label`       | String  | Optional    | Badge or category label text                                                                                                                              |
-| `visualLabel` | String  | Optional    | Text label rendered above the icon/image in the visual area                                                                                               |
-| `title`       | String  | Required    | Card heading text (required for accessibility)                                                                                                            |
-| `srOnlyTitle` | Boolean | `false`     | Visually hide title but keep for screen readers (for logo cards)                                                                                          |
-| `summaryText` | String  | Optional    | Card body text (HTML supported)                                                                                                                           |
-| `link`        | String  | Optional    | URL for card link                                                                                                                                         |
-| `linkText`    | String  | Optional    | Text for text link CTA                                                                                                                                    |
-| `button`      | String  | Optional    | Button label text                                                                                                                                         |
-| `buttonType`  | String  | `'Primary'` | Button style: `'Primary'` or `'Secondary'`                                                                                                                |
+| Property      | Type    | Required    | Description                                                                                                                                                     |
+| ------------- | ------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `icon`        | String  | Optional    | Icon class name (e.g., `"mg-icon fa-globe"`)                                                                                                                    |
+| `imgback`     | String  | Optional    | Image URL (alternative to `icon`)                                                                                                                               |
+| `imgalt`      | String  | Optional    | Alt text for image                                                                                                                                              |
+| `iconColor`   | String  | -           | Background color for the icon badge (CSS color value). Can be used without `icon` to render a color-only swatch.                                                |
+| `iconFgColor` | String  | -           | Foreground (glyph) color for the icon. Pass any CSS color value to override the default gray (e.g., `'#ffffff'` for white).                                     |
+| `borderColor` | String  | -           | Border color for the card (CSS color value). Renders a 2px solid border via the `--mg-card-border` custom property. Omit it for the theme's interactive colour. |
+| `iconSize`    | Number  | `72`        | Width/height of icon in pixels (ignored when `imageScale` is set)                                                                                               |
+| `imageScale`  | String  | -           | Scale for icons and images: `'small'` (72px), `'medium'` (50%), `'large'` (75%), `'full'` (100%). Icons scale proportionally using container query units.       |
+| `label`       | String  | Optional    | Badge or category label text                                                                                                                                    |
+| `visualLabel` | String  | Optional    | Text label rendered above the icon/image in the visual area                                                                                                     |
+| `title`       | String  | Required    | Card heading text (required for accessibility)                                                                                                                  |
+| `srOnlyTitle` | Boolean | `false`     | Visually hide title but keep for screen readers (for logo cards)                                                                                                |
+| `summaryText` | String  | Optional    | Card body text (HTML supported)                                                                                                                                 |
+| `link`        | String  | Optional    | URL for card link                                                                                                                                               |
+| `linkText`    | String  | Optional    | Text for text link CTA                                                                                                                                          |
+| `button`      | String  | Optional    | Button label text                                                                                                                                               |
+| `buttonType`  | String  | `'Primary'` | Button style: `'Primary'` or `'Secondary'`                                                                                                                      |
 
 > **Implementation note (for contributors):** `iconFgColor` is applied via the `--mg-icon-fg` CSS custom property on the icon element. `borderColor` is applied via `--mg-card-border`.
+
+### Custom properties
+
+None of these is a theme token, so none of them appears in [`tokens.json`](https://mangrove.undrr.org/tokens.json). They are input hooks: the component reads them, and you supply the value from a prop, an inline style, or any ancestor.
+
+| Property              | Set by        | Default                            | What it sets                                           |
+| --------------------- | ------------- | ---------------------------------- | ------------------------------------------------------ |
+| `--mg-card-border`    | `borderColor` | `rgb(var(--mg-color-interactive))` | Colour of the 2px border on `.mg-card__icon--bordered` |
+| `--mg-icon-fg`        | `iconFgColor` | `rgb(var(--mg-color-neutral-700))` | Glyph colour of the icon                               |
+| `--mg-icon-bg`        | `iconColor`   | none — the badge paints no fill    | Background colour of `.mg-card__icon-wrap--colored`    |
+| `--mg-card-icon-size` | `iconSize`    | `3rem` on the horizontal variant   | Size of the visual, where the variant owns it          |
+
+Writing the class in plain HTML works without setting anything:
+
+```html
+<article class="mg-card mg-card__icon mg-card__icon--bordered">
+  <!-- border paints in the theme's interactive colour -->
+</article>
+
+<article
+  class="mg-card mg-card__icon mg-card__icon--bordered"
+  style="--mg-card-border: #e8963a"
+>
+  <!-- border paints orange -->
+</article>
+```
 
 ## Code examples
 
@@ -269,6 +295,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.4.2** — 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-card__icon--bordered` gives `--mg-card-border` a fallback of `rgb(var(--mg-color-interactive))`, so the class paints a border in the theme's accent colour when nothing sets the property. It was the only input hook in `card.scss` without a fallback, and an unset custom property drops the whole `border` declaration — a consumer writing the markup by hand got the extra padding and no border at all. React callers are unaffected: `borderColor` still sets the property inline and still wins. Documented the component's four custom properties and their defaults, including that none of them are theme tokens and none appear in `tokens.json`.
 - **1.4.1** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.
 - **1.4** — 2026-09-10 ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)):
   - Added `orientation="horizontal"`, which places the icon beside the content rather than above it — the arrangement undrr.org already uses for "what would you like to do" route rows. It owns the visual's size via `--mg-card-icon-size` (default `3rem`), so `imageScale` does not apply.

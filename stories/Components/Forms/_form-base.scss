@@ -297,6 +297,43 @@ $mg-switch-ring-gap: var(
   rgb(var(--mg-color-neutral-300))
 );
 
+// Error follows the rest of the form: the invalid control takes a red
+// boundary and the message is a sibling .mg-form-error. The track's inset is
+// a transparent border (below), so the error is a border-color change, the
+// same declaration .mg-form-input--error makes. Nothing here is a box-shadow
+// or an outline, so the focus ring's outline and separator band survive it.
+$mg-switch-error: var(
+  --mg-switch-track-border-color--error,
+  rgb(var(--mg-color-red-900))
+);
+
+// Geometry hooks. --mg-switch-size is the one number most consumers set: the
+// track's block size. The track's inline size, the inset around the thumb, the
+// thumb and the thumb's travel all derive from it, so resizing a switch never
+// means re-declaring the transform -- which is what broke RTL, where the
+// travel is the same distance the other way. See unisdr/undrr-mangrove#1199.
+// Each part can still be set on its own, and every derived value is written
+// once and reused by the LTR rule, the RTL rule and the forced-colours block.
+$mg-switch-size: var(--mg-switch-size, #{mg-rem(24)});
+$mg-switch-track-block: var(--mg-switch-track-block-size, #{$mg-switch-size});
+$mg-switch-track-inline: var(
+  --mg-switch-track-inline-size,
+  calc(#{$mg-switch-track-block} * 1.75)
+);
+$mg-switch-inset: var(
+  --mg-switch-track-inset,
+  calc(#{$mg-switch-track-block} / 12)
+);
+$mg-switch-thumb-size: var(
+  --mg-switch-thumb-size,
+  calc(#{$mg-switch-track-block} - 2 * #{$mg-switch-inset})
+);
+
+// The thumb crosses the track's content box: the track's inline size less its
+// two insets, less the thumb. Interpolated as a string so the LTR rule, the
+// RTL rule and any test read one expression.
+$mg-switch-travel: "#{$mg-switch-track-inline} - #{$mg-switch-thumb-size} - 2 * #{$mg-switch-inset}";
+
 .mg-switch {
   align-items: center;
   cursor: pointer;
@@ -326,7 +363,7 @@ $mg-switch-ring-gap: var(
       background-color: $mg-switch-track-checked;
 
       .mg-switch__thumb {
-        transform: translateX(mg-rem(18));
+        transform: translateX(calc(#{$mg-switch-travel}));
       }
     }
 
@@ -374,12 +411,14 @@ $mg-switch-ring-gap: var(
     );
     cursor: progress;
 
+    // Both lengths are fractions of the thumb (2px and 4px on a default
+    // 20px thumb), so a resized switch keeps the same ring proportions.
     .mg-switch__thumb::after {
-      border: mg-rem(2) dotted $mg-switch-ring;
+      border: calc(#{$mg-switch-thumb-size} * 0.1) dotted $mg-switch-ring;
       border-radius: 50%;
       box-sizing: border-box;
       content: "";
-      inset: mg-rem(4);
+      inset: calc(#{$mg-switch-thumb-size} * 0.2);
       position: absolute;
     }
 
@@ -410,35 +449,53 @@ $mg-switch-ring-gap: var(
     cursor: progress;
   }
 
+  // The inset around the thumb is a transparent border rather than padding:
+  // it holds exactly the same box (border-box sizing, same content box, same
+  // travel) and gives the error state a border-color to set, the way every
+  // other control shows an error. Forced colours colours the same border.
   &__track {
     align-items: center;
     background-color: $mg-switch-track;
-    border-radius: mg-rem(12);
+    block-size: $mg-switch-track-block;
+    border: $mg-switch-inset solid transparent;
+    border-radius: calc(#{$mg-switch-track-block} / 2);
     box-sizing: border-box;
     display: inline-flex;
     flex-shrink: 0;
-    height: mg-rem(24);
-    padding: mg-rem(2);
-    transition: background-color var(--mg-motion-duration-fast)
-      var(--mg-motion-easing-standard);
-    width: mg-rem(42);
+    inline-size: $mg-switch-track-inline;
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
   }
 
   &__thumb {
     background-color: $mg-switch-thumb;
+    block-size: $mg-switch-thumb-size;
     border-radius: 50%;
     box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
     display: block;
-    height: mg-rem(20);
+    inline-size: $mg-switch-thumb-size;
     position: relative;
     transition: transform var(--mg-motion-duration-fast)
       var(--mg-motion-easing-standard);
-    width: mg-rem(20);
   }
 
   &__label {
     color: rgb(var(--mg-color-neutral-900));
     font-size: var(--mg-font-size-300);
+  }
+
+  // One shared small size for a toolbar, a table row or a panel header, so
+  // each consumer does not invent its own. It sets the size hook, and tightens
+  // the row's gap to match the smaller graphic; no length inside the switch is
+  // re-declared. The row keeps its 36px min-height, so the target stays large
+  // enough even though the graphic is smaller.
+  &--small {
+    --mg-switch-size: #{mg-rem(18)};
+
+    gap: var(--mg-spacing-50);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -449,8 +506,25 @@ $mg-switch-ring-gap: var(
   }
 }
 
+// Error, in the three shapes the rest of the library already uses: the
+// aria-invalid the other controls set anyway, the --error element modifier
+// they carry, and a block modifier for markup that can only reach the label,
+// as .mg-switch--pending does. Declared after the checked rule, so an invalid
+// switch keeps its red boundary in either position.
+.mg-switch__input[aria-invalid="true"] + .mg-switch__track,
+.mg-switch__input--error + .mg-switch__track,
+.mg-switch--error .mg-switch__track {
+  border-color: $mg-switch-error;
+}
+
+// The same distance the other way. Both rules interpolate one expression, so
+// a consumer setting the size hooks gets a correct RTL travel for free and
+// never has a transform of their own to keep in step. The descendant
+// combinator already covers a switch carrying `dir="rtl"` itself, because the
+// label is an ancestor of its own input -- no `.mg-switch[dir="rtl"]` variant
+// is needed, and adding one would only raise this rule above a consumer's.
 [dir="rtl"] .mg-switch__input:checked + .mg-switch__track .mg-switch__thumb {
-  transform: translateX(mg-rem(-18));
+  transform: translateX(calc(-1 * (#{$mg-switch-travel})));
 }
 
 // Forced colours paint every background as Canvas, which erased the track and
@@ -461,12 +535,12 @@ $mg-switch-ring-gap: var(
 @media (forced-colors: active) {
   .mg-switch__track {
     // A border, not an outline, so the focus outline adds to the boundary
-    // rather than replacing it. The border takes 1px from the padding, so the
-    // track stays 42x24 and the thumb keeps its size and travel.
+    // rather than replacing it. The track already carries its inset as a
+    // transparent border, so forced colours only colours it: the box, the
+    // thumb and the travel are untouched at any size.
     background-color: Canvas;
-    border: 1px solid CanvasText;
+    border-color: CanvasText;
     forced-color-adjust: none;
-    padding: 1px;
   }
 
   .mg-switch__thumb {
@@ -545,6 +619,23 @@ $mg-switch-ring-gap: var(
     .mg-switch__thumb::after {
       border-color: Canvas;
     }
+  }
+
+  // The track opts out of forcing, so an author red would be painted
+  // unchanged here while everything around it adapts -- the bug reported in
+  // unisdr/undrr-mangrove#1187. The boundary goes back to a system colour and
+  // the error is carried by a dashed edge instead, which survives a palette
+  // with no red in it. The .mg-form-error message carries the rest.
+  // Each selector carries an extra .mg-switch, as the disabled rules above do,
+  // so that all three reach the checked fill's specificity. Without it the two
+  // class markups lost `border-color` to the Highlight fill and kept only
+  // `border-style`, which painted a dashed Highlight edge on a Highlight
+  // track: an invalid checked switch with no visible boundary at all.
+  .mg-switch .mg-switch__input[aria-invalid="true"] + .mg-switch__track,
+  .mg-switch .mg-switch__input--error + .mg-switch__track,
+  .mg-switch.mg-switch--error .mg-switch__track {
+    border-color: CanvasText;
+    border-style: dashed;
   }
 
   @media (prefers-reduced-motion: no-preference) {

@@ -1,6 +1,7 @@
 import { fireEvent } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import {
+  mgSwitchAnnouncer,
   mgSwitchPending,
   mgSwitchPendingDestroy,
   mgSwitchPendingInit,
@@ -128,6 +129,118 @@ describe('mgSwitchPending', () => {
     );
   });
 
+  it('reverts by default and leaves aria-invalid alone', async () => {
+    const input = mount();
+    const failed = jest.fn();
+    input.addEventListener('mg-switch:failed', failed);
+    const { save, requests } = controlledSave();
+    mgSwitchPending(input, { save, revert: true });
+
+    fireEvent.click(input);
+    requests[0].reject(new Error('nope'));
+    await flush();
+
+    expect(input.checked).toBe(false);
+    expect(input).not.toHaveAttribute('aria-invalid');
+    expect(failed.mock.calls[0][0].detail.reverted).toBe(true);
+  });
+
+  it('keeps the requested position with revert: false, and marks it invalid', async () => {
+    const input = mount();
+    const failed = jest.fn();
+    input.addEventListener('mg-switch:failed', failed);
+    const { save, requests } = controlledSave();
+    mgSwitchPending(input, { save, revert: false });
+
+    fireEvent.click(input);
+    nextFrame();
+    requests[0].reject(new Error('nope'));
+    await flush();
+
+    expect(input.checked).toBe(true);
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input).toHaveAttribute('aria-busy', 'false');
+    expect(requests[0].signal.aborted).toBe(true);
+    expect(statusOf(input)).toHaveTextContent(
+      'Could not save the change. Try again.'
+    );
+    expect(failed.mock.calls[0][0].detail).toMatchObject({
+      checked: true,
+      requested: true,
+      reverted: false,
+      reason: 'error',
+    });
+  });
+
+  it('holds the requested position when a script moves a non-reverting switch', async () => {
+    const input = mount();
+    const { save, requests } = controlledSave();
+    mgSwitchPending(input, { save, revert: false });
+
+    fireEvent.click(input);
+    // A form reset or a script, without a change event.
+    input.checked = false;
+    requests[0].reject(new Error('nope'));
+    await flush();
+    expect(input.checked).toBe(true);
+  });
+
+  it('clears the aria-invalid it set when the next save starts', async () => {
+    const input = mount();
+    const { save, requests } = controlledSave();
+    const helper = mgSwitchPending(input, { save, revert: false });
+
+    fireEvent.click(input);
+    requests[0].reject(new Error('nope'));
+    await flush();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+
+    fireEvent.click(input);
+    expect(input).not.toHaveAttribute('aria-invalid');
+    requests[1].resolve();
+    await flush();
+    expect(input).not.toHaveAttribute('aria-invalid');
+
+    fireEvent.click(input);
+    requests[2].reject(new Error('nope'));
+    await flush();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    helper.destroy();
+    expect(input).not.toHaveAttribute('aria-invalid');
+  });
+
+  it('leaves an aria-invalid the page authored', async () => {
+    const input = mount({ inputAttrs: 'aria-invalid="true"' });
+    const { save, requests } = controlledSave();
+    const helper = mgSwitchPending(input, { save });
+
+    fireEvent.click(input);
+    requests[0].reject(new Error('nope'));
+    await flush();
+    helper.destroy();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('puts a page-authored aria-invalid back after a non-reverting failure', async () => {
+    const input = mount({ inputAttrs: 'aria-invalid="false"' });
+    const { save, requests } = controlledSave();
+    const helper = mgSwitchPending(input, { save, revert: false });
+
+    fireEvent.click(input);
+    requests[0].reject(new Error('nope'));
+    await flush();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+
+    // The page's own value returns, rather than the attribute disappearing.
+    fireEvent.click(input);
+    expect(input).toHaveAttribute('aria-invalid', 'false');
+    requests[1].reject(new Error('nope'));
+    await flush();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    helper.destroy();
+    expect(input).toHaveAttribute('aria-invalid', 'false');
+  });
+
   it('treats a save that throws synchronously as a failure', async () => {
     const input = mount();
     const failed = jest.fn();
@@ -171,6 +284,93 @@ describe('mgSwitchPending', () => {
     expect(input.checked).toBe(true);
     advance(1);
     expect(input.checked).toBe(false);
+  });
+
+  it('runs without a deadline when the timeout is 0 or Infinity', async () => {
+    document.body.innerHTML = `${switchMarkup({ id: 'zero' })}${switchMarkup({ id: 'never' })}`;
+    const zero = document.getElementById('zero');
+    const never = document.getElementById('never');
+    const { save, requests } = controlledSave();
+    mgSwitchPending(zero, { save, timeout: 0 });
+    mgSwitchPending(never, { save, timeout: Infinity });
+
+    fireEvent.click(zero);
+    fireEvent.click(never);
+    nextFrame();
+    advance(PENDING_TIMEOUT_MS * 6);
+
+    expect(zero.checked).toBe(true);
+    expect(never.checked).toBe(true);
+    expect(zero).toHaveAttribute('aria-busy', 'true');
+    expect(requests[0].signal.aborted).toBe(false);
+    expect(requests[1].signal.aborted).toBe(false);
+
+    requests[0].resolve();
+    await flush();
+    expect(zero).toHaveAttribute('aria-busy', 'false');
+    expect(statusOf(zero)).toHaveTextContent('Real-time alerts turned on');
+  });
+
+  it('says a deadline-free save is still running where the deadline would be', () => {
+    const input = mount();
+    const { save } = controlledSave();
+    mgSwitchPending(input, { save, timeout: 0 });
+    const status = statusOf(input);
+
+    fireEvent.click(input);
+    nextFrame();
+    advance(PENDING_TIMEOUT_MS - 21);
+    expect(status).toHaveTextContent('Saving…');
+
+    advance(1);
+    expect(status).toHaveTextContent('Still saving…');
+    expect(input).toHaveAttribute('aria-busy', 'true');
+    expect(input.checked).toBe(true);
+
+    // Only once: nothing more is said while the save runs on.
+    status.textContent = '';
+    advance(PENDING_TIMEOUT_MS * 3);
+    expect(status.textContent).toBe('');
+  });
+
+  it('falls back to the default timeout for a value it cannot use', () => {
+    const input = mount();
+    const { save } = controlledSave();
+    mgSwitchPending(input, { save, timeout: -5 });
+
+    fireEvent.click(input);
+    advance(PENDING_TIMEOUT_MS);
+    expect(input.checked).toBe(false);
+  });
+
+  it('reads data-mg-switch-timeout and data-mg-switch-revert, options winning', async () => {
+    document.body.innerHTML = `
+      ${switchMarkup({ id: 'attrs', inputAttrs: 'data-mg-switch-timeout="0" data-mg-switch-revert="false"' })}
+      ${switchMarkup({ id: 'on-label', labelAttrs: 'data-mg-switch-revert="false"' })}
+      ${switchMarkup({ id: 'override', inputAttrs: 'data-mg-switch-revert="false"' })}`;
+    const attrs = document.getElementById('attrs');
+    const onLabel = document.getElementById('on-label');
+    const override = document.getElementById('override');
+    const { save, requests } = controlledSave();
+    mgSwitchPending(attrs, { save });
+    mgSwitchPending(onLabel, { save });
+    mgSwitchPending(override, { save, revert: true });
+
+    [attrs, onLabel, override].forEach(input => fireEvent.click(input));
+    advance(PENDING_TIMEOUT_MS);
+    // The attribute switched the deadline off, so nothing timed out.
+    expect(attrs.checked).toBe(true);
+    expect(attrs).not.toHaveAttribute('aria-invalid');
+    // The other two reached their deadline.
+    expect(onLabel.checked).toBe(true);
+    expect(onLabel).toHaveAttribute('aria-invalid', 'true');
+    expect(override.checked).toBe(false);
+    expect(override).not.toHaveAttribute('aria-invalid');
+
+    requests[0].reject(new Error('nope'));
+    await flush();
+    expect(attrs.checked).toBe(true);
+    expect(attrs).toHaveAttribute('aria-invalid', 'true');
   });
 
   it('ignores a late response from a request that already timed out', async () => {
@@ -272,6 +472,7 @@ describe('mgSwitchPending', () => {
     expect(failed.mock.calls[0][0].detail).toEqual({
       checked: true,
       requested: false,
+      reverted: true,
       reason: 'error',
       error,
     });
@@ -969,5 +1170,174 @@ describe('auto-initialisation', () => {
     second.mgSwitchPendingDestroy(document);
     expect(input).not.toHaveAttribute('data-mg-switch-pending-enhanced');
     expect(document.querySelectorAll('[role="status"]')).toHaveLength(0);
+  });
+});
+
+describe('mgSwitchAnnouncer', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    mgSwitchPendingDestroy(document);
+    document.body.innerHTML = '';
+    jest.useRealTimers();
+    jest.restoreAllMocks();
+  });
+
+  it('announces each step for a switch it does not otherwise touch', () => {
+    const input = mount();
+    const announcer = mgSwitchAnnouncer(input);
+    const status = statusOf(input);
+
+    expect(announcer.status).toBe(status);
+    expect(announcer.label()).toBe('Real-time alerts');
+
+    announcer.pending();
+    expect(status).toHaveTextContent('Saving…');
+    announcer.settled(true);
+    expect(status).toHaveTextContent('Real-time alerts turned on');
+    announcer.settled(false);
+    expect(status).toHaveTextContent('Real-time alerts turned off');
+    announcer.failed();
+    expect(status).toHaveTextContent('Could not save the change. Try again.');
+
+    // The switch itself is left alone: no listeners, no attributes, no state.
+    fireEvent.click(input);
+    expect(input.checked).toBe(true);
+    expect(input).not.toHaveAttribute('aria-busy');
+    expect(input).not.toHaveAttribute('data-mg-switch-pending-enhanced');
+
+    announcer.destroy();
+    expect(statusOf(input)).toBeNull();
+  });
+
+  it("announces text in the consumer's own words, with {label} and functions", () => {
+    const input = mount();
+    const announcer = mgSwitchAnnouncer(input);
+    const { status } = announcer;
+
+    announcer.announce('Adding {label} to the map');
+    expect(status).toHaveTextContent('Adding Real-time alerts to the map');
+    announcer.announce((label, element) => `${label} (${element.id}) is ready`);
+    expect(status).toHaveTextContent('Real-time alerts (alerts) is ready');
+
+    // The same message again is cleared first, so it is announced again.
+    announcer.announce('Real-time alerts (alerts) is ready');
+    expect(status.textContent).toBe('');
+    advance(100);
+    expect(status).toHaveTextContent('Real-time alerts (alerts) is ready');
+    announcer.destroy();
+  });
+
+  it('rate-limits "Still saving…" unless the call forces it', () => {
+    const input = mount();
+    const announcer = mgSwitchAnnouncer(input);
+    const { status } = announcer;
+
+    expect(announcer.stillSaving()).toBe(true);
+    expect(status).toHaveTextContent('Still saving…');
+    status.textContent = '';
+    expect(announcer.stillSaving()).toBe(false);
+    expect(status.textContent).toBe('');
+
+    expect(announcer.stillSaving(true)).toBe(true);
+    expect(status).toHaveTextContent('Still saving…');
+
+    advance(STILL_SAVING_INTERVAL_MS);
+    status.textContent = '';
+    expect(announcer.stillSaving()).toBe(true);
+    expect(status).toHaveTextContent('Still saving…');
+    announcer.destroy();
+  });
+
+  it('takes a label element, an options region and translated labels', () => {
+    document.body.innerHTML = `
+      ${switchMarkup({ id: 'ar', label: 'التنبيهات الفورية', labelAttrs: `data-mg-switch-labels='{"saving":"جارٍ الحفظ…"}'` })}
+      <p id="shared" role="status"></p>`;
+    const label = document.querySelector('label');
+    const shared = document.getElementById('shared');
+    const announcer = mgSwitchAnnouncer(label, {
+      status: '#shared',
+      labels: { on: '{label} مفعّلة' },
+    });
+
+    expect(announcer.status).toBe(shared);
+    announcer.pending();
+    expect(shared).toHaveTextContent('جارٍ الحفظ…');
+    announcer.settled(true);
+    expect(shared).toHaveTextContent('التنبيهات الفورية مفعّلة');
+    announcer.destroy();
+    // A region the page owns stays.
+    expect(document.getElementById('shared')).toBeInTheDocument();
+  });
+
+  it('shares a region with the helper without either losing a message', async () => {
+    document.body.innerHTML = `
+      ${switchMarkup({ id: 'saved' })}
+      ${switchMarkup({ id: 'own', label: 'Map layer' })}
+      <p id="shared" role="status"></p>`;
+    const saved = document.getElementById('saved');
+    const own = document.getElementById('own');
+    const shared = document.getElementById('shared');
+    const { save, requests } = controlledSave();
+    mgSwitchPending(saved, { save, status: shared });
+    const announcer = mgSwitchAnnouncer(own, { status: shared });
+
+    fireEvent.click(saved);
+    expect(shared).toHaveTextContent('Saving…');
+    announcer.announce('Map layer is drawing');
+    expect(shared).toHaveTextContent('Map layer is drawing');
+    requests[0].resolve();
+    await flush();
+    expect(shared).toHaveTextContent('Real-time alerts turned on');
+    announcer.destroy();
+  });
+
+  it('says nothing about a switch that has left the page', () => {
+    document.body.innerHTML = `<div id="wrap">${switchMarkup()}</div>`;
+    const input = document.querySelector('.mg-switch__input');
+    const announcer = mgSwitchAnnouncer(input);
+    document.getElementById('wrap').remove();
+
+    announcer.pending();
+    expect(announcer.status.textContent).toBe('');
+    expect(document.querySelectorAll('[role="status"]')).toHaveLength(0);
+  });
+
+  it('returns a no-op announcer for something that is not a switch', () => {
+    document.body.innerHTML = '<p id="nope">Not a switch</p>';
+    const announcer = mgSwitchAnnouncer(document.getElementById('nope'));
+    expect(announcer.status).toBeNull();
+    expect(announcer.label()).toBe('');
+    expect(announcer.stillSaving()).toBe(false);
+    expect(() => {
+      announcer.pending();
+      announcer.settled(true);
+      announcer.failed();
+      announcer.announce('Anything');
+      announcer.destroy();
+    }).not.toThrow();
+    expect(mgSwitchAnnouncer(null).status).toBeNull();
+  });
+
+  it('does not throw for a document, a selector string or a stray value', () => {
+    document.body.innerHTML = switchMarkup();
+    // A document is a wrapper like any other: it finds the switch inside it.
+    expect(mgSwitchAnnouncer(document).status).not.toBeNull();
+    // Anything that is not an element gets the no-op announcer, not a TypeError.
+    ['.mg-switch__input', 42, true].forEach(value => {
+      expect(mgSwitchAnnouncer(value).status).toBeNull();
+    });
+  });
+
+  it('has no a11y violations with only the announcements in place', async () => {
+    jest.useRealTimers();
+    document.body.innerHTML = `<main>${switchMarkup()}</main>`;
+    const input = document.querySelector('.mg-switch__input');
+    const announcer = mgSwitchAnnouncer(input);
+    announcer.pending();
+    expect(await axe(document.body)).toHaveNoViolations();
+    announcer.destroy();
   });
 });
