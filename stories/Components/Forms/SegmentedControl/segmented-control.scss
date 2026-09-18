@@ -17,6 +17,55 @@
 // (unisdr/undrr-mangrove#1188): a tablist promises tab panels, and a view
 // switcher has none.
 
+// WHY THIS IS ITS OWN BLOCK AND NOT A .mg-form-check VARIANT
+
+// #1188 asked for a presentation variant of Radio. The semantics are indeed
+// identical, and they are reused — this is the same fieldset/legend/radio/label
+// markup a FormGroup + Radio pairing produces. What is not reused is
+// .mg-form-check, and the reason is that it is a round-dot presentation whose
+// every dimension is the opposite of a segment's. A variant class would have to
+// unset, across five rules in _form-base.scss:
+
+//   .mg-form-check              display:flex, min-height:40px, align-items
+//   .mg-form-check__input       appearance, border(2px), width/height 24px,
+//                               margin, cursor, :hover border-color,
+//                               :focus-visible (mg-focus-ring: outline +
+//                               box-shadow)
+//   ...__input--radio           background-color, border-radius:100%,
+//                               box-shadow (the inset dot)
+//   ...__input--radio:checked   background-color, box-shadow (the dot again)
+//   ...__input--radio:checked:focus-visible   box-shadow (dot + band)
+//   .mg-form-check__label       font-size, padding
+
+// That is ~21 declarations to undo, and two of them sit outside the BEM nesting
+// at 0,2,0 and 0,3,0 specifically so they win, so the variant would need
+// selectors at least that heavy just to cancel them. Worse, a segment has to
+// move the focus ring from the input to the label: that is not a declaration a
+// variant can add, it is a mixin's output suppressed on one element and
+// re-emitted on another. Twenty-one unsets and a relocated focus ring is a
+// rewrite wearing a modifier's name, so this is its own block.
+
+// WHAT THAT COSTS, AND WHAT IS OWED BACK
+
+// The deviation is real, so the couplings are written down rather than left to
+// be discovered:
+
+//  * ERROR / INVALID STATE. Radio has one (--error, aria-invalid, errorText,
+//    .mg-form-error) and so does FormGroup; this control has none, and it
+//    cannot borrow FormGroup's by nesting, because a fieldset inside a fieldset
+//    announces two group names. A consumer needing "you must choose one" has to
+//    hand-roll it — which is exactly what unisdr/undrr-mangrove#1187 reported
+//    against .mg-switch, and the trap is worse here because __label sets
+//    forced-color-adjust: none below, so a hand-rolled red is painted literally
+//    in forced colours. If Radio's validation wiring is ever revisited, this
+//    control needs the same pass.
+//  * DISABLED COLOUR. neutral-400 / neutral-500 are named directly, matching
+//    what .mg-form-check__input--disabled and .mg-form-input--disabled do
+//    today. A future --mg-color-form-disabled token would have to be routed
+//    here by hand.
+//  * HELP TEXT / aria-describedby. Not supported. Use a Radio group in a
+//    FormGroup when an option needs one.
+
 // Two theming hooks, no more. Everything else is a shared token, so a
 // segmented control follows the button, focus-ring and spacing scales of
 // whichever theme wraps it. Each is read with its default where it is used,
@@ -55,7 +104,26 @@ $mg-segmented-radius: var(
   // "Dep / th" and "Frequen / cy"; wrapping keeps every label whole. Only the
   // first and last segment of the whole control are rounded, so a wrapped row
   // ends square, which reads as "continues below" rather than as a second
-  // control.
+  // control. Per-row rounding is not expressible here: CSS cannot address the
+  // first or last item of a flex line, so it would take JS, which this
+  // component does not have.
+
+  // Two limits of the wrap, both measured, both deliberate:
+
+  //  * THIS APPLIES TO THE DEFAULT LAYOUT ONLY. --full-width below sets
+  //    `flex: 1 1 0`, which gives every segment a hypothetical main size of 0,
+  //    so the line never overflows and the row never wraps — it shrinks
+  //    instead, and past a certain label length the words do break. Measured
+  //    at 320 CSS px: "Precipitatio / n", "Vulnerabilit / y", "Displaceme /
+  //    nt". --full-width is for short labels; a narrow row with long ones
+  //    should stay on the default layout and wrap.
+  //  * A WRAPPED ROW STARTS 1px EARLY. The -1px border collapse below applies
+  //    to every segment after the first, whichever line it lands on, so the
+  //    segment that begins a second row sits 1px outside the control's
+  //    inline-start edge (measured x=7 against x=8 for the row above). Rows
+  //    also do not collapse in the block direction, so the seam between two
+  //    rows is 2px where the seams within a row are 1px. Both need a
+  //    line-aware selector CSS does not have.
   &__group {
     display: inline-flex;
     flex-wrap: wrap;
@@ -169,6 +237,45 @@ $mg-segmented-radius: var(
 // Hover is written on the LABEL, not on `input:hover + label`. Pointing at a
 // label does not put :hover on the input it is for, so the input-side
 // selector would only ever match the pixel the input is clipped to.
+
+// THE HOVER FILL IS A KNOWN CONTRAST PROBLEM IN TWO THEMES, AND #1249 IS THE
+// FIX. --mg-color-button-outline-primary--hover and
+// --mg-color-button-background--hover both resolve to orange-900 (#eb752a) in
+// PreventionWeb and IRP, because both themes set interactive-active equal to
+// interactive and had no tonal step of their own to hover to. Against the white
+// label that is 2.95:1 — under SC 1.4.3 — and it applies to BOTH hover states
+// here, selected and unselected. Measured in a browser on this component:
+
+//   theme           selected rest   unselected rest   hover fill (either)
+//   UNDRR           #004f91 8.31    #004f91 8.31      #3372a7 5.11  ok
+//   PreventionWeb   #0a6969 6.49    #0a6969 6.49      #eb752a 2.95  FAILS
+//   IRP             #0f78bf 4.71    #0f78bf 4.71      #eb752a 2.95  FAILS
+//   MCR2030         #591a61 12.03   #591a61 12.03     #6e2677 9.52  ok
+//   DELTA           #004f91 8.31    #004f91 8.31      #106cb8       ok
+
+// tokens-contract.test.js records this pair as an exception under the names
+// "button label on primary background, hover" and "outline primary button
+// label, hover fill" — but those names are cta-button.scss's, and the suite
+// checks token pairs rather than components, so this control's use of the same
+// pair adds no entry and the suite stays green while a second component ships
+// the failure. The exception is a defect record, not a licence.
+// unisdr/undrr-mangrove#1249 re-points both tokens (PW to teal-800 at 5.50,
+// IRP to blue-800 at 6.02) and deletes those entries; this control then clears
+// 1.4.3 in all five themes with no change of its own.
+
+// ==> DO NOT MERGE THIS COMPONENT AHEAD OF #1249. <==
+
+// Second, smaller point, present in every theme: hover fills an UNSELECTED
+// segment and puts the white label on it, which is the selected treatment. So
+// while the pointer is on an unselected segment the row shows two filled
+// segments, and in UNDRR the only thing separating them is #004f91 against
+// #3372a7 — 1.62:1, under SC 1.4.11's 3:1 for a state indicator. Hovering the
+// SELECTED segment moves it to that same #3372a7, so it briefly looks like any
+// other hovered segment. A tinted hover that keeps the brand ink would leave
+// "filled" meaning "selected" and nothing else; it is not done here because
+// every candidate tint puts an existing token into a contrast role
+// tokens-contract.test.js does not yet cover, in five themes, and that is a
+// design decision rather than a review one.
 .mg-segmented-control__label:hover {
   background-color: rgb(var(--mg-color-button-outline-primary--hover));
   border-color: rgb(var(--mg-color-button-outline-primary--hover));

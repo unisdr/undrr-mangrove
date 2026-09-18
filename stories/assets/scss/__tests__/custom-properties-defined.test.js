@@ -44,11 +44,10 @@ const INPUT_HOOKS = {
   '--mg-legend-tick-pos': 'Legend tick position, set inline per tick',
   '--mg-on-this-page-nav-offset':
     'Page-level docking offset for fixed headers, set by the consuming page',
-  // Read with their defaults where they are used, so a toolbar, a theme
-  // wrapper or the --small modifier can set them; declaring either on
-  // .mg-segmented-control would shadow that.
-  '--mg-segmented-control-min-block-size':
-    'Segmented control segment height, set by a wrapper or --small',
+  // Only the radius is genuinely undefined in the stylesheet. The height hook
+  // is read with its default where it is used, but .mg-segmented-control--small
+  // does declare it, so the bundle defines it and it needs no entry here —
+  // listing it would claim a hook is undefined when it is not.
   '--mg-segmented-control-radius':
     'Segmented control end radius, set by a wrapper',
   // The switch reads each hook with its default where it is used, so a

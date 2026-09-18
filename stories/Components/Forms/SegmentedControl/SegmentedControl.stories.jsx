@@ -72,6 +72,23 @@ export const HiddenLegend = {
   },
 };
 
+// A view switcher is often rendered before the user has chosen anything, and
+// the keyboard behaves differently there: the group still takes one tab stop,
+// it lands on the first segment, and arriving does not select it.
+export const NoSelection = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getCaptionForLocale(locale);
+    return (
+      <SegmentedControl
+        legend={caption.legend}
+        name="layer-no-selection"
+        options={caption.options}
+        {...args}
+      />
+    );
+  },
+};
+
 export const Small = {
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);

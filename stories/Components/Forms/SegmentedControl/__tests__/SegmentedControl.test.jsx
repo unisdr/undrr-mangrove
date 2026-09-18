@@ -123,6 +123,38 @@ describe('SegmentedControl', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  // A view switcher is often rendered before anything is chosen. The stories
+  // all pass a defaultValue, so nothing else covers this shape.
+  it('leaves every segment unselected when no value is given', () => {
+    renderControl();
+    screen.getAllByRole('radio').forEach(radio => {
+      expect(radio).not.toBeChecked();
+    });
+  });
+
+  it('keeps every segment reachable when nothing is selected', () => {
+    renderControl();
+    // A radio group with no selection puts the group's single tab stop on the
+    // first radio, and arriving there selects nothing. Neither is Mangrove's
+    // code, so this asserts the shape the browser needs: enabled radios, no
+    // tabindex of our own, and no checked attribute.
+    screen.getAllByRole('radio').forEach(radio => {
+      expect(radio).toBeEnabled();
+      expect(radio).not.toHaveAttribute('tabindex');
+    });
+  });
+
+  it('disables every segment when the fieldset is disabled', () => {
+    const { container } = renderControl({
+      defaultValue: 'depth',
+      disabled: true,
+    });
+    expect(container.querySelector('fieldset')).toBeDisabled();
+    screen.getAllByRole('radio').forEach(radio => {
+      expect(radio).toBeDisabled();
+    });
+  });
+
   it('carries no tablist or tab roles', () => {
     renderControl();
     expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
