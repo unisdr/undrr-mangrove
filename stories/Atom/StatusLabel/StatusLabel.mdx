@@ -26,12 +26,12 @@ The indicator is an empty `<span>`, not an icon font or an image, so it needs no
 
 ### The four DELTA statuses
 
-| Modifier                                | Label                        | Indicator | Shape   |
-| --------------------------------------- | ---------------------------- | --------- | ------- |
-| `.mg-status-label--draft`               | Draft                        | `#f4e496` | Square  |
-| `.mg-status-label--waiting-information` | Waiting for more information | `#bcae67` | Plus    |
-| `.mg-status-label--waiting-validation`  | Waiting for validation       | `#fec124` | Diamond |
-| `.mg-status-label--published`           | Published                    | `#0a6969` | Circle  |
+| Modifier                                | Label                        | Indicator | Shape           |
+| --------------------------------------- | ---------------------------- | --------- | --------------- |
+| `.mg-status-label--draft`               | Draft                        | `#f4e496` | Rounded square  |
+| `.mg-status-label--waiting-information` | Waiting for more information | `#bcae67` | Capsule         |
+| `.mg-status-label--waiting-validation`  | Waiting for validation       | `#fec124` | Rounded diamond |
+| `.mg-status-label--published`           | Published                    | `#0a6969` | Circle          |
 
 ### Service health states
 
@@ -83,29 +83,42 @@ Degraded and Offline are effectively the same olive dot for a reader with deuter
 
 The mapping is conventional rather than arbitrary, so the marks carry their usual meaning where they have one:
 
-| Status                       | Shape    | Why                                                                   |
-| ---------------------------- | -------- | --------------------------------------------------------------------- |
-| No modifier                  | Circle   | Unchanged. The base class names no status, so it keeps the plain dot. |
-| Draft                        | Square   | A flat, inert block — nothing has moved yet.                          |
-| Waiting for more information | Plus     | Something more is needed before the record can move.                  |
-| Waiting for validation       | Diamond  | The flowchart decision mark — someone else has to make a call.        |
-| Published                    | Circle   | Unchanged. The settled end state, and the mark the DELTA board draws. |
-| Degraded                     | Triangle | The caution triangle.                                                 |
-| Offline                      | Octagon  | The stop sign.                                                        |
+| Status                       | Shape           | Why                                                                                                                                    |
+| ---------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| No modifier                  | Circle          | The base class names no status, so it keeps the plain dot.                                                                             |
+| Draft                        | Rounded square  | A flat, inert block — nothing has moved yet.                                                                                           |
+| Waiting for more information | Capsule         | A blank line still to be filled in.                                                                                                    |
+| Waiting for validation       | Rounded diamond | The flowchart decision mark — and the draft square turned on its point, because the record has not changed, only whose hands it is in. |
+| Published                    | Circle          | The settled end state, and the mark the DELTA board draws.                                                                             |
+| Degraded                     | Triangle        | The caution triangle.                                                                                                                  |
+| Offline                      | Octagon         | The stop sign.                                                                                                                         |
 
 Published and the neutral base share the circle. Their colours are the pair that stays furthest apart in every simulation (40+ deltaE), so shape is not what has to separate them.
+
+### Why the marks look like one set
+
+Seven marks that appear in the same column have to read as one family, or the list looks like a collection of unrelated symbols. Three rules do that work:
+
+- **Every mark is convex and simple.** The first shaped release drew "waiting for more information" as a plus. A concave mark beside six convex ones reads as a different species, its twelve corners make it the visually heaviest thing in the set at the smallest size, and its inner corners are exactly where a stroke has least room to run. It is a capsule now.
+- **Every corner is softened at one radius, proportional to `--mg-status-label-indicator-size`.** Mangrove 2 gives `--mg-radius-button`, `--mg-radius-tag`, `--mg-radius-form-input` and `--mg-card-border-radius` a single value; these marks follow the same instinct. Nothing in the set ends in a sharp point, including the triangle, whose three corners are chamfered.
+- **Every mark carries the same ring,** exactly `--mg-status-label-indicator-border-width` on every edge, so the ring is one device rather than a different treatment per shape.
+
+Five of the seven are a rounded rectangle underneath — the circle is a full radius, the capsule a wide short one, the diamond the draft square rotated 45° — so they keep a real CSS `border` and the ring costs nothing. Only the triangle and the octagon need a `clip-path`, and the ring for those two is described under [Non-text contrast](#accessibility) below.
 
 ## Accessibility
 
 - **SC 1.4.1 Use of colour.** The status name is always rendered as text, so the indicator is reinforcement, never the message. Do not build an indicator-only variant. The shapes are a second cue on top of that, not the thing that satisfies the criterion.
 - **SC 1.4.3 Contrast (minimum).** The label text resolves to `--mg-color-text` (`#1a1a1a`), 17.40:1 on a white page and 15.63:1 on a tinted panel.
-- **SC 1.4.11 Non-text contrast.** The four indicator fills are 1.28:1 (draft), 1.63:1 (waiting for validation), 2.24:1 (waiting for more information) and 6.49:1 (published) against white. Three of the four would be close to invisible unbounded, so every indicator carries a 1px `--mg-color-neutral-500` ring at 5.74:1. Because the dots are decorative the ring is not strictly required by 1.4.11, but without it the component looks broken on a white page. Set `--mg-status-label-indicator-border-width: 0` to remove it. On the circle and the square the ring is a real `border`, exactly `--mg-status-label-indicator-border-width` wide. On the four clipped shapes a border would be cut through by the clip path, so the ring is the indicator's own background showing around an inset `::before`. Both read the same two tokens, and `--mg-status-label-indicator-border-width: 0` removes the ring on all seven, but the clipped four do not render it at a uniform width: insetting the box shrinks the polygon instead of offsetting its edges, so the ring is the full width on the octagon and along the triangle's base, around 0.7px on the diamond, about a third of the token on the plus's inner corners, and pinches to nothing at the triangle's apex. Treat it as a boundary on the silhouette rather than a measured stroke, and raise `--mg-status-label-indicator-border-width` if a particular surface needs a heavier edge.
-- **Forced colours.** Windows High Contrast repaints every background in a system colour, which would leave the fills identical and the shapes doing all the work. The indicators opt out of forcing and redraw themselves: each named status is a solid `CanvasText` shape, and the base indicator keeps a `Canvas` centre so it stays the one hollow mark. The offline octagon is chamfered at 20% rather than the 29.3% of a regular octagon, which is the most circle-like octagon there is, so its silhouette still separates from the published circle at 14px in this mode.
-- **Grouping.** When several statuses appear together as a legend, use `.mg-status-label-group` on a `<ul>` so screen readers announce the count.
+- **SC 1.4.11 Non-text contrast.** The four indicator fills are 1.28:1 (draft), 1.63:1 (waiting for validation), 2.24:1 (waiting for more information) and 6.49:1 (published) against white. Three of the four would be close to invisible unbounded, so every indicator carries a 1px `--mg-color-neutral-500` ring at 5.74:1. Because the dots are decorative the ring is not strictly required by 1.4.11, but without it the component looks broken on a white page. Set `--mg-status-label-indicator-border-width: 0` to remove it.
+
+  The ring is exactly `--mg-status-label-indicator-border-width` wide on every edge of every shape. On the five marks that are a rounded rectangle underneath it is a real CSS `border`. The triangle and the octagon need a `clip-path`, which cuts through a border, so those two paint the ring colour as their own background and lay the fill on a `::before` clipped to an inner polygon — one whose vertices are moved along their own angle bisectors by the miter offset, which shifts every edge in by the ring width rather than shrinking the whole shape. Measured on a 160px indicator with a 10px ring, every edge of both shapes falls within a pixel of 10px. Before this, the `::before` was inset and re-clipped to the same polygon, which scaled it: the ring came out 1px on the octagon, 0.71px on the diamond, 0.32px at the plus's inner corners and nothing at all at the triangle's apex ([#1208](https://github.com/unisdr/undrr-mangrove/issues/1208)).
+
+- **Forced colours.** Windows High Contrast repaints every background in a system colour, which would leave the fills identical and the shapes doing all the work. The indicators opt out of forcing and redraw themselves: each named status is a solid `CanvasText` mark, and the base indicator keeps a `Canvas` centre inside a `CanvasText` ring so it stays the one hollow mark and does not collapse into published. The offline octagon is chamfered at 25% rather than the 29.3% of a regular octagon, which is the most circle-like octagon there is, so its silhouette still separates from the published circle at 14px in this mode.
+- **Grouping.** When several statuses appear together as a legend, use `.mg-status-label-group` on a `<ul>` so screen readers announce the count. The class hides the bullet with `list-style-type: ""` rather than `list-style: none`, because Safari drops the implicit `list` role from a list with no marker and stops announcing the count ([#1209](https://github.com/unisdr/undrr-mangrove/issues/1209)). An empty string is a marker, so the semantics survive, and it renders nothing and reserves no space. You do not need `role="list"` on the `<ul>`; if your own list does not use this class, add one or the other.
 - **RTL.** The component is laid out with flex and logical properties. The indicator moves to the right of the text under `dir="rtl"` with no extra CSS. Every shape is symmetrical about its vertical axis, so none of them needs mirroring.
 - **Zoom.** The indicator sizes are multiples of `--mg-status-label-indicator-size`, which is set in `rem`, so the shapes scale with browser zoom and with a larger default font size.
-- **Print.** The clipped shapes have no border, so both their ring and their fill are `background-color`, and a browser printing with background graphics off would drop them while the circle and the square kept their border. A `@media print` block declares those backgrounds essential so all seven marks survive, the same fix `icons.scss` makes for mask-image icons. A host page whose print reset sets `background: transparent !important` will still clear them; the status name is text, so the row still reads.
-- **Alignment.** The shapes have different bounding boxes, but each one is pulled back to `--mg-status-label-indicator-size` of inline space with a compensating `margin-inline`, so a column or a table cell of statuses keeps one text alignment edge and the larger marks overhang it slightly, as an optically centred glyph should.
+- **Print.** The triangle and the octagon have no border, so both their ring and their fill are `background-color`, and a browser printing with background graphics off would drop them outright while the other five were reduced to an empty ring. A `@media print` block declares those backgrounds essential so all seven marks survive, the same fix `icons.scss` makes for mask-image icons. A host page whose print reset sets `background: transparent !important` will still clear them; the status name is text, so the row still reads.
+- **Alignment.** The shapes have different bounding boxes, but each one is pulled back to `--mg-status-label-indicator-size` of inline space with a compensating `margin-inline`, so a column or a table cell of statuses keeps one text alignment edge and the wider marks overhang it slightly, as an optically centred glyph should. The diamond is rotated with a `transform`, which is a paint-time operation and leaves the layout box alone.
 
 <Canvas of={StatusLabelStories.RightToLeft} />
 
@@ -147,22 +160,24 @@ Published and the neutral base share the circle. Their colours are the pair that
 
 ## Design tokens
 
-| Token                                              | Default                  | Description                                    |
-| -------------------------------------------------- | ------------------------ | ---------------------------------------------- |
-| `--mg-status-label-gap`                            | `--mg-spacing-75`        | Space between indicator and text               |
-| `--mg-status-label-font-size`                      | `16px`                   | Label text size                                |
-| `--mg-status-label-color`                          | `--mg-color-text`        | Label text colour                              |
-| `--mg-status-label-indicator-size`                 | `14px`                   | Indicator size; each shape is a multiple of it |
-| `--mg-status-label-indicator-radius`               | `50%`                    | Corner radius of the base indicator            |
-| `--mg-status-label-indicator-border-width`         | `1px`                    | Indicator ring width                           |
-| `--mg-status-label-indicator-border-color`         | `--mg-color-neutral-500` | Indicator ring colour                          |
-| `--mg-status-label-indicator`                      | `--mg-color-neutral-100` | Neutral indicator fill                         |
-| `--mg-status-label-indicator--draft`               | `--mg-color-accent-100`  | Draft                                          |
-| `--mg-status-label-indicator--waiting-validation`  | `--mg-color-accent-500`  | Waiting for validation                         |
-| `--mg-status-label-indicator--waiting-information` | `--mg-color-accent-600`  | Waiting for more information                   |
-| `--mg-status-label-indicator--published`           | `--mg-color-accent-400`  | Published                                      |
+| Token                                              | Default                  | Description                                        |
+| -------------------------------------------------- | ------------------------ | -------------------------------------------------- |
+| `--mg-status-label-gap`                            | `--mg-spacing-75`        | Space between indicator and text                   |
+| `--mg-status-label-font-size`                      | `16px`                   | Label text size                                    |
+| `--mg-status-label-color`                          | `--mg-color-text`        | Label text colour                                  |
+| `--mg-status-label-indicator-size`                 | `14px`                   | Indicator size; each shape is a multiple of it     |
+| `--mg-status-label-indicator-radius`               | `50%`                    | Corner radius of the base indicator                |
+| `--mg-status-label-indicator-border-width`         | `1px`                    | Indicator ring width, on every edge of every shape |
+| `--mg-status-label-indicator-border-color`         | `--mg-color-neutral-500` | Indicator ring colour                              |
+| `--mg-status-label-indicator`                      | `--mg-color-neutral-100` | Neutral indicator fill                             |
+| `--mg-status-label-indicator--draft`               | `--mg-color-accent-100`  | Draft                                              |
+| `--mg-status-label-indicator--waiting-validation`  | `--mg-color-accent-500`  | Waiting for validation                             |
+| `--mg-status-label-indicator--waiting-information` | `--mg-color-accent-600`  | Waiting for more information                       |
+| `--mg-status-label-indicator--published`           | `--mg-color-accent-400`  | Published                                          |
 
 `--mg-status-label-indicator-radius` shapes the base indicator and the published circle. The five status shapes set their own geometry, so changing the radius does not round them off.
+
+The stylesheet also defines `--mg-status-label-indicator-ring`, which is internal plumbing rather than a token: it carries the ring width into the inner polygons of the triangle and the octagon, which need it as a `<length>` even when it is zero. Set `--mg-status-label-indicator-border-width`, and leave that one alone. Do not set `background-color`, `border`, `border-radius`, `width`, `height` or `transform` on `.mg-status-label__indicator` directly either — a border is cut through by a clip path, a fill on the element hides the ring, and a transform replaces the diamond.
 
 ### Theming
 
@@ -170,9 +185,12 @@ No sub-brand overrides these tokens. PreventionWeb, IRP and MCR2030 have no defi
 
 ## Changelog
 
-- **1.2.0** — 2026-09-18 ([#1206](https://github.com/unisdr/undrr-mangrove/pull/1206)): Each status now has a shape as well as a colour — draft a square, waiting for more information a plus, waiting for validation a diamond, degraded a triangle, offline an octagon, chamfered deeply enough to stay distinct from a circle at small sizes. Published and the base indicator keep the circle. This is a visible change on every existing status label, and it needs no markup change: the shapes come from CSS on the same empty `<span>`.
+- **1.2.0** — 2026-09-18 ([#1206](https://github.com/unisdr/undrr-mangrove/pull/1206)): Each status now has a shape as well as a colour — draft a rounded square, waiting for more information a capsule, waiting for validation a rounded diamond, degraded a chamfered triangle, offline an octagon. Published and the base indicator keep the circle. This is a visible change on every existing status label, and it needs no markup change: the shapes come from CSS on the same empty `<span>`.
   - The shapes are a second cue, not a fix for a WCAG failure: the status name is still always present as text. They matter because several of the colours are close under colour vision deficiency (degraded and offline are 3.4 CIE76 deltaE apart simulated for deuteranopia), because a CSS-only component gets reused without its label, and because a redundant cue is faster to scan.
-  - In forced colours the indicators now draw themselves in system colours instead of disappearing into the forced background, and a `@media print` block keeps the four background-drawn shapes on the page when a browser prints without background graphics.
+  - The seven marks are drawn as one family: all convex, all softened at one corner radius proportional to the indicator size, all carrying the same ring. Five of them are a rounded rectangle underneath — the diamond is the draft square rotated 45° — so they keep a real CSS `border`; only the triangle and the octagon need a `clip-path`.
+  - The ring is now exactly `--mg-status-label-indicator-border-width` on every edge of every shape ([#1208](https://github.com/unisdr/undrr-mangrove/issues/1208)). The two clipped marks clip their fill to an inner polygon offset along each vertex's angle bisector instead of insetting the box and rescaling the same polygon, which used to give a different ring width on every edge and none at all on the two palest statuses.
+  - `.mg-status-label-group` hides its bullet with `list-style-type: ""` instead of `list-style: none`, so Safari keeps the list role and VoiceOver announces the item count the docs promise ([#1209](https://github.com/unisdr/undrr-mangrove/issues/1209)). No `role="list"` is needed on the `<ul>`.
+  - In forced colours the indicators now draw themselves in system colours instead of disappearing into the forced background, and a `@media print` block keeps the background-drawn marks on the page when a browser prints without background graphics.
   - The shapes have different bounding boxes, so each one carries a compensating `margin-inline` and still occupies exactly `--mg-status-label-indicator-size` of inline space: a column or a table of statuses keeps one text alignment edge.
   - `--mg-status-label-indicator-radius` still shapes the base indicator and the published circle; the five status shapes set their own geometry and ignore it. Every other `--mg-status-label-*` token behaves as before, including `--mg-status-label-indicator-border-width: 0` to drop the ring.
   - New "In a dense list" story, where scanning is what the second cue buys.

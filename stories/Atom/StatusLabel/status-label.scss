@@ -30,89 +30,174 @@
 //     Published
 //   </span>
 
-// Shapes, as clip paths on the indicator box.
+// The marks
 // -
-// A circle and a square are drawn with border-radius so they keep the real
-// border, and so --mg-status-label-indicator-radius still shapes the base
-// indicator. The other four need a clip path, and a clip path cuts through a
-// border — so those indicators paint the ring colour as their background, are
-// clipped to the shape, and lay the fill over it on a ::before inset by the
-// ring width and clipped to the same shape.
+// Seven silhouettes that have to read as one family and still be told apart at
+// 14px. Three rules hold the family together:
 // -
-// Insetting the box and re-applying the same percentage polygon shrinks the
-// polygon rather than offsetting each of its edges, so on these four the ring
-// is only as wide as the token on the edges that run along the box: a full 1px
-// on the octagon and along the triangle's base, about 0.7px on the diamond,
-// and about a third of the token on the plus's inner corners, pinching to
-// nothing at the triangle's apex. The ring is a visible boundary on the
-// silhouette, not a uniform stroke; StatusLabel.mdx says so where it explains
-// what the ring is for.
-$mg-status-label-diamond: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-$mg-status-label-triangle: polygon(50% 0%, 100% 100%, 0% 100%);
-$mg-status-label-plus: polygon(
-  34% 0%,
-  66% 0%,
-  66% 34%,
-  100% 34%,
-  100% 66%,
-  66% 66%,
-  66% 100%,
-  34% 100%,
-  34% 66%,
-  0% 66%,
-  0% 34%,
-  34% 34%
+// 1. Every mark is convex and simple. A concave mark (the plus this component
+//    carried in its first shaped release) reads as a different species beside
+//    six convex ones, and its inner corners are where a stroke has least room.
+// 2. Every corner is softened, at one radius proportional to the indicator
+//    size — the same move Mangrove 2 makes with --mg-radius-button, -tag,
+//    -form-input and --mg-card-border-radius, which are all one value.
+//    Nothing in the set ends in a sharp point. The radius is a build-time
+//    fraction rather than a token because it is part of the mark, not
+//    something a consumer should tune shape by shape.
+// 3. Every mark carries the same ring, exactly
+//    --mg-status-label-indicator-border-width wide on every edge, so the ring
+//    is one device rather than a different treatment per shape.
+// -
+// Five of the seven are a rounded rectangle under the hood, so they keep a real
+// CSS `border` and rule 3 costs nothing:
+// -
+//   circle (base, published)  border-radius: 50%
+//   rounded square (draft)    border-radius: the corner token
+//   capsule (waiting info)    a wide, short rounded rectangle
+//   rounded diamond (waiting  the draft square, rotate(45deg) — the same mark
+//   validation)               turned on its point, which is the relationship
+//                             the two statuses have
+// -
+// The remaining two, the caution triangle and the stop octagon, are polygons
+// that no border-radius can describe, so they are clipped. See
+// $mg-status-label-triangle below for how their ring is made uniform.
+$mg-status-label-corner: 0.13; // of --mg-status-label-indicator-size
+
+// Clipped shapes, and their rings.
+// -
+// A clip path cuts through a border, so these two paint the ring colour as
+// their own background, clip it to the outer polygon, and lay the fill on a
+// ::before clipped to an INNER polygon. Insetting the ::before box and reusing
+// the same percentage polygon — what this component did before #1208 — scales
+// the polygon instead of offsetting its edges, so the ring came out a different
+// width on every edge and pinched to nothing at a sharp corner.
+// -
+// The inner polygon instead moves each vertex along its own angle bisector by
+// the standard miter offset, w * (n1 + n2) / (1 + n1 · n2), where n1 and n2 are
+// the inward unit normals of the two edges meeting there and w is the ring
+// width. That offsets every edge by exactly w, so the ring is a true uniform
+// stroke at any size and at any --mg-status-label-indicator-border-width,
+// including 0, which collapses the inner polygon back onto the outer one and
+// removes the ring. The percentages are the shape; the `calc()` terms are the
+// bisector coefficients. Both are derived independently, and asserted, in
+// __tests__/status-label.shapes.test.js — change one and the test recomputes
+// the other.
+// -
+// Both outer polygons are chamfered rather than pointed. That is rule 2 of the
+// family, and it is also what keeps the miter coefficients near 1: an
+// unchamfered triangle apex needs a 2.24 x w offset, which at 14px would eat
+// the mark.
+// -
+// --mg-status-label-indicator-ring is internal and is not a token to override;
+// set --mg-status-label-indicator-border-width as before. It exists because
+// a bisector term has to be added to a percentage, and `calc(50% + 0.618 * X)`
+// is only valid when X is a length. The documented way to drop the ring is
+// `--mg-status-label-indicator-border-width: 0`, and a bare `0` is a <number>
+// in calc, which would invalidate the whole clip path and lose the shape.
+// Registering this property as a <length> makes the browser resolve `0` to
+// `0px` before the calc sees it, so the ring collapses instead of the mark.
+@property --mg-status-label-indicator-ring {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1px;
+}
+
+$mg-status-label-ring: var(--mg-status-label-indicator-ring);
+
+// Caution triangle, its three corners chamfered at a 6% equivalent radius —
+// enough to take the point off the apex at 48px without turning the mark into
+// a hexagon, and to stop the ring mitring out to 2.24 x its width there.
+$mg-status-label-triangle: polygon(
+  44.63344% 10.73313%,
+  55.36656% 10.73313%,
+  95.65836% 91.31672%,
+  90.2918% 100%,
+  9.7082% 100%,
+  4.34164% 91.31672%
+);
+$mg-status-label-triangle-inner: polygon(
+  calc(44.63344% + 0.61803 * #{$mg-status-label-ring})
+    calc(10.73313% + 1 * #{$mg-status-label-ring}),
+  calc(55.36656% - 0.61803 * #{$mg-status-label-ring})
+    calc(10.73313% + 1 * #{$mg-status-label-ring}),
+  calc(95.65836% - 1.14377 * #{$mg-status-label-ring})
+    calc(91.31672% - 0.05146 * #{$mg-status-label-ring}),
+  calc(90.2918% - 0.55754 * #{$mg-status-label-ring})
+    calc(100% - 1 * #{$mg-status-label-ring}),
+  calc(9.7082% + 0.55754 * #{$mg-status-label-ring})
+    calc(100% - 1 * #{$mg-status-label-ring}),
+  calc(4.34164% + 1.14377 * #{$mg-status-label-ring})
+    calc(91.31672% - 0.05146 * #{$mg-status-label-ring})
 );
 
-// 20%, not the 29.3% of a regular octagon: a regular octagon is the most
-// circle-like octagon there is, and at the 14px default it read as a circle
-// beside the published dot — and identically to it in forced colours, where
-// colour is gone. The deeper chamfer gives longer straight edges, so the
-// silhouette separates from the circle at small sizes.
+// Stop octagon, chamfered at 25% rather than the 29.3% of a regular octagon.
+// A regular octagon is the most circle-like octagon there is, and at 14px it
+// read as the published dot — and identically to it in forced colours, where
+// the fills are gone. The deeper chamfer gives longer straight edges, so the
+// silhouette separates from both circles at small sizes.
 $mg-status-label-octagon: polygon(
-  20% 0%,
-  80% 0%,
-  100% 20%,
-  100% 80%,
-  80% 100%,
-  20% 100%,
-  0% 80%,
-  0% 20%
+  25% 0%,
+  75% 0%,
+  100% 25%,
+  100% 75%,
+  75% 100%,
+  25% 100%,
+  0% 75%,
+  0% 25%
+);
+$mg-status-label-octagon-inner: polygon(
+  calc(25% + 0.41421 * #{$mg-status-label-ring})
+    calc(0% + 1 * #{$mg-status-label-ring}),
+  calc(75% - 0.41421 * #{$mg-status-label-ring})
+    calc(0% + 1 * #{$mg-status-label-ring}),
+  calc(100% - 1 * #{$mg-status-label-ring})
+    calc(25% + 0.41421 * #{$mg-status-label-ring}),
+  calc(100% - 1 * #{$mg-status-label-ring})
+    calc(75% - 0.41421 * #{$mg-status-label-ring}),
+  calc(75% - 0.41421 * #{$mg-status-label-ring})
+    calc(100% - 1 * #{$mg-status-label-ring}),
+  calc(25% + 0.41421 * #{$mg-status-label-ring})
+    calc(100% - 1 * #{$mg-status-label-ring}),
+  calc(0% + 1 * #{$mg-status-label-ring})
+    calc(75% - 0.41421 * #{$mg-status-label-ring}),
+  calc(0% + 1 * #{$mg-status-label-ring})
+    calc(25% + 0.41421 * #{$mg-status-label-ring})
 );
 
 // Equal bounding boxes do not read as equal weight: a square of the indicator
-// size looks heavier than the circle, a diamond and a triangle much lighter.
-// Each shape is scaled so its area lands near the circle's, which is what
-// makes the set look like one family rather than five unrelated marks.
+// size looks heavier than the circle, a diamond and a triangle lighter. Each
+// mark is sized as a multiple of --mg-status-label-indicator-size, tuned by eye
+// against the circle, which is what makes the set look like one family rather
+// than seven unrelated marks.
 // -
-// The scaling changes the box, which would move the label text with it: in a
-// column of statuses the text would start up to 4px further along on a plus
-// row than on a draft row, and a dense list is exactly what the second cue is
-// for. The inline margin gives that scaling back, so every indicator occupies
+// The sizing changes the box, which would move the label text with it: in a
+// column of statuses the text would start up to 4px further along on one row
+// than the next, and a dense list is exactly what the second cue is for. The
+// inline margin gives that back, so every indicator occupies
 // --mg-status-label-indicator-size of inline space whatever its shape, and the
-// larger marks overhang the alignment edge the way an optically centred glyph
+// wider marks overhang the alignment edge the way an optically centred glyph
 // should.
-@mixin mg-status-label-indicator-size($scale) {
-  inline-size: calc(var(--mg-status-label-indicator-size) * #{$scale});
-  block-size: calc(var(--mg-status-label-indicator-size) * #{$scale});
+@mixin mg-status-label-indicator-size($inline, $block: $inline) {
+  inline-size: calc(var(--mg-status-label-indicator-size) * #{$inline});
+  block-size: calc(var(--mg-status-label-indicator-size) * #{$block});
   margin-inline: calc(
-    var(--mg-status-label-indicator-size) * #{(1 - $scale) * 0.5}
+    var(--mg-status-label-indicator-size) * #{(1 - $inline) * 0.5}
   );
 }
 
-@mixin mg-status-label-shape($shape, $scale) {
+@mixin mg-status-label-shape($outer, $inner, $scale) {
   @include mg-status-label-indicator-size($scale);
 
   position: relative;
-  clip-path: $shape;
+  clip-path: $outer;
   background-color: var(--mg-status-label-indicator-border-color);
   border: 0;
   border-radius: 0;
 
   &::before {
     position: absolute;
-    inset: var(--mg-status-label-indicator-border-width);
-    clip-path: $shape;
+    inset: 0;
+    clip-path: $inner;
     content: "";
   }
 }
@@ -128,6 +213,12 @@ $mg-status-label-octagon: polygon(
 
   // The indicator is decoration; the label text carries the meaning.
   &__indicator {
+    // The ring width, coerced to a length so the clipped shapes can offset
+    // their edges by it. See the @property block above.
+    --mg-status-label-indicator-ring: var(
+      --mg-status-label-indicator-border-width
+    );
+
     flex: 0 0 auto;
     inline-size: var(--mg-status-label-indicator-size);
     block-size: var(--mg-status-label-indicator-size);
@@ -139,31 +230,43 @@ $mg-status-label-octagon: polygon(
 }
 
 // DELTA record/event workflow states.
-// Draft: a square, an inert block — nothing has moved yet.
+// Draft: a rounded square. A flat, inert block — nothing has moved yet.
 .mg-status-label--draft .mg-status-label__indicator {
   @include mg-status-label-indicator-size(0.9);
 
   background-color: var(--mg-status-label-indicator--draft);
-  border-radius: 0;
+  border-radius: calc(
+    var(--mg-status-label-indicator-size) * #{$mg-status-label-corner}
+  );
 }
 
-// Waiting for validation: a diamond, the flowchart decision mark — someone
-// else has to make a call before the record moves.
-.mg-status-label--waiting-validation .mg-status-label__indicator {
-  @include mg-status-label-shape($mg-status-label-diamond, 1.15);
-
-  &::before {
-    background-color: var(--mg-status-label-indicator--waiting-validation);
-  }
-}
-
-// Waiting for more information: a plus — something more is needed.
+// Waiting for more information: a capsule — a blank line still to be filled
+// in. It is the widest mark in the set and the only one that is not as tall as
+// it is wide, so it separates from the square and the circle on silhouette
+// alone.
 .mg-status-label--waiting-information .mg-status-label__indicator {
-  @include mg-status-label-shape($mg-status-label-plus, 1.2);
+  @include mg-status-label-indicator-size(1.22, 0.72);
 
-  &::before {
-    background-color: var(--mg-status-label-indicator--waiting-information);
-  }
+  background-color: var(--mg-status-label-indicator--waiting-information);
+
+  // Larger than half the block size, so it resolves to a true capsule and
+  // keeps doing so when a consumer resizes the indicator.
+  border-radius: var(--mg-status-label-indicator-size);
+}
+
+// Waiting for validation: a rounded diamond, the flowchart decision mark —
+// someone else has to make a call before the record moves. It is the draft
+// square rotated onto its point, so the two statuses that are still in the
+// author's hands share a mark and a corner. Rotation is a paint-time transform:
+// the layout box, and so the text alignment edge, is unaffected.
+.mg-status-label--waiting-validation .mg-status-label__indicator {
+  @include mg-status-label-indicator-size(0.82);
+
+  background-color: var(--mg-status-label-indicator--waiting-validation);
+  border-radius: calc(
+    var(--mg-status-label-indicator-size) * #{$mg-status-label-corner}
+  );
+  transform: rotate(45deg);
 }
 
 // Published: the circle, unchanged. It is the settled end state and the mark
@@ -175,7 +278,11 @@ $mg-status-label-octagon: polygon(
 // Service health states (degraded / offline), used by ServiceNotice.
 // Degraded: the caution triangle.
 .mg-status-label--warning .mg-status-label__indicator {
-  @include mg-status-label-shape($mg-status-label-triangle, 1.14);
+  @include mg-status-label-shape(
+    $mg-status-label-triangle,
+    $mg-status-label-triangle-inner,
+    1.16
+  );
 
   &::before {
     background-color: var(--mg-status-label-indicator--warning);
@@ -184,7 +291,11 @@ $mg-status-label-octagon: polygon(
 
 // Offline: the octagon of a stop sign.
 .mg-status-label--negative .mg-status-label__indicator {
-  @include mg-status-label-shape($mg-status-label-octagon, 1);
+  @include mg-status-label-shape(
+    $mg-status-label-octagon,
+    $mg-status-label-octagon-inner,
+    0.97
+  );
 
   &::before {
     background-color: var(--mg-status-label-indicator--negative);
@@ -193,9 +304,10 @@ $mg-status-label-octagon: polygon(
 
 // Forced colours repaint every background as a system colour, so the fills
 // stop telling the statuses apart and only the shape is left. The indicators
-// opt out of forcing and draw themselves in system colours: a CanvasText
-// shape, and a Canvas centre with a CanvasText edge for the two round ones, so
-// the neutral base and published do not collapse into the same mark.
+// opt out of forcing and draw themselves in system colours: each named status
+// a solid CanvasText mark, the base indicator a Canvas centre inside a
+// CanvasText ring, so it stays the one hollow mark and does not collapse into
+// published.
 @media (forced-colors: active) {
   .mg-status-label__indicator {
     forced-color-adjust: none;
@@ -203,19 +315,16 @@ $mg-status-label-octagon: polygon(
     border-color: CanvasText;
   }
 
-  // Each shaped variant names its own ::before, because the rule that puts the
+  // Each clipped variant names its own ::before, because the rule that puts the
   // fill there is more specific than a bare .mg-status-label__indicator::before
   // and would otherwise keep its author colour.
-  .mg-status-label--waiting-validation .mg-status-label__indicator::before,
-  .mg-status-label--waiting-information .mg-status-label__indicator::before,
   .mg-status-label--warning .mg-status-label__indicator::before,
   .mg-status-label--negative .mg-status-label__indicator::before {
     background-color: CanvasText;
   }
 
-  // Every named status is a solid system-coloured shape. On the four clipped
-  // shapes this fills the ring the ::before sits inside; the base class keeps
-  // its Canvas centre, so it stays the one hollow mark.
+  // Every named status is a solid system-coloured mark. On the two clipped
+  // shapes this fills the ring the ::before sits inside.
   .mg-status-label--draft .mg-status-label__indicator,
   .mg-status-label--waiting-validation .mg-status-label__indicator,
   .mg-status-label--waiting-information .mg-status-label__indicator,
@@ -226,13 +335,14 @@ $mg-status-label-octagon: polygon(
   }
 }
 
-// Print: the four clipped shapes carry no border, so their ring and their fill
-// are both background-color. Browsers drop backgrounds when "background
-// graphics" is off, which is the default in Chrome's print dialog, and generic
-// print resets clear them outright — the circle and the square would keep their
-// border while the plus, diamond, triangle and octagon vanished. Declaring the
-// backgrounds essential keeps all seven marks on the page. Follows the print
-// block in icons.scss, which fixes the same failure for mask-image icons.
+// Print: the two clipped shapes carry no border, so their ring and their fill
+// are both background-color, and the five rounded ones carry their fill as a
+// background too. Browsers drop backgrounds when "background graphics" is off,
+// which is the default in Chrome's print dialog, and generic print resets clear
+// them outright — the triangle and the octagon would disappear altogether while
+// the other five were reduced to an empty ring. Declaring the backgrounds essential
+// keeps all seven marks on the page. Follows the print block in icons.scss,
+// which fixes the same failure for mask-image icons.
 @media print {
   .mg-status-label__indicator,
   .mg-status-label__indicator::before {
@@ -248,6 +358,16 @@ $mg-status-label-octagon: polygon(
   padding: 0;
   margin: 0;
   list-style: none;
+
+  // Safari removes the implicit `list` role from any <ul> whose list-style is
+  // `none`, so VoiceOver stops announcing the item count this class exists to
+  // provide (unisdr/undrr-mangrove#1209). An empty string marker is not `none`,
+  // so the semantics stay, and it renders nothing and reserves no space.
+  // Declared after the shorthand: a browser too old to parse it keeps `none`
+  // and behaves exactly as before. This is deliberately a CSS fix rather than
+  // role="list" on the examples, because the component is CSS-only — consumers
+  // write their own <ul>, and only a fix on the class reaches all of them.
+  list-style-type: "";
 
   // The global RTL list rules add inline padding to ul/ol and li with a more
   // specific selector, which pushed the labels away from the inline start.
