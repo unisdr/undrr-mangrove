@@ -147,6 +147,12 @@
     background-color: rgb(var(--mg-color-hero));
   }
 
+  // Known exception: this paints the orange accent flat and sets an eyebrow, a
+  // headline and a 90%-white body on it — 2.65, 2.65 and 2.42. The orange
+  // carries no text at any size, so a secondary CTA must not be the only place
+  // its message appears. Removing the pairing is a brand decision, tracked in
+  // https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy it:
+  // docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   &--secondary {
     --mg-cta-accent: var(--mg-color-hero--secondary);
 
