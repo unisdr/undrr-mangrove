@@ -196,6 +196,118 @@ describe('collectCustomProperties', () => {
     ]);
   });
 
+  it.each([
+    ['a text-direction scope', '[dir=rtl] .mg-notice'],
+    ['a theme data attribute', '[data-theme=dark] .mg-notice'],
+    ['a brand block', '.mg-theme-delta .mg-notice'],
+    ['a state class', '.mg-notice.is-open'],
+    ['a has- state class', '.mg-notice.has-icon'],
+    // :has() is a condition in its own right, not a specificity wrapper like
+    // :is() and :where(). Unwrapped alongside them, a rule that applies only
+    // when the element contains something read as the value at rest.
+    // .mg-card__hc:has(.mg-card__visual) is that exact shape in the bundles.
+    ['a :has() condition', '.mg-notice:has(.mg-notice__icon)'],
+    // A numeric BEM modifier: .mg-embed-container--1x1 is one in the bundles,
+    // and a `--[a-z]` test read every one of them as a plain selector.
+    ['a numeric modifier', '.mg-notice--2up'],
+  ])('does not take a default from %s', (_label, selector) => {
+    // A "-- or :" test called none of these conditional, so a declaration
+    // made only under one published that case's value as everyone's. The 14
+    // --mg-tab-* properties have .mg-theme-* declarations and were right only
+    // because each also has a generic declaration that wins here.
+    const result = collectFrom(`
+      ${selector} { --mg-notice-bg: conditional; }
+      .mg-notice { background: var(--mg-notice-bg, resting); }
+    `);
+
+    expect(result.byComponent['components-notice-notice']).toEqual([
+      expect.objectContaining({ type: 'hook', default: 'resting' }),
+    ]);
+  });
+
+  it('does not mistake a class that merely contains "is-" for a state', () => {
+    // The state test matches at a class boundary. Without that, every
+    // .mg-*-is-* and .mg-*-has-* class would read as conditional and a real
+    // default would be thrown away.
+    const result = collectFrom(`
+      .mg-notice-has-icon .mg-notice { --mg-notice-bg: resting; }
+      .mg-notice { background: var(--mg-notice-bg, fallback); }
+    `);
+
+    expect(result.byComponent['components-notice-notice']).toEqual([
+      expect.objectContaining({ type: 'default', default: 'resting' }),
+    ]);
+  });
+
+  it('does not let a brace inside a quoted value desync the brace walk', () => {
+    // The stray "{" pushed a frame that the rule's own "}" then popped,
+    // leaving the modifier's frame open. Every declaration after it inherited
+    // `modifierOnly`, so a neighbouring property's default read as a hook.
+    const result = collectFrom(`
+      .mg-notice--warning { background-image: url("chrome{less"); }
+      .mg-notice { --mg-notice-bg: resting; }
+    `);
+
+    expect(result.byComponent['components-notice-notice']).toEqual([
+      expect.objectContaining({ type: 'default', default: 'resting' }),
+    ]);
+  });
+
+  it('does not let a semicolon inside a quoted value truncate it', () => {
+    // --mg-icon-svg carries one today, in an SVG style='fill-rule:evenodd;…'
+    // attribute. It is inert only because the value exceeds the length cap.
+    const result = collectFrom(
+      '.mg-notice { --mg-notice-bg: url("a;b"); background: var(--mg-notice-bg); }'
+    );
+
+    expect(result.byComponent['components-notice-notice'][0].default).toBe(
+      'url("a;b")'
+    );
+  });
+
+  it('does not treat a comment marker inside a string as a comment', () => {
+    // Paired with a "*/" in a later string, everything between them was
+    // deleted — including the declaration in the middle.
+    const result = collectFrom(`
+      .mg-tag::before { content: "/*"; }
+      .mg-notice { --mg-notice-bg: resting; }
+      .mg-tag::after { content: "*/"; }
+    `);
+
+    expect(result.byComponent['components-notice-notice']).toEqual([
+      expect.objectContaining({ type: 'default', default: 'resting' }),
+    ]);
+  });
+
+  it('reads a var() fallback with a parenthesis inside a quoted url()', () => {
+    const result = collectFrom(
+      '.mg-notice { background: var(--mg-notice-bg, url("a)b")); }'
+    );
+
+    expect(result.byComponent['components-notice-notice'][0].default).toBe(
+      'url("a)b")'
+    );
+  });
+
+  it('publishes no default for a hook only a modifier declares', () => {
+    // `default` is the value at rest, and a modifier's declaration is not
+    // one. Publishing it anyway contradicted the field's own description, and
+    // for --mg-mega-mobile-viewport published a 90vh that @supports
+    // (height: 100dvh) re-declares — the one value no current browser uses.
+    const result = collectFrom(`
+      .mg-tree--guides .mg-tree__group { --mg-tree-guide-offset: 1rem; }
+      .mg-tree__group { margin-inline-start: var(--mg-tree-guide-offset); }
+    `);
+
+    expect(result.byComponent['components-navigation-tree']).toEqual([
+      {
+        name: '--mg-tree-guide-offset',
+        type: 'hook',
+        description: PROPERTY_DOCS['--mg-tree-guide-offset'],
+      },
+    ]);
+  });
+
   it('flags a property every stylesheet reads inside rgb()', () => {
     const result = collectFrom(`
       .mg-hub-header { background: rgb(var(--mg-hub-header-surface, 255 255 255)); }

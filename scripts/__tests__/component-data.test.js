@@ -77,3 +77,43 @@ describe('components-empty-state manifest data', () => {
     expect(titles).toContain('p');
   });
 });
+
+/**
+ * The curated description is what reaches `description` in index.json and in
+ * every detail file — it outranks the component's own docblock
+ * (undrr-mangrove#1231). `summary` is the short line published beside it, so a
+ * description written as a paragraph needs one. `yarn validate-manifest`
+ * enforces the same rule against the generated manifest; this keeps the
+ * feedback on `yarn test`.
+ */
+describe('curated descriptions and summaries', () => {
+  const SUMMARY_MAX_LENGTH = 200;
+
+  const entries = Object.entries(COMPONENT_DATA).filter(
+    ([, data]) => typeof data?.description === 'string'
+  );
+
+  it('gives every long description a short summary', () => {
+    const missing = entries
+      .filter(
+        ([, data]) =>
+          !data.summary && data.description.length > SUMMARY_MAX_LENGTH
+      )
+      .map(([id]) => id);
+    expect(missing).toEqual([]);
+  });
+
+  it('keeps every summary within the summary length', () => {
+    const tooLong = entries
+      .filter(([, data]) => data.summary?.length > SUMMARY_MAX_LENGTH)
+      .map(([id]) => id);
+    expect(tooLong).toEqual([]);
+  });
+
+  it('documents both icon button classes on the Buttons entry', () => {
+    const buttons = COMPONENT_DATA['components-buttons-buttons'];
+    expect(buttons.summary).toMatch(/icon button/i);
+    expect(buttons.description).toMatch(/\.mg-button--icon/);
+    expect(buttons.description).toMatch(/\.mg-icon-button/);
+  });
+});
