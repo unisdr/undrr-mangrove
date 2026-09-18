@@ -78,6 +78,89 @@ Disabled state (use the HTML `disabled` attribute, not CSS-only styling):
 
 > **Note:** The native `<input type="checkbox">` manages the checked/unchecked state for assistive technologies automatically. When toggling the switch via JavaScript, update the `checked` property on the input element rather than managing `aria-checked` separately.
 
+### Error state
+
+The switch shows an error the same way every other control in Mangrove does: `aria-invalid="true"` on the input, a red boundary on the control, and a `.mg-form-error` message joined to it with `aria-describedby`. A consumer who has used the error state on a text input has nothing new to learn here, and `FormErrorSummary` links to the switch by `id` exactly as it links to any other field.
+
+The story below shows a switch and a text input in error side by side.
+
+<Canvas of={CheckboxStories.SwitchError} />
+
+```html
+<label class="mg-switch">
+  <input
+    type="checkbox"
+    role="switch"
+    class="mg-switch__input"
+    id="hazard-layer"
+    aria-invalid="true"
+    aria-describedby="hazard-layer-error"
+    checked
+  />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Seismic hazard layer</span>
+</label>
+<p class="mg-form-error" id="hazard-layer-error" role="alert">
+  This layer could not load. Try again.
+</p>
+```
+
+Three markups are styled, in that order of preference:
+
+| Markup                                 | Use it when                                                                                               |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `aria-invalid="true"` on the input     | Always, if you can. It is the only one assistive technology can see, so the other two are cosmetic alone. |
+| `mg-switch__input--error` on the input | The `--error` element modifier the other controls carry. Add `aria-invalid` as well.                      |
+| `mg-switch--error` on the label        | Your template can only reach the label, as with `.mg-switch--pending`. Add `aria-invalid` as well.        |
+
+Notes on using it:
+
+- **Keep the message outside the `<label>`.** Anything inside the label becomes part of the switch's accessible name.
+- **The switch stays where the user put it.** Unlike the pending state, the error state does not move the thumb. For "the thing this switch controls failed", that is usually what you want: a controller whose latest intent wins would contradict the user by reverting. If the change itself failed to save and you are reverting, use the pending helper, which moves the switch back and announces the failure — see below.
+- **The boundary is the track's inset, coloured.** The track carries its inset as a transparent border, so the error is a `border-color` change and nothing else. It cannot displace the focus ring, which is an outline plus a separator band. Do not paint an error with `box-shadow` on the track: that band is a `box-shadow`, and a consumer rule at the same specificity replaces it.
+- **Forced colours.** The track sets `forced-color-adjust: none`, so an author red would be painted unchanged while every state around it adapts. Mangrove's own error state goes back to `CanvasText` and shows a dashed edge instead, which survives a palette with no red in it.
+- Set `--mg-switch-track-border-color--error` to change the colour.
+
+### Size
+
+Every length in the switch derives from one custom property, so a smaller or larger switch means setting a number, never re-declaring the thumb's `transform`. Overriding the transform is the trap this replaced: Mangrove pairs its own travel with a `[dir="rtl"]` counterpart, and a consumer rule of equal specificity wins in both directions, so the thumb slid the wrong way by the wrong distance in Arabic.
+
+<Canvas of={CheckboxStories.SwitchSizes} />
+
+There is a shared small size for a toolbar, a table row or a panel header. Prefer it to a size of your own:
+
+```html
+<label class="mg-switch mg-switch--small">
+  <input type="checkbox" role="switch" class="mg-switch__input" />
+  <span class="mg-switch__track" aria-hidden="true">
+    <span class="mg-switch__thumb"></span>
+  </span>
+  <span class="mg-switch__label">Show disabled layers</span>
+</label>
+```
+
+For any other size, set `--mg-switch-size` on the switch or on any ancestor:
+
+```css
+.panel-header .mg-switch {
+  --mg-switch-size: 1.125rem;
+}
+```
+
+| Custom property                 | Default                            | What it sets                                                          |
+| ------------------------------- | ---------------------------------- | --------------------------------------------------------------------- |
+| `--mg-switch-size`              | `1.5rem` (24px)                    | The whole switch. Set this one unless you need a part on its own.     |
+| `--mg-switch-track-block-size`  | `--mg-switch-size`                 | The track's height                                                    |
+| `--mg-switch-track-inline-size` | `1.75 ×` the track's block size    | The track's width                                                     |
+| `--mg-switch-track-inset`       | `1/12` of the track's block size   | The space around the thumb, drawn as a border the error state colours |
+| `--mg-switch-thumb-size`        | The block size less its two insets | The thumb                                                             |
+
+The thumb's travel is the track's inline size less the thumb and its two insets, in both directions, and the pending ring is a fraction of the thumb, so all of it follows whatever you set. `.mg-switch--small` sets `--mg-switch-size: 1.125rem` and nothing else.
+
+Two things do not scale, deliberately: the row keeps its `36px` minimum height, so a small switch still has a large enough target (WCAG 2.5.8), and the focus ring keeps its standard width.
+
 ### Pending state
 
 Use the pending state when flipping a switch starts something that takes a moment to confirm, such as saving a setting to a server. It works in both directions: off to on, and on to off.
@@ -369,11 +452,12 @@ Events are dispatched on the input and bubble:
 
 **Theming**
 
-The switch reads these custom properties, each with the default shown. Set them on the switch or on any ancestor, such as a region of the page or a theme wrapper.
+The switch reads these custom properties, each with the default shown. Set them on the switch or on any ancestor, such as a region of the page or a theme wrapper. The size hooks are listed under [Size](#size).
 
 | Custom property                         | Default                                  |
 | --------------------------------------- | ---------------------------------------- |
 | `--mg-switch-track-background`          | `rgb(var(--mg-color-neutral-400))`       |
+| `--mg-switch-track-border-color--error` | `rgb(var(--mg-color-red-900))`           |
 | `--mg-switch-track-background--checked` | `rgb(var(--mg-color-interactive))`       |
 | `--mg-switch-thumb-background`          | `rgb(var(--mg-color-neutral-0))`         |
 | `--mg-switch-track-overlay--pending`    | `rgb(var(--mg-color-neutral-500) / 0.4)` |
@@ -395,6 +479,14 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 
 ## Changelog
 
+- **2.3** — 2026-09-18 ([#PRNUMBER](https://github.com/unisdr/undrr-mangrove/pull/PRNUMBER)): Gave `.mg-switch` an error state and size hooks. A default switch renders exactly as before.
+  - Error state ([#1187](https://github.com/unisdr/undrr-mangrove/issues/1187)): `aria-invalid="true"` on the input, `.mg-switch__input--error`, or `.mg-switch--error` on the label, each giving the track a red boundary, with a `.mg-form-error` message joined by `aria-describedby` — the same pattern, class naming and error summary relationship as the text input, select, radio and checkbox. Unlike the pending state it does not move the thumb, so a controller whose latest intent wins does not contradict the user. `--mg-switch-track-border-color--error` sets the colour.
+  - The track's inset around the thumb is now a transparent border rather than padding. The box, the thumb and the travel are unchanged; the error state has a `border-color` to set, so it cannot displace the focus ring's outline and separator band the way a consumer `box-shadow` did. In forced colours, where the track opts out of colour forcing, the error is `CanvasText` and a dashed edge instead of an author red.
+  - Size hooks ([#1199](https://github.com/unisdr/undrr-mangrove/issues/1199)): `--mg-switch-size` sizes the whole switch, with `--mg-switch-track-inline-size`, `--mg-switch-track-block-size`, `--mg-switch-track-inset` and `--mg-switch-thumb-size` for a single part. The thumb's travel, its RTL counterpart and the pending ring all derive from them, so resizing a switch no longer means re-declaring the `transform` — an override that also beat Mangrove's `[dir="rtl"]` rule and sent the thumb the wrong way in Arabic.
+  - Added `.mg-switch--small` (a 1.125rem switch) for a toolbar, table row or panel header, so a shared size exists instead of each consumer inventing one. The row keeps its 36px minimum height for the touch target.
+  - Forced colours no longer takes 1px off the track's padding to make room for its border; it colours the border the track already has, so the travel holds at any size.
+  - `[dir="rtl"]` now also matches a switch carrying `dir="rtl"` itself, as the translated example on this page does.
+  - Added "Switch error" and "Switch sizes" stories. The error story shows a text input in error beside the switch.
 - **2.2** — 2026-09-17 ([#1184](https://github.com/unisdr/undrr-mangrove/pull/1184)): Added a pending state for `.mg-switch`, set with `aria-busy="true"` or `.mg-switch--pending`, with a static indicator for reduced motion. Styled `aria-disabled` switches, made the switch visible in forced colours, and added `--mg-switch-*` custom properties.
   - `aria-disabled` dims the track with a page-coloured layer instead of opacity, so the focus ring stays at full strength.
   - Forced colours: disabled switches, on or off, use a `Canvas` track with `GrayText` parts and no opacity; the track boundary is a border, so the focus outline no longer replaces it, and the white focus band is dropped; the `.mg-switch--pending` ring spins with a visible gap when off.

@@ -45,6 +45,16 @@ const INPUT_HOOKS = {
     'Page-level docking offset for fixed headers, set by the consuming page',
   // The switch reads each hook with its default where it is used, so a
   // wrapper or theme can set it; declaring it on .mg-switch would shadow that.
+  // Geometry hooks. --mg-switch-size is the one a consumer usually sets; the
+  // other three override a single derived part. .mg-switch--small sets
+  // --mg-switch-size, which is why it is read but never declared at rest.
+  '--mg-switch-size': 'Switch size hook, set by a wrapper or --small',
+  '--mg-switch-thumb-size': 'Switch size hook, set by a wrapper',
+  '--mg-switch-track-block-size': 'Switch size hook, set by a wrapper',
+  '--mg-switch-track-border-color--error':
+    'Switch theming hook, set by a wrapper',
+  '--mg-switch-track-inline-size': 'Switch size hook, set by a wrapper',
+  '--mg-switch-track-inset': 'Switch size hook, set by a wrapper',
   '--mg-switch-pending-ring-color': 'Switch theming hook, set by a wrapper',
   '--mg-switch-pending-ring-gap-color': 'Switch theming hook, set by a wrapper',
   '--mg-switch-thumb-background': 'Switch theming hook, set by a wrapper',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Checkbox } from './Checkbox';
 import { FormGroup } from '../FormGroup/FormGroup';
+import { TextInput } from '../TextInput/TextInput';
 import {
   getSwitchCaptionForLocale,
   PendingSwitchDemo,
@@ -48,6 +49,60 @@ const getCaptionForLocale = locale => {
       };
   }
 };
+
+// Captions for the switch error and size stories. Kept here rather than in
+// _switchPending, which serves the pending stories only.
+const getSwitchStateCaption = locale => {
+  switch (locale) {
+    case 'arabic':
+      return {
+        errorLabel: 'طبقة الخطر الزلزالي',
+        errorText: 'تعذّر تحميل هذه الطبقة. حاول مرة أخرى.',
+        inputLabel: 'نصف قطر المنطقة (كم)',
+        inputError: 'أدخل رقمًا بين 1 و500.',
+        defaultSize: 'الحجم الافتراضي',
+        smallSize: 'الحجم الصغير',
+        customSize: 'حجم مخصص',
+      };
+    case 'japanese':
+      return {
+        errorLabel: '地震ハザードレイヤー',
+        errorText:
+          'このレイヤーを読み込めませんでした。もう一度お試しください。',
+        inputLabel: '範囲の半径 (km)',
+        inputError: '1 から 500 の数値を入力してください。',
+        defaultSize: '標準サイズ',
+        smallSize: '小サイズ',
+        customSize: 'カスタムサイズ',
+      };
+    default:
+      return {
+        errorLabel: 'Seismic hazard layer',
+        errorText: 'This layer could not load. Try again.',
+        inputLabel: 'Area radius (km)',
+        inputError: 'Enter a number between 1 and 500.',
+        defaultSize: 'Default size',
+        smallSize: 'Small size',
+        customSize: 'Custom size',
+      };
+  }
+};
+
+const switchMarkup = ({ id, label, className = 'mg-switch', ...input }) => (
+  <label className={className}>
+    <input
+      type="checkbox"
+      role="switch"
+      className="mg-switch__input"
+      id={id}
+      {...input}
+    />
+    <span className="mg-switch__track" aria-hidden="true">
+      <span className="mg-switch__thumb"></span>
+    </span>
+    <span className="mg-switch__label">{label}</span>
+  </label>
+);
 
 export default {
   title: 'Components/Forms/Checkbox',
@@ -195,6 +250,70 @@ export const SwitchDisabled = {
     </div>
   ),
   name: 'Switch disabled',
+};
+
+export const SwitchError = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getSwitchStateCaption(locale);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div>
+          {switchMarkup({
+            id: 'switch-error-demo',
+            label: caption.errorLabel,
+            defaultChecked: true,
+            'aria-invalid': 'true',
+            'aria-describedby': 'switch-error-demo-error',
+          })}
+          <p
+            className="mg-form-error"
+            id="switch-error-demo-error"
+            role="alert"
+          >
+            {caption.errorText}
+          </p>
+        </div>
+
+        {/* The same error treatment on a text input, for comparison. */}
+        <TextInput
+          label={caption.inputLabel}
+          defaultValue="900"
+          error
+          errorText={caption.inputError}
+        />
+      </div>
+    );
+  },
+  name: 'Switch error',
+};
+
+export const SwitchSizes = {
+  render: (args, { globals: { locale } }) => {
+    const caption = getSwitchStateCaption(locale);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {switchMarkup({
+          id: 'switch-size-default',
+          label: caption.defaultSize,
+          defaultChecked: true,
+        })}
+        {switchMarkup({
+          id: 'switch-size-small',
+          label: caption.smallSize,
+          className: 'mg-switch mg-switch--small',
+          defaultChecked: true,
+        })}
+        <span style={{ '--mg-switch-size': '2.25rem' }}>
+          {switchMarkup({
+            id: 'switch-size-custom',
+            label: caption.customSize,
+            defaultChecked: true,
+          })}
+        </span>
+      </div>
+    );
+  },
+  name: 'Switch sizes',
 };
 
 export const SwitchPending = {
