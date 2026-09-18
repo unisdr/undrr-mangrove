@@ -1337,13 +1337,36 @@ const customPropertyCount = Object.values(customProperties.byComponent).reduce(
 // Written out from the data rather than by hand, because naming only the
 // data-viz palette left 29 properties unsaid — including the five typography
 // roles that #1210 had just established as the public font API.
-const globalGroupsSentence = customProperties.globals
-  .filter(group => group.count > 0)
+const globalGroupsWithMembers = customProperties.globals.filter(
+  group => group.count > 0
+);
+const globalGroupsSentence = globalGroupsWithMembers
   .map(
     group =>
       `${group.label} (${group.prefix}*), ${group.count} of them, ${group.where}`
   )
   .join('; ');
+// Counted rather than written out. The sentence above is generated from
+// GLOBAL_PREFIXES, so a hand-typed "Four groups" in front of it goes stale the
+// moment a group is added or removed — which is exactly what happened while
+// unisdr/undrr-mangrove#1203 briefly carried a fifth group, leaving llms.txt
+// claiming four and then listing five.
+const GROUP_COUNT_WORDS = [
+  'No',
+  'One',
+  'Two',
+  'Three',
+  'Four',
+  'Five',
+  'Six',
+  'Seven',
+  'Eight',
+  'Nine',
+];
+const globalGroupsCountPhrase = `${
+  GROUP_COUNT_WORDS[globalGroupsWithMembers.length] ??
+  String(globalGroupsWithMembers.length)
+} group${globalGroupsWithMembers.length === 1 ? '' : 's'}`;
 const globalGroupsTotal = customProperties.globals.reduce(
   (total, group) => total + group.count,
   0
@@ -2229,7 +2252,7 @@ ${DOCS_BASE}ai-components/utilities.json
 Theme token dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
 ${DOCS_BASE}tokens.json
 
-This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. ${globalGroupsTotal} --mg-* properties are in neither list: they are global like a theme token, but declared straight in SCSS rather than generated from tokens/*.yaml, so the dictionary never saw them. Four groups — ${globalGroupsSentence}. The dictionary's own \`scope\` field says the same thing.
+This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. ${globalGroupsTotal} --mg-* properties are in neither list: they are global like a theme token, but declared straight in SCSS rather than generated from tokens/*.yaml, so the dictionary never saw them. ${globalGroupsCountPhrase} — ${globalGroupsSentence}. The dictionary's own \`scope\` field says the same thing.
 
 Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs
