@@ -16,12 +16,80 @@
 // DELTA states are modifiers.
 // -
 // The name is always present, so the colour is never the only cue (SC 1.4.1).
+// The indicator still carries a shape as well as a colour, for two reasons:
+// several of the colours are close to each other under red-green colour vision
+// deficiency (degraded and offline are 3.4 CIE76 deltaE apart simulated for
+// deuteranopia, draft and waiting-for-more-information 19.5), and this is a
+// CSS-only component, so consumers write the markup and some will place an
+// indicator without its label — in a table cell, a card corner, a dense list.
+// A second cue also makes a long list faster to scan for everyone.
 // -
 // Usage:
 //   <span class="mg-status-label mg-status-label--published">
 //     <span class="mg-status-label__indicator"></span>
 //     Published
 //   </span>
+
+// Shapes, as clip paths on the indicator box.
+// -
+// A circle and a square are drawn with border-radius so they keep the real
+// border, and so --mg-status-label-indicator-radius still shapes the base
+// indicator. The other four need a clip path, and a clip path cuts through a
+// border — so those indicators paint the ring colour as their background, are
+// clipped to the shape, and lay the fill over it on a ::before inset by the
+// ring width and clipped to the same shape.
+$mg-status-label-diamond: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+$mg-status-label-triangle: polygon(50% 0%, 100% 100%, 0% 100%);
+$mg-status-label-plus: polygon(
+  34% 0%,
+  66% 0%,
+  66% 34%,
+  100% 34%,
+  100% 66%,
+  66% 66%,
+  66% 100%,
+  34% 100%,
+  34% 66%,
+  0% 66%,
+  0% 34%,
+  34% 34%
+);
+$mg-status-label-octagon: polygon(
+  29.3% 0%,
+  70.7% 0%,
+  100% 29.3%,
+  100% 70.7%,
+  70.7% 100%,
+  29.3% 100%,
+  0% 70.7%,
+  0% 29.3%
+);
+
+// Equal bounding boxes do not read as equal weight: a square of the indicator
+// size looks heavier than the circle, a diamond and a triangle much lighter.
+// Each shape is scaled so its area lands near the circle's, which is what
+// makes the set look like one family rather than five unrelated marks.
+@mixin mg-status-label-indicator-size($scale) {
+  inline-size: calc(var(--mg-status-label-indicator-size) * #{$scale});
+  block-size: calc(var(--mg-status-label-indicator-size) * #{$scale});
+}
+
+@mixin mg-status-label-shape($shape, $scale) {
+  @include mg-status-label-indicator-size($scale);
+
+  position: relative;
+  clip-path: $shape;
+  background-color: var(--mg-status-label-indicator-border-color);
+  border: 0;
+  border-radius: 0;
+
+  &::before {
+    position: absolute;
+    inset: var(--mg-status-label-indicator-border-width);
+    clip-path: $shape;
+    content: "";
+  }
+}
 
 .mg-status-label {
   display: inline-flex;
@@ -32,7 +100,7 @@
   line-height: 1.5;
   color: var(--mg-status-label-color);
 
-  // The dot is decoration; the label text carries the meaning.
+  // The indicator is decoration; the label text carries the meaning.
   &__indicator {
     flex: 0 0 auto;
     inline-size: var(--mg-status-label-indicator-size);
@@ -45,29 +113,91 @@
 }
 
 // DELTA record/event workflow states.
+// Draft: a square, an inert block — nothing has moved yet.
 .mg-status-label--draft .mg-status-label__indicator {
+  @include mg-status-label-indicator-size(0.9);
+
   background-color: var(--mg-status-label-indicator--draft);
+  border-radius: 0;
 }
 
+// Waiting for validation: a diamond, the flowchart decision mark — someone
+// else has to make a call before the record moves.
 .mg-status-label--waiting-validation .mg-status-label__indicator {
-  background-color: var(--mg-status-label-indicator--waiting-validation);
+  @include mg-status-label-shape($mg-status-label-diamond, 1.15);
+
+  &::before {
+    background-color: var(--mg-status-label-indicator--waiting-validation);
+  }
 }
 
+// Waiting for more information: a plus — something more is needed.
 .mg-status-label--waiting-information .mg-status-label__indicator {
-  background-color: var(--mg-status-label-indicator--waiting-information);
+  @include mg-status-label-shape($mg-status-label-plus, 1.2);
+
+  &::before {
+    background-color: var(--mg-status-label-indicator--waiting-information);
+  }
 }
 
+// Published: the circle, unchanged. It is the settled end state and the mark
+// the DELTA board itself draws.
 .mg-status-label--published .mg-status-label__indicator {
   background-color: var(--mg-status-label-indicator--published);
 }
 
 // Service health states (degraded / offline), used by ServiceNotice.
+// Degraded: the caution triangle.
 .mg-status-label--warning .mg-status-label__indicator {
-  background-color: var(--mg-status-label-indicator--warning);
+  @include mg-status-label-shape($mg-status-label-triangle, 1.14);
+
+  &::before {
+    background-color: var(--mg-status-label-indicator--warning);
+  }
 }
 
+// Offline: the octagon of a stop sign.
 .mg-status-label--negative .mg-status-label__indicator {
-  background-color: var(--mg-status-label-indicator--negative);
+  @include mg-status-label-shape($mg-status-label-octagon, 1);
+
+  &::before {
+    background-color: var(--mg-status-label-indicator--negative);
+  }
+}
+
+// Forced colours repaint every background as a system colour, so the fills
+// stop telling the statuses apart and only the shape is left. The indicators
+// opt out of forcing and draw themselves in system colours: a CanvasText
+// shape, and a Canvas centre with a CanvasText edge for the two round ones, so
+// the neutral base and published do not collapse into the same mark.
+@media (forced-colors: active) {
+  .mg-status-label__indicator {
+    forced-color-adjust: none;
+    background-color: Canvas;
+    border-color: CanvasText;
+  }
+
+  // Each shaped variant names its own ::before, because the rule that puts the
+  // fill there is more specific than a bare .mg-status-label__indicator::before
+  // and would otherwise keep its author colour.
+  .mg-status-label--waiting-validation .mg-status-label__indicator::before,
+  .mg-status-label--waiting-information .mg-status-label__indicator::before,
+  .mg-status-label--warning .mg-status-label__indicator::before,
+  .mg-status-label--negative .mg-status-label__indicator::before {
+    background-color: CanvasText;
+  }
+
+  // Every named status is a solid system-coloured shape. On the four clipped
+  // shapes this fills the ring the ::before sits inside; the base class keeps
+  // its Canvas centre, so it stays the one hollow mark.
+  .mg-status-label--draft .mg-status-label__indicator,
+  .mg-status-label--waiting-validation .mg-status-label__indicator,
+  .mg-status-label--waiting-information .mg-status-label__indicator,
+  .mg-status-label--published .mg-status-label__indicator,
+  .mg-status-label--warning .mg-status-label__indicator,
+  .mg-status-label--negative .mg-status-label__indicator {
+    background-color: CanvasText;
+  }
 }
 
 // A list of statuses — a legend, or a filter summary.

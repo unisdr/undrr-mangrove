@@ -13,6 +13,7 @@ export default {
           '(draft, waiting for validation, waiting for more information, published). ' +
           'Two service health modifiers (warning, negative) cover degraded and offline ' +
           'services. The base class on its own gives a neutral indicator for any other status. ' +
+          'Each status has its own shape as well as its own colour. ' +
           'CSS only — no JavaScript, no React component.',
       },
     },
@@ -153,6 +154,66 @@ export const InATable = {
     </table>
   ),
   name: 'In a table',
+};
+
+/** Enough rows that the reader scans the indicators rather than reading them. */
+const DENSE_RECORDS = [
+  ['Flooding, Central Province', 'published', 'Published'],
+  [
+    'Landslide, Eastern District',
+    'waiting-validation',
+    'Waiting for validation',
+  ],
+  [
+    'Drought, Northern Region',
+    'waiting-information',
+    'Waiting for more information',
+  ],
+  ['Storm surge, Coastal Zone', 'draft', 'Draft'],
+  ['Wildfire, Southern Hills', 'published', 'Published'],
+  [
+    'Earthquake, Rift Valley',
+    'waiting-information',
+    'Waiting for more information',
+  ],
+  ['Heatwave, Inland Plateau', 'waiting-validation', 'Waiting for validation'],
+  ['Cyclone, Island Group', 'published', 'Published'],
+  ['Epidemic, Border Districts', 'draft', 'Draft'],
+  ['Locust swarm, Dry Belt', 'waiting-validation', 'Waiting for validation'],
+  ['Tsunami, Eastern Seaboard', 'published', 'Published'],
+  [
+    'Avalanche, High Passes',
+    'waiting-information',
+    'Waiting for more information',
+  ],
+];
+
+export const DenseList = {
+  render: () => (
+    <ul
+      className="mg-status-label-group"
+      style={{ flexDirection: 'column', gap: '4px' }}
+    >
+      {DENSE_RECORDS.map(([record, modifier, label]) => (
+        <li key={record} style={{ display: 'flex', gap: '12px' }}>
+          <Label modifier={modifier} label={label} />
+          <span>{record}</span>
+        </li>
+      ))}
+    </ul>
+  ),
+  name: 'In a dense list',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Scanning a long list is where a second cue earns its place. Each ' +
+          'status has a shape as well as a colour, so a reader who cannot ' +
+          'separate the pale yellow from the olive, or the gold from the red, ' +
+          'still sees four different marks.',
+      },
+    },
+  },
 };
 
 export const RightToLeft = {

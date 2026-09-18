@@ -639,7 +639,7 @@ export const COMPONENT_DATA = {
   'components-status-label': {
     name: 'Status label',
     description:
-      'Status of a record or event, as a coloured indicator dot plus the status name in text. Workflow variants: draft, waiting-validation, waiting-information, published. Service health variants: warning (degraded) and negative (offline), also used by ServiceNotice. Without a modifier the indicator is neutral. The dot is decorative: the status name is always present as text, so meaning never depends on colour. Wrap several in mg-status-label-group.',
+      'Status of a record or event, as a coloured indicator plus the status name in text. Workflow variants: draft (square), waiting-validation (diamond), waiting-information (plus), published (circle). Service health variants: warning/degraded (triangle) and negative/offline (octagon), also used by ServiceNotice. Without a modifier the indicator is a neutral circle. Each status has its own shape as well as its own colour, from CSS alone, so the markup is the same for every variant. The indicator is decorative: the status name is always present as text, so meaning never depends on colour. Wrap several in mg-status-label-group.',
     cssClasses: [
       'mg-status-label',
       'mg-status-label__indicator',
