@@ -35,15 +35,64 @@ The `mgShowMore()` function finds all elements with `data-mg-show-more` and wire
 
 <!-- Toggle button (can be anywhere on the page) -->
 
-<a href="#"
+<button type="button"
    class="mg-button mg-button-primary mg-show-more--button"
    data-mg-show-more="true"
    data-mg-show-more-target=".my-content"
    data-mg-show-more-label-open="Show less"
    data-mg-show-more-label-collapsed="Show more">
   Show more
-</a>
+</button>
 `} />
+
+The toggle must be a `<button type="button">`. Earlier versions of these docs
+showed an `<a href="#">`; that anchor announced as a link and offered a dead
+destination when the script failed to load. `mgShowMore()` still adds
+`role="button"` and a Space handler to an anchor it finds, so existing markup
+keeps working, but new markup should use a button.
+
+### Accessibility
+
+`mgShowMore()` wires these for you — do not hand-write them:
+
+- `aria-controls` on the toggle, pointing at the content container. If the
+  container has no `id`, the script assigns one (`mg-show-more-target-N`).
+- `role="button"` on a toggle that is not already a `<button>`, together with
+  a `keydown` handler so Space activates it. An anchor does not respond to
+  Space on its own, and `role="button"` promises that it does.
+- Expansion when keyboard focus enters a collapsed container, so Tab never
+  parks focus on a control clipped out of view (WCAG 2.4.7 Focus Visible,
+  2.4.11 Focus Not Obscured).
+
+#### The collapse is visual only, and the toggle is not a disclosure
+
+The toggle deliberately carries **no `aria-expanded`**, and the component is
+not a disclosure widget in the WAI-ARIA sense. Collapsing is done with
+`max-height`, `overflow: hidden` and a `mask-image` fade. All three are paint
+and layout effects: the clipped text stays in the accessibility tree and the
+clipped controls stay in the tab order. Verified in Chromium against the
+collapsed container — the accessibility tree lists every clipped paragraph,
+and tabbing goes straight through a link below the clip line.
+
+So a screen reader reads the whole block whether it looks collapsed or not.
+An `aria-expanded="false"` on the toggle would be a false statement about the
+content, which is worse than no statement: it tells a screen reader user
+there is hidden content to reveal when there is none, and it makes the toggle
+look like a control they need to operate when operating it changes nothing
+they can perceive. Nothing is lost to them — the content is all there.
+
+Making the toggle an honest disclosure would mean genuinely hiding the
+remainder (`hidden`, `display: none` or `content-visibility: hidden`), and
+that is incompatible with a fade that cuts mid-line: you can only hide whole
+elements, and the component's documented content model is a single run of
+text in one container, with no child boundary to cut at. Choosing a real
+disclosure therefore means giving up the fade, which is a visual change for
+every consumer. Until that is decided, the component says nothing it cannot
+back up.
+
+If you need a true disclosure — content that is genuinely hidden until
+revealed — build it from whole elements and toggle `hidden` on them, rather
+than reaching for this utility.
 
 ### Data attributes
 
@@ -86,8 +135,8 @@ mgShowMore([myButton]);
 Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This is useful when another script must run first (e.g. Drupal behaviors). Call `mgShowMore` yourself once that setup is complete:
 
 <Source language="html" code={`
-<a data-mg-show-more data-mg-show-more-skip-auto-init
-   data-mg-show-more-target=".my-content">Show more</a>
+<button type="button" data-mg-show-more data-mg-show-more-skip-auto-init
+   data-mg-show-more-target=".my-content">Show more</button>
 
 <script type="module">
   import {mgShowMore} from
@@ -117,6 +166,11 @@ The collapsed height is controlled by the `--mg-show-more-height` CSS custom pro
 
 ## Changelog
 
+- **1.3** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): **Visible change to the documented markup.** The toggle is now `<button type="button">` rather than `<a href="#">`, and `mgShowMore()` maintains `aria-controls` on it, assigning the target an id when it has none. The anchor announced as a link and offered a dead destination if the script failed to load (WCAG 4.1.2). An anchor still present in consumer markup keeps working and is given `role="button"`, so copied markup does not break, but new markup should use a button.
+  - An anchor toggle now also gets a `keydown` handler, so Space activates it as `role="button"` promises. The click handler already suppressed the `href="#"` jump.
+  - The toggle does **not** carry `aria-expanded`, and the docs now say why. The collapse is `max-height` plus `overflow: hidden` plus a `mask-image` fade, all of which clip visually while leaving the content in the accessibility tree and the tab order, so there is no hidden content for `aria-expanded` to describe. An earlier draft of this change added it; it was removed rather than shipped as a claim the CSS does not deliver. Turning the utility into a real disclosure means hiding whole elements and losing the mid-line fade, which is a visual change held for its own decision.
+  - Focus entering a collapsed container now expands it. `overflow: hidden` left Tab landing on links clipped out of view in a box that cannot scroll to reveal them (WCAG 2.4.7, 2.4.11).
+  - The counter behind the generated `mg-show-more-target-N` ids moved from module scope to a `globalThis` symbol and now skips ids already present in the document, so two loaded copies of the script cannot mint the same id — the hazard fixed for `createHydrator` in [#1178](https://github.com/unisdr/undrr-mangrove/pull/1178).
 - **1.2** — 2026-03-27: Added `data-mg-show-more-skip-auto-init` attribute, `type="module"` self-init, idempotency guard, single-element scope support
 - **1.1.1** — 2026-03-05: Fixed event listener leak — target click handler now registers once at init instead of on every toggle; clicking expanded content no longer inadvertently collapses it
 - **1.1** — 2026-02-23: Replaced white gradient overlay with CSS `mask-image` for background-agnostic fade effect

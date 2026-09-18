@@ -279,6 +279,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.4.3** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): A `type: 'html'` thumbnail preview is now `inert`, and any focusable element inside it is given `tabindex="-1"`. The injected author markup sits inside `<button role="tab">` under `aria-hidden="true"`, so links and buttons in it were focusable children of an aria-hidden node and interactive descendants of a button (axe `aria-hidden-focus` and `nested-interactive`, both serious). The tab itself is unchanged and stays keyboard operable.
 - **1.4.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic gallery titles now render in Noto Sans Arabic instead of Noto Kufi Arabic. `.mg-gallery__title` reads the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Latin rendering is unchanged.
 - **1.4.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a gallery title whose own language is not Arabic.
 - **1.4** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Preserved the circular carousel control language while raising main and corner navigation arrows to the recommended 44px interaction target across desktop and mobile. Removed redundant per-language story exports in favour of the global locale toolbar.

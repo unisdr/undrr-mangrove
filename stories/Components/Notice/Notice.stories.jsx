@@ -103,7 +103,46 @@ export const PositiveConfirmation = {
   },
 };
 
+/**
+ * Dismissing a notice removes the button that had focus. The notice hands
+ * focus back to whatever raised it, or to the nearest control around it, so a
+ * keyboard user is not dropped on the page body. Dismiss with the keyboard and
+ * watch where the focus ring lands.
+ */
+function DismissibleDemo(args) {
+  const [instance, setInstance] = React.useState(0);
+  const [isVisible, setIsVisible] = React.useState(true);
+
+  return (
+    <div>
+      {isVisible && (
+        <Notice
+          key={instance}
+          {...args}
+          onDismiss={() => setIsVisible(false)}
+        />
+      )}
+      <p>
+        Dismiss the notice with the keyboard: focus moves to the button below
+        rather than to the page body. Raise it from that button and dismissing
+        it returns focus there.
+      </p>
+      <button
+        type="button"
+        className="mg-button mg-button-secondary"
+        onClick={() => {
+          setInstance(current => current + 1);
+          setIsVisible(true);
+        }}
+      >
+        Show the notice again
+      </button>
+    </div>
+  );
+}
+
 export const Dismissible = {
+  render: args => <DismissibleDemo {...args} />,
   args: {
     variant: 'info',
     isDismissible: true,

@@ -19,6 +19,14 @@
     margin: 0;
   }
 
+  // Recovery links sit inside running copy ("go to the homepage, browse the
+  // directory..."), where colour alone cannot distinguish them (WCAG 1.4.1
+  // Use of Colour). Button-styled actions keep their own treatment.
+  p a:not(.mg-button) {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
   &__search {
     display: flex;
     gap: mg-rem(5);

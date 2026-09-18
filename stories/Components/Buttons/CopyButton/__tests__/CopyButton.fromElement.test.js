@@ -77,4 +77,26 @@ describe('copyButtonFromElement', () => {
     expect(props.tooltipLabel).toBe('¡Copiado!');
     expect(props.copiedLabel).toBe('Copiado al portapapeles.');
   });
+
+  describe('accessible name', () => {
+    it('reads a plain aria-label, which is what the docs teach', () => {
+      const el = makeContainer({ 'text-to-copy': 'https://example.org' });
+      el.setAttribute('aria-label', 'Copy glossary link');
+
+      expect(copyButtonFromElement(el).ariaLabel).toBe('Copy glossary link');
+    });
+
+    it('prefers aria-label over the legacy data-aria-label spelling', () => {
+      const el = makeContainer({ 'aria-label': 'Legacy name' });
+      el.setAttribute('aria-label', 'Real name');
+
+      expect(copyButtonFromElement(el).ariaLabel).toBe('Real name');
+    });
+
+    it('still falls back to data-aria-label for markup already in the wild', () => {
+      const el = makeContainer({ 'aria-label': 'Legacy name' });
+
+      expect(copyButtonFromElement(el).ariaLabel).toBe('Legacy name');
+    });
+  });
 });

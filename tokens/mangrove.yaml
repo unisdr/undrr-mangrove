@@ -259,6 +259,10 @@ color:
 
   # Hero
   hero: { $value: '{color.interactive}' }
+  # In UNDRR and every sub-brand this resolves to the orange accent, which
+  # carries no text: white fails WCAG at 2.65 and black misses the perceptual
+  # body-text floor. Treat it as a block of colour, not a text surface.
+  # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   hero--secondary: { $value: '{color.secondary}' }
   hero--tertiary: { $value: '{color.tertiary}' }
   hero--quaternary: { $value: '{color.quaternary}' }

@@ -39,6 +39,13 @@ color:
       labels this swatch "UNDRR Blue - Corporate blue" and marks it Brand.
 
   # Sendai orange (#eb752a) and its tint ramp.
+  #
+  # The top of this ramp is a non-text accent. No text colour clears AA on
+  # orange-900 or orange-800: white is 2.95 and 2.65 against WCAG's 4.5, and
+  # black, which passes WCAG at 7.11 and 7.92, still misses the perceptual
+  # body-text floor (57.4 and 61.1 against 63). Use them for borders, rules,
+  # icon fills and blocks with no copy over them.
+  # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   orange-50: { $value: '#fdf1ea' }
   orange-100: { $value: '#fbe3d4' }
   orange-200: { $value: '#f9d6bf' }
@@ -57,6 +64,12 @@ color:
   interactive: { $value: '{color.blue-900}' }
   interactive-active: { $value: '{color.blue-700}' }
 
+  # The orange accent, as three named roles. Non-text, like the ramp steps they
+  # point at: do not put copy on a surface painted with these, and do not use
+  # them as ink on white. Tag --accent, TextCta/Hero/HubHeader --secondary and
+  # AuthorImage --secondary still do, and are recorded exceptions pending
+  # https://github.com/unisdr/undrr-mangrove/issues/1196.
+  # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   secondary: { $value: '{color.orange-800}' }
   tag-accent: { $value: '{color.orange-900}' }
   tag-accent--hover: { $value: '{color.orange-800}' }

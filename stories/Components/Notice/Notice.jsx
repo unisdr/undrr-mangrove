@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -22,6 +22,95 @@ const DEFAULT_ICONS = {
 
 const HEADING_LEVELS = ['h2', 'h3', 'h4', 'h5', 'h6'];
 
+// Everything a browser puts in the tab order, used to find the notice's
+// neighbours when focus has to go somewhere after a dismissal.
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'area[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  'iframe',
+  'summary',
+  'audio[controls]',
+  'video[controls]',
+  '[contenteditable]:not([contenteditable="false"])',
+  '[tabindex]:not([tabindex^="-"])',
+].join(',');
+
+/**
+ * Whether an element can really take focus right now. `checkVisibility` is the
+ * browser's own answer; jsdom does not implement it, and nothing is laid out
+ * there, so a test environment falls through to the attribute checks.
+ *
+ * @param {HTMLElement} el
+ * @returns {boolean}
+ */
+function canTakeFocus(el) {
+  if (el.hidden) return false;
+  if (el.closest('[aria-hidden="true"], [inert]')) return false;
+  if (typeof el.checkVisibility === 'function') return el.checkVisibility();
+  return true;
+}
+
+/**
+ * Picks where focus should go once the notice is removed.
+ *
+ * Preference order: whatever was focused when the notice appeared (the button
+ * that raised it, in the common case), then a neighbour — the last focusable
+ * element before the notice, or the first after it — searched outwards one
+ * ancestor at a time so focus lands near where the user was rather than at the
+ * top of the page. Dropping focus on `<body>` loses the keyboard user's place,
+ * so it is the last resort.
+ *
+ * The search does not skip text inputs, deliberately. Landing on one opens the
+ * soft keyboard on touch devices, which is an annoyance — but the criterion
+ * being met here is 2.4.3 Focus Order, and stepping over the true neighbour to
+ * avoid it would move focus further from where the user was, trading the thing
+ * that is required for the thing that is merely nicer. The common case, a
+ * notice raised by a control, never reaches this search at all: it restores to
+ * the opener above.
+ *
+ * @param {HTMLElement} noticeEl  The notice element about to be removed.
+ * @param {?HTMLElement} opener   What held focus when the notice mounted.
+ * @returns {?HTMLElement}        The element to focus, or null.
+ */
+function findFocusTargetAfterDismiss(noticeEl, opener) {
+  if (
+    opener &&
+    opener.isConnected &&
+    opener !== document.body &&
+    !noticeEl.contains(opener) &&
+    typeof opener.focus === 'function' &&
+    canTakeFocus(opener)
+  ) {
+    return opener;
+  }
+
+  let scope = noticeEl.parentElement;
+  while (scope) {
+    let previous = null;
+    let next = null;
+
+    for (const candidate of scope.querySelectorAll(FOCUSABLE_SELECTOR)) {
+      if (noticeEl.contains(candidate) || !canTakeFocus(candidate)) continue;
+      const position = noticeEl.compareDocumentPosition(candidate);
+      if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+        previous = candidate;
+      } else if (!next && position & Node.DOCUMENT_POSITION_FOLLOWING) {
+        next = candidate;
+      }
+    }
+
+    if (previous || next) return previous || next;
+    if (scope === document.body) break;
+    scope = scope.parentElement;
+  }
+
+  return null;
+}
+
 export const Notice = ({
   title,
   description,
@@ -42,6 +131,12 @@ export const Notice = ({
   ...props
 }) => {
   const [isDismissed, setIsDismissed] = useState(false);
+  const noticeRef = useRef(null);
+  const returnFocusRef = useRef(null);
+
+  useEffect(() => {
+    returnFocusRef.current = document.activeElement;
+  }, []);
 
   if (isDismissed) return null;
 
@@ -82,12 +177,33 @@ export const Notice = ({
   const content = children || description;
 
   const handleDismiss = event => {
+    // The dismiss button is about to be removed from the document. Move focus
+    // before that happens, or the browser drops it on <body> and a keyboard
+    // user loses their place (WCAG 2.4.3 Focus Order).
+    const noticeEl = noticeRef.current;
+    if (noticeEl && noticeEl.contains(document.activeElement)) {
+      const target = findFocusTargetAfterDismiss(
+        noticeEl,
+        returnFocusRef.current
+      );
+      if (target) {
+        target.focus();
+      } else {
+        document.activeElement.blur();
+      }
+    }
+    returnFocusRef.current = null;
     setIsDismissed(true);
     if (onDismiss) onDismiss(event);
   };
 
   return (
-    <div className={noticeClasses} role={effectiveRole} {...props}>
+    <div
+      ref={noticeRef}
+      className={noticeClasses}
+      role={effectiveRole}
+      {...props}
+    >
       {(title || iconName || isDismissible || headerContent) && (
         <div className="mg-notice__header">
           {typeof iconName === 'string' && (

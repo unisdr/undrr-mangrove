@@ -80,6 +80,8 @@ Text-only CTAs are centred by default. Set `centered={false}` for start-aligned 
 
 All four accents support both tones and follow the site theme. Prefer theme accents over custom colours to keep text and action treatments coordinated.
 
+**Contrast:** the strong `secondary` accent is the orange accent, and the orange carries no text. The eyebrow and headline measure 2.65 and the 90%-white body 2.42, against WCAG's 4.5 — and no text colour clears the threshold on this hue at any size. Use the soft tone for secondary, or another accent, when the CTA carries copy a reader must read. Removing the pairing is a brand decision, tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+
 ## Props
 
 | Prop              | Type       | Default     | Description                                                                                                                        |
@@ -176,10 +178,13 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 - Headline renders as a proper heading element (`<h2>` by default). Use `headlineLevel` to match the document outline
 - Button text provides clear action labels
 - Soft tone uses dark text; strong tone uses light text. Check contrast for the chosen theme and any custom backgrounds or child content.
+- The strong `secondary` accent is a recorded contrast exception: white text on the orange accent does not meet AA at any size. See [Accent colours](#accent-colours).
 - Soft-tone actions inherit normal button focus styles; strong-tone action links use the inverse focus treatment.
 - Composed forms need visible labels, correctly grouped choices and accessible error/confirmation feedback supplied by their owner.
 
 ## Changelog
+
+- **1.2.3** — 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented the strong `secondary` accent as a recorded contrast exception — white eyebrow, headline and body on the orange accent meet neither contrast measure at any size. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
 
 - **1.2.2** — 2026-09-17 ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173)): Filled buttons on strong surfaces get a light tinted stroke so they keep a visible edge when their fill matches the banner colour.
 
