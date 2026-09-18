@@ -29,8 +29,9 @@ brand:
       Deeper partner of the IRP interactive blue. Carries the secondary button
       fill and, since the primary button's hover left the orange accent, that
       hover too. White on it is 6.02:1 and 71.1 perceptually, so it clears AA
-      either way, and it sits 6.6 dE2000 from the interactive blue — a visible
-      tonal step of the same order as the base theme's own hover (7.7).
+      either way, and it sits 6.6 dE2000 from the interactive blue — comfortably
+      past the ~2.3 just-noticeable difference, and of the same order as the
+      base theme's own blue-900 to blue-700 hover (12.2).
   green:
     $value: '#8cc63f'
     $description: >-

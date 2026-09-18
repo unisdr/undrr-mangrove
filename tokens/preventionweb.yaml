@@ -33,8 +33,9 @@ brand:
       Lighter partner of the brand teal. Carries the secondary button fill and,
       since the primary button's hover left the orange accent, that hover too.
       White on it is 5.5:1 and 69.7 perceptually, so it clears AA either way,
-      and it sits 4.2 dE2000 from the brand teal — a visible tonal step of the
-      same order as the base theme's own blue-900 to blue-700 hover (7.7).
+      and it sits 4.2 dE2000 from the brand teal — comfortably past the ~2.3
+      just-noticeable difference, though a shallower step than the base theme's
+      own blue-900 to blue-700 hover (12.2).
 
 color:
   $type: color
