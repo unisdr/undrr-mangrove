@@ -258,6 +258,8 @@ Built with proper ARIA attributes, keyboard navigation, focus management, and sc
 
 ## Changelog
 
+- **1.2.3** — 2026-09-17 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): The "Default" story canvas now explains that the component renders nothing itself and that the consent bar is drawn by the CDN library. It also records an open question: the bar does not appear in Storybook even with no stored consent (`CookieConsent.validConsent()` returns `false` and a forced `show(true)` produces no DOM), so the empty canvas is not yet confirmed to be expected behaviour. Story copy only, no component change.
+
 - **1.2.2** — 2026-09-09: The default cookie-banner CDN base now uses the canonical assets root. Custom CDN bases remain supported.
 
 - **1.2.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a consent button whose own language is not Arabic.

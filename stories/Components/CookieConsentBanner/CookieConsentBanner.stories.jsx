@@ -32,18 +32,21 @@ export const Default = {
   render: args => (
     <div>
       <p>
-        <strong>Nothing renders below on purpose.</strong> The component itself
-        returns <code>null</code>: it loads the cookie consent library and
-        configuration from the UNDRR CDN and hands control to them. The console
-        logs <code>Cookie banner initialized successfully</code> once that has
-        happened.
+        <strong>The component renders nothing itself.</strong> It returns an
+        empty fragment and its only job is to load the cookie consent library
+        and configuration from the UNDRR CDN and hand control to them. The
+        consent bar is drawn by that library, not by Mangrove. The console logs{' '}
+        <code>Cookie banner initialized successfully</code> once the CDN
+        configuration has been applied.
       </p>
       <p>
-        The consent bar is drawn by the CDN library, not by Mangrove, and it
-        decides for itself whether to show. It stays hidden here, so use this
-        story to confirm the component loads and initialises; see the
-        &ldquo;Reset banner&rdquo; story for the consent API, and a real site
-        for the bar itself.
+        <strong>Known issue:</strong> the bar does not appear in Storybook even
+        on a first visit with no stored consent, and it is not yet established
+        whether the same happens in a React app that mounts and unmounts the
+        component. Until that is resolved, treat this story as a check that the
+        CDN assets load and initialise, not as evidence that the bar works. See
+        the &ldquo;Reset banner&rdquo; story for the consent API, and a real
+        site for the bar itself.
       </p>
       <CookieConsentBanner {...args} />
     </div>
