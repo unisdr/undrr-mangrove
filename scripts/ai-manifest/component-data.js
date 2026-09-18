@@ -1307,7 +1307,12 @@ npm run build</code></pre>
         // `data-mg-show-more-target` points at what it reveals. mgShowMore()
         // adds aria-expanded and aria-controls and keeps them in sync, so do
         // not hand-write them.
-        html: `<div class="mg-show-more--collapsed" id="extra-content" style="--mg-show-more-height: 150px;">
+        //
+        // The content must NOT ship `mg-show-more--collapsed`: mgShowMore()
+        // clicks the toggle once at init, which toggles the class on. Marking
+        // the content collapsed in the source makes that first click expand it,
+        // leaving the example open with a "Show less" label on page load.
+        html: `<div id="extra-content" style="--mg-show-more-height: 150px;">
   <p>This is long content that will be collapsed behind a gradient fade. Only the first 150px is visible initially.</p>
   <p>Additional content hidden until the user clicks the button.</p>
   <p>More content here...</p>
