@@ -38,6 +38,15 @@
 // border — so those indicators paint the ring colour as their background, are
 // clipped to the shape, and lay the fill over it on a ::before inset by the
 // ring width and clipped to the same shape.
+// -
+// Insetting the box and re-applying the same percentage polygon shrinks the
+// polygon rather than offsetting each of its edges, so on these four the ring
+// is only as wide as the token on the edges that run along the box: a full 1px
+// on the octagon and along the triangle's base, about 0.7px on the diamond,
+// and about a third of the token on the plus's inner corners, pinching to
+// nothing at the triangle's apex. The ring is a visible boundary on the
+// silhouette, not a uniform stroke; StatusLabel.mdx says so where it explains
+// what the ring is for.
 $mg-status-label-diamond: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 $mg-status-label-triangle: polygon(50% 0%, 100% 100%, 0% 100%);
 $mg-status-label-plus: polygon(
@@ -69,9 +78,20 @@ $mg-status-label-octagon: polygon(
 // size looks heavier than the circle, a diamond and a triangle much lighter.
 // Each shape is scaled so its area lands near the circle's, which is what
 // makes the set look like one family rather than five unrelated marks.
+// -
+// The scaling changes the box, which would move the label text with it: in a
+// column of statuses the text would start up to 4px further along on a plus
+// row than on a draft row, and a dense list is exactly what the second cue is
+// for. The inline margin gives that scaling back, so every indicator occupies
+// --mg-status-label-indicator-size of inline space whatever its shape, and the
+// larger marks overhang the alignment edge the way an optically centred glyph
+// should.
 @mixin mg-status-label-indicator-size($scale) {
   inline-size: calc(var(--mg-status-label-indicator-size) * #{$scale});
   block-size: calc(var(--mg-status-label-indicator-size) * #{$scale});
+  margin-inline: calc(
+    var(--mg-status-label-indicator-size) * #{(1 - $scale) * 0.5}
+  );
 }
 
 @mixin mg-status-label-shape($shape, $scale) {
@@ -197,6 +217,20 @@ $mg-status-label-octagon: polygon(
   .mg-status-label--warning .mg-status-label__indicator,
   .mg-status-label--negative .mg-status-label__indicator {
     background-color: CanvasText;
+  }
+}
+
+// Print: the four clipped shapes carry no border, so their ring and their fill
+// are both background-color. Browsers drop backgrounds when "background
+// graphics" is off, which is the default in Chrome's print dialog, and generic
+// print resets clear them outright — the circle and the square would keep their
+// border while the plus, diamond, triangle and octagon vanished. Declaring the
+// backgrounds essential keeps all seven marks on the page. Follows the print
+// block in icons.scss, which fixes the same failure for mask-image icons.
+@media print {
+  .mg-status-label__indicator,
+  .mg-status-label__indicator::before {
+    print-color-adjust: exact;
   }
 }
 
