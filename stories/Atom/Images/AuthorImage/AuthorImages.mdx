@@ -39,7 +39,7 @@ The component supports Small and Large sizes, horizontal and vertical layouts, p
 - secondary
 - tertiary
 
-**Contrast:** the accent also colours the title, so `secondary` sets the orange accent as ink on white — 2.65 against WCAG's 4.5. The orange carries no text at any size, in either direction. Use `primary` or `tertiary` where the title has to be read. Removing the pairing is a brand decision, tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+**Contrast:** the accent drives the avatar ring, the focus outline and the title. `secondary` keeps the Sendai orange ring and hover tint, which carry no copy, but the title and the focus outline no longer take it: the orange is 2.65 as ink on white against WCAG's 4.5, and 2.95 as an outline against the 3.0 a focus indicator needs. The title takes `--mg-color-text` and the focus outline takes the standard focus ring. See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 <Canvas
   of={AuthorImagesStories.DefaultAuthorImage}
@@ -68,6 +68,7 @@ The component supports Small and Large sizes, horizontal and vertical layouts, p
 
 ## Changelog
 
+- **1.3.0** — 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). The `secondary` accent keeps the orange avatar ring and hover tint, which carry no copy, but its title now takes `--mg-color-text` (was the orange accent as ink on white, 2.65) and its focus outline takes `--mg-color-focus-ring` (the orange outline was 2.95, under the 3.0 a focus indicator needs). `--mg-color-secondary` is unchanged. This is a visible change wherever the variant is used, in all five themes.
 - **1.2.2** — 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented the `secondary` accent as a recorded contrast exception — the orange accent as title ink on white is 2.65, and no text colour clears AA on that hue. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
 - **1.2.1** — 2026-09-17 ([#1192](https://github.com/unisdr/undrr-mangrove/pull/1192)): The horizontal layout aligns its text with `text-align: start`, so it follows the reading direction in RTL.
 - **1.2** — 2026-09-14 ([#1147](https://github.com/unisdr/undrr-mangrove/pull/1147)): Reworked the component into a compact author block with horizontal and vertical stacked layouts, optional linking, inverse dark-surface treatment, avatar-only hover tint, and a no-image text-only variant.

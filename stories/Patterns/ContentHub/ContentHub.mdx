@@ -94,14 +94,14 @@ stylesheet:
 />
 ```
 
-| Prop                   | Notes                                                                                                                 |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `variant`              | `expressive` adds the banner; `compact` is identity and links only                                                    |
-| `surface`              | `primary` (default), `secondary`, `tertiary`, or `detached`. `secondary` is a recorded contrast exception — see below |
-| `media`, `actions`     | Both optional — a banner works as text alone                                                                          |
-| `current` / `ancestor` | The exact page, or a section containing it                                                                            |
+| Prop                   | Notes                                                                                                                                    |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`              | `expressive` adds the banner; `compact` is identity and links only                                                                       |
+| `surface`              | `primary` (default), `secondary`, `tertiary`, or `detached`. `secondary` keeps the theme hero colour and adds an orange rule — see below |
+| `media`, `actions`     | Both optional — a banner works as text alone                                                                                             |
+| `current` / `ancestor` | The exact page, or a section containing it                                                                                               |
 
-**Contrast:** `surface="secondary"` paints the header in the orange accent, and every link and heading on it is white — 2.65 against WCAG's 4.5. The bar tint darkens the navigation strip a little, and not nearly enough. The orange carries no text at any size, so use `primary`, `tertiary` or `detached` for a hub header anyone has to read. Removing the pairing is a brand decision, tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+**Contrast:** `surface="secondary"` no longer paints the header in the orange accent. Every link and heading on it was white at 2.65 against WCAG's 4.5, and the bar tint darkened the navigation strip nowhere near enough. The orange carries no text at any size, so the bar and banner now keep the theme's own hero colour, which the white ink is already sized for, and the accent becomes a 4px rule under the bar — a line with no copy over it. That rule is 2.95 against white, under the 3:1 of SC 1.4.11, so it is emphasis rather than the only thing marking the surface. See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 Pass `current` for the exact page and `ancestor` for containing section. Both
 render similarly, but only `current` announces `aria-current="page"`. Keep
@@ -149,6 +149,7 @@ other sub-brands too.
 
 ## Changelog
 
+- **1.1.0** — 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `HubHeader`'s `surface="secondary"` no longer retargets the bar and banner to the orange accent, which put every link and heading on it at 2.65. Both keep the theme's hero colour, and the accent is now a 4px full-bleed rule under the bar. `--mg-color-hero--secondary` is unchanged and drives that rule. This is a visible change wherever the surface is used, in all five themes.
 - **1.0.1** — 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented `HubHeader`'s `secondary` surface as a recorded contrast exception — white header text on the orange accent is 2.65, and no text colour clears AA on that hue. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
 - **1.0** — 2026-09-10: Content hub pattern — hub home, detail and deeper pages in English and Arabic, under the standard UNDRR header and global navigation. ([#1112](https://github.com/unisdr/undrr-mangrove/issues/1112))
   - `HubHeader` owns hub identity and section navigation, with compact and expressive variants and four surface options, and ships in the stylesheet.

@@ -119,7 +119,12 @@ const OrangeAccentNote = () => (
     <code>sendai-orange</code> for borders, rules, icon fills and blocks with no
     copy over them. No text colour meets WCAG AA on them at any size — white is
     2.65 to 2.95 against a 4.5 minimum, and black passes WCAG but misses the
-    perceptual body-text floor. See{' '}
+    perceptual body-text floor. An orange rule is emphasis and never the only
+    thing that identifies something: <code>orange-900</code> is 2.95 on white
+    and 2.66 on <code>orange-50</code>, both under the 3:1 of SC 1.4.11. For
+    text on an orange surface, use the pale end of the ramp —{' '}
+    <code>orange-50</code> and <code>orange-100</code> carry{' '}
+    <code>--mg-color-text</code> at 15.7 and 14.1. See{' '}
     <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
       the colour contrast methodology
     </a>{' '}
@@ -554,9 +559,10 @@ export const CombinedExample = () => (
     >
       <h5 className="mg-u-color--neutral-900">Statistics dashboard</h5>
       <p style={{ fontSize: '0.875rem', margin: '0.5rem 0 0' }}>
-        The orange tile below is white text on the orange accent, 2.95 against a
-        4.5 minimum. It is kept so the utility pairing is visible and is not a
-        pattern to copy — see{' '}
+        The orange tile below used to set white text on the orange accent, 2.95
+        against a 4.5 minimum. It now takes <code>orange-50</code> with{' '}
+        <code>neutral-900</code> copy, 15.7, and wears the Sendai orange as a
+        rule with no copy over it — the pattern the library itself uses. See{' '}
         <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
           the orange accent carries no text
         </a>
@@ -580,8 +586,13 @@ export const CombinedExample = () => (
           <div className="mg-u-text-wrap-balanced">Countries participating</div>
         </div>
         <div
-          className="mg-u-background-color--sendai-orange mg-u-color--white"
-          style={{ padding: '1rem', textAlign: 'center', borderRadius: '4px' }}
+          className="mg-u-background-color--orange-50 mg-u-color--neutral-900"
+          style={{
+            padding: '1rem',
+            textAlign: 'center',
+            borderRadius: '4px',
+            borderInlineStart: '4px solid var(--sendai-orange)',
+          }}
         >
           <div className="mg-u-font-size-500" style={{ fontWeight: 'bold' }}>
             45%
