@@ -81,7 +81,11 @@ color:
   # end of the same ramp. `tag-accent--hover` now has no consumer in the
   # library: it is orange-800, lighter than the resting orange-900 border, so
   # using it on hover faded the rule to 2.15 just as the chip responded. It
-  # stays published, at its value, for themes that want a distinct accent hover.
+  # stays published at its value only so this release does not also remove a
+  # token. Setting it in a theme layer does nothing — no rule reads it — so it
+  # is not a hook for "a distinct accent hover", and it should be retired
+  # rather than rewired: the reason it has no consumer is that the one use it
+  # ever had made the component worse.
   # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   secondary: { $value: '{color.orange-800}' }
   tag-accent: { $value: '{color.orange-900}' }
