@@ -44,6 +44,13 @@ const INPUT_HOOKS = {
   '--mg-legend-tick-pos': 'Legend tick position, set inline per tick',
   '--mg-on-this-page-nav-offset':
     'Page-level docking offset for fixed headers, set by the consuming page',
+  // Read with their defaults where they are used, so a toolbar, a theme
+  // wrapper or the --small modifier can set them; declaring either on
+  // .mg-segmented-control would shadow that.
+  '--mg-segmented-control-min-block-size':
+    'Segmented control segment height, set by a wrapper or --small',
+  '--mg-segmented-control-radius':
+    'Segmented control end radius, set by a wrapper',
   // The switch reads each hook with its default where it is used, so a
   // wrapper or theme can set it; declaring it on .mg-switch would shadow that.
   // Geometry hooks. --mg-switch-size is the one a consumer usually sets; the

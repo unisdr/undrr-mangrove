@@ -1557,6 +1557,41 @@ npm run build</code></pre>
     description:
       'Styled radio button with label. Error and disabled states available.',
   },
+  'components-forms-segmented-control': {
+    summary:
+      'Compact segmented presentation of a radio group, for a small mutually exclusive choice that changes what one view shows. CSS only, no JavaScript, no ARIA.',
+    description:
+      'Compact segmented presentation of a radio group: a small, mutually exclusive choice drawn as one row of adjoining segments, for switching what a single view shows (a map data source, a chart unit, a list sort order). CSS only: no JavaScript and no ARIA. The markup is a fieldset, a legend and one input[type=radio] per segment, each followed immediately by its own label; the CSS clips the inputs out of sight and draws the labels. Keep every label as the immediate next sibling of its input, because the whole presentation hangs off that adjacency, and give every input the same name. Because it is a real radio group, arrow-key navigation, the checked state, the "N of M" announcement, form submission and RTL traversal are the browser\'s and need no code from the consuming app. Do not reach for role="tablist" for this: the ARIA tabs pattern expects a tabpanel per tab, and a view switcher has none. The legend is the group\'s accessible name and is announced before the segment the user lands on; where the page has no room for a visible one, add mg-u-sr-only to the legend rather than replacing it with aria-label on the fieldset. Use Chips for filters that combine, Select for more than about five options or long labels, .mg-switch for on/off, and an ordinary Radio group in a FormGroup for a vertical list or options needing help text. Read the choice with one change listener on the fieldset. In React, pass value plus onChange for a controlled group, or defaultValue to leave the selection to the DOM.',
+    cssClasses: [
+      'mg-segmented-control',
+      'mg-segmented-control--full-width',
+      'mg-segmented-control--small',
+      'mg-segmented-control__legend',
+      'mg-segmented-control__group',
+      'mg-segmented-control__input',
+      'mg-segmented-control__label',
+    ],
+    // The auto-rendered HTML carries React's minted ids (_R_0_-depth), which
+    // are not what a hand-author writes. This is the same markup with ids a
+    // person would choose, and a hidden legend, which is the common shape for
+    // a view switcher sitting over the view it changes.
+    supplementalExamples: [
+      {
+        name: 'Hand-authored, with a visually hidden legend',
+        html: `<fieldset class="mg-segmented-control">
+  <legend class="mg-segmented-control__legend mg-u-sr-only">Map layer</legend>
+  <div class="mg-segmented-control__group">
+    <input class="mg-segmented-control__input" type="radio" id="layer-depth" name="layer" value="depth" checked>
+    <label class="mg-segmented-control__label" for="layer-depth">Depth</label>
+    <input class="mg-segmented-control__input" type="radio" id="layer-frequency" name="layer" value="frequency">
+    <label class="mg-segmented-control__label" for="layer-frequency">Frequency</label>
+    <input class="mg-segmented-control__input" type="radio" id="layer-exposure" name="layer" value="exposure">
+    <label class="mg-segmented-control__label" for="layer-exposure">Exposure</label>
+  </div>
+</fieldset>`,
+      },
+    ],
+  },
   'components-forms-textarea': {
     description:
       'Multi-line text input with label, help text, and error state.',

@@ -122,6 +122,8 @@ export default [
       Select: './stories/Components/Forms/Select/Select.jsx',
       Checkbox: './stories/Components/Forms/Checkbox/Checkbox.jsx',
       Radio: './stories/Components/Forms/Radio/Radio.jsx',
+      SegmentedControl:
+        './stories/Components/Forms/SegmentedControl/SegmentedControl.jsx',
       Textarea: './stories/Components/Forms/Textarea/Textarea.jsx',
       FormGroup: './stories/Components/Forms/FormGroup/FormGroup.jsx',
       FormErrorSummary:

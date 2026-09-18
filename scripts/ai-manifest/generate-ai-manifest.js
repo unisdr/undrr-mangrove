@@ -237,6 +237,7 @@ const COMPONENT_IDS = {
   Select: 'components-forms-select',
   Checkbox: 'components-forms-checkbox',
   Radio: 'components-forms-radio',
+  SegmentedControl: 'components-forms-segmented-control',
   Textarea: 'components-forms-textarea',
   FormGroup: 'components-forms-formgroup',
   FormAction: 'components-forms-form-action',
@@ -278,6 +279,16 @@ function buildSampleProps(React) {
     },
     Checkbox: { label: 'I agree to the terms and conditions', name: 'terms' },
     Radio: { label: 'Government', name: 'role', value: 'government' },
+    SegmentedControl: {
+      legend: 'Map layer',
+      name: 'layer',
+      defaultValue: 'depth',
+      options: [
+        { label: 'Depth', value: 'depth' },
+        { label: 'Frequency', value: 'frequency' },
+        { label: 'Exposure', value: 'exposure' },
+      ],
+    },
     Textarea: {
       label: 'Message',
       name: 'message',

@@ -750,6 +750,9 @@ describe('every component names the role it is meant to', () => {
     ['.mg-preview-access__submit', 'text'],
     ['.mg-preview-access__title', 'ui'],
     ['.mg-search__input', 'text'],
+    // A segment is a button wearing a label's class name: it takes the button
+    // tokens, so it takes the button's role too, as every other button does.
+    ['.mg-segmented-control__label', 'text'],
     ['.mg-share__copy-button', 'text'],
     ['.mg-skip-link:focus', 'ui'],
     ['.mg-share__header', 'text'],

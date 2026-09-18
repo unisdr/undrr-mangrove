@@ -115,6 +115,7 @@ export const MIN_PROPERTIES = {
   'components-navigation-on-this-page-nav': 1,
   'components-navigation-tree': 5,
   'components-notice-notice': 4,
+  'components-forms-segmented-control': 2,
   'components-reading-column': 1,
   'components-showmore': 1,
   'components-status-label': 15,
@@ -149,6 +150,7 @@ export const OWNERS = {
   'components-navigation-on-this-page-nav': ['--mg-on-this-page-nav-'],
   'components-navigation-tree': ['--mg-tree-'],
   'components-notice-notice': ['--mg-notice-'],
+  'components-forms-segmented-control': ['--mg-segmented-control-'],
   'components-reading-column': ['--mg-reading-with-contents-width'],
   'components-showmore': ['--mg-show-more-'],
   'components-status-label': ['--mg-status-label-'],
@@ -293,6 +295,12 @@ export const PROPERTY_DOCS = {
   // Reading column
   '--mg-reading-with-contents-width':
     'Maximum inline size of the .mg-reading--with-contents layout: the text measure, the gap and the side rail together.',
+
+  // Segmented control
+  '--mg-segmented-control-min-block-size':
+    'Height of a segment, and with it the touch target. Defaults to 2.75rem (44px), the recommended target; .mg-segmented-control--small sets it to 2.25rem (36px) on the fieldset itself, so a small control is resized on that element or by dropping the modifier.',
+  '--mg-segmented-control-radius':
+    'Corner radius of the two ends of the row. Defaults to --mg-radius-button, so a segmented control keeps the button radius of whichever theme wraps it. Only the first and last segment are rounded, with logical corners, so the row mirrors under dir="rtl".',
 
   // ShowMore
   '--mg-show-more-height':

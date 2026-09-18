@@ -1,0 +1,305 @@
+/**
+ * Segmented control
+ *
+ * Compact segmented presentation of a radio group: one row of adjoining
+ * segments for a small, mutually exclusive choice that changes what a single
+ * view shows.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Forms/SegmentedControl/SegmentedControl.mdx
+ */
+
+// The control is a presentation layer over a native radio group: a fieldset, a
+// legend and one <input type="radio"> per segment, each followed by its own
+// <label>. Nothing here changes the semantics, so arrow-key roving, the
+// "N of M" announcement, form submission and RTL traversal are the browser's
+// and stay correct. That is the whole reason this is not a tablist
+// (unisdr/undrr-mangrove#1188): a tablist promises tab panels, and a view
+// switcher has none.
+
+// Two theming hooks, no more. Everything else is a shared token, so a
+// segmented control follows the button, focus-ring and spacing scales of
+// whichever theme wraps it. Each is read with its default where it is used,
+// not declared on the block, so a value set on the control or on any ancestor
+// (a toolbar, a .mg-theme-* container) reaches it.
+$mg-segmented-min-block-size: var(
+  --mg-segmented-control-min-block-size,
+  #{mg-rem(44)}
+);
+$mg-segmented-radius: var(
+  --mg-segmented-control-radius,
+  var(--mg-radius-button)
+);
+
+.mg-segmented-control {
+  border: 0;
+  margin: 0 0 var(--mg-spacing-100);
+  min-inline-size: 0;
+  padding: 0;
+
+  &__legend {
+    @extend %paragraph-font-300;
+
+    display: block;
+    margin-bottom: var(--mg-spacing-25);
+    padding: 0;
+  }
+
+  // inline-flex, so the control is as wide as its labels and does not stretch
+  // across the page the way its block-level fieldset would. It is also the
+  // positioning ancestor for the visually hidden inputs.
+
+  // It wraps. A row that cannot fit has two ways to go: shrink the segments
+  // until the labels break mid-word, or take a second line. Measured at 320
+  // CSS px (WCAG 1.4.10 reflow, which is also 1280 at 400%), shrinking gave
+  // "Dep / th" and "Frequen / cy"; wrapping keeps every label whole. Only the
+  // first and last segment of the whole control are rounded, so a wrapped row
+  // ends square, which reads as "continues below" rather than as a second
+  // control.
+  &__group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    max-inline-size: 100%;
+    position: relative;
+  }
+
+  // Hidden from sight, not from anything else. The input keeps its size, its
+  // focus, its role and its place in the tab order; only its painting is
+  // clipped away, and the label next to it is what the user sees and presses.
+  // Never display: none or visibility: hidden here — both take the radio out
+  // of the accessibility tree and out of the keyboard's reach.
+  &__input {
+    appearance: none;
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  // The segment itself, drawn from the outline button's tokens: same stroke
+  // width, same radius, same padding, same type. A consumer who styles this by
+  // hand is the drift the issue reported, so nothing here is a bespoke value.
+  &__label {
+    align-items: center;
+    background-color: transparent;
+    border: var(--mg-border-width-button) solid
+      rgb(var(--mg-color-button-outline-primary));
+    color: rgb(var(--mg-color-button-outline-primary));
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 1 auto;
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-font-size-button);
+    font-weight: 600;
+    justify-content: center;
+    line-height: 1.2;
+    min-block-size: $mg-segmented-min-block-size;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+    padding: var(--mg-padding-button);
+    text-align: center;
+
+    // Local stacking context only: the focus ring and the selected fill have
+    // to sit above the neighbouring segment, whose border this one overlaps.
+    // No page-level layer is involved, so a raw integer is correct here.
+    position: relative;
+    z-index: 0;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        background-color var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard),
+        border-color var(--mg-motion-duration-fast)
+          var(--mg-motion-easing-standard),
+        color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+    }
+  }
+
+  // Only the ends are rounded, and they are rounded with logical corners, so
+  // the row mirrors itself under dir="rtl" with no RTL rule to keep in step.
+  &__label:first-of-type {
+    border-end-start-radius: $mg-segmented-radius;
+    border-start-start-radius: $mg-segmented-radius;
+  }
+
+  &__label:last-of-type {
+    border-end-end-radius: $mg-segmented-radius;
+    border-start-end-radius: $mg-segmented-radius;
+  }
+
+  // Adjoining, not spaced: every segment after the first pulls back over its
+  // neighbour's stroke so the row reads as one control with single-width
+  // dividers. margin-inline-start flips with direction on its own.
+  &__input:not(:first-of-type) + &__label {
+    margin-inline-start: calc(-1 * var(--mg-border-width-button));
+  }
+
+  // Full width: the segments share the control's inline size equally. Useful
+  // where the control owns a panel header or a mobile row.
+  &--full-width &__group {
+    display: flex;
+  }
+
+  &--full-width &__label {
+    flex: 1 1 0;
+  }
+
+  // One shared compact size, so a toolbar or a map overlay does not invent its
+  // own. It stays above the 24x24 WCAG 2.5.8 minimum; the 44px default is the
+  // recommended target and is what an unmodified control gives you.
+  &--small {
+    --mg-segmented-control-min-block-size: #{mg-rem(36)};
+
+    .mg-segmented-control__label {
+      font-size: var(--mg-font-size-200);
+      padding: var(--mg-spacing-50) var(--mg-spacing-100);
+    }
+  }
+}
+
+// States live outside the BEM nesting, in specificity order: hover (lowest),
+// then selected, then disabled, then focus — so focus is visible on any of
+// them and a disabled segment never lights up.
+
+// Hover is written on the LABEL, not on `input:hover + label`. Pointing at a
+// label does not put :hover on the input it is for, so the input-side
+// selector would only ever match the pixel the input is clipped to.
+.mg-segmented-control__label:hover {
+  background-color: rgb(var(--mg-color-button-outline-primary--hover));
+  border-color: rgb(var(--mg-color-button-outline-primary--hover));
+  color: rgb(var(--mg-color-button));
+  z-index: 1;
+}
+
+// Selected takes the filled primary button's pair, which every theme has
+// already contrast-checked for its own brand colour.
+.mg-segmented-control__input:checked + .mg-segmented-control__label {
+  background-color: var(--mg-color-button-background);
+  border-color: var(--mg-color-button-background);
+  color: rgb(var(--mg-color-button));
+  z-index: 1;
+}
+
+.mg-segmented-control__input:checked + .mg-segmented-control__label:hover {
+  background-color: var(--mg-color-button-background--hover);
+  border-color: var(--mg-color-button-background--hover);
+}
+
+// Declared after the selected rules, and one class heavier than each of them,
+// so a disabled segment keeps this treatment while the pointer is over it.
+.mg-segmented-control__input:disabled + .mg-segmented-control__label,
+.mg-segmented-control__input:disabled + .mg-segmented-control__label:hover {
+  background-color: transparent;
+  border-color: rgb(var(--mg-color-neutral-400));
+  color: rgb(var(--mg-color-neutral-400));
+  cursor: not-allowed;
+  z-index: 0;
+}
+
+.mg-segmented-control__input:disabled:checked + .mg-segmented-control__label,
+.mg-segmented-control__input:disabled:checked
+  + .mg-segmented-control__label:hover {
+  background-color: rgb(var(--mg-color-neutral-500));
+  border-color: rgb(var(--mg-color-neutral-500));
+  color: rgb(var(--mg-color-neutral-0));
+}
+
+// The ring is drawn on the label because the input it belongs to is clipped to
+// a pixel. mg-focus-ring is an outline plus a separator band, and neither is
+// re-declared by any rule above, so a focused segment keeps its ring whether
+// it is selected, hovered or both.
+.mg-segmented-control__input:focus-visible + .mg-segmented-control__label {
+  @include mg-focus-ring;
+
+  z-index: 2;
+}
+
+// Forced colours forces every background to Canvas and every foreground to
+// CanvasText, whatever the author wrote — a system colour keyword in an author
+// declaration is forced like any other, which was measured on this component:
+// `background-color: Highlight` on the selected segment came back as Canvas
+// and the row read as three identical, unselected boxes. Selection is the one
+// thing this control has to show, so the segments opt out of forcing and
+// repaint themselves in system colours, exactly as .mg-switch does for its
+// track. Nothing here uses opacity: a faded system colour loses its contrast.
+// Opting out has a cost, and it is the one unisdr/undrr-mangrove#1187 found on
+// the switch: with forcing off, an author colour that still reaches the
+// element is painted literally in a palette that has no such colour. Every
+// selector below therefore carries an extra .mg-segmented-control so that it
+// outranks, or at least ties and follows, the author state rule it replaces —
+// including the :hover variants, which are one class heavier than the state
+// they sit on and would otherwise repaint a segment in brand blue.
+@media (forced-colors: active) {
+  .mg-segmented-control .mg-segmented-control__label {
+    background-color: Canvas;
+    border-color: ButtonText;
+    color: ButtonText;
+    forced-color-adjust: none;
+  }
+
+  // The Highlight pair, which is what a selected item looks like in every
+  // forced-colours palette.
+  .mg-segmented-control
+    .mg-segmented-control__input:checked
+    + .mg-segmented-control__label,
+  .mg-segmented-control
+    .mg-segmented-control__input:checked
+    + .mg-segmented-control__label:hover {
+    background-color: Highlight;
+    border-color: Highlight;
+    color: HighlightText;
+  }
+
+  .mg-segmented-control
+    .mg-segmented-control__input:disabled
+    + .mg-segmented-control__label,
+  .mg-segmented-control
+    .mg-segmented-control__input:disabled
+    + .mg-segmented-control__label:hover {
+    background-color: Canvas;
+    border-color: GrayText;
+    color: GrayText;
+  }
+
+  // A disabled selection still has to read as the selection, so it keeps a
+  // fill and takes GrayText for it.
+  .mg-segmented-control
+    .mg-segmented-control__input:disabled:checked
+    + .mg-segmented-control__label,
+  .mg-segmented-control
+    .mg-segmented-control__input:disabled:checked
+    + .mg-segmented-control__label:hover {
+    background-color: GrayText;
+    border-color: GrayText;
+    color: Canvas;
+  }
+
+  // forced-color-adjust: none above would otherwise keep mg-focus-ring's white
+  // separator band, which is an author colour on a system-coloured segment.
+  // The band goes and the ring becomes Highlight, drawn outside the segment,
+  // where it is legible against a selected segment's fill as well.
+  .mg-segmented-control
+    .mg-segmented-control__input:focus-visible
+    + .mg-segmented-control__label {
+    box-shadow: none;
+    outline: var(--mg-focus-ring-width) solid Highlight;
+    outline-offset: var(--mg-focus-ring-offset);
+  }
+
+  // Hover is a colour-only change, and forced colours leaves no second fill to
+  // move to. An inner boundary is the affordance that survives;
+  // :not(:focus-visible) on the input keeps the focus outline winning when the
+  // pointer is over a focused segment, and :not(:disabled) keeps a disabled
+  // segment inert.
+  .mg-segmented-control
+    .mg-segmented-control__input:not(:disabled, :focus-visible)
+    + .mg-segmented-control__label:hover {
+    outline: 1px solid ButtonText;
+    outline-offset: calc(-1 * var(--mg-border-width-button));
+  }
+}
