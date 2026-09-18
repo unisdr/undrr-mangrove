@@ -53,7 +53,7 @@ const GLOBAL_PREFIXES = [
 // documented" check; anything not listed and not described fails validation.
 export const NOT_PUBLIC = {
   '--mg-gutenberg-spacer':
-    'Declared on .mg-footer and read by nothing. A leftover of the Gutenberg spacing work that --mg-container-spacer replaced; see the note in Container/container.scss.',
+    'Declared on .mg-footer and read by nothing. A leftover of the Gutenberg spacing work that --mg-container-spacer replaced; see the note in stories/Atom/Layout/Container/container.scss.',
 };
 
 // Which component owns which properties.
@@ -101,7 +101,7 @@ export const PROPERTY_DOCS = {
 
   // Buttons (CTA button)
   '--mg-cta-arrow-shift':
-    'Inline distance the CTA arrow travels on hover. The component sets it only where motion is welcome and flips its sign in RTL, so override the distance rather than the translate shorthand, which also carries the vertical centring.',
+    'Inline offset of the CTA arrow, carried in the translate shorthand that also holds the vertical centring, so shift the arrow with this rather than with translate. It is 0 at rest; the hover nudge is set on .mg-button.mg-button-cta:hover::after itself, only where motion is welcome and with its sign flipped in RTL, so a value you set on the button or an ancestor moves the arrow at rest and is replaced on hover rather than changing the hover distance. To change the hover distance, re-declare the property on that same :hover::after rule.',
 
   // IconCard — every one is an input hook the React props set inline
   '--mg-card-border':
@@ -115,7 +115,7 @@ export const PROPERTY_DOCS = {
 
   // TextCta
   '--mg-cta-accent':
-    'Accent colour of the CTA banner. The --primary, --secondary, --tertiary and --quaternary modifiers re-point it at the matching hero colour.',
+    'Accent colour of the CTA banner, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). The --primary, --secondary, --tertiary and --quaternary modifiers re-point it at the matching hero colour.',
   '--mg-cta-bg':
     'Background colour of the CTA banner. Nothing declares it, so the banner stays transparent until a wrapper or an inline style sets it.',
 
@@ -150,7 +150,7 @@ export const PROPERTY_DOCS = {
 
   // Switch (documented on the Checkbox page)
   '--mg-switch-size':
-    'Size of the whole switch. Set this one unless you need a single part on its own — the track, the thumb, the thumb travel and the pending ring all derive from it, in both directions.',
+    'Size of the whole switch. Set this one unless you need a single part on its own — the track, the thumb, the thumb travel and the pending ring all derive from it, in both directions. One exception to setting it on an ancestor: .mg-switch--small declares it on the label itself, so a small switch keeps its own size and has to be resized on that element or by dropping the modifier.',
   '--mg-switch-track-block-size': 'Height of the track.',
   '--mg-switch-track-inline-size': 'Width of the track.',
   '--mg-switch-track-inset':
@@ -171,14 +171,14 @@ export const PROPERTY_DOCS = {
 
   // Hero
   '--mg-hero-cta-color':
-    'Colour of the hero CTA button. Each colour variant re-points it.',
+    'Colour of the hero CTA button, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). Each colour variant re-points it.',
   '--mg-hero-gradient-color':
-    'Base colour of the overlay gradient. Each colour variant re-points it.',
+    'Base colour of the overlay gradient, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). Each colour variant re-points it.',
   '--mg-hero-gradient-start': 'Alpha of the overlay gradient at its start.',
   '--mg-hero-gradient-middle': 'Alpha of the overlay gradient at its midpoint.',
   '--mg-hero-gradient-end': 'Alpha of the overlay gradient at its end.',
   '--mg-hero-link-color':
-    'Colour of links inside the hero text regions. It does not reach author-provided media HTML.',
+    'Colour of links inside the hero text regions, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). It does not reach author-provided media HTML.',
 
   // Icons
   '--mg-icon-svg':
@@ -278,17 +278,26 @@ export const PROPERTY_DOCS = {
   '--mg-tag-background-hover': 'Tag fill on hover, for linked tags.',
   '--mg-tag-foreground': 'Tag label colour.',
 
-  // HubHeader
-  '--mg-hub-header-surface': 'Surface colour of the navigation bar.',
-  '--mg-hub-header-banner-surface': 'Surface colour of the banner below it.',
-  '--mg-hub-header-ink': 'Colour of the header title.',
-  '--mg-hub-header-link': 'Link colour in the bar.',
+  // HubHeader — every colour here is RGB channels, wrapped in rgb() by the
+  // stylesheet, so each description says so: a hex or a keyword makes the
+  // declaration invalid and the header silently loses the colour.
+  '--mg-hub-header-surface':
+    'Surface colour of the navigation bar, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
+  '--mg-hub-header-banner-surface':
+    'Surface colour of the banner below it, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
+  '--mg-hub-header-ink':
+    'Colour of the header title, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
+  '--mg-hub-header-link':
+    'Link colour in the bar, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
   '--mg-hub-header-link-hover':
-    'Link colour on hover. On a coloured bar the link holds its colour and the underline carries the hover, because the global interactive-active colour is meant for white backgrounds.',
-  '--mg-hub-header-marker': 'Colour of the marker on the current item.',
-  '--mg-hub-header-rule': 'Colour of the rule under the bar.',
+    'Link colour on hover, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). On a coloured bar the link holds its colour and the underline carries the hover, because the global interactive-active colour is meant for white backgrounds.',
+  '--mg-hub-header-marker':
+    'Colour of the marker on the current item, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
+  '--mg-hub-header-rule':
+    'Colour of the rule under the bar, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
   '--mg-hub-header-rule-alpha': 'Opacity of that rule.',
-  '--mg-hub-header-focus': 'Focus ring colour inside the header.',
+  '--mg-hub-header-focus':
+    'Focus ring colour inside the header, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
   '--mg-hub-header-bar-tint':
     'RGB channels of the tint that stratifies the bar from the banner, so a hero image meeting the bar reads as a boundary rather than a fault.',
   '--mg-hub-header-bar-tint-alpha':
