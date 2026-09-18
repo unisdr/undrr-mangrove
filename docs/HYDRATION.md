@@ -96,6 +96,7 @@ Returns: `{ roots, update, unmountAll }`
 ## Runtime behavior and caveats
 
 - Skips already hydrated containers via `data-mg-hydrated="true"`
+- Skips any match **inside** a container carrying `data-mg-hydrated="true"`. Everything below a hydrated container is React's own output, so mounting a second root into it is never what the consumer asked for. This is what makes it safe for a component to render the same `data-mg-*` marker its hydration selector matches — `SyndicationSearchWidget` does, so its pager can find the widget root to scroll to. Without the rule, `update()` mounted a second widget inside the first ([#1227](https://github.com/unisdr/undrr-mangrove/issues/1227))
 - Saves original `innerHTML` before rendering for rollback
 - Applies React root error hooks:
   - `onCaughtError` and `onUncaughtError`: `console.error` + optional `onError`

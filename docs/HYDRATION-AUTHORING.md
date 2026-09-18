@@ -24,6 +24,15 @@ ComponentName/
 ComponentName: './stories/Components/ComponentName/ComponentName.hydrate.js',
 ```
 
+A component may render the same `data-mg-*` marker its hydration selector
+matches — `SyndicationSearchWidget` renders `data-mg-search-widget` on its root
+so its pager can find the widget to scroll to. That is allowed: `createHydrator`
+skips every match inside a container already carrying `data-mg-hydrated="true"`,
+so a re-scan cannot mount a second copy into React's own output
+([#1227](https://github.com/unisdr/undrr-mangrove/issues/1227)). The rule the
+runtime guarantees, and the one to keep in mind when adding a component: only
+the hydration host is a target, never anything the component renders.
+
 ---
 
 ## Step-by-step walkthrough
