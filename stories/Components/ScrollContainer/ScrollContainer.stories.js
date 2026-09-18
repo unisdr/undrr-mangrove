@@ -70,10 +70,44 @@ export const CustomHeight = {
   },
 };
 
+// minWidth is a floor on the container, and min-width wins over the
+// container's own max-width: 100%. A value wider than the parent therefore
+// overflows it on purpose. The parent here is deliberately narrower than
+// minWidth so the floor is visible, and carries its own overflow-x so the
+// demo shows that without scrolling the whole page on a phone.
 export const WithMinWidth = {
-  render: Template,
+  render: args => (
+    <section style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <p style={{ marginBottom: '0.5rem' }}>
+        The dashed box below is 240px wide. The scroll container inside it asks
+        for a 320px minimum, so it holds 320px and overflows its parent — the
+        parent carries the overflow rather than the page.
+      </p>
+      <div
+        style={{
+          width: '240px',
+          outline: '2px dashed #767676',
+          outlineOffset: '2px',
+          overflowX: 'auto',
+        }}
+      >
+        <ScrollContainer stretchItems {...args}>
+          {[...scrollCardExamples, ...scrollCardExamples.slice(0, 3)].map(
+            (card, i) => (
+              <ScrollExampleCard
+                card={card}
+                index={i}
+                key={`${card.title}-${i}`}
+                showAction
+              />
+            )
+          )}
+        </ScrollContainer>
+      </div>
+    </section>
+  ),
   args: {
-    minWidth: '1500px',
+    minWidth: '320px',
     padding: '1rem',
   },
 };
