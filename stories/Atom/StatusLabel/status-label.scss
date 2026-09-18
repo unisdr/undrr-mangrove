@@ -328,6 +328,24 @@ $mg-status-label-octagon-inner: polygon(
     forced-color-adjust: none;
     background-color: Canvas;
     border-color: CanvasText;
+
+    // The ring is the only thing describing the base indicator's edge here,
+    // and dropping it with --mg-status-label-indicator-border-width: 0 is a
+    // documented opt-out — so a page that follows the docs could end up with a
+    // Canvas mark on a Canvas background and no mark at all
+    // (unisdr/undrr-mangrove#1211). The six named statuses are solid CanvasText
+    // and survive a missing ring; only the hollow one does not.
+    // -
+    // An inset outline draws the same 1px CanvasText edge in the same place the
+    // ring occupies, so it is invisible under a ring of any width and is all
+    // that is left when there is none. It is an outline rather than a minimum
+    // border width because an outline takes no space in any box model: the
+    // mark keeps its size, its fill area and its alignment edge whatever the
+    // ring is set to, and the clipped shapes' inner polygons still offset by
+    // the author's ring width rather than by a forced minimum. It lives inside
+    // this media block, so normal rendering at a zero ring is untouched.
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
   }
 
   // Each clipped variant names its own ::before, because the rule that puts the
@@ -340,6 +358,11 @@ $mg-status-label-octagon-inner: polygon(
 
   // Every named status is a solid system-coloured mark. On the two clipped
   // shapes this fills the ring the ::before sits inside.
+  // -
+  // The zero-ring outline above belongs to the hollow base indicator alone, so
+  // it is taken off again here rather than left to coincide invisibly with a
+  // solid CanvasText fill: these six are already whole without an edge, and the
+  // fix should not ride on a second mark happening to hide it.
   .mg-status-label--draft .mg-status-label__indicator,
   .mg-status-label--waiting-validation .mg-status-label__indicator,
   .mg-status-label--waiting-information .mg-status-label__indicator,
@@ -347,6 +370,7 @@ $mg-status-label-octagon-inner: polygon(
   .mg-status-label--warning .mg-status-label__indicator,
   .mg-status-label--negative .mg-status-label__indicator {
     background-color: CanvasText;
+    outline: 0;
   }
 }
 

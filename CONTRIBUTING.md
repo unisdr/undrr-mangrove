@@ -44,12 +44,13 @@ See the [component contribution guide](https://mangrove.undrr.org/?path=/docs/co
 
 ## AI manifest for component discovery
 
-Mangrove publishes an AI-friendly manifest (`llms.txt`, `llms.json`, `releases.json`, `tokens.json`, and `ai-components/`) alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers, a CSS utility class inventory, and machine-readable design token definitions. The pipeline lives in `scripts/ai-manifest/` (4 files).
+Mangrove publishes an AI-friendly manifest (`llms.txt`, `llms.json`, `releases.json`, `tokens.json`, and `ai-components/`) alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers, a CSS utility class inventory, and machine-readable design token definitions. The pipeline lives in `scripts/ai-manifest/` (5 files).
 
 Most of the manifest auto-generates from Storybook, component rendering, tokens, and `CHANGELOG.md`. Two things need manual maintenance when adding or modifying components:
 
 - **`scripts/ai-manifest/component-data.js`** — per-component metadata (descriptions, CSS class lists, curated HTML examples) and the `REQUIRES_REACT` map. Update when you change a component's HTML structure, add a new component, or rename BEM classes.
 - **`scripts/ai-manifest/css-utilities.js`** — inventory of CSS utility classes. Update when you add, rename, or remove utility classes.
+- **`scripts/ai-manifest/custom-properties.js`** — what each CSS custom property a component exposes is for. The names, kinds and defaults are extracted from the compiled CSS, so only the prose is maintained here. Add a description when you add a property, and claim a new component's prefix in `OWNERS` with its count in `MIN_PROPERTIES`. `yarn validate-manifest` fails on a property that nothing describes, on a description for a property the CSS no longer has, and on a component that publishes fewer properties than its floor — removing one from the public API means lowering that number in the same commit.
 
 Tips for better manifest output:
 

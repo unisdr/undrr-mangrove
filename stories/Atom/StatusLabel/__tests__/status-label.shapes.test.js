@@ -39,8 +39,8 @@ beforeAll(() => {
  * A shaped indicator is written by a mixin and then given its fill, so its
  * declarations are spread over more than one rule in the output.
  */
-const ruleFor = selector => {
-  const matches = css.matchAll(
+const ruleFor = (selector, source = css) => {
+  const matches = source.matchAll(
     new RegExp(
       `(?:^|[}\\n])\\s*${selector.replace(
         /[.*+?^${}()|[\]\\]/g,
@@ -51,6 +51,56 @@ const ruleFor = selector => {
   );
   return [...matches].map(match => match[1]).join('\n');
 };
+
+/**
+ * The forced-colours block that styles this component.
+ *
+ * Several components have one; take the one that mentions the status label.
+ */
+const forcedColoursBlock = () =>
+  (
+    css.match(/@media\s*\(forced-colors:\s*active\)\s*\{[\s\S]*?\n\}/g) || []
+  ).find(candidate => candidate.includes('.mg-status-label__indicator'));
+
+/**
+ * Every declaration inside `block` written for `selector`, joined.
+ *
+ * Unlike `ruleFor` this reads grouped selector lists, which is how the
+ * forced-colours block states what the six named statuses have in common.
+ */
+const declarationsFor = (selector, block) => {
+  const inner = block.replace(/^@media[^{]*\{/, '').replace(/\}\s*$/, '');
+  return [...inner.matchAll(/([^{}]+)\{([^}]*)\}/g)]
+    .filter(([, selectors]) =>
+      selectors
+        .split(',')
+        .map(one => one.trim())
+        .includes(selector)
+    )
+    .map(([, , body]) => body)
+    .join('\n');
+};
+
+/**
+ * The [ids, classes, types] specificity of a selector, so a rule meant to
+ * override another can be shown to rather than assumed to.
+ *
+ * Counted the way the cascade counts it: ids, then classes, attribute
+ * selectors and pseudo-classes, then type selectors and pseudo-elements. It
+ * covers the shapes this stylesheet actually writes — no `:is()`, `:where()`
+ * or `:not()` — and `specificityOf` itself is checked below.
+ */
+const specificityOf = selector => [
+  (selector.match(/#[\w-]+/g) || []).length,
+  // A pseudo-element's two colons never start a pseudo-class match, so the
+  // second bucket needs no special case for them.
+  (selector.match(/\.[\w-]+|\[[^\]]+\]|(?<!:):[\w-]+(?!:)/g) || []).length,
+  (selector.match(/::[\w-]+/g) || []).length +
+    (selector.match(/(?:^|[\s>+~])[a-zA-Z][\w-]*/g) || []).length,
+];
+
+/** Which of two specificities wins, as a comparator. */
+const compareSpecificity = (a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
 
 const indicator = modifier =>
   modifier
@@ -364,11 +414,7 @@ describe('status label indicator marks', () => {
   });
 
   test('forced colours repaint the indicators in system colours', () => {
-    // Several components have a forced-colours block; take the one that
-    // mentions the status label.
-    const block = (
-      css.match(/@media\s*\(forced-colors:\s*active\)\s*\{[\s\S]*?\n\}/g) || []
-    ).find(candidate => candidate.includes('.mg-status-label__indicator'));
+    const block = forcedColoursBlock();
 
     expect(block).toBeDefined();
     expect(block).toMatch(/forced-color-adjust:\s*none/);
@@ -396,6 +442,68 @@ describe('status label indicator marks', () => {
     Object.keys(CLIPPED).forEach(modifier => {
       expect(block).toContain(`${indicator(modifier)}::before`);
     });
+  });
+
+  test('the hollow base indicator survives a zero ring in forced colours', () => {
+    // unisdr/undrr-mangrove#1211. The base indicator is the one hollow mark —
+    // a Canvas centre — so the ring is the whole of its edge. Dropping the ring
+    // with --mg-status-label-indicator-border-width: 0 is documented, and in
+    // forced colours that left a Canvas mark on a Canvas background: not a lost
+    // boundary, a lost mark. An inset CanvasText outline coincides with the
+    // ring at any width and is all that is left at zero.
+    const rule = declarationsFor(indicator(), forcedColoursBlock());
+    const offset = rule.match(/outline-offset:\s*(-?[\d.]+)px/);
+
+    expect(rule).toMatch(/outline:\s*[\d.]+px solid CanvasText/);
+    // Inside the border box, or it would be a second ring outside the mark
+    // wherever the author's ring is still there.
+    expect(offset).not.toBeNull();
+    expect(Number(offset[1])).toBeLessThan(0);
+  });
+
+  test('the six solid statuses take the zero-ring outline back off', () => {
+    // The outline is the hollow mark's fallback and nothing else's: the named
+    // statuses are solid CanvasText and are whole without an edge. The rule
+    // that removes it has to actually beat the base rule, so measure that
+    // rather than trusting the reading order of the stylesheet.
+    const block = forcedColoursBlock();
+    const base = '.mg-status-label__indicator';
+    const solid = [
+      'draft',
+      'waiting-information',
+      'waiting-validation',
+      'published',
+      ...Object.keys(CLIPPED),
+    ];
+
+    // The override assertion below is only worth anything if the counter is,
+    // so check it against selectors whose specificity is not in doubt.
+    expect(specificityOf(base)).toEqual([0, 1, 0]);
+    expect(specificityOf(indicator('draft'))).toEqual([0, 2, 0]);
+    expect(specificityOf(`${indicator('draft')}::before`)).toEqual([0, 2, 1]);
+    expect(specificityOf('ul.mg-status-label-group > li:first-child')).toEqual([
+      0, 2, 2,
+    ]);
+
+    solid.forEach(modifier => {
+      const selector = indicator(modifier);
+
+      expect(declarationsFor(selector, block)).toMatch(/outline:\s*0/);
+      expect(
+        compareSpecificity(specificityOf(selector), specificityOf(base))
+      ).toBeGreaterThan(0);
+    });
+  });
+
+  test('the zero-ring outline is confined to forced colours', () => {
+    // The point of the opt-out is that the ring goes away, so nothing may draw
+    // an edge on the indicator in ordinary rendering.
+    const block = forcedColoursBlock();
+    const start = css.indexOf(block);
+    const elsewhere = css.slice(0, start) + css.slice(start + block.length);
+
+    expect(elsewhere).toContain('.mg-status-label__indicator');
+    expect(ruleFor(indicator(), elsewhere)).not.toMatch(/outline/);
   });
 
   test('print keeps the background-drawn marks on the page', () => {

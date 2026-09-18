@@ -96,6 +96,8 @@ See [Adding hydration support](https://mangrove.undrr.org/?path=/docs/contributi
 
 - [ ] If component HTML markup or CSS classes changed, updated `scripts/ai-manifest/component-data.js`
 - [ ] If new utility classes were created, indexed in `scripts/ai-manifest/css-utilities.js`
+- [ ] If the component gained or renamed a CSS custom property, described it in `scripts/ai-manifest/custom-properties.js`
+- [ ] If a CSS custom property left the public API, `MIN_PROPERTIES` came down with it and the CHANGELOG says so
 - [ ] Component `## Changelog` in MDX follows standard format and is automatically indexed in `ai-components/{id}.json` and `releases.json`
 - [ ] `yarn validate-manifest` passes with 0 errors
 

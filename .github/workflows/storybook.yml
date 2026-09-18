@@ -55,7 +55,9 @@ jobs:
       - name: Build Storybook
         run: |
           yarn run build
-          node scripts/ai-manifest/generate-ai-manifest.js --validate
+          # Same command as the local gate developers are asked to run, so a
+          # grep for it finds the CI step too.
+          yarn validate-manifest
           # preview-stats.json feeds Chromatic's TurboSnap (the chromatic
           # workflow runs its own build); the published site never reads it.
           rm -f docs-build-temp/preview-stats.json
