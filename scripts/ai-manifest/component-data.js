@@ -1305,8 +1305,10 @@ npm run build</code></pre>
         name: 'Show more / collapse pattern',
         // `data-mg-show-more` marks the toggle, not the content;
         // `data-mg-show-more-target` points at what it reveals. mgShowMore()
-        // adds aria-expanded and aria-controls and keeps them in sync, so do
-        // not hand-write them.
+        // adds aria-controls and role="button", so do not hand-write them.
+        // It deliberately adds no aria-expanded: the collapse is visual
+        // clipping and the content stays in the accessibility tree, so there
+        // is nothing hidden for aria-expanded to describe. See ShowMore.mdx.
         //
         // The content must NOT ship `mg-show-more--collapsed`: mgShowMore()
         // clicks the toggle once at init, which toggles the class on. Marking
