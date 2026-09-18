@@ -34,7 +34,7 @@ For Drupal Twig templates, static HTML pages, or server-rendered layouts where R
   class="mg-button mg-button-primary mg-button-outline mg-button--icon mg-copy-button"
   data-mg-copy-button
   data-text-to-copy="https://preventionweb.net/drr-glossary"
-  data-aria-label="Copy glossary link"
+  aria-label="Copy glossary link"
   data-tooltip-label="Copied!"
 >
   <span class="mg-icon mg-icon-copy mg-button__icon" aria-hidden="true"></span>
@@ -98,11 +98,18 @@ import { CopyButton } from '@undrr/undrr-mangrove';
 | Attribute            | Default                  | Description                                                   |
 | -------------------- | ------------------------ | ------------------------------------------------------------- |
 | `data-text-to-copy`  | `''`                     | Text string to be written to the clipboard                    |
-| `data-aria-label`    | `'Copy to clipboard'`    | Accessible button name for screen readers                     |
 | `data-tooltip-label` | `'Copied!'`              | Text displayed inside the transient micro-feedback badge      |
 | `data-copied-label`  | `'Copied to clipboard.'` | Text announced to `aria-live` upon successful copy            |
 | `data-variant`       | `'outline'`              | Button visual style (`'outline'`, `'primary'`, `'secondary'`) |
 | `data-size`          | `—`                      | Button icon size (`'small'`, `'large'`)                       |
+
+### Naming the button
+
+The button is icon-only, so it needs an accessible name of its own (WCAG 4.1.2 Name, Role, Value). Put it in a plain `aria-label` — every integration path reads it, including the React `ariaLabel` prop it maps to under hydration.
+
+`data-aria-label` is the older spelling and stays supported, so markup already in the wild keeps its name: the vanilla script copies it onto `aria-label` when the button has none, and `fromElement` falls back to it. Do not use it in new markup, and never rely on it alone — a button that carries only `data-aria-label` announces as "button" for as long as the script takes to load, and as "button" forever if it fails to.
+
+An `aria-label` or `aria-labelledby` you set yourself is never overridden.
 
 ## Props
 
@@ -110,6 +117,8 @@ import { CopyButton } from '@undrr/undrr-mangrove';
 
 ## Changelog
 
+- **1.0.1** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): `mgCopyButton()` copies `data-aria-label` onto `aria-label` when the button has no accessible name of its own, and the vanilla integration example in these docs uses a real `aria-label`. The example was icon-only and carried `data-aria-label`, which only the hydration path reads, so anyone copying it shipped a button that announced as "button" with no context (WCAG 4.1.2). An `aria-label` or `aria-labelledby` you set yourself is never overridden.
+  - `fromElement` now reads a plain `aria-label` off the container before the `data-*` spellings, so markup written against these docs keeps its name on the Layer 2 hydration path too. The data attributes reference no longer lists `data-aria-label` as the way to name the button; see "Naming the button" above.
 - **1.0.0** — 2026-09-16 ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements.
   - Standalone zero-dependency vanilla script (`stories/assets/js/copy-button.js`) and Layer 2 React hydration (`CopyButton.fromElement.js`, `CopyButton.hydrate.js`) ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
   - Before rc.1: a failed copy shows an error tooltip and announces a manual-copy hint (`failedLabel`, `failedTooltipLabel`, translated); tooltip motion respects reduced-motion; real font-size token and a local z-index instead of an undefined tooltip token.

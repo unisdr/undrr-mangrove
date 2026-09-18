@@ -91,7 +91,7 @@ export function ErrorPage({
         )}
 
         {isChallenge && (
-          <a href="https://www.undrr.org/">
+          <a href="https://www.undrr.org/" aria-label="UNDRR home">
             <div className="undrr-logo" aria-hidden="true" />
           </a>
         )}
@@ -193,7 +193,7 @@ export function ErrorPage({
           <>
             <hr />
             <small>This website is operated by</small>
-            <a href="https://www.undrr.org/">
+            <a href="https://www.undrr.org/" aria-label="UNDRR home">
               <div className="undrr-logo" aria-hidden="true" />
             </a>
           </>
