@@ -1793,7 +1793,7 @@ ${DOCS_BASE}ai-components/utilities.json
 Theme token dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
 ${DOCS_BASE}tokens.json
 
-This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define. Component-scoped custom properties (the --mg-switch-* set, --mg-card-border, --mg-empty-state-*, --mg-notice-*, --mg-tree-*, --mg-drawer-size, --mg-icon-fg, --mg-legend-tick-pos, --mg-dataviz-surface, --mg-show-more-height and the rest) are public API but are not in it. Read the component's ai-components/{id}.json entry or its Storybook docs page for those. The dictionary's own \`scope\` field says the same thing; a machine-readable per-component list is tracked in https://github.com/unisdr/undrr-mangrove/issues/1207.
+This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define. Component-scoped custom properties (the --mg-switch-* set, --mg-card-border, --mg-empty-state-*, --mg-notice-*, --mg-tree-*, --mg-drawer-size, --mg-icon-fg, --mg-legend-tick-pos, --mg-show-more-height and the rest) are public API but are not in it. Read the component's ai-components/{id}.json entry or its Storybook docs page for those. The data-viz palette (--mg-dataviz-*) is not component-scoped — it is defined on :root by stories/assets/scss/_tokens-data-viz.scss — but it is absent from tokens.json too, because the dictionary is built from the tokens/*.yaml sources only. The dictionary's own \`scope\` field says the same thing; a machine-readable per-component list is tracked in https://github.com/unisdr/undrr-mangrove/issues/1207.
 
 Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs
