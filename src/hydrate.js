@@ -20,9 +20,10 @@ function nextRootId() {
  * Queries the DOM for containers matching `selector`, extracts props via
  * `fromElement`, and renders the React `component` into each one. Marks
  * mounted containers with `data-mg-hydrated="true"` to prevent double-rendering.
- * A node inside an already-hydrated container is never a target: that subtree
- * is React's own output, so a component is free to render the marker its
- * hydration selector matches.
+ * A match sitting inside a hydrated container that `selector` also matches is
+ * never a target, so a component is free to render the marker its own
+ * hydration selector matches. A different component's hydration host nested
+ * inside a hydrated container still hydrates.
  *
  * @param {object} config
  * @param {string} config.selector - CSS selector for container elements
@@ -50,14 +51,27 @@ export default function createHydrator({
   const entries = []; // { root, container } pairs
 
   /**
-   * Is this node inside a container some hydrator has already mounted into?
+   * Is this match nested inside an already-hydrated container of its own kind?
    *
-   * Everything under a hydrated container is React-rendered output, and a
-   * component may render the same `data-mg-*` marker its own hydration
-   * selector matches — SyndicationSearchWidget does, so its pager can find the
-   * widget root. Mounting a second root into React's own output is never what
-   * a consumer meant, so a scan skips those nodes. See
-   * undrr/undrr-mangrove#1227.
+   * A component may render the same `data-mg-*` marker its own hydration
+   * selector matches — SyndicationSearchWidget renders `data-mg-search-widget`
+   * on its root so its pager can find the widget to scroll to. A re-scan then
+   * reads that React-rendered marker as an un-hydrated target and mounts a
+   * second copy inside the first. See undrr/undrr-mangrove#1227.
+   *
+   * The ancestor has to match `selector` as well as be hydrated. "Inside any
+   * hydrated container" is too wide: ScrollContainer and Drawer read
+   * `innerHTML`/`outerHTML` in their `fromElement` and re-emit the consumer's
+   * markup through `dangerouslySetInnerHTML`, so a hydration host an author
+   * nested in one comes back out of React verbatim and must still hydrate. A
+   * row of hydrated cards inside a ScrollContainer is its canonical use. What
+   * cannot be told apart is a marker the component rendered itself from one it
+   * re-emitted for the consumer, and that ambiguity only exists when the two
+   * carry the same selector — so only that case is skipped.
+   *
+   * The walk reads the DOM rather than this hydrator's own `entries`, so a
+   * page that builds two hydrators for one selector — a wrapper loaded twice,
+   * or a site bundle alongside the CDN build — does not reopen #1227.
    *
    * The walk starts at the parent: the container's own hydrated flag is the
    * separate already-mounted check.
@@ -66,20 +80,28 @@ export default function createHydrator({
    * @param {Element|Document|DocumentFragment} context - the subtree being scanned
    * @returns {boolean}
    */
-  function isInsideHydratedContainer(container, context) {
+  function isInsideHydratedContainerOfSameKind(container, context) {
     // A container an earlier mount in this same scan detached: clearing the
     // outer container took this one out of the scanned tree, so there is
     // nothing left to hydrate. The NodeList is a static snapshot, so this is
     // the only place that shows up.
     if (!context.contains(container)) return true;
-    return container.parentElement?.closest('[data-mg-hydrated="true"]') != null;
+
+    let node = container.parentElement;
+    while (node) {
+      if (node.dataset.mgHydrated === 'true' && node.matches(selector)) {
+        return true;
+      }
+      node = node.parentElement;
+    }
+    return false;
   }
 
   /**
    * Scan a DOM subtree for unhydrated containers and mount components.
    *
-   * Containers already mounted, and containers sitting inside a mounted
-   * container, are skipped.
+   * Containers already mounted, and containers sitting inside a hydrated
+   * container the same selector matches, are skipped.
    *
    * @param {Element|Document} [context=document] - DOM node to scan within
    * @returns {Array} Newly created React roots from this scan
@@ -90,7 +112,7 @@ export default function createHydrator({
 
     containers.forEach((container, index) => {
       if (container.dataset.mgHydrated === 'true') return;
-      if (isInsideHydratedContainer(container, context)) return;
+      if (isInsideHydratedContainerOfSameKind(container, context)) return;
 
       const savedHTML = clearContainer ? container.innerHTML : null;
       try {

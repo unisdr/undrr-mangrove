@@ -39,10 +39,14 @@ export function SearchPager({ widgetId = '' }) {
       // page: a page can carry more than one. The widget root carries
       // `widgetId` as its id. See undrr/undrr-mangrove#1205.
       //
-      // `SearchResults` and this pager are public exports for custom
-      // layouts, and both default `widgetId` to ''. Without the fallback the
-      // scroll would silently stop happening for those consumers, so keep
-      // the pre-#1205 behaviour when there is no id to resolve.
+      // `SearchResults` and this pager both default `widgetId` to '', and
+      // the fallback keeps the pre-#1205 behaviour when there is no id to
+      // resolve. Inside this widget it is dead code: `widgetId` is never
+      // empty. Nor are these two public exports — `src/index.js` exports only
+      // `SyndicationSearchWidget`, `DEFAULT_LABELS` and `interpolateLabel`,
+      // and the `exports` map in `package.json` makes the deep path
+      // unreachable. It stays as cheap insurance for an in-repo caller that
+      // renders the pager on its own, not as a supported entry point.
       // Only the id-less case falls back: if an id was given it is
       // authoritative, so a missed lookup must not scroll a different widget.
       const widget = widgetId

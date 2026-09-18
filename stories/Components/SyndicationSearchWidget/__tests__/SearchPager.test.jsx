@@ -156,8 +156,10 @@ describe('SearchPager used standalone, without a widgetId', () => {
     };
   });
 
-  // `SearchResults` and `Pager` are public exports for custom layouts and
-  // both default `widgetId` to ''. Scrolling must not silently stop for them.
+  // `SearchResults` and `Pager` both default `widgetId` to ''. Neither is a
+  // public export — `src/index.js` and the `package.json` `exports` map keep
+  // the deep path unreachable — and the real widget always passes an id, so
+  // this covers the fallback rather than a shipped consumer of it.
   it('still scrolls to the widget root on the page', () => {
     const Seed = () => {
       const dispatch = useSearchDispatch();

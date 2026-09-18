@@ -24,14 +24,39 @@ ComponentName/
 ComponentName: './stories/Components/ComponentName/ComponentName.hydrate.js',
 ```
 
+### Rendering your own marker
+
 A component may render the same `data-mg-*` marker its hydration selector
 matches — `SyndicationSearchWidget` renders `data-mg-search-widget` on its root
 so its pager can find the widget to scroll to. That is allowed: `createHydrator`
-skips every match inside a container already carrying `data-mg-hydrated="true"`,
-so a re-scan cannot mount a second copy into React's own output
-([#1227](https://github.com/unisdr/undrr-mangrove/issues/1227)). The rule the
-runtime guarantees, and the one to keep in mind when adding a component: only
-the hydration host is a target, never anything the component renders.
+skips a match that sits inside a hydrated container the same selector matches,
+so a re-scan cannot mount a second copy into your own output
+([#1227](https://github.com/unisdr/undrr-mangrove/issues/1227)).
+
+The skip is scoped to your own selector, not to every hydrated container.
+`ScrollContainer` and `Drawer` read the consumer's markup in their
+`fromElement` and re-emit it through `dangerouslySetInnerHTML`, so another
+component's hydration host nested inside one must still hydrate — a scrolling
+row of hydrated cards is `ScrollContainer`'s canonical use, and on Drupal that
+nested markup is author-entered.
+
+Two things follow for an author:
+
+- If your component re-emits consumer markup, do not also render your own
+  hydration marker into it. The runtime cannot tell the two apart, and a
+  container of your own kind nested inside one of yours will not hydrate.
+- If your component clears its container and renders only markup it wrote, a
+  self-identifying root marker is a reasonable convention and the runtime
+  tolerates it.
+
+`createHydrator` is not the only auto-init mechanism with this shape. The
+vanilla runtimes in `stories/assets/js/` scan for their own `data-mg-*`
+markers, and five React components render those markers into their own output:
+`ShowMore.jsx` (`data-mg-show-more`), `Tab.jsx` (`data-mg-js-tabs`),
+`TableOfContents.jsx` (`data-mg-table-of-contents`), `OnThisPageNav.jsx`
+(`data-mg-on-this-page-nav`) and `PreviewAccess.jsx` (`data-mg-preview-access`).
+Those are safe because each runtime writes a per-element `…Initialized` flag and
+returns early on a second pass. A new vanilla runtime needs the same flag.
 
 ---
 

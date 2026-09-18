@@ -5,6 +5,11 @@
  * find the widget root. A re-scan must not mount a second copy into that
  * React-rendered marker. See undrr/undrr-mangrove#1227.
  *
+ * The guard is scoped to each hydrator's own mounts. A different component's
+ * hydration host nested inside a hydrated container must still hydrate:
+ * `hydrate.cross-component.test.js` covers that against the real
+ * ScrollContainer and IconCard.
+ *
  * This file renders through the real `react-dom/client`, unlike
  * `hydrate.test.js`, which mocks it: the bug only appears once React has put
  * its own markup inside the hydrated container.
@@ -91,14 +96,17 @@ describe('createHydrator nested-marker handling', () => {
     expect(added.dataset.mgHydrated).toBe('true');
   });
 
-  it('does not hydrate a marker React rendered inside an unrelated hydrated container', () => {
+  it('hydrates a marker that sits inside another hydrator’s container', () => {
     document.body.innerHTML = `
       <div data-mg-host data-text="host"></div>
       <div data-mg-widget data-text="sibling"></div>
     `;
 
-    // A host hydrated by one hydrator renders markup carrying a second
-    // hydrator's marker. That markup is React-owned, so it is not a target.
+    // A host hydrated by one hydrator puts a second hydrator's marker in its
+    // output. The guard is scoped to each hydrator's own mounts, so this is
+    // still a target — which is what keeps ScrollContainer and Drawer working:
+    // both re-emit the consumer's markup through dangerouslySetInnerHTML, so a
+    // nested hydration host reaches the DOM as React output it did not author.
     function HostComponent() {
       return React.createElement('div', { 'data-mg-widget': '' });
     }
@@ -120,8 +128,12 @@ describe('createHydrator nested-marker handling', () => {
       });
     });
 
-    expect(widgetHydrator.roots).toHaveLength(1);
-    expect(document.querySelectorAll('.inner-plain')).toHaveLength(1);
+    expect(widgetHydrator.roots).toHaveLength(2);
+    expect(document.querySelectorAll('.inner-plain')).toHaveLength(2);
+    expect(
+      document.querySelector('[data-mg-host] [data-mg-widget]').dataset
+        .mgHydrated
+    ).toBe('true');
   });
 
   it('skips markup a consumer appends inside an already-hydrated container', () => {
@@ -136,9 +148,10 @@ describe('createHydrator nested-marker handling', () => {
       });
     });
 
-    // Everything below a hydrated container belongs to React, so markup put
-    // there is not a hydration target: the consumer must add it outside the
-    // container, or unmountAll() first.
+    // A match inside a container this hydrator mounted is React's own output
+    // as far as this hydrator can tell, so markup appended there is not a
+    // target. To replace a hydrated container's contents, call unmountAll()
+    // and re-scan.
     const added = document.createElement('div');
     added.setAttribute('data-mg-widget', '');
     document.getElementById('host').appendChild(added);
@@ -190,6 +203,41 @@ describe('createHydrator nested-marker handling', () => {
     expect(detachedRoots).toHaveLength(1);
     expect(detached.querySelector('#detached-child').dataset.mgHydrated).toBe(
       'true'
+    );
+  });
+
+  it('a second hydrator for the same selector does not take the first one’s rendered marker', () => {
+    document.body.innerHTML = '<div data-mg-widget data-text="one"></div>';
+
+    // Two hydrators for one selector is a misconfiguration — a page loading
+    // the same wrapper twice, or a site bundle alongside the CDN build — but
+    // it must not resurrect #1227. The second hydrator skips the host on its
+    // `data-mg-hydrated` flag, and skips the marker React rendered inside it
+    // because the guard reads the DOM rather than either hydrator's own
+    // bookkeeping. Scoping the guard to one hydrator's mounts would mount a
+    // second widget here.
+    let first;
+    act(() => {
+      first = createHydrator({
+        selector: '[data-mg-widget]',
+        component: MarkerRenderingComponent,
+        fromElement,
+      });
+    });
+
+    let second;
+    act(() => {
+      second = createHydrator({
+        selector: '[data-mg-widget]',
+        component: MarkerRenderingComponent,
+        fromElement,
+      });
+    });
+
+    expect(first.roots).toHaveLength(1);
+    expect(second.roots).toHaveLength(0);
+    expect(document.querySelectorAll('.inner-root .inner-root')).toHaveLength(
+      0
     );
   });
 
