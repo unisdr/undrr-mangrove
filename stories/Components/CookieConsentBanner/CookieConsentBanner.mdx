@@ -268,7 +268,7 @@ Built with proper ARIA attributes, keyboard navigation, focus management, and sc
 
 ## Changelog
 
-- **1.3.0** — 2026-09-18 ([#PR](https://github.com/unisdr/undrr-mangrove/pull/PR)): The stories can now tell a working bar from a broken one.
+- **1.3.0** — 2026-09-18 ([#1242](https://github.com/unisdr/undrr-mangrove/pull/1242)): The stories can now tell a working bar from a broken one.
   - Added a "Rendering check" story whose `play` function asserts that the three CDN assets loaded, that the library built its DOM rather than merely defining `window.CookieConsent`, and that the bar is present and visible in the document body where the library appends it. `#cc-main` lands on `document.body`, outside the story canvas, so the assertions start from `canvasElement.ownerDocument`. The story also reports the result in the canvas, so a failure is visible without opening a panel.
   - Removed the false note on the "Default" story claiming the bar does not appear in Storybook. It does. What it does not do is appear in an automated browser, because the library's `hideFromBots` default suppresses it whenever `navigator.webdriver` is true — while still reporting success.
   - Fixed the "Reset banner" story. It guarded on `window.CookieConsent.showConsentModal`, which does not exist in vanilla-cookieconsent v3, so the guard silently skipped and the button did nothing. It now erases the stored consent with `eraseCookies()` and rebuilds the bar with `show(true)`.
