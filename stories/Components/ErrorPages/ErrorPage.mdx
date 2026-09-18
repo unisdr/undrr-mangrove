@@ -213,6 +213,7 @@ https://assets.undrr.org/mangrove/2.0.0-rc.2/error-pages/504.html
 
 ## Changelog
 
+- **1.4.3** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): The UNDRR logo link now carries `aria-label="UNDRR home"`. Its only child is an `aria-hidden` div, so the link had no accessible name at all (axe `link-name`; WCAG 2.4.4 / 4.1.2). Fixed in the component and, separately, in all eleven static templates served by Cloudflare. The two are not generated from one source and their markup differs — the templates inline their own stylesheet and render `mg-error-page__container` where the component renders `mg-error-page__container mg-container--spacer` — so the logo anchor has to be kept in step by hand. Links inside the body copy are also underlined, since colour alone did not distinguish them from the surrounding text (WCAG 1.4.1).
 - **1.4.2** — 2026-09-09: Asset URLs in the stylesheet and static error templates now use the canonical CDN root.
 
 - **1.4.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Replaced the challenge panel's hard-coded radius and shadow with shared card surface tokens so it follows theme expression.

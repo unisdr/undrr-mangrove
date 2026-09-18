@@ -596,7 +596,7 @@ $mg-switch-ring-gap: var(
 // -----------------------------------------------------------------------------
 .mg-form-error-summary {
   background-color: rgb(var(--mg-color-red-50));
-  border-left: 4px solid rgb(var(--mg-color-red-900));
+  border-inline-start: 4px solid rgb(var(--mg-color-red-900));
   margin-bottom: var(--mg-spacing-200);
   padding: var(--mg-spacing-150);
 
@@ -617,7 +617,7 @@ $mg-switch-ring-gap: var(
 
   &__list {
     margin: 0;
-    padding-left: var(--mg-spacing-100);
+    padding-inline-start: var(--mg-spacing-100);
 
     li {
       margin-bottom: var(--mg-spacing-50);

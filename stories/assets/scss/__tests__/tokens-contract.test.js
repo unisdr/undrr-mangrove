@@ -1296,6 +1296,85 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.3 — the variant CTA on the white pill',
   },
 
+  // --- Text CTA: text-cta.scss -------------------------------------------
+  //
+  // The strong CTA surfaces are the same token chain as the hero variants,
+  // but the CTA paints them flat and adds an eyebrow and a 90%-white body, so
+  // it fails harder than the hero does and needs its own rows.
+  {
+    name: 'CTA eyebrow, secondary variant',
+    fg: PAGE,
+    bg: ['--mg-color-hero--secondary'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-cta__eyebrow is 12px bold on .mg-cta--secondary',
+  },
+  {
+    name: 'CTA headline, secondary variant',
+    fg: '--mg-color-white',
+    bg: ['--mg-color-hero--secondary'],
+    min: 3,
+    why: 'SC 1.4.3 large text — .mg-cta__headline is a bold heading',
+  },
+  {
+    name: 'CTA body text, secondary variant',
+    fg: 'rgb(var(--mg-color-neutral-0) / 0.9)',
+    bg: ['--mg-color-hero--secondary'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-cta__text is 90% white, so it composites on the fill',
+  },
+  {
+    name: 'CTA body text, tertiary variant',
+    fg: 'rgb(var(--mg-color-neutral-0) / 0.9)',
+    bg: ['--mg-color-hero--tertiary'],
+    min: 4.5,
+    why: 'SC 1.4.3 — the same 90% body on .mg-cta--tertiary',
+  },
+  {
+    name: 'CTA body text, quaternary variant',
+    fg: 'rgb(var(--mg-color-neutral-0) / 0.9)',
+    bg: ['--mg-color-hero--quaternary'],
+    min: 4.5,
+    why: 'SC 1.4.3 — the same 90% body on .mg-cta--quaternary',
+  },
+
+  // --- Author image: author-image.scss -----------------------------------
+  {
+    name: 'author image title, secondary variant',
+    fg: '--mg-color-secondary',
+    bg: [PAGE],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-author-image__title is bold body text, not large text',
+  },
+
+  // --- Quote highlight: quote-highlight.scss -----------------------------
+  {
+    name: 'quote text on the dark quote surface',
+    fg: '--mg-color-white',
+    bg: ['rgb(var(--mg-color-blue-900))'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-quote-highlight--dark sets one colour for quote, name and title',
+  },
+  {
+    name: 'quote text on the light quote surface',
+    fg: 'rgb(var(--mg-color-blue-900) / 0.9)',
+    bg: ['rgb(var(--mg-color-blue-900) / 0.1)'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-quote-highlight--light tints both the fill and the text',
+  },
+
+  // --- Hub header: hub-header.scss ---------------------------------------
+  //
+  // Every link and heading in the header is --mg-hub-header-ink, white, on
+  // --mg-hub-header-surface. The secondary surface is the same orange accent
+  // the hero and the CTA use, so the header inherits the same failure.
+  {
+    name: 'hub header text on the secondary surface',
+    fg: '--mg-color-neutral-0',
+    bg: ['--mg-color-hero--secondary'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-hub-header--surface-secondary paints links and headings white on the banner',
+  },
+
   // --- Notice actions: notice.scss ----------------------------------------
   //
   // ServiceNotice's status link is an outline secondary button inside the
@@ -1560,6 +1639,35 @@ const WCAG_EXCEPTIONS = {
     'orange-800 label on the white pill',
   ],
 
+  // Text CTA, secondary variant. Same orange-800 surface as the hero, but the
+  // CTA paints it flat behind an eyebrow, a headline and a 90%-white body, so
+  // all three rows fail in all five themes. Covered by the exception register
+  // in docs/COLOUR-CONTRAST-METHODOLOGY.md.
+  ...Object.fromEntries(
+    ALL_THEMES.flatMap(theme => [
+      [
+        `${theme}|CTA eyebrow, secondary variant`,
+        [2.65, 'white eyebrow on orange-800'],
+      ],
+      [
+        `${theme}|CTA headline, secondary variant`,
+        [2.65, 'white headline on orange-800; fails even the large-text 3:1'],
+      ],
+      [
+        `${theme}|CTA body text, secondary variant`,
+        [2.42, '90% white body on orange-800, the worst pair in the set'],
+      ],
+      [
+        `${theme}|author image title, secondary variant`,
+        [2.65, 'orange-800 ink on white; the same token read as text'],
+      ],
+      [
+        `${theme}|hub header text on the secondary surface`,
+        [2.65, 'white header links and headings on orange-800'],
+      ],
+    ])
+  ),
+
   // IRP's hero blue under a 90% white pill.
   'irp|hero secondary CTA label': [
     4.13,
@@ -1663,6 +1771,39 @@ const PERCEPTUAL_EXCEPTIONS = {
     -6.9,
     'why Snackbar/Hero/TextCta use the inverse ring',
   ],
+
+  // Mirrors of the Text CTA and author-image WCAG exceptions above. The
+  // quaternary CTA body appears here only: 90% white on red-800 clears WCAG 2
+  // at 4.82 but lands under the perceptual body-text floor, which is exactly
+  // the mid-tone disagreement this second measure exists to surface.
+  ...Object.fromEntries(
+    ALL_THEMES.flatMap(theme => [
+      [
+        `${theme}|CTA eyebrow, secondary variant`,
+        [42.5, 'white eyebrow on orange-800'],
+      ],
+      [
+        `${theme}|CTA headline, secondary variant`,
+        [42.5, 'white headline on orange-800'],
+      ],
+      [
+        `${theme}|CTA body text, secondary variant`,
+        [36.4, '90% white body on orange-800'],
+      ],
+      [
+        `${theme}|CTA body text, quaternary variant`,
+        [57.7, '90% white body on red-800; WCAG 2 passes, this does not'],
+      ],
+      [
+        `${theme}|author image title, secondary variant`,
+        [42.5, 'orange-800 ink on white'],
+      ],
+      [
+        `${theme}|hub header text on the secondary surface`,
+        [42.5, 'white header links and headings on orange-800'],
+      ],
+    ])
+  ),
 
   'base|accent tag label': [46.7, 'orange-900 fill under #fff'],
   'preventionweb|accent tag label': [46.7, 'orange-900 fill under #fff'],
@@ -2008,22 +2149,27 @@ describe('where the two contrast measures disagree', () => {
     'base | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'base | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'base | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'base | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
     'preventionweb | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'preventionweb | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
     'preventionweb | notice secondary action on the offline (negative) notice | WCAG 2 PASSES 4.59:1 (min 4.5) | perceptual fails 59.8 (BODY_TEXT needs 63)',
     'preventionweb | notice secondary action on the overlay over a black embed | WCAG 2 PASSES 4.81:1 (min 4.5) | perceptual fails 62.1 (BODY_TEXT needs 63)',
     'irp | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'irp | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'irp | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'irp | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
     'irp | notice secondary action on the offline (negative) notice | WCAG 2 PASSES 5.03:1 (min 4.5) | perceptual fails 61.3 (BODY_TEXT needs 63)',
     'mcr | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'mcr | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'mcr | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'mcr | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
     'delta | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'delta | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'delta | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'delta | hero title on the split hero | WCAG 2 PASSES 3.07:1 (min 3) | perceptual fails 27.2 (LARGE_TEXT needs 50)',
+    'delta | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
   ];
 
   test('the two measures disagree about exactly these pairs', () => {

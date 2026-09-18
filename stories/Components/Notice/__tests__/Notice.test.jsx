@@ -99,6 +99,67 @@ describe('Notice', () => {
     expect(screen.queryByText('Self-managed')).not.toBeInTheDocument();
   });
 
+  describe('focus after dismissal', () => {
+    it('returns focus to whatever was focused when the notice appeared', () => {
+      render(
+        <div>
+          <button type="button">Raise notice</button>
+        </div>
+      );
+      const opener = screen.getByRole('button', { name: 'Raise notice' });
+      opener.focus();
+
+      render(<Notice title="Saved" isDismissible />);
+      const dismissButton = screen.getByRole('button', {
+        name: 'Dismiss notification',
+      });
+      dismissButton.focus();
+      fireEvent.click(dismissButton);
+
+      expect(document.activeElement).toBe(opener);
+    });
+
+    it('moves focus to the preceding control when there is no opener', () => {
+      render(
+        <div>
+          <button type="button">Before</button>
+          <Notice title="Standing notice" isDismissible />
+          <button type="button">After</button>
+        </div>
+      );
+
+      const dismissButton = screen.getByRole('button', {
+        name: 'Dismiss notification',
+      });
+      dismissButton.focus();
+      fireEvent.click(dismissButton);
+
+      expect(document.activeElement).toBe(
+        screen.getByRole('button', { name: 'Before' })
+      );
+      expect(document.activeElement).not.toBe(document.body);
+    });
+
+    it('moves focus forward when nothing focusable precedes the notice', () => {
+      render(
+        <div>
+          <Notice title="First thing on the page" isDismissible />
+          <button type="button">After</button>
+        </div>
+      );
+
+      const dismissButton = screen.getByRole('button', {
+        name: 'Dismiss notification',
+      });
+      dismissButton.focus();
+      fireEvent.click(dismissButton);
+
+      expect(document.activeElement).toBe(
+        screen.getByRole('button', { name: 'After' })
+      );
+    });
+  });
+
   it('renders actions and children properly', () => {
     render(
       <Notice

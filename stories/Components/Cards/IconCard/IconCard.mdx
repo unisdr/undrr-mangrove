@@ -269,6 +269,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.4.1** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.
 - **1.4** — 2026-09-10 ([#1113](https://github.com/unisdr/undrr-mangrove/pull/1113)):
   - Added `orientation="horizontal"`, which places the icon beside the content rather than above it — the arrangement undrr.org already uses for "what would you like to do" route rows. It owns the visual's size via `--mg-card-icon-size` (default `3rem`), so `imageScale` does not apply.
   - Fixed `centered`, which centred the text but left the icon pinned left. The visual is a column flex container, so its horizontal axis is the cross axis; the variant set `justify-content` and needed `align-items`.

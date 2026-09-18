@@ -93,6 +93,8 @@ Border-only tags for a lightweight appearance.
 
 Theme-coloured tags for featured content; the base theme uses a dark neutral. These do not convey urgency or workflow status.
 
+**Contrast:** in UNDRR and every sub-brand, the accent fill is the orange accent, and the orange carries no text — a white label on it measures 2.95 against WCAG's 4.5, and no text colour clears the threshold at any size. Treat `--accent` as decorative emphasis: never put a fact in an accent tag and nowhere else, and prefer the default, secondary or outline variants for anything a reader has to act on. Removing the pairing is a brand decision, tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+
 <Canvas of={TagStories.Accent} />
 
 ### Subtle
@@ -153,6 +155,7 @@ Container children and individually classed tags share the same styling. Explici
 
 ## Changelog
 
+- **1.3.1** — 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented that `--accent` paints a white label on the orange accent, which no text colour clears at any size, and that the variant is decorative emphasis. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
 - **1.3.0** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added `.mg-tag--subtle` and `.mg-badge` for non-interactive secondary metadata, along with monospace uppercase format badge variants (`.mg-badge--code`, `.mg-tag--code`) for technical extensions (PDF, JSON, SVG).
 - **1.2.0** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Refreshed v2 spacing/geometry and aligned auto-styled tags with UI font/modifier rules. Added stronger focus/forced-colour handling for links, disabled hover treatment on static tags, and improved RTL/long-label wrapping behavior.
 

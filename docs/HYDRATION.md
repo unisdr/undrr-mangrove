@@ -107,18 +107,18 @@ Returns: `{ roots, update, unmountAll }`
 | Component | Tier | Selector | Key attributes |
 |-----------|------|----------|---------------|
 | CopyButton | Simple | `[data-mg-copy-button]` | `data-text-to-copy`, `data-aria-label`, `data-tooltip-label`, `data-copied-label`, `data-variant`, `data-size`, `data-labels` (JSON) |
-| Drawer | Simple/Medium | `[data-mg-drawer]`, `[data-mg-floating-panel]` | `data-is-open`, `data-position`, `data-title`, `data-backdrop`, `data-is-floating-panel` |
+| Drawer | Simple/Medium | `[data-mg-drawer]` | `id` (required, so triggers can find it), `data-is-open`, `data-position`, `data-title`, `data-backdrop`, `data-is-floating-panel`, `data-close-label`, plus `data-mg-drawer-trigger` on the trigger button |
 | Notice | Simple | `[data-mg-notice]` | `data-title`, `data-description`, `data-variant`, `data-heading-level`, `data-is-compact`, `data-is-prominent`, `data-is-overlay`, `data-is-dismissible`, `data-dismiss-label` |
 | ServiceNotice | Simple | `[data-mg-service-notice]` | `data-title`, `data-description`, `data-status`, `data-retry` (dispatches `mg-service-notice:retry`), `data-countdown-seconds`, `data-max-auto-retries`, `data-status-url`, `data-labels` (JSON) |
 | Tree | Medium | `[data-mg-tree]` | Nested `<ul>`/`<li>` list (`data-id`, `data-expanded` or `aria-expanded="true"`, `data-selected`, child `<a href>` with optional `aria-current`), `data-aria-label`, `data-aria-labelledby`, `data-toggle-icon`, `data-guides`, `data-selected-id`, `data-class-name` |
-| TextCta | Simple | `[data-mg-text-cta]` | `data-title`, `data-cta-label`, `data-cta-url`, `data-variant` |
+| TextCta | Medium | `[data-mg-text-cta]` | `data-eyebrow`, `data-headline`, `data-headline-level`, `data-headline-size`, `data-text`, `data-buttons` (JSON), `data-variant`, `data-tone`, `data-layout`, `data-centered` |
 | ShareButtons | Simple | `[data-mg-share-buttons]` | `data-main-label`, `data-on-copy-label`, `data-sharing-subject`, `data-sharing-body` |
 | QuoteHighlight | Simple | `[data-mg-quote-highlight]` | `data-quote`, `data-attribution`, `data-variant`, `data-alignment` |
 | ScrollContainer | Medium | `[data-mg-scroll-container]` | `data-height`, `data-show-arrows`, `data-step-size`, `.mg-scroll__content` children |
 | Gallery | Medium | `[data-mg-gallery]` | `data-media` (JSON), `data-show-thumbnails`, `data-arrow-style` |
 | IconCard | Medium | `[data-mg-icon-card]` | `data-items` (JSON), `data-centered`, `data-variant` |
 | StatsCard | Medium | `[data-mg-stats-card]` | `data-stats` (JSON), `data-title`, `data-variant` |
-| UserFeedback | Medium | `[data-mg-user-feedback]` | `data-title`, `data-description`, `data-labels` (JSON), `data-api-endpoint` |
+| UserFeedback | Simple | `[data-mg-user-feedback]` | `data-question`, `data-yes-label`, `data-no-label`, `data-report-issue-label`, `data-feedback-url`, `data-confirmation-before-link`, `data-confirmation-separator`, `data-confirmation-link`, `data-confirmation-after-link`. There is no submission endpoint: Mangrove itself records nothing |
 | MegaMenu | Complex | `[data-mg-mega-menu]` | `data-delay`, `data-hover-delay`, `data-sections` (JSON, optional) |
 | SyndicationSearchWidget | Complex | `[data-mg-search-widget]` | `data-search-endpoint`, `data-results-per-page`, `data-default-filters` (JSON) |
 | Pager | Medium | `[data-mg-pager]` | `data-page`, `data-total-pages`, `data-show-jump-to`, `data-aria-label` |

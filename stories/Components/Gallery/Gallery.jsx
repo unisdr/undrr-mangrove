@@ -5,6 +5,24 @@ import PropTypes from 'prop-types';
 const cls = (...classes) =>
   classes.filter(Boolean).length > 0 ? classes.filter(Boolean).join(' ') : null;
 
+// Everything a browser can put in the focus order inside an injected preview.
+const THUMBNAIL_PREVIEW_FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'area[href]',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'iframe',
+  'object',
+  'embed',
+  'summary',
+  'audio[controls]',
+  'video[controls]',
+  '[contenteditable]',
+  '[tabindex]',
+].join(',');
+
 export const DEFAULT_GALLERY_LABELS = {
   galleryAriaLabel: 'Gallery',
   prevLabel: 'Previous item',
@@ -35,6 +53,7 @@ function GalleryComponent({
   const mainImageRef = useRef(null);
   const thumbnailContainerRef = useRef(null);
   const thumbnailRefs = useRef([]);
+  const thumbnailPreviewRefs = useRef([]);
   const touchStartX = useRef(null);
   const touchEndX = useRef(null);
 
@@ -48,6 +67,23 @@ function GalleryComponent({
       setIsLoading(false);
     }
   }, [activeIndex, activeItem.type]);
+
+  // An `html` thumbnail renders author markup that can contain links, buttons
+  // or form controls. It sits inside `<button role="tab">`, so those would be
+  // nested interactive content and focusable children of an aria-hidden node
+  // (axe `nested-interactive`, `aria-hidden-focus`). `inert` on the preview
+  // takes the whole subtree out of focus order, hit testing and the
+  // accessibility tree; the `tabindex="-1"` sweep covers engines and tools
+  // that do not implement `inert` yet. The tab button itself stays operable.
+  useEffect(() => {
+    thumbnailPreviewRefs.current.forEach(node => {
+      if (!node) return;
+      node.setAttribute('inert', '');
+      node
+        .querySelectorAll(THUMBNAIL_PREVIEW_FOCUSABLE_SELECTOR)
+        .forEach(child => child.setAttribute('tabindex', '-1'));
+    });
+  }, [media]);
 
   // Handle thumbnail click
   const handleThumbnailClick = useCallback(
@@ -331,8 +367,12 @@ function GalleryComponent({
             >
               {item.type === 'html' && !item.thumbnail && item.html ? (
                 <div
+                  ref={el => {
+                    thumbnailPreviewRefs.current[index] = el;
+                  }}
                   className="mg-gallery__thumbnail-html-preview"
                   aria-hidden="true"
+                  inert
                 >
                   <div
                     className="mg-gallery__thumbnail-html-content"

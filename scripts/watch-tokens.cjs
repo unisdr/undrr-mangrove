@@ -26,10 +26,14 @@ function rebuild(reason) {
     if (err) {
       // A token error is the point of the generator, not a crash: print it and
       // keep watching so the next save can fix it.
-      process.stderr.write(`watch-tokens: ${reason} -> ${(stderr || err.message).trim()}\n`);
+      process.stderr.write(
+        `watch-tokens: ${reason} -> ${(stderr || err.message).trim()}\n`
+      );
       return;
     }
-    process.stdout.write(`watch-tokens: ${reason}${out ? ` -> ${out}` : ' -> rebuilt'}\n`);
+    process.stdout.write(
+      `watch-tokens: ${reason}${out ? ` -> ${out}` : ' -> rebuilt'}\n`
+    );
   });
 }
 
@@ -40,4 +44,6 @@ fs.watch(dir, (_event, filename) => {
   pending = setTimeout(() => rebuild(filename), 50);
 });
 
-process.stdout.write(`watch-tokens: watching ${path.relative(process.cwd(), dir)}/*.yaml\n`);
+process.stdout.write(
+  `watch-tokens: watching ${path.relative(process.cwd(), dir)}/*.yaml\n`
+);

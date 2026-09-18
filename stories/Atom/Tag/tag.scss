@@ -61,6 +61,12 @@
   border-color: currentColor;
 }
 
+// Known exception: a white label on the orange accent, 2.95 resting and 2.65
+// on hover. The orange carries no text at any size, so this is a decorative
+// emphasis and never the only place a fact appears. Removing the pairing is a
+// brand decision, tracked in
+// https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy it into a
+// new component: docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 .mg-tag--accent {
   --mg-tag-background: var(
     --tag-color-background-accent,

@@ -26,7 +26,12 @@ $search-debug-text: var(--mg-color-yellow-dark);
 
 // Spacing & sizing (component needs rounded corners, base theme has 0)
 $search-radius: var(--mg-spacing-25);
-$search-input-padding-x: var(--mg-spacing-250);
+
+// Clear button target: 36px square, clear of the WCAG 2.5.8 24x24 minimum.
+$search-clear-size: mg-rem(36);
+
+// Inline-end room for the clear button: its size plus the offset and a small gap.
+$search-input-padding-x: mg-rem(44);
 
 // Screen reader only utility
 .mg-u-sr-only {
@@ -102,8 +107,8 @@ $search-input-padding-x: var(--mg-spacing-250);
 .mg-search__input {
   @extend %mg-form-input-base;
 
-  // Override padding-right to leave room for the clear button
-  padding-right: $search-input-padding-x;
+  // Override the inline-end padding to leave room for the clear button
+  padding-inline-end: $search-input-padding-x;
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
@@ -115,18 +120,20 @@ $search-input-padding-x: var(--mg-spacing-250);
 
 .mg-search__clear {
   position: absolute;
-  right: var(--mg-spacing-50);
+  inset-inline-end: var(--mg-spacing-50);
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--mg-spacing-200);
-  height: var(--mg-spacing-200);
+  width: $search-clear-size;
+  height: $search-clear-size;
   padding: 0;
   background: none;
   border: none;
-  font-size: var(--mg-font-size-100);
+
+  // Matches the icon-only button glyph size used by CTA buttons and chips.
+  font-size: mg-rem(18);
   color: $search-text;
   cursor: pointer;
   line-height: 1;
@@ -171,7 +178,7 @@ $search-input-padding-x: var(--mg-spacing-250);
 .mg-search__active-filters-label {
   font-weight: 500;
   color: $search-text;
-  margin-right: var(--mg-spacing-25);
+  margin-inline-end: var(--mg-spacing-25);
 }
 
 .mg-search__active-filters-list {
@@ -492,7 +499,7 @@ $search-input-padding-x: var(--mg-spacing-250);
 .mg-search__result-date {
   &::before {
     content: "•";
-    margin-right: var(--mg-spacing-50);
+    margin-inline-end: var(--mg-spacing-50);
     color: $search-border;
   }
 }
@@ -949,7 +956,7 @@ $search-input-padding-x: var(--mg-spacing-250);
   padding: var(--mg-spacing-50) var(--mg-spacing-75);
   font-size: var(--mg-font-size-300);
   color: $search-text;
-  text-align: left;
+  text-align: start;
   background-color: rgb(var(--mg-color-neutral-50));
   border: 1px solid rgb(var(--mg-color-neutral-600) / 0.22);
   border-radius: var(--mg-radius-form-input);
@@ -986,7 +993,7 @@ $search-input-padding-x: var(--mg-spacing-250);
 
 .mg-select__trigger-icon {
   flex-shrink: 0;
-  margin-left: var(--mg-spacing-50);
+  margin-inline-start: var(--mg-spacing-50);
   color: $search-text-muted;
   transition: transform 0.2s ease;
 
@@ -1148,7 +1155,7 @@ $search-input-padding-x: var(--mg-spacing-250);
 
 // Subtype options (indented children under parent content types)
 .mg-select__option--subtype {
-  padding-left: var(--mg-spacing-150);
+  padding-inline-start: var(--mg-spacing-150);
 
   .mg-select__option-label {
     font-size: var(--mg-font-size-100);
@@ -1156,7 +1163,7 @@ $search-input-padding-x: var(--mg-spacing-250);
     // Add visual connector
     &::before {
       content: "└";
-      margin-right: var(--mg-spacing-25);
+      margin-inline-end: var(--mg-spacing-25);
       color: $search-text-muted;
     }
   }
@@ -1194,7 +1201,7 @@ $search-input-padding-x: var(--mg-spacing-250);
   }
 
   label {
-    padding-left: var(--mg-spacing-25);
+    padding-inline-start: var(--mg-spacing-25);
     font-weight: normal;
     text-wrap: balance;
     cursor: pointer;
@@ -1518,7 +1525,7 @@ $search-input-padding-x: var(--mg-spacing-250);
 .mg-search__filter-chip-connector {
   display: inline-flex;
   align-items: center;
-  margin-right: var(--mg-spacing-25);
+  margin-inline-end: var(--mg-spacing-25);
   color: $search-text-muted;
   font-weight: 600;
   text-transform: uppercase;

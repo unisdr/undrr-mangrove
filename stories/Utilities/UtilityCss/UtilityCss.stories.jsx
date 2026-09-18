@@ -93,6 +93,28 @@ export const CommaSeparator = () => (
 
 CommaSeparator.storyName = 'Comma separator (.mg-u-comma-between)';
 
+/**
+ * The orange accent is a non-text colour. No text colour meets WCAG AA on
+ * `orange-800` or `orange-900`: white is 2.65 and 2.95 against a 4.5 minimum,
+ * and black — which passes WCAG — still misses Mangrove's perceptual body-text
+ * floor. Repeated at each orange block so the rule is next to the swatches it
+ * governs.
+ */
+const OrangeAccentNote = () => (
+  <p style={{ fontSize: '0.875rem', margin: '0 0 1rem' }}>
+    <strong>The orange accent carries no text.</strong> Use{' '}
+    <code>orange-800</code>, <code>orange-900</code> and{' '}
+    <code>sendai-orange</code> for borders, rules, icon fills and blocks with no
+    copy over them. No text colour meets WCAG AA on them at any size — white is
+    2.65 to 2.95 against a 4.5 minimum, and black passes WCAG but misses the
+    perceptual body-text floor. See{' '}
+    <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
+      the colour contrast methodology
+    </a>{' '}
+    for the measurements.
+  </p>
+);
+
 // Background color utilities
 export const BackgroundColors = () => (
   <div>
@@ -157,6 +179,9 @@ export const BackgroundColors = () => (
     </div>
 
     <h5>Orange shades</h5>
+
+    <OrangeAccentNote />
+
     <div
       style={{
         display: 'flex',
@@ -336,6 +361,9 @@ export const TextColors = () => (
     </div>
 
     <h5>Orange text colors</h5>
+
+    <OrangeAccentNote />
+
     <div style={{ marginBottom: '1rem' }}>
       <p className="mg-u-color--orange-400">This is orange-400 text</p>
       <p className="mg-u-color--orange-700">This is orange-700 text</p>
@@ -507,6 +535,15 @@ export const CombinedExample = () => (
       style={{ padding: '1.5rem' }}
     >
       <h5 className="mg-u-color--neutral-900">Statistics dashboard</h5>
+      <p style={{ fontSize: '0.875rem', margin: '0.5rem 0 0' }}>
+        The orange tile below is white text on the orange accent, 2.95 against a
+        4.5 minimum. It is kept so the utility pairing is visible and is not a
+        pattern to copy — see{' '}
+        <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
+          the orange accent carries no text
+        </a>
+        .
+      </p>
       <div
         style={{
           display: 'grid',

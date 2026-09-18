@@ -10,35 +10,64 @@ export default {
 };
 
 export const Default = () => (
-  <Tree>
-    <TreeItem id="1" label="Item 1">
-      <TreeItem id="1-1" label="Item 1.1" />
-      <TreeItem id="1-2" label="Item 1.2" />
+  <Tree aria-label="Knowledge base sections" defaultExpandedIds={['sendai']}>
+    <TreeItem id="sendai" label="Sendai Framework">
+      <TreeItem id="priorities" label="Priorities for action" />
+      <TreeItem id="targets" label="Targets and indicators" />
+      <TreeItem id="monitor" label="Sendai Framework Monitor" />
     </TreeItem>
-    <TreeItem id="2" label="Item 2" />
+    <TreeItem id="hazards" label="Hazard information profiles">
+      <TreeItem id="hydromet" label="Meteorological and hydrological" />
+      <TreeItem id="geohazards" label="Geological and seismic" />
+    </TreeItem>
+    <TreeItem id="terminology" label="Terminology" />
   </Tree>
 );
 
 export const WithLinks = () => (
-  <Tree>
-    <TreeItem id="1" label="Item 1" href="/item-1" asLink>
-      <TreeItem id="1-1" label="Item 1.1" href="/item-1-1" asLink />
-      <TreeItem id="1-2" label="Item 1.2" href="/item-1-2" asLink />
+  <Tree
+    aria-label="Knowledge base sections"
+    defaultExpandedIds={['sendai']}
+    defaultSelectedId="targets"
+  >
+    <TreeItem
+      id="sendai"
+      label="Sendai Framework"
+      href="/sendai-framework"
+      asLink
+    >
+      <TreeItem
+        id="priorities"
+        label="Priorities for action"
+        href="/sendai-framework/priorities"
+        asLink
+      />
+      <TreeItem
+        id="targets"
+        label="Targets and indicators"
+        href="/sendai-framework/targets"
+        asLink
+        current="page"
+      />
     </TreeItem>
-    <TreeItem id="2" label="Item 2" href="/item-2" asLink />
+    <TreeItem id="terminology" label="Terminology" href="/terminology" asLink />
   </Tree>
 );
 
 export const CustomToggleIcon = {
   args: { toggleIcon: 'mg-icon-arrow-right' },
   render: args => (
-    <Tree defaultExpandedIds={['1']} {...args}>
-      <TreeItem id="1" label="Item 1">
-        <TreeItem id="1-1" label="Item 1.1" />
-        <TreeItem id="1-2" label="Item 1.2" />
+    <Tree
+      aria-label="Knowledge base sections"
+      defaultExpandedIds={['sendai']}
+      {...args}
+    >
+      <TreeItem id="sendai" label="Sendai Framework">
+        <TreeItem id="priorities" label="Priorities for action" />
+        <TreeItem id="targets" label="Targets and indicators" />
       </TreeItem>
-      <TreeItem id="2" label="Item 2">
-        <TreeItem id="2-1" label="Item 2.1" />
+      <TreeItem id="hazards" label="Hazard information profiles">
+        <TreeItem id="hydromet" label="Meteorological and hydrological" />
       </TreeItem>
     </Tree>
   ),

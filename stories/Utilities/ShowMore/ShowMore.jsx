@@ -40,8 +40,8 @@ export function ShowMore({ data = EMPTY_DATA }) {
           <div className={item.collapsable_wrapper_class}>
             {item.collapsable_text}
           </div>
-          <a
-            href="#"
+          <button
+            type="button"
             className="mg-button mg-button-primary mg-show-more--button"
             data-mg-show-more="true"
             data-mg-show-more-target={`.${item.collapsable_wrapper_class}`}
@@ -49,7 +49,7 @@ export function ShowMore({ data = EMPTY_DATA }) {
             data-mg-show-more-label-collapsed="Show more themes"
           >
             {item.button_text}
-          </a>
+          </button>
         </React.Fragment>
       ))}
     </React.Fragment>

@@ -26,7 +26,8 @@ See [Component standards](https://mangrove.undrr.org/?path=/docs/contributing-co
 - [ ] Keyboard navigation works (Tab, Enter, Escape, arrow keys as relevant)
 - [ ] Focus states use `@include mg-focus-ring;` or `@include mg-focus-ring-inset;` to ensure dual-band contrast and forced-colors mode visibility
 - [ ] Icon-only buttons include an accessible `aria-label` attribute (WCAG 4.1.2) and meet touch target minimums (24x24px WCAG 2.5.8 minimum, 36x36px standard)
-- [ ] Color contrast meets WCAG 2.2 AA (4.5:1 for text, 3:1 for UI elements)
+- [ ] Color contrast meets WCAG 2.2 AA (4.5:1 for text, 3:1 for UI elements). A pair that cannot meet it is not waived silently: record it, with its measured value and the reason, in `WCAG_EXCEPTIONS`/`PERCEPTUAL_EXCEPTIONS` in `stories/assets/scss/__tests__/tokens-contract.test.js`, and describe the decision in [`docs/COLOUR-CONTRAST-METHODOLOGY.md`](COLOUR-CONTRAST-METHODOLOGY.md#recorded-exceptions-components-that-still-put-text-on-the-orange) if it affects a brand colour
+- [ ] No text sits on the orange accent surfaces (`orange-800`, `orange-900`, and `secondary`, `tag-accent`, `tag-accent--hover`, `hero--secondary`, which resolve to them). The orange is a non-text accent: borders, rules, icon fills and blocks with no copy over them. No text colour clears AA on it — see [the orange accent carries no text](COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text)
 - [ ] jest-axe test included in the test file
 - [ ] Heading hierarchy is logical (no skipped levels)
 - [ ] Images and icons have appropriate alt text (empty `alt=""` for decorative images)

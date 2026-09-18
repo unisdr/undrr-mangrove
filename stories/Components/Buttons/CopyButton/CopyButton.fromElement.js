@@ -4,7 +4,7 @@
  * Expected HTML:
  * <button data-mg-copy-button
  *   data-text-to-copy="https://example.org"
- *   data-aria-label="Copy link"
+ *   aria-label="Copy link"
  *   data-copied-label="Link copied to clipboard."
  *   data-tooltip-label="Copied!"
  *   data-variant="outline"
@@ -26,7 +26,12 @@ export default function copyButtonFromElement(container) {
     }
   }
 
+  // `aria-label` first: it is what the docs teach and what the vanilla path
+  // reads, so markup that names the button the standard way keeps its name
+  // when it is hydrated instead (WCAG 4.1.2). The `data-*` spellings stay
+  // supported for markup written against the older reference table.
   const ariaLabel =
+    container.getAttribute('aria-label') ||
     dataset.ariaLabel ||
     dataset.label ||
     dataset.copyLabel ||

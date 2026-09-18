@@ -250,6 +250,21 @@ function BrandIdentityPage({ themeName }) {
       </div>
 
       <h3>Accent colors</h3>
+      <p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>
+        In UNDRR and every sub-brand the accent is the Sendai orange, and{' '}
+        <strong>the orange accent carries no text</strong>. Use it for borders,
+        rules, icon fills and blocks with no copy over them: no text colour
+        meets WCAG AA on it at any size — white is 2.95 against a 4.5 minimum,
+        and black passes WCAG but misses Mangrove&rsquo;s perceptual body-text
+        floor. A few shipped components still pair text with it; they are listed
+        as recorded exceptions in{' '}
+        <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
+          the colour contrast methodology
+        </a>
+        , pending{' '}
+        <a href="https://github.com/unisdr/undrr-mangrove/issues/1196">#1196</a>
+        .
+      </p>
       <div style={grid4}>
         {colorProbes.accent.map((c, i) => (
           <ColorSwatch
