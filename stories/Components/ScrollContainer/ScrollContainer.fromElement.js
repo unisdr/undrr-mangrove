@@ -1,3 +1,34 @@
+const CONTENT_CLASS = 'mg-scroll__content';
+
+/**
+ * Find the content wrapper this container owns.
+ *
+ * A direct child wins. Otherwise the first descendant wrapper is used, as
+ * long as no nested scroll container sits between it and this container.
+ *
+ * @param {Element} container - The scroll container being hydrated
+ * @returns {Element|null} The container's own content wrapper, if it has one
+ */
+function findOwnContent(container) {
+  const directChild = Array.from(container.children).find(child =>
+    child.classList.contains(CONTENT_CLASS)
+  );
+  if (directChild) return directChild;
+
+  return (
+    Array.from(container.querySelectorAll(`.${CONTENT_CLASS}`)).find(
+      candidate => {
+        let node = candidate.parentElement;
+        while (node && node !== container) {
+          if (node.hasAttribute('data-mg-scroll-container')) return false;
+          node = node.parentElement;
+        }
+        return node === container;
+      }
+    ) || null
+  );
+}
+
 /**
  * Layer 2: Extract ScrollContainer props from a DOM container.
  *
@@ -30,11 +61,14 @@ export default function scrollContainerFromElement(container) {
     stepSize: dataset.stepSize ? parseInt(dataset.stepSize, 10) : null,
   };
 
-  // Extract children as HTML strings from server-rendered content
+  // Extract children as HTML strings from server-rendered content.
+  //
+  // The lookup reads this container only. A page can hold several scroll
+  // containers, and one can hold another: a `.mg-scroll__content` that
+  // belongs to a nested scroll container is not this container's content,
+  // so it is skipped rather than rendered here as well.
   const contentItems = [];
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(container.innerHTML, 'text/html');
-  const contentContainer = doc.querySelector('.mg-scroll__content');
+  const contentContainer = findOwnContent(container);
 
   if (contentContainer) {
     Array.from(contentContainer.children).forEach(child => {
