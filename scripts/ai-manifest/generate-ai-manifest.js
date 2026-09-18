@@ -2128,7 +2128,7 @@ If you are writing a list of your own with \`list-style: none\` and no Mangrove 
 4. Fetch its detailsUrl for rendered HTML, props, and code examples
 5. For CSS utilities, fetch ${DOCS_BASE}ai-components/utilities.json
 
-The component index is not the whole library. Two things live elsewhere, and searching only the index will tell you they do not exist:
+The component index is not the whole library. Three things live elsewhere, and searching only the index will tell you they do not exist:
 
 - **CSS utility classes are in \`utilities.json\`, not the index.** Some patterns ship as utility classes with no component entry at all — the accordion (\`.mg-accordion\`) is one, and the data-table modifiers (\`.mg-table--data\` and the \`.mg-table__th--sortable\` / \`--sticky\` / \`.mg-table__td--numeric\` family) are documented there rather than on the Table entry. Fetch \`utilities.json\` before concluding Mangrove has no accordion or no sortable table.
 - **There is no IconButton component, and there are two icon-only button classes.** \`.mg-button--icon\` is a shape modifier of \`.mg-button\`: use \`.mg-button.mg-button-{variant}.mg-button--icon\` whenever the button should carry a brand colour, because the foreground, typography and focus ring come from \`.mg-button\`. \`.mg-icon-button\` is a separate standalone ghost primitive for dismiss, close and copy controls on an existing surface; it carries no variant colours and takes no \`.mg-button-*\` class. Both are in \`utilities.json\` and on the Buttons entry.
