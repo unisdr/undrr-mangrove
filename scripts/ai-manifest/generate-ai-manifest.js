@@ -1777,7 +1777,11 @@ async function main() {
           'already gives it the value in `default`, and yours replaces it. ' +
           'type "hook" means no unconditional rule defines it: `default` is ' +
           'the fallback it resolves to until a wrapper, an inline style or a ' +
-          'prop sets it. `wrapInRgb: true` means the value is sRGB channels ' +
+          'prop sets it, and a hook with no `default` has no value at all ' +
+          'until you give it one. A value a modifier or a media query ' +
+          'declares is never published as `default`, because it is not what ' +
+          'the component resolves to at rest. `wrapInRgb: true` means the ' +
+          'value is sRGB channels ' +
           '("255 255 255"), not a colour — a hex or a keyword there makes ' +
           'the declaration invalid and it drops silently. These are NOT in ' +
           `${DOCS_BASE}tokens.json, which covers theme tokens only.`,
@@ -1932,7 +1936,12 @@ async function main() {
   // Write tokens.json
   // -------------------------------------------------------------------------
 
-  const tokensDict = buildTokensDictionary();
+  // The count of SCSS-declared global properties is derived from the bundles
+  // here and handed to the dictionary, so its `scope.excludes` and the same
+  // figure in llms.txt cannot drift apart.
+  const tokensDict = buildTokensDictionary({
+    globalPropertyCount: globalGroupsTotal,
+  });
   tokensDict.version = pkg.version;
   tokensDict.generatedAt = generatedAt;
   const tokensJson = JSON.stringify(tokensDict, null, 2);

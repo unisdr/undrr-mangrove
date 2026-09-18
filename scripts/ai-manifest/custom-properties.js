@@ -401,27 +401,93 @@ const tidy = value =>
     .replace(/\s+\)/g, ')')
     .trim();
 
+// A CSS string is opaque: everything between an unescaped quote and its match
+// is data, not syntax. Given the index of the opening quote, this returns the
+// index just past the closing one, so the walks below can copy a string
+// through without reading anything inside it as CSS.
+//
+// Three things go wrong without it. A `{` in a quoted `url()` desyncs the
+// brace stack, and every declaration after it is then attributed to whatever
+// frame was left open — in testing that turned a neighbouring property's
+// `default` into a `hook`. A `;` truncates the value it sits inside:
+// --mg-icon-svg's SVG carries one in a `style='fill-rule:evenodd;…'`
+// attribute today, and is inert only because the value exceeds the length cap
+// below — an icon shipping an SVG `<style>` block would not be. And a `/*`
+// inside one string paired with a `*/` inside a later one deletes the real
+// CSS between them.
+const endOfString = (css, start) => {
+  const quote = css[start];
+  for (let index = start + 1; index < css.length; index++) {
+    const char = css[index];
+    if (char === '\\') index++;
+    else if (char === quote) return index + 1;
+  }
+  return css.length;
+};
+
 // A comment is not CSS. Stripping them first keeps a docblock out of the
 // parse: every component stylesheet opens with one, and several quote a
 // property (`--mg-show-more-height: 200px`) or a var() call with a fallback.
 // Left in, a comment could invent a property or a default that no rule has.
-export const stripComments = css => css.replace(/\/\*[\s\S]*?\*\//g, '');
-
-// A selector for a modifier or a state re-points a property rather than
-// setting its default — `.mg-switch--small` and `.mg-notice--warning` both do.
-// The default belongs to the plain selector, so a modifier value is used only
-// when nothing plainer declares the property.
 //
-// `:root`, `:where()` and `:is()` are not modifiers, and a bare `:` test would
-// call all three one. `:root` is where a component's unconditional defaults
-// are declared — StatusLabel's and EmptyState's whole sets, plus
+// A comment marker inside a string is not a comment, so strings are copied
+// through whole. An unclosed comment runs to the end of the stylesheet, which
+// is what CSS itself does with one.
+export const stripComments = css => {
+  let out = '';
+  for (let index = 0; index < css.length; index++) {
+    const char = css[index];
+    if (char === '"' || char === "'") {
+      const end = endOfString(css, index);
+      out += css.slice(index, end);
+      index = end - 1;
+    } else if (char === '/' && css[index + 1] === '*') {
+      const close = css.indexOf('*/', index + 2);
+      if (close === -1) break;
+      index = close + 1;
+    } else {
+      out += char;
+    }
+  }
+  return out;
+};
+
+// A state class: `.is-open`, `.has-icon`. Matched at a class boundary, so
+// `.mg-tree-has-children` and `.mg-this-thing` do not read as one.
+const STATE_CLASS = /\.(?:is|has)-[a-z]/i;
+
+// A selector that only sometimes applies declares a value for that case, not
+// the value at rest. Five shapes of it:
+//
+//   a BEM modifier      .mg-switch--small, .mg-notice--warning
+//   a pseudo-class      :hover, :focus-visible, ::after
+//   an attribute        [dir=rtl], [data-theme=dark], [aria-expanded=true]
+//   a brand block       .mg-theme-delta …
+//   a state class       .mg-notice.is-open, .mg-tree__item.has-children
+//
+// The last three were missing, so a declaration made only under a scope, a
+// theme or a state read as unconditional and its value was published as the
+// universal default. Nothing live hit it — the 14 --mg-tab-* properties have
+// `.mg-theme-*` declarations and were right only because each also has a
+// generic declaration that wins here — but a property declared only inside a
+// brand block would have published that brand's value as everyone's.
+//
+// `:root`, `:where()` and `:is()` are not conditional, and a bare `:` test
+// would call all three so. `:root` is where a component's unconditional
+// defaults are declared — StatusLabel's and EmptyState's whole sets, plus
 // --mg-show-more-height and --mg-reading-with-contents-width — and `:where()`
 // and `:is()` only change specificity, so whatever is inside them decides.
-export const isModifierSelector = selector => {
+export const isConditionalSelector = selector => {
   const plain = selector
     .replace(/:(?:is|where|not|has)\(/gi, '(')
     .replace(/:root\b/gi, '');
-  return /--[a-z]/i.test(plain) || plain.includes(':');
+  return (
+    /--[a-z]/i.test(plain) ||
+    plain.includes(':') ||
+    plain.includes('[') ||
+    plain.includes('.mg-theme-') ||
+    STATE_CLASS.test(plain)
+  );
 };
 
 // An at-rule that only applies some of the time — `@media`, `@supports`,
@@ -471,7 +537,12 @@ function declarationsIn(css) {
 
   for (let index = 0; index < source.length; index++) {
     const char = source[index];
-    if (char === '{') {
+    if (char === '"' || char === "'") {
+      // Opaque: a brace, a semicolon or a comment marker in here is data.
+      const end = endOfString(source, index);
+      buffer += source.slice(index, end);
+      index = end - 1;
+    } else if (char === '{') {
       const prelude = buffer.trim();
       const parent = stack[stack.length - 1];
       stack.push({
@@ -479,7 +550,7 @@ function declarationsIn(css) {
           (parent ? parent.modifierOnly : false) ||
           (prelude.startsWith('@')
             ? isConditionalAtRule(prelude)
-            : isModifierSelector(prelude)),
+            : isConditionalSelector(prelude)),
       });
       buffer = '';
     } else if (char === '}') {
@@ -527,6 +598,14 @@ function readsIn(rawCss) {
       let depth = 0;
       for (index++; index < css.length; index++) {
         const char = css[index];
+        if (char === '"' || char === "'") {
+          // A parenthesis inside a quoted url() is not the one that closes
+          // the var(), so the string is copied through whole.
+          const end = endOfString(css, index);
+          fallback += css.slice(index, end);
+          index = end - 1;
+          continue;
+        }
         if (char === '(') depth++;
         else if (char === ')') {
           if (depth === 0) break;
@@ -676,12 +755,27 @@ export function collectCustomProperties(cssDir, themeTokenNames = []) {
       property.wrapInRgb = true;
     }
 
-    // The value that applies at rest: the plainest rule that declares one,
-    // and otherwise the var() fallback the component reads it with.
+    // The value that applies at rest, and only that: an unconditional rule's
+    // declaration, or else the var() fallback the component reads it with.
+    //
+    // A conditional declaration is not a third source. It used to be — the
+    // rule fell back to `declaration.value` — and for a hook nothing reads
+    // with a fallback that published a value the component does not have at
+    // rest, contradicting what the field promises. It affected three
+    // properties. --mg-mega-mobile-viewport was wrong twice: its 90vh comes
+    // from the --progressive modifier, and @supports (height: 100dvh)
+    // re-declares it to 90dvh, so the published value was the one no current
+    // browser uses. --mg-tree-group-indent and --mg-tree-guide-offset were
+    // honest numbers, but only under .mg-tree--guides: set either on a plain
+    // tree and nothing moves, so publishing them as that property's resting
+    // value says something false about the property. Their descriptions
+    // already name the modifier they belong to, which is where a reader who
+    // needs them should look — and the rule that governs `default` is now the
+    // same one the `_ai` text states, rather than one with an exception.
     const value =
       declaration && !declaration.modifierOnly
         ? declaration.value
-        : use?.fallback || declaration?.value;
+        : use?.fallback || undefined;
 
     // Anything longer than this is artwork rather than a value a reader
     // wants: --mg-icon-svg carries a whole SVG data URI. Its description
