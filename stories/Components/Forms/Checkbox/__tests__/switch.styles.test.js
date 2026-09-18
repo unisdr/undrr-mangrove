@@ -223,17 +223,63 @@ const SWITCH_ERROR_SELECTORS = [
   '.mg-switch--error .mg-switch__track',
 ];
 
+// Forced colours repeats the three markups with an extra .mg-switch, so that
+// each one reaches the checked Highlight fill's specificity rather than only
+// the first. See "the forced-colours error rule outranks the checked fill".
+const SWITCH_ERROR_SELECTORS_FORCED = [
+  '.mg-switch .mg-switch__input[aria-invalid=true] + .mg-switch__track',
+  '.mg-switch .mg-switch__input--error + .mg-switch__track',
+  '.mg-switch.mg-switch--error .mg-switch__track',
+];
+
+/**
+ * Specificity as [ids, classes, elements]; enough for the selectors here,
+ * which are classes, attributes, pseudo-classes and combinators only.
+ */
+const specificity = selector => {
+  const parts = selector.replace(/[>+~]/g, ' ').split(/\s+/).filter(Boolean);
+  let classes = 0;
+  let elements = 0;
+  parts.forEach(part => {
+    classes += (part.match(/\.[\w-]+/g) || []).length;
+    classes += (part.match(/\[[^\]]+\]/g) || []).length;
+    classes += (part.match(/:(?!:)[\w-]+/g) || []).length;
+    elements += (part.match(/::[\w-]+/g) || []).length;
+    if (/^[a-z]/i.test(part)) elements += 1;
+  });
+  return [0, classes, elements];
+};
+
+const atLeastAsSpecific = (a, b) => {
+  for (let i = 0; i < 3; i += 1) {
+    if (a[i] !== b[i]) return a[i] > b[i];
+  }
+  return true;
+};
+
 describe('switch error state follows the other form controls', () => {
   const errorRules = forced =>
-    rulesWhere(selector => SWITCH_ERROR_SELECTORS.includes(selector)).filter(
-      ({ rule }) => inMedia(rule, FORCED) === forced
-    );
+    rulesWhere(selector =>
+      (forced
+        ? SWITCH_ERROR_SELECTORS_FORCED
+        : SWITCH_ERROR_SELECTORS
+      ).includes(selector)
+    ).filter(({ rule }) => inMedia(rule, FORCED) === forced);
 
   test('all three error markups are styled, in one rule', () => {
     const [match, ...extra] = errorRules(false);
     expect(match).toBeDefined();
     expect(extra).toEqual([]);
     expect(match.selectors.sort()).toEqual([...SWITCH_ERROR_SELECTORS].sort());
+  });
+
+  test('forced colours styles the same three markups, in one rule', () => {
+    const [match, ...extra] = errorRules(true);
+    expect(match).toBeDefined();
+    expect(extra).toEqual([]);
+    expect(match.selectors.sort()).toEqual(
+      [...SWITCH_ERROR_SELECTORS_FORCED].sort()
+    );
   });
 
   // .mg-form-input--error, .mg-form-check__input--error and the rest say
@@ -275,6 +321,11 @@ describe('switch error state follows the other form controls', () => {
     expect(declared(match.rule, 'border-style')).toEqual(['dashed']);
   });
 
+  // Order alone is not enough: the Highlight fill is three classes, so a
+  // two-class error selector loses `border-color` to it and keeps only
+  // `border-style`, painting a dashed Highlight edge on a Highlight track --
+  // an invalid checked switch with no visible boundary. Every error selector
+  // has to be at least as specific as the fill AND come after it.
   test('the forced-colours error rule outranks the checked fill', () => {
     const index = rule =>
       root.index(rule.parent) * 1000 + rule.parent.index(rule);
@@ -284,6 +335,14 @@ describe('switch error state follows the other form controls', () => {
     ).filter(({ rule }) => inMedia(rule, FORCED));
     expect(checked).toBeDefined();
     expect(index(error.rule)).toBeGreaterThan(index(checked.rule));
+
+    const fill = specificity(checked.selectors[0]);
+    error.selectors.forEach(selector => {
+      expect([
+        selector,
+        atLeastAsSpecific(specificity(selector), fill),
+      ]).toEqual([selector, true]);
+    });
   });
 });
 
@@ -396,7 +455,7 @@ describe('switch geometry derives from its size hooks', () => {
 
   // The shared small variant is the proof that resizing needs one number:
   // if it had to re-declare a size or a transform, so would every consumer.
-  test('the small variant sets the size hook and nothing else', () => {
+  test('the small variant re-declares no length of its own', () => {
     const [{ rule }] = rulesWhere(selector => selector === '.mg-switch--small');
     const sizeHook = rule.nodes.find(node => node.prop === '--mg-switch-size');
     expect(sizeHook).toBeDefined();

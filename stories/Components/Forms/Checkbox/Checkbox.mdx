@@ -157,7 +157,7 @@ For any other size, set `--mg-switch-size` on the switch or on any ancestor:
 | `--mg-switch-track-inset`       | `1/12` of the track's block size   | The space around the thumb, drawn as a border the error state colours |
 | `--mg-switch-thumb-size`        | The block size less its two insets | The thumb                                                             |
 
-The thumb's travel is the track's inline size less the thumb and its two insets, in both directions, and the pending ring is a fraction of the thumb, so all of it follows whatever you set. `.mg-switch--small` sets `--mg-switch-size: 1.125rem` and nothing else.
+The thumb's travel is the track's inline size less the thumb and its two insets, in both directions, and the pending ring is a fraction of the thumb, so all of it follows whatever you set. `.mg-switch--small` sets `--mg-switch-size: 1.125rem` and tightens the row gap to match; it re-declares no length inside the switch.
 
 Two things do not scale, deliberately: the row keeps its `36px` minimum height, so a small switch still has a large enough target (WCAG 2.5.8), and the focus ring keeps its standard width.
 
@@ -484,8 +484,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
   - The track's inset around the thumb is now a transparent border rather than padding. The box, the thumb and the travel are unchanged; the error state has a `border-color` to set, so it cannot displace the focus ring's outline and separator band the way a consumer `box-shadow` did. In forced colours, where the track opts out of colour forcing, the error is `CanvasText` and a dashed edge instead of an author red.
   - Size hooks ([#1199](https://github.com/unisdr/undrr-mangrove/issues/1199)): `--mg-switch-size` sizes the whole switch, with `--mg-switch-track-inline-size`, `--mg-switch-track-block-size`, `--mg-switch-track-inset` and `--mg-switch-thumb-size` for a single part. The thumb's travel, its RTL counterpart and the pending ring all derive from them, so resizing a switch no longer means re-declaring the `transform` — an override that also beat Mangrove's `[dir="rtl"]` rule and sent the thumb the wrong way in Arabic.
   - Added `.mg-switch--small` (a 1.125rem switch) for a toolbar, table row or panel header, so a shared size exists instead of each consumer inventing one. The row keeps its 36px minimum height for the touch target.
-  - Forced colours no longer takes 1px off the track's padding to make room for its border; it colours the border the track already has, so the travel holds at any size.
-  - `[dir="rtl"]` now also matches a switch carrying `dir="rtl"` itself, as the translated example on this page does.
+  - Forced colours no longer takes 1px off the track's padding to make room for its border; it colours the border the track already has, so the travel holds at any size. The visible boundary is the track's inset rather than a fixed 1px, so at the default size it is 2px rather than 1px.
   - Added "Switch error" and "Switch sizes" stories. The error story shows a text input in error beside the switch.
 - **2.2** — 2026-09-17 ([#1184](https://github.com/unisdr/undrr-mangrove/pull/1184)): Added a pending state for `.mg-switch`, set with `aria-busy="true"` or `.mg-switch--pending`, with a static indicator for reduced motion. Styled `aria-disabled` switches, made the switch visible in forced colours, and added `--mg-switch-*` custom properties.
   - `aria-disabled` dims the track with a page-coloured layer instead of opacity, so the focus ring stays at full strength.

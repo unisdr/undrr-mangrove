@@ -488,9 +488,10 @@ $mg-switch-travel: "#{$mg-switch-track-inline} - #{$mg-switch-thumb-size} - 2 * 
   }
 
   // One shared small size for a toolbar, a table row or a panel header, so
-  // each consumer does not invent its own. It sets the size hook and nothing
-  // else. The row keeps its 36px min-height, so the target stays large enough
-  // even though the graphic is smaller.
+  // each consumer does not invent its own. It sets the size hook, and tightens
+  // the row's gap to match the smaller graphic; no length inside the switch is
+  // re-declared. The row keeps its 36px min-height, so the target stays large
+  // enough even though the graphic is smaller.
   &--small {
     --mg-switch-size: #{mg-rem(18)};
 
@@ -518,14 +519,11 @@ $mg-switch-travel: "#{$mg-switch-track-inline} - #{$mg-switch-thumb-size} - 2 * 
 
 // The same distance the other way. Both rules interpolate one expression, so
 // a consumer setting the size hooks gets a correct RTL travel for free and
-// never has a transform of their own to keep in step. `.mg-switch[dir="rtl"]`
-// covers a switch that carries the direction itself, as the translated
-// examples in Checkbox.mdx do.
-[dir="rtl"] .mg-switch__input:checked + .mg-switch__track .mg-switch__thumb,
-.mg-switch[dir="rtl"]
-  .mg-switch__input:checked
-  + .mg-switch__track
-  .mg-switch__thumb {
+// never has a transform of their own to keep in step. The descendant
+// combinator already covers a switch carrying `dir="rtl"` itself, because the
+// label is an ancestor of its own input -- no `.mg-switch[dir="rtl"]` variant
+// is needed, and adding one would only raise this rule above a consumer's.
+[dir="rtl"] .mg-switch__input:checked + .mg-switch__track .mg-switch__thumb {
   transform: translateX(calc(-1 * (#{$mg-switch-travel})));
 }
 
@@ -628,9 +626,14 @@ $mg-switch-travel: "#{$mg-switch-track-inline} - #{$mg-switch-thumb-size} - 2 * 
   // unisdr/undrr-mangrove#1187. The boundary goes back to a system colour and
   // the error is carried by a dashed edge instead, which survives a palette
   // with no red in it. The .mg-form-error message carries the rest.
-  .mg-switch__input[aria-invalid="true"] + .mg-switch__track,
-  .mg-switch__input--error + .mg-switch__track,
-  .mg-switch--error .mg-switch__track {
+  // Each selector carries an extra .mg-switch, as the disabled rules above do,
+  // so that all three reach the checked fill's specificity. Without it the two
+  // class markups lost `border-color` to the Highlight fill and kept only
+  // `border-style`, which painted a dashed Highlight edge on a Highlight
+  // track: an invalid checked switch with no visible boundary at all.
+  .mg-switch .mg-switch__input[aria-invalid="true"] + .mg-switch__track,
+  .mg-switch .mg-switch__input--error + .mg-switch__track,
+  .mg-switch.mg-switch--error .mg-switch__track {
     border-color: CanvasText;
     border-style: dashed;
   }
