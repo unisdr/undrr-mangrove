@@ -80,6 +80,7 @@ should respect parent width. Content can include `logo` and `buttons`.
 
 ## Changelog
 
+- **1.6.7** — 2026-09-17 ([#1192](https://github.com/unisdr/undrr-mangrove/pull/1192)): The full-bleed escape uses `margin-inline-start` / `padding-inline-start` instead of physical left properties, so the hero mirrors in RTL without an override. Split heroes no longer break out of the viewport in Arabic at mobile widths (the page scrolled ~16px wider than the screen). The RTL blocks now only flip the background gradient and the split column order.
 - **1.6.6** — 2026-09-17 ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173)): Filled buttons on the hero get a light tinted stroke (`--mg-border-color-button-primary`/`-secondary`) so they keep a visible edge when their fill matches the hero colour.
 - **1.6.5** — 2026-09-15: Removed `max-width: 12ch` constraint from immersive hero title.
 - **1.6.4** — 2026-09-10 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)):

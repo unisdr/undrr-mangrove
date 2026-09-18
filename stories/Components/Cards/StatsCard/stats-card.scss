@@ -173,7 +173,7 @@
 .mg-stats-card--highlighted {
   .mg-stats-card-item {
     background-color: rgb(var(--mg-color-blue-900) / 0.05);
-    border-left: 4px solid rgb(var(--mg-color-interactive));
+    border-inline-start: 4px solid rgb(var(--mg-color-interactive));
 
     &:hover {
       background-color: rgb(var(--mg-color-blue-900) / 0.08);
@@ -227,12 +227,4 @@
   }
 }
 
-/* RTL Support */
-[dir="rtl"] {
-  .mg-stats-card--highlighted {
-    .mg-stats-card-item {
-      border-left: none;
-      border-right: 4px solid rgb(var(--mg-color-interactive));
-    }
-  }
-}
+/* RTL support is automatic: the highlighted accent uses `border-inline-start`. */
