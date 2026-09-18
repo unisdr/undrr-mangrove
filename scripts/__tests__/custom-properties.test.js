@@ -202,6 +202,14 @@ describe('collectCustomProperties', () => {
     ['a brand block', '.mg-theme-delta .mg-notice'],
     ['a state class', '.mg-notice.is-open'],
     ['a has- state class', '.mg-notice.has-icon'],
+    // :has() is a condition in its own right, not a specificity wrapper like
+    // :is() and :where(). Unwrapped alongside them, a rule that applies only
+    // when the element contains something read as the value at rest.
+    // .mg-card__hc:has(.mg-card__visual) is that exact shape in the bundles.
+    ['a :has() condition', '.mg-notice:has(.mg-notice__icon)'],
+    // A numeric BEM modifier: .mg-embed-container--1x1 is one in the bundles,
+    // and a `--[a-z]` test read every one of them as a plain selector.
+    ['a numeric modifier', '.mg-notice--2up'],
   ])('does not take a default from %s', (_label, selector) => {
     // A "-- or :" test called none of these conditional, so a declaration
     // made only under one published that case's value as everyone's. The 14

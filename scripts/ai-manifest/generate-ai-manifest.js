@@ -1939,8 +1939,10 @@ async function main() {
   // The count of SCSS-declared global properties is derived from the bundles
   // here and handed to the dictionary, so its `scope.excludes` and the same
   // figure in llms.txt cannot drift apart.
+  // null, not 0, when the bundles were not there to count: `globals` is empty
+  // on the skipped path, and 0 is an assertion rather than a silence.
   const tokensDict = buildTokensDictionary({
-    globalPropertyCount: globalGroupsTotal,
+    globalPropertyCount: customProperties.skipped ? null : globalGroupsTotal,
   });
   tokensDict.version = pkg.version;
   tokensDict.generatedAt = generatedAt;

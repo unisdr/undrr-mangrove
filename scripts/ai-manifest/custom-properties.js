@@ -477,12 +477,21 @@ const STATE_CLASS = /\.(?:is|has)-[a-z]/i;
 // defaults are declared — StatusLabel's and EmptyState's whole sets, plus
 // --mg-show-more-height and --mg-reading-with-contents-width — and `:where()`
 // and `:is()` only change specificity, so whatever is inside them decides.
+// `:not()` is unwrapped for the same reason: what it holds decides, and a
+// negated modifier is still a rule about that modifier.
+//
+// `:has()` is NOT unwrapped. It is a condition in its own right — a rule that
+// applies only when the element contains something — so `.mg-card__hc:has(
+// .mg-card__visual)`, which the bundles carry today, is as conditional as
+// `:hover` however plain the selector inside it reads.
 export const isConditionalSelector = selector => {
   const plain = selector
-    .replace(/:(?:is|where|not|has)\(/gi, '(')
+    .replace(/:(?:is|where|not)\(/gi, '(')
     .replace(/:root\b/gi, '');
   return (
-    /--[a-z]/i.test(plain) ||
+    // A BEM modifier. The digit matters: .mg-embed-container--1x1 is a
+    // modifier too, and `--[a-z]` alone read it as a plain selector.
+    /--[a-z0-9]/i.test(plain) ||
     plain.includes(':') ||
     plain.includes('[') ||
     plain.includes('.mg-theme-') ||
