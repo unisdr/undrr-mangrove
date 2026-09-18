@@ -68,6 +68,16 @@ beforeEach(() => {
   write(root, 'stories/assets/scss/style.scss');
   write(root, 'stories/Components/Tabs/tabs.scss');
   write(root, 'stories/Components/Tabs/Tabs.jsx');
+  // Development-only files in every tree the assembly walks (issue #1218).
+  write(root, 'dist/assets/js/__tests__/tabs.test.js');
+  write(root, 'dist/assets/js/copy-button.spec.js');
+  write(root, 'dist/assets/css/__snapshots__/style.css.snap');
+  write(root, 'dist/components/__mocks__/MegaMenu.js');
+  write(root, 'dist/components/nested/Thing.test.js');
+  write(root, 'dist/fonts/__fixtures__/sample.woff2');
+  write(root, 'stories/Components/Tabs/__tests__/tabs.test.js');
+  write(root, 'stories/Components/Tabs/__tests__/fixture.scss');
+  write(root, 'stories/Components/Tabs/tabs.test.scss');
 });
 
 afterEach(() => {
@@ -105,6 +115,54 @@ test('copies dist subpaths and SCSS sources into the CI layout', () => {
   );
 });
 
+// Regression guard for issue unisdr/undrr-mangrove#1218: Jest specs shipped
+// in the published tarball (and in every versioned CDN folder) for several
+// releases because each copy walks whole directories.
+test('leaves development-only files out of every published directory', () => {
+  expect(run(out, '--root', root).status).toBe(0);
+
+  const published = listFiles(out);
+  expect(published).not.toHaveLength(0);
+  expect(
+    published.filter(file =>
+      /(^|\/)__(tests|snapshots|mocks|fixtures)__\//.test(file)
+    )
+  ).toEqual([]);
+  expect(published.filter(file => /\.(test|spec)\.[^.]+$/.test(file))).toEqual(
+    []
+  );
+});
+
+test('the published surface never matches a development-only file', () => {
+  expect(run(out, '--root', root).status).toBe(0);
+  const { files } = JSON.parse(
+    fs.readFileSync(path.join(out, 'package.json'), 'utf8')
+  );
+  expect(files).toEqual(
+    expect.arrayContaining([
+      '!**/__tests__/**',
+      '!**/__snapshots__/**',
+      '!**/__mocks__/**',
+      '!**/__fixtures__/**',
+      '!**/*.test.*',
+      '!**/*.spec.*',
+    ])
+  );
+  // dist/ is copied but never published: nothing in `files` matches it.
+  expect(files.some(pattern => pattern.startsWith('dist'))).toBe(false);
+});
+
+test('webpack copies the same source trees without the test files', () => {
+  const config = fs.readFileSync(
+    path.resolve(__dirname, '../../webpack.config.js'),
+    'utf8'
+  );
+  expect(config).toMatch(
+    /import \{ DEV_ONLY_GLOBS \} from '\.\/scripts\/assemble-npm-package\.mjs'/
+  );
+  expect(config).toMatch(/globOptions: \{ ignore: DEV_ONLY_GLOBS \}/);
+});
+
 test('generates the slimmed package.json', () => {
   expect(run(out, '--root', root).status).toBe(0);
   const pkg = JSON.parse(fs.readFileSync(path.join(out, 'package.json')));
@@ -120,6 +178,12 @@ test('generates the slimmed package.json', () => {
       'scss/**/*.scss',
       'error-pages/**/*',
       'fonts/**/*',
+      '!**/__tests__/**',
+      '!**/__snapshots__/**',
+      '!**/__mocks__/**',
+      '!**/__fixtures__/**',
+      '!**/*.test.*',
+      '!**/*.spec.*',
     ],
     repository: { type: 'git', url: 'https://example.org/repo.git' },
     keywords: ['a'],

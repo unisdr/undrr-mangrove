@@ -6,9 +6,9 @@
  * contains: `.github/workflows/npm-publish.yml` runs it before publishing,
  * and the break-glass local release in docs/RELEASES.md runs it too.
  *
- * The repo root is NOT the published package (its package.json has no
- * `files` field), so `npm pack` at the root is misleading. See
- * https://github.com/unisdr/undrr-mangrove/issues/871
+ * The repo root is NOT the published package (its own `files` field covers
+ * the sources, not the build output), so `npm pack` at the root is
+ * misleading. See https://github.com/unisdr/undrr-mangrove/issues/871
  *
  * Usage:
  *   node scripts/assemble-npm-package.mjs [outDir] [--root <repoRoot>]
@@ -24,6 +24,10 @@
  *   `files` array excludes it, so it never reaches the tarball and
  *   `main: "dist/index.js"` points at nothing. Consumers import from the
  *   top-level subpath directories. Changing either changes what is published.
+ * - Development-only files (`__tests__/` and friends, `*.test.*`,
+ *   `*.spec.*`) are left behind everywhere, because every copy below walks
+ *   whole directories. See DEV_ONLY_GLOBS, which webpack.config.js applies to
+ *   the same sources so the CDN `dist/` tree stays clean too.
  * - Top-level dotfiles of each copied directory are skipped, matching the
  *   shell glob (`cp -r dir/*`) the workflow used before this script. As with
  *   that glob, a source directory that exists but has nothing to copy fails.
@@ -41,7 +45,45 @@ export const PACKAGE_FILES = [
   'scss/**/*.scss',
   'error-pages/**/*',
   'fonts/**/*',
+  // Second line of defence: even if a development-only file reaches the
+  // assembled directory, npm leaves it out of the tarball.
+  '!**/__tests__/**',
+  '!**/__snapshots__/**',
+  '!**/__mocks__/**',
+  '!**/__fixtures__/**',
+  '!**/*.test.*',
+  '!**/*.spec.*',
 ];
+
+// Development-only files that must never reach a consumer. Jest specs live
+// beside the sources they test (`stories/assets/js/__tests__/`), and both the
+// copies below and webpack's `stories/assets` -> `dist/assets` copy walk whole
+// directories, so without this they travel into the npm tarball and into every
+// versioned CDN folder. See issue unisdr/undrr-mangrove#1218.
+const DEV_ONLY_DIRS = new Set([
+  '__tests__',
+  '__snapshots__',
+  '__mocks__',
+  '__fixtures__',
+]);
+// Any `name.test.ext` / `name.spec.ext`, whatever the extension, so this
+// stays in step with the globs and the package.json negations below.
+const DEV_ONLY_FILE = /\.(test|spec)\.[^.]+$/;
+
+// Glob equivalents of `isDevOnly`, for consumers that filter by pattern
+// rather than by path (webpack's CopyPlugin `globOptions.ignore`).
+export const DEV_ONLY_GLOBS = [
+  '**/__tests__/**',
+  '**/__snapshots__/**',
+  '**/__mocks__/**',
+  '**/__fixtures__/**',
+  '**/*.test.*',
+  '**/*.spec.*',
+];
+
+/** True when `name` (a single path segment) is a development-only file or directory. */
+export const isDevOnly = name =>
+  DEV_ONLY_DIRS.has(name) || DEV_ONLY_FILE.test(name);
 
 // [source relative to repo root, destination relative to outDir]
 const DIST_COPIES = [
@@ -149,9 +191,11 @@ function copyContents(src, dest) {
   }
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of entries) {
+    if (isDevOnly(entry)) continue;
     fs.cpSync(path.join(src, entry), path.join(dest, entry), {
       recursive: true,
       verbatimSymlinks: true,
+      filter: from => !isDevOnly(path.basename(from)),
     });
   }
 }
@@ -159,6 +203,7 @@ function copyContents(src, dest) {
 function findScss(dir, found = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
+    if (isDevOnly(entry.name)) continue;
     if (entry.isDirectory()) findScss(full, found);
     else if (entry.isFile() && entry.name.endsWith('.scss')) found.push(full);
   }
