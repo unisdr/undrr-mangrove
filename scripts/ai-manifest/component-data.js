@@ -9,6 +9,11 @@
 //   cssClasses       (string[], optional) — BEM class names for the component.
 //   examples         (array, optional)    — [{ name: string, html: string }] curated HTML.
 //                     Only needed for components that can't auto-render in Node.js.
+//   supplementalExamples (array, optional) — same shape, appended to the published
+//                     renderedHtml instead of standing in for it. For markup the
+//                     component's default render never produces (the icon-only
+//                     buttons beside a labelled CTA), including on components that
+//                     auto-render, where `examples` would be discarded.
 //   doNotModify      (string, optional)   — Warning text for branding-critical components.
 //   vanillaHtmlEmbed (object, optional)   — Embed instructions for syndication widgets.
 //   hydration        (object, optional)   — Vanilla hydration contract for components
@@ -252,7 +257,47 @@ export const COMPONENT_DATA = {
   // --- Buttons (auto-rendered) ---
   'components-buttons-buttons': {
     description:
-      'Primary and secondary CTA buttons with disabled variant. Themed via design tokens. WCAG AA contrast on both light and dark backgrounds.',
+      'Primary and secondary CTA buttons with disabled variant. Themed via design tokens. WCAG AA contrast on both light and dark backgrounds. Icon-only buttons come in two shapes that are not interchangeable: .mg-button.mg-button-{variant}.mg-button--icon is the variant-coloured one (.mg-button--icon is a shape modifier; the foreground, typography and focus ring still come from .mg-button), and .mg-icon-button is a standalone borderless ghost primitive for dismiss, close and copy controls on an existing surface. .mg-icon-button carries no variant colours and takes no .mg-button-* class: .mg-button-primary and .mg-button-secondary only set a background, so the pairing is redundant markup, and .mg-button-outline draws no border on it.',
+    cssClasses: [
+      'mg-button',
+      'mg-buttons',
+      'mg-button-primary',
+      'mg-button-secondary',
+      'mg-button-outline',
+      'mg-button-cta',
+      'mg-button__icon',
+      'mg-button__label',
+      'mg-button--icon',
+      'mg-button--icon--round',
+      'mg-button--icon--small',
+      'mg-button--responsive-icon',
+      'mg-icon-button',
+      'mg-icon-button--round',
+      'mg-icon-button--small',
+    ],
+    supplementalExamples: [
+      {
+        name: 'Icon-only button with a variant colour',
+        html: `<button type="button" class="mg-button mg-button-primary mg-button--icon" aria-label="Search publications">
+  <span class="mg-icon mg-icon-search" aria-hidden="true"></span>
+</button>`,
+      },
+      {
+        name: 'Round and dense icon-only buttons',
+        html: `<button type="button" class="mg-button mg-button-primary mg-button--icon mg-button--icon--round" aria-label="Add a record">
+  <span class="mg-icon mg-icon-circle-plus" aria-hidden="true"></span>
+</button>
+<button type="button" class="mg-button mg-button-secondary mg-button--icon mg-button--icon--small" aria-label="Filter results">
+  <span class="mg-icon mg-icon-filter" aria-hidden="true"></span>
+</button>`,
+      },
+      {
+        name: 'Standalone ghost icon button (no variant class)',
+        html: `<button type="button" class="mg-icon-button mg-icon-button--small" aria-label="Dismiss">
+  <span class="mg-icon mg-icon-close" aria-hidden="true"></span>
+</button>`,
+      },
+    ],
   },
   'components-buttons-chips': {
     description:

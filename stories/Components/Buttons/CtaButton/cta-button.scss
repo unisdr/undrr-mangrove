@@ -184,6 +184,21 @@
   @include mg-focus-ring;
 }
 
+// Contrast guard, not an endorsement. The variant-capable icon button is
+// .mg-button.mg-button-{variant}.mg-button--icon; .mg-icon-button is the
+// standalone ghost primitive and carries no variant colours. Pairing it with a
+// filled variant is a common mistake because the variant paints a dark fill but
+// the readable foreground lives on .mg-button, which this primitive never has,
+// so the glyph stayed at the inherited body colour on the fill. The rest state
+// now matches the hover, which both variants already set to the same token, so
+// the mistake fails as a redundant class rather than as a 1.4.3 failure. Outline
+// variants are excluded: they set their own foreground on a transparent surface.
+.mg-icon-button:is(.mg-button-primary, .mg-button-secondary):not(
+    .mg-button-outline
+  ) {
+  color: rgb(var(--mg-color-button));
+}
+
 // Removed: a bare `button:focus-visible { box-shadow: 0 0 4px
 // var(--mg-color-button-background); outline: 0; }` rule used to live here.
 

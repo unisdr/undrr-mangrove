@@ -969,25 +969,35 @@ if (uncoveredIds.length > 0) {
 // ---------------------------------------------------------------------------
 const malformedExamples = [];
 for (const [componentId, data] of Object.entries(curatedData)) {
-  if (!data?.examples) continue;
-  if (!Array.isArray(data.examples)) {
-    malformedExamples.push(`${componentId}: examples is not an array`);
-    continue;
-  }
-  data.examples.forEach((example, index) => {
-    if (typeof example !== 'object' || example === null) {
-      malformedExamples.push(
-        `${componentId}: examples[${index}] is a ${typeof example}, expected ` +
-          '{ name, html }'
-      );
-    } else if (typeof example.html !== 'string' || example.html.length === 0) {
-      malformedExamples.push(
-        `${componentId}: examples[${index}] has no html string`
-      );
-    } else if (typeof example.name !== 'string' || example.name.length === 0) {
-      malformedExamples.push(`${componentId}: examples[${index}] has no name`);
+  for (const field of ['examples', 'supplementalExamples']) {
+    if (!data?.[field]) continue;
+    if (!Array.isArray(data[field])) {
+      malformedExamples.push(`${componentId}: ${field} is not an array`);
+      continue;
     }
-  });
+    data[field].forEach((example, index) => {
+      if (typeof example !== 'object' || example === null) {
+        malformedExamples.push(
+          `${componentId}: ${field}[${index}] is a ${typeof example}, expected ` +
+            '{ name, html }'
+        );
+      } else if (
+        typeof example.html !== 'string' ||
+        example.html.length === 0
+      ) {
+        malformedExamples.push(
+          `${componentId}: ${field}[${index}] has no html string`
+        );
+      } else if (
+        typeof example.name !== 'string' ||
+        example.name.length === 0
+      ) {
+        malformedExamples.push(
+          `${componentId}: ${field}[${index}] has no name`
+        );
+      }
+    });
+  }
 }
 
 if (malformedExamples.length > 0) {
@@ -1233,8 +1243,14 @@ const a11yRules = [
 const a11yViolations = [];
 
 for (const [componentId, data] of Object.entries(curatedData)) {
-  if (!data?.examples) continue;
-  for (const example of data.examples) {
+  const curatedExamples = [
+    ...(Array.isArray(data?.examples) ? data.examples : []),
+    ...(Array.isArray(data?.supplementalExamples)
+      ? data.supplementalExamples
+      : []),
+  ];
+  if (curatedExamples.length === 0) continue;
+  for (const example of curatedExamples) {
     if (!example.html) continue;
     for (const rule of a11yRules) {
       if (rule.test(example.html)) {
@@ -1581,12 +1597,22 @@ async function main() {
       });
     }
 
-    // Rendered HTML: prefer auto-rendered from dist/, fall back to curated
+    // Rendered HTML: prefer auto-rendered from dist/, fall back to curated.
+    // `supplementalExamples` are appended to either source: they show markup the
+    // component's default render never produces, such as the icon-only buttons
+    // beside a labelled CTA, so they add to the published HTML rather than
+    // standing in for it and are not compared against the render for drift.
     if (renderedHtml.has(id)) {
       detail.renderedHtml = renderedHtml.get(id);
       detail.renderedHtmlSource = 'auto';
     } else if (data?.examples) {
       detail.renderedHtml = data.examples;
+    }
+    if (data?.supplementalExamples?.length) {
+      detail.renderedHtml = [
+        ...(detail.renderedHtml || []),
+        ...data.supplementalExamples,
+      ];
     }
 
     // CSS classes used by this component
@@ -1841,7 +1867,7 @@ Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (\`${cd
 
 ### CSS utilities
 
-The utilities.json file lists ~${utilityClassCount} utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, and show-more patterns. All use the mg- prefix.
+The utilities.json file lists ~${utilityClassCount} utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, interactive controls (switches and icon-only buttons), and show-more patterns. All use the mg- prefix.
 
 ### Releases and changelog
 
@@ -1930,6 +1956,7 @@ If you are writing a list of your own with \`list-style: none\` and no Mangrove 
 The component index is not the whole library. Two things live elsewhere, and searching only the index will tell you they do not exist:
 
 - **CSS utility classes are in \`utilities.json\`, not the index.** Some patterns ship as utility classes with no component entry at all — the accordion (\`.mg-accordion\`) is one, and the data-table modifiers (\`.mg-table--data\` and the \`.mg-table__th--sortable\` / \`--sticky\` / \`.mg-table__td--numeric\` family) are documented there rather than on the Table entry. Fetch \`utilities.json\` before concluding Mangrove has no accordion or no sortable table.
+- **There is no IconButton component, and there are two icon-only button classes.** \`.mg-button--icon\` is a shape modifier of \`.mg-button\`: use \`.mg-button.mg-button-{variant}.mg-button--icon\` whenever the button should carry a brand colour, because the foreground, typography and focus ring come from \`.mg-button\`. \`.mg-icon-button\` is a separate standalone ghost primitive for dismiss, close and copy controls on an existing surface; it carries no variant colours and takes no \`.mg-button-*\` class. Both are in \`utilities.json\` and on the Buttons entry.
 - **Component custom properties are not in \`tokens.json\`.** It is a theme token dictionary; see the "Design tokens" section above.
 
 ### Brand guide
