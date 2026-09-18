@@ -629,10 +629,10 @@ This works in Drupal, Storybook, and standalone usage without Chosen.js.
 
 ### Mobile filter drawer
 
-On screens ≤800px, the sidebar is replaced with a left-slide drawer:
+On screens ≤800px, the sidebar is replaced with a drawer that slides in from the inline start — the left edge in English, the right edge in Arabic:
 
-- Amazon-style slide-in from the left edge
-- Click backdrop to close (right side)
+- Amazon-style slide-in from the inline-start edge, with the shadow cast over the page content
+- Click backdrop to close (the inline-end side)
 - Sticky header and footer with "View results" button
 - Focus trapping for accessibility
 
@@ -640,6 +640,8 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.8**, 2026-09-18 ([mangrove#1204](https://github.com/unisdr/undrr-mangrove/issues/1204)): The mobile filter drawer is anchored to the inline start rather than the physical left, so in Arabic it rests on the right edge, slides in from the right and casts its shadow to the left, over the page content. `left: 0` became `inset-inline-start: 0`, but the slide is a `translateX` keyframe, which works on a physical axis and would have fought that change: the panel would have rested on the right in Arabic while still entering from the left. Both the travel and the shadow offset are now custom properties that `:dir(rtl)` flips, the shape `.mg-drawer--start` already used in [Drawer](https://mangrove.undrr.org/?path=/docs/components-navigation-drawer--docs). LTR rendering is pixel-identical — same resting edge, same 320px width, same `4px 0 20px` shadow, same 0.3s ease-out entry.
+  - The slide now honours `prefers-reduced-motion: reduce`, which it did not before; the drawer appears in place instead of travelling. Closing is unaffected in both directions: `MobileFilterDrawer` unmounts on close, so there has never been a close animation to mirror.
 - **1.4.7**, 2026-09-18 ([mangrove#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [mangrove#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-search__active-filters-list` hides its markers with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin), so it keeps its list role in Safari from CSS rather than relying on the `role="list"` attribute the component renders. The attribute stays; the list no longer depends on it. The results grid and list keep their explicit `role="list"` because they are `<div>`s, not lists, and the select dropdown keeps `role="listbox"`.
 - **1.4.6**, 2026-09-18 ([mangrove#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Breaking — deleted the deprecated `SyndicationSearchWidget.scss` alias, which only forwarded to `syndication-search-widget.scss` and emitted a deprecation `@warn`. The npm package no longer ships `scss/Components/SyndicationSearchWidget/SyndicationSearchWidget.scss`; import `scss/Components/SyndicationSearchWidget/syndication-search-widget` instead. That partial `@extend`s `%mg-form-input-base`, so `scss/Components/Forms/form-base` must be imported before it — unchanged from 1.x, and equally true of the alias. No CSS behaviour change.
 - **1.4.5**, 2026-09-17 ([mangrove#1192](https://github.com/unisdr/undrr-mangrove/pull/1192)): The search field's clear button is a 36x36 target, clear of the 24x24 minimum in WCAG 2.5.8, and is positioned with `inset-inline-end`, so it sits at the end of the field in RTL instead of over the start of the Arabic text. The field's reserved space grew to match.
