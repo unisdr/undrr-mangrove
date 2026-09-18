@@ -715,8 +715,19 @@ function build({ tokensDir = TOKENS_DIR } = {}) {
  * Builds a structured, machine-readable design tokens dictionary.
  * Maps every public CSS custom property to its type, format, rgb-wrapping rule,
  * description, and per-brand resolved values.
+ *
+ * @param {object} [options]
+ * @param {number|null} [options.globalPropertyCount] How many --mg-*
+ *   properties are global like a theme token but declared straight in SCSS,
+ *   so they are in neither this dictionary nor a component's
+ *   customProperties. The bundles are the only place that knows, and this
+ *   file does not read them, so the manifest generator passes the figure
+ *   collectCustomProperties() counted — the same figure llms.txt prints.
+ *   Hand-typing it here put the two one data-viz colour apart from each
+ *   other with nothing to notice. Omitted, `scope.excludes` names the groups
+ *   without a count rather than asserting a stale one.
  */
-function buildTokensDictionary() {
+function buildTokensDictionary({ globalPropertyCount = null } = {}) {
   const { base, brands } = loadSources(TOKENS_DIR);
   const defaultBrand = brands.find(brand => brand.meta.default);
   const byId = new Map(brands.map(brand => [brand.meta.id, brand]));
@@ -803,7 +814,11 @@ function buildTokensDictionary() {
       includes:
         'Every --mg-* custom property emitted by the theme stylesheets from the tokens/*.yaml sources. Each one is defined on :root (or a .mg-theme-* block) in the bundles listed under `brands`, so it resolves on any element on the page.',
       excludes:
-        'Mostly component-scoped custom properties. These are public API, several of them announced in the release notes, but none of them appear in `tokens` — they are documented per component instead; see `componentProperties`. Two kinds: properties a component stylesheet defines itself, with its own default, such as --mg-empty-state-*, --mg-notice-* (except --mg-notice-action-secondary, which is a theme token), --mg-tree-* and --mg-drawer-size; and input hooks a component reads but no stylesheet defines, so a wrapper, an inline style or a consuming page supplies the value — such as the --mg-switch-track-* set, --mg-card-border, --mg-icon-fg, --mg-icon-bg, --mg-cta-bg, --mg-legend-tick-pos and --mg-on-this-page-nav-offset. Also absent: 143 properties that are global like a theme token but declared straight in SCSS rather than by a tokens/*.yaml source, so they are in neither place — the data visualisation palettes (--mg-dataviz-*) and the Sendai Framework ramps (--mg-sendai-*) from stories/assets/scss/_tokens-data-viz.scss, and the five typography roles (--mg-font-family-*) and ten legacy one-off brand colours (--mg-color-azure, -ebony-clay, -green, -yellow and their light and dark variants) from _variables.scss. llms.txt names all four groups and says where each is defined.',
+        'Mostly component-scoped custom properties. These are public API, several of them announced in the release notes, but none of them appear in `tokens` — they are documented per component instead; see `componentProperties`. Two kinds: properties a component stylesheet defines itself, with its own default, such as --mg-empty-state-*, --mg-notice-* (except --mg-notice-action-secondary, which is a theme token), --mg-tree-* and --mg-drawer-size; and input hooks a component reads but no stylesheet defines, so a wrapper, an inline style or a consuming page supplies the value — such as the --mg-switch-track-* set, --mg-card-border, --mg-icon-fg, --mg-icon-bg, --mg-cta-bg, --mg-legend-tick-pos and --mg-on-this-page-nav-offset. Also absent: ' +
+        (globalPropertyCount === null
+          ? 'the properties'
+          : `${globalPropertyCount} properties`) +
+        ' that are global like a theme token but declared straight in SCSS rather than by a tokens/*.yaml source, so they are in neither place — the data visualisation palettes (--mg-dataviz-*) and the Sendai Framework ramps (--mg-sendai-*) from stories/assets/scss/_tokens-data-viz.scss, and the five typography roles (--mg-font-family-*) and ten legacy one-off brand colours (--mg-color-azure, -ebony-clay, -green, -yellow and their light and dark variants) from _variables.scss. llms.txt names all four groups and says where each is defined.',
       componentProperties: {
         where:
           'A component\'s own custom properties are in its ai-components/{id}.json entry, under `customProperties`: one record per property, each carrying its `type` ("default" if a plain, unconditional rule already gives it a value, "hook" if nothing unconditional does — no rule at all, or only a modifier or a media query — so it holds its fallback until you set it), its resting value in `default`, a `description` of what it does, and `format: "srgb-channels"` with `wrapInRgb: true` where the value is channels rather than a colour, exactly as a token here carries them. The component index says which components have them and how many. They are also documented on each component\'s Storybook page.',

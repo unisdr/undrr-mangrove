@@ -52,6 +52,13 @@ jobs:
         run: yarn install --immutable
       - name: Lint with ESLint and stylelint
         run: yarn run lint:check
+      - name: Verify lint leaves the tree unchanged
+        # The fixing lint command must not produce a tree that prettier:check
+        # then rejects. It did, silently, until unisdr/undrr-mangrove#1226.
+        run: |
+          yarn run lint
+          yarn run prettier:check
+          git diff --exit-code
       - name: Build Storybook
         run: |
           yarn run build

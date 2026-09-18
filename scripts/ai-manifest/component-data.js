@@ -4,8 +4,17 @@
 // 'Components/Cards/Vertical card' → 'components-cards-vertical-card').
 //
 // Entry schema:
-//   description      (string, required)  — What the component does. Fallback when
-//                     Storybook/react-docgen has no description.
+//   description      (string, required)  — What the component does, and any usage
+//                     contract an agent needs. This wins over the component's own
+//                     source docblock: it is the text published as `description`
+//                     in ai-components/index.json and in the detail files, which
+//                     is the file an agent greps (undrr-mangrove#1231). Write it
+//                     for that reader, and keep it current with the source.
+//   summary          (string, optional)  — One sentence for the index listing,
+//                     used as `summary` beside the full `description`. Required
+//                     once `description` runs past 200 characters, and capped at
+//                     200 itself; `yarn validate-manifest` fails otherwise. A
+//                     short description needs no summary — it is used for both.
 //   cssClasses       (string[], optional) — BEM class names for the component.
 //                     Its counterpart, the component's CSS custom properties,
 //                     is NOT edited here: see custom-properties.js, which
@@ -199,6 +208,8 @@ export const COMPONENT_DATA = {
   },
 
   'design-decisions-grid-layout': {
+    summary:
+      'Responsive CSS grid system: 1-12 equal-fraction column layouts with spanning, an auto-fit fallback for card grids, and the asymmetric mg-grid--article split.',
     description:
       'Responsive CSS grid system. 1-12 equal-fraction column layouts with column and row spanning, plus a single-row auto-fit fallback, for card-style grids. mg-grid--article is a different shape: an asymmetric flexible-column-plus-fixed-rail split (used by the mg-reading--with-contents reading grid), not an equal-fraction layout. Flexbox fallback for older browsers.',
     cssClasses: [
@@ -263,6 +274,8 @@ export const COMPONENT_DATA = {
 
   // --- Buttons (auto-rendered) ---
   'components-buttons-buttons': {
+    summary:
+      'Primary and secondary CTA buttons with a disabled variant, plus two icon button shapes that are not interchangeable: the variant-coloured .mg-button--icon and the standalone .mg-icon-button.',
     description:
       'Primary and secondary CTA buttons with disabled variant. Themed via design tokens. WCAG AA contrast on both light and dark backgrounds. Icon-only buttons come in two shapes that are not interchangeable: .mg-button.mg-button-{variant}.mg-button--icon is the variant-coloured one (.mg-button--icon is a shape modifier; the foreground, typography and focus ring still come from .mg-button), and .mg-icon-button is a standalone borderless ghost primitive for dismiss, close and copy controls on an existing surface. .mg-icon-button carries no variant colours and takes no .mg-button-* class: .mg-button-primary and .mg-button-secondary only set a background, so the pairing is redundant markup, and .mg-button-outline draws no border on it.',
     cssClasses: [
@@ -407,6 +420,8 @@ export const COMPONENT_DATA = {
   },
 
   'components-buttons-sharebuttons': {
+    summary:
+      'Row of share controls for the current page: social networks, email, a QR code modal and a copy-link button with confirmation.',
     description:
       'Row of share controls for the current page: social networks, email, a QR code modal and a copy-link button with confirmation. Labels and the email subject and body come from props or data attributes, so every string can be translated.',
     cssClasses: [
@@ -588,6 +603,8 @@ export const COMPONENT_DATA = {
   },
 
   'components-cards-icon-card': {
+    summary:
+      'Card with icon or image, title, summary and optional CTA. Vertical or horizontal orientation, in default, centered or negative (dark) variants.',
     description:
       'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
     hydration: {
@@ -657,7 +674,7 @@ export const COMPONENT_DATA = {
 
   'components-cards-stats-card': {
     description:
-      'Grid of numeric statistics with optional icons, labels, and descriptions. Variants: default, compact, highlighted, negative.',
+      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact, highlighted, negative.',
     hydration: {
       note: 'The figures come from one JSON attribute, so renderedHtml is a preview of the markup, not a template to fill in. Render an empty data-mg-stats-card container carrying data-stats and hydrate it. Malformed JSON is swallowed and renders an empty card, so validate the attribute server-side.',
       selector: '[data-mg-stats-card]',
@@ -690,6 +707,8 @@ export const COMPONENT_DATA = {
   // --- Status and empty states ---
   'components-status-label': {
     name: 'Status label',
+    summary:
+      'Status of a record or event, as a coloured shape plus the status name in text. Workflow variants (draft to published) and service health variants (warning, negative).',
     description:
       'Status of a record or event, as a coloured indicator plus the status name in text. Workflow variants: draft (rounded square), waiting-information (capsule), waiting-validation (rounded diamond), published (circle). Service health variants: warning/degraded (triangle) and negative/offline (octagon), also used by ServiceNotice. Without a modifier the indicator is a neutral circle. Each status has its own shape as well as its own colour, from CSS alone, so the markup is the same for every variant, and every mark carries the same uniform ring. The indicator is decorative: the status name is always present as text, so meaning never depends on colour. Wrap several in mg-status-label-group, which keeps list semantics without showing a bullet, so no role="list" is needed on the ul. Theme it with the custom properties in this entry, set on the label or any ancestor, not by overriding rules. The shapes are built on those properties: the square, the capsule and the diamond are border-radius and transform overrides that keep a real CSS border, and the triangle and the octagon are clip-path shapes whose ring is the element background and whose fill is a ::before clipped to a matching inner polygon. Do not set background-color, border, border-radius, width, height or transform on mg-status-label__indicator directly — a border is cut through by the clip path, a fill on the element hides the ring, and a transform replaces the diamond.',
     cssClasses: [
@@ -724,6 +743,8 @@ export const COMPONENT_DATA = {
   },
   'components-empty-state': {
     name: 'Empty state',
+    summary:
+      'Message shown where a collection, table or panel has no content: optional glyph, title, description and actions. Variants: panel, compact, start-aligned.',
     description:
       'Message shown where a collection, table or panel has no content. Optional media slot for a glyph, a title, a description and an optional actions slot. Variants: panel, compact, start-aligned. mg-empty-state__title is a class, not a tag: choose the element to fit the surrounding outline, one level below the heading of the section or card that contains it (h3 in a section headed h2, even after an h3 subsection; h4 inside a card titled h3) and never skipping levels; use a p where a heading would be out of place, such as a table cell or dashboard tile. Examples use h2 only because they stand alone. Inside a table, place it in a single td with colspan so the row structure and column headers survive for screen readers.',
     cssClasses: [
@@ -771,6 +792,8 @@ export const COMPONENT_DATA = {
 
   // --- Tags ---
   'components-tag': {
+    summary:
+      'Compact taxonomy label with theme-owned colours and radius. Variants: default, secondary, outline, accent. Spans for static metadata, anchors for destinations.',
     description:
       'Compact taxonomy label with theme-owned colours and radius. Variants: default, secondary, outline, accent. Use spans for static metadata and anchors with href for destinations. Container children receive the same styling; static and linked tags share compact geometry (28px minimum height, 24px minimum width); links have visible keyboard focus.',
     cssClasses: [
@@ -844,6 +867,8 @@ export const COMPONENT_DATA = {
 
   // --- Table ---
   'components-table': {
+    summary:
+      'Styled HTML table with compact size, striped and bordered variants, and stacked or horizontally scrolling responsive options.',
     description:
       'Styled HTML table with compact size, striped/border variants and stacked/scroll options. For wide plain HTML tables, wrap the native table in .mg-table-scroll-region with role=region, a translated aria-label and tabindex=0. React responsive=scroll generates this wrapper; scrollLabel supplies its accessible name.',
     cssClasses: [
@@ -905,8 +930,10 @@ export const COMPONENT_DATA = {
 
   // --- Preview access ---
   'components-preview-access': {
+    summary:
+      'Page-level gate that hides an unfinished page behind a PIN prompt until a reviewer enters the code. Editorial signalling, not a security mechanism.',
     description:
-      'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM.',
+      'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM. The React export renders a static preview of the modal for docs; pass `live` to run the real body-level gate, which appends the overlay to document.body and restores the body siblings on unmount.',
     cssClasses: [
       'mg-preview-access--unlocked',
       'mg-preview-access__overlay',
@@ -941,8 +968,10 @@ export const COMPONENT_DATA = {
 
   // --- On this page nav ---
   'components-navigation-on-this-page-nav': {
+    summary:
+      'Sticky horizontal "On this page" navigation bar with scroll-spy. Auto-detects headings or takes author-provided links. Vanilla JS.',
     description:
-      'Sticky horizontal "On this page" navigation bar with IntersectionObserver scroll-spy. Two modes: auto-detect (scans h2/h3/h4 headings) or explicit (author-provided links). Optional CTA button. Vanilla JS — requires on-this-page-nav.js.',
+      'Sticky horizontal "On this page" navigation bar with IntersectionObserver scroll-spy. Two modes: auto-detect (scans h2/h3/h4 headings) or explicit (author-provided links). Optional CTA button. Vanilla JS — requires on-this-page-nav.js. The React export renders the markup and calls mgOnThisPageNav() for Storybook; it is not meant as a production React component.',
     cssClasses: [
       'mg-on-this-page-nav',
       'mg-on-this-page-nav--hidden',
@@ -994,6 +1023,8 @@ export const COMPONENT_DATA = {
       'mg-tabs-content',
       'mg-tabs__section',
     ],
+    summary:
+      'Tabbed content: centred horizontal tabs that scroll at every width, with opt-in stacked disclosures below 480px. Requires tabs.js for ARIA semantics, keyboard navigation and selection.',
     description:
       'Tabbed content with centred, softly filled horizontal tabs that scroll at every viewport width, or explicit stacked disclosures. Opt into disclosures below 480px with stackOnMobile (React) or the presence-based data-mg-js-tabs-stack-on-mobile attribute (HTML); horizontal scrolling remains the default. Only the horizontal rail scrolls; panels sit outside the tablist. Requires tabs.js as an ES module for ARIA semantics, keyboard navigation, selection and overflow indicators. Without JavaScript, panel content remains visible. Set labels.tabListLabel (React) or data-mg-js-tabs-label (HTML) to name the tablist. Existing interleaved HTML is enhanced at runtime. Before removing dynamically initialised markup, call mgTabsDestroy(scope), or pass { signal } as the third argument to mgTabs or mgTabsRuntime and abort it. A tab set removed without either is suspended, not destroyed: once a rail resize observer notification (horizontal sets, usually within a frame in Chromium), a window resize or hash change (the runtime keeps one listener for each while any set is initialised), an orientation change or font load, or a later mgTabs/mgTabsRuntime call finds it detached, its window, document.fonts and ResizeObserver registrations are released while markup, in-container listeners and selection stay intact. A re-attached set resumes on the next pointer press, focus, key press or click inside it, window resize or hash change, or mgTabs/mgTabsRuntime call; an interaction resume also resumes other re-attached sets, including nested ones. On resume, a URL hash changed while suspended selects its panel (also on React re-render or mgTabsDestroy(container, true) plus re-init), and a stackOnMobile breakpoint crossed while suspended switches layout; after an interaction both wait until it has been handled, so a tap acts on the visible layout and its selection wins. Until a removal is found its listeners stay registered.',
   },
@@ -1006,6 +1037,8 @@ export const COMPONENT_DATA = {
 
   // --- CodeBlock ---
   'components-codeblock': {
+    summary:
+      'Formatted source code display. Plain pre and code on vanilla pages, the CodeBlock component in React, both coloured by the same Prism token classes.',
     description: `Formatted source code display. Two rendering paths share the same CSS:
 
 VANILLA HTML (Drupal pages): Use \`<pre><code>\` directly. Prism.js (loaded globally) tokenises the code and emits \`.token.*\` span elements — Mangrove's \`code.scss\` styles those classes. Add a \`data-language="Bash"\` attribute on \`<pre>\` for a language badge. Wrap in \`<figure class="mg-code-block"><figcaption>filename</figcaption>…</figure>\` for a filename header bar.
@@ -1087,6 +1120,8 @@ npm run build</code></pre>
 
   // --- Hero ---
   'components-hero-hero': {
+    summary:
+      'Full-width hero banner with title, summary and CTA buttons. Four color variants, and two layouts: a full-bleed background image or a split content-and-media band.',
     description:
       'Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
     cssClasses: [
@@ -1115,6 +1150,8 @@ npm run build</code></pre>
   },
 
   'components-hero-hero-child': {
+    summary:
+      'Deprecated. Smaller hero banner for child and section pages, planned for removal by end of 2026. Migrate to the main Hero component.',
     description:
       'DEPRECATED — planned for removal by end of 2026. Never adopted in production across UNDRR sites; do not use in new work. Migrate to the main Hero component (`headingLevel="h2"`/`"h3"` or `layout="split"`), which covers the same use cases. Kept available for reference only. Smaller hero banner for child/section pages. Single CTA button, linked label.',
     deprecated: true,
@@ -1156,8 +1193,10 @@ npm run build</code></pre>
 
   // --- User feedback (auto-rendered) ---
   'components-user-feedback': {
+    summary:
+      'Standalone page-usefulness prompt, generally placed as the sibling immediately before Footer. Response storage and consent remain product-owned.',
     description:
-      'Standalone page-usefulness prompt generally paired as the sibling immediately before Footer. Response storage and consent remain product-owned.',
+      'Standalone page-usefulness prompt generally paired as the sibling immediately before Footer. Response storage and consent remain product-owned: keep the response callback separate from the report link, so a product can send the binary response to its own analytics service without Mangrove owning storage or consent decisions.',
     cssClasses: [
       'mg-user-feedback',
       'mg-user-feedback__prompt',
@@ -1389,8 +1428,10 @@ npm run build</code></pre>
 
   // --- Page header (auto-rendered) ---
   'components-pageheader': {
+    summary:
+      'UNDRR page header with coloured decoration stripe, logo, user account link and language selector, plus a decoration-only variant that renders the stripe alone.',
     description:
-      'UNDRR page header with colored decoration stripe, logo, user account link, and language selector dropdown.',
+      'UNDRR page header with colored decoration stripe, logo, user account link, and language selector dropdown. The variant prop also takes "decoration-only", which renders just the coloured stripe without the header row.',
     doNotModify:
       'The PageHeader structure (decoration stripe, toolbar wrapper, logo section) is a UNDRR branding requirement. Use the documented markup exactly as shown. The four empty divs inside mg-page-header__decoration are intentional — they render the colored stripe segments.',
   },
@@ -1411,6 +1452,8 @@ npm run build</code></pre>
       'Dropdown select field with label, placeholder, help text, and error state.',
   },
   'components-forms-checkbox': {
+    summary:
+      'Styled checkbox with label, plus the CSS-only .mg-switch toggle. Error, disabled and pending states, and a vanilla helper for switches that save a setting.',
     description:
       'Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label. The switch has an error state, set the same way as on any other control: aria-invalid="true" on the input (preferred, and the only form assistive technology sees), or mg-switch__input--error on the input, or mg-switch--error on the label, each giving the track a red boundary; put the message in a sibling p.mg-form-error with role="alert" OUTSIDE the label (inside it would join the switch\'s accessible name) and join the two with aria-describedby, exactly as with a text input, so FormErrorSummary can link to the switch by id. The error state does not move the thumb: use it for "the thing this switch controls failed", and the pending helper when the save itself failed and the switch must revert. The switch is sized and coloured with the --mg-switch-* custom properties in this entry, set on the switch or any ancestor, and never by overriding the thumb transform, which also breaks RTL. The thumb travel, its RTL counterpart and the pending ring all derive from the size properties, so setting those is enough in both directions. .mg-switch--small sets --mg-switch-size: 1.125rem and a tighter row gap, and re-declares no length inside the switch; prefer it to a size of your own for a toolbar, table row or panel header. Do not paint a switch state with box-shadow or outline on the track: the focus ring owns both, and a consumer rule of equal specificity replaces its separator band. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces "Saving…", "Still saving…" and the outcome in a role="status" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid="true" instead (which also turns on the error state above, so supply the .mg-form-error message too), and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.',
     vanillaModule: {
@@ -1523,6 +1566,8 @@ npm run build</code></pre>
       'Fieldset wrapper for grouping related form controls with a legend. Error and disabled states.',
   },
   'components-forms-form-action': {
+    summary:
+      'Joins one form field to one high-priority action as a continuous control, for search, subscribe, apply and other compact submission flows.',
     description:
       'Joins one form field to one high-priority action as a continuous control for search, subscribe, apply, check, redeem, or compact submission flows. Keep the field and button as separate semantic controls. Do not use for unrelated actions, destructive actions, multi-step forms, or multiple fields sharing one submit button. Add mg-form-action--stack-mobile when a long or translated action needs the full mobile width.',
     cssClasses: [
@@ -1546,7 +1591,7 @@ npm run build</code></pre>
   },
   'components-forms-formerrorsummary': {
     description:
-      'Error summary box listing all form validation errors with anchor links to each field.',
+      'Persistent error summary box placed at the top of a form, listing all validation errors with an anchor link to each field so the user can jump straight to the problem.',
   },
   'components-forms-range': {
     description:
@@ -1556,6 +1601,8 @@ npm run build</code></pre>
 
   // --- CTA ---
   'components-cta': {
+    summary:
+      'Call-to-action banner with heading, rich text body, action buttons and optional image. Four color variants, centered or side-by-side layout.',
     description:
       'Call-to-action banner with heading, rich text body, action buttons, and optional image. Four color variants (primary, secondary, tertiary, quaternary), strong or soft accent tone, and custom backgroundColor override. Supports centered and side-by-side (with image) layouts.',
     cssClasses: [
@@ -1653,8 +1700,10 @@ npm run build</code></pre>
 
   // --- Logos ---
   'components-logos': {
-    description:
+    summary:
       'Logo images for UNDRR, PreventionWeb, IRP, and partner organizations.',
+    description:
+      'Logo images for UNDRR, PreventionWeb, IRP, and partner organizations. The crop="autocrop" variant crops to a fixed box on mobile and tablet instead of shrinking the whole image, so the logo stays legible at small sizes — the page header ("black bar") uses it. It is tuned to the proportions of the default English horizontal wordmark only: on the translated assets (assets.undrr.org/logos/undrr/) it cuts the bottom off the subtitle line, since those are roughly square (~2.3-2.9:1) rather than the ~6.6:1 the crop box assumes. Do not pair crop="autocrop" with a translated or otherwise differently proportioned asset.',
     cssClasses: [],
     examples: [
       {
@@ -1666,8 +1715,10 @@ npm run build</code></pre>
 
   // --- Icons ---
   'components-icons': {
+    summary:
+      'Mangrove icon set. Use span elements with mg-icon and mg-icon-{name} classes; icons render from SVG data URIs via CSS mask-image.',
     description:
-      'Mangrove icon font. Use span elements with mg-icon and mg-icon-{name} classes.',
+      'Mangrove icon set. Use span elements with mg-icon and mg-icon-{name} classes. Icons render from SVG data URIs via CSS mask-image; the icon font is retained only as a fallback for legacy fa-* selectors. The React Icon component accepts five name formats: a bare name ("globe") and a legacy mg- prefixed name ("mg-globe") both resolve to "mg-icon mg-icon-globe"; an already-qualified "mg-icon-globe" resolves to the same pair; a legacy "fa-globe" resolves to "mg-icon fa-globe", keeping the FontAwesome class rather than renaming it; and any name containing a space is treated as a full class string and passed through unchanged. A size prop appends mg-icon--{size}.',
     cssClasses: ['mg-icon'],
     examples: [
       {
@@ -1692,12 +1743,17 @@ npm run build</code></pre>
       'Makes content break out of its container to span the full viewport width. RTL-safe.',
   },
   'components-loader': {
-    description: 'Animated loading spinner. 40px on mobile, 96px on desktop.',
+    summary:
+      'Animated loading spinner, 40px on mobile and 96px on desktop, named for assistive technology by an aria-label.',
+    description:
+      'Animated loading spinner. 40px on mobile, 96px on desktop. The element is empty — there is no visible and no visually hidden label text. It carries role="status", aria-live="polite" and aria-busy="true", and the label prop becomes its accessible name through aria-label, so the wait is not silent for a screen reader.',
   },
 
   'components-showmore': {
+    summary:
+      'Collapse long content behind a gradient fade with a toggle button, driven by the mgShowMore vanilla JS utility. Height customizable via CSS variable.',
     description:
-      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable.',
+      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. Expand and collapse come from the mgShowMore vanilla JS utility, which reads the data-mg-show-more attributes; the React component renders the same markup and calls it on mount.',
     cssClasses: ['mg-show-more--collapsed', 'mg-show-more--button'],
     examples: [
       {
@@ -1726,6 +1782,8 @@ npm run build</code></pre>
   // Added here rather than in unisdr/undrr-mangrove#1113, which shipped the
   // pattern without a manifest entry and left `validate-manifest` failing.
   'components-navigation-skip-link': {
+    summary:
+      "Bypass block: an anchor that stays hidden until it takes keyboard focus, then appears above the header, pointing at the page's main element.",
     description:
       'Bypass block: an anchor that stays visually hidden until it receives keyboard focus, then appears in normal flow above the header. Points at the page\'s <main>, which must carry both an id and tabindex="-1" so focus lands there rather than only the scroll position. The label is a prop, and the stylesheet uses logical properties, so it works translated and in right-to-left. Place it as the first focusable element in the page wrapper, before the brand bar. Not built on mg-u-sr-only, which has no focus reveal.',
     cssClasses: ['mg-skip-link'],
@@ -1742,8 +1800,10 @@ npm run build</code></pre>
   },
 
   'components-error-pages': {
+    summary:
+      'Branded full-page error templates for the common 4xx and 5xx codes and for Cloudflare challenges, with a brand stripe, the status code, a search field, diagnostic details and action buttons.',
     description:
-      'Branded full-page error templates (404, 500, Cloudflare challenges) with status banner, search field, diagnostic details, and action buttons.',
+      "Branded full-page error templates for the common 4xx and 5xx codes (401, 403, 404, 429, 500, 502, 503, 504) and for Cloudflare challenges, with a brand decoration stripe, the status code as a heading, search field, diagnostic details, and action buttons. Default copy ships for each of those status codes, and title, description and actions can each be overridden. Request details (Ray ID, IP, location) are optional, for debugging. For Cloudflare, static HTML versions with the Cloudflare tokens already in place live in the component's static/ directory.",
     cssClasses: [
       'mg-error-page',
       'mg-error-page__container',
@@ -1790,6 +1850,8 @@ npm run build</code></pre>
 
   // --- Page templates ---
   'components-reading-column': {
+    summary:
+      'Reading column for a long page: constrains the article to a readable measure, with an optional sticky table of contents beside it from 48rem up.',
     description:
       "Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 48rem up, stacking it above the article below that. The sidebar split itself is mg-grid's --article variant (see design-decisions-grid-layout) — pair mg-reading--with-contents with mg-grid mg-grid--article in markup.",
     cssClasses: [
@@ -1800,16 +1862,22 @@ npm run build</code></pre>
   },
 
   'patterns-content-hub': {
+    summary:
+      'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page.',
     description:
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
   },
 
   'patterns-article-story': {
+    summary:
+      'A news or event article page: headline, header image, reading body and related content cards.',
     description:
       'A news or event article page: headline, header image, reading body and related content cards. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
   },
 
   'patterns-landing-pages': {
+    summary:
+      'Three UNDRR landing page shapes: topic or initiative, report or publication, and collection index.',
     description:
       'Three UNDRR landing page shapes: topic or initiative (hero, route cards, supporting band), report or publication (feature band and a reading column with contents), and collection index (grouped rows of covers).',
   },
@@ -2237,6 +2305,8 @@ npm run build</code></pre>
     },
   },
   'components-syndicated-search': {
+    summary:
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics.',
     description:
       'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop.',
     hydration: {
@@ -2324,6 +2394,8 @@ npm run build</code></pre>
 
   // --- Navigation ---
   'components-navigation-megamenu': {
+    summary:
+      'Site-wide mega menu: a desktop navigation strip with multi-column panels, and a bounded progressive overlay below 900px.',
     description:
       'Site-wide mega menu: a desktop nav strip with multi-column panels and a bounded progressive mobile overlay below 900px. The menu structure comes from a sections array, normally built server-side or fetched from an API. Below 900px the overlay is bounded (minimum 400px where space permits, maximum min(700px, 90dvh)) with Back above the title, a separate Close control and outside-click dismissal, nested groups, and section headings linked to their landing pages. Optional label props are menuLabel, backLabel, allSectionsLabel, closeLabel, overviewLabel and toggleMobileNavLabel. mg-mega-wrapper--js-active is added on mount, so pointer-events restrictions apply only once the sidebar is available; plain HTML nav markup and failed-hydration states stay clickable on mobile.',
     hydration: {
@@ -2430,6 +2502,8 @@ npm run build</code></pre>
     },
   },
   'components-navigation-drawer': {
+    summary:
+      'Prototype. Slide-over off-canvas drawer and floating panel for secondary navigation, filters or details, with focus management, backdrop and Escape dismissal.',
     description:
       'Prototype. Slide-over off-canvas drawer and floating panel for secondary navigation, filters, or details. Modal dialog with focus management, backdrop and Escape dismissal; string content renders as text. Hydration via createHydrator with data-mg-drawer (container needs an id) and data-mg-drawer-trigger buttons; server-rendered body markup is sanitised.',
     cssClasses: [
@@ -2525,6 +2599,8 @@ npm run build</code></pre>
     },
   },
   'components-navigation-tree': {
+    summary:
+      'Prototype. Accessible tree view for a nested hierarchy, following the ARIA treeview pattern: roving tabindex, full keyboard navigation and collapsible parents.',
     description:
       'Prototype. Accessible tree and nested hierarchy view conforming to the ARIA Treeview pattern. Supports roving tabindex, full keyboard navigation (arrows, Home, End, Enter, Space), guides, controlled/uncontrolled state, a configurable toggle icon (toggleIcon), and separate toggle buttons for linked parent sections. Requires React or hydration via createHydrator with data-mg-tree around a nested list; see the hydration field.',
     cssClasses: [
