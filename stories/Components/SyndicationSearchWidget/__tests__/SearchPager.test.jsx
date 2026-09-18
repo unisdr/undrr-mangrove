@@ -16,6 +16,12 @@ import {
   act,
 } from '@testing-library/react';
 import { SyndicationSearchWidget } from '../SyndicationSearchWidget';
+import {
+  SearchProvider,
+  useSearchDispatch,
+  actions,
+} from '../context/SearchContext';
+import { SearchPager } from '../components/Pager';
 
 const originalError = console.error;
 beforeAll(() => {
@@ -137,5 +143,49 @@ describe('SearchPager on a page with two widgets', () => {
     expect(scrolled).toHaveLength(1);
     expect(scrolled[0]).toBe(widgets[1]);
     expect(scrolled[0]).not.toBe(widgets[0]);
+  });
+});
+
+describe('SearchPager used standalone, without a widgetId', () => {
+  let scrolled;
+
+  beforeEach(() => {
+    scrolled = [];
+    Element.prototype.scrollIntoView = function scrollIntoView() {
+      scrolled.push(this);
+    };
+  });
+
+  // `SearchResults` and `Pager` are public exports for custom layouts and
+  // both default `widgetId` to ''. Scrolling must not silently stop for them.
+  it('still scrolls to the widget root on the page', () => {
+    const Seed = () => {
+      const dispatch = useSearchDispatch();
+      React.useEffect(() => {
+        dispatch(
+          actions.setResults({ hits: { hits: [], total: { value: 40 } } })
+        );
+      }, [dispatch]);
+      return null;
+    };
+
+    render(
+      <div data-mg-search-widget>
+        <SearchProvider config={{ resultsPerPage: 10 }}>
+          <Seed />
+          <SearchPager />
+        </SearchProvider>
+      </div>
+    );
+
+    const root = document.querySelector('[data-mg-search-widget]');
+    const nextButton = document.querySelector(
+      '.mg-pager button[aria-label="Go to next page"]'
+    );
+    expect(nextButton).toBeInTheDocument();
+
+    fireEvent.click(nextButton);
+
+    expect(scrolled).toEqual([root]);
   });
 });

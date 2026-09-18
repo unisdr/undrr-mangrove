@@ -158,6 +158,27 @@ describe('scrollContainerFromElement', () => {
     expect(props.children[0]).toContain('Own card');
   });
 
+  it('prefers a direct-child wrapper over a deeper one earlier in the markup', () => {
+    // Document order puts the deeper wrapper first, so only the direct-child
+    // preference picks the container's own wrapper here.
+    const html = `
+      <section class="promo">
+        <div class="mg-scroll__content">
+          <div class="card">Deep card</div>
+        </div>
+      </section>
+      <div class="mg-scroll__content">
+        <div class="card">Own card</div>
+      </div>
+    `;
+    const container = createContainer({}, html);
+    const props = scrollContainerFromElement(container);
+
+    expect(props.children).toHaveLength(1);
+    expect(props.children[0]).toContain('Own card');
+    expect(props.children[0]).not.toContain('Deep card');
+  });
+
   it('returns empty children for empty container', () => {
     const container = createContainer();
     const props = scrollContainerFromElement(container);

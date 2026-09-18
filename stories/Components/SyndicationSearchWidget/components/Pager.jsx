@@ -38,7 +38,16 @@ export function SearchPager({ widgetId = '' }) {
       // Scroll this widget back to its results, not the first widget on the
       // page: a page can carry more than one. The widget root carries
       // `widgetId` as its id. See undrr/undrr-mangrove#1205.
-      const widget = widgetId ? document.getElementById(widgetId) : null;
+      //
+      // `SearchResults` and this pager are public exports for custom
+      // layouts, and both default `widgetId` to ''. Without the fallback the
+      // scroll would silently stop happening for those consumers, so keep
+      // the pre-#1205 behaviour when there is no id to resolve.
+      // Only the id-less case falls back: if an id was given it is
+      // authoritative, so a missed lookup must not scroll a different widget.
+      const widget = widgetId
+        ? document.getElementById(widgetId)
+        : document.querySelector('[data-mg-search-widget]');
       if (widget) {
         widget.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
