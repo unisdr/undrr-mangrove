@@ -22,6 +22,24 @@ export default [
   {
     ignores: ['**/glideslider.js', 'stories/assets/js/lib/*.js'],
   },
+  {
+    // Report unused eslint-disable directives, never act on them. `lint:js`
+    // passes `--fix-type problem,suggestion,layout`, which omits `directive`,
+    // so `--fix` cannot delete a suppression comment; `lint:check` runs
+    // without `--quiet`, so a stale one shows up as a warning a human reads.
+    // The repo's suppression comments carry the reason a line is written the
+    // way it is, and most of them name rules this config does not enable, so
+    // silent removal loses documentation for no gain. See
+    // unisdr/undrr-mangrove#1226.
+    linterOptions: {
+      reportUnusedDisableDirectives: 'warn',
+    },
+    rules: {
+      // Enabled so the suppression in Tree.fromElement.js guards something
+      // real: that file strips control characters from an href on purpose.
+      'no-control-regex': 'error',
+    },
+  },
   ...compat.extends('plugin:storybook/recommended', 'plugin:mdx/recommended'),
   prettierConfig,
   {
