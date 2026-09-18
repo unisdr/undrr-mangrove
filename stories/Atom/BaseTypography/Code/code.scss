@@ -144,16 +144,18 @@ figure.mg-code-block {
 
 // Line numbers — emitted by react-syntax-highlighter when showLineNumbers={true}.
 // Class name is react-syntax-highlighter's API, not a Mangrove BEM class.
-// The gutter colour was neutral-400 (#7e8082), which measures 3.9:1 on the code
-// surface and failed axe's colour-contrast rule on every number. neutral-300 is
-// the next step up that clears 4.5:1; it matches the comment colour, which is
-// the intended de-emphasised tone for this surface anyway.
+// The gutter colour was neutral-400 (#7e8082), which measures 4.39:1 on the
+// neutral-800 code surface and so failed axe's colour-contrast rule on every
+// number. neutral-300 is the next step up and clears 4.5:1 comfortably; it
+// matches the comment colour, which is the intended de-emphasised tone for
+// this surface anyway. The neutral ramp is defined once in tokens/mangrove.yaml
+// and no theme overrides it, so these ratios hold in every theme.
 .react-syntax-highlighter-line-number {
   display: inline-block;
   min-width: 2.5em;
   padding-right: var(--mg-spacing-100);
   text-align: right;
-  color: rgb(var(--mg-color-neutral-300)); // #96999c — 5.4:1 on code surface
+  color: rgb(var(--mg-color-neutral-300)); // #96999c — 6.08:1 on neutral-800
   user-select: none;
   pointer-events: none;
 }
@@ -169,7 +171,7 @@ figure.mg-code-block {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: rgb(var(--mg-color-neutral-300)); // #999 — 6.37:1 on neutral-800
+  color: rgb(var(--mg-color-neutral-300)); // #96999c — 6.08:1 on neutral-800
 }
 
 .token.keyword,
