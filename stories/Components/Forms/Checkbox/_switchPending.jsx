@@ -134,12 +134,16 @@ export const simulateSave =
  * @param {Object} props
  * @param {Object} props.caption  Localised strings
  * @param {Function} props.save   `(requested, signal) => Promise`
- * @param {number} [props.timeoutMs=PENDING_TIMEOUT_MS] Request timeout
+ * @param {number} [props.timeoutMs=PENDING_TIMEOUT_MS] Request timeout, or `0`
+ *   for no deadline
+ * @param {boolean} [props.revert=true] Whether a failed save moves the switch
+ *   back
  */
 export function PendingSwitchDemo({
   caption,
   save,
   timeoutMs = PENDING_TIMEOUT_MS,
+  revert = true,
 }) {
   const inputRef = useRef(null);
   const statusRef = useRef(null);
@@ -148,6 +152,7 @@ export function PendingSwitchDemo({
     const helper = mgSwitchPending(inputRef.current, {
       save,
       timeout: timeoutMs,
+      revert,
       status: statusRef.current,
       labels: {
         saving: caption.saving,
@@ -158,7 +163,7 @@ export function PendingSwitchDemo({
       },
     });
     return () => helper.destroy();
-  }, [caption, save, timeoutMs]);
+  }, [caption, save, timeoutMs, revert]);
 
   return (
     <div>
@@ -184,4 +189,5 @@ PendingSwitchDemo.propTypes = {
   caption: captionShape.isRequired,
   save: PropTypes.func.isRequired,
   timeoutMs: PropTypes.number,
+  revert: PropTypes.bool,
 };

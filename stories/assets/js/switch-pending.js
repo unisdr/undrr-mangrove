@@ -1,5 +1,6 @@
 // Pending state for .mg-switch: announces progress, ignores presses while a
-// save runs, times out, and reverts on failure. See Checkbox.mdx.
+// save runs, times out, and reverts on failure. The announcements are also
+// available on their own, as mgSwitchAnnouncer(). See Checkbox.mdx.
 
 /** A request that has not settled by then is aborted and reverts. */
 export const PENDING_TIMEOUT_MS = 10000;
@@ -115,10 +116,47 @@ function resolveStatus(input, option) {
   return described || null;
 }
 
+// A switch input, from the input itself or a wrapper such as its label. Takes
+// anything, because mgSwitchAnnouncer() is public and a document or a stray
+// value should get the no-op announcer rather than a TypeError.
 function toInput(element) {
-  if (!element) return null;
-  if (element.matches(INPUT_SELECTOR)) return element;
-  return element.querySelector(INPUT_SELECTOR);
+  if (!element || typeof element !== 'object') return null;
+  if (
+    typeof element.matches === 'function' &&
+    element.matches(INPUT_SELECTOR)
+  ) {
+    return element;
+  }
+  return element.querySelector?.(INPUT_SELECTOR) ?? null;
+}
+
+// A setting written in HTML, on the input or its label. The input wins, as it
+// does for data-mg-switch-labels; an option passed in JavaScript wins over both.
+function settingAttribute(input, name) {
+  const own = input.getAttribute(name);
+  if (own !== null) return own;
+  return input.closest('label')?.getAttribute(name) ?? null;
+}
+
+/**
+ * Milliseconds before a save is abandoned, or Infinity for no deadline.
+ * `0` and `Infinity` both disable it; anything unusable falls back to the
+ * default, as it did before the option accepted those two.
+ */
+function resolveTimeout(value, input) {
+  let setting = value;
+  if (setting === undefined || setting === null) {
+    const raw = settingAttribute(input, 'data-mg-switch-timeout');
+    if (raw !== null && raw.trim() !== '') setting = Number(raw);
+  }
+  if (setting === 0 || setting === Infinity) return Infinity;
+  return Number.isFinite(setting) && setting > 0 ? setting : PENDING_TIMEOUT_MS;
+}
+
+/** Whether a failed save moves the switch back. */
+function resolveRevert(value, input) {
+  if (typeof value === 'boolean') return value;
+  return settingAttribute(input, 'data-mg-switch-revert') !== 'false';
 }
 
 function cancelWrite(status, owner) {
@@ -145,24 +183,11 @@ function noResponderError() {
   );
 }
 
-function enhance(input, options, auto) {
-  const noop = { destroy() {} };
-  if (!input || typeof input.addEventListener !== 'function') return noop;
-  const existing = registry.instances.get(input);
-  if (existing) {
-    // An explicit call takes over a switch that page-load auto-init enhanced,
-    // so its options are not silently ignored.
-    if (!existing.auto || auto) return existing.handle;
-    existing.handle.destroy();
-  }
-  const { signal } = options;
-  if (signal?.aborted) return noop;
-
+// The announcements, on their own: the live region, the label resolution, the
+// re-announce trick and the rate limit, without the save state machine.
+// mgSwitchPending() runs this one, so there is a single implementation.
+function createAnnouncer(input, options) {
   const view = input.ownerDocument.defaultView || window;
-  const timeout =
-    Number.isFinite(options.timeout) && options.timeout > 0
-      ? options.timeout
-      : PENDING_TIMEOUT_MS;
   const labels = {
     ...SWITCH_PENDING_DEFAULT_LABELS,
     ...readLabels(input.closest('label')),
@@ -194,9 +219,7 @@ function enhance(input, options, auto) {
     );
   }
 
-  let current = null;
   let lastNudge = -Infinity;
-  let destroyed = false;
   const owner = {};
 
   const write = text => {
@@ -227,23 +250,123 @@ function enhance(input, options, auto) {
     status.textContent = text;
   };
 
+  const say = value => write(formatLabel(value, labelText(input), input));
+
+  return {
+    get status() {
+      return status;
+    },
+    get labels() {
+      return labels;
+    },
+    label: () => labelText(input),
+    announce: say,
+    pending: () => say(labels.saving),
+    stillSaving(force = false) {
+      const now = Date.now();
+      if (!force && now - lastNudge < STILL_SAVING_INTERVAL_MS) return false;
+      lastNudge = now;
+      say(labels.stillSaving);
+      return true;
+    },
+    settled: checked => say(checked ? labels.on : labels.off),
+    failed: () => say(labels.error),
+    destroy() {
+      cancelWrite(status, owner);
+      createdStatus?.remove();
+    },
+  };
+}
+
+const NOOP_ANNOUNCER = Object.freeze({
+  status: null,
+  labels: SWITCH_PENDING_DEFAULT_LABELS,
+  label: () => '',
+  announce: () => {},
+  pending: () => {},
+  stillSaving: () => false,
+  settled: () => {},
+  failed: () => {},
+  destroy: () => {},
+});
+
+/**
+ * The switch's announcements, without the save state machine: for apps that
+ * own the control's position and only want the accessible part.
+ *
+ * It resolves or creates the live region, resolves the switch's label the way
+ * the accessible name is resolved, formats `{label}` and function labels, and
+ * re-announces a repeated message. Announcements are skipped for a switch that
+ * has left the page, and a region it created is taken off the page with it.
+ *
+ * @param {HTMLInputElement|Element} element A `.mg-switch__input`, or a
+ *   wrapper such as its label
+ * @param {Object} [options]
+ * @param {Element|string} [options.status] Live region, or a selector for one
+ * @param {Object} [options.labels] `{ saving, stillSaving, error, on, off }`,
+ *   merged over `data-mg-switch-labels` and the defaults
+ * @returns {{
+ *   status: Element|null,
+ *   labels: Object,
+ *   label: () => string,
+ *   announce: (text: string|Function) => void,
+ *   pending: () => void,
+ *   stillSaving: (force?: boolean) => boolean,
+ *   settled: (checked: boolean) => void,
+ *   failed: () => void,
+ *   destroy: () => void,
+ * }}
+ */
+export function mgSwitchAnnouncer(element, options = {}) {
+  const input = toInput(element);
+  if (!input || typeof input.getAttribute !== 'function') return NOOP_ANNOUNCER;
+  return createAnnouncer(input, options || {});
+}
+
+function enhance(input, options, auto) {
+  const noop = { destroy() {} };
+  if (!input || typeof input.addEventListener !== 'function') return noop;
+  const existing = registry.instances.get(input);
+  if (existing) {
+    // An explicit call takes over a switch that page-load auto-init enhanced,
+    // so its options are not silently ignored.
+    if (!existing.auto || auto) return existing.handle;
+    existing.handle.destroy();
+  }
+  const { signal } = options;
+  if (signal?.aborted) return noop;
+
+  const view = input.ownerDocument.defaultView || window;
+  const timeout = resolveTimeout(options.timeout, input);
+  const revert = resolveRevert(options.revert, input);
+  const announcer = createAnnouncer(input, options);
+
+  let current = null;
+  let destroyed = false;
+  // Only an aria-invalid this helper set is cleared, and whatever the page had
+  // there is put back, so one the page authored for its own reasons survives a
+  // failed save rather than being overwritten and then removed.
+  let flaggedInvalid = false;
+  let invalidBefore = null;
+
   const emit = (type, detail) =>
     input.dispatchEvent(
       new CustomEvent(type, { bubbles: true, cancelable: false, detail })
     );
 
-  const stillSaving = () => {
-    const now = Date.now();
-    if (now - lastNudge < STILL_SAVING_INTERVAL_MS) return;
-    lastNudge = now;
-    write(formatLabel(labels.stillSaving, labelText(input), input));
+  const clearInvalid = () => {
+    if (!flaggedInvalid) return;
+    flaggedInvalid = false;
+    if (invalidBefore === null) input.removeAttribute('aria-invalid');
+    else input.setAttribute('aria-invalid', invalidBefore);
+    invalidBefore = null;
   };
 
   const onClick = event => {
     if (!current) return;
     // Cancelling the click keeps checked where it is.
     event.preventDefault();
-    stillSaving();
+    announcer.stillSaving();
   };
 
   const requestSave = (checked, requestSignal) => {
@@ -295,14 +418,16 @@ function enhance(input, options, auto) {
     if (current) {
       // A script changed the switch mid-request: undo it.
       input.checked = !input.checked;
-      stillSaving();
+      announcer.stillSaving();
       return;
     }
 
     const requested = input.checked;
     const request = { controller: new AbortController() };
     current = request;
-    write(formatLabel(labels.saving, labelText(input), input));
+    // A new attempt: the switch is saving again, not known to be unsaved.
+    clearInvalid();
+    announcer.pending();
     // Mark busy a frame later, so the new state is announced first.
     request.frame = view.requestAnimationFrame(() => {
       if (current === request) input.setAttribute('aria-busy', 'true');
@@ -315,32 +440,51 @@ function enhance(input, options, auto) {
       view.clearTimeout(request.timer);
       view.cancelAnimationFrame(request.frame);
       input.setAttribute('aria-busy', 'false');
-      const label = labelText(input);
       if (ok) {
         // A form reset or a script may have moved it without a change event.
         input.checked = requested;
-        write(formatLabel(requested ? labels.on : labels.off, label, input));
+        announcer.settled(requested);
         emit('mg-switch:settled', { checked: requested, ok: true });
         return;
       }
       request.controller.abort(error);
-      input.checked = !requested;
-      write(formatLabel(labels.error, label, input));
+      // Without revert the switch keeps what the user asked for, so its
+      // position no longer matches what is saved. aria-invalid says so to
+      // assistive technology and gives CSS a hook; the page still owns
+      // showing the failure and offering a way to try again.
+      input.checked = revert ? !requested : requested;
+      if (!revert) {
+        if (!flaggedInvalid) invalidBefore = input.getAttribute('aria-invalid');
+        input.setAttribute('aria-invalid', 'true');
+        flaggedInvalid = true;
+      }
+      announcer.failed();
       emit('mg-switch:failed', {
-        checked: !requested,
+        checked: input.checked,
         requested,
+        reverted: revert,
         reason,
         error,
       });
     };
 
-    request.timer = view.setTimeout(() => {
-      const error = new DOMException(
-        `Saving the switch took longer than ${timeout}ms.`,
-        'TimeoutError'
-      );
-      settle(false, 'timeout', error);
-    }, timeout);
+    if (timeout === Infinity) {
+      // No deadline: the save owns settling, so aria-busy stays true until it
+      // does. Say once, where the deadline would have been, that the save is
+      // still running, so a screen reader user is not left on "Saving…" with
+      // a control marked busy and no further word.
+      request.timer = view.setTimeout(() => {
+        if (current === request) announcer.stillSaving(true);
+      }, PENDING_TIMEOUT_MS);
+    } else {
+      request.timer = view.setTimeout(() => {
+        const error = new DOMException(
+          `Saving the switch took longer than ${timeout}ms.`,
+          'TimeoutError'
+        );
+        settle(false, 'timeout', error);
+      }, timeout);
+    }
 
     emit('mg-switch:pending', { checked: requested });
     // A pending listener may have destroyed the helper.
@@ -365,7 +509,7 @@ function enhance(input, options, auto) {
       input.removeEventListener('click', onClick);
       input.removeEventListener('change', onChange);
       signal?.removeEventListener('abort', onAbort);
-      cancelWrite(status, owner);
+      clearInvalid();
       const request = current;
       current = null;
       if (request) {
@@ -374,7 +518,7 @@ function enhance(input, options, auto) {
         request.controller.abort();
         input.removeAttribute('aria-busy');
       }
-      createdStatus?.remove();
+      announcer.destroy();
       if (registry.instances.get(input)?.handle === handle) {
         registry.instances.delete(input);
         input.removeAttribute(ENHANCED_ATTR);
@@ -400,7 +544,12 @@ function enhance(input, options, auto) {
  *   Saves the new position; resolving means success. Without it, a cancelable
  *   `mg-switch:save` event is dispatched for a listener to answer.
  * @param {Element|string} [options.status] Live region, or a selector for one
- * @param {number} [options.timeout=10000] Milliseconds before a save fails
+ * @param {number} [options.timeout=10000] Milliseconds before a save fails.
+ *   `0` or `Infinity` means no deadline: the save must settle itself, and
+ *   `aria-busy` stays true until it does.
+ * @param {boolean} [options.revert=true] Whether a failed save moves the
+ *   switch back. With `false` it keeps the requested position and gets
+ *   `aria-invalid="true"` instead, for apps that own the control's position.
  * @param {Object} [options.labels] `{ saving, stillSaving, error, on, off }`
  * @param {AbortSignal} [options.signal] Aborting it destroys the helper
  * @returns {{ destroy: () => void }}

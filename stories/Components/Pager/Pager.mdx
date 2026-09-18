@@ -250,6 +250,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.1.1** — 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-pager__list` hides its markers with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin). Safari drops the implicit `list` role from a markerless list, so the page count stopped being announced; an empty string is still a marker, so the role survives and nothing renders. This reaches the hand-written `<ul class="mg-pager__list">` in the docs and the AI manifest too, which is why it is a CSS fix rather than `role="list"` in the examples.
 - **1.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Refreshed the default pager with borderless 44px circular targets, softly tinted current and directional controls, stable token-driven hover/focus/press states, and visually compact arrow-only previous/next controls that retain their accessible labels.
   - Completed the bar layout refresh with soft-filled jump controls, shared button and field radii, 44px targets, token-driven focus rings and reduced-motion-aware press feedback.

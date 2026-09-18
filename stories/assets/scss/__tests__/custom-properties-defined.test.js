@@ -35,7 +35,8 @@ const BUNDLES = [
 ];
 
 const INPUT_HOOKS = {
-  '--mg-card-border': 'IconCard borderColor prop, set inline',
+  '--mg-card-border':
+    'IconCard borderColor prop, set inline; .mg-card__icon--bordered falls back to rgb(var(--mg-color-interactive)) so the public class is never an invisible border',
   '--mg-card-icon-size': 'IconCard icon size override, set inline',
   '--mg-cta-bg': 'TextCta backgroundColor prop, set inline',
   '--mg-icon-bg': 'IconCard iconColor prop, set inline',

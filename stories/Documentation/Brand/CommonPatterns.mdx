@@ -66,11 +66,13 @@ See: <LinkTo kind="design-decisions-grid-layout" story="docs">Grid reference</Li
 
 ## Typography system
 
-Every property uses the same two font families:
+Every property uses the same two Latin font families:
 
-- **Roboto Condensed** for headings (h1-h6) — compact, authoritative
-- **Roboto** for body text — readable, widely supported
-- **Noto Kufi Arabic** for Arabic headings and **Noto Sans Arabic** for Arabic body text (automatic via `lang="ar"`)
+- **Roboto** for body text and for headings (h1-h6) — readable, widely supported
+- **Roboto Condensed** for the hero title and for interface chrome — card and gallery titles, tabs, tags, stats, breadcrumbs and nav links — compact, authoritative
+- **Noto Kufi Arabic** for Arabic headings and the Arabic hero title, and **Noto Sans Arabic** for Arabic body text and chrome (automatic via `lang="ar"`)
+
+In CSS, never name a typeface. Mangrove exposes five font roles as custom properties — `--mg-font-family-text` for running text, `-heading` for h1-h3 in Arabic, `-display` for the hero title, `-ui` for chrome and `-code` for code — and re-points them for Arabic. Writing `font-family: var(--mg-font-family-text)` keeps the Arabic switch working; writing `font-family: Roboto, sans-serif` silently opts out of it.
 
 {/* prettier-ignore */}
 See: <LinkTo kind="design-decisions-typography" story="docs">Typography</LinkTo>, <LinkTo kind="design-decisions-fonts" story="docs">Fonts</LinkTo>

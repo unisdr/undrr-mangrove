@@ -306,7 +306,18 @@ $mg-tabs-border-bottom: true !default;
   // ring (5.74:1 on white) gives every indicator a visible edge — the same
   // width on every edge of all seven shapes, including the two drawn with a
   // clip path (unisdr/undrr-mangrove#1208). Set
-  // --mg-status-label-indicator-border-width to 0 to drop it.
+  // --mg-status-label-indicator-border-width to 0 to drop it, bearing in mind
+  // that the ring is the only part of the four pale marks clearing 3:1, and
+  // that in forced colours it is also what keeps the base indicator visible.
+  // -
+  // No theme overrides any of the seven fills, so all five brands render the
+  // same status palette. That is deliberate: these are DELTA's editorial
+  // workflow colours and the shared service-health pair, not brand identity,
+  // and a status that changed colour per site would stop being one status.
+  // Do not rebalance the fills for colour-vision separation without reading
+  // StatusLabel.mdx, "Why the palette is not rebalanced instead" — it is
+  // measured, and the alternatives are worse on contrast, on normal vision, or
+  // on both.
   --mg-status-label-gap: var(--mg-spacing-75);
   --mg-status-label-font-size: var(--mg-font-size-300);
   --mg-status-label-color: rgb(var(--mg-color-text));

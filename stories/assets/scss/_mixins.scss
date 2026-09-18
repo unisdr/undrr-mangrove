@@ -148,6 +148,38 @@
   }
 }
 
+// Unmarked list — hide a <ul>/<ol>'s markers without losing its list role.
+
+// Safari removes the implicit `list` role from any list whose `list-style` is
+// `none`, so VoiceOver stops announcing "list, N items" for every navigation,
+// pager, legend and menu we style that way (unisdr/undrr-mangrove#1209). An
+// empty string IS a marker, so the role survives, and it renders nothing and
+// reserves no space.
+
+// Order matters. The shorthand goes first as the fallback: a browser too old
+// to parse a string `list-style-type` drops that declaration and keeps `none`,
+// behaving exactly as it did before. Never emit `list-style: none` on its own.
+
+// This is deliberately a CSS fix rather than `role="list"` in the markup.
+// Consumers hand-write these lists in Drupal templates and static HTML, so
+// only a fix on the class reaches all of them — and `jsx-a11y` flags the
+// redundant role in our own examples. See the "List semantics" rule in
+// docs/REVIEW-CHECKLIST.md.
+
+// It belongs on the list items too, wherever an `<li>` rule hides its own
+// marker. `list-style-type` is inherited, so the list's empty string reaches
+// the items — but an item rule setting `none` wins over that inheritance, and
+// it is the item's marker Safari inspects. A bare `list-style: none` on an
+// `<li>` silently undoes the fix on its list.
+
+// Do NOT use this on a list that carries a different ARIA role on purpose
+// (`tree`, `group`, `menu`, `listbox`, `tablist`): that role already replaces
+// list semantics, and there is nothing to preserve.
+@mixin mg-list-unmarked {
+  list-style: none;
+  list-style-type: "";
+}
+
 /* mixing  end */
 
 /* placeholder start */

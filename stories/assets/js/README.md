@@ -18,14 +18,14 @@ The GitHub Actions publish workflow (`npm-publish.yml`) copies `dist/assets/js/*
 
 ## Current scripts
 
-| File                  | Component                                          | Purpose                                                                |
-| --------------------- | -------------------------------------------------- | ---------------------------------------------------------------------- |
-| `on-this-page-nav.js` | [OnThisPageNav](../../Components/OnThisPageNav/)   | Sticky horizontal "On this page" navigation with scroll-spy            |
-| `tabs.js`             | [Tab](../../Components/Tab/)                       | Tabbed content with keyboard navigation and deep linking               |
-| `show-more.js`        | [ShowMore](../../../Utilities/ShowMore/)           | Expand/collapse toggle for content sections                            |
-| `copy-button.js`      | [CopyButton](../../Components/Buttons/CopyButton/) | Zero-dependency clipboard copy button with transient feedback          |
-| `switch-pending.js`   | [Checkbox](../../Components/Forms/Checkbox/)       | Pending state for `.mg-switch`: announces, guards, times out, reverts  |
-| `undrr.js`            | —                                                  | Shared constants (key codes, breakpoints) and `window.UNDRR` namespace |
+| File                  | Component                                          | Purpose                                                                                                                       |
+| --------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `on-this-page-nav.js` | [OnThisPageNav](../../Components/OnThisPageNav/)   | Sticky horizontal "On this page" navigation with scroll-spy                                                                   |
+| `tabs.js`             | [Tab](../../Components/Tab/)                       | Tabbed content with keyboard navigation and deep linking                                                                      |
+| `show-more.js`        | [ShowMore](../../../Utilities/ShowMore/)           | Expand/collapse toggle for content sections                                                                                   |
+| `copy-button.js`      | [CopyButton](../../Components/Buttons/CopyButton/) | Zero-dependency clipboard copy button with transient feedback                                                                 |
+| `switch-pending.js`   | [Checkbox](../../Components/Forms/Checkbox/)       | Pending state for `.mg-switch`: announces, guards, and optionally times out and reverts; also exports the announcements alone |
+| `undrr.js`            | —                                                  | Shared constants (key codes, breakpoints) and `window.UNDRR` namespace                                                        |
 
 ## Adding a new script
 
