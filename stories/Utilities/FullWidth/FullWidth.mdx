@@ -136,5 +136,6 @@ The alternative — moving the box with `margin-inline-start: calc(50% - 50vw)` 
 
 ## Changelog
 
+- **1.2** — 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Breaking — deleted the deprecated `FullWidth.scss` alias, which only forwarded to `full-width.scss` and emitted a deprecation `@warn`. The npm package no longer ships `scss/Utilities/FullWidth/FullWidth.scss`; import `scss/Utilities/FullWidth/full-width` instead. No CSS behaviour change.
 - **1.1** — 2026-09-10 ([#1118](https://github.com/unisdr/undrr-mangrove/issues/1118)): Documented the ancestor-background constraint, how to diagnose it, the three ways to work around it, and two symptoms that look like it but are not. No CSS behaviour change.
 - **1.0** — 2023-03-16: Released component
