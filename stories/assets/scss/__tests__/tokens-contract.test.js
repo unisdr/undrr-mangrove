@@ -1296,6 +1296,13 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.3 — the variant leaves --mg-hero-cta-color at its default, so the CTA is hero-coloured on the white pill',
   },
   {
+    name: 'secondary hero accent rule',
+    fg: '--mg-color-hero--secondary',
+    bg: ['--mg-color-hero'],
+    min: 3,
+    why: 'SC 1.4.11 — .mg-hero--secondary draws an 8px leading rule in the accent against the hero fill it now shares with the default hero',
+  },
+  {
     name: 'hero body text, tertiary variant',
     fg: PAGE,
     bg: ['--mg-color-neutral-900'],
@@ -1355,6 +1362,13 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.3 — .mg-cta__text is neutral-800 on the soft surface, no longer 90% white on a fill',
   },
   {
+    name: 'secondary CTA accent rule',
+    fg: '--mg-color-hero--secondary',
+    bg: ['rgb(var(--mg-color-hero--secondary) / 0.08)', '--mg-color-neutral-0'],
+    min: 3,
+    why: 'SC 1.4.11 — .mg-cta--secondary draws a 6px leading rule in the accent on its own soft surface',
+  },
+  {
     name: 'CTA body text, tertiary variant',
     fg: 'rgb(var(--mg-color-neutral-0) / 0.9)',
     bg: ['--mg-color-hero--tertiary'],
@@ -1406,6 +1420,13 @@ const COMPONENT_PAIRS = [
     bg: ['--mg-color-hero'],
     min: 4.5,
     why: 'SC 1.4.3 — .mg-hub-header--surface-secondary paints links and headings white on the hero-coloured banner',
+  },
+  {
+    name: 'hub header secondary bar rule',
+    fg: '--mg-color-hero--secondary',
+    bg: ['rgb(0 0 0 / 0.14)', '--mg-color-hero'],
+    min: 3,
+    why: 'SC 1.4.11 — the rule under .mg-hub-header__bar, measured on the tinted bar it sits against; it is the only mark distinguishing this surface from the default',
   },
 
   // --- Notice actions: notice.scss ----------------------------------------
@@ -1592,6 +1613,54 @@ const WCAG_EXCEPTIONS = {
     "orange-800 rule on DELTA's tinted card surface; emphasis, not the card boundary",
   ],
 
+  // The other three rules this library draws in the accent. They are recorded
+  // here for the same reason as the ones above — an unmeasured rule is an
+  // unexamined judgement — but two of them are weaker cases than the card's,
+  // and the notes say so rather than reusing the card's wording.
+  //
+  // The CTA rule is the easy one: .mg-cta--secondary already differs from
+  // --soft by the hue of its 8% wash, so the rule is genuinely emphasis.
+  'base|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
+  ],
+  'preventionweb|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
+  ],
+  'irp|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
+  ],
+  'mcr|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
+  ],
+  'delta|secondary CTA accent rule': [
+    2.47,
+    'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
+  ],
+
+  // The hero and hub-header rules are the weaker cases. Since #1196 took the
+  // accent off both surfaces, a --secondary hero and a --surface-secondary
+  // header are pixel-identical to their defaults APART from this rule, so it
+  // is closer to identification than to emphasis. It clears 3:1 in the base,
+  // MCR and DELTA themes and does not in PreventionWeb or IRP, where the
+  // orange sits on a mid blue or teal of nearly its own luminance. Recorded,
+  // not waved through: see unisdr/undrr-mangrove#1196 review notes.
+  'preventionweb|secondary hero accent rule': [
+    2.45,
+    'orange-800 rule on the PreventionWeb teal hero; the variant has no other mark, so this is a weak identifier rather than emphasis',
+  ],
+  'irp|secondary hero accent rule': [
+    1.78,
+    'orange-800 rule on the IRP blue hero; near-equal luminance, and the variant has no other mark — the weakest rule in the set',
+  ],
+  'irp|hub header secondary bar rule': [
+    2.26,
+    'orange-800 rule on the IRP tinted bar; the surface is otherwise identical to the default header',
+  ],
+
   // IRP's tag colour is its lighter interactive blue; the blue-50 hover wash
   // takes it under 4.5.
   'irp|outline tag label, hover fill': [
@@ -1770,6 +1839,58 @@ const PERCEPTUAL_EXCEPTIONS = {
     "orange-800 rule on DELTA's tinted card surface; emphasis, not the card boundary",
   ],
 
+  // The other three accent rules. None of them clears the non-text floor
+  // perceptually; the WCAG table above carries the per-rule reasoning.
+  ...Object.fromEntries(
+    ALL_THEMES.map(theme => [
+      `${theme}|secondary CTA accent rule`,
+      [
+        37.6,
+        'orange-800 rule on the soft CTA surface; the warm wash already separates --secondary from --soft, so this is emphasis',
+      ],
+    ])
+  ),
+  'base|secondary hero accent rule': [
+    31.4,
+    'orange-800 rule on the hero fill; the variant has no other mark, so this is a weak identifier rather than emphasis',
+  ],
+  'preventionweb|secondary hero accent rule': [
+    24.9,
+    'orange-800 rule on the PreventionWeb teal hero; the variant has no other mark',
+  ],
+  'irp|secondary hero accent rule': [
+    11.5,
+    'orange-800 rule on the IRP blue hero; the weakest rule in the set on either measure',
+  ],
+  'mcr|secondary hero accent rule': [
+    40,
+    'orange-800 rule on the MCR purple hero; the variant has no other mark',
+  ],
+  'delta|secondary hero accent rule': [
+    31.4,
+    'orange-800 rule on the DELTA hero fill; the variant has no other mark',
+  ],
+  'base|hub header secondary bar rule': [
+    36.4,
+    'orange-800 rule on the tinted bar; the surface is otherwise identical to the default header',
+  ],
+  'preventionweb|hub header secondary bar rule': [
+    31.3,
+    'orange-800 rule on the tinted bar; the surface is otherwise identical to the default header',
+  ],
+  'irp|hub header secondary bar rule': [
+    21.1,
+    'orange-800 rule on the IRP tinted bar; the surface is otherwise identical to the default header',
+  ],
+  'mcr|hub header secondary bar rule': [
+    43.3,
+    'orange-800 rule on the tinted bar; the surface is otherwise identical to the default header',
+  ],
+  'delta|hub header secondary bar rule': [
+    36.4,
+    'orange-800 rule on the tinted bar; the surface is otherwise identical to the default header',
+  ],
+
   'base|legacy tab label, active': [
     60.8,
     'a mid-tone pair just short of body-text readable (WCAG 2 disagrees: 7.47:1 clears the 4.5:1 minimum)',
@@ -1909,6 +2030,39 @@ describe('component token contrast, including hover and active states', () => {
     );
   });
 
+  // The pairs above are token pairs: they measure what the tokens resolve to,
+  // not what a stylesheet actually paints. That is the register's blind spot —
+  // putting .mg-tag--accent's fill back to the solid Sendai orange restores the
+  // exact 2.95:1 failure unisdr/undrr-mangrove#1196 removed and every pair here
+  // still passes, because no pair names the tag's fill. This binds the one
+  // accent surface the issue was about to the pair that measures it. The wider
+  // gap — a register entry per painted surface — is a separate piece of work.
+  test('tag.scss paints the accent chip with the pair the register measures', () => {
+    const source = fs.readFileSync(
+      path.resolve(__dirname, '../../../Atom/Tag/tag.scss'),
+      'utf8'
+    );
+    const accent = source.slice(source.indexOf('.mg-tag--accent {'));
+    const block = accent.slice(0, accent.indexOf('\n}\n') + 3);
+
+    // The fill is the pale end of the ramp, and the label is --mg-color-text:
+    // the 'accent tag label' pair. Neither may become the accent itself.
+    expect(block).toMatch(/rgb\(var\(--mg-color-orange-50\)\)/);
+    expect(block).toMatch(/rgb\(var\(--mg-color-orange-100\)\)/);
+    expect(block).toMatch(
+      /--mg-tag-foreground:\s*rgb\(var\(--mg-color-text\)\);/
+    );
+    // The accent may only be the border here — the 'accent tag border' pair.
+    expect(block).toMatch(
+      /border-color:\s*rgb\(var\(--mg-color-tag-accent\)\);/
+    );
+    // ...and only the border. Scoped to the two fill declarations, so the
+    // border-color line below them cannot satisfy the match by accident.
+    const fills = block.match(/--mg-tag-background(?:-hover)?:[\s\S]*?\);/g);
+    expect(fills).toHaveLength(2);
+    for (const fill of fills) expect(fill).not.toMatch(/--mg-color-tag-accent/);
+  });
+
   test('switch pairs measure what _form-base.scss compiles', () => {
     const css = compile('style');
     Object.values(SWITCH).forEach(value => {
@@ -2018,11 +2172,14 @@ describe('where the two contrast measures disagree', () => {
     'base | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'base | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'base | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'base | secondary hero accent rule | WCAG 2 PASSES 3.13:1 (min 3) | perceptual fails 31.4 (NON_TEXT needs 50)',
     'base | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
+    'base | hub header secondary bar rule | WCAG 2 PASSES 3.74:1 (min 3) | perceptual fails 36.4 (NON_TEXT needs 50)',
     'preventionweb | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'preventionweb | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'preventionweb | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
+    'preventionweb | hub header secondary bar rule | WCAG 2 PASSES 3.01:1 (min 3) | perceptual fails 31.3 (NON_TEXT needs 50)',
     'preventionweb | notice secondary action on the offline (negative) notice | WCAG 2 PASSES 4.59:1 (min 4.5) | perceptual fails 59.8 (BODY_TEXT needs 63)',
     'preventionweb | notice secondary action on the overlay over a black embed | WCAG 2 PASSES 4.81:1 (min 4.5) | perceptual fails 62.1 (BODY_TEXT needs 63)',
     'irp | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
@@ -2033,12 +2190,16 @@ describe('where the two contrast measures disagree', () => {
     'mcr | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'mcr | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'mcr | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
+    'mcr | secondary hero accent rule | WCAG 2 PASSES 4.54:1 (min 3) | perceptual fails 40 (NON_TEXT needs 50)',
     'mcr | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
+    'mcr | hub header secondary bar rule | WCAG 2 PASSES 5.09:1 (min 3) | perceptual fails 43.3 (NON_TEXT needs 50)',
     'delta | error summary text on its tinted panel | WCAG 2 PASSES 5.27:1 (min 4.5) | perceptual fails 59.5 (BODY_TEXT needs 63)',
     'delta | dataviz label on categorical fill 2 | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'delta | dataviz label on Sendai target C | WCAG 2 PASSES 6.66:1 (min 4.5) | perceptual fails 54.6 (BODY_TEXT needs 63)',
     'delta | hero title on the split hero | WCAG 2 PASSES 3.07:1 (min 3) | perceptual fails 27.2 (LARGE_TEXT needs 50)',
+    'delta | secondary hero accent rule | WCAG 2 PASSES 3.13:1 (min 3) | perceptual fails 31.4 (NON_TEXT needs 50)',
     'delta | CTA body text, quaternary variant | WCAG 2 PASSES 4.82:1 (min 4.5) | perceptual fails 57.7 (BODY_TEXT needs 63)',
+    'delta | hub header secondary bar rule | WCAG 2 PASSES 3.74:1 (min 3) | perceptual fails 36.4 (NON_TEXT needs 50)',
   ];
 
   test('the two measures disagree about exactly these pairs', () => {
