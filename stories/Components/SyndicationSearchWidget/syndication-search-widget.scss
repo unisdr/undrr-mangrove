@@ -1235,7 +1235,7 @@ $search-input-padding-x: mg-rem(44);
 }
 
 // ========================================
-// Mobile Filter Drawer (Left Slide-in)
+// Mobile Filter Drawer (Inline-start Slide-in)
 // ========================================
 // UX patterns informed by:
 // @see https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters
@@ -1263,24 +1263,42 @@ $search-input-padding-x: mg-rem(44);
   }
 }
 
+// The panel, the direction it travels and the side its shadow falls on are
+// all driven by two custom properties flipped under `:dir(rtl)`, the same
+// shape `.mg-drawer--start` uses in Navigation/Drawer. `inset-inline-start`
+// on its own would fight the keyframe, which translates on a physical axis:
+// the resting edge would move to the right in Arabic while the panel still
+// slid in from the left.
 .mg-search__drawer {
+  --mg-search-drawer-offset: -100%;
+  --mg-search-drawer-shadow-offset: 4px;
+
   position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  inset-block: 0;
+  inset-inline-start: 0;
   width: min(320px, 85vw); // Max 320px or 85% of viewport
   background: #fff;
-  box-shadow: 4px 0 20px rgb(0 0 0 / 0.15);
+  box-shadow: var(--mg-search-drawer-shadow-offset) 0 20px rgb(0 0 0 / 0.15);
   display: flex;
   flex-direction: column;
-  animation: mg-search-slide-in-left 0.3s ease-out;
+  animation: mg-search-slide-in-start 0.3s ease-out;
   z-index: var(--mg-z-index-drawer);
   cursor: default; // Reset cursor inside drawer
+
+  // The shadow points at the page content, so it mirrors with the panel.
+  &:dir(rtl) {
+    --mg-search-drawer-offset: 100%;
+    --mg-search-drawer-shadow-offset: -4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
-@keyframes mg-search-slide-in-left {
+@keyframes mg-search-slide-in-start {
   from {
-    transform: translateX(-100%);
+    transform: translateX(var(--mg-search-drawer-offset));
   }
   to {
     transform: translateX(0);
