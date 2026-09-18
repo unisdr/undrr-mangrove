@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import HydrationAuthoring from '../../docs/HYDRATION-AUTHORING.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Build a component/Hydration"
@@ -9,7 +10,9 @@ import HydrationAuthoring from '../../docs/HYDRATION-AUTHORING.md?raw';
   }}
 />
 
-<Markdown>{HydrationAuthoring}</Markdown>
+<Markdown>
+  {linkDocsPages(HydrationAuthoring, 'docs/HYDRATION-AUTHORING.md')}
+</Markdown>
 
 ---
 

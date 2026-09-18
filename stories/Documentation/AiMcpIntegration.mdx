@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import AiGuide from '../../docs/AI-MCP-INTEGRATION.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Getting started/AI and MCP integration"
@@ -9,7 +10,7 @@ import AiGuide from '../../docs/AI-MCP-INTEGRATION.md?raw';
   }}
 />
 
-<Markdown>{AiGuide}</Markdown>
+<Markdown>{linkDocsPages(AiGuide, 'docs/AI-MCP-INTEGRATION.md')}</Markdown>
 
 ---
 

@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import ReviewChecklist from '../../docs/REVIEW-CHECKLIST.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Build a component/Review checklist"
@@ -9,7 +10,9 @@ import ReviewChecklist from '../../docs/REVIEW-CHECKLIST.md?raw';
   }}
 />
 
-<Markdown>{ReviewChecklist}</Markdown>
+<Markdown>
+  {linkDocsPages(ReviewChecklist, 'docs/REVIEW-CHECKLIST.md')}
+</Markdown>
 
 ---
 

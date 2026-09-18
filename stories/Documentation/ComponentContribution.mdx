@@ -488,15 +488,17 @@ Components use these approaches for managing state:
 
 4. **Follow the existing design tokens**
 
-   - Use variables for colors, spacing, typography, etc.
-   - Retrieve design tokens from `stories/assets/scss/variables`
+   - Use the `var(--mg-*)` custom properties for colors, spacing and typography. The `$mg-color-*` and `$mg-spacing-*` SCSS aliases were removed in 2.0.
+   - Tokens are generated from `tokens/*.yaml` into `stories/assets/scss/generated/_tokens-<brand>.scss` by `yarn build:tokens`; SCSS variables from `_variables.scss` are only for values a custom property cannot carry (breakpoints in `@media`, `@if`, `@font-face`).
+   - Color tokens hold sRGB channel triples, so wrap them in `rgb(...)`.
    - Never use hardcoded values for colors, fonts, or spacing
    - Example:
      ```scss
      .mg-button {
-       background-color: $mg-color-interactive; // Good
-       padding: $mg-spacing-md $mg-spacing-lg; // Good
+       background-color: rgb(var(--mg-color-interactive)); // Good
+       padding: var(--mg-spacing-100) var(--mg-spacing-200); // Good
        // NOT background-color: #0066cc; // Bad - hardcoded value
+       // NOT background-color: $mg-color-interactive; // Bad - removed in 2.0
      }
      ```
 
@@ -579,11 +581,11 @@ Or nest with `&` when the override is scoped to the block:
 
 ```scss
 .mg-component__separator {
-  border-left: 2px solid $mg-color-neutral-400;
+  border-left: 2px solid rgb(var(--mg-color-neutral-400));
 
   [dir='rtl'] & {
     border-left: none;
-    border-right: 2px solid $mg-color-neutral-400;
+    border-right: 2px solid rgb(var(--mg-color-neutral-400));
   }
 }
 ```

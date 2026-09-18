@@ -1,9 +1,9 @@
-import { Meta, Controls } from '@storybook/addon-docs/blocks';
-import { Drawer } from './Drawer';
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as DrawerStories from './Drawer.stories';
 
-<Meta title="Components/Navigation/Drawer" component={Drawer} />
+<Meta of={DrawerStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Drawer
 
@@ -17,6 +17,27 @@ The `Drawer` component provides an accessible off-canvas drawer and floating pan
 - **Content safety**: string `children` and `footer` render as plain text. Server-rendered markup goes through `bodyHtml` / `footerHtml`, which are sanitised with DOMPurify.
 - **Translations**: the close button label comes from `labels.closeLabel`.
 
+## Storybook variations
+
+Each example below opens a real drawer. Press Escape, or the close button, to
+dismiss it.
+
+### Filter drawer (default)
+
+<Canvas of={DrawerStories.Default} />
+
+### End edge
+
+<Canvas of={DrawerStories.End} />
+
+### Bottom sheet
+
+<Canvas of={DrawerStories.Bottom} />
+
+### Floating panel
+
+<Canvas of={DrawerStories.FloatingPanel} />
+
 ## Usage
 
 ### React
@@ -27,11 +48,16 @@ import { Drawer } from '@undrr/undrr-mangrove';
 <Drawer
   isOpen={isOpen}
   onClose={() => setIsOpen(false)}
-  title="Filter options"
+  title="Filter publications"
   position="start"
   labels={{ closeLabel: 'Close' }}
+  footer={
+    <button type="button" className="mg-button mg-button-primary">
+      Show 128 results
+    </button>
+  }
 >
-  <p>Drawer content goes here.</p>
+  <p>Narrow the publications list by hazard, region and year.</p>
 </Drawer>;
 ```
 
@@ -40,22 +66,26 @@ import { Drawer } from '@undrr/undrr-mangrove';
 Give the container an `id` and point one or more trigger buttons at it with `data-mg-drawer-trigger`:
 
 ```html
-<button type="button" data-mg-drawer-trigger="filters">Filter options</button>
+<button type="button" data-mg-drawer-trigger="filters">
+  Filter publications
+</button>
 
 <div
   id="filters"
   data-mg-drawer
   data-position="start"
-  data-title="Filter options"
+  data-title="Filter publications"
   data-backdrop="true"
   data-is-open="false"
   data-close-label="Close"
 >
   <div class="mg-drawer__body">
-    <p>Server rendered drawer content.</p>
+    <p>Narrow the publications list by hazard, region and year.</p>
   </div>
   <div class="mg-drawer__footer">
-    <button type="button" class="mg-button mg-button-primary">Apply</button>
+    <button type="button" class="mg-button mg-button-primary">
+      Show 128 results
+    </button>
   </div>
 </div>
 ```
@@ -95,6 +125,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.0.1** — 2026-09-17 ([#1194](https://github.com/unisdr/undrr-mangrove/pull/1194)): Documentation only. The docs page now embeds its stories, so the default drawer, the end edge, the bottom sheet and the floating panel each have a live example; `Bottom` and `FloatingPanel` are new story exports. Placeholder body copy is replaced with a publications filter panel and a country report panel; the report panel uses sample data and names no Member State. The AI manifest gained the structured `hydration` contract for Drawer, so agents reading `renderedHtml` are told it cannot open on its own.
 - **1.0.0** — 2026-09-16 ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)): Initial implementation of the off-canvas drawer and floating panel.
   - Hydration via `Drawer.fromElement.js` and `Drawer.hydrate.js` ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
   - Before rc.1: string content renders as text with sanitised `bodyHtml` / `footerHtml` for hydration; closed drawers are inert and hidden; dialog naming, focus management and a modal focus trap; translatable close label; `data-mg-drawer-trigger` and open/close events for hydrated drawers; theme tokens and RTL-aware positioning.

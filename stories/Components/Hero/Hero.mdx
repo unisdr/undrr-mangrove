@@ -4,7 +4,7 @@ import * as HeroStories from './Hero.stories';
 
 <Meta of={HeroStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Mangrove hero (main)
 
@@ -51,6 +51,10 @@ The `split` prop controls the content/media column ratio, aligned to the MG 12-c
 - Use `layout="background"` for visually-led pages where the image is central to the brand moment.
 - Use `layout="split"` when you need dense body copy alongside a representative image (e.g., topic pages, campaign sections).
 
+### Colour variants and contrast
+
+`variant="secondary"` paints the hero in the orange accent, and the orange carries no text. White body copy on it measures 2.65 against WCAG's 4.5, the orange CTA label on the white pill is the same 2.65 the other way round, and no text colour clears the threshold on this hue at any size. The "Split (1/2 balanced)" story uses this variant, so treat it as a demonstration of the variant rather than a recommended pairing: prefer `primary`, `tertiary` or `quaternary` for a hero that carries copy a reader must read. Removing the pairing is a brand decision, tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+
 ## Example — background (default)
 
 <Canvas of={HeroStories.Default} meta={HeroStories} />
@@ -80,6 +84,8 @@ should respect parent width. Content can include `logo` and `buttons`.
 
 ## Changelog
 
+- **1.6.8** — 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented `variant="secondary"` as a recorded contrast exception — white copy on the orange accent meets neither contrast measure at any size. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
+- **1.6.7** — 2026-09-17 ([#1192](https://github.com/unisdr/undrr-mangrove/pull/1192)): The full-bleed escape uses `margin-inline-start` / `padding-inline-start` instead of physical left properties, so the hero mirrors in RTL without an override. Split heroes no longer break out of the viewport in Arabic at mobile widths (the page scrolled ~16px wider than the screen). The RTL blocks now only flip the background gradient and the split column order.
 - **1.6.6** — 2026-09-17 ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173)): Filled buttons on the hero get a light tinted stroke (`--mg-border-color-button-primary`/`-secondary`) so they keep a visible edge when their fill matches the hero colour.
 - **1.6.5** — 2026-09-15: Removed `max-width: 12ch` constraint from immersive hero title.
 - **1.6.4** — 2026-09-10 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)):

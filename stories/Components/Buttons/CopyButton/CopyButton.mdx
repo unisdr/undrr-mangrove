@@ -4,7 +4,7 @@ import * as CopyButtonStories from './CopyButton.stories';
 
 <Meta title="Components/Buttons/CopyButton" component={CopyButton} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Copy button
 
@@ -26,7 +26,9 @@ Mangrove offers three integration paths depending on your project setup:
 
 ### Option 1: Standalone Vanilla JS (Zero React Dependency)
 
-For Drupal Twig templates, static HTML pages, or server-rendered layouts where React is not used, load the standalone script `@undrr/undrr-mangrove/js/copy-button.js` (or `dist/js/copy-button.min.js`). It automatically initializes all `[data-mg-copy-button]` elements on the page.
+For Drupal Twig templates, static HTML pages, or server-rendered layouts where React is not used, load the standalone script from the CDN (`https://assets.undrr.org/mangrove/2.0.0-rc.2/js/copy-button.js`) or from npm (`@undrr/undrr-mangrove/js/copy-button.js`). It automatically initializes all `[data-mg-copy-button]` elements on the page.
+
+The script file uses ES module `export` statements, so you **must** load it with `type="module"`. A plain `<script src>` throws `SyntaxError: Unexpected token 'export'`.
 
 ```html
 <button
@@ -34,7 +36,7 @@ For Drupal Twig templates, static HTML pages, or server-rendered layouts where R
   class="mg-button mg-button-primary mg-button-outline mg-button--icon mg-copy-button"
   data-mg-copy-button
   data-text-to-copy="https://preventionweb.net/drr-glossary"
-  data-aria-label="Copy glossary link"
+  aria-label="Copy glossary link"
   data-tooltip-label="Copied!"
 >
   <span class="mg-icon mg-icon-copy mg-button__icon" aria-hidden="true"></span>
@@ -44,8 +46,11 @@ For Drupal Twig templates, static HTML pages, or server-rendered layouts where R
   <span class="mg-u-sr-only" aria-live="polite"></span>
 </button>
 
-<!-- Standalone vanilla UMD script -->
-<script src="dist/js/copy-button.min.js"></script>
+<!-- JS: type="module" is required -->
+<script
+  type="module"
+  src="https://assets.undrr.org/mangrove/2.0.0-rc.2/js/copy-button.js"
+></script>
 ```
 
 In Drupal behaviors or SPAs, you can manually re-initialize dynamically inserted content:
@@ -98,11 +103,18 @@ import { CopyButton } from '@undrr/undrr-mangrove';
 | Attribute            | Default                  | Description                                                   |
 | -------------------- | ------------------------ | ------------------------------------------------------------- |
 | `data-text-to-copy`  | `''`                     | Text string to be written to the clipboard                    |
-| `data-aria-label`    | `'Copy to clipboard'`    | Accessible button name for screen readers                     |
 | `data-tooltip-label` | `'Copied!'`              | Text displayed inside the transient micro-feedback badge      |
 | `data-copied-label`  | `'Copied to clipboard.'` | Text announced to `aria-live` upon successful copy            |
 | `data-variant`       | `'outline'`              | Button visual style (`'outline'`, `'primary'`, `'secondary'`) |
 | `data-size`          | `—`                      | Button icon size (`'small'`, `'large'`)                       |
+
+### Naming the button
+
+The button is icon-only, so it needs an accessible name of its own (WCAG 4.1.2 Name, Role, Value). Put it in a plain `aria-label` — every integration path reads it, including the React `ariaLabel` prop it maps to under hydration.
+
+`data-aria-label` is the older spelling and stays supported, so markup already in the wild keeps its name: the vanilla script copies it onto `aria-label` when the button has none, and `fromElement` falls back to it. Do not use it in new markup, and never rely on it alone — a button that carries only `data-aria-label` announces as "button" for as long as the script takes to load, and as "button" forever if it fails to.
+
+An `aria-label` or `aria-labelledby` you set yourself is never overridden.
 
 ## Props
 
@@ -110,6 +122,9 @@ import { CopyButton } from '@undrr/undrr-mangrove';
 
 ## Changelog
 
+- **1.0.2** — 2026-09-18 ([#1191](https://github.com/unisdr/undrr-mangrove/pull/1191)): Fixed the standalone vanilla integration snippet. It pointed at `dist/js/copy-button.min.js`, which the CDN does not serve, and loaded the ES module without `type="module"`, so copying it threw `SyntaxError: Unexpected token 'export'`.
+- **1.0.1** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): `mgCopyButton()` copies `data-aria-label` onto `aria-label` when the button has no accessible name of its own, and the vanilla integration example in these docs uses a real `aria-label`. The example was icon-only and carried `data-aria-label`, which only the hydration path reads, so anyone copying it shipped a button that announced as "button" with no context (WCAG 4.1.2). An `aria-label` or `aria-labelledby` you set yourself is never overridden.
+  - `fromElement` now reads a plain `aria-label` off the container before the `data-*` spellings, so markup written against these docs keeps its name on the Layer 2 hydration path too. The data attributes reference no longer lists `data-aria-label` as the way to name the button; see "Naming the button" above.
 - **1.0.0** — 2026-09-16 ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements.
   - Standalone zero-dependency vanilla script (`stories/assets/js/copy-button.js`) and Layer 2 React hydration (`CopyButton.fromElement.js`, `CopyButton.hydrate.js`) ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
   - Before rc.1: a failed copy shows an error tooltip and announces a manual-copy hint (`failedLabel`, `failedTooltipLabel`, translated); tooltip motion respects reduced-motion; real font-size token and a local z-index instead of an undefined tooltip token.

@@ -1,9 +1,9 @@
-import { Meta, Controls } from '@storybook/addon-docs/blocks';
-import { Tree, TreeItem } from './Tree';
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as TreeStories from './Tree.stories';
 
-<Meta title="Components/Navigation/Tree" component={Tree} />
+<Meta of={TreeStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Tree
 
@@ -16,6 +16,27 @@ The `Tree` component provides an accessible hierarchical navigation structure co
 - **Linked Parent Sections**: Independent toggle control (`mg-tree__toggle`) and navigation link (`mg-tree__label`).
 - **Mangrove tokens**: built with canonical interactive and neutral colour tokens.
 - **RTL**: ArrowRight and ArrowLeft swap and the chevron mirrors in right-to-left layouts.
+
+## Storybook variations
+
+### Default
+
+<Canvas of={TreeStories.Default} />
+
+### With links
+
+Parent and leaf items can be links. The selected item carries `aria-current`
+and its parents start expanded.
+
+<Canvas of={TreeStories.WithLinks} />
+
+### Custom toggle icon
+
+<Canvas of={TreeStories.CustomToggleIcon} />
+
+### Hydrated from HTML
+
+<Canvas of={TreeStories.HydratedFromHtml} />
 
 ## Usage
 
@@ -177,6 +198,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.1.1** — 2026-09-17 ([#1194](https://github.com/unisdr/undrr-mangrove/pull/1194)): Documentation only. The docs page now embeds its stories, so the default, linked, custom-toggle-icon and hydrated trees each have a live example. The placeholder "Item 1 / Item 2" labels are replaced with a knowledge base section tree, and the three React stories now give the tree an `aria-label`, which `HydratedFromHtml` already had through `data-aria-label`.
 - **1.1.0** — 2026-09-17 ([#1176](https://github.com/unisdr/undrr-mangrove/pull/1176)): Hydration from a nested list with `Tree.fromElement.js`, `Tree.hydrate.js` and `HydratedTree`, and a `toggleIcon` prop on `Tree` and `TreeItem` (`data-toggle-icon` when hydrated).
   - The default export of `components/Tree.js` is now `HydratedTree` ([#1172](https://github.com/unisdr/undrr-mangrove/issues/1172)), which takes the same props and children as `Tree`; import `{ Tree }` if you need the component itself.
   - `TreeItem` takes a `current` prop that sets `aria-current` on its link. Hydration keeps `aria-current` from the source link and expands the selected item's parents so it is visible on load.

@@ -1,8 +1,8 @@
 {/* Maintenance note: the LinkTo `kind` values below are story IDs that change
 when a component's Storybook title changes (e.g. renaming, re-categorising).
-Validate against http://localhost:6006/index.json before shipping changes
-that touch story titles. Consider adding an automated check to the
-/document-release flow. */}
+`scripts/__tests__/docs-links.test.js` resolves every `kind` against the story
+titles declared in `stories/`, so a rename that orphans one of these fails
+`yarn test`. */}
 
 import { Meta } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
@@ -75,10 +75,11 @@ A curated catalog of Mangrove components organized by purpose. For theme-specifi
 
 | Component         | Purpose                         | View                                                                   |
 | ----------------- | ------------------------------- | ---------------------------------------------------------------------- |
-| Bar chart         | Horizontal and vertical charts  | <LinkTo kind="components-charts-barchart" story="docs">View</LinkTo>   |
-| Map               | Interactive geographic maps     | <LinkTo kind="components-maps-mapcomponent" story="docs">View</LinkTo> |
+| Legend            | Keys for maps and charts        | <LinkTo kind="components-dataviz-legend" story="docs">View</LinkTo>    |
 | Gallery           | Image grid with lightbox        | <LinkTo kind="components-gallery" story="docs">View</LinkTo>           |
 | Table of contents | Auto-generated content index    | <LinkTo kind="components-navigation-table-of-contents" story="docs">View</LinkTo> |
+
+Mangrove does not ship chart or map components. Its D3 charts and Leaflet map wrapper were removed in 1.8.0; bring your own charting and mapping libraries and style their output with Mangrove tokens.
 
 ---
 
@@ -109,7 +110,6 @@ A curated catalog of Mangrove components organized by purpose. For theme-specifi
 | Cookie consent     | GDPR cookie banner         | <LinkTo kind="components-notice-cookieconsentbanner" story="docs">View</LinkTo> |
 | Snackbar           | Notifications and alerts   | <LinkTo kind="components-notice-snackbar" story="docs">View</LinkTo>            |
 | Syndication search | Cross-site content search  | <LinkTo kind="components-syndicated-search" story="docs">View</LinkTo>   |
-| Fetcher            | Async content loading      | <LinkTo kind="components-fetcher" story="docs">View</LinkTo>             |
 | Error pages        | 404, 500 pages             | <LinkTo kind="components-error-pages" story="docs">View</LinkTo>         |
 | Page template      | Complete page layout       | <LinkTo kind="example-page-template-example" story="docs">View</LinkTo>  |
 

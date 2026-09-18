@@ -30,7 +30,6 @@ try {
   if (!fs.existsSync(path.join(hooksDir, 'commit-msg'))) process.exit(0);
 
   execSync('git config core.hooksPath githooks', { stdio: 'ignore' });
-  // eslint-disable-next-line no-console
   console.log('git hooks installed: core.hooksPath -> githooks');
 } catch {
   // No git, detached environment, or restricted config — silently skip.

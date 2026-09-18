@@ -20,7 +20,10 @@ const path = require('path');
 const { optimize } = require('svgo');
 const iconMap = require('./icon-map.cjs');
 
-const OUTPUT = path.resolve(__dirname, '../stories/Atom/Icons/_icon-definitions.scss');
+const OUTPUT = path.resolve(
+  __dirname,
+  '../stories/Atom/Icons/_icon-definitions.scss'
+);
 
 // SVGO config: strip metadata, remove dimensions (we size via CSS),
 // keep viewBox, inline styles → attributes for cleaner output.
@@ -98,7 +101,9 @@ function buildIconDefinitions() {
     try {
       optimised = optimize(raw, { ...svgoConfig, path: svgPath });
     } catch (err) {
-      console.error(`build-icons: SVGO failed on mg-icon-${name} (${iconMap[name]}): ${err.message}`);
+      console.error(
+        `build-icons: SVGO failed on mg-icon-${name} (${iconMap[name]}): ${err.message}`
+      );
       process.exit(1);
     }
 
@@ -106,12 +111,16 @@ function buildIconDefinitions() {
     // (e.g. OCHA's .st0{fill:...}) were not inlined. Paths would render unstyled
     // if the icon is ever used with mg-icon--multicolor (background-image mode).
     if (optimised.data.includes('<style')) {
-      errors.push(`  mg-icon-${name}: <style> block survived SVGO — class-based fill rules not inlined`);
+      errors.push(
+        `  mg-icon-${name}: <style> block survived SVGO — class-based fill rules not inlined`
+      );
     }
 
     // Error (not warning) — mask-size: contain requires viewBox to scale correctly.
     if (!optimised.data.includes('viewBox')) {
-      errors.push(`  mg-icon-${name}: missing viewBox — required for mask-size: contain`);
+      errors.push(
+        `  mg-icon-${name}: missing viewBox — required for mask-size: contain`
+      );
     }
 
     const encoded = encodeSvg(optimised.data);
@@ -154,7 +163,9 @@ function buildIconDefinitions() {
   fs.mkdirSync(path.dirname(OUTPUT), { recursive: true });
   fs.writeFileSync(OUTPUT, output, 'utf8');
 
-  console.log(`build-icons: wrote ${names.length} icon rules to ${path.relative(process.cwd(), OUTPUT)}`);
+  console.log(
+    `build-icons: wrote ${names.length} icon rules to ${path.relative(process.cwd(), OUTPUT)}`
+  );
 }
 
 buildIconDefinitions();

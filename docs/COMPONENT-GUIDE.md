@@ -165,14 +165,18 @@ function NavCard({ theme }) {
 }
 ```
 
-**Never use `href="/?path=..."` or `href="?path=..."` in MDX or stories.** Both navigate the iframe directly.
+**Never hand-write `<a href="/?path=...">` or `<a href="?path=...">` in JSX.** A raw anchor navigates the iframe directly, because nothing intercepts the click.
 
-**Add a review checklist reference** right after the `<Meta>` block. Adjust the relative path based on file depth (`../../../` for depth-3 components like `Pager/`, `../../../../` for depth-4 like `Cards/Card/`):
+**Markdown links to `?path=/docs/…` are fine, and are the right form in prose.** A markdown link in MDX — and in a `docs/*.md` file rendered through the `<Markdown>` block — compiles to Storybook's own `AnchorMdx`, which cancels the click and emits `NAVIGATE_URL` so the manager routes the page. `<LinkTo>` is still preferable when you know the story id, because it fails loudly on an unknown kind; use a markdown `?path=` link when you need a link inside a table cell, a heading, or plain Markdown that has no JSX.
+
+Write it as `?path=/docs/…--docs` (query only), never `/docs/…--docs` — a leading slash is not a Storybook route and 404s on a built site. In a `docs/*.md` file that also renders on GitHub, keep the relative `FILE.md` link: `stories/Documentation/docsPageLinks.js` rewrites those to `?path=` links when the page is imported into Storybook. `scripts/__tests__/docs-links.test.js` enforces all of this.
+
+**Add a review checklist reference** right after the `<Meta>` block. Copy the line as-is — the published Storybook URL is absolute because a relative path to a repo file 404s once the docs are built:
 
 ```mdx
 <Meta of={ComponentNameStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Component name
 ```

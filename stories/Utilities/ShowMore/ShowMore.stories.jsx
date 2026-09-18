@@ -109,8 +109,8 @@ function DetachedShowMore() {
         The button below is outside the content container. It targets the
         content using <code>data-mg-show-more-target</code>.
       </p>
-      <a
-        href="#"
+      <button
+        type="button"
         className="mg-button mg-button-primary mg-show-more--button"
         data-mg-show-more="true"
         data-mg-show-more-target=".detached-content"
@@ -118,7 +118,7 @@ function DetachedShowMore() {
         data-mg-show-more-label-collapsed="Show more"
       >
         Show more
-      </a>
+      </button>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import AccessibilityGuide from '../../docs/ACCESSIBILITY.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Getting started/Accessibility"
@@ -9,7 +10,9 @@ import AccessibilityGuide from '../../docs/ACCESSIBILITY.md?raw';
   }}
 />
 
-<Markdown>{AccessibilityGuide}</Markdown>
+<Markdown>
+  {linkDocsPages(AccessibilityGuide, 'docs/ACCESSIBILITY.md')}
+</Markdown>
 
 ---
 

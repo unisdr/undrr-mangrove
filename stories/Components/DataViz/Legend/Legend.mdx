@@ -1,22 +1,67 @@
-import { Meta, Story, Canvas, Controls } from '@storybook/addon-docs/blocks';
-import { Legend } from './Legend';
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
 import * as LegendStories from './Legend.stories';
 
-<Meta title="Components/DataViz/Legend" component={Legend} />
+<Meta of={LegendStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Legend
 
-The `Legend` component provides primitives for building map and chart legends, including continuous, stepped, and categorical variants.
+A key for a map or chart: it names the colours and symbols a visualization uses
+so a reader can tell what a shade of red or a swatch of blue means.
 
-## Overview
+Legend renders the key only. It does not draw the map or the chart, and it does
+not read data — you pass it the same colours and breakpoints your visualization
+was drawn with.
 
-Legends help users interpret the colors or symbols used in data visualizations like maps, charts, and graphs.
+## When to use
+
+| Need                                                       | Use                                                                 |
+| ---------------------------------------------------------- | ------------------------------------------------------------------- |
+| A colour ramp over a continuous measure (ground shaking)   | `type="continuous"`                                                 |
+| Binned intervals with fixed cut points (temperature bands) | `type="stepped"`                                                    |
+| A fixed set of named categories (disaster types)           | `type="categorical"`                                                |
+| A count, share, or single figure with no colour scale      | [StatsCard](?path=/docs/components-cards-stats-card--docs)          |
+| A filterable list of records                               | [Syndicated search](?path=/docs/components-syndicated-search--docs) |
+
+## Storybook variations
+
+### Continuous ramp
+
+A gradient across a measure with no natural breaks. Give it two or three ticks;
+more crowd the bar at narrow widths.
 
 Legend text is styled for light surfaces. There is no dark-surface variant: on a dark background, set the text colours yourself or place the legend on a light panel.
 
 <Canvas of={LegendStories.Continuous} />
+
+### Stepped
+
+Discrete bands, one swatch per interval. Use it when the cut points are part of
+the message, such as classified hazard or anomaly bands.
+
+<Canvas of={LegendStories.Stepped} />
+
+### Categorical
+
+Named categories, each with a swatch and an optional value. `layout="inline"`
+wraps the entries in a row.
+
+<Canvas of={LegendStories.Categorical} />
+
+### Categorical grid
+
+`layout="grid"` puts the entries in columns. Prefer it when labels are long or
+there are more than about six categories.
+
+<Canvas of={LegendStories.CategoricalGrid} />
+
+### Vertical orientation
+
+Continuous and stepped legends can run vertically, which suits a legend docked
+beside a tall map.
+
+<Canvas of={LegendStories.VerticalContinuous} />
 
 ## Properties
 
@@ -24,30 +69,117 @@ Legend text is styled for light surfaces. There is no dark-surface variant: on a
 
 ## Usage
 
-### Continuous Ramp
+```jsx
+import { Legend } from '@undrr/undrr-mangrove';
 
-Use for continuous numerical data.
+<Legend
+  title="Disaster type"
+  type="categorical"
+  layout="inline"
+  items={[
+    {
+      label: 'Earthquake',
+      color: 'rgb(var(--mg-color-red-500))',
+      value: '45%',
+    },
+    { label: 'Flood', color: 'rgb(var(--mg-color-blue-500))', value: '30%' },
+    {
+      label: 'Drought',
+      color: 'rgb(var(--mg-color-orange-500))',
+      value: '25%',
+    },
+  ]}
+/>;
+```
 
-<Canvas of={LegendStories.Continuous} />
+Ticks are positioned from the `position` string when you supply one. Without
+it, ticks are spread evenly across the bar, and a single tick sits at the
+start.
 
-### Categorical
+```jsx
+<Legend
+  title="Peak ground acceleration (cm/s²)"
+  type="continuous"
+  customRamp="linear-gradient(to right, #00f, #0ff, #0f0, #ff0, #f00)"
+  ticks={[
+    { label: '0', position: '0%' },
+    { label: '500', position: '50%' },
+    { label: '> 1000', position: '100%' },
+  ]}
+/>
+```
 
-Use for discrete categorical data.
+Pass a `rampClass` instead of `customRamp` when the gradient belongs in your own
+stylesheet rather than in an inline style.
 
-<Canvas of={LegendStories.Categorical} />
-<Canvas of={LegendStories.CategoricalGrid} />
+## Vanilla HTML and Drupal
 
-### Stepped
+Legend has no JavaScript behaviour, so it needs no hydration. A server-rendered
+page can emit the same markup and load a Mangrove stylesheet:
 
-Use for binned or segmented data intervals.
+```html
+<div
+  class="mg-legend mg-legend--categorical mg-legend--inline"
+  role="group"
+  aria-labelledby="legend-title"
+>
+  <p id="legend-title" class="mg-legend__title">Disaster type</p>
+  <ul class="mg-legend__list">
+    <li class="mg-legend__item">
+      <span class="mg-legend__swatch" style="background-color: #d73027"></span>
+      <span class="mg-legend__label">Earthquake</span>
+      <span class="mg-legend__value">45%</span>
+    </li>
+  </ul>
+</div>
+```
 
-<Canvas of={LegendStories.Stepped} />
+## CSS reference
 
-### Vertical Orientation
+| Class                      | Description                                              |
+| -------------------------- | -------------------------------------------------------- |
+| `.mg-legend`               | Root element; carries `role="group"`                     |
+| `.mg-legend--continuous`   | Type hook; carries no styles of its own                  |
+| `.mg-legend--stepped`      | Type hook; the stepped styling lives on `__bar--stepped` |
+| `.mg-legend--categorical`  | Type hook; carries no styles of its own                  |
+| `.mg-legend--vertical`     | Vertical orientation                                     |
+| `.mg-legend--inline`       | Categorical entries on one wrapping row                  |
+| `.mg-legend--grid`         | Categorical entries in columns                           |
+| `.mg-legend__title`        | Legend title; names the group through `aria-labelledby`  |
+| `.mg-legend__bar-wrapper`  | Wraps the ramp and its ticks                             |
+| `.mg-legend__bar`          | The colour ramp                                          |
+| `.mg-legend__bar--stepped` | The ramp when it is made of discrete steps               |
+| `.mg-legend__step`         | One step in a stepped ramp                               |
+| `.mg-legend__ticks`        | Tick track                                               |
+| `.mg-legend__tick`         | One tick, placed from `--mg-legend-tick-pos`             |
+| `.mg-legend__tick-label`   | Tick text                                                |
+| `.mg-legend__list`         | Categorical entry list                                   |
+| `.mg-legend__item`         | One categorical entry                                    |
+| `.mg-legend__swatch`       | Colour swatch                                            |
+| `.mg-legend__label`        | Entry label                                              |
+| `.mg-legend__value`        | Optional value beside an entry label                     |
 
-Continuous and stepped legends can be displayed vertically.
+## Accessibility
 
-<Canvas of={LegendStories.VerticalContinuous} />
+- The legend is a `role="group"` named by its title, so a screen reader
+  announces the group before reading the entries. Without a `title` the group
+  is unnamed — give every legend a title.
+- Colour is never the only cue: each categorical entry has a text label, and
+  each step in a stepped ramp carries a visually hidden label for its band.
+  Supply `label` on every `items` entry.
+- The ramp itself is `aria-hidden="true"`. The ticks carry the reading.
+- Tick placement uses logical properties, so a legend mirrors in right-to-left
+  layouts. Check your own `customRamp` gradient direction in Arabic: a
+  `to right` gradient does not flip on its own.
+- Check the contrast of your swatch colours against the surface they sit on.
+  Mangrove cannot validate colours you pass in.
+
+## Theme behaviour
+
+Legend uses shared Mangrove tokens for its title, labels and ticks, so it picks
+up each theme's type and neutral colours. The swatch and ramp colours come from
+your data, not from the theme — they are identical in UNDRR, PreventionWeb, IRP
+and MCR2030.
 
 ## Prototype notice
 
@@ -55,6 +187,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
-- **1.0.1** — 2026-09-17 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Removed the "Dark theme" story. It wrapped the legend in an `mg-theme-dark` class that the library never defined and set a `Dark` theme override that does not exist, so it rendered labels at 1.2:1 and implied a dark-surface API that Legend does not have. The docs now say plainly that Legend is styled for light surfaces.
+- **1.0.3** — 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Removed the "Dark theme" story. It wrapped the legend in an `mg-theme-dark` class that the library never defined and set a `Dark` theme override that does not exist, so it rendered labels at 1.2:1 and implied a dark-surface API that Legend does not have. The docs now say plainly that Legend is styled for light surfaces.
+- **1.0.1** — 2026-09-17 ([#1194](https://github.com/unisdr/undrr-mangrove/pull/1194)): Documentation only. Removed a duplicated `Continuous` canvas and expanded the page: when to use each type, React usage with tick positioning, the plain HTML equivalent, a CSS class reference, accessibility notes and theme behaviour.
 - **1.0.0** — 2026-09-16 ([#1159](https://github.com/unisdr/undrr-mangrove/pull/1159)): Added map and chart legend primitives (`continuous`, `categorical`, `stepped`).
   - Before rc.1: legend is a group named by its title, stepped colours have text alternatives, a single tick no longer divides by zero, font size uses a real token, and tick placement uses logical properties.

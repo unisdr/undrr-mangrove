@@ -107,7 +107,7 @@ padding: mg-rem(15); // 0.9375rem
 font-size: mg-rem(16); // 1rem
 ```
 
-`$mg-html-font-size` is the anchor `mg-rem()` divides by. **In 2.0 it is fixed at `16` and can no longer be overridden** — the `!default` is gone, and the `style-*-legacy.css` builds that served a 10px root are deleted. Sites on a 10px root must serve a 16px root and convert their own rem-based CSS to a 16px basis. See the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs) (breaking change #5).
+`$mg-html-font-size` is the anchor `mg-rem()` divides by. **In 2.0 it is fixed at `16` and can no longer be overridden** — the `!default` is gone, and the `style-*-legacy.css` builds that served a 10px root are deleted. Sites on a 10px root must serve a 16px root and convert their own rem-based CSS to a 16px basis. See the [v2.0 release notes](?path=/docs/getting-started-release-notes-v2-0--docs) (breaking change #5).
 
 ## SCSS variables reference
 
@@ -171,9 +171,9 @@ Type is the one place where the SCSS layer and the custom-property layer both ma
 
 Latin resolves exactly as it did before the roles existed, and no new `font-family` declaration matches a Latin element, so a theme that sets its own face on `h1`–`h3` keeps it. To re-point a role for one brand, override the custom property in a `.mg-theme-*` block — but a role can only point at a face Mangrove already loads. To introduce a typeface Mangrove does not ship, assign the face variable before the import and load the font yourself; quote any family name that is not a plain CSS identifier. Note that faces sit outside the brand mixins, so a Sass override applies to every brand in `style-all.css`.
 
-The six 1.x font variables — `$mg-font-family`, `-condensed`, `-headings`, `-icons`, `-arabic-headings`, `-arabic-body` — were removed in 2.0. See [breaking change #8](/docs/getting-started-release-notes-v2-0--docs) in the v2.0 release notes for what to do if you set any of them.
+The six 1.x font variables — `$mg-font-family`, `-condensed`, `-headings`, `-icons`, `-arabic-headings`, `-arabic-body` — were removed in 2.0. See [breaking change #8](?path=/docs/getting-started-release-notes-v2-0--docs) in the v2.0 release notes for what to do if you set any of them.
 
-Arabic pairs Noto Kufi Arabic display type with Noto Sans Arabic body text, replacing Dubai; the reasoning is in the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs).
+Arabic pairs Noto Kufi Arabic display type with Noto Sans Arabic body text, replacing Dubai; the reasoning is in the [v2.0 release notes](?path=/docs/getting-started-release-notes-v2-0--docs).
 
 ### Compile-time constants
 
@@ -385,7 +385,7 @@ With `includePaths` configured, imports resolve relative to the package root:
 | `@import "./variables-irp"`                         | `@import "./theme-irp"`                                                             |
 | `$mg-html-font-size: 10`                            | not supported; serve a 16px root                                                    |
 
-Referencing a removed variable fails the build. Assigning one does not, so check your Sass log for `Mangrove 2.0:` warnings before assuming an override took effect. The complete list of breaking changes is in the [v2.0 release notes](/docs/getting-started-release-notes-v2-0--docs).
+Referencing a removed variable fails the build. Assigning one does not, so check your Sass log for `Mangrove 2.0:` warnings before assuming an override took effect. The complete list of breaking changes is in the [v2.0 release notes](?path=/docs/getting-started-release-notes-v2-0--docs).
 
 ## Next steps
 

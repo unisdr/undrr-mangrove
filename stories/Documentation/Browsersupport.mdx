@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import BrowserGuide from '../../docs/BROWSER-SUPPORT.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Getting started/Browser support"
@@ -9,7 +10,7 @@ import BrowserGuide from '../../docs/BROWSER-SUPPORT.md?raw';
   }}
 />
 
-<Markdown>{BrowserGuide}</Markdown>
+<Markdown>{linkDocsPages(BrowserGuide, 'docs/BROWSER-SUPPORT.md')}</Markdown>
 
 ---
 

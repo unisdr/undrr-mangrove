@@ -3,13 +3,13 @@ import * as ServiceNoticeStories from './ServiceNotice.stories';
 
 <Meta of={ServiceNoticeStories} />
 
-> If you are creating or modifying this component, see [docs/REVIEW-CHECKLIST.md](../../../docs/REVIEW-CHECKLIST.md) for Mangrove's component standards.
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
 # Service notice
 
 An in-page notice or card overlay shown when an embedded third-party service (such as MapX, an external analytics feed, or an API endpoint) is unreachable or running in a degraded state.
 
-It shows a degraded or offline status badge, an explanation, a retry action, a link to an external status page, and optional automatic retries. It renders through the [Notice](/docs/components-notice-notice--docs) component, so it inherits its layout, tokens, compact and overlay modifiers.
+It shows a degraded or offline status badge, an explanation, a retry action, a link to an external status page, and optional automatic retries. It renders through the [Notice](?path=/docs/components-notice-notice--docs) component, so it inherits its layout, tokens, compact and overlay modifiers.
 
 ## Automatic retry
 
@@ -65,7 +65,7 @@ When the service recovers, remove the notice. Changing `countdownSeconds` starts
 </div>
 ```
 
-The markup is a [Notice](/docs/components-notice-notice--docs) with a [StatusLabel](/docs/components-status-label--docs) in its header; there is no separate `mg-service-notice` stylesheet. A retry countdown uses `mg-notice__meta` inside the actions row. The offline state swaps in `mg-notice--negative`, `mg-icon-power-off` and `mg-status-label--negative`. Static HTML should announce the outage itself if it is injected after page load (for example with a `role="status"` region).
+The markup is a [Notice](?path=/docs/components-notice-notice--docs) with a [StatusLabel](?path=/docs/components-status-label--docs) in its header; there is no separate `mg-service-notice` stylesheet. A retry countdown uses `mg-notice__meta` inside the actions row. The offline state swaps in `mg-notice--negative`, `mg-icon-power-off` and `mg-status-label--negative`. Static HTML should announce the outage itself if it is injected after page load (for example with a `role="status"` region).
 
 This markup is presentation only. The retry button has no handler, no countdown runs and nothing is announced. If you need a working retry without React code of your own, use the hydration contract below instead of copying this HTML.
 

@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import TestingGuide from '../../docs/TESTING.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Build a component/Testing"
@@ -9,7 +10,7 @@ import TestingGuide from '../../docs/TESTING.md?raw';
   }}
 />
 
-<Markdown>{TestingGuide}</Markdown>
+<Markdown>{linkDocsPages(TestingGuide, 'docs/TESTING.md')}</Markdown>
 
 ---
 

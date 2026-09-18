@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import HydrationGuide from '../../docs/HYDRATION.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Getting started/Integration/Hydration guide"
@@ -9,7 +10,7 @@ import HydrationGuide from '../../docs/HYDRATION.md?raw';
   }}
 />
 
-<Markdown>{HydrationGuide}</Markdown>
+<Markdown>{linkDocsPages(HydrationGuide, 'docs/HYDRATION.md')}</Markdown>
 
 ---
 
