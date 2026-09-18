@@ -137,7 +137,7 @@ Not every component in every system needs to come from Mangrove. Here's how to i
 
 **Displaying UNDRR content** (publications, news, search results, partner listings): you need Mangrove CSS and the relevant content components. Without them, syndicated content renders as unstyled HTML.
 
-**Standalone tool with no shared content**: Mangrove design tokens (CSS custom properties for colors and spacing, SCSS variables for typography and breakpoints) give you brand consistency with zero component lock-in. Or skip Mangrove entirely and use your own styling. The content structure matters more than the CSS.
+**Standalone tool with no shared content**: Mangrove design tokens (CSS custom properties for colors, spacing and typography, SCSS variables for breakpoints and font faces) give you brand consistency with zero component lock-in. Or skip Mangrove entirely and use your own styling. The content structure matters more than the CSS.
 
 **Mixed: domain-specific UI plus shared content** (custom data tables alongside syndicated news feeds): use whatever framework handles your application patterns best. Use Mangrove for the shared layer -- navigation, cards, content blocks. Both coexist by design.
 
@@ -162,7 +162,7 @@ A Mangrove theme is a `_theme-{name}.scss` file containing a single `.mg-theme-{
 - IRP: 50 lines
 - MCR2030: 65 lines
 
-Applying the `.mg-theme-{name}` class to `<body>` or a wrapping element activates the theme without any CSS rebuild. The overridable token set currently covers interactive colors, button and tag treatments, hero styling, form controls, and tab appearance. Foundational tokens like typography and breakpoints are build-time SCSS variables shared across all themes. If you need to customize something outside that set, talk to the Mangrove team -- the overridable set has grown over time as properties have needed more flexibility. Start with the <LinkTo kind="getting-started-integration-theming-guide" story="docs">theming guide</LinkTo>, which walks through creating a new theme file from scratch.
+Applying the `.mg-theme-{name}` class to `<body>` or a wrapping element activates the theme without any CSS rebuild. The overridable token set currently covers interactive colors, button and tag treatments, hero styling, form controls, and tab appearance. Typography is themeable at runtime too: the type scale, line heights and the five `--mg-font-family-*` roles are all custom properties. Breakpoints and font faces stay build-time SCSS variables shared across all themes. If you need to customize something outside that set, talk to the Mangrove team -- the overridable set has grown over time as properties have needed more flexibility. Start with the <LinkTo kind="getting-started-integration-theming-guide" story="docs">theming guide</LinkTo>, which walks through creating a new theme file from scratch.
 
 ### Bundle sizes
 
