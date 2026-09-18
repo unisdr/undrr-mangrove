@@ -278,6 +278,292 @@ describe('mgDrawer (vanilla lifecycle)', () => {
     expect(await axe(document.body)).toHaveNoViolations();
   });
 
+  // The name the module gives an unnamed dialog is a loan, not a repair: it is
+  // handed back on destroy along with everything else, so markup that carries
+  // role="dialog" with nothing naming it fails aria-dialog-name again once the
+  // module is gone. That is the correct trade — a destroy that kept the name
+  // would leave a minted id behind — but it means the page is only named while
+  // the module is running. Naming the dialog in the markup is the real fix.
+  it('hands the borrowed dialog name back on destroy, gap and all', async () => {
+    expect.extend(toHaveNoViolations);
+    const { container } = build();
+
+    const before = await axe(document.body);
+    expect(before.violations.map(violation => violation.id)).toContain(
+      'aria-dialog-name'
+    );
+
+    mgDrawer(document);
+    expect(await axe(document.body)).toHaveNoViolations();
+
+    mgDrawerDestroy(document);
+    const after = await axe(document.body);
+    expect(after.violations.map(violation => violation.id)).toContain(
+      'aria-dialog-name'
+    );
+    expect(container.hasAttribute('aria-labelledby')).toBe(false);
+  });
+
+  it('has no axe violations for an open non-modal floating panel', async () => {
+    expect.extend(toHaveNoViolations);
+    const { trigger } = build({ id: 'layers', panel: true });
+    mgDrawer(document);
+    trigger.click();
+
+    expect(await axe(document.body)).toHaveNoViolations();
+  });
+
+  // Each of these was a real escape or a real jam, reproduced in Chrome before
+  // it was fixed. A trap that only looks at `a[href], button, input, select,
+  // textarea, [tabindex]` and only listens on the container gets every one of
+  // them wrong.
+  describe('focus trap edge cases', () => {
+    const tabKey = (target, shiftKey = false) => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        shiftKey,
+        bubbles: true,
+        cancelable: true,
+      });
+      target.dispatchEvent(event);
+      return event;
+    };
+
+    it('ignores an unrendered element rather than making it the wrap target', () => {
+      const { container, trigger, closeButton, link } = build();
+      const hidden = document.createElement('button');
+      hidden.style.display = 'none';
+      hidden.textContent = 'hidden';
+      container.querySelector('.mg-drawer__body').append(hidden);
+      mgDrawer(document);
+      trigger.click();
+
+      // Forward from the real last tabbable wraps to the first, instead of
+      // walking past a display:none element and out of the drawer.
+      link.focus();
+      expect(tabKey(link).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(closeButton);
+
+      // Backwards from the first lands on the real last tabbable, instead of
+      // calling focus() on something that cannot take it and jamming.
+      expect(tabKey(closeButton, true).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(link);
+    });
+
+    it('counts an iframe and a contenteditable as tabbable', () => {
+      const { container, trigger, closeButton } = build();
+      container.querySelector('.mg-drawer__body').innerHTML =
+        '<div contenteditable="true" id="ce">edit</div><iframe id="frame" title="f"></iframe>';
+      mgDrawer(document);
+      trigger.click();
+
+      // The iframe is the last tabbable, so forward from it wraps. Before,
+      // neither it nor the contenteditable was reachable at all.
+      const frame = document.getElementById('frame');
+      frame.focus();
+      expect(tabKey(frame).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(closeButton);
+
+      expect(tabKey(closeButton, true).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(frame);
+    });
+
+    it('stops on one radio per group, the checked one', () => {
+      const { container, trigger, closeButton } = build();
+      container.querySelector('.mg-drawer__body').innerHTML = `
+        <input type="radio" name="r" id="r1">
+        <input type="radio" name="r" id="r2" checked>
+        <input type="radio" name="r" id="r3">`;
+      mgDrawer(document);
+      trigger.click();
+
+      // r3 is not a tab stop, so treating it as the last one let Tab leave.
+      const checked = document.getElementById('r2');
+      checked.focus();
+      expect(tabKey(checked).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(closeButton);
+    });
+
+    it('pulls focus back when it has escaped the drawer', () => {
+      const { trigger, closeButton } = build();
+      const outside = document.createElement('button');
+      document.body.append(outside);
+      mgDrawer(document);
+      trigger.click();
+
+      // Something moved focus out from under the trap. The next Tab recovers
+      // it rather than leaving the user loose behind the backdrop.
+      outside.focus();
+      expect(tabKey(outside).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(closeButton);
+    });
+
+    it('wraps Shift+Tab from the container itself', () => {
+      const { container, trigger, link } = build();
+      container.querySelector('.mg-drawer__close').remove();
+      mgDrawer(document);
+      trigger.click();
+
+      // With no close button, open() focuses the container. Shift+Tab from a
+      // tabindex="-1" element used to walk straight out of the drawer.
+      expect(document.activeElement).toBe(container);
+      expect(tabKey(container, true).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(link);
+    });
+
+    it('holds focus on the dialog when nothing inside is tabbable', () => {
+      const { container, trigger } = build();
+      container.querySelector('.mg-drawer__close').remove();
+      container.querySelector('.mg-drawer__body').innerHTML = 'just text';
+      mgDrawer(document);
+      trigger.click();
+
+      expect(tabKey(container).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(container);
+    });
+  });
+
+  describe('Escape', () => {
+    it('closes only the innermost open drawer', () => {
+      const { container: outer } = build({ id: 'outer' });
+      const { container: inner } = build({ id: 'inner' });
+      const [outerHandle, innerHandle] = mgDrawer(document);
+      outerHandle.open();
+      innerHandle.open();
+
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+      expect(inner.classList.contains('is-open')).toBe(false);
+      expect(outer.classList.contains('is-open')).toBe(true);
+    });
+
+    it('leaves an Escape another handler already answered alone', () => {
+      const { container, trigger } = build();
+      mgDrawer(document);
+      trigger.click();
+
+      const event = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true,
+      });
+      event.preventDefault();
+      document.dispatchEvent(event);
+
+      expect(container.classList.contains('is-open')).toBe(true);
+    });
+
+    it('lets a nested open dialog answer Escape first', () => {
+      const { container, trigger } = build();
+      container.querySelector('.mg-drawer__body').innerHTML =
+        '<dialog open id="nested"><button>ok</button></dialog>';
+      mgDrawer(document);
+      trigger.click();
+
+      document
+        .getElementById('nested')
+        .querySelector('button')
+        .dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+        );
+
+      expect(container.classList.contains('is-open')).toBe(true);
+    });
+
+    it('does not close a non-modal panel from elsewhere on the page', () => {
+      const { container, trigger } = build({ id: 'layers', panel: true });
+      const elsewhere = document.createElement('input');
+      document.body.append(elsewhere);
+      mgDrawer(document);
+      trigger.click();
+
+      // The page behind a floating panel stays usable, so Escape there belongs
+      // to whatever the user is in — not to the panel.
+      elsewhere.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+      );
+      expect(container.classList.contains('is-open')).toBe(true);
+
+      // From inside the panel it still closes.
+      container.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+      );
+      expect(container.classList.contains('is-open')).toBe(false);
+    });
+  });
+
+  describe('focus restoration', () => {
+    it('falls back to a trigger when the opener has gone', () => {
+      const { trigger, closeButton } = build();
+      mgDrawer(document);
+      const opener = document.createElement('button');
+      document.body.append(opener);
+      opener.focus();
+      opener.click();
+      trigger.click();
+      opener.remove();
+
+      closeButton.click();
+
+      // Never the control inside the drawer that has just been made inert.
+      expect(document.activeElement).toBe(trigger);
+    });
+
+    it('parks focus on the body when nothing is left to return to', () => {
+      const { container, closeButton } = build();
+      mgDrawer(document);
+      container.dispatchEvent(new CustomEvent('mg-drawer:open'));
+      expect(document.activeElement).toBe(closeButton);
+
+      document.querySelector('[data-mg-drawer-trigger]').remove();
+      container.dispatchEvent(new CustomEvent('mg-drawer:close'));
+
+      expect(container.contains(document.activeElement)).toBe(false);
+      expect(document.body.hasAttribute('tabindex')).toBe(false);
+    });
+  });
+
+  it('does not let a nested drawer command reach the drawer around it', () => {
+    const { container: outer } = build({ id: 'outer' });
+    const { container: inner } = build({ id: 'inner' });
+    outer.querySelector('.mg-drawer__body').append(inner);
+    mgDrawer(document);
+
+    inner.dispatchEvent(new CustomEvent('mg-drawer:open', { bubbles: true }));
+
+    expect(inner.classList.contains('is-open')).toBe(true);
+    expect(outer.classList.contains('is-open')).toBe(false);
+  });
+
+  it('destroy leaves the markup exactly as it found it', () => {
+    const { container, trigger } = build();
+    // A page that wired its own trigger state, which destroy used to delete.
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-controls', 'filters');
+    const before = document.body.innerHTML;
+
+    mgDrawer(document);
+    trigger.click();
+    mgDrawerDestroy(document);
+
+    expect(document.body.innerHTML).toBe(before);
+    expect(container.classList.contains('is-open')).toBe(false);
+  });
+
+  it('refuses a container that also carries the hydration marker', () => {
+    const { container, trigger } = build();
+    container.setAttribute('data-mg-drawer', '');
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+    expect(mgDrawer(document)).toHaveLength(0);
+    expect(warn).toHaveBeenCalled();
+    expect(container.hasAttribute('data-mg-js-drawer-initialized')).toBe(false);
+
+    trigger.click();
+    expect(container.classList.contains('is-open')).toBe(false);
+    warn.mockRestore();
+  });
+
   it('skips a container marked data-mg-js-drawer-skip-auto-init only on auto-init', () => {
     const { container } = build();
     container.setAttribute('data-mg-js-drawer-skip-auto-init', '');

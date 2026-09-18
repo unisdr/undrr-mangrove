@@ -12,6 +12,7 @@
 const DRAWER_SELECTOR = '[data-mg-js-drawer]';
 const SKIP_ATTR = 'data-mg-js-drawer-skip-auto-init';
 const INITIALISED_ATTR = 'data-mg-js-drawer-initialized';
+const HYDRATION_ATTR = 'data-mg-drawer';
 const TRIGGER_SELECTOR = '[data-mg-drawer-trigger]';
 const FLOATING_PANEL_CLASS = 'mg-floating-panel';
 const BACKDROP_CLASS = 'mg-drawer__backdrop';
@@ -25,20 +26,63 @@ export const TOGGLE_EVENT = 'mg-drawer:toggle';
 export const OPENED_EVENT = 'mg-drawer:opened';
 export const CLOSED_EVENT = 'mg-drawer:closed';
 
-// Same list the React Drawer traps against, so the two agree on what counts as
-// focusable.
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+// Everything that can hold focus. Wider than a `[tabindex]`-and-form-controls
+// list on purpose: an iframe, a contenteditable region or a `<summary>` inside
+// an open drawer is reachable by Tab, and a trap that cannot see them either
+// strands them outside the ring (unreachable) or lets Tab walk straight past
+// the end of the drawer. Both were reproduced before this list was widened.
+const FOCUSABLE = [
+  'a[href]',
+  'area[href]',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'iframe',
+  'object',
+  'embed',
+  'audio[controls]',
+  'video[controls]',
+  'summary',
+  '[contenteditable]',
+  '[tabindex]',
+].join(', ');
+
+// Tag names the browser puts in the tab order without a tabindex attribute.
+const NATIVELY_TABBABLE = new Set([
+  'A',
+  'AREA',
+  'BUTTON',
+  'INPUT',
+  'SELECT',
+  'TEXTAREA',
+  'IFRAME',
+  'OBJECT',
+  'EMBED',
+  'AUDIO',
+  'VIDEO',
+  'SUMMARY',
+]);
 
 // Shared by every copy of this module on the page — a CDN build alongside a
 // bundled one, or two versions — so one drawer is never enhanced twice and
 // either copy can destroy an instance the other created. The per-element
 // dataset flag is what survives that split; a module-scope WeakMap alone would
 // not (docs/HYDRATION-AUTHORING.md).
-const REGISTRY_KEY = Symbol.for('@undrr/mangrove/drawer@1');
+//
+// Deliberately unversioned. `INITIALISED_ATTR` is the marker that decides
+// whether a container is already enhanced and it carries no version either, so
+// a versioned registry key would let a v2 copy skip a v1 container as
+// "initialised" and then fail to find its handle — leaving the container
+// marked, its listeners live and nothing able to destroy it. The handle shape
+// (`open` / `close` / `toggle` / `isOpen` / `destroy`) is the compatibility
+// contract between copies, and it must stay additive.
+const REGISTRY_KEY = Symbol.for('@undrr/mangrove/drawer');
 const registry =
   globalThis[REGISTRY_KEY] ||
-  (globalThis[REGISTRY_KEY] = { instances: new WeakMap() });
+  (globalThis[REGISTRY_KEY] = { instances: new WeakMap(), openStack: [] });
+// A copy that predates `openStack` may have created the registry first.
+if (!registry.openStack) registry.openStack = [];
 
 // Used to give an unlabelled drawer title an id so the dialog can point
 // `aria-labelledby` at it. The counter lives on `globalThis` so two loaded
@@ -123,10 +167,154 @@ function triggersFor(container) {
   );
 }
 
-function focusableIn(container) {
-  return Array.from(container.querySelectorAll(FOCUSABLE)).filter(
-    element => !element.closest('[inert]')
+/**
+ * Whether the element is hidden from rendering, and so out of the tab order.
+ *
+ * Walks ancestors rather than reading a layout box: `getClientRects()` is
+ * empty in every non-rendering environment, which would make the trap think an
+ * open drawer had nothing in it at all under test. Computed style answers the
+ * same question in both.
+ *
+ * @param {Element} element
+ * @returns {boolean}
+ */
+function isHidden(element) {
+  const view = element.ownerDocument?.defaultView;
+  if (!view?.getComputedStyle) return false;
+  for (let node = element; node?.nodeType === 1; node = node.parentElement) {
+    if (node.hasAttribute('hidden') || node.inert) return true;
+    const style = view.getComputedStyle(node);
+    if (
+      style.display === 'none' ||
+      style.visibility === 'hidden' ||
+      style.visibility === 'collapse'
+    ) {
+      return true;
+    }
+    // A closed <details> does not render anything but its <summary>.
+    const parent = node.parentElement;
+    if (
+      parent?.tagName === 'DETAILS' &&
+      !parent.open &&
+      node.tagName !== 'SUMMARY'
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * The element's effective tabindex.
+ *
+ * Read from the attribute, then the tag, rather than from `element.tabIndex`:
+ * the property's default for elements like `<iframe>` and `<summary>` is not
+ * consistent across engines, and the trap has to agree with the browser about
+ * what Tab will do.
+ *
+ * @param {Element} element
+ * @returns {number}
+ */
+function tabIndexOf(element) {
+  const attribute = element.getAttribute('tabindex');
+  if (attribute !== null) {
+    const value = Number(attribute);
+    return Number.isNaN(value) ? -1 : value;
+  }
+  const editable = element.getAttribute('contenteditable');
+  if (editable !== null && editable !== 'false') return 0;
+  if (element.tagName === 'SUMMARY') {
+    return element.parentElement?.tagName === 'DETAILS' ? 0 : -1;
+  }
+  return NATIVELY_TABBABLE.has(element.tagName) ? 0 : -1;
+}
+
+/**
+ * Drops every radio in a group except the one the browser will actually stop
+ * on: the checked one, or the first when none is checked. Keeping all three
+ * made the last radio in a group the trap's `last`, which Tab never reaches —
+ * so Tab walked out of the drawer instead of wrapping.
+ *
+ * @param {Element[]} elements
+ * @returns {Element[]}
+ */
+function collapseRadioGroups(elements) {
+  const isRadio = element =>
+    element.tagName === 'INPUT' && element.type === 'radio' && element.name;
+  const stops = new Map();
+  elements.forEach(element => {
+    if (!isRadio(element)) return;
+    // The first radio is the stop until a checked one is found.
+    if (!stops.has(element.name) || element.checked) {
+      stops.set(element.name, element);
+    }
+  });
+  return elements.filter(
+    element => !isRadio(element) || stops.get(element.name) === element
   );
+}
+
+/**
+ * Everything inside the container that Tab will actually stop on, in tab
+ * order.
+ *
+ * @param {Element} container
+ * @returns {Element[]}
+ */
+function tabbablesIn(container) {
+  const matches = Array.from(container.querySelectorAll(FOCUSABLE)).filter(
+    element =>
+      !element.disabled &&
+      !element.closest('[inert]') &&
+      tabIndexOf(element) >= 0 &&
+      !isHidden(element)
+  );
+  return collapseRadioGroups(matches);
+}
+
+/**
+ * Moves focus to the first of `candidates` that will actually take it, and
+ * reports whether any did.
+ *
+ * `element.focus()` is a silent no-op on something unrendered, so a single
+ * call cannot be trusted: an opener that was removed, hidden or never existed
+ * used to leave focus on a control inside the drawer that had just been made
+ * `inert` and `aria-hidden` — invisible, unannounced and worse than `<body>`.
+ *
+ * @param {Element[]} candidates
+ * @param {Document} doc
+ * @returns {boolean}
+ */
+function focusFirstAvailable(candidates, doc) {
+  for (const element of candidates) {
+    if (!element?.isConnected || typeof element.focus !== 'function') continue;
+    if (isHidden(element)) continue;
+    element.focus();
+    if (doc.activeElement === element) return true;
+  }
+  // Nothing is left to go back to. Park focus on the document body so the next
+  // Tab starts from the top of the page and a screen reader resumes there,
+  // rather than leaving it inside a drawer that is now closed. The tabindex is
+  // temporary so the body does not become a permanent tab stop.
+  const body = doc.body;
+  if (!body) return false;
+  const hadTabIndex = body.hasAttribute('tabindex');
+  if (!hadTabIndex) body.setAttribute('tabindex', '-1');
+  body.focus();
+  if (!hadTabIndex) body.removeAttribute('tabindex');
+  return false;
+}
+
+/**
+ * Puts one attribute back to the value it had before this module ran.
+ *
+ * @param {Element} element
+ * @param {string} name
+ * @param {string|null} value
+ */
+function restoreOn(element, name, value) {
+  if (value === null) element.removeAttribute(name);
+  else element.setAttribute(name, value);
 }
 
 /**
@@ -153,6 +341,15 @@ function enhance(container) {
     ariaModal: container.getAttribute('aria-modal'),
     ariaLabelledBy: container.getAttribute('aria-labelledby'),
     inert: container.inert,
+    isOpen: container.classList.contains('is-open'),
+    // Per trigger, because a hand-written page may already have wired
+    // aria-expanded / aria-controls itself. Removing them unconditionally on
+    // destroy took markup away that this module never added.
+    triggers: triggersFor(container).map(trigger => ({
+      trigger,
+      ariaExpanded: trigger.getAttribute('aria-expanded'),
+      ariaControls: trigger.getAttribute('aria-controls'),
+    })),
   };
 
   // A hand-written container may be missing the two attributes that make it a
@@ -235,10 +432,26 @@ function enhance(container) {
     syncTriggers();
   };
 
+  // Which drawers are open, innermost last. Shared through the registry so a
+  // second copy of the module sees the same stack: only the topmost drawer
+  // answers Escape, and only the topmost modal traps Tab.
+  const pushOpen = () => {
+    const index = registry.openStack.indexOf(container);
+    if (index !== -1) registry.openStack.splice(index, 1);
+    registry.openStack.push(container);
+  };
+  const popOpen = () => {
+    const index = registry.openStack.indexOf(container);
+    if (index !== -1) registry.openStack.splice(index, 1);
+  };
+  const isTopmost = () =>
+    registry.openStack[registry.openStack.length - 1] === container;
+
   function openDrawer() {
     if (destroyed || open) return;
     open = true;
     returnFocusTo = doc.activeElement;
+    pushOpen();
     addBackdrop();
     applyState();
     (closeButton || container).focus();
@@ -247,17 +460,25 @@ function enhance(container) {
 
   function close() {
     if (destroyed || !open) return;
+    // Read where focus is before applyState() makes the container inert, which
+    // in a browser blurs whatever was inside it to <body> and would otherwise
+    // make this look like focus had always been outside.
+    const active = doc.activeElement;
+    // Only take focus back if it is still ours to move: a script that focused
+    // something else while the drawer was open keeps it.
+    const focusWasInside =
+      container.contains(active) || !active || active === doc.body;
     open = false;
+    popOpen();
     removeBackdrop();
     applyState();
     const target = returnFocusTo;
     returnFocusTo = null;
-    // Only take focus back if it is still ours to move: a script that focused
-    // something else while the drawer was open keeps it.
-    const active = doc.activeElement;
-    const focusWasInside =
-      container.contains(active) || !active || active === doc.body;
-    if (focusWasInside && target?.isConnected && target.focus) target.focus();
+    if (focusWasInside) {
+      // The opener first; then any trigger still on the page, which is where a
+      // keyboard user expects to land; then the body as the last resort.
+      focusFirstAvailable([target, ...triggersFor(container)], doc);
+    }
     emit(CLOSED_EVENT);
   }
 
@@ -266,33 +487,79 @@ function enhance(container) {
     else openDrawer();
   }
 
+  /** Whether an event came from inside this drawer or from one of its triggers. */
+  const isOurs = target =>
+    container.contains(target) || triggersFor(container).includes(target);
+
   // Escape closes, matching the React component, which listens on the document
-  // so a drawer closes even when focus has left it.
+  // so a modal drawer closes even when focus has left it.
   doc.addEventListener(
     'keydown',
     event => {
-      if (event.key === 'Escape' && open) close();
+      if (event.key !== 'Escape' || !open || destroyed) return;
+      // Something nearer the user already answered this Escape.
+      if (event.defaultPrevented) return;
+      // A nested <dialog>, and anything else that opens its own layer inside
+      // the drawer, owns Escape first. Without this, one Escape dismissed both
+      // the nested dialog and the drawer behind it.
+      if (event.target?.closest?.('dialog[open]')) return;
+      // Escape peels one layer: only the innermost open drawer answers.
+      // Otherwise a drawer opened from inside another closed both at once.
+      if (!isTopmost()) return;
+      // A non-modal floating panel leaves the rest of the page operable, so
+      // Escape there belongs to whatever the user is actually in — typing
+      // Escape in a page search field should not dismiss the map's layer
+      // panel. A modal drawer owns the page, so it answers from anywhere.
+      if (!isModal(container) && !isOurs(event.target)) return;
+      close();
     },
     { signal }
   );
 
   // Keep Tab inside a modal drawer. A floating panel is non-modal: the rest of
   // the page is still operable, so trapping Tab there would be wrong.
-  container.addEventListener(
+  //
+  // Listening on the document rather than the container is what makes this a
+  // trap rather than a suggestion. A container listener only ever sees Tab
+  // while focus is already inside, so once focus had left — through an iframe,
+  // or a script moving it — nothing could pull it back.
+  doc.addEventListener(
     'keydown',
     event => {
-      if (event.key !== 'Tab' || !open || !isModal(container)) return;
-      const focusable = focusableIn(container);
-      if (focusable.length === 0) {
+      if (event.key !== 'Tab' || !open || destroyed) return;
+      if (!isModal(container) || !isTopmost()) return;
+      const tabbables = tabbablesIn(container);
+      if (tabbables.length === 0) {
+        // Nothing to move to. Hold focus on the dialog itself so Tab cannot
+        // walk out into the page behind the backdrop.
         event.preventDefault();
+        if (doc.activeElement !== container) container.focus();
         return;
       }
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && doc.activeElement === first) {
+      const first = tabbables[0];
+      const last = tabbables[tabbables.length - 1];
+      const active = doc.activeElement;
+      // Focus is outside the drawer: pull it back to whichever end the user is
+      // heading for.
+      if (!container.contains(active)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+        return;
+      }
+      // The container itself holds focus (it is `tabindex="-1"`, and open()
+      // focuses it when there is no close button). Tab forward from there
+      // reaches `first` on its own, but Shift+Tab would leave the drawer.
+      if (active === container) {
+        if (event.shiftKey) {
+          event.preventDefault();
+          last.focus();
+        }
+        return;
+      }
+      if (event.shiftKey && active === first) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && doc.activeElement === last) {
+      } else if (!event.shiftKey && active === last) {
         event.preventDefault();
         first.focus();
       }
@@ -319,11 +586,21 @@ function enhance(container) {
     { signal }
   );
 
-  container.addEventListener(OPEN_EVENT, () => openDrawer(), { signal });
-  container.addEventListener(CLOSE_EVENT, () => close(), { signal });
-  container.addEventListener(TOGGLE_EVENT, () => toggle(), { signal });
+  // Scoped to this container. A command event dispatched on a drawer nested
+  // inside another one bubbles, and without this the outer drawer answered it
+  // too and opened itself.
+  const onCommand = run => event => {
+    if (event.target !== container) return;
+    run();
+  };
+  container.addEventListener(OPEN_EVENT, onCommand(openDrawer), { signal });
+  container.addEventListener(CLOSE_EVENT, onCommand(close), { signal });
+  container.addEventListener(TOGGLE_EVENT, onCommand(toggle), { signal });
 
-  if (open) addBackdrop();
+  if (open) {
+    pushOpen();
+    addBackdrop();
+  }
   applyState();
 
   const handle = {
@@ -335,12 +612,15 @@ function enhance(container) {
       if (destroyed) return;
       destroyed = true;
       controller.abort();
+      popOpen();
       removeBackdrop();
-      container.inert = initial.inert;
-      const restore = (name, value) => {
-        if (value === null) container.removeAttribute(name);
-        else container.setAttribute(name, value);
-      };
+      if (initial.inert === undefined) delete container.inert;
+      else container.inert = initial.inert;
+      // Put the open/closed class back where the markup had it. Destroying an
+      // open drawer used to leave `is-open` behind, so the page was left
+      // showing a drawer nothing could close.
+      container.classList.toggle('is-open', initial.isOpen);
+      const restore = (name, value) => restoreOn(container, name, value);
       restore('role', initial.role);
       restore('tabindex', initial.tabindex);
       restore('aria-hidden', initial.ariaHidden);
@@ -351,9 +631,16 @@ function enhance(container) {
         if (title) title.removeAttribute('id');
         mintedTitleId = null;
       }
+      // Restore each trigger to what the markup had, rather than stripping
+      // both attributes: a page that wired its own aria-expanded /
+      // aria-controls got them deleted by a destroy that never added them.
+      const known = new Map(
+        initial.triggers.map(entry => [entry.trigger, entry])
+      );
       triggersFor(container).forEach(trigger => {
-        trigger.removeAttribute('aria-expanded');
-        trigger.removeAttribute('aria-controls');
+        const entry = known.get(trigger);
+        restoreOn(trigger, 'aria-expanded', entry ? entry.ariaExpanded : null);
+        restoreOn(trigger, 'aria-controls', entry ? entry.ariaControls : null);
       });
       registry.instances.delete(container);
       container.removeAttribute(INITIALISED_ATTR);
@@ -376,6 +663,20 @@ function enhance(container) {
 export function mgDrawer(scope = document) {
   return collect(scope, DRAWER_SELECTOR)
     .filter(container => !container.hasAttribute(INITIALISED_ATTR))
+    .filter(container => {
+      // The two markers are separate so that a container is driven by one
+      // lifecycle and never both. Nothing stopped a page putting both on the
+      // same element, though, and then React would re-render away the markup
+      // this module had just bound listeners to. Refuse, and say which one
+      // to remove.
+      if (!container.hasAttribute(HYDRATION_ATTR)) return true;
+      console.warn(
+        `[mg-drawer] #${container.id || '(no id)'} carries both ${HYDRATION_ATTR} and ${DRAWER_SELECTOR.slice(1, -1)}. ` +
+          'It is left to the hydration lifecycle; remove one marker to choose.',
+        container
+      );
+      return false;
+    })
     .map(container => enhance(container));
 }
 
@@ -388,7 +689,20 @@ export function mgDrawer(scope = document) {
  */
 export function mgDrawerDestroy(scope = document) {
   collect(scope, `[${INITIALISED_ATTR}]`).forEach(container => {
-    registry.instances.get(container)?.destroy();
+    const handle = registry.instances.get(container);
+    if (handle) {
+      handle.destroy();
+      return;
+    }
+    // Marked as enhanced, but no handle in the shared registry. That means a
+    // copy of this module keyed its registry differently, so its listeners
+    // cannot be removed from here. Say so rather than silently doing nothing
+    // and reporting success.
+    console.warn(
+      `[mg-drawer] #${container.id || '(no id)'} is marked ${INITIALISED_ATTR} but has no handle in the shared registry, ` +
+        'so it cannot be destroyed from this copy of the module.',
+      container
+    );
   });
 }
 
