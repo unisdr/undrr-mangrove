@@ -24,7 +24,9 @@ The toggle button does not need to be inside or adjacent to the content containe
 ## Two on one page
 
 Two toggles may share a target selector — the default one, or the same class on
-two blocks. Each still reveals its own content.
+two blocks — as long as each pair sits in its own parent. Each toggle then
+reveals its own content. Two toggles under the _same_ parent still cannot be
+told apart — see "How the target is resolved" below.
 
 <Canvas of={ShowMoreStories.TwoOnOnePage} />
 
@@ -35,19 +37,24 @@ The `mgShowMore()` function finds all elements with `data-mg-show-more` and wire
 ### How the target is resolved
 
 A toggle's target selector is resolved nearest scope first: the script climbs
-the toggle's ancestors and takes the first match it finds inside one, falling
-back to the whole document if the walk reaches `<html>` without matching.
+the toggle's ancestors and takes the first match it finds inside one.
 
 Revealed content need not be a sibling or descendant of its toggle, so there is
 no container the lookup can be confined to — but it can be ordered. For the
 canonical markup the walk finds the adjacent wrapper. For two blocks in
 separate subtrees each toggle finds its own, so two toggles left on the default
-`.mg-show-more--container` no longer both drive the first block. When the target
-genuinely lives elsewhere on the page — the detached button above — the walk
-finds nothing in the toggle's ancestors and the document-wide lookup answers.
+`.mg-show-more--container` no longer both drive the first block.
 
-Two toggles inside the **same** parent cannot be told apart this way. Give each
-of those its own selector, ideally an `id`.
+A target elsewhere on the page is still found. For a toggle that is in the
+document the walk ends at `<html>`, which contains everything else, so its last
+step is the document-wide lookup — the detached button above resolves the same
+way it always did. The walk is never worse than the old `document.querySelector`;
+it only prefers a nearer match when there is one.
+
+Two toggles inside the **same** parent cannot be told apart this way: the first
+scope holding one target holds both, and the earlier one in document order wins.
+Give each of those its own selector, ideally an `id` — which is what the React
+wrapper does for you.
 
 ### HTML structure
 

@@ -183,8 +183,9 @@ export const TwoOnOnePage = {
       <h3 className="mg-heading-300">Two vanilla toggles</h3>
       <p>
         Neither toggle names a target, so both fall back to the default{' '}
-        <code>.mg-show-more--container</code> selector. Each still reveals the
-        block in its own section.
+        <code>.mg-show-more--container</code> selector. Each pair sits in its
+        own <code>&lt;section&gt;</code>, which is what lets each toggle resolve
+        the block beside it rather than the first one on the page.
       </p>
       <VanillaPair />
       <h3 className="mg-heading-300">Two React items</h3>
@@ -199,7 +200,7 @@ export const TwoOnOnePage = {
     docs: {
       description: {
         story:
-          'Two instances of each path on one page. The vanilla toggles resolve their target nearest-ancestor first, and each React item carries a minted id, so neither pair collides.',
+          'Two instances of each path on one page. The vanilla toggles resolve their target nearest-ancestor first — each pair is wrapped in its own section, which is what separates them — and each React item carries a minted id, so neither pair collides.',
       },
     },
   },
