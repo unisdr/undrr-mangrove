@@ -22,7 +22,7 @@ export const variantOptions = {
  * Renders one section per item in the data array (typically one).
  */
 export function ChildHero({ data, variant = 'primary' }) {
-  let variantActive = variantOptions[`${variant}`];
+  const variantActive = variantOptions[`${variant}`];
   return (
     <>
       {data.map((item, index) => (

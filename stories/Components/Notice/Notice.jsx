@@ -96,8 +96,10 @@ function findFocusTargetAfterDismiss(noticeEl, opener) {
     for (const candidate of scope.querySelectorAll(FOCUSABLE_SELECTOR)) {
       if (noticeEl.contains(candidate) || !canTakeFocus(candidate)) continue;
       const position = noticeEl.compareDocumentPosition(candidate);
+      // eslint-disable-next-line no-bitwise -- compareDocumentPosition returns a bitmask
       if (position & Node.DOCUMENT_POSITION_PRECEDING) {
         previous = candidate;
+        // eslint-disable-next-line no-bitwise -- as above
       } else if (!next && position & Node.DOCUMENT_POSITION_FOLLOWING) {
         next = candidate;
       }

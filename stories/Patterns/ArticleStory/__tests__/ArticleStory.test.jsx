@@ -55,8 +55,8 @@ test('the headline sits above the header image, not the other way round', () => 
   const header = container.querySelector('.mg-demo-article-header');
   const heading = within(header).getByRole('heading', { level: 1 });
   const image = within(header).getByRole('img');
-  // eslint-disable-next-line no-bitwise
   expect(
+    // eslint-disable-next-line no-bitwise -- compareDocumentPosition returns a bitmask
     heading.compareDocumentPosition(image) & Node.DOCUMENT_POSITION_FOLLOWING
   ).toBeTruthy();
 });

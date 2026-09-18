@@ -108,6 +108,7 @@ const CookieConsentBanner = ({
     const COOKIECONSENT_CONFIG_URL = `${cdnBaseUrl}/cookieconsent-undrr.js?cacheBuster=${CACHE_BUSTER}`;
 
     // Local debug helpers gated by debug prop
+    // eslint-disable-next-line no-console -- opt-in debug channel, silent unless the caller passes `debug`
     const log = debug ? console.log : () => {};
     const warn = debug ? console.warn : () => {};
 

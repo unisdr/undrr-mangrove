@@ -53,9 +53,9 @@ export function HorizontalBookCard({ data, variant = 'primary', className }) {
                 rel={item.rel}
               />
               {item.summaryText && (
-                // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
                 <p
                   className="mg-card__summary"
+                  // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
                   dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(item.summaryText),
                   }}

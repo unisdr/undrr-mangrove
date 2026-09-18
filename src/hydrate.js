@@ -42,12 +42,19 @@ export default function createHydrator({
   fromElement,
   options = {},
 }) {
-  const { clearContainer = true, debugLabel = selector, onError, identifierPrefix } = options;
+  const {
+    clearContainer = true,
+    debugLabel = selector,
+    onError,
+    identifierPrefix,
+  } = options;
   const Component = component?.default ?? component;
 
   // Derive a stable prefix from the selector to avoid useId() collisions
   // across multiple React roots on the same page.
-  const prefix = identifierPrefix ?? selector.replace(/[[\]\.#=>"' ]/g, '').replace(/^data-mg-?/, 'mg-');
+  const prefix =
+    identifierPrefix ??
+    selector.replace(/[[\]\.#=>"' ]/g, '').replace(/^data-mg-?/, 'mg-');
   const entries = []; // { root, container } pairs
 
   /**
@@ -121,15 +128,26 @@ export default function createHydrator({
         const root = createRoot(container, {
           identifierPrefix: `${prefix}-${nextRootId()}-`,
           onCaughtError(error, errorInfo) {
-            console.error(`[${debugLabel}] Caught error in container #${index}:`, error, errorInfo);
+            console.error(
+              `[${debugLabel}] Caught error in container #${index}:`,
+              error,
+              errorInfo
+            );
             if (onError) onError(error, container);
           },
           onUncaughtError(error, errorInfo) {
-            console.error(`[${debugLabel}] Uncaught error in container #${index}:`, error, errorInfo);
+            console.error(
+              `[${debugLabel}] Uncaught error in container #${index}:`,
+              error,
+              errorInfo
+            );
             if (onError) onError(error, container);
           },
           onRecoverableError(error) {
-            console.warn(`[${debugLabel}] Recoverable error in container #${index}:`, error);
+            console.warn(
+              `[${debugLabel}] Recoverable error in container #${index}:`,
+              error
+            );
           },
         });
         root.render(React.createElement(Component, props));

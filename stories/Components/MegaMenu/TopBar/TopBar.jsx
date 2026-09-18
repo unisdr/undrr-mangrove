@@ -43,7 +43,9 @@ export function TopBar({
       inert={isMobile}
       key={index}
       index={index}
-      ref={element => (itemListRef.current[index] = element)}
+      ref={element => {
+        itemListRef.current[index] = element;
+      }}
       title={section.title}
       icon={section.icon}
       bannerDescription={section.bannerDescription}

@@ -251,7 +251,7 @@ describe('mgPreviewAccess (vanilla runtime)', () => {
   it('rejects javascript: contact URLs and falls back to the UNDRR contact page', () => {
     const gate = mountGate({
       'data-mg-preview-id': 'test-xss',
-      // eslint-disable-next-line no-script-url
+      // Deliberate unsafe URL: the assertion below is that it is rejected.
       'data-mg-preview-contact-url': 'javascript:alert(1)',
     });
     mgPreviewAccess([gate]);

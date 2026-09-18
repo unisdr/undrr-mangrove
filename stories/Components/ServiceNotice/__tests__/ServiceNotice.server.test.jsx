@@ -23,7 +23,7 @@ describe('ServiceNotice server rendering', () => {
 
   it('still drops unsafe status links', () => {
     const html = renderToStaticMarkup(
-      // eslint-disable-next-line no-script-url
+      // Deliberate unsafe URL: the assertion below is that no link renders.
       <ServiceNotice title="Down" statusUrl="javascript:alert(1)" />
     );
 
