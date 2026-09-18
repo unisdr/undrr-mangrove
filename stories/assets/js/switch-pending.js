@@ -116,10 +116,18 @@ function resolveStatus(input, option) {
   return described || null;
 }
 
+// A switch input, from the input itself or a wrapper such as its label. Takes
+// anything, because mgSwitchAnnouncer() is public and a document or a stray
+// value should get the no-op announcer rather than a TypeError.
 function toInput(element) {
-  if (!element) return null;
-  if (element.matches(INPUT_SELECTOR)) return element;
-  return element.querySelector(INPUT_SELECTOR);
+  if (!element || typeof element !== 'object') return null;
+  if (
+    typeof element.matches === 'function' &&
+    element.matches(INPUT_SELECTOR)
+  ) {
+    return element;
+  }
+  return element.querySelector?.(INPUT_SELECTOR) ?? null;
 }
 
 // A setting written in HTML, on the input or its label. The input wins, as it
@@ -335,9 +343,11 @@ function enhance(input, options, auto) {
 
   let current = null;
   let destroyed = false;
-  // Only an aria-invalid this helper set is cleared, so one the page authored
-  // for its own reasons survives.
+  // Only an aria-invalid this helper set is cleared, and whatever the page had
+  // there is put back, so one the page authored for its own reasons survives a
+  // failed save rather than being overwritten and then removed.
   let flaggedInvalid = false;
+  let invalidBefore = null;
 
   const emit = (type, detail) =>
     input.dispatchEvent(
@@ -347,7 +357,9 @@ function enhance(input, options, auto) {
   const clearInvalid = () => {
     if (!flaggedInvalid) return;
     flaggedInvalid = false;
-    input.removeAttribute('aria-invalid');
+    if (invalidBefore === null) input.removeAttribute('aria-invalid');
+    else input.setAttribute('aria-invalid', invalidBefore);
+    invalidBefore = null;
   };
 
   const onClick = event => {
@@ -442,6 +454,7 @@ function enhance(input, options, auto) {
       // showing the failure and offering a way to try again.
       input.checked = revert ? !requested : requested;
       if (!revert) {
+        if (!flaggedInvalid) invalidBefore = input.getAttribute('aria-invalid');
         input.setAttribute('aria-invalid', 'true');
         flaggedInvalid = true;
       }

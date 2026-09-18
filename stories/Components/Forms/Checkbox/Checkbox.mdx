@@ -315,7 +315,7 @@ document.addEventListener('mg-switch:save', event => {
 
 Some apps are latest-intent-wins: the control shows what the user last asked for while the app catches up, and a failure is reported in the row rather than by moving the control. Pass `revert: false`.
 
-The switch then keeps the requested position when a save fails, and the helper sets `aria-invalid="true"` on the input, because the position no longer matches what is saved. It is removed when the next save starts, and by `destroy()`. An `aria-invalid` the page set itself is left alone.
+The switch then keeps the requested position when a save fails, and the helper sets `aria-invalid="true"` on the input, because the position no longer matches what is saved. It is undone when the next save starts, and by `destroy()`: whatever the input had there before, including nothing, is put back, so an `aria-invalid` the page set itself survives the failure.
 
 `aria-invalid` alone is not enough. It tells assistive technology that the value is not accepted and gives you a CSS hook (`.mg-switch__input[aria-invalid='true']`), but it is not a visible state, and it does not say what went wrong or how to try again. Handle `mg-switch:failed` and put a message next to the switch, in the row or region the switch controls. Its `detail.reverted` says which of the two happened.
 
@@ -372,7 +372,7 @@ A label is a string, where `{label}` is replaced with the switch's label text, o
 | `mgSwitchPendingDestroy(scope = document)`       | Destroys every enhanced switch in `scope`, including `scope` itself.                                                                                                                                                                                               |
 | `mgSwitchAnnouncer(element, options)`            | The announcements on their own, below. Takes `status` and `labels`.                                                                                                                                                                                                |
 
-`destroy()` removes the listeners, cancels pending timers, aborts a save in flight without announcing it, and removes `aria-busy` if a save was in flight, and an `aria-invalid` it set. It also removes a status region it created and the `data-mg-switch-pending-enhanced` marker. It leaves `checked` as it is.
+`destroy()` removes the listeners, cancels pending timers, aborts a save in flight without announcing it, and removes `aria-busy` if a save was in flight, and undoes an `aria-invalid` it set. It also removes a status region it created and the `data-mg-switch-pending-enhanced` marker. It leaves `checked` as it is.
 
 Events are dispatched on the input and bubble:
 
@@ -409,7 +409,7 @@ toggleLayer(input.checked)
 | `label()`            | Nothing. Returns the switch's label text, resolved as the accessible name is.                                           |
 | `destroy()`          | Nothing. Cancels a scheduled re-announcement and removes a region it created.                                           |
 
-`status` is the region the announcer resolves or creates, or `null`. `labels` is the merged set of labels. Resolution, placement, `data-mg-switch-labels`, `{label}` replacement, the re-announce trick for a repeated message, and staying silent about a switch that has left the page all work exactly as they do for the full helper, because the full helper runs this code. Several announcers and helpers can share one region.
+`status` is the region the announcer resolves or creates, or `null`. `labels` is the merged set of labels. Resolution, placement, `data-mg-switch-labels`, `{label}` replacement, the re-announce trick for a repeated message, and staying silent about a switch that has left the page all work exactly as they do for the full helper, because the full helper runs this code. Several announcers and helpers can share one region, as long as you point them all at it with `status` or `data-mg-switch-status`: the region each call creates for itself belongs to that call alone, so an announcer added to a switch the helper already enhanced would announce into a second region.
 
 An announcer takes no `save`, `timeout`, `revert` or `signal`: there is no save for it to manage. If you want the guards as well — ignoring presses while a save runs, `aria-busy`, only the latest request settling — use `mgSwitchPending()` with `revert: false` and `timeout: 0` instead.
 
@@ -461,7 +461,7 @@ Keep the ring at 3:1 or more against the thumb, and the thumb at 3:1 or more aga
 ## Changelog
 
 - **2.3** — 2026-09-18 ([#1213](https://github.com/unisdr/undrr-mangrove/pull/1213)): Made revert-on-failure and the timeout optional in `js/switch-pending.js`, and released the announcements on their own ([#1189](https://github.com/unisdr/undrr-mangrove/issues/1189)). Defaults are unchanged.
-  - `revert: false` (or `data-mg-switch-revert="false"`) keeps the position the user asked for when a save fails, for apps that report a failure in the row rather than by moving the control. The helper sets `aria-invalid="true"` on the input instead, and clears it when the next save starts or on `destroy()`; an `aria-invalid` the page set itself is left alone.
+  - `revert: false` (or `data-mg-switch-revert="false"`) keeps the position the user asked for when a save fails, for apps that report a failure in the row rather than by moving the control. The helper sets `aria-invalid="true"` on the input instead, and puts back whatever was there when the next save starts or on `destroy()`, so an `aria-invalid` the page set itself survives.
   - `timeout: 0` or `Infinity` (or `data-mg-switch-timeout`) switches the deadline off for a save that legitimately runs long. `aria-busy` then stays true until the save settles, so the helper announces "Still saving…" once at ten seconds, where the deadline would have been.
   - Added `mgSwitchAnnouncer(element, { status, labels })`: the live region, label resolution, re-announce trick and rate limit, with `pending()`, `stillSaving()`, `settled()`, `failed()`, `announce()`, `label()` and `destroy()`, and no listeners or state. `mgSwitchPending()` runs it, so there is one implementation.
   - `mg-switch:failed` now carries `reverted`, and its `checked` is the position the switch is left in either way.

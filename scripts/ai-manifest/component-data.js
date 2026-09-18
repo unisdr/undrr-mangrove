@@ -1380,7 +1380,7 @@ npm run build</code></pre>
         'data-mg-switch-revert':
           '"false" keeps the position the user asked for when a save fails, instead of moving the switch back, and sets aria-invalid="true" on the input. The page then owns showing the failure; handle mg-switch:failed. On the input or the label; the input wins, and the JS revert option wins over both.',
         'aria-invalid':
-          'Set by the script to "true" on a non-reverting switch whose save failed, and removed when the next save starts or on destroy(). An aria-invalid the page authored is left alone.',
+          'Set by the script to "true" on a non-reverting switch whose save failed. When the next save starts, and on destroy(), whatever the input had there before is put back, so an aria-invalid the page authored survives.',
         'data-mg-switch-status':
           'id of a role="status" element for announcements. Otherwise an aria-describedby target with role="status" or aria-live, else a visually hidden mg-u-sr-only region is added after the label and removed on destroy.',
         'data-mg-switch-pending-enhanced':

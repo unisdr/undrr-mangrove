@@ -221,6 +221,26 @@ describe('mgSwitchPending', () => {
     expect(input).toHaveAttribute('aria-invalid', 'true');
   });
 
+  it('puts a page-authored aria-invalid back after a non-reverting failure', async () => {
+    const input = mount({ inputAttrs: 'aria-invalid="false"' });
+    const { save, requests } = controlledSave();
+    const helper = mgSwitchPending(input, { save, revert: false });
+
+    fireEvent.click(input);
+    requests[0].reject(new Error('nope'));
+    await flush();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+
+    // The page's own value returns, rather than the attribute disappearing.
+    fireEvent.click(input);
+    expect(input).toHaveAttribute('aria-invalid', 'false');
+    requests[1].reject(new Error('nope'));
+    await flush();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    helper.destroy();
+    expect(input).toHaveAttribute('aria-invalid', 'false');
+  });
+
   it('treats a save that throws synchronously as a failure', async () => {
     const input = mount();
     const failed = jest.fn();
@@ -1299,6 +1319,16 @@ describe('mgSwitchAnnouncer', () => {
       announcer.destroy();
     }).not.toThrow();
     expect(mgSwitchAnnouncer(null).status).toBeNull();
+  });
+
+  it('does not throw for a document, a selector string or a stray value', () => {
+    document.body.innerHTML = switchMarkup();
+    // A document is a wrapper like any other: it finds the switch inside it.
+    expect(mgSwitchAnnouncer(document).status).not.toBeNull();
+    // Anything that is not an element gets the no-op announcer, not a TypeError.
+    ['.mg-switch__input', 42, true].forEach(value => {
+      expect(mgSwitchAnnouncer(value).status).toBeNull();
+    });
   });
 
   it('has no a11y violations with only the announcements in place', async () => {
