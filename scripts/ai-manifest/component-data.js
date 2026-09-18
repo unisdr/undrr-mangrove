@@ -2308,14 +2308,15 @@ npm run build</code></pre>
     summary:
       'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics.',
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
     hydration: {
       note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns { config }, plus a labels key only when a valid data-labels attribute is present, so destructure defensively. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
       selector: '[data-mg-search-widget]',
       modules: hydrationModules('SyndicationSearchWidget'),
       dataAttributes: {
         'data-mg-search-widget': 'Marks the container to hydrate (required).',
-        'data-search-endpoint': 'Search API URL.',
+        'data-search-endpoint':
+          "Search API URL. Trust boundary: the widget renders this endpoint's HTML unsanitised, because Elasticsearch highlight markup (<em> around matched terms) has to survive. Point it only at a service trusted to return safe HTML; if you point it at your own service, you own what it returns.",
         'data-results-per-page': 'Results per page.',
         'data-debounce-delay':
           'Milliseconds to wait before searching as you type.',
