@@ -94,12 +94,19 @@ export default [
       // asserting the component refuses to render it. Enabling the rule would
       // flag the test suite for testing the thing it is meant to test.
       'no-script-url': 'off',
-      // Enabled at `warn` rather than left off. 27 sites use
-      // `dangerouslySetInnerHTML`; five already carry a suppression recording
-      // the DOMPurify sanitization contract, and those now guard something
-      // real. The other 22 need a per-site audit that does not belong in a
-      // lint-coverage change, so this warns today instead of failing the
-      // build. See unisdr/undrr-mangrove#1235.
+      // Enabled at `warn` rather than left off. The rule reports 27 sites;
+      // five already carry a suppression recording the DOMPurify sanitization
+      // contract, and those now guard something real. The other 22 need a
+      // per-site audit that does not belong in a lint-coverage change, so this
+      // warns today instead of failing the build.
+      //
+      // 27 is not the size of the backlog. `dangerouslySetInnerHTML` appears
+      // at 36 non-test sites; the rule only inspects lowercase DOM elements,
+      // so every use on a component-valued tag — `<HeadingTag>` in Hero.jsx,
+      // for example — is invisible to it. Treat a clean run as necessary, not
+      // sufficient. The audit also has to cover ResultItem.jsx, where the
+      // injected HTML is a search-API response rather than a caller's own
+      // markup. See unisdr/undrr-mangrove#1235.
       'react/no-danger': 'warn',
       // Small enough backlogs that enabling them costs nothing, and each keeps
       // an existing suppression comment load-bearing.
@@ -137,9 +144,15 @@ export default [
       'react/jsx-props-no-spreading': 'off',
       'import/no-extraneous-dependencies': 'off',
       // `console.error` and `console.warn` are how a component reports a
-      // failure it cannot recover from, and all 31 statements the widened
-      // coverage found are of that kind. The rule still catches a stray
-      // `console.log` left behind after debugging, which is what it is for.
+      // failure it cannot recover from. Widening coverage found 32 such
+      // statements: 21 in component code, and 11 in test files that save and
+      // replace `console.error` to silence an expected React warning. The rule
+      // still catches a stray `console.log` left behind after debugging, which
+      // is what it is for — the one `console.log` in the tree's component code
+      // is a `debug`-gated channel in CookieConsentBanner and carries an
+      // explicit suppression. Note the reach: this block claims only story
+      // files and `.jsx`, so `no-console` never applies to plain `.js`,
+      // including the `scripts/` CLIs that print on purpose.
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-return-assign': ['warn', 'always'],
       // `as-needed` rather than `never`: naming a function expression that is

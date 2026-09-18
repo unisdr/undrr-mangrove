@@ -51,7 +51,10 @@ describe('package root entry point', () => {
 
   it('exports at least the components the library is known to ship', () => {
     // A floor, so an index.js that accidentally exported nothing would fail
-    // rather than pass the "nothing is undefined" test vacuously.
+    // rather than pass the "nothing is undefined" test vacuously. It is a
+    // floor and nothing more: the suite iterates the bindings that exist, so
+    // it cannot fail for a component someone adds and forgets to export here.
+    // Catching that needs a check against the component tree, not this file.
     expect(Object.keys(packageRoot).length).toBeGreaterThan(20);
   });
 });
