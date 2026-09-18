@@ -200,8 +200,11 @@ See: <LinkTo kind="components-footer" story="docs">Footer component</LinkTo>
 
 ### Typography
 
-External-facing print/web uses **Roboto** (UN official typeface), with
-**Roboto Condensed** for headings. Internal/email communication may use Arial.
+External-facing print/web uses **Roboto** (UN official typeface) for body text
+and headings, with **Roboto Condensed** for the hero title and for interface
+chrome such as card titles, tabs and tags. Internal/email communication may use
+Arial. In CSS, name a font role — `var(--mg-font-family-text)`, `-heading`,
+`-display`, `-ui` or `-code` — and never a typeface.
 
 **Language-specific fonts:** Mangrove applies script-specific font overrides via
 `:lang()` selectors (for example `lang="ar"`).

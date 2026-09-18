@@ -18,11 +18,26 @@
 // The name is always present, so the colour is never the only cue (SC 1.4.1).
 // The indicator still carries a shape as well as a colour, for two reasons:
 // several of the colours are close to each other under red-green colour vision
-// deficiency (degraded and offline are 3.4 CIE76 deltaE apart simulated for
-// deuteranopia, draft and waiting-for-more-information 19.5), and this is a
-// CSS-only component, so consumers write the markup and some will place an
-// indicator without its label — in a table cell, a card corner, a dense list.
-// A second cue also makes a long list faster to scan for everyone.
+// deficiency, and this is a CSS-only component, so consumers write the markup
+// and some will place an indicator without its label — in a table cell, a card
+// corner, a dense list. A second cue also makes a long list faster to scan for
+// everyone.
+// -
+// Degraded and offline are 3.3 CIE76 / 1.1 dE2000 apart simulated for
+// deuteranopia (Machado), 1.7 / 0.6 under Viénot — both well under the ~2.3
+// dE2000 just-noticeable difference, so they are the same mark to a deuteranope
+// and only the shape separates them. Draft and waiting-for-more-information are
+// 19.5 CIE76 / 13.4 dE2000 for everyone. The matrices have to be applied in
+// LINEAR rgb; against gamma-encoded sRGB the degraded/offline pair measures
+// 36 CIE76 and the collision disappears from the numbers.
+// -
+// The palette is not rebalanced to fix this because it cannot be: holding the
+// hue associations and requiring 3:1 on white, the best worst-pair available
+// from the tokens this system owns is 2.34 dE2000, still at the JND, while the
+// normal-vision worst pair drops from 13.4 to 6.8. Seven unordered categories
+// is past what colour carries — the same wall _tokens-data-viz.scss records as
+// --mg-dataviz-categorical-safe-count: 4. See StatusLabel.mdx, "Why the palette
+// is not rebalanced instead".
 // -
 // Usage:
 //   <span class="mg-status-label mg-status-label--published">
