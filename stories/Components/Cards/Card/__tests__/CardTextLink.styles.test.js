@@ -33,12 +33,20 @@ describe.each(['style.scss', 'style-gutenberg.scss'])(
   'card in-text links in %s',
   entry => {
     test('underlines summary links at rest, not only on hover', () => {
-      const rule = ruleFor(entry, '.mg-card__text-link');
+      const rule = ruleFor(entry, '.mg-card__text-link:not(.mg-button)');
       expect(rule).toMatch(/text-decoration:\s*underline/);
     });
 
-    test('leaves button-styled links in a summary alone', () => {
+    test('leaves button-styled links alone, on both selectors', () => {
+      // An anchor can carry .mg-card__text-link and .mg-button at once. Both
+      // halves of the rule need the guard, or it gets the in-text underline
+      // on top of its button treatment.
       expect(css(entry)).toContain('.mg-card__summary a:not(.mg-button)');
+      expect(css(entry)).toContain('.mg-card__text-link:not(.mg-button)');
+      expect(css(entry)).not.toMatch(
+        /\.mg-card__text-link\s*\{[^}]*text-decoration:\s*underline/
+      );
+      expect(css(entry)).not.toMatch(/\.mg-card__text-link:hover\s*\{/);
     });
 
     test('leaves the plain-title and unlinked-title opt-outs intact', () => {

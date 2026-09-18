@@ -363,7 +363,7 @@ span.mg-card__label {
 // cannot distinguish them (WCAG 1.4.1 Use of Colour). Button-styled links
 // inside a summary keep their own treatment.
 .mg-card__summary a:not(.mg-button),
-.mg-card__text-link {
+.mg-card__text-link:not(.mg-button) {
   color: rgb(var(--mg-color-interactive));
   text-decoration: underline;
   text-underline-offset: 0.15em;
@@ -383,7 +383,7 @@ span.mg-card__label {
 }
 
 .mg-card__summary a:not(.mg-button):hover,
-.mg-card__text-link:hover {
+.mg-card__text-link:not(.mg-button):hover {
   text-decoration-thickness: 2px;
 }
 
