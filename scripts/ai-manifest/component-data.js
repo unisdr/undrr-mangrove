@@ -129,6 +129,19 @@ const hydrationModules = name => ({
   component: `${CDN}/components/${name}.js`,
 });
 
+/**
+ * Modules for a vanilla lifecycle contract: one script under /js/, no React
+ * and no import map. The file name is the module's own, so the manifest
+ * validator can resolve it back to `stories/assets/js/{name}.js` and fail the
+ * build when a contract names a module that does not exist.
+ *
+ * @param {string} name Module file name without the extension (e.g. 'drawer').
+ * @returns {{ script: string }}
+ */
+const vanillaModules = name => ({
+  script: `${CDN}/js/${name}.js`,
+});
+
 const STYLESHEET_TAG = `<link rel="stylesheet" href="${CDN}/css/style.css" />`;
 
 const IMPORT_MAP = `<script type="importmap">
@@ -346,9 +359,7 @@ export const COMPONENT_DATA = {
     vanillaModule: {
       note: 'Preferred for plain HTML pages: no React, no import map. renderedHtml is inert until js/copy-button.js runs. The script enhances every [data-mg-copy-button] on load and dispatches no events; it writes the tooltip into .mg-copy-button__feedback and the announcement into the .mg-u-sr-only aria-live span, so include both in the button markup. For buttons inserted later, import the named export and call it again — `import { mgCopyButton } from ".../js/copy-button.js"; mgCopyButton(scope);`. The module puts nothing on window, so the plain `<script src>` tag in the example below cannot call it; use an inline `<script type="module">` with an import if you need to re-run it. Already-initialised buttons are skipped. Clipboard writes need a secure context (https or localhost); the script falls back to execCommand. The failed tooltip and manual-copy hint (5 seconds) are shown only when the clipboard call rejects or throws — an execCommand that merely returns false is not detected and the success tooltip is shown instead.',
       selector: '[data-mg-copy-button]',
-      modules: {
-        script: `${CDN}/js/copy-button.js`,
-      },
+      modules: vanillaModules('copy-button'),
       dataAttributes: {
         'data-mg-copy-button': 'Marks the button to enhance (required).',
         'data-text-to-copy':
@@ -1459,10 +1470,7 @@ npm run build</code></pre>
     vanillaModule: {
       note: 'Plain ES module: no React, no hydrate.js, no import map. renderedHtml switches toggle but do not save. Marked switches are enhanced on load; an explicit mgSwitchPending or mgSwitchPendingInit call takes over those switches with its options. Without a save function, each change dispatches a cancelable mg-switch:save event; a listener must call event.detail.respondWith(promise) synchronously (wrap awaited work in an async function and pass its promise), or call event.preventDefault() synchronously and respondWith later. Otherwise the switch reverts with a console warning. Call mgSwitchPendingDestroy(scope), or abort the { signal } passed to mgSwitchPendingInit, before removing switches. Exports: mgSwitchPending(input, { save, status, timeout, revert, labels, signal }) returning { destroy() }, mgSwitchPendingInit(scope, options) returning the new helpers, mgSwitchPendingDestroy(scope), and mgSwitchAnnouncer(element, { status, labels }). The announcer is the announcements without the save state machine, for an app that owns the switch position and its own requests: it adds no listeners and sets no attributes, and returns { status, labels, label(), announce(text), pending(), stillSaving(force), settled(checked), failed(), destroy() }, where announce() takes a string with {label} or a function (labelText, input). mgSwitchPending runs the same announcer.',
       selector: '[data-mg-switch-pending]',
-      modules: {
-        script:
-          'https://assets.undrr.org/mangrove/{{version}}/js/switch-pending.js',
-      },
+      modules: vanillaModules('switch-pending'),
       dataAttributes: {
         'data-mg-switch-pending':
           'On the .mg-switch__input or its label. Enhanced on page load, or by mgSwitchPendingInit(scope).',
@@ -2390,6 +2398,8 @@ npm run build</code></pre>
       'mg-legend--inline',
       'mg-legend--grid',
     ],
+    vanillaModuleNote:
+      'Deliberately none, and none is planned. A legend is static presentation: it has no state, no interactive controls and no keyboard model, so there is nothing for a lifecycle module to manage. Emit the markup, load a Mangrove stylesheet, and it is complete — the CSS-only path is the whole component, not a subset of it. If your legend entries need to toggle map layers, that interactivity belongs to your own controls (a Checkbox or Switch beside each entry, or a Drawer holding the list), not to the legend.',
   },
 
   // --- Navigation ---
@@ -2505,7 +2515,7 @@ npm run build</code></pre>
     summary:
       'Prototype. Slide-over off-canvas drawer and floating panel for secondary navigation, filters or details, with focus management, backdrop and Escape dismissal.',
     description:
-      'Prototype. Slide-over off-canvas drawer and floating panel for secondary navigation, filters, or details. Modal dialog with focus management, backdrop and Escape dismissal; string content renders as text. Hydration via createHydrator with data-mg-drawer (container needs an id) and data-mg-drawer-trigger buttons; server-rendered body markup is sanitised.',
+      'Prototype. Slide-over off-canvas drawer and floating panel for secondary navigation, filters, or details. Modal dialog with focus management, backdrop and Escape dismissal; string content renders as text. Two lifecycles, either of which makes the markup work: the dependency-free js/drawer.js module, which enhances your own markup on data-mg-js-drawer (mgDrawer / mgDrawerDestroy), or React hydration via createHydrator on data-mg-drawer, which renders the drawer and sanitises server-rendered body markup. Both need the container to have an id and use data-mg-drawer-trigger buttons. Use one or the other, not both.',
     cssClasses: [
       'mg-drawer',
       'mg-drawer--start',
@@ -2524,8 +2534,83 @@ npm run build</code></pre>
       'mg-floating-panel__close',
       'mg-floating-panel__body',
     ],
+    vanillaModule: {
+      note: 'Preferred for plain HTML pages: no React, no import map. renderedHtml is a drawer that cannot open or close until js/drawer.js runs. Unlike the hydration path, the module never builds markup — it enhances the drawer you already wrote, so the close button\'s aria-label, the title and the body stay in your HTML and translation stays with the page. Mark the container with data-mg-js-drawer, give it an id, and point one or more data-mg-drawer-trigger buttons at that id. The module adds role="dialog" and tabindex="-1" when the markup omits them, names the dialog from its own .mg-drawer__title (or .mg-floating-panel__title) when you have set no aria-label or aria-labelledby, keeps a closed drawer inert and aria-hidden, moves focus to the close button on open and back to the opener on close, closes on Escape, and traps Tab in a modal drawer. A floating panel (the mg-floating-panel class) is never modal: no backdrop, no aria-modal and no Tab trap. The only element the module creates is the .mg-drawer__backdrop, which carries no text and is removed again on close. Already-initialised containers are skipped, so mgDrawer(scope) is safe to call again after inserting markup; call mgDrawerDestroy(scope) before removing a drawer from the page.',
+      selector: '[data-mg-js-drawer]',
+      modules: vanillaModules('drawer'),
+      dataAttributes: {
+        id: 'Required, so data-mg-drawer-trigger buttons can find the drawer.',
+        'data-mg-js-drawer':
+          'Marks the container for the vanilla module (required). Distinct from data-mg-drawer, which is the React hydration marker — use one or the other, not both.',
+        'data-backdrop':
+          '"false" to drop the backdrop. With a backdrop an edge drawer is a modal dialog with a focus trap.',
+        'data-mg-js-drawer-skip-auto-init':
+          'Skips this container on page-load auto-init. An explicit mgDrawer(scope) call still enhances it.',
+        'data-mg-js-drawer-initialized': 'Set by the module. Do not author it.',
+        'is-open':
+          'A class, not an attribute: on the container it means the drawer starts open, and the module keeps it in step with the open state.',
+        'mg-floating-panel':
+          'A class on the container: renders and behaves as a non-modal floating panel rather than a modal edge drawer.',
+        'data-mg-drawer-trigger':
+          'On a button elsewhere in the page: its value is the drawer container id. Clicking toggles the drawer, and the button gets aria-expanded and aria-controls.',
+      },
+      events: [
+        {
+          name: 'mg-drawer:open',
+          target: 'The data-mg-js-drawer container',
+          bubbles: false,
+          when: 'Dispatch it yourself to open the drawer from script.',
+        },
+        {
+          name: 'mg-drawer:close',
+          target: 'The data-mg-js-drawer container',
+          bubbles: false,
+          when: 'Dispatch it yourself to close the drawer from script.',
+        },
+        {
+          name: 'mg-drawer:toggle',
+          target: 'The data-mg-js-drawer container',
+          bubbles: false,
+          when: 'Dispatch it yourself to toggle the drawer from script.',
+        },
+        {
+          name: 'mg-drawer:opened',
+          target: 'The data-mg-js-drawer container',
+          bubbles: true,
+          when: 'After the drawer has opened. Listen for it; do not dispatch it.',
+        },
+        {
+          name: 'mg-drawer:closed',
+          target: 'The data-mg-js-drawer container',
+          bubbles: true,
+          when: 'After the drawer has closed. Listen for it; do not dispatch it.',
+        },
+      ],
+      example: `${STYLESHEET_TAG}
+
+<button type="button" data-mg-drawer-trigger="filters" class="mg-button mg-button-primary">
+  Filter publications
+</button>
+
+<div id="filters" class="mg-drawer mg-drawer--start" data-mg-js-drawer role="dialog" tabindex="-1">
+  <div class="mg-drawer__header">
+    <h2 class="mg-drawer__title">Filter publications</h2>
+    <button type="button" class="mg-icon-button mg-icon-button--small mg-drawer__close" aria-label="Close">
+      <span class="mg-icon mg-icon-close" aria-hidden="true"></span>
+    </button>
+  </div>
+  <div class="mg-drawer__body">
+    <p>Narrow the publications list by hazard, region and year.</p>
+  </div>
+  <div class="mg-drawer__footer">
+    <button type="button" class="mg-button mg-button-primary">Show 128 results</button>
+  </div>
+</div>
+
+<script type="module" src="${CDN}/js/drawer.js"></script>`,
+    },
     hydration: {
-      note: 'renderedHtml is a drawer that cannot open or close: nothing opens it, Escape does nothing and focus is not managed. Give the container an id, point one or more data-mg-drawer-trigger buttons at that id, and hydrate. The default export of components/Drawer.js is HydratedDrawer, which owns the open state; the named Drawer export is the controlled component. Body and footer markup inside .mg-drawer__body / .mg-drawer__footer is passed as bodyHtml / footerHtml and sanitised with DOMPurify; the title is read as text.',
+      note: 'React alternative to js/drawer.js — use one or the other, not both. renderedHtml is a drawer that cannot open or close: nothing opens it, Escape does nothing and focus is not managed. Give the container an id, point one or more data-mg-drawer-trigger buttons at that id, and hydrate. The default export of components/Drawer.js is HydratedDrawer, which owns the open state; the named Drawer export is the controlled component. Body and footer markup inside .mg-drawer__body / .mg-drawer__footer is passed as bodyHtml / footerHtml and sanitised with DOMPurify; the title is read as text.',
       selector: '[data-mg-drawer]',
       modules: hydrationModules('Drawer'),
       dataAttributes: {
