@@ -126,16 +126,27 @@ import React from 'react';
 
 const ResetButton = () => {
   const handleResetConsent = () => {
-    if (window.CookieConsent) {
-      // Reset and show the consent modal again
-      window.CookieConsent.reset(true);
-      window.CookieConsent.showConsentModal();
-    }
+    const cc = window.CookieConsent;
+    if (!cc) return;
+
+    // Erase the stored consent, then rebuild and show the bar.
+    cc.eraseCookies(cc.getConfig('cookie').name);
+    cc.show(true);
   };
 
-  return <button onClick={handleResetConsent}>Reset Cookie Consent</button>;
+  return <button onClick={handleResetConsent}>Reset cookie consent</button>;
 };
 ```
+
+The consent API in vanilla-cookieconsent v3 is `show(createModal)`, `hide()`, `showPreferences()`, `hidePreferences()`, `reset(eraseCookie)` and `eraseCookies(name)`. There is no `showConsentModal()`; a guard on that name silently skips.
+
+Use `reset(true)` only when you want the loaded configuration discarded as well. It tears down the library's state, including the `window._ccRun` guard, so nothing can be shown again until `run()` is called a second time.
+
+### Why the bar can be missing in an automated browser
+
+The library's `hideFromBots` option defaults to `true`, and the UNDRR CDN configuration leaves it that way. When it is on and `navigator.webdriver` is `true` — any Playwright, Puppeteer, Selenium or CDP-driven session — `run()` returns before it creates a single node. The library still reports success: `window.CookieConsent` is a populated object and the CDN configuration script logs `Cookie banner initialized successfully`. Only the DOM is missing, and `show(true)` then throws `Cannot read properties of undefined (reading 'addEventListener')` instead of doing nothing.
+
+This matters for anything that drives the component in a browser: visual regression runs, end-to-end suites, and Storybook play functions all see no bar unless the configuration passed to the component sets `hideFromBots: false`. The "Rendering check" story does exactly that, and asserts the bar for real.
 
 ### Custom Categories
 
@@ -256,6 +267,12 @@ Built with proper ARIA attributes, keyboard navigation, focus management, and sc
 - [vanilla-cookieconsent Documentation](https://github.com/orestbida/cookieconsent) - Underlying library reference
 
 ## Changelog
+
+- **1.3.0** — 2026-09-18 ([#PR](https://github.com/unisdr/undrr-mangrove/pull/PR)): The stories can now tell a working bar from a broken one.
+  - Added a "Rendering check" story whose `play` function asserts that the three CDN assets loaded, that the library built its DOM rather than merely defining `window.CookieConsent`, and that the bar is present and visible in the document body where the library appends it. `#cc-main` lands on `document.body`, outside the story canvas, so the assertions start from `canvasElement.ownerDocument`. The story also reports the result in the canvas, so a failure is visible without opening a panel.
+  - Removed the false note on the "Default" story claiming the bar does not appear in Storybook. It does. What it does not do is appear in an automated browser, because the library's `hideFromBots` default suppresses it whenever `navigator.webdriver` is true — while still reporting success.
+  - Fixed the "Reset banner" story. It guarded on `window.CookieConsent.showConsentModal`, which does not exist in vanilla-cookieconsent v3, so the guard silently skipped and the button did nothing. It now erases the stored consent with `eraseCookies()` and rebuilds the bar with `show(true)`.
+  - Documented the v3 consent API and the `hideFromBots` behaviour, and corrected the reset example that used the same non-existent method.
 
 - **1.2.3** — 2026-09-17 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): The "Default" story canvas now explains that the component renders nothing itself and that the consent bar is drawn by the CDN library. It also records an open question: the bar does not appear in Storybook even with no stored consent (`CookieConsent.validConsent()` returns `false` and a forced `show(true)` produces no DOM), so the empty canvas is not yet confirmed to be expected behaviour. Story copy only, no component change.
 
