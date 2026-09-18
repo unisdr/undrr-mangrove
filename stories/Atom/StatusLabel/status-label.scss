@@ -357,17 +357,11 @@ $mg-status-label-octagon-inner: polygon(
   gap: var(--mg-spacing-100) var(--mg-spacing-200);
   padding: 0;
   margin: 0;
-  list-style: none;
 
-  // Safari removes the implicit `list` role from any <ul> whose list-style is
-  // `none`, so VoiceOver stops announcing the item count this class exists to
-  // provide (unisdr/undrr-mangrove#1209). An empty string marker is not `none`,
-  // so the semantics stay, and it renders nothing and reserves no space.
-  // Declared after the shorthand: a browser too old to parse it keeps `none`
-  // and behaves exactly as before. This is deliberately a CSS fix rather than
-  // role="list" on the examples, because the component is CSS-only — consumers
-  // write their own <ul>, and only a fix on the class reaches all of them.
-  list-style-type: "";
+  // Keeps the implicit `list` role Safari would otherwise drop, so VoiceOver
+  // still announces the item count this class exists to provide
+  // (unisdr/undrr-mangrove#1209). The mixin carries the full reasoning.
+  @include mg-list-unmarked;
 
   // The global RTL list rules add inline padding to ul/ol and li with a more
   // specific selector, which pushed the labels away from the inline start.
