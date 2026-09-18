@@ -1893,7 +1893,7 @@ ${tokensDict.wrappingRules.exceptions.length ? tokensDict.wrappingRules.exceptio
 
 **4. Deprecated: \`--sendai-red|orange|purple|turquoise\`** and their \`.mg-u-background-color--sendai-*\` / \`.mg-u-color--sendai-*\` utility classes. Named by colour rather than by Sendai meaning, three of the seven targets have no counterpart, and they are scheduled for removal in 2.1. Do not emit them in new code — use \`--mg-sendai-target-*\` for target semantics or the \`--mg-color-*\` palette for a plain accent.
 
-Font families, breakpoints, and \`$mg-tabs-border-bottom\` remain SCSS-only build-time variables and are not available as CSS custom properties.
+Breakpoints (\`$mg-breakpoint-*\`) and \`$mg-tabs-border-bottom\` remain SCSS-only build-time variables and are not available as CSS custom properties: \`@media\` and \`@if\` both need a compile-time value. The font *faces* (\`$mg-font-face-*\`) are Sass for a different reason — they are the compile-time source the role custom properties are built from, and overriding one before the import is the only way to introduce a typeface Mangrove does not ship; see "Overrides" under Typography below. Font *families* are not on that list — they are the five \`--mg-font-family-*\` role custom properties described under "Brand guide → Typography" below. Never hard-code a typeface; name a role.
 
 ### Conventions
 
