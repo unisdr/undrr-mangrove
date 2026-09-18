@@ -25,6 +25,33 @@ function nextTargetId() {
 }
 
 /**
+ * Resolves a toggle's target, nearest scope first.
+ *
+ * The revealed content need not be a sibling or descendant of its toggle, so
+ * there is no container the lookup can be confined to. It can still be
+ * *ordered*: climb the toggle's ancestors and return the first match found
+ * inside one. For the canonical markup that is the adjacent wrapper; for two
+ * blocks in separate subtrees each toggle finds its own; and when the target
+ * genuinely lives elsewhere on the page the walk reaches `<html>` without
+ * matching and the document-wide lookup answers exactly as it did before.
+ * So the walk is never worse than `document.querySelector`, and it is better
+ * whenever two toggles share a selector. See #1228.
+ *
+ * @param {HTMLElement} toggle - The toggle whose target to resolve.
+ * @param {string} selector - The CSS selector to resolve.
+ * @returns {Element|null} The nearest match, or null when nothing matches.
+ */
+function resolveTarget(toggle, selector) {
+  for (let scope = toggle.parentElement; scope; scope = scope.parentElement) {
+    const match = scope.querySelector(selector);
+    if (match) return match;
+  }
+  // `<html>` itself, and anything outside the toggle's ancestor chain (a
+  // detached toggle, say), are only reachable from the document.
+  return document.querySelector(selector);
+}
+
+/**
  * Initializes "show more" toggle buttons.
  *
  * The toggle carries `aria-controls` pointing at the content it collapses.
@@ -53,7 +80,7 @@ export function mgShowMore(scope) {
 
     const mgShowMoreTargetClass =
       item.dataset.mgShowMoreTarget || '.mg-show-more--container';
-    const mgShowMoreTarget = document.querySelector(mgShowMoreTargetClass);
+    const mgShowMoreTarget = resolveTarget(item, mgShowMoreTargetClass);
 
     if (!mgShowMoreTarget) {
       console.warn(
