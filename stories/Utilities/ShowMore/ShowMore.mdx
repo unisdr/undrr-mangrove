@@ -21,9 +21,40 @@ The toggle button does not need to be inside or adjacent to the content containe
 
 <Canvas of={ShowMoreStories.DetachedButton} />
 
+## Two on one page
+
+Two toggles may share a target selector — the default one, or the same class on
+two blocks — as long as each pair sits in its own parent. Each toggle then
+reveals its own content. Two toggles under the _same_ parent still cannot be
+told apart — see "How the target is resolved" below.
+
+<Canvas of={ShowMoreStories.TwoOnOnePage} />
+
 ## How it works
 
 The `mgShowMore()` function finds all elements with `data-mg-show-more` and wires up click handlers. On click, the targeted container's `mg-show-more--collapsed` class is toggled, which controls `max-height`, `overflow`, and a CSS `mask-image` fade.
+
+### How the target is resolved
+
+A toggle's target selector is resolved nearest scope first: the script climbs
+the toggle's ancestors and takes the first match it finds inside one.
+
+Revealed content need not be a sibling or descendant of its toggle, so there is
+no container the lookup can be confined to — but it can be ordered. For the
+canonical markup the walk finds the adjacent wrapper. For two blocks in
+separate subtrees each toggle finds its own, so two toggles left on the default
+`.mg-show-more--container` no longer both drive the first block.
+
+A target elsewhere on the page is still found. For a toggle that is in the
+document the walk ends at `<html>`, which contains everything else, so its last
+step is the document-wide lookup — the detached button above resolves the same
+way it always did. The walk is never worse than the old `document.querySelector`;
+it only prefers a nearer match when there is one.
+
+Two toggles inside the **same** parent cannot be told apart this way: the first
+scope holding one target holds both, and the earlier one in document order wins.
+Give each of those its own selector, ideally an `id` — which is what the React
+wrapper does for you.
 
 ### HTML structure
 
@@ -96,13 +127,13 @@ than reaching for this utility.
 
 ### Data attributes
 
-| Attribute                           | Required | Description                                                                                              |
-| ----------------------------------- | -------- | -------------------------------------------------------------------------------------------------------- |
-| `data-mg-show-more`                 | Yes      | Set to `"true"` on the toggle button to register it                                                      |
-| `data-mg-show-more-target`          | No       | CSS selector for the content container. Defaults to `".mg-show-more--container"`                         |
-| `data-mg-show-more-label-collapsed` | No       | Button text when content is collapsed. Defaults to "Show more"                                           |
-| `data-mg-show-more-label-open`      | No       | Button text when content is expanded. Defaults to "Show less"                                            |
-| `data-mg-show-more-skip-auto-init`  | No       | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually. |
+| Attribute                           | Required | Description                                                                                                       |
+| ----------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| `data-mg-show-more`                 | Yes      | Set to `"true"` on the toggle button to register it                                                               |
+| `data-mg-show-more-target`          | No       | CSS selector for the content container, resolved nearest ancestor first. Defaults to `".mg-show-more--container"` |
+| `data-mg-show-more-label-collapsed` | No       | Button text when content is collapsed. Defaults to "Show more"                                                    |
+| `data-mg-show-more-label-open`      | No       | Button text when content is expanded. Defaults to "Show less"                                                     |
+| `data-mg-show-more-skip-auto-init`  | No       | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually.          |
 
 ### JavaScript initialization
 
@@ -166,6 +197,9 @@ The collapsed height is controlled by the `--mg-show-more-height` CSS custom pro
 
 ## Changelog
 
+- **1.5** — 2026-09-18 ([#1238](https://github.com/unisdr/undrr-mangrove/pull/1238), [#1228](https://github.com/unisdr/undrr-mangrove/issues/1228)): Two toggles sharing a target selector each reveal their own content. `mgShowMore()` resolved the target with `document.querySelector`, so two toggles left on the default `.mg-show-more--container` both drove the first block on the page. The target is now resolved nearest scope first: the script climbs the toggle's ancestors and takes the first match inside one, falling back to the document if the walk reaches `<html>` without matching. Revealed content need not be a sibling or descendant of its toggle, so the lookup cannot be confined to a container — but it can be ordered, and ordering it is never worse. Canonical markup finds the adjacent wrapper, two blocks in separate subtrees each find their own, and a genuinely detached target resolves exactly as before.
+  - The React `ShowMore` wrapper pointed each toggle at `.${collapsable_wrapper_class}`. Its items are flat siblings, so they share a parent and the ancestor walk cannot separate them: two items given the same wrapper class still collided. Each item now carries a minted id (`mg-show-more-{useId}-{index}`) and its toggle targets that id. `collapsable_wrapper_class` goes back to being what its documentation always said it was — a styling hook — and it no longer has to be unique. Consumers reading the class off the rendered markup are unaffected; the wrapper keeps it.
+  - A new "Two on one page" story renders two vanilla toggles on the default selector and two React items sharing a wrapper class. Tests cover two instances on one page for both paths.
 - **1.4** — 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Breaking — deleted the deprecated `ShowMore.scss` alias, which only forwarded to `show-more.scss` and emitted a deprecation `@warn`. The npm package no longer ships `scss/Utilities/ShowMore/ShowMore.scss`; import `scss/Utilities/ShowMore/show-more` instead. No CSS behaviour change.
 - **1.3** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): **Visible change to the documented markup.** The toggle is now `<button type="button">` rather than `<a href="#">`, and `mgShowMore()` maintains `aria-controls` on it, assigning the target an id when it has none. The anchor announced as a link and offered a dead destination if the script failed to load (WCAG 4.1.2). An anchor still present in consumer markup keeps working and is given `role="button"`, so copied markup does not break, but new markup should use a button.
   - An anchor toggle now also gets a `keydown` handler, so Space activates it as `role="button"` promises. The click handler already suppressed the `href="#"` jump.

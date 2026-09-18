@@ -25,6 +25,43 @@ function nextTargetId() {
 }
 
 /**
+ * Resolves a toggle's target, nearest scope first.
+ *
+ * The revealed content need not be a sibling or descendant of its toggle, so
+ * there is no container the lookup can be confined to. It can still be
+ * *ordered*: climb the toggle's ancestors and return the first match found
+ * inside one. For the canonical markup that is the adjacent wrapper, and for
+ * two blocks in separate subtrees each toggle finds its own.
+ *
+ * For a toggle that is in the document the walk ends at `<html>`, an ancestor
+ * of every other element, so its last iteration *is* the document-wide lookup:
+ * a target anywhere on the page is still found, and it is the same element
+ * `document.querySelector` returned whenever nothing nearer matched. The walk
+ * is therefore never worse, and better whenever two toggles share a selector.
+ * The explicit fallback below is only reached when the toggle is not in the
+ * document tree — detached, or inside a shadow root or a `<template>` — where
+ * it resolves exactly as it did before.
+ *
+ * Two toggles under the *same* parent still cannot be told apart: the first
+ * scope containing one target contains both, and the earlier one in document
+ * order wins. That is also why the React `ShowMore` wrapper mints an id per
+ * item rather than relying on this walk. See #1228.
+ *
+ * @param {HTMLElement} toggle - The toggle whose target to resolve.
+ * @param {string} selector - The CSS selector to resolve.
+ * @returns {Element|null} The nearest match, or null when nothing matches.
+ */
+function resolveTarget(toggle, selector) {
+  for (let scope = toggle.parentElement; scope; scope = scope.parentElement) {
+    const match = scope.querySelector(selector);
+    if (match) return match;
+  }
+  // `<html>` itself, and anything outside the toggle's ancestor chain (a
+  // detached toggle, say), are only reachable from the document.
+  return document.querySelector(selector);
+}
+
+/**
  * Initializes "show more" toggle buttons.
  *
  * The toggle carries `aria-controls` pointing at the content it collapses.
@@ -53,7 +90,7 @@ export function mgShowMore(scope) {
 
     const mgShowMoreTargetClass =
       item.dataset.mgShowMoreTarget || '.mg-show-more--container';
-    const mgShowMoreTarget = document.querySelector(mgShowMoreTargetClass);
+    const mgShowMoreTarget = resolveTarget(item, mgShowMoreTargetClass);
 
     if (!mgShowMoreTarget) {
       console.warn(

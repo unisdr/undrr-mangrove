@@ -127,3 +127,81 @@ export const DetachedButton = {
   render: () => <DetachedShowMore />,
   name: 'Detached button',
 };
+
+const blockText =
+  'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities. As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.';
+
+const twoOnOnePageData = [
+  {
+    button_text: 'Show more',
+    collapsable_wrapper_class: 'show-more-wrapper-class',
+    collapsable_text: `First React block. ${blockText}`,
+  },
+  {
+    button_text: 'Show more',
+    collapsable_wrapper_class: 'show-more-wrapper-class',
+    collapsable_text: `Second React block. ${blockText}`,
+  },
+];
+
+function VanillaPair() {
+  useEffect(() => {
+    mgShowMore();
+  }, []);
+
+  return (
+    <React.Fragment>
+      {['First', 'Second'].map(label => (
+        <section key={label} style={{ marginBottom: '1rem' }}>
+          <div
+            className="mg-show-more--container"
+            style={{ backgroundColor: '#f0e6d3', padding: '1rem' }}
+          >
+            <p>
+              {label} vanilla block. {blockText}
+            </p>
+          </div>
+          <button
+            type="button"
+            className="mg-button mg-button-primary mg-show-more--button"
+            data-mg-show-more="true"
+            data-mg-show-more-label-open="Show less"
+            data-mg-show-more-label-collapsed="Show more"
+          >
+            Show more
+          </button>
+        </section>
+      ))}
+    </React.Fragment>
+  );
+}
+
+export const TwoOnOnePage = {
+  name: 'Two on one page',
+  render: () => (
+    <div style={{ maxWidth: '400px' }}>
+      <h3 className="mg-heading-300">Two vanilla toggles</h3>
+      <p>
+        Neither toggle names a target, so both fall back to the default{' '}
+        <code>.mg-show-more--container</code> selector. Each pair sits in its
+        own <code>&lt;section&gt;</code>, which is what lets each toggle resolve
+        the block beside it rather than the first one on the page.
+      </p>
+      <VanillaPair />
+      <h3 className="mg-heading-300">Two React items</h3>
+      <p>
+        Both items share one <code>collapsable_wrapper_class</code>. Each toggle
+        still reveals its own content.
+      </p>
+      <ShowMore data={twoOnOnePageData} />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Two instances of each path on one page. The vanilla toggles resolve their target nearest-ancestor first — each pair is wrapped in its own section, which is what separates them — and each React item carries a minted id, so neither pair collides.',
+      },
+    },
+  },
+};
