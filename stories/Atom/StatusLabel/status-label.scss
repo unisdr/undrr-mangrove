@@ -63,15 +63,21 @@ $mg-status-label-plus: polygon(
   0% 34%,
   34% 34%
 );
+
+// 20%, not the 29.3% of a regular octagon: a regular octagon is the most
+// circle-like octagon there is, and at the 14px default it read as a circle
+// beside the published dot — and identically to it in forced colours, where
+// colour is gone. The deeper chamfer gives longer straight edges, so the
+// silhouette separates from the circle at small sizes.
 $mg-status-label-octagon: polygon(
-  29.3% 0%,
-  70.7% 0%,
-  100% 29.3%,
-  100% 70.7%,
-  70.7% 100%,
-  29.3% 100%,
-  0% 70.7%,
-  0% 29.3%
+  20% 0%,
+  80% 0%,
+  100% 20%,
+  100% 80%,
+  80% 100%,
+  20% 100%,
+  0% 80%,
+  0% 20%
 );
 
 // Equal bounding boxes do not read as equal weight: a square of the indicator
