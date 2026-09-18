@@ -758,12 +758,11 @@ function buildTokensDictionary() {
     // resolvedTargets[0] which may not have it (sub-brand-only tokens).
     const emittingRecord =
       defaultRecord ||
-      resolvedTargets
-        .map(b => b.resolved.emitted.get(id))
-        .find(r => r != null);
+      resolvedTargets.map(b => b.resolved.emitted.get(id)).find(r => r != null);
     const tokenMeta = emittingRecord?.token;
     if (!tokenMeta) continue; // skip tokens with no resolvable metadata
-    const cssName = defaultRecord?.name || emittingRecord?.name || propertyName(tokenMeta);
+    const cssName =
+      defaultRecord?.name || emittingRecord?.name || propertyName(tokenMeta);
     const format =
       tokenMeta.format ||
       (tokenMeta.type === 'color' ? 'srgb-channels' : 'literal');
@@ -821,7 +820,6 @@ function buildTokensDictionary() {
   };
 }
 
-
 /* ------------------------------------------------------------------ *
  * Output baseline
  *
@@ -852,7 +850,7 @@ const BASELINE_NOTE =
   'commit as the tokens/*.yaml change that moved it. ' +
   'MERGE CONFLICTS: never resolve one by hand or by picking a side on ' +
   'merit - these values are a function of the generator and the token ' +
-  'sources, not of either branch\'s intent, so a hand-merged digest is ' +
+  "sources, not of either branch's intent, so a hand-merged digest is " +
   'simply wrong. Take either side to clear the conflict, then re-run ' +
   '--baseline and commit what it writes. A branch that changes what the ' +
   'generator emits (for example by adding a mixin) will legitimately have ' +
