@@ -674,7 +674,7 @@ export const COMPONENT_DATA = {
 
   'components-cards-stats-card': {
     description:
-      'Grid of numeric statistics with optional icons, labels, and descriptions. Variants: default, compact, highlighted, negative.',
+      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact, highlighted, negative.',
     hydration: {
       note: 'The figures come from one JSON attribute, so renderedHtml is a preview of the markup, not a template to fill in. Render an empty data-mg-stats-card container carrying data-stats and hydrate it. Malformed JSON is swallowed and renders an empty card, so validate the attribute server-side.',
       selector: '[data-mg-stats-card]',
@@ -1024,7 +1024,7 @@ export const COMPONENT_DATA = {
       'mg-tabs__section',
     ],
     summary:
-      'Tabbed content: centred horizontal tabs that scroll at every width, or stacked disclosures below 480px. Requires tabs.js for ARIA semantics, keyboard navigation and selection.',
+      'Tabbed content: centred horizontal tabs that scroll at every width, with opt-in stacked disclosures below 480px. Requires tabs.js for ARIA semantics, keyboard navigation and selection.',
     description:
       'Tabbed content with centred, softly filled horizontal tabs that scroll at every viewport width, or explicit stacked disclosures. Opt into disclosures below 480px with stackOnMobile (React) or the presence-based data-mg-js-tabs-stack-on-mobile attribute (HTML); horizontal scrolling remains the default. Only the horizontal rail scrolls; panels sit outside the tablist. Requires tabs.js as an ES module for ARIA semantics, keyboard navigation, selection and overflow indicators. Without JavaScript, panel content remains visible. Set labels.tabListLabel (React) or data-mg-js-tabs-label (HTML) to name the tablist. Existing interleaved HTML is enhanced at runtime. Before removing dynamically initialised markup, call mgTabsDestroy(scope), or pass { signal } as the third argument to mgTabs or mgTabsRuntime and abort it. A tab set removed without either is suspended, not destroyed: once a rail resize observer notification (horizontal sets, usually within a frame in Chromium), a window resize or hash change (the runtime keeps one listener for each while any set is initialised), an orientation change or font load, or a later mgTabs/mgTabsRuntime call finds it detached, its window, document.fonts and ResizeObserver registrations are released while markup, in-container listeners and selection stay intact. A re-attached set resumes on the next pointer press, focus, key press or click inside it, window resize or hash change, or mgTabs/mgTabsRuntime call; an interaction resume also resumes other re-attached sets, including nested ones. On resume, a URL hash changed while suspended selects its panel (also on React re-render or mgTabsDestroy(container, true) plus re-init), and a stackOnMobile breakpoint crossed while suspended switches layout; after an interaction both wait until it has been handled, so a tap acts on the visible layout and its selection wins. Until a removal is found its listeners stay registered.',
   },
@@ -1428,8 +1428,10 @@ npm run build</code></pre>
 
   // --- Page header (auto-rendered) ---
   'components-pageheader': {
+    summary:
+      'UNDRR page header with coloured decoration stripe, logo, user account link and language selector, plus a decoration-only variant that renders the stripe alone.',
     description:
-      'UNDRR page header with colored decoration stripe, logo, user account link, and language selector dropdown.',
+      'UNDRR page header with colored decoration stripe, logo, user account link, and language selector dropdown. The variant prop also takes "decoration-only", which renders just the coloured stripe without the header row.',
     doNotModify:
       'The PageHeader structure (decoration stripe, toolbar wrapper, logo section) is a UNDRR branding requirement. Use the documented markup exactly as shown. The four empty divs inside mg-page-header__decoration are intentional — they render the colored stripe segments.',
   },
@@ -1589,7 +1591,7 @@ npm run build</code></pre>
   },
   'components-forms-formerrorsummary': {
     description:
-      'Error summary box listing all form validation errors with anchor links to each field.',
+      'Persistent error summary box placed at the top of a form, listing all validation errors with an anchor link to each field so the user can jump straight to the problem.',
   },
   'components-forms-range': {
     description:
@@ -1714,9 +1716,9 @@ npm run build</code></pre>
   // --- Icons ---
   'components-icons': {
     summary:
-      'Mangrove icon font. Use span elements with mg-icon and mg-icon-{name} classes.',
+      'Mangrove icon set. Use span elements with mg-icon and mg-icon-{name} classes; icons render from SVG data URIs via CSS mask-image.',
     description:
-      'Mangrove icon font. Use span elements with mg-icon and mg-icon-{name} classes. The React Icon component normalises four name formats to that pair: a bare name ("globe"), an mg-icon- prefixed name, a legacy fa- name, and a full class string, which is passed through unchanged.',
+      'Mangrove icon set. Use span elements with mg-icon and mg-icon-{name} classes. Icons render from SVG data URIs via CSS mask-image; the icon font is retained only as a fallback for legacy fa-* selectors. The React Icon component accepts five name formats: a bare name ("globe") and a legacy mg- prefixed name ("mg-globe") both resolve to "mg-icon mg-icon-globe"; an already-qualified "mg-icon-globe" resolves to the same pair; a legacy "fa-globe" resolves to "mg-icon fa-globe", keeping the FontAwesome class rather than renaming it; and any name containing a space is treated as a full class string and passed through unchanged. A size prop appends mg-icon--{size}.',
     cssClasses: ['mg-icon'],
     examples: [
       {
@@ -1741,8 +1743,10 @@ npm run build</code></pre>
       'Makes content break out of its container to span the full viewport width. RTL-safe.',
   },
   'components-loader': {
+    summary:
+      'Animated loading spinner, 40px on mobile and 96px on desktop, named for assistive technology by an aria-label.',
     description:
-      'Animated loading spinner. 40px on mobile, 96px on desktop. The label is visually hidden and announced through aria-label, so the wait is not silent for a screen reader.',
+      'Animated loading spinner. 40px on mobile, 96px on desktop. The element is empty — there is no visible and no visually hidden label text. It carries role="status", aria-live="polite" and aria-busy="true", and the label prop becomes its accessible name through aria-label, so the wait is not silent for a screen reader.',
   },
 
   'components-showmore': {
@@ -1797,9 +1801,9 @@ npm run build</code></pre>
 
   'components-error-pages': {
     summary:
-      'Branded full-page error templates (404, 500, Cloudflare challenges) with status banner, search field, diagnostic details, and action buttons.',
+      'Branded full-page error templates for the common 4xx and 5xx codes and for Cloudflare challenges, with a brand stripe, the status code, a search field, diagnostic details and action buttons.',
     description:
-      "Branded full-page error templates (404, 500, Cloudflare challenges) with status banner, search field, diagnostic details, and action buttons. Default copy ships for the common status codes, and title, description and actions can each be overridden. Request details (Ray ID, IP, location) are optional, for debugging. For Cloudflare, static HTML versions with the Cloudflare tokens already in place live in the component's static/ directory.",
+      "Branded full-page error templates for the common 4xx and 5xx codes (401, 403, 404, 429, 500, 502, 503, 504) and for Cloudflare challenges, with a brand decoration stripe, the status code as a heading, search field, diagnostic details, and action buttons. Default copy ships for each of those status codes, and title, description and actions can each be overridden. Request details (Ray ID, IP, location) are optional, for debugging. For Cloudflare, static HTML versions with the Cloudflare tokens already in place live in the component's static/ directory.",
     cssClasses: [
       'mg-error-page',
       'mg-error-page__container',
