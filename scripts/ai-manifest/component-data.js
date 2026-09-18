@@ -96,7 +96,9 @@ export const REQUIRES_REACT = {
 // Shared pieces for hydration contracts
 //
 // Every React hydration contract points at the same two CDN modules and needs
-// the same import map, so they are built here rather than repeated 16 times.
+// the same import map, so they are built here rather than repeated per entry.
+// The ServiceNotice and Tree contracts predate these helpers and still inline
+// the same boilerplate; migrate them when their examples next change.
 // `{{version}}` is replaced with the package version when the manifest is
 // generated.
 // ---------------------------------------------------------------------------
@@ -278,7 +280,7 @@ export const COMPONENT_DATA = {
       },
     ],
     vanillaModule: {
-      note: 'Preferred for plain HTML pages: no React, no import map. renderedHtml is inert until js/copy-button.js runs. The script enhances every [data-mg-copy-button] on load and dispatches no events; it writes the tooltip into .mg-copy-button__feedback and the announcement into the .mg-u-sr-only aria-live span, so include both in the button markup. Call mgCopyButton(scope) again after inserting buttons; already-initialised buttons are skipped. Clipboard writes need a secure context (https or localhost); the script falls back to execCommand and, on failure, shows the failed tooltip and manual-copy hint for 5 seconds.',
+      note: 'Preferred for plain HTML pages: no React, no import map. renderedHtml is inert until js/copy-button.js runs. The script enhances every [data-mg-copy-button] on load and dispatches no events; it writes the tooltip into .mg-copy-button__feedback and the announcement into the .mg-u-sr-only aria-live span, so include both in the button markup. For buttons inserted later, import the named export and call it again — `import { mgCopyButton } from ".../js/copy-button.js"; mgCopyButton(scope);`. The module puts nothing on window, so the plain `<script src>` tag in the example below cannot call it; use an inline `<script type="module">` with an import if you need to re-run it. Already-initialised buttons are skipped. Clipboard writes need a secure context (https or localhost); the script falls back to execCommand. The failed tooltip and manual-copy hint (5 seconds) are shown only when the clipboard call rejects or throws — an execCommand that merely returns false is not detected and the success tooltip is shown instead.',
       selector: '[data-mg-copy-button]',
       modules: {
         script: `${CDN}/js/copy-button.js`,
@@ -364,7 +366,7 @@ export const COMPONENT_DATA = {
       'mg-share__copy-text',
     ],
     hydration: {
-      note: 'renderedHtml is inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. Every attribute is optional; the component supplies English defaults. The component reads the current page URL itself, so there is no URL attribute.',
+      note: 'The share row is rendered in renderedHtml but inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. Only these four strings can be set from the DOM — the other thirteen labels (the QR modal copy and every social button aria-label) stay English on the hydration path, because there is no data-labels attribute; use the React labels prop if you need them translated. Omitted attributes fall back to values fromElement supplies, not always to the component defaults: data-sharing-body defaults to an empty string, so the email body has no lead-in text unless you set it. The component reads the current page URL itself — a link[rel="shortlink"] in the head if there is one, otherwise window.location.href — so there is no URL attribute.',
       selector: '[data-mg-share-buttons]',
       modules: hydrationModules('ShareButtons'),
       dataAttributes: {
@@ -537,13 +539,13 @@ export const COMPONENT_DATA = {
     description:
       'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
     hydration: {
-      note: 'The whole card set comes from one JSON attribute, so renderedHtml is only a preview of the markup the component produces. Render an empty data-mg-icon-card container carrying data-items and hydrate it. Malformed JSON is swallowed and renders an empty set, so validate the attribute server-side.',
+      note: "The whole card set comes from one JSON attribute, so renderedHtml is only a preview of the markup the component produces. Render an empty data-mg-icon-card container carrying data-items and hydrate it. Malformed JSON is swallowed and renders an empty set, so validate the attribute server-side. The orientation prop has no data attribute, so the horizontal layout is React-only. Each item's summaryText accepts inline HTML and is sanitised with DOMPurify.",
       selector: '[data-mg-icon-card]',
       modules: hydrationModules('IconCard'),
       dataAttributes: {
         'data-mg-icon-card': 'Marks the container to hydrate (required).',
         'data-items':
-          'JSON array of card objects, mapped to the data prop (required). title is required on every object; the rest — icon, imgback, imgalt, imageScale, iconColor, iconFgColor, borderColor, label, visualLabel, summaryText, link, linkText, button, buttonType — are the per-card options in the component props. Invalid JSON renders nothing.',
+          'JSON array of card objects, mapped to the data prop (required). title is required on every object; the rest — id, icon, iconSize, imgback, imgalt, imageScale, iconColor, iconFgColor, borderColor, label, visualLabel, srOnlyTitle, summaryText, link, linkText, button, buttonType — are the per-card options in the component props. The onClick prop is the only one that cannot be expressed in JSON. Invalid JSON renders nothing.',
         'data-centered': '"true" to centre the card contents.',
         'data-variant': '"default" (default) or "negative" for dark surfaces.',
       },
@@ -998,17 +1000,20 @@ npm run build</code></pre>
     description:
       'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.',
     hydration: {
-      note: 'QuoteHighlight has no interactive behaviour, so the static renderedHtml is fully usable on its own — hydrate only when the surrounding page is already React. Every value comes from a data attribute; markup inside the container is discarded, not read.',
+      note: 'QuoteHighlight has no interactive behaviour, so the static renderedHtml is fully usable on its own — hydrate only when the surrounding page is already React. Every value comes from a data attribute; markup inside the container is discarded, not read. Security: data-quote, data-attribution and data-attribution-title are injected as raw HTML and are NOT sanitised — unlike TextCta and Drawer, this component does not run DOMPurify. Sanitise these values server-side before emitting them, and never build them from untrusted input.',
       selector: '[data-mg-quote-highlight]',
       modules: hydrationModules('QuoteHighlight'),
       dataAttributes: {
         'data-mg-quote-highlight': 'Marks the container to hydrate (required).',
-        'data-quote': 'Quote text (required; plain text).',
-        'data-attribution': 'Name of the person quoted.',
-        'data-attribution-title': 'Their role or organization.',
+        'data-quote':
+          'Quote text (required). A value containing "<" is rendered as raw, unsanitised HTML; anything else is rendered as text. Sanitise it yourself.',
+        'data-attribution':
+          'Name of the person quoted. Always rendered as raw, unsanitised HTML. Sanitise it yourself.',
+        'data-attribution-title':
+          'Their role or organization. Always rendered as raw, unsanitised HTML. Sanitise it yourself.',
         'data-image-src': 'Portrait or feature image URL.',
         'data-image-alt':
-          'Alt text for the image. Empty for a decorative portrait.',
+          'Alt text for the image. There is no way to get a decorative empty alt through hydration: an omitted or empty value falls back to the generated string "<attribution> image", so always supply meaningful alt text.',
         'data-background-color': '"light" (default), "dark" or "bright".',
         'data-variant': '"line" (default) or "image".',
         'data-alignment': '"full" (default), "left" or "right".',
@@ -1535,7 +1540,7 @@ npm run build</code></pre>
           'Semantic heading level, 2 to 6 (default 2). Out-of-range values fall back to 2.',
         'data-text': 'Body HTML, sanitised with DOMPurify.',
         'data-buttons':
-          'JSON array of button objects: { label, url, type }. type is "Primary" or "Secondary". Invalid JSON renders no buttons.',
+          'JSON array of button objects: { label, url, type, variant, outline, target, rel }. type is "Primary" (default) or "Secondary"; variant is "Default" or "CTA"; outline is a boolean; target and rel are the only way to get an external-link CTA from a hydrated banner. Invalid JSON renders no buttons.',
         'data-variant':
           '"primary" (default), "secondary", "tertiary" or "quaternary".',
         'data-tone': '"strong" (default) or "soft".',
@@ -2096,13 +2101,13 @@ npm run build</code></pre>
     description:
       'Media gallery with a main stage, optional thumbnail rail, navigation arrows, captions and keyboard support. Handles images, videos and embedded players.',
     hydration: {
-      note: 'renderedHtml shows the first slide and nothing else: arrows, thumbnails and keyboard navigation are all React behaviour. Render an empty data-mg-gallery container carrying data-media and hydrate it. Every media object whose type is "image" (or has no type) needs an alt value — WCAG 1.1.1. Malformed JSON is swallowed and renders an empty gallery, so validate the attribute server-side.',
+      note: 'renderedHtml contains the arrows and the thumbnail rail, but they are inert markup: slide changing, thumbnail selection and keyboard navigation are all React behaviour. Render an empty data-mg-gallery container carrying data-media and hydrate it. Every media object whose type is "image" (or has no type) needs an alt value — WCAG 1.1.1. Validate data-media server-side: the JSON parse failure itself is swallowed, but the component has no empty-media guard, so an empty or malformed list throws during render and leaves the container blank. Security: an item of type "html" is injected unsanitised, so never build one from untrusted input.',
       selector: '[data-mg-gallery]',
       modules: hydrationModules('Gallery'),
       dataAttributes: {
         'data-mg-gallery': 'Marks the container to hydrate (required).',
         'data-media':
-          'JSON array of media objects (required): { id, type, src, alt, title, caption }. type is "image" (default) or "video". Invalid JSON renders nothing.',
+          'JSON array of media objects (required): { id, type, src, alt, title, description, thumbnail, poster, embedUrl, html }. The caption text comes from description; there is no caption key. type is "image" (default), "video", "embed" or "html". Invalid or empty JSON throws during render.',
         'data-initial-index': 'Index of the first slide shown (default 0).',
         'data-show-thumbnails':
           '"false" to hide the thumbnail rail (default "true").',
@@ -2134,7 +2139,7 @@ npm run build</code></pre>
     description:
       'Horizontally scrolling rail for a row of cards or media, with optional arrow controls, drag scrolling, scroll snapping and equal-height items.',
     hydration: {
-      note: 'Unusually, this hydrator reads your server-rendered content rather than a JSON attribute: put the items inside a .mg-scroll__content wrapper in the container and each child becomes a slide. Without that wrapper the whole container innerHTML becomes a single item. The markup is re-rendered from HTML strings, so any event handlers bound to it before hydration are lost. renderedHtml scrolls natively but has no arrow controls or snapping.',
+      note: 'Unusually, this hydrator reads your server-rendered content rather than a JSON attribute: put the items inside a .mg-scroll__content wrapper in the container and each child becomes a slide. Without that wrapper the whole container innerHTML becomes a single item. The markup is re-rendered from HTML strings, so any event handlers bound to it before hydration are lost, and it is re-injected unsanitised — unlike Drawer, this component does not run DOMPurify, so only ever hand it markup you control. renderedHtml scrolls natively and snapping works from the stylesheet; the arrow markup is present but dead until hydration. The scrollLeftLabel and scrollRightLabel strings have no data attribute, so a hydrated container keeps the English arrow labels.',
       selector: '[data-mg-scroll-container]',
       modules: hydrationModules('ScrollContainer'),
       dataAttributes: {
@@ -2145,7 +2150,8 @@ npm run build</code></pre>
         'data-item-width':
           'Width of each item as a CSS value (default "auto").',
         'data-padding': 'Container padding (default "0").',
-        'data-show-arrows': '"true" to render the arrow controls.',
+        'data-show-arrows':
+          '"true" to render the arrow controls. They are suppressed on touch devices regardless.',
         'data-stretch-items':
           '"true" to give mixed-length items a shared row height.',
         'data-step-size': 'Arrow scroll step in pixels.',
@@ -2172,9 +2178,9 @@ npm run build</code></pre>
   },
   'components-syndicated-search': {
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Every UI string is translatable through the labels prop or a data-labels JSON attribute.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop.',
     hydration: {
-      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so there is no useful static markup — renderedHtml is a placeholder. Render an empty data-mg-search-widget container and hydrate it. fromElement returns { config, labels }: only attributes you set are included, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
+      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns { config }, plus a labels key only when a valid data-labels attribute is present, so destructure defensively. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
       selector: '[data-mg-search-widget]',
       modules: hydrationModules('SyndicationSearchWidget'),
       dataAttributes: {
@@ -2267,7 +2273,7 @@ npm run build</code></pre>
       dataAttributes: {
         'data-mg-mega-menu': 'Marks the container to hydrate (required).',
         'data-sections':
-          'JSON array of menu sections. Optional: most consumers pass sections from an API through a wrapper. Invalid JSON renders an empty menu.',
+          'JSON array of menu sections: [{ title, items: [{ title, url }] }]. Note the item keys are title and url, not label and href. Required unless a consumer wrapper passes the sections prop itself — sections has no default and is required, so hydrating with neither throws and leaves the container empty. Invalid JSON is swallowed and also leaves the container empty.',
         'data-delay':
           'Milliseconds before the menu closes on mouse leave (default 300).',
         'data-hover-delay':
@@ -2291,8 +2297,8 @@ npm run build</code></pre>
   data-logo-alt="PreventionWeb"
   data-logo-href="/"
   data-sections='[
-    {"title":"Knowledge base","items":[{"label":"Sendai Framework","href":"/sendai-framework"},{"label":"Terminology","href":"/terminology"}]},
-    {"title":"News and events","items":[{"label":"Latest news","href":"/news"}]}
+    {"title":"Knowledge base","items":[{"title":"Sendai Framework","url":"/sendai-framework"},{"title":"Terminology","url":"/terminology"}]},
+    {"title":"News and events","items":[{"title":"Latest news","url":"/news"}]}
   ]'></div>`,
       }),
     },
@@ -2325,20 +2331,20 @@ npm run build</code></pre>
       'mg-pager__notice-action',
     ],
     hydration: {
-      note: "renderedHtml shows a pager at a fixed page: its controls change nothing. Hydration does not give you navigation either — onPageChange is deliberately not read from the DOM, because paging is the consuming application's job. Hydrate for the keyboard and ARIA behaviour and the jump-to-page field, then pass your own onPageChange in a consumer wrapper (a Drupal behavior that re-runs the AJAX view, for example). For links that simply navigate, server-rendered <a href> markup is the better answer.",
+      note: 'renderedHtml shows a pager at a fixed page: its controls change nothing. Hydration does not give you navigation either — onPageChange is deliberately not read from the DOM, because paging is the consuming application\'s job. Do not hydrate Pager with createHydrator alone: onPageChange is a required prop, so a bare hydrated pager logs a PropTypes error and every page click, arrow key and jump-to-page submit throws "onPageChange is not a function". Wrap it: render Pager yourself in a consumer wrapper (a Drupal behavior that re-runs the AJAX view, for example) that reads these attributes and supplies onPageChange. For links that simply navigate, server-rendered <a href> markup is the better answer.',
       selector: '[data-mg-pager]',
       modules: hydrationModules('Pager'),
       dataAttributes: {
         'data-mg-pager': 'Marks the container to hydrate (required).',
         'data-page': 'Current page, 1-based (default 1).',
         'data-total-pages':
-          'Total pages. Omit it for the mini-pager, which shows only previous and next.',
+          'Total pages. Omit it for the mini-pager, which shows previous, the current page number and next.',
         'data-layout': '"centered" (default) or "bar".',
         'data-show-jump-to': '"true" to render the jump-to-page field.',
         'data-aria-label':
           'Accessible name of the pager nav (default "Pagination").',
         'data-range-label':
-          'Result range line, e.g. "Showing 21-40 of 200". Bar layout only.',
+          'Template for the result range line, with {start} and {end} placeholders, e.g. "Showing {start}-{end} of 200". Bar layout only, and inert on its own: the line renders only when a range prop is also supplied, and no data attribute sets one — pass range from a consumer wrapper.',
         'data-jump-to-label': 'Label for the jump-to-page field.',
         'data-jump-to-action': 'Label for the jump-to-page submit button.',
         'data-prev-label': 'Visible "Previous" text.',
@@ -2354,13 +2360,12 @@ npm run build</code></pre>
       example: hydrationExample({
         name: 'Pager',
         selector: '[data-mg-pager]',
-        markup: `<nav data-mg-pager
+        markup: `<div data-mg-pager
   data-page="3"
   data-total-pages="20"
   data-layout="bar"
   data-show-jump-to="true"
-  data-aria-label="Pagination"
-  data-range-label="Showing 41-60 of 400"></nav>`,
+  data-aria-label="Pagination"></div>`,
       }),
     },
   },
