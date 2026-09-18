@@ -64,6 +64,14 @@ function canTakeFocus(el) {
  * top of the page. Dropping focus on `<body>` loses the keyboard user's place,
  * so it is the last resort.
  *
+ * The search does not skip text inputs, deliberately. Landing on one opens the
+ * soft keyboard on touch devices, which is an annoyance — but the criterion
+ * being met here is 2.4.3 Focus Order, and stepping over the true neighbour to
+ * avoid it would move focus further from where the user was, trading the thing
+ * that is required for the thing that is merely nicer. The common case, a
+ * notice raised by a control, never reaches this search at all: it restores to
+ * the opener above.
+ *
  * @param {HTMLElement} noticeEl  The notice element about to be removed.
  * @param {?HTMLElement} opener   What held focus when the notice mounted.
  * @returns {?HTMLElement}        The element to focus, or null.
