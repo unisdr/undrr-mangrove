@@ -1,5 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+/**
+ * Trust boundary: `bannerDescription` is rendered unescaped, on purpose.
+ *
+ * Two sites in this file render `section.bannerDescription` as markup rather
+ * than text — the banner blurb in a section that has child items, and the whole
+ * call-to-action panel in a section that has none. `Sidebar.jsx` renders the
+ * same value the same way for the mobile overlay. None of the three sanitise,
+ * and `.includes('<')` at the first site is a routing check, not a filter: it
+ * decides whether to wrap the string in a `<p>`, and anything with a `<` in it
+ * goes through as markup.
+ *
+ * That is deliberate. Banner copy is authored, and it carries links, inline
+ * emphasis and — in the no-items shape — a whole block of layout that the
+ * component has no equivalent prop for. The value arrives through the
+ * `sections` prop, so the boundary is the consumer's own code: whatever builds
+ * the sections array owns sanitising it. Several sibling components do sanitise
+ * with DOMPurify (`TextCta`, `Drawer`, the Cards), so this file diverging from
+ * them is worth stating rather than leaving to be read as an oversight.
+ *
+ * Note that most integrations build `sections` in a wrapper from a CMS or API
+ * response rather than hand-writing it, and `data-sections` accepts the same
+ * structure as JSON on the hydration host. Sanitise `bannerDescription` where
+ * that array is built. See "Banner HTML trust contract" in MegaMenu.mdx for the
+ * consumer-facing statement of the same contract.
+ */
+
 export default function Section({
   section,
   index,
@@ -117,6 +143,10 @@ export default function Section({
               >
                 <section className="mg-mega-content__banner">
                   <header>{section.bannerHeading}</header>
+                  {/* Authored banner copy, rendered as-is so its links and
+                      inline markup survive. The `<` check routes between markup
+                      and text; it does not filter. See the trust boundary note
+                      at the top of this file. */}
                   {section.bannerDescription.includes('<') ? (
                     <div
                       dangerouslySetInnerHTML={{
@@ -282,6 +312,9 @@ export default function Section({
           {/*  If there are no child items just show the banner description in a call to action style */}
         </article>
       )}
+      {/* A section with no child items renders its banner description as the
+          whole panel, so this markup is the caller's layout and not just inline
+          copy. Same contract as above: see the note at the top of this file. */}
       {section && !section.items && section.bannerDescription && (
         <article
           className="mg-mega-content | mg-container-full-width"

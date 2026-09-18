@@ -13,7 +13,7 @@
  * @param {string} sections[].title - Top-level menu item label (required)
  * @param {string} sections[].icon - Optional icon class name shown before the title on desktop topbar (e.g. "mg-icon mg-icon-chart-bar")
  * @param {string} sections[].bannerHeading - Heading text for the section banner
- * @param {string} sections[].bannerDescription - Description text for the section banner
+ * @param {string} sections[].bannerDescription - Description text for the section banner. Rendered via `dangerouslySetInnerHTML` so authored links and inline markup survive; Mangrove does not sanitise it, so sanitise it where the sections array is built. See "Banner HTML trust contract" in MegaMenu.mdx.
  * @param {Object} sections[].bannerButton - Optional button object for the banner
  * @param {string} sections[].bannerButton.label - Label text for the banner button
  * @param {string} sections[].bannerButton.url - URL for the banner button
@@ -224,6 +224,11 @@ MegaMenu.propTypes = {
       title: PropTypes.string.isRequired,
       icon: PropTypes.string,
       bannerHeading: PropTypes.string,
+      /**
+       * Banner copy. Rendered as unsanitised HTML so authored links and inline
+       * markup survive; see "Banner HTML trust contract" in the MDX
+       * documentation.
+       */
       bannerDescription: PropTypes.string,
       bannerButton: PropTypes.shape({
         label: PropTypes.string,
