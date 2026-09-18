@@ -34,9 +34,6 @@ const MAP_LAYERS = [
   'Critical infrastructure',
 ];
 
-const toId = (prefix, label) =>
-  `${prefix}-${label.toLowerCase().replace(/\s+/g, '-')}`;
-
 const PublicationFilters = () => (
   <>
     <p>
@@ -47,7 +44,6 @@ const PublicationFilters = () => (
       {HAZARDS.map(hazard => (
         <Checkbox
           key={hazard}
-          id={toId('drawer-hazard', hazard)}
           name="hazard"
           label={hazard}
           defaultChecked={hazard === 'Flood'}
@@ -99,7 +95,6 @@ const MapLayers = () => (
       {MAP_LAYERS.map(layer => (
         <Checkbox
           key={layer}
-          id={toId('drawer-layer', layer)}
           name="layer"
           label={layer}
           defaultChecked={layer === 'Flood extent'}
