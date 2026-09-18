@@ -94,6 +94,55 @@ calibrates the measure on dark backgrounds; treat those scores as indicative.
 - Where the two measures disagree, that pair is worth a human look. That is the
   signal this approach exists to produce.
 
+## How colour-vision separation is measured
+
+Contrast and colour-vision separation are different questions. The measure above
+asks whether a pair is legible; this one asks whether two colours in the same set
+are still *different colours* to a reader with a colour vision deficiency. It is
+what produces the ΔE tables in `stories/assets/scss/_tokens-data-viz.scss` and in
+the status label's "Shape as well as colour". There is no script in the repo, so
+the procedure is written down here. Follow it exactly — the steps are not
+interchangeable, and two of them change the answer by an order of magnitude.
+
+1. **Decode sRGB to linear RGB** with the piecewise transfer function
+   (`c/12.92` below 0.04045, else `((c+0.055)/1.055)^2.4`).
+2. **Apply the dichromat projection in linear RGB.** This is the step that
+   matters most. Run against gamma-encoded sRGB it puts the status label's
+   Degraded/Offline pair 36 CIE76 apart and hides the collision completely; in
+   linear RGB the same pair is 1.7. The Viénot, Brettel and Mollon (1999)
+   projections used here are the libDaltonLens linear-RGB matrices:
+
+   | | R | G | B |
+   | --- | --- | --- | --- |
+   | Protanopia | `0.11238, 0.88762, 0.00000` | `0.11238, 0.88762, 0.00000` | `0.00401, -0.00401, 1.00000` |
+   | Deuteranopia | `0.29275, 0.70725, 0.00000` | `0.29275, 0.70725, 0.00000` | `-0.02234, 0.02234, 1.00000` |
+
+   Both rows 1 and 2 are identical by construction: a dichromat's two remaining
+   cone classes collapse the red-green axis onto one value.
+3. **Re-encode to 8-bit sRGB and decode again.** The simulated colour is a colour
+   someone actually sees on a screen, so it is quantised like one. Skipping this
+   shifts every figure down by roughly 0.1 — enough to turn a published 3.2 into
+   a 3.1 and start an argument.
+4. **Convert to CIE Lab** through sRGB → XYZ (D65, white point
+   `0.95047, 1.00000, 1.08883`), clamping each linear channel into `[0, 1]`
+   first. A projection can land slightly outside the gamut, and an unclamped
+   negative channel is not a colour anyone sees.
+5. **Compute CIEDE2000** with `kL = kC = kH = 1`. Quote CIE76 beside it if the
+   palette sits in the yellow-green region, where CIE76 overstates separation.
+6. **Take the worst pair**, as the minimum over every pair *and* over both
+   dichromat types. Record which pair it was, not only the number — a later slot
+   change needs to know which two colours to re-check.
+
+**Read the result against ~2.3 dE2000**, the just-noticeable difference. That
+threshold is a dE2000 figure and only ever means anything next to a dE2000
+figure; never compare it to a CIE76 number.
+
+Two caveats. Quote a second model where the finding is load-bearing: Viénot 1999
+and Machado et al. (2009) agree closely on protanopia and deuteranopia, but
+disagree on tritanopia, where Viénot's linear S-cone approximation is the weaker
+of the two and its tritan column should not be read alone. And a full-severity
+simulation is the worst case, not the typical one; most people with a colour
+vision deficiency are anomalous trichromats rather than dichromats.
 
 ## The orange accent carries no text
 
