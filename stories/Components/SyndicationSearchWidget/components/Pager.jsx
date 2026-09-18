@@ -35,12 +35,15 @@ export function SearchPager({ widgetId = '' }) {
   const handlePageChange = useCallback(
     newPage => {
       dispatch(actions.setPage(newPage));
-      const widget = document.querySelector('[data-mg-search-widget]');
+      // Scroll this widget back to its results, not the first widget on the
+      // page: a page can carry more than one. The widget root carries
+      // `widgetId` as its id. See undrr/undrr-mangrove#1205.
+      const widget = widgetId ? document.getElementById(widgetId) : null;
       if (widget) {
         widget.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     },
-    [dispatch]
+    [dispatch, widgetId]
   );
 
   if (totalPages <= 1) return null;
