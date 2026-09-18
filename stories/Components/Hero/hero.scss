@@ -259,7 +259,13 @@
   }
 }
 
-// Stylistic variants
+// Stylistic variants. Known exception on "secondary": orange-800 is a non-text
+// accent — white body copy on it is 2.65, and the orange-800 CTA label on the
+// white pill is the same 2.65 the other way round. The split-balanced story
+// uses this variant. No text
+// colour clears AA on the orange, so removing the pairing is a brand decision,
+// tracked in https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy
+// it: docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 $variant-colour-props: (
   "secondary": "--mg-color-orange-800",
   "tertiary": "--mg-color-neutral-900",
