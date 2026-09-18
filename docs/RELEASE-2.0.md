@@ -648,6 +648,20 @@ Two authoring rules changed, and both are in the [review checklist](https://mang
 
 Full reference: [Fonts](https://mangrove.undrr.org/?path=/docs/design-decisions-fonts--docs).
 
+### 9. `ShowMore.scss` CamelCase alias removed
+
+The npm package no longer ships `scss/Utilities/ShowMore/ShowMore.scss`. The file existed only to forward to `show-more.scss` and `@warn` that it was deprecated. Nothing in the library imported it.
+
+```scss
+// Before
+@import "@undrr/undrr-mangrove/scss/Utilities/ShowMore/ShowMore";
+
+// After
+@import "@undrr/undrr-mangrove/scss/Utilities/ShowMore/show-more";
+```
+
+Three sibling aliases are deliberately **not** removed in 2.0 and still ship: `scss/Utilities/FullWidth/FullWidth.scss`, `scss/Components/TableOfContents/TableOfContents.scss` and `scss/Components/SyndicationSearchWidget/SyndicationSearchWidget.scss`. They keep emitting their deprecation `@warn`. Move off them too — they are candidates for the next major.
+
 ## Sub-brand theming migration
 
 **Consuming a compiled sub-brand stylesheet?** You do not touch SCSS at all — just add `class="mg-theme-{brand}"` (e.g. `mg-theme-preventionweb`) to `<body>` or a wrapping element. The compiled CSS already carries the brand block; the class is what activates it. Skip to [Apply the class](#sub-brand-theming-migration) below.
