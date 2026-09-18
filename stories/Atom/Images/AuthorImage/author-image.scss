@@ -147,6 +147,11 @@
   --mg-author-image-accent: rgb(var(--mg-color-interactive));
 }
 
+// Known exception: the accent also colours the title, so this reads the orange
+// as ink on white — 2.65, the same failure as white on the orange. Removing the
+// pairing is a brand decision, tracked in
+// https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy it:
+// docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 .mg-author-image--secondary {
   --mg-author-image-accent: rgb(var(--mg-color-secondary));
   --mg-author-image-hover-tint: rgb(var(--mg-color-secondary) / 0.5);
