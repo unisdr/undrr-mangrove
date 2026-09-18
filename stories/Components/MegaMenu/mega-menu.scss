@@ -62,7 +62,9 @@
     display: flex;
     justify-content: flex-end;
     flex: 1;
-    list-style: none;
+
+    @include mg-list-unmarked;
+
     margin: 0;
     padding: 0;
   }
@@ -95,7 +97,8 @@
     flex: 1;
     padding: 0;
     margin: 0;
-    list-style: none;
+
+    @include mg-list-unmarked;
 
     // Clip overflow on mobile so the scrolling content hint works correctly.
     // pointer-events is left as auto here — it is restricted only when JS has
@@ -968,7 +971,8 @@
     margin-block: var(--mg-spacing-150);
     margin-inline: calc(-1 * var(--mg-spacing-100));
     padding: 0;
-    list-style: none;
+
+    @include mg-list-unmarked;
   }
 
   .mg-mega-sidebar-section {
