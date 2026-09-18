@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import ReleasesGuide from '../../docs/RELEASES.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Release process"
@@ -9,7 +10,7 @@ import ReleasesGuide from '../../docs/RELEASES.md?raw';
   }}
 />
 
-<Markdown>{ReleasesGuide}</Markdown>
+<Markdown>{linkDocsPages(ReleasesGuide, 'docs/RELEASES.md')}</Markdown>
 
 ---
 

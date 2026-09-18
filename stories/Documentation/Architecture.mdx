@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import ArchitectureGuide from '../../docs/ARCHITECTURE.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Architecture"
@@ -9,7 +10,7 @@ import ArchitectureGuide from '../../docs/ARCHITECTURE.md?raw';
   }}
 />
 
-<Markdown>{ArchitectureGuide}</Markdown>
+<Markdown>{linkDocsPages(ArchitectureGuide, 'docs/ARCHITECTURE.md')}</Markdown>
 
 ---
 

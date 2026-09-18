@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import AnalyticsGuide from '../../docs/ANALYTICS.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Platform services/Analytics enhancements"
@@ -9,7 +10,7 @@ import AnalyticsGuide from '../../docs/ANALYTICS.md?raw';
   }}
 />
 
-<Markdown>{AnalyticsGuide}</Markdown>
+<Markdown>{linkDocsPages(AnalyticsGuide, 'docs/ANALYTICS.md')}</Markdown>
 
 ---
 

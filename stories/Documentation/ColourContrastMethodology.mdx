@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import ContrastMethodology from '../../docs/COLOUR-CONTRAST-METHODOLOGY.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Design decisions/Colour contrast methodology"
@@ -9,7 +10,9 @@ import ContrastMethodology from '../../docs/COLOUR-CONTRAST-METHODOLOGY.md?raw';
   }}
 />
 
-<Markdown>{ContrastMethodology}</Markdown>
+<Markdown>
+  {linkDocsPages(ContrastMethodology, 'docs/COLOUR-CONTRAST-METHODOLOGY.md')}
+</Markdown>
 
 ---
 

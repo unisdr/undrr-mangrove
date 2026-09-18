@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import ChangelogContent from '../../CHANGELOG.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Changelog"
@@ -9,7 +10,7 @@ import ChangelogContent from '../../CHANGELOG.md?raw';
   }}
 />
 
-<Markdown>{ChangelogContent}</Markdown>
+<Markdown>{linkDocsPages(ChangelogContent, 'CHANGELOG.md')}</Markdown>
 
 <a
   href="https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md"

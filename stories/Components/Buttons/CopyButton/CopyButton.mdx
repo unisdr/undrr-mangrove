@@ -115,6 +115,7 @@ import { CopyButton } from '@undrr/undrr-mangrove';
 
 ## Changelog
 
+- **1.0.1** — 2026-09-18 ([#1191](https://github.com/unisdr/undrr-mangrove/pull/1191)): Fixed the standalone vanilla integration snippet. It pointed at `dist/js/copy-button.min.js`, which the CDN does not serve, and loaded the ES module without `type="module"`, so copying it threw `SyntaxError: Unexpected token 'export'`.
 - **1.0.0** — 2026-09-16 ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)): Initial implementation with copy functionality, visual feedback tooltip, and aria-live announcements.
   - Standalone zero-dependency vanilla script (`stories/assets/js/copy-button.js`) and Layer 2 React hydration (`CopyButton.fromElement.js`, `CopyButton.hydrate.js`) ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).
   - Before rc.1: a failed copy shows an error tooltip and announces a manual-copy hint (`failedLabel`, `failedTooltipLabel`, translated); tooltip motion respects reduced-motion; real font-size token and a local z-index instead of an undefined tooltip token.

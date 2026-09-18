@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import CDNGuide from '../../docs/CDN-REFERENCE.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Getting started/Integration/CDN reference"
@@ -9,7 +10,7 @@ import CDNGuide from '../../docs/CDN-REFERENCE.md?raw';
   }}
 />
 
-<Markdown>{CDNGuide}</Markdown>
+<Markdown>{linkDocsPages(CDNGuide, 'docs/CDN-REFERENCE.md')}</Markdown>
 
 ---
 

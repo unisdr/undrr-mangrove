@@ -29,7 +29,7 @@ The `SyndicationSearchWidget` component powers syndication embeds when configure
 ></div>
 ```
 
-The `Fetcher` component provides a lower-level data-fetching utility for custom rendering of UNDRR API data.
+For custom rendering, query the UNDRR API yourself. Mangrove removed its `Fetcher` wrapper in 1.8.0 and no longer ships a data-fetching component -- use your framework's own data layer, or load the results server-side.
 
 See:
 
@@ -44,10 +44,6 @@ See:
     SyndicationSearchWidget component
   </LinkTo>
   -- full documentation and props
-- <LinkTo kind="components-fetcher" story="docs">
-    Fetcher component
-  </LinkTo>
-  -- generic data-fetching utility
 
 ## Accessibility
 

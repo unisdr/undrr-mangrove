@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import ComponentGuide from '../../docs/COMPONENT-GUIDE.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Contributing/Build a component/Step by step"
@@ -9,7 +10,7 @@ import ComponentGuide from '../../docs/COMPONENT-GUIDE.md?raw';
   }}
 />
 
-<Markdown>{ComponentGuide}</Markdown>
+<Markdown>{linkDocsPages(ComponentGuide, 'docs/COMPONENT-GUIDE.md')}</Markdown>
 
 ---
 

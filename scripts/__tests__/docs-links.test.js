@@ -2,14 +2,26 @@
  * @file docs-links.test.js
  * @description Guards the internal Storybook links in Markdown and MDX documentation.
  *
- * Two failure modes this catches:
+ * Three failure modes this catches:
  *
  * 1. A link points at a story id that no longer exists. Renaming a `title`
  *    silently renames every id derived from it, and nothing else in the build
- *    fails when a doc still references the old one.
- * 2. A link uses a relative path to a repository file (`../../../docs/X.md`)
- *    or a host-absolute Storybook path (`/docs/x--docs`). Neither resolves in
- *    a built Storybook, so both 404 on https://mangrove.undrr.org/.
+ *    fails when a doc still references the old one. This covers both link
+ *    mechanisms: a Markdown `?path=/docs/…--docs` link and the `kind` of a
+ *    `<LinkTo>`, which the manager resolves through the same `sanitize()`.
+ * 2. An MDX page uses a relative path to a repository file
+ *    (`../../../docs/X.md`) or a host-absolute Storybook path
+ *    (`/docs/x--docs`). Neither resolves in a built Storybook, so both 404 on
+ *    https://mangrove.undrr.org/.
+ * 3. A guide under `docs/` loses the rewrite that makes its own relative links
+ *    work. Those files are read on GitHub as well as in Storybook, so they
+ *    keep `[Testing](TESTING.md)` — the correct link for a GitHub reader and a
+ *    404 in Storybook. Rule 2 therefore does not apply to them. Instead the
+ *    wrappers in `stories/Documentation/` pass the raw Markdown through
+ *    `linkDocsPages()` (`stories/Documentation/docsPageLinks.js`), and the
+ *    checks below verify that every wrapper still does, that its id map still
+ *    matches the wrappers' own titles, and that nothing unroutable survives
+ *    the rewrite.
  */
 
 const fs = require('fs');
@@ -36,12 +48,21 @@ function toId(title, name) {
 const repoRoot = path.resolve(__dirname, '..', '..');
 const storiesDir = path.join(repoRoot, 'stories');
 const docsDir = path.join(repoRoot, 'docs');
+const docsPagesDir = path.join(storiesDir, 'Documentation');
+
+const {
+  DOC_PAGE_IDS,
+  linkDocsPages,
+} = require('../../stories/Documentation/docsPageLinks');
 
 /** Ids referenced in docs that are deliberate placeholders, not real pages. */
 const PLACEHOLDER_IDS = new Set([
   'components-category-newcomponent--docs',
   'getting-started-release-notes-vX-Y--docs',
 ]);
+
+/** `kind` values that are prose examples of the syntax, not real targets. */
+const PLACEHOLDER_KINDS = new Set(['...', 'components-category-newcomponent']);
 
 function walk(dir, extensions) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -87,11 +108,42 @@ function collectDocFiles() {
   return [...walk(storiesDir, ['.mdx', '.md']), ...walk(docsDir, ['.md'])];
 }
 
-const validDocsIds = new Set(
-  [...collectTitles()].map(title => toId(title, 'docs'))
-);
+const titles = collectTitles();
+const validDocsIds = new Set([...titles].map(title => toId(title, 'docs')));
+/** The `kind` half of a story id: what `<LinkTo kind="…">` has to match. */
+const validKinds = new Set([...titles].map(sanitize));
 
 const docFiles = collectDocFiles();
+
+/**
+ * Every guide rendered as a Storybook page, as
+ * `{ wrapper, source, title }` — `source` repo-relative, e.g. `docs/TESTING.md`.
+ */
+function collectRenderedGuides() {
+  return fs
+    .readdirSync(docsPagesDir)
+    .filter(name => name.endsWith('.mdx'))
+    .map(name => {
+      const file = path.join(docsPagesDir, name);
+      const contents = fs.readFileSync(file, 'utf8');
+      const imported = contents.match(/from\s+'([^']+\.md)\?raw'/);
+      if (!imported) return null;
+
+      const meta = contents.match(/<Meta[\s\S]*?title=(['"])([^'"]+)\1/);
+      return {
+        wrapper: name,
+        contents,
+        source: path
+          .relative(repoRoot, path.resolve(docsPagesDir, imported[1]))
+          .split(path.sep)
+          .join('/'),
+        title: meta ? meta[2] : null,
+      };
+    })
+    .filter(Boolean);
+}
+
+const renderedGuides = collectRenderedGuides();
 
 describe('documentation links', () => {
   it('finds Storybook titles to check against', () => {
@@ -117,6 +169,33 @@ describe('documentation links', () => {
     expect(broken).toEqual([]);
   });
 
+  // `<LinkTo kind="…">` is what docs/COMPONENT-GUIDE.md recommends for prose
+  // story links, and the manager resolves that kind the same way it resolves a
+  // URL id: `toId(kind, story)`, falling back to `sanitize(kind)`. A kind may
+  // therefore be written either already sanitized
+  // (`components-navigation-pager`) or as the raw title
+  // (`Components/Navigation/Pager`); sanitizing before the lookup accepts both,
+  // because sanitize() leaves an already-sanitized string alone.
+  it('resolves every <LinkTo kind> to a story that exists', () => {
+    const broken = [];
+
+    for (const file of docFiles) {
+      const source = fs.readFileSync(file, 'utf8');
+      for (const match of source.matchAll(
+        /<LinkTo\s[^>]*?kind=(['"])([^'"]+)\1/g
+      )) {
+        const kind = match[2];
+        if (PLACEHOLDER_KINDS.has(kind)) continue;
+        if (validKinds.has(sanitize(kind))) continue;
+
+        const line = source.slice(0, match.index).split('\n').length;
+        broken.push(`${path.relative(repoRoot, file)}:${line} -> ${kind}`);
+      }
+    }
+
+    expect(broken).toEqual([]);
+  });
+
   it('does not link Storybook pages by a path that 404s when built', () => {
     const offenders = [];
 
@@ -129,6 +208,10 @@ describe('documentation links', () => {
           offenders.push(`${location} -> use ?path=/docs/… instead`);
         }
         // Relative link from an MDX page to a repository Markdown file.
+        // Deliberately `.mdx` only: a `docs/*.md` guide keeps its relative
+        // links for GitHub, and `linkDocsPages()` rewrites them for Storybook.
+        // The `guides rendered as Storybook pages` block below is what holds
+        // that arrangement together.
         if (
           file.endsWith('.mdx') &&
           /\]\((?:\.\.\/)+[^)]*\.md[)#]/.test(line)
@@ -141,5 +224,72 @@ describe('documentation links', () => {
     }
 
     expect(offenders).toEqual([]);
+  });
+});
+
+describe('guides rendered as Storybook pages', () => {
+  it('finds the wrappers that import a repository guide', () => {
+    expect(renderedGuides.length).toBeGreaterThan(15);
+  });
+
+  it('passes every guide through linkDocsPages with its own path', () => {
+    const offenders = renderedGuides
+      .filter(
+        guide =>
+          !guide.contents.includes(`linkDocsPages(`) ||
+          !guide.contents.includes(`, '${guide.source}')`)
+      )
+      .map(
+        guide => `stories/Documentation/${guide.wrapper} -> ${guide.source}`
+      );
+
+    expect(offenders).toEqual([]);
+  });
+
+  it('maps each guide to the id of the page that renders it', () => {
+    const fromWrappers = Object.fromEntries(
+      renderedGuides.map(guide => [guide.source, toId(guide.title, 'docs')])
+    );
+
+    expect(DOC_PAGE_IDS).toEqual(fromWrappers);
+  });
+
+  it('rewrites every relative link into one Storybook can route', () => {
+    const offenders = [];
+
+    for (const guide of renderedGuides) {
+      const rewritten = linkDocsPages(
+        fs.readFileSync(path.join(repoRoot, guide.source), 'utf8'),
+        guide.source
+      );
+
+      rewritten.split('\n').forEach((line, index) => {
+        if (/\]\((?!https?:|\?path=|#)[^)\s]*\.md[)#]/.test(line)) {
+          offenders.push(`${guide.source}:${index + 1} -> ${line.trim()}`);
+        }
+      });
+    }
+
+    expect(offenders).toEqual([]);
+  });
+
+  it('points every rewritten link at a file that exists', () => {
+    const missing = [];
+
+    for (const guide of renderedGuides) {
+      const source = fs.readFileSync(path.join(repoRoot, guide.source), 'utf8');
+      const dir = path.dirname(path.join(repoRoot, guide.source));
+
+      for (const match of source.matchAll(
+        /\]\((?!https?:|\/|#)([^)\s]+\.md)(?:#[^)\s]*)?\)/g
+      )) {
+        if (fs.existsSync(path.resolve(dir, match[1]))) continue;
+
+        const line = source.slice(0, match.index).split('\n').length;
+        missing.push(`${guide.source}:${line} -> ${match[1]}`);
+      }
+    }
+
+    expect(missing).toEqual([]);
   });
 });

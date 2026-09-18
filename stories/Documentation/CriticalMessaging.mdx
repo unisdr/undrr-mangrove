@@ -1,5 +1,6 @@
 import { Meta, Markdown } from '@storybook/addon-docs/blocks';
 import MessagingGuide from '../../docs/CRITICAL-MESSAGING.md?raw';
+import { linkDocsPages } from './docsPageLinks';
 
 <Meta
   title="Platform services/Critical messaging"
@@ -9,7 +10,9 @@ import MessagingGuide from '../../docs/CRITICAL-MESSAGING.md?raw';
   }}
 />
 
-<Markdown>{MessagingGuide}</Markdown>
+<Markdown>
+  {linkDocsPages(MessagingGuide, 'docs/CRITICAL-MESSAGING.md')}
+</Markdown>
 
 ---
 
