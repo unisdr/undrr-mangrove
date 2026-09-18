@@ -1360,9 +1360,9 @@ npm run build</code></pre>
   },
   'components-forms-checkbox': {
     description:
-      'Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces "Saving…", "Still saving…" and the outcome in a role="status" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener.',
+      'Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role="switch"), including a pending state set with aria-busy="true" on the input or .mg-switch--pending on the label. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces "Saving…", "Still saving…" and the outcome in a role="status" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid="true" instead, and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.',
     vanillaModule: {
-      note: 'Plain ES module: no React, no hydrate.js, no import map. renderedHtml switches toggle but do not save. Marked switches are enhanced on load; an explicit mgSwitchPending or mgSwitchPendingInit call takes over those switches with its options. Without a save function, each change dispatches a cancelable mg-switch:save event; a listener must call event.detail.respondWith(promise) synchronously (wrap awaited work in an async function and pass its promise), or call event.preventDefault() synchronously and respondWith later. Otherwise the switch reverts with a console warning. Call mgSwitchPendingDestroy(scope), or abort the { signal } passed to mgSwitchPendingInit, before removing switches. Exports: mgSwitchPending(input, { save, status, timeout, labels, signal }) returning { destroy() }, mgSwitchPendingInit(scope, options) returning the new helpers, mgSwitchPendingDestroy(scope).',
+      note: 'Plain ES module: no React, no hydrate.js, no import map. renderedHtml switches toggle but do not save. Marked switches are enhanced on load; an explicit mgSwitchPending or mgSwitchPendingInit call takes over those switches with its options. Without a save function, each change dispatches a cancelable mg-switch:save event; a listener must call event.detail.respondWith(promise) synchronously (wrap awaited work in an async function and pass its promise), or call event.preventDefault() synchronously and respondWith later. Otherwise the switch reverts with a console warning. Call mgSwitchPendingDestroy(scope), or abort the { signal } passed to mgSwitchPendingInit, before removing switches. Exports: mgSwitchPending(input, { save, status, timeout, revert, labels, signal }) returning { destroy() }, mgSwitchPendingInit(scope, options) returning the new helpers, mgSwitchPendingDestroy(scope), and mgSwitchAnnouncer(element, { status, labels }). The announcer is the announcements without the save state machine, for an app that owns the switch position and its own requests: it adds no listeners and sets no attributes, and returns { status, labels, label(), announce(text), pending(), stillSaving(force), settled(checked), failed(), destroy() }, where announce() takes a string with {label} or a function (labelText, input). mgSwitchPending runs the same announcer.',
       selector: '[data-mg-switch-pending]',
       modules: {
         script:
@@ -1375,6 +1375,12 @@ npm run build</code></pre>
           'Presence-based. Skips the switch during page-load auto-init; call mgSwitchPendingInit yourself.',
         'data-mg-switch-labels':
           'JSON on the input or label: saving, stillSaving, error, on, off. "{label}" is replaced with the switch label text. Defaults are English ("Saving…", "Still saving…", "Could not save the change. Try again.", "{label} turned on", "{label} turned off"). Input wins over label; JS labels option wins over both.',
+        'data-mg-switch-timeout':
+          'Milliseconds before a save is abandoned with a TimeoutError. "0" or "Infinity" removes the deadline, so only the save can settle the switch and aria-busy stays true until it does. Default 10000. On the input or the label; the input wins, and the JS timeout option wins over both.',
+        'data-mg-switch-revert':
+          '"false" keeps the position the user asked for when a save fails, instead of moving the switch back, and sets aria-invalid="true" on the input. The page then owns showing the failure; handle mg-switch:failed. On the input or the label; the input wins, and the JS revert option wins over both.',
+        'aria-invalid':
+          'Set by the script to "true" on a non-reverting switch whose save failed, and removed when the next save starts or on destroy(). An aria-invalid the page authored is left alone.',
         'data-mg-switch-status':
           'id of a role="status" element for announcements. Otherwise an aria-describedby target with role="status" or aria-live, else a visually hidden mg-u-sr-only region is added after the label and removed on destroy.',
         'data-mg-switch-pending-enhanced':
@@ -1403,7 +1409,7 @@ npm run build</code></pre>
           name: 'mg-switch:failed',
           target: 'The .mg-switch__input',
           bubbles: true,
-          when: "The save failed or timed out and the switch reverted. detail: { checked (reverted position), requested, reason: 'error' | 'timeout', error }.",
+          when: "The save failed or timed out. detail: { checked (the position the switch is left in), requested, reverted (false when revert: false kept the requested position), reason: 'error' | 'timeout', error }.",
         },
       ],
       example: `<link rel="stylesheet" href="https://assets.undrr.org/mangrove/{{version}}/css/style.css" />

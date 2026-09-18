@@ -218,20 +218,33 @@ export const SwitchPending = {
 };
 
 export const SwitchPendingInteractive = {
-  args: { outcome: 'success' },
+  args: { outcome: 'success', timeoutMs: 5000, revert: true },
   argTypes: {
     outcome: {
       control: 'radio',
       options: ['success', 'failure', 'timeout'],
       description:
-        'How the simulated save ends. `timeout` never responds, so the 5 second timeout reverts the switch.',
+        'How the simulated save ends. `timeout` never responds, so the deadline settles it.',
+    },
+    timeoutMs: {
+      control: 'radio',
+      options: [5000, 0],
+      labels: { 5000: '5 seconds', 0: 'No deadline' },
+      description:
+        'The `timeout` option. `0` switches the deadline off, so only the save can settle the switch: with `outcome` set to `timeout` it stays busy, and says it is still saving after 10 seconds.',
+    },
+    revert: {
+      control: 'boolean',
+      description:
+        'The `revert` option. Off keeps the position the user asked for when a save fails and sets `aria-invalid="true"` instead of moving the switch back.',
     },
   },
-  render: ({ outcome }, { globals: { locale } }) => (
+  render: ({ outcome, timeoutMs, revert }, { globals: { locale } }) => (
     <PendingSwitchDemo
       caption={getSwitchCaptionForLocale(locale)}
       save={simulateSave(outcome)}
-      timeoutMs={5000}
+      timeoutMs={timeoutMs}
+      revert={revert}
     />
   ),
   name: 'Switch pending, interactive',
