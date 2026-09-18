@@ -138,6 +138,64 @@ describe('collectCustomProperties', () => {
     ]);
   });
 
+  it('does not take a default from inside @supports', () => {
+    // MegaMenu's mobile viewport is declared twice, the second time behind
+    // @supports (height: 100dvh). Dropping the at-rule published whichever
+    // came last as the value at rest.
+    const result = collectFrom(`
+      @supports (height: 100dvh) {
+        .mg-notice { --mg-notice-bg: blue; }
+      }
+      .mg-notice { background: var(--mg-notice-bg, rebeccapurple); }
+    `);
+
+    expect(result.byComponent['components-notice-notice']).toEqual([
+      expect.objectContaining({ type: 'hook', default: 'rebeccapurple' }),
+    ]);
+  });
+
+  it('carries the at-rule context down through nesting', () => {
+    // The stack has to carry `modifierOnly` into child blocks: a @keyframes
+    // frame and a rule inside a nested at-rule both look like plain selectors
+    // on their own.
+    const nested = collectFrom(`
+      @supports (x: y) { @media (min-width: 1px) {
+        .mg-notice { --mg-notice-bg: blue; }
+      } }
+      .mg-notice { background: var(--mg-notice-bg, rebeccapurple); }
+    `);
+    const frame = collectFrom(`
+      @keyframes in { from { --mg-notice-bg: blue; } }
+      .mg-notice { background: var(--mg-notice-bg, rebeccapurple); }
+    `);
+
+    for (const result of [nested, frame]) {
+      expect(result.byComponent['components-notice-notice']).toEqual([
+        expect.objectContaining({ type: 'hook', default: 'rebeccapurple' }),
+      ]);
+    }
+  });
+
+  it('treats @layer as unconditional, but not a media query inside one', () => {
+    // A cascade layer always applies, so a plain rule in one still declares
+    // the value at rest. The condition, if there is one, is the inner at-rule.
+    const layered = collectFrom(`
+      @layer components { .mg-notice { --mg-notice-bg: blue; } }
+      .mg-notice { background: var(--mg-notice-bg, rebeccapurple); }
+    `);
+    const conditional = collectFrom(`
+      @layer components { @media print { .mg-notice { --mg-notice-bg: blue; } } }
+      .mg-notice { background: var(--mg-notice-bg, rebeccapurple); }
+    `);
+
+    expect(layered.byComponent['components-notice-notice']).toEqual([
+      expect.objectContaining({ type: 'default', default: 'blue' }),
+    ]);
+    expect(conditional.byComponent['components-notice-notice']).toEqual([
+      expect.objectContaining({ type: 'hook', default: 'rebeccapurple' }),
+    ]);
+  });
+
   it('flags a property every stylesheet reads inside rgb()', () => {
     const result = collectFrom(`
       .mg-hub-header { background: rgb(var(--mg-hub-header-surface, 255 255 255)); }

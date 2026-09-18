@@ -556,7 +556,6 @@ function readsIn(rawCss) {
  *   absent: string[],         // described, but no bundle has it
  *   notPublic: string[],      // held back from the API, with a reason
  *   globals: Array<{prefix, label, where, count}>, // the theme-layer groups
- *   unaccounted: string[],    // in none of the four lists
  *   skipped: string|null,     // why nothing was read, if nothing was
  * }}
  */
@@ -569,7 +568,6 @@ export function collectCustomProperties(cssDir, themeTokenNames = []) {
     absent: [],
     notPublic: Object.keys(NOT_PUBLIC).sort(),
     globals: [],
-    unaccounted: [],
     skipped: null,
   };
 
