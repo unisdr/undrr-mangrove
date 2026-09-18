@@ -23,11 +23,19 @@
 // Two kinds, the same distinction
 // stories/assets/scss/__tests__/custom-properties-defined.test.js draws:
 //
-//   type: 'default' — the stylesheet defines it, so it already has a value and
-//                     an override replaces that value.
-//   type: 'hook'    — nothing defines it. It resolves to its var() fallback,
-//                     or to nothing at all, until a wrapper, an inline style,
-//                     a prop or a consuming page sets it.
+//   type: 'default' — a plain, unconditional rule defines it, so it already
+//                     has a value and an override replaces that value.
+//   type: 'hook'    — nothing unconditional defines it. It resolves to its
+//                     var() fallback, or to nothing at all, until a wrapper,
+//                     an inline style, a prop or a consuming page sets it.
+//
+// "Unconditional" is the whole distinction, so the parser has to know what is
+// conditional. A modifier or a state (.mg-switch--small, :hover) declares a
+// value for that case only; so does any rule inside @media or @supports. But
+// :root, :where() and :is() are not modifiers, and a bare "contains a colon"
+// test calls all three one — which marked about thirty properties declared on
+// :root as modifier-only and took their reported default from a var()
+// fallback that merely happened to agree.
 
 import fs from 'fs';
 import path from 'path';
@@ -37,23 +45,81 @@ import path from 'path';
 const PROPERTY_NAME = /^--mg-[A-Za-z0-9]+(?:-{1,2}[A-Za-z0-9]+)*$/;
 
 // Properties that are global rather than component-scoped, and so belong to
-// the theme layer even though tokens.json does not list them: the data-viz
-// palettes and Sendai ramps from _tokens-data-viz.scss, the font roles, and
-// the legacy one-off colours. `--mg-color-*` and `--mg-font-family-*` are
-// page-wide by definition.
-const GLOBAL_PREFIXES = [
-  '--mg-color-',
-  '--mg-dataviz-',
-  '--mg-font-family-',
-  '--mg-sendai-',
-];
+// the theme layer even though tokens.json does not list them — it is built
+// from the tokens/*.yaml sources only, and these are declared straight in
+// SCSS.
+//
+// Naming a prefix here is a claim, not a filter: it says this group is the
+// theme layer's and where a reader finds it. llms.txt names every entry, and
+// validation fails on any --mg-* property the bundles carry that is in
+// neither tokens.json, a component's customProperties, NOT_PUBLIC nor one of
+// these. Without that, "the three lists partition the properties" was wrong
+// by 143 names and nothing said so.
+export const GLOBAL_PREFIXES = {
+  '--mg-color-': {
+    label: 'the legacy one-off brand colours',
+    where:
+      'declared on :root by stories/assets/scss/_variables.scss, alongside the palette tokens.json does carry',
+  },
+  '--mg-dataviz-': {
+    label: 'the data visualisation palettes',
+    where: 'declared on :root by stories/assets/scss/_tokens-data-viz.scss',
+  },
+  '--mg-font-family-': {
+    label: 'the five typography roles',
+    where:
+      'declared on :root by stories/assets/scss/_variables.scss, re-pointed for Arabic in _fonts.scss, and described under "Brand guide → Typography" below',
+  },
+  '--mg-sendai-': {
+    label: 'the Sendai Framework target ramps',
+    where: 'declared on :root by stories/assets/scss/_tokens-data-viz.scss',
+  },
+};
 
 // Properties the CSS exposes that are NOT public API, each with the reason.
 // Listing one here is how a property opts out of the "exposed but not
 // documented" check; anything not listed and not described fails validation.
+//
+// It is the one way to remove a property from the published API, so it is not
+// allowed to be quiet: `yarn validate-manifest` prints every entry on every
+// run, and MIN_PROPERTIES below fails the build if a component's published
+// count drops. Adding an entry therefore shows up three times — in this diff,
+// in the validate log, and in the count — rather than only shrinking a JSON
+// file nobody diffs.
 export const NOT_PUBLIC = {
   '--mg-gutenberg-spacer':
     'Declared on .mg-footer and read by nothing. A leftover of the Gutenberg spacing work that --mg-container-spacer replaced; see the note in stories/Atom/Layout/Container/container.scss.',
+};
+
+// How many properties each component is known to publish. A floor, not an
+// exact count: adding one is routine and passes, losing one is a removal from
+// a public API and has to be deliberate, so it fails validation until the
+// number here comes down with it.
+//
+// Without this, moving a property into NOT_PUBLIC removed it from the
+// manifest with "Validation passed" and a green test suite — the failure mode
+// this file exists to prevent, reached through the file itself.
+export const MIN_PROPERTIES = {
+  'components-buttons-buttons': 1,
+  'components-cards-icon-card': 4,
+  'components-cta': 2,
+  'components-dataviz-legend': 1,
+  'components-empty-state': 15,
+  'components-forms-checkbox': 13,
+  'components-hero-hero': 6,
+  'components-icons': 1,
+  'components-images-author-image': 3,
+  'components-navigation-drawer': 2,
+  'components-navigation-megamenu': 2,
+  'components-navigation-on-this-page-nav': 1,
+  'components-navigation-tree': 5,
+  'components-notice-notice': 4,
+  'components-reading-column': 1,
+  'components-showmore': 1,
+  'components-status-label': 15,
+  'components-tabs': 14,
+  'components-tag': 3,
+  'patterns-content-hub': 11,
 };
 
 // Which component owns which properties.
@@ -115,7 +181,7 @@ export const PROPERTY_DOCS = {
 
   // TextCta
   '--mg-cta-accent':
-    'Accent colour of the CTA banner, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). The --primary, --secondary, --tertiary and --quaternary modifiers re-point it at the matching hero colour.',
+    'Accent colour of the CTA banner. The --primary, --secondary, --tertiary and --quaternary modifiers re-point it at the matching hero colour.',
   '--mg-cta-bg':
     'Background colour of the CTA banner. Nothing declares it, so the banner stays transparent until a wrapper or an inline style sets it.',
 
@@ -171,14 +237,14 @@ export const PROPERTY_DOCS = {
 
   // Hero
   '--mg-hero-cta-color':
-    'Colour of the hero CTA button, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). Each colour variant re-points it.',
+    'Colour of the hero CTA button. Each colour variant re-points it.',
   '--mg-hero-gradient-color':
-    'Base colour of the overlay gradient, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). Each colour variant re-points it.',
+    'Base colour of the overlay gradient. Each colour variant re-points it.',
   '--mg-hero-gradient-start': 'Alpha of the overlay gradient at its start.',
   '--mg-hero-gradient-middle': 'Alpha of the overlay gradient at its midpoint.',
   '--mg-hero-gradient-end': 'Alpha of the overlay gradient at its end.',
   '--mg-hero-link-color':
-    'Colour of links inside the hero text regions, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). It does not reach author-provided media HTML.',
+    'Colour of links inside the hero text regions. It does not reach author-provided media HTML.',
 
   // Icons
   '--mg-icon-svg':
@@ -250,7 +316,7 @@ export const PROPERTY_DOCS = {
   '--mg-status-label-indicator--negative':
     'Fill of the negative / offline indicator, shared with ServiceNotice.',
   '--mg-status-label-indicator-ring':
-    'Internal. Carries the ring width into the inner polygons of the clip-path shapes. Set --mg-status-label-indicator-border-width instead.',
+    'Derived from --mg-status-label-indicator-border-width and carried into the inner polygons of the two clip-path shapes. Set the border width instead: setting this one alone leaves the ring on those two shapes disagreeing with the other five.',
 
   // Tabs
   '--mg-tab-color': 'Label colour of a tab at rest.',
@@ -278,34 +344,30 @@ export const PROPERTY_DOCS = {
   '--mg-tag-background-hover': 'Tag fill on hover, for linked tags.',
   '--mg-tag-foreground': 'Tag label colour.',
 
-  // HubHeader — every colour here is RGB channels, wrapped in rgb() by the
-  // stylesheet, so each description says so: a hex or a keyword makes the
-  // declaration invalid and the header silently loses the colour.
-  '--mg-hub-header-surface':
-    'Surface colour of the navigation bar, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
-  '--mg-hub-header-banner-surface':
-    'Surface colour of the banner below it, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
-  '--mg-hub-header-ink':
-    'Colour of the header title, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
-  '--mg-hub-header-link':
-    'Link colour in the bar, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
+  // HubHeader — every colour here takes sRGB channels rather than a colour,
+  // because the stylesheet wraps it in rgb(); a hex or a keyword makes the
+  // declaration invalid and the header silently loses the colour. That is not
+  // repeated in each description: it is extracted from the CSS and published
+  // as `format: "srgb-channels"` and `wrapInRgb: true`, the way tokens.json
+  // reports it, so an agent can act on it without reading prose.
+  '--mg-hub-header-surface': 'Surface colour of the navigation bar.',
+  '--mg-hub-header-banner-surface': 'Surface colour of the banner below it.',
+  '--mg-hub-header-ink': 'Colour of the header title.',
+  '--mg-hub-header-link': 'Link colour in the bar.',
   '--mg-hub-header-link-hover':
-    'Link colour on hover, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb(). On a coloured bar the link holds its colour and the underline carries the hover, because the global interactive-active colour is meant for white backgrounds.',
-  '--mg-hub-header-marker':
-    'Colour of the marker on the current item, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
-  '--mg-hub-header-rule':
-    'Colour of the rule under the bar, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
+    'Link colour on hover. On a coloured bar the link holds its colour and the underline carries the hover, because the global interactive-active colour is meant for white backgrounds.',
+  '--mg-hub-header-marker': 'Colour of the marker on the current item.',
+  '--mg-hub-header-rule': 'Colour of the rule under the bar.',
   '--mg-hub-header-rule-alpha': 'Opacity of that rule.',
-  '--mg-hub-header-focus':
-    'Focus ring colour inside the header, as RGB channels (e.g. 255 255 255) rather than a colour keyword or hex, because the stylesheet wraps it in rgb().',
+  '--mg-hub-header-focus': 'Focus ring colour inside the header.',
   '--mg-hub-header-bar-tint':
-    'RGB channels of the tint that stratifies the bar from the banner, so a hero image meeting the bar reads as a boundary rather than a fault.',
+    'Colour of the tint that stratifies the bar from the banner, so a hero image meeting the bar reads as a boundary rather than a fault.',
   '--mg-hub-header-bar-tint-alpha':
     'Opacity of that tint. The detached surface sets it to 0, having nothing to stratify from.',
 };
 
-const isGlobal = name =>
-  GLOBAL_PREFIXES.some(prefix => name.startsWith(prefix));
+const globalPrefixOf = name =>
+  Object.keys(GLOBAL_PREFIXES).find(prefix => name.startsWith(prefix)) || null;
 
 const claims = (matcher, name) =>
   matcher.endsWith('-') ? name.startsWith(matcher) : name === matcher;
@@ -333,47 +395,121 @@ const tidy = value =>
     .replace(/\s+\)/g, ')')
     .trim();
 
+// A comment is not CSS. Stripping them first keeps a docblock out of the
+// parse: every component stylesheet opens with one, and several quote a
+// property (`--mg-show-more-height: 200px`) or a var() call with a fallback.
+// Left in, a comment could invent a property or a default that no rule has.
+export const stripComments = css => css.replace(/\/\*[\s\S]*?\*\//g, '');
+
 // A selector for a modifier or a state re-points a property rather than
 // setting its default — `.mg-switch--small` and `.mg-notice--warning` both do.
 // The default belongs to the plain selector, so a modifier value is used only
 // when nothing plainer declares the property.
-const isModifierSelector = selector =>
-  /--[a-z]/i.test(selector) || selector.includes(':');
+//
+// `:root`, `:where()` and `:is()` are not modifiers, and a bare `:` test would
+// call all three one. `:root` is where a component's unconditional defaults
+// are declared — StatusLabel's and EmptyState's whole sets, plus
+// --mg-show-more-height and --mg-reading-with-contents-width — and `:where()`
+// and `:is()` only change specificity, so whatever is inside them decides.
+export const isModifierSelector = selector => {
+  const plain = selector
+    .replace(/:(?:is|where|not|has)\(/gi, '(')
+    .replace(/:root\b/gi, '');
+  return /--[a-z]/i.test(plain) || plain.includes(':');
+};
+
+// An at-rule that only applies some of the time — `@media`, `@supports`,
+// `@container` — makes every declaration inside it conditional, however plain
+// the selector. `@keyframes` is the same: its blocks are frames, not defaults.
+// So is anything else unrecognised, which is the safe way round: a new at-rule
+// reads as conditional rather than silently publishing a conditional value as
+// an unconditional default.
+const UNCONDITIONAL_AT_RULES =
+  /^@(?:layer|charset|namespace|font-face|import)\b/i;
+
+const isConditionalAtRule = prelude =>
+  prelude.startsWith('@') && !UNCONDITIONAL_AT_RULES.test(prelude);
 
 /**
  * Every --mg-* property declared in `css`, as name → { value, modifierOnly }.
  *
- * Read per rule block so a modifier's value is never mistaken for the
- * default: `.mg-switch--small` sets --mg-switch-size too, and it happens to
- * come first in the bundle.
+ * Walked block by block, carrying the enclosing at-rules, so neither a
+ * modifier's value nor a conditional one is mistaken for the default:
+ * `.mg-switch--small` sets --mg-switch-size too and happens to come first in
+ * the bundle, and a plain selector inside `@media (forced-colors: active)`
+ * looks unconditional to any parser that drops the at-rule.
+ *
+ * `modifierOnly` therefore means "not the value at rest": declared under a
+ * modifier, a state, or an at-rule that only sometimes applies.
  */
 function declarationsIn(css) {
   const found = new Map();
+  const source = stripComments(css);
+  const stack = [];
+  let buffer = '';
 
-  for (const block of css.matchAll(/([^{}]*)\{([^{}]*)\}/g)) {
-    const [, selector, body] = block;
-    const modifierOnly = isModifierSelector(selector);
-    for (const match of body.matchAll(
-      /(--mg-[A-Za-z0-9_-]+)\s*:\s*([^;}]*)/g
-    )) {
-      const [, name, value] = match;
-      if (!PROPERTY_NAME.test(name)) continue;
-      const seen = found.get(name);
-      if (seen && (modifierOnly || !seen.modifierOnly)) continue;
-      found.set(name, { value: tidy(value), modifierOnly });
+  const record = () => {
+    const block = stack[stack.length - 1];
+    // A declaration directly inside an at-rule prelude block (@font-face has
+    // none of ours; @media's children are rules) still parses harmlessly.
+    if (!block) return;
+    const match = /(--mg-[A-Za-z0-9_-]+)\s*:\s*([\s\S]*)/.exec(buffer);
+    if (!match) return;
+    const [, name, value] = match;
+    if (!PROPERTY_NAME.test(name)) return;
+    const { modifierOnly } = block;
+    const seen = found.get(name);
+    if (seen && (modifierOnly || !seen.modifierOnly)) return;
+    found.set(name, { value: tidy(value), modifierOnly });
+  };
+
+  for (let index = 0; index < source.length; index++) {
+    const char = source[index];
+    if (char === '{') {
+      const prelude = buffer.trim();
+      const parent = stack[stack.length - 1];
+      stack.push({
+        modifierOnly:
+          (parent ? parent.modifierOnly : false) ||
+          (prelude.startsWith('@')
+            ? isConditionalAtRule(prelude)
+            : isModifierSelector(prelude)),
+      });
+      buffer = '';
+    } else if (char === '}') {
+      record();
+      stack.pop();
+      buffer = '';
+    } else if (char === ';') {
+      record();
+      buffer = '';
+    } else {
+      buffer += char;
     }
   }
   return found;
 }
 
 /**
- * Every --mg-* property read through var() in `css`, with its fallback.
+ * Every --mg-* property read through var() in `css`, as
+ * name → { fallback, wrapped }.
  *
  * Parsed rather than matched, because a fallback is routinely another
  * function call — `var(--mg-icon-fg, rgb(var(--mg-color-neutral-700)))` — and
  * a regex stops at the first closing parenthesis.
+ *
+ * `wrapped` is true when every read of the property sits directly inside
+ * `rgb()` or `rgba()`. Such a property holds sRGB channels ("255 255 255"),
+ * not a colour: give it a hex or a keyword and the whole declaration is
+ * invalid and drops silently. That is the same distinction tokens.json draws
+ * with `format: "srgb-channels"` and `wrapInRgb`, so it is reported the same
+ * way rather than being left to prose.
  */
-function readsIn(css) {
+function readsIn(rawCss) {
+  // Comments first, for the same reason declarationsIn strips them: a
+  // docblock quoting `var(--mg-foo, 4px)` would otherwise invent a fallback,
+  // and every component stylesheet opens with one.
+  const css = stripComments(rawCss);
   const found = new Map();
   for (const match of css.matchAll(/var\(\s*(--mg-[A-Za-z0-9_-]+)/g)) {
     const name = match[1];
@@ -393,7 +529,13 @@ function readsIn(css) {
         fallback += char;
       }
     }
-    if (!found.has(name)) found.set(name, tidy(fallback));
+    const wrapped = /\brgba?\(\s*$/i.test(css.slice(0, match.index));
+    const seen = found.get(name);
+    if (seen) {
+      seen.wrapped = seen.wrapped && wrapped;
+      continue;
+    }
+    found.set(name, { fallback: tidy(fallback), wrapped });
   }
   return found;
 }
@@ -412,6 +554,9 @@ function readsIn(css) {
  *   unattributed: string[],   // exposed, claimed by no component
  *   undocumented: string[],   // exposed and owned, but not described
  *   absent: string[],         // described, but no bundle has it
+ *   notPublic: string[],      // held back from the API, with a reason
+ *   globals: Array<{prefix, label, where, count}>, // the theme-layer groups
+ *   unaccounted: string[],    // in none of the four lists
  *   skipped: string|null,     // why nothing was read, if nothing was
  * }}
  */
@@ -422,6 +567,9 @@ export function collectCustomProperties(cssDir, themeTokenNames = []) {
     unattributed: [],
     undocumented: [],
     absent: [],
+    notPublic: Object.keys(NOT_PUBLIC).sort(),
+    globals: [],
+    unaccounted: [],
     skipped: null,
   };
 
@@ -450,14 +598,40 @@ export function collectCustomProperties(cssDir, themeTokenNames = []) {
       if (seen && (declaration.modifierOnly || !seen.modifierOnly)) continue;
       declared.set(name, declaration);
     }
-    for (const [name, fallback] of readsIn(css)) {
-      if (!read.has(name)) read.set(name, fallback);
+    for (const [name, use] of readsIn(css)) {
+      const seen = read.get(name);
+      if (seen) {
+        seen.wrapped = seen.wrapped && use.wrapped;
+        continue;
+      }
+      read.set(name, { ...use });
     }
   }
 
-  const exposed = [...new Set([...declared.keys(), ...read.keys()])]
-    .filter(name => !isGlobal(name) && !themeTokens.has(name))
-    .sort();
+  const everyName = [...new Set([...declared.keys(), ...read.keys()])].sort();
+
+  // The theme-layer groups, counted from the bundles rather than asserted, so
+  // llms.txt can name each one and say how large it is. Only the names
+  // tokens.json does NOT carry are counted: the --mg-color-* palette is in
+  // the dictionary and only a handful of legacy one-offs beside it are not,
+  // so counting the whole prefix would report 111 where the answer is 10.
+  const globalCounts = new Map(
+    Object.keys(GLOBAL_PREFIXES).map(prefix => [prefix, 0])
+  );
+  for (const name of everyName) {
+    if (themeTokens.has(name)) continue;
+    const prefix = globalPrefixOf(name);
+    if (prefix) globalCounts.set(prefix, globalCounts.get(prefix) + 1);
+  }
+  const globals = Object.entries(GLOBAL_PREFIXES).map(([prefix, meta]) => ({
+    prefix,
+    ...meta,
+    count: globalCounts.get(prefix),
+  }));
+
+  const exposed = everyName.filter(
+    name => !globalPrefixOf(name) && !themeTokens.has(name)
+  );
 
   const byComponent = {};
   const unattributed = [];
@@ -477,21 +651,33 @@ export function collectCustomProperties(cssDir, themeTokenNames = []) {
     }
 
     const declaration = declared.get(name);
+    const use = read.get(name);
+
+    // `default` and `hook` turn on the same fact the resting value does:
+    // whether a plain, unconditional rule gives the property a value. A
+    // property only a modifier declares — --mg-switch-size, set by
+    // .mg-switch--small alone — is a hook on an unmodified component, where
+    // its computed value is the empty string.
     const property = {
       name,
-      type: declaration ? 'default' : 'hook',
+      type: declaration && !declaration.modifierOnly ? 'default' : 'hook',
       description,
     };
 
+    // A property every stylesheet reads inside rgb() takes sRGB channels, not
+    // a colour. Flagged the way tokens.json flags the same thing, so an agent
+    // can act on it without parsing the description.
+    if (use?.wrapped) {
+      property.format = 'srgb-channels';
+      property.wrapInRgb = true;
+    }
+
     // The value that applies at rest: the plainest rule that declares one,
-    // and otherwise the var() fallback the component reads it with. A
-    // property declared only under a modifier — --mg-switch-size, set by
-    // .mg-switch--small alone — takes its resting value from that fallback.
-    const fallback = read.get(name);
+    // and otherwise the var() fallback the component reads it with.
     const value =
       declaration && !declaration.modifierOnly
         ? declaration.value
-        : fallback || declaration?.value;
+        : use?.fallback || declaration?.value;
 
     // Anything longer than this is artwork rather than a value a reader
     // wants: --mg-icon-svg carries a whole SVG data URI. Its description
@@ -506,5 +692,20 @@ export function collectCustomProperties(cssDir, themeTokenNames = []) {
     .filter(name => !known.has(name))
     .sort();
 
-  return { byComponent, unattributed, undocumented, absent, skipped: null };
+  // Every --mg-* name the bundles carry lands in exactly one of four lists:
+  // tokens.json, a component's customProperties, NOT_PUBLIC, or one of the
+  // global prefixes above. `unattributed` and `undocumented` are what is left
+  // over, so they are already the "nobody decided about this" check — what
+  // was missing is that `globals` is the fourth list and the docs named only
+  // three. It is returned so llms.txt can name each group and its size
+  // instead of naming the data-viz palette and leaving 29 others unsaid.
+  return {
+    byComponent,
+    unattributed,
+    undocumented,
+    absent,
+    notPublic: Object.keys(NOT_PUBLIC).sort(),
+    globals,
+    skipped: null,
+  };
 }

@@ -40,7 +40,11 @@ import path from 'path';
 import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
-import { collectCustomProperties } from './custom-properties.js';
+import {
+  collectCustomProperties,
+  MIN_PROPERTIES,
+  NOT_PUBLIC,
+} from './custom-properties.js';
 import {
   buildReleasesManifest,
   parseComponentChangelog,
@@ -1140,6 +1144,24 @@ const customPropertyCount = Object.values(customProperties.byComponent).reduce(
   0
 );
 
+// The --mg-* properties that are in neither tokens.json nor a component's
+// customProperties: global like a theme token, but declared straight in SCSS
+// rather than generated from tokens/*.yaml, so the dictionary never saw them.
+// Written out from the data rather than by hand, because naming only the
+// data-viz palette left 29 properties unsaid — including the five typography
+// roles that #1210 had just established as the public font API.
+const globalGroupsSentence = customProperties.globals
+  .filter(group => group.count > 0)
+  .map(
+    group =>
+      `${group.label} (${group.prefix}*), ${group.count} of them, ${group.where}`
+  )
+  .join('; ');
+const globalGroupsTotal = customProperties.globals.reduce(
+  (total, group) => total + group.count,
+  0
+);
+
 if (customProperties.skipped) {
   console.warn(
     `Note: ${customProperties.skipped} Skipping the custom property inventory.`
@@ -1510,6 +1532,56 @@ if (validateOnly) {
     failed = true;
   }
 
+  // Losing a property is a removal from a public API, so it fails until
+  // MIN_PROPERTIES comes down with it. NOT_PUBLIC is the one way to make a
+  // property disappear from the manifest, and it used to do so in silence:
+  // moving one there printed "Validation passed" and shrank a JSON file
+  // nobody diffs. It is now printed on every run and counted here.
+  if (!customProperties.skipped) {
+    const shrunk = Object.entries(MIN_PROPERTIES)
+      .map(([id, floor]) => ({
+        id,
+        floor,
+        actual: customProperties.byComponent[id]?.length ?? 0,
+      }))
+      .filter(({ floor, actual }) => actual < floor);
+    if (shrunk.length > 0) {
+      console.error(
+        `Validation failed: ${shrunk.length} component(s) publish fewer ` +
+          'custom properties than MIN_PROPERTIES in custom-properties.js ' +
+          'records. A property left the public API. If that is intended, ' +
+          'lower the number in the same commit and say so in the CHANGELOG:'
+      );
+      for (const { id, floor, actual } of shrunk) {
+        console.error(`  - ${id}: ${actual}, was ${floor}`);
+      }
+      failed = true;
+    }
+
+    const floorless = Object.keys(customProperties.byComponent)
+      .filter(id => !(id in MIN_PROPERTIES))
+      .sort();
+    if (floorless.length > 0) {
+      console.error(
+        `Validation failed: ${floorless.length} component(s) publish custom ` +
+          'properties with no entry in MIN_PROPERTIES, so losing one later ' +
+          'would go unnoticed. Add each with its current count:'
+      );
+      for (const id of floorless) {
+        console.error(`  - ${id}: ${customProperties.byComponent[id].length}`);
+      }
+      failed = true;
+    }
+  }
+
+  const notPublic = Object.entries(NOT_PUBLIC);
+  console.log(
+    `Custom properties held back from the API (NOT_PUBLIC): ${notPublic.length}`
+  );
+  for (const [name, reason] of notPublic) {
+    console.log(`  - ${name}: ${reason}`);
+  }
+
   const developmentJsxBundles = findDevelopmentJsxBundles();
   if (developmentJsxBundles.length > 0) {
     console.error(
@@ -1672,11 +1744,16 @@ async function main() {
     if (componentCustomProperties?.length) {
       detail.customProperties = {
         _ai:
-          'Set these on the component or any ancestor to restyle it. ' +
-          'type "default" means the stylesheet already gives it the value in ' +
-          '`default`, and yours replaces it. type "hook" means no stylesheet ' +
-          'defines it: `default` is the fallback it resolves to until a ' +
-          'wrapper, an inline style or a prop sets it. These are NOT in ' +
+          'Restyle the component by setting these, usually on the component ' +
+          'or an ancestor — but check `default` first: a property the ' +
+          'component itself declares beats an ancestor, so it has to be set ' +
+          'on that element instead. type "default" means a plain rule ' +
+          'already gives it the value in `default`, and yours replaces it. ' +
+          'type "hook" means no unconditional rule defines it: `default` is ' +
+          'the fallback it resolves to until a wrapper, an inline style or a ' +
+          'prop sets it. `wrapInRgb: true` means the value is sRGB channels ' +
+          '("255 255 255"), not a colour — a hex or a keyword there makes ' +
+          'the declaration invalid and it drops silently. These are NOT in ' +
           `${DOCS_BASE}tokens.json, which covers theme tokens only.`,
         properties: componentCustomProperties,
       };
@@ -1891,7 +1968,7 @@ ${DOCS_BASE}ai-components/utilities.json
 Theme token dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
 ${DOCS_BASE}tokens.json
 
-This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. The data-viz palette (--mg-dataviz-*) is in neither: it is global like a theme token, defined on :root by stories/assets/scss/_tokens-data-viz.scss, but absent from tokens.json because the dictionary is built from the tokens/*.yaml sources only. The dictionary's own \`scope\` field says the same thing.
+This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. ${globalGroupsTotal} --mg-* properties are in neither list: they are global like a theme token, but declared straight in SCSS rather than generated from tokens/*.yaml, so the dictionary never saw them. Four groups — ${globalGroupsSentence}. The dictionary's own \`scope\` field says the same thing.
 
 Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs
@@ -1970,7 +2047,7 @@ Where they come from:
 
 Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
 
-\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define from the YAML sources, and nothing else. A component's own properties live in its manifest entry instead, under \`customProperties\` in \`ai-components/{id}.json\` — ${customPropertyCount} of them across ${Object.keys(customProperties.byComponent).length} components, each with what it does and the value it holds at rest. They come in two kinds: \`type: "default"\`, which the stylesheet already gives a value (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-tree-*\`, \`--mg-status-label-*\`, \`--mg-tab-*\`), and \`type: "hook"\`, which no stylesheet defines, so it holds its fallback until a wrapper, an inline style or a React prop sets it (\`--mg-switch-track-*\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`). Restyle a component by setting these, not by writing rules against its classes: a class rule of equal specificity replaces what the component draws, and several components build their geometry on a property whose value your rule would then be fighting.
+\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define from the YAML sources, and nothing else. A component's own properties live in its manifest entry instead, under \`customProperties\` in \`ai-components/{id}.json\` — ${customPropertyCount} of them across ${Object.keys(customProperties.byComponent).length} components, each with what it does and the value it holds at rest. They come in two kinds: \`type: "default"\`, which a plain, unconditional rule already gives a value (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-status-label-*\`, \`--mg-tab-*\`), and \`type: "hook"\`, which nothing unconditional defines — either no rule at all, or only a modifier or a media query — so it holds its fallback until a wrapper, an inline style or a React prop sets it (\`--mg-switch-track-*\`, \`--mg-switch-size\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`, \`--mg-tree-guide-offset\`). A record with \`wrapInRgb: true\` takes sRGB channels (\`255 255 255\`) rather than a colour, the same way tokens.json marks \`format: "srgb-channels"\`; a hex or a keyword there makes the declaration invalid and it drops with no warning. Restyle a component by setting these, not by writing rules against its classes: a class rule of equal specificity replaces what the component draws, and several components build their geometry on a property whose value your rule would then be fighting.
 
 What you actually write against is the compiled result: the \`--mg-*\` custom properties in the theme stylesheets above.
 

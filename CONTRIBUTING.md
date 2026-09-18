@@ -50,7 +50,7 @@ Most of the manifest auto-generates from Storybook, component rendering, tokens,
 
 - **`scripts/ai-manifest/component-data.js`** — per-component metadata (descriptions, CSS class lists, curated HTML examples) and the `REQUIRES_REACT` map. Update when you change a component's HTML structure, add a new component, or rename BEM classes.
 - **`scripts/ai-manifest/css-utilities.js`** — inventory of CSS utility classes. Update when you add, rename, or remove utility classes.
-- **`scripts/ai-manifest/custom-properties.js`** — what each CSS custom property a component exposes is for. The names, kinds and defaults are extracted from the compiled CSS, so only the prose is maintained here. Add a description when you add a property, and claim a new component's prefix in `OWNERS`. `yarn validate-manifest` fails on a property that nothing describes and on a description for a property the CSS no longer has.
+- **`scripts/ai-manifest/custom-properties.js`** — what each CSS custom property a component exposes is for. The names, kinds and defaults are extracted from the compiled CSS, so only the prose is maintained here. Add a description when you add a property, and claim a new component's prefix in `OWNERS` with its count in `MIN_PROPERTIES`. `yarn validate-manifest` fails on a property that nothing describes, on a description for a property the CSS no longer has, and on a component that publishes fewer properties than its floor — removing one from the public API means lowering that number in the same commit.
 
 Tips for better manifest output:
 

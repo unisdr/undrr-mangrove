@@ -208,8 +208,10 @@ A component's custom properties are how it is restyled. Writing rules against it
 
 Each record carries the property name, what it does, its resting value, and one of two types:
 
-- `type: "default"` — the stylesheet already gives it the value in `default`. Setting it replaces that value.
-- `type: "hook"` — no stylesheet defines it. `default` is the fallback it resolves to, and a wrapper, an inline style or a React prop supplies the real value. `--mg-icon-fg` is one: IconCard's `iconFgColor` prop sets it.
+- `type: "default"` — a plain, unconditional rule already gives it the value in `default`. Setting it replaces that value.
+- `type: "hook"` — nothing unconditional defines it: either no rule at all, or only a modifier or a media query. `default` is the fallback it resolves to, and a wrapper, an inline style or a React prop supplies the real value. `--mg-icon-fg` is one: IconCard's `iconFgColor` prop sets it. So is `--mg-switch-size`, which only `.mg-switch--small` declares.
+
+A record that also carries `"format": "srgb-channels"` and `"wrapInRgb": true` takes sRGB channels (`255 255 255`), not a colour — the stylesheet wraps it in `rgb()`, so a hex or a keyword makes the declaration invalid and it drops with no console warning. It is the same pair of fields `tokens.json` uses for the same distinction, and it is extracted rather than asserted: a property qualifies when every read of it in the compiled CSS sits directly inside `rgb()` or `rgba()`.
 
 ```json
 {
@@ -220,7 +222,9 @@ Each record carries the property name, what it does, its resting value, and one 
 }
 ```
 
-The names, types and defaults are extracted from the compiled CSS bundles on every build, so a renamed property or a changed default reaches the manifest with no edit. Only the descriptions are written by hand, in `scripts/ai-manifest/custom-properties.js`. `yarn validate-manifest` fails on a description for a property the CSS no longer has, on a property the CSS exposes that nothing describes, and on one that belongs to no component — so the list cannot go quietly stale in either direction.
+The names, types and defaults are extracted from the compiled CSS bundles on every build, so a renamed property or a changed default reaches the manifest with no edit. Only the descriptions are written by hand, in `scripts/ai-manifest/custom-properties.js`. `yarn validate-manifest` fails on a description for a property the CSS no longer has, on a property the CSS exposes that nothing describes, and on one that belongs to no component — so the list cannot go quietly stale in either direction. It also fails if a component publishes fewer properties than the `MIN_PROPERTIES` floor in the same file records, and prints the `NOT_PUBLIC` list on every run: `NOT_PUBLIC` is the one way to remove a property from the published API, and without those two it did so in silence.
+
+Not every `--mg-*` property is in `tokens.json` or in this field. The groups that are global rather than component-scoped but declared straight in SCSS rather than generated from `tokens/*.yaml` — the data visualisation palettes (`--mg-dataviz-*`), the Sendai Framework ramps (`--mg-sendai-*`), the five typography roles (`--mg-font-family-*`) and the legacy one-off brand colours (`--mg-color-*`) — are in neither. `llms.txt` names all four and says where each is defined, generated from `GLOBAL_PREFIXES` in `custom-properties.js` so the sentence cannot drift from the list.
 
 ### CSS utilities (`ai-components/utilities.json`)
 

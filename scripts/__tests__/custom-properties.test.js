@@ -15,6 +15,8 @@ import os from 'os';
 import path from 'path';
 import {
   collectCustomProperties,
+  GLOBAL_PREFIXES,
+  MIN_PROPERTIES,
   NOT_PUBLIC,
   OWNERS,
   PROPERTY_DOCS,
@@ -58,6 +60,108 @@ describe('collectCustomProperties', () => {
         default: 'rgb(var(--mg-color-neutral-700))',
       },
     ]);
+  });
+
+  it('treats :root, :where() and :is() as plain, not as modifiers', () => {
+    // A bare "contains a colon" test called all three modifiers, which marked
+    // about thirty properties declared on :root as modifier-only and took
+    // their reported default from a var() fallback instead of the
+    // declaration. The two agreed, so nothing was wrong — until one changed.
+    const result = collectFrom(`
+      :root { --mg-show-more-height: 200px; }
+      :where(.mg-notice) { --mg-notice-bg: rebeccapurple; }
+      .mg-show-more--collapsed { max-height: var(--mg-show-more-height, 999px); }
+      .mg-notice { background: var(--mg-notice-bg, rebeccablue); }
+    `);
+
+    expect(result.byComponent['components-showmore']).toEqual([
+      expect.objectContaining({ type: 'default', default: '200px' }),
+    ]);
+    expect(result.byComponent['components-notice-notice']).toEqual([
+      expect.objectContaining({ type: 'default', default: 'rebeccapurple' }),
+    ]);
+  });
+
+  it('calls a property only a modifier declares a hook', () => {
+    // An unmodified switch computes --mg-switch-size to the empty string, so
+    // it is a hook like its siblings. Typing it `default` made an artefact of
+    // the parser read as a real difference between it and them.
+    const result = collectFrom(`
+      .mg-switch--small { --mg-switch-size: 1.125rem; }
+      .mg-switch__track { inline-size: var(--mg-switch-size, 1.5rem); }
+    `);
+
+    expect(result.byComponent['components-forms-checkbox']).toEqual([
+      expect.objectContaining({ type: 'hook', default: '1.5rem' }),
+    ]);
+  });
+
+  it('does not read a property or a fallback out of a comment', () => {
+    // Every component stylesheet opens with a docblock, and ShowMore's quotes
+    // its own property. Parsed as CSS, a comment can invent a default that no
+    // rule has, or a property that does not exist.
+    const result = collectFrom(`
+      /* --mg-notice-invented: 1px; */
+      .mg-notice { background: var(--mg-notice-bg); }
+    `);
+
+    // The invented property is not published as Notice's fifth.
+    expect(result.undocumented).toEqual([]);
+    expect(result.byComponent['components-notice-notice']).toEqual([
+      { name: '--mg-notice-bg', type: 'hook', description: expect.any(String) },
+    ]);
+  });
+
+  it('does not take a fallback out of a comment', () => {
+    const result = collectFrom(`
+      /* Use var(--mg-notice-bg, red) to tint the panel. */
+      .mg-notice { background: var(--mg-notice-bg); }
+    `);
+
+    expect(
+      result.byComponent['components-notice-notice'][0].default
+    ).toBeUndefined();
+  });
+
+  it('does not take a default from inside a media query', () => {
+    // The at-rule used to be dropped, so a plain selector inside one looked
+    // unconditional and its value was published as the default.
+    const result = collectFrom(`
+      @media (forced-colors: active) {
+        .mg-notice { --mg-notice-bg: Canvas; }
+      }
+      .mg-notice { background: var(--mg-notice-bg, rebeccapurple); }
+    `);
+
+    expect(result.byComponent['components-notice-notice']).toEqual([
+      expect.objectContaining({ type: 'hook', default: 'rebeccapurple' }),
+    ]);
+  });
+
+  it('flags a property every stylesheet reads inside rgb()', () => {
+    const result = collectFrom(`
+      .mg-hub-header { background: rgb(var(--mg-hub-header-surface, 255 255 255)); }
+      .mg-notice { background: var(--mg-notice-bg, rebeccapurple); }
+    `);
+
+    expect(result.byComponent['patterns-content-hub'][0]).toMatchObject({
+      format: 'srgb-channels',
+      wrapInRgb: true,
+    });
+    expect(
+      result.byComponent['components-notice-notice'][0].wrapInRgb
+    ).toBeUndefined();
+  });
+
+  it('does not flag a property one stylesheet reads unwrapped', () => {
+    const result = collectFrom(`
+      .a { background: rgb(var(--mg-hub-header-surface)); }
+      .b { background: var(--mg-hub-header-surface); }
+    `);
+
+    expect(
+      result.byComponent['patterns-content-hub'][0].wrapInRgb
+    ).toBeUndefined();
   });
 
   it('takes the default from the plain rule, not from a modifier', () => {
@@ -146,11 +250,45 @@ describe('authored data', () => {
       expect(PROPERTY_DOCS[name]).toBeUndefined();
     }
   });
+
+  it('records a count floor for every component that owns properties', () => {
+    // NOT_PUBLIC is the one way to take a property out of the published API,
+    // and on its own it did so in silence: moving --mg-tab-radius into it
+    // printed "Validation passed", kept the suite green, and dropped Tabs
+    // from 14 properties to 13 with nothing to notice it. The floor is what
+    // notices.
+    expect(Object.keys(MIN_PROPERTIES).sort()).toEqual(
+      Object.keys(OWNERS).sort()
+    );
+    for (const count of Object.values(MIN_PROPERTIES)) {
+      expect(count).toBeGreaterThan(0);
+    }
+  });
+
+  it('says where each theme-layer group lives', () => {
+    // These are the fourth list. Naming a prefix here is what keeps llms.txt
+    // from claiming a partition it does not have.
+    for (const [prefix, meta] of Object.entries(GLOBAL_PREFIXES)) {
+      expect(prefix.startsWith('--mg-')).toBe(true);
+      expect(meta.label.length).toBeGreaterThan(5);
+      expect(meta.where).toMatch(/\.scss/);
+    }
+  });
 });
 
 // The library itself, which needs `yarn scss` to have run. Skipped rather
-// than failed without it, the same way the manifest's own CSS class check is.
+// than failed without it, the same way the manifest's own CSS class check is
+// — locally. In CI it must not skip: these are the only assertions that check
+// the real library, and a skipped assertion passes. `.github/workflows/
+// storybook.yml` runs `yarn build` (so `yarn scss`) before `yarn test`;
+// reorder those steps and every check below would quietly stop running.
 const describeCompiled = compiled ? describe : describe.skip;
+
+(process.env.CI ? describe : describe.skip)('CI preconditions', () => {
+  it('has compiled CSS, so the library checks below are not skipped', () => {
+    expect(compiled).toBe(true);
+  });
+});
 
 describeCompiled('the compiled library', () => {
   const { buildTokensDictionary } = require('../build-tokens.cjs');
@@ -177,5 +315,16 @@ describeCompiled('the compiled library', () => {
     expect(Object.keys(result.byComponent).sort()).toEqual(
       Object.keys(OWNERS).sort()
     );
+  });
+
+  it('publishes at least as many properties as each floor records', () => {
+    const shrunk = Object.entries(MIN_PROPERTIES)
+      .filter(([id, floor]) => (result.byComponent[id]?.length ?? 0) < floor)
+      .map(
+        ([id, floor]) =>
+          `${id}: ${result.byComponent[id]?.length ?? 0}, was ${floor}`
+      );
+
+    expect(shrunk).toEqual([]);
   });
 });
