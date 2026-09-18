@@ -25,7 +25,9 @@
   align-items: center;
   justify-content: center;
   gap: var(--mg-spacing-50);
-  list-style: none;
+
+  @include mg-list-unmarked;
+
   margin: 0;
   padding: 0;
 }

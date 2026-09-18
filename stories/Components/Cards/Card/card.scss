@@ -650,9 +650,18 @@ span.mg-card__label {
     }
   }
 
-  // Bordered variant (colored border via CSS custom property)
+  // Bordered variant (colored border via CSS custom property).
+
+  // --mg-card-border is an input hook: IconCard's `borderColor` prop sets it
+  // inline, and no stylesheet defines it. It carries a fallback because the
+  // class is public and a consumer writing the markup by hand does not always
+  // set the property — and an unset custom property drops the whole `border`
+  // declaration, so the modifier silently did nothing at all. The fallback is
+  // the theme's interactive colour, which makes the accent border read as the
+  // brand's in every theme. Set --mg-card-border on the element (or any
+  // ancestor) to override it. See unisdr/undrr-mangrove#1200.
   &--bordered {
-    border: 2px solid var(--mg-card-border);
+    border: 2px solid var(--mg-card-border, rgb(var(--mg-color-interactive)));
     padding: max(var(--mg-card-padding), var(--mg-spacing-150));
   }
 

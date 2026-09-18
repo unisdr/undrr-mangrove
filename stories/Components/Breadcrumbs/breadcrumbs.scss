@@ -14,17 +14,21 @@
   font-size: var(--mg-font-size-300);
   padding: 0;
 
-  // Support both the React nav > ul and legacy ul.mg-breadcrumb markup.
+  // Support the React nav > ul, the documented nav > ol, and the legacy
+  // ul.mg-breadcrumb markup. The <ol> arm matters: every curated breadcrumb
+  // example in the AI manifest uses one, and until it was listed here a
+  // consumer copying that snippet got numbered markers and no flex row.
   &,
-  > ul {
+  > :is(ul, ol) {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     row-gap: var(--mg-spacing-50);
-    list-style: none;
+
+    @include mg-list-unmarked;
   }
 
-  > ul {
+  > :is(ul, ol) {
     padding: 0;
     margin: 0;
     max-inline-size: 100%;

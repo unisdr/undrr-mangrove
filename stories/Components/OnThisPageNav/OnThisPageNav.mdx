@@ -324,7 +324,7 @@ See the **With tabs content** story for a live example.
 
 - **Landmark**: Renders as a `<nav>` with `aria-label`
 - **Active section**: `aria-current="true"` on the active link (correct WCAG 1.3.1 pattern — not `aria-selected`)
-- **List semantics**: `role="list"` on `<ul>` guards against VoiceOver + `list-style: none` bug
+- **List semantics**: `.mg-on-this-page-nav__list` hides its markers with `list-style-type: ""` rather than `list-style: none`, so Safari keeps the implicit `list` role and VoiceOver still announces the item count. You do not need `role="list"` on the `<ul>`. The vanilla script still sets one on lists it generates or adopts, which is belt and braces rather than a requirement
 - **Keyboard**: Standard tab navigation through links and scroll buttons; focused links auto-scroll into view in the nav bar
 - **Focus management**: Clicking a link moves focus to the target heading (`tabindex="-1"`, removed on blur)
 - **Focus visible**: 2px outline on `:focus-visible` for all interactive elements
@@ -348,6 +348,7 @@ Auto-generated IDs from non-Latin headings preserve the original characters. Pro
 
 ## Changelog
 
+- **1.5.3** — 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-on-this-page-nav__list` hides its markers with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin), so the implicit `list` role survives Safari without help from the markup. This closes a split between the two implementations: the vanilla script set `role="list"` on the list, the React component did not, and only one of them announced a count. The script still sets the role — belt and braces now, not a requirement — so nothing about the hydration contract changes.
 - **1.5.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic navigation links and the CTA now render in Noto Sans Arabic instead of Noto Kufi Arabic. Both classes read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Arabic labels measure about 10.8% narrower than their Latin equivalents, so the horizontal scroller needed no adjustment. Latin rendering is unchanged.
 - **1.5.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a nav link or CTA whose own language is not Arabic.
 - **1.5** — 2026-09-08 ([#1089](https://github.com/unisdr/undrr-mangrove/issues/1089)): Arabic navigation links render in Noto Kufi Arabic. The `:lang(ar)` override points at `$mg-font-family-arabic-headings`, which changed from Dubai to Noto Kufi Arabic.

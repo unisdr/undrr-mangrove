@@ -18,6 +18,12 @@
   display: flex;
   align-items: flex-start;
   z-index: var(--mg-z-index-nav);
+
+  // In the default variant this class is on the nav <ul> itself (the branded
+  // variant puts it on a wrapping <div> and uses &__nav for the list), so it
+  // is a list class and carries the house rule.
+  @include mg-list-unmarked;
+
   padding: 0;
   max-width: $mg-breakpoint-desktop;
   margin: 0 auto;
@@ -62,7 +68,9 @@
     display: flex;
     justify-content: flex-end;
     flex: 1;
-    list-style: none;
+
+    @include mg-list-unmarked;
+
     margin: 0;
     padding: 0;
   }
@@ -95,7 +103,8 @@
     flex: 1;
     padding: 0;
     margin: 0;
-    list-style: none;
+
+    @include mg-list-unmarked;
 
     // Clip overflow on mobile so the scrolling content hint works correctly.
     // pointer-events is left as auto here — it is restricted only when JS has
@@ -139,7 +148,13 @@
     font-size: var(--mg-font-size-300);
     color: rgb(var(--mg-color-interactive));
     font-weight: bold;
-    list-style: none;
+
+    // The marker is hidden on the item, not only on the list. A bare
+    // `list-style: none` here would win over the empty-string marker the
+    // parent list sets, and it is the item's marker Safari looks at, so the
+    // list role would be dropped again. Keep the mixin on both.
+    @include mg-list-unmarked;
+
     padding: 0;
     margin: 0;
 
@@ -600,7 +615,10 @@
 }
 
 .mg-mega-sidebar-section {
-  list-style: none;
+  // This is the <li> inside .mg-mega-sidebar__list. A bare `list-style: none`
+  // here overrides the empty-string marker the list sets, and the item's
+  // marker is the one Safari inspects, so the list role would be lost again.
+  @include mg-list-unmarked;
 
   ol {
     list-style: none;
@@ -968,7 +986,8 @@
     margin-block: var(--mg-spacing-150);
     margin-inline: calc(-1 * var(--mg-spacing-100));
     padding: 0;
-    list-style: none;
+
+    @include mg-list-unmarked;
   }
 
   .mg-mega-sidebar-section {
@@ -1064,7 +1083,8 @@
 }
 
 .mg-mega-topbar__mobile-trigger {
-  list-style: none;
+  @include mg-list-unmarked;
+
   margin: 0;
   padding: 0;
 
