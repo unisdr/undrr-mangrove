@@ -25,6 +25,14 @@
  * `…/scss/…`, `…/js/…`, `…/fonts/…`, `…/error-pages/…`. See
  * buildPackageJson() for why there is no `main` and no `exports`.
  *
+ * The `scss/` copy below keeps each file's path below `stories/`, so the SCSS
+ * entry point is published at `scss/assets/scss/style.scss` — the doubled
+ * segment is an artefact of that, but it is the supported public path and the
+ * documentation names it (unisdr/undrr-mangrove#1266). Nothing is published
+ * under `stories/`, `src/`, `dist/` or `tokens/`, whatever a doc may say;
+ * `scripts/__tests__/docs-package-paths.test.js` enforces that against
+ * `scripts/published-paths.cjs`, a fast model of this script's output.
+ *
  * Intentional quirks, kept to match every published release:
  * - The whole of dist/ is copied to <outDir>/dist, but the generated
  *   `files` array excludes it, so it never reaches the tarball. The copy is

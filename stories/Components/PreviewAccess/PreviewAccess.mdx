@@ -153,7 +153,7 @@ import { useEffect, useRef } from 'react';
 import {
   mgPreviewAccess,
   mgPreviewAccessDestroy,
-} from '@undrr/undrr-mangrove/js/preview-access';
+} from '@undrr/undrr-mangrove/js/preview-access.js';
 
 function Gate() {
   const ref = useRef(null);
@@ -215,6 +215,7 @@ The component supports RTL automatically when `dir="rtl"` and `lang="ar"` are se
 
 ## Changelog
 
+- **1.0.3** — 2026-09-19 ([#1267](https://github.com/unisdr/undrr-mangrove/issues/1267)): The Option B React snippet imported `@undrr/undrr-mangrove/js/preview-access` without the extension, which fails with `ERR_MODULE_NOT_FOUND` in Node ESM — the package ships no `exports` map to fill it in. It now names `js/preview-access.js`. Documentation only; the module is unchanged.
 - **1.0.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Fixed Arabic typography coverage in gate headings, button, and input by using `ui`/`text` font roles and removing the component-level `:lang(ar)` block. Latin rendering is unchanged except the submit button now follows the standard button text font role.
 - **1.0.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to gate text whose own language is not Arabic.
 - **1.0** — 2026-04-30: Initial release. Vanilla JS and CSS, body-level gate, `sessionStorage`-scoped unlock, RTL and Arabic font swap, `inert`-based focus trap, override-able copy via data attributes.

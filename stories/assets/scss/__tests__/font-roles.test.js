@@ -362,8 +362,16 @@ describe('the documented per-component Sass recipe', () => {
    * The recipe is read out of the doc rather than retyped, so a doc edit that
    * changes the supported path is checked against the SCSS rather than
    * silently diverging from it.
+   *
+   * The doc names the paths a consumer has — `scss/assets/scss/variables`,
+   * `scss/Components/Tab/tab` — because the tarball flattens `stories/` into
+   * `scss/` (unisdr/undrr-mangrove#1266). This compiles against the repo, so it
+   * maps that leading segment back. Only the prefix differs; the files are the
+   * same ones the package copies.
    */
   const MDX = path.join(STORIES_DIR, 'Documentation/SassIntegration.mdx');
+
+  const toRepoPath = line => line.replace(/(['"])scss\//, '$1stories/');
 
   const recipe = () => {
     const source = fs.readFileSync(MDX, 'utf8');
@@ -374,7 +382,7 @@ describe('the documented per-component Sass recipe', () => {
         imports.some(line => line.includes('scss/variables')) &&
         imports.some(line => line.includes('scss/foundational'))
       )
-        return imports;
+        return imports.map(toRepoPath);
     }
     return null;
   };
