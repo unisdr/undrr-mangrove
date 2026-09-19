@@ -247,6 +247,12 @@ export const PROPERTY_DOCS = {
   '--mg-hero-gradient-start': 'Alpha of the overlay gradient at its start.',
   '--mg-hero-gradient-middle': 'Alpha of the overlay gradient at its midpoint.',
   '--mg-hero-gradient-end': 'Alpha of the overlay gradient at its end.',
+  '--mg-hero-scrim-color':
+    'Colour of the neutral scrim painted above the brand tint, so body copy clears AA against a bright photograph whatever the theme colour is. Repointing it is a contrast decision, not a styling one.',
+  '--mg-hero-copy-inline-start':
+    'Where the copy column starts on the inline axis. The padding and the scrim both read it, so they cannot drift apart.',
+  '--mg-hero-copy-inline-end':
+    'Where the copy column ends on the inline axis. Both layers of the veil hold at full strength up to it and clear beyond it.',
   '--mg-hero-link-color':
     'Colour of links inside the hero text regions. It does not reach author-provided media HTML.',
 

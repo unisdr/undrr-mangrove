@@ -6,6 +6,52 @@
  * Full documentation:
  * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Hero/Hero.mdx
  */
+// The veil between the photograph and the copy, in two layers.
+
+// The lower layer is the brand tint that has always been here: the hero
+// colour, near-opaque at the copy's leading edge and fading to almost nothing
+// at the far side so the photograph can be seen.
+
+// The upper layer is the scrim, and it is the one that carries the contrast
+// guarantee. A hero composites a gradient over an editorial photograph the
+// component never sees, so no token pair describes what the copy is actually
+// read against, and the contrast register cannot hold this case -- see
+// `docs/COLOUR-CONTRAST-METHODOLOGY.md#the-hero-scrim`. The tint alone cannot
+// do the job: where the copy ends, the tint is at its middle opacity and still
+// lets about 18% of the photograph through, which over a bright sky took IRP's
+// body copy to 3.9:1 (unisdr/undrr-mangrove#1256). Nor can the tint be turned
+// up to fix it -- IRP's hero blue measures 4.71 against white at FULL opacity,
+// so the colour has no headroom left to spend. A neutral darkening layer over
+// the whole composite is the only thing that gives a floor independent of both
+// the photograph and the theme.
+
+// Both layers hold at full strength across the copy and then clear, so the
+// veil darkens the region that has to be read and leaves the photograph beyond
+// it alone. That is why the horizontal callers pass lengths derived from
+// --mg-hero-copy-inline-end rather than percentages: that property is the same
+// one the padding uses, so neither layer can drift away from the copy it is
+// protecting. The tint's middle stop used to be a flat 48%, which happens to
+// land near the copy's trailing edge at desktop-wide and nowhere near it
+// anywhere else -- at 910px the copy reached two thirds of the way across the
+// frame, into tint that had already fallen to about 0.56, and the scrim alone
+// could not make that up.
+@mixin mg-hero-veil($angle, $tint-middle, $hold, $clear) {
+  background:
+    linear-gradient(
+      $angle,
+      rgb(var(--mg-hero-scrim-color) / var(--mg-hero-scrim-opacity)) 0%,
+      rgb(var(--mg-hero-scrim-color) / var(--mg-hero-scrim-opacity)) #{$hold},
+      rgb(var(--mg-hero-scrim-color) / 0) #{$clear}
+    ),
+    linear-gradient(
+      $angle,
+      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-start)) 0%,
+      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-middle))
+        $tint-middle,
+      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-end)) 100%
+    );
+}
+
 // Hero
 // This is a test container we can use for now to ensure the hero "locks" to the grid
 // .test-container {
@@ -24,6 +70,16 @@
   --mg-hero-gradient-start: var(--mg-hero-gradient-start-opacity);
   --mg-hero-gradient-middle: var(--mg-hero-gradient-middle-opacity);
   --mg-hero-gradient-end: var(--mg-hero-gradient-end-opacity);
+  --mg-hero-scrim-color: var(--mg-color-neutral-900);
+
+  // Where the copy starts and ends along the inline axis. The padding reads
+  // the first, the scrim reads the second, so the darkened band and the text
+  // it protects are defined once and move together. A theme that widens
+  // --mg-hero-overlay-max-width widens the scrim with it, for free.
+  --mg-hero-copy-inline-start: var(--mg-spacing-100);
+  --mg-hero-copy-inline-end: calc(
+    var(--mg-hero-copy-inline-start) + var(--mg-hero-overlay-max-width)
+  );
 
   background-size: cover;
   background-position: center;
@@ -34,41 +90,56 @@
 
   // Logical, so the full-bleed escape out of the parent container mirrors in RTL.
   margin-inline-start: calc(50% - (50vw));
-  padding-inline-start: var(--mg-spacing-100);
+  padding-inline-start: var(--mg-hero-copy-inline-start);
   width: 100vw;
 
   &:not(.mg-hero--split)::before {
-    background: linear-gradient(
+    @include mg-hero-veil(
       90deg,
-      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-start)) 0%,
-      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-middle)) 48%,
-      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-end)) 100%
+      var(--mg-hero-copy-inline-end),
+      var(--mg-hero-copy-inline-end),
+      calc(var(--mg-hero-copy-inline-end) + var(--mg-hero-scrim-fade))
     );
+
     content: "";
     inset: 0;
     pointer-events: none;
     position: absolute;
 
+    // Below tablet the veil runs bottom-to-top and the copy fills the frame
+    // rather than occupying a band of it, so the scrim is held flat across the
+    // whole height: there is nowhere here it could clear without clearing over
+    // copy. That is NOT enough to bring the vertical case to AA on its own --
+    // the tint is down to its end opacity at the top of the frame while the
+    // label is still there, and no scrim this light rescues a bright sky from
+    // that. See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-hero-scrim for what
+    // remains open and why it is a design decision rather than a tuning one.
     @media (max-width: $mg-breakpoint-tablet) {
-      background: linear-gradient(
-        0deg,
-        rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-start)) 0%,
-        rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-middle)) 68%,
-        rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-end)) 100%
-      );
+      @include mg-hero-veil(0deg, 68%, 100%, 100%);
     }
   }
 
   @media (min-width: $mg-breakpoint-tablet) {
     aspect-ratio: 16 / 4; // we use 16:4, which is closer to the real crop ratio
-    padding-inline-start: calc(
-      50vw - calc($mg-breakpoint-desktop / 2)
+
+    // Interpolated, not read as a Sass variable: a custom property's value is
+    // an unevaluated token stream, so `$mg-breakpoint-desktop` would reach the
+    // browser as literal text and take the whole declaration down with it.
+
+    // Floored at zero. Between the tablet and desktop breakpoints this
+    // expression is negative; padding clamps a negative value to zero on its
+    // own, but the scrim reads the same property as a gradient stop, where a
+    // negative start would pull the protected band back off the copy.
+    --mg-hero-copy-inline-start: max(
+      0px,
+      calc(50vw - calc(#{$mg-breakpoint-desktop} / 2))
     ); // to keep the overlay fixed
   }
 
   @media (min-width: $mg-breakpoint-desktop-wide) {
-    padding-inline-start: calc(
-      50vw - calc($mg-breakpoint-desktop-wide / 2)
+    --mg-hero-copy-inline-start: max(
+      0px,
+      calc(50vw - calc(#{$mg-breakpoint-desktop-wide} / 2))
     ); // to keep the overlay fixed
   }
 
@@ -83,10 +154,15 @@
     aspect-ratio: unset;
     min-height: clamp(mg-rem(496), 62vw, mg-rem(688));
 
+    // Immersive widens the copy column, so it moves the shared property
+    // rather than the overlay's own max-width: the scrim reads the same one
+    // and has to widen with it.
+    --mg-hero-overlay-max-width: #{mg-rem(768)};
+
     .mg-hero__overlay {
       align-items: end;
       margin: 0;
-      max-width: mg-rem(768);
+      max-width: var(--mg-hero-overlay-max-width);
       padding: clamp(mg-rem(32), 6vw, mg-rem(80));
     }
 
@@ -309,22 +385,19 @@ $variant-colour-props: (
 // RTL tweaks (background layout only).
 // The full-bleed escape and the overlay inset use logical properties on
 // `.mg-hero`, so they already mirror; only the gradient direction needs flipping.
+// Only the angle changes: a gradient's stops are measured from its own start,
+// so the same copy-derived length lands on the copy once the axis is flipped.
 [dir="rtl"] .mg-hero:not(.mg-hero--split) {
   &::before {
-    background: linear-gradient(
+    @include mg-hero-veil(
       270deg,
-      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-start)) 0%,
-      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-middle)) 48%,
-      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-end)) 100%
+      var(--mg-hero-copy-inline-end),
+      var(--mg-hero-copy-inline-end),
+      calc(var(--mg-hero-copy-inline-end) + var(--mg-hero-scrim-fade))
     );
 
     @media (max-width: $mg-breakpoint-tablet) {
-      background: linear-gradient(
-        0deg,
-        rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-start)) 0%,
-        rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-middle)) 68%,
-        rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-end)) 100%
-      );
+      @include mg-hero-veil(0deg, 68%, 100%, 100%);
     }
   }
 }

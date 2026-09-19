@@ -562,6 +562,22 @@ hero-gradient:
   middle-opacity: { $value: '0.82' }
   end-opacity: { $value: '0.08' }
 
+# The scrim that sits over the brand tint where the hero's copy is, so body
+# text clears SC 1.4.3 against a photograph the component never sees. The
+# tint alone cannot carry that: at its own middle opacity it still lets
+# ~18% of the photo through, and a bright sky behind the copy takes IRP's
+# hero blue from its 4.71 flat-fill figure down to 3.9. Raising the tint
+# does not rescue it either -- 4.71 is what IRP measures at FULL opacity, so
+# there is no headroom in the colour to spend. Only a neutral darkening
+# layer over the whole composite gives a floor that holds for any photo.
+# See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-hero-scrim.
+hero-scrim:
+  $type: number
+  opacity: { $value: '0.16' }
+  # How far past the copy's trailing edge the scrim takes to clear, so the
+  # photograph is never cut by a visible edge.
+  fade: { $type: dimension, $value: 160, $format: rem }
+
 # Named stacking contexts. One token per UI concept; a component's own
 # sub-layers use `$token - 1` / `$token + 1` arithmetic in its Sass rather
 # than a token each. Kept here rather than in Sass so a brand can repoint a
