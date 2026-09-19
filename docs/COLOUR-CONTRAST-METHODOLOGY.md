@@ -120,6 +120,55 @@ The result, for body copy over a bright sky (unisdr/undrr-mangrove#1256):
 | DELTA | 6.32 | 7.82 |
 | MCR2030 | 8.87 | 10.35 |
 
+**Read the "before" column as a property of that photograph, not of those
+themes.** One image is not a test set, and a fixed-opacity veil fails on the
+image, not on the brand. Re-measured against a synthetic near-white background
+(`248 249 250` — a high-key sky, a sand or snow scene, a white studio wall), the
+worst line box behind body copy before the scrim was IRP 2.51, PreventionWeb
+2.91, UNDRR 3.34, MCR2030 4.06, DELTA 4.33: **all five themes fail**, IRP merely
+fails first and on ordinary photographs. The "four themes that already passed"
+is true of the photograph that was sampled and of nothing else, and anyone
+scoping a future fix to IRP on the strength of that row will be scoping it
+wrong.
+
+The point of the scrim is that the "after" column is not photograph-dependent in
+the same way. At the copy's trailing edge the tint is at exactly its middle
+opacity and the scrim at exactly 0.16 whatever the viewport, so the floor can be
+solved rather than sampled: over a **pure white** background the worst
+attainable ratio is IRP 4.71, PreventionWeb 5.82, UNDRR and DELTA 6.96,
+MCR2030 9.05. That is the guarantee — no photograph can do worse.
+
+It also sets the scrim's value. Solving the same equation the other way, the
+minimum scrim that holds 4.5:1 over pure white is **0.137 for IRP**, 0.015 for
+PreventionWeb and 0 for the other three. `0.16` is that floor plus 0.023 of
+headroom; it is the lightest scrim that works, not a round number, and there is
+no room to reduce it for the photograph's sake without giving up the guarantee
+on IRP.
+
+### What the band depends on
+
+The band holds at full strength from the veil's leading edge to
+`--mg-hero-copy-inline-end` and clears beyond it. Two things have to stay true
+for that to keep meaning "across the copy", and both are now enforced rather
+than assumed:
+
+- **The copy must stay inside the copy column.** `.mg-hero__title` and
+  `.mg-hero__label` are `display: inline-block`, and `overflow-wrap: break-word`
+  does not reduce a box's min-content size — so a single unbreakable word sized
+  the title past the overlay. A 48-character German compound put 259px of glyphs
+  outside the band at both 1440px and 1920px, 99px of it past the scrim's fade
+  and over the bare photograph. `max-width: 100%` plus `min-width: 0` on the
+  grid chain cap the box so the inherited `break-word` applies.
+- **The band must not be wider than the element.**
+  `--mg-hero-copy-inline-start` is viewport-derived (`50vw - container/2`), which
+  is only the same thing as an element offset in the full-bleed case.
+  `--mg-hero--contained` sets `padding-inline: 0` and takes its parent's width,
+  so it zeroes the property too, and `--mg-hero-copy-inline-end` is wrapped in
+  `min(100%, …)`. Without both, a contained hero at a wide viewport kept a
+  240px offset the copy no longer had, and any contained hero narrower than the
+  band lost its photograph entirely — the tint's middle stop sat past 100%, so
+  the tint never reached `--mg-hero-gradient-end`.
+
 ### Why the tint could not fix it
 
 The obvious repair is to turn the brand tint up until the photograph stops
@@ -172,6 +221,14 @@ frame, so the label sits at the top where the tint is down to its end opacity of
 and they failed before this work too (1.7 to 2.8). The scrim improves every
 theme but does not rescue any of them: no scrim light enough to leave the
 photograph visible can make up a tint that has effectively cleared.
+
+Note what that costs. Below 900px the scrim is held flat across the whole
+height — there is nowhere it could clear without clearing over copy — so on
+mobile the photograph *is* 16% deeper everywhere, and it buys an improvement
+that still does not reach AA. That is a deliberate trade and not a free one:
+keep it because a 1.7:1 failure moved to 2.4:1 is worth something to a real
+reader, but do not read "the photograph beyond the copy is untouched" as
+applying below the tablet breakpoint. It does not.
 
 This is not a tuning problem. The layout puts copy over the whole frame, so
 either the photograph is veiled across the whole frame or some of the copy is

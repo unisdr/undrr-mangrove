@@ -77,8 +77,18 @@
   // it protects are defined once and move together. A theme that widens
   // --mg-hero-overlay-max-width widens the scrim with it, for free.
   --mg-hero-copy-inline-start: var(--mg-spacing-100);
-  --mg-hero-copy-inline-end: calc(
-    var(--mg-hero-copy-inline-start) + var(--mg-hero-overlay-max-width)
+
+  // Clamped to the element, not just derived from it. Below --mg-hero-copy-
+  // inline-start is a VIEWPORT-derived length (50vw - container/2) while the
+  // element is only viewport-wide in the full-bleed case; --contained makes it
+  // its parent's width instead. Without the clamp a band wider than the
+  // element leaves the tint's middle stop past 100%, so the tint never
+  // finishes its ramp to --mg-hero-gradient-end and the photograph is covered
+  // edge to edge. The clamp cannot cost contrast: it only ever pulls the band
+  // in to where the element ends, and the copy cannot be painted past that.
+  --mg-hero-copy-inline-end: min(
+    100%,
+    calc(var(--mg-hero-copy-inline-start) + var(--mg-hero-overlay-max-width))
   );
 
   background-size: cover;
@@ -144,6 +154,18 @@
   }
 
   &--contained {
+    // The copy no longer pays the full-bleed padding, so the property that
+    // padding reads has to be zeroed with it. Leaving it at its viewport-
+    // derived value pushed the protected band a whole 50vw - container/2
+    // beyond where the copy actually ends -- 240px at 1920 -- which is the
+    // one direction the "defined once, they move together" invariant can be
+    // broken, because --contained is the only modifier that changes the
+    // padding without going through this property.
+
+    // Must stay AFTER the min-width media queries above: a class selector and
+    // a media query carry the same specificity, so source order decides.
+    --mg-hero-copy-inline-start: 0px;
+
     margin-inline: 0;
     padding-inline: 0;
     width: 100%;
@@ -231,6 +253,7 @@
 
   &__content {
     display: grid;
+    min-width: 0;
     margin-top: var(--mg-spacing-25);
     row-gap: mg-rem(10);
   }
@@ -252,9 +275,13 @@
 
   &__label {
     display: inline-block;
+    min-width: 0;
     font-family: var(--mg-font-family-ui);
     font-size: var(--mg-font-size-250);
     font-weight: bold;
+
+    // Same shrink-to-fit escape as the title -- see the note there.
+    max-width: 100%;
     margin-inline-end: var(--mg-spacing-25);
     padding: var(--mg-spacing-25) 0;
 
@@ -279,6 +306,7 @@
   // Hero title typography.
   &__title {
     color: rgb(var(--mg-color-hero-title));
+    min-width: 0;
     margin-bottom: var(--mg-spacing-25);
     display: inline-block;
     font-family: var(--mg-font-family-display);
@@ -286,6 +314,16 @@
     font-size: var(--mg-font-size-800);
     line-height: 1.2;
     text-wrap: balance;
+
+    // The veil protects a band the width of the copy column, so no glyph may
+    // leave that column. `display: inline-block` shrink-to-fits, and
+    // `overflow-wrap: break-word` (inherited from the foundational layer)
+    // does NOT reduce a box's min-content size -- so a single long word sized
+    // the title box past the overlay and painted over the bare photograph. A
+    // 48-character German compound escaped the band by 259px at both 1440 and
+    // 1920, 99px of it beyond the scrim's fade. Capping the box makes the
+    // inherited break-word actually apply.
+    max-width: 100%;
 
     @media (max-width: $mg-breakpoint-mobile) {
       font-size: var(--mg-font-size-600);
