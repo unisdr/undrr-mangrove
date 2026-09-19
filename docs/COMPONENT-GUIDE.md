@@ -14,13 +14,18 @@ Does the component need React?
 │
 └─ Yes
     │
-    ├─ npm only (consumed via `import { X } from '@undrr/undrr-mangrove'`)
-    │   → All of the above + add export to src/index.js
+    ├─ npm only (consumed via
+    │   `import { X } from '@undrr/undrr-mangrove/components/X.js'`)
+    │   → All of the above + a webpack entry + add export to src/index.js
     │
     └─ Drupal integration (rendered into server HTML via data attributes)
         → All of the above + fromElement.js + hydrate.js + webpack entry
           + fromElement tests + AI manifest SAMPLE_PROPS (optional)
 ```
+
+A webpack entry is what publishes a component. The npm tarball ships
+`dist/components/`, not `src/`, so an export added to `src/index.js` alone
+reaches no consumer — see unisdr/undrr-mangrove#1252.
 
 ## Reference component: Pager
 
@@ -187,9 +192,9 @@ If the component will render into server-generated HTML containers, create `from
 
 ## Step 7: Register for build
 
-### webpack entry (Drupal-integrated components)
+### webpack entry (every published component)
 
-In `webpack.config.js`, add to the second config block's `entry` object:
+This is the step that puts a component in the npm package and on the CDN, whether or not it is hydrated into Drupal. In `webpack.config.js`, add to the second config block's `entry` object:
 
 ```js
 entry: {
@@ -200,13 +205,15 @@ entry: {
 
 Point to `.hydrate.js` if the component has hydration files, otherwise `.jsx`.
 
-### npm export
+### Repository entry point
 
 In `src/index.js`, add the export:
 
 ```js
 export { default as MyComponent } from '../stories/Components/{Category}/MyComponent/MyComponent';
 ```
+
+This keeps the repository's own entry point complete — it is what `main` and `exports` in the root `package.json` resolve to, for a workspace or a repository-URL install. It does not publish anything on its own: the tarball ships no `src/`, so an npm consumer reaches the component through the webpack entry above, at `@undrr/undrr-mangrove/components/MyComponent.js`. See unisdr/undrr-mangrove#1252.
 
 See the [distribution channels table](ARCHITECTURE.md#component-distribution-channels) for how registration affects where a component is available.
 

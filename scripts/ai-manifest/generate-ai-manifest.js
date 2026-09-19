@@ -718,56 +718,75 @@ function normalizeDocsBase(url) {
 }
 
 // ---------------------------------------------------------------------------
-// Parse actual npm exports from src/index.js
+// Parse the importable surface from the built component bundles
 // ---------------------------------------------------------------------------
 
 /**
- * Reads src/index.js and returns a Set of export names that consumers can
- * actually import from the npm package. This prevents the manifest from
- * advertising imports that don't exist.
+ * Reads dist/components/*.js and returns, per bundle, the export names it
+ * provides. These bundles are what the npm package publishes under
+ * `components/`, so this is the surface a consumer can actually import.
+ *
+ * This used to read src/index.js instead and advertise
+ * `import { X } from "@undrr/undrr-mangrove"`. That import resolves for
+ * nothing: the published tarball ships neither `src/` nor `dist/`, and its
+ * `main` names a file it does not contain, so every agent that followed the
+ * manifest wrote an import that throws ERR_MODULE_NOT_FOUND. See
+ * unisdr/undrr-mangrove#1252.
  */
-function parseNpmExports() {
-  const indexPath = path.resolve(process.cwd(), 'src/index.js');
-  if (!fs.existsSync(indexPath)) {
-    console.warn('src/index.js not found — cannot validate npm exports');
-    return new Set();
+function parseBundleExports() {
+  const byBundle = new Map();
+  if (!fs.existsSync(distDir)) {
+    console.warn(
+      'dist/components/ not found — no import statements will be published'
+    );
+    return byBundle;
   }
-  const source = fs.readFileSync(indexPath, 'utf8');
-  const names = new Set();
-
-  // Match: export { default as Foo } and export { Foo }
-  const re = /export\s*\{[^}]*?\bas\s+(\w+)|export\s*\{\s*(\w+)\s*\}/g;
-  let match;
-  while ((match = re.exec(source)) !== null) {
-    names.add(match[1] || match[2]);
+  for (const file of fs.readdirSync(distDir)) {
+    if (!file.endsWith('.js')) continue;
+    const source = fs.readFileSync(path.join(distDir, file), 'utf8');
+    const names = new Set();
+    // Webpack's ESM output ends with one `export { a as Name, b as default };`
+    // per entry. Take the exported name, which is what follows `as`, or the
+    // whole specifier when the binding is exported under its own name.
+    for (const match of source.matchAll(/export\s*\{([^}]*)\}/g)) {
+      for (const specifier of match[1].split(',')) {
+        const name = specifier
+          .trim()
+          .split(/\s+as\s+/)
+          .pop();
+        if (/^[A-Za-z_$][\w$]*$/.test(name)) names.add(name);
+      }
+    }
+    byBundle.set(file.replace(/\.js$/, ''), names);
   }
-  return names;
+  return byBundle;
 }
 
-const npmExports = parseNpmExports();
+const bundleExports = parseBundleExports();
 
-// Reverse lookup: Storybook ID → webpack entry name (which matches the npm
-// export name). Derived from COMPONENT_IDS so it self-heals when new
-// components are added. Used as a fallback when Storybook's internal function
-// name differs from the npm export name.
+// Reverse lookup: Storybook ID → webpack entry name (which is the published
+// file name under components/). Derived from COMPONENT_IDS so it self-heals
+// when new components are added. Used as a fallback when Storybook's internal
+// function name differs from the entry name.
 const storybookIdToWebpackName = Object.fromEntries(
   Object.entries(COMPONENT_IDS).map(([name, id]) => [id, name])
 );
 
-// Manual overrides for npm-only components (no webpack entry in COMPONENT_IDS)
-// whose Storybook function name differs from the npm export name.
+// Manual overrides for components whose Storybook function name differs from
+// the name of the bundle they ship in.
 const NPM_NAME_OVERRIDES = {
-  ShowOffSnackbar: 'Snackbar', // Storybook demo wrapper name vs npm export
+  ShowOffSnackbar: 'Snackbar', // Storybook demo wrapper name vs component name
 };
 
 /**
- * Build a valid import statement for a component, or return empty string if
- * the component is not exported from the npm package. Tries the Storybook
+ * Build an import statement that resolves from the published package, or an
+ * empty string when the component ships in no bundle. Tries the Storybook
  * name first, then the COMPONENT_IDS reverse lookup, then NPM_NAME_OVERRIDES.
  *
- * Supported src/index.js export shapes:
- *   export { default as Foo } from '...';
- *   export { Foo } from '...';
+ * The specifier is the subpath, `@undrr/undrr-mangrove/components/Name.js`,
+ * because the package root does not resolve (unisdr/undrr-mangrove#1252). The
+ * binding is whatever the bundle exports: named where there is a matching
+ * named export, default where there is only a default.
  */
 function buildImportStatement(componentName, componentId) {
   const candidates = [
@@ -775,9 +794,15 @@ function buildImportStatement(componentName, componentId) {
     storybookIdToWebpackName[componentId],
     NPM_NAME_OVERRIDES[componentName],
   ].filter(Boolean);
-  const exportName = candidates.find(n => npmExports.has(n));
-  if (exportName) {
-    return `import { ${exportName} } from "${pkg.name}";`;
+  const bundle = candidates.find(n => bundleExports.has(n));
+  if (!bundle) return '';
+
+  const exportNames = bundleExports.get(bundle);
+  const specifier = `${pkg.name}/components/${bundle}.js`;
+  const named = candidates.find(n => exportNames.has(n));
+  if (named) return `import { ${named} } from "${specifier}";`;
+  if (exportNames.has('default')) {
+    return `import ${bundle} from "${specifier}";`;
   }
   return '';
 }
@@ -2302,7 +2327,7 @@ ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with
 
 ### React quick start
 
-${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import via npm: import { ComponentName } from "@undrr/undrr-mangrove".
+${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import them from the package subpath, which is what the tarball ships: import { ComponentName } from "@undrr/undrr-mangrove/components/ComponentName.js". The package root is not an entry point — "@undrr/undrr-mangrove" on its own does not resolve on any published version. Each component's index and detail entry carries the exact \`import\` line to use; where one is absent, the component ships in no bundle and there is nothing to import.
 
 Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's \`hydration\` field (or \`reactNote\`) for details; components with a \`hydration\` field are flagged \`hydration: true\` in the index. A \`vanillaModule\` field (flagged \`vanillaModule: true\`) has the same shape but describes a plain ES module from \`/js/\`: it needs neither React nor \`hydrate.js\`.
 
@@ -2574,7 +2599,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   );
   if (droppedImportCount > 0) {
     console.log(
-      `  ${droppedImportCount} Storybook-generated import(s) removed (not exported from src/index.js)`
+      `  ${droppedImportCount} Storybook-generated import(s) removed (no published bundle exports them)`
     );
   }
 }

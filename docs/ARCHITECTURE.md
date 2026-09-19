@@ -95,16 +95,13 @@ See [`stories/assets/js/README.md`](../stories/assets/js/README.md) for the full
 | Gallery | `.hydrate.js` | Yes | webpack + npm |
 | StatsCard | `.hydrate.js` | Yes | webpack + npm |
 | Pager | `.hydrate.js` | Yes | webpack + npm |
-| BarChart | `.jsx` | Yes | webpack + npm (no hydration) |
-| MapComponent | `.jsx` | Yes | webpack + npm (no hydration) |
-| Fetcher | `.jsx` | Yes | webpack + npm (no hydration) |
-| CookieConsentBanner | — | Yes | npm only |
-| Snackbar | — | Yes | npm only |
+| CookieConsentBanner | — | Yes | repository only |
+| Snackbar | — | Yes | repository only |
 
-- **webpack + npm**: Produces a standalone `dist/components/ComponentName.js` bundle for Drupal/CDN, and is also importable from the npm package
-- **npm only**: Importable via `import { X } from '@undrr/undrr-mangrove'` but has no `dist/components/` bundle for Drupal
+- **webpack + npm**: produces a standalone `dist/components/ComponentName.js` bundle. It is what Drupal and the CDN load, and it is what the npm package publishes as `components/ComponentName.js`, imported as `import { X } from '@undrr/undrr-mangrove/components/ComponentName.js'`.
+- **repository only**: exported from `src/index.js`, which is this repository's own entry point (`main` and `exports` in the root `package.json`), so it resolves for a workspace or a repository-URL install. It reaches no npm consumer: the published tarball ships neither `src/` nor `dist/`, and its `package.json` has no `exports` map and a `main` naming a file it does not contain, so `import { X } from '@undrr/undrr-mangrove'` does not resolve on any published version. See unisdr/undrr-mangrove#1252.
 
-To add a Drupal-integrated component: add its entry to both `webpack.config.js` (second config block) and `src/index.js`. For npm-only: add to `src/index.js` only. See [COMPONENT-GUIDE.md](COMPONENT-GUIDE.md) for the full walkthrough.
+To add a component consumers can use, give it an entry in `webpack.config.js` (second config block); that bundle is the published one. Adding an export to `src/index.js` keeps the repository entry point complete and is worth doing alongside, but on its own it publishes nothing. See [COMPONENT-GUIDE.md](COMPONENT-GUIDE.md) for the full walkthrough.
 
 ## Drupal integration flow
 

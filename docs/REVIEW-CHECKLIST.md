@@ -88,8 +88,8 @@ See the RTL support section in [Component standards](https://mangrove.undrr.org/
 - [ ] `ComponentName.fromElement.js` exports a function that extracts props from `data-mg-*` attributes
 - [ ] `ComponentName.hydrate.js` barrel file uses `createHydrator`
 - [ ] `ComponentName.fromElement.test.js` verifies prop extraction
-- [ ] Webpack entry added in `webpack.config.js`
-- [ ] Export added in `src/index.js`
+- [ ] Webpack entry added in `webpack.config.js` — this is what publishes the component to npm and the CDN
+- [ ] Export added in `src/index.js` (the repository entry point; it publishes nothing on its own, see unisdr/undrr-mangrove#1252)
 
 See [Adding hydration support](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-hydration--docs) for the full pattern.
   - Source: [`HYDRATION-AUTHORING.md`](HYDRATION-AUTHORING.md)
