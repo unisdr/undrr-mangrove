@@ -4,7 +4,6 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import webpack from 'webpack';
-import webpackEntry from './webpack.entries.js';
 import { DEV_ONLY_GLOBS } from './scripts/assemble-npm-package.mjs';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
@@ -19,7 +18,17 @@ export default [
   {
     mode: packMode,
     cache: { type: 'filesystem', name: `assets-${packMode}` },
-    entry: webpackEntry('js'),
+    // The asset pass: it compiles nothing and exists for the CopyPlugin
+    // patterns below, which are what put the vanilla modules, the compiled
+    // CSS, the fonts and the error pages into dist/assets/.
+    //
+    // It used to take glob-discovered entries from webpack.entries.js and
+    // was documented as emitting dist/js/*.min.js, but the glob doubled a
+    // path segment and matched nothing, so no such bundle was ever emitted
+    // and nothing consumes one: the npm `js/` directory and the CDN both
+    // serve the unminified copies CopyPlugin makes. See
+    // unisdr/undrr-mangrove#1253.
+    entry: {},
     output: {
       path: path.resolve(currentDirPath, 'dist'),
       filename: '[name].min.js',
@@ -47,6 +56,11 @@ export default [
     },
     optimization: {
       minimize: packMode === 'production', // Minimize only in production mode
+      // Load-bearing even with no entry: the minimizers run over the assets
+      // CopyPlugin emits. Replacing the list is what minifies the copied CSS,
+      // and leaving Terser out of it is what keeps dist/assets/js/*.js byte
+      // for byte what a contributor wrote, which is what the CDN and the npm
+      // `js/` directory serve.
       minimizer: [
         new CssMinimizerPlugin({
           minimizerOptions: {

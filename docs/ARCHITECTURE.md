@@ -8,18 +8,18 @@ This document explains the build system, distribution channels, and integration 
 
 The webpack config (`webpack.config.js`) exports an array of two configs that produce different outputs:
 
-### Config 1: Vanilla JS/CSS assets
+### Config 1: Vanilla JS and CSS assets
 
 ```
-stories/assets/js/ + stories/assets/scss/
-  → webpack (glob entries via webpack.entries.js)
-  → dist/js/*.min.js  +  dist/css/
+stories/assets/  (js/, css/ compiled from scss/, fonts/, images/)
+  → webpack CopyPlugin
+  → dist/assets/
 ```
 
-- Entry points discovered dynamically via `webpack.entries.js`
-- Output: UMD bundles with no React dependency
-- Used for: standalone scripts (tabs, accordion, show-more, etc.) that work without React
-- Also copies static assets (fonts, images, error pages) to `dist/assets/`
+- No entry points: this config compiles nothing. It exists for its CopyPlugin patterns.
+- The vanilla JS modules are copied verbatim and ship as ES module source, not as bundles. Nothing is emitted under `dist/js/`; the config was documented as emitting `dist/js/*.min.js`, but its glob matched nothing and never had (unisdr/undrr-mangrove#1253).
+- The CSS reaching `dist/assets/css/` is compiled by the `sass` CLI (`yarn scss`) before webpack runs, and minified in passing by this config's `CssMinimizerPlugin`.
+- Also copies the fonts, images and error pages.
 
 ### Config 2: React component ES modules
 
@@ -34,11 +34,11 @@ stories/Components/*/ComponentName.hydrate.js  (or .jsx)
 - Babel config: `configFile: false, babelrc: false` — ignores project `.babelrc.json` to avoid polyfill `require()` calls in ES module output
 - Used for: React components consumed by Drupal (via import maps) or CDN
 
-**Why two configs?** The vanilla JS needs UMD format with polyfills for older browser support. The React components need ES module format with React externalized so the host page provides a single shared React instance via import map.
+**Why two configs?** They have different jobs and different outputs: one copies static assets into `dist/assets/`, the other bundles React components as ES modules with React externalized, so the host page provides a single shared React instance via import map.
 
 ### Adding a new entry
 
-- **Vanilla JS**: Add the source file to `stories/assets/js/` — `webpack.entries.js` auto-discovers it
+- **Vanilla JS**: Add the source file to `stories/assets/js/` — the whole directory is copied, so being there is enough
 - **React component**: Add an explicit entry in the second config block of `webpack.config.js`
 
 ## CSS compilation pipeline
@@ -70,7 +70,7 @@ Components reach consumers through different channels depending on their type an
 
 ### Vanilla JS scripts
 
-Scripts in `stories/assets/js/` are auto-discovered by webpack and published to npm at `@undrr/undrr-mangrove/js/`. No manual registration is needed. The CI workflow (`npm-publish.yml`) copies `dist/assets/js/*` into the npm package's `js/` directory.
+Scripts in `stories/assets/js/` are copied by webpack and published to npm at `@undrr/undrr-mangrove/js/`. No manual registration is needed: `scripts/assemble-npm-package.mjs`, which the CI workflow (`npm-publish.yml`) runs, copies `dist/assets/js/*` into the npm package's `js/` directory.
 
 | Script | npm path | Purpose |
 |--------|----------|---------|

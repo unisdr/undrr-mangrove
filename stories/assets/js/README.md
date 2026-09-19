@@ -1,20 +1,20 @@
 # Vanilla JS scripts
 
-Standalone JavaScript modules that work without React. Each file in this directory is auto-discovered by `webpack.entries.js` and produces a UMD bundle at `dist/js/{name}.min.js`.
+Standalone JavaScript modules that work without React. Each file in this directory ships as source: the build copies it, it is not bundled or minified.
 
 ## How they ship
 
 ```
 stories/assets/js/my-script.js          ← source (this directory)
-  ↓ webpack build (Config 1, UMD)
-dist/js/my-script.min.js                ← minified bundle (Drupal/CDN)
-  ↓ CopyPlugin
-dist/assets/js/my-script.js             ← unminified copy
-  ↓ npm-publish.yml (CI)
+  ↓ CopyPlugin (webpack Config 1)
+dist/assets/js/my-script.js             ← verbatim copy (CDN)
+  ↓ assemble-npm-package.mjs (CI)
 @undrr/undrr-mangrove/js/my-script.js   ← npm package
 ```
 
-The GitHub Actions publish workflow (`npm-publish.yml`) copies `dist/assets/js/*` into the npm package at the top-level `js/` directory. This happens automatically — the build needs no manual registration. The AI manifest does: see step 6 below.
+They are ES modules, so a page loads one with `<script type="module">`. There is no minified or UMD variant and nothing is emitted under `dist/js/`.
+
+The publish workflow (`npm-publish.yml`) runs `scripts/assemble-npm-package.mjs`, which copies `dist/assets/js/*` into the npm package at the top-level `js/` directory. This happens automatically — the build needs no manual registration. The AI manifest does: see step 6 below.
 
 ## Current scripts
 
@@ -47,18 +47,18 @@ The GitHub Actions publish workflow (`npm-publish.yml`) copies `dist/assets/js/*
    This is required, not optional — see [HYDRATION-AUTHORING.md](../../../docs/HYDRATION-AUTHORING.md) for why a per-element flag and not a module-scope `WeakMap`.
 6. Register the module in `VANILLA_SCRIPTS` in `scripts/ai-manifest/generate-ai-manifest.js`, and add a `vanillaModule` contract to its component in `scripts/ai-manifest/component-data.js` if it drives one. `yarn validate-manifest` fails on a module that ships undocumented, and on a contract that names a file which does not exist.
 7. Create a companion SCSS file in `stories/Components/YourComponent/` and import it in `_components.scss`
-8. Run `yarn build` — the script appears at `dist/js/my-feature.min.js`
+8. Run `yarn build` — the script appears at `dist/assets/js/my-feature.js`
 
-No webpack config or `src/index.js` changes are needed. The file is picked up automatically by the glob pattern in `webpack.entries.js`.
+No webpack config or `src/index.js` changes are needed. CopyPlugin copies this whole directory, so a new file is picked up by being here.
 
 ## Differences from React components
 
-|                    | Vanilla JS (this directory)       | React components                         |
-| ------------------ | --------------------------------- | ---------------------------------------- |
-| Entry discovery    | Auto (glob)                       | Manual (webpack.config.js)               |
-| Output             | `dist/js/*.min.js` (UMD)          | `dist/components/*.js` (ESM)             |
-| npm location       | `@undrr/undrr-mangrove/js/`       | `@undrr/undrr-mangrove/components/`      |
-| React dependency   | None                              | Externalized (provided by import map)    |
-| Drupal integration | Load script directly as a library | Wrapper + hydration via `createHydrator` |
+|                    | Vanilla JS (this directory)        | React components                         |
+| ------------------ | ---------------------------------- | ---------------------------------------- |
+| Entry discovery    | Auto (whole directory is copied)   | Manual (webpack.config.js)               |
+| Output             | `dist/assets/js/*.js` (ESM source) | `dist/components/*.js` (ESM bundle)      |
+| npm location       | `@undrr/undrr-mangrove/js/`        | `@undrr/undrr-mangrove/components/`      |
+| React dependency   | None                               | Externalized (provided by import map)    |
+| Drupal integration | Load script directly as a library  | Wrapper + hydration via `createHydrator` |
 
 See [ARCHITECTURE.md](../../../docs/ARCHITECTURE.md) for the full build system documentation.

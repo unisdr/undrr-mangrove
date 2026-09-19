@@ -14,7 +14,6 @@ on:
       - '.github/workflows/storybook.yml'
       - 'package.json'
       - 'webpack.config.js'
-      - 'webpack.entries.js'
       - 'babel.config.js'
       - '.babelrc*'
       # yarn.lock and tsconfig.json changes without package.json are rare enough to skip
