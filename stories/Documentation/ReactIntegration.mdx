@@ -117,8 +117,9 @@ If your build pipeline supports Sass, you can import the source SCSS files direc
 Every bundle the npm package publishes under `components/`, with the import
 line that resolves against it. Generated from the built bundles, so a component
 missing here ships in no bundle and cannot be imported from npm at all —
-`CookieConsentBanner` and `Snackbar` are the two in that position today; both
-are available in Storybook and in this repository, neither has a webpack entry.
+`CookieConsentBanner`, `Snackbar` and `CodeBlock` are the three in that position
+today. All three are available in Storybook and in this repository, and none has
+a webpack entry.
 
 | Component                 | Import                                                                                                   |
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |

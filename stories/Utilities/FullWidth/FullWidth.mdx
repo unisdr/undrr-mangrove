@@ -44,7 +44,13 @@ The class is the API. Apply it to whichever element carries the background.
 </div>
 ```
 
-This directory also holds a small `FullWidth` wrapper component that renders a `<section>` with the class applied. It is not exported from `@undrr/undrr-mangrove`, so it is only available inside this repository — use the class in consuming code.
+This directory also holds a small `FullWidth` wrapper component that renders a `<section>` with the class applied. It has its own webpack entry, so the npm package publishes it and a React consumer can import it:
+
+```jsx
+import { FullWidth } from '@undrr/undrr-mangrove/components/FullWidth.js';
+```
+
+There is no package root to import it from — every component is its own subpath (unisdr/undrr-mangrove#1252). In markup you are writing by hand, use the class directly; the component only saves you typing it.
 
 ## When the bleed does not appear
 
@@ -185,6 +191,7 @@ The alternative — moving the box with `margin-inline-start: calc(50% - 50vw)` 
 
 ## Changelog
 
+- **1.3.1** — 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): Corrected the note on the `FullWidth` wrapper component, which said it "is not exported from `@undrr/undrr-mangrove`, so it is only available inside this repository". It has had a webpack entry since [#847](https://github.com/unisdr/undrr-mangrove/pull/847), so the npm package has been publishing `components/FullWidth.js` all along and the page was telling React consumers a usable component did not exist. The note now gives the working import line. Documentation only; neither the component nor the CSS changed.
 - **1.3** — 2026-09-18 ([#1203](https://github.com/unisdr/undrr-mangrove/issues/1203)): Fixed the right-to-left bleed landing about 13px off centre inside a flex parent such as `mg-mega-topbar`, which left an unpainted strip at one edge and 13px of page scroll at 1280. The `[dir="rtl"]` rule now anchors the pseudo-element with `left: 50%` and `margin-left: -50vw` rather than relying on its static position. Left-to-right rendering is untouched — the rule is scoped to `[dir="rtl"]`. Added [page-level setup](#page-level-setup), which documents the half-scrollbar overhang every `100vw` escape leaves on a vertically scrolling page, the `overflow-x: clip` a consuming site adds to fix it, and what that clip costs. No CSS change for the overhang: the library does not ship the page-root rule.
 - **1.2** — 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Breaking — deleted the deprecated `FullWidth.scss` alias, which only forwarded to `full-width.scss` and emitted a deprecation `@warn`. The npm package no longer ships `scss/Utilities/FullWidth/FullWidth.scss`; import `scss/Utilities/FullWidth/full-width` instead. No CSS behaviour change.
 - **1.1** — 2026-09-10 ([#1118](https://github.com/unisdr/undrr-mangrove/issues/1118)): Documented the ancestor-background constraint, how to diagnose it, the three ways to work around it, and two symptoms that look like it but are not. No CSS behaviour change.
