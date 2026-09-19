@@ -1,21 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 // Default CDN URL for UNDRR Cookie Banner
 const DEFAULT_CDN_BASE = 'https://assets.undrr.org/cookie-banner/v1';
 
 /**
- * Generates a cache buster string in YYYYMMDDHHMM format
- * @returns {string} - Cache buster timestamp
+ * Reduces a resource URL to a de-duplication key: origin plus path, with the
+ * query string and fragment dropped.
+ *
+ * The CDN's `cookieconsent-undrr.js` declares `const currentScript` and
+ * `const configUrl` at classic-script top level, so loading it a second time
+ * throws a redeclaration error. The guard against that is the "already loaded"
+ * check in `loadScript`, and it used to compare full URLs — which a
+ * `?cacheBuster=YYYYMMDDHHMM` query string defeats the moment the clock rolls
+ * over to the next minute. Comparing paths means no query-string variant, ours
+ * or a caller's, can slip a second copy past the check. See #1246.
+ *
+ * @param {string} url - Absolute or relative resource URL
+ * @returns {string} - Key identifying the underlying resource
  */
-const generateCacheBuster = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hour = String(now.getHours()).padStart(2, '0');
-  const minute = String(now.getMinutes()).padStart(2, '0');
-  return `${year}${month}${day}${hour}${minute}`;
+const resourceKey = url => {
+  try {
+    const parsed = new URL(url, document.baseURI);
+    return `${parsed.origin}${parsed.pathname}`;
+  } catch {
+    // Unparseable URL: fall back to a textual strip of query and fragment.
+    return String(url).split('#')[0].split('?')[0];
+  }
 };
 
 /**
@@ -26,8 +37,11 @@ const generateCacheBuster = () => {
  */
 const loadCSS = (href, debugLog) => {
   return new Promise((resolve, reject) => {
-    // Check if CSS is already loaded
-    const existingLink = document.querySelector(`link[href="${href}"]`);
+    // Check if CSS is already loaded, ignoring query strings (see resourceKey)
+    const key = resourceKey(href);
+    const existingLink = Array.from(
+      document.querySelectorAll('link[rel="stylesheet"][href]')
+    ).find(link => resourceKey(link.href) === key);
     if (existingLink) {
       debugLog?.(`CSS already loaded: ${href}`);
       resolve();
@@ -58,8 +72,11 @@ const loadCSS = (href, debugLog) => {
  */
 const loadScript = (src, debugLog) => {
   return new Promise((resolve, reject) => {
-    // Check if script is already loaded
-    const existingScript = document.querySelector(`script[src="${src}"]`);
+    // Check if script is already loaded, ignoring query strings (see resourceKey)
+    const key = resourceKey(src);
+    const existingScript = Array.from(
+      document.querySelectorAll('script[src]')
+    ).find(script => resourceKey(script.src) === key);
     if (existingScript) {
       debugLog?.(`Script already loaded: ${src}`);
       resolve();
@@ -98,14 +115,39 @@ const CookieConsentBanner = ({
   forceFallback = false,
   cdnBaseUrl = DEFAULT_CDN_BASE,
 }) => {
+  // `config` is usually built inline in the caller's render, so a fresh object
+  // identity arrives on every render. Depending on that identity directly made
+  // every re-render tear the banner down and load it again. Compare by value
+  // instead, and read the live object through a ref so the effect does not need
+  // it as a dependency. `JSON.stringify` drops functions, so two configs that
+  // differ only in callback identity compare equal — which is the point, since
+  // inline callbacks are exactly the churn this removes. A config that cannot
+  // be serialised (a circular reference) falls back to identity comparison, the
+  // previous behaviour. See #1245.
+  const configRef = useRef(customConfig);
+  configRef.current = customConfig;
+
+  const configKey = useMemo(() => {
+    if (!customConfig) return '';
+    try {
+      return JSON.stringify(customConfig);
+    } catch {
+      return customConfig;
+    }
+  }, [customConfig]);
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Generate URLs with the provided or default CDN base URL
-    const CACHE_BUSTER = generateCacheBuster();
-    const COOKIECONSENT_CSS_URL = `${cdnBaseUrl}/cookieconsent.css?cacheBuster=${CACHE_BUSTER}`;
-    const COOKIECONSENT_JS_URL = `${cdnBaseUrl}/cookieconsent.umd.js?cacheBuster=${CACHE_BUSTER}`;
-    const COOKIECONSENT_CONFIG_URL = `${cdnBaseUrl}/cookieconsent-undrr.js?cacheBuster=${CACHE_BUSTER}`;
+    const activeConfig = configRef.current;
+
+    // Generate URLs with the provided or default CDN base URL.
+    // No cache buster: the CDN path is version-pinned (`/v1/`) and the CDN
+    // serves its own caching headers, so a per-minute query string bought
+    // nothing but a broken dedupe and a cold cache on every page load (#1246).
+    const COOKIECONSENT_CSS_URL = `${cdnBaseUrl}/cookieconsent.css`;
+    const COOKIECONSENT_JS_URL = `${cdnBaseUrl}/cookieconsent.umd.js`;
+    const COOKIECONSENT_CONFIG_URL = `${cdnBaseUrl}/cookieconsent-undrr.js`;
 
     // Local debug helpers gated by debug prop
     // eslint-disable-next-line no-console -- opt-in debug channel, silent unless the caller passes `debug`
@@ -162,8 +204,21 @@ const CookieConsentBanner = ({
             },
           },
         };
-        window.CookieConsent.run(minimalConfig);
-        log('Cookie Banner initialized with minimal fallback config');
+        // The path above guards `run` before calling it; this one used not to,
+        // so whenever the library itself had failed to load — the most likely
+        // reason for landing in this catch — the handler threw a TypeError out
+        // of an un-awaited promise instead of reporting anything.
+        if (
+          window.CookieConsent &&
+          typeof window.CookieConsent.run === 'function'
+        ) {
+          window.CookieConsent.run(minimalConfig);
+          log('Cookie Banner initialized with minimal fallback config');
+        } else {
+          console.error(
+            'CookieConsent library not available for minimal fallback config'
+          );
+        }
       }
     };
 
@@ -188,13 +243,13 @@ const CookieConsentBanner = ({
         ) {
           // Check if we should use custom config or let UNDRR script handle it
           if (
-            customConfig &&
-            typeof customConfig === 'object' &&
-            Object.keys(customConfig).length > 0
+            activeConfig &&
+            typeof activeConfig === 'object' &&
+            Object.keys(activeConfig).length > 0
           ) {
             log('Using custom configuration provided via props');
             try {
-              window.CookieConsent.run(customConfig);
+              window.CookieConsent.run(activeConfig);
               log('Cookie Banner initialized with custom config successfully');
             } catch (configError) {
               console.error(
@@ -245,24 +300,33 @@ const CookieConsentBanner = ({
     }
 
     return () => {
-      // Cleanup CookieConsent banner when component unmounts
-      if (window.CookieConsent) {
+      // Cleanup CookieConsent banner when component unmounts.
+      // vanilla-cookieconsent v3 has no `destroy()` — the export surface is
+      // acceptCategory, acceptService, acceptedCategory, acceptedService,
+      // eraseCookies, getConfig, getCookie, getUserPreferences, hide,
+      // hidePreferences, loadScript, reset, run, setCookieData, setLanguage,
+      // show, showPreferences, validConsent, validCookie. `reset(true)` is the
+      // teardown: it detaches the listeners it registered, erases the consent
+      // cookie and removes its own root node. See #1245.
+      if (
+        window.CookieConsent &&
+        typeof window.CookieConsent.reset === 'function'
+      ) {
         try {
-          if (typeof window.CookieConsent.destroy === 'function') {
-            window.CookieConsent.destroy();
-          } else if (typeof window.CookieConsent.reset === 'function') {
-            // Reset and hide modal
-            window.CookieConsent.reset(true);
-          }
+          window.CookieConsent.reset(true);
         } catch (cleanupError) {
           console.error('Error during CookieConsent cleanup:', cleanupError);
         }
       }
 
-      // Remove any banner elements left in DOM (id starts with cc-)
-      document.querySelectorAll('[id^="cc-"]').forEach(el => el.remove());
+      // Belt and braces for the case where the library never ran, or where
+      // reset() threw before removing it. `#cc-main` is the only element v3
+      // creates. This used to be a document-wide `[id^="cc-"]` sweep, which
+      // removed any consumer markup whose id happened to start with `cc-`.
+      const bannerRoot = document.getElementById('cc-main');
+      if (bannerRoot) bannerRoot.remove();
     };
-  }, [customConfig, debug, forceFallback, cdnBaseUrl]);
+  }, [configKey, debug, forceFallback, cdnBaseUrl]);
 
   // Returning an empty Fragment instead of `null` so the Storybook docgen pass
   // (which is configured to use `react-docgen`, see .storybook/main.js) can

@@ -190,7 +190,7 @@ const customConfig = {
 };
 ```
 
-> **Implementation note (for contributors):** Resources load in sequence: CSS first (prevents flashing), core library next, UNDRR configuration last. CDN requests include a cache buster (`?cacheBuster=YYYYMMDDHHMM`) to ensure fresh resources.
+> **Implementation note (for contributors):** Resources load in sequence: CSS first (prevents flashing), core library next, UNDRR configuration last. CDN requests carry no cache buster: the path is version-pinned (`/v1/`) and the CDN serves its own caching headers. Each resource is loaded at most once per page, and that check compares origin and path only — query strings and fragments are ignored, so no URL variant can slip a second copy of `cookieconsent-undrr.js` onto the page. It declares `const`s at classic-script top level and throws a redeclaration error if it runs twice.
 
 ## API Reference
 
@@ -273,6 +273,13 @@ Built with proper ARIA attributes, keyboard navigation, focus management, and sc
 - [vanilla-cookieconsent Documentation](https://github.com/orestbida/cookieconsent) - Underlying library reference
 
 ## Changelog
+
+- **1.4.0** — 2026-09-19 ([#1245](https://github.com/unisdr/undrr-mangrove/issues/1245), [#1246](https://github.com/unisdr/undrr-mangrove/issues/1246)): Unmount cleanup stops reaching outside the banner, and the load guard stops defeating itself.
+  - Unmount no longer sweeps `[id^="cc-"]` across the whole document. That selector removed **any** element on the page whose id begins with `cc-`, including consumer markup the component never created. It now removes `#cc-main`, the single element vanilla-cookieconsent v3 creates, and only as a fallback for the case where the library never ran.
+  - Removed the `destroy?.()` branch from cleanup. There is no `destroy` anywhere in the v3 bundle — the export surface is `acceptCategory, acceptService, acceptedCategory, acceptedService, eraseCookies, getConfig, getCookie, getUserPreferences, hide, hidePreferences, loadScript, reset, run, setCookieData, setLanguage, show, showPreferences, validConsent, validCookie` — so the branch never ran and `reset(true)` was always the real teardown. It is now the only path.
+  - CDN URLs no longer carry `?cacheBuster=YYYYMMDDHHMM`. The "already loaded" checks in `loadScript` and `loadCSS` compared full URLs, so the buster made every check miss across a minute boundary. `cookieconsent-undrr.js` declares `const currentScript` and `const configUrl` at classic-script top level and throws a redeclaration error when it runs twice, so a mount and a remount a minute apart broke the page. Both checks now compare origin and path only, which also closes the same hole for any caller-supplied query string.
+  - A re-render that passes an equal `config` object no longer tears the banner down and reloads it. The effect compared `config` by identity, and a config built inline in the caller's render is a new object every time. It is now compared by value, with identity comparison retained for configs that cannot be serialised.
+  - The last-resort fallback guards `CookieConsent.run` before calling it. It previously did not, so when the library had failed to load — the most likely way to reach that handler — it threw a `TypeError` out of an un-awaited promise instead of reporting anything.
 
 - **1.3.0** — 2026-09-18 ([#1242](https://github.com/unisdr/undrr-mangrove/pull/1242)): The stories can now tell a working bar from a broken one.
   - Added a "Rendering check" story whose `play` function asserts that the CDN library and configuration script ran, that the CDN stylesheet actually applied, that the library built its DOM rather than merely defining `window.CookieConsent`, and that the bar is present and visible in the document body where the library appends it. `#cc-main` lands on `document.body`, outside the story canvas, so the assertions start from `canvasElement.ownerDocument`. The story also reports the result in the canvas, so a failure is visible without opening a panel.
