@@ -213,37 +213,114 @@ brand's own `13 103 163`. The photograph beyond the copy is untouched, and in
 practice is slightly clearer than before because the fade now starts at the
 copy's edge rather than at a fixed 48%.
 
-### Still open: the vertical veil below 900px
+### Below 900px the copy came off the frame
 
-Below the tablet breakpoint the veil runs bottom-to-top and the copy fills the
-frame, so the label sits at the top where the tint is down to its end opacity of
-0.08. **All five themes fail there**, between 2.4 and 3.1 against a bright sky,
-and they failed before this work too (1.7 to 2.8). The scrim improves every
-theme but does not rescue any of them: no scrim light enough to leave the
-photograph visible can make up a tint that has effectively cleared.
+The vertical veil could not be made to work, and that is now settled rather
+than open. Below the tablet breakpoint the veil ran bottom-to-top while the
+copy filled the frame, so the label sat at the top where the tint was down to
+its end opacity of 0.08. Sampled with the method above against four bright
+images — a near-white wall, a high-key sky, a busy high-frequency pattern and
+a white-sky landscape — **the eyebrow label failed in all five themes at every
+width from 320px to the breakpoint**, and on the two narrowest phones IRP's
+title failed the 3:1 large-text bar too:
 
-Note what that costs. Below 900px the scrim is held flat across the whole
-height — there is nowhere it could clear without clearing over copy — so on
-mobile the photograph *is* 16% deeper everywhere, and it buys an improvement
-that still does not reach AA. That is a deliberate trade and not a free one:
-keep it because a 1.7:1 failure moved to 2.4:1 is worth something to a real
-reader, but do not read "the photograph beyond the copy is untouched" as
-applying below the tablet breakpoint. It does not.
+| Theme | label, 320px | label, 390px | label, 900px | title, 320px |
+|---|---|---|---|---|
+| IRP | 2.25 | 2.37 | 2.43 | 2.91 fail |
+| UNDRR | 2.21 | 2.34 | 2.40 | 3.23 |
+| PreventionWeb | 2.39 | 2.55 | 2.58 | 3.25 |
+| MCR2030 | 2.68 | 2.97 | 3.03 | 4.09 |
+| DELTA | 2.80 | 2.90 | 3.15 | 3.96 |
 
-This is not a tuning problem. The layout puts copy over the whole frame, so
-either the photograph is veiled across the whole frame or some of the copy is
-unreadable; there is no third option, and picking between them is a design
-decision across five brands. The options, costed:
+72 of 210 measured cells failed, across both directions
+(unisdr/undrr-mangrove#1264). Note that the label is the block that fails and
+the summary is the block that passes: the veil is strongest at the bottom of
+the frame, and the label is at the top.
 
-- **Hold the tint across the full height** (vertical midpoint to 100%). Cheapest
-  to implement, strongest guarantee, and the mobile hero becomes a tinted panel
-  with the photograph barely legible.
-- **Raise the scrim on mobile only**, to roughly 0.44. Keeps the brand tint's
-  shape and keeps the photograph readable as an image, at the cost of a visibly
-  darker mobile hero in every theme.
-- **Move the copy off the top of the frame** so the veil's strong end is under
-  it. A layout change rather than a colour one, and the only option that costs
-  the photograph nothing.
+#### What was chosen, and why
+
+**The copy moved off the frame** — the third of the three options costed when
+#1263 left this open. Below the tablet breakpoint the photograph is a banner
+across the top of the hero, `--mg-hero-banner-block-size` deep, and the copy
+sits below it on the theme's hero colour under the same 0.16 scrim the
+horizontal copy band already wears. Nothing is read against a photograph any
+more, so the question stops being a sampling question and becomes a token pair
+again — white on the hero surface, darkened by the scrim — which the register
+can express and which no uploaded image can move.
+
+Measured the same way, over the same four images, every cell passes and the
+figure is the same to within 0.01 whichever image is behind it, which is the
+property that matters more than the number:
+
+| Theme | label / title / summary, 320–900px | bar |
+|---|---|---|
+| IRP | 6.19–6.20 | 4.5 |
+| PreventionWeb | 8.12–8.24 | 4.5 |
+| UNDRR | 10.08–10.19 | 4.5 |
+| DELTA | 10.08–10.19 | 4.5 |
+| MCR2030 | 13.67–13.70 | 4.5 |
+
+0 of 210 cells fail, LTR and RTL, at 320, 360, 390, 414, 600, 768 and 900.
+Above the breakpoint nothing moves: re-swept at 910, 1164, 1440 and 1920 in
+both directions, all 120 cells are identical to the figures #1263 shipped, to
+the last decimal place.
+
+#### Why the other two were rejected
+
+Both of the colour options buy the copy by spending the photograph, and they
+spend it at the width where there is least of it to spend.
+
+- **Hold the tint across the full height.** It guarantees the copy and it
+  leaves the mobile hero a flat brand panel with a ghost of an image behind
+  it. At 390px the photograph is about 390 by 600 — smaller than a postcard
+  and already carrying the least detail it ever will — so this is the worst
+  place in the responsive range to take 90% of it away.
+- **Raise the mobile scrim to about 0.44.** The arithmetic works and the
+  result is a hero that is visibly darker than the same hero on a laptop, in
+  every theme, for no reason a reader can see. It also leaves the guarantee
+  photograph-dependent: 0.44 is solved against the images that were sampled,
+  and the next brighter photograph starts the argument again.
+
+Look at the "before" screenshot in either colour option's shoes: at 390px the
+old vertical veil was *already* covering the frame to protect copy that still
+failed. The hero was not a photographic hero that a fix would spoil — it was a
+brand wash with an image faintly behind it, and unreadable copy on top. The
+banner returns a legible photograph **and** a legible copy block, which is
+what neither colour option can do at the same time.
+
+#### What it costs
+
+This is a **consumer-visible change to the hero's mobile composition**, and it
+should be described as one. Below 900px:
+
+- the hero is taller, because the banner and the copy are stacked rather than
+  overlaid;
+- the copy no longer sits on the photograph, so a page whose first screenful
+  was "image with words on it" is now "image, then words";
+- `size="immersive"` drops its `min-height` below the breakpoint and gives the
+  room to a deeper banner instead, because that height existed to give the
+  photograph space *behind* the copy and there is no longer any copy there.
+
+Above 900px nothing changes at all.
+
+#### Two things the implementation depends on
+
+- **The banner is `::after` with `background-image: inherit`, not the
+  element's own background.** The hero is as tall as its copy below the
+  breakpoint, and `cover` over a box that tall and that narrow crops a wide
+  editorial photograph to an unrecognisable column. `::after` inherits the
+  consumer's inline `background-image` — `inherit` takes the parent's computed
+  value — and covers a box of known proportions instead. That is also why the
+  element's own painting is sized away with `background-size: 0 0` rather than
+  set to `none`: `none` would become the computed value `::after` inherits,
+  and the banner would lose its photograph. No new element and no script, so a
+  consumer who hand-authors the markup and takes the stylesheet alone gets the
+  same composition.
+- **Both tablet-breakpoint queries in `hero.scss` are inclusive.** At exactly
+  900px the banner rules and `aspect-ratio: 16 / 4` both apply, and 16:4 of
+  900px is 225px — shallower than the banner's own padding, so the copy would
+  spill out of the box. The mobile composition wins at the boundary
+  (`aspect-ratio: auto`), which is what the veil below already did.
 
 ## How colour-vision separation is measured
 

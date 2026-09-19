@@ -108,7 +108,7 @@ export const MIN_PROPERTIES = {
   'components-empty-state': 15,
   'components-forms-checkbox': 13,
   'components-forms-segmented-control': 2,
-  'components-hero-hero': 6,
+  'components-hero-hero': 7,
   'components-icons': 1,
   'components-images-author-image': 3,
   'components-navigation-drawer': 2,
@@ -240,6 +240,8 @@ export const PROPERTY_DOCS = {
     'Colour of the gap behind the pending progress ring.',
 
   // Hero
+  '--mg-hero-banner-block-size':
+    "How deep the photograph is below the tablet breakpoint, where the background layout is a banner with the copy on a solid panel underneath rather than copy over the frame. The copy's offset and the panel's upper edge both read it, so a theme changes the banner's depth with this one property and the panel follows.",
   '--mg-hero-cta-color':
     'Colour of the hero CTA button. Each colour variant re-points it.',
   '--mg-hero-gradient-color':

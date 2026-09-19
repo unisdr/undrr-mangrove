@@ -35,21 +35,66 @@
 // anywhere else -- at 910px the copy reached two thirds of the way across the
 // frame, into tint that had already fallen to about 0.56, and the scrim alone
 // could not make that up.
-@mixin mg-hero-veil($angle, $tint-middle, $hold, $clear) {
+// $from is where BOTH layers switch on. It defaults to the veil's own leading
+// edge, which is what the horizontal callers want: a stop at 0% with zero
+// opacity followed immediately by one at 0% with full opacity paints exactly
+// what a single full-opacity stop at 0% painted, so passing nothing here is a
+// no-op. The vertical caller below the tablet breakpoint passes the banner's
+// depth instead, so the veil starts under the photograph rather than over it.
+@mixin mg-hero-veil($angle, $tint-middle, $hold, $clear, $from: 0%) {
   background:
     linear-gradient(
       $angle,
-      rgb(var(--mg-hero-scrim-color) / var(--mg-hero-scrim-opacity)) 0%,
+      rgb(var(--mg-hero-scrim-color) / 0) #{$from},
+      rgb(var(--mg-hero-scrim-color) / var(--mg-hero-scrim-opacity)) #{$from},
       rgb(var(--mg-hero-scrim-color) / var(--mg-hero-scrim-opacity)) #{$hold},
       rgb(var(--mg-hero-scrim-color) / 0) #{$clear}
     ),
     linear-gradient(
       $angle,
-      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-start)) 0%,
+      rgb(var(--mg-hero-gradient-color) / 0) #{$from},
+      rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-start))
+        #{$from},
       rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-middle))
         $tint-middle,
       rgb(var(--mg-hero-gradient-color) / var(--mg-hero-gradient-end)) 100%
     );
+}
+
+// The mobile composition: a banner and a panel, not copy over a photograph.
+
+// Below the tablet breakpoint the vertical veil could not be made to work.
+// The copy fills the frame, so the label sits at the top where the tint is
+// down to its end opacity, and all five themes measured between 2.4 and 3.1
+// against a bright sky (unisdr/undrr-mangrove#1264). Deepening the tint far
+// enough to protect the label veils the photograph across the whole frame, at
+// exactly the width where the photograph is smallest and least able to carry
+// detail. So the copy moves off the frame instead: the photograph is a banner
+// across the top, and the copy sits below it on the brand surface.
+
+// What that buys is not a better number, it is a different question. With no
+// photograph behind the copy the contrast is a token pair again -- white on
+// the theme's hero colour, darkened by the same scrim the horizontal band
+// uses -- so it is solvable rather than sampled, and no image a consumer
+// uploads can move it.
+
+// It is still the veil mixin and still the same tokens: the tint holds at
+// full opacity because here it is a surface rather than a veil, which is what
+// setting the three gradient opacities to 1 says. The scrim is untouched at
+// its published 0.16, so the panel is the theme's hero colour under the same
+// darkening the desktop copy band already gets.
+@mixin mg-hero-mobile-panel() {
+  --mg-hero-gradient-start: 1;
+  --mg-hero-gradient-middle: 1;
+  --mg-hero-gradient-end: 1;
+
+  @include mg-hero-veil(
+    180deg,
+    100%,
+    100%,
+    100%,
+    var(--mg-hero-banner-block-size)
+  );
 }
 
 // Hero
@@ -77,6 +122,15 @@
   // it protects are defined once and move together. A theme that widens
   // --mg-hero-overlay-max-width widens the scrim with it, for free.
   --mg-hero-copy-inline-start: var(--mg-spacing-100);
+
+  // How deep the photograph's banner is below the tablet breakpoint, and so
+  // also where the copy's panel begins: the padding and the veil both read
+  // it, the way the horizontal band reads --mg-hero-copy-inline-start. At
+  // 390px this is 218px, a hair under 16:9 -- banner proportions rather than
+  // a strip. The rem cap stops it growing into a half-screen slab as the
+  // frame approaches the breakpoint. A theme that wants a taller or shallower
+  // banner moves this one property and the panel follows.
+  --mg-hero-banner-block-size: min(56vw, #{mg-rem(320)});
 
   // Clamped to the element, not just derived from it. Below --mg-hero-copy-
   // inline-start is a VIEWPORT-derived length (50vw - container/2) while the
@@ -116,16 +170,52 @@
     pointer-events: none;
     position: absolute;
 
-    // Below tablet the veil runs bottom-to-top and the copy fills the frame
-    // rather than occupying a band of it, so the scrim is held flat across the
-    // whole height: there is nowhere here it could clear without clearing over
-    // copy. That is NOT enough to bring the vertical case to AA on its own --
-    // the tint is down to its end opacity at the top of the frame while the
-    // label is still there, and no scrim this light rescues a bright sky from
-    // that. See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-hero-scrim for what
-    // remains open and why it is a design decision rather than a tuning one.
+    // Below tablet there is no copy over the photograph to veil: the panel
+    // starts where the banner ends. See the mixin, and
+    // docs/COLOUR-CONTRAST-METHODOLOGY.md#the-hero-scrim.
     @media (max-width: $mg-breakpoint-tablet) {
-      @include mg-hero-veil(0deg, 68%, 100%, 100%);
+      @include mg-hero-mobile-panel;
+    }
+  }
+
+  // Below the tablet breakpoint the photograph is a banner across the top of
+  // the frame and the copy sits on a solid panel below it.
+
+  // The banner is ::after rather than the element's own background because
+  // the element is as tall as its copy here, and `cover` over a box that tall
+  // and that narrow crops a wide editorial photograph to an unrecognisable
+  // column. ::after takes the consumer's image with `background-image:
+  // inherit` -- the inline style on .mg-hero is its computed value -- and
+  // covers a box of known proportions instead. That is also why the element's
+  // own painting is sized away rather than set to `none`: `none` would be the
+  // computed value ::after inherits, and the banner would lose its
+  // photograph. This needs no new element and no script, so a consumer who
+  // hand-authors the markup and takes the stylesheet alone gets it too.
+  &:not(.mg-hero--split) {
+    @media (max-width: $mg-breakpoint-tablet) {
+      // The two tablet-breakpoint queries in this file are both inclusive, so
+      // at exactly 900px the banner rules and `aspect-ratio: 16 / 4` both
+      // apply -- and 16:4 of 900px is 225px, shallower than the banner's own
+      // padding, so the copy would spill out of the box it is meant to sit
+      // in. The mobile composition is the one that wins at the boundary,
+      // because the veil below already does; height comes from the banner
+      // plus the copy there, as it does at every narrower width.
+      aspect-ratio: auto;
+      background-color: rgb(var(--mg-color-hero));
+      background-size: 0 0;
+      padding-block-start: var(--mg-hero-banner-block-size);
+
+      &::after {
+        background-image: inherit;
+        background-position: center;
+        background-size: cover;
+        block-size: var(--mg-hero-banner-block-size);
+        content: "";
+        inset-block-start: 0;
+        inset-inline: 0;
+        pointer-events: none;
+        position: absolute;
+      }
     }
   }
 
@@ -175,6 +265,20 @@
     align-items: end;
     aspect-ratio: unset;
     min-height: clamp(mg-rem(496), 62vw, mg-rem(688));
+
+    // The immersive height exists to give the photograph room BEHIND the
+    // copy. Below the tablet breakpoint the copy is no longer over the
+    // photograph, so holding that height would only stretch the solid panel
+    // and push the copy to the bottom of a tall block of flat colour. Give
+    // the room to the banner instead: immersive stays the taller, more
+    // editorial hero, and the difference is in the photograph rather than in
+    // an expanse of brand colour.
+    @media (max-width: $mg-breakpoint-tablet) {
+      --mg-hero-banner-block-size: min(78vw, #{mg-rem(440)});
+
+      align-items: start;
+      min-height: 0;
+    }
 
     // Immersive widens the copy column, so it moves the shared property
     // rather than the overlay's own max-width: the scrim reads the same one
@@ -434,8 +538,13 @@ $variant-colour-props: (
       calc(var(--mg-hero-copy-inline-end) + var(--mg-hero-scrim-fade))
     );
 
+    // The banner and the panel are stacked along the BLOCK axis, which does
+    // not mirror, so this is the same call as the LTR one. It has to be
+    // repeated all the same: the RTL selector outranks the base rule on
+    // specificity, so leaving it out would restore the horizontal veil on an
+    // Arabic phone.
     @media (max-width: $mg-breakpoint-tablet) {
-      @include mg-hero-veil(0deg, 68%, 100%, 100%);
+      @include mg-hero-mobile-panel;
     }
   }
 }
