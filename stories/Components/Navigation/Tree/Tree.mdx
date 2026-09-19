@@ -93,7 +93,7 @@ and its parents start expanded.
 ### Basic tree
 
 ```jsx
-import { Tree, TreeItem } from '@undrr/undrr-mangrove';
+import { Tree, TreeItem } from '@undrr/undrr-mangrove/components/Tree.js';
 
 <Tree defaultExpandedIds={['1']}>
   <TreeItem id="1" label="Section 1">
@@ -248,6 +248,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.1.3** — 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The usage example imports `@undrr/undrr-mangrove/components/Tree.js` instead of the package root. The root has never resolved on any published version — the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain — and 2.0.0 stops advertising it, so the subpath is the only form that works. Both `Tree` and `TreeItem` come from that one bundle. Documentation only; the component is unchanged.
 - **1.1.2** — 2026-09-18 ([#1197](https://github.com/unisdr/undrr-mangrove/issues/1197)): Documentation only. New "When a treeview is the right pattern" section, which says what the roving tabindex costs: a `treeitem` is a composite widget item, so a switch, menu or separate expand button inside one is nested interactive content, and a nested hierarchy of rows with per-row controls is not a treeview however much it looks like one. It names grouped `<details>`/`<summary>` as the fallback for that case, with the trade it makes, and says that moving the control out of the item's ancestry is the fix for a `nested-interactive` finding rather than more ARIA. Written from a consuming team's report of clearing eight violations of that exact shape.
 - **1.1.1** — 2026-09-17 ([#1194](https://github.com/unisdr/undrr-mangrove/pull/1194)): Documentation only. The docs page now embeds its stories, so the default, linked, custom-toggle-icon and hydrated trees each have a live example. The placeholder "Item 1 / Item 2" labels are replaced with a knowledge base section tree, and the three React stories now give the tree an `aria-label`, which `HydratedFromHtml` already had through `data-aria-label`.
 - **1.1.0** — 2026-09-17 ([#1176](https://github.com/unisdr/undrr-mangrove/pull/1176)): Hydration from a nested list with `Tree.fromElement.js`, `Tree.hydrate.js` and `HydratedTree`, and a `toggleIcon` prop on `Tree` and `TreeItem` (`data-toggle-icon` when hydrated).
