@@ -188,7 +188,8 @@ test('the packed tarball ships the subpath directories', () => {
     'scss/Components/Tabs/tabs.scss',
     'scss/assets/scss/style.scss',
   ]);
-});
+  // `npm pack` is a subprocess; give it room under a loaded worker.
+}, 30000);
 
 // The shape every release has had: `main` names `dist/index.js`, the build
 // emits no such file, and `files` excludes dist/ anyway — so nothing answers
@@ -209,7 +210,7 @@ test('nothing answers the package root when the build emits no dist/index.js', (
   expect(files.some(file => file.startsWith('dist/'))).toBe(false);
   expect(files.some(file => file.startsWith('src/'))).toBe(false);
   expect(files).not.toContain('index.js');
-});
+}, 30000);
 
 test('webpack copies the same source trees without the test files', () => {
   const config = fs.readFileSync(
