@@ -30,9 +30,11 @@ export default [
     // unisdr/undrr-mangrove#1253.
     entry: {},
     output: {
+      // Only `path` matters here: it is where CopyPlugin writes. The
+      // `[name].min.js` filename and the UMD library target that used to sit
+      // beside it described the bundle this config never emitted, so they
+      // named a format nothing in the repository has ever produced.
       path: path.resolve(currentDirPath, 'dist'),
-      filename: '[name].min.js',
-      libraryTarget: 'umd',
     },
     externals: {},
     module: {
@@ -56,11 +58,23 @@ export default [
     },
     optimization: {
       minimize: packMode === 'production', // Minimize only in production mode
-      // Load-bearing even with no entry: the minimizers run over the assets
-      // CopyPlugin emits. Replacing the list is what minifies the copied CSS,
-      // and leaving Terser out of it is what keeps dist/assets/js/*.js byte
-      // for byte what a contributor wrote, which is what the CDN and the npm
-      // `js/` directory serve.
+      // DO NOT DELETE THIS LIST. It is load-bearing even with no entry,
+      // because minimizers run over every asset CopyPlugin emits, not just
+      // over bundles.
+      //
+      // webpack 5's default list minifies JS, CSS *and* HTML. Replacing it
+      // with CssMinimizerPlugin alone is what makes the copied assets what
+      // the CDN and the npm `js/` directory actually serve today:
+      //  - dist/assets/js/*.js stay byte for byte what a contributor wrote,
+      //    because no JS minifier is in the list;
+      //  - dist/assets/error-pages/*.html and the icon-font demo page stay
+      //    readable, because no HTML minifier is in the list;
+      //  - dist/assets/css/*.css keep their header comment, because of
+      //    `discardComments: false` below.
+      // Deleting the list does not merely stop minifying the CSS — it
+      // silently starts minifying the published JS and HTML as well.
+      // Verified by building both ways: every file under dist/assets/js,
+      // dist/assets/error-pages and dist/assets/css changes.
       minimizer: [
         new CssMinimizerPlugin({
           minimizerOptions: {
