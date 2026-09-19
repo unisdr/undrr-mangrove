@@ -316,6 +316,18 @@ Above 900px nothing changes at all.
   and the banner would lose its photograph. No new element and no script, so a
   consumer who hand-authors the markup and takes the stylesheet alone gets the
   same composition.
+- **A hero with no photograph has to say so.** `background-image` is a painted
+  value, so no selector can ask whether one resolved: the banner would reserve
+  `--mg-hero-banner-block-size` — a third of a phone screen — for an image that
+  never arrives, and the reader would get a slab of flat brand colour holding
+  the copy down for no visible reason. `Hero` and `ChildHero` add
+  `mg-hero--no-image` when `imgback` is absent, and that collapses the banner
+  to zero rather than opting out of the mobile block, so the copy keeps the
+  solid panel and the same figures. Opting out would restore the old
+  full-height veil over nothing, which is the composition this section is
+  about. Hand-authored markup without a background image has to add the class
+  itself; a broken or slow image URL still paints an empty banner, as a broken
+  URL paints an empty frame above the breakpoint.
 - **Both tablet-breakpoint queries in `hero.scss` are inclusive.** At exactly
   900px the banner rules and `aspect-ratio: 16 / 4` both apply, and 16:4 of
   900px is 225px — shallower than the banner's own padding, so the copy would

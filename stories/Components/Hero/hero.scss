@@ -219,6 +219,29 @@
     }
   }
 
+  // A hero with no photograph has nothing for the banner to inherit, and a
+  // banner with nothing in it is not a photograph missing -- it is a slab of
+  // flat brand colour holding the copy a third of a screen further down for
+  // no reason a reader can see. `background-image` is a painted value, so no
+  // selector can ask whether one resolved; the component says so instead, and
+  // hand-authored markup without an image has to say so too. See Hero.mdx.
+
+  // Collapsing the banner rather than opting out of the mobile block is what
+  // keeps the contrast: at zero depth the veil's offset is zero, so the panel
+  // starts at the top of the frame and the copy stays on the same solid
+  // surface it has at every other width. Opting out would restore the old
+  // full-height veil over nothing, which is the composition #1264 was about.
+
+  // Three classes deliberately: `--immersive` re-points the same property from
+  // a two-class selector further down the file, and a deeper banner is exactly
+  // what an image-less hero must not get. Winning on specificity rather than
+  // on source order means this cannot be undone by moving a block.
+  &.mg-hero--no-image:not(.mg-hero--split) {
+    @media (max-width: $mg-breakpoint-tablet) {
+      --mg-hero-banner-block-size: 0px;
+    }
+  }
+
   @media (min-width: $mg-breakpoint-tablet) {
     aspect-ratio: 16 / 4; // we use 16:4, which is closer to the real crop ratio
 

@@ -223,6 +223,32 @@ export const MobileBanner = {
   },
 };
 
+// A background hero with no photograph. The banner inherits the element's
+// background image, and there is nothing to inherit -- so without the
+// `mg-hero--no-image` class the component now adds, the mobile composition
+// would reserve a third of a phone screen for a photograph that never
+// arrives. The banner collapses to nothing instead and the copy keeps the
+// solid panel. Pinned to a phone viewport for the same reason as the story
+// above.
+export const NoBackgroundImage = {
+  name: 'No background image (mobile)',
+  globals: { viewport: { value: '390px-844px', isRotated: false } },
+  args: {
+    data: [
+      {
+        title: 'Early warnings for all by the end of 2027',
+        summaryText:
+          'Every person on Earth should be protected by a multi-hazard early warning system.',
+        detail: 'Global initiative',
+        label: 'Early warnings for all',
+        primary_button: 'Read the initiative',
+        link: '/#',
+      },
+    ],
+    variant: 'primary',
+  },
+};
+
 const splitMediaData = [
   {
     title: 'Comprehensive disaster and climate risk management',

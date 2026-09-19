@@ -31,9 +31,14 @@ export function ChildHero({ data, variant = 'primary' }) {
           className={cls(
             'mg-hero',
             'mg-hero--child',
+            !item.imgback && 'mg-hero--no-image',
             'mg-hero--' + `${variantActive}`
           )}
-          style={{ backgroundImage: `url(${item.imgback})` }}
+          style={
+            item.imgback
+              ? { backgroundImage: `url(${item.imgback})` }
+              : undefined
+          }
         >
           <div className="mg-hero__overlay">
             <article className="mg-hero__content">

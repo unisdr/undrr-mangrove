@@ -241,7 +241,7 @@ export const PROPERTY_DOCS = {
 
   // Hero
   '--mg-hero-banner-block-size':
-    "How deep the photograph is below the tablet breakpoint, where the background layout is a banner with the copy on a solid panel underneath rather than copy over the frame. The copy's offset and the panel's upper edge both read it, so a theme changes the banner's depth with this one property and the panel follows.",
+    "How deep the photograph is below the tablet breakpoint, where the background layout is a banner with the copy on a solid panel underneath rather than copy over the frame. The copy's offset and the panel's upper edge both read it, so a theme changes the banner's depth with this one property and the panel follows. A hero with no background image collapses it to zero through `mg-hero--no-image`, so the copy keeps the panel without a band reserved for an image that never arrives.",
   '--mg-hero-cta-color':
     'Colour of the hero CTA button. Each colour variant re-points it.',
   '--mg-hero-gradient-color':

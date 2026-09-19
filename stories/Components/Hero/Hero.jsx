@@ -183,9 +183,14 @@ export function Hero({
             'mg-hero',
             size === 'immersive' && 'mg-hero--immersive',
             contained && 'mg-hero--contained',
+            !item.imgback && 'mg-hero--no-image',
             variantActive && `mg-hero--${variantActive}`
           )}
-          style={{ backgroundImage: `url(${item.imgback})` }}
+          style={
+            item.imgback
+              ? { backgroundImage: `url(${item.imgback})` }
+              : undefined
+          }
         >
           <div className="mg-hero__overlay">
             <HeroContent item={item} HeadingTag={HeadingTag} />
