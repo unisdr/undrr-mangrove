@@ -24,13 +24,14 @@ The banner can be added to any page with three script/link tags -- no React requ
 <script src="https://assets.undrr.org/cookie-banner/v1/cookieconsent-undrr.js"></script>
 ```
 
-For React applications, import the `CookieConsentBanner` component:
-
-```jsx
-import { CookieConsentBanner } from '@undrr/undrr-mangrove';
-
-<CookieConsentBanner />;
-```
+React applications use the same three tags. The npm package publishes no build
+of `CookieConsentBanner`: it has no webpack entry, so no
+`components/CookieConsentBanner.js` exists in the tarball or on the CDN, and
+the package has no root entry point to import it from either (see
+[#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)). The React
+component exists in this repository, and all it does is append those same CDN
+assets to `document.head` on mount, so a React app gets the same banner by
+putting the tags in its own `index.html`.
 
 See the <LinkTo kind="components-notice-cookieconsentbanner" story="docs">CookieConsentBanner component</LinkTo> for full documentation, props, custom configuration, and CDN details.
 
