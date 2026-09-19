@@ -26,7 +26,7 @@ Pagination for multi-page content. Also usable as CSS/HTML for server-rendered p
 ### React
 
 ```jsx
-import { Pager } from '@undrr/undrr-mangrove';
+import { Pager } from '@undrr/undrr-mangrove/components/Pager.js';
 
 function MyComponent() {
   const [page, setPage] = React.useState(1);
@@ -250,6 +250,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.1.2** — 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/Pager.js` instead of the package root. The root has never resolved on any published version — the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain — and 2.0.0 stops advertising it, so the subpath is the only form that works. Documentation only; the component is unchanged.
 - **1.1.1** — 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-pager__list` hides its markers with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin). Safari drops the implicit `list` role from a markerless list, so the page count stopped being announced; an empty string is still a marker, so the role survives and nothing renders. This reaches the hand-written `<ul class="mg-pager__list">` in the docs and the AI manifest too, which is why it is a CSS fix rather than `role="list"` in the examples.
 - **1.1** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)):
   - Refreshed the default pager with borderless 44px circular targets, softly tinted current and directional controls, stable token-driven hover/focus/press states, and visually compact arrow-only previous/next controls that retain their accessible labels.
