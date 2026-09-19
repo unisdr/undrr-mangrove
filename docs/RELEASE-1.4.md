@@ -156,8 +156,10 @@ Use this if your build pipeline imports Mangrove SCSS source files and compiles 
 
 ```scss
 $mg-html-font-size: 10;
-@import "@undrr/undrr-mangrove/stories/assets/scss/style";
+@import "@undrr/undrr-mangrove/scss/assets/scss/style";
 ```
+
+(Correction: this said `@undrr/undrr-mangrove/stories/assets/scss/style` when it was written. No published tarball has ever contained a `stories/` directory — 1.4.1 already shipped the entry point at `scss/assets/scss/style.scss` — so the original path could not resolve on any version. See unisdr/undrr-mangrove#1266.)
 
 **For Drupal themes** that import Mangrove variables via relative paths — add the line at the top of the file, before the existing `@import` or `@use`:
 

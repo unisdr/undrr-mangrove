@@ -142,7 +142,7 @@ const ResetButton = () => {
 
 The consent API in vanilla-cookieconsent v3 is `show(createModal)`, `hide()`, `showPreferences()`, `hidePreferences()`, `reset(eraseCookie)` and `eraseCookies(name)`. There is no `showConsentModal()`; a guard on that name silently skips.
 
-Use `reset(true)` only when you want the loaded configuration discarded as well. It tears down the library's state, including the `window._ccRun` guard, so nothing can be shown again until `run()` is called a second time.
+`reset(eraseCookie)` tears down the library's state either way — it detaches its listeners, removes its `#cc-main` root and clears the `window._ccRun` guard, so nothing can be shown again until `run()` is called a second time. The argument gates one thing only: whether the visitor's stored consent cookie is erased along with it. Pass `true` only when you mean to make the visitor answer again; the component's own unmount cleanup passes `false`.
 
 ### Why the bar can be missing in an automated browser
 
@@ -190,7 +190,7 @@ const customConfig = {
 };
 ```
 
-> **Implementation note (for contributors):** Resources load in sequence: CSS first (prevents flashing), core library next, UNDRR configuration last. CDN requests include a cache buster (`?cacheBuster=YYYYMMDDHHMM`) to ensure fresh resources.
+> **Implementation note (for contributors):** Resources load in sequence: CSS first (prevents flashing), core library next, UNDRR configuration last. CDN requests carry no cache buster: the path is version-pinned (`/v1/`) and the CDN serves its own caching headers. Each resource is loaded at most once per page, and that check compares origin and path only — query strings and fragments are ignored, so no URL variant can slip a second copy of `cookieconsent-undrr.js` onto the page. It declares `const`s at classic-script top level and throws a redeclaration error if it runs twice.
 
 ## API Reference
 
@@ -261,6 +261,12 @@ const customConfig = {
 };
 ```
 
+These may be defined inline in your render and replaced on any render. The
+component passes the library a stable trampoline for each callback rather than
+your function itself, so a replacement is live from its next call onwards and
+costs no teardown or reload. Adding or removing a callback does reinitialise,
+because the library has to be told the configuration changed shape.
+
 ## Accessibility
 
 Built with proper ARIA attributes, keyboard navigation, focus management, and screen reader support.
@@ -273,6 +279,17 @@ Built with proper ARIA attributes, keyboard navigation, focus management, and sc
 - [vanilla-cookieconsent Documentation](https://github.com/orestbida/cookieconsent) - Underlying library reference
 
 ## Changelog
+
+- **1.4.0** — 2026-09-19 ([#1245](https://github.com/unisdr/undrr-mangrove/issues/1245), [#1246](https://github.com/unisdr/undrr-mangrove/issues/1246)): Unmount cleanup stops reaching outside the banner, and the load guard stops defeating itself.
+  - Unmount no longer sweeps `[id^="cc-"]` across the whole document. That selector removed **any** element on the page whose id begins with `cc-`, including consumer markup the component never created. It now removes `#cc-main`, the single element vanilla-cookieconsent v3 creates, and only as a fallback for the case where the library never ran.
+  - Removed the `destroy?.()` branch from cleanup. There is no `destroy` anywhere in the v3 bundle — the export surface is `acceptCategory, acceptService, acceptedCategory, acceptedService, eraseCookies, getConfig, getCookie, getUserPreferences, hide, hidePreferences, loadScript, reset, run, setCookieData, setLanguage, show, showPreferences, validConsent, validCookie` — so the branch never ran and `reset()` was always the real teardown. It is now the only path.
+  - **Unmount no longer erases the visitor's consent cookie.** This is a behaviour change. Cleanup called `reset(true)`, and in the 3.1.0 bundle that argument gates exactly one thing — erasing the stored `cc_cookie` (`e && (l ? De(c) : Pe(c, r, i))`). Detaching the listeners, removing the `#cc-main` root, clearing the modal classes, resetting internal state and clearing `window._ccRun` are all unconditional. So `reset(false)` is the complete teardown and the `true` bought nothing but the cookie wipe — which meant a route change that unmounted the banner destroyed the visitor's recorded consent and prompted them again. Cleanup now passes `false`. If you were relying on unmount to clear consent, call `eraseCookies()` yourself.
+  - CDN URLs no longer carry `?cacheBuster=YYYYMMDDHHMM`. The "already loaded" checks in `loadScript` and `loadCSS` compared full URLs, so the buster made every check miss across a minute boundary. `cookieconsent-undrr.js` declares `const currentScript` and `const configUrl` at classic-script top level and throws a redeclaration error when it runs twice, so a mount and a remount a minute apart broke the page. Both checks now compare origin and path only, which also closes the same hole for any caller-supplied query string.
+  - A re-render that passes an equal `config` object no longer tears the banner down and reloads it. The effect compared `config` by identity, and a config built inline in the caller's render is a new object every time. It is now compared by value: the key is built by a serialiser that sorts keys, so `{a, b}` and `{b, a}` are the same config — which matters whenever a caller assembles one by spreading a varying override set — and records function-valued properties as a marker, so _whether_ a callback is present registers while its identity does not. Configs that cannot be serialised (a circular reference) still fall back to identity comparison.
+  - **Changing a callback now takes effect immediately, with no reload.** The library captures its callbacks when `run()` is handed a configuration and holds them for the lifetime of that run, so it is never given the consumer's function directly — it gets a trampoline per callback (`onFirstConsent`, `onConsent`, `onChange`, `onModalShow`, `onModalHide`, `onModalReady`) that looks the current handler up at call time. A consumer who gates an analytics loader on `onConsent` and ships a new handler gets the new handler, where a config made only of callbacks previously kept the old one live silently and indefinitely.
+  - The effect cancels its own in-flight work. Loading three CDN assets and waiting 300ms outlives a route change or a re-render with new props, so the chain from a discarded mount could still reach `run()` after cleanup had torn the banner down. Every `await` in both the CDN and fallback paths is now followed by a cancellation check, and the settle timer is cleared on cleanup.
+  - The de-duplication key collapses repeated slashes, so a `cdnBaseUrl` passed with a trailing slash produces a key that matches the same file loaded without one. The requested URLs drop the trailing slash too.
+  - The last-resort fallback guards `CookieConsent.run` before calling it. It previously did not, so when the library had failed to load — the most likely way to reach that handler — it threw a `TypeError` out of an un-awaited promise instead of reporting anything.
 
 - **1.3.0** — 2026-09-18 ([#1242](https://github.com/unisdr/undrr-mangrove/pull/1242)): The stories can now tell a working bar from a broken one.
   - Added a "Rendering check" story whose `play` function asserts that the CDN library and configuration script ran, that the CDN stylesheet actually applied, that the library built its DOM rather than merely defining `window.CookieConsent`, and that the bar is present and visible in the document body where the library appends it. `#cc-main` lands on `document.body`, outside the story canvas, so the assertions start from `canvasElement.ownerDocument`. The story also reports the result in the canvas, so a failure is visible without opening a panel.

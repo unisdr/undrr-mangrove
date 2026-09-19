@@ -208,7 +208,7 @@ import { useEffect, useRef } from 'react';
 import {
   mgOnThisPageNav,
   mgOnThisPageNavDestroy,
-} from '@undrr/undrr-mangrove/js/on-this-page-nav';
+} from '@undrr/undrr-mangrove/js/on-this-page-nav.js';
 
 function PageWithNav() {
   const navRef = useRef(null);
@@ -348,6 +348,7 @@ Auto-generated IDs from non-Latin headings preserve the original characters. Pro
 
 ## Changelog
 
+- **1.5.4** — 2026-09-19 ([#1267](https://github.com/unisdr/undrr-mangrove/issues/1267)): The React usage snippet imported `@undrr/undrr-mangrove/js/on-this-page-nav` without the extension. Node ESM does not add one, and the package ships no `exports` map that could, so the specifier failed with `ERR_MODULE_NOT_FOUND` against a packed tarball — under a bundler it worked, which is the wrong way round for a vanilla module. It now names `js/on-this-page-nav.js`. Documentation only; the module is unchanged.
 - **1.5.3** — 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-on-this-page-nav__list` hides its markers with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin), so the implicit `list` role survives Safari without help from the markup. This closes a split between the two implementations: the vanilla script set `role="list"` on the list, the React component did not, and only one of them announced a count. The script still sets the role — belt and braces now, not a requirement — so nothing about the hydration contract changes.
 - **1.5.2** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic navigation links and the CTA now render in Noto Sans Arabic instead of Noto Kufi Arabic. Both classes read the `ui` font role rather than naming a typeface, and the component's `:lang(ar)` block is gone. Arabic labels measure about 10.8% narrower than their Latin equivalents, so the horizontal scroller needed no adjustment. Latin rendering is unchanged.
 - **1.5.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to a nav link or CTA whose own language is not Arabic.

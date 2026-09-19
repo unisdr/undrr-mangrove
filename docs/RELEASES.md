@@ -69,6 +69,19 @@ yarn update-cdn-version --dry-run  # preview changes first
 
 This updates CDN URLs in README.md, MDX docs, and story files from the old version to the new one.
 
+#### Re-point the `latest` guidance
+
+`yarn update-cdn-version` rewrites *pinned* version URLs. It does not touch `assets.undrr.org/mangrove/latest/`, and neither does any test: `scripts/__tests__/docs-package-paths.test.js` skips `latest/` on purpose, because the tag is a moving pointer at the newest stable release and cannot be resolved against this branch's sources. So `latest/` guidance is checked here, by hand, every release.
+
+A release that changes the major is the one that matters. When `latest` moves to a new major, every `latest/` URL in the docs silently starts serving a different tree — paths that 404ed begin resolving, and paths that resolved begin 404ing. Work through this list:
+
+1. **Find them.** `grep -rn "assets.undrr.org/mangrove/latest" --include='*.md' --include='*.mdx' .` — currently `docs/RELEASES.md`, `stories/Components/Navigation/Drawer/Drawer.mdx`.
+2. **Request each one** against the version being released and confirm it still resolves. A `latest/` URL that 404s after the tag moves is a broken copy-paste on a published page.
+3. **Clear the "lands in 2.0" markers** on paths that this release publishes. These exist because the module is in the sources but on no version folder yet, and the release is what makes them wrong:
+   - `docs/CDN-REFERENCE.md` — the `/js/drawer.js` table row and the paragraph under the JavaScript module table.
+   - `stories/Components/Navigation/Drawer/Drawer.mdx` — the "Lands in 2.0" note and the `{version}` placeholder in the vanilla HTML snippet, which becomes a real pinned version.
+4. **Confirm before publishing the release notes**, not after. Each of these is a path a reader copies.
+
 ### 4. Update CHANGELOG.md
 
 In `CHANGELOG.md`, rename the `## Unreleased` section to `## X.Y.Z — YYYY-MM-DD` and add a link to the GitHub Release below the heading (the release page is created in step 6, so you can add the link now and it will resolve once the release is published):
@@ -227,8 +240,9 @@ yarn pack:assemble   # replaces npm-package/ (gitignored)
 
 The script only deletes an output directory that is inside the repo, outside its source directories, and either empty or a previous package build. Anything else stops it with an error. It also fails if a `dist/` directory it copies from exists but is empty, as the old `cp -r dir/*` step did.
 
-Two things worth knowing:
+Three things worth knowing:
 
+- **`scss/` is a supported public surface, and its shape is not the repo's.** The SCSS entry points are published under `scss/assets/scss/` — `@undrr/undrr-mangrove/scss/assets/scss/style` compiles against the tarball — because the copy keeps each file's path below `stories/`. The doubled `assets/scss` segment is an artefact of that copy, not a design, but renaming it would break every Sass consumer for no gain, so it stays and the docs name it (unisdr/undrr-mangrove#1266). Documentation must never name these files under `stories/`: no tarball has ever contained a `stories/` directory. `scripts/__tests__/docs-package-paths.test.js` checks every path the documentation names.
 - **The published package has no root entry point, deliberately.** The slimmed `package.json` has no `main` and no `exports`, so `import '@undrr/undrr-mangrove'` does not resolve; consumers import the subpath dirs (`components/`, `css/`, …). Through 2.0.0-rc.2 it carried `main: "dist/index.js"`, a dangling pointer — the slim `files` array excludes `dist/`, so no tarball has ever contained that file — and 2.0.0 drops it rather than starting to ship one (unisdr/undrr-mangrove#1252). Do not add `main` back, and do not add an `exports` map without `"./*": "./*"` alongside: an `exports` map with only a `"."` entry makes every working subpath fail with `ERR_PACKAGE_PATH_NOT_EXPORTED`. `scripts/__tests__/assemble-npm-package.test.js` fails on either.
 - `npm-package/` is gitignored, but still delete it once the release is done so a stale copy is never published later.
 

@@ -21,16 +21,16 @@ Base URL: `https://assets.undrr.org/mangrove/{version}/`
 | DELTA Resilience | `/css/style-delta.css` | deltaresilience.org |
 | Gutenberg editor | `/css/style-gutenberg.css` | Drupal Gutenberg block previews |
 
-Legacy variants keep pre-1.4 behavior (`html { font-size: 10px }`). Use when migrating sites with CSS that depends on a 10px root. See [v1.4 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change).
+**Removed in 2.0.** The legacy variants kept pre-1.4 behavior (`html { font-size: 10px }`) for sites whose CSS depended on a 10px root. 2.0 assumes the browser-standard 16px root and deletes them, so these paths 404 under `mangrove/2.0.0` and later and are served only from the 1.x version folders:
 
-| Theme | Legacy path |
-|-------|-------------|
+| Theme | Legacy path, 1.4 to 1.x only |
+|-------|------------------------------|
 | UNDRR | `/css/style-legacy.css` |
 | PreventionWeb | `/css/style-preventionweb-legacy.css` |
 | MCR2030 | `/css/style-mcr-legacy.css` |
 | IRP | `/css/style-irp-legacy.css` |
 
-The DELTA Resilience theme has no legacy variant.
+The DELTA Resilience theme never had a legacy variant. See the [v1.4 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change) for what they did and the [v2.0 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) for the migration off them.
 
 ```html
 <link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.2/css/style.css" />
@@ -45,9 +45,12 @@ The DELTA Resilience theme has no legacy variant.
 | On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
 | Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
 | Copy Button | `/js/copy-button.js` | Zero-dependency copy-to-clipboard button |
+| Drawer | `/js/drawer.js` | Off-canvas drawer and floating panel lifecycle (no React). **Lands in 2.0** — see below |
 | Switch pending | `/js/switch-pending.js` | Saving state for `.mg-switch`: announcements, guards, and an optional timeout and revert. `mgSwitchAnnouncer()` exports the announcements alone |
 | Preview access | `/js/preview-access.js` | Preview-access gate form |
 | Shared constants | `/js/undrr.js` | Key codes, breakpoints and the `window.UNDRR` namespace |
+
+**`/js/drawer.js` is not on the CDN yet.** It is listed because the table is the complete list of modules the library ships, but it postdates `2.0.0-rc.2` and first reaches the CDN with 2.0. Until then it returns 404 on every version folder, `latest/` included; use `@undrr/undrr-mangrove/js/drawer.js` from npm in the meantime. Every other path in the table is served today. Cutting 2.0 removes this paragraph — see [the release procedure](RELEASES.md#re-point-the-latest-guidance).
 
 That table is the complete list. **There is no `/js/main.js` and no combined bundle** — every module is loaded on its own, so a `<script src=".../js/main.js">` returns 404. Load only the modules the page needs:
 
@@ -74,10 +77,7 @@ Runtime: `/components/hydrate.js`
 | ShareButtons | `/components/ShareButtons.js` |
 | MegaMenu | `/components/MegaMenu.js` |
 | ScrollContainer | `/components/ScrollContainer.js` |
-| BarChart | `/components/BarChart.js` |
-| MapComponent | `/components/MapComponent.js` |
 | QuoteHighlight | `/components/QuoteHighlight.js` |
-| Fetcher | `/components/Fetcher.js` |
 | SyndicationSearchWidget | `/components/SyndicationSearchWidget.js` |
 | IconCard | `/components/IconCard.js` |
 | Gallery | `/components/Gallery.js` |

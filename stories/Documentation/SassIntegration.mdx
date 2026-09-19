@@ -47,7 +47,9 @@ yarn add @undrr/undrr-mangrove
 npm install @undrr/undrr-mangrove
 ```
 
-The SCSS source files are in `stories/assets/scss/` within the installed package; the token sources are in `tokens/`.
+The SCSS source files are in `scss/assets/scss/` within the installed package. Note that this is **not** the path they have in the repository: the tarball ships no `stories/` directory, and `scss/` is the flattened copy of it. Every path on this page is the published one.
+
+The token sources (`tokens/*.yaml`) are not published — the package ships the SCSS they generate, not the YAML. Read them in the [repository](https://github.com/unisdr/undrr-mangrove/tree/main/tokens).
 
 ## What is still Sass
 
@@ -60,7 +62,7 @@ Sass variables remain only for compile-time needs (`@media`, `@if`, `@font-face`
 Mangrove's styles are a set of partials imported by a theme entry point:
 
 ```
-stories/assets/scss/
+scss/assets/scss/
   style.scss                   # Default (UNDRR) theme entry point
   style-preventionweb.scss     # PreventionWeb theme
   style-irp.scss               # IRP theme
@@ -290,21 +292,21 @@ The <LinkTo kind="getting-started-integration-theming-guide" story="docs">Themin
 
 ## Importing individual component styles
 
-If you only need specific components, import the partials directly. The full list is in `stories/assets/scss/_components.scss`.
+If you only need specific components, import the partials directly. The full list is in `scss/assets/scss/_components.scss`.
 
 ```scss
 // Import base dependencies first
-@import 'stories/assets/scss/variables';
-@import 'stories/assets/scss/fonts';
-@import 'stories/assets/scss/breakpoints';
-@import 'stories/assets/scss/mixins';
-@import 'stories/assets/scss/foundational';
+@import 'scss/assets/scss/variables';
+@import 'scss/assets/scss/fonts';
+@import 'scss/assets/scss/breakpoints';
+@import 'scss/assets/scss/mixins';
+@import 'scss/assets/scss/foundational';
 
 // Then import only the components you need
-@import 'stories/Components/Buttons/CtaButton/buttons';
-@import 'stories/Components/Cards/Card/card';
-@import 'stories/Components/Forms/form-base';
-@import 'stories/Components/Tab/tab';
+@import 'scss/Components/Buttons/CtaButton/buttons';
+@import 'scss/Components/Cards/Card/card';
+@import 'scss/Components/Forms/form-base';
+@import 'scss/Components/Tab/tab';
 ```
 
 Component stylesheets depend on `_variables.scss` for `mg-rem()`, the type scale and the `:root` token block — including the five `--mg-font-family-*` roles, which every component reads and none declares a fallback for — and on `_breakpoints.scss` and `_mixins.scss` for `devicebreak()` and the focus ring. Import those first or the build fails.
@@ -368,10 +370,12 @@ export default defineConfig({
 With `includePaths` configured, imports resolve relative to the package root:
 
 ```scss
-@import 'stories/assets/scss/variables';
-@import 'stories/assets/scss/breakpoints';
-@import 'stories/assets/scss/mixins';
+@import 'scss/assets/scss/variables';
+@import 'scss/assets/scss/breakpoints';
+@import 'scss/assets/scss/mixins';
 ```
+
+The alternative is to put `node_modules` itself on the load path and name the package in each import — `@import '@undrr/undrr-mangrove/scss/assets/scss/variables'`. That is the form the rest of Mangrove's documentation uses. Dart Sass does not search `node_modules` by default, so one of the two is required either way; bundler Sass loaders usually add it for you.
 
 ## Migrating from 1.x
 

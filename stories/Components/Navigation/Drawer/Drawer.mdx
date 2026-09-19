@@ -82,6 +82,16 @@ the same component as a drawer with `isFloatingPanel` set — the React
 `Drawer` only switches its base class — so one module drives both. Give the
 container `class="mg-floating-panel"` and load `js/drawer.js`.
 
+> **Lands in 2.0.** `js/drawer.js` postdates `2.0.0-rc.2`, so no CDN version
+> folder serves it until 2.0 is released — a `<script>` pointing at it returns
+> 404 in the meantime, on `latest/` as well as on any pinned prerelease. Until
+> then, install the package and bundle
+> `@undrr/undrr-mangrove/js/drawer.js` yourself. The stylesheet line below
+> works on every version.
+
+Replace `{version}` with the release you are pinning to. The stylesheet uses
+`latest`, which always points at the newest stable release.
+
 ```html
 <link
   rel="stylesheet"
@@ -118,9 +128,10 @@ container `class="mg-floating-panel"` and load `js/drawer.js`.
   </div>
 </div>
 
+<!-- Lands in 2.0; returns 404 on every version folder until then. -->
 <script
   type="module"
-  src="https://assets.undrr.org/mangrove/latest/js/drawer.js"
+  src="https://assets.undrr.org/mangrove/{version}/js/drawer.js"
 ></script>
 ```
 

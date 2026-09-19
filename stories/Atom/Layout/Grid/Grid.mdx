@@ -55,12 +55,24 @@ doc); reach for it directly if you need the same shape outside that pattern.
 
 #### CSS:
 
-Add the base layout style from
+There is no standalone grid stylesheet. The grid rules are compiled into every
+theme stylesheet, so a page that already loads one has them:
 
-- https://assets.undrr.org/mangrove/2.0.0-rc.2/assets/css/grid.min.css
+```html
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/2.0.0-rc.2/css/style.css"
+/>
+```
+
+Sass consumers who want the grid on its own can import the partial the theme
+stylesheets import, `@undrr/undrr-mangrove/scss/Atom/Layout/Grid/grid`. It
+carries the same prerequisites as any other per-component partial — see
+[Sass integration](?path=/docs/getting-started-integration-sass-integration--docs).
 
 ## Changelog
 
+- **1.3** — 2026-09-19 ([#1266](https://github.com/unisdr/undrr-mangrove/issues/1266)): The CSS section pointed at `.../assets/css/grid.min.css`, which the CDN has never served — no standalone grid stylesheet is emitted, the `assets/` segment is doubled, and nothing under Mangrove is minified. It now names the theme stylesheet the grid rules compile into, and the SCSS partial for Sass consumers. Documentation only; the component is unchanged.
 - **1.2** — 2026-09-11 ([undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060)): Added `.mg-grid--article` for reading-layout column splits (flexible content column + fixed rail), extracted for reuse from page-pattern-specific CSS.
 - **1.1** — 2026-08-27: Added `.mg-grid__col-7` through `.mg-grid__col-12` and `.mg-grid--auto-fit` to support larger or dynamic item counts.
 - **1.0** — 2022-12-12: Released component
