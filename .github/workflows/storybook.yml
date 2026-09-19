@@ -7,14 +7,16 @@ on:
     paths:
       - 'stories/**'
       - 'src/components/**'
-      - 'scripts/ai-manifest/**'
+      # `scripts/**`, not just the manifest subtree: this job runs
+      # scripts/serve-storybook.mjs, and a change to only that file did not
+      # retrigger the build on main.
+      - 'scripts/**'
       # CHANGELOG.md is a build input, not just a record: the manifest parses
       # it into the published releases.json and llms.txt. Without it here, a
       # changelog-only merge leaves the deployed release list stale until the
       # next push that happens to touch something else.
       - 'CHANGELOG.md'
       - 'tokens/**'
-      - 'scripts/build-tokens.cjs'
       - '.storybook/**'
       - '.github/workflows/storybook.yml'
       - 'package.json'
@@ -38,6 +40,9 @@ jobs:
   build:
     concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     runs-on: ubuntu-latest
+    # A hung browser test would otherwise sit on a runner until GitHub's
+    # six-hour default. A full run of this job is about ten minutes.
+    timeout-minutes: 30
     env:
       MANGROVE_DOCS_BASE_URL: https://mangrove.undrr.org/
     steps:
@@ -74,22 +79,51 @@ jobs:
           rm -f docs-build-temp/preview-stats.json
           mv docs-build-temp _site
           cp dist _site -r
+      # Jest first: it is the cheap suite, and it runs before the browser
+      # download and the 458 browser tests so an ordinary unit failure is
+      # reported in a couple of minutes instead of behind them.
+      - name: Run tests with Jest 🧪
+        run: |
+          yarn test
       # Play functions assert against real layout and real computed style, so
       # they need a browser: jsdom cannot tell a styled bar from a bare one.
       # Nothing ran them until unisdr/undrr-mangrove#1244 — a broken assertion
       # showed only as a console error in whichever developer's tab happened
       # to open the story.
+      - name: Resolve the Playwright version
+        id: playwright
+        # The cache has to key on the browser build, and the browser build
+        # follows the Playwright version rather than yarn.lock as a whole.
+        run: |
+          echo "version=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache the Playwright browsers
+        id: playwright-cache
+        # `actions/setup-node`'s `cache: 'yarn'` covers the yarn cache only, so
+        # without this every run re-downloaded Chromium.
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - name: Install the browser the test runner drives
-        run: yarn run playwright install --with-deps chromium
+        # The system libraries are apt packages outside the cached directory,
+        # so they are installed either way; only the browser download is
+        # skipped on a cache hit.
+        run: |
+          yarn run playwright install-deps chromium
+          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != 'true' ]; then
+            yarn run playwright install chromium
+          fi
       - name: Run Storybook play functions 🎭
+        # 6099, not 6006: 6006 is `yarn storybook`'s port. The trap is the
+        # teardown — without it the server outlived the step and was left
+        # running for the rest of the job.
         run: |
-          node scripts/serve-storybook.mjs _site 6006 &
+          node scripts/serve-storybook.mjs _site 6099 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
           curl --retry 30 --retry-delay 1 --retry-connrefused --silent --fail \
-            --output /dev/null http://127.0.0.1:6006/index.json
+            --output /dev/null http://127.0.0.1:6099/index.json
           yarn test-storybook --maxWorkers=2
-      - name: Run tests with Jest 🧪
-        run: |
-          yarn test
       - name: Cache Jest cache
         uses: actions/cache@v5
         with:

@@ -30,6 +30,52 @@ const CONSENT_COOKIE_NAME = 'cc_cookie';
 const bannerDocument = canvasElement => canvasElement.ownerDocument;
 
 /**
+ * Whether an element would actually be seen, on the same terms as jest-dom's
+ * `toBeVisible()`.
+ *
+ * The status line below needs this because the play function's own comment is
+ * right: the library builds the bar hidden and reveals it a frame later, and a
+ * `visibility: hidden` element still reports a box. A status line that measures
+ * only the box can therefore read "Bar rendered" for a bar the play function
+ * fails on, which is the one way this canvas can actively mislead a reader.
+ *
+ * @param {Element} element - The element to test.
+ * @returns {boolean} - True when the element and its ancestors are visible.
+ */
+const isVisible = element => {
+  if (!element || !element.isConnected) {
+    return false;
+  }
+
+  if (typeof element.checkVisibility === 'function') {
+    return element.checkVisibility({
+      contentVisibilityAuto: true,
+      opacityProperty: true,
+      visibilityProperty: true,
+    });
+  }
+
+  // `checkVisibility` is Chromium 105+/Safari 17.4+/Firefox 125+. The canvas is
+  // also read by people in whatever browser they have, so fall back to the walk
+  // it replaced rather than reporting a visible bar as hidden.
+  const view = element.ownerDocument.defaultView;
+  for (let node = element; node?.nodeType === 1; node = node.parentElement) {
+    const style = view.getComputedStyle(node);
+    if (
+      style.display === 'none' ||
+      style.visibility === 'hidden' ||
+      style.visibility === 'collapse' ||
+      style.opacity === '0' ||
+      node.hasAttribute('hidden')
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/**
  * Reads the state that distinguishes a working bar from a broken one.
  *
  * `window.CookieConsent` being an object proves only that the library script
@@ -256,13 +302,27 @@ const RenderingCheckHarness = () => {
     }
 
     // The status line is what a reader looking at this canvas will believe, so
-    // it reports every condition the play function asserts. Measuring one
-    // proxy — the bar's height — used to let it read "Bar rendered" while the
-    // assertions it appears to summarise had already failed on an unstyled
-    // bar. See unisdr/undrr-mangrove#1244.
+    // it covers every runtime condition the play function asserts but one.
+    // Measuring a single proxy — the bar's height — used to let it read "Bar
+    // rendered" while the assertions it appears to summarise had already
+    // failed on an unstyled or still-hidden bar. See
+    // unisdr/undrr-mangrove#1244.
+    //
+    // Two things here are the play function's alone. `BOT_HIDING_OVERRIDE`
+    // having exactly one entry is a fact about this file, not about the page.
+    // And `CookieConsent.show(true)` not throwing is a call rather than a
+    // reading: making it four times a second would rebuild the very DOM every
+    // other line below measures. So a status line reading "Bar rendered"
+    // against a library that only claims to have built its DOM is still
+    // possible — that case, and no other.
     const tick = () => {
       const state = readBannerState(document);
       const failures = [
+        [
+          Array.isArray(configDelta) &&
+            configDelta.filter(key => key !== 'hideFromBots').length === 0,
+          'the tested configuration differs from the shipped one by more than hideFromBots',
+        ],
         [state.libraryLoaded, 'the library script did not run'],
         [
           state.configScriptLoaded,
@@ -271,12 +331,21 @@ const RenderingCheckHarness = () => {
         [state.stylesheetRequested, 'cookieconsent.css was not requested'],
         [state.stylesheetApplied, 'cookieconsent.css did not apply'],
         [Boolean(state.main), 'the library built no #cc-main container'],
+        [
+          Boolean(state.main) && state.main.parentElement === document.body,
+          'the container is not a child of the document body',
+        ],
         [Boolean(state.modal), 'the library built no consent bar'],
         [
           Boolean(state.modal) &&
             state.modal.getBoundingClientRect().height > 0,
           'the consent bar has no height',
         ],
+        // Present is not visible: the library builds the bar hidden and reveals
+        // it a frame later, and a hidden element still reports a box.
+        [isVisible(state.modal), 'the consent bar is not visible'],
+        [Boolean(state.acceptButton), 'the bar has no accept button'],
+        [isVisible(state.acceptButton), 'the accept button is not visible'],
       ]
         .filter(([passed]) => !passed)
         .map(([, reason]) => reason);
@@ -291,7 +360,7 @@ const RenderingCheckHarness = () => {
     tick();
     const timer = setInterval(tick, 250);
     return () => clearInterval(timer);
-  }, [config]);
+  }, [config, configDelta]);
 
   return (
     <div>

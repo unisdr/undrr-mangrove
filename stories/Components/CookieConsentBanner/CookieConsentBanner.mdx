@@ -280,6 +280,12 @@ Built with proper ARIA attributes, keyboard navigation, focus management, and sc
 
 ## Changelog
 
+- **1.4.1** — 2026-09-19 ([#1244](https://github.com/unisdr/undrr-mangrove/issues/1244)): The "Rendering check" status line now reports what the play function asserts. Documentation and stories only; the component is unchanged.
+  - The status line read "Bar rendered" off a single measurement — the bar's height — so it could report a working banner while the assertions it appeared to summarise had already failed. It now reports every runtime condition the play function checks but one, and names the ones that failed rather than saying only that nothing rendered.
+  - Most pointedly, it checks visibility and not just the box. The play function's own comment records why: the library builds the bar hidden and reveals it a frame later, and a `visibility: hidden` element still reports a box. Measuring the box alone was therefore exactly the case that could read "Bar rendered" for a bar the play function fails on.
+  - The one condition it still does not cover is `CookieConsent.show(true)` not throwing. That is a call rather than a reading, and making it four times a second would rebuild the DOM every other check measures.
+  - This story's assertions now run in CI. The Storybook test runner executes them against the live CDN on every push to a pull request, so a banner that stops rendering fails the build instead of being noticed by whoever next opened the story.
+
 - **1.4.0** — 2026-09-19 ([#1245](https://github.com/unisdr/undrr-mangrove/issues/1245), [#1246](https://github.com/unisdr/undrr-mangrove/issues/1246)): Unmount cleanup stops reaching outside the banner, and the load guard stops defeating itself.
   - Unmount no longer sweeps `[id^="cc-"]` across the whole document. That selector removed **any** element on the page whose id begins with `cc-`, including consumer markup the component never created. It now removes `#cc-main`, the single element vanilla-cookieconsent v3 creates, and only as a fallback for the case where the library never ran.
   - Removed the `destroy?.()` branch from cleanup. There is no `destroy` anywhere in the v3 bundle — the export surface is `acceptCategory, acceptService, acceptedCategory, acceptedService, eraseCookies, getConfig, getCookie, getUserPreferences, hide, hidePreferences, loadScript, reset, run, setCookieData, setLanguage, show, showPreferences, validConsent, validCookie` — so the branch never ran and `reset()` was always the real teardown. It is now the only path.
