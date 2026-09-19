@@ -256,14 +256,16 @@ function BrandIdentityPage({ themeName }) {
         rules, icon fills and blocks with no copy over them: no text colour
         meets WCAG AA on it at any size — white is 2.95 against a 4.5 minimum,
         and black passes WCAG but misses Mangrove&rsquo;s perceptual body-text
-        floor. A few shipped components still pair text with it; they are listed
-        as recorded exceptions in{' '}
+        floor. The library follows this rule: no component sets copy on the
+        orange or uses it as ink. An orange rule is emphasis, not identification
+        — <code>orange-900</code> is 2.95 on white and 2.66 on{' '}
+        <code>orange-50</code>, both under the 3:1 of SC 1.4.11, so a fill, a
+        label or a position always carries the meaning alongside it. The values
+        themselves are unchanged. See{' '}
         <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
           the colour contrast methodology
-        </a>
-        , pending{' '}
-        <a href="https://github.com/unisdr/undrr-mangrove/issues/1196">#1196</a>
-        .
+        </a>{' '}
+        for the measurements.
       </p>
       <div style={grid4}>
         {colorProbes.accent.map((c, i) => (

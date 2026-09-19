@@ -46,7 +46,9 @@ const parseFixTypes = script =>
     .map(type => type.replace(/['"]/g, '').trim())
     .filter(Boolean);
 
-// A directive naming a rule nothing enables anywhere in this config. `--fix`
+// A directive naming a rule the config does not enable for this file: since
+// unisdr/undrr-mangrove#1235, `no-bitwise` is on for `.jsx`, and the fixture
+// below is a `.js` under scripts/, which that block does not claim. `--fix`
 // without a fix-type restriction deletes this line; with one, it must not.
 const FIXTURE = `const noop = () => {};
 // eslint-disable-next-line no-bitwise
@@ -88,11 +90,20 @@ const lintFixture = fixTypes => {
   ];
   if (fixTypes.length) args.push('--fix-type', fixTypes.join(','));
 
-  const stdout = execFileSync(process.execPath, args, {
-    cwd: repoRoot,
-    input: FIXTURE,
-    encoding: 'utf8',
-  });
+  let stdout;
+  try {
+    stdout = execFileSync(process.execPath, args, {
+      cwd: repoRoot,
+      input: FIXTURE,
+      encoding: 'utf8',
+    });
+  } catch (error) {
+    // Expected: an unused directive is reported at `error` severity, so the
+    // CLI exits non-zero. The JSON report is still on stdout, and that report
+    // is the whole point of the call. Anything else is a real failure.
+    if (!error.stdout) throw error;
+    stdout = error.stdout;
+  }
   return JSON.parse(stdout)[0];
 };
 

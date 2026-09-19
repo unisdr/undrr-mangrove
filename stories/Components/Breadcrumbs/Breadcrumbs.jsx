@@ -17,7 +17,7 @@ export function Breadcrumbcomponent({
   const lastIndex = data.length - 1;
 
   let colorClass = '';
-  if (Color == 'White') {
+  if (Color === 'White') {
     colorClass = 'mg-breadcrumb--white';
   }
 

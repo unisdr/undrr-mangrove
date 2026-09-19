@@ -180,6 +180,24 @@ const VANILLA_SCRIPTS = [
       'Pending state for .mg-switch while a change saves: announces progress, ignores presses, times out and reverts on failure. Load as type="module". Call mgSwitchPending(input, { save }) per switch, or mark switches with data-mg-switch-pending (auto-initialised on load) and answer the cancelable mg-switch:save event with event.detail.respondWith(promise). Call mgSwitchPendingDestroy(scope) or abort { signal } before removing switches.',
   },
   {
+    name: 'Drawer',
+    file: 'js/drawer.js',
+    url: `${CDN_BASE}/js/drawer.js`,
+    selector: '[data-mg-js-drawer]',
+    initFunction: 'mgDrawer(scope)',
+    description:
+      'Open and close, Escape, focus management and a modal focus trap for a drawer or floating panel you rendered yourself. It never builds markup, so the close label, title and body stay in your HTML. Triggers are [data-mg-drawer-trigger="<container id>"]; scripts can dispatch mg-drawer:open, mg-drawer:close and mg-drawer:toggle on the container and listen for mg-drawer:opened and mg-drawer:closed. A floating panel (the mg-floating-panel class) is non-modal: no backdrop and no Tab trap. Call mgDrawer(scope) again for drawers added later, and mgDrawerDestroy(scope) before removing them.',
+  },
+  {
+    name: 'Copy button',
+    file: 'js/copy-button.js',
+    url: `${CDN_BASE}/js/copy-button.js`,
+    selector: '[data-mg-copy-button]',
+    initFunction: 'mgCopyButton(scope)',
+    description:
+      'Zero-dependency copy-to-clipboard button with a transient tooltip and an aria-live announcement. Call mgCopyButton(scope) for buttons added later.',
+  },
+  {
     name: 'Preview Access',
     file: 'js/preview-access.js',
     url: `${CDN_BASE}/js/preview-access.js`,
@@ -1133,6 +1151,96 @@ if (malformedHydration.length > 0) {
 }
 
 // ---------------------------------------------------------------------------
+// Check that a claimed lifecycle module is a file that exists
+//
+// The manifest now states the lifecycle outright — `vanillaModule: true` or
+// `false` on every component, with `vanillaScripts` naming the files — so a
+// consumer no longer probes /js/ for a 404 to find out (#1197). That is only
+// worth trusting if the claim is checked: a contract naming a module that was
+// never written, or that was renamed out from under it, has to fail the build
+// rather than publish a URL that 404s.
+//
+// Checked against the source tree, which is always present, so this runs the
+// same whether or not a build has happened. Built-only artifacts under
+// components/ are left to checkCuratedDrift(), which needs dist/.
+// ---------------------------------------------------------------------------
+const VANILLA_JS_SOURCE_DIR = path.resolve(process.cwd(), 'stories/assets/js');
+
+/**
+ * A contract's module URLs as the package-relative paths npm and the CDN
+ * publish them at ('js/drawer.js'), so a claim can be resolved to a file.
+ *
+ * @param {object} contract A `hydration` or `vanillaModule` contract.
+ * @returns {string[]}
+ */
+function modulePaths(contract) {
+  return Object.values(contract?.modules || {}).map(moduleUrl => {
+    const match = /\/mangrove\/[^/]+\/(.+)$/.exec(String(moduleUrl));
+    return match ? match[1] : String(moduleUrl);
+  });
+}
+
+const missingModuleFiles = [];
+for (const [componentId, data] of Object.entries(curatedData)) {
+  for (const field of CONTRACT_FIELDS) {
+    const contract = data?.[field];
+    if (!contract || typeof contract !== 'object') continue;
+    for (const publishedPath of modulePaths(contract)) {
+      if (!publishedPath.startsWith('js/')) continue;
+      const source = path.resolve(
+        VANILLA_JS_SOURCE_DIR,
+        publishedPath.slice('js/'.length)
+      );
+      if (!fs.existsSync(source)) {
+        missingModuleFiles.push(
+          `${componentId}: ${field} names ${publishedPath}, but stories/assets/${publishedPath} does not exist`
+        );
+      }
+    }
+  }
+  // A note explaining why there is no module contradicts a module.
+  if (data?.vanillaModuleNote && data?.vanillaModule) {
+    missingModuleFiles.push(
+      `${componentId}: has both a vanillaModule contract and a vanillaModuleNote explaining that it has none`
+    );
+  }
+}
+
+// The library-level list consumers read from index.json's `library` block, in
+// both directions: every entry names a real file, and every module that ships
+// is listed. The second half is what caught js/copy-button.js, which shipped
+// and was named by a component contract but was missing from this list.
+const vanillaScriptFiles = new Set(VANILLA_SCRIPTS.map(script => script.file));
+for (const script of VANILLA_SCRIPTS) {
+  if (!script.file.startsWith('js/')) continue;
+  const source = path.resolve(
+    VANILLA_JS_SOURCE_DIR,
+    script.file.slice('js/'.length)
+  );
+  if (!fs.existsSync(source)) {
+    missingModuleFiles.push(
+      `VANILLA_SCRIPTS: ${script.name} names ${script.file}, but stories/assets/${script.file} does not exist`
+    );
+  }
+}
+if (fs.existsSync(VANILLA_JS_SOURCE_DIR)) {
+  for (const file of fs.readdirSync(VANILLA_JS_SOURCE_DIR)) {
+    if (!file.endsWith('.js')) continue;
+    if (vanillaScriptFiles.has(`js/${file}`)) continue;
+    missingModuleFiles.push(
+      `VANILLA_SCRIPTS: stories/assets/js/${file} ships but is not listed, so nothing documents it`
+    );
+  }
+}
+
+if (missingModuleFiles.length > 0) {
+  console.warn(
+    'Vanilla lifecycle modules that do not match the files on disk:'
+  );
+  for (const problem of missingModuleFiles) console.warn(`  ${problem}`);
+}
+
+// ---------------------------------------------------------------------------
 // Check that every documented CSS class actually exists
 //
 // A class list in component-data.js is hand-maintained, so it drifts when a
@@ -1240,13 +1348,36 @@ const customPropertyCount = Object.values(customProperties.byComponent).reduce(
 // Written out from the data rather than by hand, because naming only the
 // data-viz palette left 29 properties unsaid — including the five typography
 // roles that #1210 had just established as the public font API.
-const globalGroupsSentence = customProperties.globals
-  .filter(group => group.count > 0)
+const globalGroupsWithMembers = customProperties.globals.filter(
+  group => group.count > 0
+);
+const globalGroupsSentence = globalGroupsWithMembers
   .map(
     group =>
       `${group.label} (${group.prefix}*), ${group.count} of them, ${group.where}`
   )
   .join('; ');
+// Counted rather than written out. The sentence above is generated from
+// GLOBAL_PREFIXES, so a hand-typed "Four groups" in front of it goes stale the
+// moment a group is added or removed — which is exactly what happened while
+// unisdr/undrr-mangrove#1203 briefly carried a fifth group, leaving llms.txt
+// claiming four and then listing five.
+const GROUP_COUNT_WORDS = [
+  'No',
+  'One',
+  'Two',
+  'Three',
+  'Four',
+  'Five',
+  'Six',
+  'Seven',
+  'Eight',
+  'Nine',
+];
+const globalGroupsCountPhrase = `${
+  GROUP_COUNT_WORDS[globalGroupsWithMembers.length] ??
+  String(globalGroupsWithMembers.length)
+} group${globalGroupsWithMembers.length === 1 ? '' : 's'}`;
 const globalGroupsTotal = customProperties.globals.reduce(
   (total, group) => total + group.count,
   0
@@ -1587,6 +1718,18 @@ if (validateOnly) {
     failed = true;
   }
 
+  if (missingModuleFiles.length > 0) {
+    console.error(
+      `Validation failed: ${missingModuleFiles.length} vanilla lifecycle ` +
+        'module claim(s) do not match the files on disk. A component that ' +
+        'claims a module, or a VANILLA_SCRIPTS entry that names one, must ' +
+        'point at a real file under stories/assets/js/, and every module that ' +
+        'ships must be listed in VANILLA_SCRIPTS.'
+    );
+    for (const problem of missingModuleFiles) console.error(`  - ${problem}`);
+    failed = true;
+  }
+
   if (missingCssClasses.length > 0) {
     console.error(
       `Validation failed: ${missingCssClasses.length} documented CSS class(es) ` +
@@ -1778,7 +1921,16 @@ async function main() {
       indexEntry.vanillaHtml = true;
     }
     if (data?.hydration) indexEntry.hydration = true;
-    if (data?.vanillaModule) indexEntry.vanillaModule = true;
+
+    // The lifecycle is stated, not implied. `vanillaModule` used to be present
+    // only when there was one, so "vanillaHtml with no lifecycle module" and
+    // "vanillaHtml plus a module" were indistinguishable without probing /js/
+    // for a 404 (#1197). It is now always emitted, and `vanillaScripts` names
+    // the files to load so nothing has to be guessed from the component id.
+    indexEntry.vanillaModule = Boolean(data?.vanillaModule);
+    if (data?.vanillaModule) {
+      indexEntry.vanillaScripts = modulePaths(data.vanillaModule);
+    }
 
     const componentCustomProperties = customProperties.byComponent[id];
     if (componentCustomProperties?.length) {
@@ -1888,8 +2040,17 @@ async function main() {
     // Vanilla hydration contract (data attributes, events, CDN modules).
     // {{version}} is already resolved: curatedData went through replaceVersion.
     if (data?.hydration) detail.hydration = data.hydration;
-    // Plain ES module contract (no React, no hydrate.js), same shape.
-    if (data?.vanillaModule) detail.vanillaModule = data.vanillaModule;
+    // Plain ES module contract (no React, no hydrate.js), same shape — or
+    // `false` when the component has no vanilla lifecycle, so a reader of the
+    // detail file alone gets the same answer the index gives (#1197).
+    detail.vanillaModule = data?.vanillaModule || false;
+    if (data?.vanillaModule) {
+      detail.vanillaScripts = modulePaths(data.vanillaModule);
+    } else if (data?.vanillaModuleNote) {
+      // Why there is none, for a component where the absence is a decision
+      // rather than a gap.
+      detail.vanillaModuleNote = data.vanillaModuleNote;
+    }
 
     // Do-not-modify flag for branding-critical components
     if (data?.doNotModify) {
@@ -1935,6 +2096,12 @@ async function main() {
       'Component index for the UNDRR Mangrove library. ' +
       'Most components work as vanilla HTML with CSS classes (vanillaHtml: true). ' +
       'Some require React (requiresReact: true). ' +
+      'Every entry states its lifecycle outright, so you never have to probe /js/ for a 404: ' +
+      "vanillaModule is true when a plain ES module under /js/ drives the behaviour — the entry's " +
+      'vanillaScripts then lists the files to load, each one the `file` of an entry in ' +
+      'library.vanillaScripts, and the detail file carries the full contract — and false when ' +
+      'there is none, either because the component is static presentation (the detail file says why ' +
+      'in vanillaModuleNote) or because its behaviour needs React (hydration: true). ' +
       'Each entry has a detailsUrl with full props, rendered HTML examples, and code snippets.',
     library: {
       name: pkg.name,
@@ -2096,7 +2263,7 @@ ${DOCS_BASE}ai-components/utilities.json
 Theme token dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
 ${DOCS_BASE}tokens.json
 
-This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. ${globalGroupsTotal} --mg-* properties are in neither list: they are global like a theme token, but declared straight in SCSS rather than generated from tokens/*.yaml, so the dictionary never saw them. Four groups — ${globalGroupsSentence}. The dictionary's own \`scope\` field says the same thing.
+This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. ${globalGroupsTotal} --mg-* properties are in neither list: they are global like a theme token, but declared straight in SCSS rather than generated from tokens/*.yaml, so the dictionary never saw them. ${globalGroupsCountPhrase} — ${globalGroupsSentence}. The dictionary's own \`scope\` field says the same thing.
 
 Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs

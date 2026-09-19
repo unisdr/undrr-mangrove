@@ -28,7 +28,7 @@ function getVisiblePages(page, totalPages) {
   const halfVisible = Math.floor(maxVisible / 2);
 
   let startPage = Math.max(1, page - halfVisible);
-  let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+  const endPage = Math.min(totalPages, startPage + maxVisible - 1);
 
   // Adjust start if near the end
   if (endPage - startPage < maxVisible - 1) {

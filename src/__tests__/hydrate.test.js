@@ -224,8 +224,7 @@ describe('createHydrator', () => {
   });
 
   it('does not clear container when clearContainer is false', () => {
-    document.body.innerHTML =
-      '<div class="target"><p>keep me</p></div>';
+    document.body.innerHTML = '<div class="target"><p>keep me</p></div>';
 
     createHydrator({
       selector: '.target',
@@ -259,7 +258,8 @@ describe('createHydrator', () => {
   });
 
   it('keeps identifierPrefix unique across update() calls', () => {
-    document.body.innerHTML = '<div id="first"><div class="target"></div></div>';
+    document.body.innerHTML =
+      '<div id="first"><div class="target"></div></div>';
 
     const result = createHydrator({
       selector: '.target',

@@ -25,14 +25,13 @@ export default [
   {
     // Report unused eslint-disable directives, never act on them. `lint:js`
     // passes `--fix-type problem,suggestion,layout`, which omits `directive`,
-    // so `--fix` cannot delete a suppression comment; `lint:check` runs
-    // without `--quiet`, so a stale one shows up as a warning a human reads.
-    // The repo's suppression comments carry the reason a line is written the
-    // way it is, and most of them name rules this config does not enable, so
-    // silent removal loses documentation for no gain. See
-    // unisdr/undrr-mangrove#1226.
+    // so `--fix` cannot delete a suppression comment. The severity is `error`
+    // rather than `warn` so a stale directive fails the build instead of
+    // adding one line to a wall of warnings: every suppression in the tree is
+    // either load-bearing or has been replaced with a plain comment that keeps
+    // its explanation. See unisdr/undrr-mangrove#1226 and #1235.
     linterOptions: {
-      reportUnusedDisableDirectives: 'warn',
+      reportUnusedDisableDirectives: 'error',
     },
     rules: {
       // Enabled so the suppression in Tree.fromElement.js guards something
@@ -89,13 +88,44 @@ export default [
       'no-var': 'off',
       'no-plusplus': 'off',
       'no-shadow': 'off',
+      // Off deliberately. Widening lint coverage to component `.jsx`
+      // (unisdr/undrr-mangrove#1235) surfaced 25 `javascript:` literals, and
+      // every one is a fixture: stories demonstrating an unsafe href and tests
+      // asserting the component refuses to render it. Enabling the rule would
+      // flag the test suite for testing the thing it is meant to test.
       'no-script-url': 'off',
+      // Enabled at `warn` rather than left off. The rule reports 27 sites;
+      // five already carry a suppression recording the DOMPurify sanitization
+      // contract, and those now guard something real. The other 22 need a
+      // per-site audit that does not belong in a lint-coverage change, so this
+      // warns today instead of failing the build.
+      //
+      // 27 is not the size of the backlog. `dangerouslySetInnerHTML` appears
+      // at 36 non-test sites; the rule only inspects lowercase DOM elements,
+      // so every use on a component-valued tag — `<HeadingTag>` in Hero.jsx,
+      // for example — is invisible to it. Treat a clean run as necessary, not
+      // sufficient. The audit also has to cover ResultItem.jsx, where the
+      // injected HTML is a search-API response rather than a caller's own
+      // markup. See unisdr/undrr-mangrove#1235.
+      'react/no-danger': 'warn',
+      // Small enough backlogs that enabling them costs nothing, and each keeps
+      // an existing suppression comment load-bearing.
+      'no-bitwise': 'warn',
+      'no-await-in-loop': 'warn',
       'prefer-rest-params': 'off',
       'class-methods-use-this': 'off',
       'block-scoped-var': 'off',
       'max-len': 'off',
+      // Off, as it was before component `.jsx` was linted. 51 sites across 32
+      // files render list items keyed by index, and picking a stable key is a
+      // per-component judgement about the data each one receives, not a
+      // mechanical fix. Turning it on here would add 50 warnings nobody reads.
+      // Tracked separately rather than smuggled into a coverage change.
       'react/no-array-index-key': [0],
-      eqeqeq: 'warn',
+      // `null: 'ignore'` because eight of the twelve loose comparisons that
+      // widening coverage surfaced are the `x != null` nullish check, which is
+      // the idiom the components use on purpose. The rest were tightened.
+      eqeqeq: ['warn', 'always', { null: 'ignore' }],
       enforceForClassFields: [0],
       'react/button-has-type': 'off',
       'no-empty-pattern': 'off',
@@ -113,9 +143,22 @@ export default [
       'import/no-extraneous-dependencie': 'off',
       'react/jsx-props-no-spreading': 'off',
       'import/no-extraneous-dependencies': 'off',
-      'no-console': 'warn',
+      // `console.error` and `console.warn` are how a component reports a
+      // failure it cannot recover from. Widening coverage found 32 such
+      // statements: 21 in component code, and 11 in test files that save and
+      // replace `console.error` to silence an expected React warning. The rule
+      // still catches a stray `console.log` left behind after debugging, which
+      // is what it is for — the one `console.log` in the tree's component code
+      // is a `debug`-gated channel in CookieConsentBanner and carries an
+      // explicit suppression. Note the reach: this block claims only story
+      // files and `.jsx`, so `no-console` never applies to plain `.js`,
+      // including the `scripts/` CLIs that print on purpose.
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-return-assign': ['warn', 'always'],
-      'func-names': ['warn', 'never'],
+      // `as-needed` rather than `never`: naming a function expression that is
+      // assigned to a member or passed to `memo()` is what puts a useful frame
+      // in a stack trace, and the name cannot be inferred in either position.
+      'func-names': ['warn', 'as-needed'],
       'no-underscore-dangle': [0],
       'no-use-before-define': 'off',
 
@@ -129,7 +172,11 @@ export default [
       'linebreak-style': 'off',
       'prettier/prettier': 'error',
     },
-    files: ['**/*.stories.@(js|jsx|mdx|mjs|cjs)'],
+    // Component `.jsx` sits alongside the story files it documents, and the
+    // rule set above was written for exactly this kind of code, so both share
+    // it. Plain `.js` is linted without this block, by ESLint's default file
+    // patterns. See unisdr/undrr-mangrove#1235.
+    files: ['**/*.stories.@(js|jsx|mdx|mjs|cjs)', '**/*.jsx'],
   },
   {
     files: ['**/*.ts', '**/*.tsx'],

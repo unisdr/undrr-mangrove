@@ -191,52 +191,116 @@ rescues it.
 The perceptual floors are 63 for body text and 50 for large text; run any pair
 yourself with `scripts/lib/perceptual-contrast.cjs`. White fails at every size.
 Pure black is the strongest ink the hue admits and still does not carry body
-copy — only large text. There is no pairing worth recommending, so the guidance
-is to keep copy off the surface entirely.
+copy — only large text. There is no pairing worth recommending, so the rule is
+to keep copy off the surface entirely.
 
-Moving the surface would work: white clears both measures at roughly `#b2571d`,
-Oklab lightness 56 against Sendai orange's 69. That is a rust rather than Sendai
-orange, and it repaints every accent tag and every secondary surface on every
-site at once — a brand decision with a brand owner behind it, not a library one.
+This is now true of the library as well as of the guidance. Every surface that
+used to contradict it was changed in
+[#1196](https://github.com/unisdr/undrr-mangrove/issues/1196) and
+[#1243](https://github.com/unisdr/undrr-mangrove/issues/1243); see
+[where the orange lives now](#where-the-orange-lives-now).
 
-## Recorded exceptions: components that still put text on the orange
+### An orange rule is decoration, not identification
 
-Removing these combinations is tracked in
-[#1196](https://github.com/unisdr/undrr-mangrove/issues/1196), deferred past 2.0
-because it is a brand decision. Until it is taken, the rule above and the
-components below disagree, and both are written down rather than one of them
-quietly winning.
+The same numbers that keep copy off the orange also keep the orange from
+carrying a boundary on its own:
 
-| Component | Where | Pair | WCAG 2 | Oklab |
-| --- | --- | --- | --- | --- |
-| `Tag` `--accent` | label | `#fff` on `tag-accent` → `orange-900` | 2.95 | 46.7 |
-| `Tag` `--accent` | label, hover | `#fff` on `tag-accent--hover` → `orange-800` | 2.65 | 42.5 |
-| `TextCta` `--secondary` | eyebrow and headline | `#fff` on `hero--secondary` → `orange-800` | 2.65 | 42.5 |
-| `TextCta` `--secondary` | body | `#fff` at 90% on `hero--secondary` | 2.42 | 36.4 |
-| `Hero` `--secondary` | body, used by the split-balanced story | `#fff` on `orange-800` | 2.65 | 42.5 |
-| `Hero` `--secondary` | CTA label on the white pill | `orange-800` on white | 2.65 | 42.5 |
-| `HubHeader` `--surface-secondary` | banner and bar text | `#fff` on `hero--secondary` | 2.65 | 42.5 |
-| `Card` `--secondary` | title | `secondary` → `orange-800` on the card | 2.65 | 42.5 |
-| `AuthorImage` `--secondary` | title | `secondary` as ink on white | 2.65 | 42.5 |
+| Pair | WCAG 2 | Oklab | Against the 3:1 of SC 1.4.11 |
+| --- | --- | --- | --- |
+| `#eb752a` on white | 2.95 | 46.7 | fails |
+| `#eb752a` on `#fdf1ea` (`orange-50`) | 2.66 | 40.0 | fails |
+| `#ed833f` on white | 2.65 | 42.5 | fails |
 
-The values are identical in all five themes: no sub-brand overrides
-`color.secondary`, `color.tag-accent` or `color.hero--secondary`. Everything
-else in those components passes.
+So an orange border, underline or marker is emphasis and never the only thing
+that identifies a component or tells one of its states from another. Something
+that does clear the threshold — the fill, the label, the weight, the position —
+has to carry that. Where the library now uses an orange rule it is always
+alongside a fill and a label that do.
+
+The pale end of the same ramp is the text-bearing end, and that is where the
+copy went: `--mg-color-text` on `orange-50` is 15.7 and 88.8, on `orange-100`
+14.1 and 83.8.
+
+### Why the surface did not move instead
+
+Darkening the accent until white passes does work, arithmetically. White clears
+both measures at roughly `#b2571d` — 4.91 and 64.1 — with a hover step near
+`#914516` at 6.85 and 72.9. It was prototyped and measured beside the route that
+shipped, and rejected on two counts.
+
+The first is drift. `#b2571d` is 14.4 dE2000 from Sendai orange and 16.7 from
+`orange-800`, against a just-noticeable difference of about 2.3. It moves the
+hue from CIE L\* 62.1 to 47.5 (Oklab lightness 69 to 56) and drops chroma with
+it. At six times the JND it is not a tuned Sendai orange, it is a rust, and it
+would have repainted every accent tag and every secondary surface on every site
+on upgrade.
+
+The second is that it does not finish the job. `.mg-cta__text` is 90% white, so
+it composites on whatever it sits on: on `#b2571d` that lands at 4.29, still
+under 4.5. Darkening the brand colour would still have left the CTA body failing
+unless the opacity changed too — which is the tell that the problem was the
+pairing rather than the particular orange.
+
+Moving the surface stayed available as a brand decision with a brand owner
+behind it. The decision taken was the other one: keep Sendai orange exactly as
+it is, and stop putting text on it.
+
+## Where the orange lives now
+
+Seven surfaces used to contradict the rule above. Six were components that chose
+an orange background or an orange ink; the seventh was a theme re-pointing a
+role, which is why the fix is in the token layer and not in six stylesheets.
+None of them moved the colour. Each moved the copy.
+
+| Surface | Was | Is |
+| --- | --- | --- |
+| `Tag` `--accent` | white label on `tag-accent`, 2.95 (2.65 hover) | `--mg-color-text` on `orange-50`, 15.70 / 88.8 (`orange-100` on hover, 14.12 / 83.8); the orange is the chip's border |
+| `TextCta` `--secondary` | white eyebrow and headline, 90% white body, on `hero--secondary`, 2.65 and 2.42 | the `--soft` surface — white under an 8% wash of the accent — with `neutral-900` and `neutral-800` copy, about 20:1 and 17:1; the orange is the leading rule |
+| `Hero` `--secondary` | white copy on `orange-800`, 2.65; CTA label `orange-800` on the white pill, 2.65 | the theme's own hero surface and the default CTA ink, both already AA in all five themes; the orange is the leading rule |
+| `HubHeader` `--surface-secondary` | white bar and banner text on `hero--secondary`, 2.65 | the theme's own hero surface; the orange is the rule under the bar |
+| `Card` `--secondary` | title `secondary` as ink, 2.65 (2.37 on DELTA) | the interactive colour, like every other card title link; the orange is the leading rule |
+| `AuthorImage` `--secondary` | title `secondary` as ink on white, 2.65 | `--mg-color-text` on white, 17.40 / 93.9; the ring and the hover tint keep the orange, which no copy sits on |
+| `.mg-button-primary:hover`, PreventionWeb and IRP | white label on `orange-900`, 2.95 | PreventionWeb's `teal-800` (5.50 / 69.7) and IRP's `blue-800` (6.02 / 71.1), the primitives their secondary buttons already use |
+
+The same applies to `.mg-button-primary.mg-button-outline:hover`, which shares
+the token and moved with it.
+
+The values are identical in all five themes, because no sub-brand overrides
+`color.secondary`, `color.tag-accent` or `color.hero--secondary` — that is why
+this was one decision and not five. Only PreventionWeb and IRP had re-pointed
+the button hover, and only their two token files changed value.
+
+`--mg-color-hero--secondary` did not change value. What changed is its role: its
+three consumers now read it as the accent rule on a surface that carries the
+copy, rather than as the surface itself. Its tertiary and quaternary siblings
+are still surfaces, so treat this one as the exception in that group.
+
+### The register
 
 The machine-readable register lives in
-`stories/assets/scss/__tests__/tokens-contract.test.js` (`WCAG_EXCEPTIONS` and
-`PERCEPTUAL_EXCEPTIONS`), where every entry carries its measured value and the
-assertion still bites: a listed pair must STILL fail, and must not get worse.
+`stories/assets/scss/__tests__/tokens-contract.test.js` (`COMPONENT_PAIRS`, with
+`WCAG_EXCEPTIONS` and `PERCEPTUAL_EXCEPTIONS`). Every pair above is asserted
+there against both measures in all five themes, so none of them can regress
+quietly, and the exception entries that used to record them as known failures
+are gone — the assertion is now that they pass.
 
-### What consumers should do meanwhile
+The decorative rules are recorded there too, and they do not pass 3:1. They are
+listed with their measured values and the reason, because a rule that is
+emphasis rather than identification is a judgement, and a judgement belongs in
+writing where someone can disagree with it.
 
-- Do not put essential information in an accent tag or a secondary CTA and
-  nowhere else; the surrounding markup must carry it too.
-- Prefer `Tag`'s default, secondary or outline variants for anything a reader
-  has to act on. `--accent` is decorative emphasis.
-- Do not add new text to an orange surface, and do not copy the pairing from
-  these components into a new one.
-- If your site must clear AA today, override `--mg-color-tag-accent`,
-  `--mg-color-tag-accent--hover`, `--mg-color-secondary` and
-  `--mg-color-hero--secondary` in your theme layer. `#b2571d` and `#914516`
-  clear both measures.
+### What consumers should do
+
+- **If you overrode `--mg-color-tag-accent`, `--mg-color-tag-accent--hover`,
+  `--mg-color-secondary` or `--mg-color-hero--secondary` in your theme layer to
+  clear AA**, you can drop the override. The library no longer puts text on
+  those tokens, so a darkened value now only darkens borders and rules — and on
+  `Tag` `--accent` it would darken the border against a pale fill rather than
+  the fill itself, which is probably not what the override was for.
+- **If you paint your own surface with one of those tokens**, it still carries
+  no text. That has not changed and will not.
+- **An orange rule is not an indicator.** Do not use one as the only mark of a
+  selected tab, an active item, an error or a required field.
+- **Check the pair, not the value, when you re-point a role.** #1243 was correct
+  markup and documented tokens landing on 2.95 because a theme aimed a hover at
+  the accent. Nothing in a component review would have found it.

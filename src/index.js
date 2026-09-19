@@ -4,7 +4,11 @@
 export { default as createHydrator } from './hydrate.js';
 
 // Component exports
-export { default as CookieConsentBanner } from '../stories/Components/CookieConsentBanner';
+// Points at the file, not the directory: there is no index in
+// stories/Components/CookieConsentBanner, so the directory specifier resolved
+// to nothing and took the whole module down with it. See
+// unisdr/undrr-mangrove#1240.
+export { default as CookieConsentBanner } from '../stories/Components/CookieConsentBanner/CookieConsentBanner';
 export { default as ShareButtons } from '../stories/Components/Buttons/ShareButtons/ShareButtons';
 export { default as MegaMenu } from '../stories/Components/MegaMenu/MegaMenu';
 export { default as ScrollContainer } from '../stories/Components/ScrollContainer/ScrollContainer';
@@ -18,7 +22,10 @@ export {
   interpolateLabel,
 } from '../stories/Components/SyndicationSearchWidget/context/SearchContext';
 export { Gallery } from '../stories/Components/Gallery/Gallery';
-export { default as IconCard } from '../stories/Components/Cards/IconCard/IconCard';
+// IconCard has no default export; the named form matches how the component is
+// written and how IconCard.hydrate.js re-exports it. See
+// unisdr/undrr-mangrove#1240.
+export { IconCard } from '../stories/Components/Cards/IconCard/IconCard';
 export { default as StatsCard } from '../stories/Components/Cards/StatsCard/StatsCard';
 export { default as Pager } from '../stories/Components/Pager/Pager';
 export { default as FormAction } from '../stories/Components/Forms/FormAction/FormAction';

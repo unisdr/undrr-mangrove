@@ -20,6 +20,32 @@ import {
 import { useSearchLabels, interpolateLabel } from '../context/SearchContext';
 
 /**
+ * Trust boundary: response HTML is rendered unescaped, on purpose.
+ *
+ * Three sites in this file render markup straight from `config.searchEndpoint`
+ * — the pre-rendered teaser blob, and the Elasticsearch `highlight` fields for
+ * a result's title and snippet. None of it is escaped or sanitised, because the
+ * `<em>` wrappers Elasticsearch puts around matched terms are the feature:
+ * escape the response and the tags render as literal text, which is the one
+ * thing highlighting exists to avoid. Stripping tags selectively is the same
+ * problem in a smaller box, and `stripHiddenTeaserFields` below is a field
+ * filter, not a sanitiser.
+ *
+ * So the endpoint is inside the component's trust boundary rather than an
+ * untrusted input, and it is worth naming because the consumer chooses it:
+ * `searchEndpoint` is set through the `config` prop and through
+ * `data-search-endpoint` on the hydration host. Repoint it and the widget will
+ * render whatever that service returns, with no filter in between. This widget
+ * is built for syndication, so the page it renders into is often a partner's
+ * domain rather than UNDRR's. Point it only at a service you trust to return
+ * safe HTML; see "Endpoint trust contract" in SyndicationSearchWidget.mdx for
+ * the consumer-facing statement of the same contract.
+ *
+ * Highlights are built from indexed documents, not from the search string, so
+ * the query is not reflected back into these fields.
+ */
+
+/**
  * Swap card variant classes and image styles on teaser HTML for card display modes.
  *
  * Teaser HTML from Elasticsearch already contains mg-card markup.
@@ -317,6 +343,8 @@ export function ResultItem({
     return (
       <article className="mg-search__result" data-result-type={resultType}>
         {showMetrics && <ScoreMetrics hit={hit} source={source} />}
+        {/* Teaser markup from the configured endpoint, rendered as-is. See the
+            trust boundary note at the top of this file. */}
         <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
       </article>
     );
@@ -381,6 +409,8 @@ export function ResultItem({
         <div className="mg-search__result-text">
           {/* Title */}
           <h3 className="mg-search__result-title">
+            {/* Unescaped so the endpoint's <em> highlight markup survives. See
+                the trust boundary note at the top of this file. */}
             <a
               href={fullUrl}
               dangerouslySetInnerHTML={{ __html: highlightedTitle }}
@@ -407,6 +437,9 @@ export function ResultItem({
 
           {/* Snippet */}
           {!hideSummary && highlightedBody && (
+            /* Same contract as the title above: endpoint HTML, kept unescaped
+               for the <em> highlight markup. See the note at the top of this
+               file. */
             <p
               className="mg-search__result-snippet"
               dangerouslySetInnerHTML={{ __html: highlightedBody }}

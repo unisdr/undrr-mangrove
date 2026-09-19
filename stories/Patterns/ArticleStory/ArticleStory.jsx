@@ -505,7 +505,7 @@ export function ArticleStory({
                 >
                   <h2>{section.heading}</h2>
                   {section.paragraphs.map((paragraph, paragraphIndex) => (
-                    // eslint-disable-next-line react/no-array-index-key
+                    // Index key: this is fixed sample copy that never reorders.
                     <p key={paragraphIndex}>{paragraph}</p>
                   ))}
                   {/* Story-only content-placement samples (English only). */}

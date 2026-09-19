@@ -244,6 +244,28 @@ staging, etc.).
 
 <Canvas of={IntegrationsStories.CustomEndpoint} meta={IntegrationsStories} />
 
+### Endpoint trust contract
+
+The widget renders HTML from the search response without sanitising it. Result
+teasers, and the highlighted title and snippet, go straight into the page as
+markup. This is deliberate: Elasticsearch wraps matched terms in `<em>`, and
+escaping the response would print those tags instead of emphasising the match.
+
+Point `searchEndpoint` only at a service you trust to return safe HTML. The
+default, `https://www.undrr.org/search-endpoint`, is UNDRR's own proxy over the
+syndication index. If you point it at your own service — through the
+`searchEndpoint` config value or the `data-search-endpoint` attribute — then
+whatever that service returns is rendered on your page, and you own what comes
+back. Sanitise in the endpoint, not in the widget.
+
+This matters more here than in a component that renders its own site's content.
+The widget exists to be embedded on partner sites, so the page carrying the
+markup is often not the same organisation as the index behind it.
+
+Nothing from the search box reaches the page as markup: highlights are built
+from indexed documents, not from the query, so the query text is not reflected
+back.
+
 ## Syndicated cards
 
 A hardwired topic query rendered as a content block with no search chrome. Uses `defaultQuery` to seed a topic, `requireImage` to ensure every card has a visual, and `visibleTeaserFields` to strip the content type badge and teaser text for a clean image + title + date card. Adjust `resultsPerPage` and `gridColumns` for different card counts.
@@ -432,36 +454,40 @@ The component is loaded automatically on pages containing a container with `data
 </div>
 ```
 
+`data-search-endpoint` sets the same value as the `searchEndpoint` config key,
+and carries the same responsibility: the widget renders that endpoint's HTML
+unsanitised. See [Endpoint trust contract](#endpoint-trust-contract).
+
 ## Props
 
 ### Config object
 
-| Prop                   | Type           | Default            | Description                                                                  |
-| ---------------------- | -------------- | ------------------ | ---------------------------------------------------------------------------- |
-| `searchEndpoint`       | string         | `/search-endpoint` | API endpoint for Elasticsearch queries                                       |
-| `resultsPerPage`       | number         | 50                 | Number of results to display per page                                        |
-| `debounceDelay`        | number         | 500                | Milliseconds to wait before executing search                                 |
-| `minSearchLength`      | number         | 3                  | Minimum characters required to trigger search                                |
-| `defaultQuery`         | string         | `''`               | Initial search query                                                         |
-| `defaultSort`          | string         | `'relevance'`      | Initial sort order (`relevance`, `newest`, `oldest`)                         |
-| `defaultFilters`       | array          | `[]`               | Default facet filters (array of `{key, value}`)                              |
-| `showSearchBox`        | boolean        | `true`             | Show the search input                                                        |
-| `showResultsCount`     | boolean        | `true`             | Show "Showing X of Y results"                                                |
-| `showSearchTimer`      | boolean        | `true`             | Show search execution time                                                   |
-| `showFacets`           | boolean        | `true`             | Show the facets sidebar                                                      |
-| `showActiveFilters`    | boolean        | `true`             | Show active filter chips                                                     |
-| `showSearchMetrics`    | boolean        | `false`            | Show debug metrics (score, etc.)                                             |
-| `enableHashSync`       | string/boolean | `'auto'`           | Sync search state to URL hash                                                |
-| `visibleFilters`       | object         | `null`             | Control which filters are visible                                            |
-| `allowedTypes`         | object         | `null`             | Restrict content types shown                                                 |
-| `customFilters`        | array          | `[]`               | Additional Elasticsearch filters                                             |
-| `customFacets`         | array          | `[]`               | Custom facet definitions                                                     |
-| `displayMode`          | string         | `'list'`           | Result rendering style: `'list'`, `'card'`, or `'card-book'`                 |
-| `gridColumns`          | number         | `null`             | Grid columns for card modes (2-6). `null` = use `resultsPerPage`             |
-| `visibleTeaserFields`  | object         | `null`             | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible |
-| `requireImage`         | boolean        | `false`            | Only return results that have an image (`has_image:true` ES filter)          |
-| `interestingnessTiers` | array          | `[]`               | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)       |
-| `longevityTiers`       | array          | `[]`               | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`) |
+| Prop                   | Type           | Default                                 | Description                                                                                                                        |
+| ---------------------- | -------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `searchEndpoint`       | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract) |
+| `resultsPerPage`       | number         | 50                                      | Number of results to display per page                                                                                              |
+| `debounceDelay`        | number         | 500                                     | Milliseconds to wait before executing search                                                                                       |
+| `minSearchLength`      | number         | 3                                       | Minimum characters required to trigger search                                                                                      |
+| `defaultQuery`         | string         | `''`                                    | Initial search query                                                                                                               |
+| `defaultSort`          | string         | `'relevance'`                           | Initial sort order (`relevance`, `newest`, `oldest`)                                                                               |
+| `defaultFilters`       | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                    |
+| `showSearchBox`        | boolean        | `true`                                  | Show the search input                                                                                                              |
+| `showResultsCount`     | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                      |
+| `showSearchTimer`      | boolean        | `true`                                  | Show search execution time                                                                                                         |
+| `showFacets`           | boolean        | `true`                                  | Show the facets sidebar                                                                                                            |
+| `showActiveFilters`    | boolean        | `true`                                  | Show active filter chips                                                                                                           |
+| `showSearchMetrics`    | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                   |
+| `enableHashSync`       | string/boolean | `'auto'`                                | Sync search state to URL hash                                                                                                      |
+| `visibleFilters`       | object         | `null`                                  | Control which filters are visible                                                                                                  |
+| `allowedTypes`         | object         | `null`                                  | Restrict content types shown                                                                                                       |
+| `customFilters`        | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                   |
+| `customFacets`         | array          | `[]`                                    | Custom facet definitions                                                                                                           |
+| `displayMode`          | string         | `'list'`                                | Result rendering style: `'list'`, `'card'`, or `'card-book'`                                                                       |
+| `gridColumns`          | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                   |
+| `visibleTeaserFields`  | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                       |
+| `requireImage`         | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                |
+| `interestingnessTiers` | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                             |
+| `longevityTiers`       | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                       |
 
 ## Accessibility
 
@@ -640,6 +666,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.11**, 2026-09-18 ([mangrove#1254](https://github.com/unisdr/undrr-mangrove/pull/1254)): Documented the endpoint trust contract. `ResultItem` renders three pieces of the search response as HTML — the pre-rendered teaser, and the Elasticsearch `highlight` fields for the title and the snippet — and does not sanitise any of them, because the `<em>` wrappers highlighting puts around matched terms are the feature and escaping the response would print them as text. That was true before this change and stays true after it; no rendering behaviour changed. What was missing was anyone saying so: `searchEndpoint` is set by the consumer, through the config prop or `data-search-endpoint`, and a consumer who repoints it at their own service inherits whatever that service returns, on a page that — this being a syndication widget — is frequently not UNDRR's. The three render sites now carry the reasoning, the MDX has an "Endpoint trust contract" section beside the endpoint documentation, and the AI manifest entry carries it too. The search query is not part of this: highlights come from indexed documents, not from the query string, so nothing typed in the search box is reflected back as markup. Also corrects the documented default for `searchEndpoint`, which the props table gave as `/search-endpoint` where the code has always used `https://www.undrr.org/search-endpoint`.
 - **1.4.10**, 2026-09-18 ([mangrove#1234](https://github.com/unisdr/undrr-mangrove/pull/1234), [mangrove#1227](https://github.com/unisdr/undrr-mangrove/issues/1227)): `hydrator.update()` no longer mounts a second widget inside the first. The widget root renders `data-mg-search-widget`, the same marker its hydration host carries and the documented hydration selector matches, and `data-mg-hydrated` was set only on the host — so a re-scan read the React-rendered root as an un-hydrated target and hydrated it, nesting three deep. The fix is in the shared hydration runtime rather than in this component: `createHydrator` now skips a match that sits inside a hydrated container the same selector also matches. It is scoped that way so a different component's hydration host nested inside a hydrated `ScrollContainer` or `Drawer` still hydrates. The marker stays on the widget root because a self-identifying root is a reasonable convention and the runtime should tolerate it — not because anything depends on it: `SearchPager`'s `[data-mg-search-widget]` fallback is unreachable inside this widget, which always passes a `widgetId`.
 - **1.4.9**, 2026-09-18 ([mangrove#1222](https://github.com/unisdr/undrr-mangrove/pull/1222), [mangrove#1205](https://github.com/unisdr/undrr-mangrove/issues/1205)): Changing page scrolls the widget that was paged. The pager resolved its scroll target with `document.querySelector('[data-mg-search-widget]')`, so on a page carrying two widgets, paging the second one sent the reader to the top of the first, away from the results they had just asked for. The widget root now carries its `widgetId` as its DOM id and the pager scrolls to that element. `SearchResults` and `Pager` both default `widgetId` to an empty string, and with no id to resolve the pager keeps the previous `[data-mg-search-widget]` lookup. (Corrected in 1.4.10: that fallback was described here as covering public exports used in custom layouts. `src/index.js` exports only `SyndicationSearchWidget`, `DEFAULT_LABELS` and `interpolateLabel`, and the `exports` map in `package.json` makes the deep path unreachable, so the fallback is dead code — it is kept as cheap insurance, not as a supported entry point.) One widget on a page behaves exactly as before.
 - **1.4.8**, 2026-09-18 ([mangrove#1221](https://github.com/unisdr/undrr-mangrove/pull/1221), [mangrove#1204](https://github.com/unisdr/undrr-mangrove/issues/1204)): The mobile filter drawer is anchored to the inline start rather than the physical left, so in Arabic it rests on the right edge, slides in from the right and casts its shadow to the left, over the page content. `left: 0` became `inset-inline-start: 0`, but the slide is a `translateX` keyframe, which works on a physical axis and would have fought that change: the panel would have rested on the right in Arabic while still entering from the left. Both the travel and the shadow offset are now custom properties that `:dir(rtl)` flips, the shape `.mg-drawer--start` already used in [Drawer](https://mangrove.undrr.org/?path=/docs/components-navigation-drawer--docs). LTR rendering is pixel-identical — same resting edge, same 320px width, same `4px 0 20px` shadow, same 0.3s ease-out entry.
