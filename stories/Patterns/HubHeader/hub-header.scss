@@ -41,15 +41,18 @@
   --mg-hub-header-bar-tint: 0 0 0;
   --mg-hub-header-bar-tint-alpha: 0.14;
 
-  // Known exception: hero--secondary is the orange accent, and every link and
-  // heading in this header is white on it — 2.65. The bar tint above darkens
-  // the bar a little, and not nearly enough. The orange carries no text at any
-  // size; removing the pairing is a brand decision, tracked in
-  // https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy it:
-  // docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+  // hero--secondary is the orange accent, which carries no text at any size —
+  // every link and heading here was white on it at 2.65, and the bar tint
+  // darkened it nowhere near enough. So the surface stays the theme's own hero
+  // colour, which the white ink above is already sized for, and the accent
+  // becomes the rule the bar sits on: a line, with no copy over it.
+  // See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   &--surface-secondary {
-    --mg-hub-header-surface: var(--mg-color-hero--secondary);
-    --mg-hub-header-banner-surface: var(--mg-color-hero--secondary);
+    // Full-bleed, because the bar it sits under is full-bleed, so the rule
+    // reads as the edge of the header rather than a line inside it.
+    .mg-hub-header__bar {
+      border-block-end: mg-rem(4) solid rgb(var(--mg-color-hero--secondary));
+    }
   }
 
   &--surface-tertiary {

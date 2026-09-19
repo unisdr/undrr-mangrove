@@ -147,14 +147,24 @@
   --mg-author-image-accent: rgb(var(--mg-color-interactive));
 }
 
-// Known exception: the accent also colours the title, so this reads the orange
-// as ink on white — 2.65, the same failure as white on the orange. Removing the
-// pairing is a brand decision, tracked in
-// https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy it:
-// docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+// The accent drives three things: the avatar ring, the focus outline and the
+// title. The Sendai orange is fine as the ring — a band of colour with no copy
+// over it — but it is 2.65 as ink on white, under the 4.5 the title needs, and
+// 2.95 as an outline against white, under the 3.0 a focus indicator needs. So
+// this variant keeps the orange ring and hands those two back to the tokens
+// that are sized for them.
+// See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 .mg-author-image--secondary {
   --mg-author-image-accent: rgb(var(--mg-color-secondary));
   --mg-author-image-hover-tint: rgb(var(--mg-color-secondary) / 0.5);
+}
+
+.mg-author-image--secondary .mg-author-image__title {
+  color: rgb(var(--mg-color-text));
+}
+
+.mg-author-image--secondary .mg-author-image__link:focus-visible {
+  outline-color: rgb(var(--mg-color-focus-ring));
 }
 
 .mg-author-image--tertiary {

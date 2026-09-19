@@ -44,7 +44,14 @@ color:
   # orange-900 or orange-800: white is 2.95 and 2.65 against WCAG's 4.5, and
   # black, which passes WCAG at 7.11 and 7.92, still misses the perceptual
   # body-text floor (57.4 and 61.1 against 63). Use them for borders, rules,
-  # icon fills and blocks with no copy over them.
+  # icon fills and blocks with no copy over them. They are also too close to
+  # white to carry a boundary on their own: orange-900 on white is 2.95 and
+  # orange-900 on orange-50 is 2.66, both under the 3:1 of SC 1.4.11, so an
+  # orange edge is decoration and must never be the only thing that identifies
+  # a component or a state.
+  #
+  # The pale end of the ramp is the text-bearing end: orange-50 and orange-100
+  # carry --mg-color-text at 15.7:1 and 14.1:1 (88.8 and 83.8 perceptually).
   # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   orange-50: { $value: '#fdf1ea' }
   orange-100: { $value: '#fbe3d4' }
@@ -66,9 +73,19 @@ color:
 
   # The orange accent, as three named roles. Non-text, like the ramp steps they
   # point at: do not put copy on a surface painted with these, and do not use
-  # them as ink on white. Tag --accent, TextCta/Hero/HubHeader --secondary and
-  # AuthorImage --secondary still do, and are recorded exceptions pending
-  # https://github.com/unisdr/undrr-mangrove/issues/1196.
+  # them as ink on white. Nothing in the library does either any more — the last
+  # surfaces that did were changed in unisdr/undrr-mangrove#1196 and #1243, and
+  # every pair is now asserted in
+  # stories/assets/scss/__tests__/tokens-contract.test.js.
+  # `tag-accent` is the accent tag's border, not its fill; the fill is the pale
+  # end of the same ramp. `tag-accent--hover` now has no consumer in the
+  # library: it is orange-800, lighter than the resting orange-900 border, so
+  # using it on hover faded the rule to 2.15 just as the chip responded. It
+  # stays published at its value only so this release does not also remove a
+  # token. Setting it in a theme layer does nothing — no rule reads it — so it
+  # is not a hook for "a distinct accent hover", and it should be retired
+  # rather than rewired: the reason it has no consumer is that the one use it
+  # ever had made the component worse.
   # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   secondary: { $value: '{color.orange-800}' }
   tag-accent: { $value: '{color.orange-900}' }

@@ -261,7 +261,11 @@ color:
   hero: { $value: '{color.interactive}' }
   # In UNDRR and every sub-brand this resolves to the orange accent, which
   # carries no text: white fails WCAG at 2.65 and black misses the perceptual
-  # body-text floor. Treat it as a block of colour, not a text surface.
+  # body-text floor. So, unlike its tertiary and quaternary siblings, this is
+  # NOT a surface to set copy on. Its three consumers — Hero --secondary,
+  # TextCta --secondary and HubHeader --surface-secondary — read it as the
+  # accent rule on a surface that carries the copy, not as the surface.
+  # The value is unchanged by unisdr/undrr-mangrove#1196; only the role is.
   # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   hero--secondary: { $value: '{color.secondary}' }
   hero--tertiary: { $value: '{color.tertiary}' }

@@ -37,12 +37,14 @@ Photos fill their frame when adjacent content makes the card taller, using `obje
 
 Use the `variant` prop to change the title accent color. These match the Hero component color system and adapt per theme.
 
-| Variant             | Class                 | Color                          |
-| ------------------- | --------------------- | ------------------------------ |
-| `primary` (default) | —                     | `$mg-color-interactive` (blue) |
-| `secondary`         | `mg-card--secondary`  | `$mg-color-secondary` (orange) |
-| `tertiary`          | `mg-card--tertiary`   | `$mg-color-tertiary` (black)   |
-| `quaternary`        | `mg-card--quaternary` | `$mg-color-quaternary` (red)   |
+| Variant             | Class                 | Color                                                                                    |
+| ------------------- | --------------------- | ---------------------------------------------------------------------------------------- |
+| `primary` (default) | —                     | `$mg-color-interactive` (blue)                                                           |
+| `secondary`         | `mg-card--secondary`  | Title `$mg-color-interactive` (blue), plus a `$mg-color-secondary` (orange) leading rule |
+| `tertiary`          | `mg-card--tertiary`   | `$mg-color-tertiary` (black)                                                             |
+| `quaternary`        | `mg-card--quaternary` | `$mg-color-quaternary` (red)                                                             |
+
+**Contrast:** the orange accent carries no text, in either direction. `secondary` used to paint the title with it, at 2.65 against WCAG's 4.5 on the card surface; the title now takes the interactive colour and the accent is a 4px rule on the card's leading edge. That rule is 2.95 against white, under the 3:1 of SC 1.4.11, so it is emphasis rather than the only signal. See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 Use the variant control below the canvas to preview each option.
 
@@ -104,6 +106,7 @@ See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-witho
 
 ## Changelog
 
+- **1.5.0** — 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `mg-card--secondary` no longer paints its title in the orange accent (2.65 on the card surface, 2.37 on DELTA's). The title takes the interactive colour, and the accent becomes a 4px rule on the card's leading edge instead. `--mg-color-secondary` is unchanged. This is a visible change wherever the modifier is used, in all five themes.
 - **1.4.1** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.
 - **1.4.0** — 2026-09-10: Plain-text titles for unlinked cards, visible labels, `buttonLink` prop, and `card.scss` fixes for empty `href`.
 - **1.3.5** — 2026-09-09 ([#1109](https://github.com/unisdr/undrr-mangrove/issues/1109)): Photos fill frame height when adjacent content is taller.

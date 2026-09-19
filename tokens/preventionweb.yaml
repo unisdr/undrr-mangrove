@@ -30,8 +30,12 @@ brand:
   teal-800:
     $value: '#0c7575'
     $description: >-
-      Lighter partner of the brand teal for secondary button fill, meeting
-      WCAG AA (5.5:1) while providing lower visual weight than primary.
+      Lighter partner of the brand teal. Carries the secondary button fill and,
+      since the primary button's hover left the orange accent, that hover too.
+      White on it is 5.5:1 and 69.7 perceptually, so it clears AA either way,
+      and it sits 4.2 dE2000 from the brand teal — comfortably past the ~2.3
+      just-noticeable difference, though a shallower step than the base theme's
+      own blue-900 to blue-700 hover (12.2).
 
 color:
   $type: color
@@ -42,13 +46,19 @@ color:
   button-background:
     $value: '{=color.interactive}'
     $format: srgb-rgb-function
+  # Both hovers used to point at the Sendai orange, which put a white button
+  # label on the accent at 2.95:1 in this theme and in IRP — the seventh surface
+  # in unisdr/undrr-mangrove#1196, and the one that arrived through the token
+  # layer rather than through a component. The orange carries no text, so the
+  # hover is now a tonal step inside the brand instead of a jump to the accent.
+  # See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
   button-background--hover:
-    $value: '{color.orange-900}'
+    $value: '{=brand.teal-800}'
     $format: srgb-rgb-function
   button-secondary-background: { $value: '{=brand.teal-800}' }
   button-secondary-background--hover: { $value: '{=brand.primary}' }
   button-outline-primary: { $value: '{=color.interactive}' }
-  button-outline-primary--hover: { $value: '{color.orange-900}' }
+  button-outline-primary--hover: { $value: '{=brand.teal-800}' }
   button-outline-secondary:
     $value: '{color.button-secondary-background}'
     $format: literal

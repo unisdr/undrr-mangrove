@@ -114,8 +114,28 @@ stylesheet rather than in an inline style.
 
 ## Vanilla HTML and Drupal
 
-Legend has no JavaScript behaviour, so it needs no hydration. A server-rendered
-page can emit the same markup and load a Mangrove stylesheet:
+Legend has no JavaScript behaviour, so it needs neither hydration nor a vanilla
+lifecycle module, and there is no `js/legend.js` to wait for. This is a
+decision, not a gap: a legend is static presentation. It has no state, no
+interactive controls and no keyboard model, so there is nothing for a lifecycle
+to manage. The CSS-only path is the whole component here, not a subset of it —
+emit the markup, load a Mangrove stylesheet, and you have everything the React
+version gives you.
+
+In the AI manifest, Legend is `vanillaModule: false` with a
+`vanillaModuleNote` saying the same thing, so an agent reading the manifest
+does not have to probe `/js/` to find out.
+
+If your legend entries need to _do_ something — toggle a map layer, filter a
+chart series — that interactivity belongs to your own controls rather than to
+the legend. Put a [Checkbox or switch](?path=/docs/components-forms-checkbox--docs)
+beside each entry, or hold the list in a
+[Drawer or floating panel](?path=/docs/components-navigation-drawer--docs),
+which does have a vanilla lifecycle module. Keep the interactive control
+outside the legend's own markup: a legend is a `role="group"`, and burying a
+control in one only makes it harder to reach than a plain button beside it.
+
+A server-rendered page can emit the same markup and load a Mangrove stylesheet:
 
 ```html
 <div
@@ -187,6 +207,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.0.5** — 2026-09-18 ([#1197](https://github.com/unisdr/undrr-mangrove/issues/1197)): Documentation only. Says outright that Legend has no vanilla lifecycle module and that none is planned, because a legend is static presentation with no state, no interactive controls and no keyboard model — so a CSS-only adoption is the complete component rather than a partial one. Points anyone who needs interactive legend entries at a Checkbox or switch beside each entry, or a Drawer, kept outside the legend's own `role="group"`. The AI manifest states the same through `vanillaModule: false` and a `vanillaModuleNote`, so it can be read without probing `/js/` for a 404.
 - **1.0.4** — 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-legend__list` hides its markers with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin). Safari drops the implicit `list` role from a markerless list, so VoiceOver stopped announcing the entry count; an empty string is still a marker, so the role survives and nothing renders. No `role="list"` is needed on the `<ul>`, and no markup or layout changes.
 - **1.0.3** — 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Removed the "Dark theme" story. It wrapped the legend in an `mg-theme-dark` class that the library never defined and set a `Dark` theme override that does not exist, so it rendered labels at 1.2:1 and implied a dark-surface API that Legend does not have. The docs now say plainly that Legend is styled for light surfaces.
 - **1.0.1** — 2026-09-17 ([#1194](https://github.com/unisdr/undrr-mangrove/pull/1194)): Documentation only. Removed a duplicated `Continuous` canvas and expanded the page: when to use each type, React usage with tick positioning, the plain HTML equivalent, a CSS class reference, accessibility notes and theme behaviour.

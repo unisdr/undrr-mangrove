@@ -64,7 +64,11 @@ export function SyndicationSearchWidget({ config, labels }) {
 SyndicationSearchWidget.propTypes = {
   /** Widget configuration object merged with DEFAULT_CONFIG from utils/constants. */
   config: PropTypes.shape({
-    /** Elasticsearch proxy endpoint URL. */
+    /**
+     * Elasticsearch proxy endpoint URL. Results are rendered as unsanitised
+     * HTML, so this endpoint is trusted; see "Endpoint trust contract" in the
+     * MDX documentation.
+     */
     searchEndpoint: PropTypes.string,
     /** Number of results per page. */
     resultsPerPage: PropTypes.number,

@@ -17,6 +17,56 @@ The `Tree` component provides an accessible hierarchical navigation structure co
 - **Mangrove tokens**: built with canonical interactive and neutral colour tokens.
 - **RTL**: ArrowRight and ArrowLeft swap and the chevron mirrors in right-to-left layouts.
 
+## When a treeview is the right pattern
+
+A treeview is a single composite widget. The whole tree is one tab stop, and
+arrow keys move a roving `tabindex` between the items inside it. That is what
+makes it good for navigating a deep hierarchy quickly, and it is also what
+rules out a whole class of interfaces that look like trees.
+
+Use `Tree` when:
+
+- The hierarchy is there to be **navigated or selected from** — a knowledge
+  base section list, a category picker, a file tree.
+- Each row's whole job is to be chosen or to expand. Activating a row selects
+  it, follows its link, or opens its children.
+- One tab stop for the entire structure is what you want, so a keyboard user
+  arrows through 200 items instead of tabbing past them.
+
+Do not use `Tree` when **each row carries its own controls** — a switch, a
+delete button, a menu, an expand button that is separate from the row itself.
+A `treeitem` is a composite widget item, so an interactive control inside one
+is nested interactive content: axe reports it as `nested-interactive`, and the
+underlying problem is real rather than a lint preference. The row owns the
+keyboard, so the control inside it has no reliable way to be reached or
+operated, and screen readers announce the row's role rather than the control's.
+A map layer panel where every row has a visibility switch _and_ an expand
+button is the clearest example: it looks like a tree and is not one.
+
+Reach for these instead:
+
+| Shape                                                   | Use                                                                             |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Nested rows, each with its own switch, button or menu   | Grouped `<details>` / `<summary>`, or a plain nested list of ordinary controls  |
+| A row that expands, with nothing else interactive in it | `Tree`, or [ShowMore](?path=/docs/components-showmore--docs) for a single block |
+| A flat list of options to choose one or several of      | [Checkbox or switch](?path=/docs/components-forms-checkbox--docs)               |
+| A hierarchy that is navigated, with links only          | `Tree`                                                                          |
+| Tabular rows with per-row actions                       | A `<table>` with buttons in cells                                               |
+
+Grouped `<details>`/`<summary>` is the honest fallback for the rejected case.
+Each summary is its own tab stop, each row's controls are ordinary controls in
+the normal tab order, and the disclosure state is announced by the browser
+without any ARIA of your own. You lose arrow-key traversal across the whole
+hierarchy. For a panel of a dozen or so layer rows that is a good trade;
+for a 200-item navigation tree it is not, and that is the line between the two
+patterns.
+
+If you are partway into a treeview and axe is reporting `nested-interactive`,
+moving the offending control **out of the item's ancestry** is usually the fix,
+not adding ARIA to paper over it. A team building a hazard layer panel on
+Mangrove cleared eight violations of exactly this shape that way
+([#1197](https://github.com/unisdr/undrr-mangrove/issues/1197)).
+
 ## Storybook variations
 
 ### Default
@@ -198,6 +248,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.1.2** — 2026-09-18 ([#1197](https://github.com/unisdr/undrr-mangrove/issues/1197)): Documentation only. New "When a treeview is the right pattern" section, which says what the roving tabindex costs: a `treeitem` is a composite widget item, so a switch, menu or separate expand button inside one is nested interactive content, and a nested hierarchy of rows with per-row controls is not a treeview however much it looks like one. It names grouped `<details>`/`<summary>` as the fallback for that case, with the trade it makes, and says that moving the control out of the item's ancestry is the fix for a `nested-interactive` finding rather than more ARIA. Written from a consuming team's report of clearing eight violations of that exact shape.
 - **1.1.1** — 2026-09-17 ([#1194](https://github.com/unisdr/undrr-mangrove/pull/1194)): Documentation only. The docs page now embeds its stories, so the default, linked, custom-toggle-icon and hydrated trees each have a live example. The placeholder "Item 1 / Item 2" labels are replaced with a knowledge base section tree, and the three React stories now give the tree an `aria-label`, which `HydratedFromHtml` already had through `data-aria-label`.
 - **1.1.0** — 2026-09-17 ([#1176](https://github.com/unisdr/undrr-mangrove/pull/1176)): Hydration from a nested list with `Tree.fromElement.js`, `Tree.hydrate.js` and `HydratedTree`, and a `toggleIcon` prop on `Tree` and `TreeItem` (`data-toggle-icon` when hydrated).
   - The default export of `components/Tree.js` is now `HydratedTree` ([#1172](https://github.com/unisdr/undrr-mangrove/issues/1172)), which takes the same props and children as `Tree`; import `{ Tree }` if you need the component itself.

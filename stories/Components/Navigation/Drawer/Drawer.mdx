@@ -38,6 +38,10 @@ dismiss it.
 
 <Canvas of={DrawerStories.FloatingPanel} />
 
+### Vanilla lifecycle
+
+<Canvas of={DrawerStories.VanillaLifecycle} />
+
 ## Usage
 
 ### React
@@ -61,7 +65,157 @@ import { Drawer } from '@undrr/undrr-mangrove';
 </Drawer>;
 ```
 
+### Vanilla HTML (`js/drawer.js`)
+
+For a page with no React, load `js/drawer.js`. It gives you the same
+behaviour the React component has — open and close, Escape, focus management,
+a focus trap while a modal drawer is open, and cleanup — against markup you
+wrote yourself.
+
+The module never builds a drawer. It enhances the one in your HTML, so the
+close button's `aria-label`, the title and the body stay on the page that
+renders them and translation stays with your CMS. The only element it creates
+is the backdrop, which carries no text.
+
+There is no `js/floating-panel.js`, and there will not be. A floating panel is
+the same component as a drawer with `isFloatingPanel` set — the React
+`Drawer` only switches its base class — so one module drives both. Give the
+container `class="mg-floating-panel"` and load `js/drawer.js`.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://assets.undrr.org/mangrove/latest/css/style.css"
+/>
+
+<button
+  type="button"
+  data-mg-drawer-trigger="filters"
+  class="mg-button mg-button-primary"
+>
+  Filter publications
+</button>
+
+<div
+  id="filters"
+  class="mg-drawer mg-drawer--start"
+  data-mg-js-drawer
+  role="dialog"
+  tabindex="-1"
+>
+  <div class="mg-drawer__header">
+    <h2 class="mg-drawer__title">Filter publications</h2>
+    <button
+      type="button"
+      class="mg-icon-button mg-icon-button--small mg-drawer__close"
+      aria-label="Close"
+    >
+      <span class="mg-icon mg-icon-close" aria-hidden="true"></span>
+    </button>
+  </div>
+  <div class="mg-drawer__body">
+    <p>Narrow the publications list by hazard, region and year.</p>
+  </div>
+</div>
+
+<script
+  type="module"
+  src="https://assets.undrr.org/mangrove/latest/js/drawer.js"
+></script>
+```
+
+Every `[data-mg-js-drawer]` container is enhanced on page load. For drawers
+added later, and for cleanup, import the named exports:
+
+```js
+import { mgDrawer, mgDrawerDestroy } from '@undrr/undrr-mangrove/js/drawer.js';
+
+mgDrawer(container); // enhances the drawers in `container`; already-enhanced ones are skipped
+mgDrawerDestroy(container); // removes the listeners, the backdrop and the attributes it set
+```
+
+`mgDrawer()` returns a handle per drawer with `open()`, `close()`, `toggle()`
+and `isOpen()`. `mgDrawerOpen(element)`, `mgDrawerClose(element)`,
+`mgDrawerToggle(element)` and `mgDrawerInstance(element)` reach an enhanced
+drawer you do not hold a handle for.
+
+| Markup                             | Effect                                                                                                               |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `data-mg-js-drawer`                | Marks the container. Required, and distinct from the `data-mg-drawer` hydration marker — use one path, not both      |
+| `id`                               | Required, so `data-mg-drawer-trigger` buttons can find the drawer                                                    |
+| `data-mg-drawer-trigger="<id>"`    | On a button anywhere in the page. Clicking toggles the drawer; the button gets `aria-expanded` and `aria-controls`   |
+| `class="mg-floating-panel"`        | Non-modal floating panel: no backdrop, no `aria-modal`, no focus trap, and Escape only from inside it or its trigger |
+| `class="is-open"`                  | The drawer starts open                                                                                               |
+| `data-backdrop="false"`            | An edge drawer with no backdrop, and so not modal                                                                    |
+| `data-mg-js-drawer-skip-auto-init` | Skips this container on page-load auto-init; an explicit `mgDrawer()` call still enhances it                         |
+
+Dispatch `mg-drawer:open`, `mg-drawer:close` or `mg-drawer:toggle` on the
+container to drive it from script — the same event names the hydrated drawer
+answers. The module also dispatches `mg-drawer:opened` and `mg-drawer:closed`
+after the drawer has moved; both bubble.
+
+What the module does for accessibility, so you do not have to: it adds
+`role="dialog"` and `tabindex="-1"` when your markup omits them, names the
+dialog from its own `.mg-drawer__title` when you have given it no `aria-label`
+or `aria-labelledby` (minting an id for the title if it has none, and giving it
+back on destroy), keeps a closed
+drawer `inert` and `aria-hidden` so its controls stay out of the tab order,
+moves focus to the close button on open, sets `aria-modal` only while a modal
+drawer is open, and traps Tab inside a modal drawer. A floating panel is
+deliberately left untrapped: the rest of the page is still operable, and
+trapping Tab there would be wrong.
+
+The trap counts anything the browser will stop on, not just links and form
+controls — an `<iframe>`, a `contenteditable` region, a `<summary>` — and
+ignores anything it will skip: a `display:none` or `visibility:hidden`
+element, a control in a closed `<details>`, and every radio in a group but the
+one that is actually a tab stop. Getting either half of that wrong is how a
+trap leaks: a hidden element at the end of the drawer means Tab never reaches
+the wrap point and walks out into the page behind the backdrop, and a hidden
+element at the start means Shift+Tab calls `focus()` on something that cannot
+take it and focus stops moving at all. If focus does get out — the one case
+that remains is tabbing through an `<iframe>`'s own document, which the
+parent page cannot see — the next Tab pulls it back.
+
+On close, focus goes to whatever opened the drawer. When that is gone, hidden,
+or never existed — a drawer opened from script, or an opener the app has since
+re-rendered away — it falls back to a trigger for the drawer, and then to the
+document body. It is never left on a control inside the drawer that has just
+been made `inert`.
+
+Escape closes the innermost open drawer only, so a drawer opened from inside
+another peels one layer at a time, and it leaves an Escape alone when
+something nearer the user has already answered it — a nested `<dialog>`, a
+date picker, an open `<select>`. A modal drawer answers Escape from anywhere
+on the page, because it owns the page while it is open. A **non-modal floating
+panel only answers Escape from inside itself or from its trigger**: the page
+behind it is still in use, and pressing Escape in a search field there should
+not dismiss the panel.
+
+The dialog name is a loan, not a repair. If your markup has a
+`.mg-drawer__title` but nothing naming the dialog, the module points
+`aria-labelledby` at it — and hands that back on destroy, along with the id it
+minted. Markup that carries `role="dialog"` with no name is therefore unnamed
+again once the module is gone. Name the dialog in your own markup if you want
+that fixed for good.
+
+Calling `mgDrawer()` twice is safe. An enhanced container carries
+`data-mg-js-drawer-initialized` and is skipped on a second pass, so a re-scan
+after inserting markup cannot bind a second set of listeners. A container that
+carries both `data-mg-js-drawer` and the `data-mg-drawer` hydration marker is
+refused with a console warning and left to hydration, rather than enhanced by
+both paths at once.
+
 ### Drupal and server-rendered HTML (hydration)
+
+Use this path when React is already on the page, or when the drawer body is
+built from server-rendered markup you want sanitised on mount. For a page with
+no React, prefer `js/drawer.js` above: it is smaller, needs no import map, and
+keeps your own markup. Pick one. A container marked with both
+`data-mg-drawer` and `data-mg-js-drawer` is left to hydration and skipped by
+`mgDrawer()`, with a console warning naming the container — React would
+otherwise re-render away the markup the vanilla module had just bound
+listeners to.
 
 Give the container an `id` and point one or more trigger buttons at it with `data-mg-drawer-trigger`:
 
@@ -125,6 +279,15 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.1.0** — 2026-09-18 ([#1197](https://github.com/unisdr/undrr-mangrove/issues/1197)): Added the vanilla lifecycle module `js/drawer.js`, so a page with no React can open and close a drawer or floating panel. It enhances markup you wrote rather than rendering any, which keeps the close label, title and body — and their translations — on your page; the backdrop is the only element it creates. `mgDrawer(scope)` and `mgDrawerDestroy(scope)` are the lifecycle, with `mgDrawerOpen`, `mgDrawerClose`, `mgDrawerToggle` and `mgDrawerInstance` for one drawer, and the same `mg-drawer:open` / `mg-drawer:close` / `mg-drawer:toggle` command events the hydrated drawer answers, plus `mg-drawer:opened` and `mg-drawer:closed` notifications.
+  - The module marks each enhanced container with `data-mg-js-drawer-initialized` and skips it on a second pass, so a re-scan after inserting markup cannot bind two sets of listeners ([#1234](https://github.com/unisdr/undrr-mangrove/pull/1234)).
+  - It activates on `data-mg-js-drawer`, deliberately not the `data-mg-drawer` hydration marker, so a container cannot be driven by both paths at once. A container carrying both is refused with a console warning and left to hydration.
+  - There is no `js/floating-panel.js`: a floating panel is the same component with a different base class, so `js/drawer.js` drives both.
+  - Accessibility matches the React component: `role="dialog"` and `tabindex="-1"` added when the markup omits them, the dialog named from its own title when nothing else names it (an unnamed dialog announces as just "dialog", WCAG 4.1.2 — caught by the module's own jest-axe test, and handed back on destroy along with any minted id), a closed drawer left `inert` and `aria-hidden`, focus to the close button on open, Escape to dismiss, and a Tab trap in a modal drawer only. A floating panel stays non-modal and untrapped.
+  - The focus trap counts everything the browser will stop on — `<iframe>`, `contenteditable`, `<summary>` — and discards everything it will skip: unrendered elements, controls in a closed `<details>`, and the radios in a group that are not the group's tab stop. Counting an unrendered element strands Tab either outside the drawer or on an element that cannot take focus; both were reproduced in Chrome. It listens on the document, so focus that has escaped is pulled back on the next Tab, and it wraps Shift+Tab from the dialog container itself.
+  - Focus on close falls back from the opener to a trigger for the drawer and then to the document body, so an opener that was removed or hidden no longer leaves focus on a control inside a drawer that has just been made `inert`.
+  - Escape closes only the innermost open drawer, ignores an Escape that something nearer the user has already answered (a nested `<dialog>`, a date picker), and on a non-modal floating panel answers only from inside the panel or its trigger — the page behind it is still in use.
+  - New "Vanilla lifecycle (no React)" story, and the AI manifest now carries a `vanillaModule` contract for Drawer alongside the existing `hydration` one.
 - **1.0.1** — 2026-09-17 ([#1194](https://github.com/unisdr/undrr-mangrove/pull/1194)): Documentation only. The docs page now embeds its stories, so the default drawer, the end edge, the bottom sheet and the floating panel each have a live example; `Bottom` and `FloatingPanel` are new story exports. Placeholder body copy is replaced with a publications filter panel and a country report panel; the report panel uses sample data and names no Member State. The AI manifest gained the structured `hydration` contract for Drawer, so agents reading `renderedHtml` are told it cannot open on its own.
 - **1.0.0** — 2026-09-16 ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)): Initial implementation of the off-canvas drawer and floating panel.
   - Hydration via `Drawer.fromElement.js` and `Drawer.hydrate.js` ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)).

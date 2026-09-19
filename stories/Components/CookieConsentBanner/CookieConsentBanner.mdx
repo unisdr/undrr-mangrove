@@ -12,6 +12,8 @@ import * as CookieConsentBannerStories from './CookieConsentBanner.stories';
 
 The Cookie Consent Banner component provides a configurable cookie consent solution for UNDRR websites, loading the official UNDRR cookie consent implementation directly from the UNDRR CDN.
 
+> **Before you report that the banner never renders:** with the configuration UNDRR ships, **no automated tool will ever see this bar** — not Playwright, not Puppeteer, not Selenium, not a headless screenshot run, not a Storybook play function. The library's `hideFromBots` option defaults to `true` and suppresses everything whenever `navigator.webdriver` is true, while still logging `Cookie banner initialized successfully`. It renders for a person. See [Why the bar can be missing in an automated browser](#why-the-bar-can-be-missing-in-an-automated-browser).
+
 > **Quick start for Drupal / plain HTML integrators:** If you're integrating on a Drupal or plain HTML site, see [Plain HTML / CDN usage](#plain-html--cdn-usage) for the three-line include — no React wrapper needed.
 
 ## Plain HTML / CDN usage
@@ -126,16 +128,31 @@ import React from 'react';
 
 const ResetButton = () => {
   const handleResetConsent = () => {
-    if (window.CookieConsent) {
-      // Reset and show the consent modal again
-      window.CookieConsent.reset(true);
-      window.CookieConsent.showConsentModal();
-    }
+    const cc = window.CookieConsent;
+    if (!cc) return;
+
+    // Erase the stored consent, then rebuild and show the bar.
+    cc.eraseCookies(cc.getConfig('cookie').name);
+    cc.show(true);
   };
 
-  return <button onClick={handleResetConsent}>Reset Cookie Consent</button>;
+  return <button onClick={handleResetConsent}>Reset cookie consent</button>;
 };
 ```
+
+The consent API in vanilla-cookieconsent v3 is `show(createModal)`, `hide()`, `showPreferences()`, `hidePreferences()`, `reset(eraseCookie)` and `eraseCookies(name)`. There is no `showConsentModal()`; a guard on that name silently skips.
+
+Use `reset(true)` only when you want the loaded configuration discarded as well. It tears down the library's state, including the `window._ccRun` guard, so nothing can be shown again until `run()` is called a second time.
+
+### Why the bar can be missing in an automated browser
+
+The library's `hideFromBots` option defaults to `true`, and the UNDRR CDN configuration leaves it that way. When it is on and `navigator.webdriver` is `true` — any Playwright, Puppeteer, Selenium or CDP-driven session — `run()` returns before it creates a single node. The library still reports success: `window.CookieConsent` is a populated object and the CDN configuration script logs `Cookie banner initialized successfully`. Only the DOM is missing, and `show(true)` then throws `Cannot read properties of undefined (reading 'addEventListener')` instead of doing nothing.
+
+This matters for anything that drives the component in a browser: visual regression runs, end-to-end suites, and Storybook play functions all see no bar unless the configuration passed to the component sets `hideFromBots: false`. The "Rendering check" story does exactly that, and asserts the bar for real.
+
+Note what that story can and cannot prove. It runs the live CDN `config.json` with `hideFromBots` turned off, so it is not the configuration production ships, and it says so in its own canvas. Its play function pins the difference rather than describing it: it asserts that the configuration handed to the library differs from the live `config.json` by exactly that one flag, so nothing else can drift into the override and no later edit can quietly widen the gap. What it proves is that the library, the stylesheet, and the UNDRR categories and translations still build a visible bar. It does not, and cannot, prove that an automated visit to a UNDRR site sees one — that visit never will.
+
+Do not switch `hideFromBots` off in the component to make automation happy. Hiding the banner from crawlers is deliberate: it keeps consent markup out of search indexes and out of archived snapshots. Anything that genuinely needs the bar in an automated run should pass `hideFromBots: false` in its own `config` prop, the way the "Rendering check" story does.
 
 ### Custom Categories
 
@@ -256,6 +273,15 @@ Built with proper ARIA attributes, keyboard navigation, focus management, and sc
 - [vanilla-cookieconsent Documentation](https://github.com/orestbida/cookieconsent) - Underlying library reference
 
 ## Changelog
+
+- **1.3.0** — 2026-09-18 ([#1242](https://github.com/unisdr/undrr-mangrove/pull/1242)): The stories can now tell a working bar from a broken one.
+  - Added a "Rendering check" story whose `play` function asserts that the CDN library and configuration script ran, that the CDN stylesheet actually applied, that the library built its DOM rather than merely defining `window.CookieConsent`, and that the bar is present and visible in the document body where the library appends it. `#cc-main` lands on `document.body`, outside the story canvas, so the assertions start from `canvasElement.ownerDocument`. The story also reports the result in the canvas, so a failure is visible without opening a panel.
+  - The stylesheet is asserted by its effect, not by its URL. A `<link>` whose request 404s or is blocked is still enumerated in `document.styleSheets` with its `href`, and the sheet is cross-origin so its `cssRules` cannot be read, so neither the element nor the `styleSheets` entry proves anything. An unstyled bar is also still a visible element with a non-zero box, so every other assertion in the story passes without any CSS at all. The check reads the computed `position` of `#cc-main` instead: `#cc-main{position:fixed}` is the CDN sheet's first rule and an unstyled `div` is `static`.
+  - The story runs the live CDN configuration with `hideFromBots: false`, which is not the configuration production ships. The play function pins that difference instead of describing it: it asserts that the override is exactly one flag and that the configuration handed to the library differs from the live `config.json` by exactly that flag.
+  - The story erases the stored consent cookie directly before the library runs. It previously relied on `CookieConsent.reset(true)`, which exists only once another story has loaded the library; on a fresh load of this story with a stored `cc_cookie`, the library had nothing to ask and — with `lazyHtmlGeneration` on by default — never built the bar, so the check failed on a perfectly healthy banner.
+  - Removed the false note on the "Default" story claiming the bar does not appear in Storybook. It does. What it does not do is appear in an automated browser, because the library's `hideFromBots` default suppresses it whenever `navigator.webdriver` is true — while still reporting success.
+  - Fixed the "Reset banner" story. It guarded on `window.CookieConsent.showConsentModal`, which does not exist in vanilla-cookieconsent v3, so the guard silently skipped and the button did nothing. It now erases the stored consent with `eraseCookies()` and rebuilds the bar with `show(true)`.
+  - Documented the v3 consent API and the `hideFromBots` behaviour, and corrected the reset example that used the same non-existent method.
 
 - **1.2.3** — 2026-09-17 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): The "Default" story canvas now explains that the component renders nothing itself and that the consent bar is drawn by the CDN library. It also records an open question: the bar does not appear in Storybook even with no stored consent (`CookieConsent.validConsent()` returns `false` and a forced `show(true)` produces no DOM), so the empty canvas is not yet confirmed to be expected behaviour. Story copy only, no component change.
 

@@ -2,6 +2,28 @@ import React, { memo, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { mgTabsRuntime, mgTabsDestroy } from '../../assets/js/tabs';
 
+/**
+ * Trust boundary: panel content is rendered unescaped, on purpose.
+ *
+ * `TabPanel` injects `tab.data` as markup. It is not sanitised, and it should
+ * not be: a tab panel holds whole page sections — tables, figures, forms,
+ * embedded media — and that is what the prop is for. There is no escaped mode
+ * to fall back to, and running the string through a sanitiser would strip
+ * exactly the embeds and iframes panels are built to carry. Unlike `TextCta`,
+ * `Drawer` and the card components, which pass short authored strings through
+ * DOMPurify, this one does not, and the difference is a decision rather than an
+ * oversight.
+ *
+ * The string arrives on the `tabdata` prop, so the boundary is the consumer's
+ * own code: whatever assembles the tab array owns sanitising it. In practice
+ * that is a CMS output filter, which is also where iframes and embeds are
+ * permitted in the first place. See "Panel HTML trust contract" in Tab.mdx for
+ * the consumer-facing statement.
+ *
+ * The vanilla-JS path has no equivalent: there the panel markup is already in
+ * the page and `tabs.js` only enhances it.
+ */
+
 export const DEFAULT_TAB_LABELS = {
   filterPlaceholder: 'Filter sections…',
   tabListLabel: 'Sections',
@@ -126,6 +148,8 @@ export function Tab({
       )}
     </article>
   ) : (
+    // Not caller data: a fixed string literal, used only because an HTML
+    // comment is the one node JSX cannot express. Nothing to sanitise here.
     <div
       dangerouslySetInnerHTML={{
         __html: '<!-- mgTabs: No tab data passed -->',
@@ -153,6 +177,8 @@ function TabTrigger({ tab, mobile = false }) {
 const TabPanel = memo(function TabPanel({ textId, data }) {
   return (
     <section className="mg-tabs__section" id={`mg-tabs__section-${textId}`}>
+      {/* Panel content from the caller, rendered as-is so tables, forms and
+          embeds survive. See the trust boundary note at the top of this file. */}
       {data ? <div dangerouslySetInnerHTML={{ __html: data }} /> : null}
     </section>
   );
@@ -166,7 +192,12 @@ Tab.propTypes = {
       text: PropTypes.string.isRequired,
       /** Unique identifier used for the tab section anchor. */
       text_id: PropTypes.string.isRequired,
-      /** Pre-sanitised HTML content rendered inside the tab panel. Consumers must sanitise it before passing it. */
+      /**
+       * Pre-sanitised HTML content rendered inside the tab panel. Rendered
+       * unescaped and never sanitised by Mangrove, so tables, forms and embeds
+       * survive; consumers must sanitise it before passing it. See "Panel HTML
+       * trust contract" in the MDX documentation.
+       */
       data: PropTypes.string,
       /** Whether this tab should be selected by default. */
       is_default: PropTypes.string,

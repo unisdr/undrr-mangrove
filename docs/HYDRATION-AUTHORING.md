@@ -64,6 +64,22 @@ initialised and returns early on a second pass. Four of them write a per-element
 runtime needs one or the other. Prefer the dataset flag: it survives a second
 copy of the runtime on the page, which a module-scope `WeakMap` does not.
 
+`drawer.js` is the current worked example. It marks each enhanced container
+with `data-mg-js-drawer-initialized` and skips anything already carrying it, so
+`mgDrawer(scope)` can be called again after inserting markup without binding a
+second set of listeners. It keeps its handles in a `WeakMap` under a
+`Symbol.for('@undrr/mangrove/drawer@1')` registry as well, so a second copy of
+the module can still destroy an instance the first one created — the dataset
+flag is what makes the two copies agree, and the shared registry is what lets
+either of them clean up.
+
+A runtime with a marker of its own also needs to keep clear of the hydration
+selector for the same component. `Drawer` has both paths: the React hydrator
+matches `[data-mg-drawer]` and the vanilla module matches `[data-mg-js-drawer]`.
+Two markers, so a container is driven by one path or the other and never both.
+Reusing one marker for both would leave no way to tell which lifecycle a
+container asked for.
+
 ---
 
 ## Step-by-step walkthrough

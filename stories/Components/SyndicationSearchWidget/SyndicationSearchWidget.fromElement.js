@@ -10,6 +10,10 @@ export default function syndicationSearchWidgetFromElement(container) {
   const config = {};
 
   // Simple string/number props
+  // `data-search-endpoint` is the consumer-facing half of the widget's trust
+  // boundary: ResultItem renders the response HTML unescaped so Elasticsearch
+  // highlight markup survives, so whatever this attribute points at is trusted
+  // to return safe HTML. See the note at the top of components/ResultItem.jsx.
   if (dataset.searchEndpoint) config.searchEndpoint = dataset.searchEndpoint;
   if (dataset.resultsPerPage)
     config.resultsPerPage = parseInt(dataset.resultsPerPage, 10);

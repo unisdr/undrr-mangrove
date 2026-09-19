@@ -117,3 +117,63 @@ describe('curated descriptions and summaries', () => {
     expect(buttons.description).toMatch(/\.mg-icon-button/);
   });
 });
+
+/**
+ * Lifecycle claims have to match the files on disk.
+ *
+ * The manifest now says outright whether a component has a vanilla lifecycle
+ * module, so a consumer no longer probes /js/ for a 404 to find out
+ * (undrr-mangrove#1197). `yarn validate-manifest` enforces this against the
+ * generated manifest; this keeps the feedback on `yarn test`.
+ */
+describe('vanilla lifecycle claims', () => {
+  const VANILLA_JS_DIR = path.join(ROOT, 'stories/assets/js');
+  const CONTRACT_FIELDS = ['hydration', 'vanillaModule'];
+
+  const modulePaths = contract =>
+    Object.values(contract?.modules || {}).map(url => {
+      const match = /\/mangrove\/[^/]+\/(.+)$/.exec(String(url));
+      return match ? match[1] : String(url);
+    });
+
+  it('names only modules that exist under stories/assets/js', () => {
+    const missing = [];
+    for (const [id, data] of Object.entries(COMPONENT_DATA)) {
+      for (const field of CONTRACT_FIELDS) {
+        const contract = data?.[field];
+        if (!contract || typeof contract !== 'object') continue;
+        for (const published of modulePaths(contract)) {
+          if (!published.startsWith('js/')) continue;
+          const source = path.join(
+            VANILLA_JS_DIR,
+            published.slice('js/'.length)
+          );
+          if (!fs.existsSync(source)) missing.push(`${id}: ${published}`);
+        }
+      }
+    }
+    expect(missing).toEqual([]);
+  });
+
+  it('never claims a module and an explanation for having none', () => {
+    const contradictory = Object.entries(COMPONENT_DATA)
+      .filter(([, data]) => data?.vanillaModule && data?.vanillaModuleNote)
+      .map(([id]) => id);
+    expect(contradictory).toEqual([]);
+  });
+
+  it('gives Drawer a vanilla module contract on its own marker', () => {
+    const drawer = COMPONENT_DATA['components-navigation-drawer'];
+    expect(modulePaths(drawer.vanillaModule)).toEqual(['js/drawer.js']);
+    expect(drawer.vanillaModule.selector).toBe('[data-mg-js-drawer]');
+    // Distinct from the hydration marker, so one container is never driven
+    // by both lifecycles.
+    expect(drawer.hydration.selector).toBe('[data-mg-drawer]');
+  });
+
+  it('says why Legend has no module rather than leaving it unstated', () => {
+    const legend = COMPONENT_DATA['components-dataviz-legend'];
+    expect(legend.vanillaModule).toBeUndefined();
+    expect(legend.vanillaModuleNote).toMatch(/none is planned/i);
+  });
+});

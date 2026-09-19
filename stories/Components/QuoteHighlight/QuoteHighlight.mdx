@@ -37,6 +37,41 @@ import { QuoteHighlight } from '@undrr/undrr-mangrove';
 />;
 ```
 
+## Quote HTML trust contract
+
+`quote`, `attribution` and `attributionTitle` are rendered as HTML, not as text,
+and Mangrove does not sanitise them.
+
+This is deliberate. Quote copy is authored, and it carries inline markup — a
+`<cite>`, an `<em>`, a `<br>` to break a long pull quote, a link on the name of
+the person quoted. Escaping the strings would print those tags.
+
+Sanitise them where you produce them. The values reach Mangrove through props,
+or through `data-quote`, `data-attribution` and `data-attribution-title` when
+the component is hydrated, so the boundary is your own code. If they come from a
+CMS field with an output filter over it, as Drupal's text formats give you, that
+is where this is handled. If you build the string yourself, run it through
+[DOMPurify](https://github.com/cure53/DOMPurify) first:
+
+```js
+import DOMPurify from 'dompurify';
+
+<QuoteHighlight
+  quote={DOMPurify.sanitize(rawQuote)}
+  attribution={DOMPurify.sanitize(rawName)}
+/>;
+```
+
+Do not assume the component does this for you because a neighbouring one does.
+`TextCta`, `Drawer` and the card components run DOMPurify internally; this one
+does not, and they are the components closest to it in shape.
+
+One detail worth knowing: the two rendering paths differ per prop.
+`attribution` and `attributionTitle` always go through as HTML. `quote` is
+rendered as text unless it contains a `<`, in which case it goes through as
+HTML. That test picks a rendering path, not a safe one — it is a plain substring
+check, so a quote that merely mentions a `<` takes the HTML path too.
+
 ## Examples
 
 ### Line variant (default)
@@ -200,16 +235,16 @@ QuoteHighlight supports [layered hydration](https://github.com/unisdr/undrr-mang
 ></div>
 ```
 
-| Attribute                | Default   | Description                        |
-| ------------------------ | --------- | ---------------------------------- |
-| `data-quote`             | `''`      | Quote text (required)              |
-| `data-attribution`       | —         | Attribution name                   |
-| `data-attribution-title` | —         | Attribution title or role          |
-| `data-image-src`         | —         | Portrait or side image URL         |
-| `data-image-alt`         | —         | Alt text for the image             |
-| `data-background-color`  | `'light'` | `'light'`, `'dark'`, or `'bright'` |
-| `data-variant`           | `'line'`  | `'line'` or `'image'`              |
-| `data-alignment`         | `'full'`  | `'full'`, `'left'`, or `'right'`   |
+| Attribute                | Default   | Description                                                                                                                                 |
+| ------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-quote`             | `''`      | Quote text (required). A value containing `<` is rendered as unsanitised HTML — see [Quote HTML trust contract](#quote-html-trust-contract) |
+| `data-attribution`       | —         | Attribution name. Always rendered as unsanitised HTML                                                                                       |
+| `data-attribution-title` | —         | Attribution title or role. Always rendered as unsanitised HTML                                                                              |
+| `data-image-src`         | —         | Portrait or side image URL                                                                                                                  |
+| `data-image-alt`         | —         | Alt text for the image                                                                                                                      |
+| `data-background-color`  | `'light'` | `'light'`, `'dark'`, or `'bright'`                                                                                                          |
+| `data-variant`           | `'line'`  | `'line'` or `'image'`                                                                                                                       |
+| `data-alignment`         | `'full'`  | `'full'`, `'left'`, or `'right'`                                                                                                            |
 
 ```js
 import createHydrator from 'https://assets.undrr.org/mangrove/2.0.0-rc.2/components/hydrate.js';
@@ -227,6 +262,7 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 
 ## Changelog
 
+- **1.3.1** — 2026-09-18 ([#1258](https://github.com/unisdr/undrr-mangrove/pull/1258)): Documented the quote HTML trust contract. `quote`, `attribution` and `attributionTitle` are rendered as HTML and none of them is sanitised. That was already true and nothing about the rendering changed — this only writes it down where a consumer will meet it. The AI manifest hydration note had carried this for some time, and it was the only place it appeared: the component source said nothing, the propTypes said only "The quote text to display", and the MDX said nothing at all, so a React consumer reading the documentation had no way to learn it. The component now carries a block comment with the reasoning and a pointer at each of the three render sites, the propTypes say which fields take the HTML path, the MDX has a "Quote HTML trust contract" section after the usage example with a DOMPurify snippet, and the CDN attribute table repeats it on the three affected attributes. The per-prop asymmetry is stated: `attribution` and `attributionTitle` always render as HTML, while `quote` renders as text unless it contains a `<` — a substring test that picks a rendering path rather than a safe one.
 - **1.3** — 2026-09-17 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Made the `dark` variant surface opaque UNDRR blue instead of a 70% wash, so white quote, name and title text meet WCAG AA (8.31:1) on any backdrop rather than 3.99:1 on white
 - **1.2** — 2026-03-04: Added hydration support with `fromElement` prop extraction and `createHydrator` integration
 - **1.1** — 2025-04-23: Added `text-wrap: balance` for better text flow; removed bold font weight from quotes
