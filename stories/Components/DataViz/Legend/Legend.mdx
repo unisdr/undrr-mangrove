@@ -70,7 +70,7 @@ beside a tall map.
 ## Usage
 
 ```jsx
-import { Legend } from '@undrr/undrr-mangrove';
+import { Legend } from '@undrr/undrr-mangrove/components/Legend.js';
 
 <Legend
   title="Disaster type"
@@ -207,6 +207,7 @@ This component is a prototype and subject to change. The API and behavior may be
 
 ## Changelog
 
+- **1.0.6** — 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The usage example imports `@undrr/undrr-mangrove/components/Legend.js` instead of the package root. The root has never resolved on any published version — the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain — and 2.0.0 stops advertising it, so the subpath is the only form that works. The bundle exports `Legend` as a named export and has no default, so the braces are load-bearing. Documentation only; the component is unchanged.
 - **1.0.5** — 2026-09-18 ([#1197](https://github.com/unisdr/undrr-mangrove/issues/1197)): Documentation only. Says outright that Legend has no vanilla lifecycle module and that none is planned, because a legend is static presentation with no state, no interactive controls and no keyboard model — so a CSS-only adoption is the complete component rather than a partial one. Points anyone who needs interactive legend entries at a Checkbox or switch beside each entry, or a Drawer, kept outside the legend's own `role="group"`. The AI manifest states the same through `vanillaModule: false` and a `vanillaModuleNote`, so it can be read without probing `/js/` for a 404.
 - **1.0.4** — 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-legend__list` hides its markers with `list-style: none` followed by `list-style-type: ""` (the new `mg-list-unmarked` mixin). Safari drops the implicit `list` role from a markerless list, so VoiceOver stopped announcing the entry count; an empty string is still a marker, so the role survives and nothing renders. No `role="list"` is needed on the `<ul>`, and no markup or layout changes.
 - **1.0.3** — 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): Removed the "Dark theme" story. It wrapped the legend in an `mg-theme-dark` class that the library never defined and set a `Dark` theme override that does not exist, so it rendered labels at 1.2:1 and implied a dark-surface API that Legend does not have. The docs now say plainly that Legend is styled for light surfaces.
