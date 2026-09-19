@@ -99,6 +99,79 @@ describe('QuoteHighlight', () => {
     expect(container.querySelector('a')).toBeInTheDocument();
   });
 
+  describe('HTML sanitisation', () => {
+    it('keeps the inline markup a quote is authored with', () => {
+      const { container } = render(
+        <QuoteHighlight
+          {...defaultProps}
+          quote="Risk is a <em>choice</em>,<br />not a fate. <cite>World Conference</cite>"
+        />
+      );
+      const blockquote = container.querySelector('.mg-quote-highlight__quote');
+      expect(blockquote.querySelector('em')).toHaveTextContent('choice');
+      expect(blockquote.querySelector('br')).toBeInTheDocument();
+      expect(blockquote.querySelector('cite')).toHaveTextContent(
+        'World Conference'
+      );
+    });
+
+    it('keeps a link on the attribution name', () => {
+      const { container } = render(
+        <QuoteHighlight
+          {...defaultProps}
+          attribution='<a href="https://www.undrr.org/">Mami Mizutori</a>'
+        />
+      );
+      const link = container.querySelector(
+        '.mg-quote-highlight__attribution-name a'
+      );
+      expect(link).toHaveAttribute('href', 'https://www.undrr.org/');
+      expect(link).toHaveTextContent('Mami Mizutori');
+    });
+
+    it('keeps inline markup in the attribution title', () => {
+      const { container } = render(
+        <QuoteHighlight
+          {...defaultProps}
+          attributionTitle="SRSG for <em>Disaster Risk Reduction</em>"
+        />
+      );
+      expect(
+        container.querySelector('.mg-quote-highlight__attribution-title em')
+      ).toHaveTextContent('Disaster Risk Reduction');
+    });
+
+    it('strips a script from the quote and keeps the surrounding copy', () => {
+      const { container } = render(
+        <QuoteHighlight
+          {...defaultProps}
+          quote="Resilience <script>alert('xss')</script>matters"
+        />
+      );
+      const blockquote = container.querySelector('.mg-quote-highlight__quote');
+      expect(blockquote.querySelector('script')).toBeNull();
+      expect(blockquote).toHaveTextContent('Resilience matters');
+    });
+
+    it('strips event-handler attributes from both attribution fields', () => {
+      const { container } = render(
+        <QuoteHighlight
+          {...defaultProps}
+          attribution="<a href='#' onclick='alert(1)'>Mami Mizutori</a>"
+          attributionTitle="<img src='x' onerror='alert(1)' alt='' />"
+        />
+      );
+      const link = container.querySelector(
+        '.mg-quote-highlight__attribution-name a'
+      );
+      expect(link).toBeInTheDocument();
+      expect(link).not.toHaveAttribute('onclick');
+      expect(
+        container.querySelector('.mg-quote-highlight__attribution-title img')
+      ).not.toHaveAttribute('onerror');
+    });
+  });
+
   it('renders plain text quotes in a <p> element', () => {
     const { container } = render(
       <QuoteHighlight {...defaultProps} quote="Plain text quote" />

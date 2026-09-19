@@ -1095,18 +1095,46 @@ npm run build</code></pre>
   'components-quotehighlight': {
     description:
       'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.',
+    // Curated rather than auto-rendered. The component calls DOMPurify, which
+    // needs a DOM, and the manifest renderer runs in plain Node — so it skips
+    // this component the way it already skips VerticalCard and the other
+    // sanitising components. Keep this markup in step with QuoteHighlight.jsx.
+    // The `aria-label` is the one addition: the React component does not emit
+    // one (a documented limitation) but passes unknown props through to the
+    // section, so React callers can set it the same way this markup does.
+    examples: [
+      {
+        name: 'Line variant, light background',
+        html: `<section class="mg-quote-highlight mg-quote-highlight--light mg-quote-highlight--line mg-quote-highlight--full" aria-label="Quote from Mami Mizutori">
+  <div class="mg-quote-highlight__content">
+    <blockquote class="mg-quote-highlight__quote">
+      <p>Prevention is not a cost. It is an investment in our common future.</p>
+    </blockquote>
+    <div class="mg-quote-highlight__separator"></div>
+    <div class="mg-quote-highlight__attribution">
+      <div class="mg-quote-highlight__attribution-wrapper">
+        <div class="mg-quote-highlight__attribution-text">
+          <p class="mg-quote-highlight__attribution-name">Mami Mizutori</p>
+          <p class="mg-quote-highlight__attribution-title">SRSG for Disaster Risk Reduction</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+    ],
     hydration: {
-      note: 'QuoteHighlight has no interactive behaviour, so the static renderedHtml is fully usable on its own — hydrate only when the surrounding page is already React. Every value comes from a data attribute; markup inside the container is discarded, not read. Security: data-quote, data-attribution and data-attribution-title are injected as raw HTML and are NOT sanitised — unlike TextCta and Drawer, this component does not run DOMPurify. Sanitise these values server-side before emitting them, and never build them from untrusted input.',
+      note: 'QuoteHighlight has no interactive behaviour, so the static renderedHtml is fully usable on its own — hydrate only when the surrounding page is already React. Every value comes from a data attribute; markup inside the container is discarded, not read. Security: data-quote, data-attribution and data-attribution-title are injected as HTML, and the component runs each through DOMPurify first — the same pass TextCta and Drawer make. The default allow-list keeps the inline markup these fields are for (cite, em, br, a link on a name) and removes script, event-handler attributes, javascript: URLs and embeds such as iframe, so do not put panel-sized content in them. Sanitising server-side as well is still good practice; the component pass is a floor, not a replacement for your output filter.',
       selector: '[data-mg-quote-highlight]',
       modules: hydrationModules('QuoteHighlight'),
       dataAttributes: {
         'data-mg-quote-highlight': 'Marks the container to hydrate (required).',
         'data-quote':
-          'Quote text (required). A value containing "<" is rendered as raw, unsanitised HTML; anything else is rendered as text. Sanitise it yourself.',
+          'Quote text (required). A value containing "<" is rendered as HTML, sanitised with DOMPurify; anything else is rendered as text. The "<" test picks the wrapper element (p or span), not the safety.',
         'data-attribution':
-          'Name of the person quoted. Always rendered as raw, unsanitised HTML. Sanitise it yourself.',
+          'Name of the person quoted. Always rendered as HTML, sanitised with DOMPurify, so the name can carry a link.',
         'data-attribution-title':
-          'Their role or organization. Always rendered as raw, unsanitised HTML. Sanitise it yourself.',
+          'Their role or organization. Always rendered as HTML, sanitised with DOMPurify.',
         'data-image-src': 'Portrait or feature image URL.',
         'data-image-alt':
           'Alt text for the image. There is no way to get a decorative empty alt through hydration: an omitted or empty value falls back to the generated string "<attribution> image", so always supply meaningful alt text.',
