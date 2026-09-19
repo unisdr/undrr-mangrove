@@ -9,11 +9,15 @@
  *
  * The bug was not the one wrong line, it was that nothing checked. This does.
  *
- * `package.json` maps the package root straight at `src/index.js` with no
- * bundling step, so importing it here is importing exactly what
- * `import { … } from '@undrr/undrr-mangrove'` resolves to. The first test
- * holds that mapping, so this suite cannot quietly start testing a file that
- * consumers no longer reach.
+ * The **repository's** `package.json` maps its own root straight at
+ * `src/index.js` with no bundling step, so importing it here is importing
+ * exactly what a workspace or repository-URL install resolves to. The first
+ * test holds that mapping.
+ *
+ * This is not the npm surface. The published package has no root entry point
+ * at all (unisdr/undrr-mangrove#1252) and ships neither `src/` nor `dist/`;
+ * an npm consumer imports `@undrr/undrr-mangrove/components/X.js`, which comes
+ * from a webpack entry rather than from this file.
  */
 
 import fs from 'node:fs';

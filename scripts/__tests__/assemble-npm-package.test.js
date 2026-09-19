@@ -177,10 +177,12 @@ test('the packed tarball ships the subpath directories', () => {
     'components/MegaMenu.js',
     'components/nested/Thing.js',
     'css/style.css',
-    // npm always packs the file `main` names, whatever `files` says. The real
-    // build emits no dist/index.js, so this is the one difference between the
-    // fixture and a release; the test below removes it to match.
-    'dist/index.js',
+    // No dist/index.js, although the fixture has one and the assembled
+    // directory copies it. npm always packs the file `main` names, whatever
+    // `files` says — so while `main` existed this fixture packed it, and a
+    // release did not only because the real build emits no such file. With no
+    // `main` there is nothing outside `files` to force in, and the fixture and
+    // a release now pack the same shape.
     'error-pages/404.html',
     'fonts/mangrove-icon-set.woff2',
     'js/tabs.js',
@@ -191,25 +193,28 @@ test('the packed tarball ships the subpath directories', () => {
   // `npm pack` is a subprocess; give it room under a loaded worker.
 }, 30000);
 
-// The shape every release has had: `main` names `dist/index.js`, the build
-// emits no such file, and `files` excludes dist/ anyway — so nothing answers
-// the package root and `import '@undrr/undrr-mangrove'` fails with
-// ERR_MODULE_NOT_FOUND. Consumers import the subpaths instead. Whether the
-// root becomes a supported entry point or stops being advertised is
-// unisdr/undrr-mangrove#1252; either answer changes this test.
-test('nothing answers the package root when the build emits no dist/index.js', () => {
-  fs.rmSync(path.join(root, 'dist/index.js'));
+// The package has no root entry point, by decision
+// (unisdr/undrr-mangrove#1252). It never had a working one: `main` named
+// `dist/index.js`, which no release ever contained. Re-adding `main` — or an
+// `exports` map, which would also break every subpath unless it carried
+// `"./*": "./*"` — has to fail here. The fixture keeps its dist/index.js so
+// this also proves that no root file sneaks into the tarball behind `files`.
+test('the published package advertises no root entry point', () => {
   expect(run(out, '--root', root).status).toBe(0);
   const files = packAssembled();
 
-  const { main } = JSON.parse(
+  const pkg = JSON.parse(
     fs.readFileSync(path.join(out, 'package.json'), 'utf8')
   );
-  expect(main).toBe('dist/index.js');
-  expect(files).not.toContain(main);
+  expect(pkg).not.toHaveProperty('main');
+  expect(pkg).not.toHaveProperty('module');
+  expect(pkg).not.toHaveProperty('exports');
+  // Node's fallback for a package with no `main` is a root index.js.
+  expect(files).not.toContain('index.js');
   expect(files.some(file => file.startsWith('dist/'))).toBe(false);
   expect(files.some(file => file.startsWith('src/'))).toBe(false);
-  expect(files).not.toContain('index.js');
+  // What a consumer imports instead.
+  expect(files).toContain('components/MegaMenu.js');
 }, 30000);
 
 test('webpack copies the same source trees without the test files', () => {
@@ -230,7 +235,6 @@ test('generates the slimmed package.json', () => {
     name: '@undrr/undrr-mangrove',
     version: '9.9.9-test.1',
     description: 'Test package',
-    main: 'dist/index.js',
     files: [
       'components/**/*',
       'css/**/*',
@@ -254,7 +258,6 @@ test('generates the slimmed package.json', () => {
     'name',
     'version',
     'description',
-    'main',
     'files',
     'repository',
     'keywords',

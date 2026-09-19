@@ -227,9 +227,9 @@ yarn pack:assemble   # replaces npm-package/ (gitignored)
 
 The script only deletes an output directory that is inside the repo, outside its source directories, and either empty or a previous package build. Anything else stops it with an error. It also fails if a `dist/` directory it copies from exists but is empty, as the old `cp -r dir/*` step did.
 
-Two quirks worth knowing, both intentional and matching every prior release:
+Two things worth knowing:
 
-- The slim `files` array **excludes `dist/`**, so `main: "dist/index.js"` is a dangling pointer — the published tarball has no `dist/`. Consumers import from the subpath dirs (`components/`, `css/`, …), so this has never mattered. Don't "fix" it, or you change what's published.
+- **The published package has no root entry point, deliberately.** The slimmed `package.json` has no `main` and no `exports`, so `import '@undrr/undrr-mangrove'` does not resolve; consumers import the subpath dirs (`components/`, `css/`, …). Through 2.0.0-rc.2 it carried `main: "dist/index.js"`, a dangling pointer — the slim `files` array excludes `dist/`, so no tarball has ever contained that file — and 2.0.0 drops it rather than starting to ship one (unisdr/undrr-mangrove#1252). Do not add `main` back, and do not add an `exports` map without `"./*": "./*"` alongside: an `exports` map with only a `"."` entry makes every working subpath fail with `ERR_PACKAGE_PATH_NOT_EXPORTED`. `scripts/__tests__/assemble-npm-package.test.js` fails on either.
 - `npm-package/` is gitignored, but still delete it once the release is done so a stale copy is never published later.
 
 ### 3. Verify the tarball before publishing

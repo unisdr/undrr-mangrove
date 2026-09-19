@@ -19,11 +19,17 @@
  * directories, and be either absent, empty, or a previous package build
  * (a package.json named @undrr/undrr-mangrove and no .git).
  *
+ * The published package has no root entry point, by decision
+ * (unisdr/undrr-mangrove#1252). Consumers import the top-level subpath
+ * directories: `@undrr/undrr-mangrove/components/IconCard.js`, `…/css/…`,
+ * `…/scss/…`, `…/js/…`, `…/fonts/…`, `…/error-pages/…`. See
+ * buildPackageJson() for why there is no `main` and no `exports`.
+ *
  * Intentional quirks, kept to match every published release:
  * - The whole of dist/ is copied to <outDir>/dist, but the generated
- *   `files` array excludes it, so it never reaches the tarball and
- *   `main: "dist/index.js"` points at nothing. Consumers import from the
- *   top-level subpath directories. Changing either changes what is published.
+ *   `files` array excludes it, so it never reaches the tarball. The copy is
+ *   there for anything that reads the assembled directory directly; changing
+ *   `files` changes what is published.
  * - Development-only files (`__tests__/` and friends, `*.test.*`,
  *   `*.spec.*`) are left behind everywhere, because every copy below walks
  *   whole directories. See DEV_ONLY_GLOBS, which webpack.config.js applies to
@@ -210,12 +216,37 @@ function findScss(dir, found = []) {
   return found;
 }
 
+/**
+ * Build the package.json that ships in the tarball.
+ *
+ * Deliberately has **no `main` and no `exports`**, so the package has no root
+ * entry point at all (unisdr/undrr-mangrove#1252).
+ *
+ * - `main: "dist/index.js"` named a file no published tarball has ever
+ *   contained: `files` excludes dist/, so every version to date failed a bare
+ *   `import '@undrr/undrr-mangrove'` with ERR_MODULE_NOT_FOUND. Removing it
+ *   retires a promise that was never kept; it breaks nothing, because nothing
+ *   worked. Pointing it at a real file instead was rejected: the only
+ *   candidate is a barrel over `components/`, and `components/ShowMore.js`
+ *   and `components/Tab.js` touch `document` at module scope, so a root that
+ *   re-exported them would throw on import in Node and SSR while looking
+ *   supported — a worse failure than an honest one.
+ * - No `exports` map either. `exports: {".": …}` without `"./*": "./*"`
+ *   alongside makes every working subpath fail with
+ *   ERR_PACKAGE_PATH_NOT_EXPORTED — the one change here that would genuinely
+ *   break consumers. Do not add one without that wildcard.
+ * - Without `main`, Node falls back to a root `index.js`, which the tarball
+ *   does not ship either, so the root still fails — with "Cannot find module
+ *   …/index.js" rather than a path nobody recognises. Shipping a stub that
+ *   throws a friendlier message was considered and rejected: it resolves, so
+ *   bundlers would build successfully and fail in the browser instead of at
+ *   build time.
+ */
 export function buildPackageJson(pkg) {
   return {
     name: pkg.name,
     version: pkg.version,
     description: pkg.description,
-    main: 'dist/index.js',
     files: PACKAGE_FILES,
     repository: pkg.repository,
     keywords: pkg.keywords,
