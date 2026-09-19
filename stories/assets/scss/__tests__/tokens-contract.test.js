@@ -1508,29 +1508,6 @@ const WCAG_EXCEPTIONS = {
       ],
     ])
   ),
-  // The default ring on a filled brand surface -- the measurement that
-  // justifies --mg-color-focus-ring-inverse existing at all.
-  'base|focus ring on the snackbar, for comparison': [
-    1.49,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-  'preventionweb|focus ring on the snackbar, for comparison': [
-    1.16,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-  'irp|focus ring on the snackbar, for comparison': [
-    1.19,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-  'mcr|focus ring on the snackbar, for comparison': [
-    2.15,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-  'delta|focus ring on the snackbar, for comparison': [
-    1.49,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-
   // The gridline is deliberately below 3:1. SC 1.4.11 exempts objects that
   // are purely decorative, and a gridline is readable-by-position rather than
   // by contrast -- the axis and the labels carry the information. Recorded
@@ -1768,27 +1745,6 @@ const PERCEPTUAL_EXCEPTIONS = {
       ],
     ])
   ),
-  'base|focus ring on the snackbar, for comparison': [
-    -6.9,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-  'preventionweb|focus ring on the snackbar, for comparison': [
-    -18.1,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-  'irp|focus ring on the snackbar, for comparison': [
-    -20.7,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-  'mcr|focus ring on the snackbar, for comparison': [
-    6,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-  'delta|focus ring on the snackbar, for comparison': [
-    -6.9,
-    'why Snackbar/Hero/TextCta use the inverse ring',
-  ],
-
   // The quaternary CTA body appears here only: 90% white on red-800 clears
   // WCAG 2 at 4.82 but lands under the perceptual body-text floor, which is
   // exactly the mid-tone disagreement this second measure exists to surface.
@@ -1969,6 +1925,65 @@ const EXCEPTION_KEYS = new Set([
   ...Object.keys(WCAG_EXCEPTIONS),
   ...Object.keys(PERCEPTUAL_EXCEPTIONS),
 ]);
+
+/* -------------------------------------------------------------------------
+ * The exceptions are bound to the pairs.
+ *
+ * Both tables above are read in exactly one place: the per-pair tests
+ * generated from COMPONENT_PAIRS, keyed `theme|pair name`. A key naming a
+ * pair that does not exist is therefore never looked up, so it asserts
+ * nothing and suppresses nothing -- and the file gives no sign of it. Ten
+ * such keys, `<theme>|focus ring on the snackbar, for comparison`, survived
+ * unisdr/undrr-mangrove#1164 moving Snackbar into Notice and deleting the
+ * pairs; they sat inert across both tables until
+ * unisdr/undrr-mangrove#1257.
+ *
+ * Tidiness is not the point. An exception is a recorded judgement that one
+ * specific failing contrast is acceptable, and that judgement has to stay
+ * attached to the thing it was made about. Without this guard the register
+ * cannot tell an exception that is doing its job from one whose pair was
+ * renamed underneath it -- in the second case the reasoning is orphaned AND
+ * the real pair is now measured with no exception at all, which is a silent
+ * change of verdict in either direction.
+ *
+ * This is the counterpart of the `.mg-tag--accent` guard below, which binds
+ * the register's pairs to what the stylesheet paints. Same seam, opposite
+ * direction: that one stops a pair drifting away from the CSS, this one
+ * stops an exception drifting away from its pair.
+ * ---------------------------------------------------------------------- */
+describe('every exception names a pair that exists', () => {
+  const PAIR_NAMES = new Set(COMPONENT_PAIRS.map(pair => pair.name));
+
+  // Pair names never contain a pipe, so the first one splits theme from name.
+  const split = key => {
+    const at = key.indexOf('|');
+    return [key.slice(0, at), key.slice(at + 1)];
+  };
+
+  test.each([
+    ['WCAG_EXCEPTIONS', WCAG_EXCEPTIONS],
+    ['PERCEPTUAL_EXCEPTIONS', PERCEPTUAL_EXCEPTIONS],
+  ])('%s', (table, exceptions) => {
+    const orphans = Object.keys(exceptions).filter(key => {
+      const [theme, name] = split(key);
+      return !ALL_THEMES.includes(theme) || !PAIR_NAMES.has(name);
+    });
+
+    // Listed rather than counted: the failure output has to name the keys,
+    // because the fix is either restoring the pair or deleting the key and
+    // that choice needs the key in front of you.
+    expect(`${table}: ${orphans.join(', ') || 'no orphaned keys'}`).toBe(
+      `${table}: no orphaned keys`
+    );
+  });
+
+  // The reverse direction is deliberately NOT asserted: a pair with no
+  // exception is the normal, healthy case -- it means the pair passes.
+  test('the guard is measuring a register that has pairs to measure', () => {
+    expect(PAIR_NAMES.size).toBeGreaterThan(50);
+    expect(EXCEPTION_KEYS.size).toBeGreaterThan(0);
+  });
+});
 
 /**
  * Component-token contrast, including INTERACTIVE STATES.
