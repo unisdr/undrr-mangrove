@@ -153,6 +153,33 @@ describe('QuoteHighlight', () => {
       expect(blockquote).toHaveTextContent('Resilience matters');
     });
 
+    // The default allow-list drops `target`, which is the one removal a
+    // consumer is likely to notice and is not an attack shape. Pinned here so
+    // that the documented behaviour and the shipped behaviour cannot drift, and
+    // so that the attributes an authored link actually depends on — href, rel,
+    // class, id, and the data-entity-* a Drupal Linkit anchor carries — are
+    // shown to survive rather than assumed to.
+    it('drops target from an attribution link but keeps its other attributes', () => {
+      const { container } = render(
+        <QuoteHighlight
+          {...defaultProps}
+          attribution={
+            '<a href="https://www.undrr.org/" target="_blank" rel="noopener noreferrer" ' +
+            'class="mg-link" id="profile-1" data-entity-type="node">Mami Mizutori</a>'
+          }
+        />
+      );
+      const link = container.querySelector(
+        '.mg-quote-highlight__attribution-name a'
+      );
+      expect(link).not.toHaveAttribute('target');
+      expect(link).toHaveAttribute('href', 'https://www.undrr.org/');
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+      expect(link).toHaveAttribute('class', 'mg-link');
+      expect(link).toHaveAttribute('id', 'profile-1');
+      expect(link).toHaveAttribute('data-entity-type', 'node');
+    });
+
     it('strips event-handler attributes from both attribution fields', () => {
       const { container } = render(
         <QuoteHighlight

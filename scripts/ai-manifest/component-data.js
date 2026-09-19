@@ -1091,7 +1091,7 @@ npm run build</code></pre>
     ],
   },
 
-  // --- Quote highlight (auto-rendered) ---
+  // --- Quote highlight (curated; cannot auto-render) ---
   'components-quotehighlight': {
     description:
       'Testimonial or pull quote with attribution, portrait, and optional large image. Background: light, dark, bright. Variants: line separator or image. Alignment: full, left, right.',
@@ -1099,12 +1099,23 @@ npm run build</code></pre>
     // needs a DOM, and the manifest renderer runs in plain Node — so it skips
     // this component the way it already skips VerticalCard and the other
     // sanitising components. Keep this markup in step with QuoteHighlight.jsx.
-    // The `aria-label` is the one addition: the React component does not emit
-    // one (a documented limitation) but passes unknown props through to the
-    // section, so React callers can set it the same way this markup does.
+    //
+    // Nothing enforces that. `checkCuratedDrift` in generate-ai-manifest.js is
+    // the guard that would compare these BEM classes against a live render, and
+    // it cannot render this component either — the failure lands in its catch,
+    // which now prints a "could not verify" line rather than skipping in
+    // silence. Treat that line as the reminder to re-check this block by hand.
+    //
+    // The `aria-label` is the one place this markup differs from what React
+    // emits: the component does not give the `<section>` an accessible name (a
+    // documented limitation, and the reason the curated-HTML a11y lint demands
+    // one here), but it spreads unknown props onto the section, so a React
+    // caller sets the same label by passing `aria-label`. The example's `name`
+    // says so, because that is the field an agent reading the manifest sees —
+    // this comment is not published anywhere.
     examples: [
       {
-        name: 'Line variant, light background',
+        name: 'Line variant, light background — hand-authored: set your own aria-label on the section (React does not emit one)',
         html: `<section class="mg-quote-highlight mg-quote-highlight--light mg-quote-highlight--line mg-quote-highlight--full" aria-label="Quote from Mami Mizutori">
   <div class="mg-quote-highlight__content">
     <blockquote class="mg-quote-highlight__quote">
@@ -1124,7 +1135,7 @@ npm run build</code></pre>
       },
     ],
     hydration: {
-      note: 'QuoteHighlight has no interactive behaviour, so the static renderedHtml is fully usable on its own — hydrate only when the surrounding page is already React. Every value comes from a data attribute; markup inside the container is discarded, not read. Security: data-quote, data-attribution and data-attribution-title are injected as HTML, and the component runs each through DOMPurify first — the same pass TextCta and Drawer make. The default allow-list keeps the inline markup these fields are for (cite, em, br, a link on a name) and removes script, event-handler attributes, javascript: URLs and embeds such as iframe, so do not put panel-sized content in them. Sanitising server-side as well is still good practice; the component pass is a floor, not a replacement for your output filter.',
+      note: 'QuoteHighlight has no interactive behaviour, so the static renderedHtml is fully usable on its own — hydrate only when the surrounding page is already React. Every value comes from a data attribute; markup inside the container is discarded, not read. Security: data-quote, data-attribution and data-attribution-title are injected as HTML, and the component runs each through DOMPurify first — the same pass TextCta and Drawer make. The default allow-list keeps the inline markup these fields are for (cite, em, br, a link on a name) and removes script, event-handler attributes, javascript: URLs and embeds such as iframe, so do not put panel-sized content in them. It also removes target and referrerpolicy, so a link authored with target="_blank" opens in the same tab; href, rel, class, id, title, hreflang, lang, dir, aria-* and data-* all survive. Sanitising server-side as well is still good practice; the component pass is a floor, not a replacement for your output filter. Accessibility: the React component does not give the outer section an accessible name, so the aria-label in the example above is yours to write and translate — it is not something the component emits.',
       selector: '[data-mg-quote-highlight]',
       modules: hydrationModules('QuoteHighlight'),
       dataAttributes: {

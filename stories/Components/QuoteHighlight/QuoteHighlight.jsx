@@ -16,6 +16,13 @@ import DOMPurify from 'dompurify';
  * the DOM through them. The default pass keeps everything these fields exist to
  * carry; it is short authored copy, not a panel body.
  *
+ * One removal is not a script and is worth knowing: the default allow-list drops
+ * `target` (and `referrerpolicy`), so an attribution link authored as
+ * `target="_blank"` now opens in the same tab. `href`, `rel`, `class`, `id`,
+ * `title`, `hreflang`, `lang`, `dir`, `aria-*` and `data-*` all survive. This is
+ * the library-wide default, not a choice made here — `TextCta`, `Drawer` and the
+ * cards strip it too.
+ *
  * Sanitising here is defence in depth, not a licence to pass untrusted input:
  * the values arrive on props, or on `data-quote`, `data-attribution` and
  * `data-attribution-title` when the component is hydrated, and a consumer should

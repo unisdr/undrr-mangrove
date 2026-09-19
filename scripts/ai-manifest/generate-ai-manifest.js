@@ -1639,7 +1639,16 @@ async function checkCuratedDrift() {
         warnings.push(`  ${componentId}: ${parts.join(' | ')}`);
       }
     } catch {
-      // Component can't render in Node — skip silently
+      // The component cannot render in plain Node — a component that calls
+      // DOMPurify is the usual reason, since DOMPurify needs a DOM. That is
+      // also why it has curated HTML in the first place, so this is the
+      // expected path for every sanitising component. Say so rather than
+      // skipping in silence: the curated markup for these entries has no
+      // automated check behind it at all, and a reader who knows this function
+      // exists would otherwise assume it covered them.
+      warnings.push(
+        `  ${componentId}: could not verify — the component does not render in plain Node, so its curated HTML is unchecked and maintained by hand`
+      );
     }
   }
   return warnings;
@@ -1847,11 +1856,11 @@ if (validateOnly) {
   const driftWarnings = await checkCuratedDrift();
   if (driftWarnings.length > 0) {
     console.warn(
-      'Curated HTML drift detected (BEM classes differ from auto-rendered output):'
+      'Curated HTML check (BEM classes compared against auto-rendered output):'
     );
     for (const w of driftWarnings) console.warn(w);
     console.warn(
-      'Review component-data.js entries above — curated HTML may be stale.'
+      'Review the component-data.js entries above — curated HTML may be stale, and an entry reported as unverifiable has nothing checking it at all.'
     );
   }
 
