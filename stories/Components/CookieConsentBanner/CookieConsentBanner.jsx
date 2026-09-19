@@ -101,6 +101,15 @@ const CookieConsentBanner = ({
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    // Loading three CDN assets and waiting 300ms takes longer than a story
+    // change, a route change or a re-render with new props. Without this flag
+    // the chain from the discarded mount still reaches `run()` after cleanup
+    // has torn the banner down — it then re-runs the library over whatever the
+    // current mount has built, or builds a bar the current mount will not
+    // clean up. Under the Storybook test runner that showed as the
+    // "Rendering check" story finding no `#cc-main` about two runs in three.
+    let cancelled = false;
+
     // Generate URLs with the provided or default CDN base URL
     const CACHE_BUSTER = generateCacheBuster();
     const COOKIECONSENT_CSS_URL = `${cdnBaseUrl}/cookieconsent.css?cacheBuster=${CACHE_BUSTER}`;
@@ -121,6 +130,7 @@ const CookieConsentBanner = ({
 
         const { default: fallbackConfig } =
           await import('./cookieconsent-config.js');
+        if (cancelled) return;
         log('Successfully loaded local fallback configuration');
         if (
           window.CookieConsent &&
@@ -180,6 +190,7 @@ const CookieConsentBanner = ({
 
         // Wait a bit for scripts to be fully available
         await new Promise(resolve => setTimeout(resolve, 300));
+        if (cancelled) return;
 
         // Initialize the cookie banner
         if (
@@ -245,6 +256,8 @@ const CookieConsentBanner = ({
     }
 
     return () => {
+      cancelled = true;
+
       // Cleanup CookieConsent banner when component unmounts
       if (window.CookieConsent) {
         try {

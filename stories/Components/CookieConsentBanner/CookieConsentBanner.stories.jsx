@@ -255,12 +255,36 @@ const RenderingCheckHarness = () => {
       return undefined;
     }
 
+    // The status line is what a reader looking at this canvas will believe, so
+    // it reports every condition the play function asserts. Measuring one
+    // proxy — the bar's height — used to let it read "Bar rendered" while the
+    // assertions it appears to summarise had already failed on an unstyled
+    // bar. See unisdr/undrr-mangrove#1244.
     const tick = () => {
-      const modal = document.querySelector('#cc-main .cm');
+      const state = readBannerState(document);
+      const failures = [
+        [state.libraryLoaded, 'the library script did not run'],
+        [
+          state.configScriptLoaded,
+          'the UNDRR configuration script did not run',
+        ],
+        [state.stylesheetRequested, 'cookieconsent.css was not requested'],
+        [state.stylesheetApplied, 'cookieconsent.css did not apply'],
+        [Boolean(state.main), 'the library built no #cc-main container'],
+        [Boolean(state.modal), 'the library built no consent bar'],
+        [
+          Boolean(state.modal) &&
+            state.modal.getBoundingClientRect().height > 0,
+          'the consent bar has no height',
+        ],
+      ]
+        .filter(([passed]) => !passed)
+        .map(([, reason]) => reason);
+
       setStatus(
-        modal && modal.getBoundingClientRect().height > 0
-          ? 'Bar rendered — the library built and displayed its DOM.'
-          : 'No bar yet — the library has not built its DOM.'
+        failures.length === 0
+          ? 'Bar rendered — the library built, styled and displayed its DOM.'
+          : `Not rendered — ${failures.join('; ')}.`
       );
     };
 

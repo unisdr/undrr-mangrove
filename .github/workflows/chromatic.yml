@@ -10,7 +10,10 @@ on:
       - '*.config.js'
       - '.github/workflows/chromatic.yml'
   pull_request:
-    types: opened
+    # `opened` alone meant every push after the PR was raised went
+    # unsnapshotted, so only the first review round was ever checked.
+    # See unisdr/undrr-mangrove#1244.
+    types: [opened, synchronize, reopened]
     branches: [main, develop]
     paths:
       - 'stories/**'

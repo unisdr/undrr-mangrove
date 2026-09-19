@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { FormAction } from '../../Components/Forms/FormAction/FormAction';
 import { TextInput } from '../../Components/Forms/TextInput/TextInput';
 import { FormGroup } from '../../Components/Forms/FormGroup/FormGroup';
@@ -287,8 +287,14 @@ export const CompactSignup = {
     await expect(
       await canvas.findByRole('heading', { name: text.confirmation })
     ).toBeVisible();
-    await expect(
-      canvas.getByRole('heading', { name: text.confirmation })
-    ).toHaveFocus();
+    // The heading appears in one commit and is focused by a passive effect in
+    // the next. A DOM query resolves on the first of those, so asserting focus
+    // straight afterwards is a race the browser loses — it only ever passed
+    // under jsdom, where `act()` flushes both together.
+    await waitFor(() =>
+      expect(
+        canvas.getByRole('heading', { name: text.confirmation })
+      ).toHaveFocus()
+    );
   },
 };

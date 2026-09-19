@@ -112,6 +112,50 @@ it('loads data on mount', async () => {
 });
 ```
 
+## Play functions with the Storybook test runner
+
+A story's `play` function runs in a real browser, so it can assert the things
+jsdom cannot represent: computed style, box geometry, scroll overflow, focus
+order after a real click. Most of the play functions in this library exist for
+exactly that reason — a jsdom copy of them would pass on a completely unstyled
+component.
+
+The test runner drives a headless Chromium over a served Storybook. It runs
+every story twice over: a smoke test that the story renders without error, and,
+where one exists, the `play` function with its assertions.
+
+```bash
+# Build the Storybook the runner will drive
+yarn build
+
+# Serve it, then run the play functions against it
+yarn serve-storybook &
+yarn test-storybook
+
+# One story or one file
+yarn test-storybook -- Table.stories
+```
+
+`yarn test-storybook` needs a Storybook already running; it will not start one.
+Against a dev server on another port, pass `--url http://127.0.0.1:6199`.
+
+The runner needs its browser once per machine:
+
+```bash
+yarn run playwright install --with-deps chromium
+```
+
+CI runs the same two commands in the `Build and Deploy` workflow, on every push
+to a pull request. A failing assertion fails the build.
+
+### What cannot be asserted this way
+
+Play functions that depend on the network are only as reliable as the service
+they call. `CookieConsentBanner`'s "Rendering check" loads three assets from
+`assets.undrr.org`, which is why the runner's test timeout is raised to 60
+seconds. If a story genuinely cannot run headlessly, give it the `!test` tag
+and record the reason in the story rather than leaving a silent failure.
+
 ## Visual testing with Chromatic
 
 Visual testing is handled automatically through our CI/CD pipeline.
