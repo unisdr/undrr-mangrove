@@ -90,11 +90,14 @@ If your team has already invested in PrimeReact or a similar library, that inves
 | **Brand and content** | Mangrove       | Header, footer, mega menu, content cards, typography, color tokens, syndicated content blocks |
 | **Application UI**    | Your framework | Data tables, form controls, dashboards, filters, tree views, date pickers                     |
 
-A page might look like this (this example assumes a React app importing Mangrove from npm; for Drupal integration, see the <LinkTo kind="getting-started-getting-started-guide" story="docs">getting started guide</LinkTo>):
+A page might look like this (this example assumes a React app importing Mangrove from npm; for Drupal integration, see the <LinkTo kind="getting-started-getting-started-guide" story="docs">getting started guide</LinkTo>).
+
+Note the import form. Mangrove publishes one bundle per component and **no package root**, so you import `@undrr/undrr-mangrove/components/<Name>.js` and never `@undrr/undrr-mangrove`. Whether the binding is default or named varies by component; the <LinkTo kind="getting-started-integration-react-integration" story="docs">React integration guide</LinkTo> lists which is which.
 
 ```jsx
-// Mangrove handles the UNDRR content shell
-import { MegaMenu } from '@undrr/undrr-mangrove';
+// Mangrove handles the UNDRR content shell.
+// Import the per-component subpath: the package has no root entry point.
+import MegaMenu from '@undrr/undrr-mangrove/components/MegaMenu.js';
 // Your app library handles data-heavy interfaces
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
