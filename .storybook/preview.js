@@ -160,6 +160,31 @@ const themeDecorator = (Story, context) => {
 /** @type { import('storybook').Preview } */
 const preview = {
   parameters: {
+    // `@storybook/addon-a11y` is registered in main.js with no configuration,
+    // so it ran axe's default rule set. That set includes `best-practice`
+    // rules, which are advisory conventions rather than WCAG success
+    // criteria, and it runs over everything in the story — including markup
+    // from third-party embeds such as YouTube iframes, which this library
+    // neither writes nor can fix. The panel's output therefore read as a
+    // count of accessibility failures in Mangrove while being nothing of the
+    // sort. Scoping to the WCAG tags makes it mean what people already assume
+    // it means. See unisdr/undrr-mangrove#1273.
+    //
+    // `test` is deliberately left unset, which defaults to `'todo'`: the
+    // addon reports in the panel and beside the test runner's output but does
+    // not fail a build. Turning it to `'error'` is a decision for #1273,
+    // after the existing findings have been triaged — not a side effect of
+    // switching the test runner on.
+    a11y: {
+      // `runOnly` is an axe *run* option, so it belongs under `options` —
+      // putting it in `config` is accepted silently and changes nothing.
+      options: {
+        runOnly: {
+          type: 'tag',
+          values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'],
+        },
+      },
+    },
     actions: {
       argTypes: {
         onClick: { action: 'clicked' },

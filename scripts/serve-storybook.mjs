@@ -108,6 +108,16 @@ const server = http.createServer((request, response) => {
     response.writeHead(200, {
       'Content-Type':
         contentTypes[path.extname(file)] || 'application/octet-stream',
+      // Without this the responses carry no validator of any kind — no ETag,
+      // no Last-Modified, no Cache-Control — and Chromium is then free to
+      // apply heuristic caching. Storybook's chunk filenames are not fully
+      // content-hashed, so a rebuild into the same directory left the browser
+      // mixing fresh chunks with stale ones and running a story that matches
+      // no commit. That cost an afternoon before it was understood: the
+      // symptom is an assertion failing against markup the source cannot
+      // produce. Nothing here is worth caching — the whole point of this
+      // server is to serve the build that was just made.
+      'Cache-Control': 'no-store',
     });
 
     const stream = fs.createReadStream(file);
