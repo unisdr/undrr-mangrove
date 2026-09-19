@@ -10,6 +10,15 @@ const CDN_BASE = 'https://assets.undrr.org/cookie-banner/v1';
  * `onload` never fires and the component's load promises would hang forever.
  * Append for real — the de-duplication checks read the document — then settle
  * the element the way a browser would.
+ *
+ * Note what this deliberately does not model: `onload` fires whether or not the
+ * script would have executed, and `beforeEach` pre-seeds `window.CookieConsent`
+ * regardless. So nothing in this file proves that appending a script produces
+ * the library — these tests assert de-duplication, teardown and config
+ * handling, all of which are pure DOM and call bookkeeping. The check that the
+ * CDN bundle really loads and really builds a bar is the "Rendering check"
+ * story's play function, which runs in a real browser against the live CDN
+ * (#1242).
  */
 const installLoader = ({ fail = false } = {}) =>
   jest.spyOn(document.head, 'appendChild').mockImplementation(node => {
@@ -87,6 +96,9 @@ describe('CookieConsentBanner', () => {
   });
 
   it('treats a script already on the page as loaded even when its URL carries a query string', async () => {
+    // Proves the dedupe only. The seeded script has not executed, so in a real
+    // browser `window.CookieConsent` would be undefined here — see the note on
+    // `installLoader`.
     // The shape the cache buster used to produce: same file, different query.
     const seeded = document.createElement('script');
     seeded.src = `${CDN_BASE}/cookieconsent-undrr.js?cacheBuster=202601010000`;
@@ -102,6 +114,7 @@ describe('CookieConsentBanner', () => {
   });
 
   it('treats a stylesheet already on the page as loaded even when its URL carries a query string', async () => {
+    // As above: a de-duplication assertion, not an end-to-end load assertion.
     const seeded = document.createElement('link');
     seeded.rel = 'stylesheet';
     seeded.href = `${CDN_BASE}/cookieconsent.css?cacheBuster=202601010000`;
@@ -134,7 +147,7 @@ describe('CookieConsentBanner', () => {
   // Unmount cleanup (#1245)
   // --------------------------------------------------
 
-  it('tears down with reset(true) and never calls a destroy() the library does not have', async () => {
+  it('tears down with reset(false) and never calls a destroy() the library does not have', async () => {
     const destroy = jest.fn();
     window.CookieConsent = { run, reset, destroy };
 
@@ -144,8 +157,33 @@ describe('CookieConsentBanner', () => {
 
     unmount();
 
-    expect(reset).toHaveBeenCalledWith(true);
+    expect(reset).toHaveBeenCalledWith(false);
     expect(destroy).not.toHaveBeenCalled();
+  });
+
+  it('leaves the visitor’s consent cookie in place on unmount', async () => {
+    document.cookie =
+      'cc_cookie=%7B%22categories%22%3A%5B%22necessary%22%5D%7D';
+    expect(document.cookie).toContain('cc_cookie');
+
+    // Model the library's own `reset`: in the 3.1.0 bundle the argument gates
+    // exactly one thing, erasing the consent cookie. Everything else it does is
+    // unconditional, so `reset(false)` is a full teardown that keeps consent.
+    reset = jest.fn(eraseCookie => {
+      if (eraseCookie) {
+        document.cookie = 'cc_cookie=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      }
+    });
+    window.CookieConsent = { run, reset };
+
+    installLoader();
+    const { unmount } = render(<CookieConsentBanner />);
+    await waitFor(() => expect(run).toHaveBeenCalled(), { timeout: 3000 });
+
+    unmount();
+
+    expect(document.cookie).toContain('cc_cookie');
+    document.cookie = 'cc_cookie=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
 
   it('leaves unrelated cc- prefixed markup alone on unmount', async () => {
@@ -215,7 +253,102 @@ describe('CookieConsentBanner', () => {
     await waitFor(() => expect(run).toHaveBeenCalledTimes(2), {
       timeout: 3000,
     });
-    expect(reset).toHaveBeenCalledWith(true);
+    expect(reset).toHaveBeenCalledWith(false);
+  });
+
+  it('does not tear down when a config is rebuilt with its keys in a different order', async () => {
+    installLoader();
+    const { rerender } = render(
+      <CookieConsentBanner
+        config={{ ...minimalConfig(), autoShow: true, revision: 2 }}
+      />
+    );
+    await waitFor(() => expect(run).toHaveBeenCalledTimes(1), {
+      timeout: 3000,
+    });
+
+    // Same config, assembled by spreading a varying override set — which is
+    // how a caller with conditional overrides produces it.
+    rerender(
+      <CookieConsentBanner
+        config={{ revision: 2, autoShow: true, ...minimalConfig() }}
+      />
+    );
+
+    await Promise.resolve();
+    expect(reset).not.toHaveBeenCalled();
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
+  it('routes a callback through to the handler the latest render passed, without reloading', async () => {
+    const first = jest.fn();
+    const second = jest.fn();
+
+    installLoader();
+    const { rerender } = render(
+      <CookieConsentBanner config={{ ...minimalConfig(), onConsent: first }} />
+    );
+    await waitFor(() => expect(run).toHaveBeenCalledTimes(1), {
+      timeout: 3000,
+    });
+
+    rerender(
+      <CookieConsentBanner config={{ ...minimalConfig(), onConsent: second }} />
+    );
+    await Promise.resolve();
+
+    // Swapping a handler must not cost a teardown and reload...
+    expect(reset).not.toHaveBeenCalled();
+    expect(run).toHaveBeenCalledTimes(1);
+
+    // ...and the library, which captured its callbacks when it was handed the
+    // config, must still reach the current handler.
+    const handedToLibrary = run.mock.calls[0][0];
+    handedToLibrary.onConsent({ cookie: {} });
+
+    expect(second).toHaveBeenCalledTimes(1);
+    expect(first).not.toHaveBeenCalled();
+  });
+
+  it('reaches a callback that only the second render supplied', async () => {
+    const added = jest.fn();
+
+    installLoader();
+    const { rerender } = render(
+      <CookieConsentBanner
+        config={{ ...minimalConfig(), onChange: () => {} }}
+      />
+    );
+    await waitFor(() => expect(run).toHaveBeenCalledTimes(1), {
+      timeout: 3000,
+    });
+
+    rerender(
+      <CookieConsentBanner config={{ ...minimalConfig(), onChange: added }} />
+    );
+    await Promise.resolve();
+
+    run.mock.calls[0][0].onChange({ changedCategories: ['analytics'] });
+    expect(added).toHaveBeenCalledTimes(1);
+  });
+
+  // --------------------------------------------------
+  // CDN base URL normalisation (#1246)
+  // --------------------------------------------------
+
+  it('de-duplicates against a cdnBaseUrl given with a trailing slash', async () => {
+    const seeded = document.createElement('script');
+    seeded.src = `${CDN_BASE}/cookieconsent-undrr.js`;
+    document.head.appendChild(seeded);
+
+    installLoader();
+    render(<CookieConsentBanner cdnBaseUrl={`${CDN_BASE}/`} />);
+
+    await waitFor(() => expect(run).toHaveBeenCalled(), { timeout: 3000 });
+
+    // `…/v1//cookieconsent-undrr.js` is the same file, and a second copy of it
+    // still throws a redeclaration error on the page.
+    expect(resourcesNamed('cookieconsent-undrr.js')).toHaveLength(1);
   });
 
   // --------------------------------------------------
