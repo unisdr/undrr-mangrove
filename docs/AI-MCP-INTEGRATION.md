@@ -254,7 +254,7 @@ The [PageTemplateExample](https://mangrove.undrr.org/ai-components/example-page-
 **React consumers**
 1. Fetch `ai-components/index.json`.
 2. Fetch component detail files for props/types/examples.
-3. Import from npm: `import { ComponentName } from "@undrr/undrr-mangrove"`.
+3. Use the entry's own `import` line, which names the package subpath: `import { ComponentName } from "@undrr/undrr-mangrove/components/ComponentName.js"`. The package root is not an entry point and resolves on no published version (unisdr/undrr-mangrove#1252). An entry with no `import` line ships in no bundle; one flagged `importRequiresDom: true` cannot be imported in Node or during server-side rendering.
 
 ### How it's generated
 

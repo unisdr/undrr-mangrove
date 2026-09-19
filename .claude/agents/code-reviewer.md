@@ -20,7 +20,7 @@ You are reviewing code in **Mangrove**, UNDRR's Storybook-powered React componen
 - **Imports**: React → external libs → internal components → styles
 - **Gold standard**: `stories/Components/Pager/` — reference for structure, docs, and test patterns
 - **Commits**: Conventional commits (`feat:`, `fix:`, `docs:`, etc.)
-- **Exports**: Components for Drupal are listed in both `webpack.config.js` and `src/index.js`
+- **Exports**: Components for Drupal are listed in both `webpack.config.js` and `src/index.js`. Only the webpack entry publishes anything — it becomes `components/Name.js` in the tarball and on the CDN; `src/index.js` is the repository's own entry point (unisdr/undrr-mangrove#1252)
 - **Hydration**: New components should use `fromElement` + `createHydrator` pattern (see `docs/HYDRATION.md`)
 
 ### Known pitfalls to watch for

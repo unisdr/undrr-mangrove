@@ -736,10 +736,13 @@ function normalizeDocsBase(url) {
 function parseBundleExports() {
   const byBundle = new Map();
   if (!fs.existsSync(distDir)) {
-    console.warn(
-      'dist/components/ not found — no import statements will be published'
-    );
-    return byBundle;
+    // Fatal, not a warning. Continuing would publish a manifest in which
+    // every component has silently lost its `import` line — the same class of
+    // wrong-but-plausible output this function exists to stop, and
+    // indistinguishable from "no component is importable".
+    console.error(`Component bundles not found at ${distDir}.`);
+    console.error('Run "yarn build" (or "webpack") before generating.');
+    process.exit(1);
   }
   for (const file of fs.readdirSync(distDir)) {
     if (!file.endsWith('.js')) continue;
@@ -763,6 +766,30 @@ function parseBundleExports() {
 }
 
 const bundleExports = parseBundleExports();
+
+if (bundleExports.size === 0) {
+  console.error(`No component bundles in ${distDir}.`);
+  console.error('Run "yarn build" (or "webpack") before generating.');
+  process.exit(1);
+}
+
+// A dist/ built before a component was added or renamed is worse than no
+// dist/ at all: it produces a manifest that looks complete and quietly omits
+// whatever moved. Every COMPONENT_IDS key is a webpack entry, so each must
+// have a bundle; one that does not means the tree is stale.
+const staleBundles = Object.keys(COMPONENT_IDS).filter(
+  name => !bundleExports.has(name)
+);
+if (staleBundles.length > 0) {
+  console.error(
+    `dist/components/ is stale: ${staleBundles.length} webpack entr${
+      staleBundles.length === 1 ? 'y has' : 'ies have'
+    } no bundle.`
+  );
+  for (const name of staleBundles) console.error(`  - ${name}.js`);
+  console.error('Rebuild with "yarn build" before generating.');
+  process.exit(1);
+}
 
 // Reverse lookup: Storybook ID → webpack entry name (which is the published
 // file name under components/). Derived from COMPONENT_IDS so it self-heals
@@ -805,6 +832,38 @@ function buildImportStatement(componentName, componentId) {
     return `import ${bundle} from "${specifier}";`;
   }
   return '';
+}
+
+/** The bundle name an emitted import statement points at. */
+function importedBundle(statement) {
+  const match = statement.match(/\/components\/([\w$.-]+)\.js"/);
+  return match ? match[1] : '';
+}
+
+/**
+ * Import every bundle once and record the ones that throw.
+ *
+ * A component whose module scope reaches for `document` — ShowMore and Tab
+ * both import a vanilla module that self-initialises on load — imports
+ * cleanly in a browser or through a bundler and throws `document is not
+ * defined` in Node and in server-side rendering. Its import line is correct
+ * and is published, but the constraint is published with it: an agent that
+ * evaluates the line in Node gets a crash it can neither predict from the
+ * manifest nor blame on itself.
+ *
+ * Probing is the only honest way to know this. Static analysis of a minified
+ * bundle cannot tell a module-scope DOM read from one inside a function.
+ */
+async function probeBundleImports() {
+  const failures = new Map();
+  for (const bundle of bundleExports.keys()) {
+    try {
+      await import(path.join(distDir, `${bundle}.js`));
+    } catch (e) {
+      failures.set(bundle, e.message.split('\n')[0]);
+    }
+  }
+  return failures;
 }
 
 // ---------------------------------------------------------------------------
@@ -1912,6 +1971,17 @@ async function main() {
     renderedHtml = new Map();
   }
 
+  // Which published bundles cannot be imported outside a browser.
+  const domOnlyBundles = await probeBundleImports();
+  if (domOnlyBundles.size > 0) {
+    console.log(
+      `  ${domOnlyBundles.size} bundle(s) need a DOM at import (flagged importRequiresDom):`
+    );
+    for (const [bundle, reason] of domOnlyBundles) {
+      console.log(`    ${bundle}.js — ${reason}`);
+    }
+  }
+
   // -------------------------------------------------------------------------
   // Transform each component
   // -------------------------------------------------------------------------
@@ -1935,17 +2005,24 @@ async function main() {
     const description = getDescription(id, component, data);
 
     // --- Validated import statement ---
-    // Storybook's react-docgen auto-generates import statements for every
-    // component, but only components exported from src/index.js are actually
-    // importable from the npm package. Use buildImportStatement() which
-    // checks against real exports instead of trusting Storybook's guess.
+    // Storybook's react-docgen auto-generates an import statement for every
+    // component, pointing at the package root, which resolves for nobody.
+    // buildImportStatement() emits the subpath the tarball actually ships and
+    // a binding the bundle actually exports, or nothing at all.
     const validImport = buildImportStatement(name, id);
     if (component.import && !validImport) droppedImportCount++;
+    const needsDom =
+      Boolean(validImport) && domOnlyBundles.has(importedBundle(validImport));
 
     // --- Index entry (lightweight) ---
     const summary = getSummary(id, component, data, description);
     const indexEntry = { id, name, summary, description };
     if (validImport) indexEntry.import = validImport;
+    // The import line is correct and resolves; evaluating it outside a
+    // browser does not. Flagged rather than withheld: the component is
+    // published and usable, and an agent needs to know which of the two it
+    // is facing (unisdr/undrr-mangrove#1252).
+    if (needsDom) indexEntry.importRequiresDom = true;
     indexEntry.docsUrl = docsUrl(id);
     indexEntry.detailsUrl = `${DOCS_BASE}ai-components/${id}.json`;
 
@@ -1976,6 +2053,15 @@ async function main() {
     // --- Full component file ---
     const detail = { name, summary, description };
     if (validImport) detail.import = validImport;
+    if (needsDom) {
+      detail.importRequiresDom = true;
+      detail.importNote =
+        'This bundle reads `document` while it loads, so the import above ' +
+        'throws "document is not defined" in Node and during server-side ' +
+        'rendering. It is correct in a browser and through a bundler. On a ' +
+        'server-rendered page, load it from a dynamic import after mount, or ' +
+        'use the vanilla module and hydration contract instead.';
+    }
     detail.docsUrl = docsUrl(id);
 
     if (isVanilla) {
@@ -2136,6 +2222,12 @@ async function main() {
       'library.vanillaScripts, and the detail file carries the full contract — and false when ' +
       'there is none, either because the component is static presentation (the detail file says why ' +
       'in vanillaModuleNote) or because its behaviour needs React (hydration: true). ' +
+      'An `import` line, where present, is the exact line to use and names the package subpath ' +
+      `(${pkg.name}/components/Name.js); the package root is not an entry point and resolves on no ` +
+      'published version. No `import` line means the component ships in no bundle. ' +
+      'importRequiresDom: true means that line reads `document` as it loads: correct in a browser ' +
+      'or through a bundler, and it throws in Node and in server-side rendering — the detail file ' +
+      'says what to do instead. ' +
       'Each entry has a detailsUrl with full props, rendered HTML examples, and code snippets.',
     library: {
       name: pkg.name,
@@ -2327,7 +2419,7 @@ ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with
 
 ### React quick start
 
-${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import them from the package subpath, which is what the tarball ships: import { ComponentName } from "@undrr/undrr-mangrove/components/ComponentName.js". The package root is not an entry point — "@undrr/undrr-mangrove" on its own does not resolve on any published version. Each component's index and detail entry carries the exact \`import\` line to use; where one is absent, the component ships in no bundle and there is nothing to import.
+${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import them from the package subpath, which is what the tarball ships: import { ComponentName } from "@undrr/undrr-mangrove/components/ComponentName.js". The package root is not an entry point — "@undrr/undrr-mangrove" on its own does not resolve on any published version. Each component's index and detail entry carries the exact \`import\` line to use; where one is absent, the component ships in no bundle and there is nothing to import. A component flagged \`importRequiresDom: true\` reads \`document\` as it loads: that import line is correct in a browser and through a bundler, and throws "document is not defined" if it is evaluated in Node or during server-side rendering — its detail file says what to do instead.
 
 Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's \`hydration\` field (or \`reactNote\`) for details; components with a \`hydration\` field are flagged \`hydration: true\` in the index. A \`vanillaModule\` field (flagged \`vanillaModule: true\`) has the same shape but describes a plain ES module from \`/js/\`: it needs neither React nor \`hydrate.js\`.
 

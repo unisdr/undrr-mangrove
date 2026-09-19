@@ -57,8 +57,8 @@ Drupal.behaviors.mangroveComponentName = {
 ### Astro / Vite
 
 ```js
-import { createHydrator } from '@undrr/undrr-mangrove';
-import ScrollContainer, { fromElement } from '@undrr/undrr-mangrove/stories/Components/ScrollContainer/ScrollContainer.hydrate';
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
+import ScrollContainer, { fromElement } from '@undrr/undrr-mangrove/components/ScrollContainer.js';
 
 createHydrator({
   selector: '[data-mg-scroll-container]',
@@ -69,10 +69,10 @@ createHydrator({
 
 ## `createHydrator` API
 
-Exported from `src/hydrate.js` and package root.
+The source is `src/hydrate.js`; the published file is `components/hydrate.js`, the default export of that bundle. The tarball ships neither `src/` nor the package root, so the subpath is the only form that resolves (unisdr/undrr-mangrove#1252).
 
 ```js
-import createHydrator from '@undrr/undrr-mangrove/src/hydrate.js';
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
 ```
 
 | Property | Type | Required | Description |

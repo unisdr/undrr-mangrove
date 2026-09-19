@@ -43,8 +43,8 @@ You are building components in **Mangrove**, UNDRR's Storybook-powered React com
 ### Adding a new component
 1. Create component in appropriate `stories/` subdirectory following the file pattern above
 2. Add `fromElement.js` and `hydrate.js` barrel (see `docs/HYDRATION.md`)
-3. Add webpack entry in `webpack.config.js` (second config block)
-4. Add export in `src/index.js`
+3. Add webpack entry in `webpack.config.js` (second config block) — this is the step that publishes the component, to npm as `components/Name.js` and to the CDN
+4. Add export in `src/index.js` — the repository's own entry point; it publishes nothing on its own (unisdr/undrr-mangrove#1252)
 5. Build: `yarn build`
 
 ### Key conventions
