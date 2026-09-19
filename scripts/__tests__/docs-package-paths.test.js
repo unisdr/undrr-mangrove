@@ -15,10 +15,10 @@
  * the build reads documentation, so a wrong path fails only in a consumer's
  * project, months later.
  *
- * This suite closes that gap. It resolves four shapes out of every `.md` and
- * `.mdx` in the repository against `scripts/published-paths.cjs` — a model of
- * the tarball derived from the sources, which `published-paths.test.js` keeps
- * honest against a real build:
+ * This suite narrows that gap. It resolves four shapes out of every tracked
+ * `.md` and `.mdx` in the repository against `scripts/published-paths.cjs` — a
+ * model of the tarball **this working tree would produce**, which
+ * `published-paths.test.js` keeps honest against a real build:
  *
  * 1. `@undrr/undrr-mangrove/<subpath>` in an import, require or `@import`.
  * 2. A Sass `@import` written relative to the package root, the form the Sass
@@ -28,26 +28,40 @@
  *
  * ## What this does NOT cover
  *
+ * - **Whether anything is actually published.** This is the boundary that
+ *   matters most, so it goes first. The model is built from *this working
+ *   tree*, not from a registry tarball or a CDN listing. A path that is new on
+ *   this branch resolves here and 404s for every consumer until a release
+ *   ships it. Resolution against the model is a necessary condition, never a
+ *   sufficient one. `js/drawer.js` is the live example: it is in the sources,
+ *   so the model has it, and no released version folder serves it yet because
+ *   it postdates the current tag. `docs/RELEASES.md` carries the step that
+ *   clears that up at release time.
  * - **Specifiers outside `.md` / `.mdx`.** JSDoc, code comments and story
  *   source are not scanned.
  * - **Named exports.** `import { mgTabs } from '…/js/tabs.js'` is checked as
  *   far as the file; whether the file exports `mgTabs` is not checked here.
  * - **Relative paths.** A doc that writes `path/to/tabs.js` or a Drupal
  *   library path is deliberately illustrative and cannot be resolved.
- * - **CDN paths at a pinned older version.** `mangrove/1.4.1/…` is checked
- *   only against the *current* model, so it is skipped: 1.x folders really do
- *   hold files 2.0 deleted. Only the current version and `latest` are checked.
+ * - **CDN paths at any version other than the one in `package.json`.**
+ *   `mangrove/1.4.1/…` is a different tree and is skipped. So is
+ *   `mangrove/latest/…`, for the reason spelled out at the check itself: the
+ *   `latest` dist-tag does *not* track this branch.
  * - **Completeness.** A doc that omits a module that ships passes. The guard
  *   answers "does everything named resolve?", not "is everything that resolves
  *   named?".
- * - **Prose in a changelog or release note.** `CHANGELOG.md`, `docs/RELEASE-*.md`
- *   and any `## Changelog` section record what a path used to be and why it was
- *   wrong, so quoting a dead one there is the point. Fenced code in those same
- *   files is still checked, and so is prose everywhere else — which is where
- *   the Grid page's broken CSS link was.
+ * - **Table rows in a release note, and prose after a `## Changelog` heading.**
+ *   `CHANGELOG.md`, the migration tables in `docs/RELEASE-*.md` and any
+ *   `## Changelog` section record what a path used to be and why it was wrong,
+ *   so quoting a dead one there is the point. The exemption is deliberately
+ *   narrow: in a release note only table rows are exempt, because the
+ *   forward-looking "here is what to do in 2.0" prose beside those tables is
+ *   the migration guide consumers actually follow, and a wrong path in it is a
+ *   defect like any other. Fenced code is checked everywhere.
  * - **The allow-lists below.** They are the escape hatch, one line of reason
  *   each. Adding an entry is a reviewer decision, not a formality.
  */
+const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -72,9 +86,15 @@ const SKIP_DIRS = new Set([
 /**
  * Specifier shapes that are illustrative rather than real. A doc writing
  * `components/<Name>.js` is teaching the pattern, not naming a file.
+ *
+ * A trailing slash is deliberately NOT in here. "the SCSS source lives in
+ * `@undrr/undrr-mangrove/stories/`" is a claim about the package's shape, and
+ * it was false on every version ever published — one of the two claims this
+ * sweep deleted. Skipping it as "a directory being discussed" would let the
+ * same falsehood back in wearing a slash, so a named directory is resolved
+ * too, against the package's top level.
  */
 const isPlaceholder = subpath =>
-  subpath.endsWith('/') || // a directory being discussed, not imported
   /[…<>{}*]/.test(subpath) || // <Name>, {name}, …, glob
   /^(components|js)\/(ComponentName|MyComponent|Name|X|my-script)\./.test(
     subpath
@@ -91,6 +111,10 @@ const RETIRED_PATHS = new Map([
   [
     'docs/RELEASE-1.4.md::css/style-legacy.css',
     'The 1.4 release notes, where the legacy stylesheets were current. 2.0 deleted them.',
+  ],
+  [
+    'docs/RELEASE-1.4.md::stories/assets/scss/style',
+    'The correction note itself, which has to quote the path it corrects (#1266).',
   ],
   [
     'docs/RELEASE-2.0.md::scss/Utilities/ShowMore/ShowMore',
@@ -118,14 +142,41 @@ const RETIRED_PATHS = new Map([
   ],
 ]);
 
-function docFiles(dir, found = []) {
+function walkDocs(dir, found = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name.startsWith('.') || SKIP_DIRS.has(entry.name)) continue;
+    if (SKIP_DIRS.has(entry.name)) continue;
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) docFiles(full, found);
+    if (entry.isDirectory()) walkDocs(full, found);
     else if (/\.mdx?$/.test(entry.name)) found.push(full);
   }
   return found;
+}
+
+/**
+ * Every tracked `.md` and `.mdx`, `git ls-files` first.
+ *
+ * The walk used to skip every `.`-prefixed entry, which quietly dropped
+ * `.github/pull_request_template.md` and `.claude/agents/*.md` — eleven files
+ * the sweep claimed to cover. Not skipping them is not enough on its own:
+ * a developer's `git worktree` directories live under `.claude/`, and each is
+ * a whole second copy of the repository. Asking git for the tracked set gets
+ * exactly the files the branch is responsible for, and nothing that happens to
+ * be sitting on the disk. The walk stays as a fallback for a checkout without
+ * a usable git.
+ */
+function docFiles() {
+  try {
+    return execFileSync('git', ['ls-files', '-z', '*.md', '*.mdx'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      maxBuffer: 1024 * 1024 * 16,
+    })
+      .split('\0')
+      .filter(Boolean)
+      .map(relative => path.join(ROOT, relative));
+  } catch {
+    return walkDocs(ROOT);
+  }
 }
 
 const PATHS = publishedPaths();
@@ -147,8 +198,20 @@ function resolvesAsSass(subpath) {
   ].some(candidate => PATHS.has(candidate));
 }
 
-const resolves = subpath =>
-  subpath.startsWith('scss/') ? resolvesAsSass(subpath) : PATHS.has(subpath);
+/**
+ * A subpath written with a trailing slash names a directory, so it resolves
+ * when the package ships anything under it. `scss/` does; `stories/` and
+ * `tokens/` do not, which is the pair of false claims #1266 removed.
+ */
+const resolvesAsDirectory = subpath =>
+  [...PATHS].some(published => published.startsWith(subpath));
+
+const resolves = subpath => {
+  if (subpath.endsWith('/')) return resolvesAsDirectory(subpath);
+  return subpath.startsWith('scss/')
+    ? resolvesAsSass(subpath)
+    : PATHS.has(subpath);
+};
 
 /** Collect every checkable reference, with enough context to report it. */
 function collect() {
@@ -170,21 +233,40 @@ function collect() {
       return fenced;
     });
 
-    // Changelog and release-note *prose* is where a doc records what a path
+    // Changelog and migration-table *prose* is where a doc records what a path
     // used to be and why it was wrong: "it reached into `…/src/hydrate`, and
     // the tarball ships no `src/`". Naming the dead path is the whole value of
     // the sentence, so prose in those regions is not resolved. Fenced code is,
     // everywhere — a reader copies a fence — and so is prose anywhere else,
     // which is where the Grid page's broken CSS link was hiding.
-    const historicalFile =
-      relative === 'CHANGELOG.md' ||
-      /^docs\/RELEASE-[\d.]+\.md$/.test(relative);
-    const changelogFrom = lines.findIndex(text =>
-      /^#{2,3}\s+Changelog\s*$/.test(text)
+    const isChangelog = relative === 'CHANGELOG.md';
+
+    // A release note is not historical end to end. Most of `RELEASE-2.0.md` is
+    // forward-looking "here is what to do in 2.0" guidance — the migration
+    // guide consumers actually follow — and a path that does not resolve there
+    // misleads exactly the reader it is written for. Only the rows of its
+    // before/after tables are exempt, because a "Removed" column names dead
+    // paths by design.
+    const isReleaseNote = /^docs\/RELEASE-[\d.]+\.md$/.test(relative);
+    const isTableRow = text => /^\s*\|/.test(text);
+
+    // `## Changelog` has to be found the way the rest of the file reads the
+    // document, or a fenced example of the heading is mistaken for the real
+    // one. `ComponentContribution.mdx` fences exactly that as a template, at
+    // line 655 of 1031 — taking the first match exempted the back third of the
+    // component-authoring guide. Take the last unfenced heading: a page's real
+    // changelog is its final section.
+    const changelogFrom = lines.reduce(
+      (last, text, index) =>
+        !inCode[index] && /^#{2,3}\s+Changelog\s*$/.test(text) ? index : last,
+      -1
     );
+
     const isHistoricalProse = index =>
       !inCode[index] &&
-      (historicalFile || (changelogFrom !== -1 && index > changelogFrom));
+      (isChangelog ||
+        (isReleaseNote && isTableRow(lines[index])) ||
+        (changelogFrom !== -1 && index > changelogFrom));
 
     lines.forEach((text, index) => {
       const at = {
@@ -215,12 +297,30 @@ function collect() {
         found.push({ ...at, kind: 'sass-root', written: match[1] });
       }
 
-      // 3. CDN URLs at the current version (or `latest`, which tracks it).
+      // 3. CDN URLs at the version in `package.json`, and at no other.
+      //
+      // `latest` is skipped, and the reason is worth writing down because the
+      // opposite was asserted here and survived review. `latest` is a moving
+      // pointer — the dist-tag for the newest *stable* release — and it does
+      // not track this branch. Whenever a prerelease line is open it addresses
+      // a different major than the sources here, so resolving `latest/` URLs
+      // against this model is wrong in both directions at once: it blesses
+      // paths that exist only on this branch, and it rejects files the older
+      // tree genuinely serves.
+      //
+      // Deliberately not fixed by looking the tag up. Hard-coding the version
+      // it points at today would quietly change meaning the moment a release
+      // is cut, and asking the registry at test time would make the suite
+      // network-dependent and non-reproducible — both worse than the bug. A
+      // wrong answer in a guard is worse than no answer, so a `latest/` URL is
+      // a manual check. Docs should pin a version; the `latest/` URLs that
+      // remain are listed as a step in the release procedure
+      // (`docs/RELEASES.md`), to be re-pointed when the tag moves.
       for (const match of text.matchAll(
         /https:\/\/assets\.undrr\.org\/mangrove\/([^/]+)\/([^"'`\s,;)\]>}]+)/g
       )) {
         const [, version, rest] = match;
-        if (version !== CURRENT_VERSION && version !== 'latest') continue;
+        if (version !== CURRENT_VERSION) continue;
         const subpath = rest.replace(/[.,:]+$/, '');
         if (isPlaceholder(subpath)) continue;
         found.push({ ...at, kind: 'cdn', written: subpath });
@@ -253,6 +353,25 @@ function collect() {
 const references = collect();
 
 describe('published paths named in documentation', () => {
+  test('the sweep reads every tracked .md and .mdx', () => {
+    // The count in the changelog and the PR body is this number. It was wrong
+    // by eleven files because the walk skipped `.`-prefixed directories, and a
+    // stated coverage figure nothing checks is how that survived.
+    const tracked = execFileSync('git', ['ls-files', '*.md', '*.mdx'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+    })
+      .split('\n')
+      .filter(Boolean);
+    const swept = new Set(
+      docFiles().map(file =>
+        path.relative(ROOT, file).split(path.sep).join('/')
+      )
+    );
+    expect(tracked.filter(file => !swept.has(file))).toEqual([]);
+    expect(swept.size).toBe(tracked.length);
+  });
+
   test('the sweep actually found the documentation', () => {
     expect(references.length).toBeGreaterThan(150);
     expect(references.some(ref => ref.file.endsWith('.mdx'))).toBe(true);
@@ -301,6 +420,7 @@ describe('published paths named in documentation', () => {
         const subpath = ref.written.replace(/^\//, '');
         if (ref.kind === 'sass-root') return false; // Sass, by definition
         if (subpath.startsWith('scss/')) return false;
+        if (subpath.endsWith('/')) return false; // a directory has no extension
         if (RETIRED_PATHS.has(`${ref.file}::${ref.written}`)) return false;
         return !path.posix.extname(subpath);
       })

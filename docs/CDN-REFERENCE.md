@@ -45,10 +45,12 @@ The DELTA Resilience theme never had a legacy variant. See the [v1.4 release not
 | On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
 | Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
 | Copy Button | `/js/copy-button.js` | Zero-dependency copy-to-clipboard button |
-| Drawer | `/js/drawer.js` | Off-canvas drawer and floating panel lifecycle (no React) |
+| Drawer | `/js/drawer.js` | Off-canvas drawer and floating panel lifecycle (no React). **Lands in 2.0** — see below |
 | Switch pending | `/js/switch-pending.js` | Saving state for `.mg-switch`: announcements, guards, and an optional timeout and revert. `mgSwitchAnnouncer()` exports the announcements alone |
 | Preview access | `/js/preview-access.js` | Preview-access gate form |
 | Shared constants | `/js/undrr.js` | Key codes, breakpoints and the `window.UNDRR` namespace |
+
+**`/js/drawer.js` is not on the CDN yet.** It is listed because the table is the complete list of modules the library ships, but it postdates `2.0.0-rc.2` and first reaches the CDN with 2.0. Until then it returns 404 on every version folder, `latest/` included; use `@undrr/undrr-mangrove/js/drawer.js` from npm in the meantime. Every other path in the table is served today. Cutting 2.0 removes this paragraph — see [the release procedure](RELEASES.md#re-point-the-latest-guidance).
 
 That table is the complete list. **There is no `/js/main.js` and no combined bundle** — every module is loaded on its own, so a `<script src=".../js/main.js">` returns 404. Load only the modules the page needs:
 

@@ -69,6 +69,19 @@ yarn update-cdn-version --dry-run  # preview changes first
 
 This updates CDN URLs in README.md, MDX docs, and story files from the old version to the new one.
 
+#### Re-point the `latest` guidance
+
+`yarn update-cdn-version` rewrites *pinned* version URLs. It does not touch `assets.undrr.org/mangrove/latest/`, and neither does any test: `scripts/__tests__/docs-package-paths.test.js` skips `latest/` on purpose, because the tag is a moving pointer at the newest stable release and cannot be resolved against this branch's sources. So `latest/` guidance is checked here, by hand, every release.
+
+A release that changes the major is the one that matters. When `latest` moves to a new major, every `latest/` URL in the docs silently starts serving a different tree — paths that 404ed begin resolving, and paths that resolved begin 404ing. Work through this list:
+
+1. **Find them.** `grep -rn "assets.undrr.org/mangrove/latest" --include='*.md' --include='*.mdx' .` — currently `docs/RELEASES.md`, `stories/Components/Navigation/Drawer/Drawer.mdx`.
+2. **Request each one** against the version being released and confirm it still resolves. A `latest/` URL that 404s after the tag moves is a broken copy-paste on a published page.
+3. **Clear the "lands in 2.0" markers** on paths that this release publishes. These exist because the module is in the sources but on no version folder yet, and the release is what makes them wrong:
+   - `docs/CDN-REFERENCE.md` — the `/js/drawer.js` table row and the paragraph under the JavaScript module table.
+   - `stories/Components/Navigation/Drawer/Drawer.mdx` — the "Lands in 2.0" note and the `{version}` placeholder in the vanilla HTML snippet, which becomes a real pinned version.
+4. **Confirm before publishing the release notes**, not after. Each of these is a path a reader copies.
+
 ### 4. Update CHANGELOG.md
 
 In `CHANGELOG.md`, rename the `## Unreleased` section to `## X.Y.Z — YYYY-MM-DD` and add a link to the GitHub Release below the heading (the release page is created in step 6, so you can add the link now and it will resolve once the release is published):

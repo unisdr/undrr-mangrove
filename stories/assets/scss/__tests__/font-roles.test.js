@@ -368,6 +368,15 @@ describe('the documented per-component Sass recipe', () => {
    * `scss/` (unisdr/undrr-mangrove#1266). This compiles against the repo, so it
    * maps that leading segment back. Only the prefix differs; the files are the
    * same ones the package copies.
+   *
+   * Note what that mapping costs. This test no longer catches the #1266 shape:
+   * a doc that reverted to `stories/assets/scss/variables` would not match the
+   * rewrite, would pass through untouched, and would compile against the repo
+   * exactly as it does today — green, while telling consumers a path no
+   * tarball has ever held. What this test measures is that the recipe compiles
+   * and defines its font roles. Whether the recipe names paths the *package*
+   * contains is `scripts/__tests__/docs-package-paths.test.js`'s job, and that
+   * suite asserts this specifier by name. Net coverage is unchanged; it moved.
    */
   const MDX = path.join(STORIES_DIR, 'Documentation/SassIntegration.mdx');
 
