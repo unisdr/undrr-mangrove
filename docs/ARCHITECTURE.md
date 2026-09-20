@@ -8,18 +8,18 @@ This document explains the build system, distribution channels, and integration 
 
 The webpack config (`webpack.config.js`) exports an array of two configs that produce different outputs:
 
-### Config 1: Vanilla JS/CSS assets
+### Config 1: Vanilla JS and CSS assets
 
 ```
-stories/assets/js/ + stories/assets/scss/
-  → webpack (glob entries via webpack.entries.js)
-  → dist/js/*.min.js  +  dist/css/
+stories/assets/  (js/, css/ compiled from scss/, fonts/, images/)
+  → webpack CopyPlugin
+  → dist/assets/
 ```
 
-- Entry points discovered dynamically via `webpack.entries.js`
-- Output: UMD bundles with no React dependency
-- Used for: standalone scripts (tabs, accordion, show-more, etc.) that work without React
-- Also copies static assets (fonts, images, error pages) to `dist/assets/`
+- No entry points: this config compiles nothing. It exists for its CopyPlugin patterns.
+- The vanilla JS modules are copied verbatim and ship as ES module source, not as bundles. Nothing is emitted under `dist/js/`; the config was documented as emitting `dist/js/*.min.js`, but its glob matched nothing and never had (unisdr/undrr-mangrove#1253).
+- The CSS reaching `dist/assets/css/` is compiled by the `sass` CLI (`yarn scss`) before webpack runs, and minified in passing by this config's `CssMinimizerPlugin`.
+- Also copies the fonts, images and error pages.
 
 ### Config 2: React component ES modules
 
@@ -34,11 +34,11 @@ stories/Components/*/ComponentName.hydrate.js  (or .jsx)
 - Babel config: `configFile: false, babelrc: false` — ignores project `.babelrc.json` to avoid polyfill `require()` calls in ES module output
 - Used for: React components consumed by Drupal (via import maps) or CDN
 
-**Why two configs?** The vanilla JS needs UMD format with polyfills for older browser support. The React components need ES module format with React externalized so the host page provides a single shared React instance via import map.
+**Why two configs?** They have different jobs and different outputs: one copies static assets into `dist/assets/`, the other bundles React components as ES modules with React externalized, so the host page provides a single shared React instance via import map.
 
 ### Adding a new entry
 
-- **Vanilla JS**: Add the source file to `stories/assets/js/` — `webpack.entries.js` auto-discovers it
+- **Vanilla JS**: Add the source file to `stories/assets/js/` — the whole directory is copied, so being there is enough
 - **React component**: Add an explicit entry in the second config block of `webpack.config.js`
 
 ## CSS compilation pipeline
@@ -70,7 +70,7 @@ Components reach consumers through different channels depending on their type an
 
 ### Vanilla JS scripts
 
-Scripts in `stories/assets/js/` are auto-discovered by webpack and published to npm at `@undrr/undrr-mangrove/js/`. No manual registration is needed. The CI workflow (`npm-publish.yml`) copies `dist/assets/js/*` into the npm package's `js/` directory.
+Scripts in `stories/assets/js/` are copied by webpack and published to npm at `@undrr/undrr-mangrove/js/`. No manual registration is needed: `scripts/assemble-npm-package.mjs`, which the CI workflow (`npm-publish.yml`) runs, copies `dist/assets/js/*` into the npm package's `js/` directory.
 
 | Script | npm path | Purpose |
 |--------|----------|---------|
@@ -95,16 +95,13 @@ See [`stories/assets/js/README.md`](../stories/assets/js/README.md) for the full
 | Gallery | `.hydrate.js` | Yes | webpack + npm |
 | StatsCard | `.hydrate.js` | Yes | webpack + npm |
 | Pager | `.hydrate.js` | Yes | webpack + npm |
-| BarChart | `.jsx` | Yes | webpack + npm (no hydration) |
-| MapComponent | `.jsx` | Yes | webpack + npm (no hydration) |
-| Fetcher | `.jsx` | Yes | webpack + npm (no hydration) |
-| CookieConsentBanner | — | Yes | npm only |
-| Snackbar | — | Yes | npm only |
+| CookieConsentBanner | — | Yes | repository only |
+| Snackbar | — | Yes | repository only |
 
-- **webpack + npm**: Produces a standalone `dist/components/ComponentName.js` bundle for Drupal/CDN, and is also importable from the npm package
-- **npm only**: Importable via `import { X } from '@undrr/undrr-mangrove'` but has no `dist/components/` bundle for Drupal
+- **webpack + npm**: produces a standalone `dist/components/ComponentName.js` bundle. It is what Drupal and the CDN load, and it is what the npm package publishes as `components/ComponentName.js`, imported as `import { X } from '@undrr/undrr-mangrove/components/ComponentName.js'`.
+- **repository only**: exported from `src/index.js`, which is this repository's own entry point (`main` and `exports` in the root `package.json`), so it resolves for a workspace or a repository-URL install. It reaches no npm consumer: the published tarball ships neither `src/` nor `dist/`, and from 2.0.0 its `package.json` has neither `main` nor `exports`, so `import { X } from '@undrr/undrr-mangrove'` does not resolve. It never did — through 2.0.0-rc.2 `main` named `dist/index.js`, a file no tarball has contained — and the package now stops advertising a root rather than starting to ship one. See unisdr/undrr-mangrove#1252.
 
-To add a Drupal-integrated component: add its entry to both `webpack.config.js` (second config block) and `src/index.js`. For npm-only: add to `src/index.js` only. See [COMPONENT-GUIDE.md](COMPONENT-GUIDE.md) for the full walkthrough.
+To add a component consumers can use, give it an entry in `webpack.config.js` (second config block); that bundle is the published one. Adding an export to `src/index.js` keeps the repository entry point complete and is worth doing alongside, but on its own it publishes nothing. See [COMPONENT-GUIDE.md](COMPONENT-GUIDE.md) for the full walkthrough.
 
 ## Drupal integration flow
 
@@ -219,7 +216,7 @@ yarn dev    # Start Storybook — use the paintbrush toolbar to switch themes
 
 The build produces AI-friendly component metadata alongside Storybook so coding agents can discover and use components accurately. The pipeline auto-generates from Storybook and component rendering, with some curated data maintained manually.
 
-The pipeline lives in `scripts/ai-manifest/` (3 files: `generate-ai-manifest.js`, `component-data.js`, `css-utilities.js`). See the header comment in `generate-ai-manifest.js` for details.
+The pipeline lives in `scripts/ai-manifest/` (5 files: `generate-ai-manifest.js`, `component-data.js`, `css-utilities.js`, `custom-properties.js`, `parse-changelog.js`). See the header comment in `generate-ai-manifest.js` for details.
 
 ## Known technical constraints
 

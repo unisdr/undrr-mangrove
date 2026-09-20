@@ -64,7 +64,11 @@ export function SyndicationSearchWidget({ config, labels }) {
 SyndicationSearchWidget.propTypes = {
   /** Widget configuration object merged with DEFAULT_CONFIG from utils/constants. */
   config: PropTypes.shape({
-    /** Elasticsearch proxy endpoint URL. */
+    /**
+     * Elasticsearch proxy endpoint URL. Results are rendered as unsanitised
+     * HTML, so this endpoint is trusted; see "Endpoint trust contract" in the
+     * MDX documentation.
+     */
     searchEndpoint: PropTypes.string,
     /** Number of results per page. */
     resultsPerPage: PropTypes.number,
@@ -254,7 +258,6 @@ function SyndicationSearchWidgetInner() {
       setFacetsTargetEl(el);
     } else {
       setFacetsTargetEl(null);
-      // eslint-disable-next-line no-console
       console.warn(
         `[SyndicationSearchWidget] facetsTarget selector "${facetsTarget}" did not match any element; falling back to in-widget facets layout.`
       );
@@ -277,7 +280,6 @@ function SyndicationSearchWidgetInner() {
       setSearchTargetEl(el);
     } else {
       setSearchTargetEl(null);
-      // eslint-disable-next-line no-console
       console.warn(
         `[SyndicationSearchWidget] searchTarget selector "${searchTarget}" did not match any element; falling back to in-widget search input.`
       );
@@ -291,6 +293,7 @@ function SyndicationSearchWidgetInner() {
 
   return (
     <div
+      id={widgetId}
       className={`mg-search-widget ${isLoading || isPending ? 'mg-search-widget--loading' : ''}`}
       data-mg-search-widget
       data-mg-search-debug={showSearchMetrics ? 'true' : undefined}

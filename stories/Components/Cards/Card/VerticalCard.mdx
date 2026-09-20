@@ -60,16 +60,16 @@ Use ScrollContainer's `stretchItems` prop (or `data-stretch-items="true"` for HT
 
 Use the `variant` prop to change the title accent color. These match the Hero component color system and adapt per theme.
 
-| Variant             | Class                 | Color                          |
-| ------------------- | --------------------- | ------------------------------ |
-| `primary` (default) | —                     | `$mg-color-interactive` (blue) |
-| `secondary`         | `mg-card--secondary`  | `$mg-color-secondary` (orange) |
-| `tertiary`          | `mg-card--tertiary`   | `$mg-color-tertiary` (black)   |
-| `quaternary`        | `mg-card--quaternary` | `$mg-color-quaternary` (red)   |
+| Variant             | Class                 | Color                                                                                    |
+| ------------------- | --------------------- | ---------------------------------------------------------------------------------------- |
+| `primary` (default) | —                     | `$mg-color-interactive` (blue)                                                           |
+| `secondary`         | `mg-card--secondary`  | Title `$mg-color-interactive` (blue), plus a `$mg-color-secondary` (orange) leading rule |
+| `tertiary`          | `mg-card--tertiary`   | `$mg-color-tertiary` (black)                                                             |
+| `quaternary`        | `mg-card--quaternary` | `$mg-color-quaternary` (red)                                                             |
 
 Use the variant control below the canvas to preview each option.
 
-**Contrast:** `secondary` is the orange accent, and a title painted with it measures 2.65 against WCAG's 4.5 on the card surface. The orange carries no text at any size. Use `primary`, `tertiary` or `quaternary` for a card whose title has to be read. Removing the pairing is a brand decision, tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+**Contrast:** `secondary` no longer paints the title in the orange accent, which was 2.65 against WCAG's 4.5 on the card surface and 2.37 on DELTA's tinted one. The orange carries no text at any size, so the title takes the interactive colour like any other card link and the accent becomes a 4px rule on the card's leading edge. That rule is 2.95 against white, under the 3:1 of SC 1.4.11, so it is emphasis rather than the only signal. See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 ## Title link visibility
 
@@ -161,6 +161,7 @@ Linked and unlinked cards frequently sit in the same row. They should read as on
 
 ## Changelog
 
+- **1.6.0** — 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `mg-card--secondary` no longer paints its title in the orange accent (2.65 on the card surface, 2.37 on DELTA's). The title takes the interactive colour, and the accent becomes a 4px rule on the card's leading edge instead. `--mg-color-secondary` is unchanged. This applies to every card layout that carries the modifier, and is a visible change in all five themes.
 - **1.5.5** — 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): The "In separate columns" story used a fixed three-column grid, so at 375px the demo pushed the page sideways. The columns now use `auto-fit` and stack on narrow viewports; the equal-height behaviour the story demonstrates is unchanged. Story only, no component change.
 - **1.5.4** — 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented the `secondary` variant as a recorded contrast exception — an orange-accent title is 2.65 on the card surface, and no text colour clears AA on that hue. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
 - **1.5.3** — 2026-09-18 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.

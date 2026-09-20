@@ -149,11 +149,12 @@
 }
 
 // Data table variant: compact density, subtle borders, styled header row
-.mg-table--data {
+.mg-table.mg-table--data {
   font-size: var(--mg-font-size-250);
 
   th,
   td {
+    font-size: var(--mg-font-size-250);
     border-bottom: 1px solid rgb(var(--mg-color-neutral-200));
     padding: var(--mg-spacing-50) var(--mg-spacing-100);
   }
@@ -184,8 +185,8 @@
 }
 
 // Right-aligned tabular numeric cells
-.mg-table__td--numeric,
-.mg-table__th--numeric {
+.mg-table .mg-table__td--numeric,
+.mg-table .mg-table__th--numeric {
   font-variant-numeric: tabular-nums;
   text-align: end;
 }
@@ -193,6 +194,10 @@
 // Monospace code / file path cells
 .mg-table__td--code {
   font-family: var(--mg-font-family-code);
+}
+
+// Match the density selectors at cell level, including --small + --data.
+.mg-table td.mg-table__td--code {
   font-size: var(--mg-font-size-200);
 }
 

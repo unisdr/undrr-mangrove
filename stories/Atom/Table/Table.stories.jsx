@@ -360,4 +360,54 @@ export const DataTable = {
       </div>
     );
   },
+  play: async ({ canvasElement }) => {
+    const table = canvasElement.querySelector('table');
+    const originalClass = table.className;
+    const reference = document.createElement('span');
+    reference.hidden = true;
+    canvasElement.append(reference);
+    const size = scale => {
+      reference.style.fontSize = `var(--mg-font-size-${scale})`;
+      return getComputedStyle(reference).fontSize;
+    };
+
+    // Exercise the existing data markup under every supported density, then
+    // restore the consumer-facing example before screenshots or further use.
+    try {
+      for (const modifier of [
+        '',
+        'mg-table--small',
+        'mg-table--data',
+        'mg-table--small mg-table--data',
+      ]) {
+        table.className = `mg-table ${modifier}`;
+        const compact = modifier !== '';
+        expect(
+          getComputedStyle(
+            table.querySelector('tbody td:not(.mg-table__td--code)')
+          ).fontSize
+        ).toBe(size(compact ? '250' : '300'));
+        expect(
+          getComputedStyle(table.querySelector('.mg-table__td--code')).fontSize
+        ).toBe(size('200'));
+        expect(getComputedStyle(table.querySelector('th')).fontSize).toBe(
+          size(
+            modifier.includes('mg-table--data')
+              ? '200'
+              : compact
+                ? '250'
+                : '300'
+          )
+        );
+        for (const cell of table.querySelectorAll(
+          '.mg-table__td--numeric, .mg-table__th--numeric'
+        )) {
+          expect(getComputedStyle(cell).textAlign).toBe('end');
+        }
+      }
+    } finally {
+      table.className = originalClass;
+      reference.remove();
+    }
+  },
 };

@@ -353,7 +353,7 @@ const PageTemplateExample = () => {
             ))}
           </section>
         </div>
-        <section className="content-section">
+        <section className="content-section mg-content">
           <section className="mg-grid mg-grid__col-3">
             <div className="mg-grid__col--span-2">
               <h2>Understanding the importance of data</h2>

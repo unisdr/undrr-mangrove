@@ -31,9 +31,9 @@ export const TableTag = ({
   scrollLabel = 'Scrollable table',
   ...args
 }) => {
-  let table_type = variant_options[`${variant}`];
-  let table_size = variant_options1[`${size}`];
-  let table_responsive = variant_options2[`${responsive}`];
+  const table_type = variant_options[`${variant}`];
+  const table_size = variant_options1[`${size}`];
+  const table_responsive = variant_options2[`${responsive}`];
 
   // Build the complete CSS class string
   const tableClasses = [

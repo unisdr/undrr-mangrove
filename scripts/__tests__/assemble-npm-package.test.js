@@ -152,6 +152,71 @@ test('the published surface never matches a development-only file', () => {
   expect(files.some(pattern => pattern.startsWith('dist'))).toBe(false);
 });
 
+// `npm pack` is the authority on what a consumer receives: the `files` array,
+// its negations and npm's own always-include rules all interact. Packing the
+// assembled directory records the release shape, so changing it has to be
+// deliberate rather than a side effect.
+const packAssembled = () => {
+  const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+  const packed = spawnSync(
+    npm,
+    ['pack', '--dry-run', '--json', '--ignore-scripts'],
+    { cwd: out, encoding: 'utf8', shell: process.platform === 'win32' }
+  );
+  expect(packed.status).toBe(0);
+  return JSON.parse(packed.stdout)[0]
+    .files.map(entry => entry.path)
+    .sort();
+};
+
+test('the packed tarball ships the subpath directories', () => {
+  expect(run(out, '--root', root).status).toBe(0);
+  expect(packAssembled()).toEqual([
+    'LICENSE',
+    'README.md',
+    'components/MegaMenu.js',
+    'components/nested/Thing.js',
+    'css/style.css',
+    // No dist/index.js, although the fixture has one and the assembled
+    // directory copies it. npm always packs the file `main` names, whatever
+    // `files` says — so while `main` existed this fixture packed it, and a
+    // release did not only because the real build emits no such file. With no
+    // `main` there is nothing outside `files` to force in, and the fixture and
+    // a release now pack the same shape.
+    'error-pages/404.html',
+    'fonts/mangrove-icon-set.woff2',
+    'js/tabs.js',
+    'package.json',
+    'scss/Components/Tabs/tabs.scss',
+    'scss/assets/scss/style.scss',
+  ]);
+  // `npm pack` is a subprocess; give it room under a loaded worker.
+}, 30000);
+
+// The package has no root entry point, by decision
+// (unisdr/undrr-mangrove#1252). It never had a working one: `main` named
+// `dist/index.js`, which no release ever contained. Re-adding `main` — or an
+// `exports` map, which would also break every subpath unless it carried
+// `"./*": "./*"` — has to fail here. The fixture keeps its dist/index.js so
+// this also proves that no root file sneaks into the tarball behind `files`.
+test('the published package advertises no root entry point', () => {
+  expect(run(out, '--root', root).status).toBe(0);
+  const files = packAssembled();
+
+  const pkg = JSON.parse(
+    fs.readFileSync(path.join(out, 'package.json'), 'utf8')
+  );
+  expect(pkg).not.toHaveProperty('main');
+  expect(pkg).not.toHaveProperty('module');
+  expect(pkg).not.toHaveProperty('exports');
+  // Node's fallback for a package with no `main` is a root index.js.
+  expect(files).not.toContain('index.js');
+  expect(files.some(file => file.startsWith('dist/'))).toBe(false);
+  expect(files.some(file => file.startsWith('src/'))).toBe(false);
+  // What a consumer imports instead.
+  expect(files).toContain('components/MegaMenu.js');
+}, 30000);
+
 test('webpack copies the same source trees without the test files', () => {
   const config = fs.readFileSync(
     path.resolve(__dirname, '../../webpack.config.js'),
@@ -170,7 +235,6 @@ test('generates the slimmed package.json', () => {
     name: '@undrr/undrr-mangrove',
     version: '9.9.9-test.1',
     description: 'Test package',
-    main: 'dist/index.js',
     files: [
       'components/**/*',
       'css/**/*',
@@ -194,7 +258,6 @@ test('generates the slimmed package.json', () => {
     'name',
     'version',
     'description',
-    'main',
     'files',
     'repository',
     'keywords',

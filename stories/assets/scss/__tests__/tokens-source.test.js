@@ -509,4 +509,19 @@ describe('buildTokensDictionary', () => {
       }
     }
   });
+
+  test('takes the count of SCSS-declared global properties from its caller, never a hand-typed one', () => {
+    // llms.txt derives the same figure from the compiled bundles. Typed here
+    // as well, the two would have gone out of step the first time a data-viz
+    // colour was added, with nothing to notice.
+    const { excludes } = buildTokensDictionary({
+      globalPropertyCount: 7,
+    }).scope;
+
+    expect(excludes).toContain('7 properties that are global like a theme');
+    expect(excludes).not.toMatch(/\b\d{2,} properties that are global/);
+    expect(buildTokensDictionary().scope.excludes).toContain(
+      'the properties that are global like a theme'
+    );
+  });
 });

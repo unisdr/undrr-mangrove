@@ -350,7 +350,9 @@ function GalleryComponent({
           {media.map((item, index) => (
             <button
               key={item.id}
-              ref={el => (thumbnailRefs.current[index] = el)}
+              ref={el => {
+                thumbnailRefs.current[index] = el;
+              }}
               className={cls(
                 'mg-gallery__thumbnail',
                 index === activeIndex && 'mg-gallery__thumbnail--active',

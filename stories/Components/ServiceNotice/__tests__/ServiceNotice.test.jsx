@@ -160,7 +160,8 @@ describe('ServiceNotice', () => {
     render(
       <ServiceNotice
         title="Unsafe"
-        statusUrl="javascript:alert(1)" // eslint-disable-line no-script-url
+        // Deliberate unsafe URL: the assertion below is that no link renders.
+        statusUrl="javascript:alert(1)"
       />
     );
     expect(screen.queryByRole('link')).not.toBeInTheDocument();

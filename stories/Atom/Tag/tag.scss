@@ -61,21 +61,33 @@
   border-color: currentColor;
 }
 
-// Known exception: a white label on the orange accent, 2.95 resting and 2.65
-// on hover. The orange carries no text at any size, so this is a decorative
-// emphasis and never the only place a fact appears. Removing the pairing is a
-// brand decision, tracked in
-// https://github.com/unisdr/undrr-mangrove/issues/1196. Do not copy it into a
-// new component: docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
+// The orange accent carries no text at any size, so the accent tag wears it as
+// its edge instead of its fill: the chip is the pale end of the same ramp, the
+// label is --mg-color-text on it at 15.7:1, and the Sendai orange is the border
+// — a rule, with no copy over it. The leading edge is thickened because an
+// orange rule is 2.95 on white and 2.66 on orange-50, under the 3:1 of
+// SC 1.4.11, so it is emphasis and not the chip's only boundary; the fill and
+// the label carry that. See
+// docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text
 .mg-tag--accent {
   --mg-tag-background: var(
     --tag-color-background-accent,
-    rgb(var(--mg-color-tag-accent))
+    rgb(var(--mg-color-orange-50))
   );
   --mg-tag-background-hover: var(
     --tag-color-background-accent-hover,
-    rgb(var(--mg-color-tag-accent--hover))
+    rgb(var(--mg-color-orange-100))
   );
+  --mg-tag-foreground: rgb(var(--mg-color-text));
+
+  // Held steady across states on purpose. The obvious move is to swap in
+  // --mg-color-tag-accent--hover, but that is orange-800, which is LIGHTER than
+  // the orange-900 resting border, and it would land on the darker hover fill:
+  // 2.15 against the resting 2.66, so the rule would fade at the moment the
+  // chip is meant to respond. The hover is carried by the fill stepping from
+  // orange-50 to orange-100 and by the underline the base rule adds.
+  border-color: rgb(var(--mg-color-tag-accent));
+  border-inline-start-width: mg-rem(4);
 }
 
 // Subtle, non-interactive metadata badge (e.g. file formats PDF, SVG, JSON)

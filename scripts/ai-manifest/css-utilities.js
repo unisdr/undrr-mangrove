@@ -239,9 +239,16 @@ export default {
         {
           class: 'mg-button--icon',
           description:
-            'Square or circular icon-only action button with centered icon, equal aspect ratio, and touch-target padding.',
+            'Shape modifier that makes a .mg-button a square or circular icon-only action button with a centred icon and equal aspect ratio. Always used with .mg-button and an emphasis variant: the foreground colour, typography and focus ring come from .mg-button. Add .mg-button--icon--round for a circular floating action button or .mg-button--icon--small for a 28px dense toolbar button. This is the icon-only button to use when it should carry a brand colour.',
           usage:
             '<button type="button" class="mg-button mg-button-secondary mg-button--icon" aria-label="Copy to clipboard">\n  <span class="mg-icon mg-icon-copy" aria-hidden="true"></span>\n</button>',
+        },
+        {
+          class: 'mg-icon-button',
+          description:
+            'Standalone borderless ghost icon button for dismiss, close and copy controls sitting on an existing surface (Notice and Drawer use it). Same 36px square geometry as .mg-button--icon, plus its own reset, hover fill and focus ring, because it is used without .mg-button. It carries no variant colours and takes no .mg-button-* class — .mg-button-primary and .mg-button-secondary only set a background, and .mg-button-outline draws no border on it. For a variant-coloured icon-only button use .mg-button.mg-button-{variant}.mg-button--icon instead. Modifiers: .mg-icon-button--round and .mg-icon-button--small.',
+          usage:
+            '<button type="button" class="mg-icon-button mg-icon-button--small" aria-label="Dismiss">\n  <span class="mg-icon mg-icon-close" aria-hidden="true"></span>\n</button>',
         },
         {
           class: 'mg-range',

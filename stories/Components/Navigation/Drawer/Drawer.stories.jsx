@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Drawer } from './Drawer';
 import { Checkbox } from '../../Forms/Checkbox/Checkbox';
 import {
@@ -241,6 +241,78 @@ export const FloatingPanel = {
       description: {
         story:
           'A non-modal floating panel: no backdrop and no focus trap, so the page behind it stays usable. Use it for controls a reader adjusts while watching the page change.',
+      },
+    },
+  },
+};
+
+/**
+ * Plain server-rendered markup, driven by `js/drawer.js`. No React owns this
+ * drawer: the module enhances the markup in place, and is torn down again when
+ * the story unmounts, which is what a consumer does on a route change.
+ */
+const VanillaDrawerDemo = () => {
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    let destroy;
+    import('../../../assets/js/drawer.js').then(
+      ({ mgDrawer, mgDrawerDestroy }) => {
+        if (!root) return;
+        mgDrawer(root);
+        destroy = () => mgDrawerDestroy(root);
+      }
+    );
+    return () => destroy?.();
+  }, []);
+
+  return (
+    <div ref={rootRef} style={{ position: 'relative', minBlockSize: '20rem' }}>
+      <button
+        type="button"
+        className="mg-button mg-button-primary"
+        data-mg-drawer-trigger="mg-drawer-vanilla-demo"
+      >
+        Map layers
+      </button>
+      <div
+        id="mg-drawer-vanilla-demo"
+        className="mg-floating-panel"
+        data-mg-js-drawer
+        role="dialog"
+        tabIndex="-1"
+        style={{ insetInlineStart: 0, insetBlockStart: '3rem' }}
+      >
+        <div className="mg-floating-panel__header">
+          <h2 className="mg-floating-panel__title">Map layers</h2>
+          <button
+            type="button"
+            className="mg-icon-button mg-icon-button--small mg-floating-panel__close"
+            aria-label="Close"
+          >
+            <span className="mg-icon mg-icon-close" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="mg-floating-panel__body">
+          <p>Choose the hazard layers drawn over the base map.</p>
+          <p>
+            <a href="#map-layers">About these layers</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const VanillaLifecycle = {
+  name: 'Vanilla lifecycle (no React)',
+  render: () => <VanillaDrawerDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The same panel without React. The markup is written by hand, and `mgDrawer()` adds open and close, Escape, focus management and cleanup. A floating panel is non-modal, so there is no backdrop and no focus trap; an `mg-drawer` container gets both.',
       },
     },
   },

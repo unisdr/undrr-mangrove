@@ -35,6 +35,19 @@
   z-index: var(--mg-z-index-behind); // behind siblings, not behind ancestors
 }
 
+// RTL keeps the physical override rather than a logical `margin-inline-start`:
+// the pseudo-element is absolutely positioned with both offsets `auto`, so it
+// hangs off its static position, and a flex or grid parent resolves that static
+// position from the inline-end edge in RTL. Reset the inherited `margin-left`
+// here, or both negative margins apply at once and the bleed lands ~13px off
+// centre inside a flex parent such as `mg-mega-topbar`, leaving an unpainted
+// strip at the inline-end edge.
+// `left: 50%` is not a physical property left un-mirrored: the mirrored form
+// (`right: 50%` with `margin-right: -50vw`) was measured and reintroduces the
+// offset this anchor exists to remove. Do not tidy it.
+// See unisdr/undrr-mangrove#1203.
 [dir="rtl"] .mg-container-full-width::before {
-  margin-right: calc(50% - 50vw);
+  left: 50%;
+  margin-left: -50vw;
+  margin-right: 0;
 }

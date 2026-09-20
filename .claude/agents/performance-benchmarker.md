@@ -14,7 +14,7 @@ You are benchmarking performance in **Mangrove**, UNDRR's React component librar
 - **How components load**: Each React component is built as an individual ES module via Webpack 5, loaded on Drupal pages via import maps
 - **React runtime**: Not bundled — loaded from `esm.sh` via import map at runtime
 - **Bundle structure**: Two webpack targets:
-  1. Vanilla JS/CSS → `dist/js/` and `dist/css/` (tabs, accordion, etc.)
+  1. Vanilla JS/CSS → `dist/assets/js/` and `dist/assets/css/` (tabs, accordion, etc.), copied as source rather than bundled
   2. React components → `dist/components/` (ES modules, React externalized)
 - **Consumer sites**: undrr.org, preventionweb.net, mcr2030.undrr.org — real users on varied networks
 - **Global audience**: Users on slow connections in developing countries — performance is equity

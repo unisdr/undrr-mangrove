@@ -35,12 +35,28 @@ export function SearchPager({ widgetId = '' }) {
   const handlePageChange = useCallback(
     newPage => {
       dispatch(actions.setPage(newPage));
-      const widget = document.querySelector('[data-mg-search-widget]');
+      // Scroll this widget back to its results, not the first widget on the
+      // page: a page can carry more than one. The widget root carries
+      // `widgetId` as its id. See undrr/undrr-mangrove#1205.
+      //
+      // `SearchResults` and this pager both default `widgetId` to '', and
+      // the fallback keeps the pre-#1205 behaviour when there is no id to
+      // resolve. Inside this widget it is dead code: `widgetId` is never
+      // empty. Nor are these two public exports — `src/index.js` exports only
+      // `SyndicationSearchWidget`, `DEFAULT_LABELS` and `interpolateLabel`,
+      // and the `exports` map in `package.json` makes the deep path
+      // unreachable. It stays as cheap insurance for an in-repo caller that
+      // renders the pager on its own, not as a supported entry point.
+      // Only the id-less case falls back: if an id was given it is
+      // authoritative, so a missed lookup must not scroll a different widget.
+      const widget = widgetId
+        ? document.getElementById(widgetId)
+        : document.querySelector('[data-mg-search-widget]');
       if (widget) {
         widget.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     },
-    [dispatch]
+    [dispatch, widgetId]
   );
 
   if (totalPages <= 1) return null;

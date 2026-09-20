@@ -18,7 +18,7 @@ const SOCIAL_LINKS = [
 ];
 
 export function FooterIcons({ variant = 'default', ...args }) {
-  let screen_variant = variant_options[variant];
+  const screen_variant = variant_options[variant];
   return (
     <ul className={cls('mg-footer--social-links', screen_variant || undefined)}>
       {SOCIAL_LINKS.map(({ key, label, icon, isFallbackIcon }) => (

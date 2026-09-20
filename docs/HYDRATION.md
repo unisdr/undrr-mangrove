@@ -57,8 +57,8 @@ Drupal.behaviors.mangroveComponentName = {
 ### Astro / Vite
 
 ```js
-import { createHydrator } from '@undrr/undrr-mangrove';
-import ScrollContainer, { fromElement } from '@undrr/undrr-mangrove/stories/Components/ScrollContainer/ScrollContainer.hydrate';
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
+import ScrollContainer, { fromElement } from '@undrr/undrr-mangrove/components/ScrollContainer.js';
 
 createHydrator({
   selector: '[data-mg-scroll-container]',
@@ -69,10 +69,10 @@ createHydrator({
 
 ## `createHydrator` API
 
-Exported from `src/hydrate.js` and package root.
+The source is `src/hydrate.js`; the published file is `components/hydrate.js`, the default export of that bundle. The tarball ships neither `src/` nor the package root, so the subpath is the only form that resolves (unisdr/undrr-mangrove#1252).
 
 ```js
-import createHydrator from '@undrr/undrr-mangrove/src/hydrate.js';
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
 ```
 
 | Property | Type | Required | Description |
@@ -96,6 +96,10 @@ Returns: `{ roots, update, unmountAll }`
 ## Runtime behavior and caveats
 
 - Skips already hydrated containers via `data-mg-hydrated="true"`
+- Skips a match **inside** a hydrated container that the same `selector` also matches. This is what makes it safe for a component to render the same `data-mg-*` marker its hydration selector matches — `SyndicationSearchWidget` does, so its pager can find the widget root to scroll to. Without the rule, `update()` mounted a second widget inside the first ([#1227](https://github.com/unisdr/undrr-mangrove/issues/1227))
+- A **different** component's hydration host nested inside a hydrated container still hydrates. The skip is deliberately not "anything below a hydrated container": `ScrollContainer` and `Drawer` read the consumer's markup in their `fromElement` and re-emit it through `dangerouslySetInnerHTML`, so a host an author nested in one reaches the DOM as React output that the component did not write. A scrolling row of hydrated cards is `ScrollContainer`'s canonical use. Hydrate the outer component first, then the inner one — the inner hosts survive the round trip and are ordinary targets ([#1234](https://github.com/unisdr/undrr-mangrove/pull/1234))
+- The one arrangement that cannot work is nesting a container inside a hydrated container of the *same* kind. A marker the component rendered itself and one it re-emitted for the consumer are the same DOM node to the runtime, so the ambiguous case is resolved in favour of not duplicating
+- **Appending to, or refilling, a hydrated container is a no-op for a host of that container's own kind**, for the same reason: a match that lands under a hydrated container of its own kind is skipped, and `update()` reports no new roots rather than raising. To replace a hydrated container's contents, call `unmountAll()`, write the new markup, then call `update()` again. To add a container of the same kind, put it outside every hydrated container of that kind — a host of a different kind nested inside one, such as a card inside a scroll container, hydrates normally
 - Saves original `innerHTML` before rendering for rollback
 - Applies React root error hooks:
   - `onCaughtError` and `onUncaughtError`: `console.error` + optional `onError`

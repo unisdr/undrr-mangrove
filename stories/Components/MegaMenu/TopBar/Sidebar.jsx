@@ -275,7 +275,12 @@ export function Sidebar({
               current.bannerHeading !== current.title && (
                 <h3>{current.bannerHeading}</h3>
               )}
-            {/* Same caller-sanitised HTML contract as the existing desktop banner. */}
+            {/* Same caller-sanitised HTML contract as the desktop banner:
+                `bannerDescription` is rendered unescaped so its links and
+                inline markup survive, and the consumer that builds `sections`
+                owns sanitising it. The reasoning is written out in the trust
+                boundary note at the top of Section/Section.jsx, and stated for
+                consumers under "Banner HTML trust contract" in MegaMenu.mdx. */}
             <div
               dangerouslySetInnerHTML={{ __html: current.bannerDescription }}
             />

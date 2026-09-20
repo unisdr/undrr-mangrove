@@ -193,6 +193,62 @@ export const ImmersiveContained = {
   },
 };
 
+// Below the tablet breakpoint the background layout is a different
+// composition: the photograph is a banner across the top and the copy sits on
+// the brand surface underneath it, because copy over the frame could not be
+// made to clear 4.5:1 in any theme (unisdr/undrr-mangrove#1264). That only
+// happens at a mobile viewport, so a desktop canvas cannot show it and the
+// story pins one. The label is the block the old veil failed hardest on, so
+// this story leads with a long one.
+// See docs/COLOUR-CONTRAST-METHODOLOGY.md#the-hero-scrim
+export const MobileBanner = {
+  name: 'Mobile banner and panel',
+  globals: { viewport: { value: '390px-844px', isRotated: false } },
+  args: {
+    data: [
+      {
+        title: 'Early warnings for all by the end of 2027',
+        summaryText:
+          'Every person on Earth should be protected by a multi-hazard early warning system. Four pillars carry the target: knowing the risk, detecting it, communicating it, and being ready to act.',
+        detail: 'Global initiative',
+        label: 'Early warnings for all',
+        primary_button: 'Read the initiative',
+        secondary_button: 'See country progress',
+        link: '/#',
+        imgalt: 'Aerial view of a canal through Almaty, Kazakhstan',
+        imgback: resilientInfrastructureWide,
+      },
+    ],
+    variant: 'primary',
+  },
+};
+
+// A background hero with no photograph. The banner inherits the element's
+// background image, and there is nothing to inherit -- so without the
+// `mg-hero--no-image` class the component now adds, the mobile composition
+// would reserve a third of a phone screen for a photograph that never
+// arrives. The banner collapses to nothing instead and the copy keeps the
+// solid panel. Pinned to a phone viewport for the same reason as the story
+// above.
+export const NoBackgroundImage = {
+  name: 'No background image (mobile)',
+  globals: { viewport: { value: '390px-844px', isRotated: false } },
+  args: {
+    data: [
+      {
+        title: 'Early warnings for all by the end of 2027',
+        summaryText:
+          'Every person on Earth should be protected by a multi-hazard early warning system.',
+        detail: 'Global initiative',
+        label: 'Early warnings for all',
+        primary_button: 'Read the initiative',
+        link: '/#',
+      },
+    ],
+    variant: 'primary',
+  },
+};
+
 const splitMediaData = [
   {
     title: 'Comprehensive disaster and climate risk management',

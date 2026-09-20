@@ -186,4 +186,6 @@ export function PaletteGroup({ label, tokens }) {
 
 These swatches are read live from the compiled CSS custom properties on `:root`. Any theme override (`.mg-theme-mcr`, `.mg-theme-irp`, etc.) will be visible when that class is applied to the Storybook preview element.
 
+> **Note:** the orange accent carries no text. `--mg-color-orange-800`, `--mg-color-orange-900`, `--mg-color-secondary` and `--sendai-orange` are for borders, rules, icon fills and blocks with no copy over them: white on them is 2.65 to 2.95 against a 4.5 minimum, and black passes WCAG but misses the perceptual body-text floor. They are also under the 3:1 of SC 1.4.11 against white, so an orange edge is emphasis, never the only thing identifying something. For text on an orange surface use `--mg-color-orange-50` or `--mg-color-orange-100`, which carry `--mg-color-text` at 15.7 and 14.1. See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+
 {PALETTE_GROUPS.map(g => <PaletteGroup key={g.label} label={g.label} tokens={g.tokens} />)}

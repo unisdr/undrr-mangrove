@@ -24,6 +24,62 @@ ComponentName/
 ComponentName: './stories/Components/ComponentName/ComponentName.hydrate.js',
 ```
 
+### Rendering your own marker
+
+A component may render the same `data-mg-*` marker its hydration selector
+matches — `SyndicationSearchWidget` renders `data-mg-search-widget` on its root
+so its pager can find the widget to scroll to. That is allowed: `createHydrator`
+skips a match that sits inside a hydrated container the same selector matches,
+so a re-scan cannot mount a second copy into your own output
+([#1227](https://github.com/unisdr/undrr-mangrove/issues/1227)).
+
+The skip is scoped to your own selector, not to every hydrated container.
+`ScrollContainer` and `Drawer` read the consumer's markup in their
+`fromElement` and re-emit it through `dangerouslySetInnerHTML`, so another
+component's hydration host nested inside one must still hydrate — a scrolling
+row of hydrated cards is `ScrollContainer`'s canonical use, and on Drupal that
+nested markup is author-entered.
+
+Two things follow for an author:
+
+- If your component re-emits consumer markup, do not also render your own
+  hydration marker into it. The runtime cannot tell the two apart, and a
+  container of your own kind nested inside one of yours will not hydrate.
+- If your component clears its container and renders only markup it wrote, a
+  self-identifying root marker is a reasonable convention and the runtime
+  tolerates it.
+
+`createHydrator` is not the only auto-init mechanism with this shape. The
+vanilla runtimes in `stories/assets/js/` scan for their own `data-mg-*`
+markers, and five React components render those markers into their own output:
+`ShowMore.jsx` (`data-mg-show-more`), `Tab.jsx` (`data-mg-js-tabs`),
+`TableOfContents.jsx` (`data-mg-table-of-contents`), `OnThisPageNav.jsx`
+(`data-mg-on-this-page-nav`) and `PreviewAccess.jsx` (`data-mg-preview-access`).
+Those are safe because each runtime records which elements it has already
+initialised and returns early on a second pass. Four of them write a per-element
+`…Initialized` dataset flag (`mgShowMoreInitialized`,
+`mgTableOfContentsInitialized`, `mgOnThisPageNavInitialized`,
+`mgPreviewAccessInitialized`); `tabs.js` instead keys two module-scope
+`WeakMap`s on the container and checks them in `isInitialised()`. A new vanilla
+runtime needs one or the other. Prefer the dataset flag: it survives a second
+copy of the runtime on the page, which a module-scope `WeakMap` does not.
+
+`drawer.js` is the current worked example. It marks each enhanced container
+with `data-mg-js-drawer-initialized` and skips anything already carrying it, so
+`mgDrawer(scope)` can be called again after inserting markup without binding a
+second set of listeners. It keeps its handles in a `WeakMap` under a
+`Symbol.for('@undrr/mangrove/drawer@1')` registry as well, so a second copy of
+the module can still destroy an instance the first one created — the dataset
+flag is what makes the two copies agree, and the shared registry is what lets
+either of them clean up.
+
+A runtime with a marker of its own also needs to keep clear of the hydration
+selector for the same component. `Drawer` has both paths: the React hydrator
+matches `[data-mg-drawer]` and the vanilla module matches `[data-mg-js-drawer]`.
+Two markers, so a container is driven by one path or the other and never both.
+Reusing one marker for both would leave no way to tell which lifecycle a
+container asked for.
+
 ---
 
 ## Step-by-step walkthrough

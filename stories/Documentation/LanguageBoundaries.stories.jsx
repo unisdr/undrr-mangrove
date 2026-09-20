@@ -17,6 +17,7 @@
 
 import React from 'react';
 import { LanguageBoundaryDemo } from './components/LanguageBoundaryDemo';
+import { assertArabicTracking } from './helpers/assertArabicTracking';
 
 const ARABIC_HEADING = 'الحد من مخاطر الكوارث';
 const ARABIC_BODY =
@@ -51,6 +52,7 @@ export default {
  */
 export const ArabicPageWithLatinIsland = {
   name: 'Arabic page with a Latin island',
+  play: async ({ canvasElement }) => assertArabicTracking(canvasElement),
   render: args => (
     <LanguageBoundaryDemo
       heading="Arabic page with a Latin island"

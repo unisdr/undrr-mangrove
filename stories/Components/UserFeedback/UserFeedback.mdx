@@ -31,7 +31,7 @@ stress case.
 ## React
 
 ```jsx
-import { UserFeedback } from '@undrr/undrr-mangrove';
+import UserFeedback from '@undrr/undrr-mangrove/components/UserFeedback.js';
 import SiteFooter from './SiteFooter';
 
 const recordResponse = response => {
@@ -125,5 +125,6 @@ When JavaScript is unavailable, render the initial prompt as useful static HTML 
 
 ## Changelog
 
+- **1.0.2** — 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/UserFeedback.js` instead of the package root. The root has never resolved on any published version — the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain — and 2.0.0 stops advertising it, so the subpath is the only form that works. The binding also changes: the published bundle exports this component as its **default**, with no named `UserFeedback`, so `import UserFeedback from …` is correct and the braced form would give `undefined`. Documentation only; the component is unchanged.
 - **1.0.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography no longer applies to the feedback question whose own language is not Arabic.
 - **1.0** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Introduced the standalone pre-footer page-feedback component with progressive static HTML guidance, Drupal-friendly hydration, product-owned response callbacks, seven locales, RTL support, long-label handling, and accessible confirmation focus.

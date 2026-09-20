@@ -1,9 +1,10 @@
 /**
  * @file MobileFilterDrawer.jsx
- * @description Mobile-friendly left-side slide-in drawer for filter facets.
+ * @description Mobile-friendly slide-in drawer for filter facets, anchored to
+ * the inline start (left in English, right in Arabic).
  *
  * Implements a slide-in drawer pattern (Amazon-style) with:
- * - Left-side slide-in animation
+ * - Inline-start slide-in animation that mirrors in RTL
  * - Backdrop overlay with click-to-close
  * - Focus trapping for accessibility
  * - Scroll lock on body when open
@@ -13,7 +14,7 @@
  * @see https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters
  *
  * Key UX decisions:
- * - Sidebar overlay: Maintains left-side visibility for context, feels safer
+ * - Sidebar overlay: Maintains inline-start visibility for context, feels safer
  * - Batch filtering: Users refine filters then apply once (vs live filtering)
  * - Sticky Apply button: Always visible, no scrolling required
  * - Progressive disclosure: Collapsible sections avoid overwhelm
@@ -32,7 +33,7 @@ import FacetsSidebar from './FacetsSidebar';
 
 /**
  * MobileFilterDrawer component.
- * A left-side slide-in drawer containing filter facets for mobile devices.
+ * An inline-start slide-in drawer containing filter facets for mobile devices.
  *
  * @param {Object} props - Component props
  * @param {boolean} props.isOpen - Whether the drawer is open

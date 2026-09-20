@@ -41,6 +41,11 @@ import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
 import {
+  collectCustomProperties,
+  MIN_PROPERTIES,
+  NOT_PUBLIC,
+} from './custom-properties.js';
+import {
   buildReleasesManifest,
   parseComponentChangelog,
 } from './parse-changelog.js';
@@ -55,6 +60,10 @@ const { buildTokensDictionary } = require('../build-tokens.cjs');
 const CDN_BASE = 'https://assets.undrr.org/mangrove/{{version}}';
 const ASSETS_BASE = 'https://assets.undrr.org';
 const DEFAULT_DOCS_BASE = 'https://mangrove.undrr.org/';
+
+// Longest a component's `summary` may be before component-data.js has to
+// supply a short one of its own. Roughly one full sentence.
+const SUMMARY_MAX_LENGTH = 200;
 
 // One bundle per theme, plus the combined bundle.
 //
@@ -171,6 +180,24 @@ const VANILLA_SCRIPTS = [
       'Pending state for .mg-switch while a change saves: announces progress, ignores presses, times out and reverts on failure. Load as type="module". Call mgSwitchPending(input, { save }) per switch, or mark switches with data-mg-switch-pending (auto-initialised on load) and answer the cancelable mg-switch:save event with event.detail.respondWith(promise). Call mgSwitchPendingDestroy(scope) or abort { signal } before removing switches.',
   },
   {
+    name: 'Drawer',
+    file: 'js/drawer.js',
+    url: `${CDN_BASE}/js/drawer.js`,
+    selector: '[data-mg-js-drawer]',
+    initFunction: 'mgDrawer(scope)',
+    description:
+      'Open and close, Escape, focus management and a modal focus trap for a drawer or floating panel you rendered yourself. It never builds markup, so the close label, title and body stay in your HTML. Triggers are [data-mg-drawer-trigger="<container id>"]; scripts can dispatch mg-drawer:open, mg-drawer:close and mg-drawer:toggle on the container and listen for mg-drawer:opened and mg-drawer:closed. A floating panel (the mg-floating-panel class) is non-modal: no backdrop and no Tab trap. Call mgDrawer(scope) again for drawers added later, and mgDrawerDestroy(scope) before removing them.',
+  },
+  {
+    name: 'Copy button',
+    file: 'js/copy-button.js',
+    url: `${CDN_BASE}/js/copy-button.js`,
+    selector: '[data-mg-copy-button]',
+    initFunction: 'mgCopyButton(scope)',
+    description:
+      'Zero-dependency copy-to-clipboard button with a transient tooltip and an aria-live announcement. Call mgCopyButton(scope) for buttons added later.',
+  },
+  {
     name: 'Preview Access',
     file: 'js/preview-access.js',
     url: `${CDN_BASE}/js/preview-access.js`,
@@ -228,6 +255,7 @@ const COMPONENT_IDS = {
   Select: 'components-forms-select',
   Checkbox: 'components-forms-checkbox',
   Radio: 'components-forms-radio',
+  SegmentedControl: 'components-forms-segmented-control',
   Textarea: 'components-forms-textarea',
   FormGroup: 'components-forms-formgroup',
   FormAction: 'components-forms-form-action',
@@ -269,6 +297,16 @@ function buildSampleProps(React) {
     },
     Checkbox: { label: 'I agree to the terms and conditions', name: 'terms' },
     Radio: { label: 'Government', name: 'role', value: 'government' },
+    SegmentedControl: {
+      legend: 'Map layer',
+      name: 'layer',
+      defaultValue: 'depth',
+      options: [
+        { label: 'Depth', value: 'depth' },
+        { label: 'Frequency', value: 'frequency' },
+        { label: 'Exposure', value: 'exposure' },
+      ],
+    },
     Textarea: {
       label: 'Message',
       name: 'message',
@@ -680,56 +718,102 @@ function normalizeDocsBase(url) {
 }
 
 // ---------------------------------------------------------------------------
-// Parse actual npm exports from src/index.js
+// Parse the importable surface from the built component bundles
 // ---------------------------------------------------------------------------
 
 /**
- * Reads src/index.js and returns a Set of export names that consumers can
- * actually import from the npm package. This prevents the manifest from
- * advertising imports that don't exist.
+ * Reads dist/components/*.js and returns, per bundle, the export names it
+ * provides. These bundles are what the npm package publishes under
+ * `components/`, so this is the surface a consumer can actually import.
+ *
+ * This used to read src/index.js instead and advertise
+ * `import { X } from "@undrr/undrr-mangrove"`. That import resolves for
+ * nothing: the published tarball ships neither `src/` nor `dist/`, and its
+ * `main` names a file it does not contain, so every agent that followed the
+ * manifest wrote an import that throws ERR_MODULE_NOT_FOUND. See
+ * unisdr/undrr-mangrove#1252.
  */
-function parseNpmExports() {
-  const indexPath = path.resolve(process.cwd(), 'src/index.js');
-  if (!fs.existsSync(indexPath)) {
-    console.warn('src/index.js not found — cannot validate npm exports');
-    return new Set();
+function parseBundleExports() {
+  const byBundle = new Map();
+  if (!fs.existsSync(distDir)) {
+    // Fatal, not a warning. Continuing would publish a manifest in which
+    // every component has silently lost its `import` line — the same class of
+    // wrong-but-plausible output this function exists to stop, and
+    // indistinguishable from "no component is importable".
+    console.error(`Component bundles not found at ${distDir}.`);
+    console.error('Run "yarn build" (or "webpack") before generating.');
+    process.exit(1);
   }
-  const source = fs.readFileSync(indexPath, 'utf8');
-  const names = new Set();
-
-  // Match: export { default as Foo } and export { Foo }
-  const re = /export\s*\{[^}]*?\bas\s+(\w+)|export\s*\{\s*(\w+)\s*\}/g;
-  let match;
-  while ((match = re.exec(source)) !== null) {
-    names.add(match[1] || match[2]);
+  for (const file of fs.readdirSync(distDir)) {
+    if (!file.endsWith('.js')) continue;
+    const source = fs.readFileSync(path.join(distDir, file), 'utf8');
+    const names = new Set();
+    // Webpack's ESM output ends with one `export { a as Name, b as default };`
+    // per entry. Take the exported name, which is what follows `as`, or the
+    // whole specifier when the binding is exported under its own name.
+    for (const match of source.matchAll(/export\s*\{([^}]*)\}/g)) {
+      for (const specifier of match[1].split(',')) {
+        const name = specifier
+          .trim()
+          .split(/\s+as\s+/)
+          .pop();
+        if (/^[A-Za-z_$][\w$]*$/.test(name)) names.add(name);
+      }
+    }
+    byBundle.set(file.replace(/\.js$/, ''), names);
   }
-  return names;
+  return byBundle;
 }
 
-const npmExports = parseNpmExports();
+const bundleExports = parseBundleExports();
 
-// Reverse lookup: Storybook ID → webpack entry name (which matches the npm
-// export name). Derived from COMPONENT_IDS so it self-heals when new
-// components are added. Used as a fallback when Storybook's internal function
-// name differs from the npm export name.
+if (bundleExports.size === 0) {
+  console.error(`No component bundles in ${distDir}.`);
+  console.error('Run "yarn build" (or "webpack") before generating.');
+  process.exit(1);
+}
+
+// A dist/ built before a component was added or renamed is worse than no
+// dist/ at all: it produces a manifest that looks complete and quietly omits
+// whatever moved. Every COMPONENT_IDS key is a webpack entry, so each must
+// have a bundle; one that does not means the tree is stale.
+const staleBundles = Object.keys(COMPONENT_IDS).filter(
+  name => !bundleExports.has(name)
+);
+if (staleBundles.length > 0) {
+  console.error(
+    `dist/components/ is stale: ${staleBundles.length} webpack entr${
+      staleBundles.length === 1 ? 'y has' : 'ies have'
+    } no bundle.`
+  );
+  for (const name of staleBundles) console.error(`  - ${name}.js`);
+  console.error('Rebuild with "yarn build" before generating.');
+  process.exit(1);
+}
+
+// Reverse lookup: Storybook ID → webpack entry name (which is the published
+// file name under components/). Derived from COMPONENT_IDS so it self-heals
+// when new components are added. Used as a fallback when Storybook's internal
+// function name differs from the entry name.
 const storybookIdToWebpackName = Object.fromEntries(
   Object.entries(COMPONENT_IDS).map(([name, id]) => [id, name])
 );
 
-// Manual overrides for npm-only components (no webpack entry in COMPONENT_IDS)
-// whose Storybook function name differs from the npm export name.
+// Manual overrides for components whose Storybook function name differs from
+// the name of the bundle they ship in.
 const NPM_NAME_OVERRIDES = {
-  ShowOffSnackbar: 'Snackbar', // Storybook demo wrapper name vs npm export
+  ShowOffSnackbar: 'Snackbar', // Storybook demo wrapper name vs component name
 };
 
 /**
- * Build a valid import statement for a component, or return empty string if
- * the component is not exported from the npm package. Tries the Storybook
+ * Build an import statement that resolves from the published package, or an
+ * empty string when the component ships in no bundle. Tries the Storybook
  * name first, then the COMPONENT_IDS reverse lookup, then NPM_NAME_OVERRIDES.
  *
- * Supported src/index.js export shapes:
- *   export { default as Foo } from '...';
- *   export { Foo } from '...';
+ * The specifier is the subpath, `@undrr/undrr-mangrove/components/Name.js`,
+ * because the package root does not resolve (unisdr/undrr-mangrove#1252). The
+ * binding is whatever the bundle exports: named where there is a matching
+ * named export, default where there is only a default.
  */
 function buildImportStatement(componentName, componentId) {
   const candidates = [
@@ -737,11 +821,49 @@ function buildImportStatement(componentName, componentId) {
     storybookIdToWebpackName[componentId],
     NPM_NAME_OVERRIDES[componentName],
   ].filter(Boolean);
-  const exportName = candidates.find(n => npmExports.has(n));
-  if (exportName) {
-    return `import { ${exportName} } from "${pkg.name}";`;
+  const bundle = candidates.find(n => bundleExports.has(n));
+  if (!bundle) return '';
+
+  const exportNames = bundleExports.get(bundle);
+  const specifier = `${pkg.name}/components/${bundle}.js`;
+  const named = candidates.find(n => exportNames.has(n));
+  if (named) return `import { ${named} } from "${specifier}";`;
+  if (exportNames.has('default')) {
+    return `import ${bundle} from "${specifier}";`;
   }
   return '';
+}
+
+/** The bundle name an emitted import statement points at. */
+function importedBundle(statement) {
+  const match = statement.match(/\/components\/([\w$.-]+)\.js"/);
+  return match ? match[1] : '';
+}
+
+/**
+ * Import every bundle once and record the ones that throw.
+ *
+ * A component whose module scope reaches for `document` — ShowMore and Tab
+ * both import a vanilla module that self-initialises on load — imports
+ * cleanly in a browser or through a bundler and throws `document is not
+ * defined` in Node and in server-side rendering. Its import line is correct
+ * and is published, but the constraint is published with it: an agent that
+ * evaluates the line in Node gets a crash it can neither predict from the
+ * manifest nor blame on itself.
+ *
+ * Probing is the only honest way to know this. Static analysis of a minified
+ * bundle cannot tell a module-scope DOM read from one inside a function.
+ */
+async function probeBundleImports() {
+  const failures = new Map();
+  for (const bundle of bundleExports.keys()) {
+    try {
+      await import(path.join(distDir, `${bundle}.js`));
+    } catch (e) {
+      failures.set(bundle, e.message.split('\n')[0]);
+    }
+  }
+  return failures;
 }
 
 // ---------------------------------------------------------------------------
@@ -804,42 +926,73 @@ function parseJsDocParams(jsDocTags) {
   return params;
 }
 
+/** First line of a component's react-docgen docblock, tags stripped. */
+function docgenLine(component) {
+  if (!component.reactDocgen?.description) return '';
+  const desc = component.reactDocgen.description
+    .replace(/@param\s+\{[^}]*\}\s+\S+\s*/g, '')
+    .replace(/@returns?\s+.*/g, '')
+    .trim();
+  return desc ? desc.split('\n')[0] : '';
+}
+
 /**
- * Get the best description for a component, with curated fallback.
+ * Get the best description for a component.
  *
- * For most entries JSDoc wins over component-data.js: the source-level doc
- * comment was written to describe that specific export and is normally more
- * accurate/current than a hand-maintained manifest entry, which is why this
- * order is the default rather than something to "fix" globally.
+ * The curated component-data.js description wins over the source docblock.
+ * Both are written by hand, but they are written for different readers: the
+ * docblock describes the export to someone already looking at the source,
+ * while the curated entry is the manifest's own editorial surface, written
+ * for an agent that only ever sees index.json. When a maintainer writes a
+ * usage contract into component-data.js, that is the text meant to reach the
+ * manifest — see undrr-mangrove#1231, where #1225's icon-button contract
+ * never reached index.json because CtaButton.jsx's docblock outranked it.
  *
- * stories/Patterns/* is the deliberate exception. Each pattern's exported
- * function already carries a JSDoc comment written for Storybook's docs page
- * (describing the demo, not the manifest), so under the default order a
- * curated component-data.js description for a pattern is silently never
- * used — see undrr-mangrove#1129. A pattern also isn't a reusable export the
- * way a Component/Atom/Molecule is: it exists to demonstrate a composition,
- * so the manifest-facing description is worth curating deliberately rather
- * than inheriting Storybook's docs-page copy. Curated data therefore wins
- * for `patterns-*` ids when present, before JSDoc is even considered.
+ * This replaces a narrower `patterns-*` exception added for
+ * undrr-mangrove#1129, which was the same failure on the pattern stories.
+ * One rule, applied everywhere, rather than a list of ids that need it.
+ *
+ * A curated description may be long — a full contract paragraph, not a
+ * sentence. That is what `summary` is for: see getSummary().
  */
 function getDescription(id, component, data) {
-  if (id.startsWith('patterns-') && data?.description) return data.description;
+  if (data?.description) return data.description;
 
   if (component.description) return component.description;
 
-  if (component.reactDocgen?.description) {
-    const desc = component.reactDocgen.description
-      .replace(/@param\s+\{[^}]*\}\s+\S+\s*/g, '')
-      .replace(/@returns?\s+.*/g, '')
-      .trim();
-    if (desc) return desc.split('\n')[0];
-  }
-
-  if (data?.description) return data.description;
+  const docgen = docgenLine(component);
+  if (docgen) return docgen;
 
   if (REQUIRES_REACT[id]) return REQUIRES_REACT[id];
 
   return '';
+}
+
+/**
+ * Get the one-line summary shown in index.json beside the full description.
+ *
+ * `summary` and `description` used to hold the same string. They no longer
+ * do: a curated description carries the whole contract, which is what an
+ * agent grepping the index needs to find, but it does not read as a label in
+ * a list of 82 components. A curated entry whose description runs past
+ * SUMMARY_MAX_LENGTH therefore carries its own short `summary`, and
+ * `yarn validate-manifest` fails when it does not.
+ */
+function getSummary(id, component, data, description) {
+  if (data?.summary) return data.summary;
+
+  if (description.length <= SUMMARY_MAX_LENGTH) return description;
+
+  // Safety net for a long description nobody has summarised yet (validation
+  // catches the curated case): prefer the docblock line, else the first
+  // sentence.
+  const docgen = docgenLine(component);
+  if (docgen && docgen.length <= SUMMARY_MAX_LENGTH) return docgen;
+
+  const firstSentence = description.match(/^.*?[.!?](?=\s|$)/)?.[0];
+  return firstSentence && firstSentence.length <= SUMMARY_MAX_LENGTH
+    ? firstSentence
+    : description;
 }
 
 /** Build the Storybook docs URL for a component. */
@@ -917,8 +1070,13 @@ async function renderComponents() {
       } catch {
         formatted = html;
       }
-      const desc = curatedData[componentId]?.description || fileName;
-      results.set(componentId, [{ name: desc, html: formatted }]);
+      // Name the example, not the component. This used to be the curated
+      // description, which reads as a label only while a description is one
+      // sentence long — see undrr-mangrove#1231. The description is published
+      // in the same file, on the component.
+      results.set(componentId, [
+        { name: `${fileName} — default render`, html: formatted },
+      ]);
       rendered++;
     } catch (e) {
       console.warn(`  skip ${fileName}: ${e.message.split('\n')[0]}`);
@@ -957,6 +1115,35 @@ if (uncoveredIds.length > 0) {
 }
 
 // ---------------------------------------------------------------------------
+// Check that a long curated description carries a short summary
+//
+// The curated description reaches `description` in index.json and in every
+// detail file, which is the point: an agent greps the index and finds the
+// contract. `summary` is the other half of that entry — the line a human or
+// an agent reads when scanning 82 components — so a description written as a
+// paragraph needs a sentence written for that slot instead.
+// ---------------------------------------------------------------------------
+const missingSummaries = [];
+for (const [componentId, data] of Object.entries(curatedData)) {
+  if (typeof data?.description !== 'string') continue;
+  if (data.summary) {
+    if (data.summary.length > SUMMARY_MAX_LENGTH) {
+      missingSummaries.push(
+        `${componentId}: summary is ${data.summary.length} characters ` +
+          `(max ${SUMMARY_MAX_LENGTH})`
+      );
+    }
+    continue;
+  }
+  if (data.description.length > SUMMARY_MAX_LENGTH) {
+    missingSummaries.push(
+      `${componentId}: description is ${data.description.length} characters ` +
+        `and there is no summary (max ${SUMMARY_MAX_LENGTH})`
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Check curated example shape
 //
 // `examples` must be [{ name, html }]. A bare array of HTML strings still
@@ -969,25 +1156,35 @@ if (uncoveredIds.length > 0) {
 // ---------------------------------------------------------------------------
 const malformedExamples = [];
 for (const [componentId, data] of Object.entries(curatedData)) {
-  if (!data?.examples) continue;
-  if (!Array.isArray(data.examples)) {
-    malformedExamples.push(`${componentId}: examples is not an array`);
-    continue;
-  }
-  data.examples.forEach((example, index) => {
-    if (typeof example !== 'object' || example === null) {
-      malformedExamples.push(
-        `${componentId}: examples[${index}] is a ${typeof example}, expected ` +
-          '{ name, html }'
-      );
-    } else if (typeof example.html !== 'string' || example.html.length === 0) {
-      malformedExamples.push(
-        `${componentId}: examples[${index}] has no html string`
-      );
-    } else if (typeof example.name !== 'string' || example.name.length === 0) {
-      malformedExamples.push(`${componentId}: examples[${index}] has no name`);
+  for (const field of ['examples', 'supplementalExamples']) {
+    if (!data?.[field]) continue;
+    if (!Array.isArray(data[field])) {
+      malformedExamples.push(`${componentId}: ${field} is not an array`);
+      continue;
     }
-  });
+    data[field].forEach((example, index) => {
+      if (typeof example !== 'object' || example === null) {
+        malformedExamples.push(
+          `${componentId}: ${field}[${index}] is a ${typeof example}, expected ` +
+            '{ name, html }'
+        );
+      } else if (
+        typeof example.html !== 'string' ||
+        example.html.length === 0
+      ) {
+        malformedExamples.push(
+          `${componentId}: ${field}[${index}] has no html string`
+        );
+      } else if (
+        typeof example.name !== 'string' ||
+        example.name.length === 0
+      ) {
+        malformedExamples.push(
+          `${componentId}: ${field}[${index}] has no name`
+        );
+      }
+    });
+  }
 }
 
 if (malformedExamples.length > 0) {
@@ -1035,6 +1232,96 @@ if (malformedHydration.length > 0) {
     'Curated hydration or vanillaModule contracts missing required fields (selector, modules, example):'
   );
   for (const problem of malformedHydration) console.warn(`  ${problem}`);
+}
+
+// ---------------------------------------------------------------------------
+// Check that a claimed lifecycle module is a file that exists
+//
+// The manifest now states the lifecycle outright — `vanillaModule: true` or
+// `false` on every component, with `vanillaScripts` naming the files — so a
+// consumer no longer probes /js/ for a 404 to find out (#1197). That is only
+// worth trusting if the claim is checked: a contract naming a module that was
+// never written, or that was renamed out from under it, has to fail the build
+// rather than publish a URL that 404s.
+//
+// Checked against the source tree, which is always present, so this runs the
+// same whether or not a build has happened. Built-only artifacts under
+// components/ are left to checkCuratedDrift(), which needs dist/.
+// ---------------------------------------------------------------------------
+const VANILLA_JS_SOURCE_DIR = path.resolve(process.cwd(), 'stories/assets/js');
+
+/**
+ * A contract's module URLs as the package-relative paths npm and the CDN
+ * publish them at ('js/drawer.js'), so a claim can be resolved to a file.
+ *
+ * @param {object} contract A `hydration` or `vanillaModule` contract.
+ * @returns {string[]}
+ */
+function modulePaths(contract) {
+  return Object.values(contract?.modules || {}).map(moduleUrl => {
+    const match = /\/mangrove\/[^/]+\/(.+)$/.exec(String(moduleUrl));
+    return match ? match[1] : String(moduleUrl);
+  });
+}
+
+const missingModuleFiles = [];
+for (const [componentId, data] of Object.entries(curatedData)) {
+  for (const field of CONTRACT_FIELDS) {
+    const contract = data?.[field];
+    if (!contract || typeof contract !== 'object') continue;
+    for (const publishedPath of modulePaths(contract)) {
+      if (!publishedPath.startsWith('js/')) continue;
+      const source = path.resolve(
+        VANILLA_JS_SOURCE_DIR,
+        publishedPath.slice('js/'.length)
+      );
+      if (!fs.existsSync(source)) {
+        missingModuleFiles.push(
+          `${componentId}: ${field} names ${publishedPath}, but stories/assets/${publishedPath} does not exist`
+        );
+      }
+    }
+  }
+  // A note explaining why there is no module contradicts a module.
+  if (data?.vanillaModuleNote && data?.vanillaModule) {
+    missingModuleFiles.push(
+      `${componentId}: has both a vanillaModule contract and a vanillaModuleNote explaining that it has none`
+    );
+  }
+}
+
+// The library-level list consumers read from index.json's `library` block, in
+// both directions: every entry names a real file, and every module that ships
+// is listed. The second half is what caught js/copy-button.js, which shipped
+// and was named by a component contract but was missing from this list.
+const vanillaScriptFiles = new Set(VANILLA_SCRIPTS.map(script => script.file));
+for (const script of VANILLA_SCRIPTS) {
+  if (!script.file.startsWith('js/')) continue;
+  const source = path.resolve(
+    VANILLA_JS_SOURCE_DIR,
+    script.file.slice('js/'.length)
+  );
+  if (!fs.existsSync(source)) {
+    missingModuleFiles.push(
+      `VANILLA_SCRIPTS: ${script.name} names ${script.file}, but stories/assets/${script.file} does not exist`
+    );
+  }
+}
+if (fs.existsSync(VANILLA_JS_SOURCE_DIR)) {
+  for (const file of fs.readdirSync(VANILLA_JS_SOURCE_DIR)) {
+    if (!file.endsWith('.js')) continue;
+    if (vanillaScriptFiles.has(`js/${file}`)) continue;
+    missingModuleFiles.push(
+      `VANILLA_SCRIPTS: stories/assets/js/${file} ships but is not listed, so nothing documents it`
+    );
+  }
+}
+
+if (missingModuleFiles.length > 0) {
+  console.warn(
+    'Vanilla lifecycle modules that do not match the files on disk:'
+  );
+  for (const problem of missingModuleFiles) console.warn(`  ${problem}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -1119,6 +1406,71 @@ if (unstyledCssClasses.length > 0) {
 if (missingCssClasses.length > 0) {
   console.warn('Documented CSS classes that exist nowhere in the library:');
   for (const problem of missingCssClasses) console.warn(`  ${problem}`);
+}
+
+// ---------------------------------------------------------------------------
+// Collect each component's CSS custom properties
+//
+// Names, kinds and defaults come out of the compiled bundles; the prose comes
+// from scripts/ai-manifest/custom-properties.js. See that file's header for
+// why the list is produced that way. Checked in both directions below: a
+// described property the CSS does not have, and a property the CSS exposes
+// that nothing describes, both fail validation.
+// ---------------------------------------------------------------------------
+const customProperties = collectCustomProperties(
+  path.resolve(process.cwd(), 'stories/assets/css'),
+  buildTokensDictionary().tokens.map(token => token.name)
+);
+const customPropertyCount = Object.values(customProperties.byComponent).reduce(
+  (total, list) => total + list.length,
+  0
+);
+
+// The --mg-* properties that are in neither tokens.json nor a component's
+// customProperties: global like a theme token, but declared straight in SCSS
+// rather than generated from tokens/*.yaml, so the dictionary never saw them.
+// Written out from the data rather than by hand, because naming only the
+// data-viz palette left 29 properties unsaid — including the five typography
+// roles that #1210 had just established as the public font API.
+const globalGroupsWithMembers = customProperties.globals.filter(
+  group => group.count > 0
+);
+const globalGroupsSentence = globalGroupsWithMembers
+  .map(
+    group =>
+      `${group.label} (${group.prefix}*), ${group.count} of them, ${group.where}`
+  )
+  .join('; ');
+// Counted rather than written out. The sentence above is generated from
+// GLOBAL_PREFIXES, so a hand-typed "Four groups" in front of it goes stale the
+// moment a group is added or removed — which is exactly what happened while
+// unisdr/undrr-mangrove#1203 briefly carried a fifth group, leaving llms.txt
+// claiming four and then listing five.
+const GROUP_COUNT_WORDS = [
+  'No',
+  'One',
+  'Two',
+  'Three',
+  'Four',
+  'Five',
+  'Six',
+  'Seven',
+  'Eight',
+  'Nine',
+];
+const globalGroupsCountPhrase = `${
+  GROUP_COUNT_WORDS[globalGroupsWithMembers.length] ??
+  String(globalGroupsWithMembers.length)
+} group${globalGroupsWithMembers.length === 1 ? '' : 's'}`;
+const globalGroupsTotal = customProperties.globals.reduce(
+  (total, group) => total + group.count,
+  0
+);
+
+if (customProperties.skipped) {
+  console.warn(
+    `Note: ${customProperties.skipped} Skipping the custom property inventory.`
+  );
 }
 
 // Check COMPONENT_IDS entries that won't render due to missing data
@@ -1233,8 +1585,14 @@ const a11yRules = [
 const a11yViolations = [];
 
 for (const [componentId, data] of Object.entries(curatedData)) {
-  if (!data?.examples) continue;
-  for (const example of data.examples) {
+  const curatedExamples = [
+    ...(Array.isArray(data?.examples) ? data.examples : []),
+    ...(Array.isArray(data?.supplementalExamples)
+      ? data.supplementalExamples
+      : []),
+  ];
+  if (curatedExamples.length === 0) continue;
+  for (const example of curatedExamples) {
     if (!example.html) continue;
     for (const rule of a11yRules) {
       if (rule.test(example.html)) {
@@ -1365,7 +1723,16 @@ async function checkCuratedDrift() {
         warnings.push(`  ${componentId}: ${parts.join(' | ')}`);
       }
     } catch {
-      // Component can't render in Node — skip silently
+      // The component cannot render in plain Node — a component that calls
+      // DOMPurify is the usual reason, since DOMPurify needs a DOM. That is
+      // also why it has curated HTML in the first place, so this is the
+      // expected path for every sanitising component. Say so rather than
+      // skipping in silence: the curated markup for these entries has no
+      // automated check behind it at all, and a reader who knows this function
+      // exists would otherwise assume it covered them.
+      warnings.push(
+        `  ${componentId}: could not verify — the component does not render in plain Node, so its curated HTML is unchecked and maintained by hand`
+      );
     }
   }
   return warnings;
@@ -1414,6 +1781,17 @@ if (validateOnly) {
     failed = true;
   }
 
+  if (missingSummaries.length > 0) {
+    console.error(
+      `Validation failed: ${missingSummaries.length} curated description(s) ` +
+        'run past the summary length with no short `summary` of their own. ' +
+        'The description is published in full; add a one-sentence `summary` ' +
+        'beside it in component-data.js for the index listing:'
+    );
+    for (const problem of missingSummaries) console.error(`  - ${problem}`);
+    failed = true;
+  }
+
   if (malformedExamples.length > 0) {
     console.error(
       `Validation failed: ${malformedExamples.length} curated example(s) are ` +
@@ -1433,6 +1811,18 @@ if (validateOnly) {
     failed = true;
   }
 
+  if (missingModuleFiles.length > 0) {
+    console.error(
+      `Validation failed: ${missingModuleFiles.length} vanilla lifecycle ` +
+        'module claim(s) do not match the files on disk. A component that ' +
+        'claims a module, or a VANILLA_SCRIPTS entry that names one, must ' +
+        'point at a real file under stories/assets/js/, and every module that ' +
+        'ships must be listed in VANILLA_SCRIPTS.'
+    );
+    for (const problem of missingModuleFiles) console.error(`  - ${problem}`);
+    failed = true;
+  }
+
   if (missingCssClasses.length > 0) {
     console.error(
       `Validation failed: ${missingCssClasses.length} documented CSS class(es) ` +
@@ -1442,6 +1832,97 @@ if (validateOnly) {
     );
     for (const problem of missingCssClasses) console.error(`  - ${problem}`);
     failed = true;
+  }
+
+  // Custom properties, checked in both directions. The first mirrors the
+  // documented-class check above. The second is the one this field exists
+  // for: a property a component exposes that nobody wrote down is exactly the
+  // gap that sent a consuming team grepping the compiled CSS.
+  if (customProperties.absent.length > 0) {
+    console.error(
+      `Validation failed: ${customProperties.absent.length} documented custom ` +
+        'property(ies) are defined by no stylesheet and read by none. Either ' +
+        'the property was renamed or removed, or PROPERTY_DOCS in ' +
+        'custom-properties.js names one that never existed:'
+    );
+    for (const name of customProperties.absent) console.error(`  - ${name}`);
+    failed = true;
+  }
+
+  if (customProperties.undocumented.length > 0) {
+    console.error(
+      `Validation failed: ${customProperties.undocumented.length} custom ` +
+        'property(ies) are exposed by the compiled CSS but have no ' +
+        'description. Add each to PROPERTY_DOCS in custom-properties.js, or ' +
+        'to NOT_PUBLIC with the reason it is not part of the theming API:'
+    );
+    for (const item of customProperties.undocumented) {
+      console.error(`  - ${item}`);
+    }
+    failed = true;
+  }
+
+  if (customProperties.unattributed.length > 0) {
+    console.error(
+      `Validation failed: ${customProperties.unattributed.length} custom ` +
+        'property(ies) belong to no component. Claim each in OWNERS in ' +
+        'custom-properties.js, or — if it is a theme token — add it to a ' +
+        'tokens/*.yaml source so tokens.json documents it:'
+    );
+    for (const name of customProperties.unattributed) {
+      console.error(`  - ${name}`);
+    }
+    failed = true;
+  }
+
+  // Losing a property is a removal from a public API, so it fails until
+  // MIN_PROPERTIES comes down with it. NOT_PUBLIC is the one way to make a
+  // property disappear from the manifest, and it used to do so in silence:
+  // moving one there printed "Validation passed" and shrank a JSON file
+  // nobody diffs. It is now printed on every run and counted here.
+  if (!customProperties.skipped) {
+    const shrunk = Object.entries(MIN_PROPERTIES)
+      .map(([id, floor]) => ({
+        id,
+        floor,
+        actual: customProperties.byComponent[id]?.length ?? 0,
+      }))
+      .filter(({ floor, actual }) => actual < floor);
+    if (shrunk.length > 0) {
+      console.error(
+        `Validation failed: ${shrunk.length} component(s) publish fewer ` +
+          'custom properties than MIN_PROPERTIES in custom-properties.js ' +
+          'records. A property left the public API. If that is intended, ' +
+          'lower the number in the same commit and say so in the CHANGELOG:'
+      );
+      for (const { id, floor, actual } of shrunk) {
+        console.error(`  - ${id}: ${actual}, was ${floor}`);
+      }
+      failed = true;
+    }
+
+    const floorless = Object.keys(customProperties.byComponent)
+      .filter(id => !(id in MIN_PROPERTIES))
+      .sort();
+    if (floorless.length > 0) {
+      console.error(
+        `Validation failed: ${floorless.length} component(s) publish custom ` +
+          'properties with no entry in MIN_PROPERTIES, so losing one later ' +
+          'would go unnoticed. Add each with its current count:'
+      );
+      for (const id of floorless) {
+        console.error(`  - ${id}: ${customProperties.byComponent[id].length}`);
+      }
+      failed = true;
+    }
+  }
+
+  const notPublic = Object.entries(NOT_PUBLIC);
+  console.log(
+    `Custom properties held back from the API (NOT_PUBLIC): ${notPublic.length}`
+  );
+  for (const [name, reason] of notPublic) {
+    console.log(`  - ${name}: ${reason}`);
   }
 
   const developmentJsxBundles = findDevelopmentJsxBundles();
@@ -1459,11 +1940,11 @@ if (validateOnly) {
   const driftWarnings = await checkCuratedDrift();
   if (driftWarnings.length > 0) {
     console.warn(
-      'Curated HTML drift detected (BEM classes differ from auto-rendered output):'
+      'Curated HTML check (BEM classes compared against auto-rendered output):'
     );
     for (const w of driftWarnings) console.warn(w);
     console.warn(
-      'Review component-data.js entries above — curated HTML may be stale.'
+      'Review the component-data.js entries above — curated HTML may be stale, and an entry reported as unverifiable has nothing checking it at all.'
     );
   }
 
@@ -1490,6 +1971,17 @@ async function main() {
     renderedHtml = new Map();
   }
 
+  // Which published bundles cannot be imported outside a browser.
+  const domOnlyBundles = await probeBundleImports();
+  if (domOnlyBundles.size > 0) {
+    console.log(
+      `  ${domOnlyBundles.size} bundle(s) need a DOM at import (flagged importRequiresDom):`
+    );
+    for (const [bundle, reason] of domOnlyBundles) {
+      console.log(`    ${bundle}.js — ${reason}`);
+    }
+  }
+
   // -------------------------------------------------------------------------
   // Transform each component
   // -------------------------------------------------------------------------
@@ -1513,17 +2005,24 @@ async function main() {
     const description = getDescription(id, component, data);
 
     // --- Validated import statement ---
-    // Storybook's react-docgen auto-generates import statements for every
-    // component, but only components exported from src/index.js are actually
-    // importable from the npm package. Use buildImportStatement() which
-    // checks against real exports instead of trusting Storybook's guess.
+    // Storybook's react-docgen auto-generates an import statement for every
+    // component, pointing at the package root, which resolves for nobody.
+    // buildImportStatement() emits the subpath the tarball actually ships and
+    // a binding the bundle actually exports, or nothing at all.
     const validImport = buildImportStatement(name, id);
     if (component.import && !validImport) droppedImportCount++;
+    const needsDom =
+      Boolean(validImport) && domOnlyBundles.has(importedBundle(validImport));
 
     // --- Index entry (lightweight) ---
-    const summary = description;
+    const summary = getSummary(id, component, data, description);
     const indexEntry = { id, name, summary, description };
     if (validImport) indexEntry.import = validImport;
+    // The import line is correct and resolves; evaluating it outside a
+    // browser does not. Flagged rather than withheld: the component is
+    // published and usable, and an agent needs to know which of the two it
+    // is facing (unisdr/undrr-mangrove#1252).
+    if (needsDom) indexEntry.importRequiresDom = true;
     indexEntry.docsUrl = docsUrl(id);
     indexEntry.detailsUrl = `${DOCS_BASE}ai-components/${id}.json`;
 
@@ -1533,13 +2032,36 @@ async function main() {
       indexEntry.vanillaHtml = true;
     }
     if (data?.hydration) indexEntry.hydration = true;
-    if (data?.vanillaModule) indexEntry.vanillaModule = true;
+
+    // The lifecycle is stated, not implied. `vanillaModule` used to be present
+    // only when there was one, so "vanillaHtml with no lifecycle module" and
+    // "vanillaHtml plus a module" were indistinguishable without probing /js/
+    // for a 404 (#1197). It is now always emitted, and `vanillaScripts` names
+    // the files to load so nothing has to be guessed from the component id.
+    indexEntry.vanillaModule = Boolean(data?.vanillaModule);
+    if (data?.vanillaModule) {
+      indexEntry.vanillaScripts = modulePaths(data.vanillaModule);
+    }
+
+    const componentCustomProperties = customProperties.byComponent[id];
+    if (componentCustomProperties?.length) {
+      indexEntry.customProperties = componentCustomProperties.length;
+    }
 
     indexEntries.push(indexEntry);
 
     // --- Full component file ---
     const detail = { name, summary, description };
     if (validImport) detail.import = validImport;
+    if (needsDom) {
+      detail.importRequiresDom = true;
+      detail.importNote =
+        'This bundle reads `document` while it loads, so the import above ' +
+        'throws "document is not defined" in Node and during server-side ' +
+        'rendering. It is correct in a browser and through a bundler. On a ' +
+        'server-rendered page, load it from a dynamic import after mount, or ' +
+        'use the vanilla module and hydration contract instead.';
+    }
     detail.docsUrl = docsUrl(id);
 
     if (isVanilla) {
@@ -1581,17 +2103,53 @@ async function main() {
       });
     }
 
-    // Rendered HTML: prefer auto-rendered from dist/, fall back to curated
+    // Rendered HTML: prefer auto-rendered from dist/, fall back to curated.
+    // `supplementalExamples` are appended to either source: they show markup the
+    // component's default render never produces, such as the icon-only buttons
+    // beside a labelled CTA, so they add to the published HTML rather than
+    // standing in for it and are not compared against the render for drift.
     if (renderedHtml.has(id)) {
       detail.renderedHtml = renderedHtml.get(id);
       detail.renderedHtmlSource = 'auto';
     } else if (data?.examples) {
       detail.renderedHtml = data.examples;
     }
+    if (data?.supplementalExamples?.length) {
+      detail.renderedHtml = [
+        ...(detail.renderedHtml || []),
+        ...data.supplementalExamples,
+      ];
+    }
 
     // CSS classes used by this component
     if (data?.cssClasses?.length) {
       detail.cssClasses = data.cssClasses;
+    }
+
+    // CSS custom properties this component exposes — its theming API. Set
+    // these instead of writing rules against the classes above: a class rule
+    // of equal specificity replaces what the component draws, while a
+    // property is the override point the component was built around.
+    if (componentCustomProperties?.length) {
+      detail.customProperties = {
+        _ai:
+          'Restyle the component by setting these, usually on the component ' +
+          'or an ancestor — but check `default` first: a property the ' +
+          'component itself declares beats an ancestor, so it has to be set ' +
+          'on that element instead. type "default" means a plain rule ' +
+          'already gives it the value in `default`, and yours replaces it. ' +
+          'type "hook" means no unconditional rule defines it: `default` is ' +
+          'the fallback it resolves to until a wrapper, an inline style or a ' +
+          'prop sets it, and a hook with no `default` has no value at all ' +
+          'until you give it one. A value a modifier or a media query ' +
+          'declares is never published as `default`, because it is not what ' +
+          'the component resolves to at rest. `wrapInRgb: true` means the ' +
+          'value is sRGB channels ' +
+          '("255 255 255"), not a colour — a hex or a keyword there makes ' +
+          'the declaration invalid and it drops silently. These are NOT in ' +
+          `${DOCS_BASE}tokens.json, which covers theme tokens only.`,
+        properties: componentCustomProperties,
+      };
     }
 
     // Vanilla HTML embed instructions (for syndication components)
@@ -1602,8 +2160,17 @@ async function main() {
     // Vanilla hydration contract (data attributes, events, CDN modules).
     // {{version}} is already resolved: curatedData went through replaceVersion.
     if (data?.hydration) detail.hydration = data.hydration;
-    // Plain ES module contract (no React, no hydrate.js), same shape.
-    if (data?.vanillaModule) detail.vanillaModule = data.vanillaModule;
+    // Plain ES module contract (no React, no hydrate.js), same shape — or
+    // `false` when the component has no vanilla lifecycle, so a reader of the
+    // detail file alone gets the same answer the index gives (#1197).
+    detail.vanillaModule = data?.vanillaModule || false;
+    if (data?.vanillaModule) {
+      detail.vanillaScripts = modulePaths(data.vanillaModule);
+    } else if (data?.vanillaModuleNote) {
+      // Why there is none, for a component where the absence is a decision
+      // rather than a gap.
+      detail.vanillaModuleNote = data.vanillaModuleNote;
+    }
 
     // Do-not-modify flag for branding-critical components
     if (data?.doNotModify) {
@@ -1649,6 +2216,18 @@ async function main() {
       'Component index for the UNDRR Mangrove library. ' +
       'Most components work as vanilla HTML with CSS classes (vanillaHtml: true). ' +
       'Some require React (requiresReact: true). ' +
+      'Every entry states its lifecycle outright, so you never have to probe /js/ for a 404: ' +
+      "vanillaModule is true when a plain ES module under /js/ drives the behaviour — the entry's " +
+      'vanillaScripts then lists the files to load, each one the `file` of an entry in ' +
+      'library.vanillaScripts, and the detail file carries the full contract — and false when ' +
+      'there is none, either because the component is static presentation (the detail file says why ' +
+      'in vanillaModuleNote) or because its behaviour needs React (hydration: true). ' +
+      'An `import` line, where present, is the exact line to use and names the package subpath ' +
+      `(${pkg.name}/components/Name.js); the package root is not an entry point and resolves on no ` +
+      'published version. No `import` line means the component ships in no bundle. ' +
+      'importRequiresDom: true means that line reads `document` as it loads: correct in a browser ' +
+      'or through a bundler, and it throws in Node and in server-side rendering — the detail file ' +
+      'says what to do instead. ' +
       'Each entry has a detailsUrl with full props, rendered HTML examples, and code snippets.',
     library: {
       name: pkg.name,
@@ -1673,6 +2252,16 @@ async function main() {
       utilitiesUrl: `${DOCS_BASE}ai-components/utilities.json`,
       iconsUrl: `${DOCS_BASE}ai-components/components-icons.json`,
       tokensUrl: `${DOCS_BASE}tokens.json`,
+      customProperties: {
+        _note:
+          `${customPropertyCount} component-scoped CSS custom properties ` +
+          `across ${Object.keys(customProperties.byComponent).length} ` +
+          "components. They are a component's theming API and are NOT in " +
+          'tokens.json, which documents theme tokens only. Each component ' +
+          'that has them lists a count here and the full set, with defaults ' +
+          'and descriptions, in its detail JSON.',
+        field: 'customProperties',
+      },
       releasesUrl: `${DOCS_BASE}releases.json`,
       changelogUrl:
         'https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md',
@@ -1731,7 +2320,14 @@ async function main() {
   // Write tokens.json
   // -------------------------------------------------------------------------
 
-  const tokensDict = buildTokensDictionary();
+  // The count of SCSS-declared global properties is derived from the bundles
+  // here and handed to the dictionary, so its `scope.excludes` and the same
+  // figure in llms.txt cannot drift apart.
+  // null, not 0, when the bundles were not there to count: `globals` is empty
+  // on the skipped path, and 0 is an assertion rather than a silence.
+  const tokensDict = buildTokensDictionary({
+    globalPropertyCount: customProperties.skipped ? null : globalGroupsTotal,
+  });
   tokensDict.version = pkg.version;
   tokensDict.generatedAt = generatedAt;
   const tokensJson = JSON.stringify(tokensDict, null, 2);
@@ -1793,7 +2389,7 @@ ${DOCS_BASE}ai-components/utilities.json
 Theme token dictionary (~${tokensDict.totalTokens} tokens with type, format & wrapping metadata):
 ${DOCS_BASE}tokens.json
 
-This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define. Component-scoped custom properties (the --mg-switch-* set, --mg-card-border, --mg-empty-state-*, --mg-notice-*, --mg-tree-*, --mg-drawer-size, --mg-icon-fg, --mg-legend-tick-pos, --mg-show-more-height and the rest) are public API but are not in it. Read the component's ai-components/{id}.json entry or its Storybook docs page for those. The data-viz palette (--mg-dataviz-*) is not component-scoped — it is defined on :root by stories/assets/scss/_tokens-data-viz.scss — but it is absent from tokens.json too, because the dictionary is built from the tokens/*.yaml sources only. The dictionary's own \`scope\` field says the same thing; a machine-readable per-component list is tracked in https://github.com/unisdr/undrr-mangrove/issues/1207.
+This dictionary covers theme tokens only — the --mg-* properties the theme stylesheets define from the tokens/*.yaml sources. Component-scoped custom properties are public API but are not in it. They are in each component's own entry instead: ${customPropertyCount} properties across ${Object.keys(customProperties.byComponent).length} components, under \`customProperties\` in ai-components/{id}.json, each with its type, its resting value and what it does. The index says which components have them and how many. ${globalGroupsTotal} --mg-* properties are in neither list: they are global like a theme token, but declared straight in SCSS rather than generated from tokens/*.yaml, so the dictionary never saw them. ${globalGroupsCountPhrase} — ${globalGroupsSentence}. The dictionary's own \`scope\` field says the same thing.
 
 Icons gallery:
 ${DOCS_BASE}?path=/docs/components-icons--docs
@@ -1823,7 +2419,7 @@ ${vanillaCount} of the ${indexEntries.length} components work as plain HTML with
 
 ### React quick start
 
-${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import via npm: import { ComponentName } from "@undrr/undrr-mangrove".
+${reactCount} components require React (requiresReact: true in the index). These use D3, Leaflet, or complex state management. Import them from the package subpath, which is what the tarball ships: import { ComponentName } from "@undrr/undrr-mangrove/components/ComponentName.js". The package root is not an entry point — "@undrr/undrr-mangrove" on its own does not resolve on any published version. Each component's index and detail entry carries the exact \`import\` line to use; where one is absent, the component ships in no bundle and there is nothing to import. A component flagged \`importRequiresDom: true\` reads \`document\` as it loads: that import line is correct in a browser and through a bundler, and throws "document is not defined" if it is evaluated in Node or during server-side rendering — its detail file says what to do instead.
 
 Several React components support hydration on vanilla HTML pages via the createHydrator pattern. Check the component's \`hydration\` field (or \`reactNote\`) for details; components with a \`hydration\` field are flagged \`hydration: true\` in the index. A \`vanillaModule\` field (flagged \`vanillaModule: true\`) has the same shape but describes a plain ES module from \`/js/\`: it needs neither React nor \`hydrate.js\`.
 
@@ -1841,7 +2437,7 @@ Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (\`${cd
 
 ### CSS utilities
 
-The utilities.json file lists ~${utilityClassCount} utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, and show-more patterns. All use the mg- prefix.
+The utilities.json file lists ~${utilityClassCount} utility classes grouped by category: layout containers, grid, responsive display, text utilities, accessibility, background colors, text colors, font sizes, animations, embed containers, interactive controls (switches and icon-only buttons), and show-more patterns. All use the mg- prefix.
 
 ### Releases and changelog
 
@@ -1872,7 +2468,7 @@ Where they come from:
 
 Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
 
-\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define, and nothing else. A component may also define its own \`--mg-{component}-*\` properties with their own defaults (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-tree-*\`, \`--mg-drawer-size\`), or read an input hook that no stylesheet defines so you can set it (\`--mg-switch-*\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`). Those are public API and are NOT in \`tokens.json\`; grep the compiled CSS and you will find them, which is not how you should have to. Read the component's \`ai-components/{id}.json\` or its Storybook page instead. Tracked for a structural fix in https://github.com/unisdr/undrr-mangrove/issues/1207.
+\`tokens.json\` is a THEME token dictionary. It lists the \`--mg-*\` properties the theme stylesheets define from the YAML sources, and nothing else. A component's own properties live in its manifest entry instead, under \`customProperties\` in \`ai-components/{id}.json\` — ${customPropertyCount} of them across ${Object.keys(customProperties.byComponent).length} components, each with what it does and the value it holds at rest. They come in two kinds: \`type: "default"\`, which a plain, unconditional rule already gives a value (\`--mg-empty-state-*\`, \`--mg-notice-*\`, \`--mg-status-label-*\`, \`--mg-tab-*\`), and \`type: "hook"\`, which nothing unconditional defines — either no rule at all, or only a modifier or a media query — so it holds its fallback until a wrapper, an inline style or a React prop sets it (\`--mg-switch-track-*\`, \`--mg-switch-size\`, \`--mg-card-border\`, \`--mg-icon-fg\`, \`--mg-cta-bg\`, \`--mg-legend-tick-pos\`, \`--mg-on-this-page-nav-offset\`, \`--mg-tree-guide-offset\`). A record with \`wrapInRgb: true\` takes sRGB channels (\`255 255 255\`) rather than a colour, the same way tokens.json marks \`format: "srgb-channels"\`; a hex or a keyword there makes the declaration invalid and it drops with no warning. Restyle a component by setting these, not by writing rules against its classes: a class rule of equal specificity replaces what the component draws, and several components build their geometry on a property whose value your rule would then be fighting.
 
 What you actually write against is the compiled result: the \`--mg-*\` custom properties in the theme stylesheets above.
 
@@ -1927,10 +2523,11 @@ If you are writing a list of your own with \`list-style: none\` and no Mangrove 
 4. Fetch its detailsUrl for rendered HTML, props, and code examples
 5. For CSS utilities, fetch ${DOCS_BASE}ai-components/utilities.json
 
-The component index is not the whole library. Two things live elsewhere, and searching only the index will tell you they do not exist:
+The component index is not the whole library. Three things live elsewhere, and searching only the index will tell you they do not exist:
 
 - **CSS utility classes are in \`utilities.json\`, not the index.** Some patterns ship as utility classes with no component entry at all — the accordion (\`.mg-accordion\`) is one, and the data-table modifiers (\`.mg-table--data\` and the \`.mg-table__th--sortable\` / \`--sticky\` / \`.mg-table__td--numeric\` family) are documented there rather than on the Table entry. Fetch \`utilities.json\` before concluding Mangrove has no accordion or no sortable table.
-- **Component custom properties are not in \`tokens.json\`.** It is a theme token dictionary; see the "Design tokens" section above.
+- **There is no IconButton component, and there are two icon-only button classes.** \`.mg-button--icon\` is a shape modifier of \`.mg-button\`: use \`.mg-button.mg-button-{variant}.mg-button--icon\` whenever the button should carry a brand colour, because the foreground, typography and focus ring come from \`.mg-button\`. \`.mg-icon-button\` is a separate standalone ghost primitive for dismiss, close and copy controls on an existing surface; it carries no variant colours and takes no \`.mg-button-*\` class. Both are in \`utilities.json\` and on the Buttons entry.
+- **Component custom properties are not in \`tokens.json\`.** It is a theme token dictionary. A component's own properties are in its \`ai-components/{id}.json\` entry, under \`customProperties\`; see the "Design tokens" section above.
 
 ### Brand guide
 
@@ -2030,6 +2627,18 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         logos,
       },
       vanillaScripts,
+      customProperties: {
+        _note:
+          'A component is restyled by setting its CSS custom properties, not ' +
+          'by overriding its class rules. Every component that exposes any ' +
+          'lists them under `customProperties` in its detail JSON, each with ' +
+          'its type ("default" or "hook"), its resting value and what it ' +
+          'does. These are component-scoped and are NOT in tokens.json, ' +
+          'which covers theme tokens only — see its `scope` field.',
+        total: customPropertyCount,
+        components: Object.keys(customProperties.byComponent).length,
+        componentIndex: `${DOCS_BASE}ai-components/index.json`,
+      },
       conventions: {
         cssPrefix: 'mg-',
         naming: 'BEM',
@@ -2082,7 +2691,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   );
   if (droppedImportCount > 0) {
     console.log(
-      `  ${droppedImportCount} Storybook-generated import(s) removed (not exported from src/index.js)`
+      `  ${droppedImportCount} Storybook-generated import(s) removed (no published bundle exports them)`
     );
   }
 }

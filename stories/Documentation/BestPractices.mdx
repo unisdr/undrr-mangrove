@@ -48,6 +48,7 @@ See:
 - Keep overrides scoped and minimal; avoid broad global resets that can break component states.
 - Use `mg-` classnames as authored; avoid renaming or flattening BEM structures.
 - Pin production sites to a versioned CDN URL, not `latest`.
+- Decide the page root's `overflow-x` yourself. Mangrove's full-bleed components are sized in `100vw`, which counts the vertical scrollbar, so a scrolling page gains ~8px of horizontal scroll. `overflow-x: clip` on both `html` and `body` removes it, at the cost of making anything wider than the page unreachable — check your wide tables first. See [page-level setup](?path=/docs/components-fullwidth--docs#page-level-setup).
 
 See:
 
@@ -92,4 +93,4 @@ See:
 
 ---
 
-Last updated: 11 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/BestPractices.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+Last updated: 18 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/BestPractices.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

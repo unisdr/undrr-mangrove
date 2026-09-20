@@ -276,7 +276,7 @@ const ShareButtons = ({
   const sharedLink = getLinkToShare();
 
   const getShareableLinkForPlatform = Platform => {
-    let baseLink = LinkUrls[Platform];
+    const baseLink = LinkUrls[Platform];
     const subject = encodeURIComponent(
       SharingSubject ?? defaults.defaultSharingTextSubject
     );

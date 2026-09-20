@@ -6,7 +6,7 @@ This page describes 2.0 as a whole, organised by theme rather than by prerelease
 
 `2.0.0-rc.2` is the latest published prerelease. Testing continues towards a stable `2.0.0`, and this page keeps evolving with it. One earlier tag never reached npm: `2.0.0-beta.2` was tagged but not published, so its changes first became installable in `2.0.0-beta.3`.
 
-Because this page describes 2.0 as a whole, some of what follows has merged since `2.0.0-rc.2` and is in no published prerelease yet. Every passage describing a change that is not yet in a published package carries a **Not in `2.0.0-rc.2`.** marker, so you can tell at the point of reading whether the behaviour is in your build. The marker covers changes to the published package — CSS, JavaScript, markup and the npm tarball. Documentation, Storybook and the AI manifest are published continuously from `main` rather than per prerelease, so changes to those are live for everyone and carry no marker. If a behaviour described here is missing from your rc.2 build and has no marker, check the `Unreleased` section of [`CHANGELOG.md`](https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md) before reporting it.
+This page includes changes on `main` being prepared for `2.0.0-rc.3`; rc.3 has not been released. Detailed sections mark package changes absent from rc.2 with **Not in `2.0.0-rc.2`.** The highlights describe the intended 2.0 release as a whole. Documentation, Storybook and the AI manifest deploy separately from npm: a merge does not prove that the hosted site or CDN has updated. GitHub Actions is currently blocked by the organisation flag, so use the source and local build to review these changes until deployment is verified.
 
 ## What's new in 2.0
 
@@ -38,13 +38,13 @@ If you only need the highlights, start here. Each group links to the fuller tech
 **New components and patterns**
 
 - Content Hub, Landing Page and Article Story reference patterns give consumers composable, production-ready page-level layouts.
-- New components: `Notice` and `ServiceNotice`, `Drawer`, `Tree`, `Legend`, `Range`, `CopyButton`, `SkipLink`, `FormAction`, `UserFeedback`, `StatusLabel` and `EmptyState`.
+- New components: `Notice` and `ServiceNotice`, `Drawer`, `Tree`, `Legend`, `Range`, `CopyButton`, `SkipLink`, `FormAction`, `UserFeedback`, `StatusLabel`, `EmptyState` and `SegmentedControl`.
 - Snackbar now renders through Notice, and StatusLabel indicators carry a shape as well as a colour. See [New components and patterns](#new-components-and-patterns).
 
 **Hydration and vanilla scripts**
 
 - Hydration contracts are documented per component and published in the AI manifest, so a non-React page can wire up behaviour from the same source an agent reads.
-- `js/copy-button.js` and `js/switch-pending.js` are dependency-free ES modules for pages with no React at all, and `js/switch-pending.js` comes apart into its announcer, its revert and its deadline so an app can keep the parts it wants.
+- `js/copy-button.js`, `js/drawer.js` and `js/switch-pending.js` are dependency-free ES modules for pages with no React at all, and `js/switch-pending.js` comes apart into its announcer, its revert and its deadline so an app can keep the parts it wants.
 - Hydration id prefixes are unique page-wide, and vanilla tab sets removed from the page are suspended rather than left running. See [Hydration and vanilla scripts](#hydration-and-vanilla-scripts).
 
 **Documentation, tooling and discoverability**
@@ -96,11 +96,13 @@ Arriving part-way through an upgrade? Start at the row that describes you.
 | A developer who imports a **CamelCase stylesheet path** | [Breaking change #9](#9-the-four-camelcase-scss-aliases-removed) — all four aliases were removed |
 | A developer who overrides sub-brand tokens | [Sub-brand theming migration](#sub-brand-theming-migration) |
 | A developer who uses the **`--sendai-*` accent colours** | [Theming, tokens and colour](#theming-tokens-and-colour) — deprecated, replaced by `--mg-sendai-target-a`…`-g` |
-| A developer **upgrading from an earlier 2.0 prerelease** | [Upgrade notes](#upgrade-notes) — what changed inside 2.0 itself, 18 topics, each with its own heading |
+| A developer **upgrading from an earlier 2.0 prerelease** | [Upgrade notes](#upgrade-notes) — what changed inside 2.0 itself, grouped by integration topic |
 | A developer who hand-writes **Mangrove list markup** | [Hand-written lists](#hand-written-lists) — you no longer need `role="list"` |
 | A developer using the vanilla **switch pending helper** | [Switch pending timeout](#switch-pending-timeout) — `timeout: 0` changes meaning |
 | A developer who styles **`.mg-icon-button`** or a filled button | [Icon button](#icon-button) and [Filled buttons and button height](#filled-buttons-and-button-height) |
 | A developer wiring components into **Drupal or plain HTML** | [Hydration and vanilla scripts](#hydration-and-vanilla-scripts) |
+| A developer importing **React components or Sass from npm** | [Published package imports](#published-package-imports) |
+| A developer styling **editorial links or background heroes** | [Editorial content and inline links](#editorial-content-and-inline-links) and [Hero composition and image-less markup](#hero-composition-and-image-less-markup) |
 | An AI agent or tool reading this for API context | [Token API summary](#token-api-summary) |
 
 ## What changed visually
@@ -254,8 +256,8 @@ The old `--sendai-red`, `--sendai-orange`, `--sendai-purple` and `--sendai-turqu
 
 - Token pairs are now graded with an [Oklab](https://www.w3.org/TR/css-color-4/#ok-lab)-based perceptual measure alongside WCAG 2's relative-luminance figure, calibrated so its thresholds align with the familiar 4.5:1 and 3:1 boundaries.
 - Every foreground/background token pair is graded on both measures, covering every theme, hover and active states and the legacy `.mg-*` components, and the build fails if any pair passes perceptually while WCAG 2 fails it.
-- Coverage is 90 component pairs. 11 of them grade the focus ring against surfaces it is actually painted on — the gallery letterbox, the mega-menu link tint, the form error summary, the snackbar, the hero banner — and 18 grade the data-visualisation palette. Neither the focus ring nor the dataviz palette was graded at all before 2.0.
-- Pairs that cannot yet meet the target are recorded as explicit exceptions — 65 against WCAG 2, 84 against the perceptual measure. Both counts rose as coverage rose. Widening the net found failures that were always there; it did not introduce them. Most of them are the accent ramp, which is a brand decision, not a wiring one.
+- Coverage includes component foregrounds and surfaces, focus indicators and data-visualisation palettes across themes. The test suite is the current inventory; its scope does not establish conformance for every rendered state.
+- Remaining exceptions are documented with their rationale in the contrast methodology. The guard binds registered exceptions to the token pairs they cover, so renaming or moving a pair cannot silently inherit an unrelated exemption. ([#1263](https://github.com/unisdr/undrr-mangrove/pull/1263))
 - APCA was evaluated and rejected on licensing grounds. Reasoning in [Colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md).
 
 ### The status indicator palette is measured, and stays
@@ -268,7 +270,7 @@ Both models agree that degraded and offline are the same mark to a deuteranope: 
 
 Rebalancing was measured and rejected. Holding the hue associations and requiring every fill to clear 3:1 on white, the best worst-pair obtainable from the tokens this system owns is 2.34 dE2000 — still at the threshold, merely moved onto a different pair — and it costs all four DELTA status colours, drops the worst normal-vision pair from 13.4 to 6.8 dE2000, and leaves the `neutral-500` ring at 1.0–1.8:1 against its own fills. A one-token fix fares no better: moving degraded off `gold-800` lifts that pair to 11.9 but reintroduces a 1.5 dE2000 collision with waiting for more information, halves its contrast, and desynchronises it from the notice icon beside it. Seven unordered categories is past what colour carries, which is the limit this repo already records as `--mg-dataviz-categorical-safe-count: 4`.
 
-Two things found while verifying are documented with it: no theme overrides any of the seven fills, so the status palette is identical across all five brands by design; and setting `--mg-status-label-indicator-border-width: 0` removes the only part of the four pale marks that clears 3:1, and in forced colours removes the base indicator altogether.
+No theme overrides any of the seven fills, so the status palette is identical across all five brands. Setting `--mg-status-label-indicator-border-width: 0` still removes the contrast boundary from the four pale fills in normal rendering. **The base indicator now survives that setting in forced colours.** _Not in `2.0.0-rc.2`._ An inset `CanvasText` outline preserves its hollow shape without changing its size or forcing a ring onto the other six marks. ([#1224](https://github.com/unisdr/undrr-mangrove/pull/1224))
 
 ### DELTA's palette is corrected
 
@@ -330,16 +332,16 @@ PreventionWeb, MCR and IRP now define their own secondary button background and 
 
 ### The orange accent carries no text
 
-Sendai orange — `orange-900`, `orange-800`, and the `secondary`, `tag-accent`, `tag-accent--hover` and `hero--secondary` tokens that resolve to them — is documented as a non-text accent: borders, rules, icon fills and blocks with no copy over them. No text colour clears AA on it. White measures 2.65 to 2.95 against a 4.5 minimum, and black, which passes WCAG at 7.11 to 7.92, still misses the perceptual body-text floor of 63.
+Sendai orange remains a non-text accent: borders, rules, icon fills and blocks with no copy over them. White fails WCAG AA for body text on it; black passes WCAG but misses Mangrove's additional perceptual body-text threshold. These are distinct measures, not a claim that black fails WCAG.
 
-The rule is stated in [`docs/COLOUR-CONTRAST-METHODOLOGY.md`](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md), in the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs), at the token definitions in `tokens/undrr.yaml` and `tokens/mangrove.yaml`, at each stylesheet that paints the surface, on the Storybook colour inventories and in each affected component's docs. `Tag --accent`, `TextCta --secondary`, `Hero --secondary`, `HubHeader --surface-secondary`, `Card --secondary` and `AuthorImage --secondary` still pair text with the orange and are named as recorded exceptions with their measured values; removing the combination is a brand decision tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). No colour changed. ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198))
+**The component surfaces now enforce that rule.** _Not in `2.0.0-rc.2`._ Tag, TextCta, Hero, HubHeader, Card and AuthorImage no longer put their secondary/accent copy on orange. Orange remains decorative; text-bearing surfaces use readable theme colours. Existing modifier names remain supported, but their appearance changes. Review overrides that restore the former orange fill. The palette itself is unchanged. ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198), [#1249](https://github.com/unisdr/undrr-mangrove/pull/1249))
 
 ### Not yet resolved
 
 These are known and deliberately unfinished in 2.0:
 
 - Sub-brand tab colours are not wired into the new underline tab treatment. The brands designed a filled tab (white on a solid brand background); piping those colours into an underline on a white page measures 1.00:1. Resolving it is a design decision, not a wiring change.
-- The accent ramp is the largest remaining accessibility debt and is the reason most of the 65 WCAG exceptions exist. Retuning it is a brand decision.
+- The accent palette is retained for non-text use; it is not a licence to put text over any accent swatch. The current exception register and its rationale live in the colour contrast methodology.
 - Forced-colours behaviour has not been verified in real Windows High Contrast, only in emulation. The two-band mixins are built to degrade correctly there, but that is reasoned, not observed.
 - `--mg-color-focus-ring-inverse` resolves to white in all five themes, so it is a seam with nothing behind it yet. It earns its keep only when a theme retunes it.
 
@@ -394,6 +396,10 @@ The `max-width: 12ch` constraint is removed from `.mg-hero--immersive:not(.mg-he
 ScrollContainer's desktop horizontal scrollbar carries a themed interactive brand thumb and a subtle translucent track across WebKit and Firefox engines, instead of reading as an unstyled browser default. ([#1153](https://github.com/unisdr/undrr-mangrove/pull/1153))
 
 Author image supports stacked layouts, links, inverse tone and a text-only variant, alongside higher-value utility and OCHA icon additions to the icon set. ([#1147](https://github.com/unisdr/undrr-mangrove/pull/1147), [#1145](https://github.com/unisdr/undrr-mangrove/pull/1145))
+
+**Background heroes have a readable copy surface.** _Not in `2.0.0-rc.2`._ A neutral scrim deepens the desktop copy band while preserving the photograph outside it. At widths up to 900px, the image becomes a banner above the text instead of sitting behind it; immersive heroes use a deeper banner rather than a minimum viewport height. Image-less markup needs `mg-hero--no-image` to suppress that empty banner. See [Hero composition and image-less markup](#hero-composition-and-image-less-markup). ([#1263](https://github.com/unisdr/undrr-mangrove/pull/1263), [#1268](https://github.com/unisdr/undrr-mangrove/pull/1268))
+
+**Scrolling and full-width layouts work in more contexts.** _Not in `2.0.0-rc.2`._ ScrollContainer's overflow viewport is keyboard-focusable even without focusable children, and its hydration reads its own content. FullWidth anchors its bleed correctly in RTL; consumers contain page overflow with `html, body { overflow-x: clip; }` rather than clipping each section, which would break sticky descendants. Make wide tables locally scrollable before applying page-root clipping. ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276), [#1222](https://github.com/unisdr/undrr-mangrove/pull/1222), [#1251](https://github.com/unisdr/undrr-mangrove/pull/1251))
 
 ### Forms and data display
 
@@ -494,13 +500,21 @@ The rest of the sweep:
 
 Per-component detail is in each component's MDX changelog.
 
+### Editorial content and inline links
+
+_Not in `2.0.0-rc.2`._ `.mg-content p a` underlines links in editorial paragraphs at rest. Add `mg-content` to a rich-text container to opt in. Navigation and buttons retain their component treatment; this is not a global underline on every anchor. The page patterns demonstrate the wrapper. It currently supplies this narrow prose-link rule, not a complete rich-text reset or automatic blockquote styling; expanding it is [2.1 work (#1277)](https://github.com/unisdr/undrr-mangrove/issues/1277). ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276))
+
+### Arabic tracking and readable form help
+
+_Not in `2.0.0-rc.2`._ Arabic text and its pseudo-elements use normal letter spacing, including tracked headings and labels; nested elements explicitly marked with a different language keep that language's tracking. Native-reader validation of the heading face remains a follow-up in [#1103](https://github.com/unisdr/undrr-mangrove/issues/1103). Newsletter form surfaces are lighter so the existing help-text colour remains readable. ([#1279](https://github.com/unisdr/undrr-mangrove/pull/1279), [#1276](https://github.com/unisdr/undrr-mangrove/pull/1276))
+
 ### Markerless lists keep their list role
 
 _Not in `2.0.0-rc.2`._ Safari drops the implicit `list` role from any list whose marker is `none`, so the item count stops being announced — the bug `role="list"` is usually added to work around. Mangrove's guidance asked consumers for that attribute while the components' own rendered HTML omitted it, so a consumer had to pick a side. 2.0 settles it in favour of the components. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200), [#1209](https://github.com/unisdr/undrr-mangrove/issues/1209))
 
 StatusLabel introduced the fix in 1.2.0: `list-style: none` followed by `list-style-type: ""`. An empty string is still a marker, so the role survives, and it renders nothing and reserves no space; the `none` stays in front as the fallback for browsers too old to parse a string marker. That pair is now the `mg-list-unmarked` mixin and the house rule, applied across Breadcrumbs, Pager, OnThisPageNav, Legend, MegaMenu, HubHeader, Syndicated search and StatusLabel — fourteen rules in all, because it covers list *items* as well as lists. `list-style-type` is inherited, but an item setting `none` wins over the list's empty string, and it is the item's marker WebKit inspects: measured in WebKit 26.0, MegaMenu's list computed `""` while every item computed `none`, so a fix on the list alone never reached the markers it was meant to preserve.
 
-It is a CSS fix rather than an attribute because consumers hand-write these lists in Drupal templates and static HTML, so only the class reaches all of them, and because a redundant `role="list"` on a `<ul>` is the kind of thing `jsx-a11y/no-redundant-roles` exists to flag. A list that carries a different ARIA role on purpose — `tree`, `group`, `menu`, `listbox`, `tablist` — is exempt, because that role already replaces list semantics; MegaMenu's content panels are left alone for exactly that reason. Where an implementation already set the attribute it keeps it: OnThisPageNav's vanilla script still writes `role="list"`, so its hydration contract is unchanged, but the React and vanilla paths now behave the same without it.
+It is a CSS fix rather than an attribute because consumers hand-write these lists in Drupal templates and static HTML, so only the class reaches all of them, and because the CSS preserves the implicit role without a redundant attribute. This is a markup convention, not an ESLint rule enforced by this repository. A list that carries a different ARIA role on purpose — `tree`, `group`, `menu`, `listbox`, `tablist` — is exempt, because that role already replaces list semantics; MegaMenu's content panels are left alone for exactly that reason. Where an implementation already set the attribute it keeps it: OnThisPageNav's vanilla script still writes `role="list"`, so its hydration contract is unchanged, but the React and vanilla paths now behave the same without it.
 
 A Breadcrumbs layout fix travelled with this sweep and is described where a Breadcrumbs consumer will look for it: [Tabs and navigation](#tabs-and-navigation).
 
@@ -528,6 +542,10 @@ Tree later gained hydration from a nested `<ul>`, a `toggleIcon` prop and a `cur
 
 **These four are prototypes.** Their APIs may change before 2.0 is stable.
 
+### Segmented control
+
+_Not in `2.0.0-rc.2`._ `SegmentedControl` presents a native radio group as joined segments, retaining native keyboard interaction and form submission. The React wrapper uses `legend`, `name` and `options`, with `value` for controlled selection or `defaultValue` for uncontrolled selection. Import `{ SegmentedControl }` from `@undrr/undrr-mangrove/components/SegmentedControl.js`. Plain HTML uses the same CSS and native radio inputs without JavaScript. ([#1250](https://github.com/unisdr/undrr-mangrove/pull/1250))
+
 ### CopyButton
 
 A copy-to-clipboard button ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)) with React hydration, a zero-dependency vanilla script and UN-language labels ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)). It reports a failed copy with a manual-copy hint ([#1166](https://github.com/unisdr/undrr-mangrove/pull/1166)).
@@ -540,9 +558,9 @@ A copy-to-clipboard button ([#1160](https://github.com/unisdr/undrr-mangrove/pul
 
 ### FormAction and UserFeedback
 
-`FormAction` joins a field and its key action for search, subscription and select-and-continue flows, with accessible help and error wiring, RTL support and optional mobile stacking. It ships as a direct `components/FormAction.js` ESM entry as well as SCSS and the package-root export.
+`FormAction` joins a field and its key action for search, subscription and select-and-continue flows, with accessible help and error wiring, RTL support and optional mobile stacking. It ships as a direct `components/FormAction.js` ESM entry as well as SCSS. Import `{ FormAction }` from that subpath; the package has no root entry point.
 
-`UserFeedback` brings the common page-usefulness prompt into Mangrove for the usual pre-footer position, as a package-root React export and a directly hydratable bundle, while response storage, analytics and consent stay product-owned. It ships seven toolbar locales and accessible confirmation focus.
+`UserFeedback` brings the common page-usefulness prompt into Mangrove for the usual pre-footer position, as the default export of `components/UserFeedback.js` and a directly hydratable bundle, while response storage, analytics and consent stay product-owned. It ships seven toolbar locales and accessible confirmation focus.
 
 ## Hydration and vanilla scripts
 
@@ -553,6 +571,12 @@ Most Mangrove consumers are Drupal sites and plain HTML pages, not React applica
 Every component that ships a `*.hydrate.js` now carries a structured `hydration` contract in the AI manifest — a note, the selector, the CDN modules, the data attributes, the events and a runnable example — alongside the same contract in its MDX. Previously only ServiceNotice and Tree had one, so an agent copying `renderedHtml` for CopyButton, ShareButtons, IconCard, StatsCard, Gallery, MegaMenu, Pager, QuoteHighlight, ScrollContainer, TextCta, UserFeedback, Syndicated search, Drawer or Notice got markup with no behaviour and nothing saying so. ShareButtons, Gallery, MegaMenu, Pager, ScrollContainer and Syndicated search had no manifest entry at all and gain one. ([#1194](https://github.com/unisdr/undrr-mangrove/pull/1194), [#1175](https://github.com/unisdr/undrr-mangrove/pull/1175))
 
 `Tree` hydrates a nested `<ul>` inside a `data-mg-tree` container with `createHydrator` and `Tree.fromElement`, and is flagged `requiresReact` in the manifest. `Tree` and `TreeItem` take a `toggleIcon` prop, read from `data-toggle-icon` on the hydrated container, and `TreeItem` takes `current`. ([#1176](https://github.com/unisdr/undrr-mangrove/pull/1176))
+
+### Repeated hydration stays within its instance
+
+_Not in `2.0.0-rc.2`._ `createHydrator.update()` skips matches inside a hydrated ancestor matching the same selector, preventing components from mounting again inside their own output. Different component selectors can still hydrate nested content. To replace content in an existing hydrated host, call `unmountAll()` before `update()`. ScrollContainer extraction and syndicated-search paging also target their own instance. Use `data-mg-search-widget`, not the previously documented `data-undrr-search-widget`. ([#1234](https://github.com/unisdr/undrr-mangrove/pull/1234), [#1222](https://github.com/unisdr/undrr-mangrove/pull/1222), [#1260](https://github.com/unisdr/undrr-mangrove/pull/1260))
+
+**Cookie consent tolerates unmount during loading.** _Not in `2.0.0-rc.2`._ A discarded mount cannot initialise the banner after its async asset loads complete, cleanup stays within banner-owned elements, and asset URLs no longer defeat the duplicate-load guard with a cache buster. CookieConsentBanner is a repository integration wrapper, not an npm component bundle. ([#1271](https://github.com/unisdr/undrr-mangrove/pull/1271))
 
 ### Hydration ids are unique page-wide
 
@@ -565,6 +589,8 @@ A vanilla tab set removed from the page without `mgTabsDestroy()` is suspended r
 `mgTabs()` and `mgTabsRuntime()` accept an optional `{ signal }` third argument: aborting it destroys the tab sets that call initialised, and an already-aborted signal initialises nothing. The React `Tab` wrapper passes a signal and still calls `mgTabsDestroy(container, true)` in its effect cleanup. `mgTabsDestroy(scope)` destroys every set in scope even if one throws, then rethrows the first error. See [Tabs](https://mangrove.undrr.org/?path=/docs/components-tabs--docs), "Removing tabs". ([#1183](https://github.com/unisdr/undrr-mangrove/pull/1183), [#1180](https://github.com/unisdr/undrr-mangrove/issues/1180))
 
 ### Dependency-free ES modules
+
+**Drawer gains a vanilla lifecycle.** _Not in `2.0.0-rc.2`._ `js/drawer.js` enhances `data-mg-js-drawer` markup with `mgDrawer(scope)` and releases it with `mgDrawerDestroy(scope)`. That marker is distinct from React hydration's `data-mg-drawer`; choose one integration per drawer. The manifest records the vanilla lifecycle separately from React hydration. The new script is not available at an rc.2 versioned URL. ([#1248](https://github.com/unisdr/undrr-mangrove/pull/1248))
 
 `js/copy-button.js` (`window.UNDRR.copyButton`) drives CopyButton with no React at all. ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163))
 
@@ -592,11 +618,13 @@ CDN URLs were canonicalised to a single `assets.undrr.org` root across documenta
 
 **The manifest says what it does not cover.** Three reports from a vanilla-HTML consumer upgrading rc.1 to rc.2 were all the same shape: the manifest describing itself as more complete than it is. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200))
 
-- **`tokens.json` is a theme token dictionary, and now says so.** It never contained component-scoped custom properties, but nothing said so, and several of them were announced as public API in these very notes — the `--mg-switch-*` set, `--mg-empty-state-*`, `--mg-notice-*`, `--mg-tree-*`, `--mg-drawer-size` and `-offset`, `--mg-card-border`, `--mg-icon-fg`, `--mg-legend-tick-pos`, `--mg-show-more-height` — so the only way to find them was to grep the compiled CSS. The dictionary gains a `scope` field naming the three kinds it excludes: properties a component defines itself with its own default, input hooks nothing defines (which resolve to nothing and drop their declaration when unset), and the `--mg-dataviz-*` family, which is as global as a theme token but comes from `_tokens-data-viz.scss` rather than a `tokens/*.yaml` source. `llms.txt` repeats it in its "Design tokens" section. A machine-readable `customProperties` field per component is the structural fix and is tracked in [#1207](https://github.com/unisdr/undrr-mangrove/issues/1207).
+- **`tokens.json` is a theme token dictionary, and now says so.** It never contained component-scoped custom properties, but nothing said so, and several of them were announced as public API in these very notes — the `--mg-switch-*` set, `--mg-empty-state-*`, `--mg-notice-*`, `--mg-tree-*`, `--mg-drawer-size` and `-offset`, `--mg-card-border`, `--mg-icon-fg`, `--mg-legend-tick-pos`, `--mg-show-more-height` — so the only way to find them was to grep the compiled CSS. The dictionary gains a `scope` field naming the three kinds it excludes: properties a component defines itself with its own default, input hooks nothing defines (which resolve to nothing and drop their declaration when unset), and the `--mg-dataviz-*` family, which is as global as a theme token but comes from `_tokens-data-viz.scss` rather than a `tokens/*.yaml` source. `llms.txt` repeats it in its "Design tokens" section. Component-scoped properties now appear in each component's `customProperties` array, with descriptions, default-versus-hook classification and channel-format hints. Conditional declarations do not masquerade as unconditional defaults. Global SCSS-only properties remain outside the token dictionary and are identified separately. ([#1223](https://github.com/unisdr/undrr-mangrove/pull/1223), [#1236](https://github.com/unisdr/undrr-mangrove/pull/1236))
 - **Utility classes live only in `utilities.json`.** An agent checking the component index alone concluded there was no accordion — there is no component entry at all — and no data-table utilities. "How to use" now says to fetch `utilities.json` before drawing that conclusion.
 - **`llms.txt` carries the list-semantics house rule**: do not add `role="list"`, the stylesheets keep the list role themselves, and lists with a deliberate `tree`, `group`, `menu`, `listbox` or `tablist` role are exempt. See [Markerless lists keep their list role](#markerless-lists-keep-their-list-role).
 
 **The CDN JavaScript list is complete, and there is no bundle.** `docs/CDN-REFERENCE.md` was missing `js/preview-access.js` and `js/undrr.js`, and said nothing about there being no combined bundle, so a consumer copying the `<script src=".../js/main.js">` snippet from the asset library's own README had no way to tell whether the file was missing or the path was wrong. The table now states that it is the complete list and that no `js/main.js` or combined bundle exists. The 404ing snippet itself lives in `gitlab.com/undrr/common/shared-web-assets` and is reported there. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216))
+
+**Descriptions and imports describe the consumer surface.** The index has a short `summary`, while detail records retain the curated `description`. Imports are generated from the actual component bundles, using the correct subpath and named or default binding. `importRequiresDom` flags browser-only module loading, including ShowMore and Tab, rather than promising server-side imports. ([#1237](https://github.com/unisdr/undrr-mangrove/pull/1237), [#1262](https://github.com/unisdr/undrr-mangrove/pull/1262))
 
 ### Storybook organisation
 
@@ -618,11 +646,13 @@ A story fixture hygiene sweep cleared demo-only defects found in the 2.0 audit: 
 
 `docs/RELEASES.md` now defines a standard format and template for GitHub Release notes — intro, full-detail link, and a fixed section order — so the per-prerelease record stays consistent. ([#1186](https://github.com/unisdr/undrr-mangrove/pull/1186))
 
+**Package examples are checked against the published layout.** Documentation-path tests cover npm subpaths, Sass imports and CDN examples against the package model. Sass lives under `scss/`, never `stories/`; vanilla JS imports need `.js`. There is no standalone grid CSS or combined/minified vanilla JS bundle. Resolving a path in the source model is not proof it has reached npm or the CDN. ([#1270](https://github.com/unisdr/undrr-mangrove/pull/1270), [#1262](https://github.com/unisdr/undrr-mangrove/pull/1262))
+
+**Browser assertions are now an executable gate.** The build workflow runs Storybook's play functions and render smoke tests in Chromium; a failed assertion fails that step. Run `yarn test-storybook` against a served build locally while organisation-level CI is blocked. The accessibility addon uses WCAG A/AA tags but remains advisory: its warnings are not a passing accessibility certification, and cold-page and post-interaction audits cover different states. Lint coverage now includes component JSX, `src/` and `.storybook/`. ([#1272](https://github.com/unisdr/undrr-mangrove/pull/1272), [#1247](https://github.com/unisdr/undrr-mangrove/pull/1247), [#1276](https://github.com/unisdr/undrr-mangrove/pull/1276))
+
 ### Repo and build tooling
 
-**`npm pack` at the repo root now produces a usable tarball.** A `files` allowlist and a companion `.npmignore` were added to `package.json`, plus a `prepack` script (`yarn scss`) that regenerates the token partials and compiled CSS before packing. Without the `.npmignore`, npm falls back to `.gitignore` — which excludes the generated `_tokens-*.scss` partials and the compiled `style*.css` — so a root-packed tarball contained SCSS entry points that could not compile, on a missing `@import`.
-
-**The publish workflow was never affected.** `.github/workflows/npm-publish.yml` does not pack from the repo root: it runs `yarn build`, assembles a separate `npm-package/` directory from `dist/` plus a filesystem walk for SCSS, and writes its own `package.json`. Released packages were always correct. That change fixes local and third-party `npm pack` only.
+Use `yarn build` followed by `yarn pack:assemble` or `yarn pack:preview` to inspect the same curated package the publish workflow assembles. Packing the repository root is not a substitute: its layout differs from the published `components/`, `css/`, `js/`, `scss/`, `fonts/` and `error-pages/` directories. Generated Sass partials and compiled CSS must be included, and package-path checks verify the documented consumer surface. ([#1169](https://github.com/unisdr/undrr-mangrove/pull/1169), [#1265](https://github.com/unisdr/undrr-mangrove/pull/1265))
 
 **Jest specs no longer ship.** _Not in `2.0.0-rc.2`; the first tarball without them is the next prerelease._ `js/__tests__/copy-button.test.js`, `show-more.test.js` and `table-of-contents.test.js` were in every npm tarball up to `2.0.0-rc.2`, and are committed under every versioned folder in the CDN asset repository. They travelled because two steps copy whole directories: webpack copies `stories/assets` into `dist/assets`, and `scripts/assemble-npm-package.mjs` then copies `dist/assets/js` into the package, so anything sitting beside a source went with it. Both steps now skip `__tests__`, `__snapshots__`, `__mocks__`, `__fixtures__`, `*.test.*` and `*.spec.*` from one shared rule, the generated `package.json` `files` array carries the same exclusions as a second line of defence, and a test fails if a development-only file reaches the assembled package again. Nothing a consumer imports changes. ([#1219](https://github.com/unisdr/undrr-mangrove/pull/1219), [#1218](https://github.com/unisdr/undrr-mangrove/issues/1218))
 
@@ -874,6 +904,24 @@ No deprecated CamelCase stylesheet aliases remain in the package.
 
 The [breaking changes](#breaking-changes) above are the 1.x-to-2.0 migration. These are the smaller adjustments 2.0 asks for, whether you are arriving from 1.x or from an earlier 2.0 prerelease. They are grouped by what you touch, not by the prerelease they landed in.
 
+#### Published package imports
+
+Use explicit published subpaths, for example `import { IconCard } from '@undrr/undrr-mangrove/components/IconCard.js'`. Default-versus-named exports vary by bundle; use the React integration guide or manifest. There is no package-root barrel. _Not in `2.0.0-rc.2`:_ the generated package metadata drops the dangling `main: "dist/index.js"`, which never named a shipped file; working subpath imports remain supported. CookieConsentBanner, Snackbar and CodeBlock have no published component bundle. ([#1265](https://github.com/unisdr/undrr-mangrove/pull/1265))
+
+For Sass, use `@undrr/undrr-mangrove/scss/assets/scss/style`, not a repository `stories/` path. For vanilla JavaScript, include `.js`. These documentation corrections also apply to earlier packages; they do not require a new runtime API. ([#1270](https://github.com/unisdr/undrr-mangrove/pull/1270))
+
+#### Hero composition and image-less markup
+
+_Not in `2.0.0-rc.2`._ Check background heroes at phone and tablet widths: up to 900px, image and copy now stack and the hero can become taller. `--mg-hero-banner-block-size` controls the image band. Add `mg-hero--no-image` to hand-authored heroes without a background image; React Hero and ChildHero add it automatically. Check custom scrim overrides against the contrast methodology. Split-media layouts are not this background-image composition. ([#1263](https://github.com/unisdr/undrr-mangrove/pull/1263), [#1268](https://github.com/unisdr/undrr-mangrove/pull/1268))
+
+#### Quote HTML and caller-owned content
+
+_Not in `2.0.0-rc.2`._ QuoteHighlight sanitises `quote`, `attribution` and `attributionTitle` with DOMPurify. Normal emphasis and attribution links survive; scripts, event handlers, unsafe URLs and embeds do not. The default policy also strips `target` and `referrerpolicy`, so an attribution link with `target="_blank"` now opens in the same tab. Check authored quotes before upgrading. Tab panel HTML and MegaMenu's `bannerDescription` still require caller-sanitised content, and custom syndicated-search endpoints remain a trust boundary. ([#1261](https://github.com/unisdr/undrr-mangrove/pull/1261), [#1258](https://github.com/unisdr/undrr-mangrove/pull/1258), [#1254](https://github.com/unisdr/undrr-mangrove/pull/1254))
+
+#### Data tables
+
+_Not in `2.0.0-rc.2`._ Data cells use the intended compact size, numeric cells align to the inline end, and code inside a cell retains its monospace font and compact size. Review custom cell overrides that compensated for the earlier cascade. ([#1279](https://github.com/unisdr/undrr-mangrove/pull/1279))
+
 #### Snackbar
 
 It keeps its props, but the toast renders as a Notice with a light surface instead of a filled coloured bar. If you hand-wrote Snackbar markup, the `.mg-snackbar__content` and `.mg-snackbar__icon` elements and the filled `.mg-snackbar__error`, `__warning`, `__info` and `__success` colour styles are gone — the modifier classes remain only as hooks — and `SnackbarIcons.jsx` is removed. Snackbar was not used in production before this change. `severity` now defaults to `info`, where it was previously unset. `info` and `success` toasts announce politely (`role="status"`), a toast with `openedMiliseconds` no longer takes focus, and focus returns to its previous element on close.
@@ -933,6 +981,8 @@ The number in generated prefixes (`<slug>-<n>-`) is now page-wide rather than th
 #### ShowMore
 
 _Not in `2.0.0-rc.2`._ The documented toggle is a `<button type="button">` rather than an `<a href="#">`. An anchor already in your markup keeps working — it is given `role="button"` and the Space handler — but new markup should use a button.
+
+_Not in `2.0.0-rc.2`._ React ShowMore owns only its toggle listeners, cleans them up on unmount and initialises items added after the first render. Use `labelCollapsed` (default “Show more”) and `labelOpen` (default “Show less”) for translated labels; `button_text` is legacy. The vanilla helper resolves a target from the nearest ancestor outward before falling back to the document, so repeated default-target instances no longer toggle the first block on the page. ([#1279](https://github.com/unisdr/undrr-mangrove/pull/1279), [#1238](https://github.com/unisdr/undrr-mangrove/pull/1238))
 
 #### Prototypes
 
@@ -1008,7 +1058,7 @@ Full token list: [Design decisions/Colors](https://mangrove.undrr.org/?path=/doc
 
 ## Feedback
 
-2.0 is in release candidate — feedback is wanted before it goes stable. Report issues at the tracker (**canonical location TBD — set before the stable release**; likely the [GitHub issues](https://github.com/unisdr/undrr-mangrove/issues) or the project's new GitLab home). To make a report actionable, include three things:
+2.0 is in release candidate; feedback is wanted before it goes stable. Report problems in [GitHub issues](https://github.com/unisdr/undrr-mangrove/issues). The organisation flag can hide issue listings even when issues exist, so retain the direct URL of a report. Include:
 
 1. **Consumption mode** — compiled CSS via CDN, compiled CSS via npm, or SCSS import.
 2. **Brand** — base UNDRR, or which sub-brand (PreventionWeb / IRP / MCR / DELTA).

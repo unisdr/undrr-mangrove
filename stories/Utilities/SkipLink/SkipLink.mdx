@@ -75,7 +75,7 @@ Note also that most production UNDRR pages render their header from Drupal Twig 
 ## React
 
 <Source language="jsx" code={`
-import { SkipLink } from '@undrr/undrr-mangrove';
+import { SkipLink } from '@undrr/undrr-mangrove/components/SkipLink.js';
 
 <SkipLink targetId="main-content" label="Skip to main content" />
 `} />
@@ -110,4 +110,5 @@ Colours come from `--mg-color-neutral-0` and `--mg-color-text`, the same theme-i
 
 ## Changelog
 
+- **1.0.1** — 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/SkipLink.js` instead of the package root. The root has never resolved on any published version — the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain — and 2.0.0 stops advertising it, so the subpath is the only form that works. Documentation only; the component is unchanged.
 - **1.0** — 2026-09-10 ([#1117](https://github.com/unisdr/undrr-mangrove/issues/1117)): New component. Visually hidden anchor that reveals on focus in normal flow, moves focus to its target, takes its label from props and works in right-to-left. `PageHeader` gained optional `skipLinkTarget` and `skipLinkLabel` props. The content hub and landing page patterns moved off their local `mg-demo-skip-link` class, which is gone.

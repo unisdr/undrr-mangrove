@@ -79,6 +79,9 @@ High-density data tables designed for dataset tables, asset and file listings, a
 
 <Canvas of={TableStories.DataTable} meta={TableStories} />
 
+The data body uses size 250 and its header and code cells use size 200. Cell
+modifiers also apply when combined with the small variant.
+
 ### Column alignment
 
 Table content starts at the logical inline edge by default, so text remains easy to scan in both left-to-right and right-to-left layouts. Apply `.mg-table__cell--center` only to content that benefits from centring, such as a compact status, and `.mg-table__cell--end` to numeric columns that should align for comparison. `.mg-table__cell--start` explicitly restores the default when a cell must override a broader alignment rule.
@@ -209,6 +212,8 @@ The table component handles all the responsive heavy lifting for you, so you can
 - Sort buttons get their accessible name from their text content. For richer context, consider adding visually-hidden text (e.g. `<span class="mg-u-sr-only">Sort by </span>Filename`)
 
 ## Changelog
+
+- **2.4.1** — 2026-09-20 ([#1215](https://github.com/unisdr/undrr-mangrove/issues/1215)): Fixed data-table body and code-cell font sizes losing to the base cell rule. Combined small/data tables retain compact headers and smaller code cells. Numeric cell alignment now also wins over the base start alignment.
 
 - **2.4** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added the `.mg-table--data` high-density data table variant, sticky table headers (`.mg-table__th--sticky`), sortable header buttons with accessible indicator rotation (`.mg-table__th--sortable`), right-aligned tabular numeric cells (`.mg-table__td--numeric`), and monospace code/path cells (`.mg-table__td--code`).
 - **2.3** — 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Improved cell spacing with a distinct compact density and natural text wrapping. The React scroll option now creates a labelled, keyboard-focusable scroll region while preserving native table semantics; existing table modifiers remain supported.

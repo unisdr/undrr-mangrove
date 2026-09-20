@@ -32,6 +32,30 @@ describe('Hero — background layout (default)', () => {
     expect(section).toHaveStyle(`background-image: url(${baseItem.imgback})`);
   });
 
+  // Below 900px the background layout reserves --mg-hero-banner-block-size
+  // for a banner that takes its photograph from the element's own computed
+  // background-image. With no photograph there is nothing to inherit, and the
+  // reserved band would be a third of a phone screen of flat brand colour
+  // above the copy. No selector can ask whether a background image resolved,
+  // so the component states it and hero.scss collapses the banner. The inline
+  // style is also dropped rather than left to emit `url(undefined)`, which
+  // every image-less hero used to request and 404.
+  // See unisdr/undrr-mangrove#1264.
+  it('marks an image-less hero and emits no background-image', () => {
+    const { imgback, ...noImage } = baseItem;
+    const { container } = render(<Hero data={[noImage]} />);
+    const section = container.querySelector('.mg-hero');
+    expect(section).toHaveClass('mg-hero--no-image');
+    expect(section.getAttribute('style')).toBeNull();
+  });
+
+  it('does not mark a hero that has an image', () => {
+    const { container } = render(<Hero data={[baseItem]} />);
+    expect(container.querySelector('.mg-hero')).not.toHaveClass(
+      'mg-hero--no-image'
+    );
+  });
+
   it('renders a variant class', () => {
     const { container } = render(
       <Hero data={[baseItem]} variant="secondary" />

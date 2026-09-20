@@ -170,3 +170,14 @@ $font-path-noto-sans-arabic: "https://assets.undrr.org/fonts/noto-sans-arabic/v1
 
   font-family: var(--mg-font-family-text);
 }
+
+// Arabic joins letters: Latin tracking must never separate or overlap them.
+// Match the element's inherited language, not an Arabic ancestor, so explicit
+// non-Arabic islands keep their own tracking. Important is intentional: this
+// script constraint must beat later component rules and consumer import order.
+// Include generated labels (for example pre[data-language]::after).
+:lang(ar),
+:lang(ar)::before,
+:lang(ar)::after {
+  letter-spacing: normal !important;
+}

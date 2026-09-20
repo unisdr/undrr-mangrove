@@ -171,16 +171,20 @@ describe('Tab wrapper lifecycle', () => {
     const remove = window.removeEventListener;
     jest
       .spyOn(window, 'addEventListener')
-      .mockImplementation(function (type, handler, options) {
-        added.add(handler);
-        return add.call(this, type, handler, options);
-      });
+      .mockImplementation(
+        function mockAddEventListener(type, handler, options) {
+          added.add(handler);
+          return add.call(this, type, handler, options);
+        }
+      );
     jest
       .spyOn(window, 'removeEventListener')
-      .mockImplementation(function (type, handler, options) {
-        added.delete(handler);
-        return remove.call(this, type, handler, options);
-      });
+      .mockImplementation(
+        function mockRemoveEventListener(type, handler, options) {
+          added.delete(handler);
+          return remove.call(this, type, handler, options);
+        }
+      );
     const result = render(<Tab tabdata={tabdata} />);
     expect(added.size).toBeGreaterThan(0);
     result.unmount();

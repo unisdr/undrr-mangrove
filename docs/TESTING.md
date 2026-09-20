@@ -112,6 +112,84 @@ it('loads data on mount', async () => {
 });
 ```
 
+## Play functions with the Storybook test runner
+
+A story's `play` function runs in a real browser, so it can assert the things
+jsdom cannot represent: computed style, box geometry, scroll overflow, focus
+order after a real click. Most of the play functions in this library exist for
+exactly that reason — a jsdom copy of them would pass on a completely unstyled
+component.
+
+The test runner drives a headless Chromium over a served Storybook. It runs
+every story twice over: a smoke test that the story renders without error, and,
+where one exists, the `play` function with its assertions.
+
+```bash
+# Build the Storybook the runner will drive
+yarn build
+
+# Serve it, then run the play functions against it
+yarn serve-storybook &
+yarn test-storybook
+
+# One story or one file
+yarn test-storybook Table.stories
+
+# Stop the server when you are done
+kill %1
+```
+
+Arguments go straight after the script name. Yarn 4 does not need `npm`'s `--`
+separator and passes one through literally, so `yarn test-storybook -- Table`
+hands the runner a bare `--` and does not filter anything.
+
+`yarn test-storybook` needs a Storybook already running; it will not start one.
+`yarn serve-storybook` serves the built Storybook on port **6099** and
+`yarn test-storybook` points there, so the two pair up with no arguments. 6006
+is deliberately left to `yarn storybook`: sharing the port would make the server
+fail on `EADDRINUSE` while the runner quietly tested the dev server instead of
+the build. To run the play functions against a dev server on purpose:
+
+```bash
+yarn storybook           # in one shell
+yarn test-storybook --url http://127.0.0.1:6006
+```
+
+The runner needs its browser once per machine:
+
+```bash
+yarn run playwright install --with-deps chromium
+```
+
+CI runs the same commands in the `Build and Deploy` workflow, on every push to a
+pull request. A failing assertion fails the build.
+
+### What cannot be asserted this way
+
+Play functions that depend on the network are only as reliable as the service
+they call, and one here does.
+
+`CookieConsentBanner`'s "Rendering check" loads three assets from the live
+`assets.undrr.org` and asserts on the third-party bundle's internals —
+`window.initializeCookieBanner`, `#cc-main .cm`, `#cc-main [data-role="all"]`
+and `getComputedStyle('#cc-main').position`. That is a deliberate trade: it is
+the only check in the repository that can tell a working consent bar from a
+broken one, and measured over three full runs it took about 978ms with no
+flakes behind Cloudflare. It is also the reason the runner's test timeout is
+raised to 60 seconds.
+
+**Know what it costs before you debug a mystery red build.** `storybook.yml`
+has no `paths:` filter on its pull-request trigger, so this story gates *every*
+pull request in the repository; and the `deploy` job has `needs: build`, so
+while `assets.undrr.org` is down, mangrove.undrr.org cannot be deployed either.
+UNDRR ops can also change the markup or the option names under the same `/v1/`
+path without touching this repository, and the check would go red here with
+nothing in the diff to explain it. If that is what you are looking at, the fix
+is in the CDN bundle or in this story's selectors, not in the component.
+
+If a story genuinely cannot run headlessly, give it the `!test` tag and record
+the reason in the story rather than leaving a silent failure.
+
 ## Visual testing with Chromatic
 
 Visual testing is handled automatically through our CI/CD pipeline.

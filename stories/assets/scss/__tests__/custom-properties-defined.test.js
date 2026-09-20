@@ -44,6 +44,12 @@ const INPUT_HOOKS = {
   '--mg-legend-tick-pos': 'Legend tick position, set inline per tick',
   '--mg-on-this-page-nav-offset':
     'Page-level docking offset for fixed headers, set by the consuming page',
+  // Only the radius is genuinely undefined in the stylesheet. The height hook
+  // is read with its default where it is used, but .mg-segmented-control--small
+  // does declare it, so the bundle defines it and it needs no entry here —
+  // listing it would claim a hook is undefined when it is not.
+  '--mg-segmented-control-radius':
+    'Segmented control end radius, set by a wrapper',
   // The switch reads each hook with its default where it is used, so a
   // wrapper or theme can set it; declaring it on .mg-switch would shadow that.
   // Geometry hooks. --mg-switch-size is the one a consumer usually sets; the

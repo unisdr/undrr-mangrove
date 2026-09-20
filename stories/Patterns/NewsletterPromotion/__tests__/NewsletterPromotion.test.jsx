@@ -1,11 +1,29 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { CompactSignup, ServiceError } from '../NewsletterPromotion.stories';
+import {
+  AfterArticle,
+  CompactSignup,
+  ServiceError,
+} from '../NewsletterPromotion.stories';
 
 // Play functions run in Storybook; these tests exercise the rendered form.
 jest.mock('storybook/test', () => ({}));
 
 const context = { globals: { locale: 'english' } };
+
+test.each([
+  ['compact signup', CompactSignup],
+  ['after article', AfterArticle],
+])('%s uses the accessible blue-50 promotion surface', (_name, story) => {
+  const { container } = render(story.render({}, context));
+
+  expect(
+    container.querySelector('.mg-u-background-color--blue-50')
+  ).toBeInTheDocument();
+  expect(
+    container.querySelector('.mg-u-background-color--blue-100')
+  ).toBeNull();
+});
 
 test('validates email, simulates confirmation, and restores focus for another address', async () => {
   render(CompactSignup.render({ response: 'success' }, context));

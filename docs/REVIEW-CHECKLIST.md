@@ -26,9 +26,11 @@ See [Component standards](https://mangrove.undrr.org/?path=/docs/contributing-co
 - [ ] Keyboard navigation works (Tab, Enter, Escape, arrow keys as relevant)
 - [ ] Focus states use `@include mg-focus-ring;` or `@include mg-focus-ring-inset;` to ensure dual-band contrast and forced-colors mode visibility
 - [ ] Icon-only buttons include an accessible `aria-label` attribute (WCAG 4.1.2) and meet touch target minimums (24x24px WCAG 2.5.8 minimum, 36x36px standard)
-- [ ] Color contrast meets WCAG 2.2 AA (4.5:1 for text, 3:1 for UI elements). A pair that cannot meet it is not waived silently: record it, with its measured value and the reason, in `WCAG_EXCEPTIONS`/`PERCEPTUAL_EXCEPTIONS` in `stories/assets/scss/__tests__/tokens-contract.test.js`, and describe the decision in [`docs/COLOUR-CONTRAST-METHODOLOGY.md`](COLOUR-CONTRAST-METHODOLOGY.md#recorded-exceptions-components-that-still-put-text-on-the-orange) if it affects a brand colour
-- [ ] No text sits on the orange accent surfaces (`orange-800`, `orange-900`, and `secondary`, `tag-accent`, `tag-accent--hover`, `hero--secondary`, which resolve to them). The orange is a non-text accent: borders, rules, icon fills and blocks with no copy over them. No text colour clears AA on it — see [the orange accent carries no text](COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text)
-- [ ] List semantics: a `<ul>` or `<ol>` whose markers are hidden uses `@include mg-list-unmarked;` (which emits `list-style: none` then `list-style-type: ""`), never a bare `list-style: none`. The same applies to any `<li>` rule that hides its own marker: `list-style-type` is inherited, but an item setting `none` wins over the list's empty string, and it is the item's marker Safari inspects. Safari drops the implicit `list` role from a markerless list, so the count stops being announced. Do not add `role="list"` to the markup instead: consumers hand-write these lists, only a fix on the class reaches all of them, and `jsx-a11y/no-redundant-roles` flags the attribute in our own examples. A list that carries a different ARIA role on purpose (`tree`, `group`, `menu`, `listbox`, `tablist`) is exempt — that role already replaces list semantics
+- [ ] Color contrast meets WCAG 2.2 AA (4.5:1 for text, 3:1 for UI elements). A pair that cannot meet it is not waived silently: record it, with its measured value and the reason, in `WCAG_EXCEPTIONS`/`PERCEPTUAL_EXCEPTIONS` in `stories/assets/scss/__tests__/tokens-contract.test.js`, and describe the decision in [`docs/COLOUR-CONTRAST-METHODOLOGY.md`](COLOUR-CONTRAST-METHODOLOGY.md#the-register) if it affects a brand colour
+- [ ] No text sits on the orange accent surfaces (`orange-800`, `orange-900`, and `secondary`, `tag-accent`, `tag-accent--hover`, `hero--secondary`, which resolve to them), and none of them is used as ink. The orange is a non-text accent: borders, rules, icon fills and blocks with no copy over them. No text colour clears AA on it — see [the orange accent carries no text](COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text)
+- [ ] An orange rule is decoration, not identification. `orange-900` is 2.95 against white and 2.66 against `orange-50`, both under the 3:1 of SC 1.4.11, so an orange border, underline or marker must never be the only thing that identifies a component or distinguishes one of its states. The fill, the label, the weight or the position has to carry that
+- [ ] A theme that re-points a colour role has been checked against the pair the role lands on, not only against the value it came from. #1243 was a theme aiming the primary button's hover at the accent: correct markup, documented tokens, and a 2.95:1 result that no component-level review would have caught
+- [ ] List semantics: a `<ul>` or `<ol>` whose markers are hidden uses `@include mg-list-unmarked;` (which emits `list-style: none` then `list-style-type: ""`), never a bare `list-style: none`. The same applies to any `<li>` rule that hides its own marker: `list-style-type` is inherited, but an item setting `none` wins over the list's empty string, and it is the item's marker Safari inspects. Safari drops the implicit `list` role from a markerless list, so the count stops being announced. Do not add `role="list"` to the markup instead: consumers hand-write these lists, so only a fix on the class reaches all of them, and once the mixin has kept the implicit role the attribute is redundant — it restates a role the element already has, and it would have to be repeated on every hand-written list forever to do the job the stylesheet already does once. A list that carries a different ARIA role on purpose (`tree`, `group`, `menu`, `listbox`, `tablist`) is exempt — that role already replaces list semantics
 - [ ] jest-axe test included in the test file
 - [ ] Heading hierarchy is logical (no skipped levels)
 - [ ] Images and icons have appropriate alt text (empty `alt=""` for decorative images)
@@ -86,8 +88,8 @@ See the RTL support section in [Component standards](https://mangrove.undrr.org/
 - [ ] `ComponentName.fromElement.js` exports a function that extracts props from `data-mg-*` attributes
 - [ ] `ComponentName.hydrate.js` barrel file uses `createHydrator`
 - [ ] `ComponentName.fromElement.test.js` verifies prop extraction
-- [ ] Webpack entry added in `webpack.config.js`
-- [ ] Export added in `src/index.js`
+- [ ] Webpack entry added in `webpack.config.js` — this is what publishes the component to npm and the CDN
+- [ ] Export added in `src/index.js` (the repository entry point; it publishes nothing on its own, see unisdr/undrr-mangrove#1252)
 
 See [Adding hydration support](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-hydration--docs) for the full pattern.
   - Source: [`HYDRATION-AUTHORING.md`](HYDRATION-AUTHORING.md)
@@ -95,7 +97,10 @@ See [Adding hydration support](https://mangrove.undrr.org/?path=/docs/contributi
 ## AI discoverability and manifests
 
 - [ ] If component HTML markup or CSS classes changed, updated `scripts/ai-manifest/component-data.js`
+- [ ] The curated `description` in `component-data.js` still matches what the component does — it is published ahead of the component's docblock, so it is what an agent grepping `index.json` reads. A description over 200 characters carries a one-sentence `summary` for the index listing
 - [ ] If new utility classes were created, indexed in `scripts/ai-manifest/css-utilities.js`
+- [ ] If the component gained or renamed a CSS custom property, described it in `scripts/ai-manifest/custom-properties.js`
+- [ ] If a CSS custom property left the public API, `MIN_PROPERTIES` came down with it and the CHANGELOG says so
 - [ ] Component `## Changelog` in MDX follows standard format and is automatically indexed in `ai-components/{id}.json` and `releases.json`
 - [ ] `yarn validate-manifest` passes with 0 errors
 

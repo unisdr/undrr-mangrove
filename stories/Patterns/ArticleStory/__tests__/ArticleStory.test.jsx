@@ -13,6 +13,13 @@ test('the headline carries the page, with or without a header image', () => {
   ).toBeVisible();
 });
 
+test('opts the reading column into the rich-content boundary', () => {
+  const { container } = render(<ArticleStory heroImage="none" />);
+  expect(container.querySelector('.mg-reading__article')).toHaveClass(
+    'mg-content'
+  );
+});
+
 test('links the source organisations in the byline', () => {
   const { container } = render(<ArticleStory heroImage="none" />);
   const header = container.querySelector('.mg-demo-article-header');
@@ -55,8 +62,8 @@ test('the headline sits above the header image, not the other way round', () => 
   const header = container.querySelector('.mg-demo-article-header');
   const heading = within(header).getByRole('heading', { level: 1 });
   const image = within(header).getByRole('img');
-  // eslint-disable-next-line no-bitwise
   expect(
+    // eslint-disable-next-line no-bitwise -- compareDocumentPosition returns a bitmask
     heading.compareDocumentPosition(image) & Node.DOCUMENT_POSITION_FOLLOWING
   ).toBeTruthy();
 });

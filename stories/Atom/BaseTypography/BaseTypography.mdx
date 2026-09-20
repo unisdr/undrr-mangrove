@@ -75,6 +75,25 @@ export const getCaptionForLocaleHeading = locale => {
 Base HTML typography elements with Mangrove baseline styling. Use these tags
 without extra utility classes unless a pattern calls for them.
 
+## Rich content boundary
+
+Wrap long-form or WYSIWYG-authored markup in `.mg-content`. It is the opt-in
+boundary for semantic element defaults: prose links are underlined at rest, and
+blockquotes and citations receive their Mangrove typography. Navigation,
+buttons, cards and other component controls stay outside this boundary and own
+their presentation themselves.
+
+```html
+<article class="mg-content">
+  <p>
+    Read the
+    <a href="/report">full report</a>
+    .
+  </p>
+  <blockquote>Quoted material.</blockquote>
+</article>
+```
+
 <Anchor storyId="foundation-typography-basetypography--abbreviation" />
 
 ## Abbreviation
@@ -708,6 +727,8 @@ export const getCaptionForLocaleList = locale => {
 };
 
 ## Changelog
+
+- **2.4.1** — 2026-09-20 ([#1273](https://github.com/unisdr/undrr-mangrove/issues/1273)): Added `.mg-content` as the opt-in long-form and WYSIWYG typography boundary. Paragraph links inside it are underlined at rest; blockquote and cite styling now supports it alongside the existing `.mg-body` alias. Navigation, buttons and card links are not affected.
 
 - **2.4.0** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added the `.mg-accordion` and `.mg-accordion--flush` patterns for grouped `<details>` disclosures with flush border dividers, animated rotating chevrons, and nested layer support.
 - **2.3.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography now follows the computed language of each element rather than the page root, so a `lang="en"` island inside an Arabic page renders in the Latin families.

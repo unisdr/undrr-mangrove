@@ -16,7 +16,7 @@ export function TopBarItem({
   itemListRef,
   index,
 }) {
-  let isActive = index === activeItem;
+  const isActive = index === activeItem;
   // The panel below is a disclosure, not a menu: announce expanded state
   // only where a panel actually exists.
   const hasPanel = Boolean(section && section.items);

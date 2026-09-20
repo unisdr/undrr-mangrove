@@ -32,6 +32,24 @@ describe('mgShowMore', () => {
   });
 
   describe('idempotency', () => {
+    it('cleanup only removes handlers owned by its call and can be repeated', () => {
+      const btn = setupButton();
+      const target = document.querySelector('.mg-show-more--container');
+      const cleanup = mgShowMore(btn);
+      const cleanupNoop = mgShowMore(btn);
+      cleanupNoop();
+      btn.click();
+      expect(target).toHaveClass('mg-show-more--collapsed');
+      cleanup();
+      cleanup();
+      expect(btn).not.toHaveAttribute('data-mg-show-more-initialized');
+      expect(btn).not.toHaveAttribute('aria-controls');
+      btn.click();
+      expect(target).toHaveClass('mg-show-more--collapsed');
+      mgShowMore(btn);
+      expect(target).not.toHaveClass('mg-show-more--collapsed');
+    });
+
     it('does not double-initialize when called twice', () => {
       const btn = setupButton();
       mgShowMore();
@@ -51,6 +69,21 @@ describe('mgShowMore', () => {
   });
 
   describe('missing target guard', () => {
+    it('can retry when the target arrives later', () => {
+      document.body.innerHTML = '<button data-mg-show-more>Show more</button>';
+      const button = document.querySelector('button');
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      mgShowMore(button);
+      expect(button).not.toHaveAttribute('data-mg-show-more-initialized');
+      const target = document.createElement('div');
+      target.className = 'mg-show-more--container';
+      document.body.append(target);
+      mgShowMore(button);
+      expect(target).toHaveClass('mg-show-more--collapsed');
+      expect(button.getAttribute('aria-controls')).toBe(target.id);
+      warn.mockRestore();
+    });
+
     it('does not throw and warns when target element is missing', () => {
       document.body.innerHTML = `
         <button data-mg-show-more data-mg-show-more-target=".nonexistent">Show more</button>
@@ -230,6 +263,83 @@ describe('mgShowMore', () => {
       expect(target.id).not.toBe(taken);
       expect(target.id).toMatch(/^mg-show-more-target-\d+$/);
       expect(document.querySelectorAll(`#${target.id}`)).toHaveLength(1);
+      expect(btn.getAttribute('aria-controls')).toBe(target.id);
+    });
+  });
+
+  // The revealed content need not be a sibling or descendant of its toggle,
+  // so the lookup cannot be confined to a container. It can be ordered:
+  // nearest ancestor that contains a match wins, falling back to the document.
+  // See #1228.
+  describe('two instances on one page', () => {
+    it('gives each default-target toggle its own container', () => {
+      document.body.innerHTML = `
+        <section id="one">
+          <div class="mg-show-more--container"><p>First block</p></div>
+          <button data-mg-show-more>Show more</button>
+        </section>
+        <section id="two">
+          <div class="mg-show-more--container"><p>Second block</p></div>
+          <button data-mg-show-more>Show more</button>
+        </section>
+      `;
+      const [first, second] = document.querySelectorAll('[data-mg-show-more]');
+      const [firstTarget, secondTarget] = document.querySelectorAll(
+        '.mg-show-more--container'
+      );
+      mgShowMore();
+
+      expect(first.getAttribute('aria-controls')).toBe(firstTarget.id);
+      expect(second.getAttribute('aria-controls')).toBe(secondTarget.id);
+      expect(firstTarget.id).not.toBe(secondTarget.id);
+
+      // Init clicks each toggle once, so both start collapsed.
+      expect(firstTarget.classList.contains('mg-show-more--collapsed')).toBe(
+        true
+      );
+      expect(secondTarget.classList.contains('mg-show-more--collapsed')).toBe(
+        true
+      );
+
+      second.click();
+
+      expect(secondTarget.classList.contains('mg-show-more--collapsed')).toBe(
+        false
+      );
+      expect(firstTarget.classList.contains('mg-show-more--collapsed')).toBe(
+        true
+      );
+    });
+
+    it('still resolves a target that is not a sibling of the toggle', () => {
+      document.body.innerHTML = `
+        <div class="detached-content"><p>Content</p></div>
+        <section id="elsewhere">
+          <button data-mg-show-more data-mg-show-more-target=".detached-content">Show more</button>
+        </section>
+      `;
+      const btn = document.querySelector('[data-mg-show-more]');
+      const target = document.querySelector('.detached-content');
+      mgShowMore();
+
+      expect(btn.getAttribute('aria-controls')).toBe(target.id);
+
+      btn.click();
+      expect(target.classList.contains('mg-show-more--collapsed')).toBe(false);
+    });
+
+    // A toggle with no parent has no ancestors to walk, so the lookup has to
+    // fall through to the document exactly as it did before.
+    it('falls back to the document for a toggle outside it', () => {
+      document.body.innerHTML = `<div class="detached-content"><p>Content</p></div>`;
+      const btn = document.createElement('button');
+      btn.setAttribute('data-mg-show-more', '');
+      btn.dataset.mgShowMoreTarget = '.detached-content';
+      expect(btn.parentElement).toBeNull();
+
+      mgShowMore(btn);
+
+      const target = document.querySelector('.detached-content');
       expect(btn.getAttribute('aria-controls')).toBe(target.id);
     });
   });

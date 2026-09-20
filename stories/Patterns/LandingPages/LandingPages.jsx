@@ -92,6 +92,7 @@ const words = {
       title: 'Global assessment report on disaster risk reduction',
       intro:
         'The flagship report on how disaster risk is changing worldwide, and what reduces it.',
+      reportLink: 'Read the full Global Assessment Report.',
       sections: [
         [
           'What the report covers',
@@ -209,6 +210,7 @@ const words = {
       title: 'التقرير التقييمي العالمي عن الحد من مخاطر الكوارث',
       intro:
         'التقرير الرئيسي عن كيفية تغيّر مخاطر الكوارث عالمياً، وما الذي يحد منها.',
+      reportLink: 'اقرأ التقرير التقييمي العالمي كاملاً.',
       sections: [
         [
           'ما يغطيه التقرير',
@@ -412,11 +414,16 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                     text: heading,
                   }))}
                 />
-                <div className="mg-reading__article">
+                <div className="mg-reading__article mg-content">
                   {page.sections.map(([heading, body], index) => (
                     <section key={heading} id={`${id}-section-${index}`}>
                       <h2>{heading}</h2>
-                      <p>{body}</p>
+                      <p>
+                        {body}{' '}
+                        {index === page.sections.length - 1 && (
+                          <a href={links.publication}>{page.reportLink}</a>
+                        )}
+                      </p>
                     </section>
                   ))}
                 </div>

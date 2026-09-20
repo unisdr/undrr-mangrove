@@ -56,9 +56,9 @@ export function StatsCardItem({
         <strong className={`${baseClass}__bottom-label`}>{bottomLabel}</strong>
       )}
       {summaryText && (
-        // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
         <p
           className={`${baseClass}__summary`}
+          // eslint-disable-next-line react/no-danger -- sanitized HTML contract; DOMPurify sanitizes caller input
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(summaryText),
           }}

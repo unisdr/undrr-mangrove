@@ -1,0 +1,154 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as SegmentedControlStories from './SegmentedControl.stories';
+
+<Meta of={SegmentedControlStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# Segmented control
+
+A compact, mutually exclusive choice drawn as one row of adjoining segments. Use it when a small set of options changes what a single view shows.
+
+## Overview
+
+The segmented control is a presentation layer over a native radio group. The markup is a `<fieldset>`, a `<legend>` and one `<input type="radio">` per segment, each followed by its own `<label>`; the CSS hides the inputs from sight and draws the labels as segments. Nothing in it is JavaScript, and nothing in it is ARIA.
+
+That matters more than the appearance. Because the control is really a radio group, arrow-key navigation, the "N of M" announcement, the checked state, form submission and right-to-left traversal are all the browser's, and are correct without a line of code from the consuming app.
+
+## When to use
+
+- A small set (two to five) of mutually exclusive options that change what one view shows: a map's data source, a chart's unit, a list's sort order.
+- The options are short labels, and showing them all at once helps the user compare them.
+
+## When not to use
+
+- **Each option reveals its own panel.** That is [Tabs](?path=/docs/components-tabs--docs), and the ARIA tabs pattern expects a `tabpanel` for every tab. A `role="tablist"` with no panel is a promise to assistive technology that the page does not keep.
+- **The options combine.** Filters that stack are [Chips](?path=/docs/components-buttons-chips--docs) or checkboxes.
+- **More than about five options, or long labels.** Use a [Select](?path=/docs/components-forms-select--docs).
+- **The choice is on or off.** Use the `.mg-switch` toggle documented with [Checkbox](?path=/docs/components-forms-checkbox--docs).
+- **A vertical list of options, or options that need help text.** That is an ordinary [Radio](?path=/docs/components-forms-radio--docs) group in a [FormGroup](?path=/docs/components-forms-formgroup--docs).
+
+<Canvas of={SegmentedControlStories.Default} />
+
+<Controls of={SegmentedControlStories.Default} />
+
+## Vanilla HTML
+
+The control needs no React and no JavaScript. Copy this markup, give every input the same `name`, and keep each `<label>` as the immediate next sibling of its input — the whole presentation hangs off that adjacency.
+
+```html
+<fieldset class="mg-segmented-control">
+  <legend class="mg-segmented-control__legend">Map layer</legend>
+  <div class="mg-segmented-control__group">
+    <input
+      class="mg-segmented-control__input"
+      type="radio"
+      id="layer-depth"
+      name="layer"
+      value="depth"
+      checked
+    />
+    <label class="mg-segmented-control__label" for="layer-depth">Depth</label>
+    <input
+      class="mg-segmented-control__input"
+      type="radio"
+      id="layer-frequency"
+      name="layer"
+      value="frequency"
+    />
+    <label class="mg-segmented-control__label" for="layer-frequency">
+      Frequency
+    </label>
+    <input
+      class="mg-segmented-control__input"
+      type="radio"
+      id="layer-exposure"
+      name="layer"
+      value="exposure"
+    />
+    <label class="mg-segmented-control__label" for="layer-exposure">
+      Exposure
+    </label>
+  </div>
+</fieldset>
+```
+
+React to the choice with one listener on the group:
+
+```js
+document
+  .querySelector('.mg-segmented-control')
+  .addEventListener('change', event => {
+    showLayer(event.target.value);
+  });
+```
+
+## The legend
+
+The legend is the group's accessible name, and a screen reader announces it before the segment the user lands on: "Map layer, group, Depth, radio button, selected, 1 of 3". Give it a real name even when the page has no room for one.
+
+Where the row's purpose is obvious on screen (a map overlay, a chart header), add `mg-u-sr-only` to the legend, or pass `hideLegend` in React. The legend is still in the accessibility tree and still announced; it is only painted away.
+
+<Canvas of={SegmentedControlStories.HiddenLegend} />
+
+Do not replace the legend with an `aria-label` on the fieldset. A `<legend>` is what browsers and assistive technology agree on for a group name, and it is what survives translation of the page.
+
+A group may start with nothing chosen. It is still one tab stop, it lands on the first segment, and arriving there selects nothing.
+
+<Canvas of={SegmentedControlStories.NoSelection} />
+
+## Sizes and layout
+
+`mg-segmented-control--small` (`size="small"`) gives a 36px row for a toolbar, a table row or a map overlay. The default is 44px, the recommended touch target.
+
+<Canvas of={SegmentedControlStories.Small} />
+
+`mg-segmented-control--full-width` (`fullWidth`) stretches the segments to share the control's inline size equally, for a panel header or a mobile row. Because they always share the width, a full-width row never wraps — it shrinks, and long labels break mid-word at narrow widths. Use it with short labels.
+
+<Canvas of={SegmentedControlStories.FullWidth} />
+
+A segment is disabled by disabling its input, exactly as with any radio.
+
+<Canvas of={SegmentedControlStories.WithDisabledSegment} />
+
+In React, pass `value` and `onChange` to control the selection, or `defaultValue` to leave it to the DOM.
+
+<Canvas of={SegmentedControlStories.Controlled} />
+
+## Accessibility
+
+- The control is a radio group, so the whole group is one tab stop. Where it lands, measured in a browser:
+  - With a selection, Tab moves to the selected segment.
+  - With **no** selection, Tab moves to the first segment and selects nothing — so a switcher with no default is still reachable, and arriving at it does not silently choose an option.
+  - If the selected segment is disabled, Tab moves to the first enabled segment instead.
+  - A group whose fieldset is disabled is skipped by Tab entirely.
+- The arrow keys move between segments and select as they go, wrapping at both ends. Home and End do nothing: they are not radio-group keys in any browser, and nothing here adds them. There is no roving `tabindex` to maintain, because there is no custom widget.
+- The inputs are clipped, never `display: none` or `visibility: hidden`, so they keep their focus, their role and their place in the tab order.
+- Focus is drawn on the visible label with the shared `mg-focus-ring` mixin, so the indicator matches every other control in the library. Under forced colours the mixin's own colours cannot survive — the component replaces its white separator band with a `Highlight` outline, so the ring stays visible on a selected segment too.
+- Selected segments use the filled primary button's colour pair, which each theme has already checked for contrast against its own brand colour. **The hover fill does not clear that bar in every theme:** in PreventionWeb and IRP it resolves to `orange-900`, 2.95:1 under the white label, which is under SC 1.4.3. [#1249](https://github.com/unisdr/undrr-mangrove/pull/1249) re-points those two tokens and removes the failure; this component inherits the fix without changing.
+- There is no error or invalid state. A required choice that has not been made cannot be marked here — use a [Radio](?path=/docs/components-forms-radio--docs) group in a [FormGroup](?path=/docs/components-forms-formgroup--docs), which has one.
+- Forced-colours mode forces every author background to `Canvas`, which would leave the selected segment unmarked, so the segments opt out with `forced-color-adjust: none` and repaint themselves: a `ButtonText` boundary, the `Highlight` pair on the selected segment, `GrayText` on a disabled one, and a `Highlight` focus ring in place of the separator band.
+- The ends of the row are rounded with logical corner properties, so under `dir="rtl"` the rounding mirrors with the reading order and no RTL rule is needed.
+- On the default layout the row wraps to a second line rather than shrinking its labels, so at 200% zoom and at 320 CSS px the labels stay whole and the page never scrolls sideways. `--full-width` is the exception: its segments always share the width, so they shrink instead of wrapping and long labels break mid-word ("Precipitatio / n" at 320 CSS px). Keep `--full-width` for short labels; a narrow row with long ones belongs on the default layout.
+
+## CSS classes
+
+| Class                              | Purpose                                                |
+| ---------------------------------- | ------------------------------------------------------ |
+| `mg-segmented-control`             | The `<fieldset>`                                       |
+| `mg-segmented-control--full-width` | Segments share the full inline size                    |
+| `mg-segmented-control--small`      | 36px compact row                                       |
+| `mg-segmented-control__legend`     | The `<legend>`; add `mg-u-sr-only` to hide it visually |
+| `mg-segmented-control__group`      | Flex row holding the inputs and labels                 |
+| `mg-segmented-control__input`      | The visually hidden `<input type="radio">`             |
+| `mg-segmented-control__label`      | The visible segment                                    |
+
+## See also
+
+- [Radio](?path=/docs/components-forms-radio--docs) — the same semantics in the standard vertical presentation
+- [FormGroup](?path=/docs/components-forms-formgroup--docs) — fieldset and legend for an ordinary group of controls
+- [Tabs](?path=/docs/components-tabs--docs) — when each choice has its own panel
+
+## Changelog
+
+- **1.0** — 2026-09-18 ([#1188](https://github.com/unisdr/undrr-mangrove/issues/1188)): Initial release. Segmented presentation of a radio group, CSS only, with `--small` and `--full-width` modifiers and forced-colours support. Known at release: no error state (use Radio in a FormGroup), `--full-width` shrinks rather than wraps, and the hover fill is 2.95:1 in PreventionWeb and IRP until [#1249](https://github.com/unisdr/undrr-mangrove/pull/1249) re-points the token.

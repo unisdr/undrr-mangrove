@@ -104,7 +104,7 @@ test('restores a stable story route on reload and reveals an offscreen active se
   HTMLElement.prototype.scrollBy = scrollBy;
   const bounds = jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
-    .mockImplementation(function () {
+    .mockImplementation(function mockGetBoundingClientRect() {
       return this.hasAttribute('data-hub-current')
         ? { left: 350, right: 440 }
         : { left: 0, right: 320 };
@@ -136,7 +136,7 @@ test('reveals the selected section after delayed label resizing and disconnects 
   let loaded = false;
   const bounds = jest
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
-    .mockImplementation(function () {
+    .mockImplementation(function mockGetBoundingClientRect() {
       return this.hasAttribute('data-hub-current') && loaded
         ? { left: -20, right: 87 }
         : { left: 16, right: 344 };

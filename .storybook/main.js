@@ -60,7 +60,10 @@ export default {
     // Regular SCSS files (component styles, partials, etc.)
     config.module.rules.push({
       test: /\.scss$/,
-      exclude: [/node_modules/, /stories\/assets\/scss\/style(-[\w-]+)?\.scss$/],
+      exclude: [
+        /node_modules/,
+        /stories\/assets\/scss\/style(-[\w-]+)?\.scss$/,
+      ],
       use: ['style-loader', 'css-loader', 'sass-loader'],
       include: path.resolve(currentDirPath, '../'),
     });
@@ -75,15 +78,15 @@ export default {
 
     config.resolve.fallback = {
       ...config.resolve.fallback,
-      "tty": false,
-      "fs": false,
-      "path": false,
-      "os": false,
-      "process": false,
-      "buffer": false,
-      "util": false,
-      "stream": false,
-      "crypto": false,
+      tty: false,
+      fs: false,
+      path: false,
+      os: false,
+      process: false,
+      buffer: false,
+      util: false,
+      stream: false,
+      crypto: false,
     };
 
     // Provide process global for browser compatibility

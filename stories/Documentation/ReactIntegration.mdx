@@ -47,16 +47,35 @@ yarn add react react-dom
 
 ## Importing components
 
-Import components by name from the package root:
+**Import one component per subpath. There is no package root.**
 
 ```jsx
-import { StatsCard, Pager, ShareButtons } from '@undrr/undrr-mangrove';
+import { StatsCard } from '@undrr/undrr-mangrove/components/StatsCard.js';
+import { Pager } from '@undrr/undrr-mangrove/components/Pager.js';
+import ShareButtons from '@undrr/undrr-mangrove/components/ShareButtons.js';
 ```
 
-You can also import the hydration runtime if you need to mount components into server-rendered HTML containers:
+`import { StatsCard } from '@undrr/undrr-mangrove'` does not work, and never
+has on any published version. The tarball ships no bundled entry point — only
+the `components/`, `css/`, `scss/`, `js/`, `fonts/` and `error-pages/`
+directories — so a bare root import fails to resolve. From 2.0.0 the package
+stops advertising one at all
+([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)). Each component
+is its own bundle, which is also what keeps a page from downloading the whole
+library to use one card.
+
+**Check whether the binding is named or default.** It is not uniform. Most
+bundles export the component under its own name, a few export it only as a
+default, and getting it wrong gives you `undefined` rather than an error at the
+import. The table below lists the working import line for every published
+component; the [machine-readable manifest](https://mangrove.undrr.org/llms.txt)
+carries the same lines, generated from the built bundles.
+
+To mount components into server-rendered HTML containers, the hydration runtime
+is a subpath too, with a default export:
 
 ```jsx
-import { createHydrator } from '@undrr/undrr-mangrove';
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
 ```
 
 ## Including styles
@@ -95,40 +114,74 @@ If your build pipeline supports Sass, you can import the source SCSS files direc
 
 ## Available components
 
-All exports from `@undrr/undrr-mangrove`:
+Every bundle the npm package publishes under `components/`, with the import
+line that resolves against it. Generated from the built bundles, so a component
+missing here ships in no bundle and cannot be imported from npm at all —
+`CookieConsentBanner`, `Snackbar` and `CodeBlock` are the three in that position
+today. All three are available in Storybook and in this repository, and none has
+a webpack entry.
 
-| Export                    | Description                                                               |
-| ------------------------- | ------------------------------------------------------------------------- |
-| `BarChart`                | Configurable bar chart built on d3                                        |
-| `CookieConsentBanner`     | UNDRR cookie consent banner (loads from CDN)                              |
-| `CopyButton`              | Clipboard copy button with transient feedback and UN translations         |
-| `Drawer`                  | Slide-over drawer and floating panel dialog for complementary content     |
-| `Dropdown`                | Accessible dropdown menu                                                  |
-| `Fetcher`                 | Data-fetching wrapper with loading state and render prop                  |
-| `Gallery`                 | Image/video gallery with thumbnails and lightbox                          |
-| `IconCard`                | Card with icon, heading, and description                                  |
-| `MapComponent`            | Leaflet-based map with marker clustering                                  |
-| `MegaMenu`                | Multi-level navigation with sections, banners, and optional branded logo  |
-| `Notice`                  | In-page info, warning, negative and positive notices and alert banners    |
-| `Pager`                   | Pagination with centered and bar layouts, jump-to, and range display      |
-| `QuoteHighlight`          | Blockquote with attribution, portrait, and background variants            |
-| `ScrollContainer`         | Horizontally scrollable container with arrow navigation                   |
-| `ServiceNotice`           | Degraded or offline service notice with retry, backoff and status link    |
-| `ShareButtons`            | Social sharing buttons (LinkedIn, Facebook, X, email, QR code)            |
-| `Snackbar`                | Toast notification, rendered through Notice, with auto-dismiss            |
-| `StatsCard`               | Statistics display with icon, value, labels, and optional links           |
-| `SyndicationSearchWidget` | PreventionWeb syndication search interface                                |
-| `TextCta`                 | Call-to-action text block with button                                     |
-| `Tree` / `TreeItem`       | Hierarchical W3C APG treeview with keyboard navigation                    |
-| `UserFeedback`            | User feedback submission widget with rating and comments                  |
-| `createHydrator`          | Runtime for mounting React components into server-rendered DOM containers |
+| Component                 | Import                                                                                                   |
+| ------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `BookCard`                | `import { BookCard } from '@undrr/undrr-mangrove/components/BookCard.js';`                               |
+| `Breadcrumbs`             | `import { Breadcrumbcomponent } from '@undrr/undrr-mangrove/components/Breadcrumbs.js';`                 |
+| `Checkbox`                | `import { Checkbox } from '@undrr/undrr-mangrove/components/Checkbox.js';`                               |
+| `Chips`                   | `import { Chips } from '@undrr/undrr-mangrove/components/Chips.js';`                                     |
+| `CopyButton`              | `import { CopyButton } from '@undrr/undrr-mangrove/components/CopyButton.js';`                           |
+| `CtaButton`               | `import { CtaButton } from '@undrr/undrr-mangrove/components/CtaButton.js';`                             |
+| `Drawer`                  | `import { Drawer } from '@undrr/undrr-mangrove/components/Drawer.js';`                                   |
+| `EmbedContainer`          | `import { EmbedContainer } from '@undrr/undrr-mangrove/components/EmbedContainer.js';`                   |
+| `Footer`                  | `import { Footer } from '@undrr/undrr-mangrove/components/Footer.js';`                                   |
+| `FormAction`              | `import { FormAction } from '@undrr/undrr-mangrove/components/FormAction.js';`                           |
+| `FormErrorSummary`        | `import { FormErrorSummary } from '@undrr/undrr-mangrove/components/FormErrorSummary.js';`               |
+| `FormGroup`               | `import { FormGroup } from '@undrr/undrr-mangrove/components/FormGroup.js';`                             |
+| `FullWidth`               | `import { FullWidth } from '@undrr/undrr-mangrove/components/FullWidth.js';`                             |
+| `Gallery`                 | `import { Gallery } from '@undrr/undrr-mangrove/components/Gallery.js';`                                 |
+| `Hero`                    | `import { Hero } from '@undrr/undrr-mangrove/components/Hero.js';`                                       |
+| `HighlightBox`            | `import { HighlightBox } from '@undrr/undrr-mangrove/components/HighlightBox.js';`                       |
+| `HorizontalBookCard`      | `import { HorizontalBookCard } from '@undrr/undrr-mangrove/components/HorizontalBookCard.js';`           |
+| `HorizontalCard`          | `import { HorizontalCard } from '@undrr/undrr-mangrove/components/HorizontalCard.js';`                   |
+| `IconCard`                | `import { IconCard } from '@undrr/undrr-mangrove/components/IconCard.js';`                               |
+| `Legend`                  | `import { Legend } from '@undrr/undrr-mangrove/components/Legend.js';`                                   |
+| `Loader`                  | `import { Loader } from '@undrr/undrr-mangrove/components/Loader.js';`                                   |
+| `MegaMenu`                | `import MegaMenu from '@undrr/undrr-mangrove/components/MegaMenu.js';`                                   |
+| `Notice`                  | `import { Notice } from '@undrr/undrr-mangrove/components/Notice.js';`                                   |
+| `PageHeader`              | `import { PageHeader } from '@undrr/undrr-mangrove/components/PageHeader.js';`                           |
+| `Pager`                   | `import { Pager } from '@undrr/undrr-mangrove/components/Pager.js';`                                     |
+| `QuoteHighlight`          | `import QuoteHighlight from '@undrr/undrr-mangrove/components/QuoteHighlight.js';`                       |
+| `Radio`                   | `import { Radio } from '@undrr/undrr-mangrove/components/Radio.js';`                                     |
+| `Range`                   | `import { Range } from '@undrr/undrr-mangrove/components/Range.js';`                                     |
+| `ScrollContainer`         | `import ScrollContainer from '@undrr/undrr-mangrove/components/ScrollContainer.js';`                     |
+| `SegmentedControl`        | `import { SegmentedControl } from '@undrr/undrr-mangrove/components/SegmentedControl.js';`               |
+| `Select`                  | `import { Select } from '@undrr/undrr-mangrove/components/Select.js';`                                   |
+| `ServiceNotice`           | `import { ServiceNotice } from '@undrr/undrr-mangrove/components/ServiceNotice.js';`                     |
+| `ShareButtons`            | `import ShareButtons from '@undrr/undrr-mangrove/components/ShareButtons.js';`                           |
+| `ShowMore`                | `import { ShowMore } from '@undrr/undrr-mangrove/components/ShowMore.js';`                               |
+| `SkipLink`                | `import { SkipLink } from '@undrr/undrr-mangrove/components/SkipLink.js';`                               |
+| `StatsCard`               | `import { StatsCard } from '@undrr/undrr-mangrove/components/StatsCard.js';`                             |
+| `SyndicationSearchWidget` | `import { SyndicationSearchWidget } from '@undrr/undrr-mangrove/components/SyndicationSearchWidget.js';` |
+| `Tab`                     | `import { Tab } from '@undrr/undrr-mangrove/components/Tab.js';`                                         |
+| `TextCta`                 | `import { TextCta } from '@undrr/undrr-mangrove/components/TextCta.js';`                                 |
+| `TextInput`               | `import { TextInput } from '@undrr/undrr-mangrove/components/TextInput.js';`                             |
+| `Textarea`                | `import { Textarea } from '@undrr/undrr-mangrove/components/Textarea.js';`                               |
+| `Tree` / `TreeItem`       | `import { Tree, TreeItem } from '@undrr/undrr-mangrove/components/Tree.js';`                             |
+| `UserFeedback`            | `import UserFeedback from '@undrr/undrr-mangrove/components/UserFeedback.js';`                           |
+| `VerticalCard`            | `import { VerticalCard } from '@undrr/undrr-mangrove/components/VerticalCard.js';`                       |
+| `createHydrator`          | `import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';`                              |
+
+`ShowMore` and `Tab` are flagged `importRequiresDom: true` in the AI manifest.
+Those bundles read `document` while they load, so the import above throws
+`document is not defined` in Node and during server-side rendering. It is
+correct in a browser and through a bundler. On a server-rendered page, load it
+from a dynamic import after mount, or use the vanilla module and hydration
+contract instead. Every other bundle imports anywhere.
 
 ## Usage examples
 
 ### StatsCard
 
 ```jsx
-import { StatsCard } from '@undrr/undrr-mangrove';
+import { StatsCard } from '@undrr/undrr-mangrove/components/StatsCard.js';
 
 function DashboardStats() {
   return (
@@ -160,7 +213,7 @@ Props: `title` (string), `stats` (array of objects with `icon`, `label`, `value`
 
 ```jsx
 import { useState } from 'react';
-import { Pager } from '@undrr/undrr-mangrove';
+import { Pager } from '@undrr/undrr-mangrove/components/Pager.js';
 
 function PaginatedList() {
   const [page, setPage] = useState(1);
@@ -179,7 +232,7 @@ Props: `page` (number, required), `totalPages` (number), `onPageChange` (functio
 ### ShareButtons
 
 ```jsx
-import { ShareButtons } from '@undrr/undrr-mangrove';
+import ShareButtons from '@undrr/undrr-mangrove/components/ShareButtons.js';
 
 function ArticlePage() {
   return (
@@ -200,7 +253,7 @@ Props: `labels` (object with `mainLabel` and `onCopy` strings), `SharingSubject`
 ### QuoteHighlight
 
 ```jsx
-import { QuoteHighlight } from '@undrr/undrr-mangrove';
+import QuoteHighlight from '@undrr/undrr-mangrove/components/QuoteHighlight.js';
 
 function QuoteSection() {
   return (
@@ -217,31 +270,30 @@ function QuoteSection() {
 
 Props: `quote` (string, required), `attribution` (string), `attributionTitle` (string), `imageSrc` (string), `imageAlt` (string), `variant` (`"line"` | `"image"`), `backgroundColor` (`"light"` | `"dark"` | `"bright"`), `alignment` (`"full"` | `"left"` | `"right"`).
 
-### Snackbar
+### Notice
 
 ```jsx
-import { useState } from 'react';
-import { Snackbar } from '@undrr/undrr-mangrove';
+import { Notice } from '@undrr/undrr-mangrove/components/Notice.js';
 
-function FormWithFeedback() {
-  const [open, setOpen] = useState(false);
-
+function DraftPage() {
   return (
-    <div>
-      <button onClick={() => setOpen(true)}>Submit</button>
-      <Snackbar
-        severity="success"
-        opened={open}
-        message="Your changes have been saved."
-        onClose={() => setOpen(false)}
-        openedMiliseconds={5000}
-      />
-    </div>
+    <Notice
+      variant="warning"
+      title="Unsaved changes"
+      description="You have modified draft indicators that have not yet been published."
+      headingLevel="h2"
+      isDismissible
+      onDismiss={() => trackDismiss()}
+    />
   );
 }
 ```
 
-Props: `severity` (`"error"` | `"warning"` | `"info"` | `"success"`), `opened` (boolean), `message` (string), `onClose` (function), `openedMiliseconds` (number).
+Props: `variant` (`"info"` | `"warning"` | `"negative"` | `"positive"`), `title` (string), `description` (string), `headingLevel` (string), `isDismissible` (boolean), `onDismiss` (function), `actions` (node).
+
+`Snackbar`, the auto-dismissing toast built on `Notice`, has no webpack entry
+and so ships in no bundle. It is usable from this repository and visible in
+Storybook, but there is nothing to import from npm.
 
 ## Server-rendered hydration
 
@@ -251,7 +303,8 @@ components.
 
 Example below shows the **Drupal wrapper pattern** with `@mangrove/*` import-map
 aliases (injected by `mangrove-components.js` in `undrr_common`). In standard
-React apps, import directly from `@undrr/undrr-mangrove` and pass props.
+React apps, import the `@undrr/undrr-mangrove/components/…` subpaths shown
+above and pass props.
 
 ```jsx
 // Drupal wrapper script — uses @mangrove/* import map aliases (resolved by mangrove-components.js)
@@ -280,11 +333,13 @@ See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/doc
 ## TypeScript
 
 TypeScript works in development, but the published package does not yet include
-`.d.ts` files. In consuming projects, declare the module locally:
+`.d.ts` files. In consuming projects, declare the modules locally — one per
+subpath, matching the specifier you import and the binding that subpath
+exports, because there is no root module to declare:
 
 ```ts
 // mangrove.d.ts
-declare module '@undrr/undrr-mangrove' {
+declare module '@undrr/undrr-mangrove/components/StatsCard.js' {
   import { ComponentType } from 'react';
 
   export const StatsCard: ComponentType<{
@@ -300,6 +355,10 @@ declare module '@undrr/undrr-mangrove' {
     variant?: 'default' | 'compact' | 'highlighted' | 'negative';
     className?: string;
   }>;
+}
+
+declare module '@undrr/undrr-mangrove/components/Pager.js' {
+  import { ComponentType } from 'react';
 
   export const Pager: ComponentType<{
     page: number;
@@ -316,9 +375,21 @@ declare module '@undrr/undrr-mangrove' {
     emptyState?: string;
     emptyAction?: { label: string; onClick: () => void };
   }>;
-
-  // Add declarations for other components as needed
 }
+
+// A default-export bundle is declared with `export default` instead:
+declare module '@undrr/undrr-mangrove/components/ShareButtons.js' {
+  import { ComponentType } from 'react';
+
+  const ShareButtons: ComponentType<{
+    labels?: { mainLabel?: string; onCopy?: string };
+    SharingSubject?: string;
+    SharingTextBody?: string;
+  }>;
+  export default ShareButtons;
+}
+
+// Add declarations for other components as needed
 ```
 
 Use component PropTypes (Storybook controls) as the source of accepted props.
@@ -329,7 +400,7 @@ Components from Mangrove can be tested with React Testing Library like any other
 
 ```jsx
 import { render, screen } from '@testing-library/react';
-import { Pager } from '@undrr/undrr-mangrove';
+import { Pager } from '@undrr/undrr-mangrove/components/Pager.js';
 
 test('renders pagination with correct page', () => {
   const handlePageChange = jest.fn();

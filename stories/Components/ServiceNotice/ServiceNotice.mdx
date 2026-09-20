@@ -86,10 +86,11 @@ This markup is presentation only. The retry button has no handler, no countdown 
 ```
 
 ```javascript
-import createHydrator from '@undrr/undrr-mangrove/src/hydrate';
-import ServiceNotice, {
+import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
+import {
+  ServiceNotice,
   fromElement,
-} from '@undrr/undrr-mangrove/stories/Components/ServiceNotice/ServiceNotice.hydrate';
+} from '@undrr/undrr-mangrove/components/ServiceNotice.js';
 
 const hydrator = createHydrator({
   selector: '[data-mg-service-notice]',
@@ -201,7 +202,7 @@ No build step is needed. Load the Mangrove stylesheet, load React through an imp
 ### 4. React component
 
 ```jsx
-import { ServiceNotice } from '@undrr/undrr-mangrove';
+import { ServiceNotice } from '@undrr/undrr-mangrove/components/ServiceNotice.js';
 
 function MapWidget() {
   return (
@@ -255,6 +256,7 @@ Pass overrides with the `labels` prop, or the `data-labels` JSON attribute when 
 
 ## Changelog
 
+- **1.1.2** — 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/ServiceNotice.js` instead of the package root. The root has never resolved on any published version — the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain — and 2.0.0 stops advertising it, so the subpath is the only form that works. Documentation only; the component is unchanged. The Drupal hydration snippet is corrected in the same pass: it reached into `@undrr/undrr-mangrove/src/hydrate` and `@undrr/undrr-mangrove/stories/…/ServiceNotice.hydrate`, and the tarball ships no `src/` or `stories/` directory at all — `components/hydrate.js` and `components/ServiceNotice.js` are the published files, and the latter carries `fromElement` alongside the component.
 - **1.1.1** — 2026-09-17 ([#1178](https://github.com/unisdr/undrr-mangrove/pull/1178)): The Drupal behavior example uses `once()` from `core/once`, so repeated attaches add one `mg-service-notice:retry` listener per container instead of stacking duplicates.
 - **1.1.0** — 2026-09-17 ([#1175](https://github.com/unisdr/undrr-mangrove/pull/1175)): Fixes integration gaps reported in #1172. The status link now includes visually hidden "(opens in a new tab)" text, translatable with the new `labels.opensInNewTab` key. Server-rendered output now keeps the status link. Documented the vanilla hydration contract (data attributes and the `mg-service-notice:retry` event) with a CDN example, and published it in the AI manifest's `hydration` field. Examples use `https://messaging.undrr.org/` instead of the redirecting `status.undrr.org`.
   - The status page link on DELTA's offline notice meets WCAG 1.4.3 contrast (5.44:1, was 4.26:1), through the Notice `--mg-notice-action-secondary` token.

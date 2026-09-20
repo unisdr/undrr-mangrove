@@ -22,7 +22,7 @@ export const variantOptions = {
  * Renders one section per item in the data array (typically one).
  */
 export function ChildHero({ data, variant = 'primary' }) {
-  let variantActive = variantOptions[`${variant}`];
+  const variantActive = variantOptions[`${variant}`];
   return (
     <>
       {data.map((item, index) => (
@@ -31,9 +31,14 @@ export function ChildHero({ data, variant = 'primary' }) {
           className={cls(
             'mg-hero',
             'mg-hero--child',
+            !item.imgback && 'mg-hero--no-image',
             'mg-hero--' + `${variantActive}`
           )}
-          style={{ backgroundImage: `url(${item.imgback})` }}
+          style={
+            item.imgback
+              ? { backgroundImage: `url(${item.imgback})` }
+              : undefined
+          }
         >
           <div className="mg-hero__overlay">
             <article className="mg-hero__content">
