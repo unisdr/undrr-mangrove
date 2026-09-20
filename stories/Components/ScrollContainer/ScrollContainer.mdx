@@ -97,17 +97,18 @@ const MyComponent = () => (
 
 ## Props
 
-| Prop         | Type    | Default  | Description                                         |
-| ------------ | ------- | -------- | --------------------------------------------------- |
-| children     | node    | Required | Content to be displayed inside the scroll container |
-| height       | string  | 'auto'   | Custom height for the container                     |
-| minWidth     | string  | 'auto'   | Minimum width for the container                     |
-| itemWidth    | string  | 'auto'   | Width for individual items within the container     |
-| padding      | string  | '0'      | Padding inside the container                        |
-| className    | string  | ''       | Additional CSS class names                          |
-| showArrows   | boolean | false    | Whether to show navigation arrows                   |
-| stretchItems | boolean | false    | Stretch mixed-length items to a shared row height   |
-| stepSize     | number  | null     | Custom step size for arrow navigation (in pixels)   |
+| Prop         | Type    | Default                | Description                                                                                             |
+| ------------ | ------- | ---------------------- | ------------------------------------------------------------------------------------------------------- |
+| children     | node    | Required               | Content to be displayed inside the scroll container                                                     |
+| height       | string  | 'auto'                 | Custom height for the container                                                                         |
+| minWidth     | string  | 'auto'                 | Minimum width for the container                                                                         |
+| itemWidth    | string  | 'auto'                 | Width for individual items within the container                                                         |
+| padding      | string  | '0'                    | Padding inside the container                                                                            |
+| className    | string  | ''                     | Additional CSS class names                                                                              |
+| showArrows   | boolean | false                  | Whether to show navigation arrows                                                                       |
+| stretchItems | boolean | false                  | Stretch mixed-length items to a shared row height                                                       |
+| stepSize     | number  | null                   | Custom step size for arrow navigation (in pixels)                                                       |
+| ariaLabel    | string  | `'Scrollable content'` | Accessible name for this container's arrow navigation. Use a unique value for each container on a page. |
 
 ## Behaviors
 
@@ -130,25 +131,24 @@ When `showArrows` is enabled, the buttons use `aria-label="Scroll left"` and `ar
 
 ### Container semantics
 
-- The component wraps content in a `<section>` element, providing a sectioning landmark
-- The arrow buttons are grouped inside a `<nav>` element with class `mg-scroll__nav`
+- The component wraps content in a `<section>` element
+- The scrollable region is focusable so keyboard users can reach native horizontal scrolling
+- The arrow buttons are grouped inside a named `<nav>` element with class `mg-scroll__nav`. Set a descriptive, unique `ariaLabel` when a page has more than one scroll container, for example `ariaLabel="Related publications"`.
 
 ### Keyboard support
 
-The container does not add custom keyboard handlers. Users rely on native browser horizontal scrolling (for example, Shift+scroll wheel on desktop). Arrow controls are standard `<button>` elements, reachable by Tab and activatable with Enter/Space.
+The focusable container relies on native browser horizontal scrolling (for example, arrow keys or Shift+scroll wheel on desktop). Arrow controls are standard `<button>` elements, reachable by Tab and activatable with Enter/Space.
 
 ### Known limitations
 
 These are gaps that affect users or accessibility auditors:
 
-- Screen readers may announce the scroll container as an unlabelled section (the `<section>` has no `aria-label`)
-- The arrow button group has no accessible label describing its purpose
 - There are no live announcements when the scroll position changes
 - No keyboard equivalent for mouse drag scrolling beyond the arrow buttons
 - Arrow buttons may be hidden on devices classified as mobile by the component's JavaScript touch/user-agent detection, including some iPads or other misclassified devices
 - **Pre-existing, out of this component's control:** on macOS Safari at page zoom below 100%, clicks on the arrow buttons (and the native scrollbar itself) can fail to register, while scroll-wheel and trackpad scrolling still work. This is a longstanding WebKit bug where Safari's visual-viewport and layout-viewport coordinate systems diverge under zoom, so the browser can dispatch a click to the wrong element before any application code runs. It reproduces on plain, unstyled interactive elements too, so there's no component-level fix — Safari at 100% zoom or above, and every other browser at any zoom level, are unaffected.
 
-> **Implementation note (for contributors):** The `<section>` and `<nav>` are intentionally unlabelled (no `role="region"` or live region). Arrow visibility is controlled by JavaScript mobile detection (`ontouchstart` plus mobile/iPad user-agent matching), not viewport breakpoints, so any detected-mobile device may hide arrows. The scrollbar theming (`scrollbar-color` and `::-webkit-scrollbar-*`) intentionally uses fixed literal colours rather than `var(--mg-color-*)` tokens — at least one WebKit version treats a `var()`-based value in these specific properties as invalid and silently drops the whole declaration, falling back to the native scrollbar, rather than degrading gracefully.
+> **Implementation note (for contributors):** The `<section>` is intentionally unlabelled (no `role="region"` or live region). The arrow `<nav>` is named from `ariaLabel`; give each instance a distinct value where several appear together. Arrow visibility is controlled by JavaScript mobile detection (`ontouchstart` plus mobile/iPad user-agent matching), not viewport breakpoints, so any detected-mobile device may hide arrows. The scrollbar theming (`scrollbar-color` and `::-webkit-scrollbar-*`) intentionally uses fixed literal colours rather than `var(--mg-color-*)` tokens — at least one WebKit version treats a `var()`-based value in these specific properties as invalid and silently drops the whole declaration, falling back to the native scrollbar, rather than degrading gracefully.
 
 ## Server-rendered / CDN usage
 
@@ -162,6 +162,7 @@ ScrollContainer supports [layered hydration](https://github.com/unisdr/undrr-man
   data-item-width="250px"
   data-padding="16"
   data-show-arrows="true"
+  data-aria-label="Related publications"
   data-stretch-items="true"
   data-step-size="300"
 >
@@ -172,15 +173,16 @@ ScrollContainer supports [layered hydration](https://github.com/unisdr/undrr-man
 </div>
 ```
 
-| Attribute            | Default   | Description                                       |
-| -------------------- | --------- | ------------------------------------------------- |
-| `data-height`        | `'auto'`  | Container height (CSS value)                      |
-| `data-min-width`     | `'auto'`  | Minimum width (CSS value)                         |
-| `data-item-width`    | `'auto'`  | Width for individual items (CSS value)            |
-| `data-padding`       | `'0'`     | Container padding                                 |
-| `data-show-arrows`   | `'false'` | Show navigation arrows (`'true'` or `'false'`)    |
-| `data-stretch-items` | `'false'` | Stretch mixed-length items to a shared row height |
-| `data-step-size`     | `null`    | Scroll step in pixels for arrow navigation        |
+| Attribute            | Default                | Description                                                                      |
+| -------------------- | ---------------------- | -------------------------------------------------------------------------------- |
+| `data-height`        | `'auto'`               | Container height (CSS value)                                                     |
+| `data-min-width`     | `'auto'`               | Minimum width (CSS value)                                                        |
+| `data-item-width`    | `'auto'`               | Width for individual items (CSS value)                                           |
+| `data-padding`       | `'0'`                  | Container padding                                                                |
+| `data-show-arrows`   | `'false'`              | Show navigation arrows (`'true'` or `'false'`)                                   |
+| `data-aria-label`    | `'Scrollable content'` | Accessible name for the arrow navigation; make it unique per container on a page |
+| `data-stretch-items` | `'false'`              | Stretch mixed-length items to a shared row height                                |
+| `data-step-size`     | `null`                 | Scroll step in pixels for arrow navigation                                       |
 
 Child elements are extracted from a `.mg-scroll__content` wrapper inside the container. If no wrapper is found, the container's `innerHTML` is used directly.
 
@@ -199,6 +201,8 @@ createHydrator({
 See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **1.3.5** — 2026-09-20 ([#1273](https://github.com/unisdr/undrr-mangrove/issues/1273)): The overflow region is now reachable by Tab with a visible focus indicator, so keyboard users can use the browser's native horizontal scroll keys even when its items contain no links or controls. Arrow navigation now has an accessible name derived from the new `ariaLabel` / `data-aria-label` option. Give each container a unique label on pages with more than one so landmark navigation can distinguish them.
 
 - **1.3.4** — 2026-09-18 ([#1222](https://github.com/unisdr/undrr-mangrove/pull/1222), [#1205](https://github.com/unisdr/undrr-mangrove/issues/1205)): `fromElement` reads its content wrapper from the container it is hydrating instead of re-parsing `innerHTML` with `DOMParser` and querying the copy. The copy only ever held one container's markup, so two hydrated containers on a page never did read each other's children — the reported symptom does not reproduce — but the lookup still matched a `.mg-scroll__content` belonging to a **nested** scroll container, so an outer container with no wrapper of its own rendered the nested container's cards instead of its own content. A direct-child wrapper now wins, otherwise the first descendant wrapper with no nested scroll container between it and this container. Dropping the `DOMParser` round trip also stops the server-rendered markup being re-serialised on the way through. A new "Two hydrated on one page" story hydrates two rows through `createHydrator`; each keeps its own cards.
 - **1.3.3** — 2026-09-17 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): The "With minimum width" story asked for `minWidth="1500px"` in an unbounded parent, so at 375px the demo pushed the whole page sideways to 1516px. The story now uses a realistic value inside a parent that contains the overflow, and the docs spell out that `min-width` wins over the container's `max-width: 100%` and that `itemWidth` is the lever for widening the scrollable track. Story and documentation only — `minWidth` keeps its documented meaning, a minimum width for the container, and no component behaviour changed.

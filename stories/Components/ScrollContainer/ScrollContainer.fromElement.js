@@ -39,6 +39,7 @@ function findOwnContent(container) {
  *   data-item-width="250px"
  *   data-padding="16"
  *   data-show-arrows="true"
+ *   data-aria-label="Related publications"
  *   data-step-size="300">
  *   <div class="mg-scroll__content">
  *     <div class="card">...</div>
@@ -59,6 +60,7 @@ export default function scrollContainerFromElement(container) {
     showArrows: dataset.showArrows === 'true',
     stretchItems: dataset.stretchItems === 'true',
     stepSize: dataset.stepSize ? parseInt(dataset.stepSize, 10) : null,
+    ariaLabel: dataset.ariaLabel || 'Scrollable content',
   };
 
   // Extract children as HTML strings from server-rendered content.

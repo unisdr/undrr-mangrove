@@ -78,6 +78,20 @@ describe('ScrollContainer Component', () => {
     expect(screen.getByTestId('scroll-item-0')).toBeInTheDocument();
   });
 
+  it('makes the overflow region keyboard-focusable and names its navigation', () => {
+    renderScrollContainer({ ariaLabel: 'Featured publications' });
+
+    expect(document.querySelector('.mg-scroll__container')).toHaveAttribute(
+      'tabindex',
+      '0'
+    );
+    expect(
+      screen.getByRole('navigation', {
+        name: 'Featured publications navigation',
+      })
+    ).toBeInTheDocument();
+  });
+
   it('adds the shared-height modifier when stretchItems is enabled', () => {
     const { container } = renderScrollContainer({ stretchItems: true });
 

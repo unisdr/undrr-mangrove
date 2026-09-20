@@ -133,7 +133,7 @@ export const WithCustomStepSize = {
 
 const hydrationRow = (rowLabel, itemLabel) => `
   <h3 class="mg-heading-300">${rowLabel}</h3>
-  <div data-mg-scroll-container data-show-arrows="true" data-item-width="240px" data-padding="16">
+  <div data-mg-scroll-container data-show-arrows="true" data-item-width="240px" data-padding="16" data-aria-label="${rowLabel}">
     <div class="mg-scroll__content">
       ${[1, 2, 3, 4, 5, 6]
         .map(

@@ -114,6 +114,10 @@
       cursor: grabbing;
     }
 
+    &:focus-visible {
+      @include mg-focus-ring-inset;
+    }
+
     .mg-scroll--mobile & {
       cursor: default;
 

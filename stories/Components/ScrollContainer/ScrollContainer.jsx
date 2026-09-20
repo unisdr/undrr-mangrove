@@ -12,11 +12,12 @@ const ArrowButtons = React.memo(
     onScroll,
     leftButtonRef,
     rightButtonRef,
+    navigationLabel,
     scrollLeftLabel = 'Scroll left',
     scrollRightLabel = 'Scroll right',
   }) => {
     return (
-      <nav className="mg-scroll__nav">
+      <nav className="mg-scroll__nav" aria-label={navigationLabel}>
         <button
           ref={leftButtonRef}
           className="mg-scroll__nav-button"
@@ -42,6 +43,7 @@ ArrowButtons.propTypes = {
   onScroll: PropTypes.func.isRequired,
   leftButtonRef: PropTypes.object.isRequired,
   rightButtonRef: PropTypes.object.isRequired,
+  navigationLabel: PropTypes.string.isRequired,
   scrollLeftLabel: PropTypes.string,
   scrollRightLabel: PropTypes.string,
 };
@@ -57,6 +59,7 @@ const ScrollContainer = ({
   showArrows = false,
   stretchItems = false,
   stepSize = null,
+  ariaLabel = 'Scrollable content',
   labels = {},
   ...props
 }) => {
@@ -286,6 +289,7 @@ const ScrollContainer = ({
           onScroll={scroll}
           leftButtonRef={leftButtonRef}
           rightButtonRef={rightButtonRef}
+          navigationLabel={`${ariaLabel} navigation`}
           scrollLeftLabel={scrollLeftLabel}
           scrollRightLabel={scrollRightLabel}
         />
@@ -294,6 +298,7 @@ const ScrollContainer = ({
         ref={containerRef}
         className={containerClasses}
         style={containerStyle}
+        tabIndex={0}
         {...props}
       >
         <div
@@ -330,6 +335,8 @@ ScrollContainer.propTypes = {
   /** Stretch item wrappers and their direct children to a shared row height. */
   stretchItems: PropTypes.bool,
   stepSize: PropTypes.number,
+  /** Accessible name for this scroll container's arrow navigation. Use a unique value when more than one container appears on a page. */
+  ariaLabel: PropTypes.string,
   /** Translated UI label strings */
   labels: PropTypes.shape({
     scrollLeftLabel: PropTypes.string,

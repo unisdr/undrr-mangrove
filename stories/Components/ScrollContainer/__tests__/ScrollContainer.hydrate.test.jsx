@@ -33,13 +33,13 @@ describe('ScrollContainer hydration', () => {
 
   it('gives each of two containers its own children', () => {
     document.body.innerHTML = `
-      <div id="first" data-mg-scroll-container>
+      <div id="first" data-mg-scroll-container data-show-arrows="true" data-aria-label="First row">
         <div class="mg-scroll__content">
           <div class="card">First A</div>
           <div class="card">First B</div>
         </div>
       </div>
-      <div id="second" data-mg-scroll-container>
+      <div id="second" data-mg-scroll-container data-show-arrows="true" data-aria-label="Second row">
         <div class="mg-scroll__content">
           <div class="card">Second A</div>
         </div>
@@ -64,5 +64,11 @@ describe('ScrollContainer hydration', () => {
     expect(second.textContent).toContain('Second A');
     expect(second.textContent).not.toContain('First');
     expect(second.querySelectorAll('.card')).toHaveLength(1);
+    expect(
+      first.querySelector('[aria-label="First row navigation"]')
+    ).toBeInTheDocument();
+    expect(
+      second.querySelector('[aria-label="Second row navigation"]')
+    ).toBeInTheDocument();
   });
 });

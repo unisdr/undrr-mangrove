@@ -2362,6 +2362,8 @@ npm run build</code></pre>
         'data-padding': 'Container padding (default "0").',
         'data-show-arrows':
           '"true" to render the arrow controls. They are suppressed on touch devices regardless.',
+        'data-aria-label':
+          'Accessible name for the arrow navigation (default "Scrollable content"). Use a distinct value for each container on a page.',
         'data-stretch-items':
           '"true" to give mixed-length items a shared row height.',
         'data-step-size': 'Arrow scroll step in pixels.',
@@ -2375,6 +2377,7 @@ npm run build</code></pre>
         markup: `<div data-mg-scroll-container
   data-item-width="280px"
   data-show-arrows="true"
+  data-aria-label="Related publications"
   data-stretch-items="true"
   data-step-size="300">
   <div class="mg-scroll__content">
