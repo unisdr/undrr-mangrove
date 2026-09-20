@@ -78,6 +78,12 @@ function renderAndInit(
 // -------------------------------------------------------
 
 describe('Tab', () => {
+  test('opts caller panel HTML into the rich-content boundary', () => {
+    const { container } = render(<Tab tabdata={tabdata} />);
+
+    expect(getPanel(container, 'tab-1')).toHaveClass('mg-content');
+  });
+
   beforeEach(() => {
     // Tests override this to verify horizontal semantics at narrow widths.
     Object.defineProperty(window, 'innerWidth', {

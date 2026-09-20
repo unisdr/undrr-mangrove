@@ -497,7 +497,7 @@ export function ArticleStory({
                 }))}
               />
             </div>
-            <div className="mg-reading__article">
+            <div className="mg-reading__article mg-content">
               {text.sections.map((section, index) => (
                 <section
                   key={section.heading}

@@ -176,7 +176,10 @@ function TabTrigger({ tab, mobile = false }) {
 // innerHTML would otherwise discard live form values and embedded state.
 const TabPanel = memo(function TabPanel({ textId, data }) {
   return (
-    <section className="mg-tabs__section" id={`mg-tabs__section-${textId}`}>
+    <section
+      className="mg-tabs__section mg-content"
+      id={`mg-tabs__section-${textId}`}
+    >
       {/* Panel content from the caller, rendered as-is so tables, forms and
           embeds survive. See the trust boundary note at the top of this file. */}
       {data ? <div dangerouslySetInnerHTML={{ __html: data }} /> : null}

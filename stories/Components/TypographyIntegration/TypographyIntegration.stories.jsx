@@ -2,7 +2,7 @@ import React from 'react';
 
 const TypographyIntegrationExample = () => {
   return (
-    <section className="sb-unstyled mg-container">
+    <section className="sb-unstyled mg-container mg-content">
       <h1>Typography integration</h1>
 
       <p>

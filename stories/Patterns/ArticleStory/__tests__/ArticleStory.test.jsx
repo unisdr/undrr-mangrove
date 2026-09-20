@@ -13,6 +13,13 @@ test('the headline carries the page, with or without a header image', () => {
   ).toBeVisible();
 });
 
+test('opts the reading column into the rich-content boundary', () => {
+  const { container } = render(<ArticleStory heroImage="none" />);
+  expect(container.querySelector('.mg-reading__article')).toHaveClass(
+    'mg-content'
+  );
+});
+
 test('links the source organisations in the byline', () => {
   const { container } = render(<ArticleStory heroImage="none" />);
   const header = container.querySelector('.mg-demo-article-header');

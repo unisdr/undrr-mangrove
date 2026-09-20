@@ -414,7 +414,7 @@ export function LandingPage({ archetype = 'topic', locale = 'english', id }) {
                     text: heading,
                   }))}
                 />
-                <div className="mg-reading__article">
+                <div className="mg-reading__article mg-content">
                   {page.sections.map(([heading, body], index) => (
                     <section key={heading} id={`${id}-section-${index}`}>
                       <h2>{heading}</h2>

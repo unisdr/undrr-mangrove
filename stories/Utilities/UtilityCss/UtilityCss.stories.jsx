@@ -113,23 +113,25 @@ const ContrastCaveat = () => (
  * governs.
  */
 const OrangeAccentNote = () => (
-  <p style={{ fontSize: '0.875rem', margin: '0 0 1rem' }}>
-    <strong>The orange accent carries no text.</strong> Use{' '}
-    <code>orange-800</code>, <code>orange-900</code> and{' '}
-    <code>sendai-orange</code> for borders, rules, icon fills and blocks with no
-    copy over them. No text colour meets WCAG AA on them at any size — white is
-    2.65 to 2.95 against a 4.5 minimum, and black passes WCAG but misses the
-    perceptual body-text floor. An orange rule is emphasis and never the only
-    thing that identifies something: <code>orange-900</code> is 2.95 on white
-    and 2.66 on <code>orange-50</code>, both under the 3:1 of SC 1.4.11. For
-    text on an orange surface, use the pale end of the ramp —{' '}
-    <code>orange-50</code> and <code>orange-100</code> carry{' '}
-    <code>--mg-color-text</code> at 15.7 and 14.1. See{' '}
-    <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
-      the colour contrast methodology
-    </a>{' '}
-    for the measurements.
-  </p>
+  <div className="mg-content">
+    <p style={{ fontSize: '0.875rem', margin: '0 0 1rem' }}>
+      <strong>The orange accent carries no text.</strong> Use{' '}
+      <code>orange-800</code>, <code>orange-900</code> and{' '}
+      <code>sendai-orange</code> for borders, rules, icon fills and blocks with
+      no copy over them. No text colour meets WCAG AA on them at any size —
+      white is 2.65 to 2.95 against a 4.5 minimum, and black passes WCAG but
+      misses the perceptual body-text floor. An orange rule is emphasis and
+      never the only thing that identifies something: <code>orange-900</code> is
+      2.95 on white and 2.66 on <code>orange-50</code>, both under the 3:1 of SC
+      1.4.11. For text on an orange surface, use the pale end of the ramp —{' '}
+      <code>orange-50</code> and <code>orange-100</code> carry{' '}
+      <code>--mg-color-text</code> at 15.7 and 14.1. See{' '}
+      <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
+        the colour contrast methodology
+      </a>{' '}
+      for the measurements.
+    </p>
+  </div>
 );
 
 // Background color utilities
@@ -554,7 +556,7 @@ export const CombinedExample = () => (
     </div>
 
     <div
-      className="mg-u-expand-to-size mg-u-background-color--accent-100"
+      className="mg-content mg-u-expand-to-size mg-u-background-color--accent-100"
       style={{ padding: '1.5rem' }}
     >
       <h5 className="mg-u-color--neutral-900">Statistics dashboard</h5>

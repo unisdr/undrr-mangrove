@@ -188,10 +188,10 @@ a {
   }
 }
 
-// Navigation, cards and button-like links carry their purpose through their
-// component treatment. Links embedded in a paragraph do not, so colour alone
-// is insufficient to distinguish them from surrounding prose (WCAG 1.4.1).
-p a {
+// Long-form and WYSIWYG content opt into this boundary. Navigation, cards and
+// button-like links carry their purpose through their component treatment;
+// prose links do not, so colour alone is insufficient (WCAG 1.4.1).
+.mg-content p a {
   text-decoration: underline;
 }
 

@@ -15,13 +15,10 @@ const entries = [
 
 const css = entry => {
   if (compiled[entry] === undefined) {
-    compiled[entry] = sass.compile(
-      path.resolve(__dirname, '..', entry),
-      {
-        loadPaths: [path.resolve(__dirname, '..')],
-        logger: sass.Logger.silent,
-      }
-    ).css;
+    compiled[entry] = sass.compile(path.resolve(__dirname, '..', entry), {
+      loadPaths: [path.resolve(__dirname, '..')],
+      logger: sass.Logger.silent,
+    }).css;
   }
   return compiled[entry];
 };
@@ -37,7 +34,9 @@ const ruleFor = (entry, selector) => {
 
 describe.each(entries)('foundational prose links in %s', entry => {
   test('remain underlined before hover or focus', () => {
-    expect(ruleFor(entry, 'p a')).toMatch(/text-decoration:\s*underline/);
+    expect(ruleFor(entry, '.mg-content p a')).toMatch(
+      /text-decoration:\s*underline/
+    );
   });
 
   test('do not impose an underline on navigation or button links', () => {

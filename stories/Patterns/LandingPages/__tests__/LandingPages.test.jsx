@@ -42,7 +42,10 @@ test('the report archetype links its contents to real section ids', () => {
 });
 
 test('the report archetype includes a real inline link in its reading copy', () => {
-  render(<LandingPage archetype="report" id="demo" />);
+  const { container } = render(<LandingPage archetype="report" id="demo" />);
+  expect(container.querySelector('.mg-reading__article')).toHaveClass(
+    'mg-content'
+  );
   expect(
     screen.getByRole('link', {
       name: 'Read the full Global Assessment Report.',

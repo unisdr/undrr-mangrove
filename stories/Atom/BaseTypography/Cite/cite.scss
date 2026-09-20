@@ -6,7 +6,8 @@
  * Full documentation:
  * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Atom/BaseTypography/BaseTypography.mdx
  */
-.mg-body cite {
+.mg-body cite,
+.mg-content cite {
   display: block;
   font-style: inherit;
   font-weight: 400;
