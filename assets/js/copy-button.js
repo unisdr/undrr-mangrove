@@ -5,8 +5,13 @@
  * Initializes standalone copy buttons without requiring React.
  *
  * Expected HTML:
+ * The button is icon-only, so it needs an accessible name: give it an
+ * `aria-label` (or `data-aria-label`, which this script copies onto
+ * `aria-label` when the button has no name of its own).
+ *
  * <button type="button" class="mg-button mg-button-primary mg-button-outline mg-button--icon mg-copy-button"
  *   data-mg-copy-button
+ *   aria-label="Copy to clipboard"
  *   data-text-to-copy="https://example.org"
  *   data-tooltip-label="Copied!"
  *   data-copied-label="Copied to clipboard."
@@ -35,6 +40,18 @@ export function mgCopyButton(scope) {
     // Guard against double initialization
     if (button.dataset.mgCopyButtonInitialized) return;
     button.dataset.mgCopyButtonInitialized = 'true';
+
+    // An icon-only button with no accessible name announces as just "button"
+    // (WCAG 4.1.2). Markup copied from earlier docs carried the label in
+    // `data-aria-label`, which nothing read; honour it rather than ship a
+    // nameless control, without overriding a real name if one is present.
+    if (
+      button.dataset.ariaLabel &&
+      !button.getAttribute('aria-label') &&
+      !button.getAttribute('aria-labelledby')
+    ) {
+      button.setAttribute('aria-label', button.dataset.ariaLabel);
+    }
 
     let timer = null;
 

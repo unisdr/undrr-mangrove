@@ -31,11 +31,21 @@
   --mg-color-button-background: rgb(15 120 191);
 
   // color.button-background--hover
-  --mg-color-button-background--hover: rgb(var(--mg-color-orange-900));
+  // Deeper partner of the IRP interactive blue. Carries the secondary button
+  // fill and, since the primary button's hover left the orange accent, that
+  // hover too. White on it is 6.02:1 and 71.1 perceptually, so it clears AA
+  // either way, and it sits 6.6 dE2000 from the interactive blue —
+  // comfortably past the ~2.3 just-noticeable difference, and of the same
+  // order as the base theme's own blue-900 to blue-700 hover (12.2).
+  --mg-color-button-background--hover: rgb(13 103 163);
 
   // color.button-secondary-background
-  // Deeper partner of the IRP interactive blue for secondary button fill,
-  // meeting WCAG AA (6.0:1).
+  // Deeper partner of the IRP interactive blue. Carries the secondary button
+  // fill and, since the primary button's hover left the orange accent, that
+  // hover too. White on it is 6.02:1 and 71.1 perceptually, so it clears AA
+  // either way, and it sits 6.6 dE2000 from the interactive blue —
+  // comfortably past the ~2.3 just-noticeable difference, and of the same
+  // order as the base theme's own blue-900 to blue-700 hover (12.2).
   --mg-color-button-secondary-background: 13 103 163;
 
   // color.button-secondary-background--hover
@@ -46,7 +56,13 @@
   --mg-color-button-outline-primary: 15 120 191;
 
   // color.button-outline-primary--hover
-  --mg-color-button-outline-primary--hover: var(--mg-color-orange-900);
+  // Deeper partner of the IRP interactive blue. Carries the secondary button
+  // fill and, since the primary button's hover left the orange accent, that
+  // hover too. White on it is 6.02:1 and 71.1 perceptually, so it clears AA
+  // either way, and it sits 6.6 dE2000 from the interactive blue —
+  // comfortably past the ~2.3 just-noticeable difference, and of the same
+  // order as the base theme's own blue-900 to blue-700 hover (12.2).
+  --mg-color-button-outline-primary--hover: 13 103 163;
 
   // color.button-outline-secondary
   --mg-color-button-outline-secondary: var(--mg-color-button-secondary-background);
