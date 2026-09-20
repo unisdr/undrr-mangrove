@@ -140,7 +140,7 @@ function Promotion({
       </p>
       <section
         aria-labelledby={`${id}-heading`}
-        className="mg-u-background-color--blue-100"
+        className="mg-u-background-color--blue-50"
         style={{
           padding: 'clamp(1rem, 4vw, 2rem)',
           borderRadius: 'var(--mg-card-border-radius)',

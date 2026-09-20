@@ -41,6 +41,15 @@ test('the report archetype links its contents to real section ids', () => {
   }
 });
 
+test('the report archetype includes a real inline link in its reading copy', () => {
+  render(<LandingPage archetype="report" id="demo" />);
+  expect(
+    screen.getByRole('link', {
+      name: 'Read the full Global Assessment Report.',
+    })
+  ).toHaveAttribute('href', 'https://www.undrr.org/gar');
+});
+
 test('localizes copy and direction from the locale toolbar', () => {
   const { container } = render(
     <LandingPage archetype="topic" locale="arabic" id="demo" />
