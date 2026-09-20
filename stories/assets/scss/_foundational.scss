@@ -170,11 +170,7 @@ img {
 
 a {
   color: rgb(var(--mg-color-interactive));
-
-  // The interactive colour alone does not distinguish links from surrounding
-  // prose at the required contrast ratio. Keep the underline at rest so links
-  // remain identifiable without relying on hover or focus (WCAG 1.4.1).
-  text-decoration: underline;
+  text-decoration: none;
 
   @media (prefers-reduced-motion: no-preference) {
     transition: color 150ms ease;
@@ -190,6 +186,13 @@ a {
 
     text-decoration: underline;
   }
+}
+
+// Navigation, cards and button-like links carry their purpose through their
+// component treatment. Links embedded in a paragraph do not, so colour alone
+// is insufficient to distinguish them from surrounding prose (WCAG 1.4.1).
+p a {
+  text-decoration: underline;
 }
 
 @media (prefers-reduced-motion: reduce) {
