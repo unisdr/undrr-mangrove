@@ -43,7 +43,7 @@ Then preview the npm tarball exactly as the publish workflow will assemble it, a
 yarn pack:preview --compare <previous-version>   # e.g. --compare 2.0.0-rc.1
 ```
 
-Never run `npm pack` at the repo root. The root `package.json` has no `files` field, so it packs the **entire repo** (600+ files including source and config), which is not what gets published. See [Package contents](#package-contents).
+Do not use `npm pack` at the repo root to validate a release. Its source-oriented allowlist differs from the curated package the publish workflow assembles. Pack from `npm-package/` using the commands above. See [Package contents](#package-contents).
 
 ### 2. Update the version
 
@@ -77,9 +77,7 @@ A release that changes the major is the one that matters. When `latest` moves to
 
 1. **Find them.** `grep -rn "assets.undrr.org/mangrove/latest" --include='*.md' --include='*.mdx' .` — currently `docs/RELEASES.md`, `stories/Components/Navigation/Drawer/Drawer.mdx`.
 2. **Request each one** against the version being released and confirm it still resolves. A `latest/` URL that 404s after the tag moves is a broken copy-paste on a published page.
-3. **Clear the "lands in 2.0" markers** on paths that this release publishes. These exist because the module is in the sources but on no version folder yet, and the release is what makes them wrong:
-   - `docs/CDN-REFERENCE.md` — the `/js/drawer.js` table row and the paragraph under the JavaScript module table.
-   - `stories/Components/Navigation/Drawer/Drawer.mdx` — the "Lands in 2.0" note and the `{version}` placeholder in the vanilla HTML snippet, which becomes a real pinned version.
+3. **Verify newly published paths and update availability notes.** For rc.3, check the pinned `/js/drawer.js` URL in `docs/CDN-REFERENCE.md` and `stories/Components/Navigation/Drawer/Drawer.mdx`. This module is absent from rc.2; npm publication alone does not create the CDN version folder. After publication, update the preparation caveat and `next` guidance in `docs/RELEASE-2.0.md` to reflect the verified release.
 4. **Confirm before publishing the release notes**, not after. Each of these is a path a reader copies.
 
 ### 4. Update CHANGELOG.md
@@ -248,7 +246,7 @@ Three things worth knowing:
 
 ### 3. Verify the tarball before publishing
 
-Never `npm pack` at the repo root — the root `package.json` has no `files` field, so it packs the **entire repo** (600+ files including source and config), which is not what gets published. Only pack from `npm-package/`.
+Only pack from `npm-package/` for a release. The repository root has a different, source-oriented allowlist and does not represent what the publish workflow ships.
 
 Confirm contents against the previous published release — the diff should be *only* files that genuinely changed this release:
 
@@ -378,9 +376,9 @@ https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 
 # Versioned (from tagged releases)
-https://assets.undrr.org/mangrove/2.0.0-rc.2/css/style.css
-https://assets.undrr.org/mangrove/2.0.0-rc.2/components/MegaMenu.js
-https://assets.undrr.org/mangrove/2.0.0-rc.2/js/tabs.js
+https://assets.undrr.org/mangrove/2.0.0-rc.3/css/style.css
+https://assets.undrr.org/mangrove/2.0.0-rc.3/components/MegaMenu.js
+https://assets.undrr.org/mangrove/2.0.0-rc.3/js/tabs.js
 ```
 
 ## CI/CD configuration

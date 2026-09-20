@@ -332,9 +332,9 @@ describe('Arabic typography at a language boundary (DOM)', () => {
   });
 
   test('no Arabic rule matches an element inside a lang="en" island', () => {
-    const selectors = arabicSelectors(compile('style')).filter(
-      selector => !BOUNDARY_SELECTORS.includes(selector)
-    );
+    const selectors = arabicSelectors(compile('style'))
+      .filter(selector => !BOUNDARY_SELECTORS.includes(selector))
+      .map(selector => selector.replace(/::(?:before|after)\b/g, ''));
 
     const leaked = [];
     for (const selector of selectors) {
@@ -350,9 +350,10 @@ describe('Arabic typography at a language boundary (DOM)', () => {
   test('Arabic rules still match outside the island', () => {
     // The guard above passes trivially if the selectors match nothing at all.
     // Every non-boundary Arabic selector must match something on this fixture.
-    const selectors = arabicSelectors(compile('style')).filter(
-      selector => !BOUNDARY_SELECTORS.includes(selector)
-    );
+    // Pseudo-elements are not DOM nodes: check their originating element.
+    const selectors = arabicSelectors(compile('style'))
+      .filter(selector => !BOUNDARY_SELECTORS.includes(selector))
+      .map(selector => selector.replace(/::(?:before|after)\b/g, ''));
 
     const inert = selectors.filter(
       selector => document.querySelectorAll(selector).length === 0

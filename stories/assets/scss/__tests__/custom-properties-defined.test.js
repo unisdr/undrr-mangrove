@@ -82,7 +82,11 @@ const definedIn = css =>
 
 const readIn = text =>
   new Set(
-    [...text.matchAll(/var\(\s*(--mg-[A-Za-z0-9_-]+)/g)].map(match => match[1])
+    // Only complete literal names can be checked statically. A template such
+    // as var(--mg-font-size-${scale}) is exercised by its browser play test.
+    [...text.matchAll(/var\(\s*(--mg-[A-Za-z0-9_-]+)\s*(?=[,)])/g)].map(
+      match => match[1]
+    )
   );
 
 const compiled = Object.fromEntries(
@@ -104,6 +108,13 @@ const undefinedRefs = (reads, defined) =>
     .sort();
 
 describe('custom properties read by Mangrove are defined', () => {
+  test('literal references include fallbacks but not interpolated fragments', () => {
+    expect([
+      ...readIn(
+        'var(--mg-known) var(--mg-missing, red) var(--mg-font-size-${scale})'
+      ),
+    ]).toEqual(['--mg-known', '--mg-missing']);
+  });
   test.each(BUNDLES)('%s.css reads no undefined --mg-* property', entry => {
     const css = compiled[entry];
     expect(undefinedRefs(readIn(css), definedIn(css))).toEqual([]);

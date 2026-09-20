@@ -33,7 +33,7 @@ Base URL: `https://assets.undrr.org/mangrove/{version}/`
 The DELTA Resilience theme never had a legacy variant. See the [v1.4 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change) for what they did and the [v2.0 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) for the migration off them.
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.2/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0-rc.3/css/style.css" />
 ```
 
 ### JavaScript modules
@@ -45,18 +45,18 @@ The DELTA Resilience theme never had a legacy variant. See the [v1.4 release not
 | On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
 | Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
 | Copy Button | `/js/copy-button.js` | Zero-dependency copy-to-clipboard button |
-| Drawer | `/js/drawer.js` | Off-canvas drawer and floating panel lifecycle (no React). **Lands in 2.0** — see below |
+| Drawer | `/js/drawer.js` | Off-canvas drawer and floating panel lifecycle (no React). **Available from rc.3** — see below |
 | Switch pending | `/js/switch-pending.js` | Saving state for `.mg-switch`: announcements, guards, and an optional timeout and revert. `mgSwitchAnnouncer()` exports the announcements alone |
 | Preview access | `/js/preview-access.js` | Preview-access gate form |
 | Shared constants | `/js/undrr.js` | Key codes, breakpoints and the `window.UNDRR` namespace |
 
-**`/js/drawer.js` is not on the CDN yet.** It is listed because the table is the complete list of modules the library ships, but it postdates `2.0.0-rc.2` and first reaches the CDN with 2.0. Until then it returns 404 on every version folder, `latest/` included; use `@undrr/undrr-mangrove/js/drawer.js` from npm in the meantime. Every other path in the table is served today. Cutting 2.0 removes this paragraph — see [the release procedure](RELEASES.md#re-point-the-latest-guidance).
+**`/js/drawer.js` is included from `2.0.0-rc.3`.** It is absent from rc.2 and earlier packages. Use the pinned rc.3 URL after the versioned CDN assets have been published; a prepared release branch does not make that URL live. Do not substitute `latest/` for a prerelease version.
 
 That table is the complete list. **There is no `/js/main.js` and no combined bundle** — every module is loaded on its own, so a `<script src=".../js/main.js">` returns 404. Load only the modules the page needs:
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.0.0-rc.2/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.0.0-rc.3/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -107,7 +107,7 @@ React 19 removed UMD builds. Use import maps with esm.sh:
   import { createRoot } from 'react-dom/client';
 
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/mangrove/2.0.0-rc.2/components/MegaMenu.js'
+    'https://assets.undrr.org/mangrove/2.0.0-rc.3/components/MegaMenu.js'
   );
 
   let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
@@ -166,7 +166,7 @@ Base URL: `https://assets.undrr.org/logos/`
 Pin exact versions:
 
 ```
-https://assets.undrr.org/mangrove/2.0.0-rc.2/css/style.css
+https://assets.undrr.org/mangrove/2.0.0-rc.3/css/style.css
 ```
 
 ### Latest (testing only)
