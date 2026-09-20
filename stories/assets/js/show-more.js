@@ -71,8 +71,11 @@ function resolveTarget(toggle, selector) {
  * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Elements to init.
  *   Accepts a NodeList, array, or a single HTMLElement.
  *   Defaults to all [data-mg-show-more] in the document.
+ * @returns {Function} Removes handlers added by this call and restores each
+ *   target's initial collapsed state. Useful for React effect cleanup.
  */
 export function mgShowMore(scope) {
+  const cleanups = [];
   const mgShowMoreButtons = scope
     ? scope instanceof HTMLElement
       ? [scope]
@@ -83,11 +86,6 @@ export function mgShowMore(scope) {
     // Skip auto-init if the element opts out
     if (!scope && item.hasAttribute('data-mg-show-more-skip-auto-init')) return;
     if (item.dataset.mgShowMoreInitialized) return;
-    item.dataset.mgShowMoreInitialized = 'true';
-
-    item.dataset.dataVfGoogleAnalyticsLabel =
-      'Show more: ' + item.dataset.mgShowMoreLabelCollapsed || `Show more`;
-
     const mgShowMoreTargetClass =
       item.dataset.mgShowMoreTarget || '.mg-show-more--container';
     const mgShowMoreTarget = resolveTarget(item, mgShowMoreTargetClass);
@@ -98,6 +96,24 @@ export function mgShowMore(scope) {
       );
       return;
     }
+
+    item.dataset.mgShowMoreInitialized = 'true';
+    const wasCollapsed = mgShowMoreTarget.classList.contains(
+      'mg-show-more--collapsed'
+    );
+    const wasOpen = item.classList.contains('mg-show-more--button--open');
+    const initialText = item.textContent;
+    const initialControls = item.getAttribute('aria-controls');
+    const initialRole = item.getAttribute('role');
+    const onKeydown = event => {
+      if (event.key === ' ' || event.key === 'Spacebar') {
+        event.preventDefault();
+        item.click();
+      }
+    };
+
+    item.dataset.dataVfGoogleAnalyticsLabel =
+      'Show more: ' + (item.dataset.mgShowMoreLabelCollapsed || 'Show more');
 
     // Relate the toggle to the content it acts on. A <button> already
     // announces as a button; an anchor copied from an earlier version of the
@@ -112,15 +128,10 @@ export function mgShowMore(scope) {
       // `role="button"` promises Space activates the control, and an anchor
       // does not honour that on its own (WCAG 4.1.2 Name, Role, Value).
       // `preventDefault` keeps Space from scrolling the page.
-      item.addEventListener('keydown', event => {
-        if (event.key === ' ' || event.key === 'Spacebar') {
-          event.preventDefault();
-          item.click();
-        }
-      });
+      item.addEventListener('keydown', onKeydown);
     }
 
-    item.addEventListener('click', event => {
+    const onClick = event => {
       // Also neutralises the dead `href="#"` on a legacy anchor toggle.
       event.preventDefault();
       mgShowMoreTarget.classList.toggle('mg-show-more--collapsed');
@@ -137,30 +148,55 @@ export function mgShowMore(scope) {
       } else {
         item.classList.add('mg-show-more--button--open');
       }
-    });
+    };
+    item.addEventListener('click', onClick);
 
     // The collapse is `max-height` + `overflow: hidden`, which clips content
     // visually but leaves it in the tab order. Without this, Tab lands on a
     // link the user cannot see, inside a box that cannot scroll to reveal it
     // (WCAG 2.4.7 Focus Visible, 2.4.11 Focus Not Obscured). Expanding on
     // entry keeps the focused control visible.
-    mgShowMoreTarget.addEventListener('focusin', event => {
+    const onFocusin = event => {
       if (item === event.target || item.contains(event.target)) return;
       if (mgShowMoreTarget.classList.contains('mg-show-more--collapsed')) {
         item.click();
       }
-    });
+    };
+    mgShowMoreTarget.addEventListener('focusin', onFocusin);
 
     // Allow items to be shown by clicking anywhere on the collapsed item
     // https://gitlab.com/undrr/web-backlog/-/issues/1612
-    mgShowMoreTarget.addEventListener('click', () => {
+    const onTargetClick = () => {
       if (mgShowMoreTarget.classList.contains('mg-show-more--collapsed')) {
         item.click();
       }
-    });
+    };
+    mgShowMoreTarget.addEventListener('click', onTargetClick);
 
     item.click();
+    cleanups.push(() => {
+      item.removeEventListener('click', onClick);
+      item.removeEventListener('keydown', onKeydown);
+      mgShowMoreTarget.removeEventListener('focusin', onFocusin);
+      mgShowMoreTarget.removeEventListener('click', onTargetClick);
+      mgShowMoreTarget.classList.toggle(
+        'mg-show-more--collapsed',
+        wasCollapsed
+      );
+      item.classList.toggle('mg-show-more--button--open', wasOpen);
+      item.textContent = initialText;
+      for (const [attribute, value] of [
+        ['aria-controls', initialControls],
+        ['role', initialRole],
+      ]) {
+        if (value === null) item.removeAttribute(attribute);
+        else item.setAttribute(attribute, value);
+      }
+      delete item.dataset.mgShowMoreInitialized;
+    });
   });
+
+  return () => cleanups.splice(0).forEach(cleanup => cleanup());
 }
 
 // Auto-wrap so the browser Event object is not passed as scope

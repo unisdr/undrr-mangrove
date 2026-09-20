@@ -361,3 +361,72 @@ export const DataTable = {
     );
   },
 };
+
+export const CellTypography = {
+  name: 'Cell typography regression',
+  render: () => (
+    <div>
+      {[
+        '',
+        'mg-table--small',
+        'mg-table--data',
+        'mg-table--small mg-table--data',
+      ].map(modifier => (
+        <table key={modifier} className={`mg-table ${modifier}`}>
+          <caption>{modifier || 'Default table'}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Description</th>
+              <th scope="col">Path</th>
+              <th scope="col" className="mg-table__th--numeric">
+                Count
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-cell="body">A table entry</td>
+              <td data-cell="code" className="mg-table__td--code">
+                tokens.json
+              </td>
+              <td className="mg-table__td--numeric">123</td>
+            </tr>
+          </tbody>
+        </table>
+      ))}
+      <span data-scale="200" style={{ fontSize: 'var(--mg-font-size-200)' }} />
+      <span data-scale="250" style={{ fontSize: 'var(--mg-font-size-250)' }} />
+      <span data-scale="300" style={{ fontSize: 'var(--mg-font-size-300)' }} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const size = scale =>
+      getComputedStyle(canvasElement.querySelector(`[data-scale="${scale}"]`))
+        .fontSize;
+    for (const table of canvasElement.querySelectorAll('table')) {
+      const compact =
+        table.classList.contains('mg-table--data') ||
+        table.classList.contains('mg-table--small');
+      expect(
+        getComputedStyle(table.querySelector('[data-cell="body"]')).fontSize
+      ).toBe(size(compact ? '250' : '300'));
+      expect(
+        getComputedStyle(table.querySelector('[data-cell="code"]')).fontSize
+      ).toBe(size('200'));
+      expect(getComputedStyle(table.querySelector('th')).fontSize).toBe(
+        size(
+          table.classList.contains('mg-table--data')
+            ? '200'
+            : compact
+              ? '250'
+              : '300'
+        )
+      );
+      for (const cell of table.querySelectorAll(
+        '.mg-table__td--numeric, .mg-table__th--numeric'
+      )) {
+        expect(getComputedStyle(cell).textAlign).toBe('end');
+      }
+    }
+  },
+};

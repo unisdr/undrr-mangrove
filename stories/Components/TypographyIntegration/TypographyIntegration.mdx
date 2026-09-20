@@ -19,6 +19,19 @@ This page demonstrates common typography elements together, to validate spacing,
 
 <Canvas of={TypographyStories.Default} />
 
+## Arabic tracking
+
+The shared script profile in `_fonts.scss` applies `letter-spacing: normal`
+to Arabic elements and their generated labels, including inherited languages
+and regional tags such as `ar-SA`. It is intentionally important so later
+component declarations cannot break joining. Set `lang` at language boundaries:
+`dir="rtl"` alone does not identify a script. Explicit English islands keep
+their component tracking; unmarked text inherits its surrounding language.
+
+<Canvas of={TypographyStories.ArabicTracking} />
+
 ## Changelog
+
+- **1.0.2** — 2026-09-20 ([#1096](https://github.com/unisdr/undrr-mangrove/issues/1096)): Centralised the Arabic tracking reset with script routing and added a browser-asserted specimen covering headings, component labels, table headers, generated code labels and nested language islands.
 
 - **1.0.1** — 2026-09-20 ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276)): The typography example opts into `mg-content`, so its prose links use the accessible inline-link treatment without making the boundary a global element default.

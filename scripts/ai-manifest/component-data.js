@@ -1835,7 +1835,7 @@ npm run build</code></pre>
     summary:
       'Collapse long content behind a gradient fade with a toggle button, driven by the mgShowMore vanilla JS utility. Height customizable via CSS variable.',
     description:
-      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. Expand and collapse come from the mgShowMore vanilla JS utility, which reads the data-mg-show-more attributes; the React component renders the same markup and calls it on mount.',
+      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. The mgShowMore vanilla JS utility reads data-mg-show-more attributes and returns optional lifecycle cleanup. The React wrapper enhances each item independently, supports items added after mount, and accepts translated labelOpen and labelCollapsed props.',
     cssClasses: ['mg-show-more--collapsed', 'mg-show-more--button'],
     examples: [
       {

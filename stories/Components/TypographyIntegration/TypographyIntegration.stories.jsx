@@ -1,4 +1,5 @@
 import React from 'react';
+import { expect } from 'storybook/test';
 
 const TypographyIntegrationExample = () => {
   return (
@@ -272,4 +273,115 @@ export default {
 
 export const Default = {
   render: () => <TypographyIntegrationExample />,
+};
+
+export const ArabicTracking = {
+  name: 'Arabic tracking and language islands',
+  render: () => (
+    <section lang="ar-SA" dir="rtl" className="mg-container">
+      <h1 data-tracking>الحد من مخاطر الكوارث</h1>
+      <h6 data-tracking>مجتمعات آمنة وقادرة على الصمود</h6>
+      <div
+        className="mg-hero mg-hero--immersive mg-hero--contained"
+        style={{ minHeight: 0, '--mg-hero-banner-block-size': '0px' }}
+      >
+        <div className="mg-hero__overlay">
+          <div className="mg-hero__title" data-tracking>
+            العمل معاً لبناء القدرة على الصمود
+          </div>
+        </div>
+      </div>
+      <p className="mg-stats-card-item__label" data-tracking>
+        البلدان المشاركة
+      </p>
+      <div className="mg-cta">
+        <p className="mg-cta__eyebrow" data-tracking>
+          المشاركة في العمل
+        </p>
+      </div>
+      <ul className="menu">
+        <li>
+          <a href="#tracking" data-tracking>
+            معلومات إضافية
+          </a>
+        </li>
+      </ul>
+      <ul>
+        <li className="mg-mega-content__section-list-item">
+          <a
+            className="mg-mega-content__section-list-link"
+            href="#tracking"
+            data-tracking
+          >
+            مجالات العمل
+          </a>
+        </li>
+      </ul>
+      <p className="mg-search__result-type" data-tracking>
+        منشور
+      </p>
+      <p className="mg-search__filter-chip-connector" data-tracking>
+        و
+      </p>
+      <span className="mg-tag mg-tag--code" data-tracking>
+        وثيقة
+      </span>
+      <span className="mg-badge mg-badge--code" data-tracking>
+        بيانات
+      </span>
+      <table className="mg-table mg-table--data">
+        <thead>
+          <tr>
+            <th scope="col" data-tracking>
+              المصدر
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>المكتب</td>
+          </tr>
+        </tbody>
+      </table>
+      <pre data-language="مثال" data-tracking-pseudo>
+        <code>const locale = 'ar';</code>
+      </pre>
+      <section lang="en" dir="ltr">
+        <h1 data-tracking-latin>English inside Arabic</h1>
+        <div
+          className="mg-hero mg-hero--immersive mg-hero--contained"
+          style={{ minHeight: 0, '--mg-hero-banner-block-size': '0px' }}
+        >
+          <div className="mg-hero__overlay">
+            <div className="mg-hero__title" data-tracking-latin>
+              Latin display tracking
+            </div>
+          </div>
+        </div>
+        <span className="mg-tag mg-tag--code" data-tracking-latin>
+          JSON
+        </span>
+        <h1 lang="ar" dir="rtl" data-tracking>
+          العربية داخل النص الإنجليزي
+        </h1>
+      </section>
+    </section>
+  ),
+  play: async ({ canvasElement }) => {
+    for (const element of canvasElement.querySelectorAll('[data-tracking]')) {
+      expect(getComputedStyle(element).letterSpacing).toBe('normal');
+    }
+    expect(
+      getComputedStyle(
+        canvasElement.querySelector('[data-tracking-pseudo]'),
+        '::after'
+      ).letterSpacing
+    ).toBe('normal');
+    for (const element of canvasElement.querySelectorAll(
+      '[data-tracking-latin]'
+    )) {
+      expect(getComputedStyle(element).letterSpacing).not.toBe('normal');
+      expect(getComputedStyle(element).letterSpacing).not.toBe('0px');
+    }
+  },
 };

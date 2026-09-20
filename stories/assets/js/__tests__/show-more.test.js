@@ -32,6 +32,24 @@ describe('mgShowMore', () => {
   });
 
   describe('idempotency', () => {
+    it('cleanup only removes handlers owned by its call and can be repeated', () => {
+      const btn = setupButton();
+      const target = document.querySelector('.mg-show-more--container');
+      const cleanup = mgShowMore(btn);
+      const cleanupNoop = mgShowMore(btn);
+      cleanupNoop();
+      btn.click();
+      expect(target).toHaveClass('mg-show-more--collapsed');
+      cleanup();
+      cleanup();
+      expect(btn).not.toHaveAttribute('data-mg-show-more-initialized');
+      expect(btn).not.toHaveAttribute('aria-controls');
+      btn.click();
+      expect(target).toHaveClass('mg-show-more--collapsed');
+      mgShowMore(btn);
+      expect(target).not.toHaveClass('mg-show-more--collapsed');
+    });
+
     it('does not double-initialize when called twice', () => {
       const btn = setupButton();
       mgShowMore();
@@ -51,6 +69,21 @@ describe('mgShowMore', () => {
   });
 
   describe('missing target guard', () => {
+    it('can retry when the target arrives later', () => {
+      document.body.innerHTML = '<button data-mg-show-more>Show more</button>';
+      const button = document.querySelector('button');
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      mgShowMore(button);
+      expect(button).not.toHaveAttribute('data-mg-show-more-initialized');
+      const target = document.createElement('div');
+      target.className = 'mg-show-more--container';
+      document.body.append(target);
+      mgShowMore(button);
+      expect(target).toHaveClass('mg-show-more--collapsed');
+      expect(button.getAttribute('aria-controls')).toBe(target.id);
+      warn.mockRestore();
+    });
+
     it('does not throw and warns when target element is missing', () => {
       document.body.innerHTML = `
         <button data-mg-show-more data-mg-show-more-target=".nonexistent">Show more</button>
