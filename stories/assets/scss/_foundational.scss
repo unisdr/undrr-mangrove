@@ -170,7 +170,11 @@ img {
 
 a {
   color: rgb(var(--mg-color-interactive));
-  text-decoration: none;
+
+  // The interactive colour alone does not distinguish links from surrounding
+  // prose at the required contrast ratio. Keep the underline at rest so links
+  // remain identifiable without relying on hover or focus (WCAG 1.4.1).
+  text-decoration: underline;
 
   @media (prefers-reduced-motion: no-preference) {
     transition: color 150ms ease;
