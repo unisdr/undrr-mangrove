@@ -88,6 +88,13 @@ export const DefaultShowMore = {
   name: 'ShowMore',
 };
 
+// Keep this specimen substantially taller than the 200px collapse boundary,
+// so loading and expanding it demonstrates a visible change in every theme.
+const arabicDynamicData = getCaptionForLocale('arabic').map(item => ({
+  ...item,
+  collapsable_text: Array(4).fill(item.collapsable_text).join(' '),
+}));
+
 function AsyncArabicShowMore() {
   const [data, setData] = useState([]);
   return (
@@ -95,7 +102,7 @@ function AsyncArabicShowMore() {
       <button
         type="button"
         className="mg-button mg-button-secondary"
-        onClick={() => setData(getCaptionForLocale('arabic'))}
+        onClick={() => setData(arabicDynamicData)}
       >
         تحميل المحتوى
       </button>
@@ -117,11 +124,17 @@ export const ArabicDynamicContent = {
       `#${toggle.getAttribute('aria-controls')}`
     );
     expect(target).toHaveClass('mg-show-more--collapsed');
+    const collapsedHeight = target.getBoundingClientRect().height;
+    expect(target.scrollHeight).toBeGreaterThan(collapsedHeight + 100);
     await userEvent.click(toggle);
     expect(toggle).toHaveAccessibleName('عرض أقل');
     expect(target).not.toHaveClass('mg-show-more--collapsed');
+    expect(target.getBoundingClientRect().height).toBeGreaterThan(
+      collapsedHeight + 100
+    );
     await userEvent.click(toggle);
     expect(toggle).toHaveAccessibleName('عرض المزيد');
+    expect(target.getBoundingClientRect().height).toBe(collapsedHeight);
   },
 };
 
