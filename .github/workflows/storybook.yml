@@ -107,11 +107,14 @@ jobs:
       - name: Install the browser the test runner drives
         # The system libraries are apt packages outside the cached directory,
         # so they are installed either way; only the browser download is
-        # skipped on a cache hit.
+        # skipped on a cache hit. Resolve playwright-core's CLI explicitly:
+        # it is supplied transitively by the Storybook test runner, and Yarn 4
+        # does not expose undeclared transitive binaries via `yarn run`.
         run: |
-          yarn run playwright install-deps chromium
+          playwright_cli=$(yarn node -p "require('path').join(require.resolve('playwright-core/package.json'), '..', 'cli.js')")
+          yarn node "$playwright_cli" install-deps chromium
           if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != 'true' ]; then
-            yarn run playwright install chromium
+            yarn node "$playwright_cli" install chromium
           fi
       - name: Run Storybook play functions 🎭
         # 6099, not 6006: 6006 is `yarn storybook`'s port. The trap is the
