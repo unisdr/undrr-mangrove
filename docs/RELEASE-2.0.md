@@ -6,7 +6,7 @@ This page describes 2.0 as a whole, organised by theme rather than by prerelease
 
 `2.0.0-rc.3` is the final planned polishing release before stable 2.0. We expect stable 2.0 shortly, subject to final integration testing. One earlier tag never reached npm: `2.0.0-beta.2` was tagged but not published, so its changes first became installable in `2.0.0-beta.3`.
 
-This guide is prepared for `2.0.0-rc.3`. **Available from `2.0.0-rc.3`** marks package changes absent from rc.2. Until rc.3 is published, rc.2 remains the latest installable prerelease. Documentation, Storybook and the AI manifest deploy separately from npm; confirm the package and versioned CDN assets are available before following the rc.3 examples. GitHub Actions is currently blocked by the organisation flag, so deployment requires separate verification.
+This guide covers `2.0.0-rc.3`, published on npm under the `next` tag. **Available from `2.0.0-rc.3`** marks package changes absent from rc.2. Documentation, Storybook, the AI manifest and versioned CDN assets deploy separately from npm; confirm those assets are available before following a CDN example. GitHub Actions is currently blocked by the organisation flag, so each deployment requires separate verification.
 
 ## What's new in 2.0
 
@@ -67,7 +67,7 @@ If you only need the highlights, start here. Each group links to the fuller tech
 
 ## Try the prerelease
 
-2.0 ships under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. The examples below target `2.0.0-rc.3`; until it is published, `next` still resolves to rc.2.
+2.0 ships under the `next` dist-tag, so it never lands on `latest` — a plain `npm install @undrr/undrr-mangrove` stays on 1.x until 2.0 is stable. `next` now resolves to `2.0.0-rc.3`.
 
 ```bash
 # npm (prerelease tag — does not become your default version)
