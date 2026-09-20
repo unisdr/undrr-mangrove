@@ -12,8 +12,8 @@
  *
  * - `scripts/check-lint-coverage.mjs` passes on the current tree.
  * - It runs as part of `lint:check`, so CI fails on a new blind spot.
- * - The lint and format scripts cover `src` as well as `stories` and
- *   `scripts`.
+ * - The lint scripts cover `src`, `stories`, `scripts`, and checked-in
+ *   Storybook JavaScript.
  * - The signal it reads is real: a config without a `.jsx` pattern does leave
  *   component files unmatched.
  */
@@ -84,7 +84,7 @@ describe('the lint coverage guard', () => {
 });
 
 describe('the lint and format scripts', () => {
-  const sourceDirectories = ['src', 'stories', 'scripts'];
+  const sourceDirectories = ['src', 'stories', 'scripts', '.storybook'];
 
   it.each(sourceDirectories)('lint:check covers %s', directory => {
     expect(packageJson.scripts['lint:check']).toContain(`./${directory}`);
@@ -109,8 +109,18 @@ describe('the eslint config', () => {
     expect(readText('eslint.config.mjs')).toMatch(/'\*\*\/\*\.jsx'/);
   });
 
+  it('explicitly claims checked-in Storybook JavaScript', () => {
+    expect(readText('eslint.config.mjs')).toContain(
+      "'.storybook/**/*.{js,jsx,mjs,cjs}'"
+    );
+  });
+
   it('matches a component file rather than leaving it unclaimed', () => {
     expect(printConfig(COMPONENT_FILE)).toContain('"rules"');
+  });
+
+  it('parses Storybook preview JSX with the shared rule set', () => {
+    expect(printConfig('.storybook/preview.js')).toContain('"rules"');
   });
 
   it('is a meaningful guard: without a .jsx pattern the file is unmatched', () => {

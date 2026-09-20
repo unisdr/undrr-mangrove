@@ -23,8 +23,9 @@
  *   invisible to both ESLint and this check. EXTENSIONS is a hand-maintained
  *   list, which is the same class of problem #1235 was.
  * - "Matches a configuration" is not "is meaningfully linted". Most of the
- *   project's rules live in a config block that claims only story files and
- *   `.jsx`, so a plain `.js` file under `src/` or `scripts/` matches a config
+ *   project's rules live in a config block that claims story files, `.jsx`, and
+ *   checked-in `.storybook` JavaScript, so a plain `.js` file under `src/` or
+ *   `scripts/` matches a config
  *   and passes this check while having exactly one rule enabled
  *   (`no-control-regex`). Widening that block is a separate decision; this
  *   script measures reach, not depth.
@@ -43,7 +44,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 /** Directories whose source files must all be linted. */
-const DIRECTORIES = ['src', 'stories', 'scripts'];
+const DIRECTORIES = ['src', 'stories', 'scripts', '.storybook'];
 
 /** Extensions that hold JavaScript or TypeScript source. */
 const EXTENSIONS = ['js', 'jsx', 'mjs', 'cjs', 'mts', 'cts', 'ts', 'tsx'];

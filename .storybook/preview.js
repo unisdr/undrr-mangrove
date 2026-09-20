@@ -82,8 +82,8 @@ const sbFrameReset = (Story, context) => {
   const iframeBody = document.querySelector('body');
   const sidebarItem = parent.document.querySelectorAll('.sidebar-item');
 
-  sidebarItem.forEach(function (item) {
-    item.addEventListener('click', function () {
+  sidebarItem.forEach(function resetSidebarItem(item) {
+    item.addEventListener('click', function resetIframeBody() {
       const classNames = ['sdgmodal-open', 'color-blue'];
       if (
         classNames.some(className => iframeBody.classList.contains(className))

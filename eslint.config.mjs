@@ -174,9 +174,17 @@ export default [
     },
     // Component `.jsx` sits alongside the story files it documents, and the
     // rule set above was written for exactly this kind of code, so both share
-    // it. Plain `.js` is linted without this block, by ESLint's default file
-    // patterns. See unisdr/undrr-mangrove#1235.
-    files: ['**/*.stories.@(js|jsx|mdx|mjs|cjs)', '**/*.jsx'],
+    // it. Storybook's checked-in JavaScript is first-party configuration and
+    // preview code; in particular preview.js contains JSX, so it must use the
+    // JSX parser options here rather than ESLint's plain-JS defaults. The
+    // directory's HTML manager/preview shells are intentionally absent: they
+    // are not JavaScript or TypeScript source and are outside the coverage
+    // guard's explicit extension list. See unisdr/undrr-mangrove#1235.
+    files: [
+      '**/*.stories.@(js|jsx|mdx|mjs|cjs)',
+      '**/*.jsx',
+      '.storybook/**/*.{js,jsx,mjs,cjs}',
+    ],
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
