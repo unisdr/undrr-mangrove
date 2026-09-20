@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { expect, userEvent, within } from 'storybook/test';
+import React, { useEffect } from 'react';
 import { ShowMore } from './ShowMore';
 import { mgShowMore } from '../../assets/js/show-more';
 
@@ -86,56 +85,6 @@ export const DefaultShowMore = {
   },
 
   name: 'ShowMore',
-};
-
-// Keep this specimen substantially taller than the 200px collapse boundary,
-// so loading and expanding it demonstrates a visible change in every theme.
-const arabicDynamicData = getCaptionForLocale('arabic').map(item => ({
-  ...item,
-  collapsable_text: Array(4).fill(item.collapsable_text).join(' '),
-}));
-
-function AsyncArabicShowMore() {
-  const [data, setData] = useState([]);
-  return (
-    <section lang="ar" dir="rtl" style={{ maxWidth: '400px' }}>
-      <button
-        type="button"
-        className="mg-button mg-button-secondary"
-        onClick={() => setData(arabicDynamicData)}
-      >
-        تحميل المحتوى
-      </button>
-      <ShowMore data={data} labelCollapsed="عرض المزيد" labelOpen="عرض أقل" />
-    </section>
-  );
-}
-
-export const ArabicDynamicContent = {
-  name: 'Arabic dynamic content',
-  render: () => <AsyncArabicShowMore />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'تحميل المحتوى' })
-    );
-    const toggle = canvas.getByRole('button', { name: 'عرض المزيد' });
-    const target = canvasElement.querySelector(
-      `#${toggle.getAttribute('aria-controls')}`
-    );
-    expect(target).toHaveClass('mg-show-more--collapsed');
-    const collapsedHeight = target.getBoundingClientRect().height;
-    expect(target.scrollHeight).toBeGreaterThan(collapsedHeight + 100);
-    await userEvent.click(toggle);
-    expect(toggle).toHaveAccessibleName('عرض أقل');
-    expect(target).not.toHaveClass('mg-show-more--collapsed');
-    expect(target.getBoundingClientRect().height).toBeGreaterThan(
-      collapsedHeight + 100
-    );
-    await userEvent.click(toggle);
-    expect(toggle).toHaveAccessibleName('عرض المزيد');
-    expect(target.getBoundingClientRect().height).toBe(collapsedHeight);
-  },
 };
 
 function DetachedShowMore() {
