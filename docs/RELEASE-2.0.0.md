@@ -30,7 +30,7 @@ Full detail and migration steps: [v2.0 release notes](https://mangrove.undrr.org
 ## Documentation and discoverability
 
 - **Docs domain:** Storybook, `llms.txt`, `llms.json`, `releases.json`, `tokens.json` and `ai-components/` are published at `https://mangrove.undrr.org/`, and old `preventionweb.github.io/undrr-mangrove/` URLs redirect.
-- **Editorial manual:** a sourced style guide for UI copy and documentation, with its own `llms-editorial-manual.txt` for agents writing copy. ([#1286](https://github.com/unisdr/undrr-mangrove/pull/1286), [#1289](https://github.com/unisdr/undrr-mangrove/pull/1289))
+- **Editorial manual:** a sourced style guide for UI copy and documentation, with its own `llms-editorial-manual.txt` for agents writing copy. ([#1286](https://github.com/unisdr/undrr-mangrove/pull/1286), [#1289](https://github.com/unisdr/undrr-mangrove/pull/1289), [#1290](https://github.com/unisdr/undrr-mangrove/pull/1290))
 - **Checked documentation:** tests fail the build on a docs link that resolves to no story and on a package path the documentation names but the package does not ship.
 
 ## CDN
