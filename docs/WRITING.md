@@ -154,6 +154,7 @@ Reference: [UN disability‑inclusive communications guidelines (PDF)](https://d
 - Avoid euphemisms (for example, “special needs,” “differently abled”) and ableist terms or metaphors (for example, “crazy,” “OCD”).
 - Use plain language and logical structure with clear headings.
 - Provide accessible multilingual formats as needed (for example, sign language, Braille, large print, easy‑to‑read versions).
+- For the concrete recommended-vs-avoid terminology table, see [Editorial manual — Disability-inclusive language](EDITORIAL-MANUAL.md#disability-inclusive-language).
 
 #### Visual and audio design
 

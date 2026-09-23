@@ -2,11 +2,12 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/EDITORIAL-MANUAL.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs).
 
-This guide covers mechanical style rules — capitalization, punctuation, numbers and dates, abbreviations, italics, spelling, and UNDRR-specific terminology — for UI copy, component docs, and Storybook pages. It is derived from, and credits, three sources (each fetched and checked against this doc on **23 September 2026** — see [Keeping this updated](#keeping-this-updated) for when to re-check):
+This guide covers mechanical style rules — capitalization, punctuation, numbers and dates, abbreviations, italics, spelling, UNDRR-specific terminology, and disability-inclusive language — for UI copy, component docs, and Storybook pages. It is derived from, and credits, four sources (each fetched and checked against this doc on **23 September 2026** — see [Keeping this updated](#keeping-this-updated) for when to re-check):
 
 - **UNDRR Publications SOP** (internal, UNDRR Communications team; `SOP_Publication-2026.docx`, fetched 23 September 2026) — UNDRR's own house style for its publications. Authoritative for anything UNDRR-specific: named entities (Sendai Framework targets/priorities/indicators, GAR, campaigns), terminology conventions, and gender language choices. Not publicly linkable (UNDRR SharePoint); contact the Communications team for the current version.
 - [UN Geneva Web Style Guide](https://www.ungeneva.org/en/styleguide) (fetched 23 September 2026) — written for web content; the primary reference for general web/UI mechanics not covered by the SOP.
 - [UN Editorial Manual](https://www.un.org/dgacm/en/content/editorial-manual) ([Style section](https://www.un.org/dgacm/en/content/editorial-manual), fetched 23 September 2026) — written for formal UN documents; used as a fallback where neither of the above covers a case, and adapted for web/UI where a document-writing rule doesn't translate directly. The UNDRR Publications SOP itself is built on this manual.
+- [UN Disability-Inclusive Communications Guidelines](https://www.un.org/sites/un2.un.org/files/un_disability-inclusive_communication_guidelines.pdf) (Department of Global Communications, March 2022; fetched 23 September 2026) — authoritative for disability-inclusive language and terminology specifically. Its own terminology table is itself sourced from the UN Office at Geneva's Disability-Inclusive Language Guidelines.
 
 For UX writing principles — plain language, inclusive language, front-loading, writing for two audiences — see [Writing guidelines](WRITING.md) instead. This doc doesn't repeat those.
 
@@ -97,21 +98,48 @@ Rules and named entities that only make sense in UNDRR's own content — pulled 
 - **Gender-neutral terms UNDRR has chosen**: "Chair" or "Chairperson" (not "Chairman"); "he/she" or "they"; "humankind"; "human-made". "Man-made" is reserved for direct quotations from paragraph 15 of the Sendai Framework resolution (A/RES/69/283) — never use it in original UNDRR copy.
 - **Source attribution for data, charts, and figures**: `*Source*: United Nations Office for Disaster Risk Reduction (YYYY)` (italicized "Source"), with a full citation in APA style where a references list exists. For a Mangrove component that renders a data source line (chart footers, stat cards), use this exact pattern rather than inventing a new one.
 
+## Disability-inclusive language
+
+This section is scoped to terminology and copy — for keyboard/screen-reader/contrast requirements, see [Accessibility](ACCESSIBILITY.md), which this doc doesn't repeat. ([UN Disability-Inclusive Communications Guidelines](https://www.un.org/sites/un2.un.org/files/un_disability-inclusive_communication_guidelines.pdf))
+
+- **Use person-first language**: "person with disability", "person with [type of impairment]", not identity-first phrasing ("disabled person"). In line with the CRPD (Convention on the Rights of Persons with Disabilities), this is the UN's chosen convention and UNDRR content should follow it. ("Written storytelling — Use person-first language")
+- **Never use a euphemism or a term that implies pity, heroism, or abnormality** — not "differently abled", "special needs", "people of determination", "handicapped", or "suffers from [condition]". These read as more polite but do the opposite: they distance the reader from calling disability what it is. ("Avoid pejorative language")
+- **Avoid ableist language**, including using a disability term as a metaphor or adjective for something unrelated (e.g. "that's so OCD", "are you blind?"). ("Ableism in language")
+- **"Persons with disabilities" is the correct term on its own** — it doesn't need to be softened or modified further.
+
+**Recommended terms and terms to avoid** (a representative subset of the guide's full table — check the source PDF's Table 1 for the complete list, which also covers short stature, Down syndrome, albinism, leprosy, and communication-device users):
+
+| Use | Avoid |
+|---|---|
+| person with disability / persons with disabilities | disabled person, handicapped, differently abled, people of determination, special needs |
+| person(s) without impairment, broader population | normal, healthy, able-bodied |
+| person with an intellectual disability/impairment | retarded, slow, mentally handicapped |
+| person with a psychosocial disability | insane, crazy, psycho, mentally ill |
+| deaf person / person who is deaf / hard-of-hearing person | the deaf, hearing impaired, deaf and dumb |
+| blind person / person who is blind / person with low vision | the blind, partially sighted |
+| person with a physical disability/impairment | crippled, invalid, handicapped, physically challenged |
+| wheelchair user / person who uses a wheelchair | confined to a wheelchair, wheelchair-bound |
+| accessible parking / accessible bathroom | disabled parking, handicapped bathroom |
+
+("Table 1: Appropriate and pejorative language", itself credited in the source to UN Office at Geneva's Disability-Inclusive Language Guidelines)
+
 ## Keeping this updated
 
-**Sources last verified: 23 September 2026.** Every rule and citation above was checked against the live/current text of all three sources on that date. Update this date whenever the doc is re-checked, so a reader can tell at a glance how stale the citations might be.
+**Sources last verified: 23 September 2026.** Every rule and citation above was checked against the live/current text of all four sources on that date. Update this date whenever the doc is re-checked, so a reader can tell at a glance how stale the citations might be.
 
-This is a **derived, curated subset** of the three sources above — not a verbatim copy, and not exhaustive. All three cover far more than is reproduced here (full A–Z spelling lists, document/resolution formatting, indirect speech, quotations, image and map policy, publication process). Go to the source directly for anything not covered:
+This is a **derived, curated subset** of the four sources above — not a verbatim copy, and not exhaustive. All four cover far more than is reproduced here (full A–Z spelling lists, document/resolution formatting, indirect speech, quotations, image and map policy, publication process, visual storytelling and accessible-format guidance). Go to the source directly for anything not covered:
 
 - **UNDRR Publications SOP** (internal — UNDRR Communications team; not publicly linkable)
 - [UN Geneva Web Style Guide](https://www.ungeneva.org/en/styleguide)
 - [UN Editorial Manual — Style section](https://www.un.org/dgacm/en/content/editorial-manual): [Abbreviations](https://www.un.org/dgacm/en/content/editorial-manual/abbreviations), [Capitalization](https://www.un.org/dgacm/en/content/editorial-manual/capitalization), [Italics and bold print](https://www.un.org/dgacm/en/content/editorial-manual/italics), [Numbers, dates and time](https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time), [Punctuation](https://www.un.org/dgacm/en/content/editorial-manual/punctuation), [Spelling](https://www.un.org/dgacm/en/content/editorial-manual/spelling)
+- [UN Disability-Inclusive Communications Guidelines](https://www.un.org/sites/un2.un.org/files/un_disability-inclusive_communication_guidelines.pdf) (PDF)
 
-**When there's a conflict between the three sources**, in priority order:
+**When there's a conflict between the sources**, in priority order:
 
 1. **UNDRR Publications SOP** wins for anything UNDRR-specific — named entities (Sendai Framework targets/priorities/indicators, GAR, campaigns), UNDRR terminology conventions, and gender language choices — since it's UNDRR's own house style.
-2. **UN Geneva Web Style Guide** wins for general web/UI mechanics the SOP doesn't address, since it's written for the web specifically and the SOP is written for print/PDF publications.
-3. **UN Editorial Manual** is the fallback where neither of the above covers a case.
+2. **UN Disability-Inclusive Communications Guidelines** wins for disability terminology and framing specifically — it's the specialist UN-wide source on that one topic.
+3. **UN Geneva Web Style Guide** wins for general web/UI mechanics the SOP doesn't address, since it's written for the web specifically and the SOP is written for print/PDF publications.
+4. **UN Editorial Manual** is the fallback where none of the above covers a case.
 
 Translate a document-writing rule to its web/UI equivalent explicitly (as this doc does for italics and for print-only list punctuation) rather than applying it literally to component markup.
 
@@ -119,6 +147,7 @@ Translate a document-writing rule to its web/UI equivalent explicitly (as this d
 
 - When UI copy introduces a new UN-specific or UNDRR-specific term, acronym, named entity, or programme name not covered above — check the SOP and source spelling lists rather than guessing, and add it here if it's likely to recur.
 - When a component's copy needs a capitalization, punctuation, or number-formatting call this doc doesn't cover — check the source pages first, then add the rule here with its citation.
+- When content references a type of disability or impairment not in the terminology table above — check the source PDF's full Table 1 before guessing at a term.
 - When the UNDRR Publications SOP is updated (it's dated by year, e.g. "SOP_Publication-2026") — confirm the rules above still match and update citations to the current version.
 - Periodically alongside major Mangrove releases, to confirm the source URLs and rules above still match the live UN Geneva style guide and Editorial Manual (both can and do change without notice — the style guide's own last-updated date is at the bottom of its page). Update the "Sources last verified" date above whenever this check happens, whether or not anything actually changed.
 
