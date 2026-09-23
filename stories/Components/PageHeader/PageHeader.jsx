@@ -34,10 +34,11 @@ export function PageHeader({
   showLanguage = true,
   showLogo = true,
   languageDisplay = 'dropdown',
+  maxLanguageLinks = 6,
   languages = [
+    { value: 'ar', label: 'Arabic' },
     { value: 'en', label: 'English', selected: true },
     { value: 'es', label: 'Spanish' },
-    { value: 'ar', label: 'Arabic' },
   ],
   ...args
 }) {
@@ -47,6 +48,11 @@ export function PageHeader({
   // pages that render more than one header, where duplicate ids would break
   // the language `label`/`select` pairing (WCAG 1.3.1, 4.1.1).
   const id = name => (idPrefix ? `${idPrefix}-${name}` : name);
+
+  // Past a handful of languages the inline list wraps and crowds the logo,
+  // so it falls back to the dropdown outright rather than overflowing.
+  const showLinks =
+    languageDisplay === 'links' && languages.length <= maxLanguageLinks;
 
   const headerClasses = cls(
     'mg-page-header',
@@ -137,68 +143,56 @@ export function PageHeader({
               )}
 
               {/* Language Section */}
+              {showLanguage && showLinks && (
+                <div className="mg-page-header__block mg-page-header__block--language-links">
+                  <div
+                    className="mg-page-header__language-links"
+                    role="group"
+                    aria-label="Language"
+                  >
+                    {languages.map((lang, index) => {
+                      const isSelected =
+                        lang.selected ??
+                        (!languages.some(l => l.selected) && index === 0);
+                      return (
+                        <button
+                          key={lang.value}
+                          type="button"
+                          className="mg-page-header__language-link"
+                          aria-current={isSelected ? 'true' : undefined}
+                          onClick={() => {
+                            const select = langSelectRef.current;
+                            if (!select) return;
+                            select.value = lang.value;
+                            select.dispatchEvent(
+                              new Event('change', { bubbles: true })
+                            );
+                            if (select.form?.requestSubmit) {
+                              select.form.requestSubmit();
+                            } else {
+                              select.form?.submit();
+                            }
+                          }}
+                        >
+                          {lang.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               {showLanguage && (
                 <div
                   className={cls(
                     'mg-page-header__block',
-                    languageDisplay === 'links'
-                      ? 'mg-page-header__block--language-links'
-                      : 'mg-page-header__block--language'
+                    'mg-page-header__block--language',
+                    showLinks && 'mg-page-header__block--language-fallback'
                   )}
                 >
-                  {languageDisplay === 'links' ? (
-                    <div
-                      className="mg-page-header__language-links"
-                      role="group"
-                      aria-label="Language"
-                    >
-                      {languages.map((lang, index) => {
-                        const isSelected =
-                          lang.selected ??
-                          (!languages.some(l => l.selected) && index === 0);
-                        return (
-                          <button
-                            key={lang.value}
-                            type="button"
-                            className="mg-page-header__language-link"
-                            aria-label={lang.label}
-                            aria-current={isSelected ? 'true' : undefined}
-                            onClick={() => {
-                              const select = langSelectRef.current;
-                              if (!select) return;
-                              select.value = lang.value;
-                              select.dispatchEvent(
-                                new Event('change', { bubbles: true })
-                              );
-                              if (select.form?.requestSubmit) {
-                                select.form.requestSubmit();
-                              } else {
-                                select.form?.submit();
-                              }
-                            }}
-                          >
-                            <span
-                              className="mg-page-header__language-link-full"
-                              aria-hidden="true"
-                            >
-                              {lang.label}
-                            </span>
-                            <span
-                              className="mg-page-header__language-link-code"
-                              aria-hidden="true"
-                            >
-                              {lang.value.slice(0, 2).toUpperCase()}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <Icon
-                      name="languages"
-                      className="mg-page-header__toolbar-icon mg-page-header__language-icon"
-                    />
-                  )}
+                  <Icon
+                    name="languages"
+                    className="mg-page-header__toolbar-icon mg-page-header__language-icon"
+                  />
                   <form
                     className="mg-page-header__lang-form lang-dropdown-form lang_dropdown_form"
                     id={id('lang_dropdown_form_lang-dropdown-form')}
@@ -223,10 +217,6 @@ export function PageHeader({
                           data-lang-dropdown-id="lang-dropdown-form"
                           id={id('edit-lang-dropdown-select')}
                           name="lang_dropdown_select"
-                          tabIndex={
-                            languageDisplay === 'links' ? -1 : undefined
-                          }
-                          aria-hidden={languageDisplay === 'links' || undefined}
                           defaultValue={
                             languages.find(lang => lang.selected)?.value ||
                             languages[0]?.value
@@ -241,21 +231,19 @@ export function PageHeader({
                       </div>
                     </div>
 
-                    {languageDisplay !== 'links' && (
-                      <noscript>
-                        <div>
-                          <button
-                            type="submit"
-                            id={id('edit-submit')}
-                            name="op"
-                            value="Go"
-                            className="button js-form-submit form-submit btn"
-                          >
-                            Go
-                          </button>
-                        </div>
-                      </noscript>
-                    )}
+                    <noscript>
+                      <div>
+                        <button
+                          type="submit"
+                          id={id('edit-submit')}
+                          name="op"
+                          value="Go"
+                          className="button js-form-submit form-submit btn"
+                        >
+                          Go
+                        </button>
+                      </div>
+                    </noscript>
                   </form>
                 </div>
               )}
@@ -341,13 +329,19 @@ PageHeader.propTypes = {
    * icon-only trigger that opens a native <select> — works everywhere,
    * including with JavaScript disabled (see the <noscript> submit button).
    * 'links' shows each language inline in the toolbar as its own button —
-   * one click instead of open-then-select, best for 2-4 languages. It
-   * requires JavaScript (the buttons drive the same underlying <select>
-   * rather than each linking to a real URL, since `languages` doesn't carry
-   * per-language URLs), so 'dropdown' is the safer default for progressive
-   * enhancement.
+   * one click instead of open-then-select. Below the tablet breakpoint, and
+   * whenever there are more than `maxLanguageLinks` languages, it falls back
+   * to the dropdown. The buttons require JavaScript (they drive the same
+   * underlying <select> rather than each linking to a real URL, since
+   * `languages` doesn't carry per-language URLs), so 'dropdown' is the safer
+   * default for progressive enhancement.
    */
   languageDisplay: PropTypes.oneOf(['dropdown', 'links']),
+  /**
+   * With languageDisplay="links", the most languages shown inline before
+   * falling back to the dropdown. Defaults to 6, the official UN languages.
+   */
+  maxLanguageLinks: PropTypes.number,
   /** Array of language objects: { value, label, selected } */
   languages: PropTypes.arrayOf(
     PropTypes.shape({

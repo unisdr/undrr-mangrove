@@ -42,6 +42,7 @@ export default {
       options: ['dropdown', 'links'],
       control: { type: 'radio' },
     },
+    maxLanguageLinks: { control: 'number' },
     languages: { control: 'object' },
   },
 };
@@ -82,10 +83,32 @@ export const WithLanguageLinks = {
     variant: 'default',
     languageDisplay: 'links',
     languages: [
-      { value: 'en', label: 'English', selected: true },
       { value: 'ar', label: 'العربية' },
-      { value: 'es', label: 'Español' },
+      { value: 'zh', label: '中文' },
+      { value: 'en', label: 'English', selected: true },
       { value: 'fr', label: 'Français' },
+      { value: 'ru', label: 'Русский' },
+      { value: 'es', label: 'Español' },
+    ],
+  },
+};
+
+export const WithManyLanguageLinks = {
+  name: 'With language links, too many',
+  args: {
+    variant: 'default',
+    languageDisplay: 'links',
+    languages: [
+      { value: 'ar', label: 'العربية' },
+      { value: 'zh', label: '中文' },
+      { value: 'en', label: 'English', selected: true },
+      { value: 'fr', label: 'Français' },
+      { value: 'de', label: 'Deutsch' },
+      { value: 'ja', label: '日本語' },
+      { value: 'ko', label: '한국어' },
+      { value: 'pt', label: 'Português' },
+      { value: 'ru', label: 'Русский' },
+      { value: 'es', label: 'Español' },
     ],
   },
 };

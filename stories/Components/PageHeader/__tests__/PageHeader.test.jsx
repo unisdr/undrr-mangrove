@@ -209,13 +209,29 @@ describe('PageHeader', () => {
       expect(
         screen.getByRole('button', { name: 'Español' })
       ).toBeInTheDocument();
-      // The select stays in the DOM (it's what actually gets submitted) but
-      // is removed from both the accessibility tree and the tab order —
-      // the buttons are the only way to reach language selection here.
+      // The select stays in the DOM: the buttons submit through it, and it
+      // is the dropdown shown in their place below tablet (CSS-toggled).
       const select = screen.getByDisplayValue('English');
       expect(select.tagName).toBe('SELECT');
-      expect(select).toHaveAttribute('aria-hidden', 'true');
-      expect(select).toHaveAttribute('tabindex', '-1');
+      expect(
+        select.closest('.mg-page-header__block--language-fallback')
+      ).not.toBeNull();
+    });
+
+    it('falls back to the dropdown past maxLanguageLinks', () => {
+      const { container } = render(
+        <PageHeader
+          languageDisplay="links"
+          maxLanguageLinks={2}
+          languages={languages}
+        />
+      );
+
+      expect(screen.queryByRole('button', { name: 'English' })).toBeNull();
+      expect(
+        container.querySelector('.mg-page-header__block--language-fallback')
+      ).toBeNull();
+      expect(screen.getByLabelText('Select your language')).toBeInTheDocument();
     });
 
     it('marks the selected language with aria-current', () => {
