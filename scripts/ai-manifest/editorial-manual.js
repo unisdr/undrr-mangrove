@@ -8,8 +8,9 @@
  * truth; this just wraps it in the llms.txt header/links convention.
  */
 
-const GITHUB_DOCS_BASE =
-  'https://github.com/unisdr/undrr-mangrove/blob/main/docs/';
+import { REPO_BLOB_MAIN } from './repo.js';
+
+const GITHUB_DOCS_BASE = `${REPO_BLOB_MAIN}docs/`;
 
 /**
  * Wrap the editorial manual markdown as a standalone llms-style text file.

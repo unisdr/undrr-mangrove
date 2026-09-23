@@ -47,7 +47,7 @@ See the [component contribution guide](https://mangrove.undrr.org/?path=/docs/co
 
 ## AI manifest for component discovery
 
-Mangrove publishes an AI-friendly manifest (`llms.txt`, `llms.json`, `releases.json`, `tokens.json`, and `ai-components/`) alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers, a CSS utility class inventory, and machine-readable design token definitions. `llms-editorial-manual.txt` is a separate, topic-scoped sub-manifest generated from [`docs/EDITORIAL-MANUAL.md`](docs/EDITORIAL-MANUAL.md), for agents that only need writing/style rules and terminology. The pipeline lives in `scripts/ai-manifest/` (6 files).
+Mangrove publishes an AI-friendly manifest (`llms.txt`, `llms.json`, `releases.json`, `tokens.json`, and `ai-components/`) alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers, a CSS utility class inventory, and machine-readable design token definitions. `llms-editorial-manual.txt` is a separate, topic-scoped sub-manifest generated from [`docs/EDITORIAL-MANUAL.md`](docs/EDITORIAL-MANUAL.md), for agents that only need writing/style rules and terminology. The pipeline lives in `scripts/ai-manifest/` (7 files).
 
 Most of the manifest auto-generates from Storybook, component rendering, tokens, and `CHANGELOG.md`. Two things need manual maintenance when adding or modifying components:
 

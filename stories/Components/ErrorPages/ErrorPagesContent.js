@@ -20,7 +20,7 @@ export const DEFAULT_COPY = {
       "You don't have permission to view this page. If you need access, contact the website team.",
   },
   404: {
-    title: "We can't find the page you're looking for",
+    title: "This page can't be found",
     description:
       'If you typed the web address, check that it\'s correct. If you followed a link, it may be out of date. <br /> Go to the <a href="/">homepage</a>, browse the <a href="https://www.undrr.org/undrr-directory">UNDRR directory</a>, or search:',
   },
@@ -30,9 +30,9 @@ export const DEFAULT_COPY = {
       'You made too many requests in a short time. Wait a moment, then try again.',
   },
   500: {
-    title: 'Something went wrong on our side',
+    title: 'Something went wrong',
     description:
-      "We couldn't complete your request. Try again in a few minutes. If the problem continues, contact us.",
+      "Your request couldn't be completed. Try again in a few minutes.",
   },
   502: {
     title: 'Bad gateway',
