@@ -654,21 +654,21 @@ Every component MDX file must end with a `## Changelog` section (H2 level) that 
 ```markdown
 ## Changelog
 
-- **2.1** — 2026-02-20:
+- **2.1**, 2026-02-20:
   - ([web-backlog#1992](https://gitlab.com/undrr/web-backlog/-/issues/1992)) Taxonomy term results
   - ([web-backlog#2636](https://gitlab.com/undrr/web-backlog/-/issues/2636)) Card display modes
-- **2.0** — 2026-01-15 ([web-backlog#1234](https://gitlab.com/undrr/web-backlog/-/issues/1234)): **Breaking:** Description of breaking change
-- **1.0** — 2025-11-01 ([web-backlog#999](https://gitlab.com/undrr/web-backlog/-/issues/999)): Released component
+- **2.0**, 2026-01-15 ([web-backlog#1234](https://gitlab.com/undrr/web-backlog/-/issues/1234)): **Breaking:** Description of breaking change
+- **1.0**, 2025-11-01 ([web-backlog#999](https://gitlab.com/undrr/web-backlog/-/issues/999)): Released component
 ```
 
 **Rules:**
 
 - **Heading level**: Always `## Changelog` (H2)
-- **Single-issue entry**: `- **version** — YYYY-MM-DD ([web-backlog#NNN](url)): description`
+- **Single-issue entry**: `- **version**, YYYY-MM-DD ([web-backlog#NNN](url)): description`
 - **Multi-issue entry**: When multiple issues ship in the same version, use sub-bullets — one per issue, each citing its own tracker issue
 - **Tracker issue**: Always cite a tracker issue in parentheses. Prefer the GitLab web-backlog in the short format `web-backlog#NNN` linked to the full URL. If no GitLab issue exists, a GitHub issue or pull request link is acceptable (`#NNN` linked to the GitHub URL)
 - **Version**: Semver without `v` prefix (e.g., `1.0`, `2.1.3`, not `v1.0` or `Version 1.0`)
-- **Separator**: Em dash `—` between version and date, colon `:` after date
+- **Separator**: comma `,` between version and date, colon `:` after the date and tracker link. Don't use an em or en dash; they get mangled when copy passes through systems with the wrong character encoding
 - **Date**: ISO 8601 format (`YYYY-MM-DD`) for traceability
 - **Order**: Newest entries first
 - **Breaking changes**: Prefix description with `**Breaking:**`
@@ -822,7 +822,7 @@ Description of hover, focus, and other states.
 
 ## Changelog
 
-- **1.0** — 2025-01-15: Released component
+- **1.0**, 2025-01-15: Released component
 ```
 
 ## Creating Storybook stories
@@ -988,7 +988,7 @@ Every deprecation must include a clear migration path:
 Use the standard changelog format with a `**Deprecated:**` prefix:
 
 ```markdown
-- **2.1** — 2026-03-01: **Deprecated:** Use NewComponent instead
+- **2.1**, 2026-03-01: **Deprecated:** Use NewComponent instead
 ```
 
 ### Removal

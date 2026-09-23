@@ -159,7 +159,7 @@ test('positioning experiment: a quote, a callout and a video embed sit inside th
   expect(container.querySelector('.mg-highlight-box')).toBeInTheDocument();
   expect(container.querySelector('.mg-embed-container')).toBeInTheDocument();
   expect(
-    screen.getByTitle('This is how timely early warnings save lives — UNDRR')
+    screen.getByTitle('This is how timely early warnings save lives (UNDRR)')
   ).toBeInTheDocument();
 });
 

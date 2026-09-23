@@ -27,11 +27,12 @@ export function parseChangelog(markdown) {
     const line = lines[i];
 
     // Matches headings like:
-    // ## 2.0.0-beta.3 — 2026-09-15
-    // ## 2.0.0 — unreleased
-    // ## [1.8.2] — 2026-08-27
+    // ## 2.0.0-beta.3, 2026-09-15
+    // ## 2.0.0, unreleased
+    // ## [1.8.2], 2026-08-27
+    // The older em/en dash separator (`## 1.8.2 — 2026-08-27`) is still accepted.
     const releaseHeaderMatch = line.match(
-      /^##\s+(?:\[?([0-9a-zA-Z.-]+)\]?)(?:\s+[—–-]\s+(\d{4}-\d{2}-\d{2}|unreleased))?/i
+      /^##\s+(?:\[?([0-9a-zA-Z.-]+)\]?)(?:(?:\s*,\s*|\s+[—–-]\s+)(\d{4}-\d{2}-\d{2}|unreleased))?/i
     );
 
     if (releaseHeaderMatch && !line.toLowerCase().startsWith('## unreleased')) {
@@ -40,7 +41,7 @@ export function parseChangelog(markdown) {
         releaseHeaderMatch[2] ||
         (line.toLowerCase().includes('unreleased') ? 'unreleased' : null);
 
-      // Only dated headings are releases. `## 2.0.0 — unreleased` is a planning
+      // Only dated headings are releases. `## 2.0.0, unreleased` is a planning
       // section; publishing it would advertise a stable version and tag that
       // do not exist. Stop collecting until the next real release heading.
       if (!/^\d{4}-\d{2}-\d{2}$/.test(rawDate || '')) {
@@ -153,9 +154,10 @@ export function parseComponentChangelog(mdxContent) {
   let currentEntry = null;
 
   for (const line of bulletLines) {
-    // Matches: - **2.4.0** — 2026-09-16: ... or - **2.4.0** — 2026-09-16 ([#1157](url)): ...
+    // Matches: - **2.4.0**, 2026-09-16: ... or - **2.4.0**, 2026-09-16 ([#1157](url)): ...
+    // The older em/en dash separator (`- **2.4.0** — 2026-09-16`) is still accepted.
     const match = line.match(
-      /^[-*]\s+\*\*([0-9a-zA-Z.-]+)\*\*(?:\s+[—–-]\s+(\d{4}-\d{2}-\d{2}))?:?\s*(.*)$/
+      /^[-*]\s+\*\*([0-9a-zA-Z.-]+)\*\*(?:(?:\s*,\s*|\s+[—–-]\s+)(\d{4}-\d{2}-\d{2}))?:?\s*(.*)$/
     );
     if (match) {
       const version = match[1];

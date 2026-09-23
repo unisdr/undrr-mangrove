@@ -37,7 +37,7 @@ This work supports sites in meeting the [minimum standards for multilingualism o
 
 ## Component changelogs
 
-Every component MDX file must include a `## Changelog` section tracking its version history. When submitting a PR that modifies a component, add a new changelog entry (e.g. `- **X.Y.Z** — YYYY-MM-DD ([#PR](https://...)): Description`).
+Every component MDX file must include a `## Changelog` section tracking its version history. When submitting a PR that modifies a component, add a new changelog entry (e.g. `- **X.Y.Z**, YYYY-MM-DD ([#PR](https://...)): Description`).
 
 The manifest pipeline automatically parses each `## Changelog` into machine-readable format for `releases.json` and the component's `ai-components/{id}.json` detail file.
 

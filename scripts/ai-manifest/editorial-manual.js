@@ -34,7 +34,7 @@ export function buildEditorialManualTxt(markdown, docsBase) {
 
   return `# Mangrove editorial manual
 
-> Mechanical style rules (capitalization, punctuation, numbers and dates, abbreviations, italics, spelling), UNDRR-specific terminology, plus disability inclusive and gender-inclusive language for UNDRR Mangrove UI copy, component docs and Storybook pages. Each rule is credited to its source – the UNDRR Publications SOP, the UN Geneva Web Style Guide, the United Nations Editorial Manual, the United Nations Disability-Inclusive Communications Guidelines or the DPI Gender Checklist for Content Creators; see the "Keeping this updated" section below for the full source list and priority order.
+> Mechanical style rules (capitalization, punctuation, numbers and dates, abbreviations, italics, spelling), UNDRR-specific terminology, plus disability inclusive and gender-inclusive language for UNDRR Mangrove UI copy, component docs and Storybook pages. Each rule is credited to its source: the UNDRR Publications SOP, the UN Geneva Web Style Guide, the United Nations Editorial Manual, the United Nations Disability-Inclusive Communications Guidelines or the DPI Gender Checklist for Content Creators; see the "Keeping this updated" section below for the full source list and priority order.
 
 ${body.trim()}
 

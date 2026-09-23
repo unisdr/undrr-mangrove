@@ -99,16 +99,16 @@ See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-witho
 
 ## Changelog
 
-- **1.5.0** — 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `mg-card--secondary` no longer paints its title in the orange accent (2.65 on the card surface, 2.37 on DELTA's). The title takes the interactive colour, and the accent becomes a 4px rule on the card's leading edge instead. `--mg-color-secondary` is unchanged. This is a visible change wherever the modifier is used, in all five themes.
-- **1.4.1** — 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.
-- **1.4.0** — 2026-09-10: Plain-text titles for unlinked cards, visible labels, `buttonLink` prop, and `card.scss` fixes for empty `href`.
-- **1.3.4** — 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic titles/labels use `ui` font role.
-- **1.3.3** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Language-specific Arabic typography.
-- **1.3.2** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Unified focus states, raised surface, elevation.
-- **1.3.1** — 2026-07-08: Fix z-index conflict with MegaMenu.
-- **1.3** — 2026-04-13: Roboto Condensed headings; add `variant` prop.
-- **1.2.1** — 2026-03-12: Fix chevron orphaning; trim title whitespace.
-- **1.2** — 2026-03-05: Link affordances; `variant` prop; `mg-card--plain-title` modifier.
-- **1.1.1** — 2025-12-12: Remove card share support.
-- **1.1** — 2024-09-20: Handle missing images.
-- **1.0** — 2023-09-04: Initial release.
+- **1.5.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `mg-card--secondary` no longer paints its title in the orange accent (2.65 on the card surface, 2.37 on DELTA's). The title takes the interactive colour, and the accent becomes a 4px rule on the card's leading edge instead. `--mg-color-secondary` is unchanged. This is a visible change wherever the modifier is used, in all five themes.
+- **1.4.1**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.
+- **1.4.0**, 2026-09-10: Plain-text titles for unlinked cards, visible labels, `buttonLink` prop, and `card.scss` fixes for empty `href`.
+- **1.3.4**, 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Arabic titles/labels use `ui` font role.
+- **1.3.3**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Language-specific Arabic typography.
+- **1.3.2**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Unified focus states, raised surface, elevation.
+- **1.3.1**, 2026-07-08: Fix z-index conflict with MegaMenu.
+- **1.3**, 2026-04-13: Roboto Condensed headings; add `variant` prop.
+- **1.2.1**, 2026-03-12: Fix chevron orphaning; trim title whitespace.
+- **1.2**, 2026-03-05: Link affordances; `variant` prop; `mg-card--plain-title` modifier.
+- **1.1.1**, 2025-12-12: Remove card share support.
+- **1.1**, 2024-09-20: Handle missing images.
+- **1.0**, 2023-09-04: Initial release.

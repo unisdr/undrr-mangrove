@@ -728,21 +728,21 @@ export const getCaptionForLocaleList = locale => {
 
 ## Changelog
 
-- **2.4.1** — 2026-09-20 ([#1273](https://github.com/unisdr/undrr-mangrove/issues/1273)): Added `.mg-content` as the opt-in long-form and WYSIWYG typography boundary. Paragraph links inside it are underlined at rest; blockquote and cite styling now supports it alongside the existing `.mg-body` alias. Navigation, buttons and card links are not affected.
+- **2.4.1**, 2026-09-20 ([#1273](https://github.com/unisdr/undrr-mangrove/issues/1273)): Added `.mg-content` as the opt-in long-form and WYSIWYG typography boundary. Paragraph links inside it are underlined at rest; blockquote and cite styling now supports it alongside the existing `.mg-body` alias. Navigation, buttons and card links are not affected.
 
-- **2.4.0** — 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added the `.mg-accordion` and `.mg-accordion--flush` patterns for grouped `<details>` disclosures with flush border dividers, animated rotating chevrons, and nested layer support.
-- **2.3.1** — 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography now follows the computed language of each element rather than the page root, so a `lang="en"` island inside an Arabic page renders in the Latin families.
-- **2.3** — 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Aligned the enhanced `.mg-details` disclosure marker with stacked tabs by replacing directional triangles with tokenised circular plus/minus controls, logical RTL positioning, a 48px summary target, and tactile hover/press states. Bare `<details>` retains its native marker.
+- **2.4.0**, 2026-09-16 ([#1157](https://github.com/unisdr/undrr-mangrove/pull/1157)): Added the `.mg-accordion` and `.mg-accordion--flush` patterns for grouped `<details>` disclosures with flush border dividers, animated rotating chevrons, and nested layer support.
+- **2.3.1**, 2026-09-08 ([#1092](https://github.com/unisdr/undrr-mangrove/issues/1092)): Arabic typography now follows the computed language of each element rather than the page root, so a `lang="en"` island inside an Arabic page renders in the Latin families.
+- **2.3**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Aligned the enhanced `.mg-details` disclosure marker with stacked tabs by replacing directional triangles with tokenised circular plus/minus controls, logical RTL positioning, a 48px summary target, and tactile hover/press states. Bare `<details>` retains its native marker.
   - Refined inline code as a compact theme-aware technical surface with interactive-colour tinting, shared radius semantics, a modern system-monospace stack, disabled ligatures, and coherent decoration when snippets wrap.
 
-- **1.2** — 2025-07-14 ([#865](https://github.com/unisdr/undrr-mangrove/issues/865)):
+- **1.2**, 2025-07-14 ([#865](https://github.com/unisdr/undrr-mangrove/issues/865)):
   - Refactored `details`/`summary` styles to opt-in `mg-details` class; bare `<details>` receives a light baseline (pointer cursor, branded focus ring) without altering the native disclosure marker
   - Replaced `outline: 0` on `summary` with explicit `:focus-visible` style for keyboard accessibility
   - Improved `hr` with brand-blue top border and vertical breathing room
   - Improved `dt` with bold weight for clear labelling without link ambiguity; added `dd + dt` group spacing
   - Redesigned code block: removed left accent border in favour of clean full-radius dark block; added language badge (top-right) via `data-language` attribute or CSS `:has()` for syntax-highlighted output; added `figure.mg-code-block` + `figcaption` wrapper for Vercel-inspired filename headers
-- **1.1** — 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)):
+- **1.1**, 2026-03-05 ([web-backlog#2661](https://gitlab.com/undrr/web-backlog/-/issues/2661)):
   - Added optional `size` prop to Paragraph component for applying font-size utility classes
-  - Fixed Paragraph `label` prop support — callers passing `label` instead of `detail` now render correctly
+  - Fixed Paragraph `label` prop support: callers passing `label` instead of `detail` now render correctly
   - Added whitelist validation for `size` prop values
-- **1.0** — Released component
+- **1.0**: Released component

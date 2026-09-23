@@ -82,10 +82,10 @@ A release that changes the major is the one that matters. When `latest` moves to
 
 ### 4. Update CHANGELOG.md
 
-In `CHANGELOG.md`, rename the `## Unreleased` section to `## X.Y.Z — YYYY-MM-DD` and add a link to the GitHub Release below the heading (the release page is created in step 6, so you can add the link now and it will resolve once the release is published):
+In `CHANGELOG.md`, rename the `## Unreleased` section to `## X.Y.Z, YYYY-MM-DD` and add a link to the GitHub Release below the heading (the release page is created in step 6, so you can add the link now and it will resolve once the release is published):
 
 ```markdown
-## 1.3.0 — 2026-01-15
+## 1.3.0, 2026-01-15
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v1.3.0) for full details.
 ```
