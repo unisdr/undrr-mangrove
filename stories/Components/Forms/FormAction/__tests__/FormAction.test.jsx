@@ -32,7 +32,7 @@ describe('FormAction', () => {
 
   it('connects help and error messages without replacing existing descriptions', () => {
     renderFormAction({
-      helpText: 'We will send a confirmation email.',
+      helpText: 'A confirmation email will be sent to this address.',
       errorText: 'Enter a valid email address.',
       control: (
         <input
@@ -65,7 +65,7 @@ describe('FormAction', () => {
 
   it('has no detectable accessibility violations', async () => {
     const { container } = renderFormAction({
-      helpText: 'We will send a confirmation email.',
+      helpText: 'A confirmation email will be sent to this address.',
     });
 
     expect(await axe(container)).toHaveNoViolations();

@@ -72,7 +72,7 @@ const sampleTabData = [
   {
     text: 'Tab title 1',
     text_id: 'tab-1',
-    data: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
+    data: 'As the United Nations Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
   },
   {
     text: 'Tab title 2',
@@ -91,7 +91,7 @@ const sampleTabDataStacked = [
   {
     text: 'Stacked title 1',
     text_id: 'tab-1-stacked',
-    data: 'As the UN Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
+    data: 'As the United Nations Office for Disaster Risk Reduction, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.',
   },
   {
     text: 'Tab title 2',
@@ -513,7 +513,7 @@ const PageTemplateExample = () => {
           <form onSubmit={event => event.preventDefault()}>
             <FormAction
               label="Email address"
-              helpText="We will only use this address for your selected updates."
+              helpText="This address is only used for your selected updates."
               stackOnMobile
               control={
                 <input

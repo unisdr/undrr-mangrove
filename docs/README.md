@@ -16,7 +16,7 @@ This directory holds the source files for documentation published in Storybook.
 | Architecture and delivery model | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Accessibility requirements | [ACCESSIBILITY.md](ACCESSIBILITY.md) |
 | Writing standards | [WRITING.md](WRITING.md) |
-| Editorial style rules (capitalization, punctuation, numbers, spelling) | [EDITORIAL-MANUAL.md](EDITORIAL-MANUAL.md) |
+| Editorial style rules (capitalization, punctuation, numbers, spelling, UNDRR terminology, inclusive language) | [EDITORIAL-MANUAL.md](EDITORIAL-MANUAL.md) |
 | Hydration API and patterns | [HYDRATION.md](HYDRATION.md) |
 | CDN usage | [CDN-REFERENCE.md](CDN-REFERENCE.md) |
 | Release process | [RELEASES.md](RELEASES.md) |

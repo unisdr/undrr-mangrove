@@ -71,7 +71,7 @@ const getCaptionForLocale = locale => {
         {
           text: 'Tab title 1',
           text_id: 'tab-1',
-          data: "<a href='#'>As the UN Office for Disaster Risk Reduction</a>, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.",
+          data: "<a href='#'>As the United Nations Office for Disaster Risk Reduction</a>, UNDRR convenes partners and coordinates activities to create safer, more resilient communities.",
         },
         {
           text: 'Tab title 2',

@@ -2244,7 +2244,7 @@ npm run build</code></pre>
       <div class="mg-form-field">
         <label class="mg-form-label mg-form-label--required" for="email">Email address</label>
         <input class="mg-form-input" type="email" id="email" name="email" autocomplete="email" aria-describedby="email-help" required />
-        <p class="mg-form-help" id="email-help">We will only use this to respond to your inquiry.</p>
+        <p class="mg-form-help" id="email-help">This address is only used to respond to your inquiry.</p>
       </div>
 
       <div class="mg-form-field">

@@ -14,7 +14,7 @@ This guide helps anyone contributing to Mangrove write interface copy, documenta
 - Make flows simpler, actions clearer, and decisions easier.
 - Prefer verbs that match the action (for example, “Save changes” instead of “OK”).
 - Break down complex steps into smaller, scannable chunks.
-- Example: Instead of “Form submission failed,” use “We couldn’t save your changes. Try again in a few minutes.”
+- Example: Instead of “Form submission failed,” use “Your changes couldn’t be saved. Try again in a few minutes.”
 - Reference: [GOV.UK content design principles — writing for services](https://www.gov.uk/guidance/content-design/writing-for-gov-uk)
 
 ## Tell the truth
@@ -30,7 +30,7 @@ This guide helps anyone contributing to Mangrove write interface copy, documenta
 - Avoid idioms, colloquialisms, and culturally specific metaphors.
 - Provide alt text and meaningful, descriptive link text.
 - Reference: [Microsoft writing style guide — inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
-- Reference: [United Nations Editorial Manual](https://www.un.org/dgacm/en/content/editorial-manual) — the canonical UN system source for capitalization, punctuation, numbers/dates, and gender- and disability-inclusive language rules.
+- Reference: [United Nations Editorial Manual](https://www.un.org/dgacm/en/content/editorial-manual) — the canonical United Nations system source for capitalization, punctuation, numbers and dates, abbreviations and spelling.
 
 ## Say the right thing at the right time
 
@@ -103,10 +103,10 @@ Reference: [Ibrahim Diallo — How do we get developers to read the docs?](https
 
 ## Language mechanics and patterns
 
-- Use second person (“you”) and speak directly to the user. Keep sentences and paragraphs short for scannability. Aim to front‑load key information. References: [GOV.UK content design](https://www.gov.uk/guidance/content-design/writing-for-gov-uk), [PlainLanguage.gov](https://www.plainlanguage.gov/guidelines/)
+- Use second person (“you”) and speak directly to the user. Avoid the first person (“we,” “our,” “us”): describe what happened instead (“Your changes couldn’t be saved”), as the [Editorial manual](EDITORIAL-MANUAL.md#undrr-specific-terminology) requires. Keep sentences and paragraphs short for scannability. Aim to front‑load key information. References: [GOV.UK content design](https://www.gov.uk/guidance/content-design/writing-for-gov-uk), [PlainLanguage.gov](https://www.plainlanguage.gov/guidelines/)
 - Structure pages with meaningful headings and lists. Make one point per paragraph, and prefer bulleted lists for steps and options. Reference: [PlainLanguage.gov](https://www.plainlanguage.gov/guidelines/)
 - Use descriptive link text and avoid “click here.” Put the action or destination in the link. Reference: [GOV.UK content design](https://www.gov.uk/guidance/content-design/writing-for-gov-uk)
-- Prefer sentence case for UI labels and headings; capitalize proper nouns and acronyms. Reference: [Material Design — writing](https://m2.material.io/design/communication/writing.html)
+- Prefer sentence case for UI labels and headings; capitalize proper nouns and acronyms. Menu and navigation labels are the exception and take title case (see the [Editorial manual](EDITORIAL-MANUAL.md#capitalization)). Reference: [Material Design — writing](https://m2.material.io/design/communication/writing.html)
 - Contractions are acceptable when they improve clarity and tone. Avoid exclamation marks and overly casual slang. Reference: [Mailchimp content style guide](https://styleguide.mailchimp.com/)
 - Make dates and times unambiguous by writing out the month (for example, “10 October 2025”). Use units and numerals consistently. Reference: [PlainLanguage.gov](https://www.plainlanguage.gov/guidelines/)
 
@@ -122,14 +122,14 @@ Reference: [Ibrahim Diallo — How do we get developers to read the docs?](https
 - Write alt text that conveys purpose, not just appearance, and ensure link text is meaningful out of context.
 - Prefer people‑first or identity‑first language according to the community’s preference when relevant. Reference: [Microsoft — inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
 
-### UN guidance for gender‑inclusive English
+### United Nations guidance for gender‑inclusive English
 
-- Follow the United Nations strategies for gender‑inclusive language in English, using gender‑neutral terms by default (for example, “chair,” “spokesperson,” “humankind”). Avoid gender‑biased expressions and stereotypes. References: [UN gender‑inclusive language — guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml)
-- Make gender visible only when relevant to the communication. Prefer neutral constructions (plural antecedents, relative pronoun “who,” or rephrasing to omit gendered pronouns). Reference: [UN gender‑inclusive language — guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml)
+- Follow the United Nations strategies for gender‑inclusive language in English, using gender‑neutral terms by default (for example, “chair,” “spokesperson,” “humankind”). Avoid gender‑biased expressions and stereotypes. References: [United Nations gender‑inclusive language — guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml)
+- Make gender visible only when relevant to the communication. Prefer neutral constructions (plural antecedents, relative pronoun “who,” or rephrasing to omit gendered pronouns). Reference: [United Nations gender‑inclusive language — guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml)
 
 ### Disability‑inclusive communication
 
-Reference: [UN disability‑inclusive communications guidelines (PDF)](https://digitallibrary.un.org/record/4042358/files/1401388-EN.pdf)
+Reference: [United Nations disability‑inclusive communications guidelines (PDF)](https://digitallibrary.un.org/record/4042358/files/1401388-EN.pdf)
 
 #### Foundational principles
 
@@ -154,7 +154,7 @@ Reference: [UN disability‑inclusive communications guidelines (PDF)](https://d
 - Avoid euphemisms (for example, “special needs,” “differently abled”) and ableist terms or metaphors (for example, “crazy,” “OCD”).
 - Use plain language and logical structure with clear headings.
 - Provide accessible multilingual formats as needed (for example, sign language, Braille, large print, easy‑to‑read versions).
-- For the concrete recommended-vs-avoid terminology table, see [Editorial manual — Disability-inclusive language](EDITORIAL-MANUAL.md#disability-inclusive-language).
+- For the concrete recommended-vs-avoid terminology table, see [Editorial manual — Disability inclusive language](EDITORIAL-MANUAL.md#disability-inclusive-language).
 
 #### Visual and audio design
 
@@ -186,7 +186,7 @@ Reference: [UN disability‑inclusive communications guidelines (PDF)](https://d
 ## Related documentation
 
 - [Writing guidelines (short)](WRITING-SHORT.md) — quick-reference version of these rules
-- [Editorial manual](EDITORIAL-MANUAL.md) — mechanical style rules (capitalization, punctuation, numbers, abbreviations, italics, spelling), credited to UN system sources
+- [Editorial manual](EDITORIAL-MANUAL.md) — mechanical style rules (capitalization, punctuation, numbers, abbreviations, italics, spelling), plus UNDRR terminology and inclusive-language terms, credited to United Nations system sources and the UNDRR Publications SOP
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
 

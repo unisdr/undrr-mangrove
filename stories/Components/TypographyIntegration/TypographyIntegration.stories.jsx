@@ -117,9 +117,9 @@ const count = text.length;
 
       <figure>
         <figcaption>
-          As the UN Office for Disaster Risk Reduction, UNDRR convenes partners
-          and coordinates activities to create safer, more resilient
-          communities.
+          As the United Nations Office for Disaster Risk Reduction, UNDRR
+          convenes partners and coordinates activities to create safer, more
+          resilient communities.
         </figcaption>
       </figure>
 

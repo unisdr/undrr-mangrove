@@ -21,7 +21,7 @@ Layer your docs: what it does → how to use it → why it works that way. Keep 
 Also:
 
 - Sentence case for headings and titles; keep proper nouns and acronyms capitalized.
-- Error messages: what happened, why (if known), what to do next.
+- Error messages: what happened, why (if known), what to do next. No first person: “Your changes couldn’t be saved,” not “We couldn’t save your changes.”
 - Empty states: what’s missing, why it matters, how to add content.
 - Success messages: confirm result and suggest next steps.
 - Confirmation dialogs: put consequences up front; primary action is the safest choice.
@@ -30,17 +30,17 @@ Also:
 
 - Use direct, plain language; front‑load key info; keep sentences short. (GOV.UK, PlainLanguage.gov)
 - Descriptive link text; avoid “click here.” (GOV.UK)
-- Sentence case for UI; keep proper nouns/acronyms capitalized. (Material Design)
+- Sentence case for UI; keep proper nouns/acronyms capitalized. Menu and navigation labels take title case. (Material Design; UN Geneva)
 - Calm, actionable errors: what happened, why (if helpful), what to do next. (NN/g)
 - Inclusive language; avoid idioms/slang; meaningful alt text and link text. (Microsoft)
 - Plan for localization: avoid idioms; allow text expansion; clear dates/times. (Microsoft, GOV.UK)
 
-UN guidance:
+United Nations guidance:
 
-- Use gender‑neutral terms by default (for example, “chair,” “spokesperson,” “humankind”). Avoid gender‑biased expressions and stereotypes. ([UN guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml))
-- Make gender visible only when relevant; prefer neutral constructions (plural antecedents, “who,” or rephrasing). ([UN guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml))
-- Consider translation and parity across UN languages; avoid constructions that impede translation. ([UN publications PDF](https://digitallibrary.un.org/record/4042358/files/1401388-EN.pdf))
-- Disability‑inclusive (UN): ([PDF](https://digitallibrary.un.org/record/4042358/files/1401388-EN.pdf))
+- Use gender‑neutral terms by default (for example, “chair,” “spokesperson,” “humankind”). Avoid gender‑biased expressions and stereotypes. ([United Nations guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml))
+- Make gender visible only when relevant; prefer neutral constructions (plural antecedents, “who,” or rephrasing). ([United Nations guidelines](https://www.un.org/en/gender-inclusive-language/guidelines.shtml))
+- Consider translation and parity across the official United Nations languages; avoid constructions that impede translation. ([United Nations publications PDF](https://digitallibrary.un.org/record/4042358/files/1401388-EN.pdf))
+- Disability‑inclusive (United Nations): ([PDF](https://digitallibrary.un.org/record/4042358/files/1401388-EN.pdf))
 
 ## References
 
@@ -57,7 +57,7 @@ The “Write for two audiences” principle is inspired by Ibrahim Diallo’s �
 
 ## Related documentation
 
-- [Full writing guidelines](WRITING.md) — detailed UX writing standards and UN conventions
-- [Editorial manual](EDITORIAL-MANUAL.md) — capitalization, punctuation, numbers, abbreviations, italics, and spelling rules, credited to UN system sources
+- [Full writing guidelines](WRITING.md) — detailed UX writing standards and United Nations conventions
+- [Editorial manual](EDITORIAL-MANUAL.md) — capitalization, punctuation, numbers, abbreviations, italics and spelling rules, plus UNDRR terminology and inclusive-language terms, credited to United Nations system sources and the UNDRR Publications SOP
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
