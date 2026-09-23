@@ -93,6 +93,22 @@ See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v
   });
 });
 
+describe('parseChangelog comma headings', () => {
+  it('reads a bracketed version with a comma separator', () => {
+    const releases = parseChangelog(`
+## [1.8.2], 2026-08-27
+
+### Bug fixes
+
+- **Fix.** Something.
+`);
+
+    expect(releases).toHaveLength(1);
+    expect(releases[0].version).toBe('1.8.2');
+    expect(releases[0].date).toBe('2026-08-27');
+  });
+});
+
 describe('parseComponentChangelog', () => {
   const sampleMdx = `
 # Table Component
@@ -130,6 +146,19 @@ Some table docs...
 
     expect(entries[2].version).toBe('1.0.0');
     expect(entries[2].date).toBeNull();
+  });
+
+  it('reads comma-separated entries without a PR link', () => {
+    const entries = parseComponentChangelog(`
+## Changelog
+
+- **1.0**, 2026-01-01: Initial release.
+`);
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0].version).toBe('1.0');
+    expect(entries[0].date).toBe('2026-01-01');
+    expect(entries[0].notes).toBe('Initial release.');
   });
 
   it('returns empty array when no changelog section exists', () => {
