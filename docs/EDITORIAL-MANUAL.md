@@ -2,12 +2,13 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/EDITORIAL-MANUAL.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs).
 
-This guide covers mechanical style rules — capitalization, punctuation, numbers and dates, abbreviations, italics, spelling, UNDRR-specific terminology, and disability-inclusive language — for UI copy, component docs, and Storybook pages. It is derived from, and credits, four sources (each fetched and checked against this doc on **23 September 2026** — see [Keeping this updated](#keeping-this-updated) for when to re-check):
+This guide covers mechanical style rules — capitalization, punctuation, numbers and dates, abbreviations, italics, spelling, UNDRR-specific terminology, and disability- and gender-inclusive language — for UI copy, component docs, and Storybook pages. It is derived from, and credits, five sources (each fetched and checked against this doc on **23 September 2026** — see [Keeping this updated](#keeping-this-updated) for when to re-check):
 
 - **UNDRR Publications SOP** (internal, UNDRR Communications team; `SOP_Publication-2026.docx`, fetched 23 September 2026) — UNDRR's own house style for its publications. Authoritative for anything UNDRR-specific: named entities (Sendai Framework targets/priorities/indicators, GAR, campaigns), terminology conventions, and gender language choices. Not publicly linkable (UNDRR SharePoint); contact the Communications team for the current version.
 - [UN Geneva Web Style Guide](https://www.ungeneva.org/en/styleguide) (fetched 23 September 2026) — written for web content; the primary reference for general web/UI mechanics not covered by the SOP.
 - [UN Editorial Manual](https://www.un.org/dgacm/en/content/editorial-manual) ([Style section](https://www.un.org/dgacm/en/content/editorial-manual), fetched 23 September 2026) — written for formal UN documents; used as a fallback where neither of the above covers a case, and adapted for web/UI where a document-writing rule doesn't translate directly. The UNDRR Publications SOP itself is built on this manual.
 - [UN Disability-Inclusive Communications Guidelines](https://www.un.org/sites/un2.un.org/files/un_disability-inclusive_communication_guidelines.pdf) (Department of Global Communications, March 2022; fetched 23 September 2026) — authoritative for disability-inclusive language and terminology specifically. Its own terminology table is itself sourced from the UN Office at Geneva's Disability-Inclusive Language Guidelines.
+- **DPI Gender Checklist for Content Creators** (Focal Points for Women and Gender, Department of Public Information, 2018; not confirmed to have a stable public URL — a copy was provided directly, checked 23 September 2026) — a one-page checklist for editorial teams; only its word-level "Check your words" guidance is in scope here. The rest of the checklist (narrative balance, image diversity, quantitative speaking-time checks) is content-strategy guidance for editorial teams producing stories, photography, and video, not a mechanical style rule for a component library, so it isn't reproduced in this doc.
 
 For UX writing principles — plain language, inclusive language, front-loading, writing for two audiences — see [Writing guidelines](WRITING.md) instead. This doc doesn't repeat those.
 
@@ -96,6 +97,7 @@ Rules and named entities that only make sense in UNDRR's own content — pulled 
 - **Named entities — exact form, abbreviate only after first mention**: "Global Assessment Report on Disaster Risk Reduction 20XX (GAR20XX)"; "Sendai Framework for Disaster Risk Reduction 2015–2030" (then "Sendai Framework"); "Addis Ababa Action Agenda on Financing for Development" (then "Addis Ababa Action Agenda" or "AAAA"); "Transforming our World: the 2030 Agenda for Sustainable Development" (then "2030 Agenda"); "Sustainable Development Goals" (then "SDG"/"SDGs"); "Making Cities Resilient Campaign" (Mangrove's MCR2030 theme takes its name from this campaign — don't abbreviate the campaign name itself to "MCR2030" outside the product/brand context); "Special Representative of the Secretary-General for Disaster Risk Reduction" — never abbreviated, no matter how often it recurs.
 - **Country names**: use the UNTERM short form (e.g. "United States of America", shortened to "United States" after first mention) — never an abbreviation or acronym. Alphabetize country names in a list unless there's a specific reason not to.
 - **Gender-neutral terms UNDRR has chosen**: "Chair" or "Chairperson" (not "Chairman"); "he/she" or "they"; "humankind"; "human-made". "Man-made" is reserved for direct quotations from paragraph 15 of the Sendai Framework resolution (A/RES/69/283) — never use it in original UNDRR copy.
+- **Avoid gendered-default constructions and unnecessary gender-marking**: don't default a role to one gender and mark the other as an exception (e.g. "farmer" implying male, "farmer's wife" for the female case) or add a gender qualifier where it isn't relevant to the content ("female athlete" when the person's sex has no bearing on the story). **"Flip it to test it"**: when copy names or describes a person, mentally swap the gender — if the result reads strange or the example no longer makes sense, that's a sign of an unexamined bias worth fixing. (DPI [Department of Public Information] Gender Checklist for Content Creators, 2018, "Check your words")
 - **Source attribution for data, charts, and figures**: `*Source*: United Nations Office for Disaster Risk Reduction (YYYY)` (italicized "Source"), with a full citation in APA style where a references list exists. For a Mangrove component that renders a data source line (chart footers, stat cards), use this exact pattern rather than inventing a new one.
 
 ## Disability-inclusive language
@@ -125,21 +127,23 @@ This section is scoped to terminology and copy — for keyboard/screen-reader/co
 
 ## Keeping this updated
 
-**Sources last verified: 23 September 2026.** Every rule and citation above was checked against the live/current text of all four sources on that date. Update this date whenever the doc is re-checked, so a reader can tell at a glance how stale the citations might be.
+**Sources last verified: 23 September 2026.** Every rule and citation above was checked against the live/current text of all five sources on that date. Update this date whenever the doc is re-checked, so a reader can tell at a glance how stale the citations might be.
 
-This is a **derived, curated subset** of the four sources above — not a verbatim copy, and not exhaustive. All four cover far more than is reproduced here (full A–Z spelling lists, document/resolution formatting, indirect speech, quotations, image and map policy, publication process, visual storytelling and accessible-format guidance). Go to the source directly for anything not covered:
+This is a **derived, curated subset** of the five sources above — not a verbatim copy, and not exhaustive. All five cover far more than is reproduced here (full A–Z spelling lists, document/resolution formatting, indirect speech, quotations, image and map policy, publication process, visual storytelling and accessible-format guidance, narrative/imagery content-strategy checks). Go to the source directly for anything not covered:
 
 - **UNDRR Publications SOP** (internal — UNDRR Communications team; not publicly linkable)
 - [UN Geneva Web Style Guide](https://www.ungeneva.org/en/styleguide)
 - [UN Editorial Manual — Style section](https://www.un.org/dgacm/en/content/editorial-manual): [Abbreviations](https://www.un.org/dgacm/en/content/editorial-manual/abbreviations), [Capitalization](https://www.un.org/dgacm/en/content/editorial-manual/capitalization), [Italics and bold print](https://www.un.org/dgacm/en/content/editorial-manual/italics), [Numbers, dates and time](https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time), [Punctuation](https://www.un.org/dgacm/en/content/editorial-manual/punctuation), [Spelling](https://www.un.org/dgacm/en/content/editorial-manual/spelling)
 - [UN Disability-Inclusive Communications Guidelines](https://www.un.org/sites/un2.un.org/files/un_disability-inclusive_communication_guidelines.pdf) (PDF)
+- **DPI Gender Checklist for Content Creators** (2018; not publicly linkable — request a copy from UN Women/Gender focal points)
 
 **When there's a conflict between the sources**, in priority order:
 
 1. **UNDRR Publications SOP** wins for anything UNDRR-specific — named entities (Sendai Framework targets/priorities/indicators, GAR, campaigns), UNDRR terminology conventions, and gender language choices — since it's UNDRR's own house style.
 2. **UN Disability-Inclusive Communications Guidelines** wins for disability terminology and framing specifically — it's the specialist UN-wide source on that one topic.
-3. **UN Geneva Web Style Guide** wins for general web/UI mechanics the SOP doesn't address, since it's written for the web specifically and the SOP is written for print/PDF publications.
-4. **UN Editorial Manual** is the fallback where none of the above covers a case.
+3. **DPI Gender Checklist for Content Creators** wins for gender-bias review technique specifically (the "flip it to test it" check and avoiding gendered-default constructions) — it's the specialist source on that one topic.
+4. **UN Geneva Web Style Guide** wins for general web/UI mechanics none of the above address, since it's written for the web specifically and the SOP is written for print/PDF publications.
+5. **UN Editorial Manual** is the fallback where none of the above covers a case.
 
 Translate a document-writing rule to its web/UI equivalent explicitly (as this doc does for italics and for print-only list punctuation) rather than applying it literally to component markup.
 
