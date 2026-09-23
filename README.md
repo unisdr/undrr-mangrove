@@ -72,6 +72,7 @@ yarn build
 Mangrove publishes static metadata for coding agents after Storybook deploy:
 
 - `llms.txt`: <https://mangrove.undrr.org/llms.txt>
+- `llms-editorial-manual.txt` (writing/style rules only): <https://mangrove.undrr.org/llms-editorial-manual.txt>
 - component index: <https://mangrove.undrr.org/ai-components/index.json>
 - per-component details: `ai-components/{id}.json`
 

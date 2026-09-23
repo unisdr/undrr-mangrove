@@ -11,6 +11,7 @@
  *
  *        llms.txt                       — plain-text discovery file for AI agents
  *        llms.json                      — structured version of llms.txt
+ *        llms-editorial-manual.txt      — sub-manifest: writing/style rules, from docs/EDITORIAL-MANUAL.md
  *        ai-components/index.json       — lightweight component index
  *        ai-components/{id}.json        — full details per component
  *        ai-components/utilities.json   — CSS utility class inventory
@@ -2372,6 +2373,7 @@ async function main() {
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
 - Theme token dictionary: ${DOCS_BASE}tokens.json (theme tokens only — component custom properties are documented per component)
+- Editorial manual (capitalization, punctuation, numbers, abbreviations, italics, spelling — derived from UN Geneva Web Style Guide and UN Editorial Manual, credited in the doc itself): ${DOCS_BASE}llms-editorial-manual.txt
 
 ## For AI agents
 
@@ -2592,6 +2594,54 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   fs.writeFileSync(llmsTxtPath, llmsTxt);
 
   // -------------------------------------------------------------------------
+  // Write llms-editorial-manual.txt
+  //
+  // A separate, topic-scoped sub-manifest (not a section of llms.txt) so an
+  // agent that only needs writing/style rules doesn't have to fetch and parse
+  // the full component manifest. Built from docs/EDITORIAL-MANUAL.md itself —
+  // that file is the source of truth; this just wraps it in the llms.txt
+  // header/links convention and strips the GitHub/Storybook banner line,
+  // which is meaningless outside those two contexts.
+  // -------------------------------------------------------------------------
+
+  const editorialManualPath = path.resolve(
+    process.cwd(),
+    'docs/EDITORIAL-MANUAL.md'
+  );
+  const editorialManualSource = fs
+    .readFileSync(editorialManualPath, 'utf8')
+    // Drop the file's own H1 (the wrapper below supplies one) and the
+    // GitHub/Storybook banner line, both meaningless in a standalone text file.
+    .replace(/^# .+\n\n/, '')
+    .replace(/^> Edits to this file show up on both.*\n\n?/m, '')
+    // Relative docs/*.md links only resolve inside Storybook's <Markdown>
+    // block or on GitHub's file browser — neither applies here, so point
+    // them at the GitHub file directly.
+    .replace(
+      /\]\((?!https?:|\/|#)([^)\s]+\.md)(#[^)\s]*)?\)/g,
+      (match, target, hash = '') =>
+        `](https://github.com/unisdr/undrr-mangrove/blob/main/docs/${target}${hash})`
+    );
+
+  const llmsEditorialManualTxt = `# Mangrove editorial manual
+
+> Mechanical style rules (capitalization, punctuation, numbers and dates, abbreviations, italics, spelling) for UNDRR Mangrove UI copy, component docs, and Storybook pages. Derived from, and credited to, the UN Geneva Web Style Guide and the UN Editorial Manual — see the "Keeping this updated" section below for exact source citations per rule.
+
+${editorialManualSource.trim()}
+
+## Links
+
+- Rendered version in Storybook: ${DOCS_BASE}?path=/docs/contributing-editorial-manual--docs
+- Source on GitHub: https://github.com/unisdr/undrr-mangrove/blob/main/docs/EDITORIAL-MANUAL.md
+- Full component/library manifest: ${DOCS_BASE}llms.txt
+`;
+
+  fs.writeFileSync(
+    path.join(buildDir, 'llms-editorial-manual.txt'),
+    llmsEditorialManualTxt
+  );
+
+  // -------------------------------------------------------------------------
   // Write llms.json
   // -------------------------------------------------------------------------
 
@@ -2613,6 +2663,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
         tokens: `${DOCS_BASE}tokens.json`,
+        editorialManual: `${DOCS_BASE}llms-editorial-manual.txt`,
         css: themeCss,
       },
       latestRelease: releasesData.latest,
@@ -2673,6 +2724,9 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
 
   console.log('AI manifest generated:');
   console.log(`  ${llmsTxtPath} (llms.txt + llms.json)`);
+  console.log(
+    `  ${path.join(buildDir, 'llms-editorial-manual.txt')} (editorial manual sub-manifest)`
+  );
   console.log(
     `  ${path.join(buildDir, 'releases.json')} (${releasesData.releases.length} releases parsed)`
   );

@@ -58,5 +58,6 @@ The “Write for two audiences” principle is inspired by Ibrahim Diallo’s �
 ## Related documentation
 
 - [Full writing guidelines](WRITING.md) — detailed UX writing standards and UN conventions
+- [Editorial manual](EDITORIAL-MANUAL.md) — capitalization, punctuation, numbers, abbreviations, italics, and spelling rules, credited to UN system sources
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist

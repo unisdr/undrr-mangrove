@@ -24,6 +24,7 @@ To keep copy consistent and high quality across UI, docs, and developer messages
 
 - Read the full guide: [`docs/WRITING.md`](docs/WRITING.md)
 - Use the quick reference for AI tools and lookups: [`docs/WRITING-SHORT.md`](docs/WRITING-SHORT.md)
+- For mechanical style rules (capitalization, punctuation, numbers, abbreviations, italics, spelling), see [`docs/EDITORIAL-MANUAL.md`](docs/EDITORIAL-MANUAL.md), credited to UN system sources.
 - Headings and titles use sentence case, with proper nouns and acronyms capitalized.
 
 ## Storybook translations and RTL
@@ -44,7 +45,7 @@ See the [component contribution guide](https://mangrove.undrr.org/?path=/docs/co
 
 ## AI manifest for component discovery
 
-Mangrove publishes an AI-friendly manifest (`llms.txt`, `llms.json`, `releases.json`, `tokens.json`, and `ai-components/`) alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers, a CSS utility class inventory, and machine-readable design token definitions. The pipeline lives in `scripts/ai-manifest/` (5 files).
+Mangrove publishes an AI-friendly manifest (`llms.txt`, `llms.json`, `releases.json`, `tokens.json`, and `ai-components/`) alongside Storybook so coding agents can discover and use components accurately. The manifest includes rendered HTML examples for vanilla HTML consumers, a CSS utility class inventory, and machine-readable design token definitions. `llms-editorial-manual.txt` is a separate, topic-scoped sub-manifest generated from [`docs/EDITORIAL-MANUAL.md`](docs/EDITORIAL-MANUAL.md), for agents that only need writing/style rules. The pipeline lives in `scripts/ai-manifest/` (5 files).
 
 Most of the manifest auto-generates from Storybook, component rendering, tokens, and `CHANGELOG.md`. Two things need manual maintenance when adding or modifying components:
 

@@ -184,6 +184,7 @@ Reference: [UN disability‑inclusive communications guidelines (PDF)](https://d
 ## Related documentation
 
 - [Writing guidelines (short)](WRITING-SHORT.md) — quick-reference version of these rules
+- [Editorial manual](EDITORIAL-MANUAL.md) — mechanical style rules (capitalization, punctuation, numbers, abbreviations, italics, spelling), credited to UN system sources
 - [Review checklist](REVIEW-CHECKLIST.md) — pre-submission component checklist
 - [Component guide](COMPONENT-GUIDE.md) — step-by-step tutorial for building a component
 

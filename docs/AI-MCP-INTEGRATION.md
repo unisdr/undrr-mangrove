@@ -159,6 +159,8 @@ The site root has a [`llms.txt`](https://mangrove.undrr.org/llms.txt) file follo
 
 A structured [`llms.json`](https://mangrove.undrr.org/llms.json) provides the same data in machine-parseable JSON, with all URLs as proper fields. Fetch tools that summarize markdown won't lose the URLs from the JSON version. It now includes an `iconsUrl` field that points directly to the static icon inventory JSON.
 
+A separate, topic-scoped sub-manifest, [`llms-editorial-manual.txt`](https://mangrove.undrr.org/llms-editorial-manual.txt), carries only writing/style rules (capitalization, punctuation, numbers, abbreviations, italics, spelling) for an agent generating UI copy or docs prose — fetch it instead of the full `llms.txt` when component data isn't needed.
+
 ### Component index (`ai-components/index.json`)
 
 The [component index](https://mangrove.undrr.org/ai-components/index.json) lists every component with:
