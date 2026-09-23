@@ -311,7 +311,7 @@ export const SplitWithVideo = {
         media: {
           type: 'video',
           src: 'https://www.youtube.com/embed/lJWNmqYmKEQ',
-          title: 'This is how timely early warnings save lives (UNDRR)',
+          title: 'This is how timely early warnings save lives, UNDRR',
         },
       },
     ],

@@ -21,15 +21,15 @@ For setup and workflow details, see the [development section of the README](http
 
 ### Related guides
 
-- **<LinkTo kind="contributing-build-a-component-step-by-step" story="docs">Build a component</LinkTo>** — step-by-step tutorial
-- **<LinkTo kind="contributing-build-a-component-testing" story="docs">Testing components</LinkTo>** — unit, visual, and accessibility testing
-- **<LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>** — UX writing standards for components and docs
-- **<LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo>** — accessibility, performance, and architecture guidance
-- **<LinkTo kind="contributing-architecture" story="docs">Architecture</LinkTo>** — build system, distribution channels, and Drupal integration
-- **<LinkTo kind="contributing-build-a-component-hydration" story="docs">Adding hydration support</LinkTo>** — `fromElement` prop extraction for server-rendered integration (Drupal, Astro)
-- **<LinkTo kind="contributing-release-process" story="docs">Release process</LinkTo>** — versioning, tagging, and publishing
-- [Development guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md) — environment setup, scripts, branching, and commit conventions
-- [Contributing guide](https://github.com/unisdr/undrr-mangrove/blob/main/CONTRIBUTING.md) — how to propose changes and submit PRs
+- **<LinkTo kind="contributing-build-a-component-step-by-step" story="docs">Build a component</LinkTo>**: step-by-step tutorial
+- **<LinkTo kind="contributing-build-a-component-testing" story="docs">Testing components</LinkTo>**: unit, visual, and accessibility testing
+- **<LinkTo kind="contributing-writing-guidelines" story="docs">Writing guidelines</LinkTo>**: UX writing standards for components and docs
+- **<LinkTo kind="getting-started-best-practices" story="docs">Best practices</LinkTo>**: accessibility, performance, and architecture guidance
+- **<LinkTo kind="contributing-architecture" story="docs">Architecture</LinkTo>**: build system, distribution channels, and Drupal integration
+- **<LinkTo kind="contributing-build-a-component-hydration" story="docs">Adding hydration support</LinkTo>**: `fromElement` prop extraction for server-rendered integration (Drupal, Astro)
+- **<LinkTo kind="contributing-release-process" story="docs">Release process</LinkTo>**: versioning, tagging, and publishing
+- [Development guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DEVELOPMENT.md): environment setup, scripts, branching, and commit conventions
+- [Contributing guide](https://github.com/unisdr/undrr-mangrove/blob/main/CONTRIBUTING.md): how to propose changes and submit PRs
 
 ## Component development workflow
 
@@ -100,7 +100,7 @@ If none of the existing categories fit, discuss with the team before creating a 
    - Use destructuring for props
    - Provide default values where appropriate
    - Include prop spread (`...props`) to allow passing HTML attributes to the root element
-   - **Do not use `Component.defaultProps`** — it is deprecated in React 19. Set defaults in the destructuring pattern instead:
+   - **Do not use `Component.defaultProps`**: it is deprecated in React 19. Set defaults in the destructuring pattern instead:
      ```jsx
      export function MyComponent({ variant = 'primary', isLoading = false }) { ... }
      ```
@@ -117,7 +117,7 @@ If none of the existing categories fit, discuss with the team before creating a 
    | CSS class props  | `className`              | `className="custom-class"`                |
    | Children content | `children`               | Standard React children prop              |
 
-   Avoid generic names like `data` or `info` — use descriptive names that convey meaning (e.g., `chartData`, `userProfile`).
+   Avoid generic names like `data` or `info`; use descriptive names that convey meaning (e.g., `chartData`, `userProfile`).
 
 4. **Avoid module-level mutable state**
 
@@ -451,7 +451,7 @@ Components use these approaches for managing state:
 
    - **Matches the CSS ecosystem.** CSS properties are kebab-case (`background-color`), BEM classes are kebab-case (`mg-mega-menu__item`), and Sass partials are conventionally kebab-case (`_variables.scss`). SCSS files that follow the same convention as the language they contain are more predictable.
    - **Cross-platform safety.** macOS is case-insensitive by default, Linux is case-sensitive. A file named `FullWidth.scss` could silently resolve on macOS but fail in CI on Linux. Kebab-case avoids this entirely.
-   - **PascalCase is for components, not styles.** JSX files use PascalCase (`MegaMenu.jsx`) because that's a React convention. SCSS files are stylesheets, not components — different artifact type, different convention.
+   - **PascalCase is for components, not styles.** JSX files use PascalCase (`MegaMenu.jsx`) because that's a React convention. SCSS files are stylesheets, not components: different artifact type, different convention.
 
    After creating your SCSS file, import it in `stories/assets/scss/_components.scss`.
 
@@ -600,13 +600,13 @@ Component-level SCSS uses logical properties (`padding-inline-start`, `margin-in
 
 These components have dedicated RTL story exports you can reference as examples:
 
-- **MegaMenu** — `RTL` story: full menu layout with flipped chevrons, borders, and sidebar
-- **Pager** — `RTL` story: pagination controls in Arabic
-- **QuoteHighlight** — `RTLLeftAlignedQuote`, `RTLRightAlignedQuote`: directional float behavior
-- **HighlightBox** — `RTLFloatStart`, `RTLFloatEnd`: logical float behavior in RTL
-- **IndexChart** — `CustomRtlIndexChart`: chart axis and label direction
-- **ScatterPlotChart** — `CustomRtlConnectedScatterplot`: RTL chart rendering
-- **StatsCard** — locale-aware story that switches direction based on toolbar selection
+- **MegaMenu** (`RTL` story): full menu layout with flipped chevrons, borders, and sidebar
+- **Pager** (`RTL` story): pagination controls in Arabic
+- **QuoteHighlight** (`RTLLeftAlignedQuote`, `RTLRightAlignedQuote`): directional float behavior
+- **HighlightBox** (`RTLFloatStart`, `RTLFloatEnd`): logical float behavior in RTL
+- **IndexChart** (`CustomRtlIndexChart`): chart axis and label direction
+- **ScatterPlotChart** (`CustomRtlConnectedScatterplot`): RTL chart rendering
+- **StatsCard**: locale-aware story that switches direction based on toolbar selection
 
 Many other components (Breadcrumbs, Buttons, Cards, Forms, Tab, Table, Hero) include Arabic translations that respond to the locale toolbar without needing a separate RTL story export.
 
@@ -732,7 +732,7 @@ This approach ensures consistency across all documentation and provides a clean,
 
 ### Linking to other docs pages
 
-MDX files are rendered inside Storybook's iframe. Relative file paths (e.g. `../Tab/Tab.mdx`) do not work — Storybook does not route by file path.
+MDX files are rendered inside Storybook's iframe. Relative file paths (e.g. `../Tab/Tab.mdx`) do not work: Storybook does not route by file path.
 
 **Use the `?path=/docs/` query parameter** to link to any other story or docs page:
 
@@ -833,7 +833,7 @@ Stories demonstrate the component's usage and variants:
 
    All stories must use **CSF3 object syntax**. Do not use the legacy `Template.bind({})` pattern.
 
-   The `component` property is **required** in the default export — it enables autodocs prop tables and type inference.
+   The `component` property is **required** in the default export: it enables autodocs prop tables and type inference.
 
    CSS-only components have no React component to pass. Set `parameters: { docs: { source: { html: true } } }` in their default export instead, so "Show code" shows the rendered HTML to copy rather than JSX.
 
@@ -931,7 +931,7 @@ When a component is no longer needed, has been replaced, or has been merged into
 
 Apply all three of the following:
 
-1. **Console warning** — Add a runtime warning so consumers are notified during development:
+1. **Console warning.** Add a runtime warning so consumers are notified during development:
 
    ```jsx
    export function OldComponent(props) {
@@ -944,7 +944,7 @@ Apply all three of the following:
    }
    ```
 
-2. **JSDoc `@deprecated` tag** — Add to the component's JSDoc block so IDEs surface the deprecation:
+2. **JSDoc `@deprecated` tag.** Add to the component's JSDoc block so IDEs surface the deprecation:
 
    ```jsx
    /**
@@ -953,7 +953,7 @@ Apply all three of the following:
    export function OldComponent(props) { ... }
    ```
 
-3. **Storybook badge** — Add a `deprecated` tag and a banner in the component's MDX documentation:
+3. **Storybook badge.** Add a `deprecated` tag and a banner in the component's MDX documentation:
 
    ```jsx
    // ComponentName.stories.jsx

@@ -530,7 +530,7 @@ export function ArticleStory({
                     <EmbedContainer aspectRatio="16x9">
                       <iframe
                         src="https://www.youtube.com/embed/lJWNmqYmKEQ"
-                        title="This is how timely early warnings save lives (UNDRR)"
+                        title="This is how timely early warnings save lives, UNDRR"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
                       />
