@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **New editorial style guide, and a topic-scoped AI manifest to go with it:** `docs/EDITORIAL-MANUAL.md` documents mechanical style rules — capitalization, punctuation, numbers and dates, abbreviations, italics, spelling, and UNDRR-specific terminology (Sendai Framework target/priority/indicator naming, GAR and campaign naming, gender language) — each rule cited to its source: the UN Geneva Web Style Guide, the UN Editorial Manual, or UNDRR's internal Publications SOP, in that priority order where they conflict. Rendered in Storybook under **Contributing/Editorial manual**. The AI manifest pipeline gains a new, genuinely separate output, `llms-editorial-manual.txt`, so an agent generating UI copy can fetch just the writing/style rules instead of the full component manifest; linked from `llms.txt`, `llms.json` (`urls.editorialManual`), and `docs/AI-MCP-INTEGRATION.md`. ([#1286](https://github.com/unisdr/undrr-mangrove/pull/1286))
+
 ## 2.0.0-rc.3 — 2026-09-20
 
 The final planned polishing release before stable 2.0, with accessibility, typography, responsive layout and integration fixes. Stable 2.0 is expected shortly, subject to final integration testing.
