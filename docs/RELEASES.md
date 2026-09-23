@@ -75,7 +75,7 @@ This updates CDN URLs in README.md, MDX docs, and story files from the old versi
 
 A release that changes the major is the one that matters. When `latest` moves to a new major, every `latest/` URL in the docs silently starts serving a different tree: paths that 404ed begin resolving, and paths that resolved begin 404ing. Work through this list:
 
-1. **Find them.** `grep -rn "assets.undrr.org/mangrove/latest" --include='*.md' --include='*.mdx' .`. As of 2.0.0 the only hit is the `curl` check in this file's break-glass section; the docs pin a version everywhere else.
+1. **Find them.** `grep -rn "assets.undrr.org/mangrove/latest" --include='*.md' --include='*.mdx' .`. As of 2.0.0 every hit is in this file (this section and the break-glass `curl` check); the docs pin a version everywhere else.
 2. **Request each one** against the version being released and confirm it still resolves. A `latest/` URL that 404s after the tag moves is a broken copy-paste on a published page.
 3. **Verify newly published paths and update availability notes.** A module or stylesheet that first ships in this release has no folder on any earlier version, and npm publication alone does not create the CDN version folder. Request its pinned URL once the versioned assets are live, and check that any "Available from" note or install guidance in the release notes page (`docs/RELEASE-X.Y.md`) matches the version that actually shipped.
 4. **Confirm before publishing the release notes**, not after. Each of these is a path a reader copies.
@@ -115,7 +115,7 @@ The tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr
 
 Go to [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) and create a release from the tag.
 
-Write release notes as a **curated, themed narrative**, not a flat commit list, using the standard format below. Every release from `v2.0.0-rc.1` on follows it; see [v2.0.0-rc.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.1) and [v2.0.0-rc.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.2) for worked examples.
+Write release notes as a **curated, themed narrative**, not a flat commit list, using the standard format below. Releases from `v2.0.0-rc.1` on follow it (the short rc.3 notes were an exception); see [v2.0.0-rc.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.1) and [v2.0.0-rc.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.2) for worked examples.
 
 Start from the PRs merged since the previous tag, and read each PR's description rather than relying on commit subjects:
 
@@ -413,7 +413,7 @@ No npm token is required; trusted publishing handles authentication via OIDC.
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| npm publish fails with 403/404 | Trusted publisher not configured or misconfigured | Check [package settings](https://www.npmjs.com/package/@undrr/undrr-mangrove/access): repo, workflow filename, and environment must match |
+| npm publish fails with 403/404 | Trusted publisher not configured or misconfigured | Check [package settings](https://www.npmjs.com/package/@undrr/undrr-mangrove/access): repo, workflow filename and environment must match |
 | npm publish fails with OIDC error | Missing `id-token: write` permission in workflow | Ensure the job has `permissions: id-token: write` |
 | npm publish fails with Corepack error | Missing `corepack enable` step in workflow | Check `npm-publish.yml` has the "Enable Corepack" step |
 | CDN not updated | `dist.yml` workflow failed | Check the workflow run; it runs on every push to `main` |

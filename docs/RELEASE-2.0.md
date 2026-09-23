@@ -6,7 +6,7 @@ This page describes 2.0 as a whole, organised by theme rather than by prerelease
 
 `2.0.0` is the stable release, published on npm under the `latest` tag. It follows four alphas, three betas and three release candidates. One of those tags never reached npm: `2.0.0-beta.2` was tagged but not published, so its changes first became installable in `2.0.0-beta.3`.
 
-**If you are upgrading from a release candidate**, two markers show what is new to you. **Available from `2.0.0-rc.3`** marks package changes absent from rc.2, and **Available from `2.0.0`** marks the few that landed after rc.3. Upgrading from 1.x, you can ignore both. Documentation, Storybook, the AI manifest and versioned CDN assets deploy separately from npm, so confirm a CDN path resolves before you rely on it.
+**If you are upgrading from a release candidate**, two markers show what is new to you. **Available from `2.0.0-rc.3`** marks package changes absent from rc.2, and **Available from `2.0.0`** marks the few that landed after rc.3. If you are upgrading from 1.x, you can ignore both. Documentation, Storybook, the AI manifest and versioned CDN assets deploy separately from npm, so confirm a CDN path resolves before you rely on it.
 
 ## What's new in 2.0
 
@@ -226,7 +226,7 @@ Two are worth calling out. `MegaMenu`'s section-list link drew a hardcoded _whit
 
 ### Changed default: the focus ring is two bands
 
-**Every focused control in every theme looks slightly different.** The default focus indicator is now two bands (a `neutral-0` separator against the control, then the ring) where it was a single outline on most components and a hand-rolled two-band on a handful.
+**Every focused control in every theme looks slightly different.** The default focus indicator is now two bands (a `neutral-0` separator against the control, then the ring), where it was a single outline on most components and a hand-rolled two-band on a handful.
 
 This is the treatment GOV.UK and NHS use, and the reason their loud yellows carry a boundary they could not carry alone: the inner band separates the ring from whatever the control is painted in, so the ring's contrast is measured against a known colour rather than against an arbitrary component fill. Mangrove now ships it as `mg-focus-ring` and `mg-focus-ring-inset` in `stories/assets/scss/_mixins.scss`, so a component gets it from one `@include` rather than restating the geometry. `--mg-focus-ring-width` and `--mg-focus-ring-offset` are unchanged at `2px`.
 
@@ -267,7 +267,7 @@ The method is two measurements. **WCAG non-text contrast** for each of the seven
 
 Both models agree that degraded and offline are the same mark to a deuteranope: 1.1 dE2000 under Machado and 0.6 under Viénot, against a just-noticeable difference of about 2.3. That is what the [StatusLabel shapes](#statuslabel-and-emptystate) are for.
 
-Rebalancing was measured and rejected. Holding the hue associations and requiring every fill to clear 3:1 on white, the best worst-pair obtainable from the tokens this system owns is 2.34 dE2000 (still at the threshold, merely moved onto a different pair) and it costs all four DELTA status colours, drops the worst normal-vision pair from 13.4 to 6.8 dE2000, and leaves the `neutral-500` ring at 1.0–1.8:1 against its own fills. A one-token fix fares no better: moving degraded off `gold-800` lifts that pair to 11.9 but reintroduces a 1.5 dE2000 collision with waiting for more information, halves its contrast, and desynchronises it from the notice icon beside it. Seven unordered categories is past what colour carries, which is the limit this repo already records as `--mg-dataviz-categorical-safe-count: 4`.
+Rebalancing was measured and rejected. Holding the hue associations and requiring every fill to clear 3:1 on white, the best worst-pair obtainable from the tokens this system owns is 2.34 dE2000 (still at the threshold, merely moved onto a different pair), and it costs all four DELTA status colours, drops the worst normal-vision pair from 13.4 to 6.8 dE2000, and leaves the `neutral-500` ring at 1.0–1.8:1 against its own fills. A one-token fix fares no better: moving degraded off `gold-800` lifts that pair to 11.9 but reintroduces a 1.5 dE2000 collision with waiting for more information, halves its contrast, and desynchronises it from the notice icon beside it. Seven unordered categories is past what colour carries, which is the limit this repo already records as `--mg-dataviz-categorical-safe-count: 4`.
 
 No theme overrides any of the seven fills, so the status palette is identical across all five brands. Setting `--mg-status-label-indicator-border-width: 0` still removes the contrast boundary from the four pale fills in normal rendering. **The base indicator now survives that setting in forced colours.** _Available from `2.0.0-rc.3`._ An inset `CanvasText` outline preserves its hollow shape without changing its size or forcing a ring onto the other six marks. ([#1224](https://github.com/unisdr/undrr-mangrove/pull/1224))
 
@@ -627,7 +627,7 @@ CDN URLs were canonicalised to a single `assets.undrr.org` root across documenta
 
 **Descriptions and imports describe the consumer surface.** The index has a short `summary`, while detail records retain the curated `description`. Imports are generated from the actual component bundles, using the correct subpath and named or default binding. `importRequiresDom` flags browser-only module loading, including ShowMore and Tab, rather than promising server-side imports. ([#1237](https://github.com/unisdr/undrr-mangrove/pull/1237), [#1262](https://github.com/unisdr/undrr-mangrove/pull/1262))
 
-**An editorial manual, with its own manifest.** [Contributing/Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) sets out the mechanical style rules for UI copy and documentation: capitalisation, punctuation, numbers and dates, abbreviations, UNDRR terminology, disability-inclusive language and gender-bias review. Each rule cites its source, from the UN Geneva Web Style Guide and the United Nations Editorial Manual to UNDRR's Publications SOP. A separate `llms-editorial-manual.txt` lets an agent writing copy fetch only those rules; `llms.txt`, `llms.json` (`urls.editorialManual`) and the AI integration guide link to it. ([#1286](https://github.com/unisdr/undrr-mangrove/pull/1286), [#1289](https://github.com/unisdr/undrr-mangrove/pull/1289), [#1290](https://github.com/unisdr/undrr-mangrove/pull/1290))
+**An editorial manual, with its own manifest.** [Contributing/Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) sets out the mechanical style rules for UI copy and documentation: capitalization, punctuation, numbers and dates, abbreviations, UNDRR terminology, disability-inclusive language and gender-bias review. Each rule cites its source, from the UN Geneva Web Style Guide and the United Nations Editorial Manual to UNDRR's Publications SOP. A separate `llms-editorial-manual.txt` lets an agent writing copy fetch only those rules; `llms.txt`, `llms.json` (`urls.editorialManual`) and the AI integration guide link to it. ([#1286](https://github.com/unisdr/undrr-mangrove/pull/1286), [#1289](https://github.com/unisdr/undrr-mangrove/pull/1289), [#1290](https://github.com/unisdr/undrr-mangrove/pull/1290))
 
 ### Storybook organisation
 
@@ -647,7 +647,7 @@ The same pass corrected the typeface-to-element mapping on both brand pages, whi
 
 A story fixture hygiene sweep cleared demo-only defects found in the 2.0 audit: a Legend "Dark theme" story that depended on a class the library never defined, a dead placeholder image, three demo pages that scrolled a 375px viewport sideways, colour inventories with no contrast caveat, and an empty CookieConsentBanner canvas with nothing explaining it. ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193))
 
-`docs/RELEASES.md` now defines a standard format and template for GitHub Release notes (intro, full-detail link, and a fixed section order), so the per-release record stays consistent. ([#1186](https://github.com/unisdr/undrr-mangrove/pull/1186))
+`docs/RELEASES.md` now defines a standard format and template for GitHub Release notes (intro, full-detail link and a fixed section order), so the per-release record stays consistent. ([#1186](https://github.com/unisdr/undrr-mangrove/pull/1186))
 
 **Package examples are checked against the published layout.** Documentation-path tests cover npm subpaths, Sass imports and CDN examples against the package model. Sass lives under `scss/`, never `stories/`; vanilla JS imports need `.js`. There is no standalone grid CSS or combined/minified vanilla JS bundle. Resolving a path in the source model is not proof it has reached npm or the CDN. ([#1270](https://github.com/unisdr/undrr-mangrove/pull/1270), [#1262](https://github.com/unisdr/undrr-mangrove/pull/1262))
 

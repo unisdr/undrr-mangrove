@@ -17,11 +17,11 @@ _Notable cross-cutting changes between releases land here. Per-component changes
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0) for full details.
 
-The stable release of Mangrove 2.0, published on the npm `latest` tag. The [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)) describe 2.0 as a whole, with the numbered breaking changes and upgrade guidance from 1.x. Each prerelease section below records what changed in that prerelease.
+The stable release of Mangrove 2.0, published on the npm `latest` tag. The [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md)) describe 2.0 as a whole, with the numbered breaking changes and upgrade guidance from 1.x. Earlier sections of this file record each prerelease.
 
 Prereleases: [2.0.0-alpha.1](https://github.com/unisdr/undrr-mangrove/pull/1061), [2.0.0-alpha.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.2), [2.0.0-alpha.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.3), [2.0.0-alpha.4](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-alpha.4), [2.0.0-beta.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.1), [2.0.0-beta.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.2) (tagged, not published to npm), [2.0.0-beta.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-beta.3), [2.0.0-rc.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.1), [2.0.0-rc.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.2) and [2.0.0-rc.3](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.3).
 
-Changes since 2.0.0-rc.3:
+### Changes since 2.0.0-rc.3
 
 - **PageHeader language links fall back to the dropdown:** `languageDisplay="links"` renders the icon dropdown below the tablet breakpoint and when there are more languages than the new `maxLanguageLinks` prop (default 6), replacing the two-letter codes that wrapped under the logo. Default and example language lists follow UN order, alphabetical by English name. ([#1284](https://github.com/unisdr/undrr-mangrove/pull/1284))
 

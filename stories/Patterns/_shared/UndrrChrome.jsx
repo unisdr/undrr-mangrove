@@ -169,10 +169,10 @@ export function UndrrChrome({ locale = 'english', id }) {
         logoTitle={words.home}
         showAccount={false}
         languages={[
-          { value: 'en', label: 'English', selected: !arabic },
           { value: 'ar', label: 'العربية', selected: arabic },
-          { value: 'es', label: 'Español' },
+          { value: 'en', label: 'English', selected: !arabic },
           { value: 'fr', label: 'Français' },
+          { value: 'es', label: 'Español' },
         ]}
       />
       <MegaMenu

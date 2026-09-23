@@ -2007,10 +2007,10 @@ npm run build</code></pre>
                 <label for="lang-select" class="mg-u-sr-only">Select your language</label>
                 <div class="mg-page-header__select-wrapper">
                   <select id="lang-select" class="mg-page-header__select" name="lang_dropdown_select">
+                    <option value="ar" lang="ar">\u0627\u0644\u0639\u0631\u0628\u064a\u0629</option>
                     <option value="en" selected>English</option>
                     <option value="fr" lang="fr">Fran\u00e7ais</option>
                     <option value="es" lang="es">Espa\u00f1ol</option>
-                    <option value="ar" lang="ar">\u0627\u0644\u0639\u0631\u0628\u064a\u0629</option>
                   </select>
                 </div>
               </div>
