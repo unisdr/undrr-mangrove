@@ -2,10 +2,11 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/EDITORIAL-MANUAL.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs).
 
-This guide covers mechanical style rules — capitalization, punctuation, numbers and dates, abbreviations, italics, and spelling — for UI copy, component docs, and Storybook pages. It is derived from, and credits, two UN system sources:
+This guide covers mechanical style rules — capitalization, punctuation, numbers and dates, abbreviations, italics, spelling, and UNDRR-specific terminology — for UI copy, component docs, and Storybook pages. It is derived from, and credits, three sources:
 
-- [UN Geneva Web Style Guide](https://www.ungeneva.org/en/styleguide) — written for web content, and the primary reference below.
-- [UN Editorial Manual](https://www.un.org/dgacm/en/content/editorial-manual) ([Style section](https://www.un.org/dgacm/en/content/editorial-manual)) — written for formal UN documents; used as a fallback where the web style guide doesn't cover a case, and adapted for web/UI where a document-writing rule doesn't translate directly.
+- **UNDRR Publications SOP** (internal, UNDRR Communications team) — UNDRR's own house style for its publications. Authoritative for anything UNDRR-specific: named entities (Sendai Framework targets/priorities/indicators, GAR, campaigns), terminology conventions, and gender language choices. Not publicly linkable (UNDRR SharePoint); contact the Communications team for the current version.
+- [UN Geneva Web Style Guide](https://www.ungeneva.org/en/styleguide) — written for web content; the primary reference for general web/UI mechanics not covered by the SOP.
+- [UN Editorial Manual](https://www.un.org/dgacm/en/content/editorial-manual) ([Style section](https://www.un.org/dgacm/en/content/editorial-manual)) — written for formal UN documents; used as a fallback where neither of the above covers a case, and adapted for web/UI where a document-writing rule doesn't translate directly. The UNDRR Publications SOP itself is built on this manual.
 
 For UX writing principles — plain language, inclusive language, front-loading, writing for two audiences — see [Writing guidelines](WRITING.md) instead. This doc doesn't repeat those.
 
@@ -27,13 +28,15 @@ For UX writing principles — plain language, inclusive language, front-loading,
 - **Slash (`/`)**: no space on either side when used to separate words. The UN Editorial Manual goes further for prose and discourages it outright in favor of "and"/"or" since its meaning is unclear — worth applying that stricter rule in component prop docs and error copy, where ambiguity is costly. ([UN Geneva style guide, Punctuation](https://www.ungeneva.org/en/styleguide); [UN Editorial Manual, Punctuation](https://www.un.org/dgacm/en/content/editorial-manual/punctuation))
 - **Full stop at the end of UI text**: skip it for short style elements — accordion headings, button/link text, list items in short lists — unless the item is a full sentence. Do use one to end running text/body copy. Never end a link or button with a full stop or exclamation mark unless it's the end of a complete sentence in running text. ([UN Geneva style guide, Punctuation](https://www.ungeneva.org/en/styleguide) and [Links](https://www.ungeneva.org/en/styleguide))
 - **Quotation marks**: use only for actual quotes, not to "flag" a word. A full stop goes inside the closing quotation mark only if the entire sentence is inside the quote; otherwise it goes outside. ([UN Geneva style guide, Punctuation](https://www.ungeneva.org/en/styleguide))
-- **En dash for ranges**: `2–4 per cent`, `3–6 p.m.`, `23 May–1 June 2026` — en dash (`–`), not a hyphen. ([UN Editorial Manual, Numbers, dates and time](https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time))
-- **Lists**: no punctuation after short list items; a full stop after each item only if items are full sentences; never a semicolon between items; no "and"/"or" tacked onto the last item; capitalize an item's first word only if the item is a full sentence. ([UN Geneva style guide, Lists](https://www.ungeneva.org/en/styleguide))
+- **En dash for ranges and pairs**: number/year/date ranges (`2–4 per cent`, `2015–2030`, `11–13 December`), joined pairs (`cost–benefit ratio`), and a parenthetical aside (`The way in which such changes — including hazard intensity — affect human activity...`) all take an en dash (`–`), not a hyphen. ([UN Editorial Manual, Numbers, dates and time](https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time); UNDRR Publications SOP, Punctuation)
+- **No apostrophe on an abbreviation's plural**: `NGOs`, not `NGO's`. (UNDRR Publications SOP, Punctuation)
+- **Lists**: no punctuation after short list items; a full stop after each item only if items are full sentences; never a semicolon between items in UI lists; no "and"/"or" tacked onto the last item; capitalize an item's first word only if the item is a full sentence. ([UN Geneva style guide, Lists](https://www.ungeneva.org/en/styleguide)) The UNDRR Publications SOP uses a semicolon between items for print/document lists — that's a print convention for long-form documents, not the UI rule above; don't apply it to Mangrove component lists.
 
 ## Numbers and dates
 
 - **Words vs. figures**: spell out numbers below 10 ("eight children"); use figures from 10 up, and always use figures for percentages, decimals, ratios, measurements, temperatures, money, ages, and voting results (e.g. "1% increase", "10.5°C", "$6.50", "15 votes to none"). ([UN Geneva style guide, Numbers, dates & times](https://www.ungeneva.org/en/styleguide); [UN Editorial Manual, Numbers, dates and time](https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time))
-- **Large numbers**: pair millions/billions/trillions with a decimal numeral — "1.5 million", not "1,500,000" in running copy. ([UN Geneva style guide, Numbers, dates & times](https://www.ungeneva.org/en/styleguide))
+- **Large numbers**: pair millions/billions/trillions with a decimal numeral — "1.5 million", not "1,500,000" in running copy. ([UN Geneva style guide, Numbers, dates & times](https://www.ungeneva.org/en/styleguide)) Where a figure is shown in full rather than abbreviated (a table cell, a stat card), use a comma for four digits or more — "1,000", "12,452" — and always a decimal point, never a decimal comma. (UNDRR Publications SOP, Numbers, dates and time)
+- **Percentages**: figure directly followed by `%` with no space — "25%" — except when the number starts a sentence or standalone label, where both are spelled out — "Twenty-five per cent". (UNDRR Publications SOP, Numbers, dates and time)
 - **Dates**: day, then month spelled out, then year, no punctuation — "12 January 2026", not "Jan 12, 2026" or "12/01/2026". This matches Mangrove's existing "10 October 2025" example in [Writing guidelines](WRITING.md); this doc gives the rule behind that example. ([UN Geneva style guide, Numbers, dates & times](https://www.ungeneva.org/en/styleguide))
 - **Decades**: "the 1990s" — no apostrophe. ([UN Editorial Manual, Numbers, dates and time](https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time))
 - **Time**: 12-hour clock, `a.m.`/`p.m.`, a point (not a colon) between hours and minutes, no minutes shown on the hour — "9 a.m.", "8.30 p.m.". A UI component showing a machine-readable timestamp (e.g. a `<time>` element's `datetime` attribute) should still use ISO 8601 internally; this rule is for the human-readable label. ([UN Geneva style guide, Numbers, dates & times](https://www.ungeneva.org/en/styleguide))
@@ -46,6 +49,9 @@ For UX writing principles — plain language, inclusive language, front-loading,
 - **No periods in abbreviations** — "UNDRR", not "U.N.D.R.R.". ([UN Editorial Manual, Abbreviations](https://www.un.org/dgacm/en/content/editorial-manual/abbreviations))
 - **Don't abbreviate in headings or titles.** ([UN Editorial Manual, Abbreviations](https://www.un.org/dgacm/en/content/editorial-manual/abbreviations))
 - **Units of measure abbreviate without periods**: `cm`, `kg`, `km`, `ha`, `kW`, and data units like `GB`/`TB`. ([UN Editorial Manual, Abbreviations](https://www.un.org/dgacm/en/content/editorial-manual/abbreviations))
+- **Always spell out "United Nations" in full** — never abbreviate it to "UN", including inside otherwise-abbreviated UI copy. (UNDRR Publications SOP, Abbreviations and acronyms)
+- **No "the" before an abbreviation or acronym, and never a possessive form of one** — not "the UNDRR", not "UNDRR's mandate". Rephrase instead, e.g. "the mandate of UNDRR". (UNDRR Publications SOP, Abbreviations and acronyms)
+- **Avoid "e.g.", "i.e." and "etc." in running text** — spell out "for example" / "that is" / "and so on", or move the aside into a parenthetical or footnote where the Latin abbreviations are acceptable. (UNDRR Publications SOP, Abbreviations and acronyms)
 
 ## Italics and emphasis
 
@@ -65,7 +71,7 @@ The UN Editorial Manual's italics rules are written for print/PDF documents; the
 This is the section most likely to catch out a contributor, since these terms come up in real UNDRR UI copy and docs.
 
 - **Base dictionary**: British English, per the online Oxford Dictionary — same standard [Writing guidelines](WRITING.md) already assumes. ([UN Editorial Manual, Spelling](https://www.un.org/dgacm/en/content/editorial-manual/spelling))
-- **"organization", "organize"** — `-ize`/`-ization`, not `-ise`/`-isation` (Oxford spelling, not `-ise` British spelling some other UK style guides use). ([UN Geneva style guide, Spelling](https://www.ungeneva.org/en/styleguide))
+- **"organization", "organize"** — `-ize`/`-ization`, not `-ise`/`-isation` (Oxford spelling, not `-ise` British spelling some other UK style guides use). Exceptions that always take `-yse`: "analyse", "catalyse". ([UN Geneva style guide, Spelling](https://www.ungeneva.org/en/styleguide); UNDRR Publications SOP, Spellings)
 - **"programme"** for a plan of activities (UNDRR's own programmes, funding programmes), reserving "program" only for software. ([UN Geneva style guide, Spelling](https://www.ungeneva.org/en/styleguide))
 - **"Member State"/"Member States"** capitalized when referring to UN Member States; lowercase "state"/"states" otherwise. ([UN Geneva style guide, Spelling](https://www.ungeneva.org/en/styleguide))
 - **"email"** — one word, no hyphen (an explicit exception to the general "e-" prefix hyphenation rule). ([UN Geneva style guide, Spelling](https://www.ungeneva.org/en/styleguide))
@@ -77,19 +83,40 @@ This is the section most likely to catch out a contributor, since these terms co
 
 > **Note:** The UN Geneva style guide's spelling list above is a small excerpt of general-interest terms. It also lists UN-Geneva-specific entities (Palais des Nations gates, internal systems like `gDoc`/`gMeets`) that are UNOG-specific and not relevant to UNDRR content — those are intentionally left out here. If you hit a spelling question this list doesn't answer, check the [UN Geneva style guide's full A–Z list](https://www.ungeneva.org/en/styleguide) or the [UN Editorial Manual's spelling list](https://www.un.org/dgacm/en/content/editorial-manual/spelling) before guessing.
 
+## UNDRR-specific terminology
+
+Rules and named entities that only make sense in UNDRR's own content — pulled from the UNDRR Publications SOP, UNDRR's internal house style built on top of the UN Editorial Manual. Nothing here has a public UN-system citation; the SOP is the source for all of it.
+
+- **"data" is plural** — "the data show", not "the data shows".
+- **Be consistent about singular vs. plural "risk"** — decide per-document/per-component whether you mean the general concept ("risk") or countable instances ("risks"), and don't switch within the same piece of copy.
+- **Avoid the first person** — no "we" or "I" in UNDRR content; write from a third-person or user-directed voice instead (this is stricter than `docs/WRITING.md`'s general "second person for the user" guidance, which still applies to direct address like "you").
+- **Sendai Framework references**: "Target A", "Target B" ... (not "target a" or "Target 1"); "Priority 1", "Priority 2" ...; "Indicator A-1", "Indicator B-2" ... for the 38 monitoring indicators. Capitalize the word (Target/Priority/Indicator) as part of the name.
+- **Named entities — exact form, abbreviate only after first mention**: "Global Assessment Report on Disaster Risk Reduction 20XX (GAR20XX)"; "Sendai Framework for Disaster Risk Reduction 2015–2030" (then "Sendai Framework"); "Addis Ababa Action Agenda on Financing for Development" (then "Addis Ababa Action Agenda" or "AAAA"); "Transforming our World: the 2030 Agenda for Sustainable Development" (then "2030 Agenda"); "Special Representative of the Secretary-General for Disaster Risk Reduction" — never abbreviated, no matter how often it recurs.
+- **Country names**: use the UNTERM short form (e.g. "United States of America", shortened to "United States" after first mention) — never an abbreviation or acronym. Alphabetize country names in a list unless there's a specific reason not to.
+- **Gender-neutral terms UNDRR has chosen**: "Chair" or "Chairperson" (not "Chairman"); "he/she" or "they"; "humankind"; "human-made". "Man-made" is reserved for direct quotations from paragraph 15 of the Sendai Framework resolution (A/RES/69/283) — never use it in original UNDRR copy.
+- **Source attribution for data, charts, and figures**: `*Source*: United Nations Office for Disaster Risk Reduction (YYYY)` (italicized "Source"), with a full citation in APA style where a references list exists. For a Mangrove component that renders a data source line (chart footers, stat cards), use this exact pattern rather than inventing a new one.
+
 ## Keeping this updated
 
-This is a **derived, curated subset** of the two UN sources above — not a verbatim copy, and not exhaustive. Both sources cover far more than is reproduced here (full A–Z spelling lists, document/resolution formatting, indirect speech, quotations, country names). Go to the source directly for anything not covered:
+This is a **derived, curated subset** of the three sources above — not a verbatim copy, and not exhaustive. All three cover far more than is reproduced here (full A–Z spelling lists, document/resolution formatting, indirect speech, quotations, image and map policy, publication process). Go to the source directly for anything not covered:
 
+- **UNDRR Publications SOP** (internal — UNDRR Communications team; not publicly linkable)
 - [UN Geneva Web Style Guide](https://www.ungeneva.org/en/styleguide)
 - [UN Editorial Manual — Style section](https://www.un.org/dgacm/en/content/editorial-manual): [Abbreviations](https://www.un.org/dgacm/en/content/editorial-manual/abbreviations), [Capitalization](https://www.un.org/dgacm/en/content/editorial-manual/capitalization), [Italics and bold print](https://www.un.org/dgacm/en/content/editorial-manual/italics), [Numbers, dates and time](https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time), [Punctuation](https://www.un.org/dgacm/en/content/editorial-manual/punctuation), [Spelling](https://www.un.org/dgacm/en/content/editorial-manual/spelling)
 
-**When there's a conflict between the two sources**: the UN Geneva Web Style Guide wins for anything it addresses, since it's written for the web specifically. Fall back to the Editorial Manual only where the web style guide is silent, and translate document-writing rules to their web/UI equivalent explicitly (as this doc does for italics) rather than applying them literally to component markup.
+**When there's a conflict between the three sources**, in priority order:
+
+1. **UNDRR Publications SOP** wins for anything UNDRR-specific — named entities (Sendai Framework targets/priorities/indicators, GAR, campaigns), UNDRR terminology conventions, and gender language choices — since it's UNDRR's own house style.
+2. **UN Geneva Web Style Guide** wins for general web/UI mechanics the SOP doesn't address, since it's written for the web specifically and the SOP is written for print/PDF publications.
+3. **UN Editorial Manual** is the fallback where neither of the above covers a case.
+
+Translate a document-writing rule to its web/UI equivalent explicitly (as this doc does for italics and for print-only list punctuation) rather than applying it literally to component markup.
 
 **When to revisit this doc**:
 
-- When UI copy introduces a new UN-specific term, acronym, or programme name not covered above — check the source spelling lists rather than guessing, and add it here if it's likely to recur.
+- When UI copy introduces a new UN-specific or UNDRR-specific term, acronym, named entity, or programme name not covered above — check the SOP and source spelling lists rather than guessing, and add it here if it's likely to recur.
 - When a component's copy needs a capitalization, punctuation, or number-formatting call this doc doesn't cover — check the source pages first, then add the rule here with its citation.
+- When the UNDRR Publications SOP is updated (it's dated by year, e.g. "SOP_Publication-2026") — confirm the rules above still match and update citations to the current version.
 - Periodically alongside major Mangrove releases, to confirm the source URLs and rules above still match the live UN Geneva style guide and Editorial Manual (both can and do change without notice — the style guide's own last-updated date is at the bottom of its page).
 
 ## Related documentation
