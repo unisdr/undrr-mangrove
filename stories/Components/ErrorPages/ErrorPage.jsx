@@ -170,14 +170,14 @@ export function ErrorPage({
         <p>
           {isChallenge ? (
             <>
-              Having trouble? <a href={contactUrl}>Contact us</a>
+              Having trouble? <a href={contactUrl}>Contact UNDRR</a>
               {showRequestDetails ? ' and include the details below' : ''}.
             </>
           ) : (
             <>
               If you think this is in error or need help,{' '}
-              <a href={contactUrl}>please contact us</a> and provide the details
-              below.
+              <a href={contactUrl}>please contact UNDRR</a> and provide the
+              details below.
             </>
           )}
         </p>

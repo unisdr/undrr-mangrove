@@ -8,6 +8,7 @@
  */
 
 import fs from 'fs';
+import { REPO_BLOB_MAIN, REPO_URL } from './repo.js';
 
 /**
  * Parse project CHANGELOG.md into structured release objects.
@@ -54,7 +55,7 @@ export function parseChangelog(markdown) {
         date: rawDate,
         isPrerelease: /-(alpha|beta|rc)/i.test(rawVersion),
         tag: `v${rawVersion}`,
-        tagUrl: `https://github.com/unisdr/undrr-mangrove/releases/tag/v${rawVersion}`,
+        tagUrl: `${REPO_URL}/releases/tag/v${rawVersion}`,
         summary: '',
         changes: [],
       };
@@ -94,8 +95,7 @@ export function parseChangelog(markdown) {
         text.match(/\(#(\d+)\)/);
       if (prMatch) {
         pr = parseInt(prMatch[1], 10);
-        prUrl =
-          prMatch[2] || `https://github.com/unisdr/undrr-mangrove/pull/${pr}`;
+        prUrl = prMatch[2] || `${REPO_URL}/pull/${pr}`;
       }
 
       currentRelease.changes.push({
@@ -171,8 +171,7 @@ export function parseComponentChangelog(mdxContent) {
         notes.match(/\(#(\d+)\)/);
       if (prMatch) {
         pr = parseInt(prMatch[1], 10);
-        prUrl =
-          prMatch[2] || `https://github.com/unisdr/undrr-mangrove/pull/${pr}`;
+        prUrl = prMatch[2] || `${REPO_URL}/pull/${pr}`;
       }
 
       currentEntry = {
@@ -225,9 +224,8 @@ export function buildReleasesManifest({
     generatedAt: generatedAt || new Date().toISOString(),
     urls: {
       releases: `${docsBase}releases.json`,
-      changelog:
-        'https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md',
-      repository: 'https://github.com/unisdr/undrr-mangrove',
+      changelog: `${REPO_BLOB_MAIN}CHANGELOG.md`,
+      repository: REPO_URL,
       releaseNotesV2: `${docsBase}?path=/docs/getting-started-release-notes-v2-0--docs`,
     },
     latest: latestRelease

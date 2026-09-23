@@ -305,7 +305,7 @@ const CookieConsentBanner = ({
                 consentModal: {
                   title: 'This website uses cookies',
                   description:
-                    'We use cookies to ensure you get the best experience on our website.',
+                    'Cookies help ensure you get the best experience on this website.',
                   acceptAllBtn: 'Accept all',
                   acceptNecessaryBtn: 'Reject all',
                   showPreferencesBtn: 'Manage preferences',

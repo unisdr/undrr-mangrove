@@ -32,7 +32,7 @@ const defaultConfig = {
       en: {
         consentModal: {
           title:
-            'FALLBACK UNDRR uses cookies to ensure you get the best experience on our website.',
+            'FALLBACK UNDRR uses cookies to ensure you get the best experience on this website.',
           description: '',
           closeIconLabel: '',
           acceptAllBtn: 'Accept all',
@@ -53,7 +53,7 @@ const defaultConfig = {
               title:
                 'Strictly Necessary Cookies <span class="pm__badge">Always Enabled</span>',
               description:
-                'Aside from the personal information that you disclose for a specific purpose, UNDRR also uses cookies to collect anonymous information about your browsing behavior. Cookies are small data files placed onto your computer or other mobile devices when you access a website. Encrypted information gathered from cookies is used to understand the audience and performance of our websites and improve user experience. This information is anonymous and based on behavior rather than on personally identifiable features.\n\nIf you do not wish to have cookies installed on your computer or mobile device, you can set your browser to notify you before you receive a cookie, giving you the chance to decide whether to accept it. You can also set your browser to turn off cookies. If you do so, however, some areas of UNDRR websites may not function properly.',
+                'Aside from the personal information that you disclose for a specific purpose, UNDRR also uses cookies to collect anonymous information about your browsing behaviour. Cookies are small data files placed onto your computer or other mobile devices when you access a website. Encrypted information gathered from cookies is used to understand the audience and performance of UNDRR websites and improve user experience. This information is anonymous and based on behaviour rather than on personally identifiable features.\n\nIf you do not wish to have cookies installed on your computer or mobile device, you can set your browser to notify you before you receive a cookie, giving you the chance to decide whether to accept it. You can also set your browser to turn off cookies. If you do so, however, some areas of UNDRR websites may not function properly.',
               linkedCategory: 'necessary',
             },
             {
@@ -71,7 +71,7 @@ const defaultConfig = {
             {
               title: 'More information',
               description:
-                'For any query in relation to my policy on cookies and your choices, please <a class="cc__link" href="https://www.undrr.org/contact-us">contact us</a>.',
+                'For any query about the UNDRR cookie policy and your choices, please <a class="cc__link" href="https://www.undrr.org/contact-us">contact UNDRR</a>.',
             },
           ],
         },

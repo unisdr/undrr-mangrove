@@ -42,6 +42,7 @@ import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
 import { buildEditorialManualTxt } from './editorial-manual.js';
+import { REPO_BLOB_MAIN, REPO_URL } from './repo.js';
 import {
   collectCustomProperties,
   MIN_PROPERTIES,
@@ -2236,7 +2237,7 @@ async function main() {
       version: pkg.version,
       description: pkg.description,
       documentation: DOCS_BASE,
-      repository: 'https://github.com/unisdr/undrr-mangrove',
+      repository: REPO_URL,
       npm: `https://www.npmjs.com/package/${pkg.name}`,
       cssPrefix: 'mg-',
       namingConvention:
@@ -2265,8 +2266,7 @@ async function main() {
         field: 'customProperties',
       },
       releasesUrl: `${DOCS_BASE}releases.json`,
-      changelogUrl:
-        'https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md',
+      changelogUrl: `${REPO_BLOB_MAIN}CHANGELOG.md`,
       quickstart: {
         css: `<link rel="stylesheet" href="${themeCss.undrr}" />`,
         cssThemes: themeCss,
@@ -2367,10 +2367,10 @@ async function main() {
 ## Links
 
 - Storybook: ${DOCS_BASE}
-- Repository: https://github.com/unisdr/undrr-mangrove
+- Repository: ${REPO_URL}
 - npm: https://www.npmjs.com/package/${pkg.name}
 - Release changelog (machine-readable): ${DOCS_BASE}releases.json
-- Project changelog (markdown): https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md
+- Project changelog (markdown): ${REPO_BLOB_MAIN}CHANGELOG.md
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
 - Theme token dictionary: ${DOCS_BASE}tokens.json (theme tokens only — component custom properties are documented per component)
@@ -2448,7 +2448,7 @@ To inspect changes between versions, tags, and pre-releases without parsing raw 
 
 - **Machine-readable releases endpoint**: ${DOCS_BASE}releases.json
   Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs.
-- **Repository changelog**: https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md
+- **Repository changelog**: ${REPO_BLOB_MAIN}CHANGELOG.md
   Cross-cutting library release notes.
 - **v2.0 migration notes & breaking changes**: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
   Full breaking change catalogue, architectural shifts, and token migration recipes.
@@ -2624,11 +2624,10 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
       license: pkg.license || 'See LICENSE file',
       urls: {
         storybook: DOCS_BASE,
-        repository: 'https://github.com/unisdr/undrr-mangrove',
+        repository: REPO_URL,
         npm: `https://www.npmjs.com/package/${pkg.name}`,
         releases: `${DOCS_BASE}releases.json`,
-        changelog:
-          'https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md',
+        changelog: `${REPO_BLOB_MAIN}CHANGELOG.md`,
         releaseNotesV2: `${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
