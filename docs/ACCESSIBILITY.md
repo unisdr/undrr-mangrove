@@ -6,6 +6,8 @@ Accessible design improves usability for everyone. Mangrove components target [W
 
 For the full specification, see the [Web Content Accessibility Guidelines (WCAG) 2.2](https://www.w3.org/TR/WCAG22/).
 
+> **Note:** This meets and exceeds the [UN system's accessibility mandate](https://www.un.org/en/webaccessibility/index.shtml), which requires WCAG 2.1 AA as the minimum standard for UN websites.
+
 ### 1. Semantic HTML
 
 **Use proper HTML elements**

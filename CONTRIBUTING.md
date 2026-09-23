@@ -32,6 +32,8 @@ Use Storybook's global locale toolbar for translated component content and text 
 
 Keep a dedicated RTL, long-label, or translation-stress story only when it exercises a distinct layout or interaction condition that the ordinary toolbar-driven story cannot demonstrate clearly. See the [RTL support and locale-toolbar guidance](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs#rtl-support) in the component contribution guide.
 
+This work implements the [UN system's minimum standards for multilingualism on websites](https://www.un.org/en/multilingualism-web-standards), including the requirement for a language bar and right-to-left support for Arabic.
+
 ## Component changelogs
 
 Every component MDX file must include a `## Changelog` section tracking its version history. When submitting a PR that modifies a component, add a new changelog entry (e.g. `- **X.Y.Z** — YYYY-MM-DD ([#PR](https://...)): Description`).

@@ -30,6 +30,7 @@ This guide helps anyone contributing to Mangrove write interface copy, documenta
 - Avoid idioms, colloquialisms, and culturally specific metaphors.
 - Provide alt text and meaningful, descriptive link text.
 - Reference: [Microsoft writing style guide — inclusive communication](https://learn.microsoft.com/style-guide/inclusive-communication/)
+- Reference: [United Nations Editorial Manual](https://www.un.org/dgacm/en/content/editorial-manual) — the canonical UN system source for capitalization, punctuation, numbers/dates, and gender- and disability-inclusive language rules.
 
 ## Say the right thing at the right time
 
