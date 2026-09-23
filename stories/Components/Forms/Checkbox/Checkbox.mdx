@@ -225,7 +225,7 @@ Try it below. Toggle the switch with the mouse or the Space key, then press it a
 </label>
 
 <script type="module">
-  import { mgSwitchPending } from 'https://assets.undrr.org/mangrove/2.0.0-rc.3/js/switch-pending.js';
+  import { mgSwitchPending } from 'https://assets.undrr.org/mangrove/2.0.0/js/switch-pending.js';
 
   mgSwitchPending(document.querySelector('#alerts-switch'), {
     async save(checked, signal) {
@@ -276,7 +276,7 @@ With no `save` function, each change dispatches a cancelable `mg-switch:save` ev
 
 <script
   type="module"
-  src="https://assets.undrr.org/mangrove/2.0.0-rc.3/js/switch-pending.js"
+  src="https://assets.undrr.org/mangrove/2.0.0/js/switch-pending.js"
 ></script>
 <script>
   document.addEventListener('mg-switch:save', event => {
@@ -341,7 +341,7 @@ mangrove-switch-pending:
 import {
   mgSwitchPendingInit,
   mgSwitchPendingDestroy,
-} from 'https://assets.undrr.org/mangrove/2.0.0-rc.3/js/switch-pending.js';
+} from 'https://assets.undrr.org/mangrove/2.0.0/js/switch-pending.js';
 
 Drupal.behaviors.mangroveSwitchPending = {
   attach(context) {

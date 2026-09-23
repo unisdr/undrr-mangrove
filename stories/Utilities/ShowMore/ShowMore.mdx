@@ -156,7 +156,7 @@ The script file uses ES module `export` statements, so you **must** load it with
 
 <Source language="html" code={`
 <!-- JS: type="module" is required -->
-<script type="module" src="https://assets.undrr.org/mangrove/2.0.0-rc.3/js/show-more.js"></script>
+<script type="module" src="https://assets.undrr.org/mangrove/2.0.0/js/show-more.js"></script>
 `} />
 
 The script auto-initializes on `DOMContentLoaded` (or immediately if the DOM is already parsed). Module scripts are deferred by default, so no wrapper is needed.
@@ -164,7 +164,7 @@ The script auto-initializes on `DOMContentLoaded` (or immediately if the DOM is 
 For dynamically added content, import and call the init function:
 
 <Source language="js" code={`
-import { mgShowMore } from 'https://assets.undrr.org/mangrove/2.0.0-rc.3/js/show-more.js';
+import { mgShowMore } from 'https://assets.undrr.org/mangrove/2.0.0/js/show-more.js';
 
 // Initialize specific buttons
 mgShowMore([myButton]);
@@ -186,7 +186,7 @@ Add `data-mg-show-more-skip-auto-init` to skip a button during auto-init. This i
 
 <script type="module">
   import {mgShowMore} from
-  'https://assets.undrr.org/mangrove/2.0.0-rc.3/js/show-more.js';
+  'https://assets.undrr.org/mangrove/2.0.0/js/show-more.js';
   mgShowMore([document.querySelector('[data-mg-show-more-skip-auto-init]')]);
 </script>
 
