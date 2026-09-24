@@ -8,7 +8,7 @@
 
 # Mangrove: the UNDRR component library
 
-Mangrove is UNDRR's component library for accessible, reusable UI across React and server-rendered sites.
+Mangrove is the component library and design system of the United Nations Office for Disaster Risk Reduction (UNDRR), used on undrr.org, PreventionWeb, MCR2030, the International Recovery Platform (IRP) and DELTA Resilience. It provides accessible, reusable UI for React and server-rendered sites.
 
 - Storybook docs and live examples: <https://mangrove.undrr.org/>
 - npm package: <https://www.npmjs.com/package/@undrr/undrr-mangrove>
@@ -31,20 +31,24 @@ Mangrove is UNDRR's component library for accessible, reusable UI across React a
 npm install @undrr/undrr-mangrove
 ```
 
+Upgrading from 1.x? Read the [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs).
+
 Package contents:
 
 - `components/` compiled React component ES modules
 - `css/` compiled theme stylesheets
 - `js/` vanilla JS utilities
 - `scss/` source Sass files
+- `fonts/` web font files
+- `error-pages/` static error page templates
 
 ## Choose an integration path
 
 - CDN reference: [`docs/CDN-REFERENCE.md`](docs/CDN-REFERENCE.md)
-- Vanilla HTML/CSS: Storybook "Vanilla HTML and CSS"
+- Vanilla HTML/CSS: [Storybook "Vanilla HTML and CSS"](https://mangrove.undrr.org/?path=/docs/getting-started-integration-vanilla-html-and-css--docs)
 - Hydration for Drupal/Astro/server-rendered apps: [`docs/HYDRATION.md`](docs/HYDRATION.md)
-- Sass integration: Storybook "Sass integration"
-- React integration: Storybook "React integration"
+- Sass integration: [Storybook "Sass integration"](https://mangrove.undrr.org/?path=/docs/getting-started-integration-sass-integration--docs)
+- React integration: [Storybook "React integration"](https://mangrove.undrr.org/?path=/docs/getting-started-integration-react-integration--docs)
 
 ## Development
 
@@ -64,7 +68,7 @@ yarn build
 ## Releases
 
 - Release process: [`docs/RELEASES.md`](docs/RELEASES.md)
-- Release notes index in Storybook: "Getting started/Release notes"
+- Upgrading from 1.x: [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md))
 - GitHub releases: <https://github.com/unisdr/undrr-mangrove/releases>
 
 ## AI and MCP integration
