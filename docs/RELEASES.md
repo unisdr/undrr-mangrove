@@ -71,7 +71,7 @@ This updates CDN URLs in README.md, MDX docs, and story files from the old versi
 
 #### Re-point the `latest` guidance
 
-`yarn update-cdn-version` rewrites *pinned* version URLs. It does not touch `assets.undrr.org/mangrove/latest/`, and neither does any test: `scripts/__tests__/docs-package-paths.test.js` skips `latest/` on purpose, because the tag is a moving pointer at the newest stable release and cannot be resolved against this branch's sources. So `latest/` guidance is checked here, by hand, every release.
+`yarn update-cdn-version` rewrites *pinned* version URLs. It does not touch `assets.undrr.org/mangrove/latest/`, and neither does any test: `scripts/__tests__/docs-package-paths.test.js` skips `latest/` on purpose, because `latest/` is a moving pointer (a copy of the `dist` branch as of the last shared-web-assets production deploy) and cannot be resolved against this branch's sources. So `latest/` guidance is checked here, by hand, every release.
 
 A release that changes the major is the one that matters. When `latest` moves to a new major, every `latest/` URL in the docs silently starts serving a different tree: paths that 404ed begin resolving, and paths that resolved begin 404ing. Work through this list:
 
@@ -182,7 +182,7 @@ gh release create vX.Y.Z --title X.Y.Z --verify-tag --notes-file release-notes.m
 - [npm package page](https://www.npmjs.com/package/@undrr/undrr-mangrove) shows the new version
 - [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) has the release notes
 - `npm view @undrr/undrr-mangrove dist-tags` shows `latest` on the new version for a stable release, or `next` for a prerelease. A stable release that closes a prerelease line (such as 2.0.0 after the 2.0 release candidates) leaves `next` on the last release candidate, so point it at the stable version too: `npm dist-tag add @undrr/undrr-mangrove@X.Y.Z next`
-- **Stable releases: move the CDN `latest/` path by hand.** `assets.undrr.org/mangrove/latest/` does not follow npm's `latest` tag or this repository's `dist` branch; it is a manual step. Once the versioned `X.Y.Z/` folder is live, point `latest/` at it in the [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) repository, then confirm it serves the new version (a `200` status alone does not prove that):
+- **The CDN is updated by a shared-web-assets production deploy.** The [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) build copies this repository's `dist` branch into `mangrove/latest/` (falling back to npm's `latest` tag only if GitHub is unreachable) and every published npm version into `mangrove/X.Y.Z/`. Nothing reaches `assets.undrr.org` until that repository is tagged and its manual `deploy-production-job` is run in GitLab. After the npm publish and the `dist` push, update the pinned Mangrove version in its `mangrove/README.md`, tag it, run the production deploy, then confirm `latest/` serves the new version (a `200` status alone does not prove that):
 
   ```bash
   curl -s https://assets.undrr.org/mangrove/latest/css/style.css | grep -m1 'Version:'   # expect: Version: X.Y.Z
@@ -285,7 +285,7 @@ attempt does not consume the version number.
 
 ### 5. Update the CDN `dist` branch by hand
 
-`dist.yml` normally force-pushes the contents of `dist/` (minus `assets/images` and `assets/icons`) to the `dist` branch on every push to `main`. **It does not move `assets.undrr.org/mangrove/latest/`**, which is a manual step (see [Verify](#8-verify)), and the versioned `static/mangrove/X.Y.Z/` path is produced separately by the GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline from the tagged release (see [the caveat in step 6](#6-create-the-github-release-and-verify)).
+`dist.yml` normally force-pushes the contents of `dist/` (minus `assets/images` and `assets/icons`) to the `dist` branch on every push to `main`. **It is the source of `assets.undrr.org/mangrove/latest/`**, which the GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) build copies from it at its next production deploy (see [Verify](#8-verify)). The versioned `mangrove/X.Y.Z/` path comes from the same build, from the published npm version (see [the caveat in step 6](#6-create-the-github-release-and-verify)).
 
 Replicate the push from an **isolated worktree** so your `main` checkout is untouched (with `dist/` freshly built at the tagged commit):
 
@@ -312,7 +312,7 @@ curl -s https://assets.undrr.org/mangrove/latest/css/style.css | grep -m1 'Versi
 curl -sI https://assets.undrr.org/mangrove/X.Y.Z/css/style.css  | head -1   # versioned path
 ```
 
-The versioned `X.Y.Z/` URL will **404 until the GitLab shared-web-assets pipeline publishes it**: that pipeline, not this repo's `dist` push, creates versioned paths, and under the org flag it may need to be checked or triggered manually on the GitLab side. `latest/` should return 200 once GitLab has synced the `dist` push.
+The versioned `X.Y.Z/` URL will **404 until the GitLab shared-web-assets pipeline publishes it**: that pipeline, not this repo's `dist` push, creates versioned paths, and production only updates when a shared-web-assets tag is deployed by hand (see [Verify](#8-verify)). The same deploy moves `latest/` to the `dist` push; check its version banner, not just its status.
 
 Finally, delete the local `npm-package/` once the version is live.
 
@@ -377,7 +377,7 @@ The project maintains a `dist` branch for CDN/static hosting via the [UNDRR stat
 Example CDN URLs:
 
 ```
-# Latest (from dist branch, updated on every push to main)
+# Latest (the dist branch, as of the last shared-web-assets production deploy)
 https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 
