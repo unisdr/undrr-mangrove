@@ -271,6 +271,36 @@ describe('mgHubHeader lifecycle', () => {
     expect(link('/monitor/about').getAttribute('aria-current')).toBe('page');
   });
 
+  it('leaves the reader where they scrolled when the window resizes', () => {
+    at('/monitor/data');
+    const root = render();
+    const rail = root.querySelector('ul');
+    rail.scrollBy = jest.fn();
+    const bounds = jest
+      .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+      .mockImplementation(function mockGetBoundingClientRect() {
+        return this.hasAttribute('data-hub-current')
+          ? { left: 350, right: 440 }
+          : { left: 0, right: 320 };
+      });
+    try {
+      cleanup = mgHubHeader(root);
+      expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+      Object.defineProperties(rail, {
+        scrollWidth: { value: 600, configurable: true },
+        clientWidth: { value: 200, configurable: true },
+      });
+      // iOS Safari fires resize when its toolbar collapses mid-scroll.
+      window.dispatchEvent(new Event('resize'));
+      expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+      expect(root.querySelector('nav').hasAttribute('data-overflow-end')).toBe(
+        true
+      );
+    } finally {
+      bounds.mockRestore();
+    }
+  });
+
   it('removes the overflow markers on cleanup', () => {
     const root = render();
     const rail = root.querySelector('ul');

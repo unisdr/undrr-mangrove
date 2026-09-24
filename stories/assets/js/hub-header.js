@@ -142,27 +142,31 @@ function enhanceRail(root) {
   };
 
   update();
-  // A web font arriving after first paint widens every label without
-  // resizing the rail's own box, so the rail alone is not enough to watch:
-  // the marked link's size and the font load both need to trigger an update.
-  const observer =
-    typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
-  observer?.observe(nav);
-  observer?.observe(rail);
+  // Only a change to the marked label, such as a web font arriving after first
+  // paint, moves the rail back to it. Everything else only recomputes the
+  // fades: a resize must not undo the reader's own scrolling, and iOS Safari
+  // fires one whenever its toolbar collapses.
+  const Observer =
+    typeof ResizeObserver === 'undefined' ? null : ResizeObserver;
+  const railObserver = Observer ? new Observer(markOverflow) : null;
+  railObserver?.observe(nav);
+  railObserver?.observe(rail);
+  const labelObserver = Observer ? new Observer(update) : null;
   const selected = rail.querySelector('[data-hub-current]');
-  if (selected) observer?.observe(selected);
+  if (selected) labelObserver?.observe(selected);
   let active = true;
   document.fonts?.ready.then(() => {
     if (active) update();
   });
   rail.addEventListener('scroll', markOverflow, { passive: true });
-  window.addEventListener('resize', update);
+  window.addEventListener('resize', markOverflow);
 
   return () => {
     active = false;
-    observer?.disconnect();
+    railObserver?.disconnect();
+    labelObserver?.disconnect();
     rail.removeEventListener('scroll', markOverflow);
-    window.removeEventListener('resize', update);
+    window.removeEventListener('resize', markOverflow);
     nav.removeAttribute('data-overflow-start');
     nav.removeAttribute('data-overflow-end');
   };
