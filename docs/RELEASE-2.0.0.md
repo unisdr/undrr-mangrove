@@ -19,7 +19,7 @@ Full detail and migration steps: [v2.0 release notes](https://mangrove.undrr.org
 - **New components:** Notice and ServiceNotice, Drawer, Tree, Legend, Range, CopyButton, SkipLink, FormAction, UserFeedback, StatusLabel, EmptyState and SegmentedControl. Drawer, Tree, Legend and Range are prototypes whose APIs may still change in a 2.x minor release.
 - **Page-level patterns:** Content Hub, Landing Page and Article Story reference layouts.
 - **PageHeader language links:** `languageDisplay="links"` shows languages inline in the toolbar, and falls back to the icon dropdown below the tablet breakpoint and when there are more languages than `maxLanguageLinks` (default 6). Default and example language lists follow United Nations order (alphabetical by English name: Arabic, Chinese, English, French, Russian, Spanish). ([#1134](https://github.com/unisdr/undrr-mangrove/pull/1134), [#1284](https://github.com/unisdr/undrr-mangrove/pull/1284))
-- **Vanilla modules:** `js/copy-button.js`, `js/drawer.js` and `js/switch-pending.js` are dependency-free ES modules for pages with no React, and hydration contracts are documented for every hydratable component.
+- **Vanilla modules:** `js/copy-button.js`, `js/drawer.js`, `js/hub-header.js` and `js/switch-pending.js` are dependency-free ES modules for pages with no React, and hydration contracts are documented for every hydratable component.
 
 ## Bug fixes and hardening
 

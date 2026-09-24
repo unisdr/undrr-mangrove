@@ -46,7 +46,7 @@ If you only need the highlights, start here. Each group links to the fuller tech
 **Hydration and vanilla scripts**
 
 - Hydration contracts are documented per component and published in the AI manifest, so a non-React page can wire up behaviour from the same source an agent reads.
-- `js/copy-button.js`, `js/drawer.js` and `js/switch-pending.js` are dependency-free ES modules for pages with no React at all, and `js/switch-pending.js` comes apart into its announcer, its revert and its deadline so an app can keep the parts it wants.
+- `js/copy-button.js`, `js/drawer.js`, `js/hub-header.js` and `js/switch-pending.js` are dependency-free ES modules for pages with no React at all, and `js/switch-pending.js` comes apart into its announcer, its revert and its deadline so an app can keep the parts it wants.
 - Hydration id prefixes are unique page-wide, and vanilla tab sets removed from the page are suspended rather than left running. See [Hydration and vanilla scripts](#hydration-and-vanilla-scripts).
 
 **Documentation, tooling and discoverability**
@@ -615,6 +615,8 @@ A vanilla tab set removed from the page without `mgTabsDestroy()` is suspended r
 ### Dependency-free ES modules
 
 **Drawer gains a vanilla lifecycle.** _Available from `2.0.0-rc.3`._ `js/drawer.js` enhances `data-mg-js-drawer` markup with `mgDrawer(scope)` and releases it with `mgDrawerDestroy(scope)`. That marker is distinct from React hydration's `data-mg-drawer`; choose one integration per drawer. The manifest records the vanilla lifecycle separately from React hydration. The new script is not available at an rc.2 versioned URL. ([#1248](https://github.com/unisdr/undrr-mangrove/pull/1248))
+
+**HubHeader gains a vanilla runtime.** _Available from `2.0.0`._ `js/hub-header.js` enhances static hub header markup marked `data-mg-js-hub-header`: it keeps the current section in view on narrow screens and drives the edge fades, which CSS cannot do alone. Add `data-mg-hub-header-detect-current` and it also marks the current section from the URL, so one block of markup can be copied to every page of a hub; markup that already marks a section is left alone. For headers added later, import `mgHubHeader`. The React `HubHeader` runs the same script. See [Content Hub](https://mangrove.undrr.org/?path=/docs/patterns-content-hub--docs), "Without React". ([#1292](https://github.com/unisdr/undrr-mangrove/pull/1292))
 
 `js/copy-button.js` enhances `data-mg-copy-button` markup on load and exports `mgCopyButton(scope)` for content added later, with no React at all. ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163))
 

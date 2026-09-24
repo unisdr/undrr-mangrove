@@ -69,10 +69,10 @@ export const WithCustomLanguages = {
   args: {
     variant: 'default',
     languages: [
-      { value: 'en', label: 'English', selected: true },
+      { value: 'ar', label: 'العربية' },
       { value: 'fr', label: 'Français' },
-      { value: 'pt', label: 'Português' },
-      { value: 'sw', label: 'Kiswahili' },
+      { value: 'pt', label: 'Português', selected: true },
+      { value: 'es', label: 'Español' },
     ],
   },
 };
