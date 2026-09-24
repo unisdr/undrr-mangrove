@@ -77,6 +77,7 @@ Scripts in `stories/assets/js/` are copied by webpack and published to npm at `@
 | `on-this-page-nav.js` | `js/on-this-page-nav.js` | Sticky horizontal nav with scroll-spy |
 | `tabs.js` | `js/tabs.js` | Tabbed content with keyboard nav |
 | `show-more.js` | `js/show-more.js` | Expand/collapse toggle |
+| `hub-header.js` | `js/hub-header.js` | Current section, scroll into view and edge fades for HubHeader |
 | `switch-pending.js` | `js/switch-pending.js` | Pending state for `.mg-switch` while a change saves |
 | `undrr.js` | `js/undrr.js` | Shared constants and namespace |
 

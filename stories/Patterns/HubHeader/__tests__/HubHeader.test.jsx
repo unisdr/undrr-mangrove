@@ -233,3 +233,16 @@ test('has no detectable accessibility violations', async () => {
   );
   expect(await axe(container)).toHaveNoViolations();
 });
+
+test('enhances its rail through the shared runtime and releases it on unmount', () => {
+  const { container, unmount } = render(<HubHeader {...base} />);
+  const root = container.querySelector('.mg-hub-header');
+  expect(root).toHaveAttribute('data-mg-js-hub-header');
+  // React knows which section is current, so the URL is never consulted.
+  expect(root).not.toHaveAttribute('data-mg-hub-header-detect-current');
+  // Left to the effect, so the component owns the lifecycle and its cleanup.
+  expect(root).toHaveAttribute('data-mg-hub-header-skip-auto-init');
+  expect(root.dataset.mgJsHubHeaderInitialized).toBe('true');
+  unmount();
+  expect(root.dataset.mgJsHubHeaderInitialized).toBeUndefined();
+});

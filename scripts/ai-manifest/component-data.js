@@ -1948,6 +1948,41 @@ npm run build</code></pre>
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page.',
     description:
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
+    vanillaModule: {
+      note: 'For static HubHeader markup on pages without React. js/hub-header.js enhances every [data-mg-js-hub-header] on load: it keeps the marked section in view and sets data-overflow-start and data-overflow-end on the nav for the edge fades. With data-mg-hub-header-detect-current it also marks the current section from the URL, so identical markup can be copied to every page of the hub: an exact match gets aria-current="page", otherwise the longest section whose path contains the page gets mg-hub-header__nav-item--ancestor and no aria-current. A section linking to the hub home or to / only matches exactly. Markup that already marks a section is left alone. For headers inserted later, import { mgHubHeader } from ".../js/hub-header.js" and call mgHubHeader(scope); initialized headers are skipped and the returned function undoes the call. Without JavaScript the links work and nothing is marked.',
+      selector: '[data-mg-js-hub-header]',
+      modules: vanillaModules('hub-header'),
+      dataAttributes: {
+        'data-mg-js-hub-header':
+          'Marks the .mg-hub-header root to enhance (required).',
+        'data-mg-hub-header-detect-current':
+          'Opt in to marking the current section from the URL. Leave it off when the server marks it.',
+        'data-mg-hub-header-skip-auto-init':
+          'Skips the header on load; call mgHubHeader(scope) yourself.',
+        'data-mg-js-hub-header-initialized':
+          'Set by the script. Do not author it.',
+      },
+      events: [],
+      example: `${STYLESHEET_TAG}
+
+<div class="mg-hub-header mg-hub-header--compact mg-hub-header--surface-primary"
+  data-mg-js-hub-header data-mg-hub-header-detect-current>
+  <div class="mg-hub-header__bar">
+    <div class="mg-hub-header__identity mg-container">
+      <a class="mg-hub-header__name" href="/monitor">Sendai Framework Monitor</a>
+      <nav class="mg-hub-header__nav" aria-label="Sendai Framework Monitor sections">
+        <ul>
+          <li><a href="/monitor/about">About</a></li>
+          <li><a href="/monitor/reporting">Reporting</a></li>
+          <li><a href="/monitor/data">Data</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="${vanillaModules('hub-header').script}"></script>`,
+    },
   },
 
   'patterns-article-story': {

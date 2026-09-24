@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { CtaButton } from '../../Components/Buttons/CtaButton/CtaButton';
+import { mgHubHeader } from '../../assets/js/hub-header';
 
 /**
  * Identity and section navigation for a content hub, with an optional
@@ -72,10 +73,25 @@ export function HubHeader({
 }) {
   const expressive = variant === 'expressive';
   warnAboutContract({ sections, navLabel, name });
+  const root = useRef(null);
+  // Re-run when the marked section moves, so it is scrolled into view. The
+  // runtime's own observer covers labels resizing after that.
+  const marked = sections
+    .map(section => (section.current || section.ancestor ? section.href : ''))
+    .join('|');
+
+  // The same runtime static markup uses, without URL detection: the props
+  // already say which section is current.
+  useEffect(() => mgHubHeader(root.current), [marked, variant]);
 
   return (
     <div
+      ref={root}
       className={`mg-hub-header mg-hub-header--${variant} mg-hub-header--surface-${surface}`}
+      data-mg-js-hub-header=""
+      // The effect below initializes and releases it; auto-init claiming the
+      // root first would leave the effect with nothing to clean up.
+      data-mg-hub-header-skip-auto-init=""
     >
       <div className="mg-hub-header__bar">
         <div className="mg-hub-header__identity | mg-container">

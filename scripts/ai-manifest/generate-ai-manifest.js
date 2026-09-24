@@ -192,6 +192,15 @@ const VANILLA_SCRIPTS = [
       'Open and close, Escape, focus management and a modal focus trap for a drawer or floating panel you rendered yourself. It never builds markup, so the close label, title and body stay in your HTML. Triggers are [data-mg-drawer-trigger="<container id>"]; scripts can dispatch mg-drawer:open, mg-drawer:close and mg-drawer:toggle on the container and listen for mg-drawer:opened and mg-drawer:closed. A floating panel (the mg-floating-panel class) is non-modal: no backdrop and no Tab trap. Call mgDrawer(scope) again for drawers added later, and mgDrawerDestroy(scope) before removing them.',
   },
   {
+    name: 'Hub header',
+    file: 'js/hub-header.js',
+    url: `${CDN_BASE}/js/hub-header.js`,
+    selector: '[data-mg-js-hub-header]',
+    initFunction: 'mgHubHeader(scope)',
+    description:
+      'Keeps the marked section of a static HubHeader in view and drives its edge fades. With data-mg-hub-header-detect-current it marks the current section from the URL, so the same markup can be copied to every page of a hub. Call mgHubHeader(scope) for headers added later; the returned function undoes the call.',
+  },
+  {
     name: 'Copy button',
     file: 'js/copy-button.js',
     url: `${CDN_BASE}/js/copy-button.js`,
