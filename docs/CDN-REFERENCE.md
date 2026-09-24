@@ -45,6 +45,7 @@ The DELTA Resilience theme never had a legacy variant. See the [v1.4 release not
 | On This Page Nav | `/js/on-this-page-nav.js` | Sticky heading nav with scroll-spy |
 | Table of Contents | `/js/table-of-contents.js` | Static page overview navigation |
 | Copy Button | `/js/copy-button.js` | Zero-dependency copy-to-clipboard button |
+| Hub header | `/js/hub-header.js` | Current section from the URL, scroll into view and edge fades for static HubHeader markup (no React) |
 | Drawer | `/js/drawer.js` | Off-canvas drawer and floating panel lifecycle (no React). **Available from rc.3** — see below |
 | Switch pending | `/js/switch-pending.js` | Saving state for `.mg-switch`: announcements, guards, and an optional timeout and revert. `mgSwitchAnnouncer()` exports the announcements alone |
 | Preview access | `/js/preview-access.js` | Preview-access gate form |

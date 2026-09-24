@@ -25,6 +25,7 @@ The publish workflow (`npm-publish.yml`) runs `scripts/assemble-npm-package.mjs`
 | `show-more.js`         | [ShowMore](../../../Utilities/ShowMore/)             | Expand/collapse toggle for content sections                                                                                   |
 | `copy-button.js`       | [CopyButton](../../Components/Buttons/CopyButton/)   | Zero-dependency clipboard copy button with transient feedback                                                                 |
 | `switch-pending.js`    | [Checkbox](../../Components/Forms/Checkbox/)         | Pending state for `.mg-switch`: announces, guards, and optionally times out and reverts; also exports the announcements alone |
+| `hub-header.js`        | [HubHeader](../../Patterns/ContentHub/)              | Current section from the URL, scroll into view and edge fades for static hub header markup                                    |
 | `drawer.js`            | [Drawer](../../Components/Navigation/Drawer/)        | Open and close, Escape, focus management and a modal focus trap for a drawer or floating panel you rendered yourself          |
 | `preview-access.js`    | [PreviewAccess](../../Components/PreviewAccess/)     | Password gate and preview notice for staging and pre-publication review                                                       |
 | `table-of-contents.js` | [TableOfContents](../../Components/TableOfContents/) | In-page table of contents generated from the article's headings, with scrollspy                                               |

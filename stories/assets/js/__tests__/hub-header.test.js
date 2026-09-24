@@ -159,6 +159,15 @@ describe('mgHubHeader lifecycle', () => {
     expect(root.dataset.mgJsHubHeaderInitialized).toBe('true');
   });
 
+  it('leaves skip-auto-init headers to an explicit call', () => {
+    const root = render();
+    root.setAttribute('data-mg-hub-header-skip-auto-init', '');
+    cleanup = mgHubHeader();
+    expect(root.dataset.mgJsHubHeaderInitialized).toBeUndefined();
+    cleanup = mgHubHeader(root);
+    expect(root.dataset.mgJsHubHeaderInitialized).toBe('true');
+  });
+
   it('ignores elements without the marker', () => {
     const root = render();
     root.removeAttribute('data-mg-js-hub-header');

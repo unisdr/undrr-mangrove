@@ -141,7 +141,8 @@ function enhanceRail(root) {
  * can be called again after inserting markup.
  *
  * @param {NodeList|HTMLElement[]|HTMLElement} [scope] - Headers to enhance.
- *   Defaults to every [data-mg-js-hub-header] in the document.
+ *   Defaults to every [data-mg-js-hub-header] in the document, less any
+ *   carrying data-mg-hub-header-skip-auto-init.
  * @returns {Function} Removes what this call added, so a header can be
  *   initialized again. Useful for React effect cleanup.
  */
@@ -154,6 +155,9 @@ export function mgHubHeader(scope) {
   const cleanups = [];
   Array.from(roots).forEach(root => {
     if (!(root instanceof HTMLElement) || !root.matches(ROOT_SELECTOR)) return;
+    if (!scope && root.hasAttribute('data-mg-hub-header-skip-auto-init')) {
+      return;
+    }
     if (root.dataset.mgJsHubHeaderInitialized === 'true') return;
     root.dataset.mgJsHubHeaderInitialized = 'true';
     if (root.hasAttribute('data-mg-hub-header-detect-current')) {

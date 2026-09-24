@@ -183,7 +183,6 @@ export function ContentHub({
   const prefix = routePrefix || `hub-${instanceId.replace(/:/g, '')}`;
   const [page, setPage] = useState(initialPage);
   const content = useRef(null);
-  const navigation = useRef(null);
   const visited = useRef(false);
   const href = route => `#${prefix}/${route}`;
   const detail = page === 'how-to-report' || page === 'validate-data';
@@ -221,53 +220,6 @@ export function ContentHub({
   useEffect(() => {
     if (visited.current) content.current?.focus();
   }, [page]);
-
-  useEffect(() => {
-    const nav = navigation.current;
-    const rail = nav?.querySelector('ul');
-    const revealSection = () => {
-      if (!rail) return;
-      const selected = rail.querySelector('[data-hub-current]');
-      if (!selected || !rail.scrollBy) return;
-      const viewport = rail.getBoundingClientRect();
-      const item = selected.getBoundingClientRect();
-      const offset =
-        item.left < viewport.left
-          ? item.left - viewport.left
-          : item.right > viewport.right
-            ? item.right - viewport.right
-            : 0;
-      if (offset) rail.scrollBy({ left: offset, behavior: 'instant' });
-    };
-    // Drives the edge fades: CSS cannot detect overflow on its own.
-    const markOverflow = () => {
-      if (!nav || !rail) return;
-      const start = Math.abs(rail.scrollLeft) > 1;
-      const end =
-        Math.abs(rail.scrollLeft) + rail.clientWidth < rail.scrollWidth - 1;
-      nav.toggleAttribute('data-overflow-start', start);
-      nav.toggleAttribute('data-overflow-end', end);
-    };
-    const update = () => {
-      revealSection();
-      markOverflow();
-    };
-    update();
-    // Font and theme changes can resize labels after the first paint.
-    const observer =
-      typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
-    if (nav) {
-      observer?.observe(nav);
-      if (rail) observer?.observe(rail);
-    }
-    rail?.addEventListener('scroll', markOverflow, { passive: true });
-    window.addEventListener('resize', update);
-    return () => {
-      observer?.disconnect();
-      rail?.removeEventListener('scroll', markOverflow);
-      window.removeEventListener('resize', update);
-    };
-  }, [page, locale]);
 
   const intro =
     page === 'landing'
@@ -370,7 +322,6 @@ export function ContentHub({
         )}
         {page !== 'landing' && (
           <HubHeader
-            navRef={navigation}
             name={text.hub}
             nameHref={href('overview')}
             nameCurrent={page === 'overview'}
