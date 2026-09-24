@@ -125,7 +125,7 @@ Add `data-mg-hub-header-detect-current` and the script also works out the curren
 - On the hub home, the hub name gets `aria-current="page"` when no section links to the home itself.
 - Markup that already marks a section is left alone, so a server that knows better than the URL wins.
 
-Paths are compared without the query, fragment, trailing slash or `index.html`, and only for links on the same origin. Ancestry follows the URL, so it works when a hub's pages sit under its home in the path (`/monitor`, `/monitor/reporting`, `/monitor/reporting/how-to`).
+Paths are compared without the query, fragment, trailing slash or `index.html`, and only for links on the same origin, so use root-relative links (`/monitor/about`) if the same markup serves more than one host. Links that do not point at a page (an empty `href`, `#section`, `?query`) are never marked. Ancestry follows the URL, so it works when a hub's pages sit under its home in the path (`/monitor`, `/monitor/reporting`, `/monitor/reporting/how-to`).
 
 ```html
 <div
@@ -157,7 +157,7 @@ Paths are compared without the query, fragment, trailing slash or `index.html`, 
 ></script>
 ```
 
-The script enhances every `[data-mg-js-hub-header]` on load, skipping any that carry `data-mg-hub-header-skip-auto-init`. For markup inserted later, import `mgHubHeader` and call it with the new headers; initialized headers are skipped, and the function it returns undoes what it added. Without JavaScript the links still work; nothing is marked and nothing fades.
+The script enhances every `[data-mg-js-hub-header]` on load, skipping any that carry `data-mg-hub-header-skip-auto-init`. For markup inserted later, import `mgHubHeader` and call it with the new headers; initialized headers are skipped, and the function it returns undoes what it added, including the marks, so calling it again after a client-side navigation marks the new page. Without JavaScript the links still work; nothing is marked and nothing fades.
 
 ## Design decisions
 

@@ -42,29 +42,48 @@ function hasExplicitState(root) {
 }
 
 /**
+ * The path a link points at, or null when it does not point at a page: an
+ * empty href, a fragment or a bare query resolves to the current page, so it
+ * would match wherever the markup is copied.
+ *
+ * @param {Element} link - The link.
+ * @returns {string|null} The link's path.
+ */
+function linkPath(link) {
+  const href = (link.getAttribute('href') || '').trim();
+  if (!href || href.startsWith('#') || href.startsWith('?')) return null;
+  return hubHeaderPath(href);
+}
+
+/**
  * Marks the section for the current page. An exact match is the page itself
  * and is announced; otherwise the longest section containing the page is
  * marked as its ancestor, styled the same but not announced.
  *
  * @param {HTMLElement} root - The hub header.
+ * @returns {Function} Removes the marks this call added.
  */
 function markCurrent(root) {
-  if (hasExplicitState(root)) return;
+  const none = () => {};
+  if (hasExplicitState(root)) return none;
   const here = hubHeaderPath(window.location.href);
   const name = root.querySelector('.mg-hub-header__name[href]');
-  const home = name ? hubHeaderPath(name.getAttribute('href')) : null;
+  const home = name ? linkPath(name) : null;
   const links = [...root.querySelectorAll('.mg-hub-header__nav a[href]')];
-  const paths = links.map(link => hubHeaderPath(link.getAttribute('href')));
+  const paths = links.map(linkPath);
 
   const exact = links.find((link, index) => paths[index] === here);
   if (exact) {
     exact.setAttribute('aria-current', 'page');
     exact.setAttribute('data-hub-current', '');
-    return;
+    return () => {
+      exact.removeAttribute('aria-current');
+      exact.removeAttribute('data-hub-current');
+    };
   }
-  if (name && home === here && !name.hasAttribute('aria-current')) {
+  if (home && home === here && !name.hasAttribute('aria-current')) {
     name.setAttribute('aria-current', 'page');
-    return;
+    return () => name.removeAttribute('aria-current');
   }
 
   // A section that is the hub home, or the site root, contains every page of
@@ -77,10 +96,14 @@ function markCurrent(root) {
     if (!here.startsWith(`${path}/`)) return;
     if (!best || path.length > best.path.length) best = { link, path };
   });
-  if (best) {
-    best.link.closest('li')?.classList.add(ANCESTOR_CLASS);
-    best.link.setAttribute('data-hub-current', '');
-  }
+  if (!best) return none;
+  const item = best.link.closest('li');
+  item?.classList.add(ANCESTOR_CLASS);
+  best.link.setAttribute('data-hub-current', '');
+  return () => {
+    item?.classList.remove(ANCESTOR_CLASS);
+    best.link.removeAttribute('data-hub-current');
+  };
 }
 
 /**
@@ -169,12 +192,13 @@ export function mgHubHeader(scope) {
     }
     if (root.dataset.mgJsHubHeaderInitialized === 'true') return;
     root.dataset.mgJsHubHeaderInitialized = 'true';
-    if (root.hasAttribute('data-mg-hub-header-detect-current')) {
-      markCurrent(root);
-    }
+    const unmark = root.hasAttribute('data-mg-hub-header-detect-current')
+      ? markCurrent(root)
+      : () => {};
     const teardown = enhanceRail(root);
     cleanups.push(() => {
       teardown();
+      unmark();
       delete root.dataset.mgJsHubHeaderInitialized;
     });
   });

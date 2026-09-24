@@ -112,6 +112,22 @@ describe('mgHubHeader current detection', () => {
     expect(document.querySelector('[data-hub-current]')).toBeNull();
   });
 
+  it('ignores links that do not point at a page', () => {
+    at('/monitor/reporting/how-to');
+    cleanup = mgHubHeader(
+      render({
+        home: '',
+        sections: ['#top', '?q=1', '/monitor/reporting'],
+      })
+    );
+    expect(hubName().hasAttribute('aria-current')).toBe(false);
+    expect(link('#top').hasAttribute('data-hub-current')).toBe(false);
+    expect(link('?q=1').hasAttribute('data-hub-current')).toBe(false);
+    expect(link('/monitor/reporting').hasAttribute('data-hub-current')).toBe(
+      true
+    );
+  });
+
   it('marks the hub name on the hub home when no section matches', () => {
     at('/monitor');
     cleanup = mgHubHeader(render({ sections: ['/monitor/about'] }));
@@ -233,6 +249,26 @@ describe('mgHubHeader lifecycle', () => {
     } finally {
       delete document.fonts;
     }
+  });
+
+  it('removes the marks it added on cleanup, so a new URL can be marked', () => {
+    at('/monitor/reporting/how-to');
+    const root = render();
+    mgHubHeader(root)();
+    expect(root.querySelector('[data-hub-current], [aria-current]')).toBeNull();
+    expect(
+      root.querySelector('.mg-hub-header__nav-item--ancestor')
+    ).toBeNull();
+    at('/monitor/data');
+    cleanup = mgHubHeader(root);
+    expect(link('/monitor/data').getAttribute('aria-current')).toBe('page');
+  });
+
+  it('keeps marks it did not add on cleanup', () => {
+    at('/monitor/data');
+    const root = render({ current: '/monitor/about' });
+    mgHubHeader(root)();
+    expect(link('/monitor/about').getAttribute('aria-current')).toBe('page');
   });
 
   it('removes the overflow markers on cleanup', () => {

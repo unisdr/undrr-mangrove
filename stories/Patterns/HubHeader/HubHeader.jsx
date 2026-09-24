@@ -89,6 +89,9 @@ export function HubHeader({
       ref={root}
       className={`mg-hub-header mg-hub-header--${variant} mg-hub-header--surface-${surface}`}
       data-mg-js-hub-header=""
+      // The effect below initializes and releases it; auto-init claiming the
+      // root first would leave the effect with nothing to clean up.
+      data-mg-hub-header-skip-auto-init=""
     >
       <div className="mg-hub-header__bar">
         <div className="mg-hub-header__identity | mg-container">
