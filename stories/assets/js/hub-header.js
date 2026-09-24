@@ -119,15 +119,24 @@ function enhanceRail(root) {
   };
 
   update();
-  // Font loading and translated labels can resize the rail after first paint.
+  // A web font arriving after first paint widens every label without
+  // resizing the rail's own box, so the rail alone is not enough to watch:
+  // the marked link's size and the font load both need to trigger an update.
   const observer =
     typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
   observer?.observe(nav);
   observer?.observe(rail);
+  const selected = rail.querySelector('[data-hub-current]');
+  if (selected) observer?.observe(selected);
+  let active = true;
+  document.fonts?.ready.then(() => {
+    if (active) update();
+  });
   rail.addEventListener('scroll', markOverflow, { passive: true });
   window.addEventListener('resize', update);
 
   return () => {
+    active = false;
     observer?.disconnect();
     rail.removeEventListener('scroll', markOverflow);
     window.removeEventListener('resize', update);

@@ -188,6 +188,53 @@ describe('mgHubHeader lifecycle', () => {
     expect(nav.hasAttribute('data-overflow-start')).toBe(false);
   });
 
+  it('watches the marked link, whose label can widen when fonts load', () => {
+    const originalObserver = global.ResizeObserver;
+    const observed = [];
+    global.ResizeObserver = class {
+      observe(element) {
+        observed.push(element);
+      }
+
+      disconnect() {}
+    };
+    try {
+      at('/monitor/data');
+      cleanup = mgHubHeader(render());
+      expect(observed).toContain(link('/monitor/data'));
+    } finally {
+      global.ResizeObserver = originalObserver;
+    }
+  });
+
+  it('checks again once web fonts have loaded', async () => {
+    let fontsLoaded;
+    Object.defineProperty(document, 'fonts', {
+      configurable: true,
+      value: {
+        ready: new Promise(resolve => {
+          fontsLoaded = resolve;
+        }),
+      },
+    });
+    try {
+      const root = render();
+      const rail = root.querySelector('ul');
+      cleanup = mgHubHeader(root);
+      const nav = root.querySelector('nav');
+      expect(nav.hasAttribute('data-overflow-end')).toBe(false);
+      Object.defineProperties(rail, {
+        scrollWidth: { value: 600, configurable: true },
+        clientWidth: { value: 200, configurable: true },
+      });
+      fontsLoaded();
+      await document.fonts.ready;
+      expect(nav.hasAttribute('data-overflow-end')).toBe(true);
+    } finally {
+      delete document.fonts;
+    }
+  });
+
   it('removes the overflow markers on cleanup', () => {
     const root = render();
     const rail = root.querySelector('ul');
