@@ -115,7 +115,7 @@ story-only `mg-demo-` classes, hash routing, and Monitor sample copy.
 
 ## Without React
 
-A CMS that saves static HTML can render the same markup `HubHeader` does and load `js/hub-header.js`. It keeps the marked section in view on narrow screens and drives the edge fades, which CSS cannot do on its own because it cannot detect overflow.
+A CMS that saves static HTML can render the same markup `HubHeader` does and load `js/hub-header.js`. It scrolls the marked section into view on narrow screens (on load and once web fonts arrive, never on a later resize) and drives the edge fades, which CSS cannot do on its own because it cannot detect overflow.
 
 Add `data-mg-hub-header-detect-current` and the script also works out the current section from the URL, so one block of markup can be copied to every page of the hub:
 
@@ -123,7 +123,7 @@ Add `data-mg-hub-header-detect-current` and the script also works out the curren
 - Otherwise the longest section whose path contains the current page is marked as its ancestor: styled the same, not announced.
 - A section that links to the hub home, or to `/`, only ever matches exactly. As an ancestor it would be marked on every page.
 - On the hub home, the hub name gets `aria-current="page"` when no section links to the home itself.
-- Markup that already marks a section is left alone, so a server that knows better than the URL wins.
+- Markup that already marks a section is left alone, so a server that knows better than the URL wins. Only marks on the section links count: a hub name that already carries `aria-current` does not stop detection on the sections.
 
 Paths are compared without the query, fragment, trailing slash or `index.html`, and only for links on the same origin, so use root-relative links (`/monitor/about`) if the same markup serves more than one host. Links that do not point at a page (an empty `href`, `#section`, `?query`) are never marked. Ancestry follows the URL, so it works when a hub's pages sit under its home in the path (`/monitor`, `/monitor/reporting`, `/monitor/reporting/how-to`).
 
@@ -195,7 +195,7 @@ other sub-brands too.
 
 ## Changelog
 
-- **1.2.0**, 2026-09-24: `js/hub-header.js` enhances static hub header markup without React: it keeps the marked section in view, drives the edge fades and, with `data-mg-hub-header-detect-current`, marks the current section from the URL. `HubHeader` runs the same script, so the scrolling and fade logic that lived in the ContentHub story now ships with the component.
+- **1.2.0**, 2026-09-24: `js/hub-header.js` enhances static hub header markup without React: it scrolls the marked section into view on load and once web fonts arrive (a later resize only updates the fades, so a reader's own scrolling is kept), drives the edge fades and, with `data-mg-hub-header-detect-current`, marks the current section from the URL. `HubHeader` runs the same script, so the scrolling and fade logic that lived in the ContentHub story now ships with the component.
 - **1.1.1**, 2026-09-23: The hero video title reads "This is how timely early warnings save lives, UNDRR" instead of setting "UNDRR" off with an em dash, following the dash rules in the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs#punctuation).
 - **1.1.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `HubHeader`'s `surface="secondary"` no longer retargets the bar and banner to the orange accent, which put every link and heading on it at 2.65. Both keep the theme's hero colour, and the accent is now a 4px full-bleed rule under the bar. `--mg-color-hero--secondary` is unchanged and drives that rule. This is a visible change wherever the surface is used, in all five themes.
 - **1.0.1**, 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented `HubHeader`'s `secondary` surface as a recorded contrast exception: white header text on the orange accent is 2.65, and no text colour clears AA on that hue. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).
