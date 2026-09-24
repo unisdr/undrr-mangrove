@@ -13,7 +13,7 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
-## 2.0.0, 2026-09-23
+## 2.0.0, 2026-09-24
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0) for full details.
 
