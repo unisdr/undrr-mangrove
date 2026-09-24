@@ -1,5 +1,7 @@
 # Mangrove 2.0 release notes
 
+Mangrove is the component library and design system the United Nations Office for Disaster Risk Reduction (UNDRR) uses to build its websites. Version 2.0 changes how those sites are built more than how they look. Every UNDRR brand can now run from one stylesheet, the keyboard focus indicator is easier to see and survives high-contrast modes, Arabic typography and right-to-left layout are improved, and teams get new components and page layouts to build from. For most sites on the hosted stylesheet, upgrading means changing one link and, for a sub-brand, adding one class.
+
 Mangrove 2.0 is a major refresh of the library. Theming moved to runtime CSS custom properties, design tokens now come from versioned sources with automated drift checks, every core component went through a coordinated interaction and accessibility pass, and the library gained a set of new primitives and page-level patterns.
 
 This page describes 2.0 as a whole, organized by theme rather than by prerelease. The per-prerelease record lives in [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases), one entry per alpha, beta and release candidate, in the format `docs/RELEASES.md` defines; cross-cutting library notes are in [`CHANGELOG.md`](https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md) and per-component history is in each component's `## Changelog` in Storybook.
@@ -69,6 +71,8 @@ If you only need the highlights, start here. Each group links to the fuller tech
 
 2.0 is the `latest` release on npm, so a plain install now resolves to it. Pin the major if you are not ready to upgrade a 1.x project yet (`npm install @undrr/undrr-mangrove@^1`).
 
+**1.x is now in best-effort support.** There is no schedule for further 1.x releases, and new features and fixes land in 2.x. Plan your upgrade with the [upgrade checklist](#upgrade-checklist).
+
 ```bash
 npm install @undrr/undrr-mangrove@^2
 ```
@@ -87,6 +91,7 @@ Arriving part-way through an upgrade? Start at the row that describes you.
 
 | I am... | Go to... |
 |---|---|
+| **Anyone upgrading from 1.x** | [Upgrade checklist](#upgrade-checklist): each step says when it applies to you |
 | A **base UNDRR** Drupal/CDN consumer, no custom SCSS | [What changed visually](#what-changed-visually) and [Component experience and interaction](#component-experience-and-interaction) |
 | A **sub-brand** Drupal/CDN consumer (PreventionWeb, IRP, MCR2030, DELTA) | [Sub-brand theming migration](#sub-brand-theming-migration): add the `mg-theme-*` body class |
 | A **DELTA** consumer | [DELTA's palette is corrected](#deltas-palette-is-corrected): your brand colours changed |
@@ -105,6 +110,22 @@ Arriving part-way through an upgrade? Start at the row that describes you.
 | A developer importing **React components or Sass from npm** | [Published package imports](#published-package-imports) |
 | A developer styling **editorial links or background heroes** | [Editorial content and inline links](#editorial-content-and-inline-links) and [Hero composition and image-less markup](#hero-composition-and-image-less-markup) |
 | An AI agent or tool reading this for API context | [Token API summary](#token-api-summary) |
+
+## Upgrade checklist
+
+Work through these in order. Each step says when it applies; skip the ones that don't.
+
+1. **Pin any `latest/` CDN URL.** Applies if a page loads `assets.undrr.org/mangrove/latest/`, which moves to 2.0 with this release. Pin it to `mangrove/1.8.2/` now, and to `mangrove/2.0.0/` once the steps below are done.
+2. **Update the version.** Change CDN URLs to `https://assets.undrr.org/mangrove/2.0.0/`, or run `npm install @undrr/undrr-mangrove@^2`.
+3. **Load one Mangrove stylesheet per page.** Applies if a page loads both `style.css` and a sub-brand stylesheet. Load one, or `style-all.css` for several brands. See [Multi-brand pages and the combined bundle](#multi-brand-pages-and-the-combined-bundle).
+4. **Add the theme class.** Applies if you load `style-preventionweb.css`, `style-irp.css`, `style-mcr.css`, `style-delta.css` or `style-all.css`. Add `mg-theme-preventionweb`, `mg-theme-irp`, `mg-theme-mcr` or `mg-theme-delta` to `<body>` or a wrapping element, or the page renders in the UNDRR palette. See [Sub-brand theming migration](#sub-brand-theming-migration).
+5. **Move off a 10px root.** Applies if you load a `*-legacy.css` stylesheet, set `html { font-size: 62.5% }` or `10px`, or set `$mg-html-font-size: 10`. The legacy stylesheets are gone. See [breaking change #5](#5-legacy-10px-root-removed).
+6. **Rebuild your Sass and clear every error and warning.** Applies if you import Mangrove SCSS. Removed variables fail the build or print a warning that starts `Mangrove 2.0:`, and each names its replacement. See [Breaking changes](#breaking-changes).
+7. **Check button colour overrides.** Applies if your CSS sets `--mg-color-button-background`, `--mg-color-button-background--hover` or `--mg-border-color-button`. They now take a complete colour, not RGB channels; an override written as channels is dropped silently, with no warning. See [breaking change #7](#7-three-button-tokens-changed-shape).
+8. **Mark heroes that have no image.** Applies if you hand-author hero markup without a background image. Add `mg-hero--no-image`, or phones show an empty band of brand colour. See [Hero composition and image-less markup](#hero-composition-and-image-less-markup).
+9. **Review hand-written markup for changed components.** Applies if you hand-author Snackbar markup, pass links with `target` to QuoteHighlight, or import the removed `Pagination` SCSS. See [Snackbar](#snackbar), [Quote HTML and caller-owned content](#quote-html-and-caller-owned-content) and [breaking change #6](#6-deprecated-pagination-component-removed).
+10. **Use subpath imports from npm.** Applies if you import React components. Import from `@undrr/undrr-mangrove/components/{Name}.js`; the package has no root entry point. See [Published package imports](#published-package-imports).
+11. **Check the result.** Look at key pages at phone width and move through them with the keyboard. Expect the changes in [What changed visually](#what-changed-visually), and nothing else.
 
 ## What changed visually
 
@@ -416,13 +437,13 @@ The switch exposed seven custom properties and all seven were colours, so resizi
 
 ## Typography, language and accessibility
 
-### Why Dubai was dropped
+### Why the Dubai typeface was replaced
 
 Before 2.0, Arabic headings were Noto Kufi Arabic and Arabic body text was Dubai. An intermediate step during 2.0's development moved both onto Dubai, so Arabic readers downloaded one font instead of two.
 
-Two objections were recorded at the time. Dropping Kufi was a judgement rather than a correction, because the UAE Federal Design System and OCHA's own base theme both set Noto Kufi for body. And the Dubai EULA requires the font be embedded so an end user cannot extract it, and forbids redistribution, while Mangrove served it as a plain WOFF2 from an open CDN, referenced by an Apache-2.0 library that pointed other organizations at that copy.
+One objection was recorded at the time: dropping Kufi was a judgement rather than a correction, because the UAE Federal Design System and OCHA's own base theme both set Noto Kufi for body.
 
-**Both objections were upheld.** Dubai is no longer shipped; the next section describes the replacement.
+**That objection was upheld.** Dubai is no longer shipped; the next section describes the replacement.
 
 ### Arabic typography settled
 
@@ -430,7 +451,7 @@ Two objections were recorded at the time. Dropping Kufi was a judgement rather t
 
 Dubai came to Mangrove from OCHA, but the inheritance was weaker than it looked and had gone stale on both halves. Dubai was OCHA's alternative subtheme pairing (body only, never headings, Regular only), not their base theme, which used Noto Kufi Arabic. And on 2026-05-28 OCHA's own brand guidance moved to Almarai for display and Noto Sans Arabic for body.
 
-Both Noto families are [SIL Open Font License 1.1](https://openfontlicense.org/), which also settles the redistribution question Dubai's EULA left open.
+Both Noto families are [SIL Open Font License 1.1](https://openfontlicense.org/).
 
 This is two Arabic families where the interim single-family step had one, and that is deliberate. Kufi is a display style (angular, high contrast, architectural), so it earns its place in headings and is the wrong choice at body size; Noto Sans Arabic carries the running text and shares Noto Sans' proportions. The second download is subset by `unicode-range` across `arabic`, `latin` and `latin-ext`, so a page fetches only the scripts it renders: an English string inside an Arabic page pulls the small `latin` file, not the much larger `arabic` one.
 
