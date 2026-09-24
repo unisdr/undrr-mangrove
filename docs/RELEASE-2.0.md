@@ -1,59 +1,10 @@
 # Mangrove 2.0 release notes
 
+> _Edits here show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs)._
+
 Mangrove is the component library and design system the United Nations Office for Disaster Risk Reduction (UNDRR) uses to build its websites. Version 2.0 changes how those sites are built more than how they look. Every UNDRR brand can now run from one stylesheet, the keyboard focus indicator is easier to see and survives high-contrast modes, Arabic typography and right-to-left layout are improved, and teams get new components and page layouts to build from. For most sites on the hosted stylesheet, upgrading means changing one link and, for a sub-brand, adding one class.
 
-Mangrove 2.0 is a major refresh of the library. Theming moved to runtime CSS custom properties, design tokens now come from versioned sources with automated drift checks, every core component went through a coordinated interaction and accessibility pass, and the library gained a set of new primitives and page-level patterns.
-
-This page describes 2.0 as a whole, organized by theme rather than by prerelease. The per-prerelease record lives in [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases), one entry per alpha, beta and release candidate, in the format `docs/RELEASES.md` defines; cross-cutting library notes are in [`CHANGELOG.md`](https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md) and per-component history is in each component's `## Changelog` in Storybook.
-
-`2.0.0` is the stable release, published on npm under the `latest` tag. It follows four alphas, three betas and three release candidates. One of those tags never reached npm: `2.0.0-beta.2` was tagged but not published, so its changes first became installable in `2.0.0-beta.3`.
-
-**If you are upgrading from a release candidate**, two markers show what is new to you. **Available from `2.0.0-rc.3`** marks package changes absent from rc.2, and **Available from `2.0.0`** marks the few that landed after rc.3. If you are upgrading from 1.x, you can ignore both. Documentation, Storybook, the AI manifest and versioned CDN assets deploy separately from npm, so confirm a CDN path resolves before you rely on it.
-
-## What's new in 2.0
-
-If you only need the highlights, start here. Each group links to the fuller technical detail further down.
-
-**Theming, tokens and colour**
-
-- Theming moved from compiled SCSS variables to runtime CSS custom properties with `.mg-theme-*` selectors, so one stylesheet can serve every brand and a page can switch brand without a rebuild.
-- Design tokens come from versioned YAML sources (`tokens/*.yaml`), compiled by a generator that fails the build on a malformed or circular token, with a committed baseline manifest that catches unintended compiled-output drift in tests.
-- Three system-wide visual defaults changed, in every theme: cool-tinted neutral surfaces, a non-brand gold focus ring, and a two-band focus treatment. DELTA's palette was corrected to match DELTA's own production code and design files.
-- The type scale and line heights are public custom properties (`--mg-font-size-*`, `--mg-font-line-height-*`), so a theme can re-value them at runtime.
-- A perceptual (Oklab) colour-contrast methodology runs alongside WCAG 2 on every token pair, including the focus ring and the data-visualization palette for the first time. See [Theming, tokens and colour](#theming-tokens-and-colour).
-
-**Component experience and interaction**
-
-- Buttons, forms, cards, hero compositions, tabs, disclosures, menus, on-page navigation, tables, Pager, ScrollContainer and Text CTA received a coordinated responsive and interaction refresh.
-- Tabs centre when they fit and scroll when they overflow; MegaMenu reveals one mobile level at a time and animates its desktop flyout; PageHeader's account link and language switcher are icon-only at every width.
-- Filled buttons paint their fill under the border, icons in buttons are centred, and a standalone `.mg-icon-button` owns its own styling instead of inheriting MegaMenu's.
-- Switches gained a pending state for changes that save asynchronously, an error state matching every other form control, and size hooks that derive every length from one number. See [Component experience and interaction](#component-experience-and-interaction).
-
-**Typography, language and accessibility**
-
-- Arabic typography is settled: Noto Kufi Arabic headings with Noto Sans Arabic body text, replacing Dubai, and Arabic overrides now respect language boundaries instead of leaking across them.
-- Font families are five script-mapped roles instead of six ad hoc SCSS variables.
-- Components mirror properly in Arabic: Hero, Card, StatsCard, Author image, the form error summary and syndicated search use logical properties rather than physical left and right.
-- Every focused control has a forced-colours-safe indicator, and an accessibility sweep named, announced and visually distinguished controls across six components.
-- One library-wide rule for markerless lists keeps the `list` role Safari otherwise drops, so item counts stay announced without `role="list"` in consumer markup. See [Typography, language and accessibility](#typography-language-and-accessibility).
-
-**New components and patterns**
-
-- Content Hub, Landing Page and Article Story reference patterns give consumers reference page layouts to compose production pages from.
-- New components: `Notice` and `ServiceNotice`, `Drawer`, `Tree`, `Legend`, `Range`, `CopyButton`, `SkipLink`, `FormAction`, `UserFeedback`, `StatusLabel`, `EmptyState` and `SegmentedControl`.
-- Snackbar now renders through Notice, and StatusLabel indicators carry a shape as well as a colour. See [New components and patterns](#new-components-and-patterns).
-
-**Hydration and vanilla scripts**
-
-- Hydration contracts are documented per component and published in the AI manifest, so a non-React page can wire up behaviour from the same source an agent reads.
-- `js/copy-button.js`, `js/drawer.js`, `js/hub-header.js` and `js/switch-pending.js` are dependency-free ES modules for pages with no React at all, and `js/switch-pending.js` comes apart into its announcer, its revert and its deadline so an app can keep the parts it wants.
-- Hydration id prefixes are unique page-wide, and vanilla tab sets removed from the page are suspended rather than left running. See [Hydration and vanilla scripts](#hydration-and-vanilla-scripts).
-
-**Documentation, tooling and discoverability**
-
-- Storybook, `llms.txt`, `llms.json`, `releases.json`, `tokens.json` and `ai-components/` are published at `https://mangrove.undrr.org/`.
-- Machine-readable `releases.json` and `tokens.json`, CSS and JS banners, and SCSS docblocks point agents and developers at the canonical docs. `tokens.json` now states that it is a theme token dictionary and says where component-scoped properties are documented instead.
-- A links test fails the build on a documentation link that resolves to no story. See [Documentation, tooling and discoverability](#documentation-tooling-and-discoverability).
+Mangrove 2.0 is a major refresh of the library. Theming moved to runtime CSS custom properties, design tokens now come from versioned sources with automated drift checks, core components went through a coordinated interaction and accessibility pass, and the library gained a set of new primitives and page-level patterns.
 
 > **If you consume the base UNDRR compiled CSS (CDN or prebuilt), no sub-brand theming:** The theming migration requires no integration change, and the component refresh keeps existing Drupal hydration and BEM contracts, with a few exceptions in the [upgrade notes](#upgrade-notes): hand-authored heroes with no background image need `mg-hero--no-image`, and hand-written Snackbar markup changes. A page on a 10px root, or loading a `*-legacy.css` stylesheet, must move to a 16px root ([breaking change #5](#5-legacy-10px-root-removed)). Three visual defaults change everywhere regardless (see below).
 >
@@ -65,8 +16,6 @@ If you only need the highlights, start here. Each group links to the fuller tech
 >
 > **If you import Mangrove SCSS directly** or override `$mg-color-*` / `$mg-spacing-*` variables in your own stylesheets: see the [breaking changes](#breaking-changes) and the [upgrade notes](#upgrade-notes) below.
 
-> _Edits here show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs)._
-
 ## Install
 
 2.0 is the `latest` release on npm, so a plain install now resolves to it. Pin the major if you are not ready to upgrade a 1.x project yet (`npm install @undrr/undrr-mangrove@^1`).
@@ -77,7 +26,7 @@ If you only need the highlights, start here. Each group links to the fuller tech
 npm install @undrr/undrr-mangrove@^2
 ```
 
-The React components need React and ReactDOM 18 or later, installed by your project; 2.0 is developed and tested on 19.3. npm does not warn about a missing or older React, so check your version. Compiled CSS, SCSS and the vanilla `js/` modules need no React.
+The React components need React and ReactDOM 18 or later, installed by your project; 2.0 is developed and tested on 19.3.0. npm does not warn about a missing or older React, so check your version. Compiled CSS, SCSS and the vanilla `js/` modules need no React.
 
 ```html
 <!-- CDN, versioned path. Load one only: the base stylesheet or a sub-brand one -->
@@ -94,6 +43,8 @@ Arriving part-way through an upgrade? Start at the row that describes you.
 | I am... | Go to... |
 |---|---|
 | **Anyone upgrading from 1.x** | [Upgrade checklist](#upgrade-checklist): each step says when it applies to you |
+| A **product owner or manager** deciding when to upgrade | [Install](#install): pinned 1.x installs and CDN paths keep working, and 1.x is in best-effort support; for hosted CSS the upgrade is one link and, for a sub-brand, one class |
+| **New to Mangrove** | [Introduction](https://mangrove.undrr.org/) |
 | A **base UNDRR** Drupal/CDN consumer, no custom SCSS | [What changed visually](#what-changed-visually) and [Component experience and interaction](#component-experience-and-interaction) |
 | A **sub-brand** Drupal/CDN consumer (PreventionWeb, IRP, MCR2030, DELTA) | [Sub-brand theming migration](#sub-brand-theming-migration): add the `mg-theme-*` body class |
 | A **DELTA** consumer | [DELTA's palette is corrected](#deltas-palette-is-corrected): your brand colours changed |
@@ -129,17 +80,85 @@ Work through these in order. Each step says when it applies; skip the ones that 
 10. **Check React and use subpath imports.** Applies if you import React components. They need React and ReactDOM 18 or later. Import from `@undrr/undrr-mangrove/components/{Name}.js`; the package has no root entry point. See [Published package imports](#published-package-imports).
 11. **Check the result.** Look at key pages at phone width and move through them with the keyboard. Expect the changes in [What changed visually](#what-changed-visually), and nothing else.
 
+## What's new in 2.0
+
+If you only need the highlights, this section has them. Each group links to the fuller technical detail further down.
+
+**Theming, tokens and colour**
+
+- Theming moved from compiled SCSS variables to runtime CSS custom properties with `.mg-theme-*` selectors, so one stylesheet can serve every brand and a page can switch brand without a rebuild.
+- Design tokens come from versioned YAML sources (`tokens/*.yaml`), compiled by a generator that fails the build on a malformed or circular token, with a committed baseline manifest that catches unintended compiled-output drift in tests.
+- Three system-wide visual defaults changed, in every theme: cool-tinted neutral surfaces, a non-brand gold focus ring and a two-band focus treatment. DELTA's palette was corrected to match DELTA's own production code and design files.
+- The type scale and line heights are public custom properties (`--mg-font-size-*`, `--mg-font-line-height-*`), so a theme can re-value them at runtime.
+- A perceptual (Oklab) colour-contrast methodology runs alongside WCAG 2 on the foreground and background token pairs the contrast tests grade, which now include the focus ring and the data-visualization palette.
+
+See [Theming, tokens and colour](#theming-tokens-and-colour).
+
+**Component experience and interaction**
+
+- Buttons, forms, cards, hero compositions, tabs, disclosures, menus, on-page navigation, tables, Pager, ScrollContainer and Text CTA received a coordinated responsive and interaction refresh.
+- Tabs centre when they fit and scroll when they overflow; MegaMenu reveals one mobile level at a time and animates its desktop flyout; PageHeader's account link and language switcher are icon-only at every width.
+- Filled buttons paint their fill under the border, icons in buttons are centred, and a standalone `.mg-icon-button` owns its own styling instead of inheriting MegaMenu's.
+- Switches gained a pending state for changes that save asynchronously, an error state matching every other form control, and size hooks that derive every length from one number.
+
+See [Component experience and interaction](#component-experience-and-interaction).
+
+**Typography, language and accessibility**
+
+- Arabic typography is settled: Noto Kufi Arabic headings with Noto Sans Arabic body text, replacing Dubai, and Arabic overrides now respect language boundaries instead of leaking across them.
+- Font families are five script-mapped roles instead of six ad hoc SCSS variables.
+- Components mirror properly in Arabic: Hero, Card, StatsCard, Author image, the form error summary and syndicated search use logical properties rather than physical left and right.
+- Mangrove's interactive components have a focus indicator that stays visible in forced-colours (high-contrast) modes, and an accessibility sweep named, announced and visually distinguished controls across six components.
+- One library-wide rule for markerless lists keeps the `list` role Safari otherwise drops, so item counts stay announced without `role="list"` in consumer markup.
+
+See [Typography, language and accessibility](#typography-language-and-accessibility).
+
+**New components and patterns**
+
+- Content Hub, Landing Page and Article Story reference patterns give consumers reference page layouts to compose production pages from.
+- New components: `Notice` and `ServiceNotice`, `Drawer`, `Tree`, `Legend`, `Range`, `CopyButton`, `SkipLink`, `FormAction`, `UserFeedback`, `StatusLabel`, `EmptyState` and `SegmentedControl`.
+- Snackbar now renders through Notice, and StatusLabel indicators carry a shape as well as a colour.
+
+See [New components and patterns](#new-components-and-patterns).
+
+**Hydration and vanilla scripts**
+
+- Hydration contracts are documented per component and published in the AI manifest, so a non-React page can wire up behaviour from the same source an agent reads.
+- `js/copy-button.js`, `js/drawer.js`, `js/hub-header.js` and `js/switch-pending.js` are dependency-free ES modules for pages with no React at all, and `js/switch-pending.js` comes apart into its announcer, its revert and its deadline so an app can keep the parts it wants.
+- Hydration id prefixes are unique page-wide, and vanilla tab sets removed from the page are suspended rather than left running.
+
+See [Hydration and vanilla scripts](#hydration-and-vanilla-scripts).
+
+**Documentation, tooling and discoverability**
+
+- Storybook, `llms.txt`, `llms.json`, `releases.json`, `tokens.json` and `ai-components/` are published at `https://mangrove.undrr.org/`.
+- Machine-readable `releases.json` and `tokens.json`, CSS and JS banners, and SCSS docblocks point agents and developers at the canonical docs. `tokens.json` now states that it is a theme token dictionary and says where component-scoped properties are documented instead.
+- A links test fails the build on a documentation link that resolves to no story.
+
+See [Documentation, tooling and discoverability](#documentation-tooling-and-discoverability).
+
+## About these notes
+
+This page describes 2.0 as a whole, organized by theme rather than by prerelease. `2.0.0` is the stable release, published on npm under the `latest` tag, and follows four alphas, three betas and three release candidates. One of those tags never reached npm: `2.0.0-beta.2` was tagged but not published, so its changes first became installable in `2.0.0-beta.3`.
+
+The per-prerelease record lives in [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases), one entry per alpha, beta and release candidate, in the format `docs/RELEASES.md` defines; cross-cutting library notes are in [`CHANGELOG.md`](https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md) and per-component history is in each component's `## Changelog` in Storybook.
+
+**If you are upgrading from a release candidate**, two markers show what is new to you. **Available from `2.0.0-rc.3`** marks package changes absent from rc.2, and **Available from `2.0.0`** marks the few that landed after rc.3. If you are upgrading from 1.x, you can ignore both. Documentation, Storybook, the AI manifest and versioned CDN assets deploy separately from npm, so confirm a CDN path resolves before you rely on it.
+
 ## What changed visually
 
-For base UNDRR consumers, colours and spacing are visually equivalent to 1.x wherever nothing else deliberately changed: the values moved from SCSS variables to CSS custom properties, but the compiled `style.css` output is equivalent.
+Upgrading from 1.x, you will see these changes:
 
-The component refresh intentionally changes the presentation and interaction of core components. It introduces softer theme-aware surfaces, clearer focus and hover states, more consistent responsive spacing, joined form actions and stronger multilingual behaviour. Semantic shapes remain component-specific: carousel controls stay circular, chips retain meaningful pill geometry and institutional chrome continues to express its owning theme.
+- cool-tinted neutral surfaces: the neutral ramp's surface half takes a tint that is subtle per surface and cumulative across a page ([Theming, tokens and colour](#theming-tokens-and-colour))
+- a gold keyboard focus ring, no longer the brand colour, drawn as two bands
+- the component refresh, which intentionally changes the presentation and interaction of core components: softer theme-aware surfaces, clearer focus and hover states, more consistent responsive spacing, joined form actions and stronger multilingual behaviour; semantic shapes remain component-specific, so carousel controls stay circular, chips retain meaningful pill geometry and institutional chrome continues to express its owning theme ([Component experience and interaction](#component-experience-and-interaction))
+- Snackbar as a light Notice surface rather than a filled coloured bar ([Snackbar](#snackbar))
+- filled buttons that paint their fill under the border, so they match outline buttons in size ([Filled buttons and button height](#filled-buttons-and-button-height))
+- StatusLabel indicators that carry a shape as well as a colour ([StatusLabel and EmptyState](#statuslabel-and-emptystate))
+- background heroes that stack image and copy up to 900px viewport width ([Hero composition and image-less markup](#hero-composition-and-image-less-markup))
+- on DELTA sites, DELTA's palette corrected against its own design sources, with buttons going from unfilled navy text to white on brand blue ([DELTA's palette is corrected](#deltas-palette-is-corrected))
 
-The token work changes three things in every theme (the neutral ramp's surface half is cool-tinted, the focus ring is gold rather than the brand colour, and that ring is now two bands), plus DELTA's palette, corrected against its own design sources. The tint is subtle per surface and cumulative across a page. DELTA's buttons in particular go from unfilled navy text to white on brand blue. See [Theming, tokens and colour](#theming-tokens-and-colour). Otherwise the token rewrite carries the values it started with, apart from [three tokens that changed shape](#7-three-button-tokens-changed-shape).
-
-Three component changes are visible everywhere they appear: Snackbar renders as a light Notice surface rather than a filled coloured bar, filled buttons paint their fill under the border so they match outline buttons in size, and StatusLabel indicators carry a shape as well as a colour.
-
-**One border now paints where it painted nothing.** _Available from `2.0.0-rc.3`._ `.mg-card__icon--bordered` drew its border from `--mg-card-border` with no fallback, so a hand-written card that used the documented class without setting the property got the extra padding and no border at all: an unset custom property drops the whole declaration. It falls back to `rgb(var(--mg-color-interactive))`, so on the vanilla path the modifier now reads as an accent border in the brand's own colour. React callers see no change: IconCard has emitted the modifier class only when `borderColor` is set since 1.2, and when it is set it writes `--mg-card-border` inline, which still wins. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200))
+Otherwise colours and spacing are visually equivalent to 1.x: the values moved from SCSS variables to CSS custom properties, but the compiled `style.css` output is equivalent. The token rewrite carries the values it started with, apart from [three tokens that changed shape](#7-three-button-tokens-changed-shape).
 
 **Sub-brand consumers (PreventionWeb, IRP, MCR2030, DELTA) have one required change.** Brand colours previously baked into every component rule at compile time; they now live in a `.mg-theme-{brand}` selector block. Add `class="mg-theme-{brand}"` (`mg-theme-preventionweb`, `mg-theme-irp`, `mg-theme-mcr` or `mg-theme-delta`) to `<body>` or a wrapping element, or components render with the default UNDRR palette instead of the brand palette. See [Sub-brand theming migration](#sub-brand-theming-migration).
 
@@ -249,7 +268,7 @@ Two are worth calling out. `MegaMenu`'s section-list link drew a hardcoded white
 
 ### Changed default: the focus ring is two bands
 
-**Every focused control in every theme looks slightly different.** The default focus indicator is now two bands (a `neutral-0` separator against the control, then the ring), where it was a single outline on most components and a hand-rolled two-band on a handful.
+**Focused controls in every theme look slightly different.** The default focus indicator is now two bands (a `neutral-0` separator against the control, then the ring), where it was a single outline on most components and a hand-rolled two-band on a handful.
 
 This is the treatment GOV.UK and NHS use, and the reason their loud yellows carry a boundary they could not carry alone: the inner band separates the ring from whatever the control is painted in, so the ring's contrast is measured against a known colour rather than against an arbitrary component fill. Mangrove now ships it as `mg-focus-ring` and `mg-focus-ring-inset` in `stories/assets/scss/_mixins.scss`, so a component gets it from one `@include` rather than restating the geometry. `--mg-focus-ring-width` and `--mg-focus-ring-offset` are unchanged at `2px`.
 
@@ -298,7 +317,7 @@ No theme overrides any of the seven fills, so the status palette is identical ac
 
 **DELTA consumers should read this. The other four themes are unaffected.** 26 of DELTA's 57 tokens change value or shape. This is a deliberate correction, not a side effect of the token rewrite.
 
-DELTA's Mangrove theme was built on a navy, `#132e48`, that appears **zero times** in DELTA's own codebase. Its card surface was `#fafafa`, which appears once in DELTA where the colour DELTA actually uses, `#f2f2f2`, appears eleven times. 2.0 reads the palette from DELTA's production repository and its DLDTS design file instead of inferring it.
+DELTA's Mangrove theme was built on a navy, `#132e48`, that appears **zero times** in DELTA's own codebase. Its card surface was `#fafafa`, which appears once in DELTA where the colour DELTA actually uses, `#f2f2f2`, appears eleven times. 2.0 reads the palette from DELTA's production repository and the design file for DLDTS, DELTA's design system, instead of inferring it.
 
 Two findings drove the change:
 
@@ -401,7 +420,7 @@ PageHeader also resolves logos per locale, renders at a fixed height, and keeps 
 
 **A breadcrumb written as an `<ol>` is now laid out.** _Available from `2.0.0-rc.3`._ The list inside `nav.mg-breadcrumb` was styled only when it was a `<ul>`, while every curated breadcrumb example in the AI manifest uses an `<ol>`, so a consumer copying the documented snippet got default decimal markers and no flex row. Both arms now share one `> :is(ul, ol)` rule. If you worked around the missing rule with your own `list-style` or flex declarations, check them. This landed with the list-semantics sweep in [Markerless lists keep their list role](#markerless-lists-keep-their-list-role). ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200))
 
-Compiled-CSS consumers do not need a markup migration for any of these navigation updates. Sass consumers must apply the font-role migration in [breaking change #8](#8-font-family-variables-replaced-by-five-roles), and themes depending on Dubai must supply their own font declaration.
+Compiled-CSS consumers do not need a markup migration for any of these navigation updates.
 
 ### Buttons
 
@@ -433,9 +452,19 @@ Data table, badge, accordion, switch and icon-button styles were added as part o
 
 **Switches have an error state, and their geometry is a hook.** _Available from `2.0.0-rc.3`._ Two reports from a team running rc.2 in a vanilla-HTML app, answered as one change because they share the switch's geometry: the error state needs something to colour, and what it colours is the inset the size hooks compute. ([#1214](https://github.com/unisdr/undrr-mangrove/pull/1214), [#1187](https://github.com/unisdr/undrr-mangrove/issues/1187), [#1199](https://github.com/unisdr/undrr-mangrove/issues/1199))
 
-Every other control in the library had an error treatment and `.mg-switch` had none, so a consumer wrote their own rule and hit two traps: a `box-shadow` on the track replaced the focus ring's white separator band at equal specificity, and the track sets `forced-color-adjust: none`, so a hard-coded red survived forced colours unchanged while every state around it adapted. The switch now shows an error the way a text input does: `aria-invalid` on the input, `.mg-switch__input--error` on the input, or `.mg-switch--error` on the label gives the track a red boundary, and the message is the same sibling `p.mg-form-error` joined with `aria-describedby`, so `FormErrorSummary` links to a switch exactly as it links to any other field. It is a `border-color` change and nothing else, matching `.mg-form-input--error` declaration for declaration, so it cannot displace the focus ring's outline or band. In forced colours it returns to `CanvasText` and says "error" with a dashed edge, which survives a palette with no red in it. Unlike the pending state it does not move the thumb: the error is about the thing the switch controls, not about the switch's position. Where the save itself failed, `js/switch-pending.js` already reverts and announces.
+Every other control in the library had an error treatment and `.mg-switch` had none, so a consumer wrote their own rule and hit two traps: a `box-shadow` on the track replaced the focus ring's white separator band at equal specificity, and the track sets `forced-color-adjust: none`, so a hard-coded red survived forced colours unchanged while every state around it adapted.
 
-The switch exposed seven custom properties and all seven were colours, so resizing it meant re-declaring the track, the thumb and the thumb's transform, and that last one is the trap, because Mangrove's own `translateX` is paired with a `[dir=rtl]` counterpart of equal specificity, so a consumer rule loaded later won in both directions and the thumb slid the wrong way by the wrong distance in Arabic. Following the StatusLabel indicators, every length now derives from one number: `--mg-switch-size` sets the track's block size, and `--mg-switch-track-inline-size`, `--mg-switch-track-block-size`, `--mg-switch-track-inset` and `--mg-switch-thumb-size` each set one part. The travel is the track's inline size less the thumb and its two insets, written once and read by the LTR rule, the RTL rule and the tests, and the pending ring is a fraction of the thumb, so setting a hook is enough in both directions at any size. `.mg-switch--small` is a shared 1.125rem switch for a toolbar, a table row or a panel header; it sets the size hook and tightens the row gap, and the row keeps its 36px minimum height, so the touch target does not shrink with the graphic. The track's inset around the thumb is now a transparent border rather than padding (same border box, same content box, same travel), which is what gives the error state a `border-color` to change and stops forced colours taking a pixel off the padding to make room for its own border. Every default is unchanged: a 42×24 track, a 20px thumb and 18px of travel, pinned in a test.
+The switch now shows an error the way a text input does: `aria-invalid` on the input, `.mg-switch__input--error` on the input or `.mg-switch--error` on the label gives the track a red boundary, and the message is the same sibling `p.mg-form-error` joined with `aria-describedby`, so `FormErrorSummary` links to a switch exactly as it links to any other field. It is a `border-color` change and nothing else, matching `.mg-form-input--error` declaration for declaration, so it cannot displace the focus ring's outline or band. In forced colours it returns to `CanvasText` and says "error" with a dashed edge, which survives a palette with no red in it.
+
+Unlike the pending state it does not move the thumb: the error is about the thing the switch controls, not about the switch's position. Where the save itself failed, `js/switch-pending.js` already reverts and announces.
+
+The switch exposed seven custom properties and all seven were colours, so resizing it meant re-declaring the track, the thumb and the thumb's transform. That last one is the trap: Mangrove's own `translateX` is paired with a `[dir=rtl]` counterpart of equal specificity, so a consumer rule loaded later won in both directions and the thumb slid the wrong way by the wrong distance in Arabic.
+
+Following the StatusLabel indicators, every length now derives from one number: `--mg-switch-size` sets the track's block size, and `--mg-switch-track-inline-size`, `--mg-switch-track-block-size`, `--mg-switch-track-inset` and `--mg-switch-thumb-size` each set one part. The travel is the track's inline size less the thumb and its two insets, written once and read by the LTR rule, the RTL rule and the tests, and the pending ring is a fraction of the thumb, so setting a hook is enough in both directions at any size.
+
+`.mg-switch--small` is a shared 1.125rem switch for a toolbar, a table row or a panel header; it sets the size hook and tightens the row gap, and the row keeps its 36px minimum height, so the touch target does not shrink with the graphic.
+
+The track's inset around the thumb is now a transparent border rather than padding (same border box, same content box, same travel), which is what gives the error state a `border-color` to change and stops forced colours taking a pixel off the padding to make room for its own border. Every default is unchanged: a 42×24 track, a 20px thumb and 18px of travel, pinned in a test.
 
 ## Typography, language and accessibility
 
@@ -554,7 +583,7 @@ Two further accessibility threads run through 2.0 and are documented where they 
 
 ### Notice, ServiceNotice and Snackbar
 
-`Notice` is a messaging foundation: `info`, `warning`, `negative` and `positive` severities, compact, prominent and overlay modifiers, and hydration. `ServiceNotice` builds on it for degraded or offline embeds, with capped automatic retry and UN-language labels. **Snackbar now renders through Notice**, which is a visible change; see the [upgrade notes](#upgrade-notes). ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164))
+`Notice` is a messaging foundation: `info`, `warning`, `negative` and `positive` severities, compact, prominent and overlay modifiers, and hydration. `ServiceNotice` builds on it for degraded or offline embeds, with capped automatic retry and translated labels in the six official United Nations languages and Japanese. **Snackbar now renders through Notice**, which is a visible change; see the [upgrade notes](#upgrade-notes). ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164))
 
 ServiceNotice's DELTA status link meets 4.5:1 through the Notice `--mg-notice-action-secondary` token, and the Drupal behavior example attaches its retry listener with `once()`. ([#1175](https://github.com/unisdr/undrr-mangrove/pull/1175), [#1178](https://github.com/unisdr/undrr-mangrove/pull/1178))
 
@@ -572,13 +601,19 @@ _Available from `2.0.0-rc.3`._ `SegmentedControl` presents a native radio group 
 
 ### CopyButton
 
-A copy-to-clipboard button ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)) with React hydration, a zero-dependency vanilla script and UN-language labels ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)). It reports a failed copy with a manual-copy hint ([#1166](https://github.com/unisdr/undrr-mangrove/pull/1166)).
+A copy-to-clipboard button ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)) with React hydration, a zero-dependency vanilla script and translated labels in the six official United Nations languages and Japanese ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)). It reports a failed copy with a manual-copy hint ([#1166](https://github.com/unisdr/undrr-mangrove/pull/1166)).
 
 ### StatusLabel and EmptyState
 
 `StatusLabel` (`.mg-status-label`) ships `--draft`, `--published`, `--waiting-validation` and `--waiting-information` variants, plus `--warning` and `--negative`, which are documented as service-health states. `EmptyState` (`.mg-empty-state`) ships `--compact`, `--panel` and `--start` variants and carries heading-level guidance. Both are additions no existing component uses. ([#1174](https://github.com/unisdr/undrr-mangrove/pull/1174))
 
-**StatusLabel indicators carry a shape as well as a colour.** _Available from `2.0.0-rc.3`._ Draft is a rounded square, waiting for more information a capsule, waiting for validation a rounded diamond, degraded a chamfered triangle, offline an octagon; published and the unmodified base keep the circle. This is visible wherever `.mg-status-label` is used, and needs no markup change: the shapes come from CSS on the same empty `<span>`. The status name is still always present as text, so this is a redundant cue rather than a WCAG fix. It is there because several of the colours are close under colour vision deficiency (degraded and offline measure 3.3 CIE76 and 1.1 dE2000 apart simulated for deuteranopia under Machado 2009, against a just-noticeable difference of about 2.3 dE2000), because a CSS-only component gets reused without its label, and because a second cue is faster to scan. The full measurement, and why the palette itself was left alone, is in [the status indicator palette is measured, and stays](#the-status-indicator-palette-is-measured-and-stays). The seven marks are drawn as one family: all convex, all softened at one corner radius, all carrying the same ring, and that ring is now exactly `--mg-status-label-indicator-border-width` on every edge of every shape ([#1208](https://github.com/unisdr/undrr-mangrove/issues/1208)). `.mg-status-label-group` keeps its list semantics in Safari, so VoiceOver announces the item count ([#1209](https://github.com/unisdr/undrr-mangrove/issues/1209)), and in RTL the group no longer picks up the global list padding ([#1174](https://github.com/unisdr/undrr-mangrove/pull/1174)). The indicators survive Windows High Contrast and printing without background graphics, and each shape occupies one `--mg-status-label-indicator-size` of inline space, so a column or table of statuses keeps a single text alignment edge. See [Status label](https://mangrove.undrr.org/?path=/docs/components-status-label--docs), "Shape as well as colour". ([#1206](https://github.com/unisdr/undrr-mangrove/pull/1206))
+**StatusLabel indicators carry a shape as well as a colour.** _Available from `2.0.0-rc.3`._ Draft is a rounded square, waiting for more information a capsule, waiting for validation a rounded diamond, degraded a chamfered triangle, offline an octagon; published and the unmodified base keep the circle. This is visible wherever `.mg-status-label` is used, and needs no markup change: the shapes come from CSS on the same empty `<span>`. The status name is still always present as text, so this is a redundant cue rather than a WCAG fix.
+
+It is there because several of the colours are close under colour vision deficiency (degraded and offline measure 3.3 CIE76 and 1.1 dE2000 apart simulated for deuteranopia under Machado 2009, against a just-noticeable difference of about 2.3 dE2000), because a CSS-only component gets reused without its label, and because a second cue is faster to scan. The full measurement, and why the palette itself was left alone, is in [the status indicator palette is measured, and stays](#the-status-indicator-palette-is-measured-and-stays).
+
+The seven marks are drawn as one family: all convex, all softened at one corner radius, all carrying the same ring, and that ring is now exactly `--mg-status-label-indicator-border-width` on every edge of every shape ([#1208](https://github.com/unisdr/undrr-mangrove/issues/1208)). The indicators survive Windows High Contrast and printing without background graphics, and each shape occupies one `--mg-status-label-indicator-size` of inline space, so a column or table of statuses keeps a single text alignment edge.
+
+`.mg-status-label-group` keeps its list semantics in Safari, so VoiceOver announces the item count ([#1209](https://github.com/unisdr/undrr-mangrove/issues/1209)), and in RTL the group no longer picks up the global list padding ([#1174](https://github.com/unisdr/undrr-mangrove/pull/1174)). See [Status label](https://mangrove.undrr.org/?path=/docs/components-status-label--docs), "Shape as well as colour". ([#1206](https://github.com/unisdr/undrr-mangrove/pull/1206))
 
 ### FormAction and UserFeedback
 
@@ -620,9 +655,17 @@ A vanilla tab set removed from the page without `mgTabsDestroy()` is suspended r
 
 `js/copy-button.js` enhances `data-mg-copy-button` markup on load and exports `mgCopyButton(scope)` for content added later, with no React at all. ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163))
 
-`js/switch-pending.js` drives the switch pending state, on the CDN (`https://assets.undrr.org/mangrove/2.0.0/js/switch-pending.js`) and in npm (`@undrr/undrr-mangrove/js/switch-pending.js`). `mgSwitchPending(input, { save, status, timeout, labels, signal })` returns `{ destroy() }`. It announces "Saving…", "Still saving…" for ignored presses and the outcome in a `role="status"` region, ignores clicks and changes while pending, lets only the latest request settle, and reverts on failure or after the timeout (10s by default). Switches marked `data-mg-switch-pending` are enhanced on page load. Without a `save` function, a cancelable `mg-switch:save` event lets one site-wide listener answer every switch with `event.detail.respondWith(promise)`; an `async` listener passes an async IIFE, or calls `event.preventDefault()` first and `respondWith()` later. `mgSwitchPendingInit(scope, options)` and `mgSwitchPendingDestroy(scope)` suit Drupal behaviors, the module dispatches `mg-switch:pending`, `mg-switch:settled` and `mg-switch:failed`, an explicit call takes over a switch that auto-init enhanced, and duplicate copies of the script share one registry. See [Checkbox](https://mangrove.undrr.org/?path=/docs/components-forms-checkbox--docs), "Pending state". ([#1184](https://github.com/unisdr/undrr-mangrove/pull/1184))
+`js/switch-pending.js` drives the switch pending state. It is on the CDN (`https://assets.undrr.org/mangrove/2.0.0/js/switch-pending.js`) and in npm (`@undrr/undrr-mangrove/js/switch-pending.js`). While a save is pending, it announces "Saving…", "Still saving…" for ignored presses and the outcome in a `role="status"` region, ignores clicks and changes, lets only the latest request settle and reverts on failure or after the timeout (10s by default). Switches marked `data-mg-switch-pending` are enhanced on page load.
 
-**The helper comes apart.** _Available from `2.0.0-rc.3`._ rc.2 shipped those three behaviours (the announcements, the ignore-while-saving guard, and revert-on-failure with a deadline) as one indivisible unit, so an app whose switches are latest-intent-wins, and whose saves can legitimately run past ten seconds, had to drop the helper and re-implement the announcements, which are the hard part. Three additions, all opt-in, every default unchanged. ([#1213](https://github.com/unisdr/undrr-mangrove/pull/1213), [#1189](https://github.com/unisdr/undrr-mangrove/issues/1189))
+- `mgSwitchPending(input, { save, status, timeout, labels, signal })` returns `{ destroy() }`.
+- Without a `save` function, a cancelable `mg-switch:save` event lets one site-wide listener answer every switch with `event.detail.respondWith(promise)`. An `async` listener passes an immediately invoked async function (IIFE), or calls `event.preventDefault()` first and `respondWith()` later.
+- `mgSwitchPendingInit(scope, options)` and `mgSwitchPendingDestroy(scope)` suit Drupal behaviors.
+- The module dispatches `mg-switch:pending`, `mg-switch:settled` and `mg-switch:failed`.
+- An explicit call takes over a switch that auto-init enhanced, and duplicate copies of the script share one registry.
+
+See [Checkbox](https://mangrove.undrr.org/?path=/docs/components-forms-checkbox--docs), "Pending state". ([#1184](https://github.com/unisdr/undrr-mangrove/pull/1184))
+
+**The helper comes apart.** _Available from `2.0.0-rc.3`._ rc.2 shipped those three behaviours (the announcements, the ignore-while-saving guard and revert-on-failure with a deadline) as one indivisible unit, so an app whose switches are latest-intent-wins, and whose saves can legitimately run past ten seconds, had to drop the helper and re-implement the announcements, which are the hard part. Three additions, all opt-in, every default unchanged. ([#1213](https://github.com/unisdr/undrr-mangrove/pull/1213), [#1189](https://github.com/unisdr/undrr-mangrove/issues/1189))
 
 - `revert: false`, or `data-mg-switch-revert="false"`, keeps the position the user asked for when a save fails. A switch that does not match the server is its own problem, so the helper sets `aria-invalid="true"` on the input instead, restores whatever the page had authored there when the next save starts or on `destroy()`, and leaves an `aria-invalid` it did not write alone. `mg-switch:failed` now carries `reverted`, and its `checked` is the position the switch is left in either way.
 - `timeout: 0` or `Infinity` removes the deadline for a save that runs long, and the new `data-mg-switch-timeout` sets the deadline from markup, or removes it, with `0` or `Infinity`. `aria-busy` then stays true until the save settles, so the helper announces "Still saving…" once at ten seconds, where the deadline would have been, rather than leaving a screen reader user on "Saving…" against a busy control with nothing further. **`timeout: 0` changes meaning for anyone already passing it**: rc.2 rejected it as not a positive finite number and silently used the 10-second default. See the [upgrade notes](#upgrade-notes).
@@ -717,7 +760,7 @@ $mg-color-interactive: #0a6969;
 @import "@undrr/undrr-mangrove/scss/assets/scss/style";
 ```
 
-Components now read `var(--mg-color-interactive)`, not the SCSS variable, so your brand color silently reverts to the default UNDRR palette and nothing errors. Symptom: *"my brand color went back to UNDRR blue and the build was green."* To catch this, Mangrove's build emits a `@warn` when it sees a commonly-overridden `$mg-color-*` / `$mg-spacing-*` variable defined at import time; watch your Sass build log. The fix is to move the override to a CSS custom property (see [Sub-brand theming migration](#sub-brand-theming-migration)).
+Components now read `var(--mg-color-interactive)`, not the SCSS variable, so your brand colour silently reverts to the default UNDRR palette and nothing errors. Symptom: *"my brand colour went back to UNDRR blue and the build was green."* To catch this, Mangrove's build emits a `@warn` when it sees a commonly-overridden `$mg-color-*` / `$mg-spacing-*` variable defined at import time; watch your Sass build log. The fix is to move the override to a CSS custom property (see [Sub-brand theming migration](#sub-brand-theming-migration)).
 
 The following remain as SCSS variables (build time only, no CSS custom property equivalent):
 
@@ -841,7 +884,7 @@ The one Latin change anywhere in the library is `.mg-preview-access__submit`, wh
 **Arabic rendering does change, deliberately.** The old model routed by element: every heading and all compact chrome took Noto Kufi Arabic. The new model routes by role, and Arabic has no condensed axis, so `ui` collapses onto Noto Sans Arabic. Kufi is kept for narrative h1–h3 and the hero title, where a display face belongs. Everything else that had it moves to Noto Sans Arabic:
 
 - chrome, because `ui` collapses: card titles and labels, gallery and empty-state titles, tags, tabs, breadcrumbs, mega-menu and on-this-page navigation links, stat values, the hero label;
-- prose-sized elements that the old model swept up with the headings, because they now inherit `text`: `h4`, `h5`, `h6`, `th`, and the bare `header` element, which previously handed a display face to every page-header subtree.
+- prose-sized elements that the old model swept up with the headings, because they now inherit `text`: `h4`, `h5`, `h6`, `th` and the bare `header` element, which previously handed a display face to every page-header subtree.
 
 Arabic chrome measures about 10.8% narrower than the Latin equivalent, so nothing needed width compensation.
 
@@ -976,7 +1019,7 @@ A switch with `aria-disabled="true"` now looks dimmed, like a disabled one, whil
 
 ### Switch error state and sizing
 
-_Available from `2.0.0-rc.3`._ Both are new API, so nothing breaks by doing nothing. If you wrote your own error rule for `.mg-switch`, replace it: `aria-invalid` on the input, `.mg-switch__input--error`, or `.mg-switch--error` on the label now gives the track a red boundary that survives forced colours and cannot displace the focus ring, and pairs with the same sibling `p.mg-form-error` every other field uses. If you wrote your own sizing rule, replace it too: the thumb's `transform` is no longer something to override, and overriding it was what broke the thumb in RTL. Set `--mg-switch-size`, or one of `--mg-switch-track-inline-size`, `--mg-switch-track-block-size`, `--mg-switch-track-inset` and `--mg-switch-thumb-size`, and use `.mg-switch--small` for the shared compact size. The track's inset is now a transparent border rather than padding; every default measurement is unchanged.
+_Available from `2.0.0-rc.3`._ Both are new API, so nothing breaks by doing nothing. If you wrote your own error rule for `.mg-switch`, replace it: `aria-invalid` on the input, `.mg-switch__input--error` or `.mg-switch--error` on the label now gives the track a red boundary that survives forced colours and cannot displace the focus ring, and pairs with the same sibling `p.mg-form-error` every other field uses. If you wrote your own sizing rule, replace it too: the thumb's `transform` is no longer something to override, and overriding it was what broke the thumb in RTL. Set `--mg-switch-size`, or one of `--mg-switch-track-inline-size`, `--mg-switch-track-block-size`, `--mg-switch-track-inset` and `--mg-switch-thumb-size`, and use `.mg-switch--small` for the shared compact size. The track's inset is now a transparent border rather than padding; every default measurement is unchanged.
 
 ### Switch pending timeout
 
@@ -984,7 +1027,7 @@ _Available from `2.0.0-rc.3`._ `timeout: 0` now means "no deadline". Passing `0`
 
 ### Icon card border
 
-_Available from `2.0.0-rc.3`._ `.mg-card__icon--bordered` used to render no border at all when `--mg-card-border` was unset, which is what hand-written vanilla markup usually did. It now falls back to `rgb(var(--mg-color-interactive))`, so that markup gains a visible accent border in the brand colour. Set `--mg-card-border` on the element or an ancestor to choose a different one. React callers are unaffected either way: IconCard emits the modifier class only when `borderColor` is set, and sets the property inline with it.
+_Available from `2.0.0-rc.3`._ `.mg-card__icon--bordered` used to render no border at all when `--mg-card-border` was unset, which is what hand-written vanilla markup usually did. It now falls back to `rgb(var(--mg-color-interactive))`, so that markup gains a visible accent border in the brand colour. Set `--mg-card-border` on the element or an ancestor to choose a different one. React callers are unaffected either way: IconCard emits the modifier class only when `borderColor` is set, and sets the property inline with it. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200))
 
 ### Hand-written lists
 
@@ -1088,6 +1131,6 @@ Full token list: [Design decisions/Colors](https://mangrove.undrr.org/?path=/doc
 
 Report problems in [GitHub issues](https://github.com/unisdr/undrr-mangrove/issues). The organization flag can hide issue listings even when issues exist, so retain the direct URL of a report. Include:
 
-1. **Consumption mode**: compiled CSS via CDN, compiled CSS via npm, or SCSS import.
+1. **Consumption mode**: compiled CSS via CDN, compiled CSS via npm or SCSS import.
 2. **Brand**: base UNDRR, or which sub-brand (PreventionWeb, IRP, MCR2030 or DELTA).
 3. **What you saw vs. expected**: including whether your Sass build printed any `Mangrove 2.0:` warning.

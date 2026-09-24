@@ -75,7 +75,7 @@ This updates CDN URLs in README.md, MDX docs, and story files from the old versi
 
 A release that changes the major is the one that matters. When `latest` moves to a new major, every `latest/` URL in the docs silently starts serving a different tree: paths that 404ed begin resolving, and paths that resolved begin 404ing. Work through this list:
 
-1. **Find them.** `grep -rn "assets.undrr.org/mangrove/latest" --include='*.md' --include='*.mdx' .`. As of 2.0.0 every hit is in this file (this section and the break-glass `curl` check); the docs pin a version everywhere else.
+1. **Find them.** `grep -rn "assets.undrr.org/mangrove/latest" --include='*.md' --include='*.mdx' .`. As of 2.0.0 the hits are this file (this section and the break-glass `curl` check) and the upgrade guidance in `docs/RELEASE-2.0.md` and `docs/RELEASE-2.0.0.md`, which tell readers to move off `latest/`; no doc loads from `latest/`.
 2. **Request each one** against the version being released and confirm it still resolves. A `latest/` URL that 404s after the tag moves is a broken copy-paste on a published page.
 3. **Verify newly published paths and update availability notes.** A module or stylesheet that first ships in this release has no folder on any earlier version, and npm publication alone does not create the CDN version folder. Request its pinned URL once the versioned assets are live, and check that any "Available from" note or install guidance in the release notes page (`docs/RELEASE-X.Y.md`) matches the version that actually shipped.
 4. **Confirm before publishing the release notes**, not after. Each of these is a path a reader copies.
@@ -182,6 +182,11 @@ gh release create vX.Y.Z --title X.Y.Z --verify-tag --notes-file release-notes.m
 - [npm package page](https://www.npmjs.com/package/@undrr/undrr-mangrove) shows the new version
 - [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) has the release notes
 - `npm view @undrr/undrr-mangrove dist-tags` shows `latest` on the new version for a stable release, or `next` for a prerelease. A stable release that closes a prerelease line (such as 2.0.0 after the 2.0 release candidates) leaves `next` on the last release candidate, so point it at the stable version too: `npm dist-tag add @undrr/undrr-mangrove@X.Y.Z next`
+- **Stable releases: move the CDN `latest/` path by hand.** `assets.undrr.org/mangrove/latest/` does not follow npm's `latest` tag or this repository's `dist` branch; it is a manual step. Once the versioned `X.Y.Z/` folder is live, point `latest/` at it in the [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) repository, then confirm it serves the new version (a `200` status alone does not prove that):
+
+  ```bash
+  curl -s https://assets.undrr.org/mangrove/latest/css/style.css | grep -m1 'Version:'   # expect: Version: X.Y.Z
+  ```
 
 ### 9. Update the Drupal theme (if needed)
 
@@ -280,7 +285,7 @@ attempt does not consume the version number.
 
 ### 5. Update the CDN `dist` branch by hand
 
-`dist.yml` normally force-pushes the contents of `dist/` (minus `assets/images` and `assets/icons`) to the `dist` branch on every push to `main`. **This feeds only the CDN `latest/` path**: the versioned `static/mangrove/X.Y.Z/` path is produced separately by the GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline from the tagged release (see [the caveat in step 6](#6-create-the-github-release-and-verify)).
+`dist.yml` normally force-pushes the contents of `dist/` (minus `assets/images` and `assets/icons`) to the `dist` branch on every push to `main`. **It does not move `assets.undrr.org/mangrove/latest/`**, which is a manual step (see [Verify](#8-verify)), and the versioned `static/mangrove/X.Y.Z/` path is produced separately by the GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline from the tagged release (see [the caveat in step 6](#6-create-the-github-release-and-verify)).
 
 Replicate the push from an **isolated worktree** so your `main` checkout is untouched (with `dist/` freshly built at the tagged commit):
 
@@ -303,7 +308,7 @@ Create the release from the tag as usual (steps 7–8), then verify:
 ```bash
 npm view @undrr/undrr-mangrove dist-tags                     # stable: latest -> X.Y.Z ; prerelease: next -> X.Y.Z-alpha.N and latest UNCHANGED
 npm pack @undrr/undrr-mangrove@X.Y.Z --dry-run 2>&1 | tail -1  # sanity-check file count/size
-curl -sI https://assets.undrr.org/mangrove/latest/css/style.css | head -1   # CDN latest/ reachable
+curl -s https://assets.undrr.org/mangrove/latest/css/style.css | grep -m1 'Version:'   # stable: expect Version: X.Y.Z
 curl -sI https://assets.undrr.org/mangrove/X.Y.Z/css/style.css  | head -1   # versioned path
 ```
 
