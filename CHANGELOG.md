@@ -23,7 +23,7 @@ Prereleases: [2.0.0-alpha.1](https://github.com/unisdr/undrr-mangrove/pull/1061)
 
 ### Changes since 2.0.0-rc.3
 
-- **HubHeader vanilla runtime:** New `js/hub-header.js` enhances static hub header markup without React, keeping the current section in view and driving the edge fades; with `data-mg-hub-header-detect-current` it marks the current section from the URL. The React `HubHeader` runs the same script. ([#1292](https://github.com/unisdr/undrr-mangrove/pull/1292))
+- **HubHeader vanilla runtime:** New `js/hub-header.js` enhances static hub header markup without React, scrolling the current section into view on load and driving the edge fades; with `data-mg-hub-header-detect-current` it marks the current section from the URL. The React `HubHeader` runs the same script. ([#1292](https://github.com/unisdr/undrr-mangrove/pull/1292), [#1293](https://github.com/unisdr/undrr-mangrove/pull/1293))
 
 - **PageHeader language links fall back to the dropdown:** `languageDisplay="links"` renders the icon dropdown below the tablet breakpoint and when there are more languages than the new `maxLanguageLinks` prop (default 6), replacing the two-letter codes that wrapped under the logo. Default and example language lists follow United Nations order, alphabetical by English name. ([#1284](https://github.com/unisdr/undrr-mangrove/pull/1284))
 
