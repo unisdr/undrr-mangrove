@@ -77,6 +77,8 @@ If you only need the highlights, start here. Each group links to the fuller tech
 npm install @undrr/undrr-mangrove@^2
 ```
 
+The React components need React and ReactDOM 18 or later, installed by your project; 2.0 is developed and tested on 19.3. npm does not warn about a missing or older React, so check your version. Compiled CSS, SCSS and the vanilla `js/` modules need no React.
+
 ```html
 <!-- CDN, versioned path. Load one only: the base stylesheet or a sub-brand one -->
 <link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0/css/style.css">
@@ -124,7 +126,7 @@ Work through these in order. Each step says when it applies; skip the ones that 
 7. **Check button colour overrides.** Applies if your CSS sets `--mg-color-button-background`, `--mg-color-button-background--hover` or `--mg-border-color-button`. They now take a complete colour, not RGB channels; an override written as channels is dropped silently, with no warning. See [breaking change #7](#7-three-button-tokens-changed-shape).
 8. **Mark heroes that have no image.** Applies if you hand-author hero markup without a background image. Add `mg-hero--no-image`, or phones show an empty band of brand colour. See [Hero composition and image-less markup](#hero-composition-and-image-less-markup).
 9. **Review hand-written markup for changed components.** Applies if you hand-author Snackbar markup, pass links with `target` to QuoteHighlight, or import the removed `Pagination` SCSS. See [Snackbar](#snackbar), [Quote HTML and caller-owned content](#quote-html-and-caller-owned-content) and [breaking change #6](#6-deprecated-pagination-component-removed).
-10. **Use subpath imports from npm.** Applies if you import React components. Import from `@undrr/undrr-mangrove/components/{Name}.js`; the package has no root entry point. See [Published package imports](#published-package-imports).
+10. **Check React and use subpath imports.** Applies if you import React components. They need React and ReactDOM 18 or later. Import from `@undrr/undrr-mangrove/components/{Name}.js`; the package has no root entry point. See [Published package imports](#published-package-imports).
 11. **Check the result.** Look at key pages at phone width and move through them with the keyboard. Expect the changes in [What changed visually](#what-changed-visually), and nothing else.
 
 ## What changed visually

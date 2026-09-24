@@ -33,6 +33,10 @@ Full detail and migration steps: [v2.0 release notes](https://mangrove.undrr.org
 - **Editorial manual:** a sourced style guide for UI copy and documentation, with its own `llms-editorial-manual.txt` for agents writing copy. ([#1286](https://github.com/unisdr/undrr-mangrove/pull/1286), [#1289](https://github.com/unisdr/undrr-mangrove/pull/1289), [#1290](https://github.com/unisdr/undrr-mangrove/pull/1290))
 - **Checked documentation:** Documentation links and the package paths the docs name are verified by tests, so a copied import or CDN path resolves.
 
+## Dependencies
+
+- **React:** the React components need React and ReactDOM 18 or later, installed by your project; 2.0 is developed and tested on 19.3.0 ([#1128](https://github.com/unisdr/undrr-mangrove/pull/1128)). Compiled CSS, SCSS and the vanilla `js/` modules need no React.
+
 ## CDN
 ```html
 <link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0/css/style.css">
