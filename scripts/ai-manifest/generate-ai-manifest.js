@@ -201,6 +201,15 @@ const VANILLA_SCRIPTS = [
       'Keeps the marked section of a static HubHeader in view and drives its edge fades. With data-mg-hub-header-detect-current it marks the current section from the URL, so the same markup can be copied to every page of a hub. Call mgHubHeader(scope) for headers added later; the returned function undoes the call.',
   },
   {
+    name: 'Cite this',
+    file: 'js/cite-this.js',
+    url: `${CDN_BASE}/js/cite-this.js`,
+    selector: '[data-mg-cite-this]',
+    initFunction: 'mgCiteThis(scope)',
+    description:
+      'Enhances a server-rendered citation disclosure with metadata resolution, copy feedback and analytics events.',
+  },
+  {
     name: 'Copy button',
     file: 'js/copy-button.js',
     url: `${CDN_BASE}/js/copy-button.js`,

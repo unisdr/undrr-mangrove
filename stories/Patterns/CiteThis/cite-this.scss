@@ -1,0 +1,114 @@
+/**
+ * Cite this (CiteThis)
+ *
+ * Inline citation disclosure with copy action and a clear source label.
+ *
+ * Full documentation:
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Patterns/CiteThis/CiteThis.mdx
+ */
+
+.mg-cite-this {
+  max-inline-size: 48rem;
+  background: rgb(var(--mg-color-neutral-50));
+  border-inline-start: var(--mg-spacing-50) solid
+    rgb(var(--mg-color-interactive));
+  color: rgb(var(--mg-color-neutral-800));
+  font-family: var(--mg-font-family-text);
+
+  &__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mg-spacing-150);
+    min-block-size: 44px;
+    padding: var(--mg-spacing-150) var(--mg-spacing-200);
+    cursor: pointer;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-400);
+    font-weight: 700;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:focus-visible {
+      @include mg-focus-ring-inset;
+    }
+
+    &::after {
+      content: "+";
+      font-family: var(--mg-font-family-text);
+      font-size: var(--mg-font-size-400);
+      font-weight: 400;
+      line-height: 1;
+    }
+  }
+
+  &[open] .mg-cite-this__summary::after {
+    content: "−";
+  }
+
+  &__content {
+    padding: 0 var(--mg-spacing-200) var(--mg-spacing-200);
+  }
+
+  &__context {
+    margin: 0 0 var(--mg-spacing-100);
+    color: rgb(var(--mg-color-neutral-700));
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-250);
+  }
+
+  &__text {
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-size: var(--mg-font-size-300);
+    line-height: var(--mg-font-line-height-700);
+    text-wrap: pretty;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-150);
+    margin-block-start: var(--mg-spacing-150);
+  }
+
+  &__copy {
+    min-block-size: 44px;
+    padding: var(--mg-spacing-100) var(--mg-spacing-200);
+    background: rgb(var(--mg-color-interactive));
+    border: 0;
+    border-radius: var(--mg-radius-button);
+    color: rgb(var(--mg-color-white));
+    cursor: pointer;
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-font-size-300);
+    font-weight: 600;
+    transition-property: filter, scale;
+    transition-duration: var(--mg-motion-duration-fast);
+    transition-timing-function: var(--mg-motion-easing-standard);
+
+    &:hover {
+      filter: brightness(0.92);
+    }
+
+    &:active {
+      scale: 0.96;
+    }
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &__status {
+    font-size: var(--mg-font-size-250);
+  }
+}

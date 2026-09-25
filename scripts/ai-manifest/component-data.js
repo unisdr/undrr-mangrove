@@ -1943,6 +1943,75 @@ npm run build</code></pre>
     ],
   },
 
+  'patterns-cite-this': {
+    description:
+      'Vanilla citation disclosure for detail pages. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent.',
+    summary:
+      'Vanilla citation disclosure with editorial, structured-data and page fallbacks, copy feedback, and analytics events.',
+    cssClasses: [
+      'mg-cite-this',
+      'mg-cite-this__summary',
+      'mg-cite-this__content',
+      'mg-cite-this__context',
+      'mg-cite-this__text',
+      'mg-cite-this__actions',
+      'mg-cite-this__copy',
+      'mg-cite-this__status',
+    ],
+    examples: [
+      {
+        name: 'Publisher-supplied citation',
+        html: `<details class="mg-cite-this" data-mg-cite-this data-mg-cite-this-citation="UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.">
+  <summary class="mg-cite-this__summary">Cite this</summary>
+  <div class="mg-cite-this__content">
+    <p class="mg-cite-this__context" data-mg-cite-this-context>Provided citation</p>
+    <p class="mg-cite-this__text" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
+    <div class="mg-cite-this__actions">
+      <button type="button" class="mg-cite-this__copy" data-mg-cite-this-copy hidden>Copy citation</button>
+      <span class="mg-cite-this__status" data-mg-cite-this-status role="status" aria-live="polite"></span>
+    </div>
+  </div>
+</details>`,
+      },
+    ],
+    vanillaModule: {
+      note: 'Render the disclosure and citation on the server. js/cite-this.js upgrades the text, reveals the copy button, and emits events. Its formatter is a suggested UN website-materials form; editorially approved publication citations should be supplied verbatim. The host maps events to its consent-aware analytics setup.',
+      selector: '[data-mg-cite-this]',
+      modules: vanillaModules('cite-this'),
+      dataAttributes: {
+        'data-mg-cite-this': 'Marks the citation disclosure.',
+        'data-mg-cite-this-citation':
+          'Approved citation, shown and copied unchanged.',
+        'data-mg-cite-this-title': 'Override the work title.',
+        'data-mg-cite-this-author': 'Override author or creator.',
+        'data-mg-cite-this-publisher': 'Override publisher.',
+        'data-mg-cite-this-year': 'Override publication year.',
+        'data-mg-cite-this-url': 'Override the citation locator.',
+        'data-mg-cite-this-site': 'Override site name for page fallback.',
+      },
+      events: [
+        'mg-cite-this:open',
+        'mg-cite-this:copy',
+        'mg-cite-this:copy-error',
+      ],
+      example: `${STYLESHEET_TAG}
+
+<details class="mg-cite-this" data-mg-cite-this data-mg-cite-this-citation="UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.">
+  <summary class="mg-cite-this__summary">Cite this</summary>
+  <div class="mg-cite-this__content">
+    <p class="mg-cite-this__context" data-mg-cite-this-context>Provided citation</p>
+    <p class="mg-cite-this__text" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
+    <div class="mg-cite-this__actions">
+      <button type="button" class="mg-cite-this__copy" data-mg-cite-this-copy hidden>Copy citation</button>
+      <span class="mg-cite-this__status" data-mg-cite-this-status role="status" aria-live="polite"></span>
+    </div>
+  </div>
+</details>
+
+<script type="module" src="${vanillaModules('cite-this').script}"></script>`,
+    },
+  },
+
   'patterns-content-hub': {
     summary:
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page.',
