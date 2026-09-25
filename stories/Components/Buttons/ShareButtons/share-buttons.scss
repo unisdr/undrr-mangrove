@@ -106,3 +106,97 @@
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
+
+.mg-share__dialog {
+  box-sizing: border-box;
+  inline-size: min(calc(100% - 2 * var(--mg-spacing-200)), mg-rem(500));
+  max-block-size: calc(100vh - 2 * var(--mg-spacing-200));
+  padding: var(--mg-spacing-300);
+  border: 0;
+  border-block-start: mg-rem(4) solid rgb(var(--mg-color-interactive));
+  border-radius: 0;
+  background: rgb(var(--mg-color-white));
+  color: rgb(var(--mg-color-text));
+  box-shadow: 0 mg-rem(8) mg-rem(32) rgb(var(--mg-color-neutral-900) / 0.25);
+  overflow: auto;
+
+  &::backdrop {
+    background: var(--mg-color-modal-scrim);
+  }
+}
+
+.mg-share__dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--mg-spacing-150);
+}
+
+.mg-share__dialog-title {
+  margin: 0;
+  font-family: var(--mg-font-family-ui);
+  font-size: var(--mg-font-size-500);
+  line-height: 1.2;
+}
+
+.mg-share__dialog-close {
+  flex: none;
+  inline-size: mg-rem(40);
+  block-size: mg-rem(40);
+  border: 0;
+  background: transparent;
+  color: rgb(var(--mg-color-text));
+  font-family: var(--mg-font-family-text);
+  font-size: var(--mg-font-size-500);
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(var(--mg-color-neutral-50));
+  }
+
+  &:focus-visible {
+    @include mg-focus-ring;
+  }
+}
+
+.mg-share__dialog-description {
+  margin-block: var(--mg-spacing-150);
+  font-family: var(--mg-font-family-text);
+}
+
+.mg-share__dialog-content {
+  min-inline-size: 0;
+}
+
+.mg-share__dialog-image {
+  display: block;
+  max-inline-size: 100%;
+  max-block-size: mg-rem(220);
+  block-size: auto;
+  margin-inline: auto;
+}
+
+.mg-share__dialog-url {
+  overflow-wrap: anywhere;
+}
+
+.mg-share__dialog-actions,
+.mg-share__dialog-actions-primary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-100);
+}
+
+.mg-share__dialog-actions {
+  justify-content: space-between;
+  margin-block-start: var(--mg-spacing-200);
+}
+
+.mg-share__visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

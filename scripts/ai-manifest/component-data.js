@@ -432,9 +432,9 @@ export const COMPONENT_DATA = {
 
   'components-buttons-sharebuttons': {
     summary:
-      'Row of share controls for the current page: social networks, email, a QR code modal and a copy-link button with confirmation.',
+      'Row of share controls for the current page: social networks, email, a native QR code dialog and a copy-link button with confirmation.',
     description:
-      'Row of share controls for the current page: social networks, email, a QR code modal and a copy-link button with confirmation. Labels and the email subject and body come from props or data attributes, so every string can be translated.',
+      'Row of share controls for the current page: social networks, email, a native QR code dialog and a copy-link button with confirmation. The dialog has labelled copy, download, and close actions. Labels and the email subject and body come from props or data attributes, so every string can be translated.',
     cssClasses: [
       'mg-share',
       'mg-share__header',
@@ -442,6 +442,17 @@ export const COMPONENT_DATA = {
       'mg-share__button',
       'mg-share__copy-button',
       'mg-share__copy-text',
+      'mg-share__dialog',
+      'mg-share__dialog-header',
+      'mg-share__dialog-title',
+      'mg-share__dialog-close',
+      'mg-share__dialog-description',
+      'mg-share__dialog-content',
+      'mg-share__dialog-image',
+      'mg-share__dialog-url',
+      'mg-share__dialog-actions',
+      'mg-share__dialog-actions-primary',
+      'mg-share__visually-hidden',
     ],
     hydration: {
       note: 'The share row is rendered in renderedHtml but inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. Only these four strings can be set from the DOM — the other thirteen labels (the QR modal copy and every social button aria-label) stay English on the hydration path, because there is no data-labels attribute; use the React labels prop if you need them translated. Omitted attributes fall back to values fromElement supplies, not always to the component defaults: data-sharing-body defaults to an empty string, so the email body has no lead-in text unless you set it. The component reads the current page URL itself — a link[rel="shortlink"] in the head if there is one, otherwise window.location.href — so there is no URL attribute.',

@@ -771,6 +771,9 @@ describe('every component names the role it is meant to', () => {
     // tokens, so it takes the button's role too, as every other button does.
     ['.mg-segmented-control__label', 'text'],
     ['.mg-share__copy-button', 'text'],
+    ['.mg-share__dialog-close', 'text'],
+    ['.mg-share__dialog-description', 'text'],
+    ['.mg-share__dialog-title', 'ui'],
     ['.mg-skip-link:focus', 'ui'],
     ['.mg-share__header', 'text'],
     ['.mg-stats-card-item__bottom-label', 'ui'],

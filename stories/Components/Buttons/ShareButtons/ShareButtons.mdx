@@ -57,10 +57,10 @@ The component uses shortlinks when a `<link rel="shortlink" href="{url here}" />
 
 - Clicking a social button opens a new tab with the sharing link
 - Clicking the copy button copies the link to clipboard
-- Clicking the QR code button opens a modal with:
+- Clicking the QR code button opens a native dialog with a labelled title and description. Focus stays in the dialog, Escape or either close button dismisses it, and focus returns to the QR code button. Clicking the backdrop also closes it. The dialog contains:
   - QR code image
   - URL with UTM tracking parameters
-  - Guidance text and copy/close options
+  - Guidance text and copy, download, and close options
 
 <Canvas
   of={ShareButtonsStories.DefaultShareButtons}
@@ -108,6 +108,8 @@ createHydrator({
 See the [Hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **1.10**, 2026-09-25: Replaced the custom QR overlay with a native dialog. It now has an accessible name and description, browser-managed modal focus and Escape handling, and focus restoration to the QR trigger. Moved dialog styling to themeable tokens while retaining translated labels, QR copy and download actions, and backdrop dismissal.
 
 - **1.9**, 2026-09-09 ([#1105](https://github.com/unisdr/undrr-mangrove/issues/1105)): Quiet, unfilled sharing icons and a neutral URL-copy surface replace competing primary-button fills; hover uses a subtle neutral tint. Theme text colours and button radii remain in control; the share row wraps at narrow widths, long URLs and translated feedback wrap at readable text size, and keyboard focus and reduced-motion behaviour are consistent.
 
