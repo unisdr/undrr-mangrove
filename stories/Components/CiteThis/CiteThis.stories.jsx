@@ -56,7 +56,7 @@ function CitationExample({
 }
 
 export default {
-  title: 'Patterns/Cite this',
+  title: 'Components/Cite this',
   component: CitationExample,
   parameters: {
     docs: {

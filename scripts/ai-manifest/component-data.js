@@ -1943,7 +1943,7 @@ npm run build</code></pre>
     ],
   },
 
-  'patterns-cite-this': {
+  'components-cite-this': {
     description:
       'Vanilla citation button and native dialog for detail pages. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent.',
     summary:

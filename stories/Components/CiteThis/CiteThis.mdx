@@ -9,15 +9,39 @@ import * as CiteThisStories from './CiteThis.stories';
 
 A Cite this button opens a citation dialog on article, terminology, HIP and publication detail pages. The publishing site decides where to show it; Mangrove formats available data and provides copying.
 
-<Canvas of={CiteThisStories.PageFallback} />
+## Page fallback
+
+With no publication metadata, the citation uses the page title, site name and canonical URL. It includes the access date because no publication year is known. The source panel is open here to show the story configuration.
+
+<Canvas of={CiteThisStories.PageFallback} sourceState="shown" />
+
+## Configured publication metadata
+
+The site supplies the title, author, publisher, year and publication URL. These fields override matching structured data.
+
 <Canvas of={CiteThisStories.Metadata} />
+
+## Matching Schema.org work
+
+When the page has a matching JSON-LD work, the citation can use its publication details without a separate configuration.
+
 <Canvas of={CiteThisStories.SchemaMetadata} />
+
+## Publisher citation
+
+Use an approved citation supplied by the publisher or editor when one exists. Mangrove displays and copies that text unchanged.
+
 <Canvas of={CiteThisStories.PublisherCitation} />
+
+## Long citation
+
+Long titles, multiple creators and URLs wrap within the dialog, including on narrow screens.
+
 <Canvas of={CiteThisStories.LongCitation} />
 
 ## Citation source
 
-The pattern uses the first available source:
+The component uses the first available source:
 
 1. An editorially supplied citation (`data-mg-cite-this-citation`). Mangrove displays and copies it unchanged.
 2. Configured fields on the element (`data-mg-cite-this-title`, `-author`, `-publisher`, `-year`, `-url`, `-site`). These take precedence over matching structured data.
@@ -98,4 +122,4 @@ The enhanced button opens a native modal dialog. Focus moves to its title, stays
 
 ## Changelog
 
-- **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, and analytics events.
+- **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, analytics events, and labelled Storybook examples.
