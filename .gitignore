@@ -12,6 +12,7 @@ yarn-error.log
 /stories/assets/css/style*.css.map
 /stories/assets/scss/generated/_tokens-*.scss
 /aria/react-aria.css
+/aria/combo-box.css
 /aria/tokens/*.css
 .DS_Store
 .scannerwork

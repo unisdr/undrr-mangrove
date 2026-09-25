@@ -12,6 +12,7 @@
  */
 @import "../generated/tokens-irp";
 @import "../tokens-tabs";
+@import "../control-tokens";
 @import "./runtime-theme-aliases";
 @import "./tokens-shared";
 
@@ -20,6 +21,15 @@
      resolved for this brand. Generated: see tokens/*.yaml. */
   @include mg-tokens-irp-aria;
   @include mg-tokens-tabs;
+  @include mg-control-tokens;
   @include mg-aria-runtime-theme-aliases;
+
+  --mg-font-family-text: var(--mg-aria-font-family);
+
   @include mg-aria-token-constants('"Roboto", sans-serif');
+}
+
+// Match the standalone adapter typography inside Arabic language boundaries.
+:where(:lang(ar)) {
+  --mg-font-family-text: var(--mg-aria-font-family);
 }

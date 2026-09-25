@@ -14,7 +14,6 @@ import {
   CalendarHeaderCell,
   Cell,
   Checkbox,
-  ComboBox,
   Column,
   ColumnResizer,
   DateInput,
@@ -58,6 +57,8 @@ import {
   isFileDropItem,
 } from 'react-aria-components';
 import Pager from '../Components/Pager/Pager';
+import AriaComboBox from '../Components/Forms/AriaComboBox/AriaComboBox';
+import '../assets/scss/aria/_combo-box.scss';
 // Spike-demo composition styles. Imported here rather than in the theme
 // rollup so these fixtures are not shipped in every consumer's stylesheet.
 import '../assets/scss/aria/_spike-demo.scss';
@@ -262,38 +263,22 @@ function EventEditor({ item, onClose, onSave }) {
                     </>
                   )}
                 </DropZone>
-                <ComboBox
+                <AriaComboBox
+                  label="Hazard type"
+                  placeholder="Enter hazard type"
+                  openButtonLabel="Show suggested hazards"
+                  items={initialEvents.map(event => ({
+                    id: event.hazard,
+                    label: event.hazard,
+                  }))}
                   allowsCustomValue
                   isRequired
                   inputValue={draft.hazard}
                   onInputChange={value => set('hazard', value)}
                   onSelectionChange={key => set('hazard', String(key))}
                   isInvalid={showValidation && !draft.hazard.trim()}
-                >
-                  <Label className="mg-form-label">Hazard type</Label>
-                  <Group>
-                    <Input
-                      className="mg-form-input"
-                      placeholder="Enter hazard type"
-                    />
-                    <Button
-                      className="mg-button mg-button-primary mg-button-outline"
-                      aria-label="Show suggested hazards"
-                    >
-                      ▾
-                    </Button>
-                  </Group>
-                  <Popover>
-                    <ListBox items={initialEvents}>
-                      {event => (
-                        <ListBoxItem id={event.hazard} textValue={event.hazard}>
-                          {event.hazard}
-                        </ListBoxItem>
-                      )}
-                    </ListBox>
-                  </Popover>
-                  <FieldError>A hazard type is required.</FieldError>
-                </ComboBox>
+                  errorText="A hazard type is required."
+                />
               </div>
               <div className="aria-crud-editor__fields">
                 <TextField

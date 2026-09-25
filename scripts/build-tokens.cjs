@@ -51,9 +51,9 @@ const GENERATED_DIR = path.join(SCSS_DIR, 'generated');
 const BASELINE_PATH = path.join(TOKENS_DIR, 'output-baseline.json');
 
 /**
- * Sass sources that make up the React Aria adapter. The standalone token
- * files must carry the transitive closure of every Mangrove token these
- * reference, or a consumer importing one on its own gets an unresolved
+ * Sass sources that make up the React Aria adapter and the scoped pilot. The
+ * standalone token files must carry the transitive closure of every Mangrove
+ * token these reference, or a consumer importing one on its own gets an unresolved
  * var() chain and no accent, no surface and no focus indicator. Scanning
  * them is what makes that closure self-maintaining.
  *
@@ -65,6 +65,8 @@ const BASELINE_PATH = path.join(TOKENS_DIR, 'output-baseline.json');
 const ARIA_ADAPTER_SOURCES = [
   'aria/_runtime-theme-aliases.scss',
   'aria/_tokens-shared.scss',
+  'aria/_combo-box.scss',
+  '_control-tokens.scss',
   '_tokens-tabs.scss',
 ];
 
@@ -619,7 +621,12 @@ function ariaSeeds() {
     }
     const source = fs.readFileSync(absolute, 'utf8');
     for (const match of source.matchAll(/var\(\s*(--mg-[a-z0-9-]+)/g)) {
-      if (match[1].startsWith('--mg-aria-')) continue;
+      if (
+        match[1].startsWith('--mg-aria-') ||
+        match[1].startsWith('--mg-control-') ||
+        match[1] === '--mg-font-family-text'
+      )
+        continue;
       seeds.add(match[1]);
     }
     // Properties the adapter declares itself (the shared v2 tab tokens) are

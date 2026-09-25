@@ -142,6 +142,31 @@ describe('custom properties read by Mangrove are defined', () => {
     }
   );
 
+  test.each(['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'])(
+    'scoped ComboBox CSS resolves with %s standalone tokens',
+    brand => {
+      const comboBox = sass.compile(
+        path.join(SCSS_DIR, 'aria/_combo-box.scss'),
+        {
+          loadPaths: [SCSS_DIR],
+          silenceDeprecations: ['import'],
+          logger: sass.Logger.silent,
+        }
+      ).css;
+      const tokens = sass.compile(
+        path.join(SCSS_DIR, `aria/_tokens-${brand}.scss`),
+        {
+          loadPaths: [SCSS_DIR],
+          silenceDeprecations: ['import'],
+          logger: sass.Logger.silent,
+        }
+      ).css;
+      expect(
+        undefinedRefs(readIn(comboBox + tokens), definedIn(comboBox + tokens))
+      ).toEqual([]);
+    }
+  );
+
   test('stories JS, JSX and CSS read no undefined --mg-* property', () => {
     const allDefined = new Set(
       Object.values(compiled).flatMap(css => [...definedIn(css)])

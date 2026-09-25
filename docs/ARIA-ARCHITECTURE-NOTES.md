@@ -11,6 +11,11 @@ whoever picks this up can see the reasoning rather than just the diff.
 
 Status: in progress. Nothing here is a commitment.
 
+The first narrow Mangrove 2 reconciliation slice is documented in
+[ARIA-V2-RECONCILIATION.md](ARIA-V2-RECONCILIATION.md). It adds shared control
+roles and one scoped React Aria ComboBox; the broad stock-class surface below
+remains experimental.
+
 Every factual claim below was independently verified against the repository and,
 where relevant, re-measured in a browser. That pass found four wrong claims and
 three imprecise ones, all since corrected. Where something remains unverified it

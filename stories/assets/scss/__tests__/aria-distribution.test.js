@@ -17,6 +17,7 @@ const compile = entry =>
 
 describe('optional React Aria distribution', () => {
   const surface = compile('aria/_react-aria');
+  const comboBox = compile('aria/_combo-box');
 
   test('normal themes carry neither Aria selectors nor adapter tokens', () => {
     for (const entry of [
@@ -29,6 +30,7 @@ describe('optional React Aria distribution', () => {
     ]) {
       const css = compile(entry);
       expect(css).not.toMatch(/\.react-aria-|--mg-aria-/);
+      expect(css).not.toMatch(/\.mg-aria-combobox/);
     }
   });
 
@@ -36,6 +38,16 @@ describe('optional React Aria distribution', () => {
     expect(surface).toMatch(/\.react-aria-Button\b/);
     expect(surface).not.toMatch(/\.aria-(?:crud|gallery|integration|spike)-/);
     expect(surface).not.toMatch(/@layer\b/);
+  });
+
+  test('the pilot is scoped to Mangrove classes and semantic control roles', () => {
+    expect(comboBox).toMatch(/\.mg-aria-combobox__option\b/);
+    expect(comboBox).toMatch(/var\(--mg-control-option-selected\)/);
+    expect(comboBox).not.toMatch(/\.react-aria-/);
+    for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
+      const tokens = compile(`aria/_tokens-${brand}`);
+      expect(tokens).toMatch(/--mg-control-option-selected:/);
+    }
   });
 
   test('the adapter refreshes inside each runtime theme class', () => {
