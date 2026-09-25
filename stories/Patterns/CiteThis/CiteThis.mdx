@@ -46,10 +46,7 @@ Render the HTML on the server, including the citation text when it is known. The
   <details class="mg-cite-this__fallback">
     <summary class="mg-cite-this__summary">Cite this</summary>
     <div class="mg-cite-this__content">
-      <p class="mg-cite-this__context" data-mg-cite-this-context>
-        Suggested citation
-      </p>
-      <p class="mg-cite-this__text" data-mg-cite-this-text>
+      <p class="mg-cite-this__text mg-code" data-mg-cite-this-text>
         United Nations Office for Disaster Risk Reduction (2017), “Response”,
         UNDRR, https://www.undrr.org/terminology/response.
       </p>
@@ -80,7 +77,7 @@ Render the HTML on the server, including the citation text when it is known. The
 
 For Drupal behaviors or client-side navigation, call `mgCiteThis(context)` after insertion and `mgCiteThisDestroy(context)` before removal. Initialisation is idempotent and also runs on page load. The published module is `@undrr/undrr-mangrove/js/cite-this.js`.
 
-All strings can be translated in the server markup. Set `data-mg-cite-this-close-label`, `data-mg-cite-this-provided-label`, `data-mg-cite-this-suggested-label`, `data-mg-cite-this-copied-label`, and `data-mg-cite-this-failed-label` for translated controls, feedback and context. If using an automatic citation, set the document's `lang` attribute to format the access date.
+All strings can be translated in the server markup. Set `data-mg-cite-this-close-label`, `data-mg-cite-this-copied-label`, and `data-mg-cite-this-failed-label` for translated controls and feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation text uses Mangrove's `mg-code` style and remains selectable.
 
 ## Analytics
 

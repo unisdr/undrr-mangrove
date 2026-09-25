@@ -1958,7 +1958,6 @@ npm run build</code></pre>
       'mg-cite-this__close',
       'mg-cite-this__summary',
       'mg-cite-this__content',
-      'mg-cite-this__context',
       'mg-cite-this__text',
       'mg-cite-this__actions',
       'mg-cite-this__copy',
@@ -1971,8 +1970,7 @@ npm run build</code></pre>
   <details class="mg-cite-this__fallback">
     <summary class="mg-cite-this__summary">Cite this</summary>
     <div class="mg-cite-this__content">
-      <p class="mg-cite-this__context" data-mg-cite-this-context>Provided citation</p>
-      <p class="mg-cite-this__text" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
+      <p class="mg-cite-this__text mg-code" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
       <div class="mg-cite-this__actions">
         <button type="button" class="mg-cite-this__copy" data-mg-cite-this-copy hidden>Copy citation</button>
         <span class="mg-cite-this__status" data-mg-cite-this-status role="status" aria-live="polite"></span>
@@ -2009,8 +2007,7 @@ npm run build</code></pre>
   <details class="mg-cite-this__fallback">
     <summary class="mg-cite-this__summary">Cite this</summary>
     <div class="mg-cite-this__content">
-      <p class="mg-cite-this__context" data-mg-cite-this-context>Provided citation</p>
-      <p class="mg-cite-this__text" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
+      <p class="mg-cite-this__text mg-code" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
       <div class="mg-cite-this__actions">
         <button type="button" class="mg-cite-this__copy" data-mg-cite-this-copy hidden>Copy citation</button>
         <span class="mg-cite-this__status" data-mg-cite-this-status role="status" aria-live="polite"></span>

@@ -10,8 +10,7 @@ function fixture(attributes = '') {
     <details class="mg-cite-this__fallback">
     <summary class="mg-cite-this__summary">Cite this</summary>
     <div class="mg-cite-this__content">
-      <p class="mg-cite-this__context" data-mg-cite-this-context></p>
-      <p class="mg-cite-this__text" data-mg-cite-this-text></p>
+      <p class="mg-cite-this__text mg-code" data-mg-cite-this-text></p>
       <div class="mg-cite-this__actions">
         <button type="button" data-mg-cite-this-copy hidden>Copy citation</button>
         <span data-mg-cite-this-status role="status" aria-live="polite"></span>

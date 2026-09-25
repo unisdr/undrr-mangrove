@@ -713,7 +713,6 @@ describe('every component names the role it is meant to', () => {
     ['.mg-cite-this__trigger', 'text'],
     ['.mg-cite-this__title', 'ui'],
     ['.mg-cite-this__close', 'text'],
-    ['.mg-cite-this__context', 'ui'],
     ['.mg-cite-this__copy', 'text'],
     ['.mg-cite-this__summary', 'ui'],
     ['.mg-cite-this__summary::after', 'text'],

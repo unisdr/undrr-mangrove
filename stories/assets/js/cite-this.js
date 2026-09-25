@@ -200,13 +200,6 @@ export function mgCiteThis(scope = document) {
     const citation = resolveCitation(element);
     output.textContent = citation.text;
     element.dataset.mgCiteThisSource = citation.source;
-    const context = fallback.querySelector('[data-mg-cite-this-context]');
-    if (context) {
-      context.textContent =
-        citation.source === 'provided'
-          ? element.dataset.mgCiteThisProvidedLabel || 'Provided citation'
-          : element.dataset.mgCiteThisSuggestedLabel || 'Suggested citation';
-    }
     const dialog = doc.createElement('dialog');
     if (typeof dialog.showModal !== 'function') continue;
 

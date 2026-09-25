@@ -139,18 +139,9 @@
     padding: 0 var(--mg-spacing-200) var(--mg-spacing-200);
   }
 
-  &__context {
-    margin: 0 0 var(--mg-spacing-100);
-    color: rgb(var(--mg-color-neutral-700));
-    font-family: var(--mg-font-family-ui);
-    font-size: var(--mg-font-size-250);
-  }
-
   &__text {
     margin: 0;
     overflow-wrap: anywhere;
-    font-size: var(--mg-font-size-300);
-    line-height: var(--mg-font-line-height-700);
     text-wrap: pretty;
   }
 

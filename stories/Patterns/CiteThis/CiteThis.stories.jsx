@@ -32,8 +32,7 @@ function CitationExample({
       <details className="mg-cite-this__fallback">
         <summary className="mg-cite-this__summary">Cite this</summary>
         <div className="mg-cite-this__content">
-          <p className="mg-cite-this__context" data-mg-cite-this-context />
-          <p className="mg-cite-this__text" data-mg-cite-this-text />
+          <p className="mg-cite-this__text mg-code" data-mg-cite-this-text />
           <div className="mg-cite-this__actions">
             <button
               type="button"
