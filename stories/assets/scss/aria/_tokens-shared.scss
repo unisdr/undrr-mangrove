@@ -1,0 +1,85 @@
+/*
+ * Brand-neutral React Aria adapter constants.
+ *
+ * These are the --mg-aria-* values no brand overrides: type metrics, the
+ * shape and size constants shared by the range/toggle family, and the
+ * dialog geometry. They are a mixin rather than a :root block so the same
+ * declarations can be emitted at :root inside Mangrove's own bundle and at
+ * zero specificity inside each standalone aria/tokens/*.css.
+ *
+ * $font-family is passed as a Sass *string* and interpolated: assigning a
+ * comma list here would drop the quotes and change the compiled CSS. The same
+ * applies to $font-family-arabic.
+ */
+@mixin mg-aria-token-constants(
+  $font-family,
+  $font-family-arabic: '"Dubai", sans-serif'
+) {
+  --mg-aria-font-family: #{$font-family};
+  --mg-aria-font-size: 1rem;
+  --mg-aria-font-size-small: 0.875rem;
+  --mg-aria-line-height: 1.5;
+  --mg-aria-border-width: 1px;
+  --mg-aria-width-full: 100%;
+
+  // --mg-aria-color-overlay-backdrop moved to the runtime theme aliases: it
+  // was the one colour literal in this file (an off-palette navy) and it is
+  // theme-dependent now that it derives from --mg-color-neutral-900.
+  // Constants a theme could not previously touch because they were literals
+  // repeated in the stylesheet: opacity 0.55 appears twelve times, the press
+  // scale twice, the strong weight five times. Naming them does not change any
+  // rendered value; it makes them one decision instead of nineteen.
+  --mg-aria-opacity-disabled: 0.55;
+  --mg-aria-press-scale: 0.96;
+  --mg-aria-font-weight-strong: 600;
+
+  // Shape and size constants shared by the range/toggle family. Brand-neutral,
+  // so they sit outside the runtime theme aliases.
+  --mg-aria-radius-pill: 9999px;
+  --mg-aria-track-thickness: 0.5rem;
+
+  // 24px: WCAG 2.5.8 minimum target size. Also sets the switch track
+  // geometry, which derives from this value.
+  --mg-aria-thumb-size: 1.5rem;
+
+  // 24px, matching the thumb and the WCAG 2.5.8 target minimum, so the
+  // adapter's checks agree with Mangrove's own (_form-base.scss).
+  --mg-aria-check-size: 1.5rem;
+  --mg-aria-dialog-width: 42rem;
+  --mg-aria-dialog-available-width: calc(100% - var(--mg-aria-space-4) * 2);
+  --mg-aria-dialog-available-height: calc(100% - var(--mg-aria-space-4) * 2);
+
+  // Arabic. Roboto has no Arabic coverage, so an Arabic React Aria control
+  // rendered in it falls through to whatever system sans the browser picks —
+  // while the legacy surface beside it correctly switches to Dubai via the
+  // `:lang(ar)` blocks in _foundational.scss. The adapter cannot inherit that
+  // switch: every `.react-aria-*` rule sets `font-family:
+  // var(--mg-aria-font-family)` explicitly, which beats any inherited value.
+  // So the swap has to happen on the custom property itself.
+
+  // Two selectors, because they solve two different problems:
+
+  // - `&:lang(ar)` is the document case (`<html lang="ar">`, which is what
+  //   Storybook's locale decorator and every UNDRR Arabic page produce). It
+  //   compiles to `:root:lang(ar)` (0,2,0) here and `:where(:root):lang(ar)`
+  //   (0,1,0) in the standalone token files — in both, strictly higher than
+  //   the `:root`/`:where(:root)` block it overrides, so it wins on
+  //   specificity and not on source order.
+  // - `@at-root :lang(ar)` is the subtree case (an Arabic pull-quote inside an
+  //   English page). `:root` does not match that element at all, so there is
+  //   no specificity contest: the declaration simply replaces the value
+  //   inherited from the document root, matching how every other `:lang(ar)`
+  //   block in Mangrove behaves.
+
+  // A plain `:root { --mg-aria-font-family: ... }` override could never do
+  // this: `:root` matches one element, and the value it resolves is then
+  // inherited already-resolved by every descendant. This is the same trap
+  // documented at the top of _runtime-theme-aliases.scss.
+  &:lang(ar) {
+    --mg-aria-font-family: #{$font-family-arabic};
+  }
+
+  @at-root :lang(ar) {
+    --mg-aria-font-family: #{$font-family-arabic};
+  }
+}

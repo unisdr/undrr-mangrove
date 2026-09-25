@@ -1,0 +1,25 @@
+/*
+ * Standalone React Aria token file for the preventionweb theme.
+ * Compiled to aria/tokens/preventionweb.css by `yarn build:aria`; do not edit that
+ * generated CSS directly.
+ *
+ * Everything sits inside :where(:root), which has ZERO specificity. That is
+ * what makes the file work on its own — a consumer importing it without
+ * Mangrove's stylesheet still gets an accent, a surface, spacing and a focus
+ * indicator — while Mangrove's own :root palette still wins whenever both are
+ * loaded, regardless of load order. A plain :root block would let a stale
+ * published package override a newer stylesheet.
+ */
+@import "../generated/tokens-preventionweb";
+@import "../tokens-tabs";
+@import "./runtime-theme-aliases";
+@import "./tokens-shared";
+
+:where(:root) {
+  /* The transitive closure of Mangrove tokens the --mg-aria-* contract reads,
+     resolved for this brand. Generated: see tokens/*.yaml. */
+  @include mg-tokens-preventionweb-aria;
+  @include mg-tokens-tabs;
+  @include mg-aria-runtime-theme-aliases;
+  @include mg-aria-token-constants('"Roboto", sans-serif');
+}

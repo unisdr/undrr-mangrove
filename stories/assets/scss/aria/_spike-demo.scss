@@ -1,0 +1,377 @@
+/*
+ * Storybook-only composition styles for the React Aria integration spike.
+ * These selectors dress the demo stories (`.aria-crud-*`,
+ * `.aria-integration-demo*`, `.aria-spike-*`, `.aria-gallery-*`,
+ * `.aria-collection-*`) and are deliberately excluded
+ * from the distributed `aria/react-aria.css` surface, which carries only
+ * reusable React Aria primitive and state styles.
+ * This file is imported by the Storybook spike stories, not by `yarn build:aria`.
+ */
+@import "react-aria";
+
+.aria-spike-table-scroll {
+  border-radius: var(--mg-aria-radius-surface);
+  box-shadow: var(--mg-aria-surface-shadow);
+  overflow: auto;
+}
+/* Column header rows. The CRUD spike names these `aria-spike-`; the collection
+   gallery names them `aria-collection-`. Both are listed because the gallery's
+   headers were previously matching nothing and rendered with no flex layout at
+   all - the resizer sat under the label instead of beside it.
+
+   The label deliberately wraps rather than truncating. Under
+   `table-layout: fixed` an ellipsis drops content outright at 400% zoom
+   (WCAG 2.1 SC 1.4.4 and 1.4.10) and clips translated or expanded strings that
+   are simply longer than the English source; no institutional peer truncates
+   header text. `align-items: center` keeps the resizer centred against a label
+   that is now one or two lines tall. */
+.aria-spike-column-header,
+.aria-collection-column-header {
+  align-items: center;
+  display: flex;
+  gap: var(--mg-aria-space-1);
+  inline-size: var(--mg-aria-width-full);
+  justify-content: space-between;
+}
+/* `anywhere` is the right inherited default for a DATA cell, where an
+   unbroken token (a URL, an identifier) has to break somewhere or it blows the
+   column open. It is the wrong default for a column HEADING, which is prose:
+   a heading should wrap between its words. `break-word` says exactly that -
+   break inside a word only when that word cannot fit a line by itself, which
+   is a last resort that still keeps the text inside the cell rather than
+   spilling it over the neighbouring header. The columns themselves are sized
+   so that last resort is not reached by their labels. */
+.aria-spike-column-header > span,
+.aria-collection-column-header > span {
+  min-inline-size: 0;
+  overflow-wrap: break-word;
+}
+.aria-crud-selection-column,
+.aria-crud-favorite-column,
+.aria-crud-selection-cell,
+.aria-crud-favorite-cell {
+  text-align: center;
+}
+.aria-crud-selection-column,
+.aria-crud-favorite-column {
+  padding-inline: 0;
+}
+.aria-crud-selection-cell,
+.aria-crud-favorite-cell {
+  padding: 0;
+}
+.aria-crud-demo {
+  display: grid;
+  font-family: var(--mg-aria-font-family);
+  gap: var(--mg-aria-space-4);
+  max-width: var(--mg-aria-width-full);
+}
+.aria-integration-demo {
+  display: grid;
+  font-family: var(--mg-aria-font-family);
+  gap: var(--mg-aria-space-4);
+  max-width: calc(var(--mg-aria-dialog-width) * 1.5);
+}
+.aria-integration-demo__intro {
+  display: grid;
+  gap: var(--mg-aria-space-1);
+}
+.aria-integration-demo__intro > * {
+  margin: 0;
+}
+.aria-integration-demo__intro h2 {
+  color: var(--mg-aria-color-text);
+  text-wrap: balance;
+}
+.aria-integration-demo__intro p {
+  color: var(--mg-aria-color-muted-text);
+  text-wrap: pretty;
+}
+.aria-integration-demo__surface {
+  border-radius: var(--mg-aria-radius-surface);
+  box-shadow: var(--mg-aria-surface-shadow);
+  display: grid;
+  gap: var(--mg-aria-space-4);
+  padding: var(--mg-aria-space-4);
+}
+.aria-integration-demo__fields {
+  align-items: start;
+  display: grid;
+  gap: var(--mg-aria-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+.aria-integration-demo__checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-aria-space-2) var(--mg-aria-space-4);
+}
+.aria-integration-demo__surface > .react-aria-Button {
+  justify-self: start;
+}
+.aria-crud-toolbar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-aria-space-2);
+}
+.aria-crud-search {
+  flex: 1 1 20rem;
+  min-width: min(100%, 20rem);
+}
+.aria-crud-toolbar > .mg-button,
+.aria-crud-actions > .mg-button {
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+}
+.aria-crud-actions {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-aria-space-2);
+}
+.aria-crud-editor__identity,
+.aria-crud-editor__fields {
+  width: var(--mg-aria-width-full);
+}
+.aria-crud-editor > [slot="title"],
+.aria-crud-editor__identity,
+.aria-crud-editor__fields,
+.aria-crud-editor > .aria-crud-actions {
+  grid-column: 1 / -1;
+}
+.aria-crud-editor {
+  display: grid;
+  gap: var(--mg-aria-space-3);
+  grid-template-columns: minmax(0, 1fr);
+}
+.aria-crud-editor__fields {
+  display: grid;
+  gap: var(--mg-aria-space-3);
+}
+.aria-crud-editor > .aria-crud-actions {
+  justify-content: flex-end;
+}
+.aria-crud-event-identity {
+  align-items: center;
+  display: flex;
+  gap: var(--mg-aria-space-2);
+}
+.aria-crud-event-identity img {
+  background: var(--mg-aria-color-subtle-surface);
+  block-size: calc(var(--mg-aria-space-4) * 2);
+  inline-size: calc(var(--mg-aria-space-4) * 2);
+  object-fit: contain;
+}
+.aria-crud-event-identity > span {
+  display: grid;
+  min-width: 0;
+}
+.aria-crud-event-identity strong,
+.aria-crud-event-identity small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.aria-crud-list {
+  border-radius: var(--mg-aria-radius-surface);
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+}
+.aria-crud-card + .aria-crud-card {
+  margin-block-start: var(--mg-aria-space-3);
+}
+.aria-crud-card {
+  border-radius: var(--mg-aria-radius-surface);
+  box-shadow: var(--mg-aria-surface-shadow);
+  display: grid;
+  gap: var(--mg-aria-space-3);
+  padding: var(--mg-aria-space-3);
+}
+.aria-crud-card[data-hovered] {
+  box-shadow: var(--mg-aria-surface-shadow-hover);
+}
+.aria-crud-card__header,
+.aria-crud-card__meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-aria-space-2);
+}
+.aria-crud-card__header {
+  justify-content: space-between;
+}
+.aria-crud-card__header .aria-crud-event-identity {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+.aria-crud-card__meta .mg-tag {
+  margin: 0;
+}
+.aria-crud-event-identity small {
+  color: var(--mg-aria-color-muted-text);
+  font-size: var(--mg-aria-font-size-small);
+}
+.aria-crud-favorite-button {
+  align-items: center;
+  display: inline-flex;
+  font-size: var(--mg-aria-space-4);
+  justify-content: center;
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+  min-inline-size: calc(var(--mg-aria-space-4) * 2);
+  padding: 0;
+}
+.aria-crud-card[data-focus-visible] {
+  box-shadow: var(--mg-aria-shadow);
+}
+.aria-crud-card[data-focus-visible] {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .aria-crud-card {
+    transition: box-shadow var(--mg-aria-motion-duration-fast)
+      var(--mg-aria-motion-easing);
+  }
+}
+
+@media (forced-colors: active) {
+  .aria-crud-card[data-focus-visible] {
+    outline: var(--mg-aria-focus-width) solid CanvasText;
+    outline-offset: var(--mg-aria-focus-offset);
+  }
+}
+
+/* Gallery specimen scaffolding. Both React Aria galleries label each specimen
+   with a bare span, which inherits body type and reads as prose, so a label is
+   indistinguishable from the description above it. This gives labels their own
+   rung in the hierarchy: below the section title, clearly not running text.
+
+   No letter-spacing and no uppercasing: spaced letters break Arabic glyph
+   joining, and uppercasing is a Latin-script idiom that does nothing for Arabic
+   or Chinese while making English labels harder to scan. Size, weight and
+   colour carry it instead. */
+.aria-gallery-specimen-label,
+.aria-collection-specimen-label {
+  color: rgb(var(--mg-color-neutral-600));
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-block-end: var(--mg-spacing-50);
+}
+.aria-gallery-specimen,
+.aria-collection-specimen {
+  border-block-start: 1px solid rgb(var(--mg-color-neutral-100));
+  padding-block-start: var(--mg-spacing-100);
+}
+.aria-gallery-specimen-body,
+.aria-collection-specimen-body {
+  display: grid;
+  gap: var(--mg-spacing-100);
+}
+.aria-collection-specimen-caption {
+  color: rgb(var(--mg-color-neutral-600));
+  font-size: 0.875rem;
+  margin-block-start: var(--mg-spacing-50);
+}
+
+/* Dialog action rows in the collection gallery. The CRUD spike styles its own
+   equivalent; this one was rendering with no gap, so the buttons touched. */
+.aria-collection-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-100);
+  justify-content: flex-end;
+  margin-block-start: var(--mg-spacing-150);
+}
+
+/* Stage for the always-open modal specimen. The distributed
+   .react-aria-ModalOverlay is position: fixed, which is correct for a real
+   modal and wrong for a specimen on a Docs page that renders every story
+   inline - it covered the page. The overlay is portalled in here and pinned to
+   the stage instead. Demo-only: this override never ships in the React Aria
+   surface. */
+.aria-collection-modal-stage {
+  border: 1px solid var(--mg-aria-color-border);
+  border-radius: var(--mg-aria-radius-surface);
+  /* Tall enough that the Modal's own max-block-size: calc(100% - 40px) does not
+     clip the dialog and add a scrollbar to the specimen. */
+  min-block-size: 22rem;
+  overflow: hidden;
+  position: relative;
+
+  .react-aria-ModalOverlay {
+    position: absolute;
+  }
+
+  /* This specimen is open on mount, so the distributed overlay entry motion
+     would run on every story load and a screenshot runner would catch the
+     intermediate frame. Popover takes React Aria's own `shouldSkipAnimation`
+     prop for exactly this; Modal and ModalOverlay do not expose it (and
+     `isEntering` is OR-ed with the measured value, so it cannot force false),
+     so the motion is cancelled here instead. Scoped to the stage, so it only
+     affects the always-open specimen and never a real modal. */
+  .react-aria-Modal,
+  .react-aria-ModalOverlay {
+    &[data-entering],
+    &[data-exiting] {
+      opacity: 1;
+      scale: 1;
+      transition: none;
+      translate: none;
+    }
+  }
+}
+
+/* Layout helpers used throughout the gallery stories. These were referenced in
+   the markup but never styled, so every specimen holding more than one control
+   rendered them flush against each other - links, switches and standalone
+   toggle buttons all had a 0px gap. */
+.aria-gallery-stack,
+.aria-collection-stack {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mg-spacing-100);
+}
+
+.aria-gallery-inline {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-100);
+}
+
+.aria-gallery-row,
+.aria-collection-row {
+  display: grid;
+  gap: var(--mg-spacing-150);
+}
+
+.aria-gallery-intro,
+.aria-collection-intro {
+  margin-block-end: var(--mg-spacing-200);
+}
+
+.aria-gallery-section,
+.aria-collection-section {
+  margin-block-start: var(--mg-spacing-300);
+}
+
+.aria-gallery-section-note,
+.aria-collection-section-note {
+  color: rgb(var(--mg-color-neutral-600));
+  margin-block-end: var(--mg-spacing-150);
+}
+
+.aria-gallery-value {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The specimen body is a grid, so button-shaped children stretched to the full
+   column width. Fields should still fill it; buttons should not. */
+.aria-gallery-specimen-body > .react-aria-Button,
+.aria-gallery-specimen-body > .react-aria-ToggleButton,
+.aria-collection-specimen-body > .react-aria-Button,
+.aria-collection-specimen-body > .react-aria-ToggleButton {
+  justify-self: start;
+}

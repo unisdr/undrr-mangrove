@@ -2,7 +2,8 @@
 // Applied when .mg-theme-mcr is present on <body> or a wrapping element.
 // ---------------------------------------------------------------------
 // Every token in this block is generated from tokens/mcr.yaml, merged over
-// tokens/mangrove.yaml and tokens/undrr.yaml.
+// tokens/mangrove.yaml and tokens/undrr.yaml. The same source emits the
+// standalone aria/tokens/mcr.css, so the two cannot drift apart.
 @import "./generated/tokens-mcr";
 
 .mg-theme-mcr {

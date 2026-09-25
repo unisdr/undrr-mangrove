@@ -52,10 +52,9 @@
   padding: var(--mg-form-input-padding);
   width: 100%;
 
-  // Filled: a field holding a value lifts off the tinted rest surface, so a
-  // form reads as answered at a glance. The [placeholder] guard matters -
-  // without it the selector matches every field that has no placeholder, so
-  // everything would look filled.
+  // Filled: see the note on the React Aria surface. The [placeholder] guard
+  // matters - without it the selector matches every field that has no
+  // placeholder, so everything would look filled.
   &[placeholder]:not(:placeholder-shown) {
     background-color: var(--mg-form-input-background--focus);
   }

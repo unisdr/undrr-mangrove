@@ -18,7 +18,7 @@
  *    component build, whose keys become `components/<Key>.js`.
  * 3. `package.json` — the `scss` script's Sass directory compile
  *    (`stories/assets/scss` -> `stories/assets/css`), whose output becomes
- *    `css/`.
+ *    `css/`, plus the six standalone React Aria stylesheets.
  *
  * `scripts/__tests__/published-paths.test.js` compares the model against a
  * real `dist/` when one is present, so the drift is caught rather than assumed
@@ -104,6 +104,14 @@ function publishedPaths() {
     const stem = rel(scssRoot, file).replace(/\.scss$/, '');
     paths.add(`css/${stem}.css`);
     paths.add(`css/${stem}.css.map`);
+  }
+
+  // aria/ — standalone opt-in React Aria surface and per-brand tokens.
+  if (fs.existsSync(path.join(scssRoot, 'aria/_react-aria.scss'))) {
+    paths.add('aria/react-aria.css');
+    for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
+      paths.add(`aria/tokens/${brand}.css`);
+    }
   }
 
   // scss/ — every .scss under stories/, keeping its path below stories/.

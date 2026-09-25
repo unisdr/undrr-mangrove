@@ -309,4 +309,6 @@ padding: 1.5rem;
 - [Hydration guide](HYDRATION.md) — consumer-facing integration guide
 - [Adding hydration support](HYDRATION-AUTHORING.md) — contributor guide for `fromElement`, barrel files, and tests
 - [Testing guide](TESTING.md) — unit, visual, and accessibility testing
+- [Cascade layers](CASCADE-LAYERS.md) — why the React Aria stylesheet ships unlayered, what layering would take, and the build-tool failures around `@layer`
 - [Colour contrast methodology](COLOUR-CONTRAST-METHODOLOGY.md) — why token contrast is graded perceptually rather than by WCAG 2 alone
+- [React Aria architecture notes](ARIA-ARCHITECTURE-NOTES.md) — decision record for the React Aria integration: what was tried, measured and rejected. Contributor-facing, deliberately not published to Storybook.

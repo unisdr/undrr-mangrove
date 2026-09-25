@@ -112,7 +112,8 @@ color:
   neutral-900: { $value: '#000000' }
 
   # Danger ramp. Kept in the base rather than in a brand layer because the
-  # base has to be able to express "invalid" on its own: a brand-free build
+  # base has to be able to express "invalid" on its own: the React Aria
+  # adapter's --mg-aria-color-invalid reads red-900, and a brand-free build
   # with no error colour is not a usable design system. UNDRR's Sendai red
   # happens to be the same value.
   red-50: { $value: '#f9e6e9' }
@@ -205,9 +206,9 @@ color:
   #
   # WHY NOT THE BRAND COLOUR
   #   Aliased to `interactive`, focus and selection were the same signal:
-  #   a selected surface is the interactive colour at low alpha and the ring
-  #   was the same hue at full strength, so a focused row in a selected
-  #   state said one thing twice. A deliberately non-brand focus
+  #   --mg-aria-color-selected-surface is the interactive colour at 12% and
+  #   the ring was the same hue at full strength, so a focused row in a
+  #   selected state said one thing twice. A deliberately non-brand focus
   #   colour is near-universal in public-sector systems — GOV.UK #ffdd00,
   #   NHS #ffeb3b, USWDS a blue-40v distinct from its link blue.
   #
@@ -218,8 +219,9 @@ color:
   #   measure against a floor of 50. GOV.UK and NHS get away with it because
   #   their indicator is two bands — a yellow fill with a 4px near-black bar
   #   underneath — and the dark band, not the yellow, carries the contrast.
-  #   The two-band treatment is a follow-up; this is the shippable
-  #   single-colour step.
+  #   Mangrove has the structure for that (--mg-aria-shadow already composes
+  #   a surface band inside a ring) but nothing reads it yet, so the two-band
+  #   treatment is a follow-up and this is the shippable single-colour step.
   #
   # WHY THIS VALUE
   #   gold-800 keeps the yellow register users already read as "the keyboard
@@ -478,15 +480,16 @@ opacity:
   hero: { $value: '0.85' }
 
 # v2 horizontal tab: an underline indicator rather than a filled pill.
-# One definition, so a theme restyles every tab surface from one place.
+# Shared with the React Aria Tabs surface so both express a tab the same
+# way, and a theme restyles both from one definition.
 tab:
   $type: dimension
   padding: { $value: '{spacing.150} {spacing.200}' }
   min-block-size: { $value: 44, $format: rem }
   indicator-size: { $value: '3px' }
 
-# Form control surface. One definition of what a field looks like, read by
-# every control that has to sit alongside an input.
+# Form control surface, shared with the React Aria field tokens so both
+# surfaces describe a field the same way.
 form-input:
   background:
     $type: color
@@ -580,8 +583,9 @@ hero-scrim:
 
 # Named stacking contexts. One token per UI concept; a component's own
 # sub-layers use `$token - 1` / `$token + 1` arithmetic in its Sass rather
-# than a token each. Kept here rather than in Sass so a brand can repoint a
-# stacking context at runtime like any other token.
+# than a token each. Kept here rather than in Sass because the React Aria
+# adapter's --mg-aria-overlay-z-index reads --mg-z-index-modal, and a
+# standalone token file that omitted it would ship a dead var() chain.
 z-index:
   $type: number
   behind: { $value: '-1' }

@@ -22,7 +22,7 @@
  * The published package has no root entry point, by decision
  * (unisdr/undrr-mangrove#1252). Consumers import the top-level subpath
  * directories: `@undrr/undrr-mangrove/components/IconCard.js`, `…/css/…`,
- * `…/scss/…`, `…/js/…`, `…/fonts/…`, `…/error-pages/…`. See
+ * `…/scss/…`, `…/js/…`, `…/fonts/…`, `…/aria/…`, `…/error-pages/…`. See
  * buildPackageJson() for why there is no `main` and no `exports`.
  *
  * The `scss/` copy below keeps each file's path below `stories/`, so the SCSS
@@ -57,6 +57,7 @@ export const PACKAGE_FILES = [
   'css/**/*',
   'js/**/*',
   'scss/**/*.scss',
+  'aria/**/*',
   'error-pages/**/*',
   'fonts/**/*',
   // Second line of defence: even if a development-only file reaches the
@@ -106,6 +107,7 @@ const DIST_COPIES = [
   ['dist/assets/css', 'css'],
   ['dist/assets/error-pages', 'error-pages'],
   ['dist/fonts', 'fonts'],
+  ['dist/aria', 'aria'],
   ['dist/components', 'components'],
 ];
 

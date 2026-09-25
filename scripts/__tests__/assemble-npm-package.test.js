@@ -240,6 +240,7 @@ test('generates the slimmed package.json', () => {
       'css/**/*',
       'js/**/*',
       'scss/**/*.scss',
+      'aria/**/*',
       'error-pages/**/*',
       'fonts/**/*',
       '!**/__tests__/**',

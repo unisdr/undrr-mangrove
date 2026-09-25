@@ -57,6 +57,19 @@ export const REQUIRES_REACT = {
   'design-decisions-language-boundaries':
     'Storybook integration demo measuring rendered font families across nested Arabic and Latin language boundaries. Requires React and browser layout APIs for live measurements; this is a documentation specimen, not a reusable production component.',
 
+  // Spike and documentation stories, not consumable components. They render
+  // React Aria demos and state matrices for review; nothing here is part of the
+  // published component API, so they carry no curated markup.
+  'spike-react-aria-gallery':
+    'Spike story: React Aria primitives rendered across their states. Not a Mangrove component.',
+  'spike-react-aria-collection-states':
+    'Spike story: React Aria collection, overlay and date components in forced states. Not a Mangrove component.',
+  'spike-form-state-matrix':
+    'Spike story: form control states compared across the legacy and React Aria surfaces. Not a Mangrove component.',
+  'spike-react-aria-crud':
+    'Experimental Storybook-only React Aria CRUD fixture. Requires React and is not a supported Mangrove component export.',
+  'spike-react-aria-integration':
+    'Experimental Storybook-only React Aria integration fixture. Requires React and is not a supported Mangrove component export.',
   'components-syndicated-search':
     'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
   'components-syndicated-search-translations':

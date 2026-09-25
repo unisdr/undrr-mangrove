@@ -17,3 +17,6 @@
 #
 # Positive selection (and the __tests__ exclusion) lives in package.json
 # "files". Add exclusions there, not here -- "files" wins over this file.
+# `prepack` also generates the opt-in React Aria surface under aria/. It is
+# selected explicitly by package.json "files" alongside the normal build
+# output; keeping this .npmignore present prevents .gitignore from dropping it.

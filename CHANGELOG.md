@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- Added an optional React Aria Components stylesheet and standalone tokens for all five Mangrove themes. Import `aria/react-aria.css` with `aria/tokens/{brand}.css`; the normal theme stylesheets do not include the React Aria rules. See [PR #1088](https://github.com/unisdr/undrr-mangrove/pull/1088).
+
 ## 2.0.0, 2026-09-24
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0) for full details.

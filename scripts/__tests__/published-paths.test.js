@@ -42,6 +42,7 @@ describe('the published-path model', () => {
       'css',
       'js',
       'scss',
+      'aria',
       'error-pages',
       'fonts',
     ]) {
@@ -56,6 +57,7 @@ describe('the published-path model', () => {
       "['dist/assets/css', 'css']",
       "['dist/assets/error-pages', 'error-pages']",
       "['dist/fonts', 'fonts']",
+      "['dist/aria', 'aria']",
       "['dist/components', 'components']",
     ]) {
       expect(assembleSource).toContain(line);
@@ -80,6 +82,13 @@ describe('the published-path model', () => {
     expect(paths.has('scss/style.scss')).toBe(false);
   });
 
+  test('models all six optional React Aria stylesheets', () => {
+    expect(paths.has('aria/react-aria.css')).toBe(true);
+    for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
+      expect(paths.has(`aria/tokens/${brand}.css`)).toBe(true);
+    }
+  });
+
   test('derives one component bundle per webpack entry', () => {
     const names = componentEntryNames();
     expect(names.length).toBeGreaterThan(30);
@@ -100,6 +109,7 @@ describe('the published-path model', () => {
         ['assets/css', 'css'],
         ['assets/error-pages', 'error-pages'],
         ['fonts', 'fonts'],
+        ['aria', 'aria'],
         ['components', 'components'],
       ]) {
         if (entry === from || entry.startsWith(`${from}/`)) {
