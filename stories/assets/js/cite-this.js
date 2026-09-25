@@ -136,9 +136,9 @@ export function resolveCitation(element, now = new Date()) {
   const title =
     data.mgCiteThisTitle?.trim() ||
     firstText(work?.headline || work?.name) ||
+    doc.title?.trim() ||
     doc.querySelector('meta[property="og:title"]')?.content?.trim() ||
     doc.querySelector('h1')?.textContent?.trim() ||
-    doc.title?.trim() ||
     'Untitled page';
   const site =
     data.mgCiteThisSite?.trim() ||
@@ -186,11 +186,45 @@ function emit(element, name, citation) {
   );
 }
 
+function createFallback(element) {
+  const doc = element.ownerDocument;
+  const fallback = doc.createElement('details');
+  fallback.className = 'mg-cite-this__fallback';
+  const summary = doc.createElement('summary');
+  summary.className = 'mg-cite-this__summary';
+  summary.textContent = element.dataset.mgCiteThisLabel || 'Cite this';
+  const content = doc.createElement('div');
+  content.className = 'mg-cite-this__content';
+  const output = doc.createElement('p');
+  output.className = 'mg-cite-this__text mg-code';
+  output.dataset.mgCiteThisText = '';
+  const actions = doc.createElement('div');
+  actions.className = 'mg-cite-this__actions';
+  const copy = doc.createElement('button');
+  copy.type = 'button';
+  copy.className = 'mg-cite-this__copy';
+  copy.dataset.mgCiteThisCopy = '';
+  copy.textContent = element.dataset.mgCiteThisCopyLabel || 'Copy citation';
+  copy.hidden = true;
+  const status = doc.createElement('span');
+  status.className = 'mg-cite-this__status';
+  status.dataset.mgCiteThisStatus = '';
+  status.setAttribute('role', 'status');
+  status.setAttribute('aria-live', 'polite');
+  actions.append(copy, status);
+  content.append(output, actions);
+  fallback.append(summary, content);
+  element.append(fallback);
+  return fallback;
+}
+
 /** Initialise citation dialogs within a document or Drupal behaviour scope. */
 export function mgCiteThis(scope = document) {
   for (const element of elementsIn(scope)) {
     if (instances.has(element)) continue;
-    const fallback = element.querySelector('details.mg-cite-this__fallback');
+    const existing = element.querySelector('details.mg-cite-this__fallback');
+    const generated = !existing && element.childElementCount === 0;
+    const fallback = generated ? createFallback(element) : existing;
     const output = fallback?.querySelector('[data-mg-cite-this-text]');
     const summary = fallback?.querySelector('summary');
     const content = fallback?.querySelector('.mg-cite-this__content');
@@ -201,7 +235,10 @@ export function mgCiteThis(scope = document) {
     output.textContent = citation.text;
     element.dataset.mgCiteThisSource = citation.source;
     const dialog = doc.createElement('dialog');
-    if (typeof dialog.showModal !== 'function') continue;
+    if (typeof dialog.showModal !== 'function') {
+      if (generated) instances.set(element, () => fallback.remove());
+      continue;
+    }
 
     const trigger = doc.createElement('button');
     trigger.type = 'button';
@@ -290,7 +327,8 @@ export function mgCiteThis(scope = document) {
       if (dialog.open) dialog.close();
       trigger.remove();
       dialog.remove();
-      fallback.hidden = false;
+      if (generated) fallback.remove();
+      else fallback.hidden = false;
     });
   }
 }

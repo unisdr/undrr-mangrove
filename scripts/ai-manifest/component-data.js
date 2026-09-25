@@ -1945,7 +1945,7 @@ npm run build</code></pre>
 
   'components-cite-this': {
     description:
-      'Vanilla citation button and native dialog for detail pages. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent.',
+      'Vanilla citation button and native dialog for detail pages. An empty data-mg-cite-this element uses the page title and URL; server-rendered disclosure markup preserves a no-JavaScript fallback. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent.',
     summary:
       'Vanilla citation dialog with editorial, structured-data and page fallbacks, copy feedback, and analytics events.',
     cssClasses: [
@@ -1965,6 +1965,10 @@ npm run build</code></pre>
     ],
     examples: [
       {
+        name: 'Zero-configuration page fallback',
+        html: '<div class="mg-cite-this" data-mg-cite-this></div>',
+      },
+      {
         name: 'Publisher-supplied citation',
         html: `<div class="mg-cite-this" data-mg-cite-this data-mg-cite-this-citation="UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.">
   <details class="mg-cite-this__fallback">
@@ -1981,7 +1985,7 @@ npm run build</code></pre>
       },
     ],
     vanillaModule: {
-      note: 'Render the disclosure and citation on the server. js/cite-this.js upgrades it to a button and native dialog, reveals the copy button, and emits events. Its formatter is a suggested UN website-materials form; editorially approved publication citations should be supplied verbatim. The host maps events to its consent-aware analytics setup.',
+      note: 'The empty marker becomes a button and native dialog when js/cite-this.js loads; it is invisible without JavaScript. To preserve a no-JavaScript citation, render the disclosure and citation on the server. The script reveals the copy button and emits events. Its formatter is a suggested UN website-materials form; editorially approved publication citations should be supplied verbatim. The host maps events to its consent-aware analytics setup.',
       selector: '[data-mg-cite-this]',
       modules: vanillaModules('cite-this'),
       dataAttributes: {
@@ -1994,6 +1998,9 @@ npm run build</code></pre>
         'data-mg-cite-this-year': 'Override publication year.',
         'data-mg-cite-this-url': 'Override the citation locator.',
         'data-mg-cite-this-site': 'Override site name for page fallback.',
+        'data-mg-cite-this-label': 'Translate the generated Cite this button.',
+        'data-mg-cite-this-copy-label':
+          'Translate the generated Copy citation button.',
         'data-mg-cite-this-close-label': 'Translate the dialog Close button.',
       },
       events: [
@@ -2003,18 +2010,7 @@ npm run build</code></pre>
       ],
       example: `${STYLESHEET_TAG}
 
-<div class="mg-cite-this" data-mg-cite-this data-mg-cite-this-citation="UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.">
-  <details class="mg-cite-this__fallback">
-    <summary class="mg-cite-this__summary">Cite this</summary>
-    <div class="mg-cite-this__content">
-      <p class="mg-cite-this__text mg-code" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
-      <div class="mg-cite-this__actions">
-        <button type="button" class="mg-cite-this__copy" data-mg-cite-this-copy hidden>Copy citation</button>
-        <span class="mg-cite-this__status" data-mg-cite-this-status role="status" aria-live="polite"></span>
-      </div>
-    </div>
-  </details>
-</div>
+<div class="mg-cite-this" data-mg-cite-this></div>
 
 <script type="module" src="${vanillaModules('cite-this').script}"></script>`,
     },

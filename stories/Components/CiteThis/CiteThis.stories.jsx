@@ -55,6 +55,15 @@ function CitationExample({
   );
 }
 
+function BareHtmlExample() {
+  const ref = useRef(null);
+  useEffect(() => {
+    mgCiteThis(ref.current);
+    return () => mgCiteThisDestroy(ref.current);
+  }, []);
+  return <div ref={ref} className="mg-cite-this" data-mg-cite-this="" />;
+}
+
 export default {
   title: 'Components/Cite this',
   component: CitationExample,
@@ -68,8 +77,14 @@ export default {
   },
 };
 
-export const PageFallback = {
-  name: 'Page fallback',
+export const BarePageFallback = {
+  name: 'Vanilla HTML page fallback',
+  parameters: { docs: { source: { html: true } } },
+  render: () => <BareHtmlExample />,
+};
+
+export const PageWithOverrides = {
+  name: 'Page title and site overrides',
   render: () => (
     <CitationExample site="UNDRR" title="Understanding disaster risk" />
   ),

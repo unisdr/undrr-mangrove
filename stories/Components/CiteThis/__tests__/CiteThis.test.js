@@ -201,3 +201,45 @@ test('server markup remains readable without enhancement', () => {
   expect(element).toHaveTextContent('Approved citation.');
   expect(element.querySelector('dialog')).toBeNull();
 });
+
+test('an empty vanilla marker uses the page title and URL', () => {
+  document.head.insertAdjacentHTML(
+    'beforeend',
+    '<meta property="og:title" content="Open Graph title">'
+  );
+  document.body.innerHTML =
+    '<main><h1>Heading title</h1><div class="mg-cite-this" data-mg-cite-this></div></main>';
+  const element = document.querySelector('[data-mg-cite-this]');
+  mgCiteThis(element);
+
+  expect(element.dataset.mgCiteThisSource).toBe('page');
+  expect(element.querySelector('.mg-cite-this__trigger')).toHaveTextContent(
+    'Cite this'
+  );
+  expect(
+    element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-text]')
+  ).toHaveTextContent('“Page title”');
+  expect(
+    element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-text]')
+  ).toHaveTextContent(new URL(document.location.href).origin);
+
+  mgCiteThisDestroy(element);
+  expect(element.querySelector('details')).toBeNull();
+  expect(element.querySelector('dialog')).toBeNull();
+});
+
+test('an empty marker becomes a readable disclosure when dialog is unavailable', () => {
+  HTMLDialogElement.prototype.showModal = undefined;
+  document.body.innerHTML =
+    '<main><div class="mg-cite-this" data-mg-cite-this></div></main>';
+  const element = document.querySelector('[data-mg-cite-this]');
+  mgCiteThis(element);
+
+  expect(element.querySelector('details')).not.toHaveAttribute('hidden');
+  expect(element.querySelector('[data-mg-cite-this-text]')).toHaveTextContent(
+    '“Page title”'
+  );
+  expect(element.querySelector('.mg-cite-this__trigger')).toBeNull();
+  mgCiteThisDestroy(element);
+  expect(element.querySelector('details')).toBeNull();
+});

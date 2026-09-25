@@ -9,11 +9,19 @@ import * as CiteThisStories from './CiteThis.stories';
 
 A Cite this button opens a citation dialog on article, terminology, HIP and publication detail pages. The publishing site decides where to show it; Mangrove formats available data and provides copying.
 
-## Page fallback
+## Vanilla HTML page fallback
 
-With no publication metadata, the citation uses the page title, site name and canonical URL. It includes the access date because no publication year is known. The source panel is open here to show the story configuration.
+Drop the single HTML element shown below into a page and load `js/cite-this.js`. With no citation fields, the script uses the page's title, site name and canonical URL. It includes the access date because no publication year is known. In Storybook, the result cites Storybook's preview iframe; on a site, it cites that page.
 
-<Canvas of={CiteThisStories.PageFallback} sourceState="shown" />
+<Canvas of={CiteThisStories.BarePageFallback} sourceState="shown" />
+
+This shortest form needs JavaScript to display anything. For a citation that stays readable without JavaScript, render the full HTML with citation text as shown under **Vanilla HTML** below.
+
+## Page title and site overrides
+
+The site can supply a cleaner title and site name while leaving the URL and access date to the page fallback.
+
+<Canvas of={CiteThisStories.PageWithOverrides} />
 
 ## Configured publication metadata
 
@@ -56,7 +64,7 @@ An authored canonical link or configured citation URL keeps its query string, be
 
 ## Vanilla HTML
 
-Render the HTML on the server, including the citation text when it is known. The disclosure remains readable if JavaScript does not load. JavaScript replaces it with a button and native dialog, resolves the citation, adds copy behavior, and emits events. The copy button is hidden until the script starts.
+The shortest integration is `<div class="mg-cite-this" data-mg-cite-this></div>` plus the module script. If JavaScript is unavailable, that empty marker has no visible citation. To keep a citation readable without JavaScript, render the full HTML on the server, including citation text when it is known. JavaScript replaces the disclosure with a button and native dialog, resolves the citation, adds copy behavior, and emits events. The copy button is hidden until the script starts.
 
 ```html
 <div
@@ -101,7 +109,7 @@ Render the HTML on the server, including the citation text when it is known. The
 
 For Drupal behaviors or client-side navigation, call `mgCiteThis(context)` after insertion and `mgCiteThisDestroy(context)` before removal. Initialisation is idempotent and also runs on page load. The published module is `@undrr/undrr-mangrove/js/cite-this.js`.
 
-All strings can be translated in the server markup. Set `data-mg-cite-this-close-label` for the icon button's accessible name, plus `data-mg-cite-this-copied-label` and `data-mg-cite-this-failed-label` for feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation text uses Mangrove's `mg-code` style and remains selectable.
+All strings can be translated in the server markup. For the empty-marker version, set `data-mg-cite-this-label` and `data-mg-cite-this-copy-label` for its generated button labels. Set `data-mg-cite-this-close-label` for the icon button's accessible name, plus `data-mg-cite-this-copied-label` and `data-mg-cite-this-failed-label` for feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation text uses Mangrove's `mg-code` style and remains selectable.
 
 ## Analytics
 
@@ -122,4 +130,4 @@ The enhanced button opens a native modal dialog. Focus moves to its title, stays
 
 ## Changelog
 
-- **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, analytics events, and labelled Storybook examples.
+- **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, analytics events, labelled Storybook examples, and a zero-configuration HTML marker.
