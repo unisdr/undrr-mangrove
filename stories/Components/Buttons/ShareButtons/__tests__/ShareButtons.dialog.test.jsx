@@ -40,7 +40,14 @@ describe('ShareButtons QR dialog', () => {
     expect(dialog).toHaveTextContent('utm_medium=web');
     expect(dialog).toHaveTextContent('utm_campaign=share_box');
 
-    fireEvent.click(screen.getByRole('button', { name: 'Close modal' }));
+    const closeButton = screen.getByRole('button', { name: 'Close modal' });
+    expect(closeButton).toHaveClass('mg-icon-button', 'mg-share__dialog-close');
+    expect(closeButton.querySelector('.mg-icon-close')).toHaveAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+    fireEvent.click(closeButton);
     await waitFor(() =>
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     );

@@ -125,10 +125,10 @@ const QRCodeModal = ({
         <button
           type="button"
           onClick={closeDialog}
-          className="mg-share__dialog-close"
+          className="mg-icon-button mg-share__dialog-close"
           aria-label={closeModalLabel}
         >
-          ×
+          <span className="mg-icon mg-icon-close" aria-hidden="true" />
         </button>
       </div>
       <p id={descriptionId} className="mg-share__dialog-description">

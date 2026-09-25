@@ -143,19 +143,14 @@
   flex: none;
   inline-size: mg-rem(40);
   block-size: mg-rem(40);
-  border: 0;
-  background: transparent;
+  min-inline-size: mg-rem(40);
+  min-block-size: mg-rem(40);
+  margin-inline-start: auto;
   color: rgb(var(--mg-color-text));
-  font-family: var(--mg-font-family-text);
-  font-size: var(--mg-font-size-500);
-  cursor: pointer;
 
   &:hover {
     background: rgb(var(--mg-color-neutral-50));
-  }
-
-  &:focus-visible {
-    @include mg-focus-ring;
+    color: rgb(var(--mg-color-text));
   }
 }
 
