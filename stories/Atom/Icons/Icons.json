@@ -115,6 +115,41 @@
       "status": "new"
     },
     {
+      "name": "plus",
+      "label": "Plus, Zoom In, Add",
+      "source": "lucide",
+      "availableSince": "2026-09-25",
+      "status": "new"
+    },
+    {
+      "name": "minus",
+      "label": "Minus, Zoom Out, Remove",
+      "source": "lucide",
+      "availableSince": "2026-09-25",
+      "status": "new"
+    },
+    {
+      "name": "pause",
+      "label": "Pause, Stop Motion",
+      "source": "lucide",
+      "availableSince": "2026-09-25",
+      "status": "new"
+    },
+    {
+      "name": "play",
+      "label": "Play, Resume Motion",
+      "source": "lucide",
+      "availableSince": "2026-09-25",
+      "status": "new"
+    },
+    {
+      "name": "circle-minus",
+      "label": "Minus, Zoom Out, Circle",
+      "source": "lucide",
+      "availableSince": "2026-09-25",
+      "status": "new"
+    },
+    {
       "name": "reload",
       "label": "Reload, Refresh (alias for refresh)",
       "source": "lucide",
