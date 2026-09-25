@@ -147,6 +147,9 @@ test('emits an open event only while enhanced and clears stale status on close',
   trigger.click();
   expect(onOpen).toHaveBeenCalledTimes(1);
   expect(element.querySelector('dialog').open).toBe(true);
+  expect(element.querySelector('.mg-cite-this__close')).toHaveAccessibleName(
+    'Close'
+  );
   element.querySelector(
     '.mg-cite-this__dialog [data-mg-cite-this-status]'
   ).textContent = 'Citation copied';

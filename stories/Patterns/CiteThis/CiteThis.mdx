@@ -77,7 +77,7 @@ Render the HTML on the server, including the citation text when it is known. The
 
 For Drupal behaviors or client-side navigation, call `mgCiteThis(context)` after insertion and `mgCiteThisDestroy(context)` before removal. Initialisation is idempotent and also runs on page load. The published module is `@undrr/undrr-mangrove/js/cite-this.js`.
 
-All strings can be translated in the server markup. Set `data-mg-cite-this-close-label`, `data-mg-cite-this-copied-label`, and `data-mg-cite-this-failed-label` for translated controls and feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation text uses Mangrove's `mg-code` style and remains selectable.
+All strings can be translated in the server markup. Set `data-mg-cite-this-close-label` for the icon button's accessible name, plus `data-mg-cite-this-copied-label` and `data-mg-cite-this-failed-label` for feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation text uses Mangrove's `mg-code` style and remains selectable.
 
 ## Analytics
 
@@ -94,7 +94,7 @@ document.addEventListener('mg-cite-this:copy', event => {
 
 ## Accessibility
 
-The enhanced button opens a native modal dialog. Focus moves to its title, stays in the dialog while it is open, and returns to the button when closed with Escape or Close. Without JavaScript, native `details` and `summary` provide disclosure keyboard behavior. The copy button appears only when the JavaScript enhancement is active. Copy success and failure are announced in a polite live region. The citation is always selectable text.
+The enhanced button opens a native modal dialog. Focus moves to its title, stays in the dialog while it is open, and returns to the button when closed with Escape or the named close icon button. The close control uses Mangrove's shared `mg-icon-button` and `mg-icon-close` styles. Without JavaScript, native `details` and `summary` provide disclosure keyboard behavior. The copy button appears only when the JavaScript enhancement is active. Copy success and failure are announced in a polite live region. The citation is always selectable text.
 
 ## Changelog
 

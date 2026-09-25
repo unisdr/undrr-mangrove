@@ -218,8 +218,15 @@ export function mgCiteThis(scope = document) {
 
     const close = doc.createElement('button');
     close.type = 'button';
-    close.className = 'mg-cite-this__close';
-    close.textContent = element.dataset.mgCiteThisCloseLabel || 'Close';
+    close.className = 'mg-icon-button mg-cite-this__close';
+    close.setAttribute(
+      'aria-label',
+      element.dataset.mgCiteThisCloseLabel || 'Close'
+    );
+    const closeIcon = doc.createElement('span');
+    closeIcon.className = 'mg-icon mg-icon-close';
+    closeIcon.setAttribute('aria-hidden', 'true');
+    close.append(closeIcon);
 
     const header = doc.createElement('div');
     header.className = 'mg-cite-this__dialog-header';
