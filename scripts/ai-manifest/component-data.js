@@ -204,11 +204,11 @@ export const COMPONENT_DATA = {
   <section aria-labelledby="spacer-heading-1">
     <h2 id="spacer-heading-1">First section</h2>
     <p>The spacer modifier adds consistent vertical gaps between children.</p>
-  </section>
+  </div>
   <section aria-labelledby="spacer-heading-2">
     <h2 id="spacer-heading-2">Second section</h2>
     <p>Padding adds 2rem top and bottom to the container itself.</p>
-  </section>
+  </div>
 </div>`,
       },
       {
@@ -465,7 +465,7 @@ export const COMPONENT_DATA = {
   data-main-label="Share this"
   data-on-copy-label="Link copied"
   data-sharing-subject="From PreventionWeb"
-  data-sharing-body="I thought this might interest you: "></section>`,
+  data-sharing-body="I thought this might interest you: "></div>`,
       }),
     },
   },
@@ -1131,7 +1131,7 @@ npm run build</code></pre>
       </div>
     </div>
   </div>
-</section>`,
+</div>`,
       },
     ],
     hydration: {
@@ -1236,7 +1236,7 @@ npm run build</code></pre>
       </div>
     </article>
   </div>
-</section>`,
+</div>`,
       },
     ],
   },
@@ -1945,11 +1945,17 @@ npm run build</code></pre>
 
   'patterns-cite-this': {
     description:
-      'Vanilla citation disclosure for detail pages. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent.',
+      'Vanilla citation button and native dialog for detail pages. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent.',
     summary:
-      'Vanilla citation disclosure with editorial, structured-data and page fallbacks, copy feedback, and analytics events.',
+      'Vanilla citation dialog with editorial, structured-data and page fallbacks, copy feedback, and analytics events.',
     cssClasses: [
       'mg-cite-this',
+      'mg-cite-this__fallback',
+      'mg-cite-this__trigger',
+      'mg-cite-this__dialog',
+      'mg-cite-this__dialog-header',
+      'mg-cite-this__title',
+      'mg-cite-this__close',
       'mg-cite-this__summary',
       'mg-cite-this__content',
       'mg-cite-this__context',
@@ -1961,25 +1967,27 @@ npm run build</code></pre>
     examples: [
       {
         name: 'Publisher-supplied citation',
-        html: `<details class="mg-cite-this" data-mg-cite-this data-mg-cite-this-citation="UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.">
-  <summary class="mg-cite-this__summary">Cite this</summary>
-  <div class="mg-cite-this__content">
-    <p class="mg-cite-this__context" data-mg-cite-this-context>Provided citation</p>
-    <p class="mg-cite-this__text" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
-    <div class="mg-cite-this__actions">
-      <button type="button" class="mg-cite-this__copy" data-mg-cite-this-copy hidden>Copy citation</button>
-      <span class="mg-cite-this__status" data-mg-cite-this-status role="status" aria-live="polite"></span>
+        html: `<div class="mg-cite-this" data-mg-cite-this data-mg-cite-this-citation="UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.">
+  <details class="mg-cite-this__fallback">
+    <summary class="mg-cite-this__summary">Cite this</summary>
+    <div class="mg-cite-this__content">
+      <p class="mg-cite-this__context" data-mg-cite-this-context>Provided citation</p>
+      <p class="mg-cite-this__text" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
+      <div class="mg-cite-this__actions">
+        <button type="button" class="mg-cite-this__copy" data-mg-cite-this-copy hidden>Copy citation</button>
+        <span class="mg-cite-this__status" data-mg-cite-this-status role="status" aria-live="polite"></span>
+      </div>
     </div>
-  </div>
-</details>`,
+  </details>
+</div>`,
       },
     ],
     vanillaModule: {
-      note: 'Render the disclosure and citation on the server. js/cite-this.js upgrades the text, reveals the copy button, and emits events. Its formatter is a suggested UN website-materials form; editorially approved publication citations should be supplied verbatim. The host maps events to its consent-aware analytics setup.',
+      note: 'Render the disclosure and citation on the server. js/cite-this.js upgrades it to a button and native dialog, reveals the copy button, and emits events. Its formatter is a suggested UN website-materials form; editorially approved publication citations should be supplied verbatim. The host maps events to its consent-aware analytics setup.',
       selector: '[data-mg-cite-this]',
       modules: vanillaModules('cite-this'),
       dataAttributes: {
-        'data-mg-cite-this': 'Marks the citation disclosure.',
+        'data-mg-cite-this': 'Marks the citation component.',
         'data-mg-cite-this-citation':
           'Approved citation, shown and copied unchanged.',
         'data-mg-cite-this-title': 'Override the work title.',
@@ -1988,6 +1996,7 @@ npm run build</code></pre>
         'data-mg-cite-this-year': 'Override publication year.',
         'data-mg-cite-this-url': 'Override the citation locator.',
         'data-mg-cite-this-site': 'Override site name for page fallback.',
+        'data-mg-cite-this-close-label': 'Translate the dialog Close button.',
       },
       events: [
         'mg-cite-this:open',
@@ -1996,17 +2005,19 @@ npm run build</code></pre>
       ],
       example: `${STYLESHEET_TAG}
 
-<details class="mg-cite-this" data-mg-cite-this data-mg-cite-this-citation="UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.">
-  <summary class="mg-cite-this__summary">Cite this</summary>
-  <div class="mg-cite-this__content">
-    <p class="mg-cite-this__context" data-mg-cite-this-context>Provided citation</p>
-    <p class="mg-cite-this__text" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
-    <div class="mg-cite-this__actions">
-      <button type="button" class="mg-cite-this__copy" data-mg-cite-this-copy hidden>Copy citation</button>
-      <span class="mg-cite-this__status" data-mg-cite-this-status role="status" aria-live="polite"></span>
+<div class="mg-cite-this" data-mg-cite-this data-mg-cite-this-citation="UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.">
+  <details class="mg-cite-this__fallback">
+    <summary class="mg-cite-this__summary">Cite this</summary>
+    <div class="mg-cite-this__content">
+      <p class="mg-cite-this__context" data-mg-cite-this-context>Provided citation</p>
+      <p class="mg-cite-this__text" data-mg-cite-this-text>UNDRR (2022), Global Assessment Report on Disaster Risk Reduction 2022, Geneva.</p>
+      <div class="mg-cite-this__actions">
+        <button type="button" class="mg-cite-this__copy" data-mg-cite-this-copy hidden>Copy citation</button>
+        <span class="mg-cite-this__status" data-mg-cite-this-status role="status" aria-live="polite"></span>
+      </div>
     </div>
-  </div>
-</details>
+  </details>
+</div>
 
 <script type="module" src="${vanillaModules('cite-this').script}"></script>`,
     },
@@ -2258,7 +2269,7 @@ npm run build</code></pre>
       <div class="mg-hero__summaryText">Published 15 March 2026</div>
     </article>
   </div>
-</section>
+</div>
 
 <div class="mg-container mg-container--padded mg-container--spacer">
   <nav aria-label="Breadcrumbs" class="mg-breadcrumb">

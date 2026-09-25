@@ -1,5 +1,5 @@
 /**
- * Vanilla citation disclosure for server-rendered pages.
+ * Vanilla citation dialog for server-rendered pages.
  * The host owns editorial approval and analytics; this module only resolves,
  * displays, copies, and announces a citation.
  */
@@ -16,6 +16,7 @@ const WORK_TYPES = new Set([
 ]);
 
 const instances = new WeakMap();
+let nextDialogId = 0;
 
 function firstText(value) {
   if (Array.isArray(value))
@@ -185,36 +186,74 @@ function emit(element, name, citation) {
   );
 }
 
-/** Initialise citation disclosures within a document or Drupal behaviour scope. */
+/** Initialise citation dialogs within a document or Drupal behaviour scope. */
 export function mgCiteThis(scope = document) {
   for (const element of elementsIn(scope)) {
     if (instances.has(element)) continue;
-    const details = element.matches('details')
-      ? element
-      : element.querySelector('details');
-    const output = element.querySelector('[data-mg-cite-this-text]');
-    if (!details || !output) continue;
+    const fallback = element.querySelector('details.mg-cite-this__fallback');
+    const output = fallback?.querySelector('[data-mg-cite-this-text]');
+    const summary = fallback?.querySelector('summary');
+    const content = fallback?.querySelector('.mg-cite-this__content');
+    if (!fallback || !summary || !content || !output) continue;
+
+    const doc = element.ownerDocument;
     const citation = resolveCitation(element);
     output.textContent = citation.text;
     element.dataset.mgCiteThisSource = citation.source;
-    const context = element.querySelector('[data-mg-cite-this-context]');
+    const context = fallback.querySelector('[data-mg-cite-this-context]');
     if (context) {
       context.textContent =
         citation.source === 'provided'
           ? element.dataset.mgCiteThisProvidedLabel || 'Provided citation'
           : element.dataset.mgCiteThisSuggestedLabel || 'Suggested citation';
     }
-    const copy = element.querySelector('[data-mg-cite-this-copy]');
-    const status = element.querySelector('[data-mg-cite-this-status]');
+    const dialog = doc.createElement('dialog');
+    if (typeof dialog.showModal !== 'function') continue;
+
+    const trigger = doc.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'mg-cite-this__trigger';
+    trigger.textContent = summary.textContent.trim();
+    trigger.setAttribute('aria-haspopup', 'dialog');
+
+    const dialogId = `mg-cite-this-dialog-${++nextDialogId}`;
+    const title = doc.createElement('h2');
+    title.id = `${dialogId}-title`;
+    title.className = 'mg-cite-this__title';
+    title.tabIndex = -1;
+    title.textContent = trigger.textContent;
+
+    const close = doc.createElement('button');
+    close.type = 'button';
+    close.className = 'mg-cite-this__close';
+    close.textContent = element.dataset.mgCiteThisCloseLabel || 'Close';
+
+    const header = doc.createElement('div');
+    header.className = 'mg-cite-this__dialog-header';
+    header.append(title, close);
+
+    const dialogContent = content.cloneNode(true);
+    const copy = dialogContent.querySelector('[data-mg-cite-this-copy]');
+    const status = dialogContent.querySelector('[data-mg-cite-this-status]');
     if (copy) copy.hidden = false;
+    dialog.className = 'mg-cite-this__dialog';
+    dialog.setAttribute('aria-labelledby', title.id);
+    dialog.append(header, dialogContent);
+    element.append(trigger, dialog);
+    fallback.hidden = true;
+
     let statusTimer;
-    const onToggle = () => {
-      if (details.open) emit(element, 'open', citation);
-      else if (status) {
-        clearTimeout(statusTimer);
-        status.textContent = '';
-      }
+    const onOpen = () => {
+      dialog.showModal();
+      title.focus();
+      emit(element, 'open', citation);
     };
+    const onClose = () => {
+      clearTimeout(statusTimer);
+      if (status) status.textContent = '';
+      trigger.focus();
+    };
+    const closeDialog = () => dialog.close();
     const onCopy = async () => {
       try {
         await navigator.clipboard.writeText(citation.text);
@@ -238,13 +277,20 @@ export function mgCiteThis(scope = document) {
         }, 5000);
       }
     };
-    details.addEventListener('toggle', onToggle);
+    trigger.addEventListener('click', onOpen);
+    close.addEventListener('click', closeDialog);
+    dialog.addEventListener('close', onClose);
     copy?.addEventListener('click', onCopy);
     instances.set(element, () => {
       clearTimeout(statusTimer);
-      details.removeEventListener('toggle', onToggle);
+      trigger.removeEventListener('click', onOpen);
+      close.removeEventListener('click', closeDialog);
+      dialog.removeEventListener('close', onClose);
       copy?.removeEventListener('click', onCopy);
-      if (copy) copy.hidden = true;
+      if (dialog.open) dialog.close();
+      trigger.remove();
+      dialog.remove();
+      fallback.hidden = false;
     });
   }
 }

@@ -207,7 +207,7 @@ const VANILLA_SCRIPTS = [
     selector: '[data-mg-cite-this]',
     initFunction: 'mgCiteThis(scope)',
     description:
-      'Enhances a server-rendered citation disclosure with metadata resolution, copy feedback and analytics events.',
+      'Enhances a server-rendered citation disclosure into a button and native dialog with metadata resolution, copy feedback and analytics events.',
   },
   {
     name: 'Copy button',

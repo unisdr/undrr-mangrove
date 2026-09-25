@@ -17,7 +17,7 @@ function CitationExample({
   }, [citation, author, publisher, year, title, site, url]);
 
   return (
-    <details
+    <div
       ref={ref}
       className="mg-cite-this"
       data-mg-cite-this
@@ -29,28 +29,30 @@ function CitationExample({
       data-mg-cite-this-site={site}
       data-mg-cite-this-url={url}
     >
-      <summary className="mg-cite-this__summary">Cite this</summary>
-      <div className="mg-cite-this__content">
-        <p className="mg-cite-this__context" data-mg-cite-this-context />
-        <p className="mg-cite-this__text" data-mg-cite-this-text />
-        <div className="mg-cite-this__actions">
-          <button
-            type="button"
-            className="mg-cite-this__copy"
-            data-mg-cite-this-copy
-            hidden
-          >
-            Copy citation
-          </button>
-          <span
-            className="mg-cite-this__status"
-            data-mg-cite-this-status
-            role="status"
-            aria-live="polite"
-          />
+      <details className="mg-cite-this__fallback">
+        <summary className="mg-cite-this__summary">Cite this</summary>
+        <div className="mg-cite-this__content">
+          <p className="mg-cite-this__context" data-mg-cite-this-context />
+          <p className="mg-cite-this__text" data-mg-cite-this-text />
+          <div className="mg-cite-this__actions">
+            <button
+              type="button"
+              className="mg-cite-this__copy"
+              data-mg-cite-this-copy
+              hidden
+            >
+              Copy citation
+            </button>
+            <span
+              className="mg-cite-this__status"
+              data-mg-cite-this-status
+              role="status"
+              aria-live="polite"
+            />
+          </div>
         </div>
-      </div>
-    </details>
+      </details>
+    </div>
   );
 }
 
@@ -61,7 +63,7 @@ export default {
     docs: {
       description: {
         component:
-          'A server-rendered citation disclosure enhanced by a small vanilla JavaScript module. Try opening and copying each example.',
+          'A Cite this button opens a native dialog when enhanced by vanilla JavaScript. Try opening and copying each example.',
       },
     },
   },

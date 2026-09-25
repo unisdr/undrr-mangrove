@@ -1,7 +1,7 @@
 /**
  * Cite this (CiteThis)
  *
- * Inline citation disclosure with copy action and a clear source label.
+ * Citation button and dialog with a readable disclosure fallback.
  *
  * Full documentation:
  * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Patterns/CiteThis/CiteThis.mdx
@@ -9,11 +9,97 @@
 
 .mg-cite-this {
   max-inline-size: 48rem;
-  background: rgb(var(--mg-color-neutral-50));
-  border-inline-start: var(--mg-spacing-50) solid
-    rgb(var(--mg-color-interactive));
   color: rgb(var(--mg-color-neutral-800));
   font-family: var(--mg-font-family-text);
+
+  &__fallback {
+    background: rgb(var(--mg-color-neutral-50));
+    border-inline-start: var(--mg-spacing-50) solid
+      rgb(var(--mg-color-interactive));
+  }
+
+  &__trigger {
+    min-block-size: 44px;
+    padding: var(--mg-spacing-100) var(--mg-spacing-200);
+    background: rgb(var(--mg-color-interactive));
+    border: 0;
+    border-radius: var(--mg-radius-button);
+    color: rgb(var(--mg-color-white));
+    cursor: pointer;
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-font-size-300);
+    font-weight: 600;
+    transition: filter var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+
+    &:hover {
+      filter: brightness(0.92);
+    }
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &__dialog {
+    inline-size: min(calc(100% - 2rem), 44rem);
+    max-block-size: calc(100vh - 2rem);
+    padding: 0;
+    overflow-y: auto;
+    background: rgb(var(--mg-color-white));
+    border: 0;
+    border-block-start: var(--mg-spacing-50) solid
+      rgb(var(--mg-color-interactive));
+    border-radius: var(--mg-radius-button);
+    color: rgb(var(--mg-color-neutral-800));
+    box-shadow: 0 12px 40px rgb(0 0 0 / 0.2);
+
+    &::backdrop {
+      background: var(--mg-color-modal-scrim);
+    }
+
+    .mg-cite-this__content {
+      padding-block: var(--mg-spacing-100) var(--mg-spacing-200);
+    }
+  }
+
+  &__dialog-header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: var(--mg-spacing-200);
+    padding: var(--mg-spacing-200) var(--mg-spacing-200) 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-font-size-400);
+    line-height: var(--mg-font-line-height-700);
+  }
+
+  &__close {
+    min-block-size: 44px;
+    padding: var(--mg-spacing-100);
+    background: transparent;
+    border: 0;
+    color: rgb(var(--mg-color-interactive));
+    cursor: pointer;
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-font-size-300);
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+  }
 
   &__summary {
     display: flex;
@@ -45,7 +131,7 @@
     }
   }
 
-  &[open] .mg-cite-this__summary::after {
+  &__fallback[open] .mg-cite-this__summary::after {
     content: "−";
   }
 

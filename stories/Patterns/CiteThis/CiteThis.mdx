@@ -7,7 +7,7 @@ import * as CiteThisStories from './CiteThis.stories';
 
 # Cite this
 
-A compact citation disclosure for article, terminology, HIP and publication detail pages. The publishing site decides where to show it; Mangrove formats available data and provides copying.
+A Cite this button opens a citation dialog on article, terminology, HIP and publication detail pages. The publishing site decides where to show it; Mangrove formats available data and provides copying.
 
 <Canvas of={CiteThisStories.PageFallback} />
 <Canvas of={CiteThisStories.Metadata} />
@@ -32,10 +32,10 @@ An authored canonical link or configured citation URL keeps its query string, be
 
 ## Vanilla HTML
 
-Render the HTML on the server, including the citation text when it is known. The disclosure remains readable if JavaScript does not load. JavaScript resolves the citation, adds copy behavior, and emits events. The copy button is hidden until the script starts.
+Render the HTML on the server, including the citation text when it is known. The disclosure remains readable if JavaScript does not load. JavaScript replaces it with a button and native dialog, resolves the citation, adds copy behavior, and emits events. The copy button is hidden until the script starts.
 
 ```html
-<details
+<div
   class="mg-cite-this"
   data-mg-cite-this
   data-mg-cite-this-title="Response"
@@ -43,33 +43,35 @@ Render the HTML on the server, including the citation text when it is known. The
   data-mg-cite-this-year="2017"
   data-mg-cite-this-publisher="UNDRR"
 >
-  <summary class="mg-cite-this__summary">Cite this</summary>
-  <div class="mg-cite-this__content">
-    <p class="mg-cite-this__context" data-mg-cite-this-context>
-      Suggested citation
-    </p>
-    <p class="mg-cite-this__text" data-mg-cite-this-text>
-      United Nations Office for Disaster Risk Reduction (2017), “Response”,
-      UNDRR, https://www.undrr.org/terminology/response.
-    </p>
-    <div class="mg-cite-this__actions">
-      <button
-        type="button"
-        class="mg-cite-this__copy"
-        data-mg-cite-this-copy
-        hidden
-      >
-        Copy citation
-      </button>
-      <span
-        class="mg-cite-this__status"
-        data-mg-cite-this-status
-        role="status"
-        aria-live="polite"
-      ></span>
+  <details class="mg-cite-this__fallback">
+    <summary class="mg-cite-this__summary">Cite this</summary>
+    <div class="mg-cite-this__content">
+      <p class="mg-cite-this__context" data-mg-cite-this-context>
+        Suggested citation
+      </p>
+      <p class="mg-cite-this__text" data-mg-cite-this-text>
+        United Nations Office for Disaster Risk Reduction (2017), “Response”,
+        UNDRR, https://www.undrr.org/terminology/response.
+      </p>
+      <div class="mg-cite-this__actions">
+        <button
+          type="button"
+          class="mg-cite-this__copy"
+          data-mg-cite-this-copy
+          hidden
+        >
+          Copy citation
+        </button>
+        <span
+          class="mg-cite-this__status"
+          data-mg-cite-this-status
+          role="status"
+          aria-live="polite"
+        ></span>
+      </div>
     </div>
-  </div>
-</details>
+  </details>
+</div>
 <script
   type="module"
   src="https://assets.undrr.org/mangrove/2.0.0/js/cite-this.js"
@@ -78,7 +80,7 @@ Render the HTML on the server, including the citation text when it is known. The
 
 For Drupal behaviors or client-side navigation, call `mgCiteThis(context)` after insertion and `mgCiteThisDestroy(context)` before removal. Initialisation is idempotent and also runs on page load. The published module is `@undrr/undrr-mangrove/js/cite-this.js`.
 
-All strings can be translated in the server markup. Set `data-mg-cite-this-provided-label`, `data-mg-cite-this-suggested-label`, `data-mg-cite-this-copied-label`, and `data-mg-cite-this-failed-label` for translated feedback and context. If using an automatic citation, set the document's `lang` attribute to format the access date.
+All strings can be translated in the server markup. Set `data-mg-cite-this-close-label`, `data-mg-cite-this-provided-label`, `data-mg-cite-this-suggested-label`, `data-mg-cite-this-copied-label`, and `data-mg-cite-this-failed-label` for translated controls, feedback and context. If using an automatic citation, set the document's `lang` attribute to format the access date.
 
 ## Analytics
 
@@ -95,8 +97,8 @@ document.addEventListener('mg-cite-this:copy', event => {
 
 ## Accessibility
 
-Native `details` and `summary` provide disclosure keyboard behavior. The copy button appears only when the JavaScript enhancement is active. Copy success and failure are announced in a polite live region. The citation is always selectable text.
+The enhanced button opens a native modal dialog. Focus moves to its title, stays in the dialog while it is open, and returns to the button when closed with Escape or Close. Without JavaScript, native `details` and `summary` provide disclosure keyboard behavior. The copy button appears only when the JavaScript enhancement is active. Copy success and failure are announced in a polite live region. The citation is always selectable text.
 
 ## Changelog
 
-- **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation pattern with editorial, metadata, JSON-LD and page fallbacks, copy feedback, and analytics events.
+- **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, and analytics events.

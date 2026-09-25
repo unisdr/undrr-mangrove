@@ -6,7 +6,8 @@ import {
 } from '../../../assets/js/cite-this';
 
 function fixture(attributes = '') {
-  document.body.innerHTML = `<main><details class="mg-cite-this" data-mg-cite-this ${attributes}>
+  document.body.innerHTML = `<main><div class="mg-cite-this" data-mg-cite-this ${attributes}>
+    <details class="mg-cite-this__fallback">
     <summary class="mg-cite-this__summary">Cite this</summary>
     <div class="mg-cite-this__content">
       <p class="mg-cite-this__context" data-mg-cite-this-context></p>
@@ -16,7 +17,8 @@ function fixture(attributes = '') {
         <span data-mg-cite-this-status role="status" aria-live="polite"></span>
       </div>
     </div>
-  </details></main>`;
+    </details>
+  </div></main>`;
   return document.querySelector('[data-mg-cite-this]');
 }
 
@@ -24,6 +26,13 @@ beforeEach(() => {
   document.head.innerHTML =
     '<title>Page title</title><meta property="og:site_name" content="UNDRR">';
   document.documentElement.lang = 'en-GB';
+  HTMLDialogElement.prototype.showModal = function () {
+    this.open = true;
+  };
+  HTMLDialogElement.prototype.close = function () {
+    this.open = false;
+    this.dispatchEvent(new Event('close'));
+  };
 });
 
 afterEach(() => {
@@ -49,10 +58,13 @@ test('editorial text has precedence and is copied unchanged', async () => {
   expect(element.querySelector('[data-mg-cite-this-text]')).toHaveTextContent(
     'Approved citation.'
   );
-  expect(element.querySelector('[data-mg-cite-this-copy]')).not.toHaveAttribute(
-    'hidden'
-  );
-  element.querySelector('[data-mg-cite-this-copy]').click();
+  expect(
+    element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-copy]')
+  ).not.toHaveAttribute('hidden');
+  element.querySelector('.mg-cite-this__trigger').click();
+  element
+    .querySelector('.mg-cite-this__dialog [data-mg-cite-this-copy]')
+    .click();
   await Promise.resolve();
   expect(writeText).toHaveBeenCalledTimes(1);
   expect(writeText).toHaveBeenCalledWith('Approved citation.');
@@ -121,8 +133,7 @@ test('preserves a supplied locator query while keeping it out of analytics event
   const onOpen = jest.fn();
   element.addEventListener('mg-cite-this:open', onOpen);
   mgCiteThis(element);
-  element.open = true;
-  element.dispatchEvent(new Event('toggle'));
+  element.querySelector('.mg-cite-this__trigger').click();
   expect(onOpen.mock.calls[0][0].detail.url).toBe(
     'https://www.undrr.org/report'
   );
@@ -133,19 +144,23 @@ test('emits an open event only while enhanced and clears stale status on close',
   const onOpen = jest.fn();
   element.addEventListener('mg-cite-this:open', onOpen);
   mgCiteThis(element);
-  element.open = true;
-  element.dispatchEvent(new Event('toggle'));
+  const trigger = element.querySelector('.mg-cite-this__trigger');
+  trigger.click();
   expect(onOpen).toHaveBeenCalledTimes(1);
-  element.querySelector('[data-mg-cite-this-status]').textContent =
-    'Citation copied';
-  element.open = false;
-  element.dispatchEvent(new Event('toggle'));
+  expect(element.querySelector('dialog').open).toBe(true);
+  element.querySelector(
+    '.mg-cite-this__dialog [data-mg-cite-this-status]'
+  ).textContent = 'Citation copied';
+  element.querySelector('.mg-cite-this__close').click();
   expect(
-    element.querySelector('[data-mg-cite-this-status]')
+    element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-status]')
   ).toBeEmptyDOMElement();
+  expect(document.activeElement).toBe(trigger);
   mgCiteThisDestroy(element);
-  element.open = true;
-  element.dispatchEvent(new Event('toggle'));
+  expect(element.querySelector('.mg-cite-this__trigger')).toBeNull();
+  expect(element.querySelector('.mg-cite-this__fallback')).not.toHaveAttribute(
+    'hidden'
+  );
   expect(onOpen).toHaveBeenCalledTimes(1);
 });
 
@@ -158,17 +173,29 @@ test('announces copy failure and emits an error event', async () => {
   const onError = jest.fn();
   element.addEventListener('mg-cite-this:copy-error', onError);
   mgCiteThis(element);
-  element.querySelector('[data-mg-cite-this-copy]').click();
+  element.querySelector('.mg-cite-this__trigger').click();
+  element
+    .querySelector('.mg-cite-this__dialog [data-mg-cite-this-copy]')
+    .click();
   await Promise.resolve();
   expect(onError).toHaveBeenCalledTimes(1);
-  expect(element.querySelector('[data-mg-cite-this-status]')).toHaveTextContent(
-    'Copy failed. Select the citation and copy it manually.'
-  );
+  expect(
+    element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-status]')
+  ).toHaveTextContent('Copy failed. Select the citation and copy it manually.');
 });
 
 test('markup has no accessibility violations when expanded', async () => {
   const element = fixture('data-mg-cite-this-citation="Approved citation."');
   mgCiteThis(element);
-  element.open = true;
+  element.querySelector('.mg-cite-this__trigger').click();
   expect(await axe(document.body)).toHaveNoViolations();
+});
+
+test('server markup remains readable without enhancement', () => {
+  const element = fixture('data-mg-cite-this-citation="Approved citation."');
+  element.querySelector('[data-mg-cite-this-text]').textContent =
+    'Approved citation.';
+  element.querySelector('details').open = true;
+  expect(element).toHaveTextContent('Approved citation.');
+  expect(element.querySelector('dialog')).toBeNull();
 });
