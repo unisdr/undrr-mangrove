@@ -150,6 +150,27 @@
       "status": "new"
     },
     {
+      "name": "expand",
+      "label": "Expand, Enter Fullscreen",
+      "source": "lucide",
+      "availableSince": "2026-09-25",
+      "status": "new"
+    },
+    {
+      "name": "shrink",
+      "label": "Shrink, Exit Fullscreen",
+      "source": "lucide",
+      "availableSince": "2026-09-25",
+      "status": "new"
+    },
+    {
+      "name": "layers",
+      "label": "Layers, Map Layers, Overlays",
+      "source": "lucide",
+      "availableSince": "2026-09-25",
+      "status": "new"
+    },
+    {
       "name": "reload",
       "label": "Reload, Refresh (alias for refresh)",
       "source": "lucide",

@@ -59,7 +59,7 @@ Use `mg-icon` base class with `mg-icon-{name}`:
 <span class="mg-icon mg-icon-earthquake"></span>
 ```
 
-For map and media controls, use `plus` and `minus` for zoom, or pair `circle-plus` with `circle-minus`. Use `pause` and `play` for motion controls. Give each icon-only button an accessible name that describes its action:
+For map and media controls, use `plus` and `minus` for zoom, or pair `circle-plus` with `circle-minus`. Use `pause` and `play` for motion controls, `expand` and `shrink` for fullscreen, and `layers` for a layer picker. Give each icon-only button an accessible name that describes its action:
 
 ```html
 <button type="button" class="mg-icon-button" aria-label="Zoom in">
@@ -196,7 +196,7 @@ The full list is in `scripts/icon-map.cjs`. Legacy `fa-*` classes still work dur
 
 ## Changelog
 
-- **2.3**, 2026-09-25 ([#1296](https://github.com/unisdr/undrr-mangrove/issues/1296)): Added `plus`, `minus`, `pause`, `play` and `circle-minus` Lucide icons for map and media controls.
+- **2.3**, 2026-09-25 ([#1296](https://github.com/unisdr/undrr-mangrove/issues/1296)): Added `plus`, `minus`, `pause`, `play`, `circle-minus`, `expand`, `shrink` and `layers` Lucide icons for map and media controls.
 - **2.2.2**, 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): The "Colored icons" demo carries the same default-pairing contrast note as the colour utility demos. No icon colours changed.
 - **2.2.1**, 2026-09-17 ([#1192](https://github.com/unisdr/undrr-mangrove/pull/1192)): The legacy `.fa-before` gap uses `padding-inline-end`, so it falls after the icon in RTL.
 - **2.2**, 2026-09-14 ([#1145](https://github.com/unisdr/undrr-mangrove/pull/1145)): Added a machine-readable icon inventory to the AI manifest and expanded the gallery with high-value utility and OCHA icons, so humans and AI agents can see what’s available at a glance. The gallery table now also shows an availability date/status column for new entries.
