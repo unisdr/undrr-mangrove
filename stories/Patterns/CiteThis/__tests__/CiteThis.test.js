@@ -88,15 +88,43 @@ test('uses only JSON-LD for the canonical work, ignoring other entities and bad 
   expect(citation.text).not.toContain('Unrelated');
 });
 
+test('uses a work nested under the matching WebPage entity', () => {
+  document.head.insertAdjacentHTML(
+    'beforeend',
+    `<link rel="canonical" href="https://www.undrr.org/publication/report">
+     <script type="application/ld+json">{"@type":"https://schema.org/WebPage","url":"https://www.undrr.org/publication/report","name":"Generic page title","mainEntity":{"@type":"https://schema.org/Report","name":"The report","datePublished":"2025-04-10"}}</script>`
+  );
+  const citation = resolveCitation(fixture());
+  expect(citation.source).toBe('schema');
+  expect(citation.text).toContain('“The report”');
+  expect(citation.text).not.toContain('Generic page title');
+});
+
 test('page fallback uses access date without pretending it is a publication date', () => {
   document.head.insertAdjacentHTML(
     'beforeend',
-    '<link rel="canonical" href="https://www.undrr.org/terminology/response?tracking=1">'
+    '<link rel="canonical" href="https://www.undrr.org/terminology/response?version=2025">'
   );
   const citation = resolveCitation(fixture(), new Date('2026-09-25T12:00:00Z'));
   expect(citation.source).toBe('page');
   expect(citation.text).toBe(
-    '“Page title”, UNDRR, accessed 25 September 2026, https://www.undrr.org/terminology/response.'
+    '“Page title”, UNDRR, accessed 25 September 2026, https://www.undrr.org/terminology/response?version=2025.'
+  );
+});
+
+test('preserves a supplied locator query while keeping it out of analytics events', () => {
+  const element = fixture(
+    'data-mg-cite-this-title="Report" data-mg-cite-this-url="https://www.undrr.org/report?id=42"'
+  );
+  const citation = resolveCitation(element);
+  expect(citation.text).toContain('https://www.undrr.org/report?id=42.');
+  const onOpen = jest.fn();
+  element.addEventListener('mg-cite-this:open', onOpen);
+  mgCiteThis(element);
+  element.open = true;
+  element.dispatchEvent(new Event('toggle'));
+  expect(onOpen.mock.calls[0][0].detail.url).toBe(
+    'https://www.undrr.org/report'
   );
 });
 

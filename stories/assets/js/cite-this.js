@@ -27,12 +27,12 @@ function firstText(value) {
   return '';
 }
 
-function cleanUrl(value, base) {
+function cleanUrl(value, base, stripQuery = false) {
   try {
     const url = new URL(value, base);
     if (!['https:', 'http:'].includes(url.protocol)) return '';
     url.hash = '';
-    url.search = '';
+    if (stripQuery) url.search = '';
     return url.href.replace(/\/$/, '');
   } catch {
     return '';
@@ -41,7 +41,18 @@ function cleanUrl(value, base) {
 
 function canonicalUrl(doc) {
   const canonical = doc.querySelector('link[rel="canonical"]')?.href;
-  return cleanUrl(canonical || doc.location.href, doc.location.href);
+  return cleanUrl(
+    canonical || doc.location.href,
+    doc.location.href,
+    !canonical
+  );
+}
+
+function workTypes(node) {
+  return [node?.['@type']]
+    .flat()
+    .filter(Boolean)
+    .map(type => String(type).split(/[\/#]/).pop());
 }
 
 function schemaNodes(value) {
@@ -72,16 +83,21 @@ function schemaWork(doc, canonical) {
     }
   }
   const matches = candidates.filter(node => {
-    const types = [node['@type']].flat().filter(Boolean);
-    if (!types.some(type => WORK_TYPES.has(String(type).split(/[\/#]/).pop())))
-      return false;
+    if (!workTypes(node).some(type => WORK_TYPES.has(type))) return false;
     return [node.mainEntityOfPage, node.url, node['@id']].some(
       value => cleanUrl(referenceUrl(value), base) === canonical
     );
   });
+  // The WebPage may identify its primary work through mainEntity instead of
+  // repeating mainEntityOfPage on that work.
+  const page = matches.find(node => workTypes(node).includes('WebPage'));
+  const mainEntity = schemaNodes(page?.mainEntity).find(node =>
+    workTypes(node).some(type => WORK_TYPES.has(type) && type !== 'WebPage')
+  );
   // A matching work is preferable to a matching WebPage wrapper.
   return (
-    matches.find(node => ![node['@type']].flat().includes('WebPage')) ||
+    matches.find(node => !workTypes(node).includes('WebPage')) ||
+    mainEntity ||
     matches[0]
   );
 }
@@ -161,7 +177,10 @@ function emit(element, name, citation) {
   element.dispatchEvent(
     new CustomEvent(`mg-cite-this:${name}`, {
       bubbles: true,
-      detail: { source: citation.source, url: citation.url },
+      detail: {
+        source: citation.source,
+        url: cleanUrl(citation.url, element.ownerDocument.location.href, true),
+      },
     })
   );
 }

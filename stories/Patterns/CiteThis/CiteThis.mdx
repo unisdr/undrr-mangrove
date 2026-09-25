@@ -21,12 +21,14 @@ The pattern uses the first available source:
 
 1. An editorially supplied citation (`data-mg-cite-this-citation`). Mangrove displays and copies it unchanged.
 2. Configured fields on the element (`data-mg-cite-this-title`, `-author`, `-publisher`, `-year`, `-url`, `-site`). These take precedence over matching structured data.
-3. A `CreativeWork`, `Article`, `ScholarlyArticle`, `Book`, `Chapter`, `Report`, `NewsArticle`, `TechArticle` or `WebPage` JSON-LD entity whose URL, ID or `mainEntityOfPage` matches the page's canonical URL.
+3. A `CreativeWork`, `Article`, `ScholarlyArticle`, `Book`, `Chapter`, `Report`, `NewsArticle`, `TechArticle` or `WebPage` JSON-LD entity whose URL, ID or `mainEntityOfPage` matches the page's canonical URL. A work nested as that `WebPage`'s `mainEntity` also qualifies.
 4. Page title, site name and canonical URL. If no publication year is known, the citation states the access date rather than inventing a publication date.
 
 Generated citations follow a simple UN website-materials form: creator and year where known, quoted title, publisher, and URL. The page fallback includes an access date. **The consuming site's editors should review this template before presenting generated text as an approved publication citation.** Published works with an official suggested citation should supply that text explicitly.
 
 The page's URL is a locator. A publication citation describes the publication, and a HIP citation should identify its profile and edition. Schema.org's `citation` field lists works referenced _by_ a work; it is not read as that work's recommended citation.
+
+An authored canonical link or configured citation URL keeps its query string, because it may identify the work. When no canonical link exists, the browser URL's query string is omitted from the page fallback. Analytics events omit query strings even when the citation itself includes one.
 
 ## Vanilla HTML
 
@@ -80,7 +82,7 @@ All strings can be translated in the server markup. Set `data-mg-cite-this-provi
 
 ## Analytics
 
-The element dispatches bubbling `mg-cite-this:open`, `mg-cite-this:copy` (after successful clipboard write) and `mg-cite-this:copy-error` events. Each event has `detail.source` (`provided`, `metadata`, `schema`, or `page`) and `detail.url`. The consuming site maps these to GA4 through its consent-aware analytics setup. Mangrove itself sends nothing to Google.
+The element dispatches bubbling `mg-cite-this:open`, `mg-cite-this:copy` (after successful clipboard write) and `mg-cite-this:copy-error` events. Each event has `detail.source` (`provided`, `metadata`, `schema`, or `page`) and a query-free `detail.url`. The consuming site maps these to GA4 through its consent-aware analytics setup. Mangrove itself sends nothing to Google.
 
 ```js
 document.addEventListener('mg-cite-this:copy', event => {
