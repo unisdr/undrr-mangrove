@@ -18,9 +18,29 @@ const languageOptions = [
 
 const copy = {
   en: {
-    heading: 'Mangrove React island',
+    kicker: 'Integration example',
+    heading: 'Mangrove and React Aria, together',
     intro:
-      'A server-rendered page can supply taxonomy data to this optional React control. The surrounding page and ordinary forms still use Mangrove CSS and vanilla JavaScript.',
+      'This demo models a small React island on a server-rendered Drupal page. It uses Mangrove’s assembled package and a local API fixture shaped like taxonomy data.',
+    howTitle: 'How the pieces fit',
+    steps: [
+      {
+        title: 'Data from an API',
+        body: 'A JSON response supplies hazard IDs and translated labels. A Drupal site could provide the same data through its API.',
+      },
+      {
+        title: 'Search from React Aria',
+        body: 'Mangrove’s ComboBox uses React Aria for filtering, keyboard navigation, selection and required-field feedback.',
+      },
+      {
+        title: 'One Mangrove interface',
+        body: 'The Drawer, native selects, buttons and themes use Mangrove’s existing controls. Suggestions stay inside the Drawer so they inherit its theme.',
+      },
+    ],
+    tryTitle: 'Try the integration',
+    tryBody:
+      'Open the form, change the theme or language, then choose a hazard. Save shows the submitted taxonomy ID here; this demo does not write to Drupal.',
+    savedLabel: 'Submitted taxonomy ID',
     open: 'Open hazard form',
     close: 'Close',
     title: 'Choose a hazard',
@@ -33,9 +53,29 @@ const copy = {
     language: 'Language',
   },
   ar: {
-    heading: 'مكوّن React داخل Mangrove',
+    kicker: 'مثال على التكامل',
+    heading: 'Mangrove وReact Aria معًا',
     intro:
-      'يمكن للصفحة المقدّمة من الخادم توفير بيانات التصنيف لهذا المكوّن الاختياري. وتبقى النماذج العادية قابلة للاستخدام دون React.',
+      'يحاكي هذا العرض مكوّن React صغيرًا داخل صفحة Drupal مقدّمة من الخادم. ويستخدم حزمة Mangrove المجمّعة وبيانات محلية تشبه بيانات التصنيف من واجهة برمجة التطبيقات.',
+    howTitle: 'كيف تتكامل الأجزاء',
+    steps: [
+      {
+        title: 'بيانات من واجهة برمجة التطبيقات',
+        body: 'توفّر استجابة JSON معرّفات المخاطر وتسمياتها المترجمة. ويمكن لموقع Drupal توفير البيانات نفسها عبر واجهته.',
+      },
+      {
+        title: 'البحث عبر React Aria',
+        body: 'يستخدم مربّع الاختيار في Mangrove أدوات React Aria للتصفية والتنقّل بلوحة المفاتيح والاختيار والتحقّق من الحقل المطلوب.',
+      },
+      {
+        title: 'واجهة Mangrove موحّدة',
+        body: 'يستخدم الدرج والقوائم الأصلية والأزرار والسمات عناصر Mangrove المعتادة. وتبقى الاقتراحات داخل الدرج لترث سمته.',
+      },
+    ],
+    tryTitle: 'جرّب التكامل',
+    tryBody:
+      'افتح النموذج وغيّر السمة أو اللغة ثم اختر نوع خطر. يعرض الحفظ معرّف التصنيف المقدَّم هنا؛ هذا العرض لا يكتب إلى Drupal.',
+    savedLabel: 'معرّف التصنيف المقدَّم',
     open: 'افتح نموذج المخاطر',
     close: 'أغلق',
     title: 'اختر نوع الخطر',
@@ -48,9 +88,29 @@ const copy = {
     language: 'اللغة',
   },
   fr: {
-    heading: 'Module React dans Mangrove',
+    kicker: 'Exemple d’intégration',
+    heading: 'Mangrove et React Aria, ensemble',
     intro:
-      'Une page rendue par le serveur peut fournir des données de taxonomie à ce composant facultatif. Les formulaires ordinaires restent utilisables sans React.',
+      'Cette démonstration simule un petit module React dans une page Drupal rendue par le serveur. Elle utilise le paquet Mangrove assemblé et des données locales imitant une API de taxonomie.',
+    howTitle: 'Comment les éléments se complètent',
+    steps: [
+      {
+        title: 'Données d’une API',
+        body: 'Une réponse JSON fournit les identifiants des aléas et leurs libellés traduits. Un site Drupal pourrait fournir ces mêmes données via son API.',
+      },
+      {
+        title: 'Recherche avec React Aria',
+        body: 'La ComboBox de Mangrove utilise React Aria pour le filtrage, le clavier, la sélection et la validation du champ obligatoire.',
+      },
+      {
+        title: 'Une seule interface Mangrove',
+        body: 'Le tiroir, les listes natives, les boutons et les thèmes utilisent les composants Mangrove existants. Les suggestions restent dans le tiroir et héritent de son thème.',
+      },
+    ],
+    tryTitle: 'Essayer l’intégration',
+    tryBody:
+      'Ouvrez le formulaire, changez le thème ou la langue, puis choisissez un aléa. Enregistrer affiche ici son identifiant de taxonomie ; cette démonstration n’écrit rien dans Drupal.',
+    savedLabel: 'Identifiant de taxonomie envoyé',
     open: 'Ouvrir le formulaire',
     close: 'Fermer',
     title: 'Choisir un aléa',
@@ -103,18 +163,46 @@ function App() {
         lang={locale}
         dir={locale === 'ar' ? 'rtl' : 'ltr'}
       >
-        <h1>{t.heading}</h1>
-        <p>{t.intro}</p>
-        <button
-          type="button"
-          className="mg-button mg-button-secondary mg-button-outline"
-          onClick={() => setOpen(true)}
-        >
-          {t.open}
-        </button>
-        <p role="status" data-testid="saved-value">
-          {saved}
-        </p>
+        <header className="consumer-hero">
+          <p className="consumer-kicker">{t.kicker}</p>
+          <h1>{t.heading}</h1>
+          <p className="consumer-lede">{t.intro}</p>
+        </header>
+
+        <section className="consumer-try" aria-labelledby="consumer-try-title">
+          <h2 id="consumer-try-title">{t.tryTitle}</h2>
+          <p>{t.tryBody}</p>
+          <button
+            type="button"
+            className="mg-button mg-button-secondary mg-button-outline"
+            onClick={() => setOpen(true)}
+          >
+            {t.open}
+          </button>
+          <p
+            role="status"
+            className="consumer-result"
+            data-testid="saved-value"
+          >
+            {saved && (
+              <>
+                {t.savedLabel}: <code>{saved}</code>
+              </>
+            )}
+          </p>
+        </section>
+
+        <section className="consumer-how" aria-labelledby="consumer-how-title">
+          <h2 id="consumer-how-title">{t.howTitle}</h2>
+          <div className="consumer-steps">
+            {t.steps.map(step => (
+              <div className="consumer-step" key={step.title}>
+                <h3>{step.title}</h3>
+                <p>{step.body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <Drawer
           isOpen={open}
