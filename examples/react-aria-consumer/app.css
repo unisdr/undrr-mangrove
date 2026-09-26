@@ -6,9 +6,89 @@
 
 @layer utilities {
   .consumer-shell {
-    margin: 2rem auto;
-    max-inline-size: 48rem;
-    padding: 1rem;
+    align-content: start;
+    gap: clamp(1.5rem, 3vw, 2rem);
+    margin-inline: auto;
+    max-inline-size: 72rem;
+    min-block-size: 100vh;
+    padding: clamp(1.5rem, 4vw, 4rem);
+  }
+
+  .consumer-hero,
+  .consumer-try {
+    max-inline-size: 52rem;
+  }
+
+  .consumer-kicker {
+    color: rgb(var(--mg-color-interactive));
+    font-weight: 700;
+  }
+
+  .consumer-hero h1,
+  .consumer-how h2,
+  .consumer-try h2 {
+    text-wrap: balance;
+  }
+
+  .consumer-lede {
+    font-size: var(--mg-font-size-400);
+    line-height: 1.6;
+  }
+
+  .consumer-steps {
+    display: grid;
+    gap: var(--mg-spacing-200);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  }
+
+  .consumer-step {
+    background: var(--mg-surface-raised);
+    border: 1px solid rgb(var(--mg-color-neutral-200));
+    border-radius: var(--mg-card-border-radius);
+    box-shadow: var(--mg-card-shadow);
+    padding: var(--mg-spacing-200);
+  }
+
+  .consumer-step h3 {
+    font-size: var(--mg-font-size-400);
+    margin-block-start: 0;
+  }
+
+  .consumer-step p {
+    margin-block-end: 0;
+  }
+
+  .consumer-try {
+    background: var(--mg-surface-raised);
+    border: 1px solid rgb(var(--mg-color-neutral-200));
+    border-inline-start: 4px solid rgb(var(--mg-color-interactive));
+    border-radius: var(--mg-card-border-radius);
+    display: grid;
+    gap: var(--mg-spacing-100);
+    justify-items: start;
+    padding: var(--mg-spacing-200);
+  }
+
+  .consumer-try h2,
+  .consumer-try p {
+    margin-block: 0;
+  }
+
+  .consumer-result {
+    border-block-start: 1px solid rgb(var(--mg-color-neutral-200));
+    inline-size: 100%;
+    padding-block-start: var(--mg-spacing-100);
+  }
+
+  .consumer-result:empty {
+    border: 0;
+    padding: 0;
+  }
+
+  .consumer-result code {
+    background: rgb(var(--mg-color-neutral-50) / 0.35);
+    border-radius: var(--mg-card-border-radius);
+    padding: 0.2em 0.4em;
   }
 
   .consumer-fields {
@@ -23,7 +103,8 @@
   }
 }
 
-/* An existing unlayered site rule: keep it harmless and verify the cascade. */
+/* The host page's unlayered layout wins over Mangrove's base main rule. */
 .consumer-shell {
+  display: grid;
   text-wrap: pretty;
 }

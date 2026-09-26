@@ -1,6 +1,6 @@
 # React Aria consumer example
 
-This example bundles **the assembled npm package**, not the Storybook source. It represents a React island on a server-rendered Drupal page: a small API response supplies taxonomy terms, while Mangrove owns the Drawer, ComboBox, native Select controls, button styles, CSS and theme. The JSON file is a fixture; a real integration replaces the `fetch` URL and maps its API response to `{ id, label }` items.
+This example bundles **the assembled npm package**, not the Storybook source. The page now explains the data, behaviour and presentation layers alongside the working form. It models a React island on a server-rendered Drupal page: a small API response supplies taxonomy terms, while Mangrove owns the Drawer, ComboBox, native Select controls, button styles, CSS and theme. For convenience the standalone demo renders its whole page with React; a Drupal site would mount only the island. The JSON file is a fixture; a real integration replaces the `fetch` URL and maps its API response to `{ id, label }` items.
 
 From the repository root:
 
