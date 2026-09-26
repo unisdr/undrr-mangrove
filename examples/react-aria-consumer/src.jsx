@@ -5,6 +5,7 @@ import ComboBox from '@undrr/undrr-mangrove/components/ComboBox.js';
 import { Drawer } from '@undrr/undrr-mangrove/components/Drawer.js';
 import Select from '@undrr/undrr-mangrove/components/Select.js';
 import { Tab } from '@undrr/undrr-mangrove/components/Tab.js';
+import CrudDemo from './CrudDemo';
 import './app.css';
 
 const themeOptions = ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'].map(
@@ -40,7 +41,7 @@ const copy = {
     ],
     tryTitle: 'Try the integration',
     tryBody:
-      'Open the form, change the theme or language, then choose a hazard. Save shows the submitted taxonomy ID here; this demo does not write to Drupal.',
+      'Open the form, choose a language and select a hazard. Save shows the submitted taxonomy ID here; this demo does not write to Drupal.',
     savedLabel: 'Submitted taxonomy ID',
     open: 'Open hazard form',
     close: 'Close',
@@ -52,13 +53,19 @@ const copy = {
     submit: 'Save',
     theme: 'Theme',
     language: 'Language',
-    sharedTitle: 'One theme, two interaction engines',
+    sharedTitle: 'One theme token, two real controls',
     sharedBody:
-      'Change the theme in the form, then close the Drawer. The ComboBox and these Mangrove Tabs follow the same interactive colour token. Mangrove owns their appearance; each control keeps the interaction engine that suits its job.',
-    sourceToken: 'Theme source',
-    comboToken: 'ComboBox accent',
-    tabToken: 'Tabs indicator',
-    tabsTitle: 'Why these are Mangrove Tabs',
+      'Change the theme here. Open the search suggestions to see the selected-option tint; the active tab has a stronger indicator. Both colours derive from one Mangrove theme token, while each control keeps its own keyboard behaviour.',
+    sourceToken: 'Mangrove theme defines the interactive colour once',
+    comboToken: 'Searchable filter',
+    comboEngine: 'React Aria interaction · Mangrove appearance',
+    comboBody:
+      'Search by hazard to filter the records below. React Aria handles the suggestions; Mangrove styles the selected option and the field.',
+    filterLabel: 'Filter records by hazard',
+    filterHelp: 'Choose a hazard to filter the records below.',
+    clearFilter: 'Clear hazard filter',
+    tabToken: 'Section tabs',
+    tabEngine: 'Mangrove vanilla interaction · Mangrove appearance',
     tabsBody:
       'This is the published Mangrove Tab component. Its React wrapper uses the same vanilla JavaScript tabs runtime that can enhance server-rendered Drupal markup. Try the arrow keys; a URL fragment can also select a panel on load.',
     tabsLabel: 'Integration choices',
@@ -97,7 +104,7 @@ const copy = {
     ],
     tryTitle: 'جرّب التكامل',
     tryBody:
-      'افتح النموذج وغيّر السمة أو اللغة ثم اختر نوع خطر. يعرض الحفظ معرّف التصنيف المقدَّم هنا؛ هذا العرض لا يكتب إلى Drupal.',
+      'افتح النموذج واختر اللغة ونوع الخطر. يعرض الحفظ معرّف التصنيف المقدَّم هنا؛ هذا العرض لا يكتب إلى Drupal.',
     savedLabel: 'معرّف التصنيف المقدَّم',
     open: 'افتح نموذج المخاطر',
     close: 'أغلق',
@@ -109,13 +116,19 @@ const copy = {
     submit: 'احفظ',
     theme: 'السمة',
     language: 'اللغة',
-    sharedTitle: 'سمة واحدة وطريقتان للتفاعل',
+    sharedTitle: 'رمز سمة واحد وعنصران حقيقيان',
     sharedBody:
-      'غيّر السمة في النموذج ثم أغلق الدرج. يتبع مربّع الاختيار وعلامات تبويب Mangrove الرمز نفسه للون التفاعلي. تحدد Mangrove المظهر، ويستخدم كل عنصر آلية التفاعل المناسبة له.',
-    sourceToken: 'رمز السمة',
-    comboToken: 'لون مربّع الاختيار',
-    tabToken: 'مؤشر علامات التبويب',
-    tabsTitle: 'لماذا هذه علامات تبويب Mangrove',
+      'غيّر السمة هنا. افتح اقتراحات البحث لترى لون الخيار المحدد، ثم لاحظ مؤشر علامة التبويب النشطة. يشتق اللونان من رمز واحد في سمة Mangrove، مع سلوك مختلف للوحة المفاتيح.',
+    sourceToken: 'تحدد سمة Mangrove اللون التفاعلي مرة واحدة',
+    comboToken: 'تصفية قابلة للبحث',
+    comboEngine: 'تفاعل React Aria · مظهر Mangrove',
+    comboBody:
+      'ابحث عن نوع خطر لتصفية السجلّات أدناه. تدير React Aria الاقتراحات، وتحدد Mangrove مظهر الخيار المحدد والحقل.',
+    filterLabel: 'تصفية السجلّات حسب الخطر',
+    filterHelp: 'اختر نوع خطر لتصفية السجلّات أدناه.',
+    clearFilter: 'امسح عامل تصفية المخاطر',
+    tabToken: 'علامات تبويب الأقسام',
+    tabEngine: 'تفاعل Mangrove التقليدي · مظهر Mangrove',
     tabsBody:
       'هذا مكوّن Tab المنشور من Mangrove. يستخدم غلاف React آلية JavaScript نفسها التي يمكنها تحسين صفحات Drupal المقدّمة من الخادم. جرّب مفاتيح الأسهم؛ ويمكن لجزء من عنوان URL اختيار لوحة عند تحميل الصفحة.',
     tabsLabel: 'خيارات التكامل',
@@ -154,7 +167,7 @@ const copy = {
     ],
     tryTitle: 'Essayer l’intégration',
     tryBody:
-      'Ouvrez le formulaire, changez le thème ou la langue, puis choisissez un aléa. Enregistrer affiche ici son identifiant de taxonomie ; cette démonstration n’écrit rien dans Drupal.',
+      'Ouvrez le formulaire, choisissez une langue et un aléa. Enregistrer affiche ici son identifiant de taxonomie ; cette démonstration n’écrit rien dans Drupal.',
     savedLabel: 'Identifiant de taxonomie envoyé',
     open: 'Ouvrir le formulaire',
     close: 'Fermer',
@@ -166,13 +179,19 @@ const copy = {
     submit: 'Enregistrer',
     theme: 'Thème',
     language: 'Langue',
-    sharedTitle: 'Un thème, deux moteurs d’interaction',
+    sharedTitle: 'Un jeton de thème, deux contrôles réels',
     sharedBody:
-      'Changez le thème dans le formulaire, puis fermez le tiroir. La ComboBox et ces onglets Mangrove suivent le même jeton de couleur interactive. Mangrove définit leur apparence ; chaque contrôle conserve le moteur adapté à son usage.',
-    sourceToken: 'Jeton du thème',
-    comboToken: 'Accent de la ComboBox',
-    tabToken: 'Indicateur des onglets',
-    tabsTitle: 'Pourquoi ces onglets restent Mangrove',
+      'Changez le thème ici. Ouvrez les suggestions pour voir la teinte de l’option choisie, puis l’indicateur plus marqué de l’onglet actif. Ces deux couleurs viennent du même jeton Mangrove, avec des comportements clavier distincts.',
+    sourceToken: 'Le thème Mangrove définit une seule couleur interactive',
+    comboToken: 'Filtre avec recherche',
+    comboEngine: 'Interaction React Aria · apparence Mangrove',
+    comboBody:
+      'Cherchez un aléa pour filtrer les fiches ci-dessous. React Aria gère les suggestions ; Mangrove définit le style de l’option choisie et du champ.',
+    filterLabel: 'Filtrer les fiches par aléa',
+    filterHelp: 'Choisissez un aléa pour filtrer les fiches ci-dessous.',
+    clearFilter: 'Effacer le filtre des aléas',
+    tabToken: 'Onglets des sections',
+    tabEngine: 'Interaction Mangrove sans React · apparence Mangrove',
     tabsBody:
       'Voici le composant Tab publié par Mangrove. Son enveloppe React utilise le même moteur JavaScript que celui des pages Drupal rendues par le serveur. Essayez les flèches ; un fragment d’URL peut aussi sélectionner un panneau au chargement.',
     tabsLabel: 'Choix d’intégration',
@@ -199,6 +218,8 @@ function App() {
   const [portalHost, setPortalHost] = useState(null);
   const [selectedKey, setSelectedKey] = useState(null);
   const [saved, setSaved] = useState('');
+  const [filterHazardId, setFilterHazardId] = useState(null);
+  const [tokenPortalHost, setTokenPortalHost] = useState(null);
   const t = copy[locale];
   // These panel strings are fixed, authored markup. Dynamic CMS HTML must be
   // filtered before it reaches Tab's intentionally unescaped panel API.
@@ -287,28 +308,62 @@ function App() {
         >
           <h2 id="consumer-shared-title">{t.sharedTitle}</h2>
           <p>{t.sharedBody}</p>
-          <div className="consumer-token-flow">
-            <div className="consumer-token">
-              <span className="consumer-token__swatch consumer-token__swatch--source" />
-              <span>{t.sourceToken}</span>
+          <div className="consumer-token-source">
+            <div>
+              <strong>{t.sourceToken}</strong>
               <code>--mg-color-interactive</code>
             </div>
-            <div className="consumer-token">
-              <span className="consumer-token__swatch consumer-token__swatch--combo" />
-              <span>{t.comboToken}</span>
-              <code>--mg-control-accent</code>
+            <Select
+              id="consumer-theme"
+              label={t.theme}
+              options={themeOptions}
+              value={theme}
+              onChange={event => setTheme(event.target.value)}
+            />
+          </div>
+          <div className="consumer-token-flow">
+            <div className="consumer-token" ref={setTokenPortalHost}>
+              <p className="consumer-token__engine">{t.comboEngine}</p>
+              <h3>{t.comboToken}</h3>
+              <p>{t.comboBody}</p>
+              <code>--mg-control-option-selected</code>
+              <ComboBox
+                key={locale}
+                id="consumer-hazard-filter"
+                label={t.filterLabel}
+                items={items}
+                selectedKey={filterHazardId}
+                onSelectionChange={setFilterHazardId}
+                helpText={t.filterHelp}
+                openButtonLabel={t.suggestions}
+                popoverContainer={tokenPortalHost}
+              />
+              {filterHazardId && (
+                <button
+                  type="button"
+                  className="mg-button mg-button-secondary mg-button-outline"
+                  onClick={() => setFilterHazardId(null)}
+                >
+                  {t.clearFilter}
+                </button>
+              )}
             </div>
             <div className="consumer-token">
-              <span className="consumer-token__swatch consumer-token__swatch--tabs" />
-              <span>{t.tabToken}</span>
+              <p className="consumer-token__engine">{t.tabEngine}</p>
+              <h3>{t.tabToken}</h3>
+              <p>{t.tabsBody}</p>
               <code>--mg-tab-indicator--active</code>
+              <Tab tabdata={tabdata} labels={{ tabListLabel: t.tabsLabel }} />
             </div>
           </div>
-          <h3>{t.tabsTitle}</h3>
-          <p>{t.tabsBody}</p>
-          <Tab tabdata={tabdata} labels={{ tabListLabel: t.tabsLabel }} />
           <p className="consumer-shared__note">{t.buttonsNote}</p>
         </section>
+
+        <CrudDemo
+          items={items}
+          locale={locale}
+          filterHazardId={filterHazardId}
+        />
 
         <Drawer
           isOpen={open}
@@ -317,13 +372,6 @@ function App() {
           labels={{ closeLabel: t.close }}
         >
           <div ref={setPortalHost} className="consumer-fields">
-            <Select
-              id="consumer-theme"
-              label={t.theme}
-              options={themeOptions}
-              value={theme}
-              onChange={event => setTheme(event.target.value)}
-            />
             <Select
               id="consumer-language"
               label={t.language}

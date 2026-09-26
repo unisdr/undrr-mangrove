@@ -12,6 +12,7 @@ Mangrove serves server-rendered Drupal and vanilla JavaScript, and some Drupal p
 | Fixed single choice | Native `Select` / `.mg-form-select` | Keep the native control. A custom listbox with the same job needs a demonstrated requirement and a migration plan for the existing API. |
 | Searchable or free-text choice | `ComboBox` / `.mg-combobox` | New, distinct capability. React Aria provides filtering, keyboard interaction and collection behaviour behind Mangrove's API. |
 | Tabs | `Tab` / `.mg-tabs` and its vanilla runtime | Keep one public tab contract. Any React Aria implementation must preserve it and prove parity across themes and hydration contexts before replacing the current engine. |
+| Record tables | `.mg-table` for presenting tabular data | The consumer example uses React Aria Table for sorting and keyboard navigation in a local CRUD workflow. That example is research, not a second published Table. Define a Mangrove contract for an interactive record grid only when a consuming product needs one. |
 | Drawer or modal panel | `Drawer` / `.mg-drawer` | Keep one public drawer contract. Do not add a second modal or drawer just because React Aria offers Modal and Dialog primitives. A future generic Dialog needs its own user need and must reuse Mangrove's overlay, focus and theme decisions. |
 | Date entry, rich collections and other gaps | Define a Mangrove component first | Use React Aria when its behaviour addresses the demonstrated need; publish only the Mangrove wrapper and its scoped CSS. |
 
