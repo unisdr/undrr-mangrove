@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { I18nProvider } from 'react-aria-components';
 import ComboBox from '@undrr/undrr-mangrove/components/ComboBox.js';
 import { Drawer } from '@undrr/undrr-mangrove/components/Drawer.js';
 import Select from '@undrr/undrr-mangrove/components/Select.js';
+import { Tab } from '@undrr/undrr-mangrove/components/Tab.js';
 import './app.css';
 
 const themeOptions = ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'].map(
@@ -51,6 +52,28 @@ const copy = {
     submit: 'Save',
     theme: 'Theme',
     language: 'Language',
+    sharedTitle: 'One theme, two interaction engines',
+    sharedBody:
+      'Change the theme in the form, then close the Drawer. The ComboBox and these Mangrove Tabs follow the same interactive colour token. Mangrove owns their appearance; each control keeps the interaction engine that suits its job.',
+    sourceToken: 'Theme source',
+    comboToken: 'ComboBox accent',
+    tabToken: 'Tabs indicator',
+    tabsTitle: 'Why these are Mangrove Tabs',
+    tabsBody:
+      'This is the published Mangrove Tab component. Its React wrapper uses the same vanilla JavaScript tabs runtime that can enhance server-rendered Drupal markup. Try the arrow keys; a URL fragment can also select a panel on load.',
+    tabsLabel: 'Integration choices',
+    tabs: [
+      {
+        text: 'Existing Tabs',
+        data: '<p>Use the same Mangrove tabs in React or server-rendered HTML. The current runtime supports keyboard navigation, RTL, URL hashes and mobile stacking without requiring React Aria.</p>',
+      },
+      {
+        text: 'React Aria candidate',
+        data: '<p>React Aria Tabs offer other interaction modes, including vertical layout and manual keyboard activation. They could power this same Mangrove API if a real need justifies the change and existing behaviour remains covered.</p>',
+      },
+    ],
+    buttonsNote:
+      'The form actions remain native buttons with Mangrove’s mg-button classes. React Aria is used where the searchable choice needs its collection and keyboard behaviour; it does not add a second Button or Tabs API.',
   },
   ar: {
     kicker: 'مثال على التكامل',
@@ -86,6 +109,28 @@ const copy = {
     submit: 'احفظ',
     theme: 'السمة',
     language: 'اللغة',
+    sharedTitle: 'سمة واحدة وطريقتان للتفاعل',
+    sharedBody:
+      'غيّر السمة في النموذج ثم أغلق الدرج. يتبع مربّع الاختيار وعلامات تبويب Mangrove الرمز نفسه للون التفاعلي. تحدد Mangrove المظهر، ويستخدم كل عنصر آلية التفاعل المناسبة له.',
+    sourceToken: 'رمز السمة',
+    comboToken: 'لون مربّع الاختيار',
+    tabToken: 'مؤشر علامات التبويب',
+    tabsTitle: 'لماذا هذه علامات تبويب Mangrove',
+    tabsBody:
+      'هذا مكوّن Tab المنشور من Mangrove. يستخدم غلاف React آلية JavaScript نفسها التي يمكنها تحسين صفحات Drupal المقدّمة من الخادم. جرّب مفاتيح الأسهم؛ ويمكن لجزء من عنوان URL اختيار لوحة عند تحميل الصفحة.',
+    tabsLabel: 'خيارات التكامل',
+    tabs: [
+      {
+        text: 'علامات التبويب الحالية',
+        data: '<p>تعمل علامات تبويب Mangrove نفسها في React أو HTML المقدّم من الخادم. وتدعم الآلية الحالية لوحة المفاتيح واتجاه RTL وروابط العناوين والتخطيط للأجهزة الصغيرة دون React Aria.</p>',
+      },
+      {
+        text: 'خيار React Aria',
+        data: '<p>تتيح علامات تبويب React Aria أنماطًا أخرى، منها التخطيط العمودي والتنشيط اليدوي بلوحة المفاتيح. ويمكن استخدامها داخل واجهة Mangrove نفسها عند وجود حاجة حقيقية مع الحفاظ على السلوك الحالي.</p>',
+      },
+    ],
+    buttonsNote:
+      'تظل إجراءات النموذج أزرارًا أصلية بفئات mg-button من Mangrove. تُستخدم React Aria عندما يحتاج الاختيار القابل للبحث إلى سلوك القوائم ولوحة المفاتيح؛ ولا تضيف واجهة ثانية للأزرار أو علامات التبويب.',
   },
   fr: {
     kicker: 'Exemple d’intégration',
@@ -121,6 +166,28 @@ const copy = {
     submit: 'Enregistrer',
     theme: 'Thème',
     language: 'Langue',
+    sharedTitle: 'Un thème, deux moteurs d’interaction',
+    sharedBody:
+      'Changez le thème dans le formulaire, puis fermez le tiroir. La ComboBox et ces onglets Mangrove suivent le même jeton de couleur interactive. Mangrove définit leur apparence ; chaque contrôle conserve le moteur adapté à son usage.',
+    sourceToken: 'Jeton du thème',
+    comboToken: 'Accent de la ComboBox',
+    tabToken: 'Indicateur des onglets',
+    tabsTitle: 'Pourquoi ces onglets restent Mangrove',
+    tabsBody:
+      'Voici le composant Tab publié par Mangrove. Son enveloppe React utilise le même moteur JavaScript que celui des pages Drupal rendues par le serveur. Essayez les flèches ; un fragment d’URL peut aussi sélectionner un panneau au chargement.',
+    tabsLabel: 'Choix d’intégration',
+    tabs: [
+      {
+        text: 'Onglets existants',
+        data: '<p>Les mêmes onglets Mangrove fonctionnent dans React et le HTML rendu par le serveur. Le moteur actuel prend en charge le clavier, le sens RTL, les liens URL et l’empilement mobile sans React Aria.</p>',
+      },
+      {
+        text: 'Piste React Aria',
+        data: '<p>React Aria Tabs propose aussi une disposition verticale et une activation manuelle au clavier. Ce moteur pourrait servir la même interface Mangrove si un besoin concret le justifie et si le comportement actuel est préservé.</p>',
+      },
+    ],
+    buttonsNote:
+      'Les actions du formulaire restent des boutons natifs avec les classes mg-button de Mangrove. React Aria sert au choix avec recherche, qui demande un comportement de liste et de clavier ; il ne crée pas une deuxième interface pour les boutons ou les onglets.',
   },
 };
 
@@ -133,6 +200,16 @@ function App() {
   const [selectedKey, setSelectedKey] = useState(null);
   const [saved, setSaved] = useState('');
   const t = copy[locale];
+  // These panel strings are fixed, authored markup. Dynamic CMS HTML must be
+  // filtered before it reaches Tab's intentionally unescaped panel API.
+  const tabdata = useMemo(
+    () =>
+      t.tabs.map((tab, index) => ({
+        ...tab,
+        text_id: `consumer-integration-${index + 1}`,
+      })),
+    [t]
+  );
 
   useEffect(() => {
     fetch('./api/hazards.json')
@@ -202,6 +279,35 @@ function App() {
               </div>
             ))}
           </div>
+        </section>
+
+        <section
+          className="consumer-shared"
+          aria-labelledby="consumer-shared-title"
+        >
+          <h2 id="consumer-shared-title">{t.sharedTitle}</h2>
+          <p>{t.sharedBody}</p>
+          <div className="consumer-token-flow">
+            <div className="consumer-token">
+              <span className="consumer-token__swatch consumer-token__swatch--source" />
+              <span>{t.sourceToken}</span>
+              <code>--mg-color-interactive</code>
+            </div>
+            <div className="consumer-token">
+              <span className="consumer-token__swatch consumer-token__swatch--combo" />
+              <span>{t.comboToken}</span>
+              <code>--mg-control-accent</code>
+            </div>
+            <div className="consumer-token">
+              <span className="consumer-token__swatch consumer-token__swatch--tabs" />
+              <span>{t.tabToken}</span>
+              <code>--mg-tab-indicator--active</code>
+            </div>
+          </div>
+          <h3>{t.tabsTitle}</h3>
+          <p>{t.tabsBody}</p>
+          <Tab tabdata={tabdata} labels={{ tabListLabel: t.tabsLabel }} />
+          <p className="consumer-shared__note">{t.buttonsNote}</p>
         </section>
 
         <Drawer
