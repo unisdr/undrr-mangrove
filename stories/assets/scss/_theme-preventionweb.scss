@@ -9,4 +9,5 @@
 .mg-theme-preventionweb {
   @include mg-tokens-tabs;
   @include mg-tokens-preventionweb;
+  @include mg-control-tokens;
 }

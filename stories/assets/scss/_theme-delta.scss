@@ -9,4 +9,5 @@
 .mg-theme-delta {
   @include mg-tokens-tabs;
   @include mg-tokens-delta;
+  @include mg-control-tokens;
 }

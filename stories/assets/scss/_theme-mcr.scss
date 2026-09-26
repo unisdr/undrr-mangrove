@@ -9,4 +9,5 @@
 .mg-theme-mcr {
   @include mg-tokens-tabs;
   @include mg-tokens-mcr;
+  @include mg-control-tokens;
 }

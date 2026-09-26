@@ -9,4 +9,5 @@
 .mg-theme-irp {
   @include mg-tokens-tabs;
   @include mg-tokens-irp;
+  @include mg-control-tokens;
 }

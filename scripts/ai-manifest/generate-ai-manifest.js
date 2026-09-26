@@ -1391,7 +1391,13 @@ if (!fs.existsSync(compiledCssPath)) {
     `${path.relative(process.cwd(), compiledCssPath)} not found — run ` +
     '"yarn scss" first. Skipping the CSS class existence check.';
 } else {
-  const compiledCss = fs.readFileSync(compiledCssPath, 'utf8');
+  const compiledCss = [
+    compiledCssPath,
+    path.resolve(process.cwd(), 'aria/combo-box.css'),
+  ]
+    .filter(file => fs.existsSync(file))
+    .map(file => fs.readFileSync(file, 'utf8'))
+    .join('\n');
   const storySources = readStorySources(storiesDir);
 
   const escape = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

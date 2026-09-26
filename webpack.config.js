@@ -149,6 +149,8 @@ export default [
       CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.entry.js',
       TextInput: './stories/Components/Forms/TextInput/TextInput.jsx',
       Select: './stories/Components/Forms/Select/Select.jsx',
+      AriaComboBox:
+        './stories/Components/Forms/AriaComboBox/AriaComboBox.jsx',
       Checkbox: './stories/Components/Forms/Checkbox/Checkbox.jsx',
       Radio: './stories/Components/Forms/Radio/Radio.jsx',
       SegmentedControl:

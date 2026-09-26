@@ -109,6 +109,7 @@ function publishedPaths() {
   // aria/ — standalone opt-in React Aria surface and per-brand tokens.
   if (fs.existsSync(path.join(scssRoot, 'aria/_react-aria.scss'))) {
     paths.add('aria/react-aria.css');
+    paths.add('aria/combo-box.css');
     for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
       paths.add(`aria/tokens/${brand}.css`);
     }
