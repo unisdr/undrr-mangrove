@@ -27,7 +27,7 @@ Use this for a searchable list or custom text values in a React application. Use
 
 ## Behaviour and accessibility
 
-Pass items as `{ id, label }` objects. The label and suggestion button text are supplied by the caller so they can be translated. React Aria handles filtering, keyboard navigation, selection, required state and form value. Pass `inputValue` with `onInputChange` for a controlled input; pass `selectedKey` with `onSelectionChange` for controlled selection.
+Pass items as `{ id, label }` objects. The label and suggestion button text are supplied by the caller so they can be translated. React Aria locally filters this source list, handles keyboard navigation, selection, required state and form value. Remote or asynchronous filtering needs a separate documented API. Pass `inputValue` with `onInputChange` for a controlled input; pass `selectedKey` with `onSelectionChange` for controlled selection.
 
 React Aria portals the suggestion list. If the theme is scoped to a wrapper rather than `<body>`, pass that wrapper element as `popoverContainer` so the list inherits its tokens. This prop maps to React Aria's `UNSTABLE_portalContainer` and should be rechecked on library upgrades.
 

@@ -35,7 +35,7 @@ export function ComboBox({
   return (
     <AriaComboBox
       className={['mg-combobox', className].filter(Boolean).join(' ')}
-      items={items}
+      defaultItems={items}
       inputValue={inputValue}
       onInputChange={onInputChange}
       selectedKey={selectedKey}
@@ -57,7 +57,7 @@ export function ComboBox({
         className="mg-combobox__popover"
         UNSTABLE_portalContainer={popoverContainer}
       >
-        <ListBox className="mg-combobox__listbox" items={items}>
+        <ListBox className="mg-combobox__listbox">
           {item => (
             <ListBoxItem
               className="mg-combobox__option"

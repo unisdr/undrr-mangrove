@@ -37,6 +37,21 @@ describe('ComboBox', () => {
     expect(onInputChange).toHaveBeenCalledWith('Flood');
   });
 
+  test('filters suggestions as the user types', async () => {
+    render(<ComboBox label="Hazard type" items={items} />);
+    const input = screen.getByRole('combobox');
+    fireEvent.focus(input);
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    expect(
+      await screen.findByRole('option', { name: 'Drought' })
+    ).toBeVisible();
+    fireEvent.change(input, {
+      target: { value: 'flo' },
+    });
+    expect(await screen.findByRole('option', { name: 'Flood' })).toBeVisible();
+    expect(screen.queryByRole('option', { name: 'Drought' })).toBeNull();
+  });
+
   test('renders disabled state', () => {
     render(<ComboBox label="Hazard type" items={items} isDisabled />);
     expect(screen.getByRole('combobox')).toBeDisabled();

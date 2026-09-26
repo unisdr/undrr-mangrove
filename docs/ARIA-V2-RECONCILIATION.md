@@ -12,7 +12,7 @@ This work tests a narrower contract than the original #1088 global React Aria sk
 
 ## Try the pilot
 
-In a React application, install `react-aria-components`, import a Mangrove theme (or one `css/tokens/{brand}.css` file), then `css/combo-box.css`, and render `components/ComboBox.js`. React and React Aria Components are optional peers so applications share one runtime as more controls are added. The scoped CSS is about 4 KB; a page using only Mangrove's Drupal or vanilla components does not load the React entry.
+In a React application or a React island on a Drupal page, install `react-aria-components`, import a Mangrove theme (or one `css/tokens/{brand}.css` file), then `css/combo-box.css`, and render `components/ComboBox.js`. React and React Aria Components are optional peers so hosts share one runtime as more controls are added. The scoped CSS is about 4 KB; a server-rendered form or vanilla control does not load the React entry.
 
 The [ComboBox Storybook page](../stories/Components/Forms/ComboBox/ComboBox.mdx) has the prop contract and a Tailwind 4 layer import recipe. The existing CRUD fixture now uses this wrapper for its searchable hazard field, so reviewers can test it beside Mangrove controls.
 
