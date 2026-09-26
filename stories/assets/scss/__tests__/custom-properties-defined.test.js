@@ -121,23 +121,16 @@ describe('custom properties read by Mangrove are defined', () => {
   });
 
   test.each(['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'])(
-    'standalone React Aria CSS resolves with %s tokens',
+    'research React Aria CSS resolves with the %s theme',
     brand => {
       const css = sass.compile(path.join(SCSS_DIR, 'aria/_react-aria.scss'), {
         loadPaths: [SCSS_DIR],
         silenceDeprecations: ['import'],
         logger: sass.Logger.silent,
       }).css;
-      const tokens = sass.compile(
-        path.join(SCSS_DIR, `aria/_tokens-${brand}.scss`),
-        {
-          loadPaths: [SCSS_DIR],
-          silenceDeprecations: ['import'],
-          logger: sass.Logger.silent,
-        }
-      ).css;
+      const theme = compiled[brand === 'mangrove' ? 'style' : `style-${brand}`];
       expect(
-        undefinedRefs(readIn(css + tokens), definedIn(css + tokens))
+        undefinedRefs(readIn(css + theme), definedIn(css + theme))
       ).toEqual([]);
     }
   );

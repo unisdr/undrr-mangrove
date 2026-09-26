@@ -1,0 +1,23 @@
+@layer theme, base, mg-components, components, utilities;
+
+/* The assembled package is the input, including its CSS and React bundles. */
+@import '@undrr/undrr-mangrove/css/style-all.css';
+@import '@undrr/undrr-mangrove/css/combo-box.css' layer(mg-components);
+
+@layer utilities {
+  .consumer-shell {
+    margin: 2rem auto;
+    max-inline-size: 48rem;
+    padding: 1rem;
+  }
+
+  .consumer-fields {
+    display: grid;
+    gap: 1rem;
+  }
+}
+
+/* An existing unlayered site rule: keep it harmless and verify the cascade. */
+.consumer-shell button {
+  font: inherit;
+}

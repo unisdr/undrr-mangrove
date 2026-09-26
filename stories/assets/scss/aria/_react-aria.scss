@@ -3,7 +3,7 @@
  * The research-only aria/react-aria.css artifact is generated from this file
  * for Storybook and coverage checks. It is excluded from npm/CDN packages.
  * This intentionally targets React Aria's stock classes and consumes only
- * --mg-aria-* tokens, so consumers can import it without Mangrove components.
+ * --mg-aria-* tokens. The research gallery loads it with a Mangrove theme.
  *
  * Keep this file limited to reusable React Aria primitive and state styles.
  * Composition styles for the Storybook spike demos belong in _spike-demo.scss,

@@ -77,6 +77,20 @@ describe('ComboBox', () => {
     expect(input).toHaveAttribute('aria-describedby');
   });
 
+  test('a controlled form can clear an earlier error', () => {
+    const props = {
+      label: 'Hazard type',
+      items,
+      errorText: 'Pick a hazard',
+    };
+    const { rerender } = render(<ComboBox {...props} error />);
+    const input = screen.getByRole('combobox', { name: 'Hazard type' });
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    rerender(<ComboBox {...props} selectedKey="flood" error={false} />);
+    expect(input).not.toHaveAttribute('aria-invalid', 'true');
+    expect(screen.queryByText('Pick a hazard')).toBeNull();
+  });
+
   test('shares Mangrove field props and describes help text', () => {
     render(
       <ComboBox

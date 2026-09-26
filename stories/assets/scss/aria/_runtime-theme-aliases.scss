@@ -10,7 +10,7 @@
   // component works with no React Aria present. This mixin only aliases them
   // into the --mg-aria-tab-* contract below, which is what keeps the two tab
   // surfaces identical under every brand. Include mg-tokens-tabs alongside
-  // this mixin wherever the aria layer must stand alone.
+  // this mixin wherever the research skin is used with a Mangrove theme.
   --mg-aria-color-accent: rgb(var(--mg-color-interactive));
   --mg-aria-color-accent-active: rgb(var(--mg-color-interactive-active));
   --mg-aria-color-on-accent: rgb(var(--mg-color-white));

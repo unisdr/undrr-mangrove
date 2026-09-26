@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------
 // Every token in this block is generated from tokens/mcr.yaml, merged over
 // tokens/mangrove.yaml and tokens/undrr.yaml. The same source emits the
-// standalone aria/tokens/mcr.css, so the two cannot drift apart.
+// framework-neutral brand token file, so the two cannot drift apart.
 @import "./generated/tokens-mcr";
 
 .mg-theme-mcr {

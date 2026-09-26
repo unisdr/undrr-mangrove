@@ -51,7 +51,7 @@ export function ComboBox({
       allowsCustomValue={allowsCustomValue}
       isRequired={required}
       isDisabled={disabled}
-      isInvalid={error === true ? true : undefined}
+      isInvalid={error}
       name={name}
     >
       <Label

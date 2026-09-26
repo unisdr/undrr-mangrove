@@ -3,7 +3,7 @@
  *
  * `tokens/*.yaml` is the single source every brand is built from;
  * `scripts/build-tokens.cjs` emits the Sass partials that Mangrove's own
- * stylesheet and the standalone aria/tokens/*.css both consume. Four ways
+ * stylesheet and framework-neutral brand tokens consume. Four ways
  * that can rot, all silent:
  *
  *   1. someone edits a generated partial, or edits the YAML without
@@ -14,8 +14,7 @@
  *      writes them only when they are MISSING, precisely so a stale one still
  *      fails here instead of being repaired behind the developer's back;
  *   2. someone re-hardcodes a brand value into a hand-written Sass file,
- *      which is exactly how _theme-delta.scss and aria/_tokens-delta.scss
- *      came to hold two independent copies of the same brand;
+ *      which is how theme overrides can diverge from the source;
  *   3. the generated partials are build output and are not committed, so
  *      nothing in the repository records what the generator produces. On a
  *      fresh clone — every CI run — globalSetup writes the partials from
@@ -154,17 +153,14 @@ describe('design-token generator', () => {
     }
     expect(literals.length).toBeGreaterThan(10);
 
-    // Scoped to the hand-written theme and React Aria adapter files, which
-    // are where the duplication actually happened: _theme-delta.scss and
-    // aria/_tokens-delta.scss each held an independent copy of the DELTA
-    // brand. (_tokens-data-viz.scss does re-state neutral and DELTA channel
+    // Scoped to hand-written themes and adapter files where duplication has
+    // occurred. (_tokens-data-viz.scss does re-state neutral and DELTA channel
     // values; that palette is a separate concern and is not migrated here.)
     const hardcoded = [];
     const guarded = [
       ...['preventionweb', 'irp', 'mcr', 'delta'].map(
         brand => `stories/assets/scss/_theme-${brand}.scss`
       ),
-      ...BRANDS.map(brand => `stories/assets/scss/aria/_tokens-${brand}.scss`),
       'stories/assets/scss/aria/_runtime-theme-aliases.scss',
       'stories/assets/scss/aria/_tokens-shared.scss',
       'stories/assets/scss/_tokens-tabs.scss',
@@ -219,12 +215,7 @@ color:
   afterEach(() => fs.rmSync(dir, { recursive: true, force: true }));
 
   const write = (name, body) => fs.writeFileSync(path.join(dir, name), body);
-  // The fixture is two tiny files, so the closure is driven from an
-  // explicit seed rather than from Mangrove's real adapter sources.
-  const run =
-    (seeds = ['--mg-color-interactive']) =>
-    () =>
-      build({ tokensDir: dir, ariaSeedNames: seeds });
+  const run = () => () => build({ tokensDir: dir });
 
   test('the fixture itself builds, so every failure below is the mutation', () => {
     expect(run()).not.toThrow();
@@ -376,26 +367,6 @@ size: { $type: dimension, gap: { $value: '{size.wide}' } }`
     );
     expect(run()).toThrow(/format "rem" needs a number/);
   });
-
-  test('the React Aria adapter reading a token no source defines', () => {
-    // This is the 28-undefined-reference defect, caught at generation time
-    // instead of shipping as a stylesheet that silently does nothing.
-    const base = fs.readFileSync(path.join(dir, 'mangrove.yaml'), 'utf8');
-    fs.writeFileSync(
-      path.join(dir, 'mangrove.yaml'),
-      base.replace("  interactive: { $value: '{color.neutral-0}' }\n", '')
-    );
-    fs.writeFileSync(
-      path.join(dir, 'undrr.yaml'),
-      DEFAULT_BRAND.replace(
-        "  interactive: { $value: '{color.blue-900}' }\n",
-        ''
-      )
-    );
-    expect(run()).toThrow(
-      /the React Aria adapter reads --mg-color-interactive, which no token source defines/
-    );
-  });
 });
 
 /**
@@ -408,8 +379,6 @@ size: { $type: dimension, gap: { $value: '{size.wide}' } }`
  */
 describe('an override inherits the shape it does not restate', () => {
   let dir;
-
-  const ARIA_SEEDS = ['--mg-color-interactive'];
 
   const BASE = `
 $brand: { id: mangrove, base: true, title: Base, selector: ':root' }
@@ -452,15 +421,13 @@ brand:
   });
   afterEach(() => fs.rmSync(dir, { recursive: true, force: true }));
 
-  // Same reason as the suite above: a two-file fixture cannot satisfy the
-  // real adapter's seed set, so the closure is driven from an explicit seed.
   const sub = () =>
-    build({ tokensDir: dir, ariaSeedNames: ARIA_SEEDS }).get(
+    build({ tokensDir: dir }).get(
       'stories/assets/scss/generated/_tokens-sub.scss'
     );
 
   test('the fixture builds and the base emits each token as declared', () => {
-    const base = build({ tokensDir: dir, ariaSeedNames: ARIA_SEEDS }).get(
+    const base = build({ tokensDir: dir }).get(
       'stories/assets/scss/generated/_tokens-mangrove.scss'
     );
     expect(base).toContain('--mg-color-button-border: rgb(0 79 145);');
