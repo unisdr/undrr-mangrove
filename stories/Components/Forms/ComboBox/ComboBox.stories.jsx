@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ComboBox from './ComboBox';
+import { Drawer } from '../../Navigation/Drawer/Drawer';
 import '../../../assets/scss/aria/_combo-box.scss';
 
 const hazards = [
@@ -26,11 +27,31 @@ export const CustomValue = {
 };
 
 export const Invalid = {
-  args: { isInvalid: true, errorText: 'Choose a hazard type.' },
+  args: { error: true, errorText: 'Choose a hazard type.' },
 };
 
 export const Disabled = {
-  args: { isDisabled: true },
+  args: { disabled: true },
+};
+
+export const InDrawer = {
+  render: args => {
+    const [open, setOpen] = useState(true);
+    return (
+      <>
+        <button type="button" onClick={() => setOpen(true)}>
+          Open drawer
+        </button>
+        <Drawer
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          title="Choose a hazard"
+        >
+          <ComboBox {...args} />
+        </Drawer>
+      </>
+    );
+  },
 };
 
 export const Controlled = {

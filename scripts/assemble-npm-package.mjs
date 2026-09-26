@@ -73,6 +73,16 @@ export const PACKAGE_FILES = [
   '!**/*.spec.*',
 ];
 
+// Storybook keeps these adapter sources for experiments, but the release
+// package and CDN should expose only the scoped ComboBox Sass entry. Keep the
+// webpack copy rule in sync with the npm file exclusions above.
+export const RESEARCH_ONLY_GLOBS = [
+  '**/scss/aria/_react-aria.scss',
+  '**/scss/aria/_spike-demo.scss',
+  '**/scss/aria/_runtime-theme-aliases.scss',
+  '**/scss/aria/_tokens-*.scss',
+];
+
 // Development-only files that must never reach a consumer. Jest specs live
 // beside the sources they test (`stories/assets/js/__tests__/`), and both the
 // copies below and webpack's `stories/assets` -> `dist/assets` copy walk whole

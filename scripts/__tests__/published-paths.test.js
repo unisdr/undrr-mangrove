@@ -131,6 +131,11 @@ describe('the published-path model', () => {
       return found;
     };
 
+    const researchFiles = walk(
+      path.join(dist, 'assets', 'scss', 'aria')
+    ).filter(file => path.basename(file) !== '_combo-box.scss');
+    expect(researchFiles).toEqual([]);
+
     const inDist = new Set();
     for (const file of walk(dist)) {
       const mapped = toPackage(

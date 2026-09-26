@@ -225,15 +225,16 @@ test('the published package advertises no root entry point', () => {
   expect(files).toContain('components/MegaMenu.js');
 }, 30000);
 
-test('webpack copies the same source trees without the test files', () => {
+test('webpack leaves development and research sources out of dist', () => {
   const config = fs.readFileSync(
     path.resolve(__dirname, '../../webpack.config.js'),
     'utf8'
   );
-  expect(config).toMatch(
-    /import \{ DEV_ONLY_GLOBS \} from '\.\/scripts\/assemble-npm-package\.mjs'/
+  expect(config).toContain('DEV_ONLY_GLOBS');
+  expect(config).toContain('RESEARCH_ONLY_GLOBS');
+  expect(config).toContain(
+    'ignore: [...DEV_ONLY_GLOBS, ...RESEARCH_ONLY_GLOBS]'
   );
-  expect(config).toMatch(/globOptions: \{ ignore: DEV_ONLY_GLOBS \}/);
 });
 
 test('generates the slimmed package.json', () => {

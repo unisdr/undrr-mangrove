@@ -272,11 +272,11 @@ function EventEditor({ item, onClose, onSave }) {
                     label: event.hazard,
                   }))}
                   allowsCustomValue
-                  isRequired
+                  required
                   inputValue={draft.hazard}
                   onInputChange={value => set('hazard', value)}
                   onSelectionChange={key => set('hazard', String(key))}
-                  isInvalid={showValidation && !draft.hazard.trim()}
+                  error={showValidation && !draft.hazard.trim()}
                   errorText="A hazard type is required."
                 />
               </div>
