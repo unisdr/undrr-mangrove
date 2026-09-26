@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
-  ComboBox,
+  ComboBox as AriaComboBox,
   FieldError,
   Input,
   Label,
@@ -14,7 +14,7 @@ import {
 
 const EMPTY_ITEMS = [];
 
-export function AriaComboBox({
+export function ComboBox({
   label,
   items = EMPTY_ITEMS,
   placeholder,
@@ -33,9 +33,9 @@ export function AriaComboBox({
   className,
 }) {
   return (
-    <ComboBox
-      className={['mg-aria-combobox', className].filter(Boolean).join(' ')}
-      items={items}
+    <AriaComboBox
+      className={['mg-combobox', className].filter(Boolean).join(' ')}
+      defaultItems={items}
       inputValue={inputValue}
       onInputChange={onInputChange}
       selectedKey={selectedKey}
@@ -46,24 +46,21 @@ export function AriaComboBox({
       isInvalid={isInvalid}
       name={name}
     >
-      <Label className="mg-aria-combobox__label">{label}</Label>
-      <div className="mg-aria-combobox__control">
-        <Input className="mg-aria-combobox__input" placeholder={placeholder} />
-        <Button
-          className="mg-aria-combobox__trigger"
-          aria-label={openButtonLabel}
-        >
+      <Label className="mg-combobox__label">{label}</Label>
+      <div className="mg-combobox__control">
+        <Input className="mg-combobox__input" placeholder={placeholder} />
+        <Button className="mg-combobox__trigger" aria-label={openButtonLabel}>
           <span aria-hidden="true">▾</span>
         </Button>
       </div>
       <Popover
-        className="mg-aria-combobox__popover"
+        className="mg-combobox__popover"
         UNSTABLE_portalContainer={popoverContainer}
       >
-        <ListBox className="mg-aria-combobox__listbox" items={items}>
+        <ListBox className="mg-combobox__listbox">
           {item => (
             <ListBoxItem
-              className="mg-aria-combobox__option"
+              className="mg-combobox__option"
               id={item.id}
               textValue={item.label}
             >
@@ -73,13 +70,13 @@ export function AriaComboBox({
         </ListBox>
       </Popover>
       {errorText && (
-        <FieldError className="mg-aria-combobox__error">{errorText}</FieldError>
+        <FieldError className="mg-combobox__error">{errorText}</FieldError>
       )}
-    </ComboBox>
+    </AriaComboBox>
   );
 }
 
-AriaComboBox.propTypes = {
+ComboBox.propTypes = {
   label: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(
     PropTypes.shape({
@@ -103,4 +100,4 @@ AriaComboBox.propTypes = {
   className: PropTypes.string,
 };
 
-export default AriaComboBox;
+export default ComboBox;

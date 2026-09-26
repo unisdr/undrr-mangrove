@@ -30,7 +30,7 @@ describe('optional React Aria distribution', () => {
     ]) {
       const css = compile(entry);
       expect(css).not.toMatch(/\.react-aria-|--mg-aria-/);
-      expect(css).not.toMatch(/\.mg-aria-combobox/);
+      expect(css).not.toMatch(/\.mg-combobox/);
     }
   });
 
@@ -41,12 +41,13 @@ describe('optional React Aria distribution', () => {
   });
 
   test('the pilot is scoped to Mangrove classes and semantic control roles', () => {
-    expect(comboBox).toMatch(/\.mg-aria-combobox__option\b/);
+    expect(comboBox).toMatch(/\.mg-combobox__option\b/);
     expect(comboBox).toMatch(/var\(--mg-control-option-selected\)/);
     expect(comboBox).not.toMatch(/\.react-aria-/);
     for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
-      const tokens = compile(`aria/_tokens-${brand}`);
+      const tokens = compile(`brand-tokens/_${brand}`);
       expect(tokens).toMatch(/--mg-control-option-selected:/);
+      expect(tokens).not.toMatch(/--mg-aria-/);
     }
   });
 

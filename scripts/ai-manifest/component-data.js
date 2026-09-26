@@ -54,8 +54,8 @@
 // ---------------------------------------------------------------------------
 
 export const REQUIRES_REACT = {
-  'components-forms-aria-combobox':
-    'React-only searchable ComboBox pilot. Import components/AriaComboBox.js and aria/combo-box.css; needs a Mangrove theme or standalone brand tokens. No Drupal hydration.',
+  'components-forms-combobox':
+    'React-only searchable ComboBox. Import components/ComboBox.js and css/combo-box.css; needs a Mangrove theme or standalone brand tokens, plus react-aria-components. No Drupal hydration.',
   'design-decisions-language-boundaries':
     'Storybook integration demo measuring rendered font families across nested Arabic and Latin language boundaries. Requires React and browser layout APIs for live measurements; this is a documentation specimen, not a reusable production component.',
 
@@ -1527,21 +1527,21 @@ npm run build</code></pre>
     description:
       'Dropdown select field with label, placeholder, help text, and error state.',
   },
-  'components-forms-aria-combobox': {
+  'components-forms-combobox': {
     summary:
       'React-only searchable choice control using React Aria behaviour and Mangrove 2 tokens.',
     description:
       'React-only searchable choice control. Uses React Aria for interaction, Mangrove classes and framework-neutral --mg-control-* roles for styling. Import the optional JS and CSS; use Select for a simple fixed choice list.',
     cssClasses: [
-      'mg-aria-combobox',
-      'mg-aria-combobox__label',
-      'mg-aria-combobox__control',
-      'mg-aria-combobox__input',
-      'mg-aria-combobox__trigger',
-      'mg-aria-combobox__popover',
-      'mg-aria-combobox__listbox',
-      'mg-aria-combobox__option',
-      'mg-aria-combobox__error',
+      'mg-combobox',
+      'mg-combobox__label',
+      'mg-combobox__control',
+      'mg-combobox__input',
+      'mg-combobox__trigger',
+      'mg-combobox__popover',
+      'mg-combobox__listbox',
+      'mg-combobox__option',
+      'mg-combobox__error',
     ],
   },
   'components-forms-checkbox': {

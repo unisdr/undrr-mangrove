@@ -42,7 +42,6 @@ describe('the published-path model', () => {
       'css',
       'js',
       'scss',
-      'aria',
       'error-pages',
       'fonts',
     ]) {
@@ -57,7 +56,6 @@ describe('the published-path model', () => {
       "['dist/assets/css', 'css']",
       "['dist/assets/error-pages', 'error-pages']",
       "['dist/fonts', 'fonts']",
-      "['dist/aria', 'aria']",
       "['dist/components', 'components']",
     ]) {
       expect(assembleSource).toContain(line);
@@ -82,10 +80,14 @@ describe('the published-path model', () => {
     expect(paths.has('scss/style.scss')).toBe(false);
   });
 
-  test('models all six optional React Aria stylesheets', () => {
-    expect(paths.has('aria/react-aria.css')).toBe(true);
+  test('publishes one scoped control stylesheet and neutral brand access', () => {
+    expect(paths.has('css/combo-box.css')).toBe(true);
+    expect(paths.has('components/ComboBox.js')).toBe(true);
+    expect(paths.has('aria/react-aria.css')).toBe(false);
+    expect(paths.has('scss/assets/scss/aria/_react-aria.scss')).toBe(false);
     for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
-      expect(paths.has(`aria/tokens/${brand}.css`)).toBe(true);
+      expect(paths.has(`css/tokens/${brand}.css`)).toBe(true);
+      expect(paths.has(`aria/tokens/${brand}.css`)).toBe(false);
     }
   });
 

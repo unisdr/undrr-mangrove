@@ -106,12 +106,11 @@ function publishedPaths() {
     paths.add(`css/${stem}.css.map`);
   }
 
-  // aria/ — standalone opt-in React Aria surface and per-brand tokens.
-  if (fs.existsSync(path.join(scssRoot, 'aria/_react-aria.scss'))) {
-    paths.add('aria/react-aria.css');
-    paths.add('aria/combo-box.css');
+  // Scoped optional control CSS and framework-neutral per-brand tokens.
+  if (fs.existsSync(path.join(scssRoot, 'aria/_combo-box.scss'))) {
+    paths.add('css/combo-box.css');
     for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
-      paths.add(`aria/tokens/${brand}.css`);
+      paths.add(`css/tokens/${brand}.css`);
     }
   }
 
@@ -121,7 +120,13 @@ function publishedPaths() {
   const storiesRoot = path.join(ROOT, 'stories');
   for (const file of walk(storiesRoot)) {
     if (!file.endsWith('.scss')) continue;
-    paths.add(`scss/${rel(storiesRoot, file)}`);
+    const published = `scss/${rel(storiesRoot, file)}`;
+    if (
+      published.startsWith('scss/assets/scss/aria/') &&
+      published !== 'scss/assets/scss/aria/_combo-box.scss'
+    )
+      continue;
+    paths.add(published);
   }
 
   return paths;

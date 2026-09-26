@@ -105,7 +105,6 @@ export default [
             from: 'stories/assets/fonts/mangrove-icon-set',
             to: 'fonts/mangrove-icon-set',
           },
-          { from: 'aria', to: 'aria' },
         ].map(pattern => ({
           ...pattern,
           globOptions: { ignore: DEV_ONLY_GLOBS },
@@ -149,8 +148,7 @@ export default [
       CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.entry.js',
       TextInput: './stories/Components/Forms/TextInput/TextInput.jsx',
       Select: './stories/Components/Forms/Select/Select.jsx',
-      AriaComboBox:
-        './stories/Components/Forms/AriaComboBox/AriaComboBox.jsx',
+      ComboBox: './stories/Components/Forms/ComboBox/ComboBox.jsx',
       Checkbox: './stories/Components/Forms/Checkbox/Checkbox.jsx',
       Radio: './stories/Components/Forms/Radio/Radio.jsx',
       SegmentedControl:
@@ -183,6 +181,9 @@ export default [
       react: 'react',
       'react-dom': 'react-dom',
       'react-dom/client': 'react-dom/client',
+      // React-only controls share the consumer's React Aria runtime. Bundling
+      // it into each Mangrove entry would duplicate it as more controls land.
+      'react-aria-components': 'react-aria-components',
     },
     output: {
       path: path.resolve(currentDirPath, 'dist/components'),

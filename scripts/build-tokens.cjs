@@ -22,7 +22,8 @@
  *       @mixin mg-tokens-<brand>       the theme block (:root / .mg-theme-*)
  *       @mixin mg-tokens-<brand>-aria  the standalone React Aria closure
  *       plus any Sass variables the build still needs
- *   aria/tokens/<brand>.css            (compiled from the above by `yarn build:aria`)
+ *   css/tokens/<brand>.css              (compiled from the theme mixins by `yarn build:aria`)
+ *   The -aria mixin remains for the Storybook research stylesheet only.
  *
  * Usage:
  *   node scripts/build-tokens.cjs            write the generated partials

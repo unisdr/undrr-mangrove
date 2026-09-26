@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import AriaComboBox from './AriaComboBox';
+import ComboBox from './ComboBox';
 import '../../../assets/scss/aria/_combo-box.scss';
 
 const hazards = [
@@ -9,8 +9,8 @@ const hazards = [
 ];
 
 export default {
-  title: 'Components/Forms/Aria ComboBox',
-  component: AriaComboBox,
+  title: 'Components/Forms/ComboBox',
+  component: ComboBox,
   args: {
     label: 'Hazard type',
     placeholder: 'Search hazards',
@@ -37,7 +37,7 @@ export const Controlled = {
   render: args => {
     const [inputValue, setInputValue] = useState('');
     return (
-      <AriaComboBox
+      <ComboBox
         {...args}
         inputValue={inputValue}
         onInputChange={setInputValue}

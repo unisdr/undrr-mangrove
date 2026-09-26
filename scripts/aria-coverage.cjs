@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 /**
- * React Aria styling coverage for the distributed Mangrove surface.
+ * React Aria styling coverage for the Storybook research surface.
  *
  * Compares the stock `.react-aria-*` class names that react-aria-components
  * actually renders against the ones the Mangrove Aria stylesheet styles. The
- * gap is the list of components a consumer would get unstyled, which is the
- * number that matters when arguing this surface is a usable alternative to a
- * batteries-included component library.
+ * gap records how much of React Aria the research gallery explored. This is
+ * not a public Mangrove component coverage metric.
  *
  * Method caveat: the denominator is derived by grepping the package for
  * `react-aria-<Name>` string literals, which includes names that appear only

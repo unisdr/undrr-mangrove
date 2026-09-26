@@ -8,15 +8,17 @@
     "node": ">=22.0.0"
   },
   "exports": {
-    ".": "./src/index.js",
-    "./aria/*": "./aria/*"
+    ".": "./src/index.js"
   },
   "//files": "Positive allowlist for `npm pack`. The matching .npmignore stops npm falling back to .gitignore, which would drop the generated token partials and compiled style*.css; `prepack` regenerates both. Note the release workflow publishes its own assembled package.json, not this one.",
   "files": [
     "src/**/*.js",
     "stories/**",
     "tokens/**",
-    "aria/**",
+    "!stories/assets/scss/aria/_react-aria.scss",
+    "!stories/assets/scss/aria/_spike-demo.scss",
+    "!stories/assets/scss/aria/_runtime-theme-aliases.scss",
+    "!stories/assets/scss/aria/_tokens-*.scss",
     "!**/__tests__/**",
     "!**/__snapshots__/**"
   ],
@@ -36,9 +38,9 @@
     "update-cdn-version": "node scripts/update-cdn-version.js",
     "pack:assemble": "node scripts/assemble-npm-package.mjs",
     "pack:preview": "node scripts/pack-preview.mjs",
-    "build:aria": "yarn build:tokens && sass stories/assets/scss/aria/_react-aria.scss:aria/react-aria.css stories/assets/scss/aria/_combo-box.scss:aria/combo-box.css stories/assets/scss/aria/_tokens-mangrove.scss:aria/tokens/mangrove.css stories/assets/scss/aria/_tokens-preventionweb.scss:aria/tokens/preventionweb.css stories/assets/scss/aria/_tokens-irp.scss:aria/tokens/irp.css stories/assets/scss/aria/_tokens-mcr.scss:aria/tokens/mcr.css stories/assets/scss/aria/_tokens-delta.scss:aria/tokens/delta.css --no-source-map --silence-deprecation import",
+    "build:aria": "yarn build:tokens && sass stories/assets/scss/aria/_react-aria.scss:aria/react-aria.css stories/assets/scss/aria/_combo-box.scss:stories/assets/css/combo-box.css stories/assets/scss/brand-tokens/_mangrove.scss:stories/assets/css/tokens/mangrove.css stories/assets/scss/brand-tokens/_preventionweb.scss:stories/assets/css/tokens/preventionweb.css stories/assets/scss/brand-tokens/_irp.scss:stories/assets/css/tokens/irp.css stories/assets/scss/brand-tokens/_mcr.scss:stories/assets/css/tokens/mcr.css stories/assets/scss/brand-tokens/_delta.scss:stories/assets/css/tokens/delta.css --no-source-map --silence-deprecation import",
     "scss": "yarn build:tokens && yarn build:icons && yarn build:css-version && yarn build:aria && sass ./stories/assets/scss:./stories/assets/css --silence-deprecation import",
-    "scss-watch": "yarn build:tokens && yarn build:icons && yarn build:css-version && { node scripts/watch-tokens.cjs & } && sass --watch ./stories/assets/scss:./stories/assets/css stories/assets/scss/aria/_react-aria.scss:aria/react-aria.css stories/assets/scss/aria/_tokens-mangrove.scss:aria/tokens/mangrove.css stories/assets/scss/aria/_tokens-preventionweb.scss:aria/tokens/preventionweb.css stories/assets/scss/aria/_tokens-irp.scss:aria/tokens/irp.css stories/assets/scss/aria/_tokens-mcr.scss:aria/tokens/mcr.css stories/assets/scss/aria/_tokens-delta.scss:aria/tokens/delta.css --no-source-map --silence-deprecation import",
+    "scss-watch": "yarn build:tokens && yarn build:icons && yarn build:css-version && { node scripts/watch-tokens.cjs & } && sass --watch ./stories/assets/scss:./stories/assets/css stories/assets/scss/aria/_react-aria.scss:aria/react-aria.css stories/assets/scss/aria/_combo-box.scss:stories/assets/css/combo-box.css stories/assets/scss/brand-tokens/_mangrove.scss:stories/assets/css/tokens/mangrove.css stories/assets/scss/brand-tokens/_preventionweb.scss:stories/assets/css/tokens/preventionweb.css stories/assets/scss/brand-tokens/_irp.scss:stories/assets/css/tokens/irp.css stories/assets/scss/brand-tokens/_mcr.scss:stories/assets/css/tokens/mcr.css stories/assets/scss/brand-tokens/_delta.scss:stories/assets/css/tokens/delta.css --no-source-map --silence-deprecation import",
     "lint": "yarn run lint:css && yarn run lint:js",
     "prettier:check": "prettier --check \"{src,stories,scripts,.storybook}/**/*.{js,jsx,cjs,mjs,ts,tsx,json,css,scss,md,mdx}\" --ignore-path .gitignore --ignore-path .prettierignore",
     "//lint:js": "--fix-type omits `directive`, so this script can never delete an eslint-disable comment for a rule the config does not enable (see unisdr/undrr-mangrove#1226). The guard is on this command only: a bare `npx eslint --fix`, or an editor running fix-on-save, will still remove one — route ESLint edits through `yarn lint`. Unused directives are reported at error severity (see eslint.config.mjs), so a stale one fails lint:check rather than hiding among the warnings.",
@@ -177,7 +179,19 @@
   },
   "peerDependencies": {
     "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react-dom": ">=18.0.0",
+    "react-aria-components": "^1.20.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "react-aria-components": {
+      "optional": true
+    }
   },
   "resolutions": {
     "@storybook/react/webpack": "5",

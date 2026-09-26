@@ -1393,7 +1393,7 @@ if (!fs.existsSync(compiledCssPath)) {
 } else {
   const compiledCss = [
     compiledCssPath,
-    path.resolve(process.cwd(), 'aria/combo-box.css'),
+    path.resolve(process.cwd(), 'stories/assets/css/combo-box.css'),
   ]
     .filter(file => fs.existsSync(file))
     .map(file => fs.readFileSync(file, 'utf8'))
