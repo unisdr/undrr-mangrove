@@ -2,10 +2,12 @@
 // Applied when .mg-theme-preventionweb is present on <body> or a wrapping element.
 // ---------------------------------------------------------------------
 // Every token in this block is generated from tokens/preventionweb.yaml, merged over
-// tokens/mangrove.yaml and tokens/undrr.yaml.
+// tokens/mangrove.yaml and tokens/undrr.yaml. The same source emits the
+// standalone css/tokens/preventionweb.css, so the two cannot drift apart.
 @import "./generated/tokens-preventionweb";
 
 .mg-theme-preventionweb {
   @include mg-tokens-tabs;
   @include mg-tokens-preventionweb;
+  @include mg-control-tokens;
 }

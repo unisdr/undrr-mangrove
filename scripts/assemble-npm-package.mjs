@@ -57,6 +57,10 @@ export const PACKAGE_FILES = [
   'css/**/*',
   'js/**/*',
   'scss/**/*.scss',
+  '!scss/assets/scss/aria/_react-aria.scss',
+  '!scss/assets/scss/aria/_spike-demo.scss',
+  '!scss/assets/scss/aria/_runtime-theme-aliases.scss',
+  '!scss/assets/scss/aria/_tokens-*.scss',
   'error-pages/**/*',
   'fonts/**/*',
   // Second line of defence: even if a development-only file reaches the
@@ -67,6 +71,16 @@ export const PACKAGE_FILES = [
   '!**/__fixtures__/**',
   '!**/*.test.*',
   '!**/*.spec.*',
+];
+
+// Storybook keeps these adapter sources for experiments, but the release
+// package and CDN should expose only the scoped ComboBox Sass entry. Keep the
+// webpack copy rule in sync with the npm file exclusions above.
+export const RESEARCH_ONLY_GLOBS = [
+  '**/scss/aria/_react-aria.scss',
+  '**/scss/aria/_spike-demo.scss',
+  '**/scss/aria/_runtime-theme-aliases.scss',
+  '**/scss/aria/_tokens-*.scss',
 ];
 
 // Development-only files that must never reach a consumer. Jest specs live
@@ -260,6 +274,10 @@ export function buildPackageJson(pkg) {
     keywords: pkg.keywords,
     author: pkg.author,
     license: pkg.license,
+    // Component dependencies are optional at the package level because a
+    // CSS-only or vanilla JS consumer does not load the React entries.
+    peerDependencies: pkg.peerDependencies,
+    peerDependenciesMeta: pkg.peerDependenciesMeta,
   };
 }
 

@@ -4,7 +4,10 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import webpack from 'webpack';
-import { DEV_ONLY_GLOBS } from './scripts/assemble-npm-package.mjs';
+import {
+  DEV_ONLY_GLOBS,
+  RESEARCH_ONLY_GLOBS,
+} from './scripts/assemble-npm-package.mjs';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const currentFilePath = fileURLToPath(import.meta.url);
@@ -107,7 +110,7 @@ export default [
           },
         ].map(pattern => ({
           ...pattern,
-          globOptions: { ignore: DEV_ONLY_GLOBS },
+          globOptions: { ignore: [...DEV_ONLY_GLOBS, ...RESEARCH_ONLY_GLOBS] },
         })),
       }),
     ],
@@ -148,6 +151,7 @@ export default [
       CtaButton: './stories/Components/Buttons/CtaButton/CtaButton.entry.js',
       TextInput: './stories/Components/Forms/TextInput/TextInput.jsx',
       Select: './stories/Components/Forms/Select/Select.jsx',
+      ComboBox: './stories/Components/Forms/ComboBox/ComboBox.jsx',
       Checkbox: './stories/Components/Forms/Checkbox/Checkbox.jsx',
       Radio: './stories/Components/Forms/Radio/Radio.jsx',
       SegmentedControl:
@@ -180,6 +184,9 @@ export default [
       react: 'react',
       'react-dom': 'react-dom',
       'react-dom/client': 'react-dom/client',
+      // React-only controls share the consumer's React Aria runtime. Bundling
+      // it into each Mangrove entry would duplicate it as more controls land.
+      'react-aria-components': 'react-aria-components',
     },
     output: {
       path: path.resolve(currentDirPath, 'dist/components'),

@@ -1,0 +1,358 @@
+@layer theme, base, mg-components, components, utilities;
+
+/* The assembled package is the input, including its CSS and React bundles. */
+@import '@undrr/undrr-mangrove/css/style-all.css';
+@import '@undrr/undrr-mangrove/css/combo-box.css' layer(mg-components);
+
+@layer utilities {
+  .consumer-shell {
+    align-content: start;
+    gap: clamp(1.5rem, 3vw, 2rem);
+    margin-inline: auto;
+    max-inline-size: 72rem;
+    min-block-size: 100vh;
+    padding: clamp(1.5rem, 4vw, 4rem);
+  }
+
+  .consumer-hero,
+  .consumer-try {
+    max-inline-size: 52rem;
+  }
+
+  .consumer-kicker {
+    color: rgb(var(--mg-color-interactive));
+    font-weight: 700;
+  }
+
+  .consumer-hero h1,
+  .consumer-how h2,
+  .consumer-try h2,
+  .consumer-shared h2 {
+    text-wrap: balance;
+  }
+
+  .consumer-lede {
+    font-size: var(--mg-font-size-400);
+    line-height: 1.6;
+  }
+
+  .consumer-steps {
+    display: grid;
+    gap: var(--mg-spacing-200);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  }
+
+  .consumer-step {
+    background: var(--mg-surface-raised);
+    border: 1px solid rgb(var(--mg-color-neutral-200));
+    border-radius: var(--mg-card-border-radius);
+    box-shadow: var(--mg-card-shadow);
+    padding: var(--mg-spacing-200);
+  }
+
+  .consumer-step h3 {
+    font-size: var(--mg-font-size-400);
+    margin-block-start: 0;
+  }
+
+  .consumer-step p {
+    margin-block-end: 0;
+  }
+
+  .consumer-shared {
+    display: grid;
+    gap: var(--mg-spacing-200);
+  }
+
+  .consumer-shared h2,
+  .consumer-shared h3,
+  .consumer-shared > p {
+    margin-block: 0;
+  }
+
+  .consumer-shared > p {
+    max-inline-size: 52rem;
+  }
+
+  .consumer-token-source {
+    align-items: center;
+    background: var(--mg-surface-raised);
+    border: 1px solid rgb(var(--mg-color-neutral-200));
+    border-inline-start: 4px solid rgb(var(--mg-color-interactive));
+    border-radius: var(--mg-card-border-radius);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-200);
+    justify-content: space-between;
+    padding: var(--mg-spacing-200);
+  }
+
+  .consumer-token-source > div:first-child {
+    display: grid;
+    gap: var(--mg-spacing-50);
+  }
+
+  .consumer-token-source .mg-form-field {
+    flex: 0 1 16rem;
+  }
+
+  .consumer-token-flow {
+    display: grid;
+    gap: var(--mg-spacing-200);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 25rem), 1fr));
+  }
+
+  .consumer-token {
+    align-content: start;
+    background: var(--mg-surface-raised);
+    border: 1px solid rgb(var(--mg-color-neutral-200));
+    border-radius: var(--mg-card-border-radius);
+    display: grid;
+    gap: var(--mg-spacing-150);
+    min-inline-size: 0;
+    padding: var(--mg-spacing-200);
+  }
+
+  .consumer-token > p,
+  .consumer-token h3 {
+    margin-block: 0;
+  }
+
+  .consumer-token__engine {
+    color: rgb(var(--mg-color-neutral-600));
+    font-size: var(--mg-font-size-200);
+    font-weight: 600;
+  }
+
+  .consumer-token code,
+  .consumer-token-source code {
+    font-size: var(--mg-font-size-100);
+    overflow-wrap: anywhere;
+  }
+
+  .consumer-token > code {
+    border-radius: var(--mg-card-border-radius);
+    justify-self: start;
+    padding: var(--mg-spacing-50) var(--mg-spacing-100);
+  }
+
+  .consumer-token:first-child > code {
+    background: var(--mg-control-option-selected);
+  }
+
+  .consumer-token:last-child > code {
+    border-block-end: 3px solid var(--mg-tab-indicator--active);
+  }
+
+  .consumer-token .mg-tabs {
+    min-inline-size: 0;
+  }
+
+  .consumer-shared__note {
+    border-inline-start: 4px solid rgb(var(--mg-color-interactive));
+    padding-inline-start: var(--mg-spacing-200);
+  }
+
+  .consumer-crud {
+    display: grid;
+    gap: var(--mg-spacing-150);
+    min-inline-size: 0;
+  }
+
+  .consumer-crud__heading {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-200);
+    justify-content: space-between;
+  }
+
+  .consumer-crud__heading > div {
+    max-inline-size: 52rem;
+  }
+
+  .consumer-crud__heading h2 {
+    margin-block-start: 0;
+    text-wrap: balance;
+  }
+
+  .consumer-crud__heading p,
+  .consumer-crud__count {
+    margin-block: 0;
+  }
+
+  .consumer-crud__count {
+    font-size: var(--mg-font-size-200);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .consumer-crud__scroll {
+    border: 1px solid rgb(var(--mg-color-neutral-200));
+    border-radius: var(--mg-card-border-radius);
+    max-inline-size: 100%;
+    overflow-x: auto;
+  }
+
+  .consumer-crud__scroll:focus-visible {
+    outline: var(--mg-focus-ring-width) solid rgb(var(--mg-color-interactive));
+    outline-offset: var(--mg-focus-ring-offset);
+  }
+
+  .consumer-crud__table {
+    inline-size: 100%;
+    min-inline-size: 42rem;
+  }
+
+  .consumer-crud__table [role='row'] {
+    display: grid;
+    grid-template-columns:
+      minmax(13rem, 2fr) minmax(9rem, 1fr) minmax(8rem, 1fr)
+      minmax(12rem, 1fr);
+  }
+
+  .consumer-crud__table [role='columnheader'],
+  .consumer-crud__table [role='rowheader'],
+  .consumer-crud__table [role='gridcell'] {
+    align-content: center;
+    border-block-end: 1px solid rgb(var(--mg-color-neutral-200));
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+    padding: var(--mg-spacing-100);
+  }
+
+  .consumer-crud__table [role='columnheader'] {
+    background: rgb(var(--mg-color-neutral-50));
+    color: rgb(var(--mg-color-neutral-800));
+    cursor: pointer;
+    font-size: var(--mg-font-size-200);
+    font-weight: 700;
+  }
+
+  .consumer-crud__table [role='columnheader'][data-sort-direction] {
+    color: rgb(var(--mg-color-interactive));
+  }
+
+  .consumer-crud__table
+    [role='columnheader'][data-sort-direction='ascending']::after {
+    content: ' ↑';
+  }
+
+  .consumer-crud__table
+    [role='columnheader'][data-sort-direction='descending']::after {
+    content: ' ↓';
+  }
+
+  .consumer-crud__table [data-focus-visible] {
+    outline: var(--mg-focus-ring-width) solid rgb(var(--mg-color-interactive));
+    outline-offset: calc(-1 * var(--mg-focus-ring-offset));
+  }
+
+  .consumer-crud__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-75);
+  }
+
+  .consumer-crud__actions .mg-button {
+    min-block-size: 2.5rem;
+  }
+
+  .consumer-crud__empty {
+    padding: var(--mg-spacing-200);
+  }
+
+  .consumer-crud__editor {
+    display: grid;
+    gap: var(--mg-spacing-200);
+  }
+
+  .consumer-crud__editor > p {
+    margin-block: 0;
+  }
+
+  .consumer-crud__notice:empty {
+    display: none;
+  }
+
+  .consumer-confirm {
+    background: var(--mg-surface-raised);
+    border: 0;
+    border-block-start: 4px solid rgb(var(--mg-color-interactive));
+    border-radius: var(--mg-card-border-radius);
+    box-shadow: var(--mg-shadow-raised);
+    box-sizing: border-box;
+    color: rgb(var(--mg-color-text));
+    inline-size: min(28rem, calc(100vw - 2rem));
+    max-block-size: calc(100dvh - 2rem);
+    overflow: auto;
+    padding: var(--mg-spacing-300);
+  }
+
+  .consumer-confirm::backdrop {
+    background: var(--mg-color-modal-scrim);
+  }
+
+  .consumer-confirm h2 {
+    margin-block: 0 var(--mg-spacing-150);
+    text-wrap: balance;
+  }
+
+  .consumer-confirm p {
+    margin-block: 0 var(--mg-spacing-150);
+  }
+
+  .consumer-confirm .consumer-crud__actions {
+    justify-content: flex-end;
+    margin-block-start: var(--mg-spacing-300);
+  }
+
+  .consumer-try {
+    background: var(--mg-surface-raised);
+    border: 1px solid rgb(var(--mg-color-neutral-200));
+    border-inline-start: 4px solid rgb(var(--mg-color-interactive));
+    border-radius: var(--mg-card-border-radius);
+    display: grid;
+    gap: var(--mg-spacing-100);
+    justify-items: start;
+    padding: var(--mg-spacing-200);
+  }
+
+  .consumer-try h2,
+  .consumer-try p {
+    margin-block: 0;
+  }
+
+  .consumer-result {
+    border-block-start: 1px solid rgb(var(--mg-color-neutral-200));
+    inline-size: 100%;
+    padding-block-start: var(--mg-spacing-100);
+  }
+
+  .consumer-result:empty {
+    border: 0;
+    padding: 0;
+  }
+
+  .consumer-result code {
+    background: rgb(var(--mg-color-neutral-50) / 0.35);
+    border-radius: var(--mg-card-border-radius);
+    padding: 0.2em 0.4em;
+  }
+
+  .consumer-fields {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .consumer-form {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+}
+
+/* The host page's unlayered layout wins over Mangrove's base main rule. */
+.consumer-shell {
+  display: grid;
+  text-wrap: pretty;
+}

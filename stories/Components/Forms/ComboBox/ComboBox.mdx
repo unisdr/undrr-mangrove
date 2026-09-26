@@ -1,0 +1,62 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as ComboBoxStories from './ComboBox.stories';
+
+<Meta of={ComboBoxStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# ComboBox
+
+A React-only searchable choice control. It uses React Aria for interaction and Mangrove tokens and classes for presentation. Import `css/combo-box.css` with a normal Mangrove theme stylesheet, or with one `css/tokens/{brand}.css` file in a React-only application.
+
+## When to use
+
+Use this for a searchable list or custom text values in a React application. Use the native [Select](?path=/docs/components-forms-select--docs) for an ordinary fixed choice list.
+
+## States
+
+<Canvas of={ComboBoxStories.Default} />
+
+<Controls of={ComboBoxStories.Default} />
+
+<Canvas of={ComboBoxStories.CustomValue} />
+
+<Canvas of={ComboBoxStories.Invalid} />
+
+<Canvas of={ComboBoxStories.Disabled} />
+
+<Canvas of={ComboBoxStories.InDrawer} />
+
+## Behaviour and accessibility
+
+Pass items as `{ id, label }` objects. The label and suggestion button text are supplied by the caller so they can be translated. React Aria locally filters this source list, handles keyboard navigation, selection, required state and form value. Remote or asynchronous filtering needs a separate documented API.
+
+Use Mangrove's field props `id`, `hideLabel`, `required`, `disabled`, `error`, `helpText` and `errorText`, as with native Select. `id` belongs to the input and can be targeted by a form error summary. Omit `error` when relying on required-field validation; `error={true}` forces an externally determined invalid state. In a controlled form, set `error={false}` when a previously invalid value becomes valid so React Aria clears its displayed error before the next submit. The browser still checks the `required` input. For controlled text use `inputValue` with `onInputChange`; for controlled selection use `selectedKey` with `onSelectionChange`. The corresponding initial values are `defaultInputValue` and `defaultSelectedKey`. Text and selection are separate because the user may type a partial search without selecting an item.
+
+React Aria portals the suggestion list. If the theme is scoped to a wrapper rather than `<body>`, pass that wrapper element as `popoverContainer` so the list inherits its tokens. This prop maps to React Aria's `UNSTABLE_portalContainer` and should be rechecked on library upgrades.
+
+When ComboBox sits inside Mangrove Drawer, the open suggestion list owns the first Escape; a second Escape closes the Drawer. Test the portal container and focus behaviour in the consuming host.
+
+## CSS and JavaScript
+
+- Styles: `css/combo-box.css` (opt-in), sourced from `stories/assets/scss/aria/_combo-box.scss`.
+- JavaScript: `components/ComboBox.js` in the assembled npm package. React and React Aria Components are optional peers. Install `react-aria-components` in an application that imports this entry.
+- Theme values: `--mg-control-*` roles and existing Mangrove form, focus, spacing and typography tokens. The component never relies on `.react-aria-*` class names.
+
+Tailwind 4 puts utilities in a cascade layer. To let those utilities override the pilot's CSS, declare the order before either import and place the optional stylesheet in the earlier layer:
+
+```css
+@layer theme, base, mg-components, components, utilities;
+@import '@undrr/undrr-mangrove/css/style.css';
+@import '@undrr/undrr-mangrove/css/combo-box.css' layer(mg-components);
+```
+
+Replace `css/style.css` with the chosen theme, or one standalone `css/tokens/{brand}.css` file. Existing unlayered application CSS has higher priority than layered styles; test the import order in the consuming application.
+
+See [React Aria inside Mangrove](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REACT-ARIA-BOUNDARY.md) for why this is a distinct control rather than a second Select API.
+
+## Changelog
+
+- **1.2**, 2026-09-26: Let controlled forms explicitly clear an earlier validation error with `error={false}` after a valid selection.
+- **1.1**, 2026-09-26: Published as Mangrove ComboBox with scoped CSS and a shared optional React Aria runtime; removed the broad stock-class skin from distribution.
+- **1.0**, 2026-09-25: Added a narrow React Aria pilot for Mangrove 2 tokens and a real searchable control.

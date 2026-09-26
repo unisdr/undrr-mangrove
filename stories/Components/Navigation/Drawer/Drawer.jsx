@@ -40,11 +40,22 @@ export const Drawer = ({
   useEffect(() => {
     const handleKeyDown = event => {
       if (event.key === 'Escape' && isOpen && onCloseRef.current) {
+        // An expanded child popup owns the first Escape. In particular,
+        // React Aria keeps ComboBox focus on its input while closing the
+        // suggestion list; the drawer must wait for a second Escape.
+        if (
+          event.defaultPrevented ||
+          drawerRef.current?.querySelector(
+            '[role="combobox"][aria-expanded="true"], [aria-haspopup][aria-expanded="true"]'
+          )
+        ) {
+          return;
+        }
         onCloseRef.current();
       }
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
   }, [isOpen]);
 
   // A closed drawer is off-screen but still in the DOM: inert keeps its

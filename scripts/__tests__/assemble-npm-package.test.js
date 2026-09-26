@@ -51,6 +51,10 @@ beforeEach(() => {
       keywords: ['a'],
       author: 'UNDRR',
       license: 'Apache-2.0',
+      peerDependencies: { 'react-aria-components': '^1.20.0' },
+      peerDependenciesMeta: {
+        'react-aria-components': { optional: true },
+      },
     })
   );
   write(root, 'README.md', '# readme');
@@ -146,6 +150,10 @@ test('the published surface never matches a development-only file', () => {
       '!**/__fixtures__/**',
       '!**/*.test.*',
       '!**/*.spec.*',
+      '!scss/assets/scss/aria/_react-aria.scss',
+      '!scss/assets/scss/aria/_spike-demo.scss',
+      '!scss/assets/scss/aria/_runtime-theme-aliases.scss',
+      '!scss/assets/scss/aria/_tokens-*.scss',
     ])
   );
   // dist/ is copied but never published: nothing in `files` matches it.
@@ -217,15 +225,16 @@ test('the published package advertises no root entry point', () => {
   expect(files).toContain('components/MegaMenu.js');
 }, 30000);
 
-test('webpack copies the same source trees without the test files', () => {
+test('webpack leaves development and research sources out of dist', () => {
   const config = fs.readFileSync(
     path.resolve(__dirname, '../../webpack.config.js'),
     'utf8'
   );
-  expect(config).toMatch(
-    /import \{ DEV_ONLY_GLOBS \} from '\.\/scripts\/assemble-npm-package\.mjs'/
+  expect(config).toContain('DEV_ONLY_GLOBS');
+  expect(config).toContain('RESEARCH_ONLY_GLOBS');
+  expect(config).toContain(
+    'ignore: [...DEV_ONLY_GLOBS, ...RESEARCH_ONLY_GLOBS]'
   );
-  expect(config).toMatch(/globOptions: \{ ignore: DEV_ONLY_GLOBS \}/);
 });
 
 test('generates the slimmed package.json', () => {
@@ -240,6 +249,10 @@ test('generates the slimmed package.json', () => {
       'css/**/*',
       'js/**/*',
       'scss/**/*.scss',
+      '!scss/assets/scss/aria/_react-aria.scss',
+      '!scss/assets/scss/aria/_spike-demo.scss',
+      '!scss/assets/scss/aria/_runtime-theme-aliases.scss',
+      '!scss/assets/scss/aria/_tokens-*.scss',
       'error-pages/**/*',
       'fonts/**/*',
       '!**/__tests__/**',
@@ -253,6 +266,10 @@ test('generates the slimmed package.json', () => {
     keywords: ['a'],
     author: 'UNDRR',
     license: 'Apache-2.0',
+    peerDependencies: { 'react-aria-components': '^1.20.0' },
+    peerDependenciesMeta: {
+      'react-aria-components': { optional: true },
+    },
   });
   expect(Object.keys(pkg)).toEqual([
     'name',
@@ -263,6 +280,8 @@ test('generates the slimmed package.json', () => {
     'keywords',
     'author',
     'license',
+    'peerDependencies',
+    'peerDependenciesMeta',
   ]);
 });
 

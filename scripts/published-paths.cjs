@@ -18,7 +18,7 @@
  *    component build, whose keys become `components/<Key>.js`.
  * 3. `package.json` — the `scss` script's Sass directory compile
  *    (`stories/assets/scss` -> `stories/assets/css`), whose output becomes
- *    `css/`.
+ *    `css/`, plus the six standalone React Aria stylesheets.
  *
  * `scripts/__tests__/published-paths.test.js` compares the model against a
  * real `dist/` when one is present, so the drift is caught rather than assumed
@@ -106,13 +106,27 @@ function publishedPaths() {
     paths.add(`css/${stem}.css.map`);
   }
 
+  // Scoped optional control CSS and framework-neutral per-brand tokens.
+  if (fs.existsSync(path.join(scssRoot, 'aria/_combo-box.scss'))) {
+    paths.add('css/combo-box.css');
+    for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
+      paths.add(`css/tokens/${brand}.css`);
+    }
+  }
+
   // scss/ — every .scss under stories/, keeping its path below stories/.
   // This is why the published SCSS entry point is `scss/assets/scss/style.scss`
   // and not `scss/style.scss`.
   const storiesRoot = path.join(ROOT, 'stories');
   for (const file of walk(storiesRoot)) {
     if (!file.endsWith('.scss')) continue;
-    paths.add(`scss/${rel(storiesRoot, file)}`);
+    const published = `scss/${rel(storiesRoot, file)}`;
+    if (
+      published.startsWith('scss/assets/scss/aria/') &&
+      published !== 'scss/assets/scss/aria/_combo-box.scss'
+    )
+      continue;
+    paths.add(published);
   }
 
   return paths;

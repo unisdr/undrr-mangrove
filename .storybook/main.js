@@ -10,7 +10,12 @@ const currentDirPath = path.dirname(currentFilePath);
 
 export default {
   staticDirs: ['../stories/assets'],
-  stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: [
+    '../stories/**/*.mdx',
+    process.env.MANGROVE_INCLUDE_ARIA_RESEARCH
+      ? '../stories/**/*.stories.@(js|jsx|ts|tsx)'
+      : '../stories/**/!(AriaCollectionGallery|AriaComponentGallery|AriaCrudSpike|AriaIntegrationSpike).stories.@(js|jsx|ts|tsx)',
+  ],
 
   //stories: ["../stories/**/CategoriesMenu2.stories.mdx"],
   addons: [

@@ -120,6 +120,47 @@ describe('custom properties read by Mangrove are defined', () => {
     expect(undefinedRefs(readIn(css), definedIn(css))).toEqual([]);
   });
 
+  test.each(['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'])(
+    'research React Aria CSS resolves with the %s theme',
+    brand => {
+      const css = sass.compile(path.join(SCSS_DIR, 'aria/_react-aria.scss'), {
+        loadPaths: [SCSS_DIR],
+        silenceDeprecations: ['import'],
+        logger: sass.Logger.silent,
+      }).css;
+      const theme = compiled[brand === 'mangrove' ? 'style' : `style-${brand}`];
+      expect(
+        undefinedRefs(readIn(css + theme), definedIn(css + theme))
+      ).toEqual([]);
+    }
+  );
+
+  test.each(['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'])(
+    'scoped ComboBox CSS resolves with %s neutral tokens',
+    brand => {
+      const comboBox = sass.compile(
+        path.join(SCSS_DIR, 'aria/_combo-box.scss'),
+        {
+          loadPaths: [SCSS_DIR],
+          silenceDeprecations: ['import'],
+          logger: sass.Logger.silent,
+        }
+      ).css;
+      const tokens = sass.compile(
+        path.join(SCSS_DIR, `brand-tokens/_${brand}.scss`),
+        {
+          loadPaths: [SCSS_DIR],
+          silenceDeprecations: ['import'],
+          logger: sass.Logger.silent,
+        }
+      ).css;
+      expect(
+        undefinedRefs(readIn(comboBox + tokens), definedIn(comboBox + tokens))
+      ).toEqual([]);
+      expect(tokens).not.toMatch(/--mg-aria-/);
+    }
+  );
+
   test('stories JS, JSX and CSS read no undefined --mg-* property', () => {
     const allDefined = new Set(
       Object.values(compiled).flatMap(css => [...definedIn(css)])

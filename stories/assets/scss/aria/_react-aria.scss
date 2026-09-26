@@ -1,0 +1,2911 @@
+/*
+ * Sass source for the React Aria Components styling surface.
+ * The research-only aria/react-aria.css artifact is generated from this file
+ * for Storybook and coverage checks. It is excluded from npm/CDN packages.
+ * This intentionally targets React Aria's stock classes and consumes only
+ * --mg-aria-* tokens. The research gallery loads it with a Mangrove theme.
+ *
+ * Keep this file limited to reusable React Aria primitive and state styles.
+ * Composition styles for the Storybook spike demos belong in _spike-demo.scss,
+ * which is not part of the distributed CSS surface.
+ */
+@import "./runtime-theme-aliases";
+@import "./tokens-shared";
+
+// Keep the adapter in the opt-in artifact. Values resolve on each theme
+// element so changing mg-theme-* at runtime also updates React Aria controls.
+:root {
+  @include mg-aria-runtime-theme-aliases;
+  @include mg-aria-token-constants('"Roboto", sans-serif');
+}
+
+.mg-theme-preventionweb,
+.mg-theme-irp,
+.mg-theme-mcr,
+.mg-theme-delta {
+  @include mg-aria-runtime-theme-aliases;
+}
+
+.react-aria-Input,
+.react-aria-ListBox,
+.react-aria-ListBoxItem,
+.react-aria-Label,
+.react-aria-Text {
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  line-height: var(--mg-aria-line-height);
+}
+
+// Selectors here are deliberately NOT wrapped in :where(). Zero specificity
+// would let a consumer's own `button {}` or `input {}` reset outrank this
+// stylesheet, which matters because the surface ships unlayered into pages
+// that have significant legacy CSS. A bare `button` reset was in fact
+// overriding the themed font size.
+// The filled button reads Mangrove's own button tokens, so a theme that
+// reshapes its buttons reshapes this surface too. min-block-size is a floor
+// rather than a token: it keeps the 40px target the v2 principles ask for even
+// where a theme's padding would produce a smaller control.
+
+// `border: 0` was a real bug, not a style choice: it meant every later rule
+// that set only `border-color` on a Button — the Select trigger, the
+// Disclosure trigger, the dialog's close button — was a no-op, so those
+// controls rendered with no boundary at all. The button now carries a real
+// border in --mg-aria-button-border-width (1px in the base theme, 2px in
+// MCR2030), transparent on the filled variant so nothing changes visually
+// there and quiet variants have an edge to colour in.
+
+// The text line-height is 1.25, not --mg-aria-line-height. 1.5 is a reading
+// measure; on a 14px button it produced a 21px line box and a 41px control,
+// one pixel past the 40px floor and one pixel out of step with everything
+// else on the screen. 1.25 puts the content box under the floor so the floor
+// is what decides the height, which is the point of having one.
+.react-aria-Button {
+  align-items: center;
+  font-family: var(--mg-aria-font-family);
+  line-height: 1.25;
+  background: var(--mg-aria-button-background);
+  border: var(--mg-aria-button-border-width) solid transparent;
+  border-radius: var(--mg-aria-radius-button);
+  box-sizing: border-box;
+  color: var(--mg-aria-button-color);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: var(--mg-aria-button-font-size);
+  font-weight: var(--mg-aria-font-weight-strong);
+  justify-content: center;
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+  padding: var(--mg-aria-button-padding);
+}
+.react-aria-Button[data-hovered] {
+  background: var(--mg-aria-button-background-hover);
+}
+.react-aria-Button[data-pressed] {
+  background: var(--mg-aria-button-background-hover);
+  scale: var(--mg-aria-press-scale);
+}
+.react-aria-Button[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+
+// Text inputs key off data-focused, not data-focus-visible: React Aria
+// withholds the latter on a pointer click, whereas browsers do apply
+// :focus-visible to a text field that was clicked. Styling these on
+// data-focus-visible silently removed the focus ring for anyone focusing a
+// field with a mouse, which is exactly who needs it most.
+.react-aria-Button[data-focus-visible],
+.react-aria-Input[data-focused],
+.react-aria-DateInput[data-focus-within],
+.react-aria-CalendarCell[data-focus-visible],
+.react-aria-GridListItem[data-focus-visible],
+.react-aria-ListBoxItem[data-focus-visible],
+.react-aria-MenuItem[data-focus-visible],
+.react-aria-Link[data-focus-visible],
+.react-aria-Radio[data-focus-visible]::before,
+.react-aria-SliderThumb[data-focus-visible],
+.react-aria-Switch[data-focus-visible]::before,
+.react-aria-Tab[data-focus-visible],
+.react-aria-TabPanel[data-focus-visible],
+.react-aria-Tag[data-focus-visible],
+.react-aria-TextArea[data-focused],
+.react-aria-ToggleButton[data-focus-visible],
+.react-aria-Row[data-focus-visible],
+.react-aria-Column[data-focus-visible],
+.react-aria-ColumnResizer[data-focus-visible],
+.react-aria-DropZone[data-focus-visible] {
+  outline: var(--mg-aria-focus-width) solid var(--mg-aria-color-focus-ring);
+  outline-offset: var(--mg-aria-focus-offset);
+}
+.react-aria-Input[data-focused],
+.react-aria-DateInput[data-focus-within] {
+  background: var(--mg-aria-color-field-surface-focus);
+  border-color: var(--mg-aria-color-border-focus);
+}
+
+// THE FOCUS RING ON AN OVERLAY CONTAINER IS CHROME'S, NOT OURS.
+// React Aria moves real DOM focus to the overlay container when a Menu, a
+// Select/ComboBox listbox or a Dialog opens. Measured: document.activeElement
+// is `.react-aria-Menu` / `.react-aria-ListBox` / `.react-aria-Dialog`,
+// `:focus-visible` matches, and no rule in this file sets an outline on any of
+// them — so the browser paints its own default `auto` outline, which in Chrome
+// is a bright blue hairline. That is a blue band around every popover in every
+// brand (unmistakable in MCR2030's purple system), and inside the Dialog it
+// sits within the modal's padding and reads as the second frame the elevation
+// work removed.
+
+// Suppressed rather than restyled, which is what GOV.UK, USWDS and Primer all
+// do with a dialog's container. The reasoning: the container is a wrapper the
+// keyboard passes THROUGH rather than lands on — the very next key press moves
+// focus onto a MenuItem, a ListBoxItem or a button, every one of which carries
+// the ring from the block above. The overlay's own arrival (a popover's edge
+// and shadow, the modal's scrim) is what announces that focus moved, so a ring
+// on the wrapper is a second, larger indicator for a place the user cannot
+// stay. Re-tinting it to --mg-aria-color-focus-ring would have kept the double
+// frame and only changed its colour.
+
+// The STANDALONE ListBox is deliberately excluded: AriaCollectionGallery
+// renders one as a real page control with no Popover around it, and there the
+// container is the control — its ring is the only thing that says the
+// collection has focus before an option is chosen. Hence the child combinator
+// rather than a bare `.react-aria-ListBox`.
+.react-aria-Menu:focus,
+.react-aria-Menu:focus-visible,
+.react-aria-Popover > .react-aria-ListBox:focus,
+.react-aria-Popover > .react-aria-ListBox:focus-visible,
+.react-aria-Dialog:focus,
+.react-aria-Dialog:focus-visible {
+  outline: none;
+}
+
+// Filled. A control carrying a value computed identically to an empty one on
+// both surfaces, so a long form gave no sign of what had been completed.
+// :placeholder-shown is the only hook CSS has, and it needs a placeholder to
+// work at all - without one, :not(:placeholder-shown) matches unconditionally
+// and every field would render as filled. The [placeholder] guard makes the
+// rule inert on controls that have none, rather than wrong. Use
+// placeholder=" " to opt a field in without showing placeholder text.
+.react-aria-Input[placeholder]:not(:placeholder-shown),
+.react-aria-TextArea[placeholder]:not(:placeholder-shown) {
+  background: var(--mg-aria-color-field-surface-focus);
+  border-color: var(--mg-aria-color-border);
+}
+
+// React Aria renders every field wrapper as a bare <div> with no layout of its
+// own, so each one needs a stack here or its label, control, description and
+// error render as inline siblings. DateRangePicker and TimeField were missing
+// from this list and were the only two field wrappers still laying out as a
+// plain block.
+.react-aria-TextField,
+.react-aria-NumberField,
+.react-aria-SearchField,
+.react-aria-Select,
+.react-aria-DateField,
+.react-aria-TimeField,
+.react-aria-DatePicker,
+.react-aria-DateRangePicker,
+.react-aria-ComboBox {
+  display: grid;
+  gap: var(--mg-aria-space-1);
+}
+
+// THE GROUP IS THE FIELD.
+// Previously the Group was a bare `display: flex; gap: 5px` with no box of its
+// own while each child — Input, DateInput, and the Button, which was the loud
+// filled accent variant — carried a full border, radius and background. A
+// NumberField therefore rendered as three separately-boxed controls floating
+// 5px apart with two saturated primary squares beside them; a reviewer read
+// the steppers as "two submit buttons". A ComboBox and a DatePicker rendered a
+// detached accent square beside the field.
+
+// Every RAC starter in the ecosystem — Adobe's vanilla and Tailwind starters,
+// Spectrum 2, Marigold, Intent UI, Jolly UI — resolves this the same way: the
+// Group carries the border, radius, height, background and focus ring, and the
+// controls inside are borderless and flush. React Aria already puts
+// data-hovered / data-focus-within / data-invalid / data-disabled on the
+// Group, so every state the field needs is available on the box that draws it.
+
+// The box is stated here; the child resets live in the joined-field-group
+// section at the end of this file, where source order lets them beat the
+// `.react-aria-NumberField[data-invalid] .react-aria-Input` family (0,3,0)
+// that would otherwise re-tint the inner control inside an already-tinted
+// group.
+
+// align-items is `stretch` rather than `center` so the input and the buttons
+// fill the band and the whole 46px is a hit target; the DateRangePicker's
+// author-supplied " to " separator is re-centred in that section.
+.react-aria-Group {
+  align-items: stretch;
+  background: var(--mg-aria-color-field-surface);
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-border);
+  border-radius: var(--mg-aria-radius-control);
+  box-sizing: border-box;
+  color: var(--mg-aria-color-text);
+  display: flex;
+  font-family: var(--mg-aria-font-family);
+  gap: 0;
+  min-block-size: var(--mg-aria-control-block-size);
+}
+.react-aria-Group[data-hovered] {
+  border-color: var(--mg-aria-color-border-focus);
+}
+
+// data-focus-within, not data-focus-visible, for the reason the Input rule
+// gives: a field focused by pointer must still show its ring. The ring is on
+// the Group, so it wraps the input AND its buttons as one control — which is
+// the whole point of joining them.
+.react-aria-Group[data-focus-within] {
+  background: var(--mg-aria-color-field-surface-focus);
+  border-color: var(--mg-aria-color-border-focus);
+  outline: var(--mg-aria-focus-width) solid var(--mg-aria-color-focus-ring);
+  outline-offset: var(--mg-aria-focus-offset);
+}
+
+// The wash and the invalid edge move to the Group for the same reason the
+// border did: an invalid NumberField previously tinted only the middle third
+// of itself.
+.react-aria-Group[data-invalid],
+.react-aria-NumberField[data-invalid] > .react-aria-Group,
+.react-aria-ComboBox[data-invalid] > .react-aria-Group,
+.react-aria-DatePicker[data-invalid] > .react-aria-Group,
+.react-aria-DateRangePicker[data-invalid] > .react-aria-Group {
+  background: var(--mg-aria-color-invalid-surface);
+  border-color: var(--mg-aria-color-invalid);
+}
+.react-aria-Group[data-disabled],
+.react-aria-NumberField[data-disabled] > .react-aria-Group,
+.react-aria-ComboBox[data-disabled] > .react-aria-Group,
+.react-aria-DatePicker[data-disabled] > .react-aria-Group,
+.react-aria-DateRangePicker[data-disabled] > .react-aria-Group {
+  background: var(--mg-aria-color-field-surface);
+  border-color: var(--mg-aria-color-border);
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-DateInput {
+  background: var(--mg-aria-color-field-surface);
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-border);
+  border-radius: var(--mg-aria-radius-control);
+  box-sizing: border-box;
+  color: var(--mg-aria-color-text);
+
+  // The DateInput was the one field that never stated its own type metrics, so
+  // it inherited the page's. Under DELTA, whose base type is larger, that made
+  // it 49px beside a 46px Input and a 46px calendar trigger.
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  line-height: var(--mg-aria-line-height);
+  min-block-size: var(--mg-aria-control-block-size);
+  padding: var(--mg-aria-space-2);
+
+  // The segments are inline children of a stretched flex item, so they sat at
+  // the TOP of the 44px band while the DateRangePicker's " to " separator was
+  // centred beside them — measured 10px apart on the block axis, three pieces
+  // of one control on three different baselines. A flex row with centred items
+  // is what every DateInput in the ecosystem is, and it makes the control's
+  // own alignment independent of the height it happens to be given.
+  align-items: center;
+  display: flex;
+}
+
+// Segments need a little breathing room and a radius of their own now that the
+// focused one is filled rather than outlined. tabular-nums stops the day and
+// month segments changing width as you arrow through values, which was moving
+// the rest of the field sideways on every keystroke — the "stable layouts
+// during interaction" principle applied to a control one character wide.
+.react-aria-DateSegment {
+  border-radius: var(--mg-aria-radius-check);
+  font-variant-numeric: tabular-nums;
+  padding-inline: calc(var(--mg-aria-space-1) / 2);
+}
+.react-aria-DateSegment[data-placeholder] {
+  color: var(--mg-aria-color-muted-text);
+}
+
+// The focused segment was drawn with a focus RING at a positive offset. Inside
+// a joined group that ring now sits under the group's own ring, two
+// concentric outlines around the same 46px band, and the inner one is clipped
+// against its neighbours. Every date implementation in the ecosystem (Adobe
+// vanilla, Spectrum 2, Marigold) instead FILLS the active segment: the group
+// ring says "this field has focus", the fill says "and this segment is the one
+// the arrow keys will change", which are two different facts that were
+// previously fighting for the same visual channel.
+// The accent/on-accent pair is the one already validated for every theme.
+.react-aria-DateSegment[data-focused] {
+  background: var(--mg-aria-color-accent);
+  color: var(--mg-aria-color-on-accent);
+}
+.react-aria-Checkbox {
+  align-items: center;
+  color: var(--mg-aria-color-text);
+  display: inline-flex;
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  gap: var(--mg-aria-space-2);
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+}
+
+// The box was 20x20 with a 1px neutral-400 edge — about 3.9:1, and under the
+// 24px WCAG 2.5.8 minimum. Mangrove's own check grew to 24px with a 2px
+// BRAND-coloured border in #1086 (_form-base.scss:169-179), which is both a
+// stronger boundary and the thing that makes a check look like a Mangrove
+// check rather than a browser default. --mg-aria-check-color and
+// -check-color-hover have been in the contract since then and were read by
+// nothing. The border is twice the hairline rather than a literal 2px so a
+// theme that thickens its hairline thickens the check with it.
+// The radius is --mg-aria-radius-check, not -radius-control: MCR2030 puts a
+// 10px form radius on what is now a 24px box, and at that size 10px reads as a
+// radio button — a meaning change, not a style one.
+.react-aria-Checkbox::before {
+  align-items: center;
+  background: var(--mg-aria-color-surface);
+  border: calc(var(--mg-aria-border-width) * 2) solid var(--mg-aria-check-color);
+  border-radius: var(--mg-aria-radius-check);
+  box-sizing: border-box;
+  color: var(--mg-aria-color-on-accent);
+  content: "";
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-weight: 700;
+  height: var(--mg-aria-check-size);
+  justify-content: center;
+  width: var(--mg-aria-check-size);
+}
+.react-aria-Checkbox[data-hovered]::before {
+  border-color: var(--mg-aria-check-color-hover);
+}
+.react-aria-Checkbox[data-selected]::before {
+  background: var(--mg-aria-check-color-checked);
+  border-color: var(--mg-aria-check-color-checked);
+  content: "\2713" / "";
+}
+
+// The Radio below carried an invalid rule and the Checkbox did not, so an
+// invalid checkbox was signalled only by the error message.
+.react-aria-Checkbox[data-invalid]::before,
+.react-aria-CheckboxGroup[data-invalid] .react-aria-Checkbox::before {
+  border-color: var(--mg-aria-color-invalid);
+}
+.react-aria-Checkbox[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-Checkbox[data-focus-visible]::before {
+  outline: var(--mg-aria-focus-width) solid var(--mg-aria-color-focus-ring);
+  outline-offset: var(--mg-aria-focus-offset);
+}
+.react-aria-ResizableTableContainer {
+  // Both spike stories wrap their table in this and it carried no styling at
+  // all, so horizontal overflow and sticky-header behaviour were accidental.
+  // It is the table's frame and its scroll port; the table inside draws no
+  // outer edge of its own.
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+  border-radius: var(--mg-aria-radius-surface);
+  max-inline-size: var(--mg-aria-width-full);
+  overflow: auto;
+  position: relative;
+}
+.react-aria-Table {
+  border-collapse: collapse;
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  min-width: var(--mg-aria-width-full);
+  table-layout: fixed;
+  width: var(--mg-aria-width-full);
+}
+
+// The header/body seam is the ONE strong line in a table. Every other rule in
+// it is structure and reads --mg-aria-color-rule, so an opaque neutral here is
+// what separates "column labels" from "data" rather than one uniform grey
+// grid.
+.react-aria-TableHeader {
+  border-block-end: var(--mg-aria-border-width) solid
+    var(--mg-aria-color-border);
+}
+
+// renderEmptyState lands in TableBody[data-empty] (AriaCollectionGallery
+// renders one) and had no styling at all, so an empty result set rendered as
+// a flush-left orphan line and read as a broken table.
+.react-aria-TableBody[data-empty] {
+  color: var(--mg-aria-color-muted-text);
+  text-align: center;
+}
+
+// An empty body closed with nothing at all: a tinted header row floating
+// above a message on the bare page, which reads as a table that failed to
+// render rather than as one with no results. Every populated row closes with
+// this rule on its cells, and legacy Mangrove's `empty-state--in-a-table` does
+// the same, so the empty body simply takes the row rule a populated body would
+// have had. Deliberately only a closing rule and not a full box: an
+// institutional table (GOV.UK, USWDS) is horizontal rules with no side edges,
+// and a table that IS wrapped in a ResizableTableContainer already has that
+// container's frame around it — a second box here would double it.
+.react-aria-TableBody[data-empty] > tr > td {
+  border-block-end: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+  padding: var(--mg-aria-space-4) var(--mg-aria-space-2);
+}
+.react-aria-Column {
+  background: var(--mg-aria-color-subtle-surface);
+  color: var(--mg-aria-color-text);
+  font-weight: var(--mg-aria-font-weight-strong);
+
+  // Sticky so a container with a capped height keeps its header in view. Inert
+  // when nothing scrolls vertically, which is why it is safe unconditionally.
+  // Overlaps the ColumnResizer's stacking context, so it needs the z-index.
+  inset-block-start: 0;
+  padding: var(--mg-aria-space-2);
+  position: sticky;
+  text-align: start;
+  z-index: 1;
+}
+
+// Sorting was expressed by nothing: `grep -n sort` over this file returned
+// zero hits while both spike stories pass a sortDescriptor and mark columns
+// allowsSorting, so the active sort column was indistinguishable from a
+// static one. React Aria emits data-allows-sorting on every sortable column
+// and data-sort-direction on the active one.
+// The arrow is a pseudo-element, so it is dropped in forced-colours mode and
+// is not announced. It is therefore only the third cue: the active column
+// also takes the accent colour, and React Aria's own aria-sort carries the
+// state to assistive technology.
+.react-aria-Column[data-allows-sorting] {
+  cursor: pointer;
+}
+
+// Layered rather than replaced: --mg-aria-color-hover-surface is a 6% tint and
+// assigning it to `background` would discard the column's subtle-surface fill
+// instead of tinting it.
+.react-aria-Column[data-allows-sorting][data-hovered] {
+  background-image: linear-gradient(
+    var(--mg-aria-color-hover-surface),
+    var(--mg-aria-color-hover-surface)
+  );
+}
+.react-aria-Column[data-sort-direction] {
+  color: var(--mg-aria-color-accent);
+}
+
+// THE GLYPH BELONGS TO THE LABEL, SO IT IS DRAWN BESIDE IT.
+// It used to be absolutely positioned at the inline end of the header cell,
+// with its lane reserved in the PADDING box because a ColumnResizer occupies
+// the inline end of the CONTENT box. That reasoning was sound about the
+// resizer and wrong about the reader: on a 220px column the arrow landed
+// ~130px from the word it qualifies, and in Arabic it sat against the
+// NEIGHBOURING column's label and read as belonging to it. GOV.UK and USWDS
+// both keep the glyph adjacent to the label, and so does every RAC starter.
+
+// It is now an ordinary in-flow pseudo-element, so it follows the label
+// wherever the label is, and the resizer is kept out of its way by flex order
+// rather than by reserved padding — which also means the resizer keeps its
+// full 31px hit area at the true inline end of the cell.
+
+// Two selectors because there are two shapes of header cell in the wild, and
+// NEITHER is addressed by an author class:
+// - a Column whose label is its own text (`<Column>Onset</Column>`): the
+//   pseudo-element is the cell's own ::after, in flow right after the label;
+// - a Column whose contents are wrapped in ONE author element, which is what
+//   both spike stories and Adobe's own resizable-table example render
+//   (`<div><span>label</span><ColumnResizer /></div>`): the cell's ::after
+//   would land after that wrapper, i.e. back at the inline end, so the glyph
+//   is drawn on the WRAPPER instead. `> *:only-child` identifies it without
+//   knowing its class and covers a bare `<span>` label just as well.
+// The two are mutually exclusive by construction, so exactly one matches.
+.react-aria-Column[data-sort-direction]:not(:has(> *:only-child))::after,
+.react-aria-Column[data-sort-direction] > *:only-child::after {
+  color: var(--mg-aria-color-accent);
+  font-size: var(--mg-aria-font-size-small);
+  margin-inline-start: var(--mg-aria-space-1);
+}
+
+// The empty alt text keeps the glyph out of the accessible name; aria-sort
+// already says which way the column is sorted.
+.react-aria-Column[data-sort-direction="ascending"]:not(
+    :has(> *:only-child)
+  )::after,
+.react-aria-Column[data-sort-direction="ascending"] > *:only-child::after {
+  content: "\25B2" / "";
+}
+.react-aria-Column[data-sort-direction="descending"]:not(
+    :has(> *:only-child)
+  )::after,
+.react-aria-Column[data-sort-direction="descending"] > *:only-child::after {
+  content: "\25BC" / "";
+}
+
+// At rest the resizer painted an opaque full-height rule inside EVERY header
+// cell, including the trailing column where there is nothing to separate, so
+// the header read as arbitrary vertical banding rather than as a set of
+// grab handles. The rule is now an affordance that appears when the handle is
+// reachable. The 31px hit area from padding-inline is deliberate WCAG 2.5.8
+// sizing and is unchanged; only the painted rule moved.
+.react-aria-ColumnResizer {
+  background: transparent;
+  background-clip: content-box;
+  box-sizing: content-box;
+  cursor: col-resize;
+  display: inline-block;
+
+  // Keeps the handle at the cell's inline end while the sort glyph sits next
+  // to the label, in the flex row a header cell's contents form. `order`
+  // alone would let `justify-content: space-between` strand the glyph in the
+  // middle of the cell, so the auto margin collects the free space in one
+  // place; both are inert outside a flex container, and both are logical, so
+  // the handle stays on the inline end in Arabic.
+  margin-inline-start: auto;
+  order: 1;
+
+  // The visible rule stays 1px, but the hit area must clear the 24px
+  // WCAG 2.5.8 minimum, so the target comes from height plus inline padding.
+  height: calc(var(--mg-aria-space-4) * 2);
+  padding-inline: var(--mg-aria-space-3);
+  width: var(--mg-aria-border-width);
+}
+
+// background-color, not the background shorthand: the shorthand resets the
+// base rule's background-clip to border-box, which paints the whole 31px hit
+// area instead of the 1px rule inside it.
+.react-aria-ColumnResizer[data-hovered],
+.react-aria-ColumnResizer[data-focus-visible] {
+  background-color: var(--mg-aria-color-border);
+}
+.react-aria-ColumnResizer[data-resizing] {
+  background-color: var(--mg-aria-color-accent);
+}
+.react-aria-Cell {
+  // A cell rule is structure, not a control boundary: opaque neutral-400 on
+  // every row turned the table into a uniform grey grid. Same translucent
+  // register as .mg-tabs__list (tab.scss:211) and --mg-shadow-raised.
+  border-block-end: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+
+  // Was `white-space: nowrap` + ellipsis under `table-layout: fixed`. That
+  // silently DROPS content at 400% zoom (SC 1.4.4/1.4.10) and truncates every
+  // translated string, which expand by 30-40% out of English. No
+  // institutional peer truncates cell text; the row grows instead.
+  overflow-wrap: break-word;
+  padding: var(--mg-aria-space-2);
+}
+
+// A BUTTON IN A TABLE ROW IS NOT A PAGE BUTTON.
+// This is the --mg-padding-button trap, in the one place it still reached: a
+// theme's button padding is drawn for a standalone call to action, and MCR2030
+// sets it to 15px/30px with a 30px pill radius. Applied to a row's icon-only
+// controls that made the favourite ToggleButton 82px wide and 52px tall inside
+// a 41px-wide cell — its edge ran straight through the hazard column's icons —
+// and clipped the row-actions button against the table's edge. It does not
+// happen in UNDRR/IRP/DELTA only because their button padding happens to be
+// small; the defect is structural, not MCR-specific, so the fix is too.
+
+// `min-block-size` cannot compensate, because padding drives the content box
+// and a floor only ever raises — the same trap the Select trigger records. So
+// the padding itself has to be stated, and the row is the right place to state
+// it: a table row is a dense context whose height is set by its text, and
+// every institutional table puts row controls on row metrics.
+
+// The bare element selector is deliberate: a consumer composing a React Aria
+// row with their own button class — which Mangrove's own demos do — is exactly
+// the case that breaks, and an element selector reaches it at (0,1,1), one
+// hair above a single class and no more than that, so a consumer's own
+// deliberate button styling still wins. The 40px floor keeps WCAG 2.5.8 in a
+// cell that has shrunk to its icon. Toolbar buttons are untouched: they are
+// outside any Cell.
+.react-aria-Cell .react-aria-Button,
+.react-aria-Cell .react-aria-ToggleButton,
+.react-aria-Cell button {
+  border-radius: var(--mg-aria-radius-control);
+
+  // 40px both ways: the WCAG 2.5.8 target this file already uses as its
+  // control floor, restated because the padding above no longer produces it.
+  // A floor cannot pull a control down, which is why the padding is stated
+  // first and the floor second.
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+  min-inline-size: calc(var(--mg-aria-space-4) * 2);
+  padding-block: var(--mg-aria-space-1);
+  padding-inline: var(--mg-aria-space-1);
+}
+
+// A cell whose ENTIRE content is one control hands it the whole cell. An
+// icon column is sized to its icon — 40px in both spike stories — so 10px of
+// cell padding either side leaves a 20px content box for a 40px target, and
+// the control has nowhere to go but across the neighbouring column. The
+// `:only-child` guard keeps this off every cell that has text beside its
+// button.
+.react-aria-Cell:has(> .react-aria-Button:only-child),
+.react-aria-Cell:has(> .react-aria-ToggleButton:only-child),
+.react-aria-Cell:has(> button:only-child) {
+  padding-inline: 0;
+}
+.react-aria-Row[data-hovered] .react-aria-Cell {
+  background: var(--mg-aria-color-hover-surface);
+}
+.react-aria-Row[data-selected] .react-aria-Cell {
+  background: var(--mg-aria-color-selected-surface);
+}
+
+// Selection is a tint PLUS a non-colour marker, never a tint alone. The
+// inline-start bar is what survives forced-colours mode and what satisfies
+// "never rely on colour alone" (SC 1.4.1). Reserved as a transparent border
+// on every row and on the header so selecting a row does not shift the table
+// sideways, and expressed logically so it moves to the right edge in Arabic.
+.react-aria-Row > .react-aria-Cell:first-child,
+.react-aria-TableHeader .react-aria-Column:first-child {
+  border-inline-start: calc(var(--mg-aria-border-width) * 3) solid transparent;
+}
+.react-aria-Row[data-selected] > .react-aria-Cell:first-child {
+  border-inline-start-color: var(--mg-aria-color-accent);
+}
+.react-aria-Row[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+
+// The row and header-cell rings are INSET, for the same class of reason the
+// calendar cell's is. A row's outline is painted OUTSIDE the row box and the
+// scroll port that frames the table clips it, so a focused row rendered as a
+// gold rule above the row and another below it with nothing joining them at
+// the ends — two stray horizontal lines rather than a ring. A negative offset
+// draws the ring inside the row, where all four sides survive the clip.
+// A negative offset and not an inset box-shadow: box-shadow is suppressed
+// entirely in forced colours (measured — see the block at the end of this
+// file), so a shadow ring is no ring at all for the users who most need one.
+// The same applies to a sticky Column, whose ring is clipped on the
+// block-start edge by the same container.
+.react-aria-Row[data-focus-visible],
+.react-aria-Column[data-focus-visible] {
+  outline-offset: calc(-1 * var(--mg-aria-focus-width));
+}
+.react-aria-Menu {
+  background: var(--mg-aria-color-surface);
+
+  // Was radius 0 inside a rounded Popover — square inner corners inside
+  // rounded outer ones. A Menu is always inside a Popover in practice, but the
+  // stylesheet is public, so the standalone case still has to be a surface.
+  border-radius: var(--mg-aria-radius-surface);
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+  margin: 0;
+  padding: var(--mg-aria-space-1);
+}
+.react-aria-MenuItem {
+  align-items: center;
+
+  // --mg-aria-radius-item, not radius-control: an item nested in a surface has
+  // to clamp to the surface's radius. MCR2030's control radius is 10px against
+  // a 5px surface, so a focused MenuItem's corner sat outside the Popover's.
+  border-radius: var(--mg-aria-radius-item);
+  cursor: pointer;
+  display: flex;
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+  padding: var(--mg-aria-space-2) var(--mg-aria-space-3);
+}
+
+// One vocabulary across Menu, ListBox and Row: hover/focus is a brand tint,
+// selection is a stronger tint PLUS a non-colour marker. The tint is
+// --mg-aria-color-hover-surface (interactive / 0.06), which is how the rest of
+// Mangrove hovers — pager.scss, details.scss, scroll-container.scss and React
+// Aria's own Tab via --mg-tab-background--hover. Hovering to neutral-25 made
+// these the only brand-blind surfaces left in the adapter.
+.react-aria-MenuItem[data-focused],
+.react-aria-MenuItem[data-hovered] {
+  background: var(--mg-aria-color-hover-surface);
+}
+.react-aria-MenuItem[data-selected] {
+  background: var(--mg-aria-color-selected-surface);
+  font-weight: var(--mg-aria-font-weight-strong);
+}
+
+// The non-colour half of "selected". A check glyph is the only part of the
+// signal that survives forced colours, where both tints are flattened to the
+// forced canvas. Empty alt text: aria-selected already carries the state, so
+// the glyph must not join the accessible name.
+.react-aria-MenuItem[data-selected]::after,
+.react-aria-ListBoxItem[data-selected]::after {
+  color: var(--mg-aria-color-accent);
+  content: "\2713" / "";
+  margin-inline-start: auto;
+  padding-inline-start: var(--mg-aria-space-2);
+}
+.react-aria-MenuItem[data-disabled],
+.react-aria-ListBoxItem[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-ModalOverlay {
+  align-items: center;
+  background: var(--mg-aria-color-overlay-backdrop);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: var(--mg-aria-overlay-z-index);
+}
+.react-aria-Modal {
+  background: var(--mg-aria-color-surface);
+  border-radius: var(--mg-aria-radius-surface);
+  box-sizing: border-box;
+
+  // Was --mg-aria-overlay-shadow, so the modal sat at the same elevation as a
+  // popover and --mg-aria-modal-shadow, the top of the ladder, reached
+  // nothing at all.
+  box-shadow: var(--mg-aria-modal-shadow);
+  color: var(--mg-aria-color-text);
+  max-height: var(--mg-aria-dialog-available-height);
+  max-width: var(--mg-aria-dialog-available-width);
+  overflow: auto;
+  padding: var(--mg-aria-space-4);
+  width: var(--mg-aria-dialog-width);
+}
+
+// A dialog's dismissing action is not a second primary. React Aria gives it a
+// slot, so the quiet treatment keys off that rather than a class contract we
+// would have to impose on consumers. Without this, a confirm dialog renders two
+// identical filled buttons and the destructive one carries no more weight than
+// the escape hatch.
+
+// It is Mangrove's OUTLINE button, not a variant invented here. The previous
+// treatment — a grey border with dark text, filling grey on hover — exists
+// nowhere in Mangrove, which is why the CRUD story reached past this
+// stylesheet for the legacy button classes. Mangrove's primary outline button
+// (cta-button.scss:99-106) is a transparent button whose border AND text are
+// --mg-color-button-outline-primary, filling with the hover colour and
+// flipping to --mg-color-button on hover. Every brand overrides that token;
+// none of it could reach here while the base Button set `border: 0`.
+// The border width is max(button width, hairline) so MCR2030's 2px button
+// border carries through, while a consumer loading only aria/react-aria.css
+// without Mangrove's component tokens — where --mg-border-width-button falls
+// back to 0 — still gets a visible 1px boundary rather than none.
+.react-aria-Dialog .react-aria-Button[slot="close"] {
+  background: transparent;
+  border-color: var(--mg-aria-button-outline-color);
+  border-width: max(
+    var(--mg-aria-button-border-width),
+    var(--mg-aria-border-width)
+  );
+  color: var(--mg-aria-button-outline-color);
+}
+.react-aria-Dialog .react-aria-Button[slot="close"][data-hovered],
+.react-aria-Dialog .react-aria-Button[slot="close"][data-pressed] {
+  background: var(--mg-aria-button-outline-color-hover);
+  border-color: var(--mg-aria-button-outline-color-hover);
+  color: var(--mg-aria-button-color);
+}
+.react-aria-Dialog {
+  display: grid;
+  gap: var(--mg-aria-space-3);
+  font-family: var(--mg-aria-font-family);
+}
+
+// A container, not a control: it holds dropped content and its own button, so
+// it takes the structural register (--mg-aria-color-rule + radius-surface)
+// that GridList and ResizableTableContainer took, not the opaque form-field
+// border. Dashed because a dashed edge is the drop-target idiom across the
+// ecosystem (Adobe's starter, Spectrum 2) and it is the cue that distinguishes
+// this container from the two solid-edged ones beside it. The drop-target
+// state goes solid AND accent, so the transition is a shape change as well as
+// a colour change. min-block-size, not min-height: logical properties only.
+.react-aria-DropZone {
+  align-items: center;
+  background: var(--mg-aria-color-subtle-surface);
+  border: var(--mg-aria-border-width) dashed var(--mg-aria-color-rule);
+  border-radius: var(--mg-aria-radius-surface);
+  color: var(--mg-aria-color-muted-text);
+  display: grid;
+  gap: var(--mg-aria-space-1);
+  justify-items: center;
+  min-block-size: calc(var(--mg-aria-space-4) * 5);
+  padding: var(--mg-aria-space-3);
+  text-align: center;
+}
+.react-aria-DropZone[data-drop-target] {
+  background: var(--mg-aria-color-selected-surface);
+  border-color: var(--mg-aria-color-accent);
+  border-style: solid;
+  color: var(--mg-aria-color-accent);
+}
+.react-aria-DropZone img {
+  border-radius: var(--mg-aria-radius-control);
+  max-inline-size: var(--mg-aria-width-full);
+}
+.react-aria-Calendar {
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+}
+.react-aria-CalendarGrid {
+  border-collapse: collapse;
+}
+
+// The DOM here is the thing every review of this calendar got wrong.
+// CalendarGrid renders a real <table>; CalendarCell renders an UNCLASSED <td>
+// wrapping an inner <div class="react-aria-CalendarCell"> which carries every
+// data-* attribute. So the old
+// `.react-aria-CalendarHeaderCell, .react-aria-CalendarCell { padding: 5px }`
+// put padding on a <th> in one case and on an inner <div> in the other — two
+// different boxes from one rule — and the <td> in between, reachable by no
+// class at all, kept the UA default `padding: 1px`.
+
+// That 1px was a gutter around every date that no token controlled, and it is
+// why range selection rendered as broken-up segments: the selected background
+// painted the 30px div and left a 1px unpainted moat on all four sides. Zeroing
+// the table cells and moving all sizing onto the inner div makes adjacent
+// selected days actually touch, which is what a range band is.
+.react-aria-CalendarGrid td,
+.react-aria-CalendarGrid th {
+  padding: 0;
+}
+
+// Small, muted and strong, the treatment every calendar in the ecosystem uses
+// to push the weekday row behind the dates rather than competing with them.
+// It previously rendered at full body size and full text colour, so SMTWTFS
+// read as loud as the numbers under it.
+.react-aria-CalendarHeaderCell {
+  color: var(--mg-aria-color-muted-text);
+  font-size: var(--mg-aria-font-size-small);
+  font-weight: var(--mg-aria-font-weight-strong);
+  padding-block: var(--mg-aria-space-1);
+  text-align: center;
+}
+
+// 40px square. Net pitch was ~32px assembled from a 30px min-size, a 5px inner
+// padding that went inert whenever the digit was narrower than the minimum,
+// and the td's 1px — three sources for one number. It is now one number, and
+// it is `calc(space-4 * 2)`, the same 40px control floor the buttons and tabs
+// in this file already use, so a date target and a button target are the same
+// size. The ecosystem range is 32-40px (Adobe ~32, Marigold/Jolly 36, Intent
+// 40) and 40 is the only value in it that also satisfies WCAG 2.5.8 without
+// leaning on the contiguous-target exception.
+// Radius is --mg-aria-radius-control, not the pill Adobe uses: a pill-by-
+// default shape is out of scope for this surface.
+.react-aria-CalendarCell {
+  align-items: center;
+  block-size: calc(var(--mg-aria-space-4) * 2);
+  border-radius: var(--mg-aria-radius-control);
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  font-variant-numeric: tabular-nums;
+  inline-size: calc(var(--mg-aria-space-4) * 2);
+  justify-content: center;
+}
+
+// A date had no hover state at all, so nothing confirmed the pointer was over
+// a target before the click committed a value.
+.react-aria-CalendarCell[data-hovered] {
+  background: var(--mg-aria-color-hover-surface);
+}
+.react-aria-CalendarCell[data-selected] {
+  background: var(--mg-aria-color-accent);
+  color: var(--mg-aria-color-on-accent);
+}
+
+// The one two-band focus indicator on this surface, and the only rule here
+// that needs one. A focused cell that is ALSO selected is filled with
+// --mg-aria-color-accent, and the ring is inset, so the ring is painted on the
+// brand fill rather than clear of it. Measured there the gold ring is
+// 1.49 / 1.16 / 1.19 / 2.15 / 1.49 (base / PreventionWeb / IRP / MCR2030 /
+// DELTA) — under SC 1.4.11's 3:1 in every theme, and effectively invisible in
+// two of them. This is the same defect the legacy Tab carried, on a different
+// surface: the state arrow-key navigation lands on had no measurable ring.
+// The band takes the worst seam to 4.71:1 (IRP; 6.49 / 8.31 / 12.03
+// elsewhere), and the ring against the band is 5.58:1 by construction in all
+// five themes.
+// Band INSIDE the ring, which is the opposite of Mangrove's
+// mg-focus-ring-inset and is deliberate: the cells are contiguous, so the
+// outermost 2px has to be the ring or the neighbouring cell paints over it.
+// The separation the band exists to provide is unchanged — the ring's inner
+// neighbour is the band rather than the fill either way.
+// The ring stays in `outline` and the band in `box-shadow`, the same split and
+// the same order Mangrove's mixins use, because forced colours drops
+// box-shadow and repaints outline: the indicator degrades to single-band there
+// instead of to nothing.
+.react-aria-CalendarCell[data-focused] {
+  // Outer 2px: the ring. Next 2px inward: the separator band, drawn as an
+  // inset shadow the outline is painted over.
+  box-shadow: inset 0 0 0 calc(var(--mg-aria-focus-width) * 2)
+    var(--mg-aria-color-focus-ring-separator);
+  outline: var(--mg-aria-focus-width) solid var(--mg-aria-color-focus-ring);
+
+  // A negative offset, unlike everywhere else in this file. Calendar cells are
+  // contiguous by construction, so a ring drawn OUTSIDE the cell is painted
+  // over by the neighbouring cell's background on two sides. Inset, it is
+  // always fully visible.
+  outline-offset: calc(-1 * var(--mg-aria-focus-width));
+}
+
+// Today. React Aria 1.20 does emit data-today (verified in the installed
+// Calendar.mjs: it is in the dataAttrs object merged onto the inner div, not
+// on the <td>), and nothing was reading it — the current date was
+// indistinguishable from any other. The marker is weight plus a dot rather
+// than a colour, so it survives being overlaid by the selected fill (the dot
+// is currentColor, so it flips to on-accent along with the digit) and does not
+// rely on colour alone. 3px is Intent UI's dot.
+.react-aria-CalendarCell[data-today] {
+  font-weight: var(--mg-aria-font-weight-strong);
+  position: relative;
+}
+.react-aria-CalendarCell[data-today]::after {
+  background: currentColor;
+  block-size: 3px;
+  border-radius: var(--mg-aria-radius-pill);
+  content: "";
+  inline-size: 3px;
+  inset-block-end: calc(var(--mg-aria-space-1) / 2);
+  position: absolute;
+}
+.react-aria-Label {
+  color: var(--mg-aria-color-text);
+}
+.react-aria-Input {
+  background: var(--mg-aria-color-field-surface);
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-border);
+  border-radius: var(--mg-aria-radius-control);
+  box-sizing: border-box;
+  color: var(--mg-aria-color-text);
+
+  // The field height, not the 40px control floor. The Input already measured
+  // 46px, but only as an accident of padding plus a 1.5 line box; stating it
+  // makes it the same 46px Mangrove's own inputs get from
+  // --mg-form-input-block-size, and gives every field-adjacent control
+  // something to match.
+  min-block-size: var(--mg-aria-control-block-size);
+  padding: var(--mg-aria-space-2);
+  width: var(--mg-aria-width-full);
+}
+
+// There was no ::placeholder rule at all, so placeholder text fell back to the
+// UA default — in Chromium, the field's own text colour, which is to say it did
+// not read as a placeholder. _form-base.scss:54 sets neutral-500, which is what
+// --mg-aria-color-muted-text now resolves to. `opacity: 1` is required:
+// Firefox applies a UA opacity to ::placeholder and would otherwise wash the
+// colour below 4.5:1.
+.react-aria-Input::placeholder,
+.react-aria-TextArea::placeholder {
+  color: var(--mg-aria-color-muted-text);
+  opacity: 1;
+}
+
+// An invalid field recoloured its border and nothing else, so in a long form
+// there was nothing to scan for — you had to trace every edge. The wash is
+// deliberately far below any contrast threshold; the border and the error
+// message stay the contrast carriers, per "never rely on tint alone".
+// It sits after the [data-focused] and filled rules on purpose: an invalid
+// field stays invalid-looking while it is focused.
+.react-aria-Input[data-invalid],
+.react-aria-TextField[data-invalid] .react-aria-Input,
+.react-aria-SearchField[data-invalid] .react-aria-Input,
+.react-aria-NumberField[data-invalid] .react-aria-Input,
+.react-aria-ComboBox[data-invalid] .react-aria-Input,
+.react-aria-DateInput[data-invalid],
+.react-aria-DateField[data-invalid] .react-aria-DateInput,
+.react-aria-DatePicker[data-invalid] .react-aria-DateInput {
+  background: var(--mg-aria-color-invalid-surface);
+  border-color: var(--mg-aria-color-invalid);
+}
+
+// React Aria forwards `slot` to the DOM as a plain HTML attribute; it never
+// emits `data-slot`. Matching on `[slot]` is what actually hits the helper and
+// error text React Aria renders inside a field.
+.react-aria-Text[slot="description"] {
+  color: var(--mg-aria-color-muted-text);
+  display: block;
+  font-size: var(--mg-aria-font-size-small);
+}
+.react-aria-Tooltip {
+  background: var(--mg-aria-color-text);
+  border-radius: var(--mg-aria-radius-control);
+  color: var(--mg-aria-color-on-accent);
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size-small);
+  padding: var(--mg-aria-space-1) var(--mg-aria-space-2);
+}
+.react-aria-Text[slot="errorMessage"],
+.react-aria-FieldError {
+  color: var(--mg-aria-color-invalid);
+  display: block;
+  font-size: var(--mg-aria-font-size-small);
+}
+
+// Overlay surfaces need a real boundary. A drop shadow is not an edge, and it
+// is not painted at all in forced-colours mode — which is why the
+// forced-colours block repaints these in CanvasText.
+// The edge is now the QUIET structural register rather than the form-field
+// border. An opaque neutral-400 (#808080) is the colour Mangrove reserves for
+// a CONTROL boundary under SC 1.4.11; a container edge is structure. Drawing
+// an opaque #808080 rule AND a long soft shadow was expressing the same
+// boundary in two systems at once, which no institutional peer does (GOV.UK,
+// USWDS, NHS, OCHA Common Design, Primer, Atlassian, Carbon) and no
+// RAC-based system does either — every overlay border surveyed is a low-alpha
+// neutral. The paired shadow was shortened to match; see
+// --mg-aria-overlay-shadow in _runtime-theme-aliases.scss.
+.react-aria-Popover,
+.react-aria-Menu,
+.react-aria-ListBox,
+.react-aria-Modal {
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+}
+.react-aria-Popover {
+  background: var(--mg-aria-color-surface);
+  border-radius: var(--mg-aria-radius-surface);
+  box-shadow: var(--mg-aria-overlay-shadow);
+  padding: var(--mg-aria-space-1);
+  z-index: var(--mg-aria-overlay-z-index);
+}
+
+// The double frame. A Popover drew a 1px border, a 5px radius and 5px of
+// padding; the Menu or ListBox inside it drew its OWN 1px border, a radius of
+// 0 and another 5px of padding — 12px of chrome and two visible rules before
+// the first item, with square inner corners sitting inside rounded outer
+// ones.
+// The overlay owns the frame; the collection inside it is naked and carries
+// the padding. Padding in exactly one place is what every RAC-based system
+// surveyed does (Adobe, Spectrum 2, Marigold, Intent UI), without exception.
+// Scoped to the direct child so a STANDALONE collection keeps its own
+// boundary — AriaCollectionGallery renders a bare multi-select ListBox with
+// no Popover around it.
+.react-aria-Popover:has(> .react-aria-Menu),
+.react-aria-Popover:has(> .react-aria-ListBox) {
+  padding: 0;
+}
+.react-aria-Popover > .react-aria-Menu,
+.react-aria-Popover > .react-aria-ListBox {
+  background: none;
+  border: 0;
+
+  // Inherits the Popover's radius so the scroll clip follows the frame rather
+  // than cutting square corners across it.
+  border-radius: inherit;
+  padding: var(--mg-aria-space-1);
+}
+.react-aria-ListBox {
+  background: var(--mg-aria-color-surface);
+
+  // A standalone ListBox previously had a border but no radius and no
+  // padding, so its items ran flush into a square-cornered edge.
+  border-radius: var(--mg-aria-radius-surface);
+  color: var(--mg-aria-color-text);
+  padding: var(--mg-aria-space-1);
+}
+.react-aria-ListBoxItem {
+  align-items: center;
+  border-radius: var(--mg-aria-radius-item);
+  cursor: pointer;
+  display: flex;
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+  padding: var(--mg-aria-space-2);
+}
+
+// [data-focused] and [data-selected] both resolved to
+// --mg-aria-color-subtle-surface, so a focused-but-unselected option and a
+// selected one were pixel-identical and multi-select was unreadable. Same
+// vocabulary as MenuItem above: hover/focus tints, selection fills and takes
+// the shared check marker. Selection is declared last so it wins on a
+// focused-and-selected item, where the focus ring already carries focus.
+.react-aria-ListBoxItem[data-focused],
+.react-aria-ListBoxItem[data-hovered] {
+  background: var(--mg-aria-color-hover-surface);
+}
+.react-aria-ListBoxItem[data-selected] {
+  background: var(--mg-aria-color-selected-surface);
+  font-weight: var(--mg-aria-font-weight-strong);
+}
+
+// A GridList is a list of rows, not a floating surface: a quiet frame with
+// hairline-divided rows. It was a bare radius on nothing, so the rows floated
+// with no container at all. `overflow` is deliberately not clipped — the rows
+// carry focus rings that a clip would eat.
+.react-aria-GridList {
+  background: var(--mg-aria-color-surface);
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+  border-radius: var(--mg-aria-radius-surface);
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+  list-style: none;
+  margin-block: 0;
+  padding-inline-start: 0;
+}
+.react-aria-GridList[data-empty] {
+  color: var(--mg-aria-color-muted-text);
+  padding: var(--mg-aria-space-4);
+  text-align: center;
+}
+.react-aria-GridListItem {
+  border-block-end: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+
+  // The same reserved selection marker the table rows use, so the two
+  // collections express selection identically.
+  border-inline-start: calc(var(--mg-aria-border-width) * 3) solid transparent;
+  padding: var(--mg-aria-space-2);
+}
+
+// The last row's rule doubled up against the container border.
+.react-aria-GridListItem:last-child {
+  border-block-end-width: 0;
+}
+.react-aria-GridListItem[data-hovered] {
+  background: var(--mg-aria-color-hover-surface);
+}
+.react-aria-GridListItem[data-selected] {
+  background: var(--mg-aria-color-selected-surface);
+  border-inline-start-color: var(--mg-aria-color-accent);
+}
+.react-aria-GridListItem[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-GridListItem[data-focused] {
+  outline: var(--mg-aria-focus-width) solid var(--mg-aria-color-focus-ring);
+  outline-offset: var(--mg-aria-focus-offset);
+}
+
+.react-aria-Tabs {
+  color: var(--mg-aria-color-text);
+  display: flex;
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  gap: var(--mg-aria-space-3);
+  line-height: var(--mg-aria-line-height);
+}
+.react-aria-Tabs[data-orientation="horizontal"] {
+  flex-direction: column;
+}
+.react-aria-Tabs[data-orientation="vertical"] {
+  flex-direction: row;
+}
+.react-aria-TabList {
+  display: flex;
+  gap: var(--mg-aria-space-1);
+}
+
+// The rail behind the underline indicator is structure, not a control edge.
+// Mangrove's own .mg-tabs__list draws it at neutral-600 / 0.24 (tab.scss:211),
+// which is exactly --mg-aria-color-rule; drawing it at opaque neutral-400 made
+// the rail compete with the indicator it is supposed to sit behind.
+.react-aria-TabList[data-orientation="horizontal"] {
+  border-block-end: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.react-aria-TabList[data-orientation="vertical"] {
+  border-inline-end: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+  flex-direction: column;
+}
+
+// Tabs are a v2 underline indicator, not a filled pill. Both this surface and
+// the legacy .mg-tabs component read the same tab tokens, so a theme restyles
+// both at once. See _runtime-theme-aliases.scss.
+.react-aria-Tab {
+  align-items: center;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: inset 0 calc(var(--mg-aria-tab-indicator-size) * -1) 0 transparent;
+  color: var(--mg-aria-tab-color);
+  cursor: pointer;
+  display: flex;
+  font-size: var(--mg-aria-tab-font-size);
+  font-weight: 600;
+  justify-content: center;
+  min-block-size: var(--mg-aria-tab-min-block-size);
+  padding: var(--mg-aria-tab-padding);
+}
+.react-aria-Tab[data-hovered] {
+  background: var(--mg-aria-tab-background-hover);
+  box-shadow: inset 0 calc(var(--mg-aria-tab-indicator-size) * -1) 0
+    var(--mg-aria-tab-indicator-hover);
+  color: var(--mg-aria-tab-color-hover);
+}
+.react-aria-Tab[data-pressed] {
+  background: var(--mg-aria-tab-background-hover);
+}
+.react-aria-Tab[data-selected] {
+  background: transparent;
+  box-shadow: inset 0 calc(var(--mg-aria-tab-indicator-size) * -1) 0
+    var(--mg-aria-tab-indicator-active);
+  color: var(--mg-aria-tab-color-active);
+}
+.react-aria-Tab[data-disabled] {
+  color: var(--mg-aria-color-muted-text);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.react-aria-TabPanel {
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  line-height: var(--mg-aria-line-height);
+  padding-block-start: var(--mg-aria-space-1);
+}
+.react-aria-Switch {
+  align-items: center;
+  color: var(--mg-aria-color-text);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  gap: var(--mg-aria-space-2);
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+  position: relative;
+}
+.react-aria-Switch::before {
+  background: var(--mg-aria-color-track);
+  block-size: var(--mg-aria-thumb-size);
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-border);
+  border-radius: var(--mg-aria-radius-pill);
+  box-sizing: border-box;
+  content: "";
+  flex: 0 0 auto;
+  inline-size: calc(var(--mg-aria-thumb-size) * 2);
+}
+
+// The thumb is a white dot on a rail the theme keeps light (see
+// --mg-aria-color-track), so without an edge of its own it is a white dot on
+// near-white. Every Tailwind port of this control gives the thumb a shadow for
+// exactly this reason. --mg-aria-surface-shadow is Mangrove's own
+// --mg-shadow-raised, an `inset 0 0 0 1px neutral-600/0.24` hairline rather
+// than a drop shadow, so it draws the dot's edge without adding a floating
+// consumer-app elevation to a 20px circle.
+
+// The resting position stays on inset-inline-start — a LOGICAL property, so
+// the off thumb is at the inline start in Arabic as well — and only the
+// travel is a translate. Moving the anchor itself to translate would break
+// RTL silently: translate's X axis is physical and does not flip, so an
+// Arabic switch would read "off" while selected. The [dir="rtl"] rule below
+// is the one deliberate physical-axis exception in this file.
+.react-aria-Switch::after {
+  background: var(--mg-aria-color-surface);
+  block-size: calc(var(--mg-aria-thumb-size) - var(--mg-aria-space-1));
+  border-radius: var(--mg-aria-radius-pill);
+  box-shadow: var(--mg-aria-surface-shadow);
+  content: "";
+  inline-size: calc(var(--mg-aria-thumb-size) - var(--mg-aria-space-1));
+  inset-block-start: 50%;
+  inset-inline-start: calc(var(--mg-aria-space-1) / 2);
+  position: absolute;
+  translate: 0 -50%;
+}
+.react-aria-Switch[data-hovered]::before {
+  border-color: var(--mg-aria-color-border-focus);
+}
+.react-aria-Switch[data-selected]::before {
+  background: var(--mg-aria-color-accent);
+  border-color: var(--mg-aria-color-accent);
+}
+
+// The travel is exactly one thumb-size: the track is 2x thumb-size wide, the
+// dot is thumb-size - space-1, and it rests space-1/2 from either end.
+.react-aria-Switch[data-selected]::after {
+  translate: var(--mg-aria-thumb-size) -50%;
+}
+[dir="rtl"] .react-aria-Switch[data-selected]::after {
+  translate: calc(var(--mg-aria-thumb-size) * -1) -50%;
+}
+.react-aria-Switch[data-pressed]::after {
+  background: var(--mg-aria-color-field-surface);
+}
+.react-aria-Switch[data-invalid]::before {
+  border-color: var(--mg-aria-color-invalid);
+}
+.react-aria-Switch[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-RadioGroup {
+  color: var(--mg-aria-color-text);
+  display: flex;
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  gap: var(--mg-aria-space-2);
+}
+.react-aria-RadioGroup[data-orientation="vertical"] {
+  flex-direction: column;
+}
+.react-aria-RadioGroup[data-orientation="horizontal"] {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--mg-aria-space-3);
+}
+.react-aria-Radio {
+  align-items: center;
+  color: var(--mg-aria-color-text);
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--mg-aria-space-2);
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+}
+
+// Same 20px/1px/grey -> 24px/2px/brand correction as the Checkbox above, and
+// for the same reasons: _form-base.scss:169-179 and WCAG 2.5.8.
+.react-aria-Radio::before {
+  background: var(--mg-aria-color-surface);
+  block-size: var(--mg-aria-check-size);
+  border: calc(var(--mg-aria-border-width) * 2) solid var(--mg-aria-check-color);
+  border-radius: var(--mg-aria-radius-pill);
+  box-sizing: border-box;
+  content: "";
+  flex: 0 0 auto;
+  inline-size: var(--mg-aria-check-size);
+}
+.react-aria-Radio[data-hovered]::before {
+  border-color: var(--mg-aria-check-color-hover);
+}
+.react-aria-Radio[data-selected]::before {
+  background: var(--mg-aria-check-color-checked);
+  border-color: var(--mg-aria-color-surface);
+  border-width: calc(var(--mg-aria-space-1) / 2);
+  outline: var(--mg-aria-border-width) solid var(--mg-aria-check-color-checked);
+}
+.react-aria-Radio[data-pressed]::before {
+  background: var(--mg-aria-color-accent-active);
+}
+.react-aria-Radio[data-invalid]::before,
+.react-aria-RadioGroup[data-invalid] .react-aria-Radio::before {
+  border-color: var(--mg-aria-color-invalid);
+}
+
+// Disabled spoke one language on the Button, Switch and TextArea (a dimmed
+// control) and another here (a cursor change only), so a disabled radio group
+// was indistinguishable from an enabled one for anyone not using a pointer
+// (WCAG 1.3.1, 1.4.1). One token, one treatment.
+.react-aria-Radio[data-disabled],
+.react-aria-RadioGroup[data-disabled] {
+  cursor: not-allowed;
+}
+
+// Only the Radio dims, never the group: React Aria marks BOTH the group and
+// every radio inside it when the group is disabled, so dimming both would
+// composite 0.55 twice and land at 0.30.
+.react-aria-Radio[data-disabled] {
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-NumberField .react-aria-Input {
+  text-align: end;
+}
+
+// The press scale is a button gesture; on a control the eye reads as part of a
+// field it looks like the field is wobbling, so it is cancelled here and on
+// the Select trigger. (Field-adjacent buttons used to take their height from
+// --mg-aria-control-block-size here. They no longer need to: the Group states
+// that height once and its children stretch to it — see the joined
+// field group section at the end of this file.)
+.react-aria-Group > .react-aria-Button[data-pressed],
+.react-aria-Select > .react-aria-Button[data-pressed] {
+  scale: 1;
+}
+.react-aria-TextArea {
+  background: var(--mg-aria-color-field-surface);
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-border);
+  border-radius: var(--mg-aria-radius-control);
+  box-sizing: border-box;
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  inline-size: var(--mg-aria-width-full);
+  line-height: var(--mg-aria-line-height);
+  min-block-size: calc(var(--mg-aria-space-4) * 4);
+  padding: var(--mg-aria-space-2);
+  resize: block;
+}
+.react-aria-TextArea[data-hovered] {
+  border-color: var(--mg-aria-color-border-focus);
+}
+.react-aria-TextArea[data-focused] {
+  background: var(--mg-aria-color-field-surface-focus);
+  border-color: var(--mg-aria-color-border-focus);
+}
+.react-aria-TextArea[data-invalid],
+.react-aria-TextField[data-invalid] .react-aria-TextArea {
+  background: var(--mg-aria-color-invalid-surface);
+  border-color: var(--mg-aria-color-invalid);
+}
+
+// Was expressed by nothing: a disabled Input computed identically to an enabled
+// one in every property, so the state was conveyed neither by colour nor by
+// anything else (WCAG 1.3.1, 1.4.1). Matches the TextArea treatment below.
+.react-aria-Input[data-disabled],
+.react-aria-DateInput[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-TextArea[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+
+// This was a stack of full-width grey FILLED buttons inside a hard-bordered
+// box — the only disclosure in Mangrove without the <details> vocabulary
+// (details.scss:49-80: transparent trigger, 30px circular +/- badge, accent
+// colour when open). Nobody in the RAC ecosystem fills a disclosure trigger
+// either; Spectrum 2, Marigold and Intent UI all render hairline-divided rows.
+// Hairlines instead of a box also let the `overflow: clip` +
+// `overflow-clip-margin` workaround go: it existed only because the boxed
+// group clipped the trigger's focus ring, and there is no box now.
+.react-aria-DisclosureGroup {
+  border-block: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+}
+.react-aria-Disclosure {
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+}
+.react-aria-DisclosureGroup .react-aria-Disclosure + .react-aria-Disclosure {
+  border-block-start: var(--mg-aria-border-width) solid
+    var(--mg-aria-color-rule);
+}
+.react-aria-Disclosure .react-aria-Button[slot="trigger"] {
+  background: none;
+  border-color: transparent;
+
+  // Flush at rest so the row reads as one of a divided list; a real radius
+  // only when the focus ring needs corners to sit on (Spectrum 2's trick).
+  border-radius: 0;
+  color: var(--mg-aria-color-text);
+  gap: var(--mg-aria-space-2);
+  inline-size: var(--mg-aria-width-full);
+  justify-content: space-between;
+
+  // 45px, between the 40px control floor and the 48px <details> row.
+  min-block-size: calc(var(--mg-aria-space-4) * 2 + var(--mg-aria-space-1));
+  padding-inline: var(--mg-aria-space-2);
+  text-align: start;
+}
+.react-aria-Disclosure .react-aria-Button[slot="trigger"][data-focus-visible] {
+  border-radius: var(--mg-aria-radius-item);
+}
+
+// React Aria renders no expand marker of its own, so the open/closed state was
+// carried by nothing but the panel appearing below. This is the 30px circular
+// +/- badge from details.scss, at the same 6% interactive tint. A pseudo-
+// element is dropped in forced colours and is not announced, which is fine
+// here: aria-expanded on the trigger is the state's real carrier.
+.react-aria-Disclosure .react-aria-Button[slot="trigger"]::after {
+  align-items: center;
+  background: var(--mg-aria-color-hover-surface);
+  block-size: calc(var(--mg-aria-space-4) * 1.5);
+  border-radius: var(--mg-aria-radius-pill);
+  color: var(--mg-aria-color-accent);
+  content: "\002B" / "";
+  display: flex;
+  flex: none;
+  inline-size: calc(var(--mg-aria-space-4) * 1.5);
+  justify-content: center;
+}
+.react-aria-Disclosure[data-expanded]
+  .react-aria-Button[slot="trigger"]::after {
+  content: "\2212" / "";
+}
+.react-aria-Disclosure .react-aria-Button[slot="trigger"][data-hovered] {
+  background: var(--mg-aria-color-hover-surface);
+  color: var(--mg-aria-color-accent-active);
+}
+.react-aria-Disclosure[data-expanded] .react-aria-Button[slot="trigger"] {
+  color: var(--mg-aria-color-accent);
+}
+.react-aria-Disclosure[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-DisclosurePanel {
+  color: var(--mg-aria-color-text);
+  font-size: var(--mg-aria-font-size);
+  line-height: var(--mg-aria-line-height);
+  padding-block-end: var(--mg-aria-space-3);
+  padding-inline: var(--mg-aria-space-2);
+}
+.react-aria-ToggleButtonGroup {
+  display: inline-flex;
+  gap: var(--mg-aria-space-1);
+}
+.react-aria-ToggleButtonGroup[data-orientation="vertical"] {
+  flex-direction: column;
+}
+.react-aria-ToggleButton {
+  align-items: center;
+  background: var(--mg-aria-color-surface);
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-border);
+  border-radius: var(--mg-aria-radius-button);
+  color: var(--mg-aria-color-text);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  font-weight: 600;
+  justify-content: center;
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+  padding-block: var(--mg-aria-space-2);
+  padding-inline: var(--mg-aria-space-3);
+}
+
+// Brand-tinted, like every other hover in the adapter, rather than neutral-25.
+// See --mg-aria-color-hover-surface; the border-colour change carries the
+// state, the tint only supports it.
+.react-aria-ToggleButton[data-hovered] {
+  background: var(--mg-aria-color-hover-surface);
+  border-color: var(--mg-aria-color-border-focus);
+}
+.react-aria-ToggleButton[data-pressed] {
+  background: var(--mg-aria-color-selected-surface);
+  scale: var(--mg-aria-press-scale);
+}
+
+// DELIBERATELY still a solid accent fill, where the Tag beside it moved to
+// tint + check. A ToggleButton IS a button: it renders as one, it is pressed
+// rather than picked, and its state is aria-pressed, not aria-selected. A
+// pressed button that fills is the convention in every system surveyed
+// (GOV.UK, USWDS, Primer, Carbon, Atlassian) and matches Mangrove's own
+// primary button modifier, so the "selected filters look like the primary
+// button" failure the Tag had does not apply here — here it IS a button, and
+// looking like one is correct. The two selection vocabularies are therefore split by
+// semantics, not by inconsistency: aria-selected in a collection means tint +
+// mark; aria-pressed on a button means filled.
+.react-aria-ToggleButton[data-selected] {
+  background: var(--mg-aria-color-accent);
+  border-color: var(--mg-aria-color-accent);
+  color: var(--mg-aria-color-on-accent);
+}
+.react-aria-ToggleButton[data-selected][data-hovered] {
+  background: var(--mg-aria-color-accent-active);
+  border-color: var(--mg-aria-color-accent-active);
+}
+.react-aria-ToggleButton[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-TagGroup {
+  color: var(--mg-aria-color-text);
+  display: grid;
+  font-family: var(--mg-aria-font-family);
+  gap: var(--mg-aria-space-1);
+}
+.react-aria-TagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-aria-space-2);
+  list-style: none;
+  margin-block: 0;
+  padding-inline-start: 0;
+}
+.react-aria-TagList[data-empty] {
+  color: var(--mg-aria-color-muted-text);
+  font-size: var(--mg-aria-font-size-small);
+}
+
+// The Tag was a 40px block with an opaque grey border, a grey fill and a SOLID
+// ACCENT selected state — functionally Mangrove's own .mg-chip (chip.scss: 40px,
+// pill, neutral-50, no border) and visually neither a chip nor a tag. GOV.UK's
+// published filter research is directly on this: users "perceived these as
+// buttons and tried to click them", and a selected filter that is pixel-for-pixel
+// the primary button is the strongest possible version of that error.
+
+// So: the surface plus a hairline instead of a fill plus an opaque stroke, and
+// selection expressed as tint + accent ring + a leading check rather than as a
+// button. --mg-aria-surface-shadow / -hover are Mangrove's --mg-shadow-raised
+// and --mg-shadow-raised-hover — an `inset 0 0 0 1px neutral-600/0.24` hairline
+// and an `inset 0 0 0 2px interactive` ring. They have been defined since 2.0
+// and read by nothing; a chip is their natural consumer, and because they are
+// inset shadows rather than borders no state in this group shifts layout.
+
+// Height is derived, not chosen: the 24px remove target (WCAG 2.5.8) plus a
+// space-1 gutter either side = 34px, down from 40px and inside the 20-32px
+// band the ecosystem uses. Radius stays theme-sourced via --mg-aria-tag-radius
+// (0 in the base theme, 5px in IRP/DELTA, 10px in MCR2030) — the base theme's
+// squareness is a brand statement and "soften with restraint" rules out
+// pill-by-default.
+.react-aria-Tag {
+  align-items: center;
+  background: var(--mg-aria-color-surface);
+  border: 0;
+  border-radius: var(--mg-aria-tag-radius);
+  box-shadow: var(--mg-aria-surface-shadow);
+
+  // Without this the min-block-size is a CONTENT height and the padding adds
+  // on top: the old 40px tag actually rendered at 50px, measured.
+  box-sizing: border-box;
+  color: var(--mg-aria-color-text);
+  cursor: default;
+  display: inline-flex;
+  font-size: var(--mg-aria-font-size-small);
+  gap: var(--mg-aria-space-1);
+  min-block-size: calc(var(--mg-aria-check-size) + var(--mg-aria-space-1) * 2);
+  padding-block: var(--mg-aria-space-1);
+  padding-inline: var(--mg-aria-space-2);
+}
+.react-aria-TagList[data-selection-mode] .react-aria-Tag {
+  cursor: pointer;
+}
+.react-aria-Tag[data-hovered] {
+  background: var(--mg-aria-color-hover-surface);
+  box-shadow: var(--mg-aria-surface-shadow-hover);
+}
+.react-aria-Tag[data-pressed] {
+  background: var(--mg-aria-color-selected-surface);
+}
+
+// Selected is a tint plus a ring in the theme's own tag colour — the same
+// vocabulary the ListBox and Menu items use, not the primary button's. The
+// ring keeps --mg-aria-tag-background wired, so a brand that retints its tags
+// still retints these; it just no longer floods the chip with it.
+.react-aria-Tag[data-selected] {
+  background: var(--mg-aria-color-selected-surface);
+  box-shadow: inset 0 0 0 calc(var(--mg-aria-border-width) * 2)
+    var(--mg-aria-tag-background);
+  color: var(--mg-aria-color-text);
+  font-weight: var(--mg-aria-font-weight-strong);
+}
+
+// The non-colour half of "selected", matching the MenuItem/ListBoxItem check
+// above. Leading rather than trailing because a chip's trailing slot is the
+// remove button. Empty alt string: aria-selected already carries the state, so
+// the glyph must stay out of the accessible name.
+.react-aria-Tag[data-selected]::before {
+  color: var(--mg-aria-tag-background);
+  content: "\2713" / "";
+  font-weight: var(--mg-aria-font-weight-strong);
+}
+.react-aria-Tag[data-selected][data-hovered] {
+  box-shadow: inset 0 0 0 calc(var(--mg-aria-border-width) * 2)
+    var(--mg-aria-tag-background-hover);
+}
+.react-aria-Tag[data-selected][data-hovered]::before {
+  color: var(--mg-aria-tag-background-hover);
+}
+.react-aria-Tag[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+.react-aria-Tag[data-allows-removing] {
+  padding-inline-end: calc(var(--mg-aria-space-1) / 2);
+}
+
+// A 24px square, not a text-sized glyph with horizontal padding: 24px is the
+// WCAG 2.5.8 target minimum on its own, so the remove affordance stays legal
+// independently of how tall a theme makes the chip. Transparent with its own
+// hover fill so it reads as a control inside a control, and an INSET focus
+// ring because an outset one would be clipped by the chip's own edge.
+.react-aria-Tag .react-aria-Button[slot="remove"] {
+  align-items: center;
+  background: none;
+  block-size: var(--mg-aria-check-size);
+  border-radius: var(--mg-aria-radius-pill);
+  border-width: 0;
+  color: currentColor;
+  display: inline-flex;
+  flex: 0 0 auto;
+  inline-size: var(--mg-aria-check-size);
+  justify-content: center;
+
+  // The base Button sets min-block-size: 40px. Left standing it wins over
+  // block-size and re-inflates the chip to 50px, which is what the 40px tag
+  // measured before this change.
+  min-block-size: var(--mg-aria-check-size);
+  min-inline-size: var(--mg-aria-check-size);
+  padding: 0;
+}
+.react-aria-Tag .react-aria-Button[slot="remove"][data-hovered] {
+  background: var(--mg-aria-color-selected-surface);
+}
+.react-aria-Tag .react-aria-Button[slot="remove"][data-focus-visible] {
+  outline: var(--mg-aria-focus-width) solid var(--mg-aria-color-focus-ring);
+  outline-offset: calc(var(--mg-aria-focus-offset) * -1);
+}
+.react-aria-Slider {
+  color: var(--mg-aria-color-text);
+  display: grid;
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  gap: var(--mg-aria-space-1);
+}
+.react-aria-Slider[data-orientation="vertical"] {
+  justify-items: center;
+}
+.react-aria-Slider[data-disabled] {
+  cursor: not-allowed;
+}
+.react-aria-SliderOutput {
+  color: var(--mg-aria-color-muted-text);
+  font-size: var(--mg-aria-font-size-small);
+}
+
+// The rail group. It used to carry a 1px --mg-aria-color-border — the FORM
+// INPUT border token — which is why a 0% meter measured as "an empty text
+// field": same stroke, same colour, same pill as a field, only shorter.
+
+// The border was there to compensate for the rail being 1.25:1 against the
+// page, and the obvious fix (darken the rail until it carries its own 3:1) is
+// arithmetically impossible here: IRP's accent is ~4.2:1 on white, so any rail
+// dark enough to clear 3:1 on the page leaves the accent fill under 3:1 on the
+// rail. The full five-theme measurement is recorded on --mg-aria-color-track.
+
+// So the rail takes the register every surveyed system actually ships — Adobe
+// neutral-300, Spectrum 2 gray-300, Intent/Jolly zinc-200 (1.19:1 on white),
+// none of them bordered — and the contrast guarantee moves to where the
+// information is: --mg-aria-color-fill is graded 3:1 against BOTH the rail and
+// the page, so the filled extent is legible whether or not the empty remainder
+// reads. Forced colours restores an explicit rail outline, where a background
+// tint cannot survive.
+.react-aria-SliderTrack,
+.react-aria-ProgressBar .bar,
+.react-aria-Meter .bar {
+  border: 0;
+  box-sizing: border-box;
+}
+.react-aria-SliderTrack {
+  background: var(--mg-aria-color-track);
+  border-radius: var(--mg-aria-radius-pill);
+  position: relative;
+}
+
+// 6px, three quarters of the progress/meter rail. A slider's value is read off
+// the THUMB, so its rail is an affordance and can be thinner; a progress bar
+// has no thumb and the rail is the whole reading surface, so it keeps the full
+// 8px. Same split as Adobe's starter (6px slider) and Spectrum 2. Expressed as
+// a fraction of --mg-aria-track-thickness rather than a second constant so a
+// theme that rescales the family still gets one decision.
+.react-aria-SliderTrack[data-orientation="horizontal"] {
+  block-size: calc(var(--mg-aria-track-thickness) * 0.75);
+  inline-size: var(--mg-aria-width-full);
+  margin-block: var(--mg-aria-space-3);
+}
+.react-aria-SliderTrack[data-orientation="vertical"] {
+  block-size: calc(var(--mg-aria-space-4) * 8);
+  inline-size: calc(var(--mg-aria-track-thickness) * 0.75);
+  margin-inline: var(--mg-aria-space-3);
+}
+.react-aria-SliderTrack[data-hovered] {
+  background: var(--mg-aria-color-selected-surface);
+}
+.react-aria-SliderFill {
+  background: var(--mg-aria-color-fill);
+  border-radius: var(--mg-aria-radius-pill);
+}
+.react-aria-SliderFill[data-disabled] {
+  background: var(--mg-aria-color-border);
+}
+.react-aria-SliderThumb {
+  background: var(--mg-aria-color-accent);
+  block-size: var(--mg-aria-thumb-size);
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-surface);
+  border-radius: var(--mg-aria-radius-pill);
+  box-sizing: border-box;
+  cursor: grab;
+  inline-size: var(--mg-aria-thumb-size);
+}
+.react-aria-SliderThumb[data-hovered] {
+  background: var(--mg-aria-color-accent-active);
+}
+.react-aria-SliderThumb[data-dragging] {
+  background: var(--mg-aria-color-accent-active);
+  cursor: grabbing;
+  scale: 1.1;
+}
+.react-aria-SliderThumb[data-disabled] {
+  background: var(--mg-aria-color-border);
+  cursor: not-allowed;
+}
+.react-aria-ProgressBar,
+.react-aria-Meter {
+  color: var(--mg-aria-color-text);
+  display: grid;
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  gap: var(--mg-aria-space-1);
+  inline-size: var(--mg-aria-width-full);
+}
+
+// React Aria renders these labels as a <span>; without an explicit block they
+// only lay out correctly by accident of the grid parent.
+.react-aria-ProgressBar .react-aria-Label,
+.react-aria-Meter .react-aria-Label {
+  display: block;
+  font-size: var(--mg-aria-font-size-small);
+}
+
+// React Aria renders only the outer element for these two; the bar and fill
+// are author-supplied markup following Adobe's documented anatomy
+// (`<div class="bar"><div class="fill" /></div>`). Both helper classes are
+// scoped to the React Aria parent so the distributed stylesheet never claims
+// a bare `.bar` or `.fill` in a consumer's application.
+.react-aria-ProgressBar .bar,
+.react-aria-Meter .bar {
+  background: var(--mg-aria-color-track);
+  block-size: var(--mg-aria-track-thickness);
+  border-radius: var(--mg-aria-radius-pill);
+  inline-size: var(--mg-aria-width-full);
+  overflow: hidden;
+}
+.react-aria-ProgressBar .fill,
+.react-aria-Meter .fill {
+  background: var(--mg-aria-color-fill);
+  block-size: var(--mg-aria-width-full);
+  border-radius: var(--mg-aria-radius-pill);
+}
+
+// An indeterminate bar has no aria-valuenow, and React Aria leaves the fill
+// width to the author, so it otherwise renders identically to 100% complete.
+// Stripes read as "in progress, value unknown" rather than "finished", and
+// survive as a solid Highlight in forced colours where background-image is
+// dropped.
+.react-aria-ProgressBar:not([aria-valuenow]) .fill {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--mg-aria-color-accent) 0 var(--mg-aria-space-2),
+    var(--mg-aria-color-accent-active) var(--mg-aria-space-2)
+      var(--mg-aria-space-4)
+  );
+}
+.react-aria-Breadcrumbs {
+  align-items: center;
+  color: var(--mg-aria-color-text);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size-small);
+  gap: var(--mg-aria-space-2);
+  list-style: none;
+  margin-block: 0;
+  padding-inline-start: 0;
+}
+.react-aria-Breadcrumb {
+  align-items: center;
+  color: var(--mg-aria-color-muted-text);
+  display: inline-flex;
+  gap: var(--mg-aria-space-2);
+}
+.react-aria-Breadcrumb:not(:last-child)::after {
+  color: var(--mg-aria-color-muted-text);
+  content: "\203A" / "";
+}
+[dir="rtl"] .react-aria-Breadcrumb:not(:last-child)::after {
+  content: "\2039" / "";
+}
+.react-aria-Breadcrumb[data-current] {
+  color: var(--mg-aria-color-text);
+  font-weight: 600;
+}
+
+// React Aria sets data-disabled when `isDisabled || isCurrent`, so the current
+// crumb carries both attributes. Without the :not() guard the current page
+// renders dimmed and not-allowed, as if it were unavailable.
+.react-aria-Breadcrumb[data-disabled]:not([data-current]) {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.react-aria-Link {
+  border-radius: var(--mg-aria-radius-control);
+  color: var(--mg-aria-color-accent);
+  cursor: pointer;
+  font-family: var(--mg-aria-font-family);
+  text-decoration: underline;
+}
+.react-aria-Link[data-hovered] {
+  color: var(--mg-aria-color-accent-active);
+}
+.react-aria-Link[data-pressed] {
+  color: var(--mg-aria-color-accent-active);
+}
+.react-aria-Link[data-current] {
+  color: var(--mg-aria-color-text);
+  text-decoration: none;
+}
+
+// Same data-disabled/data-current overlap as Breadcrumb: a Link rendered as the
+// current crumb must not be dimmed.
+.react-aria-Link[data-disabled]:not([data-current]) {
+  color: var(--mg-aria-color-muted-text);
+  cursor: not-allowed;
+  opacity: 0.55;
+  text-decoration: none;
+}
+
+// A separator is the definition of structure, so it takes the structural
+// register rather than the form-field border colour.
+.react-aria-Separator {
+  background: var(--mg-aria-color-rule);
+  border: 0;
+  margin-block: var(--mg-aria-space-2);
+}
+.react-aria-Separator:not([aria-orientation="vertical"]) {
+  block-size: var(--mg-aria-border-width);
+  inline-size: var(--mg-aria-width-full);
+}
+.react-aria-Separator[aria-orientation="vertical"] {
+  align-self: stretch;
+  inline-size: var(--mg-aria-border-width);
+  margin-block: 0;
+  margin-inline: var(--mg-aria-space-2);
+}
+.react-aria-Form {
+  color: var(--mg-aria-color-text);
+  display: grid;
+  font-family: var(--mg-aria-font-family);
+  gap: var(--mg-aria-space-3);
+}
+
+// Grid items stretch to the column by default, which is right for fields and
+// wrong for buttons: a submit button rendered full-bleed across the form. Only
+// the button opts out, so inputs keep filling the column.
+.react-aria-Form > .react-aria-Button {
+  justify-self: start;
+}
+.react-aria-FieldError {
+  font-family: var(--mg-aria-font-family);
+  line-height: var(--mg-aria-line-height);
+}
+.react-aria-Header {
+  color: var(--mg-aria-color-muted-text);
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size-small);
+  font-weight: 600;
+  padding-block: var(--mg-aria-space-1);
+  padding-inline: var(--mg-aria-space-2);
+}
+.react-aria-Heading {
+  color: var(--mg-aria-color-text);
+  font-family: var(--mg-aria-font-family);
+  line-height: var(--mg-aria-line-height);
+  margin-block: 0;
+}
+
+// GridListSection is emitted by React Aria (GridList.mjs) and was the only
+// collection section left unstyled, so a sectioned GridList lost the grouping
+// that a sectioned ListBox or Menu got.
+.react-aria-Section,
+.react-aria-ListBoxSection,
+.react-aria-MenuSection,
+.react-aria-GridListSection {
+  display: block;
+  padding-block: var(--mg-aria-space-1);
+}
+.react-aria-Section + .react-aria-Section,
+.react-aria-ListBoxSection + .react-aria-ListBoxSection,
+.react-aria-MenuSection + .react-aria-MenuSection,
+.react-aria-GridListSection + .react-aria-GridListSection {
+  border-block-start: var(--mg-aria-border-width) solid
+    var(--mg-aria-color-rule);
+  margin-block-start: var(--mg-aria-space-1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .react-aria-ProgressBar:not([aria-valuenow]) .fill {
+    animation: mg-aria-indeterminate 1s linear infinite;
+  }
+  .react-aria-Button {
+    transition:
+      background-color var(--mg-aria-motion-duration-fast)
+        var(--mg-aria-motion-easing),
+      border-color var(--mg-aria-motion-duration-fast)
+        var(--mg-aria-motion-easing),
+      color var(--mg-aria-motion-duration-fast) var(--mg-aria-motion-easing),
+      scale var(--mg-aria-motion-duration-fast) var(--mg-aria-motion-easing);
+  }
+  .react-aria-Cell,
+  .react-aria-Column,
+  .react-aria-ColumnResizer,
+  .react-aria-GridListItem,
+  .react-aria-ListBoxItem,
+  .react-aria-MenuItem {
+    transition: background-color var(--mg-aria-motion-duration-fast)
+      var(--mg-aria-motion-easing);
+  }
+
+  // Overlays used to hard-cut in and out. React Aria emits data-entering and
+  // data-exiting on Popover, Tooltip, Modal and ModalOverlay and waits for the
+  // element's animations before unmounting, so plain CSS is enough — no JS, no
+  // CSSTransition.
+  // TRANSITIONS, not @keyframes: useAnimation reads getAnimations(), which
+  // returns CSSTransition objects too, and React Aria's own styling docs
+  // recommend transitions because a keyframe animation is not interruptible.
+  // The trap that remains is real: useAnimation does
+  // `if (animations.length === 0) { onEnd(); return; }`, so if the exiting
+  // state changes no transitioned property the element unmounts on the same
+  // frame and there is silently no exit at all. Every [data-exiting] rule
+  // below therefore changes opacity.
+  // EVERYTHING here, the opacity: 0 start state included, has to stay inside
+  // this block. Leaked outside, a reduced-motion user gets an overlay that
+  // mounts at opacity 0 and never transitions in — an invisible popover.
+  // 4px of displacement (space-1 is 5px) and 160ms is the restrained end of
+  // the ecosystem: Spectrum 2 and Intent UI use 4px, Adobe's vanilla starter
+  // 8px, which starts reading as a slide. Everyone exits faster than they
+  // enter. Deliberately NOT borrowed: overshoot beziers, scale-from-0.8, and
+  // backdrop blur — consumer-app gestures that fight "motion as feedback".
+  .react-aria-Popover,
+  .react-aria-Tooltip {
+    transition:
+      opacity var(--mg-aria-motion-duration-fast) var(--mg-aria-motion-easing),
+      translate var(--mg-aria-motion-duration-fast) var(--mg-aria-motion-easing);
+  }
+  .react-aria-Popover[data-entering],
+  .react-aria-Popover[data-exiting],
+  .react-aria-Tooltip[data-entering],
+  .react-aria-Tooltip[data-exiting] {
+    opacity: 0;
+  }
+  .react-aria-Popover[data-exiting],
+  .react-aria-Tooltip[data-exiting] {
+    transition-duration: calc(var(--mg-aria-motion-duration-fast) * 0.75);
+  }
+
+  // data-placement carries the RESOLVED placement, after collision detection,
+  // so an overlay that flips to the other side of its trigger flips the
+  // direction it moves in for free. Physical axes are correct here: React Aria
+  // has already resolved start/end against the document direction, so "left"
+  // means left on screen in Arabic too.
+  .react-aria-Popover[data-placement="bottom"][data-entering],
+  .react-aria-Popover[data-placement="bottom"][data-exiting],
+  .react-aria-Tooltip[data-placement="bottom"][data-entering],
+  .react-aria-Tooltip[data-placement="bottom"][data-exiting] {
+    translate: 0 calc(var(--mg-aria-space-1) * -1);
+  }
+  .react-aria-Popover[data-placement="top"][data-entering],
+  .react-aria-Popover[data-placement="top"][data-exiting],
+  .react-aria-Tooltip[data-placement="top"][data-entering],
+  .react-aria-Tooltip[data-placement="top"][data-exiting] {
+    translate: 0 var(--mg-aria-space-1);
+  }
+  .react-aria-Popover[data-placement="left"][data-entering],
+  .react-aria-Popover[data-placement="left"][data-exiting],
+  .react-aria-Tooltip[data-placement="left"][data-entering],
+  .react-aria-Tooltip[data-placement="left"][data-exiting] {
+    translate: var(--mg-aria-space-1) 0;
+  }
+  .react-aria-Popover[data-placement="right"][data-entering],
+  .react-aria-Popover[data-placement="right"][data-exiting],
+  .react-aria-Tooltip[data-placement="right"][data-entering],
+  .react-aria-Tooltip[data-placement="right"][data-exiting] {
+    translate: calc(var(--mg-aria-space-1) * -1) 0;
+  }
+
+  // The modal is the one place --mg-aria-motion-duration-medium belongs: it is
+  // a context switch, not a hover response. The scrim and the dialog animate
+  // independently and React Aria waits for both.
+  .react-aria-ModalOverlay {
+    transition: opacity var(--mg-aria-motion-duration-medium)
+      var(--mg-aria-motion-easing);
+  }
+  .react-aria-ModalOverlay[data-entering],
+  .react-aria-ModalOverlay[data-exiting] {
+    opacity: 0;
+  }
+  .react-aria-Modal {
+    transition:
+      opacity var(--mg-aria-motion-duration-medium) var(--mg-aria-motion-easing),
+      translate var(--mg-aria-motion-duration-medium)
+        var(--mg-aria-motion-easing);
+  }
+  .react-aria-Modal[data-entering],
+  .react-aria-Modal[data-exiting] {
+    opacity: 0;
+    translate: 0 var(--mg-aria-space-1);
+  }
+  .react-aria-Modal[data-exiting],
+  .react-aria-ModalOverlay[data-exiting] {
+    transition-duration: var(--mg-aria-motion-duration-fast);
+  }
+  .react-aria-Link,
+  .react-aria-Tab,
+  .react-aria-Tag,
+  .react-aria-TextArea,
+  .react-aria-ToggleButton {
+    transition:
+      background-color var(--mg-aria-motion-duration-fast)
+        var(--mg-aria-motion-easing),
+      border-color var(--mg-aria-motion-duration-fast)
+        var(--mg-aria-motion-easing),
+      color var(--mg-aria-motion-duration-fast) var(--mg-aria-motion-easing),
+      scale var(--mg-aria-motion-duration-fast) var(--mg-aria-motion-easing);
+  }
+  .react-aria-Switch::before,
+  .react-aria-Radio::before {
+    transition:
+      background-color var(--mg-aria-motion-duration-fast)
+        var(--mg-aria-motion-easing),
+      border-color var(--mg-aria-motion-duration-fast)
+        var(--mg-aria-motion-easing);
+  }
+
+  // translate, not inset-inline-start: the old property animated layout and
+  // paint on every frame of a hover-speed transition. Mangrove's own motion
+  // idiom is the same (card.scss and cta-button.scss both animate translate).
+  // The property name has to change with the rule or the thumb snaps.
+  .react-aria-Switch::after {
+    transition: translate var(--mg-aria-motion-duration-fast)
+      var(--mg-aria-motion-easing);
+  }
+  .react-aria-SliderThumb {
+    transition:
+      background-color var(--mg-aria-motion-duration-fast)
+        var(--mg-aria-motion-easing),
+      scale var(--mg-aria-motion-duration-fast) var(--mg-aria-motion-easing);
+  }
+}
+
+// A 135deg repeating gradient repeats horizontally every stop-period * sqrt(2),
+// so the animation must travel exactly that far to loop without a seam. Sizing
+// the background to any other value tiles the image and bands the stripes.
+@keyframes mg-aria-indeterminate {
+  to {
+    background-position: calc(var(--mg-aria-space-4) * 1.41421) 0;
+  }
+}
+
+// Buttons that are field affordances rather than calls to action. The base
+// Button rule fills with the accent colour, which is right for a submit button
+// and wrong for a select trigger, a search clear button or calendar
+// navigation: those read as primary actions and, inside a grid field, stretch
+// to the full container width.
+// A picker's value is content, not a call to action, so the trigger takes the
+// INPUT's recipe rather than the button's: field surface, a real 1px border,
+// the control radius (never --mg-aria-radius-button — MCR2030's button radius
+// is a 30px pill while its inputs are 10px, so a pill trigger would sit beside
+// a rounded-rectangle input), field type size at normal weight, and the field
+// height. It previously rendered as a 41px, 14px/600 button beside a 46px,
+// 16px/400 input, and its `border-color` reached nothing because the base
+// Button set `border: 0` — the trigger had no boundary at all, only a tint,
+// which "never rely on tint or shadow alone to identify a control" rules out
+// and SC 1.4.11 fails outright.
+.react-aria-Select > .react-aria-Button {
+  background: var(--mg-aria-color-field-surface);
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-border);
+  border-radius: var(--mg-aria-radius-control);
+  color: var(--mg-aria-color-text);
+  font-size: var(--mg-aria-font-size);
+  font-weight: 400;
+  justify-content: space-between;
+  min-block-size: var(--mg-aria-control-block-size);
+
+  // The Input's padding, not --mg-aria-button-padding. MCR2030's button
+  // padding is 15px/30px, which pushes the trigger's own content box to 52px
+  // and back past the 46px field it is meant to match — a floor cannot pull a
+  // control down, only up.
+  padding: var(--mg-aria-space-2);
+  text-align: start;
+}
+
+// Same lift to the plain surface the Input makes, so hovering, focusing or
+// opening the picker reads as the same gesture as entering a field.
+.react-aria-Select > .react-aria-Button[data-hovered],
+.react-aria-Select > .react-aria-Button[data-focus-visible],
+.react-aria-Select > .react-aria-Button[data-pressed],
+.react-aria-Select > .react-aria-Button[data-open] {
+  background: var(--mg-aria-color-field-surface-focus);
+  border-color: var(--mg-aria-color-border-focus);
+}
+
+// React Aria puts data-invalid and data-disabled on the Select, not on the
+// trigger, so neither state reached the control the user actually sees.
+.react-aria-Select[data-invalid] > .react-aria-Button,
+.react-aria-Select > .react-aria-Button[data-invalid] {
+  background: var(--mg-aria-color-invalid-surface);
+  border-color: var(--mg-aria-color-invalid);
+}
+.react-aria-Select[data-disabled] > .react-aria-Button,
+.react-aria-Select > .react-aria-Button[data-disabled] {
+  background: var(--mg-aria-color-field-surface);
+  border-color: var(--mg-aria-color-border);
+  cursor: not-allowed;
+  opacity: var(--mg-aria-opacity-disabled);
+}
+
+// UNGROUPED SearchField.
+// React Aria's SearchField provides GroupContext, so the recommended markup
+// wraps the input and its clear button in a <Group> — which routes it through
+// the joined-field-group recipe at the end of this file like every other field,
+// and is what the spike stories do. But `<Label><Input><Button slot="clear">`
+// as flat children is the shape Adobe's own docs still show, and the shape any
+// consumer upgrading this stylesheet already has, so it has to keep working.
+
+// The whole branch below is reached through `>` from `.react-aria-SearchField`,
+// so it is inert by construction once an intervening Group exists — except the
+// grid track definition, which is on the wrapper itself and is guarded
+// explicitly. The seam is faked the only way it can be without a wrapper: the
+// Input and the button share one grid row with NO column gap and complementary
+// borders, so two boxes read as one field with a divider. Identical to a real
+// Group except for the focus ring, which is why the :has() state rule exists.
+// Row gap still comes from the shared `gap` on the field wrappers; only the
+// column gap is zeroed.
+.react-aria-SearchField:not(:has(> .react-aria-Group)) {
+  column-gap: 0;
+  grid-template-columns: 1fr auto;
+}
+.react-aria-SearchField > .react-aria-Label,
+.react-aria-SearchField > .react-aria-Text,
+.react-aria-SearchField > .react-aria-FieldError {
+  grid-column: 1 / -1;
+}
+.react-aria-SearchField > .react-aria-Input {
+  border-end-end-radius: 0;
+  border-inline-end: 0;
+  border-start-end-radius: 0;
+}
+.react-aria-SearchField > .react-aria-Button {
+  background: none;
+  border: var(--mg-aria-border-width) solid var(--mg-aria-color-border);
+
+  // Longhands only, and never the `border-radius` shorthand: the shorthand
+  // would reset the two corners zeroed here, and its four-value form is
+  // physical, so it would put the rounding on the wrong side in Arabic.
+  border-end-end-radius: var(--mg-aria-radius-control);
+  border-end-start-radius: 0;
+  border-inline-start: 0;
+  border-start-end-radius: var(--mg-aria-radius-control);
+  border-start-start-radius: 0;
+  color: var(--mg-aria-color-muted-text);
+  min-block-size: var(--mg-aria-control-block-size);
+  min-inline-size: calc(var(--mg-aria-space-4) * 2);
+  padding-block: var(--mg-aria-space-2);
+  padding-inline: var(--mg-aria-space-2);
+}
+
+// The two halves have to change state together or the seam becomes visible
+// exactly when the field is in use. React Aria puts data-focused on the Input,
+// not on the SearchField, so :has() is the only way to reach the sibling.
+.react-aria-SearchField:has(> .react-aria-Input[data-focused])
+  > .react-aria-Button {
+  background: var(--mg-aria-color-field-surface-focus);
+  border-color: var(--mg-aria-color-border-focus);
+}
+.react-aria-SearchField[data-invalid] > .react-aria-Button {
+  border-color: var(--mg-aria-color-invalid);
+}
+.react-aria-SearchField > .react-aria-Button[data-hovered] {
+  background: var(--mg-aria-color-hover-surface);
+  color: var(--mg-aria-color-text);
+}
+
+// visibility, not display or removal. Adobe's and Intent's search fields both
+// hide the clear affordance this way so the field does not change width the
+// moment the first character is typed or the last one deleted — the "stable
+// layouts during interaction" principle. Previously the button was permanently
+// visible, offering to clear an empty field.
+// A descendant selector, not a child one: data-empty is on the SearchField and
+// the button may be one level deeper inside a Group, so this is the one rule in
+// this branch that has to reach both markup shapes.
+.react-aria-SearchField[data-empty] .react-aria-Button[slot="clear"] {
+  visibility: hidden;
+}
+
+// Calendar navigation. These were 14px grey text glyphs on no box at all, so
+// the two most-used controls in the calendar were the least visible things in
+// it. Every calendar in the ecosystem sizes them like a cell (Marigold 36px,
+// Intent 32px) as quiet icon buttons: same 40px square as a date, transparent
+// until hovered, then the brand hover tint the rest of the surface uses.
+.react-aria-Calendar .react-aria-Button[slot="previous"],
+.react-aria-Calendar .react-aria-Button[slot="next"],
+.react-aria-RangeCalendar .react-aria-Button[slot="previous"],
+.react-aria-RangeCalendar .react-aria-Button[slot="next"] {
+  background: none;
+  border-color: transparent;
+  border-radius: var(--mg-aria-radius-control);
+  color: var(--mg-aria-color-text);
+  min-block-size: calc(var(--mg-aria-space-4) * 2);
+  min-inline-size: calc(var(--mg-aria-space-4) * 2);
+  padding-block: 0;
+  padding-inline: var(--mg-aria-space-2);
+}
+.react-aria-Calendar .react-aria-Button[slot="previous"][data-hovered],
+.react-aria-Calendar .react-aria-Button[slot="next"][data-hovered],
+.react-aria-RangeCalendar .react-aria-Button[slot="previous"][data-hovered],
+.react-aria-RangeCalendar .react-aria-Button[slot="next"][data-hovered] {
+  background: var(--mg-aria-color-hover-surface);
+}
+
+// React Aria renders no calendar header; the previous/heading/next row is
+// author markup under a class we cannot know. Selecting on the slot buttons it
+// contains lays it out without dictating a class name.
+.react-aria-Calendar > *:has(> .react-aria-Button[slot="previous"]),
+.react-aria-RangeCalendar > *:has(> .react-aria-Button[slot="previous"]) {
+  align-items: center;
+  display: flex;
+  gap: var(--mg-aria-space-2);
+  justify-content: space-between;
+  margin-block-end: var(--mg-aria-space-2);
+}
+
+// React Aria DOES ship a CalendarHeading (default class
+// `react-aria-CalendarHeading`, verified in the installed 1.20 build), and it
+// would let the `:has()` hack above be replaced by a real class — but only for
+// the heading itself, NOT for the previous/heading/next row, which is author
+// markup in every case. Styled here so a consumer using it gets the right
+// type; the story change is reported as a follow-up.
+.react-aria-CalendarHeading {
+  font-family: var(--mg-aria-font-family);
+  font-size: var(--mg-aria-font-size);
+  font-weight: var(--mg-aria-font-weight-strong);
+  margin: 0;
+}
+
+// A calendar sizes to its grid; without this the author-supplied header row
+// stretches to the container and pushes the next-month button out of view.
+.react-aria-Calendar,
+.react-aria-RangeCalendar {
+  inline-size: fit-content;
+}
+
+// Disabled, unavailable and outside-month cells rendered identically to
+// selectable ones, so the user could not tell which dates were choosable.
+// Unavailable dates stay focusable, so they keep a 4.5:1 text colour and carry
+// a line through as a non-colour signal.
+.react-aria-CalendarCell[data-disabled],
+.react-aria-CalendarCell[data-outside-month] {
+  color: var(--mg-aria-color-muted-text);
+}
+.react-aria-CalendarCell[data-unavailable] {
+  color: var(--mg-aria-color-muted-text);
+  text-decoration: line-through;
+}
+
+// THE RANGE BAND.
+// A range used to render as a row of separately-rounded pills: each selected
+// cell kept --mg-aria-radius-control on all four corners, and the td's UA
+// padding put a 1px moat between them (zeroed above). The technique below is
+// the one Spectrum 2, Marigold, Intent and Jolly all use, and it is the only
+// one that works on this DOM: square EVERY selected cell so the interior fill
+// is continuous, then hand the radius back only on the outer edge of the two
+// ends.
+
+// "Outer edge" is four cases, not two: the range start and the range end, plus
+// the first and last day of every week, because a band that wraps to the next
+// row has to close off at the week boundary too. React Aria puts
+// data-selection-start / -end on the inner div, so those are class selectors;
+// the week boundary lives on the untargetable <td>, so it is reached through
+// the child combinator.
+
+// All eight properties are logical. The start of the band is the start of the
+// inline axis, which in Arabic is the right-hand edge — a physical
+// border-top-left-radius here would round the wrong end of every range.
+.react-aria-RangeCalendar .react-aria-CalendarCell[data-selected] {
+  background: var(--mg-aria-color-selected-surface);
+  border-radius: 0;
+  color: var(--mg-aria-color-text);
+}
+.react-aria-RangeCalendar .react-aria-CalendarCell[data-selection-start],
+.react-aria-RangeCalendar
+  .react-aria-CalendarGrid
+  td:first-child
+  > .react-aria-CalendarCell[data-selected] {
+  border-end-start-radius: var(--mg-aria-radius-control);
+  border-start-start-radius: var(--mg-aria-radius-control);
+}
+.react-aria-RangeCalendar .react-aria-CalendarCell[data-selection-end],
+.react-aria-RangeCalendar
+  .react-aria-CalendarGrid
+  td:last-child
+  > .react-aria-CalendarCell[data-selected] {
+  border-end-end-radius: var(--mg-aria-radius-control);
+  border-start-end-radius: var(--mg-aria-radius-control);
+}
+
+// The two endpoints are the SOLID fill: they are the values the user chose and
+// can drag, the wash between them is a consequence. Without them a band that
+// wraps to the next row is ambiguous — nothing on the second row distinguishes
+// the final day from a continuation — and every surveyed system (Spectrum 2,
+// Primer, GOV.UK's date range) fills the endpoints. The single Calendar's
+// selected cell is already exactly this treatment.
+// The RangeCalendar-scoped copies of the selectors are load-bearing, and their
+// absence is why the endpoints rendered as plain band: source order does not
+// beat specificity. The band rule above is
+// `.react-aria-RangeCalendar .react-aria-CalendarCell[data-selected]` at
+// (0,3,0); a bare `.react-aria-CalendarCell[data-selection-start]` is (0,2,0)
+// and lost the background to it no matter where it sat in the file. The
+// unscoped pair is kept for a consumer who marks endpoints outside a
+// RangeCalendar.
+.react-aria-RangeCalendar .react-aria-CalendarCell[data-selection-start],
+.react-aria-RangeCalendar .react-aria-CalendarCell[data-selection-end],
+.react-aria-CalendarCell[data-selection-start],
+.react-aria-CalendarCell[data-selection-end] {
+  background: var(--mg-aria-color-accent);
+  color: var(--mg-aria-color-on-accent);
+}
+
+/* ---------------------------------------------------------------------------
+   JOINED FIELD GROUPS — the child half of the recipe begun at
+   `.react-aria-Group` near the top of this file.
+
+   It lives at the end of the file because of specificity, not taste. The
+   invalid, focused and filled rules for the inner controls are written as
+   `.react-aria-NumberField[data-invalid] .react-aria-Input` and friends —
+   (0,3,0). A plain `.react-aria-Group > .react-aria-Input` is (0,2,0) and
+   would lose, so the group's children would keep their own borders and
+   backgrounds inside the group's box and the tint would composite twice.
+   `:not([hidden])` lifts these to (0,3,0), and being last in the file settles
+   the tie. `[hidden]` is chosen as the harmless argument because a hidden
+   control is not rendered anyway, so the guard can never change what matches.
+   ------------------------------------------------------------------------ */
+.react-aria-Group > .react-aria-Input:not([hidden]),
+.react-aria-Group > .react-aria-DateInput:not([hidden]) {
+  align-self: stretch;
+  background: none;
+
+  // block-size, margin and box-shadow are reset for the CRUD spike's markup,
+  // which deliberately puts Mangrove's own `.mg-form-input` class on the RAC
+  // Input to show the two surfaces composing. That class states
+  // `height: 46px`, a `margin-top` and its own `:focus-visible` box-shadow
+  // ring — inside a joined group all three are wrong: the height makes the
+  // group 48px, the margin pushes the control off the band, and the shadow
+  // draws a second ring inside the group's.
+  block-size: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  flex: 1;
+  margin: 0;
+
+  // The group owns the height now. Leaving the 46px floor on the child would
+  // add its own box to the group's border and make the field 48px — the same
+  // "a floor cannot pull a control down" trap the previous wave hit with
+  // MCR2030's button padding.
+  min-block-size: 0;
+  min-inline-size: 0;
+  outline: none;
+  padding-block: 0;
+  padding-inline: var(--mg-aria-space-2);
+
+  // The group already dims as a whole; dimming the child too would composite
+  // 0.55 twice and land at 0.30, the mistake the Radio comment records.
+  opacity: 1;
+}
+
+// The DateRangePicker's " to " is author markup — a bare inline element among
+// stretched flex children, so it would otherwise sit at the top of the band.
+.react-aria-Group
+  > :not(.react-aria-Input, .react-aria-DateInput, .react-aria-Button) {
+  align-self: center;
+}
+
+// Buttons inside a group are QUIET: flush, full-height, transparent until
+// hovered, muted glyph. They are not standalone actions and must not read as
+// ones — the accent fill stays on `.react-aria-Button` outside a group.
+// Spectrum 2 tints its steppers neutral and explicitly never accent, and
+// nothing in the ecosystem fills a field-adjacent button.
+.react-aria-Group > .react-aria-Button {
+  align-self: stretch;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--mg-aria-color-muted-text);
+  flex: 0 0 auto;
+  min-block-size: 0;
+  min-inline-size: calc(var(--mg-aria-space-4) * 2);
+  padding-block: 0;
+  padding-inline: var(--mg-aria-space-2);
+}
+
+// A STEPPER HAS TO LOOK PRESSABLE. Quiet is the brief — Spectrum 2's steppers
+// are neutral and inset and explicitly never accent — but a 40px cell holding a
+// hairline "-" on exactly the field's own fill offers nothing to aim at, and
+// the "+" only read heavier because it has a crossbar. Two restrained changes,
+// no accent: the cell takes a ~3% neutral wash so it is a cell rather than a
+// continuation of the input, and the glyph goes up a step and takes the full
+// text colour so it has the weight of a control.
+// --mg-aria-color-inset-surface is translucent by design: --mg-aria-color-
+// subtle-surface computes to the SAME value as --mg-aria-color-field-surface
+// in every theme (measured — both resolve to the identical neutral), so an
+// opaque neutral would have painted nothing here, while a wash composites
+// correctly over both the resting field fill and the white the group lifts to
+// on focus.
+// Declared BEFORE the hover, open and disabled rules below: those are (0,3,0),
+// this is (0,3,0), and a stepper that kept its resting fill on hover would be
+// a stepper with no hover. The seam that separates it from the input is the
+// `:first-child`/`:last-child` rule at the end of this file.
+.react-aria-NumberField .react-aria-Group > .react-aria-Button {
+  background: var(--mg-aria-color-inset-surface);
+  color: var(--mg-aria-color-text);
+  font-size: calc(var(--mg-aria-font-size) * 1.25);
+}
+.react-aria-Group > .react-aria-Button[data-hovered],
+.react-aria-Group > .react-aria-Button[data-pressed],
+.react-aria-Group > .react-aria-Button[data-open] {
+  background: var(--mg-aria-color-hover-surface);
+  color: var(--mg-aria-color-text);
+}
+.react-aria-Group > .react-aria-Button[data-disabled] {
+  background: none;
+  opacity: 1;
+}
+
+// A ring at a positive offset on a child of a joined group is drawn on top of
+// its neighbours and clipped by the group's edge. Inset, it reads as "this
+// part of the field" rather than as a second control.
+.react-aria-Group > .react-aria-Button[data-focus-visible] {
+  outline-offset: calc(-1 * var(--mg-aria-focus-width));
+}
+
+// Marigold's divider: the seam between a stepper and the field it steps. Drawn
+// in the QUIET structural register, not the control-boundary one — the group's
+// own edge is the control boundary, this is interior structure. The side is
+// chosen by position, so a NumberField (Button, Input, Button) gets a rule on
+// the inner side of each stepper without either of them being named.
+.react-aria-Group > .react-aria-Button:first-child {
+  border-inline-end: var(--mg-aria-border-width) solid var(--mg-aria-color-rule);
+}
+.react-aria-Group > .react-aria-Button:last-child {
+  border-inline-start: var(--mg-aria-border-width) solid
+    var(--mg-aria-color-rule);
+}
+
+// ...and the seam is for a SECOND ACTION inside the field, not for the caret
+// that opens the field's own popover. Side by side, a seamed ComboBox trigger
+// cell and a Select's bare floating caret read as two generations of one
+// control, and they cannot be reconciled by seaming the Select: a Select
+// CANNOT use a Group (Select.mjs imports no GroupContext), its trigger Button
+// IS the field, and there is no element between the value and the caret to
+// draw a seam on. So the reconciliation goes the other way — NEITHER is
+// seamed. The three pickers below open a popover for the field they sit in,
+// which is the same act as clicking the field, so they take the same bare
+// caret Select has; the divider stays where two genuinely separate controls
+// share one band, which is the NumberField's steppers and the SearchField's
+// clear button.
+// Written after the rule above rather than merged into it because both are
+// (0,3,0) and this has to win; scoped by component because "opens my own
+// popover" has no data attribute at rest.
+.react-aria-ComboBox .react-aria-Group > .react-aria-Button,
+.react-aria-DatePicker .react-aria-Group > .react-aria-Button,
+.react-aria-DateRangePicker .react-aria-Group > .react-aria-Button {
+  border-inline-start-width: 0;
+}
+
+// The DateRangePicker's two DateInputs each flexed to half the group, so the
+// start date sat at the far inline start, "to" floated ~450px away and the end
+// date after that: three widely separated pieces reading as three controls
+// rather than one range. Content-sized inputs put the three together at the
+// start of the band and let the GROUP take the slack, with the calendar button
+// pushed to the far end exactly as a single DatePicker's is.
+.react-aria-DateRangePicker
+  .react-aria-Group
+  > .react-aria-DateInput:not([hidden]) {
+  flex: 0 0 auto;
+}
+.react-aria-DateRangePicker .react-aria-Group > .react-aria-Button {
+  margin-inline-start: auto;
+}
+
+// Concentric corners. Without these the square-cornered hover fill of a
+// stepper overflows the group's rounded corner — very visible at MCR2030's
+// 10px. Logical longhands are mandatory here: NumberField puts a Button FIRST,
+// so `border-top-left-radius` would round the decrement button in English and
+// the increment button in Arabic.
+// The `:not([hidden])` guard is here for the same specificity reason as above,
+// with one extra wrinkle: the reset rules set the `border-radius` SHORTHAND,
+// which expands to all four longhands at the shorthand's own specificity. So
+// these rules must match (0,3,0) too, or `border-radius: 0` would win the
+// corner back.
+.react-aria-Group > :first-child:not([hidden]) {
+  border-end-start-radius: var(--mg-aria-radius-control-inner);
+  border-start-start-radius: var(--mg-aria-radius-control-inner);
+}
+.react-aria-Group > :last-child:not([hidden]) {
+  border-end-end-radius: var(--mg-aria-radius-control-inner);
+  border-start-end-radius: var(--mg-aria-radius-control-inner);
+}
+
+/* ---------------------------------------------------------------------------
+   FORCED COLOURS (Windows High Contrast Mode).
+
+   LAST IN THE FILE, and that is load-bearing. A media query adds no
+   specificity, so every rule below has to win on source order alone. The block
+   previously sat mid-file with ~450 lines after it, and each of those later
+   rules at equal specificity silently beat it: the calendar's disabled,
+   outside-month, unavailable, selection-start and selection-end colours and
+   the RangeCalendar band all overrode their own forced-colours repaints.
+   Nothing here may be moved above another rule it names.
+   ------------------------------------------------------------------------ */
+@media (forced-colors: active) {
+  .react-aria-Popover,
+  .react-aria-Menu,
+  .react-aria-ListBox,
+  .react-aria-Modal,
+  .react-aria-Tooltip {
+    border: var(--mg-aria-border-width) solid CanvasText;
+  }
+
+  // The rule above is written on the collections themselves so a STANDALONE
+  // Menu or ListBox keeps an edge. Inside a Popover the overlay owns the
+  // frame, exactly as in normal mode — without this reset the double frame
+  // the surfaces wave removed everywhere else survives here alone.
+  .react-aria-Popover > .react-aria-Menu,
+  .react-aria-Popover > .react-aria-ListBox {
+    border: 0;
+  }
+  .react-aria-Button[data-focus-visible],
+  .react-aria-Input[data-focused],
+  .react-aria-DateInput[data-focus-within],
+  .react-aria-Group[data-focus-within],
+  .react-aria-Checkbox[data-focus-visible]::before,
+  .react-aria-CalendarCell[data-focus-visible],
+  .react-aria-GridListItem[data-focus-visible],
+  .react-aria-ListBoxItem[data-focus-visible],
+  .react-aria-MenuItem[data-focus-visible],
+  .react-aria-Link[data-focus-visible],
+  .react-aria-Radio[data-focus-visible]::before,
+  .react-aria-SliderThumb[data-focus-visible],
+  .react-aria-Switch[data-focus-visible]::before,
+  .react-aria-Tab[data-focus-visible],
+  .react-aria-TabPanel[data-focus-visible],
+  .react-aria-Tag[data-focus-visible],
+  .react-aria-TextArea[data-focused],
+  .react-aria-ToggleButton[data-focus-visible] {
+    outline: var(--mg-aria-focus-width) solid CanvasText;
+    outline-offset: var(--mg-aria-focus-offset);
+  }
+
+  // Calendar cells are contiguous, so the ring above is painted over by the
+  // neighbouring cell on two sides. The same negative offset normal mode uses,
+  // restated because the list above resets the shorthand's offset.
+  // `.react-aria-DateSegment[data-focused]` left that list: it is a FILL now,
+  // not a ring — see the Highlight pairing further down.
+  .react-aria-CalendarCell[data-focused],
+  .react-aria-CalendarCell[data-focus-visible] {
+    // outline-COLOR restated as well as the offset: a selected cell is opted
+    // out of forcing, so its normal-mode brand focus ring would otherwise be
+    // painted verbatim instead of forced to a system colour.
+    outline-color: CanvasText;
+    outline-offset: calc(-1 * var(--mg-aria-focus-width));
+  }
+
+  // BOX-SHADOWS ARE NOT PAINTED IN FORCED COLOURS. Verified in Chrome under
+  // Emulation.setEmulatedMedia: an `inset 0 0 0 2px CanvasText` shadow inside
+  // this very media query computes to `none`. So anything whose only boundary
+  // is a shadow has no boundary at all here, and anything that opts out of
+  // forced colours keeps its BRAND shadow, which is worse. The Tag's resting
+  // hairline and selected ring, the Switch thumb's hairline and the Tab's
+  // underline indicator are all shadows; the Tag gets a real border instead
+  // and the other three already carry their edge in a fill.
+  .react-aria-Tag {
+    border: var(--mg-aria-border-width) solid CanvasText;
+  }
+
+  // The focused calendar cell's separator band joins this list for a
+  // different reason from the four above. Its box-shadow is not the cell's
+  // only boundary — the CanvasText outline above is — but a SELECTED cell is
+  // opted out of forcing further down, so unlike every other shadow here its
+  // band would actually be painted, in brand white, inside a system-coloured
+  // ring. The ring is what carries the indicator in this mode; the band has
+  // nothing left to separate.
+  .react-aria-CalendarCell[data-focused],
+  .react-aria-Switch::after,
+  .react-aria-Tab[data-selected],
+  .react-aria-Tag,
+  .react-aria-Tag[data-hovered],
+  .react-aria-Tag[data-selected],
+  .react-aria-Tag[data-selected][data-hovered] {
+    box-shadow: none;
+  }
+
+  // Every forced-color-adjust opt-out below is paired with a system-colour
+  // repaint. An unpaired opt-out keeps the brand colour, which a High Contrast
+  // user has explicitly asked not to see; no opt-out at all flattens the
+  // indicator into the forced canvas so the control reads as empty.
+
+  // A `background: Highlight; color: HighlightText` pairing MUST be in this
+  // list, and that is not a style preference. Chrome paints a Canvas TEXT
+  // BACKPLATE behind the text of any element still on
+  // `forced-color-adjust: auto`, so HighlightText renders white-on-white and
+  // the label disappears entirely — the computed values are perfect and the
+  // pixels are blank. Confirmed by screenshot under
+  // Emulation.setEmulatedMedia, not by reading the cascade: two identical
+  // divs, one opted out and one not, and only the opted-out one has readable
+  // text. The six collection and calendar selectors above were added on that
+  // evidence. A Highlight BORDER, or a fill with no text over it (the row
+  // selection marker, the column resizer), needs no opt-out.
+  .react-aria-Switch::before,
+  .react-aria-Switch::after,
+  .react-aria-Radio[data-selected]::before,
+  .react-aria-Tab[data-selected],
+  .react-aria-Tag[data-selected],
+  .react-aria-ToggleButton[data-selected],
+  .react-aria-CalendarCell[data-selected],
+  .react-aria-CalendarCell[data-selection-start],
+  .react-aria-CalendarCell[data-selection-end],
+  .react-aria-DateSegment[data-focused],
+  .react-aria-ListBoxItem[data-selected],
+  .react-aria-MenuItem[data-selected],
+  .react-aria-SliderFill,
+  .react-aria-SliderThumb,
+  .react-aria-ProgressBar .bar,
+  .react-aria-ProgressBar .fill,
+  .react-aria-Meter .bar,
+  .react-aria-Meter .fill {
+    forced-color-adjust: none;
+  }
+  .react-aria-Switch::before {
+    background: Canvas;
+    border-color: CanvasText;
+  }
+  .react-aria-Switch::after {
+    background: CanvasText;
+  }
+  .react-aria-Switch[data-selected]::before {
+    background: Highlight;
+    border-color: Highlight;
+  }
+  .react-aria-Switch[data-selected]::after {
+    background: HighlightText;
+  }
+  .react-aria-Radio[data-selected]::before {
+    background: Highlight;
+    border-color: Canvas;
+    outline-color: Highlight;
+  }
+  .react-aria-Tab[data-selected],
+  .react-aria-Tag[data-selected],
+  .react-aria-ToggleButton[data-selected] {
+    background: Highlight;
+    border-color: Highlight;
+    color: HighlightText;
+  }
+  .react-aria-SliderFill,
+  .react-aria-SliderThumb,
+  .react-aria-ProgressBar .fill,
+  .react-aria-Meter .fill {
+    background: Highlight;
+  }
+  .react-aria-SliderThumb {
+    border-color: CanvasText;
+  }
+
+  // Without a rail outline the unfilled remainder is indistinguishable from the
+  // page, so a part-full bar reads as a short floating block. The SliderTrack
+  // joined this rule when the rails lost their normal-mode border: its
+  // --mg-aria-color-track forces to Canvas, so the empty remainder became the
+  // page and a slider read as a bar floating in space.
+  // Deliberately NOT added to the forced-color-adjust group above: the track
+  // has a `[data-hovered]` brand tint at (0,2,0) that an opt-out would paint
+  // over this rule. Explicit system colours need no opt-out — verified.
+  .react-aria-SliderTrack,
+  .react-aria-ProgressBar .bar,
+  .react-aria-Meter .bar {
+    background: Canvas;
+    border: var(--mg-aria-border-width) solid CanvasText;
+    box-sizing: border-box;
+  }
+
+  // Leaks through the opt-out above. `forced-color-adjust: none` disables
+  // forcing for EVERY declaration that reaches the element, so the more
+  // specific state rules — SliderFill/Thumb [data-disabled] and the thumb's
+  // hover/drag colours — were painting brand values that no forced-colours
+  // rule had authorised. GrayText is the system's own disabled idiom.
+  .react-aria-SliderFill[data-disabled],
+  .react-aria-SliderThumb[data-disabled] {
+    background: GrayText;
+  }
+  .react-aria-SliderThumb[data-hovered],
+  .react-aria-SliderThumb[data-dragging] {
+    background: Highlight;
+  }
+
+  // Same leak, and the one the source comment already promised: the
+  // indeterminate stripes claim to "survive as a solid Highlight in forced
+  // colours where background-image is dropped", but the fill's opt-out is
+  // precisely what stops it being dropped, so the bar rendered in brand
+  // stripes. Dropping the image by hand delivers the stated behaviour.
+  .react-aria-ProgressBar:not([aria-valuenow]) .fill {
+    background-image: none;
+  }
+
+  // STRUCTURE THAT WAS A BACKGROUND.
+  // A translucent BORDER colour is forced to opaque CanvasText and survives
+  // intact, which is why the table rules, both tab rails, the disclosure
+  // dividers, the GridList and ResizableTableContainer frames and the stepper
+  // seam all need nothing here. A translucent BACKGROUND keeps its alpha and
+  // is forced to Canvas, so it becomes the page. These three drew a line with
+  // a background.
+  .react-aria-Separator {
+    background: CanvasText;
+  }
+
+  // Transparent at rest by design, so every revealed state was a Canvas
+  // background on Canvas — the handle was unreachable-looking in all three.
+  // CanvasText for the two "the handle is here" states because the affordance
+  // is a RULE, and Highlight only while it is actually being dragged.
+  .react-aria-ColumnResizer[data-hovered],
+  .react-aria-ColumnResizer[data-focus-visible] {
+    // background-COLOR, never the shorthand: the resizer paints a 1px rule
+    // inside a 31px hit area via `background-clip: content-box`, and the
+    // shorthand resets that back to border-box — which would fill the whole
+    // 31px target with a black block. The clip is restated because the
+    // NORMAL-MODE `[data-hovered]`/`[data-resizing]` rules do use the
+    // shorthand and so reset it at equal specificity before we get here; that
+    // is a real normal-mode defect and is reported rather than fixed, since
+    // this pass owns only the forced-colours block.
+    background-clip: content-box;
+    background-color: CanvasText;
+  }
+  .react-aria-ColumnResizer[data-resizing] {
+    background-clip: content-box;
+    background-color: Highlight;
+  }
+
+  // The badge's 6% interactive tint flattens to Canvas, leaving a bare +/- with
+  // no circle. A border needs no opt-out; box-sizing keeps the 30px box 30px.
+  .react-aria-Disclosure .react-aria-Button[slot="trigger"]::after {
+    border: var(--mg-aria-border-width) solid CanvasText;
+    box-sizing: border-box;
+  }
+
+  // THE RESERVED SELECTION BAR — the defect nobody reported.
+  // Both collections reserve the 3px marker as `solid transparent` so
+  // selecting does not shift the layout. Forced colours forces a TRANSPARENT
+  // border-color to CanvasText (verified in Chrome), so every row, every
+  // GridList item and the table header's first column painted an opaque 3px
+  // black bar, and "selected" became indistinguishable from "not selected" —
+  // the exact state the bar exists to carry. Canvas restores the reservation;
+  // Highlight is the system's own selection colour.
+  .react-aria-Row > .react-aria-Cell:first-child,
+  .react-aria-TableHeader .react-aria-Column:first-child,
+  .react-aria-GridListItem {
+    border-inline-start-color: Canvas;
+  }
+  .react-aria-Row[data-selected] > .react-aria-Cell:first-child,
+  .react-aria-GridListItem[data-selected] {
+    border-inline-start-color: Highlight;
+  }
+
+  // Menu and ListBox selection is a tint plus a check. The check survives
+  // (generated content is rendered in forced colours; only its colour is
+  // forced), but the tint does not, so a selected item was carried by the
+  // glyph alone. Highlight/HighlightText is what a Windows list does, and the
+  // check must follow the fill or it stays CanvasText on Highlight. The
+  // opt-out these need lives in the group above, for the text-backplate
+  // reason recorded there.
+  .react-aria-MenuItem[data-selected],
+  .react-aria-ListBoxItem[data-selected] {
+    background: Highlight;
+    color: HighlightText;
+  }
+  .react-aria-MenuItem[data-selected]::after,
+  .react-aria-ListBoxItem[data-selected]::after,
+  .react-aria-Tag[data-selected]::before {
+    color: HighlightText;
+  }
+
+  // Sorted column. The arrow itself survives, so this is reinforcement rather
+  // than rescue and the conservative option is the right one: a Highlight fill
+  // would fight the user's theme for a state aria-sort already announces. Under
+  // border-collapse the heavier border wins the shared edge, so no layout
+  // moves.
+  .react-aria-Column[data-sort-direction] {
+    border-block-end: calc(var(--mg-aria-border-width) * 2) solid CanvasText;
+  }
+
+  // Dashed -> solid already survives (border-style is not forced), so only the
+  // accent needs restating. The label stays CanvasText: Highlight text on
+  // Canvas is the one place the system palette gives no contrast guarantee.
+  .react-aria-DropZone[data-drop-target] {
+    border-color: Highlight;
+  }
+
+  // The focused segment is a FILL now. An accent fill forces to Canvas, so the
+  // segment read as unfocused while the group around it read as focused.
+  .react-aria-DateSegment[data-focused] {
+    background: Highlight;
+    color: HighlightText;
+  }
+  .react-aria-DateSegment[data-placeholder] {
+    color: GrayText;
+  }
+
+  // A selected date was Canvas on Canvas with no border and no glyph — the
+  // single most complete loss of state on this surface. Stated for the plain
+  // Calendar as well as the RangeCalendar (the range wave reported only the
+  // latter), and at the specificity of each normal-mode rule it has to beat.
+  // GrayText first so selection still wins on a selected-and-disabled cell.
+  .react-aria-CalendarCell[data-disabled],
+  .react-aria-CalendarCell[data-outside-month],
+  .react-aria-CalendarCell[data-unavailable] {
+    color: GrayText;
+  }
+  .react-aria-CalendarCell[data-selected],
+  .react-aria-RangeCalendar .react-aria-CalendarCell[data-selected],
+  .react-aria-CalendarCell[data-selection-start],
+  .react-aria-CalendarCell[data-selection-end] {
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  // The today dot is `background: currentcolor`, and currentcolor in a
+  // BACKGROUND is forced to Canvas rather than tracking the forced text
+  // colour, so the dot vanished. Stated explicitly on both grounds.
+  .react-aria-CalendarCell[data-today]::after {
+    background: CanvasText;
+  }
+  .react-aria-CalendarCell[data-selected][data-today]::after {
+    background: HighlightText;
+  }
+}

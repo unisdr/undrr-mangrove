@@ -36,6 +36,19 @@ The DELTA Resilience theme never had a legacy variant. See the [v1.4 release not
 <link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0/css/style.css" />
 ```
 
+### Optional ComboBox styles (unreleased)
+
+`css/combo-box.css` styles the Mangrove `ComboBox` only. Load it with a normal
+Mangrove theme stylesheet, or with one `css/tokens/{brand}.css` file in a
+React-only application that does not load the normal stylesheet. The component
+entry is `components/ComboBox.js` and requires React Aria Components in the
+consuming application, including a Drupal page that mounts a React island.
+CSS-only and server-rendered controls do not load that runtime.
+
+The broad `.react-aria-*` stylesheet used in the Storybook research gallery is
+not published. See [React Aria inside Mangrove](REACT-ARIA-BOUNDARY.md) for the
+component ownership rule.
+
 ### JavaScript modules
 
 | Module | Path | Purpose |

@@ -80,6 +80,17 @@ describe('the published-path model', () => {
     expect(paths.has('scss/style.scss')).toBe(false);
   });
 
+  test('publishes one scoped control stylesheet and neutral brand access', () => {
+    expect(paths.has('css/combo-box.css')).toBe(true);
+    expect(paths.has('components/ComboBox.js')).toBe(true);
+    expect(paths.has('aria/react-aria.css')).toBe(false);
+    expect(paths.has('scss/assets/scss/aria/_react-aria.scss')).toBe(false);
+    for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
+      expect(paths.has(`css/tokens/${brand}.css`)).toBe(true);
+      expect(paths.has(`aria/tokens/${brand}.css`)).toBe(false);
+    }
+  });
+
   test('derives one component bundle per webpack entry', () => {
     const names = componentEntryNames();
     expect(names.length).toBeGreaterThan(30);
@@ -100,6 +111,7 @@ describe('the published-path model', () => {
         ['assets/css', 'css'],
         ['assets/error-pages', 'error-pages'],
         ['fonts', 'fonts'],
+        ['aria', 'aria'],
         ['components', 'components'],
       ]) {
         if (entry === from || entry.startsWith(`${from}/`)) {
@@ -118,6 +130,11 @@ describe('the published-path model', () => {
       }
       return found;
     };
+
+    const researchFiles = walk(
+      path.join(dist, 'assets', 'scss', 'aria')
+    ).filter(file => path.basename(file) !== '_combo-box.scss');
+    expect(researchFiles).toEqual([]);
 
     const inDist = new Set();
     for (const file of walk(dist)) {

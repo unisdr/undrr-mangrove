@@ -19,8 +19,9 @@
  *
  * Emitted per brand:
  *   stories/assets/scss/generated/_tokens-<brand>.scss
- *       @mixin mg-tokens-<brand>  the theme block (:root / .mg-theme-*)
+ *       @mixin mg-tokens-<brand>       the theme block (:root / .mg-theme-*)
  *       plus any Sass variables the build still needs
+ *   css/tokens/<brand>.css              (compiled from the theme mixins)
  *
  * Usage:
  *   node scripts/build-tokens.cjs            write the generated partials
@@ -32,8 +33,8 @@
  * SHA-256 per emitted file, checked by tokens-source.test.js. A deliberate
  * token change moves it; regenerate it in the same commit with --baseline.
  *
- * Wired into package.json as `yarn build:tokens`, which `yarn scss` and
- * `yarn scss-watch` both run first.
+ * Wired into package.json as `yarn build:tokens`, which `yarn scss`,
+ * `yarn scss-watch` and `yarn build:aria-research` all run first.
  */
 'use strict';
 
@@ -660,8 +661,6 @@ function renderBrand(brand, resolved, ownIds, label) {
   lines.push(`@mixin mg-tokens-${label} {`);
   lines.push(...declarations(own, '  '));
   lines.push('}');
-
-  lines.push('');
 
   return lines.join('\n');
 }
