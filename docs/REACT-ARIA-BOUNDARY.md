@@ -16,6 +16,8 @@ Mangrove serves server-rendered Drupal and vanilla JavaScript, and some Drupal p
 | Drawer or modal panel | `Drawer` / `.mg-drawer` | Keep one public drawer contract. Do not add a second modal or drawer just because React Aria offers Modal and Dialog primitives. A future generic Dialog needs its own user need and must reuse Mangrove's overlay, focus and theme decisions. |
 | Date entry, rich collections and other gaps | Define a Mangrove component first | Use React Aria when its behaviour addresses the demonstrated need; publish only the Mangrove wrapper and its scoped CSS. |
 
+The consumer CRUD example uses the existing Drawer for the longer create/edit form and a native `<dialog>` for the short delete confirmation, following ShareButtons' modal pattern. The dialog styling is local to that example; it does not publish a generic modal API.
+
 `aria/react-aria.css` remains a Storybook research artifact and is excluded from the npm and CDN package. It targets React Aria's default classes across many controls and would create a second visual API beside the existing `mg-` controls. Those default classes also disappear when an application supplies `className`, so they are a weak contract for consumer code. See [React Aria's styling guide](https://react-aria.adobe.com/styling).
 
 ## Adding a React Aria implementation
