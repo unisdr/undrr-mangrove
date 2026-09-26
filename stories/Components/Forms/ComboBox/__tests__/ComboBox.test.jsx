@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { axe } from 'jest-axe';
 import ComboBox from '../ComboBox';
+import { Drawer } from '../../../Navigation/Drawer/Drawer';
 
 const items = [
   { id: 'flood', label: 'Flood' },
@@ -53,8 +54,66 @@ describe('ComboBox', () => {
   });
 
   test('renders disabled state', () => {
-    render(<ComboBox label="Hazard type" items={items} isDisabled />);
+    render(<ComboBox label="Hazard type" items={items} disabled />);
     expect(screen.getByRole('combobox')).toBeDisabled();
+  });
+
+  test('shows native required validation feedback after an empty submit', async () => {
+    render(
+      <form>
+        <ComboBox
+          label="Hazard type"
+          items={items}
+          required
+          errorText="Pick a hazard"
+        />
+        <button type="submit">Submit</button>
+      </form>
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
+    const input = screen.getByRole('combobox', { name: 'Hazard type' });
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(await screen.findByText('Pick a hazard')).toBeVisible();
+    expect(input).toHaveAttribute('aria-describedby');
+  });
+
+  test('shares Mangrove field props and describes help text', () => {
+    render(
+      <ComboBox
+        id="hazard-type"
+        label="Hazard type"
+        hideLabel
+        items={items}
+        required
+        helpText="Choose one hazard"
+        defaultSelectedKey="flood"
+      />
+    );
+    const input = screen.getByRole('combobox', { name: 'Hazard type' });
+    expect(input).toHaveAttribute('id', 'hazard-type');
+    expect(input).toHaveValue('Flood');
+    expect(input).toBeRequired();
+    expect(input).toHaveAttribute('aria-describedby');
+    expect(screen.getByText('Choose one hazard')).toBeVisible();
+    expect(screen.getByText('Hazard type')).toHaveClass('mg-u-sr-only');
+  });
+
+  test('Escape closes suggestions before their containing Drawer', async () => {
+    const onClose = jest.fn();
+    render(
+      <Drawer isOpen title="Choose a hazard" onClose={onClose}>
+        <ComboBox label="Hazard type" items={items} />
+      </Drawer>
+    );
+    const input = screen.getByRole('combobox', { name: 'Hazard type' });
+    fireEvent.focus(input);
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    expect(await screen.findByRole('option', { name: 'Flood' })).toBeVisible();
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(onClose).not.toHaveBeenCalled();
+    expect(screen.queryByRole('option', { name: 'Flood' })).toBeNull();
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   test('has no accessibility violations at rest', async () => {
