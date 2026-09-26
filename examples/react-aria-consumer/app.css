@@ -15,9 +15,15 @@
     display: grid;
     gap: 1rem;
   }
+
+  .consumer-form {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
 }
 
 /* An existing unlayered site rule: keep it harmless and verify the cascade. */
-.consumer-shell button {
-  font: inherit;
+.consumer-shell {
+  text-wrap: pretty;
 }
