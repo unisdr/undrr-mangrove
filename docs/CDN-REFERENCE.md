@@ -36,27 +36,17 @@ The DELTA Resilience theme never had a legacy variant. See the [v1.4 release not
 <link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0/css/style.css" />
 ```
 
-### React Aria stylesheets (unreleased)
+### Optional ComboBox styles (unreleased)
 
-Mangrove styles the stock `.react-aria-*` classes of
-[React Aria Components](https://react-spectrum.adobe.com/react-aria/), so those
-components pick up Mangrove theming with no `className` or configuration.
+`css/combo-box.css` styles the Mangrove `ComboBox` only. Load it with a normal
+Mangrove theme stylesheet, or with one `css/tokens/{brand}.css` file in a
+React-only application that does not load the normal stylesheet. The component
+entry is `components/ComboBox.js` and requires React Aria Components in the
+consuming application. CSS-only and Drupal consumers do not load that runtime.
 
-The surface is opt-in: load `aria/react-aria.css` and one
-`aria/tokens/{brand}.css` file alongside React Aria Components. The normal
-Mangrove theme stylesheets do not include these rules, so consumers that do not
-use React Aria pay no CSS cost.
-
-Once a release includes the surface, load these paths from that release's
-`https://assets.undrr.org/mangrove/{version}/` folder:
-
-```text
-aria/tokens/mangrove.css
-aria/react-aria.css
-```
-
-The npm package exposes the same paths under
-`@undrr/undrr-mangrove/aria/`.
+The broad `.react-aria-*` stylesheet used in the Storybook research gallery is
+not published. See [React Aria inside Mangrove](REACT-ARIA-BOUNDARY.md) for the
+component ownership rule.
 
 ### JavaScript modules
 

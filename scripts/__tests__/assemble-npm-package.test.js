@@ -51,6 +51,10 @@ beforeEach(() => {
       keywords: ['a'],
       author: 'UNDRR',
       license: 'Apache-2.0',
+      peerDependencies: { 'react-aria-components': '^1.20.0' },
+      peerDependenciesMeta: {
+        'react-aria-components': { optional: true },
+      },
     })
   );
   write(root, 'README.md', '# readme');
@@ -146,6 +150,10 @@ test('the published surface never matches a development-only file', () => {
       '!**/__fixtures__/**',
       '!**/*.test.*',
       '!**/*.spec.*',
+      '!scss/assets/scss/aria/_react-aria.scss',
+      '!scss/assets/scss/aria/_spike-demo.scss',
+      '!scss/assets/scss/aria/_runtime-theme-aliases.scss',
+      '!scss/assets/scss/aria/_tokens-*.scss',
     ])
   );
   // dist/ is copied but never published: nothing in `files` matches it.
@@ -240,7 +248,10 @@ test('generates the slimmed package.json', () => {
       'css/**/*',
       'js/**/*',
       'scss/**/*.scss',
-      'aria/**/*',
+      '!scss/assets/scss/aria/_react-aria.scss',
+      '!scss/assets/scss/aria/_spike-demo.scss',
+      '!scss/assets/scss/aria/_runtime-theme-aliases.scss',
+      '!scss/assets/scss/aria/_tokens-*.scss',
       'error-pages/**/*',
       'fonts/**/*',
       '!**/__tests__/**',
@@ -254,6 +265,10 @@ test('generates the slimmed package.json', () => {
     keywords: ['a'],
     author: 'UNDRR',
     license: 'Apache-2.0',
+    peerDependencies: { 'react-aria-components': '^1.20.0' },
+    peerDependenciesMeta: {
+      'react-aria-components': { optional: true },
+    },
   });
   expect(Object.keys(pkg)).toEqual([
     'name',
@@ -264,6 +279,8 @@ test('generates the slimmed package.json', () => {
     'keywords',
     'author',
     'license',
+    'peerDependencies',
+    'peerDependenciesMeta',
   ]);
 });
 

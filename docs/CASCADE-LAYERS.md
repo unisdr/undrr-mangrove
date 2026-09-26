@@ -1,6 +1,10 @@
 # Cascade layers
 
-Mangrove ships its optional React Aria stylesheet **unlayered**, and there is
+This document records cascade findings from the Storybook React Aria research
+skin. That broad stylesheet is no longer published. The supported ComboBox
+ships scoped CSS and documents an app-level layer import in its component page.
+
+The research stylesheet was **unlayered**, and there is
 currently no layered flavour of it. This page explains how it interacts with
 layered application CSS and what a future layered build would require.
 
@@ -249,7 +253,8 @@ still support pre-2022 browsers, ship unlayered CSS.
 
 ## Design tokens stay unlayered
 
-The `aria/tokens/*.css` files are deliberately **not**
+The supported `css/tokens/*.css` files are deliberately **not**
 layered. They only declare custom properties, and keeping them out of a layer
 means a consumer can override a token from anywhere without thinking about layer
-order. Import them alongside `aria/react-aria.css` however you load it.
+order. Import them alongside a supported scoped component stylesheet however
+you load it.

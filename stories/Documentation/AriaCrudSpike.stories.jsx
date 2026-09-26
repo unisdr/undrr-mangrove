@@ -57,7 +57,7 @@ import {
   isFileDropItem,
 } from 'react-aria-components';
 import Pager from '../Components/Pager/Pager';
-import AriaComboBox from '../Components/Forms/AriaComboBox/AriaComboBox';
+import ComboBox from '../Components/Forms/ComboBox/ComboBox';
 import '../assets/scss/aria/_combo-box.scss';
 // Spike-demo composition styles. Imported here rather than in the theme
 // rollup so these fixtures are not shipped in every consumer's stylesheet.
@@ -263,7 +263,7 @@ function EventEditor({ item, onClose, onSave }) {
                     </>
                   )}
                 </DropZone>
-                <AriaComboBox
+                <ComboBox
                   label="Hazard type"
                   placeholder="Enter hazard type"
                   openButtonLabel="Show suggested hazards"

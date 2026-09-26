@@ -1,13 +1,13 @@
 import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
-import * as AriaComboBoxStories from './AriaComboBox.stories';
+import * as ComboBoxStories from './ComboBox.stories';
 
-<Meta of={AriaComboBoxStories} />
+<Meta of={ComboBoxStories} />
 
 > If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
 
-# Aria ComboBox
+# ComboBox
 
-A React-only searchable choice control. It uses React Aria for interaction and Mangrove tokens and classes for presentation. Import `aria/combo-box.css` with a normal Mangrove theme stylesheet, or with one `aria/tokens/{brand}.css` file in a React-only application. The broad `aria/react-aria.css` skin is not required.
+A React-only searchable choice control. It uses React Aria for interaction and Mangrove tokens and classes for presentation. Import `css/combo-box.css` with a normal Mangrove theme stylesheet, or with one `css/tokens/{brand}.css` file in a React-only application.
 
 ## When to use
 
@@ -15,15 +15,15 @@ Use this for a searchable list or custom text values in a React application. Use
 
 ## States
 
-<Canvas of={AriaComboBoxStories.Default} />
+<Canvas of={ComboBoxStories.Default} />
 
-<Controls of={AriaComboBoxStories.Default} />
+<Controls of={ComboBoxStories.Default} />
 
-<Canvas of={AriaComboBoxStories.CustomValue} />
+<Canvas of={ComboBoxStories.CustomValue} />
 
-<Canvas of={AriaComboBoxStories.Invalid} />
+<Canvas of={ComboBoxStories.Invalid} />
 
-<Canvas of={AriaComboBoxStories.Disabled} />
+<Canvas of={ComboBoxStories.Disabled} />
 
 ## Behaviour and accessibility
 
@@ -33,8 +33,8 @@ React Aria portals the suggestion list. If the theme is scoped to a wrapper rath
 
 ## CSS and JavaScript
 
-- Styles: `aria/combo-box.css` (opt-in), sourced from `stories/assets/scss/aria/_combo-box.scss`.
-- JavaScript: `components/AriaComboBox.js` in the assembled npm package. React is external; the React Aria behaviour is bundled with this optional entry.
+- Styles: `css/combo-box.css` (opt-in), sourced from `stories/assets/scss/aria/_combo-box.scss`.
+- JavaScript: `components/ComboBox.js` in the assembled npm package. React and React Aria Components are optional peers. Install `react-aria-components` in an application that imports this entry.
 - Theme values: `--mg-control-*` roles and existing Mangrove form, focus, spacing and typography tokens. The component never relies on `.react-aria-*` class names.
 
 Tailwind 4 puts utilities in a cascade layer. To let those utilities override the pilot's CSS, declare the order before either import and place the optional stylesheet in the earlier layer:
@@ -42,11 +42,14 @@ Tailwind 4 puts utilities in a cascade layer. To let those utilities override th
 ```css
 @layer theme, base, mg-components, components, utilities;
 @import '@undrr/undrr-mangrove/css/style.css';
-@import '@undrr/undrr-mangrove/aria/combo-box.css' layer(mg-components);
+@import '@undrr/undrr-mangrove/css/combo-box.css' layer(mg-components);
 ```
 
-Replace `css/style.css` with the chosen theme, or one standalone `aria/tokens/{brand}.css` file. Existing unlayered application CSS has higher priority than layered styles; test the import order in the consuming application.
+Replace `css/style.css` with the chosen theme, or one standalone `css/tokens/{brand}.css` file. Existing unlayered application CSS has higher priority than layered styles; test the import order in the consuming application.
+
+See [React Aria inside Mangrove](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REACT-ARIA-BOUNDARY.md) for why this is a distinct control rather than a second Select API.
 
 ## Changelog
 
+- **1.1**, 2026-09-26: Published as Mangrove ComboBox with scoped CSS and a shared optional React Aria runtime; removed the broad stock-class skin from distribution.
 - **1.0**, 2026-09-25: Added a narrow React Aria pilot for Mangrove 2 tokens and a real searchable control.

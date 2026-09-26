@@ -3,8 +3,8 @@
  * These selectors dress the demo stories (`.aria-crud-*`,
  * `.aria-integration-demo*`, `.aria-spike-*`, `.aria-gallery-*`,
  * `.aria-collection-*`) and are deliberately excluded
- * from the distributed `aria/react-aria.css` surface, which carries only
- * reusable React Aria primitive and state styles.
+ * from the research-only `aria/react-aria.css` surface, which carries only
+ * React Aria primitive and state styles for the gallery.
  * This file is imported by the Storybook spike stories, not by `yarn build:aria`.
  */
 @import "react-aria";

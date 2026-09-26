@@ -1,7 +1,7 @@
 /*
  * Sass source for the React Aria Components styling surface.
- * The public aria/react-aria.css artifact is generated from this file by
- * `yarn build:aria`; do not edit that generated CSS directly.
+ * The research-only aria/react-aria.css artifact is generated from this file
+ * for Storybook and coverage checks. It is excluded from npm/CDN packages.
  * This intentionally targets React Aria's stock classes and consumes only
  * --mg-aria-* tokens, so consumers can import it without Mangrove components.
  *

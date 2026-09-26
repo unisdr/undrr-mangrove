@@ -143,7 +143,7 @@ describe('custom properties read by Mangrove are defined', () => {
   );
 
   test.each(['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'])(
-    'scoped ComboBox CSS resolves with %s standalone tokens',
+    'scoped ComboBox CSS resolves with %s neutral tokens',
     brand => {
       const comboBox = sass.compile(
         path.join(SCSS_DIR, 'aria/_combo-box.scss'),
@@ -154,7 +154,7 @@ describe('custom properties read by Mangrove are defined', () => {
         }
       ).css;
       const tokens = sass.compile(
-        path.join(SCSS_DIR, `aria/_tokens-${brand}.scss`),
+        path.join(SCSS_DIR, `brand-tokens/_${brand}.scss`),
         {
           loadPaths: [SCSS_DIR],
           silenceDeprecations: ['import'],
@@ -164,6 +164,7 @@ describe('custom properties read by Mangrove are defined', () => {
       expect(
         undefinedRefs(readIn(comboBox + tokens), definedIn(comboBox + tokens))
       ).toEqual([]);
+      expect(tokens).not.toMatch(/--mg-aria-/);
     }
   );
 

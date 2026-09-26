@@ -1,31 +1,31 @@
 /**
- * Optional React Aria ComboBox pilot. Scoped Mangrove classes deliberately
+ * Optional React ComboBox pilot. Scoped Mangrove classes deliberately
  * avoid React Aria's replaceable stock class names.
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Forms/AriaComboBox/AriaComboBox.mdx
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Forms/ComboBox/ComboBox.mdx
  */
 @import "../breakpoints";
 @import "../mixins";
 
-.mg-aria-combobox {
+.mg-combobox {
   color: var(--mg-control-text);
   display: block;
   font-family: var(--mg-font-family-text);
   max-inline-size: 28rem;
 }
 
-.mg-aria-combobox__label {
+.mg-combobox__label {
   display: block;
   font-size: var(--mg-font-size-300);
   margin-block-end: var(--mg-spacing-25);
 }
 
-.mg-aria-combobox__control {
+.mg-combobox__control {
   align-items: stretch;
   display: flex;
 }
 
-.mg-aria-combobox__input {
+.mg-combobox__input {
   background: var(--mg-control-surface);
   border: var(--mg-form-input-border-width) solid var(--mg-control-border);
   border-start-start-radius: var(--mg-radius-form-input);
@@ -49,7 +49,7 @@
   }
 }
 
-.mg-aria-combobox__trigger {
+.mg-combobox__trigger {
   background: var(--mg-control-surface);
   border: var(--mg-form-input-border-width) solid var(--mg-control-border);
   border-inline-start: 0;
@@ -65,7 +65,7 @@
   }
 }
 
-.mg-aria-combobox__popover {
+.mg-combobox__popover {
   background: var(--mg-control-surface-focus);
   border: 1px solid var(--mg-control-border);
   border-radius: var(--mg-radius-form-input);
@@ -79,11 +79,11 @@
   z-index: var(--mg-z-index-dropdown);
 }
 
-.mg-aria-combobox__listbox {
+.mg-combobox__listbox {
   outline: none;
 }
 
-.mg-aria-combobox__option {
+.mg-combobox__option {
   border-radius: var(--mg-radius-form-input);
   cursor: pointer;
   padding: var(--mg-spacing-100);
@@ -103,29 +103,29 @@
   }
 }
 
-.mg-aria-combobox__error {
+.mg-combobox__error {
   color: var(--mg-control-error);
   display: block;
   font-size: var(--mg-font-size-200);
   margin-block-start: var(--mg-spacing-25);
 }
 
-.mg-aria-combobox[data-invalid] .mg-aria-combobox__input {
+.mg-combobox[data-invalid] .mg-combobox__input {
   border-color: var(--mg-control-error);
 }
 
-.mg-aria-combobox[data-disabled] {
+.mg-combobox[data-disabled] {
   opacity: 0.55;
 }
 
 @media (forced-colors: active) {
-  .mg-aria-combobox__input,
-  .mg-aria-combobox__trigger,
-  .mg-aria-combobox__popover {
+  .mg-combobox__input,
+  .mg-combobox__trigger,
+  .mg-combobox__popover {
     border-color: ButtonText;
   }
 
-  .mg-aria-combobox__option[data-selected] {
+  .mg-combobox__option[data-selected] {
     outline: 1px solid Highlight;
   }
 }

@@ -1,17 +1,17 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { axe } from 'jest-axe';
-import AriaComboBox from '../AriaComboBox';
+import ComboBox from '../ComboBox';
 
 const items = [
   { id: 'flood', label: 'Flood' },
   { id: 'drought', label: 'Drought' },
 ];
 
-describe('AriaComboBox', () => {
+describe('ComboBox', () => {
   test('labels its input and supports translated button text', () => {
     render(
-      <AriaComboBox
+      <ComboBox
         label="Hazard type"
         items={items}
         openButtonLabel="Show hazards"
@@ -24,7 +24,7 @@ describe('AriaComboBox', () => {
   test('passes input changes to a controlled consumer', () => {
     const onInputChange = jest.fn();
     render(
-      <AriaComboBox
+      <ComboBox
         label="Hazard type"
         items={items}
         inputValue=""
@@ -38,13 +38,13 @@ describe('AriaComboBox', () => {
   });
 
   test('renders disabled state', () => {
-    render(<AriaComboBox label="Hazard type" items={items} isDisabled />);
+    render(<ComboBox label="Hazard type" items={items} isDisabled />);
     expect(screen.getByRole('combobox')).toBeDisabled();
   });
 
   test('has no accessibility violations at rest', async () => {
     const { container } = render(
-      <AriaComboBox label="Hazard type" items={items} />
+      <ComboBox label="Hazard type" items={items} />
     );
     expect(await axe(container)).toHaveNoViolations();
   });
