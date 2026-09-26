@@ -1,6 +1,6 @@
 # React Aria consumer example
 
-This example bundles **the assembled npm package**, not the Storybook source. It represents a React island on a server-rendered Drupal page: a small API response supplies taxonomy terms, while Mangrove owns the Drawer, ComboBox, CSS and theme. The JSON file is a fixture; a real integration replaces the `fetch` URL and maps its API response to `{ id, label }` items.
+This example bundles **the assembled npm package**, not the Storybook source. It represents a React island on a server-rendered Drupal page: a small API response supplies taxonomy terms, while Mangrove owns the Drawer, ComboBox, native Select controls, button styles, CSS and theme. The JSON file is a fixture; a real integration replaces the `fetch` URL and maps its API response to `{ id, label }` items.
 
 From the repository root:
 
@@ -20,6 +20,6 @@ Open `http://127.0.0.1:6101/`. The build assembles the same `npm-package/` direc
 5. Switch to Arabic. The host and popup become RTL, and the label, help, error and options are translated. French is a second LTR translation check.
 6. At a narrow viewport or 200% zoom, the field and popup should stay usable without horizontal page overflow. In forced-colours mode, check focus and selected-option visibility.
 
-`app.css` imports `style-all.css` for runtime brand switching and places scoped ComboBox CSS in a named layer before utilities. A small unlayered site rule represents an existing host stylesheet. This checks the package in a realistic cascade without asking the host to use the broad `.react-aria-*` research skin.
+`app.css` imports `style-all.css` for runtime brand switching and places scoped ComboBox CSS in a named layer before utilities. The theme and language controls use Mangrove's published native `Select`; the actions use its `mg-button` classes. A small unlayered site rule represents an existing host stylesheet. This checks the package in a realistic cascade without asking the host to use the broad `.react-aria-*` research skin. React Aria supplies ComboBox interaction here; using its stock Button or Select classes would introduce a second public control pattern for the same tasks.
 
 The example does not claim that every Drupal form uses React. Server-rendered controls continue to work without this island or the React Aria dependency.

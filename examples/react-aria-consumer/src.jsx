@@ -3,7 +3,18 @@ import { createRoot } from 'react-dom/client';
 import { I18nProvider } from 'react-aria-components';
 import ComboBox from '@undrr/undrr-mangrove/components/ComboBox.js';
 import { Drawer } from '@undrr/undrr-mangrove/components/Drawer.js';
+import Select from '@undrr/undrr-mangrove/components/Select.js';
 import './app.css';
+
+const themeOptions = ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'].map(
+  brand => ({ value: brand, label: brand })
+);
+
+const languageOptions = [
+  { value: 'en', label: 'English' },
+  { value: 'ar', label: 'العربية' },
+  { value: 'fr', label: 'Français' },
+];
 
 const copy = {
   en: {
@@ -94,7 +105,11 @@ function App() {
       >
         <h1>{t.heading}</h1>
         <p>{t.intro}</p>
-        <button type="button" onClick={() => setOpen(true)}>
+        <button
+          type="button"
+          className="mg-button mg-button-secondary mg-button-outline"
+          onClick={() => setOpen(true)}
+        >
           {t.open}
         </button>
         <p role="status" data-testid="saved-value">
@@ -108,35 +123,21 @@ function App() {
           labels={{ closeLabel: t.close }}
         >
           <div ref={setPortalHost} className="consumer-fields">
-            <label>
-              {t.theme}
-              <select
-                aria-label={t.theme}
-                value={theme}
-                onChange={event => setTheme(event.target.value)}
-              >
-                {['mangrove', 'preventionweb', 'irp', 'mcr', 'delta'].map(
-                  brand => (
-                    <option key={brand} value={brand}>
-                      {brand}
-                    </option>
-                  )
-                )}
-              </select>
-            </label>
-            <label>
-              {t.language}
-              <select
-                aria-label={t.language}
-                value={locale}
-                onChange={event => setLocale(event.target.value)}
-              >
-                <option value="en">English</option>
-                <option value="ar">العربية</option>
-                <option value="fr">Français</option>
-              </select>
-            </label>
-            <form onSubmit={save}>
+            <Select
+              id="consumer-theme"
+              label={t.theme}
+              options={themeOptions}
+              value={theme}
+              onChange={event => setTheme(event.target.value)}
+            />
+            <Select
+              id="consumer-language"
+              label={t.language}
+              options={languageOptions}
+              value={locale}
+              onChange={event => setLocale(event.target.value)}
+            />
+            <form className="consumer-form" onSubmit={save}>
               <ComboBox
                 key={locale}
                 id="hazard-type"
@@ -152,7 +153,9 @@ function App() {
                 onSelectionChange={setSelectedKey}
                 popoverContainer={portalHost}
               />
-              <button type="submit">{t.submit}</button>
+              <button type="submit" className="mg-button mg-button-primary">
+                {t.submit}
+              </button>
             </form>
           </div>
         </Drawer>
