@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
   Cell,
   Column,
@@ -49,7 +49,7 @@ const copy = {
   en: {
     heading: 'Try a small record workflow',
     intro:
-      'Create, read, update and delete records in memory. React Aria supplies table navigation and sorting; Mangrove supplies the editor controls, buttons, Drawer and theme. Nothing is sent to Drupal.',
+      'Create, read, update and delete records in memory. React Aria supplies table navigation and sorting; Mangrove supplies the editor controls, buttons and theme. The editor opens in a Drawer; deletion uses a short native modal. Nothing is sent to Drupal.',
     tableLabel: 'Hazard records',
     scrollLabel: 'Scrollable hazard records',
     title: 'Record title',
@@ -79,7 +79,7 @@ const copy = {
   ar: {
     heading: 'جرّب إدارة سجلّات صغيرة',
     intro:
-      'أنشئ السجلّات واعرضها وعدّلها واحذفها محليًا. توفّر React Aria التنقّل والفرز في الجدول؛ وتوفّر Mangrove حقول التحرير والأزرار والدرج والسمة. لا تُرسل البيانات إلى Drupal.',
+      'أنشئ السجلّات واعرضها وعدّلها واحذفها محليًا. توفّر React Aria التنقّل والفرز في الجدول؛ وتوفّر Mangrove حقول التحرير والأزرار والسمة. يفتح المحرر في درج، ويستخدم الحذف نافذة تأكيد أصلية. لا تُرسل البيانات إلى Drupal.',
     tableLabel: 'سجلّات المخاطر',
     scrollLabel: 'سجلّات مخاطر قابلة للتمرير',
     title: 'عنوان السجل',
@@ -109,7 +109,7 @@ const copy = {
   fr: {
     heading: 'Essayer la gestion de fiches',
     intro:
-      'Créez, consultez, modifiez et supprimez des fiches en mémoire. React Aria assure la navigation et le tri du tableau ; Mangrove fournit les champs, les boutons, le tiroir et le thème. Rien n’est envoyé à Drupal.',
+      'Créez, consultez, modifiez et supprimez des fiches en mémoire. React Aria assure la navigation et le tri du tableau ; Mangrove fournit les champs, les boutons et le thème. Le formulaire s’ouvre dans un tiroir, la suppression dans une courte fenêtre modale native. Rien n’est envoyé à Drupal.',
     tableLabel: 'Fiches sur les aléas',
     scrollLabel: 'Fiches sur les aléas, défilement horizontal',
     title: 'Titre de la fiche',
@@ -143,6 +143,108 @@ const copy = {
 const titleFor = (record, locale) =>
   record.titles[locale] || record.titles.en || Object.values(record.titles)[0];
 
+function DeleteConfirmation({
+  isOpen,
+  title,
+  question,
+  recordName,
+  cancelLabel,
+  deleteLabel,
+  onDismiss,
+  onConfirm,
+  fallbackFocusRef,
+}) {
+  const dialogRef = useRef(null);
+  const openerRef = useRef(null);
+  const focusFrameRef = useRef(null);
+  const titleId = useId();
+  const descriptionId = useId();
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    if (focusFrameRef.current) {
+      cancelAnimationFrame(focusFrameRef.current);
+      focusFrameRef.current = null;
+    }
+    const dialog = dialogRef.current;
+    const opener = document.activeElement;
+    openerRef.current = {
+      element: opener,
+      recordId: opener?.getAttribute('data-record-id'),
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    if (!dialog.open) dialog.showModal();
+
+    return () => {
+      if (dialog.open) dialog.close();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
+  useEffect(
+    () => () => {
+      if (focusFrameRef.current) cancelAnimationFrame(focusFrameRef.current);
+    },
+    []
+  );
+
+  const handleClose = () => {
+    onDismiss();
+    if (focusFrameRef.current) cancelAnimationFrame(focusFrameRef.current);
+    focusFrameRef.current = requestAnimationFrame(() => {
+      const { element, recordId } = openerRef.current || {};
+      const fallback = fallbackFocusRef.current;
+      const target =
+        recordId &&
+        element?.isConnected &&
+        element.getAttribute('data-record-id') === recordId
+          ? element
+          : fallback?.disabled
+            ? dialogRef.current
+                ?.closest('.consumer-crud')
+                ?.querySelector('[role="grid"]')
+            : fallback;
+      target?.focus();
+      focusFrameRef.current = null;
+    });
+  };
+
+  return (
+    <dialog
+      ref={dialogRef}
+      className="consumer-confirm"
+      role="alertdialog"
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+      onClose={handleClose}
+    >
+      <h2 id={titleId}>{title}</h2>
+      <div id={descriptionId}>
+        <p>{question}</p>
+        <strong>{recordName}</strong>
+      </div>
+      <div className="consumer-crud__actions">
+        <button
+          type="button"
+          className="mg-button mg-button-secondary mg-button-outline"
+          onClick={() => dialogRef.current?.close()}
+          autoFocus
+        >
+          {cancelLabel}
+        </button>
+        <button
+          type="button"
+          className="mg-button mg-button-primary"
+          onClick={onConfirm}
+        >
+          {deleteLabel}
+        </button>
+      </div>
+    </dialog>
+  );
+}
+
 export default function CrudDemo({ items, locale, filterHazardId }) {
   const t = copy[locale];
   const [records, setRecords] = useState(seedRecords);
@@ -154,6 +256,7 @@ export default function CrudDemo({ items, locale, filterHazardId }) {
   const [draft, setDraft] = useState(null);
   const [portalHost, setPortalHost] = useState(null);
   const [notice, setNotice] = useState('');
+  const addButtonRef = useRef(null);
   const hazardNames = useMemo(
     () => Object.fromEntries(items.map(item => [item.id, item.label])),
     [items]
@@ -228,6 +331,7 @@ export default function CrudDemo({ items, locale, filterHazardId }) {
           <p>{t.intro}</p>
         </div>
         <button
+          ref={addButtonRef}
           type="button"
           className="mg-button mg-button-primary"
           onClick={startCreate}
@@ -294,6 +398,7 @@ export default function CrudDemo({ items, locale, filterHazardId }) {
                       type="button"
                       className="mg-button mg-button-secondary mg-button-outline"
                       aria-label={`${t.delete}: ${titleFor(record, locale)}`}
+                      data-record-id={record.id}
                       onClick={() => {
                         setNotice('');
                         setDraft({
@@ -316,41 +421,14 @@ export default function CrudDemo({ items, locale, filterHazardId }) {
         {notice && t[notice]}
       </p>
       <Drawer
-        isOpen={Boolean(mode)}
+        isOpen={mode === 'create' || mode === 'edit'}
         onClose={() => setMode(null)}
         title={
-          mode === 'create'
-            ? t.createTitle
-            : mode === 'edit'
-              ? t.editTitle
-              : mode === 'delete'
-                ? t.deleteTitle
-                : ''
+          mode === 'create' ? t.createTitle : mode === 'edit' ? t.editTitle : ''
         }
         labels={{ closeLabel: t.close }}
       >
-        {mode === 'delete' ? (
-          <div className="consumer-crud__editor">
-            <p>{t.deleteQuestion}</p>
-            <strong>{draft?.title}</strong>
-            <div className="consumer-crud__actions">
-              <button
-                type="button"
-                className="mg-button mg-button-secondary mg-button-outline"
-                onClick={() => setMode(null)}
-              >
-                {t.cancel}
-              </button>
-              <button
-                type="button"
-                className="mg-button mg-button-primary"
-                onClick={remove}
-              >
-                {t.delete}
-              </button>
-            </div>
-          </div>
-        ) : mode ? (
+        {mode === 'create' || mode === 'edit' ? (
           <form className="consumer-crud__editor" onSubmit={save}>
             <TextInput
               id="consumer-record-title"
@@ -408,6 +486,17 @@ export default function CrudDemo({ items, locale, filterHazardId }) {
           </form>
         ) : null}
       </Drawer>
+      <DeleteConfirmation
+        isOpen={mode === 'delete'}
+        title={t.deleteTitle}
+        question={t.deleteQuestion}
+        recordName={draft?.title || ''}
+        cancelLabel={t.cancel}
+        deleteLabel={t.delete}
+        onDismiss={() => setMode(null)}
+        onConfirm={remove}
+        fallbackFocusRef={addButtonRef}
+      />
     </section>
   );
 }
