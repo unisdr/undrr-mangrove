@@ -4,8 +4,8 @@
  * These are the --mg-aria-* values no brand overrides: type metrics, the
  * shape and size constants shared by the range/toggle family, and the
  * dialog geometry. They are a mixin rather than a :root block so the same
- * declarations can be emitted at :root inside Mangrove's own bundle and at
- * zero specificity inside each standalone aria/tokens/*.css.
+ * declarations can be emitted at :root inside Mangrove's own bundle and
+ * reused by the opt-in Storybook research skin.
  *
  * $font-family is passed as a Sass *string* and interpolated: assigning a
  * comma list here would drop the quotes and change the compiled CSS. The same
@@ -62,8 +62,8 @@
   // - `&:lang(ar)` is the document case (`<html lang="ar">`, which is what
   //   Storybook's locale decorator and every UNDRR Arabic page produce). It
   //   compiles to `:root:lang(ar)` (0,2,0) here and `:where(:root):lang(ar)`
-  //   (0,1,0) in the standalone token files — in both, strictly higher than
-  //   the `:root`/`:where(:root)` block it overrides, so it wins on
+  //   (0,1,0) when used under a zero-specificity root — in both cases higher
+  //   than the base token block, so it wins on
   //   specificity and not on source order.
   // - `@at-root :lang(ar)` is the subtree case (an Arabic pull-quote inside an
   //   English page). `:root` does not match that element at all, so there is

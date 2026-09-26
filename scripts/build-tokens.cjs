@@ -20,10 +20,8 @@
  * Emitted per brand:
  *   stories/assets/scss/generated/_tokens-<brand>.scss
  *       @mixin mg-tokens-<brand>       the theme block (:root / .mg-theme-*)
- *       @mixin mg-tokens-<brand>-aria  the standalone React Aria closure
  *       plus any Sass variables the build still needs
- *   css/tokens/<brand>.css              (compiled from the theme mixins by `yarn build:aria`)
- *   The -aria mixin remains for the Storybook research stylesheet only.
+ *   css/tokens/<brand>.css              (compiled from the theme mixins)
  *
  * Usage:
  *   node scripts/build-tokens.cjs            write the generated partials
@@ -36,7 +34,7 @@
  * token change moves it; regenerate it in the same commit with --baseline.
  *
  * Wired into package.json as `yarn build:tokens`, which `yarn scss`,
- * `yarn scss-watch` and `yarn build:aria` all run first.
+ * `yarn scss-watch` and `yarn build:aria-research` all run first.
  */
 'use strict';
 
@@ -50,26 +48,6 @@ const TOKENS_DIR = path.join(ROOT, 'tokens');
 const SCSS_DIR = path.join(ROOT, 'stories/assets/scss');
 const GENERATED_DIR = path.join(SCSS_DIR, 'generated');
 const BASELINE_PATH = path.join(TOKENS_DIR, 'output-baseline.json');
-
-/**
- * Sass sources that make up the React Aria adapter and the scoped pilot. The
- * standalone token files must carry the transitive closure of every Mangrove
- * token these reference, or a consumer importing one on its own gets an unresolved
- * var() chain and no accent, no surface and no focus indicator. Scanning
- * them is what makes that closure self-maintaining.
- *
- * `_tokens-tabs.scss` is on the list even though it is not itself part of
- * the adapter: since alpha.3 it, not the aria alias mixin, declares the six
- * shared --mg-tab-* tokens the --mg-aria-tab-* contract reads, and the
- * standalone aria token files include it for exactly that reason.
- */
-const ARIA_ADAPTER_SOURCES = [
-  'aria/_runtime-theme-aliases.scss',
-  'aria/_tokens-shared.scss',
-  'aria/_combo-box.scss',
-  '_control-tokens.scss',
-  '_tokens-tabs.scss',
-];
 
 class TokenError extends Error {}
 
@@ -608,63 +586,6 @@ function resolve(tokens, brandLabel) {
 }
 
 /* ------------------------------------------------------------------ *
- * Standalone React Aria closure
- * ------------------------------------------------------------------ */
-function ariaSeeds() {
-  const seeds = new Set();
-  for (const relative of ARIA_ADAPTER_SOURCES) {
-    const absolute = path.join(SCSS_DIR, relative);
-    if (!fs.existsSync(absolute)) {
-      throw new TokenError(
-        `aria adapter source ${relative} is missing; the standalone token ` +
-          'closure cannot be computed from it'
-      );
-    }
-    const source = fs.readFileSync(absolute, 'utf8');
-    for (const match of source.matchAll(/var\(\s*(--mg-[a-z0-9-]+)/g)) {
-      if (
-        match[1].startsWith('--mg-aria-') ||
-        match[1].startsWith('--mg-control-') ||
-        match[1] === '--mg-font-family-text'
-      )
-        continue;
-      seeds.add(match[1]);
-    }
-    // Properties the adapter declares itself (the shared v2 tab tokens) are
-    // supplied by the mixin, not by the closure.
-    for (const match of source.matchAll(/^\s*(--mg-[a-z0-9-]+)\s*:/gm)) {
-      seeds.delete(match[1]);
-    }
-  }
-  return seeds;
-}
-
-function ariaClosure(resolved, seeds, brandLabel) {
-  const wanted = new Set();
-  const visit = property => {
-    if (wanted.has(property)) return;
-    const record = resolved.byProperty.get(property);
-    if (!record) {
-      throw new TokenError(
-        `${brandLabel}: the React Aria adapter reads ${property}, which no ` +
-          'token source defines. A standalone aria/tokens/*.css would ship an ' +
-          'unresolvable var() chain.'
-      );
-    }
-    wanted.add(property);
-    for (const match of String(record.value).matchAll(
-      /var\(\s*(--mg-[a-z0-9-]+)/g
-    )) {
-      visit(match[1]);
-    }
-  };
-  for (const seed of [...seeds].sort()) visit(seed);
-  return [...resolved.emitted.values()].filter(
-    record => record.name && wanted.has(record.name)
-  );
-}
-
-/* ------------------------------------------------------------------ *
  * Rendering
  * ------------------------------------------------------------------ */
 function comment(text, prefix, indent = '') {
@@ -702,7 +623,7 @@ function declarations(records, indent) {
   return lines;
 }
 
-function renderBrand(brand, resolved, ownIds, aria, label) {
+function renderBrand(brand, resolved, ownIds, label) {
   const lines = [];
   lines.push('// GENERATED FILE — DO NOT EDIT.');
   lines.push(`// Brand: ${brand.meta.title || label}`);
@@ -741,30 +662,14 @@ function renderBrand(brand, resolved, ownIds, aria, label) {
   lines.push(...declarations(own, '  '));
   lines.push('}');
 
-  lines.push('');
-  lines.push('// Standalone React Aria closure: every Mangrove token the');
-  lines.push('// --mg-aria-* adapter reads, transitively, resolved for this');
-  lines.push(
-    '// brand. Emitted at zero specificity by the aria token entry so'
-  );
-  lines.push("// the published file works alone and still loses to Mangrove's");
-  lines.push('// own stylesheet whenever both are present.');
-  lines.push(`@mixin mg-tokens-${label}-aria {`);
-  lines.push(...declarations(aria, '  '));
-  lines.push('}');
-  lines.push('');
-
   return lines.join('\n');
 }
 
 /* ------------------------------------------------------------------ *
  * Build
  * ------------------------------------------------------------------ */
-function build({ tokensDir = TOKENS_DIR, ariaSeedNames } = {}) {
+function build({ tokensDir = TOKENS_DIR } = {}) {
   const { base, brands } = loadSources(tokensDir);
-  // `ariaSeedNames` exists so the guard tests can drive the closure with a
-  // fixture-sized set; production always scans the real adapter sources.
-  const seeds = ariaSeedNames ? new Set(ariaSeedNames) : ariaSeeds();
   const files = new Map();
 
   // The default brand is merged into the base's own :root block, because
@@ -796,10 +701,9 @@ function build({ tokensDir = TOKENS_DIR, ariaSeedNames } = {}) {
   for (const target of targets) {
     const output = target.meta.output || target.meta.id;
     const resolved = resolve(target.tokens, output);
-    const aria = ariaClosure(resolved, seeds, output);
     files.set(
       path.relative(ROOT, path.join(GENERATED_DIR, `_tokens-${output}.scss`)),
-      renderBrand(target, resolved, target.ownIds, aria, output)
+      renderBrand(target, resolved, target.ownIds, output)
     );
   }
 

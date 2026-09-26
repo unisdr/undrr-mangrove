@@ -5,6 +5,7 @@ yarn-error.log
 /storybook-static
 /docs-build
 /docs-build-temp
+/docs-build-aria-research
 # Assembled npm package (yarn pack:assemble / pack:preview)
 /npm-package
 /_site
@@ -21,6 +22,7 @@ yarn-error.log
 .vscode/
 .yarn/cache/
 coverage/
+/examples/react-aria-consumer/dist/
 /.yarn
 .cache
 CLAUDE.md
