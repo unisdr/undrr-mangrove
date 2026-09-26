@@ -1,6 +1,6 @@
 # React Aria consumer example
 
-This example bundles **the assembled npm package**, not the Storybook source. The page explains the data, behaviour and presentation layers alongside a working form and tabs. It models a React island on a server-rendered Drupal page: a small API response supplies taxonomy terms, while Mangrove owns the Drawer, ComboBox, Tab, native Select controls, button styles, CSS and theme. For convenience the standalone demo renders its whole page with React; a Drupal site would mount only the island. The JSON file is a fixture; a real integration replaces the `fetch` URL and maps its API response to `{ id, label }` items.
+This example bundles **the assembled npm package**, not the Storybook source. The page explains the data, behaviour and presentation layers alongside a working form, tabs and an in-memory CRUD workflow. It models a React island on a server-rendered Drupal page: a small API response supplies taxonomy terms, while Mangrove owns the Drawer, ComboBox, Tab, native Select and TextInput controls, button styles, CSS and theme. For convenience the standalone demo renders its whole page with React; a Drupal site would mount only the island. The JSON file is a fixture; a real integration replaces the `fetch` URL and maps its API response to `{ id, label }` items.
 
 From the repository root:
 
@@ -16,14 +16,20 @@ Open `http://127.0.0.1:6101/`. The build assembles the same `npm-package/` direc
 1. Open the Drawer, submit the empty required field and confirm the translated error appears and is connected to the input.
 2. Type part of a hazard name, choose an option with the keyboard, and save. The submitted value is the taxonomy ID.
 3. Reopen, open the suggestions and press Escape twice. The first press closes suggestions and keeps focus in the field; the second closes Drawer and returns focus to the opener.
-4. Switch across the five Mangrove themes while the Drawer is open. The portaled list remains inside the themed Drawer body and follows its colours and typography.
+4. Switch across the five Mangrove themes with the visible Theme control. The portaled lists stay inside their themed host or Drawer and follow its colours and typography.
 5. Switch to Arabic. The host and popup become RTL, and the label, help, error and options are translated. French is a second LTR translation check.
 6. At a narrow viewport or 200% zoom, the field and popup should stay usable without horizontal page overflow. In forced-colours mode, check focus and selected-option visibility.
-7. Close the Drawer after changing themes. The token swatches, ComboBox accent and Mangrove Tab indicator derive from `--mg-color-interactive`. Use the arrow keys to change tabs. Load `/#mg-tabs__section-consumer-integration-2` to check that a URL fragment selects the second panel.
+7. Change the theme while looking at the live controls. `--mg-color-interactive` feeds the ComboBox's selected-option tint through `--mg-control-option-selected` and the active Mangrove Tab indicator through `--mg-tab-indicator--active`. Use the arrow keys to change tabs. Load `/#mg-tabs__section-consumer-integration-2` to check that a URL fragment selects the second panel.
+8. Choose a hazard in the searchable filter and check that the record table filters. Clear the filter, sort a column, and use keyboard arrows to navigate the React Aria table.
+9. Add a record, edit it, and delete it. The editor uses Mangrove TextInput, ComboBox, native Select, Drawer and button classes. The delete action asks for confirmation. Records live in memory and reset on reload.
 
 `app.css` imports `style-all.css` for runtime brand switching and places scoped ComboBox CSS in a named layer before utilities. The theme and language controls use Mangrove's published native `Select`; the actions use its `mg-button` classes. A small unlayered site rule represents an existing host stylesheet. This checks the package in a realistic cascade without asking the host to use the broad `.react-aria-*` research skin. React Aria supplies ComboBox interaction here; using its stock Button or Select classes would introduce a second public control pattern for the same tasks.
 
 The example does not claim that every Drupal form uses React. Server-rendered controls continue to work without this island or the React Aria dependency.
+
+## Why the CRUD table uses React Aria
+
+Mangrove's existing `.mg-table` is suitable for presenting server-rendered data. This example needs an interactive collection: sortable column headers and keyboard navigation across records. [React Aria Table](https://react-aria.adobe.com/Table) provides that behaviour in this optional React island. The table layout CSS is scoped to this example; it is not a new published Mangrove Table API. Record editing continues to use Mangrove's published fields, Drawer, status labels and button classes. The broader Storybook CRUD spike remains research, while this page exercises the boundary with a smaller working workflow and the assembled package.
 
 ## Why the Tabs stay Mangrove
 
