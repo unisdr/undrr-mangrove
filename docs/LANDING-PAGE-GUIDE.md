@@ -6,6 +6,19 @@
 
 Guidance for editors building landing pages on UNDRR websites: which page shape to start from, how to structure sections and which Mangrove component suits each job. The structure and editorial advice comes first in each section; the Drupal Gutenberg markup that produces it follows.
 
+## Quick start for editors
+
+> **First version:** a short outline for building a page in the visual editor, without writing code. A fuller editor guide will follow; the rest of this page has the detail.
+
+1. **Pick a page shape.** Decide what the page is for, then find its shape in [Choose a page shape](#choose-a-page-shape).
+2. **Insert a starting pattern.** Open the block inserter, switch to patterns and choose the **UNDRR pages** category. Insert the pattern closest to your page shape: a reading page, an initiative overview, a publication collection or a frequently asked questions section.
+3. **Replace the placeholders.** Rewrite every heading and paragraph, and check every link destination. Select each image, hero and card and choose a real image from the media library, with alt text and a photo credit. Follow the [Editorial manual](EDITORIAL-MANUAL.md) for the words.
+4. **Add a search widget if the page needs one.** Insert the **UNDRR Search Widget** block from the **UNDRR** category of the inserter and set it up in the block sidebar. [Search widget editor configuration](SEARCH-WIDGET-EDITOR-GUIDE.md) explains each setting and has ready-made recipes.
+5. **Preview.** Check the page before publishing, including at a narrow window width, and fix any block that shows a validation warning.
+6. **Publish** the page the way your website's editorial workflow requires.
+
+Developers, and AI tools that write block markup, should start from [Drupal Gutenberg integration](DRUPAL-GUTENBERG.md), which has the current markup for every block.
+
 The [Landing page patterns](https://mangrove.undrr.org/?path=/docs/patterns-landing-pages--docs) page shows the three common page shapes rendered side by side. [Drupal Gutenberg integration](DRUPAL-GUTENBERG.md) covers how each UNDRR block serializes and has the current markup for every block; this guide links to it rather than repeating it.
 
 > **Tip:** An AI tool can read this guide and the integration guide as one plain-text file: <https://mangrove.undrr.org/llms-page-building.txt>. [Using this guide with an AI tool](DRUPAL-GUTENBERG.md#using-this-guide-with-an-ai-tool) has a prompt to start from.
@@ -61,6 +74,8 @@ The hero block has two layouts:
 - **Background** (legacy): text over a full-bleed image. Existing background heroes do not need migrating, but new pages should use split.
 
 A newly inserted hero block starts on the background layout, so switch **Layout** to split in the block sidebar.
+
+To draft a split hero before the image is in the media library, leave the image out: the hero saves no media column until an image is chosen, and the rest of the block still works. [Drupal Gutenberg integration: Hero](DRUPAL-GUTENBERG.md#hero) shows what to leave out of hand-written markup.
 
 Split ratios describe the **content** column, which is the easiest thing to get backwards:
 
@@ -277,7 +292,7 @@ Alternate white and grey section backgrounds down the page. Global Assessment Re
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><a href="/media/12345/download">Read more in the full report (PDF)</a></p>
+<p><a href="/media/[media ID]/download">Read more in the full report (PDF)</a></p>
 <!-- /wp:paragraph -->
 ```
 
@@ -295,7 +310,7 @@ Each chart row is a columns block split 33.33/66.66: an H3 stating the key messa
 <!-- wp:columns -->
 <div class="wp-block-columns"><!-- wp:column {"verticalAlignment":"top","width":"33.33%"} -->
 <div class="wp-block-column is-vertically-aligned-top" style="flex-basis:33.33%"><!-- wp:heading {"level":3} -->
-<h3 class="wp-block-heading">Floods dominate expected annual disaster losses</h3>
+<h3 class="wp-block-heading">[Key finding, stated as a message]</h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
@@ -305,23 +320,23 @@ Each chart row is a columns block split 33.33/66.66: an H3 stating the key messa
 
 <!-- wp:column {"verticalAlignment":"top","width":"66.66%"} -->
 <div class="wp-block-column is-vertically-aligned-top" style="flex-basis:66.66%"><!-- wp:html -->
-<iframe title="Floods dominate expected annual disaster losses" src="https://datawrapper.dwcdn.net/XXXXX/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="425" data-external="1"></iframe>
+<iframe title="[Key finding, stated as a message]" src="https://datawrapper.dwcdn.net/XXXXX/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="425" data-external="1"></iframe>
 <!-- /wp:html -->
 
 <!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size mg-u-font-size-250">Share of total average annual loss by hazard type (%). <em>Source</em>: United Nations Office for Disaster Risk Reduction (2025)</p>
+<p class="has-small-font-size mg-u-font-size-250">[Metric, units and scope]. <em>Source</em>: [organization] ([year])</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
 ```
 
-Chart titles and captions follow a convention:
+Chart titles and captions follow a convention. The text in square brackets is a placeholder: write the finding and source from the data the chart shows.
 
-| Element | Content | Example |
+| Element | Content | Form |
 | --- | --- | --- |
-| H3 in the left column | The key takeaway, stated as a message | "Floods dominate expected annual disaster losses" |
-| `iframe` `title` | The same text as the H3; it is the chart's accessible name | "Floods dominate expected annual disaster losses" |
-| Caption paragraph | Neutral: metric, units, scope and source, with the source in the [editorial manual's attribution form](EDITORIAL-MANUAL.md#undrr-specific-terminology) | "Share of total average annual loss by hazard type (%). *Source*: United Nations Office for Disaster Risk Reduction (2025)" |
+| H3 in the left column | The key takeaway, stated as a message | "[What the data shows, in one sentence]" |
+| `iframe` `title` | The same text as the H3; it is the chart's accessible name | The H3 text |
+| Caption paragraph | Neutral: metric, units, scope and source, with the source line following the [editorial manual's template](EDITORIAL-MANUAL.md#undrr-specific-terminology) | "[Metric] ([units]), [scope]. _Source_: [organization] ([year])" |
 | Title inside the chart | Can be hidden in the chart tool's publish settings | |
 
 Datawrapper's own embed code adds a script that resizes the iframe; include it in the same `wp:html` block.
@@ -451,7 +466,7 @@ Markup: [Drupal Gutenberg integration: Core blocks](DRUPAL-GUTENBERG.md#core-blo
 
 ## Starter page
 
-A minimal index page: title, contents, one white section of book cards and one grey section. Paste it through the Code editor, then replace the placeholder text, links and images. Elsewhere in this guide, text in square brackets such as `[book card]` marks where other blocks go; it is not valid block markup, so replace it with real blocks before pasting.
+A minimal index page: title, contents, one white section of book cards and one grey section. Paste it through the Code editor, then replace the placeholder text, links and images; `[cover image URL]` stands for the URL of an image chosen from the media library. Elsewhere in this guide, text in square brackets is a placeholder. On a line of its own, such as `[book card]`, it marks where other blocks go and is not valid block markup, so replace it with real blocks before pasting. Inside a block, such as `[Key finding, stated as a message]`, it is a value to replace with real content.
 
 ```html
 <!-- wp:heading {"level":1} -->
@@ -481,13 +496,13 @@ A minimal index page: title, contents, one white section of book cards and one g
 <!-- wp:columns -->
 <div class="wp-block-columns"><!-- wp:column -->
 <div class="wp-block-column"><!-- wp:undrr/undrr-card {"title":"Resource A","titleLink":"https://www.undrr.org/example-a","cardType":"book","mediaAlt":""} -->
-<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__visual"><img src="/sites/default/files/2024-01/cover-a.jpg" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-a">Resource A</a></header></div></article>
+<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__visual"><img src="[cover image URL]" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-a">Resource A</a></header></div></article>
 <!-- /wp:undrr/undrr-card --></div>
 <!-- /wp:column -->
 
 <!-- wp:column -->
 <div class="wp-block-column"><!-- wp:undrr/undrr-card {"title":"Resource B","titleLink":"https://www.undrr.org/example-b","cardType":"book","mediaAlt":""} -->
-<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__visual"><img src="/sites/default/files/2024-01/cover-b.jpg" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-b">Resource B</a></header></div></article>
+<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__visual"><img src="[cover image URL]" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-b">Resource B</a></header></div></article>
 <!-- /wp:undrr/undrr-card --></div>
 <!-- /wp:column -->
 
@@ -524,6 +539,10 @@ A minimal index page: title, contents, one white section of book cards and one g
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
 ```
+
+## Found a problem?
+
+If something in this guide is wrong or out of date, open an issue in the [Mangrove issue queue](https://github.com/PreventionWeb/undrr-mangrove/issues) (a GitHub account is needed).
 
 ## Related documentation
 

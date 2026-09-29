@@ -23,7 +23,7 @@ Replace everything after "draft" with your page brief. Add <https://mangrove.und
 
 If you use Claude Code or Cursor with access to the block module source, the [drupal-gutenberg-llm-skills](https://github.com/khawkins98/drupal-gutenberg-llm-skills) plugin gives better results because it validates against the full block definitions.
 
-Review AI output in the editor before publishing. A block the editor cannot validate shows an "Attempt block recovery" prompt; recovering it rewrites the markup to what the block would save, which usually drops attributes.
+Review AI output in the editor before publishing. A block the editor cannot validate shows an "Attempt block recovery" prompt; recovering it rewrites the markup to what the block would save, which usually drops attributes. The search widget is an exception: all its settings are in the block comment, so recovery rebuilds its markup from them and loses nothing.
 
 ## Platform context
 
@@ -51,6 +51,8 @@ The body field's text format must be **Gutenberg**. It is the only format that p
 The source of truth for every UNDRR block's serialized markup is that block's `save()` output in the `undrr_gutenberg_blocks` module. The examples on this page reproduce it so that editors and AI tools can work without access to the platform codebase. The module's maintainers keep the two in step: when a block's `save()` output changes, the matching example here is updated in the same round of work.
 
 When an example here and the editor disagree, the editor wins. Build the block in the visual editor, open the Code editor and copy what it saved.
+
+Media IDs, file paths, image style tokens (`?h=…&itok=…`), file UUIDs and `/media/…` links in the examples are illustrative. They belong to items in one website's media library, so on another website they point at nothing or at something else. Replace them with values from the media library of the website you are editing, or leave the media out while drafting, as described for each block.
 
 Blocks keep older save formats as deprecations, so pages saved with earlier markup (nested card wrappers, the previous stats card format, heroes without `mg-hero--no-image`) still validate and are rewritten to the current format the next time the block is saved.
 
@@ -281,7 +283,8 @@ Details that trip up hand-written hero markup:
 - `mg-hero--undefined` when `overlayBackgroundColor` is unset. Heroes saved before the current block version have a trailing space after it; both forms validate.
 - No `mg-hero__meta` element when there is no label.
 - The title is `<h1 class="text-xxl"><a href="…">Text</a></h1>`.
-- The `<img>` carries `data-mg-media-id`, and its `src` is a Drupal image style derivative with an `?h=…&itok=…` query. Copy the URL the media library generates rather than writing one.
+- The `<img>` carries `data-mg-media-id`, and its `src` is a Drupal image style derivative with an `?h=…&itok=…` query. Copy the URL the media library generates rather than writing one. The `mediaID` and URL in the example above are illustrative.
+- To draft a split image hero without a real media ID, leave `mediaID` and `mediaAltText` out of the block comment and leave out the whole `<div class="mg-hero__media">` element. The block saves no media column until an image is chosen, so the markup still validates; choose the image in the editor before publishing.
 
 Current split hero with a video, media-led (`1/3`):
 
@@ -503,7 +506,7 @@ The six layout attributes are saved as `data-*` attributes whether or not they d
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p>Between 2000 and 2019, disasters affected 4 billion people worldwide.</p>
+<p>[One short fact, with its source.]</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:undrr/highlight-box -->
 ```
@@ -534,7 +537,7 @@ For a pull quote with no attribution, a lighter pattern is in [Building landing 
 
 ### Search widget
 
-`undrr/search-widget` renders the [Syndicated search](https://mangrove.undrr.org/?path=/docs/components-syndicated-search--docs) widget. The block writes around 20 `data-*` attributes on a container with `data-undrr-search-widget="true"`, and a wrapper script in the Drupal theme reads them and mounts the Mangrove component. Mangrove's own hydration does not read that attribute; it is specific to the platform wrapper. Widgets saved before [undrr/web-backlog#2822](https://gitlab.com/undrr/web-backlog/-/work_items/2822) keep **Override with current website domain** and **Override with current page language** off through the block's deprecation; new widgets have both on. Configure it in the block sidebar rather than by hand; [Search widget editor configuration](SEARCH-WIDGET-EDITOR-GUIDE.md) documents every setting and the filter syntax.
+`undrr/search-widget` renders the [Syndicated search](https://mangrove.undrr.org/?path=/docs/components-syndicated-search--docs) widget. The block writes around 20 `data-*` attributes on a container with `data-undrr-search-widget="true"`, and a wrapper script in the Drupal theme reads them and mounts the Mangrove component. Mangrove's own hydration does not read that attribute; it is specific to the platform wrapper. Widgets saved before [undrr/web-backlog#2822](https://gitlab.com/undrr/web-backlog/-/work_items/2822) keep **Override with current website domain** and **Override with current page language** off through the block's deprecation; new widgets have both on. Configure it in the block sidebar rather than by hand; [Search widget editor configuration](SEARCH-WIDGET-EDITOR-GUIDE.md) documents every setting and the filter syntax, and has the [saved markup](SEARCH-WIDGET-EDITOR-GUIDE.md#saved-markup) of a new widget.
 
 ### Core blocks used alongside the UNDRR blocks
 
@@ -559,6 +562,10 @@ https://www.youtube.com/watch?v=VIDEO_ID
 ```
 
 **Page-level CSS.** A `wp:html` block with a `<style>` element holds CSS that no block attribute can express. Keep it at the end of the page body and keep it small; each rule is a page-level patch that someone has to find later.
+
+## Found a problem?
+
+If something in this guide is wrong or out of date, such as markup that no longer matches what the editor saves, open an issue in the [Mangrove issue queue](https://github.com/PreventionWeb/undrr-mangrove/issues) (a GitHub account is needed).
 
 ## Related documentation
 
