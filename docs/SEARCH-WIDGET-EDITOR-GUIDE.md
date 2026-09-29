@@ -41,6 +41,10 @@ The appended text joins the reader's own words in a single search whose default 
 
 Separate entries combine with AND: `["type:news", "field_theme:311"]` means news **and** climate change. For OR, use parentheses inside a single entry. Field filters and free-text terms such as `DRR` can be mixed in one expression.
 
+> **Website filters and the domain override:** **Override with current website domain** is on by default and filters every widget to the website it is published on. A `field_domain_access` entry in **Custom filters** applies as well, not instead, so on any other website the two website filters combine with AND and the widget returns almost nothing. Whenever **Custom filters** fix the website, turn off **Override with current website domain**.
+
+> **Straight quotes only:** type **Custom filters** with straight double quotes (`"`). Curly quotes (`“` and `”`), which Word and many email and chat tools put in automatically, make the JSON invalid: the field shows "Preview not updated: invalid JSON." and the widget keeps its previous filters. Type the filters in the sidebar, or paste them from a plain-text editor. The same goes for quoted values in custom facet queries and **Append to queries**, where curly quotes do not mark a phrase, so the words are searched separately.
+
 **Search modifiers** use Elasticsearch `query_string` syntax and work in both **Append to queries** and **Custom filters**. The widget processes appended text separately from the reader's search and combines the two as `(reader search) AND (appended text)`, so an OR typed by a reader cannot loosen the requirement, and special characters in the appended text do not change how the reader's words are searched:
 
 | Modifier | Syntax | Example |
@@ -111,6 +115,8 @@ Goal: only PreventionWeb publications, with a facet readers can use to narrow by
 
 **Custom filters**: `["type:publication", "field_domain_access:www_preventionweb_net"]`
 
+Turn off **Override with current website domain**, because the custom filter already fixes the website.
+
 Add a custom facet titled "Publication type":
 
 | Label | Query |
@@ -133,7 +139,7 @@ Goal: research briefs and publications together as one research feed, as on [Pre
 - `type:publication` matches all publications.
 - `OR` means either condition qualifies a result.
 
-In the sidebar, set **Website** to PreventionWeb, hide the **Website** dropdown and sort by **Newest first**. Under **Limit by content type**, check only News and Publication so the **Type** dropdown stays short.
+In the sidebar, set **Website** to PreventionWeb, turn off **Override with current website domain** so the setting holds on every website, hide the **Website** dropdown and sort by **Newest first**. Under **Limit by content type**, check only News and Publication so the **Type** dropdown stays short.
 
 Two separate entries, `["field_news_type:755", "type:publication"]`, would return nothing: entries combine with AND, and no item is both a news item and a publication. The OR has to sit inside one entry.
 
@@ -228,6 +234,8 @@ Both overrides are on by default so a new widget adapts to whichever website and
 | Append to queries | `queryAppend` | Terms added to every search; every result must match them |
 | Custom filters (JSON array) | `customFilters` | `query_string` filters applied to every query. A bare expression such as `type:news` is wrapped into a one-item array automatically |
 
+A website fixed in **Custom filters** needs **Override with current website domain** turned off, and the JSON needs straight quotes; see the two warnings under [Quick reference](#quick-reference).
+
 **Editorial ranking filters** limit results by the interestingness or longevity an editor set on each item. Leave both empty for no filter.
 
 | Interestingness tier | Range |
@@ -295,6 +303,18 @@ A fixed filter is a default value plus a hidden dropdown: set **Website** to `ww
 | Widget container ID | `widgetId` | Generated | Read-only |
 
 On a page with more than one widget, `auto` hash sync stops the widgets fighting over the URL. To keep sync on one of them, set it to `true` on exactly one widget and `false` on the rest.
+
+### Saved markup
+
+The block saves its settings as attributes in the block comment, leaving out any that are at their default, and writes them again as `data-*` attributes on an empty container that the platform's wrapper script reads when the page loads. A new widget with the default settings saves:
+
+```html
+<!-- wp:undrr/search-widget {"widgetId":"search-widget-sample-default"} -->
+<div class="wp-block-undrr-search-widget undrr-search-widget-container" data-undrr-search-widget="true" data-widget-id="search-widget-sample-default" data-search-endpoint="/search-endpoint" data-results-per-page="10" data-facet-count-to-show="500" data-debounce-delay="750" data-default-filters="[{&quot;key&quot;:&quot;_language&quot;,&quot;value&quot;:&quot;en&quot;,&quot;checked&quot;:true}]" data-visible-filters="{&quot;field_domain_access&quot;:true,&quot;type&quot;:true,&quot;field_news_type&quot;:true,&quot;year&quot;:true,&quot;field_country_region&quot;:true,&quot;field_hazard&quot;:true,&quot;field_theme&quot;:true,&quot;_language&quot;:true}" data-enable-hash-sync="auto" data-default-sort="newest" data-default-query="" data-show-search-box="true" data-show-results-count="true" data-show-search-timer="true" data-show-facets="true" data-show-pager="true" data-show-search-metrics="false" data-show-active-filters="true" data-use-current-language="true" data-use-current-domain="true"><div id="search-widget-sample-default" class="undrr-search-widget-target"></div></div>
+<!-- /wp:undrr/search-widget -->
+```
+
+The `widgetId` is generated when the block is inserted, so every widget on a page has its own. Configure the widget in the sidebar rather than editing this markup. Every setting is a block comment attribute, so if the editor offers "Attempt block recovery" for this block, recovery rebuilds the container from the comment and loses nothing. To change a setting by hand, edit the block comment and let recovery rewrite the container.
 
 ## What readers can type
 
