@@ -2,6 +2,8 @@
 
 Use this as a compact, LLM‑friendly summary of the Mangrove Writing standards.
 
+> **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, the full [Writing guidelines](WRITING.md), the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) and the sources they cite take precedence.
+
 1. Improve UX: simplify flows, clarify actions, reduce friction.
 2. Be truthful: avoid false urgency; state limits clearly; admit uncertainty.
 3. Inclusive language: respect all users; avoid idioms/slang; ensure accessibility.

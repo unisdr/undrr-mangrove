@@ -2,6 +2,8 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DRUPAL-GUTENBERG.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-drupal-gutenberg--docs).
 
+> **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, follow the source: the block definitions and `save()` output in the Drupal `undrr_gutenberg_blocks` module as deployed (for blocks, attributes and markup), the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) and the sources it cites (for writing and style) and the [UNDRR Web Style Guide](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Web-Style-Guide.aspx) (UNDRR staff only) (for UNDRR web style).
+
 UNDRR websites (undrr.org, preventionweb.net, mcr2030.undrr.org and the microsites) run on a shared Drupal platform, and editors build landing pages there with the Gutenberg block editor. Most of what an editor places on a page is a Mangrove component wrapped in a Gutenberg block. This page is the thin layer between the two: which block renders which component, how the blocks serialize, what the deployed build can and cannot render, and the current markup for each block.
 
 It has two companions:

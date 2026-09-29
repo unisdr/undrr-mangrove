@@ -2,6 +2,8 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/SEARCH-WIDGET-EDITOR-GUIDE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/components-syndicated-search-editor-configuration--docs).
 
+> **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, follow the source: the [syndication search widget](https://mangrove.undrr.org/?path=/docs/components-syndicated-search--docs) component and its code (for search behaviour), the search configuration of the UNDRR platform as deployed (for fields, scoring and settings) and the production taxonomy (for term IDs and names).
+
 How to configure the **UNDRR Search Widget** block (`undrr/search-widget`) on UNDRR websites: what each sidebar setting does, what readers can type in the search box and the `field:value` filters that scope a widget to a content type, theme, country, website or date range. The block renders the [Syndicated search](https://mangrove.undrr.org/?path=/docs/components-syndicated-search--docs) component; that page documents the component's props and behaviour for developers.
 
 The search widget turns up on landing pages, country pages, topic hubs and conference microsites. On most of them an editor sets hidden filters that sandbox the results. The sidebar handles the common cases; this guide covers the rest.

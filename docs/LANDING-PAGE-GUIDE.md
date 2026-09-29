@@ -2,6 +2,8 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/LANDING-PAGE-GUIDE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/patterns-building-landing-pages--docs).
 
+> **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, follow the source: the block definitions in the Drupal `undrr_gutenberg_blocks` module as deployed (for block behaviour and markup), the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) and the sources it cites (for writing and style) and the [UNDRR Web Style Guide](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Web-Style-Guide.aspx) (UNDRR staff only) (for UNDRR web style).
+
 Guidance for editors building landing pages on UNDRR websites: which page shape to start from, how to structure sections and which Mangrove component suits each job. The structure and editorial advice comes first in each section; the Drupal Gutenberg markup that produces it follows.
 
 The [Landing page patterns](https://mangrove.undrr.org/?path=/docs/patterns-landing-pages--docs) page shows the three common page shapes rendered side by side. [Drupal Gutenberg integration](DRUPAL-GUTENBERG.md) covers how each UNDRR block serializes and has the current markup for every block; this guide links to it rather than repeating it.

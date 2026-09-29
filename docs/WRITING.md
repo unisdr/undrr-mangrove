@@ -2,6 +2,8 @@
 
 > Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/WRITING.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-writing-guidelines--docs).
 
+> **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, follow the source credited in that section. For the style of UNDRR content, the [UNDRR Publications SOP](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Publications.aspx) (UNDRR staff only) and the [United Nations Editorial Manual](https://www.un.org/dgacm/en/content/editorial-manual) are authoritative; the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) summarizes them.
+
 This guide helps anyone contributing to Mangrove write interface copy, documentation, and developer messages that:
 
 - Improve user experience
