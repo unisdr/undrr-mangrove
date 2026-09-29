@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **Editorial manual, capitals after a colon in titles:** follows the United Nations Editorial Manual by type of title: lower case after the colon in headings and titles UNDRR writes and in titles of United Nations documents; the main words and the first word of the subtitle capitalized in publication titles. Tracked in [undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109).
+
 - **Release guide, PreventionWeb fork and CDN `latest/`:** `docs/RELEASES.md` now explains that CI and deployment run on the `PreventionWeb/undrr-mangrove` fork while the `unisdr` organisation is flagged (sync the fork to deploy; run pull request checks locally; npm publishing and Chromatic are disabled there, so releases use the break-glass path), and corrects the claim that `assets.undrr.org/mangrove/latest/` is moved by hand: the asset library pipeline rebuilds it from the fork's `dist` branch. Tracked in [undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109).
 
 - **Reference notes on derived guidance:** the editorial manual, writing guidelines and the three page-building guides now open with an "About this guidance" note. It says each page brings together guidance maintained elsewhere for reference and ease of access, and names the authoritative sources that take precedence. Tracked in [undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109).

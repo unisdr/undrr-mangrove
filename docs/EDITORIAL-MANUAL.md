@@ -33,6 +33,9 @@ UNDRR largely follows the United Nations Editorial Manual, but its Publications 
 ## Capitalization
 
 - **Page and heading titles**: sentence case, capitalizing only the first word and proper nouns. ([UN Geneva style guide, Capitalization](https://www.ungeneva.org/en/styleguide)) This matches Mangrove's existing "sentence case for all headings and titles" rule in [Writing guidelines](WRITING.md).
+- **After a colon in titles and headings**: follow the United Nations Editorial Manual, which decides by type of title.
+  - **Headings and titles UNDRR writes** (page and section headings, news, event and blog titles) **and titles of United Nations documents**: lower case after the colon, unless the next word is a proper noun: "Message for World Tsunami Awareness Day 2025: sustained investment in preparedness". ([United Nations Editorial Manual, Headings](https://www.un.org/dgacm/en/content/editorial-manual/headings); [UN Geneva style guide, Punctuation](https://www.ungeneva.org/en/styleguide))
+  - **Titles of publications**, wherever they appear, including the title of a publication's web page: capitalize the main words of the title and the first word of the subtitle: "GAR Special Report 2024: Forensic Insights for Future Resilience". ([United Nations Editorial Manual, Footnotes and citations: publications](https://www.un.org/dgacm/en/content/editorial-manual/footnotes/chap-02))
 - **Menu items and nav labels**: capitalize each major word (skip articles, conjunctions, prepositions). This is the one case where UN Geneva's web guide departs from sentence case, so use it specifically for menu/nav-style labels, not page headings. un.org follows the same convention, and the MegaMenu story data already does. ([UN Geneva style guide, Capitalization](https://www.ungeneva.org/en/styleguide))
 - **Buttons, card links, captions**: capitalize the first word and proper nouns only, same as page headings. ([UN Geneva style guide, Capitalization](https://www.ungeneva.org/en/styleguide))
 - **Table cells**: capitalize the first word in every cell. ([UN Geneva style guide, Capitalization](https://www.ungeneva.org/en/styleguide))
@@ -42,7 +45,7 @@ UNDRR largely follows the United Nations Editorial Manual, but its Publications 
 
 ## Punctuation
 
-- **Colon and semicolon**: no space before them; continue with a lower-case letter after. ([UN Geneva style guide, Punctuation](https://www.ungeneva.org/en/styleguide))
+- **Colon and semicolon**: no space before them; continue with a lower-case letter after. ([UN Geneva style guide, Punctuation](https://www.ungeneva.org/en/styleguide)) In titles and headings, see [after a colon](#capitalization) for when a capital follows.
 - **Comma**: no serial (Oxford) comma before "and" in a simple list: "organs, organizations and bodies", not "organs, organizations, and bodies". ([United Nations Editorial Manual, Punctuation](https://www.un.org/dgacm/en/content/editorial-manual/punctuation))
 - **Ampersand (`&`)**: fine in UI chrome (buttons, menu items) but avoid in running text unless it's part of a title; put a space on both sides. ([UN Geneva style guide, Punctuation](https://www.ungeneva.org/en/styleguide))
 - **Slash (`/`)**: no space on either side when used to separate words. The United Nations Editorial Manual goes further for prose and discourages it outright in favour of "and"/"or" since its meaning is unclear. Apply that stricter rule in component prop docs and error copy, where ambiguity is costly. ([UN Geneva style guide, Punctuation](https://www.ungeneva.org/en/styleguide); [United Nations Editorial Manual, Punctuation](https://www.un.org/dgacm/en/content/editorial-manual/punctuation))
