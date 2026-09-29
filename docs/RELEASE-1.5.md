@@ -6,7 +6,7 @@ The main change in 1.5: icons now render via CSS `mask-image` instead of a font.
 
 1.4.1 was a documentation-only patch with no functional changes. These notes cover everything since 1.4.0. Full diff: [v1.4.0...v1.5.0 on GitHub](https://github.com/unisdr/undrr-mangrove/compare/v1.4.0...v1.5.0).
 
-> _Edits here show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.5.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v1-5--docs)._
+> _Edits here show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-1.5.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v1-5--docs)._
 
 ## Find your path
 

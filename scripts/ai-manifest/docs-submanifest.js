@@ -12,12 +12,22 @@
  * such as "Using the UNDRR page building guide at <url>..." points at.
  */
 
-import { REPO_BLOB_MAIN } from './repo.js';
+import path from 'node:path';
+import { DOC_PAGE_IDS } from '../../stories/Documentation/docsPageLinks.js';
+import { PUBLIC_ISSUES_URL, PUBLIC_REPO_BLOB_MAIN } from './repo.js';
 
-export const GITHUB_DOCS_BASE = `${REPO_BLOB_MAIN}docs/`;
+/**
+ * Readable GitHub location of docs/*.md. The canonical repository returns 404
+ * to anonymous readers, so this is the public fork; see repo.js.
+ */
+export const GITHUB_DOCS_BASE = `${PUBLIC_REPO_BLOB_MAIN}docs/`;
 
-/** `](TARGET.md)` or `](TARGET.md#anchor)`, skipping absolute and in-page links. */
-const RELATIVE_MD_LINK = /\]\((?!https?:|\/|#)([^)\s]+\.md)(#[^)\s]*)?\)/g;
+/** The editorial manual's own sub-manifest, built by editorial-manual.js. */
+export const EDITORIAL_MANUAL_TXT = 'llms-editorial-manual.txt';
+
+/** A whole `[text](TARGET.md)` or `[text](TARGET.md#anchor)` link, skipping absolute and in-page links. */
+const RELATIVE_MD_LINK =
+  /\[([^\]]*)\]\((?!https?:|\/|#)([^)\s]+\.md)(#[^)\s]*)?\)/g;
 
 /**
  * GitHub-style heading slug, used to link to a guide that is part of the same
@@ -35,18 +45,67 @@ export function slugify(text) {
 }
 
 /**
+ * docs/*.md file name -> the llms-*.txt file that publishes it as plain text.
+ *
+ * @returns {Record<string, string>}
+ */
+export function plainTextGuides() {
+  return {
+    'EDITORIAL-MANUAL.md': EDITORIAL_MANUAL_TXT,
+    ...Object.fromEntries(
+      DOCS_SUBMANIFESTS.flatMap(sub =>
+        sub.sources.map(source => [source.file, sub.filename])
+      )
+    ),
+  };
+}
+
+/**
+ * Where a relative docs/*.md link should point in a standalone text file.
+ *
+ * Nothing on github.com/unisdr is readable without signing in, and the
+ * Storybook site is a single-page app an agent cannot read, so in order of
+ * preference: the plain-text copy of the guide, then its Storybook page (still
+ * useful to a person), then nothing.
+ *
+ * @param {string} target   The link target as written, relative to docs/
+ * @param {string} hash     The `#anchor`, or an empty string
+ * @param {string} docsBase Storybook base URL, with trailing slash
+ * @returns {string|null} Absolute URL, or null to drop the link
+ */
+export function resolveDocsLink(target, hash, docsBase) {
+  const repoPath = path.posix.normalize(`docs/${target}`);
+  const fileName = repoPath.startsWith('docs/')
+    ? repoPath.slice('docs/'.length)
+    : null;
+  const plainText = fileName && plainTextGuides()[fileName];
+  if (plainText) return `${docsBase}${plainText}${hash}`;
+
+  const pageId = DOC_PAGE_IDS[repoPath];
+  if (pageId) return `${docsBase}?path=/docs/${pageId}${hash}`;
+
+  return null;
+}
+
+/**
  * Strip what only makes sense in the source file and fix up relative links.
  *
  * A link to a guide included in the same sub-manifest becomes an in-page
  * anchor, so an agent reading the file does not fetch content it already
- * has. Any other relative docs/*.md link points at the file on GitHub.
+ * has. Any other relative docs/*.md link goes where `resolveDocsLink()` says,
+ * or loses its link and keeps its text.
  *
  * @param {string} markdown Raw content of a docs/*.md file
- * @param {Record<string, string>} [localTitles] File name -> title, for the
- *   guides that share this sub-manifest
+ * @param {object} [options]
+ * @param {Record<string, string>} [options.localTitles] File name -> title,
+ *   for the guides that share this sub-manifest
+ * @param {string} [options.docsBase] Storybook base URL, with trailing slash
  * @returns {string} The body, ready to embed in a sub-manifest
  */
-export function prepareDocsBody(markdown, localTitles = {}) {
+export function prepareDocsBody(
+  markdown,
+  { localTitles = {}, docsBase = 'https://mangrove.undrr.org/' } = {}
+) {
   return (
     markdown
       // Drop the file's own H1 (the wrapper supplies one) and the
@@ -55,11 +114,12 @@ export function prepareDocsBody(markdown, localTitles = {}) {
       .replace(/^> Edits to this file show up on both.*\n\n?/m, '')
       // Relative docs/*.md links only resolve inside Storybook's <Markdown>
       // block or on GitHub's file browser; neither applies here.
-      .replace(RELATIVE_MD_LINK, (match, target, hash = '') => {
+      .replace(RELATIVE_MD_LINK, (match, text, target, hash = '') => {
         if (localTitles[target]) {
-          return `](${hash || `#${slugify(localTitles[target])}`})`;
+          return `[${text}](${hash || `#${slugify(localTitles[target])}`})`;
         }
-        return `](${GITHUB_DOCS_BASE}${target}${hash})`;
+        const url = resolveDocsLink(target, hash, docsBase);
+        return url ? `[${text}](${url})` : text;
       })
       .trim()
   );
@@ -92,7 +152,7 @@ export function buildDocsSubmanifest({
     : Object.fromEntries(sources.map(source => [source.file, source.title]));
 
   const bodies = sources.map(source => {
-    const body = prepareDocsBody(source.markdown, localTitles);
+    const body = prepareDocsBody(source.markdown, { localTitles, docsBase });
     return single ? body : `# ${source.title}\n\n${body}`;
   });
 
@@ -116,6 +176,7 @@ ${[
   ...links,
   ...extraLinks,
   `- Full component/library manifest: ${docsBase}llms.txt`,
+  `- Report a problem with this guide: ${PUBLIC_ISSUES_URL}`,
 ].join('\n')}
 `;
 }

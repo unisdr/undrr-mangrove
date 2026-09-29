@@ -95,7 +95,7 @@ test('points relative .md links at Storybook, or GitHub where there is no page',
     '[its tone section](https://mangrove.undrr.org/?path=/docs/contributing-writing-guidelines--docs#tone)'
   );
   expect(manual).toContain(
-    '[Writing quick reference](https://github.com/unisdr/undrr-mangrove/blob/main/docs/WRITING-SHORT.md)'
+    '[Writing quick reference](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/WRITING-SHORT.md)'
   );
   expect(manual).toContain('[Keeping this updated](#keeping-this-updated)');
   expect(manual).toContain('[the source](https://www.un.org/x.md)');

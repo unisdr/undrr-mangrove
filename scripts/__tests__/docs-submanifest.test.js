@@ -5,13 +5,20 @@ import path from 'path';
 import {
   buildDocsSubmanifest,
   DOCS_SUBMANIFESTS,
+  plainTextGuides,
   prepareDocsBody,
   slugify,
 } from '../ai-manifest/docs-submanifest.js';
+import { PUBLIC_ISSUES_URL } from '../ai-manifest/repo.js';
 import { DOC_PAGE_IDS } from '../../stories/Documentation/docsPageLinks';
 
 const DOCS_BASE = 'https://mangrove.undrr.org/';
-const GITHUB_DOCS = 'https://github.com/unisdr/undrr-mangrove/blob/main/docs/';
+const GITHUB_DOCS =
+  'https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/';
+
+// The unisdr organization is flagged on GitHub: every page under it is a 404
+// to anonymous readers, AI tools included (undrr/web-backlog#3109).
+const UNREADABLE_GITHUB = /github\.com\/unisdr\//;
 
 const readDoc = file =>
   fs.readFileSync(path.resolve(process.cwd(), 'docs', file), 'utf8');
@@ -21,19 +28,48 @@ describe('prepareDocsBody', () => {
 
 > Edits to this file show up on both [GitHub](https://example.org) and in [Storybook](https://example.org).
 
-See [Other guide](OTHER.md), [a section](OTHER.md#tabs), [a local guide](LOCAL.md), [a local section](LOCAL.md#hero), [absolute](https://www.un.org/x.md) and [same page](#top).
+See [the manual](EDITORIAL-MANUAL.md), [a manual section](EDITORIAL-MANUAL.md#capitalization), [the search guide](SEARCH-WIDGET-EDITOR-GUIDE.md), [Writing guidelines](WRITING.md), [a writing section](WRITING.md#tone), [the short version](WRITING-SHORT.md), [a local guide](LOCAL.md), [a local section](LOCAL.md#hero), [absolute](https://www.un.org/x.md) and [same page](#top).
 `;
 
-  const output = prepareDocsBody(sample, { 'LOCAL.md': 'Local guide' });
+  const output = prepareDocsBody(sample, {
+    localTitles: { 'LOCAL.md': 'Local guide' },
+    docsBase: DOCS_BASE,
+  });
 
   it('drops the source H1 and the banner', () => {
     expect(output).not.toContain('# Source title');
     expect(output).not.toContain('Edits to this file show up on both');
   });
 
-  it('points other guides at GitHub, keeping anchors', () => {
-    expect(output).toContain(`[Other guide](${GITHUB_DOCS}OTHER.md)`);
-    expect(output).toContain(`[a section](${GITHUB_DOCS}OTHER.md#tabs)`);
+  it('points guides that have a plain-text copy at that copy', () => {
+    expect(output).toContain(
+      `[the manual](${DOCS_BASE}llms-editorial-manual.txt)`
+    );
+    expect(output).toContain(
+      `[a manual section](${DOCS_BASE}llms-editorial-manual.txt#capitalization)`
+    );
+    expect(output).toContain(
+      `[the search guide](${DOCS_BASE}llms-search-widget.txt)`
+    );
+  });
+
+  it('points other guides at their Storybook page, keeping anchors', () => {
+    expect(output).toContain(
+      `[Writing guidelines](${DOCS_BASE}?path=/docs/contributing-writing-guidelines--docs)`
+    );
+    expect(output).toContain(
+      `[a writing section](${DOCS_BASE}?path=/docs/contributing-writing-guidelines--docs#tone)`
+    );
+  });
+
+  it('keeps only the text of a link to a guide with neither', () => {
+    expect(output).toContain('See [the manual]');
+    expect(output).toContain(', the short version, ');
+    expect(output).not.toContain('WRITING-SHORT.md');
+  });
+
+  it('never links to GitHub', () => {
+    expect(output).not.toContain('github.com');
   });
 
   it('turns links to guides in the same sub-manifest into anchors', () => {
@@ -44,6 +80,24 @@ See [Other guide](OTHER.md), [a section](OTHER.md#tabs), [a local guide](LOCAL.m
   it('leaves absolute and same-page links alone', () => {
     expect(output).toContain('[absolute](https://www.un.org/x.md)');
     expect(output).toContain('[same page](#top)');
+  });
+});
+
+describe('plainTextGuides', () => {
+  it('maps every guide with a sub-manifest to a file that exists', () => {
+    const guides = plainTextGuides();
+
+    expect(guides['EDITORIAL-MANUAL.md']).toBe('llms-editorial-manual.txt');
+    expect(guides['LANDING-PAGE-GUIDE.md']).toBe('llms-page-building.txt');
+    expect(guides['DRUPAL-GUTENBERG.md']).toBe('llms-page-building.txt');
+    expect(guides['SEARCH-WIDGET-EDITOR-GUIDE.md']).toBe(
+      'llms-search-widget.txt'
+    );
+    for (const file of Object.keys(guides)) {
+      expect(fs.existsSync(path.resolve(process.cwd(), 'docs', file))).toBe(
+        true
+      );
+    }
   });
 });
 
@@ -80,6 +134,8 @@ describe('buildDocsSubmanifest', () => {
     );
     expect(output).toContain(`- Source on GitHub: ${GITHUB_DOCS}GUIDE.md`);
     expect(output).toContain(`${DOCS_BASE}llms.txt`);
+    expect(output).toContain(PUBLIC_ISSUES_URL);
+    expect(output).not.toMatch(UNREADABLE_GITHUB);
   });
 
   it('keeps each source title when there are several', () => {
@@ -116,6 +172,7 @@ describe('DOCS_SUBMANIFESTS', () => {
       expect(filename).toMatch(/^llms-[a-z-]+\.txt$/);
       expect(output).not.toContain('Edits to this file show up on both');
       expect(output).not.toMatch(/\]\((?!https?:|\/|#)[^)\s]+\.md/);
+      expect(output).not.toMatch(UNREADABLE_GITHUB);
       expect(output).toContain('## Links');
     }
   );

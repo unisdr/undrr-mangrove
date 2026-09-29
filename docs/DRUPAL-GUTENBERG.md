@@ -1,6 +1,6 @@
 # Drupal Gutenberg integration
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/DRUPAL-GUTENBERG.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-drupal-gutenberg--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/DRUPAL-GUTENBERG.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-drupal-gutenberg--docs).
 
 > **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, follow the source: the block definitions and `save()` output in the Drupal `undrr_gutenberg_blocks` module as deployed (for blocks, attributes and markup), the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) and the sources it cites (for writing and style) and the [UNDRR Web Style Guide](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Web-Style-Guide.aspx) (UNDRR staff only) (for UNDRR web style).
 

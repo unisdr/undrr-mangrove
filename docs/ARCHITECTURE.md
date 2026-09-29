@@ -1,6 +1,6 @@
 # Architecture
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ARCHITECTURE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-architecture--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/ARCHITECTURE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-architecture--docs).
 
 This document explains the build system, distribution channels, and integration patterns for the Mangrove component library. It is the single reference for understanding how source code becomes consumable assets.
 

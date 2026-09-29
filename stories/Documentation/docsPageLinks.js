@@ -15,8 +15,8 @@
  * - a guide that has a Storybook page becomes `?path=/docs/<id>--docs`, which
  *   `AnchorMdx` intercepts and turns into a `NAVIGATE_URL` event;
  * - a guide that has none (for example `WRITING-SHORT.md`) becomes an absolute
- *   GitHub link to the source file, which opens in a new context rather than
- *   dead-ending inside the preview iframe.
+ *   link to the source file on the public GitHub fork, which opens in a new
+ *   context rather than dead-ending inside the preview iframe.
  *
  * `scripts/__tests__/docs-links.test.js` checks that `DOC_PAGE_IDS` still matches
  * the wrappers' own `<Meta title>` values, and that every relative link in a
@@ -56,7 +56,11 @@ export const DOC_PAGE_IDS = {
   'docs/WRITING.md': 'contributing-writing-guidelines--docs',
 };
 
-const GITHUB_BLOB = 'https://github.com/unisdr/undrr-mangrove/blob/main/';
+// The PreventionWeb fork, not unisdr/undrr-mangrove: the unisdr organization
+// is flagged on GitHub and its pages return 404 to anonymous readers. See
+// PUBLIC_REPO_URL in scripts/ai-manifest/repo.js.
+const GITHUB_BLOB =
+  'https://github.com/PreventionWeb/undrr-mangrove/blob/main/';
 
 /** `](TARGET.md)` or `](TARGET.md#anchor)`, skipping absolute and in-page links. */
 const RELATIVE_MD_LINK = /\]\((?!https?:|\/|#)([^)\s]+\.md)(#[^)\s]*)?\)/g;

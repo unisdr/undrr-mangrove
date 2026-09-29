@@ -1,6 +1,6 @@
 # Hydration guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-hydration-guide--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-hydration-guide--docs).
 
 Mangrove hydrates React components into server-rendered containers (`data-mg-*`). Use `createHydrator` to query DOM nodes, extract props with `fromElement`, manage roots, and recover original HTML on mount errors.
 

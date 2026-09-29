@@ -1,6 +1,6 @@
 # Release process guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASES.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-release-process--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASES.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-release-process--docs).
 
 This guide explains the release process for the UNDRR Mangrove component library.
 

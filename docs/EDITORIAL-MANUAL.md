@@ -1,6 +1,6 @@
 # Editorial manual for Mangrove
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/EDITORIAL-MANUAL.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/EDITORIAL-MANUAL.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs).
 
 > **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, follow the source: the [UNDRR Publications SOP](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Publications.aspx) (UNDRR staff only), the [United Nations Editorial Manual](https://www.un.org/dgacm/en/content/editorial-manual), the [UN Geneva Web Style Guide](https://www.ungeneva.org/en/styleguide), the [United Nations Disability-Inclusive Communications Guidelines](https://www.un.org/sites/un2.un.org/files/un_disability-inclusive_communication_guidelines.pdf) and the DPI Gender Checklist for Content Creators, in the priority order set out in [Keeping this updated](#keeping-this-updated).
 

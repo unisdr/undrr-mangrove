@@ -1,6 +1,6 @@
 # CDN reference
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-cdn-reference--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/CDN-REFERENCE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-integration-cdn-reference--docs).
 
 Authoritative path reference for UNDRR CDN assets. Browse the full index at [assets.undrr.org](https://assets.undrr.org/sitemap.html).
 

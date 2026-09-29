@@ -1,6 +1,6 @@
 # Mangrove 2.0 release notes
 
-> _Edits here show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs)._
+> _Edits here show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs)._
 
 Mangrove is the component library and design system the United Nations Office for Disaster Risk Reduction (UNDRR) uses to build its websites. Version 2.0 changes how those sites are built more than how they look. Every UNDRR brand can now run from one stylesheet, the keyboard focus indicator is easier to see and survives high-contrast modes, Arabic typography and right-to-left layout are improved, and teams get new components and page layouts to build from. For most sites on the hosted stylesheet, upgrading means changing one link and, for a sub-brand, adding one class.
 
@@ -361,9 +361,9 @@ One value is a deliberate divergence from DELTA's stylesheet, and is recorded as
 
 ### The type scale is public
 
-`--mg-font-size-100` … `--mg-font-size-1100` custom properties are emitted in every theme and read by all components with `var()`; compiled sizes are unchanged. `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` are deprecated Sass aliases until 3.0, and overriding `$mg-font-tag` no longer changes Mangrove's own components. A test fails the build on any `var(--mg-*)` that nothing defines. ([#1168](https://github.com/unisdr/undrr-mangrove/pull/1168), [#1167](https://github.com/unisdr/undrr-mangrove/issues/1167))
+`--mg-font-size-100` … `--mg-font-size-1100` custom properties are emitted in every theme and read by all components with `var()`; compiled sizes are unchanged. `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` are deprecated Sass aliases until 3.0, and overriding `$mg-font-tag` no longer changes Mangrove's own components. A test fails the build on any `var(--mg-*)` that nothing defines. ([#1168](https://github.com/unisdr/undrr-mangrove/pull/1168), [#1167](https://github.com/PreventionWeb/undrr-mangrove/issues/1167))
 
-Line heights followed: `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`) are emitted in every theme and read by body text, the font-size utilities and Card. Compiled line heights are unchanged. ([#1170](https://github.com/unisdr/undrr-mangrove/pull/1170), [#1085](https://github.com/unisdr/undrr-mangrove/issues/1085))
+Line heights followed: `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`) are emitted in every theme and read by body text, the font-size utilities and Card. Compiled line heights are unchanged. ([#1170](https://github.com/unisdr/undrr-mangrove/pull/1170), [#1085](https://github.com/PreventionWeb/undrr-mangrove/issues/1085))
 
 ### Sub-brand button tokens
 
@@ -418,13 +418,13 @@ The MegaMenu desktop active-tab indicator transitions smoothly with an animated 
 
 PageHeader also resolves logos per locale, renders at a fixed height, and keeps `crop="autocrop"` for the default English logo only. ([#1148](https://github.com/unisdr/undrr-mangrove/pull/1148))
 
-**A breadcrumb written as an `<ol>` is now laid out.** _Available from `2.0.0-rc.3`._ The list inside `nav.mg-breadcrumb` was styled only when it was a `<ul>`, while every curated breadcrumb example in the AI manifest uses an `<ol>`, so a consumer copying the documented snippet got default decimal markers and no flex row. Both arms now share one `> :is(ul, ol)` rule. If you worked around the missing rule with your own `list-style` or flex declarations, check them. This landed with the list-semantics sweep in [Markerless lists keep their list role](#markerless-lists-keep-their-list-role). ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200))
+**A breadcrumb written as an `<ol>` is now laid out.** _Available from `2.0.0-rc.3`._ The list inside `nav.mg-breadcrumb` was styled only when it was a `<ul>`, while every curated breadcrumb example in the AI manifest uses an `<ol>`, so a consumer copying the documented snippet got default decimal markers and no flex row. Both arms now share one `> :is(ul, ol)` rule. If you worked around the missing rule with your own `list-style` or flex declarations, check them. This landed with the list-semantics sweep in [Markerless lists keep their list role](#markerless-lists-keep-their-list-role). ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/PreventionWeb/undrr-mangrove/issues/1200))
 
 Compiled-CSS consumers do not need a markup migration for any of these navigation updates.
 
 ### Buttons
 
-Filled primary, secondary and disabled buttons paint their fill under the border (`background-clip: border-box`), so the stroke matches the fill and they render the same size as outline buttons. Icons in buttons are vertically centred, icon-only buttons use an 18px icon, and a button with an icon and a label is 36px tall, the same as a text-only button. A standalone `.mg-icon-button` now owns its ghost styling instead of picking up a global MegaMenu rule, and switches to the light button foreground on hover, where MCR2030 previously measured 1.75:1. ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173), [#1171](https://github.com/unisdr/undrr-mangrove/issues/1171))
+Filled primary, secondary and disabled buttons paint their fill under the border (`background-clip: border-box`), so the stroke matches the fill and they render the same size as outline buttons. Icons in buttons are vertically centred, icon-only buttons use an 18px icon, and a button with an icon and a label is 36px tall, the same as a text-only button. A standalone `.mg-icon-button` now owns its ghost styling instead of picking up a global MegaMenu rule, and switches to the light button foreground on hover, where MCR2030 previously measured 1.75:1. ([#1173](https://github.com/unisdr/undrr-mangrove/pull/1173), [#1171](https://github.com/PreventionWeb/undrr-mangrove/issues/1171))
 
 CTA and icon surfaces had a separate contrast and inventory cleanup, and the Text CTA gained a soft-tone variant and composed form content. ([#1145](https://github.com/unisdr/undrr-mangrove/pull/1145), [#1144](https://github.com/unisdr/undrr-mangrove/pull/1144), [#1142](https://github.com/unisdr/undrr-mangrove/pull/1142), [#1111](https://github.com/unisdr/undrr-mangrove/pull/1111))
 
@@ -450,7 +450,7 @@ Data table, badge, accordion, switch and icon-button styles were added as part o
 
 **Switches have a pending state.** Set `aria-busy="true"` on `.mg-switch__input`, or `.mg-switch--pending` on the label when the input cannot take attributes, while a change is saving. The thumb moves to the requested position straight away and shows a spinning ring in the interactive colour, a static dotted ring under reduced motion, over a greyed track; the cursor is `progress`. Pending does not disable the input, so focus and announcements stay. `aria-disabled="true"` is styled like `:disabled` with a page-coloured layer instead of opacity, so the focus ring keeps full strength. In forced colours the switch used to be invisible (track and thumb were both painted as Canvas) and now sets `forced-color-adjust: none` and draws a bordered Canvas track, a CanvasText thumb and a Highlight fill when on, with GrayText for disabled and `aria-disabled` switches. New `--mg-switch-*` custom properties (track, thumb, pending and disabled overlays, ring and gap colours) are read with their defaults where used, so they can be set on any ancestor. The vanilla helper that drives it is in [Hydration and vanilla scripts](#hydration-and-vanilla-scripts). ([#1184](https://github.com/unisdr/undrr-mangrove/pull/1184))
 
-**Switches have an error state, and their geometry is a hook.** _Available from `2.0.0-rc.3`._ Two reports from a team running rc.2 in a vanilla-HTML app, answered as one change because they share the switch's geometry: the error state needs something to colour, and what it colours is the inset the size hooks compute. ([#1214](https://github.com/unisdr/undrr-mangrove/pull/1214), [#1187](https://github.com/unisdr/undrr-mangrove/issues/1187), [#1199](https://github.com/unisdr/undrr-mangrove/issues/1199))
+**Switches have an error state, and their geometry is a hook.** _Available from `2.0.0-rc.3`._ Two reports from a team running rc.2 in a vanilla-HTML app, answered as one change because they share the switch's geometry: the error state needs something to colour, and what it colours is the inset the size hooks compute. ([#1214](https://github.com/unisdr/undrr-mangrove/pull/1214), [#1187](https://github.com/PreventionWeb/undrr-mangrove/issues/1187), [#1199](https://github.com/PreventionWeb/undrr-mangrove/issues/1199))
 
 Every other control in the library had an error treatment and `.mg-switch` had none, so a consumer wrote their own rule and hit two traps: a `box-shadow` on the track replaced the focus ring's white separator band at equal specificity, and the track sets `forced-color-adjust: none`, so a hard-coded red survived forced colours unchanged while every state around it adapted.
 
@@ -478,7 +478,7 @@ One objection was recorded at the time: dropping Kufi was a judgement rather tha
 
 ### Arabic typography settled
 
-**Arabic now pairs Noto Kufi Arabic headings with Noto Sans Arabic body text. Dubai is removed.** This closes [issue #1089](https://github.com/unisdr/undrr-mangrove/issues/1089), which asked for the Arabic typeface to be chosen deliberately rather than inherited.
+**Arabic now pairs Noto Kufi Arabic headings with Noto Sans Arabic body text. Dubai is removed.** This closes [issue #1089](https://github.com/PreventionWeb/undrr-mangrove/issues/1089), which asked for the Arabic typeface to be chosen deliberately rather than inherited.
 
 Dubai came to Mangrove from OCHA, but the inheritance was weaker than it looked and had gone stale on both halves. Dubai was OCHA's alternative subtheme pairing (body only, never headings, Regular only), not their base theme, which used Noto Kufi Arabic. And on 2026-05-28 OCHA's own brand guidance moved to Almarai for display and Noto Sans Arabic for body.
 
@@ -502,7 +502,7 @@ Per the CSS font-matching rules a target of `600` resolves up to Bold, but a tar
 
 ### Arabic typography now respects language boundaries
 
-Closing [issue #1092](https://github.com/unisdr/undrr-mangrove/issues/1092), an English island inside an Arabic page (a quotation, a citation, an untranslated widget) no longer renders in Arabic typography.
+Closing [issue #1092](https://github.com/PreventionWeb/undrr-mangrove/issues/1092), an English island inside an Arabic page (a quotation, a citation, an untranslated widget) no longer renders in Arabic typography.
 
 Every `:lang(ar)` override had been written as a descendant selector: `:lang(ar) { h1 { ... } }`, compiling to `:lang(ar) h1`. `:lang()` there matches the root and the `h1` is merely a descendant, so the rule fired on every heading beneath an Arabic root regardless of that heading's own language.
 
@@ -555,15 +555,15 @@ Per-component detail is in each component's MDX changelog.
 
 ### Editorial content and inline links
 
-_Available from `2.0.0-rc.3`._ `.mg-content p a` underlines links in editorial paragraphs at rest. Add `mg-content` to a rich-text container to opt in. Navigation and buttons retain their component treatment; this is not a global underline on every anchor. The page patterns demonstrate the wrapper. It currently supplies this narrow prose-link rule, not a complete rich-text reset or automatic blockquote styling; expanding it is [2.1 work (#1277)](https://github.com/unisdr/undrr-mangrove/issues/1277). ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276))
+_Available from `2.0.0-rc.3`._ `.mg-content p a` underlines links in editorial paragraphs at rest. Add `mg-content` to a rich-text container to opt in. Navigation and buttons retain their component treatment; this is not a global underline on every anchor. The page patterns demonstrate the wrapper. It currently supplies this narrow prose-link rule, not a complete rich-text reset or automatic blockquote styling; expanding it is [2.1 work (#1277)](https://github.com/PreventionWeb/undrr-mangrove/issues/1277). ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276))
 
 ### Arabic tracking and readable form help
 
-_Available from `2.0.0-rc.3`._ Arabic text and its pseudo-elements use normal letter spacing, including tracked headings and labels; nested elements explicitly marked with a different language keep that language's tracking. Native-reader validation of the heading face remains a follow-up in [#1103](https://github.com/unisdr/undrr-mangrove/issues/1103). Newsletter form surfaces are lighter so the existing help-text colour remains readable. ([#1279](https://github.com/unisdr/undrr-mangrove/pull/1279), [#1276](https://github.com/unisdr/undrr-mangrove/pull/1276))
+_Available from `2.0.0-rc.3`._ Arabic text and its pseudo-elements use normal letter spacing, including tracked headings and labels; nested elements explicitly marked with a different language keep that language's tracking. Native-reader validation of the heading face remains a follow-up in [#1103](https://github.com/PreventionWeb/undrr-mangrove/issues/1103). Newsletter form surfaces are lighter so the existing help-text colour remains readable. ([#1279](https://github.com/unisdr/undrr-mangrove/pull/1279), [#1276](https://github.com/unisdr/undrr-mangrove/pull/1276))
 
 ### Markerless lists keep their list role
 
-_Available from `2.0.0-rc.3`._ Safari drops the implicit `list` role from any list whose marker is `none`, so the item count stops being announced (the bug `role="list"` is usually added to work around). Mangrove's guidance asked consumers for that attribute while the components' own rendered HTML omitted it, so a consumer had to pick a side. 2.0 settles it in favour of the components. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200), [#1209](https://github.com/unisdr/undrr-mangrove/issues/1209))
+_Available from `2.0.0-rc.3`._ Safari drops the implicit `list` role from any list whose marker is `none`, so the item count stops being announced (the bug `role="list"` is usually added to work around). Mangrove's guidance asked consumers for that attribute while the components' own rendered HTML omitted it, so a consumer had to pick a side. 2.0 settles it in favour of the components. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/PreventionWeb/undrr-mangrove/issues/1200), [#1209](https://github.com/PreventionWeb/undrr-mangrove/issues/1209))
 
 StatusLabel introduced the fix in 1.2.0: `list-style: none` followed by `list-style-type: ""`. An empty string is still a marker, so the role survives, and it renders nothing and reserves no space; the `none` stays in front as the fallback for browsers too old to parse a string marker. That pair is now the `mg-list-unmarked` mixin and the house rule, applied across Breadcrumbs, Pager, OnThisPageNav, Legend, MegaMenu, HubHeader, Syndicated search and StatusLabel (fourteen rules in all, because it covers list items as well as lists). `list-style-type` is inherited, but an item setting `none` wins over the list's empty string, and it is the item's marker WebKit inspects: measured in WebKit 26.0, MegaMenu's list computed `""` while every item computed `none`, so a fix on the list alone never reached the markers it was meant to preserve.
 
@@ -591,7 +591,7 @@ ServiceNotice's DELTA status link meets 4.5:1 through the Notice `--mg-notice-ac
 
 Drawer and Tree navigation ([#1158](https://github.com/unisdr/undrr-mangrove/pull/1158)), map and chart Legend ([#1159](https://github.com/unisdr/undrr-mangrove/pull/1159)) and Range slider ([#1160](https://github.com/unisdr/undrr-mangrove/pull/1160)) joined the library, with hydration for Drawer and full keyboard navigation for Tree ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163)). An audit before the first release candidate hardened all four: Drawer renders strings as text, is inert when closed, manages focus and hydrates with trigger buttons; Tree mirrors in RTL; Legend and Range gained accessibility fixes and tests ([#1166](https://github.com/unisdr/undrr-mangrove/pull/1166)).
 
-Tree later gained hydration from a nested `<ul>`, a `toggleIcon` prop and a `current` flag on `TreeItem`, along with fixes to the RTL chevron, Enter and Space on unlinked parents, Tab focus on the selected item and the selected-label contrast in IRP ([#1176](https://github.com/unisdr/undrr-mangrove/pull/1176), [#1172](https://github.com/unisdr/undrr-mangrove/issues/1172)).
+Tree later gained hydration from a nested `<ul>`, a `toggleIcon` prop and a `current` flag on `TreeItem`, along with fixes to the RTL chevron, Enter and Space on unlinked parents, Tab focus on the selected item and the selected-label contrast in IRP ([#1176](https://github.com/unisdr/undrr-mangrove/pull/1176), [#1172](https://github.com/PreventionWeb/undrr-mangrove/issues/1172)).
 
 **These four are prototypes.** They ship in 2.0, but their APIs may still change in a 2.x minor release; check their component changelogs when you upgrade.
 
@@ -611,9 +611,9 @@ A copy-to-clipboard button ([#1160](https://github.com/unisdr/undrr-mangrove/pul
 
 It is there because several of the colours are close under colour vision deficiency (degraded and offline measure 3.3 CIE76 and 1.1 dE2000 apart simulated for deuteranopia under Machado 2009, against a just-noticeable difference of about 2.3 dE2000), because a CSS-only component gets reused without its label, and because a second cue is faster to scan. The full measurement, and why the palette itself was left alone, is in [the status indicator palette is measured, and stays](#the-status-indicator-palette-is-measured-and-stays).
 
-The seven marks are drawn as one family: all convex, all softened at one corner radius, all carrying the same ring, and that ring is now exactly `--mg-status-label-indicator-border-width` on every edge of every shape ([#1208](https://github.com/unisdr/undrr-mangrove/issues/1208)). The indicators survive Windows High Contrast and printing without background graphics, and each shape occupies one `--mg-status-label-indicator-size` of inline space, so a column or table of statuses keeps a single text alignment edge.
+The seven marks are drawn as one family: all convex, all softened at one corner radius, all carrying the same ring, and that ring is now exactly `--mg-status-label-indicator-border-width` on every edge of every shape ([#1208](https://github.com/PreventionWeb/undrr-mangrove/issues/1208)). The indicators survive Windows High Contrast and printing without background graphics, and each shape occupies one `--mg-status-label-indicator-size` of inline space, so a column or table of statuses keeps a single text alignment edge.
 
-`.mg-status-label-group` keeps its list semantics in Safari, so VoiceOver announces the item count ([#1209](https://github.com/unisdr/undrr-mangrove/issues/1209)), and in RTL the group no longer picks up the global list padding ([#1174](https://github.com/unisdr/undrr-mangrove/pull/1174)). See [Status label](https://mangrove.undrr.org/?path=/docs/components-status-label--docs), "Shape as well as colour". ([#1206](https://github.com/unisdr/undrr-mangrove/pull/1206))
+`.mg-status-label-group` keeps its list semantics in Safari, so VoiceOver announces the item count ([#1209](https://github.com/PreventionWeb/undrr-mangrove/issues/1209)), and in RTL the group no longer picks up the global list padding ([#1174](https://github.com/unisdr/undrr-mangrove/pull/1174)). See [Status label](https://mangrove.undrr.org/?path=/docs/components-status-label--docs), "Shape as well as colour". ([#1206](https://github.com/unisdr/undrr-mangrove/pull/1206))
 
 ### FormAction and UserFeedback
 
@@ -645,7 +645,7 @@ _Available from `2.0.0-rc.3`._ `createHydrator.update()` skips matches inside a 
 
 A vanilla tab set removed from the page without `mgTabsDestroy()` is suspended rather than left running. A `ResizeObserver` notification, one of its outside listeners or a page-wide sweep (on every `mgTabs()` and `mgTabsRuntime()` call and on window `resize` and `hashchange`) finds it detached and releases its window, `document.fonts` and `ResizeObserver` registrations; its markup, in-container listeners and selection stay. If the same node is re-attached it resumes on interaction, a sweep or `mgTabs()`, and follows a hash change made while it was suspended.
 
-`mgTabs()` and `mgTabsRuntime()` accept an optional `{ signal }` third argument: aborting it destroys the tab sets that call initialized, and an already-aborted signal initializes nothing. The React `Tab` wrapper passes a signal and still calls `mgTabsDestroy(container, true)` in its effect cleanup. `mgTabsDestroy(scope)` destroys every set in scope even if one throws, then rethrows the first error. See [Tabs](https://mangrove.undrr.org/?path=/docs/components-tabs--docs), "Removing tabs". ([#1183](https://github.com/unisdr/undrr-mangrove/pull/1183), [#1180](https://github.com/unisdr/undrr-mangrove/issues/1180))
+`mgTabs()` and `mgTabsRuntime()` accept an optional `{ signal }` third argument: aborting it destroys the tab sets that call initialized, and an already-aborted signal initializes nothing. The React `Tab` wrapper passes a signal and still calls `mgTabsDestroy(container, true)` in its effect cleanup. `mgTabsDestroy(scope)` destroys every set in scope even if one throws, then rethrows the first error. See [Tabs](https://mangrove.undrr.org/?path=/docs/components-tabs--docs), "Removing tabs". ([#1183](https://github.com/unisdr/undrr-mangrove/pull/1183), [#1180](https://github.com/PreventionWeb/undrr-mangrove/issues/1180))
 
 ### Dependency-free ES modules
 
@@ -665,7 +665,7 @@ A vanilla tab set removed from the page without `mgTabsDestroy()` is suspended r
 
 See [Checkbox](https://mangrove.undrr.org/?path=/docs/components-forms-checkbox--docs), "Pending state". ([#1184](https://github.com/unisdr/undrr-mangrove/pull/1184))
 
-**The helper comes apart.** _Available from `2.0.0-rc.3`._ rc.2 shipped those three behaviours (the announcements, the ignore-while-saving guard and revert-on-failure with a deadline) as one indivisible unit, so an app whose switches are latest-intent-wins, and whose saves can legitimately run past ten seconds, had to drop the helper and re-implement the announcements, which are the hard part. Three additions, all opt-in, every default unchanged. ([#1213](https://github.com/unisdr/undrr-mangrove/pull/1213), [#1189](https://github.com/unisdr/undrr-mangrove/issues/1189))
+**The helper comes apart.** _Available from `2.0.0-rc.3`._ rc.2 shipped those three behaviours (the announcements, the ignore-while-saving guard and revert-on-failure with a deadline) as one indivisible unit, so an app whose switches are latest-intent-wins, and whose saves can legitimately run past ten seconds, had to drop the helper and re-implement the announcements, which are the hard part. Three additions, all opt-in, every default unchanged. ([#1213](https://github.com/unisdr/undrr-mangrove/pull/1213), [#1189](https://github.com/PreventionWeb/undrr-mangrove/issues/1189))
 
 - `revert: false`, or `data-mg-switch-revert="false"`, keeps the position the user asked for when a save fails. A switch that does not match the server is its own problem, so the helper sets `aria-invalid="true"` on the input instead, restores whatever the page had authored there when the next save starts or on `destroy()`, and leaves an `aria-invalid` it did not write alone. `mg-switch:failed` now carries `reverted`, and its `checked` is the position the switch is left in either way.
 - `timeout: 0` or `Infinity` removes the deadline for a save that runs long, and the new `data-mg-switch-timeout` sets the deadline from markup, or removes it, with `0` or `Infinity`. `aria-busy` then stays true until the save settles, so the helper announces "Still saving…" once at ten seconds, where the deadline would have been, rather than leaving a screen reader user on "Saving…" against a busy control with nothing further. **`timeout: 0` changes meaning for anyone already passing it**: rc.2 rejected it as not a positive finite number and silently used the 10-second default. See the [upgrade notes](#upgrade-notes).
@@ -685,7 +685,7 @@ CDN URLs were canonicalized to a single `assets.undrr.org` root across documenta
 
 `releases.json` and `tokens.json` are published alongside Storybook, CSS and JS banners and SCSS docblocks link to Storybook and `llms.txt`, and AI manifest coverage expanded to match. ([#1156](https://github.com/unisdr/undrr-mangrove/pull/1156), [#1157](https://github.com/unisdr/undrr-mangrove/pull/1157), [#1162](https://github.com/unisdr/undrr-mangrove/pull/1162), [#1130](https://github.com/unisdr/undrr-mangrove/pull/1130), [#1143](https://github.com/unisdr/undrr-mangrove/pull/1143), [#1141](https://github.com/unisdr/undrr-mangrove/pull/1141))
 
-**The manifest says what it does not cover.** Three reports from a vanilla-HTML consumer upgrading rc.1 to rc.2 were all the same shape: the manifest describing itself as more complete than it is. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200))
+**The manifest says what it does not cover.** Three reports from a vanilla-HTML consumer upgrading rc.1 to rc.2 were all the same shape: the manifest describing itself as more complete than it is. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/PreventionWeb/undrr-mangrove/issues/1200))
 
 - **`tokens.json` is a theme token dictionary, and now says so.** It never contained component-scoped custom properties, but nothing said so, and several of them were announced as public API in these very notes (the `--mg-switch-*` set, `--mg-empty-state-*`, `--mg-notice-*`, `--mg-tree-*`, `--mg-drawer-size` and `-offset`, `--mg-card-border`, `--mg-icon-fg`, `--mg-legend-tick-pos`, `--mg-show-more-height`), so the only way to find them was to grep the compiled CSS. The dictionary gains a `scope` field naming the three kinds it excludes: properties a component defines itself with its own default, input hooks nothing defines (which resolve to nothing and drop their declaration when unset), and the `--mg-dataviz-*` family, which is as global as a theme token but comes from `_tokens-data-viz.scss` rather than a `tokens/*.yaml` source. `llms.txt` repeats it in its "Design tokens" section. Component-scoped properties now appear in each component's `customProperties` array, with descriptions, default-versus-hook classification and channel-format hints. Conditional declarations do not masquerade as unconditional defaults. Global SCSS-only properties remain outside the token dictionary and are identified separately. ([#1223](https://github.com/unisdr/undrr-mangrove/pull/1223), [#1236](https://github.com/unisdr/undrr-mangrove/pull/1236))
 - **Utility classes live only in `utilities.json`.** An agent checking the component index alone concluded there was no accordion (there is no component entry at all) and no data-table utilities. "How to use" now says to fetch `utilities.json` before drawing that conclusion.
@@ -725,7 +725,7 @@ A story fixture hygiene sweep cleared demo-only defects found in the 2.0 audit: 
 
 Use `yarn build` followed by `yarn pack:assemble` or `yarn pack:preview` to inspect the same curated package the publish workflow assembles. Packing the repository root is not a substitute: its layout differs from the published `components/`, `css/`, `js/`, `scss/`, `fonts/` and `error-pages/` directories. Generated Sass partials and compiled CSS must be included, and package-path checks verify the documented consumer surface. ([#1169](https://github.com/unisdr/undrr-mangrove/pull/1169), [#1265](https://github.com/unisdr/undrr-mangrove/pull/1265))
 
-**Jest specs no longer ship.** _Available from `2.0.0-rc.3`; rc.2 still includes them._ `js/__tests__/copy-button.test.js`, `show-more.test.js` and `table-of-contents.test.js` were in every npm tarball up to `2.0.0-rc.2`, and are committed under every versioned folder in the CDN asset repository. They travelled because two steps copy whole directories: webpack copies `stories/assets` into `dist/assets`, and `scripts/assemble-npm-package.mjs` then copies `dist/assets/js` into the package, so anything sitting beside a source went with it. Both steps now skip `__tests__`, `__snapshots__`, `__mocks__`, `__fixtures__`, `*.test.*` and `*.spec.*` from one shared rule, the generated `package.json` `files` array carries the same exclusions as a second line of defence, and a test fails if a development-only file reaches the assembled package again. Nothing a consumer imports changes. ([#1219](https://github.com/unisdr/undrr-mangrove/pull/1219), [#1218](https://github.com/unisdr/undrr-mangrove/issues/1218))
+**Jest specs no longer ship.** _Available from `2.0.0-rc.3`; rc.2 still includes them._ `js/__tests__/copy-button.test.js`, `show-more.test.js` and `table-of-contents.test.js` were in every npm tarball up to `2.0.0-rc.2`, and are committed under every versioned folder in the CDN asset repository. They travelled because two steps copy whole directories: webpack copies `stories/assets` into `dist/assets`, and `scripts/assemble-npm-package.mjs` then copies `dist/assets/js` into the package, so anything sitting beside a source went with it. Both steps now skip `__tests__`, `__snapshots__`, `__mocks__`, `__fixtures__`, `*.test.*` and `*.spec.*` from one shared rule, the generated `package.json` `files` array carries the same exclusions as a second line of defence, and a test fails if a development-only file reaches the assembled package again. Nothing a consumer imports changes. ([#1219](https://github.com/unisdr/undrr-mangrove/pull/1219), [#1218](https://github.com/PreventionWeb/undrr-mangrove/issues/1218))
 
 The rest changes nothing in the published package:
 
@@ -771,9 +771,9 @@ The following remain as SCSS variables (build time only, no CSS custom property 
 | `$mg-html-font-size` | Base rem anchor, compile-time only |
 | `$mg-tabs-border-bottom` | `@if` conditional, compile-time only |
 
-The type scale is **not** on this list. It is emitted as `--mg-font-size-100` … `--mg-font-size-1100` custom properties, which components read with `var()` and a theme can re-value at runtime. The `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` Sass variables still compile but are deprecated and will be removed in 3.0; Sass consumers should switch to `var(--mg-font-size-*)`. Overriding `$mg-font-tag` no longer changes Mangrove's own components. See [#1167](https://github.com/unisdr/undrr-mangrove/issues/1167).
+The type scale is **not** on this list. It is emitted as `--mg-font-size-100` … `--mg-font-size-1100` custom properties, which components read with `var()` and a theme can re-value at runtime. The `$mg-font-size-*`, `$mg-font-body` and `$mg-font-tag` Sass variables still compile but are deprecated and will be removed in 3.0; Sass consumers should switch to `var(--mg-font-size-*)`. Overriding `$mg-font-tag` no longer changes Mangrove's own components. See [#1167](https://github.com/PreventionWeb/undrr-mangrove/issues/1167).
 
-Line heights are not on the list either. `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`) are custom properties; `$mg-font-line-height-500` and `$mg-font-line-height-700` still compile but are deprecated and will be removed in 3.0. A theme can re-value the custom properties, including as a unitless number such as `1.5`; unitless values inherit differently from `em`, because descendants recompute the line height against their own font size instead of inheriting a fixed length. See [#1085](https://github.com/unisdr/undrr-mangrove/issues/1085).
+Line heights are not on the list either. `--mg-font-line-height-500` (`1.25em`) and `--mg-font-line-height-700` (`1.5em`) are custom properties; `$mg-font-line-height-500` and `$mg-font-line-height-700` still compile but are deprecated and will be removed in 3.0. A theme can re-value the custom properties, including as a unitless number such as `1.5`; unitless values inherit differently from `em`, because descendants recompute the line height against their own font size instead of inheriting a fixed length. See [#1085](https://github.com/PreventionWeb/undrr-mangrove/issues/1085).
 
 ### 2. Sub-brand `_variables-*.scss` files deleted
 
@@ -856,7 +856,7 @@ This is not a blanket conversion. Sibling tokens are still channel triples where
 
 ### 8. Font-family variables replaced by five roles
 
-Closes [issue #1098](https://github.com/unisdr/undrr-mangrove/issues/1098). All six font-family SCSS variables are removed and replaced by five CSS custom properties.
+Closes [issue #1098](https://github.com/PreventionWeb/undrr-mangrove/issues/1098). All six font-family SCSS variables are removed and replaced by five CSS custom properties.
 
 | Removed | Replacement role |
 |---|---|
@@ -888,7 +888,7 @@ The one Latin change anywhere in the library is `.mg-preview-access__submit`, wh
 
 Arabic chrome measures about 10.8% narrower than the Latin equivalent, so nothing needed width compensation.
 
-**Two Arabic elements that named no Arabic face at all are fixed by the same move.** The preview-access text input and the mega-menu top-bar link both rendered in a Latin face on Arabic pages (Roboto and Roboto Condensed respectively, neither of which has Arabic coverage) because the per-component `:lang(ar)` blocks that covered their siblings missed them. On a role they follow the map like everything else. The mega-menu half of that is [issue #1095](https://github.com/unisdr/undrr-mangrove/issues/1095), fixed as a side effect: its Arabic override named a non-existent sibling of `.mg-mega-topbar__item-link`.
+**Two Arabic elements that named no Arabic face at all are fixed by the same move.** The preview-access text input and the mega-menu top-bar link both rendered in a Latin face on Arabic pages (Roboto and Roboto Condensed respectively, neither of which has Arabic coverage) because the per-component `:lang(ar)` blocks that covered their siblings missed them. On a role they follow the map like everything else. The mega-menu half of that is [issue #1095](https://github.com/PreventionWeb/undrr-mangrove/issues/1095), fixed as a side effect: its Arabic override named a non-existent sibling of `.mg-mega-topbar__item-link`.
 
 #### What you need to do
 
@@ -1027,7 +1027,7 @@ _Available from `2.0.0-rc.3`._ `timeout: 0` now means "no deadline". Passing `0`
 
 ### Icon card border
 
-_Available from `2.0.0-rc.3`._ `.mg-card__icon--bordered` used to render no border at all when `--mg-card-border` was unset, which is what hand-written vanilla markup usually did. It now falls back to `rgb(var(--mg-color-interactive))`, so that markup gains a visible accent border in the brand colour. Set `--mg-card-border` on the element or an ancestor to choose a different one. React callers are unaffected either way: IconCard emits the modifier class only when `borderColor` is set, and sets the property inline with it. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200))
+_Available from `2.0.0-rc.3`._ `.mg-card__icon--bordered` used to render no border at all when `--mg-card-border` was unset, which is what hand-written vanilla markup usually did. It now falls back to `rgb(var(--mg-color-interactive))`, so that markup gains a visible accent border in the brand colour. Set `--mg-card-border` on the element or an ancestor to choose a different one. React callers are unaffected either way: IconCard emits the modifier class only when `borderColor` is set, and sets the property inline with it. ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/PreventionWeb/undrr-mangrove/issues/1200))
 
 ### Hand-written lists
 
@@ -1129,7 +1129,7 @@ Full token list: [Design decisions/Colors](https://mangrove.undrr.org/?path=/doc
 
 ## Feedback
 
-Report problems in [GitHub issues](https://github.com/unisdr/undrr-mangrove/issues). The organization flag can hide issue listings even when issues exist, so retain the direct URL of a report. Include:
+Report problems in [GitHub issues](https://github.com/PreventionWeb/undrr-mangrove/issues). Include:
 
 1. **Consumption mode**: compiled CSS via CDN, compiled CSS via npm or SCSS import.
 2. **Brand**: base UNDRR, or which sub-brand (PreventionWeb, IRP, MCR2030 or DELTA).

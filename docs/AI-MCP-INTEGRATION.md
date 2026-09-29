@@ -1,6 +1,6 @@
 # AI and MCP integration
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/AI-MCP-INTEGRATION.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-ai-and-mcp-integration--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/AI-MCP-INTEGRATION.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-ai-and-mcp-integration--docs).
 
 Mangrove publishes structured component data so AI coding agents can look up components, props, rendered HTML, and usage examples. This page shows you how to point your agent at that data.
 

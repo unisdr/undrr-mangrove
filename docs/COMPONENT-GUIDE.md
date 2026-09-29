@@ -1,6 +1,6 @@
 # Component guide
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-step-by-step--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COMPONENT-GUIDE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-step-by-step--docs).
 
 A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) in Storybook.
 

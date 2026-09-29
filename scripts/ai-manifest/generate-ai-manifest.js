@@ -45,7 +45,13 @@ import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
 import { buildEditorialManualTxt } from './editorial-manual.js';
 import { buildDocsSubmanifest, DOCS_SUBMANIFESTS } from './docs-submanifest.js';
-import { REPO_BLOB_MAIN, REPO_URL } from './repo.js';
+import {
+  PUBLIC_ISSUES_URL,
+  PUBLIC_REPO_BLOB_MAIN,
+  PUBLIC_REPO_RAW_MAIN,
+  PUBLIC_REPO_URL,
+  REPO_URL,
+} from './repo.js';
 import {
   collectCustomProperties,
   MIN_PROPERTIES,
@@ -2287,7 +2293,7 @@ async function main() {
         field: 'customProperties',
       },
       releasesUrl: `${DOCS_BASE}releases.json`,
-      changelogUrl: `${REPO_BLOB_MAIN}CHANGELOG.md`,
+      changelogUrl: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
       quickstart: {
         css: `<link rel="stylesheet" href="${themeCss.undrr}" />`,
         cssThemes: themeCss,
@@ -2388,10 +2394,11 @@ async function main() {
 ## Links
 
 - Storybook: ${DOCS_BASE}
-- Repository: ${REPO_URL}
+- Repository (public mirror of ${REPO_URL}, which is not publicly readable): ${PUBLIC_REPO_URL}
+- Report a problem with a component or a guide: ${PUBLIC_ISSUES_URL}
 - npm: https://www.npmjs.com/package/${pkg.name}
 - Release changelog (machine-readable): ${DOCS_BASE}releases.json
-- Project changelog (markdown): ${REPO_BLOB_MAIN}CHANGELOG.md
+- Project changelog (markdown): ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
 - Theme token dictionary: ${DOCS_BASE}tokens.json (theme tokens only; component custom properties are documented per component)
@@ -2471,7 +2478,7 @@ To inspect changes between versions, tags, and pre-releases without parsing raw 
 
 - **Machine-readable releases endpoint**: ${DOCS_BASE}releases.json
   Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs.
-- **Repository changelog**: ${REPO_BLOB_MAIN}CHANGELOG.md
+- **Repository changelog**: ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
   Cross-cutting library release notes.
 - **v2.0 migration notes & breaking changes**: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
   Full breaking change catalogue, architectural shifts, and token migration recipes.
@@ -2488,9 +2495,9 @@ Colour, spacing, radii and component tokens are CSS custom properties, so they a
 Where they come from:
 
 - Compiled theme token dictionary: ${DOCS_BASE}tokens.json — theme tokens only; see its \`scope\` field
-- \`tokens/mangrove.yaml\` — the brand-neutral base: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/tokens/mangrove.yaml
+- \`tokens/mangrove.yaml\` — the brand-neutral base: ${PUBLIC_REPO_RAW_MAIN}tokens/mangrove.yaml
 - \`tokens/undrr.yaml\`, \`preventionweb.yaml\`, \`irp.yaml\`, \`mcr.yaml\`, \`delta.yaml\` — brand layers merged over the base, same directory.
-- \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/stories/assets/scss/_tokens-data-viz.scss
+- \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: ${PUBLIC_REPO_RAW_MAIN}stories/assets/scss/_tokens-data-viz.scss
 
 Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
 
@@ -2672,7 +2679,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         repository: REPO_URL,
         npm: `https://www.npmjs.com/package/${pkg.name}`,
         releases: `${DOCS_BASE}releases.json`,
-        changelog: `${REPO_BLOB_MAIN}CHANGELOG.md`,
+        changelog: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
         releaseNotesV2: `${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,

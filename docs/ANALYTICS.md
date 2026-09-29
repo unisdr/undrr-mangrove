@@ -1,6 +1,6 @@
 # Analytics enhancements
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ANALYTICS.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/platform-services-analytics-enhancements--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/ANALYTICS.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/platform-services-analytics-enhancements--docs).
 
 UNDRR provides Google Analytics 4 enhancements via a shared, versioned CDN bundle.
 

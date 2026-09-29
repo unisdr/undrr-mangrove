@@ -1,6 +1,6 @@
 # Adding hydration support
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION-AUTHORING.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-hydration--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION-AUTHORING.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-hydration--docs).
 
 How to add layered hydration support so a Mangrove component can render into
 server-generated HTML containers. For consumer usage, see the

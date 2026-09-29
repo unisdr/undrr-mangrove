@@ -12,7 +12,7 @@ Mangrove is the component library and design system of the United Nations Office
 
 - Storybook docs and live examples: <https://mangrove.undrr.org/>
 - npm package: <https://www.npmjs.com/package/@undrr/undrr-mangrove>
-- Issue tracker: <https://github.com/unisdr/undrr-mangrove/issues>
+- Issue tracker: <https://github.com/PreventionWeb/undrr-mangrove/issues> (the public fork; a GitHub account is needed to open an issue)
 
 ## Quick start
 

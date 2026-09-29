@@ -1,6 +1,6 @@
 # Browser support
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/BROWSER-SUPPORT.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-browser-support--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/BROWSER-SUPPORT.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-browser-support--docs).
 
 Mangrove is tested in major modern browsers. Support covers the latest stable
 release plus the two prior versions for each browser. Older browsers are
