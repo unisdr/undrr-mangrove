@@ -120,6 +120,21 @@ React 19 removed UMD builds. Use import maps with esm.sh:
 
 Bundled components export `fromElement`; pair with `/components/hydrate.js` to avoid manual `createRoot` lifecycle code. See [Hydration guide](https://mangrove.undrr.org/?path=/docs/getting-started-integration-hydration-guide--docs).
 
+### Documentation
+
+Plain-text copies of guidance, for people and AI tools that need a stable, versioned URL rather than the Storybook site. First shipped in the release after 2.0.0, so no `2.0.0/` or earlier folder has them.
+
+| Document | Path | Contents |
+|----------|------|----------|
+| Editorial manual | `/docs/EDITORIAL-MANUAL.md` | Copy of `docs/EDITORIAL-MANUAL.md`, with links to other guides pointing at Storybook |
+| Editorial manual sub-manifest | `/docs/llms-editorial-manual.txt` | The same rules in the `llms.txt` format |
+
+Every other `llms-*.txt` sub-manifest the build generates is published beside them under `/docs/`. The top-level `llms.txt` and `llms.json` are not: they index the Storybook site and stay at <https://mangrove.undrr.org/llms.txt>.
+
+```
+https://assets.undrr.org/mangrove/{version}/docs/llms-editorial-manual.txt
+```
+
 ## Analytics
 
 Base URL: `https://assets.undrr.org/analytics/{version}/`

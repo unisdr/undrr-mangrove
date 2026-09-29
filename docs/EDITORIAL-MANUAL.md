@@ -175,6 +175,8 @@ Translate a document-writing rule to its web/UI equivalent explicitly (as this d
 - When the UNDRR Publications SOP is updated (it's dated by year, e.g. "SOP_Publication-2026"). Confirm the rules above still match and update citations to the current version.
 - Periodically alongside major Mangrove releases, to confirm the source URLs and rules above still match the live UN Geneva style guide and Editorial Manual. Both can and do change without notice; the style guide's own last-updated date is at the bottom of its page. Update the "Sources last verified" date above whenever this check happens, whether or not anything actually changed.
 
+**Where copies are published**: edit this file only. Each build also publishes it, with its links pointing at Storybook, as `docs/EDITORIAL-MANUAL.md` and, in the `llms.txt` format, as `docs/llms-editorial-manual.txt`, both in the npm package and on the UNDRR asset library: `https://assets.undrr.org/mangrove/latest/docs/` for the latest build and `https://assets.undrr.org/mangrove/{version}/docs/` for a release, from the release after 2.0.0. The `llms-editorial-manual.txt` sub-manifest is also served from the Storybook site root. Those copies are generated, so a change made to one of them is lost at the next build.
+
 ## Related documentation
 
 - [Writing guidelines](WRITING.md): UX writing principles, tone, inclusive language and the "write for two audiences" model

@@ -236,6 +236,15 @@ The [utilities reference](https://mangrove.undrr.org/ai-components/utilities.jso
 
 The [releases endpoint](https://mangrove.undrr.org/releases.json) provides machine-readable version history across all library tags, pre-releases, and individual components. It summarizes what changed between releases, links PRs, categorizes changes (Features, Bug fixes, Tooling, Security), and includes granular component changelogs.
 
+### Versioned copies on assets.undrr.org (`docs/`)
+
+The editorial manual and every `llms-*.txt` sub-manifest are also copied into the build output, `dist/docs/`, and published in the npm package under `docs/`. The UNDRR asset library mirrors both, so the same files are served next to Mangrove's CSS and JavaScript:
+
+- Latest build: `https://assets.undrr.org/mangrove/latest/docs/EDITORIAL-MANUAL.md` and `https://assets.undrr.org/mangrove/latest/docs/llms-editorial-manual.txt`
+- Pinned to a release: `https://assets.undrr.org/mangrove/{version}/docs/EDITORIAL-MANUAL.md` and `https://assets.undrr.org/mangrove/{version}/docs/llms-editorial-manual.txt`, from the release after 2.0.0
+
+Use a pinned URL where the guidance has to stay fixed, for example in a prompt that is reviewed and reused. The Markdown copy starts with a provenance line, and its links to other guides point at their Storybook pages. `llms.txt` and `llms.json` are not copied; they index the Storybook site. `scripts/copy-docs-to-dist.mjs` does the copy at the end of `yarn build`.
+
 ### Page templates
 
 The [PageTemplateExample](https://mangrove.undrr.org/ai-components/example-page-template-example.json) detail file includes four complete page templates:
@@ -260,13 +269,15 @@ The [PageTemplateExample](https://mangrove.undrr.org/ai-components/example-page-
 
 ### How it's generated
 
-A single script runs after Storybook and webpack finish:
+A single script generates the manifest after Storybook and webpack finish, and a small one then copies the published guidance into `dist/`:
 
 ```
 storybook build → manifests/components.json (props, types, stories)
 webpack build   → dist/components/*.js (compiled React bundles)
         ↓
 generate-ai-manifest.js → llms.txt, llms.json, index.json, {id}.json, utilities.json, tokens.json, releases.json
+        ↓
+copy-docs-to-dist.mjs   → dist/docs/EDITORIAL-MANUAL.md, dist/docs/llms-*.txt
 ```
 
 `generate-ai-manifest.js` auto-renders React components from `dist/` using `renderToStaticMarkup`, then merges four data sources: the Storybook manifest (props, types), auto-rendered HTML, curated data from `component-data.js` (descriptions, CSS classes, flags, page templates), and release/changelog data from `CHANGELOG.md` via `parse-changelog.js`. Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs fall back to curated HTML examples. When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns, and PropTypes coverage.

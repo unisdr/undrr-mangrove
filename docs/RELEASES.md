@@ -188,6 +188,13 @@ gh release create vX.Y.Z --title X.Y.Z --verify-tag --notes-file release-notes.m
   curl -s https://assets.undrr.org/mangrove/latest/css/style.css | grep -m1 'Version:'   # expect: Version: X.Y.Z
   ```
 
+- The versioned folder carries the published guidance under `docs/` (the editorial manual and every `llms-*.txt` sub-manifest, from `dist/docs/`), which prompts and integrations can pin to:
+
+  ```bash
+  curl -sI https://assets.undrr.org/mangrove/X.Y.Z/docs/EDITORIAL-MANUAL.md | head -1          # expect 200
+  curl -sI https://assets.undrr.org/mangrove/X.Y.Z/docs/llms-editorial-manual.txt | head -1   # expect 200
+  ```
+
 ### 9. Update the Drupal theme (if needed)
 
 If component JS or CSS changed:

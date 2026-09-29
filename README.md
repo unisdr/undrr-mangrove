@@ -82,6 +82,8 @@ Mangrove publishes static metadata for coding agents after Storybook deploy:
 
 Guide: [`docs/AI-MCP-INTEGRATION.md`](docs/AI-MCP-INTEGRATION.md)
 
+The editorial manual and the `llms-*.txt` sub-manifests also ship in `dist/docs/` and in the npm package under `docs/`, so the UNDRR asset library serves them at stable URLs, for example <https://assets.undrr.org/mangrove/latest/docs/llms-editorial-manual.txt> and `https://assets.undrr.org/mangrove/{version}/docs/EDITORIAL-MANUAL.md` (from the release after 2.0.0). See the [CDN reference](docs/CDN-REFERENCE.md#documentation).
+
 ## Documentation index
 
 All project docs: [`docs/README.md`](docs/README.md)
