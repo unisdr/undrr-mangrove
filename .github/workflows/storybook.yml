@@ -16,6 +16,10 @@ on:
       # changelog-only merge leaves the deployed release list stale until the
       # next push that happens to touch something else.
       - 'CHANGELOG.md'
+      # The guides under docs/ are build inputs too: Storybook renders them
+      # with `?raw` imports, and the manifest builds llms-*.txt from them.
+      # Without this, a docs-only merge leaves mangrove.undrr.org stale.
+      - 'docs/**'
       - 'tokens/**'
       - '.storybook/**'
       - '.github/workflows/storybook.yml'

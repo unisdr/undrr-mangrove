@@ -50,6 +50,7 @@ United Nations guidance:
 - [Material Design: writing](https://m2.material.io/design/communication/writing.html)
 - [PlainLanguage.gov: guidelines](https://www.plainlanguage.gov/guidelines/)
 - [Mailchimp content style guide](https://styleguide.mailchimp.com/)
+- [A Handbook for Writers of the United Nations (PDF)](https://languages.un.org/sites/default/files/2024-01/writing_for_the_united_natons_a_handbook_of_guidelines_techniques_and_resources.pdf)
 
 Originally inspired by Nick DiLallo’s “This is good UX writing: Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
 

@@ -25,7 +25,7 @@
     "build:tokens": "node scripts/build-tokens.cjs",
     "build:icons": "node scripts/icon-build.cjs",
     "build:css-version": "node scripts/sync-css-version.js",
-    "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --stats-json && webpack --progress && node scripts/ai-manifest/generate-ai-manifest.js",
+    "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --stats-json && webpack --progress && node scripts/ai-manifest/generate-ai-manifest.js && node scripts/copy-docs-to-dist.mjs",
     "generate-ai-manifest": "node scripts/ai-manifest/generate-ai-manifest.js",
     "validate-manifest": "node scripts/ai-manifest/generate-ai-manifest.js --validate",
     "build:analyze": "ANALYZE=true NODE_ENV=production webpack --progress",

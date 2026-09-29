@@ -89,6 +89,7 @@ Reference: [Ibrahim Diallo: How do we get developers to read the docs?](https://
 - Prefer active voice; use plain language and short sentences.
 - Read copy aloud to check rhythm and clarity.
 - Reference: [PlainLanguage.gov: guidelines](https://www.plainlanguage.gov/guidelines/)
+- Reference: [A Handbook for Writers of the United Nations (PDF)](https://languages.un.org/sites/default/files/2024-01/writing_for_the_united_natons_a_handbook_of_guidelines_techniques_and_resources.pdf): United Nations guidance on purpose, audience, clarity and conciseness, and diplomatic language, with examples by text type (version 1, 10 June 2023)
 
 ---
 
