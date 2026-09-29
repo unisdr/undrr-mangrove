@@ -2402,7 +2402,9 @@ async function main() {
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
 - Theme token dictionary: ${DOCS_BASE}tokens.json (theme tokens only; component custom properties are documented per component)
-- Editorial manual (capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language; each rule credited to its United Nations system or UNDRR source in the doc itself): ${DOCS_BASE}llms-editorial-manual.txt
+- Editorial manual for UNDRR web content (news, publications, blogs, events) as well as UI copy and component docs: capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language, each rule credited to its United Nations system or UNDRR source in the doc itself: ${DOCS_BASE}llms-editorial-manual.txt
+- UNDRR editorial guides for writing news, events, publications and blogs: https://assets.undrr.org/docs/editorial-guides/README.md
+- Instructions for AI agents writing UNDRR content: https://assets.undrr.org/docs/editorial-guides/ai-agent-instructions.md
 - Page building guide for UNDRR websites built with Drupal Gutenberg (landing page structure, layout patterns, component choice, UNDRR block reference with current pasteable markup): ${DOCS_BASE}llms-page-building.txt
 - Search widget editor configuration (block settings, search syntax, field:value filters, taxonomy term IDs): ${DOCS_BASE}llms-search-widget.txt
 
@@ -2578,8 +2580,7 @@ Theme key facts:
 
 Brand characteristics (UNDRR voice): Knowledgeable, Approachable, Collaborative.
 
-Editorial rules:
-- Avoid UN jargon. Lead with people, not issues. Use inverted pyramid. Positive framing for prevention content.
+Editorial rules: follow the editorial manual (${DOCS_BASE}llms-editorial-manual.txt) and, for news, events, publications and blogs, the UNDRR editorial guides linked above.
 
 Typography:
 - Font families are CSS custom properties called ROLES, not Sass variables. A component stylesheet names a role and never a typeface: \`var(--mg-font-family-text)\`, \`-heading\`, \`-display\`, \`-ui\`, \`-code\`. Roles are defined on \`:root\` in \`_variables.scss\` and re-pointed for Arabic in \`_fonts.scss\`, which is the single font entry point every build path imports — entry points, the shared Drupal import list, and the per-component recipe alike.
