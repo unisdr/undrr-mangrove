@@ -461,8 +461,11 @@ and carries the same responsibility: the widget renders that endpoint's HTML
 unsanitised. See [Endpoint trust contract](#endpoint-trust-contract).
 
 On the UNDRR Drupal platform, the `undrr/search-widget` Gutenberg block saves
-its own container, marked `data-undrr-search-widget`, and a wrapper script in
-the platform theme reads its `data-*` attributes and mounts this component.
+its own container, marked `data-undrr-search-widget`. That attribute belongs to
+the platform, not to this library: a wrapper script in the platform theme finds
+those containers, reads their `data-*` attributes and mounts this component
+itself. Mangrove never reads `data-undrr-search-widget` (see 1.4.12 below), so
+markup outside the platform should keep using `data-mg-search-widget`.
 The block's settings and the filter values editors use are documented in
 [Editor configuration](?path=/docs/components-syndicated-search-editor-configuration--docs).
 Backend notes (relevance scoring, synonyms, the configuration modifier

@@ -14,7 +14,7 @@ This guide covers structure, not prose. For the words on the page:
 
 - [Editorial manual](EDITORIAL-MANUAL.md): capitalization, punctuation, numbers and dates, abbreviations, spelling, UNDRR terminology and inclusive language. It is the single source for these rules; the other guides link to it rather than restating it.
 - [Writing guidelines](WRITING.md): plain language, front-loading and descriptive link text. Its rules on second person are written for interface copy; body copy on a landing page follows the editorial manual.
-- UNDRR editorial guides for news, events, publications and blogs, being published at <https://assets.undrr.org/docs/editorial-guides/>.
+- UNDRR editorial guides for news, events, publications and blogs, being published at <https://assets.undrr.org/docs/editorial-guides/README.md>.
 
 Points specific to landing pages:
 
@@ -51,12 +51,14 @@ Every page has exactly one H1. Either the hero supplies it (`headingLevel` `h1`)
 
 For a large display title on a publication or campaign page, set the font size to **Huge**, which saves `has-huge-font-size mg-u-font-size-800`.
 
-### Hero
+### Choosing a hero
 
 The hero block has two layouts:
 
 - **Split** (preferred for new pages): text in one column and an image, video or custom HTML in the other, on a solid theme colour. Contrast is predictable because the text never sits over a photograph.
 - **Background** (legacy): text over a full-bleed image. Existing background heroes do not need migrating, but new pages should use split.
+
+A newly inserted hero block starts on the background layout, so switch **Layout** to split in the block sidebar.
 
 Split ratios describe the **content** column, which is the easiest thing to get backwards:
 
@@ -79,7 +81,7 @@ Long pages need a way to jump between sections. There are two blocks for this, a
 - **On this page navigation** (`undrr/undrr-on-this-page-nav-block`): a sticky horizontal bar built from the H2 headings. Use it on narrative and campaign pages, directly after the hero. To keep a download in view as the reader scrolls, turn on its call-to-action link.
 - **Table of contents** (`undrr/undrr-table-of-contents-block`): a contents list, usually in a sidebar of the page header. Use it on index and reference pages.
 
-Both read the page's headings, so the headings are the navigation: keep H2 text short and specific. Leave a heading out of the contents list with the `mg-table-of-contents--exclude` class.
+Both read the page's headings, so the headings are the navigation: keep H2 text short and specific. To leave a heading out, add a class to it: `mg-on-this-page-nav--exclude` for the on-this-page bar, `mg-table-of-contents--exclude` for the contents list.
 
 Markup: [Table of contents](DRUPAL-GUTENBERG.md#table-of-contents) and [On this page navigation](DRUPAL-GUTENBERG.md#on-this-page-navigation).
 
@@ -211,7 +213,7 @@ Observations from pages that have been through editorial review, offered as defa
 For collection index pages, which exist to reach many items:
 
 - Put a full-width H3 above each row of cards, not inside a column.
-- Below the H3, add a paragraph with a "View landing page" link. When the subsection covers two related topics, add both links separated by a line break.
+- Below the H3, add a paragraph linking to the subsection's own landing page. Name the destination in the link text ("All early warning resources"), not a generic "View landing page", which reads the same for every row to a screen reader user scanning links. When the subsection covers two related topics, add both links separated by a line break.
 - Lay book cards out in five-column rows, and pad a short row with empty columns so the covers keep their size.
 - When two neighbouring subsections have only one or two cards each, merge them under one H3.
 - Turn items that do not suit a card (training modules, other landing pages) into text links.
@@ -223,7 +225,7 @@ For collection index pages, which exist to reach many items:
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
-<p><a href="https://www.undrr.org/example">View landing page</a></p>
+<p><a href="https://www.undrr.org/example">All early warning resources</a></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:columns -->
@@ -305,7 +307,7 @@ Each chart row is a columns block split 33.33/66.66: an H3 stating the key messa
 <!-- /wp:html -->
 
 <!-- wp:paragraph {"fontSize":"small"} -->
-<p class="has-small-font-size mg-u-font-size-250">Share of total average annual loss by hazard type (%). Source: UNDRR</p>
+<p class="has-small-font-size mg-u-font-size-250">Share of total average annual loss by hazard type (%). <em>Source</em>: United Nations Office for Disaster Risk Reduction (2025)</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
@@ -317,7 +319,7 @@ Chart titles and captions follow a convention:
 | --- | --- | --- |
 | H3 in the left column | The key takeaway, stated as a message | "Floods dominate expected annual disaster losses" |
 | `iframe` `title` | The same text as the H3; it is the chart's accessible name | "Floods dominate expected annual disaster losses" |
-| Caption paragraph | Neutral: metric, units, scope and source | "Share of total average annual loss by hazard type (%). Source: UNDRR" |
+| Caption paragraph | Neutral: metric, units, scope and source, with the source in the [editorial manual's attribution form](EDITORIAL-MANUAL.md#undrr-specific-terminology) | "Share of total average annual loss by hazard type (%). *Source*: United Nations Office for Disaster Risk Reduction (2025)" |
 | Title inside the chart | Can be hidden in the chart tool's publish settings | |
 
 Datawrapper's own embed code adds a script that resizes the iframe; include it in the same `wp:html` block.
@@ -426,11 +428,14 @@ The show more button collapses a long block, such as a list of resources, behind
 <!-- /wp:html -->
 ```
 
-### Long reference content
+### Frequently asked questions and long reference content
 
-Horizontal tabs truncate their labels and make readers click through each tab to find a section. For long reference content, such as frequently asked questions or the Sendai Framework targets, use stacked tabs with the keyword filter on and **Only one open at a time** set, so readers can type a word and go straight to the section. Write section labels with the words a reader would search for.
+There are two tools for content that readers expand one item at a time:
 
-When a stacked tab set sits inside an H2 section and the tab labels are the only headings needed, turn on **Unlabelled** for each section. Otherwise each open panel repeats its label as a visible H2 below the tab, which duplicates the heading.
+- **A short set of questions** (up to about ten): use the **Frequently asked questions** pattern from the **UNDRR pages** category. It inserts core Details blocks with the Mangrove presentation switched on, one per question. Details are native HTML disclosures, so they need no script and the browser's find-in-page search reaches the answers.
+- **Long reference content**, such as a long question list or the Sendai Framework targets and indicators: use stacked tabs with **Show filter input** and **Single open (accordion)** turned on, so readers can type a word and go straight to the matching section. Horizontal tabs are the wrong tool here; they truncate their labels and make readers click through each tab. Write section labels with the words a reader would search for.
+
+When a stacked tab set sits inside an H2 section and the tab labels are the only headings needed, turn on **Hide heading** for each section. Otherwise each open panel repeats its label as a visible H2 below the tab, which duplicates the heading.
 
 Markup: [Drupal Gutenberg integration: Tabs](DRUPAL-GUTENBERG.md#tabs).
 
@@ -444,7 +449,7 @@ Markup: [Drupal Gutenberg integration: Core blocks](DRUPAL-GUTENBERG.md#core-blo
 
 ## Starter page
 
-A minimal index page: title, contents, one white section of book cards and one grey section. Paste it through the Code editor, then replace the placeholders.
+A minimal index page: title, contents, one white section of book cards and one grey section. Paste it through the Code editor, then replace the placeholder text, links and images. Elsewhere in this guide, text in square brackets such as `[book card]` marks where other blocks go; it is not valid block markup, so replace it with real blocks before pasting.
 
 ```html
 <!-- wp:heading {"level":1} -->
@@ -474,13 +479,13 @@ A minimal index page: title, contents, one white section of book cards and one g
 <!-- wp:columns -->
 <div class="wp-block-columns"><!-- wp:column -->
 <div class="wp-block-column"><!-- wp:undrr/undrr-card {"title":"Resource A","titleLink":"https://www.undrr.org/example-a","cardType":"book","mediaAlt":""} -->
-<article class="wp-block-undrr-undrr-card"><div class="mg-card mg-card__book"><div class="mg-card__visual"><img src="/sites/default/files/2024-01/cover-a.jpg" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-a">Resource A</a></header></div></div></article>
+<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__visual"><img src="/sites/default/files/2024-01/cover-a.jpg" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-a">Resource A</a></header></div></article>
 <!-- /wp:undrr/undrr-card --></div>
 <!-- /wp:column -->
 
 <!-- wp:column -->
 <div class="wp-block-column"><!-- wp:undrr/undrr-card {"title":"Resource B","titleLink":"https://www.undrr.org/example-b","cardType":"book","mediaAlt":""} -->
-<article class="wp-block-undrr-undrr-card"><div class="mg-card mg-card__book"><div class="mg-card__visual"><img src="/sites/default/files/2024-01/cover-b.jpg" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-b">Resource B</a></header></div></div></article>
+<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__visual"><img src="/sites/default/files/2024-01/cover-b.jpg" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-b">Resource B</a></header></div></article>
 <!-- /wp:undrr/undrr-card --></div>
 <!-- /wp:column -->
 
@@ -511,9 +516,9 @@ A minimal index page: title, contents, one white section of book cards and one g
 <p>One or two sentences on what readers will find in this section.</p>
 <!-- /wp:paragraph -->
 
-  [a row of cards, as above]
-
-</div>
+<!-- wp:paragraph -->
+<p>Replace this paragraph with a row of cards, as in the first section.</p>
+<!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
 ```

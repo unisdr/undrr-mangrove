@@ -12,11 +12,12 @@ An AI tool can read this guide as plain text at <https://mangrove.undrr.org/llms
 
 ## Quick reference
 
-**Append to queries** biases results without filtering them out. Good for context:
+**Append to queries** adds hidden terms to every search, and every result must match them. It narrows results; it does not merely rank matching content higher:
 
-- `sendai framework` biases results toward Sendai Framework content
-- `climate resilience` biases results toward climate resilience
-- `"early warning systems"` biases results toward the exact phrase
+- `sendai framework` limits every search to content that also mentions the Sendai Framework
+- `"early warning systems"` limits every search to content containing the exact phrase
+
+The appended text joins the reader's own words in a single search whose default operator is AND. A search for `flood` with `sendai framework` appended returns only items that match all three words, a small fraction of the plain `flood` results. For a hard scope, **Custom filters** are clearer and more predictable.
 
 **Custom filters** are a JSON array of hard filters applied to every query:
 
@@ -38,7 +39,7 @@ An AI tool can read this guide as plain text at <https://mangrove.undrr.org/llms
 
 Separate entries combine with AND: `["type:news", "field_theme:311"]` means news **and** climate change. For OR, use parentheses inside a single entry. Field filters and free-text terms such as `DRR` can be mixed in one expression.
 
-**Search modifiers** use Elasticsearch `query_string` syntax and work in both **Append to queries** and **Custom filters**:
+**Search modifiers** use Elasticsearch `query_string` syntax and work in both **Append to queries** and **Custom filters**. Appended text that contains any of these special characters also switches off typo tolerance and common-word removal for the reader's search, because the two are searched together:
 
 | Modifier | Syntax | Example |
 | --- | --- | --- |
@@ -85,11 +86,11 @@ Leave **Override with current website domain** on (the default). When the same l
 
 **Custom filters**: `["field_collections:65548", "field_hazard:357"]`
 
-This limits results to content in the "Artificial intelligence (AI) for disaster risk reduction" collection (node 65548) that is tagged Wildfire (term 357). `field_collections` holds collection **node** IDs, not taxonomy term IDs. To let readers choose between several collections, add a custom facet whose options are `field_collections:<node ID>` queries.
+This limits results to content in the "Artificial intelligence (AI) for disaster risk reduction" collection (node 65548) that is tagged Wildfire and Bushfire (term 357). `field_collections` holds collection **node** IDs, not taxonomy term IDs. To let readers choose between several collections, add a custom facet whose options are `field_collections:<node ID>` queries.
 
-### Bias searches without filtering
+### Require terms in every search
 
-Set **Append to queries** to `sendai framework`. Every search a reader makes carries those terms as extra context, so Sendai Framework content ranks higher without anything else being excluded.
+Set **Append to queries** to `sendai framework`. Every search a reader makes must then also match those words, so the widget only ever returns content that mentions the Sendai Framework. Use it sparingly: readers cannot see or remove the appended terms, and a search that returns nothing gives them no clue why.
 
 ### Custom facet for UNDRR document types
 
@@ -160,7 +161,7 @@ Scope the panel with **Custom filters** rather than **Default search query**. A 
 ["field_syndication:1018"]
 ```
 
-Check that content is actually tagged before building the panel: a filter that matches nothing renders an empty widget with no error. The block preview in the editor runs the same query, so an empty preview means an empty panel.
+Check that content is actually tagged before building the panel: a filter that matches nothing renders an empty widget with no error. The block preview in the editor runs the same query, but it always uses the fixed **Language** and **Website** values, so it matches the published panel only when **Override with current page language** and **Override with current website domain** are off, or when the fixed values are the ones the page is published with.
 
 ### Card grid with no empty image slots
 
@@ -182,7 +183,7 @@ A newly inserted widget finds exactly one of each container on the page and link
 
 If a container is missing when the page loads, the widget shows the search box or facets in its own area instead.
 
-For tabs where each tab holds its own widget and all of them share one search box, turn on **Share with all search widgets on this page** on the container. This works only when the tabs mount one widget at a time; if several widgets are on screen at once, only the first uses the shared container.
+For tabs where each tab holds its own widget and all of them share one search box, turn on **Share with all search widgets on this page** on the container. Use it only when the tabs mount one widget at a time. Nothing arbitrates between widgets that are on screen together, so do not point two mounted widgets at the same container.
 
 To put a search box on one page and the results on another, use a plain HTML form that submits to the results page with a `#query=` fragment instead.
 
@@ -211,7 +212,7 @@ The sidebar has four panels: **Search settings**, **Filtering**, **Display** and
 | Website | `defaultDomain` | Empty (all websites) | Pre-selected website; also the fallback for the override below |
 | Override with current website domain | `useCurrentDomain` | On | Uses the website the page is published on, falling back to **Website** |
 
-Both overrides are on by default so a new widget adapts to whichever website and language it appears on. Detection happens once, when the page loads. The editor preview always uses the fixed **Language** and **Website** values, because the editor is not the published page.
+Both overrides are on by default so a new widget adapts to whichever website and language it appears on. Widgets saved before these defaults were switched on ([undrr/web-backlog#2822](https://gitlab.com/undrr/web-backlog/-/work_items/2822)) keep both off, through the block's deprecation, until an editor turns them on. Detection happens once, when the page loads. The editor preview always uses the fixed **Language** and **Website** values, because the editor is not the published page.
 
 ### Filtering
 
@@ -222,7 +223,7 @@ Both overrides are on by default so a new widget adapts to whichever website and
 | Setting | Attribute | Description |
 | --- | --- | --- |
 | Only show results with images | `requireImage` | Adds a hidden `has_image:true` filter |
-| Append to queries | `queryAppend` | Text added to every search, to bias results |
+| Append to queries | `queryAppend` | Terms added to every search; every result must match them |
 | Custom filters (JSON array) | `customFilters` | `query_string` filters applied to every query. A bare expression such as `type:news` is wrapped into a one-item array automatically |
 
 **Editorial ranking filters** limit results by the interestingness or longevity an editor set on each item. Leave both empty for no filter.
@@ -241,9 +242,11 @@ Both overrides are on by default so a new widget adapts to whichever website and
 | Days | 4–20 | Relevant for about a week |
 | Week | 21–40 | Relevant for about two weeks |
 | Month | 41–65 | Relevant for about three months |
-| Year | 66–85 | Relevant for about a year; items with no value count as 80 |
+| Year | 66–85 | Relevant for about a year |
 | Long time | 86–95 | Relevant for years |
 | Always | 96–100 | Permanently relevant |
+
+Items with no value set are ranked as if their longevity were 80, but a tier filter does not include them: selecting **Year** matches only items whose stored value is 66–85.
 
 **Custom facet dropdowns**: up to three filter dropdowns defined by the editor. Each has a title, a position weight (0–100; lower appears first), a multiple-selection toggle and a list of options, each a label and a `query_string` expression. Multiple selections combine with OR.
 
@@ -303,12 +306,15 @@ Double quotes search for the exact phrase, with no typo tolerance and with short
 
 ### Operators and wildcards
 
-| Operator | Example | Meaning |
+Every word must match; there is no need to type AND.
+
+| To | Type | Example |
 | --- | --- | --- |
-| AND | `climate AND resilience` | Both terms (the default) |
-| OR | `earthquake OR tsunami` | Either term |
-| NOT | `disaster NOT earthquake` | The first term without the second |
-| `*` | `disast*` | Disaster, disasters, disastrous |
+| Exclude a word | `-term` | `disaster -earthquake` |
+| Match either of two words | A parenthesised group with OR | `(earthquake OR tsunami)` |
+| Match the start of a word | `*` | `disast*` matches disaster, disasters and disastrous |
+
+Typed without parentheses, OR and NOT do not work as operators. "or" is one of the common words removed before searching, so `earthquake OR tsunami` becomes `earthquake tsunami` and requires both words, and NOT is searched as an ordinary word, which can cause an error. The parentheses in a group count as special characters, which keeps the operators intact.
 
 Typo tolerance is not added when the search contains any of `: ~ ^ / + - ! ( ) { } [ ] * ? \ & | < > = @`, so `field:value` searches and wildcards pass through unchanged.
 
@@ -368,7 +374,7 @@ Subtypes appear indented under their type in the **Type** dropdown. Each has its
 | `1` | Statements and messages |
 | `754` | Feature |
 | `755` | Research briefs |
-| `797` | Community announcement |
+| `797` | Opportunities |
 | `756` | Op Ed |
 
 **Blog**: `field_blog_type`
@@ -533,11 +539,11 @@ Term 1177 is a duplicate "Financing DRR"; use `317`.
 | `341` | Avalanche |
 | `342` | Cold Wave |
 | `343` | Cyclone, Hurricane and Typhoon |
-| `344` | Drought |
+| `344` | Drought and Desertification |
 | `345` | Earthquake |
 | `346` | Epidemic and Pandemic |
 | `347` | Flood |
-| `348` | Heatwave |
+| `348` | Heatwave and Extreme Heat |
 | `349` | Insect infestation |
 | `350` | Landslide |
 | `351` | NBC: Nuclear, Biological, Chemical |
@@ -546,12 +552,12 @@ Term 1177 is a duplicate "Financing DRR"; use `317`.
 | `354` | Tornado |
 | `355` | Tsunami |
 | `356` | Volcano |
-| `357` | Wildfire |
+| `357` | Wildfire and Bushfire |
 | `1178` | Sea level rise |
 | `1179` | Thunderstorm |
 | `1180` | Land subsidence |
 
-**Countries and regions**: `field_country_region`. The vocabulary has 231 terms: continents, country groupings and countries. Commonly used regions and groupings:
+**Countries and regions**: `field_country_region`. The vocabulary has 235 terms: continents, country groupings and countries. Commonly used regions and groupings:
 
 | Term ID | Name |
 | --- | --- |
@@ -677,7 +683,7 @@ published_at:[* TO 2022-12-31]
 
 ### Images
 
-Field: `has_image`. `true` when the item has an image. Items of these types can have one: blog, collections, commitment, conference event, event, landing page, news, organization, people, publication, resource and hazard information profile. Items of these types never do: national platform, terminology, vacancy, conference and focal point. Taxonomy terms never have one.
+Field: `has_image`. `true` when the item has an image. Items of these types can have one: blog, collections, commitment, conference event, event, landing page, news, organization, people, publication and resource. Items of these types never do: hazard information profile, national platform, terminology, vacancy, conference and focal point. Taxonomy terms never have one.
 
 ```
 has_image:true
@@ -692,7 +698,7 @@ Only published content is searched. There is no need to add a status filter.
 
 ## Looking up term IDs
 
-The term IDs in this guide come from the original data migration and are the same on every environment. Terms created later can have different IDs on development, staging and production, so check a new term on the website the widget will be published on.
+The term IDs in this guide come from the original data migration and match production. Terms created later can have different IDs on development, staging and production, so check a new term on the website the widget will be published on.
 
 | Where | What |
 | --- | --- |
@@ -704,7 +710,7 @@ The term IDs in this guide come from the original data migration and are the sam
 | `/admin/structure/taxonomy/manage/collections/overview` | Collection types |
 | `/admin/structure/taxonomy/manage/syndication/overview` | Syndication terms |
 | `/api/v1/taxonomy?vid=prevention_web_regions&items_per_page=1000` | Every country and region term, as JSON |
-| `/api/v1/taxonomy?vid=syndication&items_per_page=100` | Every syndication term, as JSON |
+| `/api/v1/taxonomy?vid=syndication&items_per_page=1000` | Every syndication term, as JSON |
 | `/taxonomy/term/{tid}` | One term, to confirm an ID |
 
 ## Related documentation
