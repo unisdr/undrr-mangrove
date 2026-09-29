@@ -443,8 +443,10 @@ function sanitizeQuery(query) {
   // Remove trailing boolean operators (AND, OR, NOT) that would cause errors
   sanitized = sanitized.replace(/\s+(AND|OR|NOT)\s*$/i, '');
 
-  // Remove leading boolean operators
-  sanitized = sanitized.replace(/^\s*(AND|OR|NOT)\s+/i, '');
+  // Remove leading AND/OR, which are invalid at the start. Keep an uppercase
+  // leading NOT: "NOT earthquake" is a valid exclusion.
+  sanitized = sanitized.replace(/^\s*(AND|OR)\s+/i, '');
+  sanitized = sanitized.replace(/^\s*(?!NOT\s)not\s+/i, '');
 
   // Remove standalone boolean operators
   if (/^(AND|OR|NOT)$/i.test(sanitized.trim())) {
@@ -503,7 +505,7 @@ function removeStopWords(query, stopWords = []) {
 /**
  * Drop operators left dangling after stop word removal, so that
  * "earthquake OR the" doesn't become the invalid "earthquake OR".
- * Keeps "AND NOT" / "OR NOT", which are valid.
+ * Keeps "AND NOT" / "OR NOT" and a leading "NOT", which are valid.
  *
  * @param {Array<string>} tokens - Query tokens
  * @returns {Array<string>} Tokens without dangling operators
@@ -516,7 +518,12 @@ function tidyOperators(tokens) {
       return;
     }
     const previous = result[result.length - 1];
-    if (previous === undefined) return;
+    // A leading NOT is valid ("NOT earthquake" excludes earthquake); a
+    // leading AND or OR is not.
+    if (previous === undefined) {
+      if (token === 'NOT') result.push(token);
+      return;
+    }
     if (BOOLEAN_OPERATORS.includes(previous)) {
       if (token !== 'NOT' || previous === 'NOT') return;
     }

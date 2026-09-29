@@ -474,6 +474,11 @@ describe('queryBuilder', () => {
       );
     });
 
+    it('keeps a leading NOT so the term stays excluded', () => {
+      expect(queryFor('NOT earthquake')).toBe('NOT earthquake~1');
+      expect(queryFor('the NOT tsunami')).toBe('NOT tsunami~1');
+    });
+
     it('drops operators left dangling by stop word removal', () => {
       expect(queryFor('earthquake OR the')).toBe('earthquake~1');
       expect(queryFor('the OR tsunami')).toBe('tsunami~1');
