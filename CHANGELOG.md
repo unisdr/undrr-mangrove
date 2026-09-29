@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **Editorial manual, first-person exception:** the "Avoid the first person" rule now records its one exception: guest-authored blogs and signed op-eds may use first person where it rests on the author's firsthand experience, never as an undefined institutional "we" or to promote. Tracked in [undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109).
+
 - **Editorial manual, SOP link and two new rules:** the UNDRR Publications SOP is now linked for UNDRR staff (its SharePoint Publications page) instead of described as not linkable. New rules from the 2026 SOP cover currencies (full name, then the three-letter code; USD or US$, never a bare "$") and hazard names (follow the Hazard Definition and Classification Review). A new "Where UNDRR style differs from United Nations style" section records the "%" versus "per cent" difference and why, and the en dash example no longer uses "per cent". Tracked in [undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109).
 
 ## 2.0.0, 2026-09-24
