@@ -13,9 +13,9 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
-- **Editorial manual and AI sub-manifests on the asset library:** `docs/EDITORIAL-MANUAL.md` and every `llms-*.txt` sub-manifest now ship in `dist/docs/` and in the npm package under `docs/`, so the UNDRR asset library serves them at `https://assets.undrr.org/mangrove/latest/docs/` and, from the next release, at versioned URLs such as `https://assets.undrr.org/mangrove/{version}/docs/llms-editorial-manual.txt`. The Markdown copy starts with a provenance line, and its links to other guides point at Storybook. `llms.txt` and `llms.json` stay on the Storybook site only. The `dist` and Storybook workflows now also rebuild on a change under `docs/`. Tracked in [undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109).
-
 - **Editorial manual, SOP link and two new rules:** the UNDRR Publications SOP is now linked for UNDRR staff (its SharePoint Publications page) instead of described as not linkable. New rules from the 2026 SOP cover currencies (full name, then the three-letter code; USD or US$, never a bare "$") and hazard names (follow the Hazard Definition and Classification Review). A new "Where UNDRR style differs from United Nations style" section records the "%" versus "per cent" difference and why, and the en dash example no longer uses "per cent". Tracked in [undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109).
+
+- **Editorial manual and AI sub-manifests on the asset library:** `docs/EDITORIAL-MANUAL.md` and every `llms-*.txt` sub-manifest now ship in `dist/docs/` and in the npm package under `docs/`, so the UNDRR asset library serves them at `https://assets.undrr.org/mangrove/latest/docs/` and, from the next release, at versioned URLs such as `https://assets.undrr.org/mangrove/{version}/docs/llms-editorial-manual.txt`. The Markdown copy starts with a provenance line, and its links to other guides point at Storybook. `llms.txt` and `llms.json` stay on the Storybook site only. The `dist` and Storybook workflows now also rebuild on a change under `docs/`. Tracked in [undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109).
 
 ## 2.0.0, 2026-09-24
 
