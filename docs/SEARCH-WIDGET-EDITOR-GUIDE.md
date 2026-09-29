@@ -39,7 +39,7 @@ The appended text joins the reader's own words in a single search whose default 
 
 Separate entries combine with AND: `["type:news", "field_theme:311"]` means news **and** climate change. For OR, use parentheses inside a single entry. Field filters and free-text terms such as `DRR` can be mixed in one expression.
 
-**Search modifiers** use Elasticsearch `query_string` syntax and work in both **Append to queries** and **Custom filters**. Appended text that contains any of these special characters also switches off typo tolerance and common-word removal for the reader's search, because the two are searched together:
+**Search modifiers** use Elasticsearch `query_string` syntax and work in both **Append to queries** and **Custom filters**. The widget processes appended text separately from the reader's search and combines the two as `(reader search) AND (appended text)`, so an OR typed by a reader cannot loosen the requirement, and special characters in the appended text do not change how the reader's words are searched:
 
 | Modifier | Syntax | Example |
 | --- | --- | --- |
@@ -310,11 +310,13 @@ Every word must match; there is no need to type AND.
 
 | To | Type | Example |
 | --- | --- | --- |
-| Exclude a word | `-term` | `disaster -earthquake` |
-| Match either of two words | A parenthesised group with OR | `(earthquake OR tsunami)` |
+| Match either of two words | `OR` | `earthquake OR tsunami` |
+| Exclude a word | `NOT` or `-term` | `disaster NOT earthquake`, `disaster -earthquake` |
+| Exclude a word from everything | `NOT` at the start | `NOT earthquake` |
+| Group conditions | `(...)` | `(earthquake OR tsunami) AND preparedness` |
 | Match the start of a word | `*` | `disast*` matches disaster, disasters and disastrous |
 
-Typed without parentheses, OR and NOT do not work as operators. "or" is one of the common words removed before searching, so `earthquake OR tsunami` becomes `earthquake tsunami` and requires both words, and NOT is searched as an ordinary word, which can cause an error. The parentheses in a group count as special characters, which keeps the operators intact.
+Operators must be typed in capitals. Lowercase "and" and "or" are common words and are removed before searching, so `flood and drought or storm` is searched as `flood drought storm`, which requires all three words.
 
 Typo tolerance is not added when the search contains any of `: ~ ^ / + - ! ( ) { } [ ] * ? \ & | < > = @`, so `field:value` searches and wildcards pass through unchanged.
 
@@ -324,7 +326,7 @@ Outside quotes, these words are removed before searching: the, a, an, and, or, b
 
 ### Automatic fixes
 
-The widget repairs common mistakes: an unmatched quotation mark is removed, AND, OR and NOT at the start or end of a search are dropped, a search that is only an operator becomes empty and a trailing `-` or `+` is removed.
+The widget repairs common mistakes: an unmatched quotation mark is removed, AND or OR at the start of a search and any operator at the end are dropped, an operator left without a word after common words are removed is dropped (`earthquake OR the` becomes `earthquake`), a search that is only an operator becomes empty and a trailing `-` or `+` is removed. `NOT` at the start is kept, because it is a valid exclusion.
 
 ## Field and value filters
 

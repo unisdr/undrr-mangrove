@@ -20,6 +20,12 @@ import {
 } from './constants';
 
 /**
+ * Query_string Boolean operators. Elasticsearch only treats them as
+ * operators when uppercase.
+ */
+const BOOLEAN_OPERATORS = ['AND', 'OR', 'NOT'];
+
+/**
  * Build a complete Elasticsearch query from state and config.
  *
  * Uses post_filter pattern for disjunctive faceting:
@@ -360,30 +366,23 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
 
 /**
  * Build the must clause for the query.
- * Includes queryAppend (hidden terms added to all searches).
+ * Includes queryAppend (hidden terms added to all searches). queryAppend is a
+ * requirement, not a bias: every result must match it.
  * Removes stop words from the query for more consistent results.
  * @private
  */
 function buildMustClause(searchQuery, scoring, config) {
-  const queryAppend = config.queryAppend || '';
+  const queryAppend = (config.queryAppend || '').trim();
   const stopWords = scoring.stopWords || [];
 
   // Sanitize query to prevent Elasticsearch errors (unclosed quotes, trailing operators)
   const sanitizedQuery = sanitizeQuery(searchQuery || '');
 
-  // Combine user query with appended terms
-  let combinedQuery = sanitizedQuery;
-  if (queryAppend) {
-    combinedQuery = combinedQuery
-      ? `${combinedQuery} ${queryAppend}`
-      : queryAppend;
-  }
-
   const fieldWeights = scoring.fieldWeights;
 
   // For empty queries, use wildcard "*" to match all documents
   // Note: match_all doesn't work with the UNDRR search endpoint proxy
-  if (!combinedQuery || combinedQuery.length === 0) {
+  if (!sanitizedQuery && !queryAppend) {
     return {
       query_string: {
         query: '*',
@@ -394,12 +393,23 @@ function buildMustClause(searchQuery, scoring, config) {
 
   // Remove stop words for more consistent matching
   // e.g., "The Draft Articles on the Protection" and "Draft Articles on Protection"
-  // will both search for the same core terms
-  const cleanedQuery = removeStopWords(combinedQuery, stopWords);
+  // will both search for the same core terms.
+  // The reader query and queryAppend are processed separately so that syntax
+  // in one (field:value, quotes) doesn't switch off processing for the other.
+  const prepare = query => addFuzziness(removeStopWords(query, stopWords));
+  const readerPart = sanitizedQuery ? prepare(sanitizedQuery) : '';
+  const appendPart = queryAppend ? prepare(queryAppend) : '';
+
+  // Group both sides so an OR in the reader's query can't loosen the
+  // queryAppend requirement, e.g. "a OR b field_theme:339".
+  const combinedQuery =
+    readerPart && appendPart
+      ? `(${readerPart}) AND (${appendPart})`
+      : readerPart || appendPart;
 
   return {
     query_string: {
-      query: addFuzziness(cleanedQuery),
+      query: combinedQuery,
       fields: Object.entries(fieldWeights).map(
         ([field, weight]) => `${field}^${weight}`
       ),
@@ -433,8 +443,10 @@ function sanitizeQuery(query) {
   // Remove trailing boolean operators (AND, OR, NOT) that would cause errors
   sanitized = sanitized.replace(/\s+(AND|OR|NOT)\s*$/i, '');
 
-  // Remove leading boolean operators
-  sanitized = sanitized.replace(/^\s*(AND|OR|NOT)\s+/i, '');
+  // Remove leading AND/OR, which are invalid at the start. Keep an uppercase
+  // leading NOT: "NOT earthquake" is a valid exclusion.
+  sanitized = sanitized.replace(/^\s*(AND|OR)\s+/i, '');
+  sanitized = sanitized.replace(/^\s*(?!NOT\s)not\s+/i, '');
 
   // Remove standalone boolean operators
   if (/^(AND|OR|NOT)$/i.test(sanitized.trim())) {
@@ -476,16 +488,56 @@ function removeStopWords(query, stopWords = []) {
     return query;
   }
 
+  // Uppercase AND/OR/NOT are query_string operators; lowercase "and"/"or"
+  // are ordinary words and can still be dropped as stop words.
   const words = query.split(/\s+/);
-  const filtered = words.filter(
-    word => !stopWords.includes(word.toLowerCase())
+  const filtered = tidyOperators(
+    words.filter(
+      word =>
+        BOOLEAN_OPERATORS.includes(word) ||
+        !stopWords.includes(word.toLowerCase())
+    )
   );
   // Return original if all words were stop words
   return filtered.length > 0 ? filtered.join(' ') : query;
 }
 
 /**
+ * Drop operators left dangling after stop word removal, so that
+ * "earthquake OR the" doesn't become the invalid "earthquake OR".
+ * Keeps "AND NOT" / "OR NOT" and a leading "NOT", which are valid.
+ *
+ * @param {Array<string>} tokens - Query tokens
+ * @returns {Array<string>} Tokens without dangling operators
+ */
+function tidyOperators(tokens) {
+  const result = [];
+  tokens.forEach(token => {
+    if (!BOOLEAN_OPERATORS.includes(token)) {
+      result.push(token);
+      return;
+    }
+    const previous = result[result.length - 1];
+    // A leading NOT is valid ("NOT earthquake" excludes earthquake); a
+    // leading AND or OR is not.
+    if (previous === undefined) {
+      if (token === 'NOT') result.push(token);
+      return;
+    }
+    if (BOOLEAN_OPERATORS.includes(previous)) {
+      if (token !== 'NOT' || previous === 'NOT') return;
+    }
+    result.push(token);
+  });
+  while (BOOLEAN_OPERATORS.includes(result[result.length - 1])) {
+    result.pop();
+  }
+  return result;
+}
+
+/**
  * Add fuzziness to search query for typo tolerance.
+ * Boolean operators (AND, OR, NOT) are left as they are.
  * @param {string} query - Search query
  * @param {number} fuzzinessLevel - Fuzziness level (default: 1)
  * @returns {string} Query with fuzziness
@@ -503,7 +555,11 @@ function addFuzziness(query, fuzzinessLevel = 1) {
   }
 
   const terms = query.split(/\s+/);
-  return terms.map(term => `${term}~${fuzzinessLevel}`).join(' ');
+  return terms
+    .map(term =>
+      BOOLEAN_OPERATORS.includes(term) ? term : `${term}~${fuzzinessLevel}`
+    )
+    .join(' ');
 }
 
 /**
@@ -533,7 +589,12 @@ function buildPhraseBoosting(searchQuery, scoring) {
   // Sanitize, strip quotes, then remove stop words
   const sanitizedQuery = sanitizeQuery(searchQuery);
   const unquotedQuery = stripQuotes(sanitizedQuery);
-  const cleanedQuery = removeStopWords(unquotedQuery, stopWords);
+  // Operators aren't content: boosting "disaster NOT earthquake" as a phrase
+  // would reward the excluded word.
+  const cleanedQuery = removeStopWords(unquotedQuery, stopWords)
+    .split(/\s+/)
+    .filter(word => !BOOLEAN_OPERATORS.includes(word))
+    .join(' ');
 
   // Skip if query is empty after sanitization
   if (!cleanedQuery || cleanedQuery.trim().length === 0) {
