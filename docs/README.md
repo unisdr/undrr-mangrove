@@ -19,6 +19,9 @@ This directory holds the source files for documentation published in Storybook.
 | Editorial style rules (capitalization, punctuation, numbers, spelling, UNDRR terminology, inclusive language) | [EDITORIAL-MANUAL.md](EDITORIAL-MANUAL.md) |
 | Hydration API and patterns | [HYDRATION.md](HYDRATION.md) |
 | CDN usage | [CDN-REFERENCE.md](CDN-REFERENCE.md) |
+| Building UNDRR landing pages (page shapes, layout patterns, component choice) | [LANDING-PAGE-GUIDE.md](LANDING-PAGE-GUIDE.md) |
+| Drupal Gutenberg blocks, serialization rules and current block markup | [DRUPAL-GUTENBERG.md](DRUPAL-GUTENBERG.md) |
+| Search widget configuration for editors | [SEARCH-WIDGET-EDITOR-GUIDE.md](SEARCH-WIDGET-EDITOR-GUIDE.md) |
 | Release process | [RELEASES.md](RELEASES.md) |
 
 ## Specialist guides

@@ -77,6 +77,8 @@ Mangrove publishes static metadata for coding agents after Storybook deploy:
 
 - `llms.txt`: <https://mangrove.undrr.org/llms.txt>
 - `llms-editorial-manual.txt` (writing/style rules and terminology only): <https://mangrove.undrr.org/llms-editorial-manual.txt>
+- `llms-page-building.txt` (building UNDRR landing pages with Drupal Gutenberg, with current block markup): <https://mangrove.undrr.org/llms-page-building.txt>
+- `llms-search-widget.txt` (search widget configuration for editors): <https://mangrove.undrr.org/llms-search-widget.txt>
 - component index: <https://mangrove.undrr.org/ai-components/index.json>
 - per-component details: `ai-components/{id}.json`
 

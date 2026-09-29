@@ -1,0 +1,19 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+import SearchWidgetEditorGuide from '../../docs/SEARCH-WIDGET-EDITOR-GUIDE.md?raw';
+import { linkDocsPages } from './docsPageLinks';
+
+<Meta
+  title="Components/Syndicated search/Editor configuration"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+<Markdown>
+  {linkDocsPages(SearchWidgetEditorGuide, 'docs/SEARCH-WIDGET-EDITOR-GUIDE.md')}
+</Markdown>
+
+---
+
+Last updated: 29 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/SearchWidgetEditorGuide.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

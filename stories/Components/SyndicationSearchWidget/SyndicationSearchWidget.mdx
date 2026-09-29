@@ -19,6 +19,8 @@ filtering, and list/card/book-card display modes across UNDRR domains.
 
 > **Future:** A standalone, configurable search component without platform dependencies may be developed separately for broader use cases.
 
+> **Integration note:** Editors placing the widget on UNDRR websites configure it through the UNDRR Search Widget block in Drupal Gutenberg. [Editor configuration](?path=/docs/components-syndicated-search-editor-configuration--docs) covers every block setting, practical configurations, what readers can type and the `field:value` filter syntax with taxonomy term IDs. AI tools can read it as plain text at https://mangrove.undrr.org/llms-search-widget.txt.
+
 ## Features
 
 - Keyword search with responsive input and live result updates
@@ -458,6 +460,15 @@ The component is loaded automatically on pages containing a container with `data
 and carries the same responsibility: the widget renders that endpoint's HTML
 unsanitised. See [Endpoint trust contract](#endpoint-trust-contract).
 
+On the UNDRR Drupal platform, the `undrr/search-widget` Gutenberg block saves
+its own container, marked `data-undrr-search-widget`, and a wrapper script in
+the platform theme reads its `data-*` attributes and mounts this component.
+The block's settings and the filter values editors use are documented in
+[Editor configuration](?path=/docs/components-syndicated-search-editor-configuration--docs).
+Backend notes (relevance scoring, synonyms, the configuration modifier
+pattern and library load order) are maintained with the Drupal module in the
+platform codebase.
+
 ## Props
 
 ### Config object
@@ -666,6 +677,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.14**, 2026-09-29 ([undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109)): Added the [Editor configuration](?path=/docs/components-syndicated-search-editor-configuration--docs) sub-page, which moves the editor-facing search guidance for the Drupal Gutenberg block (block settings, practical examples, search syntax, `field:value` filters and taxonomy term IDs) into Mangrove, and links it from this page. Documentation only; the component is unchanged.
 - **1.4.13**, 2026-09-19 ([mangrove#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The usage example imports `@undrr/undrr-mangrove/components/SyndicationSearchWidget.js` instead of the package root. The root has never resolved on any published version (the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain), and 2.0.0 stops advertising it, so the subpath is the only form that works. Documentation only; the component is unchanged.
 - **1.4.12**, 2026-09-19 ([mangrove#1255](https://github.com/unisdr/undrr-mangrove/issues/1255)): The Drupal integration snippet names the attribute the component actually hydrates on. It said `data-undrr-search-widget` in both the sentence and the copy-pasteable markup, so a consumer who followed it got a container nothing ever mounted into; the hydration selector is `[data-mg-search-widget]`, which this file already used correctly in every later example. Nothing in the library ever read `data-undrr-search-widget`, so it was never a legacy alias and no fallback is needed. The same wrong spelling in the `CustomEndpoint` story's Drupal example is corrected too; that story renders React directly from `args` and never hydrated, so it was not broken, only modelling markup that would not work. Documentation only; no behaviour change.
 - **1.4.11**, 2026-09-18 ([mangrove#1254](https://github.com/unisdr/undrr-mangrove/pull/1254)): Documented the endpoint trust contract. `ResultItem` renders three pieces of the search response as HTML (the pre-rendered teaser, and the Elasticsearch `highlight` fields for the title and the snippet) and does not sanitise any of them, because the `<em>` wrappers highlighting puts around matched terms are the feature and escaping the response would print them as text. That was true before this change and stays true after it; no rendering behaviour changed. What was missing was anyone saying so: `searchEndpoint` is set by the consumer, through the config prop or `data-search-endpoint`, and a consumer who repoints it at their own service inherits whatever that service returns, on a page that, this being a syndication widget, is frequently not UNDRR's. The three render sites now carry the reasoning, the MDX has an "Endpoint trust contract" section beside the endpoint documentation, and the AI manifest entry carries it too. The search query is not part of this: highlights come from indexed documents, not from the query string, so nothing typed in the search box is reflected back as markup. Also corrects the documented default for `searchEndpoint`, which the props table gave as `/search-endpoint` where the code has always used `https://www.undrr.org/search-endpoint`.

@@ -9,9 +9,16 @@ import * as Stories from './LandingPages.stories';
 
 These examples compare three common UNDRR landing page structures side by side:
 where the title sits, whether in-page navigation is needed, and how content is
-grouped below the fold. Copy is illustrative; structure follows the
-[Gutenberg content guide](https://assets.undrr.org/docs/gutenberg-content-guide/CONTENT_GUIDE.md)
+grouped below the fold. Copy is illustrative; structure follows
+[Building landing pages](?path=/docs/patterns-building-landing-pages--docs)
 and current undrr.org patterns.
+
+> **Integration note:** To build one of these pages on a UNDRR website, start
+> with [Building landing pages](?path=/docs/patterns-building-landing-pages--docs)
+> for the section structure, layout patterns and component choice, and
+> [Drupal Gutenberg integration](?path=/docs/getting-started-integration-drupal-gutenberg--docs)
+> for the blocks and their markup. AI tools can read both as one plain-text
+> file at https://mangrove.undrr.org/llms-page-building.txt.
 
 ## Topic or initiative
 
@@ -49,6 +56,21 @@ that link onward; skip the hero because the listings are the content.
 Use the locale toolbar for Arabic and the theme toolbar for other brands. Each
 example sits under standard UNDRR header/global navigation so spacing is realistic.
 
+## Building them in Drupal Gutenberg
+
+Each example maps onto blocks an editor can place:
+
+| Example          | Title and navigation                                                                                          | Body                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Topic            | Hero block with the split layout, then the on-this-page navigation block                                      | Icon cards for routes; vertical cards, or a search widget set up as a curated feed, for recent material |
+| Report           | A full-width coloured columns block with the H1 and lede, and the table of contents block in its right column | Sections in a 20/60/20 reading column; stats cards at full width between them                           |
+| Collection index | A level 1 heading and the table of contents block                                                             | An H3 per group, then five-column rows of book cards                                                    |
+
+The guidance behind these choices, including section backgrounds, reading
+column widths, spacing, the publication and data chart page shapes and the
+editorial conventions for each section, is in
+[Building landing pages](?path=/docs/patterns-building-landing-pages--docs).
+
 ## Composition
 
 These pages compose shipped components (`Hero`, `IconCard`, `VerticalCard`,
@@ -63,6 +85,7 @@ hydration APIs are introduced here.
 
 ## Changelog
 
+- **1.0.3**, 2026-09-29 ([undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109)): The structure now cites [Building landing pages](?path=/docs/patterns-building-landing-pages--docs), which replaces the Gutenberg content guide on assets.undrr.org, and a new section maps each example onto the Drupal Gutenberg blocks that build it. Documentation only.
 - **1.0.2**, 2026-09-20 ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276)): The report reading column opts into `mg-content`, so its inline report link is visibly distinguished without changing the navigation links around it.
 - **1.0.1**, 2026-09-20 ([#1273](https://github.com/unisdr/undrr-mangrove/issues/1273)): Added a real inline report link to the publication-page example, so the foundational link treatment can be reviewed in a realistic reading-column context.
 

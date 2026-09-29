@@ -12,6 +12,8 @@
  *        llms.txt                       — plain-text discovery file for AI agents
  *        llms.json                      — structured version of llms.txt
  *        llms-editorial-manual.txt      — sub-manifest: writing/style rules, from docs/EDITORIAL-MANUAL.md
+ *        llms-page-building.txt         — sub-manifest: Drupal Gutenberg page building, from docs/LANDING-PAGE-GUIDE.md and docs/DRUPAL-GUTENBERG.md
+ *        llms-search-widget.txt         — sub-manifest: search widget editor configuration, from docs/SEARCH-WIDGET-EDITOR-GUIDE.md
  *        ai-components/index.json       — lightweight component index
  *        ai-components/{id}.json        — full details per component
  *        ai-components/utilities.json   — CSS utility class inventory
@@ -42,6 +44,7 @@ import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
 import { buildEditorialManualTxt } from './editorial-manual.js';
+import { buildDocsSubmanifest, DOCS_SUBMANIFESTS } from './docs-submanifest.js';
 import { REPO_BLOB_MAIN, REPO_URL } from './repo.js';
 import {
   collectCustomProperties,
@@ -2393,6 +2396,8 @@ async function main() {
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
 - Theme token dictionary: ${DOCS_BASE}tokens.json (theme tokens only; component custom properties are documented per component)
 - Editorial manual (capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language; each rule credited to its United Nations system or UNDRR source in the doc itself): ${DOCS_BASE}llms-editorial-manual.txt
+- Page building guide for UNDRR websites built with Drupal Gutenberg (landing page structure, layout patterns, component choice, UNDRR block reference with current pasteable markup): ${DOCS_BASE}llms-page-building.txt
+- Search widget editor configuration (block settings, search syntax, field:value filters, taxonomy term IDs): ${DOCS_BASE}llms-search-widget.txt
 
 ## For AI agents
 
@@ -2630,6 +2635,28 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   );
 
   // -------------------------------------------------------------------------
+  // Write llms-page-building.txt and llms-search-widget.txt
+  // (see docs-submanifest.js)
+  // -------------------------------------------------------------------------
+
+  for (const submanifest of DOCS_SUBMANIFESTS) {
+    const txt = buildDocsSubmanifest({
+      title: submanifest.title,
+      summary: submanifest.summary,
+      sources: submanifest.sources.map(source => ({
+        ...source,
+        markdown: fs.readFileSync(
+          path.resolve(process.cwd(), 'docs', source.file),
+          'utf8'
+        ),
+      })),
+      docsBase: DOCS_BASE,
+      extraLinks: submanifest.extraLinks(DOCS_BASE),
+    });
+    fs.writeFileSync(path.join(buildDir, submanifest.filename), txt);
+  }
+
+  // -------------------------------------------------------------------------
   // Write llms.json
   // -------------------------------------------------------------------------
 
@@ -2651,6 +2678,12 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
         tokens: `${DOCS_BASE}tokens.json`,
         editorialManual: `${DOCS_BASE}llms-editorial-manual.txt`,
+        ...Object.fromEntries(
+          DOCS_SUBMANIFESTS.map(submanifest => [
+            submanifest.urlKey,
+            `${DOCS_BASE}${submanifest.filename}`,
+          ])
+        ),
         css: themeCss,
       },
       latestRelease: releasesData.latest,
@@ -2714,6 +2747,11 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   console.log(
     `  ${path.join(buildDir, 'llms-editorial-manual.txt')} (editorial manual sub-manifest)`
   );
+  for (const submanifest of DOCS_SUBMANIFESTS) {
+    console.log(
+      `  ${path.join(buildDir, submanifest.filename)} (${submanifest.title})`
+    );
+  }
   console.log(
     `  ${path.join(buildDir, 'releases.json')} (${releasesData.releases.length} releases parsed)`
   );

@@ -248,6 +248,7 @@ const preview = {
               'Theming guide',
               'CDN reference',
               'Hydration guide',
+              'Drupal Gutenberg',
             ],
             'Best practices',
             'Accessibility',

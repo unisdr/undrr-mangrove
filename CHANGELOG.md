@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **Page building guidance moves into Mangrove:** Three new guides replace the Gutenberg content guide and search guidance formerly published on assets.undrr.org. [Building landing pages](https://mangrove.undrr.org/?path=/docs/patterns-building-landing-pages--docs) (`docs/LANDING-PAGE-GUIDE.md`) covers page shapes, section structure, layout patterns and component choice; [Drupal Gutenberg integration](https://mangrove.undrr.org/?path=/docs/getting-started-integration-drupal-gutenberg--docs) (`docs/DRUPAL-GUTENBERG.md`) maps each UNDRR Gutenberg block to the component it renders, with serialization rules, rendering constraints and current block markup; [Search widget editor configuration](https://mangrove.undrr.org/?path=/docs/components-syndicated-search-editor-configuration--docs) (`docs/SEARCH-WIDGET-EDITOR-GUIDE.md`) documents the search widget block for editors. The AI manifest gains two sub-manifests built from them, `llms-page-building.txt` and `llms-search-widget.txt`, linked from `llms.txt` and `llms.json` (`urls.pageBuilding`, `urls.searchWidget`); the editorial manual sub-manifest now shares their builder, `scripts/ai-manifest/docs-submanifest.js`, with unchanged output. ([undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109))
+
 ## 2.0.0, 2026-09-24
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0) for full details.

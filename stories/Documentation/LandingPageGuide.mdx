@@ -1,0 +1,19 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+import LandingPageGuide from '../../docs/LANDING-PAGE-GUIDE.md?raw';
+import { linkDocsPages } from './docsPageLinks';
+
+<Meta
+  title="Patterns/Building landing pages"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+<Markdown>
+  {linkDocsPages(LandingPageGuide, 'docs/LANDING-PAGE-GUIDE.md')}
+</Markdown>
+
+---
+
+Last updated: 29 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/LandingPageGuide.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

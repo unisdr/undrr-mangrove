@@ -1,0 +1,19 @@
+import { Meta, Markdown } from '@storybook/addon-docs/blocks';
+import DrupalGutenbergGuide from '../../docs/DRUPAL-GUTENBERG.md?raw';
+import { linkDocsPages } from './docsPageLinks';
+
+<Meta
+  title="Getting started/Integration/Drupal Gutenberg"
+  parameters={{
+    viewMode: 'docs',
+    previewTabs: { canvas: { hidden: true } },
+  }}
+/>
+
+<Markdown>
+  {linkDocsPages(DrupalGutenbergGuide, 'docs/DRUPAL-GUTENBERG.md')}
+</Markdown>
+
+---
+
+Last updated: 29 September 2026 · <a href="https://github.com/unisdr/undrr-mangrove/blob/main/stories/Documentation/DrupalGutenberg.mdx" target="_blank" rel="noopener noreferrer">View source on GitHub</a>

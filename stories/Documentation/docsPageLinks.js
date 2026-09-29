@@ -37,16 +37,21 @@ export const DOC_PAGE_IDS = {
   'docs/COMPONENT-GUIDE.md':
     'contributing-build-a-component-step-by-step--docs',
   'docs/CRITICAL-MESSAGING.md': 'platform-services-critical-messaging--docs',
+  'docs/DRUPAL-GUTENBERG.md':
+    'getting-started-integration-drupal-gutenberg--docs',
   'docs/EDITORIAL-MANUAL.md': 'contributing-editorial-manual--docs',
   'docs/HYDRATION-AUTHORING.md':
     'contributing-build-a-component-hydration--docs',
   'docs/HYDRATION.md': 'getting-started-integration-hydration-guide--docs',
+  'docs/LANDING-PAGE-GUIDE.md': 'patterns-building-landing-pages--docs',
   'docs/RELEASE-1.4.md': 'getting-started-release-notes-v1-4--docs',
   'docs/RELEASE-1.5.md': 'getting-started-release-notes-v1-5--docs',
   'docs/RELEASE-2.0.md': 'getting-started-release-notes-v2-0--docs',
   'docs/RELEASES.md': 'contributing-release-process--docs',
   'docs/REVIEW-CHECKLIST.md':
     'contributing-build-a-component-review-checklist--docs',
+  'docs/SEARCH-WIDGET-EDITOR-GUIDE.md':
+    'components-syndicated-search-editor-configuration--docs',
   'docs/TESTING.md': 'contributing-build-a-component-testing--docs',
   'docs/WRITING.md': 'contributing-writing-guidelines--docs',
 };
