@@ -51,6 +51,7 @@ import {
   PUBLIC_REPO_RAW_MAIN,
   PUBLIC_REPO_URL,
   REPO_URL,
+  findPrivateLinks,
 } from './repo.js';
 import {
   collectCustomProperties,
@@ -2265,6 +2266,7 @@ async function main() {
       description: pkg.description,
       documentation: DOCS_BASE,
       repository: REPO_URL,
+      publicRepository: PUBLIC_REPO_URL,
       npm: `https://www.npmjs.com/package/${pkg.name}`,
       cssPrefix: 'mg-',
       namingConvention:
@@ -2394,7 +2396,7 @@ async function main() {
 ## Links
 
 - Storybook: ${DOCS_BASE}
-- Repository (public mirror of ${REPO_URL}, which is not publicly readable): ${PUBLIC_REPO_URL}
+- Repository (public mirror of ${REPO_URL.replace('https://github.com/', '')}, which is not publicly readable): ${PUBLIC_REPO_URL}
 - Report a problem with a component or a guide: ${PUBLIC_ISSUES_URL}
 - npm: https://www.npmjs.com/package/${pkg.name}
 - Release changelog (machine-readable): ${DOCS_BASE}releases.json
@@ -2479,12 +2481,12 @@ The utilities.json file lists ~${utilityClassCount} utility classes grouped by c
 To inspect changes between versions, tags, and pre-releases without parsing raw git commits:
 
 - **Machine-readable releases endpoint**: ${DOCS_BASE}releases.json
-  Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs.
+  Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs. Pull requests, issues and tags are on \`${REPO_URL.replace('https://github.com/', '')}\`, which is not publicly readable, so they appear as plain-text references (such as \`unisdr/undrr-mangrove#1234\`) with no URL; do not look them up on the public fork, whose numbers refer to different items.
 - **Repository changelog**: ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
   Cross-cutting library release notes.
 - **v2.0 migration notes & breaking changes**: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
   Full breaking change catalogue, architectural shifts, and token migration recipes.
-- **Component-level changelogs**: Each component's detail file (${DOCS_BASE}ai-components/{id}.json) contains a \`changelog\` array with granular version updates, dates, descriptions, and PR links.
+- **Component-level changelogs**: Each component's detail file (${DOCS_BASE}ai-components/{id}.json) contains a \`changelog\` array with granular version updates, dates, descriptions, and PR references.
 
 ### Z-index layers
 
@@ -2678,6 +2680,8 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
       urls: {
         storybook: DOCS_BASE,
         repository: REPO_URL,
+        publicRepository: PUBLIC_REPO_URL,
+        issues: PUBLIC_ISSUES_URL,
         npm: `https://www.npmjs.com/package/${pkg.name}`,
         releases: `${DOCS_BASE}releases.json`,
         changelog: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
@@ -2737,6 +2741,38 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   );
 
   fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);
+
+  // -------------------------------------------------------------------------
+  // No links into the unisdr organization
+  // -------------------------------------------------------------------------
+
+  // Anonymous readers and AI tools get a 404 from github.com/unisdr. A link
+  // there in any manifest this build publishes is a regression: fix its source
+  // or route it through toPublicMarkdown() in parse-changelog.js.
+  const publishedManifests = [
+    ...fs
+      .readdirSync(buildDir)
+      .filter(name => /^(llms.*\.(txt|json)|releases\.json)$/.test(name))
+      .map(name => path.join(buildDir, name)),
+    ...fs
+      .readdirSync(outputDir)
+      .filter(name => name.endsWith('.json'))
+      .map(name => path.join(outputDir, name)),
+  ];
+  const privateLinks = publishedManifests.flatMap(file =>
+    findPrivateLinks(fs.readFileSync(file, 'utf8')).map(
+      url => `${path.relative(process.cwd(), file)}: ${url}`
+    )
+  );
+  if (privateLinks.length > 0) {
+    console.error(
+      `Error: ${privateLinks.length} link(s) to github.com/unisdr in the generated manifests, which anonymous readers cannot open:`
+    );
+    for (const link of [...new Set(privateLinks)].slice(0, 20)) {
+      console.error(`  - ${link}`);
+    }
+    process.exit(1);
+  }
 
   // -------------------------------------------------------------------------
   // Summary
