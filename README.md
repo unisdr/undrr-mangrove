@@ -1,7 +1,7 @@
 [![npm version](https://img.shields.io/npm/v/@undrr/undrr-mangrove.svg)](https://www.npmjs.com/package/@undrr/undrr-mangrove)
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://mangrove.undrr.org/)
-[![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/storybook.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
-[![License](https://img.shields.io/github/license/unisdr/undrr-mangrove.svg)](https://github.com/unisdr/undrr-mangrove/blob/main/LICENSE)
+[![Build Status](https://github.com/PreventionWeb/undrr-mangrove/actions/workflows/storybook.yml/badge.svg)](https://github.com/PreventionWeb/undrr-mangrove/actions/workflows/storybook.yml)
+[![License](https://img.shields.io/github/license/PreventionWeb/undrr-mangrove.svg)](https://github.com/PreventionWeb/undrr-mangrove/blob/main/LICENSE)
 <!-- React Doctor score is a periodic snapshot, not live. Refresh after audit sweeps by re-running `npx -y react-doctor@latest .` and updating the s/e/w/f params below. See docs/AI-CODING-AGENTS.md#component-quality-checks-with-react-doctor. -->
 
 [![React Doctor](https://www.react.doctor/share/badge?p=%40undrr%2Fundrr-mangrove&s=100&e=0&w=0&f=0)](https://www.react.doctor/share?p=%40undrr%2Fundrr-mangrove&s=100&e=0&w=0&f=0)
@@ -69,7 +69,7 @@ yarn build
 
 - Release process: [`docs/RELEASES.md`](docs/RELEASES.md)
 - Upgrading from 1.x: [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md))
-- GitHub releases: <https://github.com/unisdr/undrr-mangrove/releases>
+- Changelog: [`CHANGELOG.md`](CHANGELOG.md). GitHub Releases are published on `unisdr/undrr-mangrove`, which is readable only when signed in as a member while the `unisdr` organization is flagged; the public fork has no releases
 
 ## AI and MCP integration
 

@@ -68,7 +68,7 @@ Every component stylesheet must begin with a docblock comment containing a conci
  * Brief 1-2 sentence description of the component purpose, layout, and behaviors.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/{Category}/{ComponentName}/{ComponentName}.mdx
  */
 ```
 

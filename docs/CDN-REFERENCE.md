@@ -30,7 +30,7 @@ Base URL: `https://assets.undrr.org/mangrove/{version}/`
 | MCR2030 | `/css/style-mcr-legacy.css` |
 | IRP | `/css/style-irp-legacy.css` |
 
-The DELTA Resilience theme never had a legacy variant. See the [v1.4 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change) for what they did and the [v2.0 release notes](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) for the migration off them.
+The DELTA Resilience theme never had a legacy variant. See the [v1.4 release notes](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change) for what they did and the [v2.0 release notes](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) for the migration off them.
 
 ```html
 <link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0/css/style.css" />

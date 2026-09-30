@@ -25,7 +25,7 @@ Agents that can read files (Claude Code, Cursor, Copilot) can work directly from
 
 ```
 I'm working with the UNDRR Mangrove component library.
-Repository: https://github.com/unisdr/undrr-mangrove
+Repository: https://github.com/PreventionWeb/undrr-mangrove
 
 Help me create a page layout using the MegaMenu, Hero, and Footer components.
 ```
@@ -360,6 +360,6 @@ The Storybook team's research on agent workflows (closed Oct 2025). Key finding:
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Supercharge Your Design System with LLMs and Storybook MCP (Codrops)](https://tympanus.net/codrops/2025/12/09/supercharge-your-design-system-with-llms-and-storybook-mcp/)
 - [Dear LLM, here's how my design system works (UX Collective)](https://uxdesign.cc/dear-llm-heres-how-my-design-system-works-b59fb9a342b7)
-- [Claude Code agent prompts](https://github.com/unisdr/undrr-mangrove/blob/main/docs/AGENTS.md) — specialized agents for accessibility auditing, code review, and other contributor tasks
+- [Claude Code agent prompts](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/AGENTS.md) — specialized agents for accessibility auditing, code review, and other contributor tasks
 - [Getting started guide](https://mangrove.undrr.org/?path=/docs/getting-started-getting-started-guide--docs)
 - [React integration](https://mangrove.undrr.org/?path=/docs/getting-started-integration-react-integration--docs)

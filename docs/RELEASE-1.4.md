@@ -22,7 +22,7 @@ These options are a progression: Option A is the safe immediate upgrade, Option 
 
 ## What else is in 1.4
 
-Our last release was 1.3.3. For the complete diff, see the [v1.3.3...v1.4.0 comparison on GitHub](https://github.com/unisdr/undrr-mangrove/compare/v1.3.3...v1.4.0). Below are the highlights.
+Our last release was 1.3.3. For the complete diff, see the [v1.3.3...v1.4.0 comparison on GitHub](https://github.com/PreventionWeb/undrr-mangrove/compare/v1.3.3...v1.4.0). Below are the highlights.
 
 ### New features
 

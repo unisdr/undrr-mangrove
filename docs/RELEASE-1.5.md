@@ -4,7 +4,7 @@ The main change in 1.5: icons now render via CSS `mask-image` instead of a font.
 
 > **If you manage a site that uses Mangrove:** UI control icons (search, navigation arrows, menus) will shift from filled/solid to outlined. Domain icons on cards and hazard imagery use OCHA filled icons and look similar to before. This is intentional — see [Visual style shift](#visual-style-shift). No HTML changes needed. If you use `fa-*` classes directly, they still work.
 
-1.4.1 was a documentation-only patch with no functional changes. These notes cover everything since 1.4.0. Full diff: [v1.4.0...v1.5.0 on GitHub](https://github.com/unisdr/undrr-mangrove/compare/v1.4.0...v1.5.0).
+1.4.1 was a documentation-only patch with no functional changes. These notes cover everything since 1.4.0. Full diff: [v1.4.0...v1.5.0 on GitHub](https://github.com/PreventionWeb/undrr-mangrove/compare/v1.4.0...v1.5.0).
 
 > _Edits here show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-1.5.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v1-5--docs)._
 

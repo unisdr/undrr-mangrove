@@ -141,7 +141,7 @@ See [Documentation, tooling and discoverability](#documentation-tooling-and-disc
 
 This page describes 2.0 as a whole, organized by theme rather than by prerelease. `2.0.0` is the stable release, published on npm under the `latest` tag, and follows four alphas, three betas and three release candidates. One of those tags never reached npm: `2.0.0-beta.2` was tagged but not published, so its changes first became installable in `2.0.0-beta.3`.
 
-The per-prerelease record lives in [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases), one entry per alpha, beta and release candidate, in the format `docs/RELEASES.md` defines; cross-cutting library notes are in [`CHANGELOG.md`](https://github.com/unisdr/undrr-mangrove/blob/main/CHANGELOG.md) and per-component history is in each component's `## Changelog` in Storybook.
+The per-prerelease record lives in the GitHub Releases of `unisdr/undrr-mangrove` (readable only when signed in as a member while the `unisdr` organization is flagged), one entry per alpha, beta and release candidate, in the format `docs/RELEASES.md` defines; cross-cutting library notes are in [`CHANGELOG.md`](https://github.com/PreventionWeb/undrr-mangrove/blob/main/CHANGELOG.md) and per-component history is in each component's `## Changelog` in Storybook.
 
 **If you are upgrading from a release candidate**, two markers show what is new to you. **Available from `2.0.0-rc.3`** marks package changes absent from rc.2, and **Available from `2.0.0`** marks the few that landed after rc.3. If you are upgrading from 1.x, you can ignore both. Documentation, Storybook, the AI manifest and versioned CDN assets deploy separately from npm, so confirm a CDN path resolves before you rely on it.
 
@@ -299,7 +299,7 @@ The old `--sendai-red`, `--sendai-orange`, `--sendai-purple` and `--sendai-turqu
 - Every foreground/background token pair is graded on both measures, covering every theme, hover and active states and the legacy `.mg-*` components, and the build fails if any pair passes perceptually while WCAG 2 fails it.
 - Coverage includes component foregrounds and surfaces, focus indicators and data-visualization palettes across themes. The test suite is the current inventory; its scope does not establish conformance for every rendered state.
 - Remaining exceptions are documented with their rationale in the contrast methodology. The guard binds registered exceptions to the token pairs they cover, so renaming or moving a pair cannot silently inherit an unrelated exemption. ([#1263](https://github.com/unisdr/undrr-mangrove/pull/1263))
-- APCA was evaluated and rejected on licensing grounds. Reasoning in [Colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md).
+- APCA was evaluated and rejected on licensing grounds. Reasoning in [Colour contrast methodology](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md).
 
 ### The status indicator palette is measured, and stays
 

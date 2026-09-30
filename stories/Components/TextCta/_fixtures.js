@@ -5,7 +5,7 @@ export const INLINE_CTA_ARGS = {
   buttons: [
     {
       label: 'View GitHub',
-      url: 'https://github.com/unisdr/undrr-mangrove',
+      url: 'https://github.com/PreventionWeb/undrr-mangrove',
       target: '_blank',
       rel: 'noopener noreferrer',
     },

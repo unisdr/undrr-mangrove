@@ -193,7 +193,7 @@ export default [
         banner: `UNDRR Mangrove component library
 Storybook:    https://mangrove.undrr.org/
 LLMs context: https://mangrove.undrr.org/llms.txt
-Repository:   https://github.com/unisdr/undrr-mangrove
+Repository:   https://github.com/PreventionWeb/undrr-mangrove
 Compiled on:  ${new Date().toISOString()}`,
         raw: false,
         entryOnly: false,

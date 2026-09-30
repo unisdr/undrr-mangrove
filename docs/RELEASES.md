@@ -106,6 +106,8 @@ See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v
 
 Then add a fresh empty `## Unreleased` section above it for the next cycle.
 
+The GitHub Release link opens only for signed-in members while the organization is flagged. The manifest build keeps the version and drops the link, and turns pull request and issue links into plain `unisdr/undrr-mangrove#1234` references, so `releases.json` and `llms.json` never link to a page anonymous readers get a 404 from.
+
 > **Automated changelog endpoints:** You only maintain `CHANGELOG.md` and per-component `## Changelog` sections in MDX files. The build pipeline (`scripts/ai-manifest/generate-ai-manifest.js`) automatically parses `CHANGELOG.md` to generate the machine-readable `releases.json` endpoint and updates `llms.txt`/`llms.json`. Storybook renders `CHANGELOG.md` directly via `stories/Documentation/Changelog.mdx` without any duplicate files to maintain.
 
 ### 5. Commit, tag, and push
@@ -121,7 +123,7 @@ git push origin main --tags
 
 > **Note:** while the `unisdr` organisation is flagged, no workflow runs on the tag push (see [Where CI runs](#where-ci-runs-the-preventionweb-fork)). Publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable) and sync the fork instead.
 
-When Actions are available, the tag push triggers the [NPM Publish workflow](https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml), which automatically:
+When Actions are available, the tag push triggers the "Publish to NPM Registry" workflow (`.github/workflows/npm-publish.yml`) on `unisdr/undrr-mangrove`, which automatically:
 
 - Builds the project
 - Packages distribution files and SCSS sources (`scripts/assemble-npm-package.mjs`, the same script as `yarn pack:preview`)
@@ -129,9 +131,9 @@ When Actions are available, the tag push triggers the [NPM Publish workflow](htt
 
 ### 7. Create a GitHub Release
 
-Go to [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) and create a release from the tag.
+Create a release from the tag on the Releases page of `unisdr/undrr-mangrove`. While the organization is flagged, only signed-in members can read it, and the public fork has no releases of its own.
 
-Write release notes as a **curated, themed narrative**, not a flat commit list, using the standard format below. Releases from `v2.0.0-rc.1` on follow it (the short rc.3 notes were an exception); see [v2.0.0-rc.1](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.1) and [v2.0.0-rc.2](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.0-rc.2) for worked examples.
+Write release notes as a **curated, themed narrative**, not a flat commit list, using the standard format below. Releases from `v2.0.0-rc.1` on follow it (the short rc.3 notes were an exception); see v2.0.0-rc.1 and v2.0.0-rc.2 for worked examples (`gh release view --repo unisdr/undrr-mangrove v2.0.0-rc.1`).
 
 Start from the PRs merged since the previous tag, and read each PR's description rather than relying on commit subjects:
 
@@ -162,7 +164,7 @@ Use GitHub "Generate release notes" as a checklist of what landed, then rewrite 
 ~~~markdown
 The Nth release candidate for Mangrove X.Y. It <main themes, in consumer terms>.
 
-Full detail and migration steps: [vX.Y release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-vX-Y--docs) (source: [`docs/RELEASE-X.Y.md`](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-X.Y.md)).
+Full detail and migration steps: [vX.Y release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-vX-Y--docs) (source: [`docs/RELEASE-X.Y.md`](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-X.Y.md)).
 
 ## Breaking and visible changes
 
@@ -196,7 +198,7 @@ gh release create vX.Y.Z --title X.Y.Z --verify-tag --notes-file release-notes.m
 ### 8. Verify
 
 - [npm package page](https://www.npmjs.com/package/@undrr/undrr-mangrove) shows the new version
-- [GitHub Releases](https://github.com/unisdr/undrr-mangrove/releases) has the release notes
+- The release on `unisdr/undrr-mangrove` has the release notes: `gh release view --repo unisdr/undrr-mangrove vX.Y.Z`
 - `npm view @undrr/undrr-mangrove dist-tags` shows `latest` on the new version for a stable release, or `next` for a prerelease. A stable release that closes a prerelease line (such as 2.0.0 after the 2.0 release candidates) leaves `next` on the last release candidate, so point it at the stable version too: `npm dist-tag add @undrr/undrr-mangrove@X.Y.Z next`
 - **CDN `latest/`: confirm it picked up the release.** `assets.undrr.org/mangrove/latest/` is not moved by hand and doesn't follow npm's `latest` tag. The GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline rebuilds it from the `dist` branch of the PreventionWeb fork each time it runs (on the testing site for every push to its `main`, and in production for a tagged release there), falling back to the latest npm version if the clone fails. So sync the fork, let `dist` rebuild, then run the shared-web-assets pipeline and confirm `latest/` serves the new version (a `200` status alone does not prove that):
 
@@ -225,7 +227,7 @@ Copy built JS from `dist/components/` to `undrr_common/js/mangrove-components/` 
 
 If a tag-push publish fails but **Actions is still available**, re-run it manually:
 
-1. Go to [Actions → Publish to NPM Registry](https://github.com/unisdr/undrr-mangrove/actions/workflows/npm-publish.yml)
+1. Go to Actions → Publish to NPM Registry on `unisdr/undrr-mangrove` (the fork's copy of this workflow is disabled, so it has no public run history).
 2. Click "Run workflow"
 3. Optionally enter a specific git tag (leave empty for latest)
 

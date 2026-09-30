@@ -82,7 +82,7 @@ Text-only CTAs are centred by default. Set `centered={false}` for start-aligned 
 
 All four accents support both tones and follow the site theme. Prefer theme accents over custom colours to keep text and action treatments coordinated.
 
-**Contrast:** the orange accent carries no text, so `secondary` no longer paints a flat orange panel. Its eyebrow and headline were 2.65 and its 90%-white body 2.42, against WCAG's 4.5. The variant now takes the same surface as `soft` — white under an 8% wash of the accent — with dark eyebrow, headline and body, standard buttons, and the Sendai orange as a 6px leading rule that no copy sits on. `secondary` is therefore a soft surface at both tones; `tertiary` and `quaternary` still go solid under `tone="strong"`. See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+**Contrast:** the orange accent carries no text, so `secondary` no longer paints a flat orange panel. Its eyebrow and headline were 2.65 and its 90%-white body 2.42, against WCAG's 4.5. The variant now takes the same surface as `soft` — white under an 8% wash of the accent — with dark eyebrow, headline and body, standard buttons, and the Sendai orange as a 6px leading rule that no copy sits on. `secondary` is therefore a soft surface at both tones; `tertiary` and `quaternary` still go solid under `tone="strong"`. See [the colour contrast methodology](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 ## Props
 
@@ -129,7 +129,7 @@ The new `tone` and `children` options are shown from the local build and are not
 available in the published alpha.4 bundle. Use a release containing these changes
 when integrating them. The CDN example below demonstrates the existing button API.
 
-TextCta supports [layered hydration](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
+TextCta supports [layered hydration](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md). Use data attributes on a container element:
 
 ```html
 <div
@@ -172,7 +172,7 @@ createHydrator({
 });
 ```
 
-See the [hydration guide](https://github.com/unisdr/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
+See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Accessibility
 
