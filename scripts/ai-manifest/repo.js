@@ -84,10 +84,47 @@ export function toPublicMarkdown(text) {
     .replace(markdownLink, (whole, label, url) => {
       const ref = privateGithubRef(url);
       if (!ref) return label;
-      return label === ref.slice(ref.indexOf('#')) ? ref : `${label} (${ref})`;
+      // `[#1247](…)` or `[PR #1247](…)`: qualify the number in place rather
+      // than leave a bare `#1247` beside the reference.
+      const number = ref.slice(ref.indexOf('#'));
+      const inLabel = new RegExp(`(?<![\\w/])${number}(?!\\d)`);
+      return inLabel.test(label)
+        ? label.replace(inLabel, ref)
+        : `${label} (${ref})`;
     })
     .replace(angleLink, (whole, url) => describe(url))
     .replace(bareUrl, url => describe(url));
+}
+
+/**
+ * Qualify bare `#1234` references in changelog prose as
+ * `unisdr/undrr-mangrove#1234`. In CHANGELOG.md and the component changelogs a
+ * bare number is a pull request or issue on the repository changes merge to;
+ * left bare in a published manifest, a reader or agent on the public fork would
+ * resolve it to the fork's unrelated item with the same number.
+ *
+ * Code spans and markdown links are left alone (a link's label names its own
+ * target, such as `[web-backlog #2412](https://gitlab.com/…)`), as is a number
+ * after a word with a hyphen or slash, which names some other repository.
+ */
+export function qualifyBareRefs(text) {
+  if (typeof text !== 'string' || !text.includes('#')) return text;
+
+  const slug = REPO_URL.replace('https://github.com/', '');
+  const bareRef = /(?<![\w/&#-])#(\d+)(?![\w-])/g;
+
+  return text
+    .split(/(`[^`]*`|\[[^\]]*\]\([^)]*\))/)
+    .map((part, i) =>
+      i % 2 === 1
+        ? part
+        : part.replace(bareRef, (whole, number, offset) =>
+            /[\w.]*[-/][\w.-]*\s+$/.test(part.slice(0, offset))
+              ? whole
+              : `${slug}#${number}`
+          )
+    )
+    .join('');
 }
 
 /**
@@ -103,15 +140,23 @@ export function githubHeadingAnchor(heading) {
 }
 
 /**
- * Every github.com/unisdr URL in a generated manifest, other than the
- * `"repository"` identity field (the canonical repository, as package.json and
- * npm provenance name it, not a link a reader is expected to open).
+ * Every URL into the unisdr organization in a generated manifest, other than
+ * the `"repository"` identity field (the canonical repository, as package.json
+ * and npm provenance name it, not a link a reader is expected to open).
+ *
+ * Deliberately broader than the links toPublicMarkdown() rewrites: any scheme
+ * or none, `www.`, any letter case (GitHub organization names are not case
+ * sensitive), raw.githubusercontent.com, api.github.com/repos, gist and a
+ * percent-encoded slash, as in a badge's `?url=` parameter. A form the
+ * rewriter does not handle fails the build rather than shipping.
  */
 export function findPrivateLinks(content) {
-  const identity = new RegExp(`"repository":\\s*"${REPO_URL}(?:\\.git)?"`, 'g');
-  return (
-    String(content)
-      .replace(identity, '')
-      .match(new RegExp(PRIVATE_URL.source, 'g')) || []
+  const escapedRepo = REPO_URL.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+  const identity = new RegExp(
+    `"repository":\\s*"${escapedRepo}(?:\\.git)?"`,
+    'g'
   );
+  const anyPrivateUrl =
+    /(?:[a-z][\w+.-]*:(?:\/\/|%2F%2F))?(?:[\w-]+\.)*(?:github\.com|githubusercontent\.com)(?:\/|%2F)(?:repos(?:\/|%2F))?unisdr(?![\w.-])[^\s)>\]"'\\]*/gi;
+  return String(content).replace(identity, '').match(anyPrivateUrl) || [];
 }

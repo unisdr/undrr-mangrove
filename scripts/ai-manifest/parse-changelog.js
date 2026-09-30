@@ -14,10 +14,17 @@ import {
   REPO_URL,
   githubHeadingAnchor,
   privateGithubRef,
+  qualifyBareRefs,
   toPublicMarkdown,
 } from './repo.js';
 
 const REPO_SLUG = REPO_URL.replace('https://github.com/', '');
+
+/**
+ * Changelog prose as published: no link into the unisdr organization, and no
+ * bare `#1234` that a reader of the public fork would look up there.
+ */
+const publicText = text => qualifyBareRefs(toPublicMarkdown(text));
 
 /**
  * Resolve a change's pull request reference. A link on the unisdr organization,
@@ -112,7 +119,7 @@ export function parseChangelog(markdown) {
     // Check for bullet point: - ... or * ...
     const bulletMatch = line.match(/^[-*]\s+(.+)$/);
     if (bulletMatch) {
-      const text = toPublicMarkdown(bulletMatch[1].trim());
+      const text = publicText(bulletMatch[1].trim());
 
       // Extract title: **Title**
       const titleMatch = text.match(/^\*\*([^*]+)\*\*:?\s*(.*)$/);
@@ -156,7 +163,7 @@ export function parseChangelog(markdown) {
       currentRelease.changes.length === 0
     ) {
       if (!line.includes('[GitHub Release]')) {
-        const prose = toPublicMarkdown(line.trim());
+        const prose = publicText(line.trim());
         currentRelease.summary = currentRelease.summary
           ? `${currentRelease.summary} ${prose}`
           : prose;
@@ -201,7 +208,7 @@ export function parseComponentChangelog(mdxContent) {
       currentEntry = {
         version,
         date,
-        notes: toPublicMarkdown(notes.trim()),
+        notes: publicText(notes.trim()),
         pr,
         prRef,
         prUrl,
@@ -211,11 +218,11 @@ export function parseComponentChangelog(mdxContent) {
       // Sub-bullet
       if (!currentEntry.details) currentEntry.details = [];
       currentEntry.details.push(
-        toPublicMarkdown(line.trim().replace(/^[-*]\s+/, ''))
+        publicText(line.trim().replace(/^[-*]\s+/, ''))
       );
     } else if (currentEntry && line.trim() && !line.startsWith('#')) {
       // Continuation of notes
-      currentEntry.notes += ' ' + toPublicMarkdown(line.trim());
+      currentEntry.notes += ' ' + publicText(line.trim());
     }
   }
 
@@ -248,7 +255,7 @@ export function buildReleasesManifest({
       'Machine-readable release history, tag diffs, and component changelogs for UNDRR Mangrove.',
     _note:
       '100% automated by the build. Generated from CHANGELOG.md and component MDX documentation stories. Do not edit manually.',
-    _links: `Pull requests, issues, tags and GitHub Releases are on ${REPO_SLUG}, where changes are merged; it is not publicly readable, so they are given as plain-text references (prRef, such as ${REPO_SLUG}#1234, and tag) with no URL. Each release's changelogUrl points at its section of CHANGELOG.md on the public fork, ${PUBLIC_REPO_URL}.`,
+    _links: `Pull requests, issues, tags and GitHub Releases are on ${REPO_SLUG}, where changes are merged; it is not publicly readable, so they are given as plain-text references (prRef, such as ${REPO_SLUG}#1234, and tag) with no URL, in the text fields as well. Do not look these numbers up on the public fork, whose numbering is separate. Each release's changelogUrl points at its section of CHANGELOG.md on the public fork, ${PUBLIC_REPO_URL}.`,
     generatedAt: generatedAt || new Date().toISOString(),
     urls: {
       releases: `${docsBase}releases.json`,

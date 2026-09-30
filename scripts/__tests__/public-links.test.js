@@ -6,6 +6,7 @@ import {
   findPrivateLinks,
   githubHeadingAnchor,
   privateGithubRef,
+  qualifyBareRefs,
   toPublicMarkdown,
 } from '../ai-manifest/repo.js';
 import {
@@ -55,6 +56,14 @@ describe('toPublicMarkdown', () => {
     ).toBe('2.0.0-alpha.1 (unisdr/undrr-mangrove#1061)');
   });
 
+  it('qualifies the number in a label that names the pull request', () => {
+    expect(
+      toPublicMarkdown(
+        '(PR [#1258](https://github.com/unisdr/undrr-mangrove/pull/1258)) and [PR #1247](https://github.com/unisdr/undrr-mangrove/pull/1247)'
+      )
+    ).toBe('(PR unisdr/undrr-mangrove#1258) and PR unisdr/undrr-mangrove#1247');
+  });
+
   it('keeps the text of a release or comparison link and drops the URL', () => {
     expect(
       toPublicMarkdown(
@@ -88,6 +97,23 @@ describe('toPublicMarkdown', () => {
   });
 });
 
+describe('qualifyBareRefs', () => {
+  it('names the repository on a bare pull request or issue number', () => {
+    expect(
+      qualifyBareRefs('Yarn 4.14.1 (#952). Fixes #1171; see #985, #988.')
+    ).toBe(
+      'Yarn 4.14.1 (unisdr/undrr-mangrove#952). Fixes unisdr/undrr-mangrove#1171; see unisdr/undrr-mangrove#985, unisdr/undrr-mangrove#988.'
+    );
+  });
+
+  it('leaves qualified references, code, links, anchors and entities alone', () => {
+    const text =
+      'unisdr/undrr-mangrove#1240, undrr/web-backlog#3109, web-backlog #2412, `color: #666`, [#2556](https://gitlab.com/undrr/web-backlog/-/issues/2556), `#200-rc3--2026-09-20`, #200-rc3, &#8249;';
+    expect(qualifyBareRefs(text)).toBe(text);
+    expect(qualifyBareRefs(null)).toBeNull();
+  });
+});
+
 describe('githubHeadingAnchor', () => {
   it('matches the anchors GitHub renders for CHANGELOG.md headings', () => {
     expect(githubHeadingAnchor('2.0.0, 2026-09-24')).toBe('200-2026-09-24');
@@ -113,6 +139,31 @@ describe('findPrivateLinks', () => {
         '{"prUrl": "https://github.com/unisdr/undrr-mangrove/pull/1150"}'
       )
     ).toEqual(['https://github.com/unisdr/undrr-mangrove/pull/1150']);
+  });
+
+  it.each([
+    'http://github.com/unisdr/undrr-mangrove/pull/1',
+    'https://www.github.com/unisdr/undrr-mangrove',
+    'https://github.com/UNISDR/undrr-mangrove/issues/2',
+    'github.com/unisdr/undrr-mangrove',
+    'https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/README.md',
+    'https://api.github.com/repos/unisdr/undrr-mangrove/releases',
+    'https://img.shields.io/github/license/x?url=https%3A%2F%2Fgithub.com%2Funisdr%2Fundrr-mangrove',
+  ])('reports %s', url => {
+    expect(findPrivateLinks(`{"link": "${url}"}`)).toHaveLength(1);
+  });
+
+  it('does not treat another key, or another repository, as the identity field', () => {
+    expect(
+      findPrivateLinks(
+        '{"homepage": "https://github.com/unisdr/undrr-mangrove", "repository": "https://github.com/unisdr/other"}'
+      )
+    ).toHaveLength(2);
+    expect(
+      findPrivateLinks(
+        '{"repository": "https://github.com/unisdrXundrr-mangrove"}'
+      )
+    ).toEqual([]);
   });
 });
 
