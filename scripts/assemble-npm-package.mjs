@@ -262,6 +262,11 @@ export function buildPackageJson(pkg) {
     description: pkg.description,
     files: PACKAGE_FILES,
     repository: pkg.repository,
+    // Without these npm derives both from `repository`, and its package page
+    // links a README and an issue queue on unisdr/undrr-mangrove, which
+    // anonymous readers get a 404 from (undrr/web-backlog#3109).
+    ...(pkg.homepage && { homepage: pkg.homepage }),
+    ...(pkg.bugs && { bugs: pkg.bugs }),
     keywords: pkg.keywords,
     author: pkg.author,
     license: pkg.license,

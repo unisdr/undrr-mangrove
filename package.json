@@ -197,5 +197,9 @@
     "type": "git",
     "url": "https://github.com/unisdr/undrr-mangrove.git"
   },
+  "homepage": "https://mangrove.undrr.org/",
+  "bugs": {
+    "url": "https://github.com/PreventionWeb/undrr-mangrove/issues"
+  },
   "packageManager": "yarn@4.17.0"
 }
