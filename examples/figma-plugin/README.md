@@ -46,7 +46,7 @@ The plugin now appears under **Plugins > Development**. On a Professional plan, 
 
 ### 3. Import into the library file
 
-1. Open the Figma file that will be the Mangrove library. Use a dedicated file, not a project file.
+1. Open the Figma file that will be the Mangrove library. Use a dedicated file, saved in a project that belongs to the Professional team. A file in Drafts or a Starter team is limited to 1 mode.
 2. Run **Plugins > Development > Mangrove tokens (exploratory)**.
 3. Choose the `mangrove-variables.json` you generated.
 4. Leave all five brands ticked, then select **Import variables**.
@@ -69,12 +69,13 @@ The plugin now appears under **Plugins > Development**. On a Professional plan, 
 
 ### Troubleshooting
 
-| Message                            | Cause and fix                                                                                           |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Could not add mode "..."           | The plan's mode limit was reached. Untick brands, or split them across files.                           |
-| Not a mangrove-variables.json file | The wrong file was chosen. Regenerate it with step 1.                                                   |
-| alias target ... missing           | The JSON was edited by hand or is from a mixed build. Regenerate it.                                    |
-| A variable shows the wrong type    | Its token changed type in YAML. The plugin deletes and recreates it, so rebind any layers that used it. |
+| Message                                           | Cause and fix                                                                                                                                                                                                               |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Could not add mode "...", Limited to 1 modes only | The file is not in a Professional team project: Drafts and Starter teams allow 1 mode. Move the file into a project in the Professional team and import again; existing variables are kept and the missing modes are added. |
+| Could not add mode "..." with a higher limit      | The plan's mode limit was reached. Untick brands, or split them across files.                                                                                                                                               |
+| Not a mangrove-variables.json file                | The wrong file was chosen. Regenerate it with step 1.                                                                                                                                                                       |
+| alias target ... missing                          | The JSON was edited by hand or is from a mixed build. Regenerate it.                                                                                                                                                        |
+| A variable shows the wrong type                   | Its token changed type in YAML. The plugin deletes and recreates it, so rebind any layers that used it.                                                                                                                     |
 
 The plugin runs locally in Figma and has no network access.
 

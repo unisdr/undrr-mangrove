@@ -41,9 +41,11 @@ function ensureModes(collection, modes, created) {
       modeIds[mode.id] = collection.addMode(mode.name);
     } catch (error) {
       errors.push(
-        `Could not add mode "${mode.name}" (${collection.modes.length} modes ` +
-          `exist). Your plan's mode limit may be reached; import fewer ` +
-          `brands. ${error.message}`
+        `Could not add mode "${mode.name}" (${collection.modes.length} ` +
+          `mode(s) exist). The file's plan limits modes: a file in Drafts ` +
+          `or a Starter team allows only 1. Move it into a project in the ` +
+          `Professional team and import again, or import fewer brands. ` +
+          error.message
       );
     }
   });
@@ -102,7 +104,8 @@ async function importVariables(doc, selectedModeIds, prune) {
       variable.scopes = spec.scopes;
       if (spec.codeSyntax && spec.codeSyntax.WEB) {
         variable.setVariableCodeSyntax('WEB', spec.codeSyntax.WEB);
-      } else {
+      } else if (variable.codeSyntax && variable.codeSyntax.WEB) {
+        // Figma throws if asked to remove a code syntax that is not set.
         variable.removeVariableCodeSyntax('WEB');
       }
     } catch (error) {
