@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 12px;
+        font:
+          12px/1.4 Inter,
+          system-ui,
+          sans-serif;
+        color: var(--figma-color-text);
+        background: var(--figma-color-bg);
+      }
+      h1 {
+        font-size: 13px;
+        margin: 0 0 8px;
+      }
+      p {
+        margin: 0 0 10px;
+        color: var(--figma-color-text-secondary);
+      }
+      fieldset {
+        border: 1px solid var(--figma-color-border);
+        border-radius: 4px;
+        margin: 0 0 10px;
+        padding: 8px;
+      }
+      label {
+        display: block;
+        margin: 2px 0;
+      }
+      button {
+        font: inherit;
+        padding: 6px 12px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--figma-color-bg-brand);
+        color: var(--figma-color-text-onbrand);
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      pre {
+        white-space: pre-wrap;
+        max-height: 220px;
+        overflow: auto;
+        background: var(--figma-color-bg-secondary);
+        padding: 8px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Mangrove tokens</h1>
+    <p>
+      Choose <code>mangrove-variables.json</code> from
+      <code>yarn build:figma-tokens</code>. Re-importing updates the same
+      variables.
+    </p>
+    <input id="file" type="file" accept=".json,application/json" />
+    <fieldset id="modes" hidden>
+      <legend>Brands (one mode each)</legend>
+    </fieldset>
+    <label
+      ><input id="prune" type="checkbox" /> Remove Mangrove variables no longer
+      in the file</label
+    >
+    <p></p>
+    <button id="import" disabled>Import variables</button>
+    <pre id="log" hidden></pre>
+    <script>
+      let doc = null;
+      const $ = id => document.getElementById(id);
+
+      function log(text) {
+        $('log').hidden = false;
+        $('log').textContent = text;
+      }
+
+      $('file').addEventListener('change', async event => {
+        const file = event.target.files[0];
+        if (!file) return;
+        try {
+          doc = JSON.parse(await file.text());
+          if (!doc.collection || !Array.isArray(doc.variables)) {
+            throw new Error('Not a mangrove-variables.json file.');
+          }
+        } catch (error) {
+          doc = null;
+          $('import').disabled = true;
+          log(error.message);
+          return;
+        }
+        const box = $('modes');
+        box.querySelectorAll('label').forEach(l => l.remove());
+        doc.modes.forEach(mode => {
+          const label = document.createElement('label');
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.value = mode.id;
+          input.checked = true;
+          label.append(input, ` ${mode.name} (${mode.selector})`);
+          box.append(label);
+        });
+        box.hidden = false;
+        $('import').disabled = false;
+        log(
+          `${doc.variables.length} variables, ${doc.modes.length} brands, ` +
+            `${doc.skipped.length} tokens skipped.`
+        );
+      });
+
+      $('import').addEventListener('click', () => {
+        const modes = [...$('modes').querySelectorAll('input:checked')].map(
+          input => input.value
+        );
+        $('import').disabled = true;
+        log('Importing...');
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: 'import',
+              doc,
+              modes,
+              prune: $('prune').checked,
+            },
+          },
+          '*'
+        );
+      });
+
+      window.onmessage = event => {
+        const msg = event.data.pluginMessage;
+        if (!msg) return;
+        $('import').disabled = false;
+        if (msg.type === 'error') {
+          log(`Error: ${msg.message}`);
+          return;
+        }
+        const r = msg.result;
+        const lines = [
+          `Collection "${r.collection}", modes: ${r.modes.join(', ')}`,
+          `Created ${r.counts.created}, updated ${r.counts.updated}, ` +
+            `removed ${r.counts.removed}, values set ${r.counts.values}.`,
+        ];
+        if (r.stale.length) {
+          lines.push('', `Stale (not in file, kept): ${r.stale.join(', ')}`);
+        }
+        if (r.errors.length) lines.push('', 'Errors:', ...r.errors);
+        if (r.skipped.length) {
+          lines.push(
+            '',
+            'Not representable as Figma variables:',
+            ...r.skipped.map(s => `${s.id}: ${s.reason}`)
+          );
+        }
+        log(lines.join('\n'));
+      };
+    </script>
+  </body>
+</html>

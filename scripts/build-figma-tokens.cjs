@@ -1,0 +1,470 @@
+#!/usr/bin/env node
+/**
+ * EXPLORATORY: Mangrove tokens -> Figma Variables JSON.
+ *
+ * Reads the same tokens/*.yaml sources as build-tokens.cjs, resolves every
+ * brand through the same merge and reference rules, and writes one JSON file
+ * that the plugin in examples/figma-plugin/ imports as a single variable
+ * collection with one mode per brand.
+ *
+ *   node scripts/build-figma-tokens.cjs           write the JSON
+ *   node scripts/build-figma-tokens.cjs --stdout  print it instead
+ *
+ * Mapping rules:
+ *   - One collection, one mode per brand, default brand first. Figma
+ *     Professional allows 10 modes per collection; Mangrove has five brands.
+ *   - A token whose whole value is one reference ({path} or {=path}) becomes
+ *     a Figma alias, so the chain designers see mirrors the YAML, as long as
+ *     the alias resolves to the same value the CSS would.
+ *   - Figma aliases cannot change alpha, so values built from a cast such as
+ *     {rgb(path / 0.24)} or a token-level $alpha are written as resolved RGBA.
+ *   - Single-length dimensions become FLOAT px (rem x 16). A two-value
+ *     shorthand such as padding becomes <name>/block and <name>/inline.
+ *     Longer shorthands, percentages, em line heights, shadows, durations
+ *     and easings have no faithful Figma variable type and are listed under
+ *     `skipped`.
+ *   - $private tokens are exported but hidden from publishing, so aliases
+ *     can point at brand primitives without listing them in the library.
+ *   - The --mg-control-* roles are parsed from _control-tokens.scss, and the
+ *     --mg-font-family-* roles from _variables.scss, because those files are
+ *     their only source. They are exported under control/ and font-family/.
+ */
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const tokens = require('./build-tokens.cjs');
+
+const ROOT = path.resolve(__dirname, '..');
+const OUTPUT = path.join(ROOT, 'examples/figma-plugin/mangrove-variables.json');
+const CONTROL_SCSS = path.join(
+  ROOT,
+  'stories/assets/scss/_control-tokens.scss'
+);
+const VARIABLES_SCSS = path.join(ROOT, 'stories/assets/scss/_variables.scss');
+const HTML_FONT_SIZE = 16;
+const COLLECTION = 'Mangrove';
+
+/* ------------------------------------------------------------------ *
+ * Colour parsing
+ * ------------------------------------------------------------------ */
+const round = n => Math.round(n * 10000) / 10000;
+
+function rgba(r, g, b, a = 1) {
+  return {
+    r: round(r / 255),
+    g: round(g / 255),
+    b: round(b / 255),
+    a: round(a),
+  };
+}
+
+function oklchToRgba(l, c, h, a = 1) {
+  const hr = (h * Math.PI) / 180;
+  const A = c * Math.cos(hr);
+  const B = c * Math.sin(hr);
+  const l_ = l + 0.3963377774 * A + 0.2158037573 * B;
+  const m_ = l - 0.1055613458 * A - 0.0638541728 * B;
+  const s_ = l - 0.0894841775 * A - 1.291485548 * B;
+  const [L, M, S] = [l_ ** 3, m_ ** 3, s_ ** 3];
+  const linear = [
+    4.0767416621 * L - 3.3077115913 * M + 0.2309699292 * S,
+    -1.2684380046 * L + 2.6097574011 * M - 0.3413193965 * S,
+    -0.0041960863 * L - 0.7034186147 * M + 1.707614701 * S,
+  ];
+  const gamma = v => {
+    const x = Math.min(1, Math.max(0, v));
+    return x <= 0.0031308 ? 12.92 * x : 1.055 * x ** (1 / 2.4) - 0.055;
+  };
+  const [r, g, b] = linear.map(gamma);
+  return { r: round(r), g: round(g), b: round(b), a: round(a) };
+}
+
+function parseColor(value) {
+  const v = String(value).trim();
+  if (v === 'transparent') return rgba(0, 0, 0, 0);
+  let m = /^(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)$/.exec(v);
+  if (m) return rgba(+m[1], +m[2], +m[3]);
+  m =
+    /^rgb\(\s*(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)\s*(?:\/\s*([\d.]+)\s*)?\)$/.exec(
+      v
+    );
+  if (m) return rgba(+m[1], +m[2], +m[3], m[4] == null ? 1 : +m[4]);
+  m = /^#([0-9a-f]{6})$/i.exec(v);
+  if (m) {
+    const n = parseInt(m[1], 16);
+    return rgba((n >> 16) & 255, (n >> 8) & 255, n & 255);
+  }
+  m =
+    /^oklch\(\s*([\d.]+)(%?)\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*([\d.]+)\s*)?\)$/.exec(
+      v
+    );
+  if (m) {
+    const l = m[2] ? +m[1] / 100 : +m[1];
+    return oklchToRgba(l, +m[3], +m[4], m[5] == null ? 1 : +m[5]);
+  }
+  return null;
+}
+
+/* ------------------------------------------------------------------ *
+ * Dimension parsing
+ * ------------------------------------------------------------------ */
+function parseLength(value) {
+  const v = String(value).trim();
+  if (v === '0') return 0;
+  let m = /^(-?[\d.]+)rem$/.exec(v);
+  if (m) return round(+m[1] * HTML_FONT_SIZE);
+  m = /^(-?[\d.]+)px$/.exec(v);
+  if (m) return +m[1];
+  return null;
+}
+
+/* ------------------------------------------------------------------ *
+ * Naming and scopes
+ * ------------------------------------------------------------------ */
+const figmaName = id => id.split('.').join('/');
+
+function scopesFor(id, type) {
+  if (type === 'COLOR') return ['ALL_SCOPES'];
+  const group = id.split('.')[0];
+  if (/opacity/.test(id)) return ['OPACITY'];
+  if (group === 'z-index') return [];
+  if (group === 'font-size') return ['FONT_SIZE'];
+  if (group === 'radius') return ['CORNER_RADIUS'];
+  if (group === 'border-width') return ['STROKE_FLOAT'];
+  if (group === 'width') return ['WIDTH_HEIGHT'];
+  if (group === 'spacing' || group === 'container') {
+    return ['GAP', 'WIDTH_HEIGHT'];
+  }
+  return ['ALL_SCOPES'];
+}
+
+function webSyntax(record) {
+  if (!record.name) return null;
+  const isChannels =
+    record.token.type === 'color' &&
+    (record.token.format || 'srgb-channels') === 'srgb-channels';
+  return isChannels ? `rgb(var(${record.name}))` : `var(${record.name})`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Per-token conversion
+ * ------------------------------------------------------------------ */
+const LONE_REFERENCE = /^\{=?\s*([^{}()/=\s]+)\s*\}$/;
+
+/** The Figma type and literal value of one resolved record, or a reason. */
+function literalOf(record) {
+  const { type } = record.token;
+  if (type === 'color') {
+    const color = parseColor(record.literal);
+    return color
+      ? { type: 'COLOR', value: color }
+      : { skip: `colour "${record.literal}" has no Figma equivalent` };
+  }
+  if (type === 'dimension') {
+    const parts = String(record.literal).trim().split(/\s+/).map(parseLength);
+    if (parts.some(px => px == null) || parts.length > 2) {
+      return { skip: `"${record.literal}" is not one or two rem/px lengths` };
+    }
+    // A two-value shorthand is block then inline, which Figma auto layout
+    // binds as vertical and horizontal padding.
+    return parts.length === 2
+      ? { type: 'FLOAT', pair: parts }
+      : { type: 'FLOAT', value: parts[0] };
+  }
+  if (type === 'number') {
+    const n = Number(record.literal);
+    if (!Number.isFinite(n))
+      return { skip: `"${record.literal}" is not a number` };
+    // Figma opacity variables are percentages.
+    return {
+      type: 'FLOAT',
+      value: /opacity/.test(record.id) ? round(n * 100) : n,
+    };
+  }
+  return { skip: `$type ${type} has no faithful Figma variable type` };
+}
+
+function sameValue(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+/* ------------------------------------------------------------------ *
+ * Control roles from _control-tokens.scss
+ * ------------------------------------------------------------------ */
+const CONTROL_LINE =
+  /^\s*(--mg-control-[\w-]+):\s*(?:rgb\(\s*var\((--mg-[\w-]+)\)\s*(?:\/\s*([\d.]+)\s*)?\)|var\((--mg-[\w-]+)\))\s*;/;
+
+function readControlRoles() {
+  return fs
+    .readFileSync(CONTROL_SCSS, 'utf8')
+    .split('\n')
+    .map(line => CONTROL_LINE.exec(line))
+    .filter(Boolean)
+    .map(m => ({
+      name: m[1],
+      target: m[2] || m[4],
+      castRgb: Boolean(m[2]),
+      alpha: m[3] == null ? null : Number(m[3]),
+    }));
+}
+
+/* ------------------------------------------------------------------ *
+ * Font-family roles from _variables.scss
+ *
+ * Roles map onto faces in Sass, not in tokens/*.yaml, so they are read
+ * from the :root block. Figma needs one family name, so the first face in
+ * each stack is used; the CSS fallbacks have no Figma meaning.
+ * ------------------------------------------------------------------ */
+function readFontRoles() {
+  const source = fs.readFileSync(VARIABLES_SCSS, 'utf8');
+  const faces = new Map();
+  for (const m of source.matchAll(/^\$mg-font-face-([\w-]+):\s*"([^"]+)"/gm)) {
+    faces.set(m[1], m[2]);
+  }
+  const roles = [];
+  for (const m of source.matchAll(
+    /^\s*(--mg-font-family-([\w-]+)):\s*#\{mg-font-stack\(\$mg-font-face-([\w-]+)\)\}/gm
+  )) {
+    if (faces.has(m[3]))
+      roles.push({ name: m[1], role: m[2], family: faces.get(m[3]) });
+  }
+  return roles;
+}
+
+/* ------------------------------------------------------------------ *
+ * Build
+ * ------------------------------------------------------------------ */
+function buildFigmaVariables() {
+  const { base, brands } = tokens.loadSources(tokens.TOKENS_DIR);
+  const byId = new Map(brands.map(brand => [brand.meta.id, brand]));
+  const ordered = [...brands].sort(
+    (a, b) => Number(Boolean(b.meta.default)) - Number(Boolean(a.meta.default))
+  );
+
+  const modes = ordered.map(brand => ({
+    id: brand.meta.id,
+    name: brand.meta.title || brand.meta.id,
+    selector: brand.meta.selector,
+  }));
+
+  const resolved = new Map(
+    ordered.map(brand => {
+      const merged = tokens.mergeLayers(tokens.layersFor(brand, base, byId));
+      return [brand.meta.id, tokens.resolve(merged, brand.meta.id)];
+    })
+  );
+
+  // Every token id any brand emits, in source order of the default brand.
+  const ids = [];
+  const seen = new Set();
+  for (const r of resolved.values()) {
+    for (const id of r.emitted.keys()) {
+      if (!seen.has(id)) {
+        seen.add(id);
+        ids.push(id);
+      }
+    }
+  }
+
+  const variables = new Map();
+  const skipped = [];
+
+  // Pass 1: literal values per mode, so pass 2 can check alias fidelity.
+  for (const id of ids) {
+    const perMode = {};
+    let figmaType = null;
+    let reason = null;
+    let first = null;
+    let paired = false;
+    for (const mode of modes) {
+      const record = resolved.get(mode.id).emitted.get(id);
+      if (!record) continue;
+      first = first || record;
+      const lit = literalOf(record);
+      if (lit.skip) {
+        reason = lit.skip;
+        break;
+      }
+      figmaType = lit.type;
+      paired = paired || Boolean(lit.pair);
+      const lone =
+        record.token.alpha == null &&
+        LONE_REFERENCE.exec(String(record.token.value).trim());
+      perMode[mode.id] = {
+        literal: lit.pair || lit.value,
+        reference: lone ? lone[1] : null,
+      };
+    }
+    if (reason) {
+      skipped.push({ id, reason });
+      continue;
+    }
+    const missing = modes
+      .filter(mode => !perMode[mode.id])
+      .map(mode => mode.id);
+    const onlyIn = missing.length
+      ? modes.filter(mode => perMode[mode.id]).map(mode => mode.id)
+      : null;
+    if (!paired) {
+      variables.set(id, {
+        id,
+        name: figmaName(id),
+        type: figmaType,
+        record: first,
+        perMode,
+        onlyIn,
+      });
+      continue;
+    }
+    ['block', 'inline'].forEach((axis, index) => {
+      const split = {};
+      for (const [modeId, entry] of Object.entries(perMode)) {
+        const pair = Array.isArray(entry.literal)
+          ? entry.literal
+          : [entry.literal, entry.literal];
+        split[modeId] = { literal: pair[index], reference: null };
+      }
+      variables.set(`${id}.${axis}`, {
+        id: `${id}.${axis}`,
+        name: figmaName(`${id}.${axis}`),
+        type: figmaType,
+        record: first,
+        perMode: split,
+        onlyIn,
+        axis,
+      });
+    });
+  }
+
+  // Pass 2: aliases where the target exists and resolves identically.
+  const output = [];
+  for (const variable of variables.values()) {
+    const values = {};
+    const fallback = variable.perMode[Object.keys(variable.perMode)[0]];
+    for (const mode of modes) {
+      const own = variable.perMode[mode.id] || fallback;
+      const target = own.reference && variables.get(own.reference);
+      const targetValue = target && (target.perMode[mode.id] || null);
+      values[mode.id] =
+        target &&
+        target.type === variable.type &&
+        targetValue &&
+        sameValue(targetValue.literal, own.literal)
+          ? { alias: target.name }
+          : own.literal;
+    }
+    const { record } = variable;
+    const notes = [];
+    if (record.token.description)
+      notes.push(String(record.token.description).trim());
+    if (record.name) {
+      notes.push(
+        variable.axis
+          ? `CSS: ${variable.axis} part of ${record.name}`
+          : `CSS: ${record.name}`
+      );
+    }
+    if (variable.onlyIn)
+      notes.push(`Only defined by: ${variable.onlyIn.join(', ')}.`);
+    output.push({
+      id: variable.id,
+      name: variable.name,
+      type: variable.type,
+      description: notes.join('\n\n'),
+      scopes: scopesFor(variable.id, variable.type),
+      hiddenFromPublishing: Boolean(record.token.private),
+      codeSyntax:
+        webSyntax(record) && !variable.axis ? { WEB: webSyntax(record) } : {},
+      values,
+    });
+  }
+
+  // Control roles: alias when the role is a plain pass-through, otherwise
+  // resolve the alpha per brand.
+  const byProperty = new Map();
+  for (const variable of variables.values()) {
+    if (variable.record.name) byProperty.set(variable.record.name, variable);
+  }
+  for (const role of readControlRoles()) {
+    const target = byProperty.get(role.target);
+    if (!target) {
+      skipped.push({
+        id: role.name,
+        reason: `references ${role.target}, which is not exported`,
+      });
+      continue;
+    }
+    const values = {};
+    for (const mode of modes) {
+      if (role.alpha == null) {
+        values[mode.id] = { alias: target.name };
+      } else {
+        const lit = (
+          target.perMode[mode.id] || Object.values(target.perMode)[0]
+        ).literal;
+        values[mode.id] = { ...lit, a: round(lit.a * role.alpha) };
+      }
+    }
+    output.push({
+      id: role.name.replace(/^--mg-/, '').replace(/^control-/, 'control.'),
+      name: role.name.replace(/^--mg-control-/, 'control/'),
+      type: target.type,
+      description: `Framework-neutral control role.\n\nCSS: ${role.name}`,
+      scopes: ['ALL_SCOPES'],
+      hiddenFromPublishing: false,
+      codeSyntax: { WEB: `var(${role.name})` },
+      values,
+    });
+  }
+
+  for (const role of readFontRoles()) {
+    output.push({
+      id: `font-family.${role.role}`,
+      name: `font-family/${role.role}`,
+      type: 'STRING',
+      description:
+        'Font-family role. Latin-script face only; Arabic and other scripts ' +
+        `map this role to other faces in _fonts.scss.\n\nCSS: ${role.name}`,
+      scopes: ['FONT_FAMILY'],
+      hiddenFromPublishing: false,
+      codeSyntax: { WEB: `var(${role.name})` },
+      values: Object.fromEntries(modes.map(mode => [mode.id, role.family])),
+    });
+  }
+
+  return {
+    $comment:
+      'GENERATED by scripts/build-figma-tokens.cjs from tokens/*.yaml. EXPLORATORY. Import with examples/figma-plugin.',
+    collection: COLLECTION,
+    modes,
+    variables: output,
+    skipped,
+  };
+}
+
+function main(argv) {
+  const json = `${JSON.stringify(buildFigmaVariables(), null, 2)}\n`;
+  if (argv.includes('--stdout')) {
+    process.stdout.write(json);
+    return;
+  }
+  fs.writeFileSync(OUTPUT, json);
+  const doc = JSON.parse(json);
+  process.stdout.write(
+    `build-figma-tokens: wrote ${path.relative(ROOT, OUTPUT)} ` +
+      `(${doc.variables.length} variables, ${doc.modes.length} modes, ` +
+      `${doc.skipped.length} skipped)\n`
+  );
+}
+
+if (require.main === module) {
+  try {
+    main(process.argv.slice(2));
+  } catch (error) {
+    process.stderr.write(`build-figma-tokens: ${error.message}\n`);
+    process.exitCode = 1;
+  }
+}
+
+module.exports = { buildFigmaVariables, parseColor, parseLength };
