@@ -27,6 +27,19 @@ async function findOrCreateCollection(name, firstModeName) {
 function ensureModes(collection, modes, created) {
   const modeIds = {};
   const errors = [];
+
+  // Brand switcher: one brand into a one-mode collection overwrites that
+  // mode, so a file limited to 1 mode can still be re-themed by re-importing
+  // with another brand. Bindings survive because variables are reused.
+  if (modes.length === 1 && collection.modes.length === 1) {
+    const only = collection.modes[0];
+    if (only.name !== modes[0].name) {
+      collection.renameMode(only.modeId, modes[0].name);
+    }
+    modeIds[modes[0].id] = only.modeId;
+    return { modeIds, errors };
+  }
+
   modes.forEach((mode, index) => {
     const match = collection.modes.find(m => m.name === mode.name);
     if (match) {
@@ -44,7 +57,8 @@ function ensureModes(collection, modes, created) {
         `Could not add mode "${mode.name}" (${collection.modes.length} ` +
           `mode(s) exist). The file's plan limits modes: a file in Drafts ` +
           `or a Starter team allows only 1. Move it into a project in the ` +
-          `Professional team and import again, or import fewer brands. ` +
+          `Professional team and import again, or tick a single brand to ` +
+          `use this file as a brand switcher. ` +
           error.message
       );
     }

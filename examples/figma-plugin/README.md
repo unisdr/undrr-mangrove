@@ -53,6 +53,16 @@ The plugin now appears under **Plugins > Development**. On a Professional plan, 
 5. Read the report in the plugin window: the counts, any errors, and the tokens that could not be represented.
 6. Open **Local variables** to see the **Mangrove** collection, with one column per brand.
 
+### On a file limited to 1 mode: brand switcher
+
+A file in Drafts or a Starter team allows only 1 mode, so the five brands cannot sit side by side. Use the file as a brand switcher instead:
+
+1. Run the plugin, untick every brand except one, and import. The single mode is named after that brand.
+2. Bind your designs to the Mangrove variables as usual.
+3. To see another brand, run the plugin again with only that brand ticked. Its values overwrite the mode in place and every bound layer in the file re-themes. Variables are reused, so no bindings break.
+
+Limits: one brand is visible at a time, and Starter cannot publish libraries, so the variables, components and designs stay in this one file. When the file moves to a Professional team project, import with all brands ticked: the existing mode is kept and the others are added.
+
 ### 4. Publish and use
 
 1. Publish the file as a library (**Assets > Libraries > Publish**). Private brand primitives stay out of the published list.
