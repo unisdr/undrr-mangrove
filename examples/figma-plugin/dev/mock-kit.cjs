@@ -128,6 +128,7 @@ function environment(doc, options = {}) {
       this._characters = '';
       this._definitions = {};
       this.overrides = {};
+      this._isExposedInstance = false;
       this._horizontal = this._vertical = 'FIXED';
       state.nodes.set(this.id, this);
     }
@@ -360,6 +361,33 @@ function environment(doc, options = {}) {
         this.overrides[key] = value;
       }
     }
+    get isExposedInstance() {
+      return this.type === 'INSTANCE' ? this._isExposedInstance : undefined;
+    }
+    set isExposedInstance(value) {
+      assert.strictEqual(this.type, 'INSTANCE');
+      assert.strictEqual(typeof value, 'boolean');
+      let insideComponent = false;
+      for (let parent = this.parent; parent; parent = parent.parent) {
+        assert.notStrictEqual(
+          parent.type,
+          'INSTANCE',
+          'Exposure is inherited on instance descendants'
+        );
+        if (parent.type === 'COMPONENT') insideComponent = true;
+      }
+      assert(
+        insideComponent,
+        'Only primary instances within components expose properties'
+      );
+      this._isExposedInstance = value;
+    }
+    get exposedInstances() {
+      assert.strictEqual(this.type, 'INSTANCE');
+      return this.findAll(
+        node => node.type === 'INSTANCE' && node.isExposedInstance
+      );
+    }
     createInstance() {
       assert.strictEqual(this.type, 'COMPONENT');
       function clone(source, root = false) {
@@ -382,6 +410,7 @@ function environment(doc, options = {}) {
           'textStyleId',
           'effectStyleId',
           'componentPropertyReferences',
+          '_isExposedInstance',
           'layoutMode',
           'paddingTop',
           'paddingBottom',
@@ -395,6 +424,10 @@ function environment(doc, options = {}) {
           'constraints',
           'lineHeight',
           'fontSize',
+          'textAutoResize',
+          'textAlignHorizontal',
+          '_horizontal',
+          '_vertical',
         ])
           if (source[field] !== undefined) node[field] = copy(source[field]);
         if (root) node.main = source;
@@ -604,6 +637,98 @@ async function main() {
       );
     }
     const owned = ownership(env.state);
+    for (const [id, variantId] of [
+      ['tabs', 'tabs.horizontal'],
+      ['combobox', 'combobox.open'],
+    ]) {
+      const family = first.families.find(item => item.id === id);
+      const component = env.state.nodes.get(
+        family.variantIds.find(item => item.id === variantId).nodeId
+      );
+      const nested = component.findAllWithCriteria({ types: ['INSTANCE'] });
+      assert.strictEqual(nested.length, 3);
+      assert(
+        nested.every(instance => instance.isExposedInstance),
+        `${id}: nested component properties must be exposed`
+      );
+    }
+    const tabsLong = [...env.state.nodes.values()].find(
+      node =>
+        identity(node, 'mgKitId') === 'review/tabs/specimen/long-label/instance'
+    );
+    assert.strictEqual(tabsLong.exposedInstances.length, 3);
+    const firstTab = tabsLong.exposedInstances.find(
+      instance => instance.name === 'mg-tabs__item-1'
+    );
+    const tabLabel = Object.keys(firstTab.componentProperties).find(name =>
+      name.startsWith('Label#')
+    );
+    assert.strictEqual(
+      firstTab.componentProperties[tabLabel].value,
+      'A longer Mangrove label to check resizing and wrapping',
+      'Long rail specimen edits the actual nested tab label'
+    );
+    assert(
+      firstTab
+        .findAllWithCriteria({ types: ['TEXT'] })
+        .every(node => node.textAutoResize === 'WIDTH_AND_HEIGHT'),
+      'Tab labels preserve source nowrap'
+    );
+    firstTab.setProperties({
+      [tabLabel]: 'A designer changed this nested tab',
+    });
+    const narrowButton = [...env.state.nodes.values()].find(
+      node =>
+        identity(node, 'mgKitId') === 'review/button/specimen/narrow/instance'
+    );
+    const narrowText = narrowButton
+      .findAllWithCriteria({ types: ['TEXT'] })
+      .find(node =>
+        node.componentPropertyReferences?.characters?.startsWith('Label#')
+      );
+    narrowText.textAutoResize = 'WIDTH_AND_HEIGHT';
+    narrowText.textAlignHorizontal = 'RIGHT';
+    narrowText.resize(177, 21);
+    narrowText.layoutSizingHorizontal = 'FIXED';
+    narrowText.layoutSizingVertical = 'FIXED';
+    const narrowFormatting = () =>
+      JSON.stringify({
+        autoResize: narrowText.textAutoResize,
+        align: narrowText.textAlignHorizontal,
+        width: narrowText.width,
+        height: narrowText.height,
+        horizontal: narrowText.layoutSizingHorizontal,
+        vertical: narrowText.layoutSizingVertical,
+      });
+    const originalFormatting = narrowFormatting();
+    const inputStyle = env.state.styles.find(
+      style => identity(style, 'mgStyleId') === 'component.input'
+    );
+    assert.strictEqual(inputStyle.lineHeight.unit, 'PERCENT');
+    assert.strictEqual(inputStyle.lineHeight.value, 115);
+    for (const id of ['component.body', 'component.help', 'component.error']) {
+      const style = env.state.styles.find(
+        item => identity(item, 'mgStyleId') === id
+      );
+      assert.strictEqual(style.lineHeight.unit, 'PIXELS');
+      assert.strictEqual(style.lineHeight.value, 24);
+    }
+    const textInputBuilt = first.families.find(
+      family => family.id === 'text-input'
+    );
+    const filledInput = env.state.nodes.get(
+      textInputBuilt.variantIds.find(
+        variant => variant.id === 'text-input.filled'
+      ).nodeId
+    );
+    const filledValue = filledInput
+      .findAllWithCriteria({ types: ['TEXT'] })
+      .find(node => node.name === 'mg-form-input__value');
+    assert.strictEqual(
+      filledValue.fills[0].boundVariables.color.id,
+      variableByName.get('color/black').id,
+      'Filled input preserves observed browser field-text black, with its source caveat'
+    );
     const editable = [...env.state.nodes.values()].find(
       node =>
         node.type === 'INSTANCE' &&
@@ -637,6 +762,27 @@ async function main() {
       editable.componentProperties[label].value,
       'A designer changed this label'
     );
+    assert.strictEqual(
+      firstTab.componentProperties[tabLabel].value,
+      'A designer changed this nested tab'
+    );
+    assert.strictEqual(
+      narrowFormatting(),
+      originalFormatting,
+      'Rebuild must preserve designer narrow-text formatting'
+    );
+    assert(
+      !second.updatedNodeIds.includes(narrowText.id),
+      'Existing narrow label is not rewritten'
+    );
+    assert(
+      second.audit.some(
+        entry =>
+          entry.nodeId === tabsLong.id &&
+          entry.status === 'existing-nested-review-label-preserved'
+      ),
+      'Existing nested review labels receive an explicit preservation/migration hint'
+    );
     const inspection = await env.call('inspectMangroveKit');
     assert.strictEqual(
       inspection.errors.length,
@@ -653,9 +799,48 @@ async function main() {
         node.resolvedBindings.some(binding => binding.name === 'radius/button')
       )
     );
+    assert.strictEqual(
+      inspection.nodes.find(node => node.id === tabsLong.id).exposedInstanceIds
+        .length,
+      3
+    );
     console.log(
       'ok  complete build, stable IDs and properties, editable review overrides, binding inspection'
     );
+    const tabSourceIds = Object.entries(ownership(env.state))
+      .filter(([key]) => key.startsWith('family/tabs/'))
+      .map(([, id]) => id);
+    for (const longLabelTarget of [
+      null,
+      '',
+      [],
+      'mg-tabs__item-1',
+      ['missing-tab'],
+      ['mg-tabs__item-1', 'missing-label'],
+    ]) {
+      const malformed = copy(doc);
+      malformed.components.families.find(
+        family => family.id === 'tabs'
+      ).review.longLabelTarget = longLabelTarget;
+      const rejected = await env.call(
+        'buildMangroveComponents',
+        malformed,
+        'undrr',
+        ['tabs']
+      );
+      assert(
+        rejected.audit.some(
+          entry => entry.family === 'tabs' && entry.status === 'blocked'
+        ),
+        'Malformed label target must block its composed family'
+      );
+      assert(!rejected.families.some(family => family.id === 'tabs'));
+      assert(
+        tabSourceIds.every(id => !rejected.updatedNodeIds.includes(id)),
+        'Malformed target must not alter existing Tabs construction'
+      );
+      assert.strictEqual(rejected.createdNodeIds.length, 0);
+    }
     const failedStyle = env.state.styles.find(
       style => identity(style, 'mgStyleId') === 'component.button'
     );

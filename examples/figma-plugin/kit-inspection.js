@@ -185,6 +185,13 @@ async function mgInspectNode(node, variables, errors) {
       )
     );
     try {
+      result.exposedInstanceIds = node.exposedInstances.map(
+        instance => instance.id
+      );
+    } catch (error) {
+      errors.push(`${node.id} exposedInstances: ${errorMessage(error)}`);
+    }
+    try {
       const main = await node.getMainComponentAsync();
       result.mainComponent = main
         ? { id: main.id, name: main.name, key: main.key }

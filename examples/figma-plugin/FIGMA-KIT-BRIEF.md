@@ -14,9 +14,9 @@ Mangrove serves five brands through shared structure: UNDRR, PreventionWeb, IRP,
 6. Mirror logical start and end for right-to-left layouts. The first scaffold is Latin and left to right; it does not establish Arabic typography.
 7. Place focus on the actual focused element. Use outward `Mangrove/focus-ring` or inward `Mangrove/focus-ring-inset` according to source, then verify geometry and clipping on actual nodes.
 
-Regular foundations have automatic line height. Component typography needs explicit source weights and line heights. Buttons request CSS 600 and line height 100%; tabs request CSS 600 and 142.1%. Bundled Roboto and Roboto Condensed assets lack 600 faces, so Bold 700 is an inferred matching candidate. Confirm it against rendered stories. Report missing or unloadable fonts without substituting another family.
+Regular foundations have automatic line height. Component typography needs explicit source weights and line heights. Buttons request CSS 600 and line height 100%; tabs request CSS 600 and 142.1%. Chromium source comparison confirmed bundled Bold 700 for Button, selected options and tabs. Figma font-file equivalence remains unverified. Report missing or unloadable fonts without substituting another family.
 
-Body line height is 1.5em on a 16px body, computing 24px. Descendants can inherit that fixed computed length even when smaller. Component help and ComboBox errors must preserve that inheritance; applying 150% to their 12.5px text would produce a different line height. Browser-native TextInput defaults still require a computed-style check.
+Body line height is 1.5em on a 16px body, computing 24px. Component help and ComboBox errors inherit that fixed computed length; applying 150% to their 12.5px text would produce a different line height. TextInput retains vendored Normalize's 115% ratio, observed as 18.4px at 16px. ComboBox uses `font: inherit` and therefore 24px. See [the measured source baseline](LEARNINGS.md#browser-acceptance-measurements).
 
 ## Button (`mg-button`)
 
@@ -44,7 +44,7 @@ Source: [form base](../../stories/Components/Forms/_form-base.scss) and [TextInp
 - Base: `form-input/background`, `form-input/border-color`, `form-input/border-width`, `form-input/block-size`, `form-input/padding`, `radius/form-input`; text `font-family/text`, `font-size/form-input`.
 - Label: `font-size/300`, gap `spacing/25`. Required adds source ` *` in `color/red-900`.
 - Placeholder: `color/neutral-500`.
-- Filled: `form-input/background--focus`. CSS requires a placeholder attribute and nonempty value.
+- Filled: `form-input/background--focus`. CSS requires a placeholder attribute and nonempty value. Text binds `color/black` to match Chromium's measured user-agent `fieldtext`; the source does not declare a text colour role, and other system colours remain unverified.
 - Focus: focus background, `color/form-focus` border and outward focus effect.
 - Invalid: `color/red-900` border. InvalidFocused uses `color/form-focus` because the source focus selector has greater specificity; the error message stays red and the focus effect remains visible. Record any proposed change to that source behaviour separately.
 - Disabled: white fill; label, input text, placeholder and border `color/neutral-400`. No root opacity reduction.
@@ -52,6 +52,8 @@ Source: [form base](../../stories/Components/Forms/_form-base.scss) and [TextInp
 - Error: `font-size/300`, `color/red-900`, gap `spacing/25`. This size differs from ComboBox error.
 
 Initial matrix: `State=Default|Filled|Focused|Invalid|InvalidFocused|Disabled`, six variants. Expose label, value, help and error text, with booleans for label, help and required-marker visibility. Hover has no separate source treatment. Browser-native date and other input affordances remain outside this first family.
+
+The separate required-marker layer does not reproduce the source inline `::after` position on a wrapping label. The current HUG label geometry also needs a native multiline solution. Record narrow required labels as an acceptance gap; changing the label to FILL alone places the marker beside the block rather than after its final word.
 
 ## ComboBox (`mg-combobox`)
 
@@ -61,7 +63,7 @@ Source: [ComboBox SCSS](../../stories/assets/scss/aria/_combo-box.scss) and [Com
 - Label: `font-size/300`, lower gap `spacing/25`.
 - Input: `control/surface`, `control/border`, `control/text`, placeholder `control/muted-text`; `form-input/border-width`, `form-input/block-size` as minimum height, `form-input/padding`, start-side `radius/form-input` corners.
 - Input uses `font: inherit`. Its normal body-context size is `font-size/300`, not an explicit `font-size/form-input` declaration.
-- Trigger: matching fill and stroke; no start border; end corners only; source minimum width 2.75rem, 44px. Render the actual `▾` text glyph.
+- Trigger: matching fill and stroke; no start border; end corners only; source minimum width 2.75rem, 44px. Render the actual `▾` text glyph. Chromium used Lucida Grande fallback for that glyph on the tested macOS host; cross-platform glyph equivalence needs inspection.
 - InputFocused changes input fill to `control/surface-focus`, stroke to `control/border-focus`, with outward focus on the input. TriggerFocused puts a separate outward ring on the trigger.
 - Invalid changes input border only to `control/error`. Disabled applies 0.55 root opacity.
 - Popover: `control/surface-focus`, `control/border`, source 1px border, `radius/form-input`, `spacing/25` padding, inset `Mangrove/shadow/raised`. There is no elevated drop shadow in source.
@@ -69,7 +71,7 @@ Source: [ComboBox SCSS](../../stories/assets/scss/aria/_combo-box.scss) and [Com
 - Options: `spacing/100` padding, `radius/form-input`, `control/text`; hover or keyboard focus uses `control/option-hover`; selection uses `control/option-selected` and requested weight 600. Selection fill wins over hover. FocusVisible uses the inset two-band effect.
 - Error: `font-size/200`, `control/error`, gap `spacing/25`. Help follows shared form-help source.
 
-Initial matrix: `State=Default|InputFocused|TriggerFocused|Open|Invalid|Disabled`, six variants. Option matrix: `Selected=False|True`, `State=Default|Hover|FocusVisible`, six variants. Compose the open specimen from option instances.
+Initial matrix: `State=Default|InputFocused|TriggerFocused|Open|Invalid|Disabled`, six variants. Option matrix: `Selected=False|True`, `State=Default|Hover|FocusVisible`, six variants. Compose the open specimen from option instances and expose their nested properties.
 
 A first open specimen can show the popover in flow to expose anatomy. Mark that approximation. React Aria manages runtime overlay positioning, portals, filtering, scrolling and focus; native component construction does not prove those behaviours.
 
@@ -86,7 +88,7 @@ Current React markup renders a rounded pill rail. Horizontal selectors override 
 - Selected: `tab/background--active`, interactive at 0.12 alpha; full 1px `tab/indicator--active` border; `tab/color--active` text. Selected hover keeps this appearance.
 - Focus: outward two-band ring represented by opaque native stroke decorations for both selected and inactive triggers. An absent or translucent fill must not mask the focus bands. The outer radius helper follows `tab/radius` plus `focus-ring/offset`. Panel separation follows `tab/panel-gap`.
 
-Trigger matrix: `Selected=False|True`, `State=Default|Hover|Focus`, six variants. Compose three editable trigger instances into a rail. Panel content, scroll overflow fades and responsive stacked disclosures are later scaffolds. Stacked tabs use neutral disclosures with plus/minus markers rather than vertically rearranged pills.
+Trigger matrix: `Selected=False|True`, `State=Default|Hover|Focus`, six variants. Compose three editable trigger instances into a rail and expose their nested properties. Long-label review should edit an actual trigger; preserve horizontal nowrap behaviour. Panel content, scroll overflow fades and responsive stacked disclosures are later scaffolds. Stacked tabs use neutral disclosures with plus/minus markers rather than vertically rearranged pills.
 
 ## Acceptance before expanding
 

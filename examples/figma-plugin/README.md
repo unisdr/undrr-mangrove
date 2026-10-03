@@ -31,7 +31,7 @@ The JSON's `styles` section holds values and binding names. The plugin chooses w
 | `display` | `900`, `1000`                              | Roboto Condensed |
 | `ui`      | `tab`                                      | Roboto Condensed |
 
-Expand a role in the plugin to change the selection. The 60 foundation choices use **Regular** with **automatic line height**, with `fontFamily` bound to `font-family/*` and `fontSize` bound to `font-size/*`. Component styles add source weights and explicit line heights. The bundled CSS has no weight 600 face; its Bold 700 matching candidate is recorded as an inference pending browser comparison. Script-specific fonts remain pending. The SCSS `code` role uses a generic monospace stack, so no specific Figma font is exported for it.
+Expand a role in the plugin to change the selection. The 60 foundation choices use **Regular** with **automatic line height**, with `fontFamily` bound to `font-family/*` and `fontSize` bound to `font-size/*`. Component styles add source weights and explicit line heights. Chromium source comparison confirmed bundled Bold 700 for CSS600, 115% line height for TextInput and inherited 24px for smaller help text. Figma font-file equivalence and script-specific fonts remain pending. The SCSS `code` role uses a generic monospace stack, so no specific Figma font is exported for it.
 
 The importer discovers exact font names with `listAvailableFontsAsync` and loads them with `loadFontAsync` before editing. An unavailable or unloadable font skips the affected text styles and appears in the report. Variables, effect styles and other text styles still import. Install or enable the missing font and re-import to complete the set; no fallback font is substituted.
 
@@ -104,6 +104,8 @@ Import one brand first, then select families and choose **Build selected compone
 | Horizontal pill Tabs |        1 |
 
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
+
+Composed Tabs exposes the nested trigger properties; open ComboBox exposes its nested options. Review label targets follow the recipe anatomy, and responsive formatting is seeded only on new specimens. These updates need their real-file rebuild and editor check. See [the source measurements and acceptance record](LEARNINGS.md#browser-acceptance-measurements).
 
 **Inspect kit and fonts** records actual IDs, resolved consumer bindings and font-load results. **Save inspection report** downloads that JSON. **Focus diagnostics** compares literal effect order with bound styles; PNG export buttons capture review frames. These are local development operations and do not publish a library.
 

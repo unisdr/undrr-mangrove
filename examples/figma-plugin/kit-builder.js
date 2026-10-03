@@ -187,12 +187,43 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
         variantIds.add(variant.id);
         if (variant.tree.type !== 'FRAME')
           throw new Error('Variant root must be FRAME.');
+        if (family.review?.longLabelTarget !== undefined) {
+          const path = family.review.longLabelTarget;
+          if (
+            !Array.isArray(path) ||
+            !path.length ||
+            path.some(name => typeof name !== 'string' || !name)
+          )
+            throw new Error(
+              'Long-label target must be a nonempty anatomy path.'
+            );
+          let target = variant.tree;
+          for (const name of path) {
+            const matches = (target.children || []).filter(
+              child => child.name === name
+            );
+            if (matches.length !== 1)
+              throw new Error(
+                `Ambiguous or missing review label target ${name}`
+              );
+            target = matches[0];
+          }
+          if (target.type !== 'INSTANCE')
+            throw new Error('Long-label target must be a nested instance.');
+        }
         const keys = new Set();
         treeWalk(variant.tree, tree => {
           if (!['FRAME', 'TEXT', 'INSTANCE'].includes(tree.type))
             throw new Error(`Unsupported recipe node ${tree.type}`);
           if (!tree.id && !tree.key)
             throw new Error(`Node ${tree.name} needs a stable id.`);
+          if (
+            tree.expose !== undefined &&
+            (tree.type !== 'INSTANCE' || typeof tree.expose !== 'boolean')
+          )
+            throw new Error(
+              'Only nested instance recipes may declare boolean expose.'
+            );
           const key = tree.id || tree.key;
           if (keys.has(key)) throw new Error(`Duplicate recipe node id ${key}`);
           keys.add(key);
@@ -669,6 +700,9 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
         overrides[property] = value;
       }
       if (Object.keys(overrides).length) node.setProperties(overrides);
+      // These are primary nested instances in the owned main component.
+      // Review descendants inherit exposure; do not write their inherited flag.
+      node.isExposedInstance = Boolean(spec.expose);
     }
     applyLayout(node, spec.layout);
     if (spec.effectStyle && ['FRAME', 'COMPONENT'].includes(node.type))
@@ -942,6 +976,7 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
   for (const [id, family] of built) {
     if (!chosen.has(id)) continue;
     try {
+      const reviewOptions = families.get(id)?.review || {};
       const section = await reviewFrame(
         `review/${id}`,
         family.set.name,
@@ -1001,25 +1036,45 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
         if (instance.parent !== row) row.appendChild(instance);
         if (fresh) {
           instance.name = specimen.name;
-          const label = Object.entries(instance.componentProperties).find(
+          let labelTarget = instance;
+          if (specimen.label)
+            for (const name of reviewOptions.longLabelTarget || []) {
+              const matches = labelTarget.children.filter(
+                child => child.name === name
+              );
+              if (matches.length !== 1)
+                throw new Error(
+                  `Ambiguous or missing review label target ${name}`
+                );
+              labelTarget = matches[0];
+            }
+          const label = Object.entries(labelTarget.componentProperties).find(
             ([name, property]) =>
               property.type === 'TEXT' &&
               name.replace(/#[^#]+$/, '') === 'Label'
           );
-          if (label && specimen.label)
-            instance.setProperties({ [label[0]]: specimen.label });
+          if (label && specimen.label) {
+            labelTarget.setProperties({ [label[0]]: specimen.label });
+            if (labelTarget !== instance) created.add(labelTarget.id);
+          } else if (specimen.label)
+            throw new Error(
+              `Review label property missing on ${labelTarget.name}`
+            );
           if (
             specimen.width ||
             specimen.variant.recipe.tree.layout?.width === 'FILL'
           )
             instance.layoutSizingHorizontal = 'FILL';
         }
-        if (
-          specimen.width &&
-          family.set &&
-          family.variants[0].recipe &&
-          recipes.find(recipe => recipe.id === id)?.review?.responsiveLabel
-        ) {
+        if (!fresh && specimen.label && reviewOptions.longLabelTarget) {
+          result.audit.push({
+            nodeId: instance.id,
+            status: 'existing-nested-review-label-preserved',
+            anatomyPath: reviewOptions.longLabelTarget,
+            note: 'Nested label seeding applies to fresh review specimens only. Existing labels are preserved; use the exposed nested Label property to edit a prior specimen or explicitly reseed the review.',
+          });
+        }
+        if (fresh && specimen.width && reviewOptions.responsiveLabel) {
           const label = instance
             .findAllWithCriteria({ types: ['TEXT'] })
             .find(

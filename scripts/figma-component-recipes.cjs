@@ -12,6 +12,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
     tabRoles: 'stories/assets/scss/_tokens-tabs.scss',
     mixins: 'stories/assets/scss/_mixins.scss',
     body: 'stories/assets/scss/_foundational.scss',
+    normalize: 'stories/Utilities/Normalize/normalize.scss',
     tokens: 'tokens/mangrove.yaml',
   };
   const files = new Map();
@@ -277,10 +278,24 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
   source(sources.body, /line-height: var\(--mg-font-line-height-700\)/);
   source(sources.body, /body \{[^}]*font-size: var\(--mg-font-size-300\)/);
   const bodyLineHeight = Number(bodyLine.slice(0, -2));
+  const inputLineHeight = Number(
+    source(
+      sources.normalize,
+      /button,\s*input,\s*optgroup,\s*select,\s*textarea\s*\{[^}]*line-height: ([\d.]+)\s*;/
+    ).match[1]
+  );
+  source(
+    'stories/assets/scss/_components.scss',
+    /@import "\.\.\/\.\.\/Utilities\/Normalize\/normalize";/
+  );
 
   function textStyle(id, role, size, weight, lineHeight, ref) {
     const bold = weight === 600;
-    const inheritsBody = !['component.button', 'component.tab'].includes(id);
+    const inheritsBody = ![
+      'component.button',
+      'component.tab',
+      'component.input',
+    ].includes(id);
     if (bold) {
       const folder = role === 'ui' ? 'roboto-condensed' : 'roboto';
       const entry = `stories/assets/fonts/${folder}/${folder}.scss`;
@@ -301,13 +316,13 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       description:
         `Component typography. CSS requests weight ${weight}; ` +
         (bold
-          ? 'bundled CSS has no 600 face, so Bold 700 is the source font-matching candidate. Verify rendered story before acceptance. '
+          ? 'bundled CSS has no 600 face; Chromium rendered the bundled Bold 700 face in the 3 October 2026 source comparison. Figma font-file equivalence remains unverified. '
           : 'Regular 400. ') +
         (inheritsBody
           ? 'Line height is the computed body length (body font-size 300 times its em ratio), inherited without rescaling small text. '
-          : `Explicit line height ${lineHeight * 100}%. `) +
+          : `Explicit line height ${Number((lineHeight * 100).toFixed(6))}%. `) +
         (id === 'component.input'
-          ? 'TextInput browser-native line-height defaults still require a computed-style check. '
+          ? 'TextInput retains the vendored Normalize line-height ratio; ComboBox separately resets font to inherit. '
           : '') +
         'Latin script only.',
       typography: {
@@ -318,8 +333,10 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
           ? 'computed-body-length'
           : 'own-font-size',
         verification: bold
-          ? 'Font matching inferred from bundled @font-face weights; rendered check required.'
-          : 'Explicit source role and body line-height default.',
+          ? 'Bundled Bold face observed with Chromium CSS.getPlatformFontsForNode on 3 October 2026; Figma font-file equivalence unverified.'
+          : id === 'component.input'
+            ? 'Normalize ratio observed in computed Chromium styles on 3 October 2026.'
+            : 'Explicit source role and body line-height default.',
       },
       bindings: {
         fontFamily: `font-family/${role}`,
@@ -336,7 +353,10 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
               unit: 'PIXELS',
               value: value('font-size/300', mode) * bodyLineHeight,
             }
-          : { unit: 'PERCENT', value: lineHeight * 100 },
+          : {
+              unit: 'PERCENT',
+              value: Number((lineHeight * 100).toFixed(6)),
+            },
       })),
     };
     const existing = styles.text.findIndex(style => style.id === id);
@@ -358,8 +378,11 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       'text',
       'form-input',
       400,
-      bodyLineHeight,
-      reference(sources.input, /%mg-form-input-base/)
+      inputLineHeight,
+      reference(
+        sources.normalize,
+        /button,\s*input,\s*optgroup,\s*select,\s*textarea\s*\{/
+      )
     ),
     body: textStyle(
       'component.body',
@@ -647,7 +670,9 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
           disabled
             ? 'color/neutral-400'
             : filled
-              ? 'color/text'
+              ? // Chromium's UA fieldtext is black; source has no colour role.
+                // This is the measured baseline, not a cross-platform CSS role.
+                'color/black'
               : 'color/neutral-500',
           'Value'
         ),
@@ -851,6 +876,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
           'mg-combobox__popover',
           ['Tropical cyclone', 'Drought', 'Flood'].map((Label, i) => ({
             type: 'INSTANCE',
+            expose: true,
             family: 'combobox-option',
             name: `mg-combobox__option-${i + 1}`,
             variant: {
@@ -984,6 +1010,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       'mg-tabs__rail',
       ['Overview', 'Resources', 'Related'].map((Label, i) => ({
         type: 'INSTANCE',
+        expose: true,
         family: 'tabs-trigger',
         name: `mg-tabs__item-${i + 1}`,
         variant: { Selected: i === 0 ? 'True' : 'False', State: 'Default' },
@@ -1064,9 +1091,16 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       /\.mg-tabs--horizontal \{/,
       triggers
     ),
-    family('tabs', 'Mangrove/Tabs', sources.tabs, /\.mg-tabs--horizontal \{/, [
-      rail,
-    ]),
+    family(
+      'tabs',
+      'Mangrove/Tabs',
+      sources.tabs,
+      /\.mg-tabs--horizontal \{/,
+      [rail],
+      {
+        review: { longLabelTarget: ['mg-tabs__item-1'] },
+      }
+    ),
   ];
   function validate(node) {
     const names = [
@@ -1118,7 +1152,9 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
     families,
     limitations: [
       'Latin script and left-to-right scaffold. Arabic font routing and mirrored logical corners remain pending.',
-      'CSS 600 uses bundled Bold 700 as an inferred font-match candidate, pending rendered source verification.',
+      'Chromium source comparison confirmed bundled Bold 700 for CSS 600. Identical Figma font-file versions remain unverified.',
+      'Filled TextInput uses the measured Chromium black fieldtext baseline. Source does not declare an input colour role; system-colour and other-browser parity remain unverified.',
+      'Required field labels use a separate marker layer. Narrow multiline labels do not reproduce the source inline ::after flow yet.',
       'ComboBox popover is a specimen in flow; runtime overlay position, viewport cap and behaviour are not reproduced.',
       'Transparent resets, glyphs and source literals have no invented brand overrides.',
     ],
