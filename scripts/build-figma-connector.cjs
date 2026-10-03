@@ -1,0 +1,413 @@
+#!/usr/bin/env node
+/** Build a bounded, self-contained Figma connector script from the plugin sources. */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const { minify } = require('terser');
+const PLUGIN = path.resolve(__dirname, '../examples/figma-plugin');
+const LIMIT = 50000;
+
+// Fixed-width LZW codes over UTF-8 bytes. The decoder uses only JavaScript,
+// keeping the payload independent of Figma-specific base64 helpers.
+function compressJSON(value) {
+  const input = Buffer.from(JSON.stringify(value), 'utf8').toString('latin1');
+  const dictionary = new Map();
+  const codes = [];
+  let next = 256;
+  let word = input[0] || '';
+  for (let i = 1; i < input.length; i += 1) {
+    const character = input[i];
+    const combined = word + character;
+    if (dictionary.has(combined)) word = combined;
+    else {
+      codes.push(word.length === 1 ? word.charCodeAt(0) : dictionary.get(word));
+      if (next < 65536) dictionary.set(combined, next++);
+      word = character;
+    }
+  }
+  if (word)
+    codes.push(word.length === 1 ? word.charCodeAt(0) : dictionary.get(word));
+  const bytes = Buffer.alloc(codes.length * 2);
+  codes.forEach((code, index) => bytes.writeUInt16BE(code, index * 2));
+  return bytes.toString('base64');
+}
+function decompressJSON(encoded) {
+  const alphabet =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  const bytes = [];
+  let bits = 0;
+  let buffer = 0;
+  for (const character of encoded) {
+    if (character === '=') break;
+    const index = alphabet.indexOf(character);
+    if (index < 0) throw new Error('Invalid connector data encoding');
+    buffer = (buffer << 6) | index;
+    bits += 6;
+    if (bits >= 8) {
+      bits -= 8;
+      bytes.push((buffer >> bits) & 255);
+    }
+  }
+  const codes = [];
+  for (let i = 0; i < bytes.length; i += 2)
+    codes.push((bytes[i] << 8) | bytes[i + 1]);
+  const dictionary = Array.from({ length: 256 }, (_, index) =>
+    String.fromCharCode(index)
+  );
+  let previous = dictionary[codes[0]];
+  if (previous === undefined) throw new Error('Empty connector data');
+  let decoded = previous;
+  let next = 256;
+  for (let i = 1; i < codes.length; i += 1) {
+    const code = codes[i];
+    const word =
+      dictionary[code] || (code === next ? previous + previous[0] : null);
+    if (word === null) throw new Error('Invalid connector dictionary code');
+    decoded += word;
+    if (next < 65536) dictionary[next++] = previous + word[0];
+    previous = word;
+  }
+  const utf8 = Array.from(
+    decoded,
+    character => `%${character.charCodeAt(0).toString(16).padStart(2, '0')}`
+  ).join('');
+  return JSON.parse(decodeURIComponent(utf8));
+}
+
+function selectFamilies(doc, requested) {
+  const families = new Map(
+    doc.components.families.map(family => [family.id, family])
+  );
+  const selected = new Set();
+  const visiting = new Set();
+  function visit(id) {
+    if (selected.has(id)) return;
+    if (visiting.has(id)) throw new Error(`Recipe dependency cycle at ${id}`);
+    const family = families.get(id);
+    if (!family) throw new Error(`Unknown component family ${id}`);
+    visiting.add(id);
+    function tree(node) {
+      if (node.type === 'INSTANCE') visit(node.family);
+      (node.children || []).forEach(tree);
+    }
+    family.variants.forEach(variant => tree(variant.tree));
+    visiting.delete(id);
+    selected.add(id);
+  }
+  requested.forEach(visit);
+  return [...selected].map(id => families.get(id));
+}
+function subsetDocument(doc, operation, brandId, requested) {
+  const mode = doc.modes.find(item => item.id === brandId);
+  if (!mode) throw new Error(`Unknown brand ${brandId}`);
+  const oneBrand = spec => ({
+    ...spec,
+    values: { [brandId]: spec.values[brandId] },
+  });
+  const base = {
+    collection: doc.collection,
+    modes: [mode],
+    variables: [],
+    styles: { text: [], effect: [] },
+  };
+  if (operation === 'build') {
+    const families = selectFamilies(doc, requested);
+    const textIds = new Set();
+    const effectIds = new Set();
+    function tree(node) {
+      if (node.textStyle) textIds.add(node.textStyle);
+      if (node.effectStyle) effectIds.add(node.effectStyle);
+      (node.children || []).forEach(tree);
+    }
+    families.forEach(family =>
+      family.variants.forEach(variant => tree(variant.tree))
+    );
+    base.components = { version: doc.components.version, families };
+    base.styles.text = doc.styles.text
+      .filter(style => textIds.has(style.id))
+      .map(oneBrand);
+    base.styles.effect = doc.styles.effect
+      .filter(style => effectIds.has(style.id))
+      .map(oneBrand);
+    return base;
+  }
+  if (operation === 'import') {
+    base.variables = doc.variables.map(oneBrand);
+    base.styles.text = doc.styles.text
+      .filter(style => style.recommended)
+      .map(oneBrand);
+    base.styles.effect = doc.styles.effect.map(oneBrand);
+    return base;
+  }
+  if (operation === 'diagnostics') {
+    const wanted = new Set();
+    const byName = new Map(
+      doc.variables.flatMap(spec => [
+        [spec.id, spec],
+        [spec.name, spec],
+      ])
+    );
+    function visit(id) {
+      const spec = byName.get(id);
+      if (!spec) throw new Error(`Missing diagnostic variable ${id}`);
+      if (wanted.has(spec.id)) return;
+      wanted.add(spec.id);
+      const value = spec.values[brandId];
+      if (value?.alias) visit(value.alias);
+    }
+    [
+      'color.neutral-0',
+      'color.neutral-100',
+      'color.neutral-900',
+      'font-size.300',
+      'radius.form-input',
+    ].forEach(visit);
+    base.variables = doc.variables
+      .filter(spec => wanted.has(spec.id))
+      .map(oneBrand);
+    base.styles.text = [
+      oneBrand(
+        doc.styles.text.find(
+          style => style.bindings.fontFamily === 'font-family/text'
+        )
+      ),
+    ];
+    base.styles.effect = [
+      oneBrand(doc.styles.effect.find(style => style.id === 'focus-ring')),
+    ];
+    return base;
+  }
+  return null;
+}
+function coreSource() {
+  const source = fs.readFileSync(path.join(PLUGIN, 'code.js'), 'utf8');
+  const boundary = source.indexOf('figma.ui.onmessage =');
+  if (boundary < 0)
+    throw new Error(
+      'Plugin UI handler boundary changed. Update connector build.'
+    );
+  const prefix = source.slice(0, boundary);
+  const start = prefix.indexOf('figma.showUI(');
+  if (start < 0)
+    throw new Error(
+      'Plugin UI startup boundary changed. Update connector build.'
+    );
+  const end = prefix.indexOf(';', start);
+  if (end < 0) throw new Error('Plugin UI startup terminator missing.');
+  return prefix.slice(0, start) + prefix.slice(end + 1);
+}
+function connectorInspectionSummary(report, nodeIds) {
+  const nodes = report.nodes;
+  const brief = node => ({
+    id: node.id,
+    name: node.name,
+    type: node.type,
+    mgKitId: node.mgKitId,
+    width: node.width,
+    height: node.height,
+    x: node.x,
+    y: node.y,
+    childCount:
+      node.childIds?.length ?? node.childCount ?? node.variantIds?.length ?? 0,
+  });
+  const result = {
+    schemaVersion: report.schemaVersion,
+    capturedAt: report.capturedAt,
+    document: report.document,
+    currentPage: report.currentPage,
+    counts: {
+      variables: report.variables.length,
+      textStyles: report.styles.text.length,
+      effectStyles: report.styles.effect.length,
+      nodes: nodes.length,
+      components: nodes.filter(node => node.type === 'COMPONENT').length,
+      instances: nodes.filter(node => node.type === 'INSTANCE').length,
+    },
+    collections: report.collections.map(collection => ({
+      id: collection.id,
+      name: collection.name,
+      modes: collection.modes,
+      variableCount: collection.variableIds?.length,
+    })),
+    roots: nodes
+      .filter(node => node.parentId === report.currentPage.id)
+      .map(brief),
+    sets: nodes
+      .filter(node => node.type === 'COMPONENT_SET')
+      .map(node => ({
+        ...brief(node),
+        variantIds: node.childIds,
+        properties: node.componentPropertyDefinitions,
+      })),
+    selectedNodes: nodes
+      .filter(node => nodeIds.includes(node.id))
+      .map(node => ({
+        ...brief(node),
+        parentId: node.parentId,
+        childIds: node.childIds,
+        mainComponent: node.mainComponent,
+        characters: node.characters,
+        fontName: node.fontName,
+        fontSize: node.fontSize,
+        lineHeight: node.lineHeight,
+        textStyleId: node.textStyleId,
+        effectStyleId: node.effectStyleId,
+        componentProperties: node.componentProperties,
+        fills: node.fills,
+        strokes: node.strokes,
+        effects: node.effects,
+        resolvedBindings: node.resolvedBindings,
+      })),
+    missingSelectedIds: nodeIds.filter(
+      id => !nodes.some(node => node.id === id)
+    ),
+    fonts: report.fonts,
+    errorCount: report.errors.length,
+    errors: report.errors.slice(0, 20),
+    detailOmitted: false,
+  };
+  // Keep JSON intact when even a selected node or property schema is unusually large.
+  const size = () =>
+    encodeURIComponent(JSON.stringify(result)).replace(/%[0-9A-F]{2}/g, 'x')
+      .length;
+  if (size() > 16000) {
+    result.selectedNodes = result.selectedNodes.map(node => brief(node));
+    result.detailOmitted = true;
+  }
+  if (size() > 16000) {
+    result.sets = result.sets.map(set => ({
+      ...brief(set),
+      variantIds: set.variantIds,
+    }));
+    result.detailOmitted = true;
+  }
+  if (size() > 16000) {
+    result.setCount = result.sets.length;
+    result.sets = result.sets.slice(0, 12);
+    result.roots = result.roots.slice(0, 12);
+    result.errors = result.errors.map(error => String(error).slice(0, 200));
+    result.detailOmitted = true;
+  }
+  if (size() > 16000) {
+    result.sets = result.sets.map(set => ({
+      id: set.id,
+      name: String(set.name).slice(0, 200),
+      variantCount: set.variantIds.length,
+    }));
+    result.selectedNodes = [];
+    result.fonts = null;
+    result.detailOmitted = true;
+  }
+  return result;
+}
+async function buildConnector({
+  operation = 'build',
+  brandId = 'undrr',
+  familyIds,
+  nodeIds = [],
+  checkFonts = false,
+  doc,
+} = {}) {
+  if (!['build', 'import', 'diagnostics', 'inspect'].includes(operation))
+    throw new Error(
+      operation === 'export'
+        ? 'Use the Figma screenshot tool for images; connector JSON image bytes exceed its response limit.'
+        : `Unknown connector operation ${operation}`
+    );
+  if (
+    !Array.isArray(nodeIds) ||
+    nodeIds.length > 4 ||
+    nodeIds.some(id => typeof id !== 'string')
+  )
+    throw new Error('Inspection accepts at most four node IDs.');
+  doc =
+    doc ||
+    JSON.parse(
+      fs.readFileSync(path.join(PLUGIN, 'mangrove-variables.json'), 'utf8')
+    );
+  const requested =
+    familyIds ||
+    (operation === 'build'
+      ? (doc.components?.families || []).map(family => family.id)
+      : []);
+  if (operation === 'build' && !requested.length)
+    throw new Error('No component recipes. Rebuild the token JSON.');
+  const subset = subsetDocument(doc, operation, brandId, requested);
+  let source = 'const MG_SHARED_ONLY = true;\n';
+  source += fs.readFileSync(path.join(PLUGIN, 'kit-identity.js'), 'utf8');
+  source += `\n;\n${coreSource()}\n;\n`;
+  const runtime =
+    operation === 'build'
+      ? 'kit-builder.js'
+      : ['diagnostics', 'inspect'].includes(operation)
+        ? 'kit-inspection.js'
+        : null;
+  if (runtime)
+    source += fs.readFileSync(path.join(PLUGIN, runtime), 'utf8') + '\n;\n';
+  if (subset) {
+    source += `const doc = (${decompressJSON.toString()})(${JSON.stringify(compressJSON(subset))});\n`;
+  }
+  if (operation === 'build')
+    source += `return await buildMangroveComponents(doc, ${JSON.stringify(brandId)}, ${JSON.stringify(requested)});`;
+  else if (operation === 'import')
+    source += `
+      const {createdVariableIds, updatedVariableIds, removedVariableIds, styles, ...result} = await importVariables(doc, [${JSON.stringify(brandId)}], false, undefined, true);
+      const {createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds, ...styleReport} = styles;
+      result.styles = styleReport;
+      return {result, createdVariableIds, updatedVariableIds, removedVariableIds, createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds};
+    `;
+  else if (operation === 'diagnostics')
+    source += `return await createMangroveFocusDiagnostics(doc, ${JSON.stringify(brandId)});`;
+  else if (operation === 'inspect')
+    source += `return (${connectorInspectionSummary.toString()})(await inspectMangroveKit({checkFonts:${Boolean(checkFonts)}}), ${JSON.stringify(nodeIds)});`;
+  const minified = await minify(`async function mgRun(){${source}}`, {
+    compress: true,
+    mangle: true,
+    format: { comments: false },
+  });
+  const wrapped = minified.code;
+  const header = 'async function mgRun(){';
+  if (!wrapped?.startsWith(header) || !wrapped.endsWith('}'))
+    throw new Error('Unexpected minifier wrapper output.');
+  const code = wrapped.slice(header.length, -1);
+  const bytes = Buffer.byteLength(code, 'utf8');
+  if (code.length > LIMIT || bytes > LIMIT)
+    throw new Error(
+      `Connector payload exceeds ${LIMIT}: ${code.length} characters / ${bytes} bytes. Select fewer component families.`
+    );
+  return {
+    code,
+    operation,
+    brandId,
+    families: operation === 'build' ? requested : [],
+    characters: code.length,
+    bytes,
+  };
+}
+if (require.main === module) {
+  const [operation = 'build', brandId = 'undrr', familyList] =
+    process.argv.slice(2);
+  buildConnector({
+    operation,
+    brandId,
+    familyIds: familyList ? familyList.split(',') : undefined,
+    nodeIds: operation === 'inspect' && familyList ? familyList.split(',') : [],
+  })
+    .then(result => {
+      process.stdout.write(`${result.code}\n`);
+      process.stderr.write(
+        `build-figma-connector: ${result.operation} / ${result.brandId}, ${result.characters} characters / ${result.bytes} bytes\n`
+      );
+    })
+    .catch(error => {
+      process.stderr.write(`build-figma-connector: ${error.message}\n`);
+      process.exitCode = 1;
+    });
+}
+module.exports = {
+  buildConnector,
+  subsetDocument,
+  compressJSON,
+  decompressJSON,
+  connectorInspectionSummary,
+};

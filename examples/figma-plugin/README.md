@@ -1,11 +1,11 @@
 # Mangrove tokens for Figma (exploratory)
 
-A spike, stacked on the React Aria pilot (unisdr/undrr-mangrove#1088). It turns Mangrove's tokens into local Figma variables, text styles and effect styles so a Figma kit can use the same spacing, colour and theme layers as the code. Nothing here is published or supported yet.
+A spike, stacked on the React Aria pilot (unisdr/undrr-mangrove#1088). It turns Mangrove's tokens into local Figma variables, text styles, effect styles and native component recipes so a Figma kit can use the same spacing, colour and theme layers as the code. Nothing here is published or supported yet.
 
 ## How it fits together
 
 ```
-tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-variables.json ──> this plugin ──> Figma variables and styles
+tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-variables.json ──> this plugin ──> Figma variables, styles and components
 (same merge and resolve as build-tokens.cjs)          (generated, not committed)
 ```
 
@@ -18,7 +18,7 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows are represented as effect styles instead.
 
-Current output: **219 variables**, five brands, **60 text style choices** (12 selected by default), **three effect styles**, and 16 tokens skipped as variables. The two additional variables preserve the raised shadow's alpha and the focus ring's outer extent when switching brands.
+Current output adds source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), seven component text styles and four effect styles. Read the build report for current totals. Component recipes cover 41 variants across six families; 16 tokens remain skipped as variables.
 
 ### Text and effect foundations
 
@@ -31,7 +31,7 @@ The JSON's `styles` section holds values and binding names. The plugin chooses w
 | `display` | `900`, `1000`                              | Roboto Condensed |
 | `ui`      | `tab`                                      | Roboto Condensed |
 
-Expand a role in the plugin to change the selection. All choices use **Regular** with **automatic line height**, with `fontFamily` bound to `font-family/*` and `fontSize` bound to `font-size/*`. These are foundations, not complete component typography: component weights, line heights and script-specific fonts need separate work. The SCSS `code` role uses a generic monospace stack, so no specific Figma font is exported for it.
+Expand a role in the plugin to change the selection. The 60 foundation choices use **Regular** with **automatic line height**, with `fontFamily` bound to `font-family/*` and `fontSize` bound to `font-size/*`. Component styles add source weights and explicit line heights. The bundled CSS has no weight 600 face; its Bold 700 matching candidate is recorded as an inference pending browser comparison. Script-specific fonts remain pending. The SCSS `code` role uses a generic monospace stack, so no specific Figma font is exported for it.
 
 The importer discovers exact font names with `listAvailableFontsAsync` and loads them with `loadFontAsync` before editing. An unavailable or unloadable font skips the affected text styles and appears in the report. Variables, effect styles and other text styles still import. Install or enable the missing font and re-import to complete the set; no fallback font is substituted.
 
@@ -41,7 +41,7 @@ The importer discovers exact font names with `listAvailableFontsAsync` and loads
 | `Mangrove/shadow/raised-hover` | `shadow.raised-hover`: a zero-blur 2px inner shadow, colour bound to `color/interactive`.                                                                            |
 | `Mangrove/focus-ring`          | `mg-focus-ring` in `_mixins.scss`: two zero-blur outward shadows, with a neutral separator over the coloured outer band. Colours and spreads are bound to variables. |
 
-These shadows are inset borders in the CSS, not elevated drop shadows. The focus effect approximates a CSS outline; its geometry and effect ordering still need a desktop visual check. Figma documents spread support for rectangles, ellipses and filled frames with clipping enabled. Check the effect on the actual control shapes, including whether an ancestor clips the outward ring. The exporter fails if the focus mixin's supported recipe changes.
+These shadows are inset borders in the CSS, not elevated drop shadows. The focus effect approximates a CSS outline; opaque diagnostic shapes have been rendered in Figma to compare ordering. Figma paints the later effect over the earlier one, so the coloured outer spread precedes the white separator. Actual control and inset rendering still need checking. Figma documents spread support for rectangles, ellipses and filled frames with clipping enabled. Check the effect on the actual control shapes, including whether an ancestor clips the outward ring. The exporter fails if the focus mixin's supported recipe changes.
 
 API references: [TextStyle](https://developers.figma.com/docs/plugins/api/TextStyle/), [effect variable bindings](https://developers.figma.com/docs/plugins/api/figma-variables/) and [effect geometry](https://developers.figma.com/docs/plugins/api/Effect/).
 
@@ -61,7 +61,7 @@ From the repository root:
 yarn build:figma-tokens
 ```
 
-This writes `examples/figma-plugin/mangrove-variables.json` and prints the variable, mode, style and skipped token counts. The file is build output and is not committed, so regenerate it on whichever branch holds the tokens you want.
+This writes `examples/figma-plugin/mangrove-variables.json`, bundles the runtime into `examples/figma-plugin/build/main.js`, and prints the variable, mode, style and skipped token counts. Both files are build output and are not committed, so regenerate it on whichever branch holds the tokens you want.
 
 ### 2. Install the plugin (once per designer)
 
@@ -76,7 +76,7 @@ The plugin now appears under **Plugins > Development**. On a Professional plan, 
 1. Open the dedicated Figma Design file that will hold the Mangrove kit. A file in Drafts or a Starter team is limited to 1 mode. For all five modes, save it in a project that belongs to the Professional team.
 2. Run **Plugins > Development > Mangrove tokens (exploratory)**.
 3. Choose the `mangrove-variables.json` you generated.
-4. On Starter or in Drafts, tick only one brand. In a Professional team file, leave all five brands ticked. Expand the text roles to choose sizes, and leave effect styles ticked to import the three effects. Select **Import variables and styles**.
+4. On Starter or in Drafts, tick only one brand. In a Professional team file, tick all five brands. Expand the text roles to choose sizes, and leave effect styles ticked to import the effects. UNDRR is selected initially for the Starter workflow. Select **Import variables and styles**.
 5. Read the report in the plugin window: the counts, any errors, and the tokens that could not be represented.
 6. Open **Local variables** to see the **Mangrove** collection, with one column per imported brand. In local styles, inspect the text and effect styles under **Mangrove**.
 
@@ -89,6 +89,42 @@ A file in Drafts or a Starter team allows only 1 mode, so the five brands cannot
 3. To see another brand, run the plugin again with only that brand ticked. Its values overwrite the mode in place and every bound layer in the file re-themes. Variables are reused, so no bindings break.
 
 Limits: one brand is visible at a time, and Starter cannot publish libraries, so the variables, components and designs stay in this one file. Local text styles, effect styles and components can still be created and reused within the file. When the file moves to a Professional team project, import with all brands ticked: the existing mode is kept and the others are added. This migration and the brand switcher pass the mock harness; they still need a check in real Figma.
+
+### Build and inspect the native kit
+
+Import one brand first, then select families and choose **Build selected components**. Dependencies are built first. The generated kit contains main components outside **Mangrove / Review**, where editable instances show states, long labels and narrow examples.
+
+| Family               | Variants |
+| -------------------- | -------: |
+| Button               |       16 |
+| Text input           |        6 |
+| ComboBox option      |        6 |
+| ComboBox             |        6 |
+| Tab trigger          |        6 |
+| Horizontal pill Tabs |        1 |
+
+The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
+
+**Inspect kit and fonts** records actual IDs, resolved consumer bindings and font-load results. **Save inspection report** downloads that JSON. **Focus diagnostics** compares literal effect order with bound styles; PNG export buttons capture review frames. These are local development operations and do not publish a library.
+
+Stable public token and component identities use shared plugin data in namespace `orgundrrmangrove`. Desktop imports also read legacy private IDs and reject conflicting ownership. Shared metadata contains no workflow ledger, account information or secrets. See [Figma shared plugin data](https://developers.figma.com/docs/plugins/api/properties/nodes-setsharedplugindata/).
+
+### Drive the same recipes through the connector
+
+When `use_figma` is available, generate a bounded script from the same runtime:
+
+```sh
+node scripts/build-figma-connector.cjs import undrr > /tmp/mangrove-import.js
+node scripts/build-figma-connector.cjs build undrr button > /tmp/mangrove-button.js
+node scripts/build-figma-connector.cjs build undrr text-input > /tmp/mangrove-input.js
+node scripts/build-figma-connector.cjs build undrr combobox > /tmp/mangrove-combobox.js
+node scripts/build-figma-connector.cjs build undrr tabs > /tmp/mangrove-tabs.js
+node scripts/build-figma-connector.cjs inspect undrr > /tmp/mangrove-inspect.js
+```
+
+Pass the emitted JavaScript to `use_figma` after loading its skill. The builder includes nested component dependencies, trims other brands, compresses data with a local codec and rejects payloads over 50,000 characters or bytes. It does not use `eval` or fetch code. Connector execution uses shared metadata only: first migrate legacy private identities through the desktop importer, or verify unchanged unique names before adoption. Privately identified assets that were renamed cannot be recovered by the connector's name fallback.
+
+On 3 October 2026, the connected Starter account reported a Full seat and canvas writes worked. Screenshot reads subsequently hit the Starter tool-call allowance. This is an observation for this account, not a promise that every Starter account can write. Conserve read calls and record structural evidence returned from writes. Do not upgrade plans or change permissions automatically. See [rate limits and access](https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/).
 
 ### 4. Publish and use
 
@@ -116,7 +152,7 @@ Unticking a style leaves any existing style in place. The prune option removes v
 | Could not add mode "..." with a higher limit      | The plan's mode limit was reached. Untick brands, or split them across files.                                                                                                                                               |
 | Not a mangrove-variables.json file                | The wrong file was chosen. Regenerate it with step 1.                                                                                                                                                                       |
 | alias target ... missing                          | The JSON was edited by hand or is from a mixed build. Regenerate it.                                                                                                                                                        |
-| A variable shows the wrong type                   | Its token changed type in YAML. The plugin deletes and recreates it, so rebind any layers that used it.                                                                                                                     |
+| A variable shows the wrong type                   | Its token changed type in YAML. Preflight preserves the existing ID and rejects the import; design an explicit migration before changing bindings.                                                                          |
 | Missing fonts or a font could not load            | Enable the exact reported family and style in Figma, then re-import. Other assets are still imported.                                                                                                                       |
 
 The plugin runs locally in Figma and has no network access.
@@ -153,23 +189,23 @@ As checked on **3 October 2026**, Figma documents these limits:
 
 Sources: [plans and features](https://help.figma.com/hc/en-us/articles/360040328273-Figma-plans-and-features), [publish a library](https://help.figma.com/hc/en-us/articles/360025508373-Publish-a-library), [MCP rate limits and access](https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/), [write to canvas](https://developers.figma.com/docs/figma-mcp-server/write-to-canvas/) and [Code Connect](https://developers.figma.com/docs/code-connect/). Recheck these when the account or plan changes.
 
-The practical Starter route is to run the Mangrove development plugin in the desktop app. It imports variables and selected text and effect styles; component generation remains planned work. Keep one canonical kit file, bind components to the same variables and defer shared-library publishing. When Professional access is available, ask for a Full seat on your own account and edit access to the team file, move the kit into that team, then import all five brands. Joining a Professional team with a View or Dev seat does not meet the documented requirement for direct agent writes.
+The practical Starter route is to run the Mangrove development plugin in the desktop app. It imports variables and selected text and effect styles; component generation uses the exporter recipes described above. Keep one canonical kit file, bind components to the same variables and defer shared-library publishing. When Professional access is available, ask for a Full seat on your own account and edit access to the team file, move the kit into that team, then import all five brands. Joining a Professional team with a View or Dev seat does not meet the documented requirement for direct agent writes.
 
 ## Spike learnings
 
 Keep observations separate from API documentation and mock results. Update this record as the spike is exercised in Figma.
 
-| Finding                                                                            | Evidence and consequence                                                                                                                                                                                                                                                                                                                                                                    |
-| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Variables were created in the user's free file, but additional modes were rejected | User-reported desktop import: `Limited to 1 modes only`. The file can hold the token collection even when five brand modes are unavailable.                                                                                                                                                                                                                                                 |
-| Removing absent WEB code syntax throws                                             | Observed in real Figma, fixed in the importer and reproduced by the mock. Remove syntax only when it is present. The later desktop re-import updated all 219 variables without code syntax errors.                                                                                                                                                                                          |
-| A single mode can be reused as a brand switcher                                    | All five brands pass the mock scenario without new variables. Visual re-theming and preserved bindings still need desktop verification.                                                                                                                                                                                                                                                     |
-| Text and effect styles are local foundations                                       | Implemented with documented variable bindings and font loading. The mock checks creation, stable IDs, missing-font recovery and selective imports. Desktop import created nine text styles and all three effects; re-import updated them without new styles. Three Roboto Condensed styles failed to load. Rendering remains unverified.                                                    |
-| `shadow.raised` and hover are inset outlines                                       | Confirmed in `tokens/mangrove.yaml`. Export as inner shadows, preserving the alpha cast with a derived colour variable. Do not infer elevation from the token name.                                                                                                                                                                                                                         |
-| A CSS outline needs a Figma approximation                                          | The focus mixin becomes two bound, zero-blur outward effects. The mock checks the 2px separator and 4px outer spread, but does not prove rendered geometry or ordering.                                                                                                                                                                                                                     |
-| A connected agent and a local development plugin have different constraints        | Remote canvas writes require a Full seat. The desktop importer has already run in the free file. Confirm the connector's API support before reusing desktop plugin code.                                                                                                                                                                                                                    |
-| An installed connector may not expose tools to the active session                  | On 3 October 2026 the user confirmed connection and the Codex plugin catalog showed Figma enabled, but this session exposed no Figma tools. Local app inspection initially failed with a native-pipe startup error, then worked on the follow-up turn and enabled the desktop import. No remote Figma tools were exposed. These observations do not establish an account or seat rejection. |
-| An editable captured screen is not yet a reusable component kit                    | Kit acceptance needs native components, variants, auto layout, shared styles and variable bindings verified against Mangrove's source and rendered stories.                                                                                                                                                                                                                                 |
+| Finding                                                                            | Evidence and consequence                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Variables were created in the user's free file, but additional modes were rejected | User-reported desktop import: `Limited to 1 modes only`. The file can hold the token collection even when five brand modes are unavailable.                                                                                                                                                                                                                                                                                                                                             |
+| Removing absent WEB code syntax throws                                             | Observed in real Figma, fixed in the importer and reproduced by the mock. Remove syntax only when it is present. The later desktop re-import updated all 219 variables without code syntax errors.                                                                                                                                                                                                                                                                                      |
+| A single mode can be reused as a brand switcher                                    | All five brands pass the mock scenario without new variables. Visual re-theming and preserved bindings still need desktop verification.                                                                                                                                                                                                                                                                                                                                                 |
+| Text and effect styles are local foundations                                       | Implemented with documented variable bindings and font loading. The mock checks creation, stable IDs, missing-font recovery and selective imports. Desktop import created nine text styles and all three effects; re-import updated them without new styles. Three Roboto Condensed styles initially failed to load in the desktop app; the later connector import created them successfully. Full control rendering remains pending.                                                   |
+| `shadow.raised` and hover are inset outlines                                       | Confirmed in `tokens/mangrove.yaml`. Export as inner shadows, preserving the alpha cast with a derived colour variable. Do not infer elevation from the token name.                                                                                                                                                                                                                                                                                                                     |
+| A CSS outline needs a Figma approximation                                          | The focus mixin becomes two bound, zero-blur outward effects. Rendered opaque diagnostics showed that the neutral effect must follow the outer effect. This correction is tested locally; the current file still needs the corrected import.                                                                                                                                                                                                                                            |
+| A connected agent and a local development plugin have different constraints        | Remote canvas writes require a Full seat. The desktop importer has already run in the free file. Confirm the connector's API support before reusing desktop plugin code.                                                                                                                                                                                                                                                                                                                |
+| An installed connector may not expose tools to the active session                  | On 3 October 2026 the user confirmed connection and the Codex plugin catalog showed Figma enabled, but this session exposed no Figma tools. Local app inspection initially failed with a native-pipe startup error, then worked on the follow-up turn and enabled the desktop import. Tools became available during the later autonomous iteration and canvas writes succeeded. The account reported a Full seat on Starter; subsequent reads and writes reached the Starter allowance. |
+| Native component scaffolds require rendering and source comparison                 | Six native component sets now exist with variants, auto layout and bindings. Button and Text input repeat updates preserve IDs. Remaining visual gates are recorded in LEARNINGS.md.                                                                                                                                                                                                                                                                                                    |
 
 For each future change, record the source token or component, the Figma representation, the local verification, the desktop or connector observation and any remaining limitation. Preserve asset identities during updates so existing bindings and instances survive. The exporter remains the source of values: add style definitions to its JSON rather than duplicating values in the plugin.
 
@@ -179,7 +215,7 @@ The agent operated the Figma desktop app in the user's existing Starter Design f
 
 - First import: two new helper variables, 217 updated variables, 219 values set; nine text styles and all three effect styles created. The collection UI confirms 219 variables and the UNDRR mode.
 - Repeat import: no new variables or styles; 219 variables, nine text styles and three effect styles updated. No variable or effect errors were reported.
-- Three styles remain missing: `Mangrove/display/900/Regular`, `Mangrove/display/1000/Regular` and `Mangrove/ui/tab/Regular`. `listAvailableFontsAsync` listed Roboto Condensed Regular, but `loadFontAsync` rejected it. Font Book confirms that exact face is installed and active. The cause is not established; no substitute font or system font change was applied.
+- Three styles were initially missing: `Mangrove/display/900/Regular`, `Mangrove/display/1000/Regular` and `Mangrove/ui/tab/Regular`. `listAvailableFontsAsync` listed Roboto Condensed Regular, but `loadFontAsync` rejected it. Font Book confirms that exact face is installed and active. The cause is not established; no substitute font or system font change was applied.
 - Figma's font rejection was a string. The importer now reports that string instead of `undefined`, and the mock reproduces the string rejection. The actual message is `The font "Roboto Condensed Regular" could not be loaded`.
 - The originally registered plugin pointed to an older Desktop copy. Importing the checkout alongside it produced two registrations with the same manifest ID and still ran the old interface. Removing the stale registration made the checkout's current interface run. Use the checkout directly and check the path in **Manage plugins in development** when an update appears stale. The old source files were left in place.
 - The focus style editor shows two drop-shadow effects with colour and spread bindings. Local variables shows the outer extent as 4px; the style editor displayed 0 for its bound spread without a node context. Inspect resolution and geometry on an actual bound control before declaring the focus effect visually verified.
@@ -187,21 +223,36 @@ The agent operated the Figma desktop app in the user's existing Starter Design f
 
 This verifies desktop creation and repeat updates, not rendered component fidelity, all font recovery paths, published libraries, or migration to a paid team. The brand switcher remains verified by the mock only.
 
+### Connector verification on 3 October 2026
+
+- Import preserved the 219 existing variable IDs, added 23 source-backed roles and recovered the three missing Roboto Condensed styles. The file contains 242 variables, 12 Regular foundations and four effects; component builds added seven typography styles.
+- Native construction created six sets and 41 variants: Button 16, Text input 6, ComboBox option 6, ComboBox 6, Tab trigger 6 and horizontal Tabs 1. Main components and editable review instances are separate.
+- Button and Text input rebuilt with zero new nodes, unchanged variant/property IDs and no reported errors. ComboBox and Tabs still need their real-file repeat and visual checks.
+- A rendered Button review exposed zero-width captions. Explicit text widths fixed the layout. Its narrow specimen also needs the newer responsive label update.
+- Opaque focus diagnostics confirmed the paint-order issue. The source now reverses the effect order, provides transparent stroke geometry for outline Button and Tab focus and corrects InvalidFocused Text input according to CSS specificity. The newest generated output contains 244 variables, but the tool allowance blocked applying this correction to the file.
+- The connector truncates returned text at 20 kB. Bounded inspection summaries and selected-node reports keep results parseable; desktop reports can retain the full inventory.
+- Screenshot reads reached the Starter allowance. A subsequent foundation update through `use_figma` was also rejected. Further real-file checks need restored connector allowance or working desktop control. No plan or permission changes were made.
+
+See [LEARNINGS.md](LEARNINGS.md) for source findings, evidence boundaries and the next acceptance checks.
+
 ## Checking changes without Figma
 
-`dev/mock-figma.cjs` runs `code.js` against a small mock of the Figma variables and styles APIs. Six scenarios cover importing every brand, stable variable and style IDs on re-import, the 1-mode limit followed by adding modes, the brand switcher, unavailable and unloadable font recovery, selective style imports, renamed styles and older JSON without styles:
+`dev/mock-figma.cjs` runs the importer and identity helper against a small mock of the Figma variables and styles APIs. Ten scenarios cover importing every brand, stable variable and style IDs on re-import, the 1-mode limit followed by adding modes, the brand switcher, unavailable and unloadable font recovery, selective style imports, renamed styles and older JSON without styles:
 
 ```sh
 yarn build:figma-tokens
 node examples/figma-plugin/dev/mock-figma.cjs
+node examples/figma-plugin/dev/mock-kit.cjs
 ```
+
+The kit harness additionally checks native identity and properties, instance overrides, dependency and font blocking, transparent focus geometry, codec transport and the actual API restrictions encountered.
 
 The mock copies the Figma behaviours that have caused bugs here, but it is not Figma. Confirm a change in the desktop app before relying on it.
 
 ## What this spike does not cover yet
 
-- Completion of the three Roboto Condensed styles after resolving the desktop font-loading failure.
+- Desktop font-loading recovery. The connector has completed the three missing styles; the desktop failure cause remains unestablished.
 - Rendered effects and brand switching on actual bound nodes. Import and repeat updates have been checked in the desktop app.
-- Component typography, including weights, explicit line heights and Arabic fonts. The selectable Regular styles are foundations.
-- Components. See [FIGMA-KIT-BRIEF.md](FIGMA-KIT-BRIEF.md) for a brief to give to Figma's AI, or to a designer.
+- Browser comparison of component font matching and line heights, plus Arabic font routing. Source-backed component text styles are separate from the selectable Regular foundations.
+- Rendered source comparison and broader component coverage. See [FIGMA-KIT-BRIEF.md](FIGMA-KIT-BRIEF.md) and [LEARNINGS.md](LEARNINGS.md).
 - Code Connect, which links Figma components to the React source. It needs an Organization or Enterprise plan.

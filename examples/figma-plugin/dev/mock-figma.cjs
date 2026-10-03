@@ -82,6 +82,7 @@ function createFigma(state) {
       this.hiddenFromPublishing = false;
       this.valuesByMode = {};
       this.pluginData = {};
+      this.sharedData = {};
       this.syntax = {};
       this.scopeList = ['ALL_SCOPES'];
     }
@@ -109,7 +110,19 @@ function createFigma(state) {
     }
 
     getPluginData(key) {
+      if (state.sharedOnly) throw new Error('Private plugin data unavailable');
       return this.pluginData[key] || '';
+    }
+
+    getSharedPluginData(namespace, key) {
+      return (this.sharedData[namespace] || {})[key] || '';
+    }
+
+    setSharedPluginData(namespace, key, value) {
+      if (!/^[a-zA-Z0-9]{3,}$/.test(namespace))
+        throw new Error('Invalid shared namespace');
+      this.sharedData[namespace] = this.sharedData[namespace] || {};
+      this.sharedData[namespace][key] = value;
     }
 
     setVariableCodeSyntax(platform, value) {
@@ -157,16 +170,29 @@ function createFigma(state) {
       this.name = '';
       this.description = '';
       this.pluginData = {};
+      this.sharedData = {};
       this.boundVariables = {};
       this.currentFont = { family: 'Inter', style: 'Regular' };
     }
 
     getPluginData(key) {
+      if (state.sharedOnly) throw new Error('Private plugin data unavailable');
       return this.pluginData[key] || '';
     }
 
     setPluginData(key, value) {
       this.pluginData[key] = value;
+    }
+
+    getSharedPluginData(namespace, key) {
+      return (this.sharedData[namespace] || {})[key] || '';
+    }
+
+    setSharedPluginData(namespace, key, value) {
+      if (!/^[a-zA-Z0-9]{3,}$/.test(namespace))
+        throw new Error('Invalid shared namespace');
+      this.sharedData[namespace] = this.sharedData[namespace] || {};
+      this.sharedData[namespace][key] = value;
     }
 
     get fontName() {
@@ -186,6 +212,8 @@ function createFigma(state) {
 
     set fontSize(value) {
       this.requireFont(this.fontName);
+      if (state.failStyleWrites?.has(this.id) || state.failNewStyleWrites)
+        throw 'Injected style write failure';
       assert(Number.isFinite(value) && value > 0, 'Invalid style font size');
       this.size = value;
     }
@@ -224,6 +252,7 @@ function createFigma(state) {
     }
 
     remove() {
+      if (state.rejectStyleRemoval) throw 'Injected style cleanup failure';
       state.styles.splice(state.styles.indexOf(this), 1);
     }
   }
@@ -303,8 +332,9 @@ function createFigma(state) {
   };
 }
 
-function loadPlugin(modeLimit) {
+function loadPlugin(modeLimit, { sharedOnly = false } = {}) {
   const state = {
+    sharedOnly,
     modeLimit,
     collections: [],
     variables: [],
@@ -315,11 +345,17 @@ function loadPlugin(modeLimit) {
     loadedFonts: new Set(),
     rejectedFonts: new Set(),
   };
-  vm.runInNewContext(fs.readFileSync(path.join(DIR, 'code.js'), 'utf8'), {
-    figma: createFigma(state),
-    __html__: '',
-    console,
-  });
+  vm.runInNewContext(
+    ['kit-identity.js', 'code.js']
+      .map(file => fs.readFileSync(path.join(DIR, file), 'utf8'))
+      .join('\n'),
+    {
+      figma: createFigma(state),
+      __html__: '',
+      MG_SHARED_ONLY: sharedOnly,
+      console,
+    }
+  );
   const run = async (doc, modes, prune = false, options = {}) => {
     await state.handler({ type: 'import', doc, modes, prune, ...options });
     if (state.lastMessage.type === 'error') {
@@ -364,8 +400,13 @@ async function main() {
     let r = await run(doc, all);
     assert.strictEqual(r.errors.length, 0, r.errors.join('\n'));
     assert.strictEqual(r.counts.created, total);
+    assert.strictEqual(r.createdVariableIds.length, total);
+    assert.strictEqual(r.updatedVariableIds.length, 0);
+    assert.strictEqual(r.collectionId, state.collections[0].id);
     assert.strictEqual(r.counts.values, total * all.length);
     assert.strictEqual(r.styles.counts.text.created, recommended.length);
+    assert.strictEqual(r.styles.createdStyleIds.length, styleTotal);
+    assert.strictEqual(r.styles.touchedStyleIds.length, styleTotal);
     for (const spec of recommended) {
       const style = state.styles.find(entry => entry.name === spec.name);
       for (const [field, name] of Object.entries(spec.bindings)) {
@@ -388,8 +429,16 @@ async function main() {
       style => style.name === 'Mangrove/focus-ring'
     );
     assert.strictEqual(focus.effects.length, 2);
-    assert.strictEqual(focus.effects[0].spread, 2);
-    assert.strictEqual(focus.effects[1].spread, 4);
+    assert.strictEqual(focus.effects[0].spread, 4);
+    assert.strictEqual(focus.effects[1].spread, 2);
+    assert.strictEqual(
+      focus.effects[0].boundVariables.color.id,
+      state.variables.find(variable => variable.name === 'color/focus-ring').id
+    );
+    assert.strictEqual(
+      focus.effects[1].boundVariables.color.id,
+      state.variables.find(variable => variable.name === 'color/neutral-0').id
+    );
     assert(
       focus.effects.every(
         effect => effect.boundVariables.color && effect.boundVariables.spread
@@ -398,6 +447,10 @@ async function main() {
     r = await run(doc, all);
     assert.strictEqual(r.errors.length, 0, r.errors.join('\n'));
     assert.strictEqual(r.counts.created, 0);
+    assert.strictEqual(r.createdVariableIds.length, 0);
+    assert.strictEqual(r.updatedVariableIds.length, total);
+    assert.strictEqual(r.styles.createdStyleIds.length, 0);
+    assert.strictEqual(r.styles.updatedStyleIds.length, styleTotal);
     assert.strictEqual(state.variables.length, total);
     assert.strictEqual(state.styles.length, styleTotal);
     assert.strictEqual(state.styles.map(style => style.id).join(','), ids);
@@ -417,6 +470,8 @@ async function main() {
     let r = await run(doc, all);
     assert.strictEqual(r.errors.length, all.length - 1);
     assert(r.errors.every(e => e.startsWith('Could not add mode')));
+    assert.strictEqual(r.modes.length, 1);
+    assert.strictEqual(r.requestedModes.length, all.length);
     state.modeLimit = 10;
     r = await run(doc, all);
     assert.strictEqual(r.errors.length, 0, r.errors.join('\n'));
@@ -450,6 +505,12 @@ async function main() {
   }
 
   // Missing fonts skip their text styles, keep variables/effects, recover.
+  const condensedCount = recommended.filter(spec =>
+    Object.values(spec.values).some(
+      value => value.fontName.family === 'Roboto Condensed'
+    )
+  ).length;
+  const availableTextCount = recommended.length - condensedCount;
   for (const unavailable of ['not-listed', 'load-rejected']) {
     const { state, run } = loadPlugin(1);
     const savedFonts = state.fonts;
@@ -463,8 +524,8 @@ async function main() {
       r.styles.missingFonts.join(','),
       'Roboto Condensed Regular'
     );
-    assert.strictEqual(r.styles.counts.text.failed, 3);
-    assert.strictEqual(r.styles.counts.text.created, 9);
+    assert.strictEqual(r.styles.counts.text.failed, condensedCount);
+    assert.strictEqual(r.styles.counts.text.created, availableTextCount);
     if (unavailable === 'load-rejected') {
       assert(
         r.errors.every(error =>
@@ -472,22 +533,246 @@ async function main() {
         )
       );
     }
-    assert.strictEqual(r.styles.counts.effect.created, 3);
+    assert.strictEqual(
+      r.styles.counts.effect.created,
+      doc.styles.effect.length
+    );
     assert.strictEqual(state.variables.length, total);
     assert.strictEqual(
       state.styles.length,
-      12,
+      availableTextCount + doc.styles.effect.length,
       'No partial styles after missing font'
     );
     state.fonts = savedFonts;
     state.rejectedFonts.clear();
     r = await run(doc, [all[0]]);
     assert.strictEqual(r.errors.length, 0, r.errors.join('\n'));
-    assert.strictEqual(r.styles.counts.text.created, 3);
-    assert.strictEqual(r.styles.counts.text.updated, 9);
+    assert.strictEqual(r.styles.counts.text.created, condensedCount);
+    assert.strictEqual(r.styles.counts.text.updated, availableTextCount);
     assert.strictEqual(state.styles.length, styleTotal);
     console.log(
       `ok  missing font (${unavailable}) reports and recovers without partial styles`
+    );
+  }
+
+  // Invalid source definitions fail before collections, modes or assets change.
+  {
+    const invalid = [];
+    function candidate(label, change) {
+      const copy = JSON.parse(JSON.stringify(doc));
+      change(copy);
+      invalid.push([label, copy]);
+    }
+    candidate('duplicate variable ID', copy =>
+      copy.variables.push({ ...copy.variables[0], name: 'duplicate/id' })
+    );
+    candidate('duplicate variable name', copy =>
+      copy.variables.push({ ...copy.variables[0], id: 'duplicate.id' })
+    );
+    candidate('duplicate mode ID', copy =>
+      copy.modes.push({ ...copy.modes[0], name: 'Duplicate brand' })
+    );
+    candidate('duplicate mode name', copy =>
+      copy.modes.push({ ...copy.modes[0], id: 'duplicate-brand' })
+    );
+    candidate('duplicate style name', copy =>
+      copy.styles.text.push({ ...copy.styles.text[0], id: 'duplicate.style' })
+    );
+    candidate('missing alias', copy => {
+      copy.variables[0].values[all[0]] = { alias: 'missing/target' };
+    });
+    candidate('alias type mismatch', copy => {
+      copy.variables[0].values[all[0]] = {
+        alias: copy.variables.find(variable => variable.type === 'FLOAT').name,
+      };
+    });
+    candidate('alias cycle', copy => {
+      copy.variables[0].values[all[0]] = { alias: copy.variables[1].name };
+      copy.variables[1].values[all[0]] = { alias: copy.variables[0].name };
+    });
+    for (const [label, copy] of invalid) {
+      const { state, run } = loadPlugin(1);
+      await assert.rejects(() => run(copy, [all[0]]), /Import preflight/);
+      assert.strictEqual(state.collections.length, 0, label);
+      assert.strictEqual(state.variables.length, 0, label);
+      assert.strictEqual(state.styles.length, 0, label);
+    }
+    console.log(
+      'ok  malformed import definitions reject before any document mutation'
+    );
+  }
+
+  // Existing asset ambiguity, ownership and changed type preserve the entire kit.
+  for (const collision of [
+    'collection',
+    'variable-name',
+    'variable-id',
+    'foreign-variable',
+    'variable-type',
+    'style-name',
+    'foreign-style',
+    'style-type',
+  ]) {
+    const { state, run } = loadPlugin(1);
+    await run(doc, [all[0]]);
+    const variable = state.variables[0];
+    const style = state.styles[0];
+    if (collision === 'collection')
+      state.collections.push({
+        ...state.collections[0],
+        id: 'duplicate-collection',
+      });
+    if (collision === 'variable-name' || collision === 'variable-id')
+      state.variables.push(
+        Object.assign(
+          Object.create(Object.getPrototypeOf(variable)),
+          variable,
+          {
+            id: 'duplicate-variable',
+            name:
+              collision === 'variable-name'
+                ? variable.name
+                : 'duplicate/variable',
+            pluginData: { ...variable.pluginData },
+          }
+        )
+      );
+    if (collision === 'foreign-variable')
+      variable.setPluginData('mgId', 'foreign.owner');
+    if (collision === 'variable-type') variable.resolvedType = 'FLOAT';
+    if (collision === 'style-name')
+      state.styles.push(
+        Object.assign(Object.create(Object.getPrototypeOf(style)), style, {
+          id: 'duplicate-style',
+          pluginData: { ...style.pluginData },
+        })
+      );
+    if (collision === 'foreign-style')
+      style.setPluginData('mgStyleId', 'foreign.owner');
+    if (collision === 'style-type') style.type = 'EFFECT';
+    const before = JSON.stringify({
+      collections: state.collections,
+      variables: state.variables,
+      styles: state.styles,
+    });
+    await assert.rejects(
+      () => run(doc, [all[1]]),
+      /Import preflight|Conflicting Mangrove identities/
+    );
+    const after = JSON.stringify({
+      collections: state.collections,
+      variables: state.variables,
+      styles: state.styles,
+    });
+    assert.strictEqual(
+      after,
+      before,
+      `${collision}: no mode renaming, deletion, metadata or value mutation`
+    );
+  }
+  console.log(
+    'ok  ambiguous or incompatible existing assets reject without breaking identities or changing modes'
+  );
+
+  // Desktop private identities migrate to shared metadata, and shared-only
+  // runtimes never need the private plugin-data API.
+  {
+    const { state, run } = loadPlugin(1);
+    await run(doc, [all[0]]);
+    const ids = [...state.variables, ...state.styles]
+      .map(asset => asset.id)
+      .join(',');
+    for (const variable of state.variables) {
+      variable.setPluginData(
+        'mgId',
+        variable.getSharedPluginData('orgundrrmangrove', 'mgId')
+      );
+      variable.sharedData = {};
+    }
+    for (const style of state.styles) {
+      style.setPluginData(
+        'mgStyleId',
+        style.getSharedPluginData('orgundrrmangrove', 'mgStyleId')
+      );
+      style.sharedData = {};
+    }
+    const result = await run(doc, [all[1]]);
+    assert.strictEqual(result.counts.created, 0);
+    assert.strictEqual(result.errors.length, 0);
+    assert.strictEqual(
+      [...state.variables, ...state.styles].map(asset => asset.id).join(','),
+      ids
+    );
+    assert(
+      state.variables.every(variable =>
+        variable.getSharedPluginData('orgundrrmangrove', 'mgId')
+      )
+    );
+    assert(
+      state.styles.every(style =>
+        style.getSharedPluginData('orgundrrmangrove', 'mgStyleId')
+      )
+    );
+    const remote = loadPlugin(1, { sharedOnly: true });
+    await remote.run(doc, [all[0]]);
+    const remoteIds = [...remote.state.variables, ...remote.state.styles]
+      .map(asset => asset.id)
+      .join(',');
+    const repeat = await remote.run(doc, [all[1]]);
+    assert.strictEqual(repeat.errors.length, 0);
+    assert.strictEqual(repeat.counts.created, 0);
+    assert.strictEqual(
+      [...remote.state.variables, ...remote.state.styles]
+        .map(asset => asset.id)
+        .join(','),
+      remoteIds
+    );
+    console.log(
+      'ok  private identities migrate in place and shared-only imports preserve IDs without private APIs'
+    );
+  }
+
+  // Asset ID reports distinguish successes, partial retained writes and cleanup.
+  {
+    const { state, run } = loadPlugin(1);
+    await run(doc, [all[0]]);
+    const existing = state.styles.find(style => style.type === 'TEXT');
+    state.failStyleWrites = new Set([existing.id]);
+    const result = await run(doc, [all[0]]);
+    assert(result.styles.touchedStyleIds.includes(existing.id));
+    assert(!result.styles.updatedStyleIds.includes(existing.id));
+    assert.strictEqual(result.styles.updatedStyleIds.length, styleTotal - 1);
+    assert.strictEqual(result.styles.removedStyleIds.length, 0);
+    assert(
+      state.styles.some(style => style.id === existing.id),
+      'Existing partial style preserved'
+    );
+    for (const cleanupFails of [false, true]) {
+      const fresh = loadPlugin(1);
+      fresh.state.failNewStyleWrites = true;
+      fresh.state.rejectStyleRemoval = cleanupFails;
+      const failed = await fresh.run(doc, [all[0]]);
+      const ids = new Set(fresh.state.styles.map(style => style.id));
+      assert.strictEqual(
+        failed.styles.createdStyleIds.length,
+        doc.styles.effect.length
+      );
+      assert.strictEqual(failed.styles.updatedStyleIds.length, 0);
+      assert.strictEqual(
+        failed.styles.removedStyleIds.length,
+        cleanupFails ? 0 : recommended.length
+      );
+      assert.strictEqual(
+        failed.styles.retainedPartialStyleIds.length,
+        cleanupFails ? recommended.length : 0
+      );
+      assert(failed.styles.createdStyleIds.every(id => ids.has(id)));
+      assert(failed.styles.touchedStyleIds.every(id => ids.has(id)));
+      assert(failed.styles.removedStyleIds.every(id => !ids.has(id)));
+      assert(failed.styles.retainedPartialStyleIds.every(id => ids.has(id)));
+    }
+    console.log(
+      'ok  affected IDs include partial existing writes and distinguish removed or retained failed styles'
     );
   }
 

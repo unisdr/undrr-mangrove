@@ -2,7 +2,7 @@
   "name": "Mangrove tokens (exploratory)",
   "id": "mangrove-tokens-exploratory",
   "api": "1.0.0",
-  "main": "code.js",
+  "main": "build/main.js",
   "ui": "ui.html",
   "editorType": ["figma"],
   "documentAccess": "dynamic-page",

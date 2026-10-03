@@ -24,6 +24,7 @@ yarn-error.log
 coverage/
 /examples/react-aria-consumer/dist/
 /examples/figma-plugin/mangrove-variables.json
+/examples/figma-plugin/build/
 /.yarn
 .cache
 CLAUDE.md

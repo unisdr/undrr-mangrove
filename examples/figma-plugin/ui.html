@@ -83,9 +83,23 @@
     >
     <p></p>
     <button id="import" disabled>Import variables and styles</button>
+    <fieldset id="components" hidden>
+      <legend>Native components</legend>
+      <p>
+        Import one brand first, then build its components. Existing kit assets
+        are updated.
+      </p>
+    </fieldset>
+    <button id="build" disabled>Build selected components</button>
+    <button id="diagnostics" disabled>Focus diagnostics</button>
+    <button id="inspect">Inspect kit and fonts</button>
+    <button id="save-report" disabled>Save inspection report</button>
+    <button id="export-review">Export review PNG</button>
+    <button id="export-diagnostics">Export focus PNG</button>
     <pre id="log" hidden></pre>
     <script>
       let doc = null;
+      let inspection = null;
       const $ = id => document.getElementById(id);
 
       function log(text) {
@@ -118,7 +132,7 @@
           const input = document.createElement('input');
           input.type = 'checkbox';
           input.value = mode.id;
-          input.checked = true;
+          input.checked = doc.modes.length === 1 || mode.id === 'undrr';
           label.append(input, ` ${mode.name} (${mode.selector})`);
           box.append(label);
         });
@@ -146,6 +160,20 @@
         });
         stylesBox.hidden = !groups.size;
         $('effects-label').hidden = !(doc.styles?.effect || []).length;
+        const components = $('components');
+        components.querySelectorAll('label').forEach(l => l.remove());
+        (doc.components?.families || []).forEach(family => {
+          const label = document.createElement('label');
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.value = family.id;
+          input.checked = true;
+          label.append(input, ` ${family.name}`);
+          components.append(label);
+        });
+        components.hidden = !doc.components;
+        $('build').disabled = !doc.components;
+        $('diagnostics').disabled = false;
         $('import').disabled = false;
         log(
           `${doc.variables.length} variables, ${doc.modes.length} brands, ` +
@@ -178,12 +206,79 @@
         );
       });
 
+      function send(type, payload = {}) {
+        parent.postMessage({ pluginMessage: { type, ...payload } }, '*');
+        log('Working…');
+      }
+      function singleBrand() {
+        const selected = [...$('modes').querySelectorAll('input:checked')];
+        if (selected.length !== 1) {
+          log('Select one brand for component and diagnostic operations.');
+          return null;
+        }
+        return selected[0].value;
+      }
+      function download(bytes, type, name) {
+        const url = URL.createObjectURL(new Blob([bytes], { type }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = name;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+      $('inspect').onclick = () => send('inspect');
+      $('save-report').onclick = () =>
+        download(
+          JSON.stringify(inspection, null, 2),
+          'application/json',
+          'mangrove-kit-inspection.json'
+        );
+      $('build').onclick = () => {
+        const brand = singleBrand();
+        if (brand)
+          send('build-components', {
+            doc,
+            brand,
+            families: [
+              ...$('components').querySelectorAll('input:checked'),
+            ].map(i => i.value),
+          });
+      };
+      $('diagnostics').onclick = () => {
+        const brand = singleBrand();
+        if (brand) send('diagnostics', { doc, brand });
+      };
+      $('export-review').onclick = () =>
+        send('export-review', { name: 'Mangrove / Review' });
+      $('export-diagnostics').onclick = () =>
+        send('export-review', { name: 'Mangrove diagnostics / focus ring' });
+
       window.onmessage = event => {
         const msg = event.data.pluginMessage;
         if (!msg) return;
         $('import').disabled = false;
         if (msg.type === 'error') {
           log(`Error: ${msg.message}`);
+          return;
+        }
+        if (msg.type === 'inspection') {
+          inspection = msg.result;
+          $('save-report').disabled = false;
+          log(JSON.stringify(inspection, null, 2));
+          return;
+        }
+        if (msg.type === 'operation') {
+          log(JSON.stringify(msg.result, null, 2));
+          return;
+        }
+        if (msg.type === 'export') {
+          const r = msg.result;
+          download(
+            new Uint8Array(r.bytes),
+            'image/png',
+            `${r.name.replaceAll('/', '-')}.png`
+          );
+          log(`Exported ${r.name} (${r.width} × ${r.height}).`);
           return;
         }
         const r = msg.result;

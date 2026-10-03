@@ -1,4 +1,4 @@
-/* global figma, __html__ */
+/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
  * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
@@ -21,8 +21,250 @@ function post(type, payload) {
   figma.ui.postMessage(Object.assign({ type }, payload));
 }
 
+function validateMangroveImport(doc, selectedModeIds, selectedTextIds) {
+  const fail = message => {
+    throw new Error(`Import preflight: ${message}`);
+  };
+  const nonempty = value =>
+    typeof value === 'string' && value.trim().length > 0;
+  function unique(entries, kind) {
+    if (!Array.isArray(entries)) fail(`${kind} must be an array`);
+    const ids = new Set();
+    const names = new Set();
+    for (const entry of entries) {
+      if (!entry || !nonempty(entry.id) || !nonempty(entry.name))
+        fail(`${kind} needs nonempty IDs and names`);
+      if (ids.has(entry.id)) fail(`Duplicate ${kind} ID ${entry.id}`);
+      if (names.has(entry.name)) fail(`Duplicate ${kind} name ${entry.name}`);
+      ids.add(entry.id);
+      names.add(entry.name);
+    }
+    return ids;
+  }
+  if (!doc || !nonempty(doc.collection)) fail('collection must have a name');
+  const modes = unique(doc.modes, 'mode');
+  unique(doc.variables, 'variable');
+  if (!Array.isArray(selectedModeIds) || !selectedModeIds.length)
+    fail('Select at least one brand.');
+  if (new Set(selectedModeIds).size !== selectedModeIds.length)
+    fail('Duplicate selected brands');
+  for (const id of selectedModeIds)
+    if (!modes.has(id)) fail(`Unknown selected brand ${id}`);
+  const byName = new Map(
+    doc.variables.map(variable => [variable.name, variable])
+  );
+  function checkValues(spec, kind) {
+    if (
+      !spec.values ||
+      typeof spec.values !== 'object' ||
+      Array.isArray(spec.values)
+    )
+      fail(`${kind} ${spec.name} needs mode values`);
+    for (const id of Object.keys(spec.values))
+      if (!modes.has(id)) fail(`${kind} ${spec.name} has unknown mode ${id}`);
+  }
+  function checkBinding(name, type, owner) {
+    const target = byName.get(name);
+    if (!target) fail(`${owner}: missing binding variable ${name}`);
+    if (target.type !== type)
+      fail(`${owner}: binding ${name} needs ${type}, got ${target.type}`);
+  }
+  for (const spec of doc.variables) {
+    if (!['COLOR', 'FLOAT', 'STRING', 'BOOLEAN'].includes(spec.type))
+      fail(`${spec.name}: unsupported variable type ${spec.type}`);
+    checkValues(spec, 'Variable');
+    for (const [mode, value] of Object.entries(spec.values)) {
+      if (value && typeof value === 'object' && 'alias' in value) {
+        const target = byName.get(value.alias);
+        if (!target)
+          fail(`${spec.name} [${mode}]: alias target ${value.alias} missing`);
+        if (target.type !== spec.type)
+          fail(
+            `${spec.name} [${mode}]: alias target ${value.alias} has wrong type`
+          );
+        if (!target.values || target.values[mode] === undefined)
+          fail(
+            `${spec.name} [${mode}]: alias target ${value.alias} has no value`
+          );
+      } else if (
+        (spec.type === 'FLOAT' && !Number.isFinite(value)) ||
+        (spec.type === 'STRING' && typeof value !== 'string') ||
+        (spec.type === 'BOOLEAN' && typeof value !== 'boolean') ||
+        (spec.type === 'COLOR' &&
+          (!value ||
+            !['r', 'g', 'b', 'a'].every(
+              field =>
+                Number.isFinite(value[field]) &&
+                value[field] >= 0 &&
+                value[field] <= 1
+            )))
+      )
+        fail(`${spec.name} [${mode}]: invalid ${spec.type} value`);
+    }
+  }
+  for (const mode of modes) {
+    const visiting = new Set();
+    const visited = new Set();
+    function visit(spec) {
+      if (visited.has(spec.name)) return;
+      if (visiting.has(spec.name))
+        fail(`Alias cycle at ${spec.name} [${mode}]`);
+      visiting.add(spec.name);
+      const value = spec.values[mode];
+      if (value && typeof value === 'object' && 'alias' in value)
+        visit(byName.get(value.alias));
+      visiting.delete(spec.name);
+      visited.add(spec.name);
+    }
+    for (const spec of doc.variables) visit(spec);
+  }
+  const text = doc.styles ? doc.styles.text || [] : [];
+  const effects = doc.styles ? doc.styles.effect || [] : [];
+  if (!Array.isArray(text) || !Array.isArray(effects))
+    fail('Style definitions must be arrays');
+  unique([...text, ...effects], 'style');
+  if (selectedTextIds !== undefined) {
+    if (
+      !Array.isArray(selectedTextIds) ||
+      new Set(selectedTextIds).size !== selectedTextIds.length
+    )
+      fail('Text style selection must contain unique IDs');
+    const textIds = new Set(text.map(spec => spec.id));
+    for (const id of selectedTextIds)
+      if (!textIds.has(id)) fail(`Unknown selected text style ${id}`);
+  }
+  for (const spec of text) {
+    checkValues(spec, 'Text style');
+    checkBinding(
+      spec.bindings && spec.bindings.fontFamily,
+      'STRING',
+      spec.name
+    );
+    checkBinding(spec.bindings && spec.bindings.fontSize, 'FLOAT', spec.name);
+    for (const [mode, value] of Object.entries(spec.values)) {
+      if (
+        !value ||
+        !value.fontName ||
+        !nonempty(value.fontName.family) ||
+        !nonempty(value.fontName.style) ||
+        !Number.isFinite(value.fontSize) ||
+        value.fontSize <= 0
+      )
+        fail(`${spec.name} [${mode}]: invalid text style value`);
+    }
+  }
+  for (const spec of effects) {
+    checkValues(spec, 'Effect style');
+    for (const [mode, entries] of Object.entries(spec.values)) {
+      if (!Array.isArray(entries))
+        fail(`${spec.name} [${mode}]: effects must be an array`);
+      for (const entry of entries) {
+        if (!entry || !entry.effect)
+          fail(`${spec.name} [${mode}]: effect definition missing`);
+        for (const [field, name] of Object.entries(entry.bindings || {})) {
+          if (
+            !['color', 'radius', 'spread', 'offsetX', 'offsetY'].includes(field)
+          )
+            fail(`${spec.name}: unsupported effect binding ${field}`);
+          checkBinding(name, field === 'color' ? 'COLOR' : 'FLOAT', spec.name);
+        }
+      }
+    }
+  }
+}
+
+function mangroveAssetIndex(assets, key) {
+  const index = { byId: new Map(), byName: new Map(), key };
+  for (const asset of assets) rememberMangroveAsset(index, asset);
+  return index;
+}
+
+function rememberMangroveAsset(index, asset) {
+  for (const map of [index.byId, index.byName]) {
+    for (const [key, entries] of map) {
+      const remaining = entries.filter(entry => entry.id !== asset.id);
+      if (remaining.length) map.set(key, remaining);
+      else map.delete(key);
+    }
+  }
+  for (const [map, key] of [
+    [index.byId, mgReadIdentity(asset, index.key)],
+    [index.byName, asset.name],
+  ]) {
+    if (key) map.set(key, [...(map.get(key) || []), asset]);
+  }
+}
+
+function findMangroveAsset(index, spec, kind, type) {
+  const ids = index.byId.get(spec.id) || [];
+  const names = index.byName.get(spec.name) || [];
+  if (ids.length > 1 || names.length > 1)
+    throw new Error(`Import preflight: ambiguous ${kind} ${spec.name}`);
+  const asset = ids[0] || names[0];
+  if (!asset) return null;
+  if (ids[0] && names[0] && ids[0].id !== names[0].id)
+    throw new Error(
+      `Import preflight: ${kind} name ${spec.name} conflicts with its existing ID`
+    );
+  const owner = mgReadIdentity(asset, index.key);
+  if (owner && owner !== spec.id)
+    throw new Error(
+      `Import preflight: ${kind} ${spec.name} belongs to ${owner}`
+    );
+  const actualType = kind === 'variable' ? asset.resolvedType : asset.type;
+  if (actualType !== type)
+    throw new Error(
+      `Import preflight: ${kind} ${spec.name} changed type from ${actualType} to ${type}; migration required. Existing ID ${asset.id} was preserved.`
+    );
+  return asset;
+}
+
+async function preflightMangroveAssets(doc, textStyles, importEffects) {
+  const collections = (
+    await figma.variables.getLocalVariableCollectionsAsync()
+  ).filter(collection => collection.name === doc.collection);
+  if (collections.length > 1)
+    throw new Error(`Import preflight: ambiguous collection ${doc.collection}`);
+  const collection = collections[0];
+  if (
+    collection &&
+    new Set(collection.modes.map(mode => mode.name)).size !==
+      collection.modes.length
+  )
+    throw new Error(
+      `Import preflight: duplicate modes in collection ${doc.collection}`
+    );
+  const local = (await figma.variables.getLocalVariablesAsync()).filter(
+    variable => collection && variable.variableCollectionId === collection.id
+  );
+  const variables = mangroveAssetIndex(local, ID_KEY);
+  for (const spec of doc.variables)
+    findMangroveAsset(variables, spec, 'variable', spec.type);
+  if (!doc.styles) return;
+  const selectedText = (doc.styles.text || []).filter(spec =>
+    textStyles ? textStyles.includes(spec.id) : spec.recommended
+  );
+  const selectedEffects = importEffects ? doc.styles.effect || [] : [];
+  if (!selectedText.length && !selectedEffects.length) return;
+  const styles = mangroveAssetIndex(
+    [
+      ...(await figma.getLocalTextStylesAsync()),
+      ...(await figma.getLocalEffectStylesAsync()),
+    ],
+    STYLE_ID_KEY
+  );
+  for (const [kind, specs, type] of [
+    ['text style', selectedText, 'TEXT'],
+    ['effect style', selectedEffects, 'EFFECT'],
+  ]) {
+    for (const spec of specs) findMangroveAsset(styles, spec, kind, type);
+  }
+}
+
 async function findOrCreateCollection(name, firstModeName) {
   const collections = await figma.variables.getLocalVariableCollectionsAsync();
+  if (collections.filter(collection => collection.name === name).length > 1)
+    throw new Error(`Import preflight: ambiguous collection ${name}`);
   const existing = collections.find(c => c.name === name);
   if (existing) return { collection: existing, created: false };
   const collection = figma.variables.createVariableCollection(name);
@@ -31,7 +273,7 @@ async function findOrCreateCollection(name, firstModeName) {
 }
 
 function ensureModes(collection, modes, created) {
-  const modeIds = {};
+  const modeIds = Object.create(null);
   const errors = [];
 
   // Brand switcher: one brand into a one-mode collection overwrites that
@@ -85,7 +327,19 @@ async function importStyles(
   };
   const errors = [];
   const missingFonts = new Set();
-  if (!doc.styles) return { counts, errors, missingFonts: [] };
+  const createdStyleIds = [];
+  const updatedStyleIds = [];
+  const touchedStyleIds = new Set();
+  const removedStyleIds = [];
+  const retainedPartialStyleIds = [];
+  const trackedIds = () => ({
+    createdStyleIds,
+    updatedStyleIds,
+    touchedStyleIds: [...touchedStyleIds],
+    removedStyleIds,
+    retainedPartialStyleIds,
+  });
+  if (!doc.styles) return { counts, errors, missingFonts: [], ...trackedIds() };
   const textSpecs = (doc.styles.text || []).filter(spec =>
     selectedTextIds ? selectedTextIds.includes(spec.id) : spec.recommended
   );
@@ -160,12 +414,14 @@ async function importStyles(
       errors.push(`Could not list ${kind} styles: ${errorMessage(error)}`);
       continue;
     }
-    const byId = new Map(
-      local.map(style => [style.getPluginData(STYLE_ID_KEY), style])
-    );
-    const byName = new Map(local.map(style => [style.name, style]));
+    const index = mangroveAssetIndex(local, STYLE_ID_KEY);
     for (const spec of specs) {
-      let style = byId.get(spec.id) || byName.get(spec.name);
+      let style = findMangroveAsset(
+        index,
+        spec,
+        `${kind} style`,
+        kind === 'text' ? 'TEXT' : 'EFFECT'
+      );
       const existing = Boolean(style);
       try {
         const value = spec.values[modeId];
@@ -194,6 +450,9 @@ async function importStyles(
           });
         }
         style = style || create();
+        // Record retained writes even when a later setter fails. Font and
+        // binding preflight above does not touch the existing style.
+        touchedStyleIds.add(style.id);
         if (kind === 'text') {
           style.fontName = value.fontName;
           style.fontSize = value.fontSize;
@@ -205,17 +464,30 @@ async function importStyles(
         }
         style.name = spec.name;
         style.description = spec.description || '';
-        style.setPluginData(STYLE_ID_KEY, spec.id);
+        mgWriteIdentity(style, STYLE_ID_KEY, spec.id);
+        rememberMangroveAsset(index, style);
         counts[kind][existing ? 'updated' : 'created'] += 1;
+        (existing ? updatedStyleIds : createdStyleIds).push(style.id);
       } catch (error) {
         // Do not leave a new, partly configured style after a failed import.
-        if (style && !existing) style.remove();
+        if (style && !existing) {
+          try {
+            style.remove();
+            removedStyleIds.push(style.id);
+            touchedStyleIds.delete(style.id);
+          } catch (removeError) {
+            retainedPartialStyleIds.push(style.id);
+            errors.push(
+              `${spec.name}: partial style ${style.id} could not be removed: ${errorMessage(removeError)}`
+            );
+          }
+        }
         counts[kind].failed += 1;
         errors.push(`${spec.name}: ${errorMessage(error)}`);
       }
     }
   }
-  return { counts, errors, missingFonts: [...missingFonts] };
+  return { counts, errors, missingFonts: [...missingFonts], ...trackedIds() };
 }
 
 async function importVariables(
@@ -225,6 +497,8 @@ async function importVariables(
   textStyles,
   effects
 ) {
+  validateMangroveImport(doc, selectedModeIds, textStyles);
+  await preflightMangroveAssets(doc, textStyles, effects !== false);
   const modes = doc.modes.filter(m => selectedModeIds.includes(m.id));
   if (modes.length === 0) throw new Error('Select at least one brand.');
 
@@ -237,15 +511,12 @@ async function importVariables(
   const local = (await figma.variables.getLocalVariablesAsync()).filter(
     v => v.variableCollectionId === collection.id
   );
-  const byId = new Map();
-  const byName = new Map();
-  local.forEach(v => {
-    const id = v.getPluginData(ID_KEY);
-    if (id) byId.set(id, v);
-    byName.set(v.name, v);
-  });
+  const index = mangroveAssetIndex(local, ID_KEY);
 
   const counts = { created: 0, updated: 0, removed: 0, values: 0 };
+  const createdVariableIds = [];
+  const updatedVariableIds = [];
+  const removedVariableIds = [];
   const resolvedByName = new Map();
   const wanted = new Set();
 
@@ -253,13 +524,10 @@ async function importVariables(
   // so pass 2 can alias to any of them regardless of order.
   for (const spec of doc.variables) {
     wanted.add(spec.id);
-    let variable = byId.get(spec.id) || byName.get(spec.name);
-    if (variable && variable.resolvedType !== spec.type) {
-      variable.remove();
-      variable = null;
-    }
+    let variable = findMangroveAsset(index, spec, 'variable', spec.type);
     if (variable) {
       counts.updated += 1;
+      updatedVariableIds.push(variable.id);
       if (variable.name !== spec.name) variable.name = spec.name;
     } else {
       variable = figma.variables.createVariable(
@@ -268,9 +536,10 @@ async function importVariables(
         spec.type
       );
       counts.created += 1;
+      createdVariableIds.push(variable.id);
     }
     try {
-      variable.setPluginData(ID_KEY, spec.id);
+      mgWriteIdentity(variable, ID_KEY, spec.id);
       variable.description = spec.description || '';
       variable.hiddenFromPublishing = Boolean(spec.hiddenFromPublishing);
       variable.scopes = spec.scopes;
@@ -283,6 +552,7 @@ async function importVariables(
     } catch (error) {
       errors.push(`${spec.name}: ${errorMessage(error)}`);
     }
+    rememberMangroveAsset(index, variable);
     resolvedByName.set(spec.name, variable);
   }
 
@@ -312,11 +582,14 @@ async function importVariables(
   }
 
   const stale = local.filter(v => {
-    const id = v.getPluginData(ID_KEY);
+    const id = mgReadIdentity(v, ID_KEY);
     return id && !wanted.has(id) && !v.removed;
   });
   if (prune) {
-    stale.forEach(v => v.remove());
+    stale.forEach(v => {
+      v.remove();
+      removedVariableIds.push(v.id);
+    });
     counts.removed = stale.length;
   }
 
@@ -334,8 +607,14 @@ async function importVariables(
 
   return {
     collection: collection.name,
-    modes: modes.map(m => m.name),
+    collectionId: collection.id,
+    modeIds,
+    modes: modes.filter(mode => modeIds[mode.id]).map(mode => mode.name),
+    requestedModes: modes.map(mode => mode.name),
     counts,
+    createdVariableIds,
+    updatedVariableIds,
+    removedVariableIds,
     styles,
     stale: prune ? [] : stale.map(v => v.name),
     skipped: doc.skipped || [],
@@ -348,8 +627,32 @@ figma.ui.onmessage = async msg => {
     figma.closePlugin();
     return;
   }
-  if (msg.type !== 'import') return;
   try {
+    if (msg.type === 'inspect') {
+      post('inspection', {
+        result: await inspectMangroveKit({ checkFonts: true }),
+      });
+      return;
+    }
+    if (msg.type === 'diagnostics') {
+      post('operation', {
+        result: await createMangroveFocusDiagnostics(msg.doc, msg.brand),
+      });
+      return;
+    }
+    if (msg.type === 'build-components') {
+      post('operation', {
+        result: await buildMangroveComponents(msg.doc, msg.brand, msg.families),
+      });
+      return;
+    }
+    if (msg.type === 'export-review') {
+      post('export', {
+        result: await exportMangroveReview(msg.name, { scale: 2 }),
+      });
+      return;
+    }
+    if (msg.type !== 'import') return;
     const result = await importVariables(
       msg.doc,
       msg.modes,
