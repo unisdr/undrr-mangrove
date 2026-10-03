@@ -241,8 +241,11 @@ function createFigma(state) {
     listAvailableFontsAsync: async () => state.fonts,
     async loadFontAsync(font) {
       const key = `${font.family} ${font.style}`;
+      if (state.rejectedFonts.has(key)) {
+        // Real Figma can reject with a string, not an Error instance.
+        return Promise.reject(`Unavailable font ${key}`);
+      }
       if (
-        state.rejectedFonts.has(key) ||
         !state.fonts.some(
           entry =>
             entry.fontName.family === font.family &&
@@ -462,6 +465,13 @@ async function main() {
     );
     assert.strictEqual(r.styles.counts.text.failed, 3);
     assert.strictEqual(r.styles.counts.text.created, 9);
+    if (unavailable === 'load-rejected') {
+      assert(
+        r.errors.every(error =>
+          error.includes('Unavailable font Roboto Condensed Regular')
+        )
+      );
+    }
     assert.strictEqual(r.styles.counts.effect.created, 3);
     assert.strictEqual(state.variables.length, total);
     assert.strictEqual(

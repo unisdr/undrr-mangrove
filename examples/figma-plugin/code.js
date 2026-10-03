@@ -12,6 +12,11 @@ const STYLE_ID_KEY = 'mgStyleId';
 
 figma.showUI(__html__, { width: 440, height: 680, themeColors: true });
 
+// Figma API rejections can be strings rather than Error instances.
+function errorMessage(error) {
+  return error && error.message ? error.message : String(error);
+}
+
 function post(type, payload) {
   figma.ui.postMessage(Object.assign({ type }, payload));
 }
@@ -60,7 +65,7 @@ function ensureModes(collection, modes, created) {
           `or a Starter team allows only 1. Move it into a project in the ` +
           `Professional team and import again, or tick a single brand to ` +
           `use this file as a brand switcher. ` +
-          error.message
+          errorMessage(error)
       );
     }
   });
@@ -91,7 +96,7 @@ async function importStyles(
     try {
       fonts = await figma.listAvailableFontsAsync();
     } catch (error) {
-      errors.push(`Could not list fonts: ${error.message}`);
+      errors.push(`Could not list fonts: ${errorMessage(error)}`);
     }
   }
   async function loadFont(font) {
@@ -116,7 +121,9 @@ async function importStyles(
             await figma.loadFontAsync(font);
           } catch (error) {
             missingFonts.add(key);
-            throw new Error(`Could not load font "${key}": ${error.message}`);
+            throw new Error(
+              `Could not load font "${key}": ${errorMessage(error)}`
+            );
           }
         })()
       );
@@ -150,7 +157,7 @@ async function importStyles(
       local = await getLocal();
     } catch (error) {
       counts[kind].failed += specs.length;
-      errors.push(`Could not list ${kind} styles: ${error.message}`);
+      errors.push(`Could not list ${kind} styles: ${errorMessage(error)}`);
       continue;
     }
     const byId = new Map(
@@ -204,7 +211,7 @@ async function importStyles(
         // Do not leave a new, partly configured style after a failed import.
         if (style && !existing) style.remove();
         counts[kind].failed += 1;
-        errors.push(`${spec.name}: ${error.message}`);
+        errors.push(`${spec.name}: ${errorMessage(error)}`);
       }
     }
   }
@@ -274,7 +281,7 @@ async function importVariables(
         variable.removeVariableCodeSyntax('WEB');
       }
     } catch (error) {
-      errors.push(`${spec.name}: ${error.message}`);
+      errors.push(`${spec.name}: ${errorMessage(error)}`);
     }
     resolvedByName.set(spec.name, variable);
   }
@@ -299,7 +306,7 @@ async function importVariables(
         }
         counts.values += 1;
       } catch (error) {
-        errors.push(`${spec.name} [${mode.name}]: ${error.message}`);
+        errors.push(`${spec.name} [${mode.name}]: ${errorMessage(error)}`);
       }
     }
   }
@@ -357,6 +364,6 @@ figma.ui.onmessage = async msg => {
         (result.errors.length ? `, ${result.errors.length} errors` : '')
     );
   } catch (error) {
-    post('error', { message: error.message });
+    post('error', { message: errorMessage(error) });
   }
 };
