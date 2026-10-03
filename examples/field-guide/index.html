@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Mangrove · A field guide</title>
+    <link id="theme-css" rel="stylesheet" href="assets/undrr.css" />
+    <link rel="stylesheet" href="guide.css" />
+    <script src="guide.js" type="module"></script>
+  </head>
+  <body class="mg-guide">
+    <a class="mg-guide__skip" href="#book">Skip to the guide</a>
+    <header class="mg-guide__top">
+      <a class="mg-guide__wordmark" href="#start/undrr"
+        >mangrove<span>A field guide</span></a
+      >
+      <div class="mg-guide__tools">
+        <label for="theme">Property</label>
+        <select id="theme" aria-label="Property theme">
+          <option value="undrr">UNDRR</option>
+          <option value="preventionweb">PreventionWeb</option>
+          <option value="mcr">MCR2030</option>
+          <option value="irp">IRP</option>
+          <option value="delta">DELTA Resilience</option>
+        </select>
+        <button id="contents" aria-haspopup="dialog">
+          Contents <span aria-hidden="true">☰</span>
+        </button>
+      </div>
+    </header>
+    <main
+      id="book"
+      class="mg-guide__book"
+      tabindex="-1"
+      aria-label="Mangrove field guide"
+    >
+      <section
+        id="start"
+        class="mg-guide__page mg-guide__cover"
+        data-title="A shared language"
+      >
+        <div class="mg-guide__eyebrow">
+          UNDRR design system / Exploratory edition 01
+        </div>
+        <div class="mg-guide__cover-grid">
+          <div>
+            <h1>Many voices.<br />One shared<br /><em>language.</em></h1>
+            <p class="mg-guide__lede">
+              A field guide to the identities, foundations and patterns that
+              connect UNDRR’s digital experiences.
+            </p>
+            <button class="mg-guide__primary" data-go="identity">
+              Open the guide <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+          <div
+            class="mg-guide__ecosystem"
+            role="group"
+            aria-label="The five property identities connected by shared foundations"
+          >
+            <div class="mg-guide__orbit" aria-hidden="true"></div>
+            <div class="mg-guide__root">mg<span>Shared foundations</span></div>
+            <button
+              data-theme="undrr"
+              class="mg-guide__leaf mg-guide__leaf--one"
+            >
+              UNDRR<span>Corporate</span></button
+            ><button
+              data-theme="preventionweb"
+              class="mg-guide__leaf mg-guide__leaf--two"
+            >
+              PreventionWeb<span>Knowledge</span></button
+            ><button
+              data-theme="mcr"
+              class="mg-guide__leaf mg-guide__leaf--three"
+            >
+              MCR2030<span>Cities</span></button
+            ><button
+              data-theme="irp"
+              class="mg-guide__leaf mg-guide__leaf--four"
+            >
+              IRP<span>Recovery</span></button
+            ><button
+              data-theme="delta"
+              class="mg-guide__leaf mg-guide__leaf--five"
+            >
+              DELTA<span>Data</span>
+            </button>
+          </div>
+        </div>
+        <div class="mg-guide__cover-bottom">
+          <span>For designers, editors and developers</span
+          ><span>Identity → foundations → application</span>
+        </div>
+      </section>
+      <section
+        id="identity"
+        class="mg-guide__page"
+        data-title="One system, five identities"
+        hidden
+      >
+        <div class="mg-guide__eyebrow">01 / Identity</div>
+        <h1 class="mg-guide__chapter-title">
+          Family resemblance.<br />Room for character.
+        </h1>
+        <p class="mg-guide__lede">
+          A property changes the brand layer. The structure, language and
+          familiar interaction patterns stay connected.
+        </p>
+        <div id="identity-cards" class="mg-guide__identity-grid"></div>
+        <div class="mg-guide__two-col mg-guide__notes">
+          <div>
+            <h2 class="mg-guide__subheading">What we share</h2>
+            <p>
+              Typography roles, spacing, responsive grids and component
+              contracts. The Mangrove base sits beneath the UNDRR layer and each
+              property theme.
+            </p>
+          </div>
+          <div>
+            <h2 class="mg-guide__subheading">What can change</h2>
+            <p>
+              Brand colours and semantic treatments such as actions, tags and
+              heroes. Choose a property throughout this guide to see those
+              decisions in context.
+            </p>
+          </div>
+        </div>
+        <a
+          class="mg-guide__source"
+          href="https://mangrove.undrr.org/?path=/docs/brand-about-this-guide--docs"
+          >Read the existing web style guide ↗</a
+        >
+      </section>
+      <section
+        id="colour"
+        class="mg-guide__page"
+        data-title="Colour with a purpose"
+        hidden
+      >
+        <div class="mg-guide__eyebrow">02 / Colour</div>
+        <h1 class="mg-guide__chapter-title">Give colour a job.</h1>
+        <p class="mg-guide__lede">
+          Select a swatch to see its actual CSS value and usage. These colours
+          are read from the active theme, built from Mangrove’s YAML sources.
+        </p>
+        <div id="swatches" class="mg-guide__swatches"></div>
+        <div class="mg-guide__two-col mg-guide__notes">
+          <div>
+            <h2 class="mg-guide__subheading" id="swatch-title">
+              Primary action
+            </h2>
+            <p id="swatch-usage"></p>
+            <code id="swatch-code"></code
+            ><button id="copy-token" class="mg-guide__small-button">
+              Copy CSS declaration
+            </button>
+          </div>
+          <div>
+            <div id="contrast-sample" class="mg-guide__contrast">
+              Make the next step clear.
+            </div>
+            <p id="contrast-result"></p>
+            <p class="mg-guide__small">
+              Preview uses the selected background with the theme’s button text
+              colour. The ratio checks WCAG AA for normal text; it is one part
+              of an accessibility review.
+            </p>
+          </div>
+        </div>
+        <a
+          class="mg-guide__source"
+          href="https://mangrove.undrr.org/?path=/docs/design-decisions-colors--docs"
+          >Explore the full colour reference ↗</a
+        >
+      </section>
+      <section
+        id="type"
+        class="mg-guide__page"
+        data-title="Typography that travels"
+        hidden
+      >
+        <div class="mg-guide__eyebrow">03 / Typography</div>
+        <h1 class="mg-guide__chapter-title">A role for every voice.</h1>
+        <p class="mg-guide__lede">
+          Prose needs room to read. Interface labels need room to scan. Font
+          roles carry that intent across languages.
+        </p>
+        <div class="mg-guide__type-tools">
+          <label for="sample-text">Try your own heading</label
+          ><input
+            id="sample-text"
+            value="Building resilience together"
+            maxlength="90"
+          /><label for="language">Script</label
+          ><select id="language">
+            <option value="en">Latin</option>
+            <option value="ar">Arabic</option>
+          </select>
+        </div>
+        <div id="type-specimen" class="mg-guide__type-specimen">
+          <p class="mg-guide__display" id="display-text">
+            Building resilience together
+          </p>
+          <p id="body-text">
+            Better decisions begin with shared knowledge. Put the key message
+            first, then give people the detail they need to act.
+          </p>
+          <span class="mg-guide__ui" id="ui-text"
+            >Knowledge / Action / Resilience</span
+          >
+        </div>
+        <div class="mg-guide__roles">
+          <div>
+            <code>text · heading</code>
+            <p>
+              Roboto for Latin prose and headings. Noto Sans Arabic for Arabic
+              body text; Noto Kufi Arabic for headings.
+            </p>
+          </div>
+          <div>
+            <code>display · ui</code>
+            <p>
+              Roboto Condensed for Latin hero titles and scanned chrome. Arabic
+              display uses Noto Kufi Arabic; chrome uses Noto Sans Arabic.
+            </p>
+          </div>
+          <div>
+            <code>code</code>
+            <p>
+              The code role keeps technical examples distinct. Use role
+              properties in styles so language overrides remain connected.
+            </p>
+          </div>
+        </div>
+        <a
+          class="mg-guide__source"
+          href="https://mangrove.undrr.org/?path=/docs/design-decisions-fonts--docs"
+          >Open the font role reference ↗</a
+        >
+      </section>
+      <section
+        id="patterns"
+        class="mg-guide__page"
+        data-title="From foundations to pages"
+        hidden
+      >
+        <div class="mg-guide__eyebrow">04 / In practice</div>
+        <h1 class="mg-guide__chapter-title">The system in use.</h1>
+        <p class="mg-guide__lede">
+          The same component language can support a knowledge listing, an
+          editorial page or an action. Change the property and compare.
+        </p>
+        <div class="mg-guide__preview-tools">
+          <label for="pattern">Pattern</label
+          ><select id="pattern">
+            <option value="listing">Knowledge listing</option>
+            <option value="article">Editorial page</option>
+            <option value="action">Action and feedback</option></select
+          ><label for="viewport">Preview width</label
+          ><select id="viewport">
+            <option value="wide">Wide</option>
+            <option value="mobile">Mobile · 375px</option>
+          </select>
+        </div>
+        <div id="preview-wrap" class="mg-guide__preview-wrap">
+          <iframe
+            id="preview"
+            title="Mangrove page pattern using the active property stylesheet"
+            src="specimen.html?theme=undrr&amp;pattern=listing"
+          ></iframe>
+        </div>
+        <p class="mg-guide__small">
+          Illustrative content with real Mangrove button, tag and card classes.
+          The compact specimen header is a teaching aid. Production pages use
+          the canonical PageHeader and Footer.
+        </p>
+        <a
+          class="mg-guide__source"
+          href="https://mangrove.undrr.org/?path=/docs/example-page-template-example--docs"
+          >See complete production page recipes ↗</a
+        >
+      </section>
+      <section
+        id="voice"
+        class="mg-guide__page"
+        data-title="People before process"
+        hidden
+      >
+        <div class="mg-guide__eyebrow">05 / Voice and imagery</div>
+        <h1 class="mg-guide__chapter-title">Make the message<br />human.</h1>
+        <p class="mg-guide__lede">
+          Knowledgeable. Approachable. Collaborative. The visual system works
+          best when the words and images share those qualities.
+        </p>
+        <div class="mg-guide__editorial">
+          <div>
+            <span class="mg-guide__eyebrow">A useful direction</span>
+            <blockquote>
+              Help communities understand risk and take action.
+            </blockquote>
+            <p>
+              Lead with the reader’s need. Prefer concrete verbs, concise
+              sentences and positive framing of prevention and recovery.
+            </p>
+          </div>
+          <div>
+            <span class="mg-guide__eyebrow">An example edit</span>
+            <p class="mg-guide__before">
+              The operationalisation of disaster risk reduction capacity
+              development mechanisms.
+            </p>
+            <p class="mg-guide__after">
+              Build the skills to reduce disaster risk.
+            </p>
+            <p class="mg-guide__small">
+              Illustrative copy, using the existing brand and editorial
+              guidance.
+            </p>
+          </div>
+        </div>
+        <div class="mg-guide__roles">
+          <div>
+            <h2 class="mg-guide__subheading">Photography</h2>
+            <p>
+              Focus on people, prevention and recovery. Keep conference imagery
+              to a minimum. Include the photo credit and source.
+            </p>
+          </div>
+          <div>
+            <h2 class="mg-guide__subheading">Identity</h2>
+            <p>
+              Use approved artwork. Keep a clear area equal to the width of the
+              “U” around the UNDRR logo; use the inverse artwork on dark
+              surfaces.
+            </p>
+          </div>
+          <div>
+            <h2 class="mg-guide__subheading">Ownership</h2>
+            <p>
+              Keep the UN identity and Sendai Framework visible. Use the
+              canonical header and footer to carry the shared identity.
+            </p>
+          </div>
+        </div>
+        <a
+          class="mg-guide__source"
+          href="https://mangrove.undrr.org/?path=/docs/brand-brand-guidelines--docs"
+          >Read the brand guidelines ↗</a
+        >
+      </section>
+      <section
+        id="handoff"
+        class="mg-guide__page"
+        data-title="Design intent, working code"
+        hidden
+      >
+        <div class="mg-guide__eyebrow">06 / Handoff</div>
+        <h1 class="mg-guide__chapter-title">
+          Keep the meaning<br />all the way through.
+        </h1>
+        <p class="mg-guide__lede">
+          Choose a theme, name a semantic role, then use a documented component.
+          The design decision should survive the journey to code.
+        </p>
+        <ol class="mg-guide__flow">
+          <li>
+            <strong>Source</strong><code>tokens/*.yaml</code>
+            <p>Base + brand layers</p>
+          </li>
+          <li>
+            <strong>Translate</strong><code>Token generator</code>
+            <p>CSS + token dictionary</p>
+          </li>
+          <li>
+            <strong>Design</strong><code>Figma bridge</code>
+            <p>Variables and collections</p>
+          </li>
+          <li>
+            <strong>Apply</strong><code>CSS / React / Drupal</code>
+            <p>Shared component contracts</p>
+          </li>
+        </ol>
+        <div class="mg-guide__two-col">
+          <div>
+            <h2 class="mg-guide__subheading">Choose your route</h2>
+            <label for="integration">Integration</label
+            ><select id="integration">
+              <option value="html">HTML / Drupal markup</option>
+              <option value="react">React component</option>
+              <option value="css">Semantic CSS token</option>
+            </select>
+            <pre id="recipe"></pre>
+            <button id="copy-recipe" class="mg-guide__small-button">
+              Copy example
+            </button>
+          </div>
+          <div class="mg-guide__handoff-note">
+            <h2 class="mg-guide__subheading">Carry the contract with you</h2>
+            <p>
+              CSS colour tokens can be channel triplets or complete colour
+              expressions. The token reference below shows the correct syntax
+              for each format.
+            </p>
+            <p>
+              React imports use the published component subpath. CSS-only tags
+              remain plain markup. A component’s own style hooks are documented
+              separately from theme tokens.
+            </p>
+            <a
+              href="https://mangrove.undrr.org/?path=/docs/getting-started-integration-react-integration--docs"
+              >React integration ↗</a
+            ><br /><a
+              href="https://mangrove.undrr.org/?path=/docs/getting-started-ai-and-mcp-integration--docs"
+              >AI and MCP integration ↗</a
+            >
+          </div>
+        </div>
+        <p class="mg-guide__small">
+          The Figma bridge is part of this feature branch. This prototype reads
+          the YAML sources; it does not write to Figma or change any token.
+        </p>
+      </section>
+      <section
+        id="reference"
+        class="mg-guide__page"
+        data-title="A living token reference"
+        hidden
+      >
+        <div class="mg-guide__eyebrow">07 / Reference</div>
+        <h1 class="mg-guide__chapter-title">Find the decision.</h1>
+        <p class="mg-guide__lede">
+          Search the generated theme tokens. Select a row to copy a declaration
+          with the correct colour wrapping.
+        </p>
+        <label for="token-search">Search by name, value or description</label
+        ><input
+          id="token-search"
+          type="search"
+          placeholder="Try button, spacing or radius"
+        />
+        <p id="token-count" class="mg-guide__small"></p>
+        <div class="mg-guide__table-wrap">
+          <table>
+            <caption class="mg-guide__sr">
+              Theme tokens for the selected property
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Token / copy declaration</th>
+                <th scope="col">CSS value</th>
+                <th scope="col">Format</th>
+              </tr>
+            </thead>
+            <tbody id="token-rows"></tbody>
+          </table>
+        </div>
+        <p class="mg-guide__small">
+          Theme tokens only. Typography roles, data visualisation palettes,
+          Sendai ramps and component style hooks also exist outside this
+          dictionary. See their dedicated documentation.
+        </p>
+        <a class="mg-guide__source" href="tokens.json" download
+          >Download the generated token dictionary ↓</a
+        >
+      </section>
+      <section
+        id="next"
+        class="mg-guide__page mg-guide__closing"
+        data-title="Take it into your work"
+        hidden
+      >
+        <div class="mg-guide__eyebrow">08 / Continue exploring</div>
+        <h1 class="mg-guide__chapter-title">
+          One decision.<br />Many applications.
+        </h1>
+        <p class="mg-guide__lede">
+          Use this guide to discuss a direction. Use the component documentation
+          to build it.
+        </p>
+        <div class="mg-guide__roles">
+          <a
+            href="https://mangrove.undrr.org/?path=/docs/brand-brand-identity--docs"
+            ><h2 class="mg-guide__subheading">For designers ↗</h2>
+            <p>Brand identity, approved artwork and component treatments.</p></a
+          ><a
+            href="https://mangrove.undrr.org/?path=/docs/brand-brand-guidelines--docs"
+            ><h2 class="mg-guide__subheading">For editors ↗</h2>
+            <p>Voice, imagery, attribution and ownership.</p></a
+          ><a
+            href="https://mangrove.undrr.org/?path=/docs/getting-started-getting-started-guide--docs"
+            ><h2 class="mg-guide__subheading">For developers ↗</h2>
+            <p>Integration, page recipes and the component catalogue.</p></a
+          >
+        </div>
+        <button id="print" class="mg-guide__primary">
+          Print / save as PDF
+        </button>
+        <p class="mg-guide__small">
+          Print includes every chapter in the currently selected property.
+          Expanded token search results can run over several pages.
+        </p>
+        <div class="mg-guide__notes">
+          <h2 class="mg-guide__subheading">About this exploration</h2>
+          <p>
+            Inspired by the DELTA Resilience brand book’s guided reading and
+            application examples. Mangrove’s existing documentation and token
+            sources remain authoritative. This is an exploratory interface, with
+            illustrative content and no new brand approvals.
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="mg-guide__nav">
+      <button id="prev" aria-label="Previous chapter">
+        ← <span>Previous</span>
+      </button>
+      <div>
+        <span id="chapter-name">A shared language</span
+        ><span id="page-count">01 / 09</span>
+      </div>
+      <button id="next-page" aria-label="Next chapter">
+        <span>Next</span> →
+      </button>
+      <div class="mg-guide__progress" id="progress"></div>
+    </footer>
+    <dialog id="contents-dialog">
+      <div class="mg-guide__dialog-head">
+        <h2>In this guide</h2>
+        <button id="close-contents" aria-label="Close contents">×</button>
+      </div>
+      <nav id="chapter-links" aria-label="Chapters"></nav>
+      <p class="mg-guide__small">
+        Use ← and → to turn chapters. Each chapter and property has its own
+        shareable link.
+      </p>
+    </dialog>
+    <div
+      id="status"
+      class="mg-guide__status"
+      role="status"
+      aria-live="polite"
+    ></div>
+    <noscript
+      ><p>
+        This interactive exploration needs JavaScript.
+        <a href="https://mangrove.undrr.org/">Read the Mangrove documentation</a
+        >.
+      </p></noscript
+    >
+  </body>
+</html>

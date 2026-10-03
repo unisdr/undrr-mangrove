@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mangrove pattern specimen</title>
+    <link id="specimen-theme" rel="stylesheet" href="assets/undrr.css" />
+    <style>
+      body {
+        margin: 0;
+      }
+      .mg-specimen {
+        max-width: 1050px;
+        margin: auto;
+        padding: 24px;
+      }
+      .mg-specimen__top {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid #d9dfdf;
+      }
+      .mg-specimen__top img {
+        width: 130px;
+        height: auto;
+      }
+      .mg-specimen__top span {
+        font: 700 15px var(--mg-font-family-ui);
+      }
+      .mg-specimen h1 {
+        font-size: 30px;
+        margin: 16px 0;
+      }
+      .mg-specimen__intro {
+        max-width: 58ch;
+        margin-bottom: 24px;
+      }
+      .mg-specimen__cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .mg-specimen__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 20px 0;
+      }
+      .mg-specimen__article {
+        max-width: 66ch;
+      }
+      .mg-specimen__article p {
+        margin: 18px 0;
+      }
+      .mg-specimen__article h2 {
+        font-size: 23px;
+        margin-top: 28px;
+      }
+      .mg-specimen__notice {
+        border-inline-start: 4px solid var(--mg-color-button-background);
+        padding: 12px 20px;
+        background: rgb(var(--mg-color-neutral-25));
+      }
+      .mg-specimen :focus-visible {
+        outline: 3px solid var(--mg-color-button-background);
+        outline-offset: 3px;
+      }
+      .mg-specimen [hidden] {
+        display: none;
+      }
+      @media print {
+        .mg-specimen {
+          padding: 12px;
+          font-size: 13px;
+        }
+        .mg-specimen__top {
+          margin-bottom: 16px;
+          padding-bottom: 12px;
+        }
+        .mg-specimen__top img {
+          width: 100px;
+        }
+        .mg-specimen h1 {
+          font-size: 24px;
+          margin: 12px 0;
+        }
+        .mg-specimen__intro {
+          margin-bottom: 16px;
+        }
+        .mg-specimen__cards {
+          gap: 12px;
+        }
+        .mg-specimen .mg-card__content {
+          padding: 12px;
+        }
+        .mg-specimen .mg-card__title {
+          font-size: 18px;
+        }
+        .mg-specimen .mg-card__summary {
+          font-size: 13px;
+        }
+      }
+      @media (max-width: 600px) {
+        .mg-specimen__cards {
+          grid-template-columns: 1fr;
+        }
+        .mg-specimen {
+          padding: 20px;
+        }
+        .mg-specimen__top {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body class="mg-body">
+    <main class="mg-specimen" aria-label="Page pattern specimen">
+      <header class="mg-specimen__top">
+        <img src="assets/undrr-logo-blue.svg" alt="UNDRR" /><span
+          id="property-name"
+          >UNDRR / Illustrative content</span
+        >
+      </header>
+      <section id="listing">
+        <span class="mg-tag">Knowledge</span>
+        <h1>Knowledge into action.</h1>
+        <p class="mg-specimen__intro">
+          Tools and ideas to help communities understand risk and build
+          resilience.
+        </p>
+        <div class="mg-specimen__cards">
+          <article class="mg-card mg-card__vc">
+            <div class="mg-card__content">
+              <div class="mg-card__meta">
+                <a class="mg-card__label mg-card__label--active" href="#article"
+                  >Guide</a
+                >
+              </div>
+              <header class="mg-card__title">
+                <a href="#article">Understand local risk</a>
+              </header>
+              <p class="mg-card__summary">
+                Start with the evidence and the people who know the place.
+              </p>
+              <a
+                class="mg-button mg-button-cta mg-button-primary"
+                href="#article"
+                >Read the guide</a
+              >
+            </div>
+          </article>
+          <article class="mg-card mg-card__vc">
+            <div class="mg-card__content">
+              <div class="mg-card__meta">
+                <a class="mg-card__label mg-card__label--active" href="#article"
+                  >Practice</a
+                >
+              </div>
+              <header class="mg-card__title">
+                <a href="#article">Plan for resilience</a>
+              </header>
+              <p class="mg-card__summary">
+                Connect shared knowledge to practical decisions.
+              </p>
+              <a
+                class="mg-button mg-button-cta mg-button-primary"
+                href="#article"
+                >Explore the practice</a
+              >
+            </div>
+          </article>
+          <article class="mg-card mg-card__vc">
+            <div class="mg-card__content">
+              <div class="mg-card__meta">
+                <a class="mg-card__label mg-card__label--active" href="#article"
+                  >Resource</a
+                >
+              </div>
+              <header class="mg-card__title">
+                <a href="#article">Work together</a>
+              </header>
+              <p class="mg-card__summary">
+                Make space for the experience of communities and partners.
+              </p>
+              <a
+                class="mg-button mg-button-cta mg-button-primary"
+                href="#article"
+                >View resources</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+      <section id="article" class="mg-specimen__article" hidden>
+        <span class="mg-tag mg-tag--secondary">Practice note</span>
+        <h1>Build the skills to reduce risk.</h1>
+        <p>
+          Resilience starts with people. Shared knowledge helps communities
+          understand the risks they face and choose practical next steps.
+        </p>
+        <div class="mg-specimen__notice">
+          Bring local experience into the conversation from the start.
+        </div>
+        <h2>Start with a shared question</h2>
+        <p>
+          What matters most to the people who live and work here? Listen to
+          their experience, then connect it with the evidence.
+        </p>
+        <a class="mg-button mg-button-primary mg-button-outline" href="#listing"
+          >Explore more resources</a
+        >
+      </section>
+      <section id="action" hidden>
+        <span class="mg-tag">Get involved</span>
+        <h1>Choose a clear next step.</h1>
+        <p class="mg-specimen__intro">
+          Give the primary action a specific label. Keep a supporting action
+          visually secondary.
+        </p>
+        <div class="mg-specimen__actions">
+          <button id="save" class="mg-button mg-button-primary">
+            Save this resource</button
+          ><a
+            class="mg-button mg-button-secondary mg-button-outline"
+            href="#listing"
+            >Browse resources</a
+          >
+        </div>
+        <p id="feedback" role="status" aria-live="polite">
+          Demo only. Nothing is sent or stored.
+        </p>
+      </section>
+    </main>
+    <script>
+      const parameters = new URLSearchParams(location.search);
+      const brands = {
+        undrr: 'UNDRR',
+        preventionweb: 'PreventionWeb',
+        mcr: 'MCR2030',
+        irp: 'IRP',
+        delta: 'DELTA Resilience',
+      };
+      const theme = Object.hasOwn(brands, parameters.get('theme'))
+        ? parameters.get('theme')
+        : 'undrr';
+      document.body.className =
+        'mg-body' + (theme === 'undrr' ? '' : ' mg-theme-' + theme);
+      document.getElementById('specimen-theme').href =
+        'assets/' + theme + '.css';
+      document.getElementById('property-name').textContent =
+        brands[theme] + ' / Illustrative content';
+      const ids = ['listing', 'article', 'action'];
+      const initial = ids.includes(parameters.get('pattern'))
+        ? parameters.get('pattern')
+        : 'listing';
+      function showPattern() {
+        const hash = location.hash.slice(1);
+        const selected = ids.includes(hash) ? hash : initial;
+        ids.forEach(id => {
+          document.getElementById(id).hidden = id !== selected;
+        });
+        document.title = brands[theme] + ' · ' + selected + ' specimen';
+      }
+      window.addEventListener('hashchange', showPattern);
+      document.getElementById('save').addEventListener('click', () => {
+        document.getElementById('feedback').textContent =
+          'Resource saved for this demo session. Nothing is sent or stored.';
+        document.getElementById('save').textContent = 'Saved';
+        document.getElementById('save').disabled = true;
+      });
+      showPattern();
+    </script>
+  </body>
+</html>

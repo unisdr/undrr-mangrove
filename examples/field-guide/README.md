@@ -1,0 +1,119 @@
+# Mangrove field guide exploration
+
+A standalone interactive companion to Mangrove’s existing Storybook brand and
+integration documentation. Inspired by the page-by-page DELTA Resilience brand
+book in `delta-pw/_docs/brand/brand-book/index.html` (reference branch
+`docs/logo-exploration`, inspected at brand-book commit `62276621`). No Delta
+artwork, animation code or generated lookbook images are copied.
+
+This work starts from `spike/figma-token-bridge` at `f3531558`, in the separate
+branch `spike/mangrove-field-guide`. It changes no existing component or token.
+
+## Run
+
+From the repository root, with the repository’s dependencies installed:
+
+```sh
+yarn build:field-guide
+yarn example:field-guide:serve
+```
+
+Open <http://127.0.0.1:6117/>. The server stays running until stopped. The
+generated `examples/field-guide/dist/` directory is ignored by Git. To use a
+different port:
+
+```sh
+node scripts/serve-storybook.mjs examples/field-guide/dist 6120
+```
+
+The build uses the existing token generator and Sass entry points to produce
+the five property stylesheets and the full theme-token dictionary. Generated
+token partials are written only inside this checkout. Rebuild after changing
+source files or YAML tokens; this example has no watch mode.
+
+Serve `dist/` over HTTP, since the guide fetches `tokens.json`. Its files can be
+copied as a directory to any static host. Font faces retain Mangrove’s existing
+UNDRR asset CDN URLs, so exact typography needs access to that CDN. Other assets
+are included locally. There are no new runtime packages, analytics or storage.
+
+## Explore
+
+| Before                                       | After                                                                                                                                                 |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DELTA’s linear brand-book reference          | Nine Mangrove chapters: introduction, identities, colour, type, patterns, voice, handoff, tokens and next steps                                       |
+| One project identity                         | UNDRR, PreventionWeb, MCR2030, IRP and DELTA Resilience, with a persistent property selector                                                          |
+| Static palette examples                      | Semantic swatches, correct CSS expressions, copy actions and a live WCAG contrast pairing                                                             |
+| Static type samples                          | Editable specimens, Latin/Arabic language boundaries and role-based typography                                                                        |
+| Application lookbook                         | Listing, editorial and action specimens using real Mangrove styles and current card/button/tag markup; wide/mobile previews and working demo feedback |
+| Separate design and implementation reference | YAML-to-CSS/Figma/component overview, HTML/React/CSS examples and searchable generated tokens with descriptions, value formats, copying and download  |
+| Sequential reading                           | Chapter contents dialog, keyboard arrows, stable `#chapter/property` links, browser history, keyboard focus and skip navigation                       |
+| Screen-only prototype                        | Responsive layout, reduced-motion support and all-chapter browser printing with compact specimen styles                                               |
+
+Examples:
+
+- `/#colour/delta`
+- `/#type/preventionweb`
+- `/#patterns/mcr`
+- `/#reference/irp`
+
+Arrow keys turn chapters except inside text fields, selects or the contents
+dialog. Escape dismisses the dialog. Copying requires a browser secure context
+(localhost qualifies); failures show a message so the visible example can be
+copied manually.
+
+The print action uses the current property and includes all chapters. The
+reference table follows its current search query. This is a browser print view,
+not a separately typeset publication.
+
+## Sources and scope
+
+- `stories/Documentation/Brand/{AboutThisGuide,BrandGuidelines,CommonPatterns}.mdx`
+- `stories/Documentation/Brand/data/themes.js`
+- `stories/Documentation/ReactIntegration.mdx`
+- `docs/AI-MCP-INTEGRATION.md`
+- `tokens/*.yaml` and `scripts/build-tokens.cjs`
+- `stories/assets/scss/{style*,_variables,_fonts}.scss`
+- Current `VerticalCard`, `cardParts`, `CtaButton` and `Tag` markup
+
+The existing documentation and tokens remain authoritative. Five property
+identities are layered over the Mangrove base; the base is not a sixth property.
+The token dictionary intentionally excludes component style hooks, typography
+roles defined in Sass, Sendai ramps and data visualisation palettes.
+
+The page specimens contain illustrative content and a compact teaching header,
+not the complete official page shell. The guide links to the production recipes
+and canonical PageHeader/Footer documentation. Brand marks use the existing
+UNDRR SVG only. This exploration grants no new artwork or identity approval.
+
+The Figma bridge chapter describes the branch’s existing workflow. The guide
+does not read or write a Figma file. Figma decisions can continue independently.
+
+## Possible next decisions
+
+- Keep this as a standalone field guide, or integrate chapters into Storybook.
+- Decide whether the main audience is designers/editors, developers, or both.
+- Add selected real page applications once the reading format is agreed.
+- If promoted to maintained documentation, automate the build and check guide
+  links, token freshness and browser interactions in CI.
+
+No deployment or pull request is required for this local exploration.
+
+## Validation performed
+
+- Built all five property bundles and the 202-token dictionary successfully.
+- Passed scoped ESLint, Prettier, JavaScript syntax and Git whitespace checks.
+- Reviewed desktop and 390px mobile screenshots; checked theme switching,
+  shared links, search (including no results), the contents dialog, Escape,
+  keyboard navigation and skip focus without changing the active chapter.
+- Confirmed Arabic display/body roles resolve to Noto Kufi Arabic and Noto Sans
+  Arabic, with right-to-left direction.
+- Ran axe 4.12 on all nine chapters with the UNDRR theme: zero violations in
+  each. Also checked the DELTA action specimen, including its save feedback.
+  Symbol-only navigation controls remain automated contrast checks marked
+  incomplete; a scan is not an accessibility certification.
+- Rendered and visually inspected the browser print output: nine pages with a
+  two-token reference filter, including complete pattern and handoff pages.
+  An unfiltered token appendix is intentionally longer.
+
+The Sass build emits the repository’s existing syndication-search deprecation
+warning. The guide adds no suppression for that component.
