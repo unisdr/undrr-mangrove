@@ -415,6 +415,7 @@ function environment(doc, options = {}) {
           'width',
           'height',
           'visible',
+          'clipsContent',
           'fills',
           'strokes',
           'effects',
@@ -559,6 +560,353 @@ async function main() {
     fs.readFileSync(path.join(DIR, 'mangrove-variables.json'), 'utf8')
   );
   assert(doc.components?.families.length, 'Build updated token JSON first');
+  {
+    const {
+      buildFigmaVariables,
+    } = require('../../../scripts/build-figma-tokens.cjs');
+    const build = () => buildFigmaVariables();
+    const helperName = 'component/textarea/default-block-size';
+    const current = build();
+    const height = current.variables.find(
+      variable => variable.name === helperName
+    );
+    assert(height, 'Textarea source height helper is missing');
+    assert.deepStrictEqual(height.scopes, ['WIDTH_HEIGHT']);
+    assert.deepStrictEqual(height.codeSyntax, {});
+    assert(Object.values(height.values).every(value => value === 88.1));
+    const originalRead = fs.readFileSync;
+    function withSource(suffix, replace, check) {
+      fs.readFileSync = function (file, ...args) {
+        const result = originalRead.call(this, file, ...args);
+        return typeof file === 'string' && file.endsWith(suffix)
+          ? replace(result)
+          : result;
+      };
+      try {
+        check();
+      } finally {
+        fs.readFileSync = originalRead;
+      }
+    }
+    const jsx = '/stories/Components/Forms/Textarea/Textarea.jsx';
+    const form = '/stories/Components/Forms/_form-base.scss';
+    withSource(
+      jsx,
+      source => source.replace('rows = 4,', 'rows = 1,'),
+      () => {
+        const oneRow = build().variables.find(
+          variable => variable.name === helperName
+        );
+        assert(Object.values(oneRow.values).every(value => value === 32.9));
+      }
+    );
+    const guardedChanges = [
+      [
+        jsx,
+        source => source.replace('rows = 4,', 'rows = 0,'),
+        /default rows must be positive/,
+      ],
+      [
+        jsx,
+        source => source.replace('{error && errorText && (', '{errorText && ('),
+        /no longer matches/,
+      ],
+      [
+        form,
+        source => source.replace('height: auto;', 'height: 200px;'),
+        /no longer matches/,
+      ],
+      [
+        form,
+        source =>
+          source.replace(
+            '.mg-form-textarea {',
+            '.mg-form-textarea {\n  line-height: 2;'
+          ),
+        /overrides typography or value colour/,
+      ],
+      [
+        form,
+        source =>
+          source.replace(
+            '.mg-form-textarea {',
+            '.mg-form-textarea {\n  color: #123;'
+          ),
+        /overrides typography or value colour/,
+      ],
+      [
+        form,
+        source => {
+          const start = source.indexOf('.mg-form-textarea {');
+          return (
+            source.slice(0, start) +
+            source
+              .slice(start)
+              .replace('var(--mg-color-red-900)', 'var(--mg-color-red-600)')
+          );
+        },
+        /no longer matches/,
+      ],
+    ];
+    for (const [file, replace, error] of guardedChanges)
+      withSource(file, replace, () => assert.throws(build, error));
+    console.log(
+      'ok  Textarea height follows JSX rows and source guards reject changed geometry, typography and error treatment'
+    );
+  }
+  {
+    const env = environment(doc, {
+      rejectedFonts: ['RobotoCondensed Regular', 'RobotoCondensed Bold'],
+    });
+    const helperName = 'component/textarea/default-block-size';
+    await importFoundation(env, doc);
+    const first = await env.call('buildMangroveComponents', doc, 'undrr', [
+      'textarea',
+    ]);
+    assert.strictEqual(first.errors.length, 0, first.errors.join('\n'));
+    assert.strictEqual(first.families.length, 1);
+    const built = first.families[0];
+    assert.strictEqual(built.id, 'textarea');
+    assert.strictEqual(built.variantIds.length, 6);
+    const variables = new Map(
+      env.state.variables.map(variable => [variable.name, variable])
+    );
+    const set = env.state.nodes.get(built.setId);
+    const definitions = set.componentPropertyDefinitions;
+    const property = name =>
+      Object.keys(definitions).find(key => key.startsWith(`${name}#`));
+    for (const name of ['Label', 'Value', 'Help text', 'Error message']) {
+      assert(property(name), `Textarea ${name} text property missing`);
+      assert.strictEqual(definitions[property(name)].type, 'TEXT');
+    }
+    for (const name of ['Show label', 'Show help', 'Show error', 'Required']) {
+      assert(property(name), `Textarea ${name} visibility property missing`);
+      assert.strictEqual(definitions[property(name)].type, 'BOOLEAN');
+    }
+    assert.strictEqual(definitions[property('Required')].defaultValue, false);
+    const expected = {
+      default: [
+        'form-input/border-color',
+        'form-input/background',
+        'color/neutral-500',
+      ],
+      filled: [
+        'form-input/border-color',
+        'form-input/background--focus',
+        'component/text-input/browser-fieldtext',
+      ],
+      focused: [
+        'color/form-focus',
+        'form-input/background--focus',
+        'color/neutral-500',
+      ],
+      invalid: ['color/red-900', 'form-input/background', 'color/neutral-500'],
+      invalidfocused: [
+        'color/form-focus',
+        'form-input/background--focus',
+        'color/neutral-500',
+      ],
+      disabled: ['color/neutral-400', 'color/white', 'color/neutral-400'],
+    };
+    const find = (node, name) => node.findAll(child => child.name === name)[0];
+    for (const item of built.variantIds) {
+      const component = env.state.nodes.get(item.nodeId);
+      const state = item.id.slice('textarea.'.length);
+      const control = find(component, 'mg-form-textarea');
+      const value = find(component, 'mg-form-textarea__value');
+      assert(control && value, `Textarea ${state} control is missing`);
+      assert.strictEqual(control.height, 88.1);
+      assert.strictEqual(
+        control.boundVariables.height.id,
+        variables.get(helperName).id
+      );
+      assert.strictEqual(control.layoutMode, 'VERTICAL');
+      assert.strictEqual(control.primaryAxisAlignItems, 'MIN');
+      assert.strictEqual(control.clipsContent, true);
+      assert.strictEqual(control.paddingTop, 6.25);
+      assert.strictEqual(control.paddingBottom, 6.25);
+      assert.strictEqual(control.strokeWeight, 1);
+      assert.strictEqual(value.textAutoResize, 'HEIGHT');
+      assert.strictEqual(value.layoutSizingHorizontal, 'FILL');
+      assert.strictEqual(value.lineHeight.unit, 'PERCENT');
+      assert.strictEqual(value.lineHeight.value, 115);
+      assert.strictEqual(
+        value.componentPropertyReferences.characters,
+        property('Value')
+      );
+      const [border, fill, text] = expected[state];
+      assert.strictEqual(
+        control.strokes[0].boundVariables.color.id,
+        variables.get(border).id
+      );
+      assert.strictEqual(
+        control.fills[0].boundVariables.color.id,
+        variables.get(fill).id
+      );
+      assert.strictEqual(
+        value.fills[0].boundVariables.color.id,
+        variables.get(text).id
+      );
+      assert.strictEqual(
+        Boolean(find(component, 'mg-form-error')),
+        state.startsWith('invalid')
+      );
+      assert.strictEqual(
+        Boolean(control.effectStyleId),
+        state.includes('focused')
+      );
+    }
+    const editable = [...env.state.nodes.values()].find(
+      node =>
+        identity(node, 'mgKitId') ===
+        'review/textarea/specimen/multiline/instance'
+    );
+    assert(editable, 'Textarea multiline review instance missing');
+    const specimen = doc.components.families.find(
+      family => family.id === 'textarea'
+    ).review.specimens[0];
+    assert.strictEqual(
+      editable.componentProperties[property('Value')].value,
+      specimen.properties.Value
+    );
+    assert(specimen.properties.Value.includes('\n'));
+    assert(
+      specimen.properties.Value.split('\n').length > 4,
+      'Overflow specimen must exceed the default row count before wrapping'
+    );
+    assert.strictEqual(
+      editable.componentProperties[property('Required')].value,
+      true
+    );
+    assert.strictEqual(
+      editable.parent.width -
+        editable.parent.paddingLeft -
+        editable.parent.paddingRight,
+      240
+    );
+    assert.strictEqual(editable.layoutSizingHorizontal, 'FILL');
+    assert.strictEqual(find(editable, 'mg-form-textarea').clipsContent, true);
+    assert.strictEqual(
+      find(editable, 'mg-form-textarea__value').textAutoResize,
+      'HEIGHT'
+    );
+    editable.setProperties({
+      [property('Value')]: 'First line\nSecond line\nThird line',
+      [property('Required')]: false,
+      [property('Show help')]: false,
+    });
+    const owned = ownership(env.state);
+    const second = await env.call('buildMangroveComponents', doc, 'undrr', [
+      'textarea',
+    ]);
+    assert.strictEqual(second.errors.length, 0, second.errors.join('\n'));
+    assert.strictEqual(second.createdNodeIds.length, 0);
+    assert.deepStrictEqual(ownership(env.state), owned);
+    assert.deepStrictEqual(
+      copy(second.families[0].propertyIds),
+      copy(built.propertyIds)
+    );
+    assert.strictEqual(
+      editable.componentProperties[property('Value')].value,
+      'First line\nSecond line\nThird line'
+    );
+    assert.strictEqual(
+      editable.componentProperties[property('Required')].value,
+      false
+    );
+    assert.strictEqual(
+      editable.componentProperties[property('Show help')].value,
+      false
+    );
+    console.log(
+      'ok  native Textarea builder binds measured geometry, six source states and multiline 240px review without Condensed fonts; reimport preserves IDs and text/visibility edits'
+    );
+  }
+  {
+    for (const properties of [
+      { Required: 'true' },
+      { Missing: 'value' },
+      { Value: false },
+    ]) {
+      const malformed = copy(doc);
+      malformed.components.families.find(
+        family => family.id === 'textarea'
+      ).review.specimens[0].properties = properties;
+      const env = environment(malformed);
+      await importFoundation(env, malformed);
+      const styleCount = env.state.styles.length;
+      const result = await env.call(
+        'buildMangroveComponents',
+        malformed,
+        'undrr',
+        ['textarea']
+      );
+      assert.strictEqual(result.families.length, 0);
+      assert.strictEqual(
+        env.figma.currentPage.children.length,
+        0,
+        'Review property preflight must reject before canvas writes'
+      );
+      assert.strictEqual(
+        env.state.styles.length,
+        styleCount,
+        'Review property preflight must reject before style writes'
+      );
+      assert(
+        result.errors.some(error =>
+          error.includes('must match a named TEXT or BOOLEAN property')
+        )
+      );
+    }
+    console.log(
+      'ok  review specimen preflight rejects unknown properties and wrong TEXT/BOOLEAN values before canvas or style writes'
+    );
+  }
+  {
+    const env = environment(doc);
+    await importFoundation(env, doc);
+    const built = await env.call('buildMangroveComponents', doc, 'undrr', [
+      'button',
+    ]);
+    assert.strictEqual(built.errors.length, 0, built.errors.join('\n'));
+    let lists = 0;
+    let loads = 0;
+    const listFonts = env.figma.listAvailableFontsAsync;
+    env.figma.listAvailableFontsAsync = async () => {
+      lists += 1;
+      return listFonts();
+    };
+    env.figma.loadFontAsync = async () => {
+      loads += 1;
+      throw 'Mock desktop font loading failure';
+    };
+    await env.state.handler({ type: 'inspect' });
+    assert.strictEqual(env.state.lastMessage.type, 'inspection');
+    assert.strictEqual(env.state.lastMessage.result.fonts, null);
+    assert(env.state.lastMessage.result.nodes.length > 0);
+    assert.strictEqual(
+      lists,
+      0,
+      'Structural inspection must not enumerate fonts'
+    );
+    assert.strictEqual(loads, 0, 'Structural inspection must not load fonts');
+    await env.state.handler({ type: 'inspect', checkFonts: true });
+    assert.strictEqual(env.state.lastMessage.type, 'inspection');
+    assert.strictEqual(lists, 1);
+    assert.strictEqual(
+      loads,
+      6,
+      'Opt-in font checks probe both source families'
+    );
+    assert.strictEqual(env.state.lastMessage.result.fonts.loads.length, 6);
+    assert(
+      env.state.lastMessage.result.fonts.loads.every(entry => !entry.loaded),
+      'Font failures remain reported without failing structural inspection'
+    );
+    console.log(
+      'ok  desktop inspection skips font APIs by default and reports explicit font probes independently'
+    );
+  }
   {
     const env = environment(doc);
     await importFoundation(env, doc);

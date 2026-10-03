@@ -630,7 +630,9 @@ figma.ui.onmessage = async msg => {
   try {
     if (msg.type === 'inspect') {
       post('inspection', {
-        result: await inspectMangroveKit({ checkFonts: true }),
+        result: await inspectMangroveKit({
+          checkFonts: msg.checkFonts === true,
+        }),
       });
       return;
     }

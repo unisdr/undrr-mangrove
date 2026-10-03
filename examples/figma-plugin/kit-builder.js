@@ -209,6 +209,14 @@ async function buildMangroveComponents(
       const variantIds = new Set();
       const familyText = new Set();
       const familyEffects = new Set();
+      const propertyTypes = new Map();
+      function recordProperty(name, type) {
+        if (propertyTypes.has(name) && propertyTypes.get(name) !== type)
+          throw new Error(`Conflicting component property type for ${name}`);
+        propertyTypes.set(name, type);
+      }
+      for (const name of Object.keys(family.optionalProperties || {}))
+        recordProperty(name, 'BOOLEAN');
       for (const variant of family.variants) {
         if (variantIds.has(variant.id))
           throw new Error(`Duplicate variant ${variant.id}`);
@@ -241,6 +249,9 @@ async function buildMangroveComponents(
         }
         const keys = new Set();
         treeWalk(variant.tree, tree => {
+          if (tree.textProperty) recordProperty(tree.textProperty, 'TEXT');
+          if (tree.visibilityProperty)
+            recordProperty(tree.visibilityProperty, 'BOOLEAN');
           if (!['FRAME', 'TEXT', 'INSTANCE'].includes(tree.type))
             throw new Error(`Unsupported recipe node ${tree.type}`);
           if (!tree.id && !tree.key)
@@ -313,6 +324,58 @@ async function buildMangroveComponents(
               throw new Error(`No matching ${tree.family} variant.`);
           }
         });
+      }
+      if (family.review?.specimens !== undefined) {
+        const specimens = family.review.specimens;
+        if (!Array.isArray(specimens) || specimens.length > 8)
+          throw new Error(
+            'Review specimens must be an array of at most eight entries.'
+          );
+        const specimenIds = new Set([...variantIds, 'long-label', 'narrow']);
+        for (const specimen of specimens) {
+          if (
+            !specimen ||
+            !/^[a-z0-9][a-z0-9-]*$/.test(specimen.id || '') ||
+            specimenIds.has(specimen.id)
+          )
+            throw new Error('Review specimen needs a unique stable id.');
+          specimenIds.add(specimen.id);
+          if (typeof specimen.name !== 'string' || !specimen.name)
+            throw new Error('Review specimen needs a name.');
+          if (
+            !specimen.variant ||
+            family.variants.filter(variant =>
+              matches(variant.properties, specimen.variant)
+            ).length !== 1
+          )
+            throw new Error(
+              `Review specimen ${specimen.id} needs one matching variant.`
+            );
+          if (!Number.isFinite(specimen.width) || specimen.width <= 0)
+            throw new Error(
+              `Review specimen ${specimen.id} needs a positive finite width.`
+            );
+          if (
+            !specimen.properties ||
+            typeof specimen.properties !== 'object' ||
+            Array.isArray(specimen.properties)
+          )
+            throw new Error(
+              `Review specimen ${specimen.id} needs named property overrides.`
+            );
+          for (const [name, value] of Object.entries(specimen.properties)) {
+            const type = propertyTypes.get(name);
+            if (
+              !type ||
+              (type === 'TEXT'
+                ? typeof value !== 'string'
+                : typeof value !== 'boolean')
+            )
+              throw new Error(
+                `Review specimen ${specimen.id} property ${name} must match a named TEXT or BOOLEAN property.`
+              );
+          }
+        }
       }
       for (const id of familyText) {
         const spec = textSpecs.get(id);
@@ -1051,6 +1114,14 @@ async function buildMangroveComponents(
         width: 240,
         label: 'A longer Mangrove label in a narrow layout',
       });
+      specimens.push(
+        ...(reviewOptions.specimens || []).map(specimen => ({
+          ...specimen,
+          variant: family.variants.find(item =>
+            matches(item.recipe.properties, specimen.variant)
+          ),
+        }))
+      );
       for (const specimen of specimens) {
         const key = `review/${id}/specimen/${specimen.id}`;
         const row = await reviewFrame(
@@ -1098,6 +1169,25 @@ async function buildMangroveComponents(
             throw new Error(
               `Review label property missing on ${labelTarget.name}`
             );
+          const overrides = {};
+          for (const [name, value] of Object.entries(
+            specimen.properties || {}
+          )) {
+            const entry = Object.entries(instance.componentProperties).find(
+              ([key]) => key.replace(/#[^#]+$/, '') === name
+            );
+            if (
+              !entry ||
+              (entry[1].type === 'TEXT'
+                ? typeof value !== 'string'
+                : entry[1].type !== 'BOOLEAN' || typeof value !== 'boolean')
+            )
+              throw new Error(
+                `Review property ${name} must match a named TEXT or BOOLEAN property.`
+              );
+            overrides[entry[0]] = value;
+          }
+          if (Object.keys(overrides).length) instance.setProperties(overrides);
           if (
             specimen.width ||
             specimen.variant.recipe.tree.layout?.width === 'FILL'

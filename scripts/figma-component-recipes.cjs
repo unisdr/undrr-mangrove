@@ -7,6 +7,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
   const sources = {
     button: 'stories/Components/Buttons/CtaButton/cta-button.scss',
     input: 'stories/Components/Forms/_form-base.scss',
+    textarea: 'stories/Components/Forms/Textarea/Textarea.jsx',
     combo: 'stories/assets/scss/aria/_combo-box.scss',
     tabs: 'stories/Components/Tab/tab.scss',
     tabRoles: 'stories/assets/scss/_tokens-tabs.scss',
@@ -245,7 +246,11 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
   );
   // Native inputs retain the browser's fieldtext system colour. This literal
   // records the measured Chromium baseline, not an authored Mangrove role.
-  for (const pattern of [/%mg-form-input-base\s*\{/, /\.mg-form-input\s*\{/]) {
+  for (const pattern of [
+    /%mg-form-input-base\s*\{/,
+    /\.mg-form-input\s*\{/,
+    /\.mg-form-textarea\s*\{/,
+  ]) {
     const { match } = source(sources.input, pattern);
     const body = read(sources.input)
       .slice(match.index + match[0].length)
@@ -258,10 +263,14 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       else if (depth === 1) declarations += character;
       if (depth === 0) break;
     }
-    if (depth !== 0) throw new Error('TextInput source block is incomplete.');
-    if (/(?:^|[;\n])\s*color\s*:/.test(declarations))
+    if (depth !== 0) throw new Error('Native form source block is incomplete.');
+    if (
+      /(?:^|[;\n])\s*(?:color|font|font-weight|line-height)\s*:/.test(
+        declarations
+      )
+    )
       throw new Error(
-        'TextInput now declares a value colour: replace the measured browser fieldtext baseline.'
+        'Native form control now overrides typography or value colour: update the measured browser baseline.'
       );
   }
   const inputFieldText = addVariable(
@@ -319,6 +328,53 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
     'stories/assets/scss/_components.scss',
     /@import "\.\.\/\.\.\/Utilities\/Normalize\/normalize";/
   );
+  const textareaRows = Number(
+    source(sources.textarea, /rows = (\d+),\s*cols/).match[1]
+  );
+  if (textareaRows < 1)
+    throw new Error('Textarea default rows must be positive.');
+  source(sources.textarea, /rows=\{rows\}/);
+  source(
+    sources.textarea,
+    /disabled && 'mg-form-textarea--disabled',\s*error && 'mg-form-textarea--error'/
+  );
+  source(sources.textarea, /\{error && errorText && \(/);
+  source(
+    sources.input,
+    /\.mg-form-textarea \{\s*@extend %mg-form-input-base;\s*height: auto;\s*max-width: 100%;\s*resize: vertical;/
+  );
+  source(
+    sources.input,
+    /&\[placeholder\]:not\(:placeholder-shown\) \{\s*background-color: var\(--mg-form-input-background--focus\);\s*\}/
+  );
+  source(
+    sources.input,
+    /%mg-form-input-base \{[\s\S]*?&::placeholder \{\s*color: rgb\(var\(--mg-color-neutral-500\)\);\s*\}/
+  );
+  source(
+    sources.input,
+    /&:focus-visible \{\s*background-color: var\(--mg-form-input-background--focus\);\s*border-color: rgb\(var\(--mg-color-form-focus\)\);\s*@include mg-focus-ring;\s*\}/
+  );
+  source(
+    sources.input,
+    /\.mg-form-textarea \{\s*@extend %mg-form-input-base;\s*height: auto;\s*max-width: 100%;\s*resize: vertical;\s*&--disabled \{\s*background-color: rgb\(var\(--mg-color-white\)\);\s*border-color: rgb\(var\(--mg-color-neutral-400\)\);\s*color: rgb\(var\(--mg-color-neutral-400\)\);\s*&::placeholder \{\s*color: rgb\(var\(--mg-color-neutral-400\)\);\s*\}\s*\}\s*&--error \{\s*border-color: rgb\(var\(--mg-color-red-900\)\);\s*\}\s*\}/
+  );
+  const textareaBlockSize = addVariable(
+    'component/textarea/default-block-size',
+    'FLOAT',
+    perMode(mode =>
+      Number(
+        (
+          textareaRows * value('font-size/form-input', mode) * inputLineHeight +
+          2 * value('form-input/padding', mode) +
+          2 * value('form-input/border-width', mode)
+        ).toFixed(6)
+      )
+    ),
+    `${textareaRows} default JSX rows times Normalize line-height at the control font size, plus block padding and border. The UNDRR comparison on 3 October 2026 gave a source formula of 88.1px and Chromium 153/macOS measurement of 88.0625px because each row is quantized. CSS height is auto, not a fixed public token. Other native browser sizing remains unverified.`,
+    reference(sources.textarea, /rows = (\d+),\s*cols/)
+  );
+  byName.get(textareaBlockSize).scopes = ['WIDTH_HEIGHT'];
 
   function textStyle(id, role, size, weight, lineHeight, ref) {
     const bold = weight === 600;
@@ -771,6 +827,100 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
     );
   });
 
+  const textareas = inputStates.map(State => {
+    const disabled = State === 'Disabled';
+    const invalid = State.startsWith('Invalid');
+    const focused = State.includes('Focused');
+    const filled = State === 'Filled';
+    const area = frame(
+      'mg-form-textarea',
+      [
+        {
+          ...text(
+            'mg-form-textarea__value',
+            'Enter text',
+            typography.input,
+            disabled
+              ? 'color/neutral-400'
+              : filled
+                ? inputFieldText
+                : 'color/neutral-500',
+            'Value'
+          ),
+          layout: { width: 'FILL', height: 'HUG' },
+        },
+      ],
+      {
+        layout: {
+          mode: 'VERTICAL',
+          width: 'FILL',
+          height: textareaBlockSize,
+          padding: {
+            block: 'form-input/padding',
+            inline: 'form-input/padding',
+          },
+          align: 'MIN',
+          justify: 'MIN',
+          gap: zero,
+          clipsContent: true,
+        },
+        bindings: {
+          cornerRadius: 'radius/form-input',
+          strokeWeight: 'form-input/border-width',
+        },
+        fill: disabled
+          ? 'color/white'
+          : filled || focused
+            ? 'form-input/background--focus'
+            : 'form-input/background',
+        stroke: disabled
+          ? 'color/neutral-400'
+          : focused
+            ? 'color/form-focus'
+            : invalid
+              ? 'color/red-900'
+              : 'form-input/border-color',
+        effectStyle: focused ? 'focus-ring' : null,
+        fidelity:
+          'Initial default-row specimen only. Value wraps from the top; overflow is clipped without native scrolling. Browser vertical resize handle and resizing behaviour are not reproduced.',
+      }
+    );
+    return variant(
+      `textarea.${State.toLowerCase()}`,
+      { State },
+      frame(
+        'mg-form-field',
+        [
+          fieldLabel(disabled),
+          area,
+          helpText(),
+          ...(invalid
+            ? [
+                {
+                  ...text(
+                    'mg-form-error',
+                    'Error message',
+                    typography.error,
+                    'color/red-900',
+                    'Error message'
+                  ),
+                  visibilityProperty: 'Show error',
+                },
+              ]
+            : []),
+        ],
+        {
+          layout: {
+            mode: 'VERTICAL',
+            width: 'FILL',
+            height: 'HUG',
+            gap: 'spacing/25',
+          },
+        }
+      )
+    );
+  });
+
   const options = [];
   for (const Selected of ['False', 'True'])
     for (const State of ['Default', 'Hover', 'FocusVisible']) {
@@ -1132,6 +1282,39 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
         review: { longLabelTarget: ['mg-tabs__item-1'] },
       }
     ),
+    family(
+      'textarea',
+      'Mangrove/Textarea',
+      sources.input,
+      /\.mg-form-textarea \{/,
+      textareas,
+      {
+        review: {
+          specimens: [
+            {
+              id: 'multiline',
+              name: 'Multiline value, 240px, overflow specimen',
+              variant: { State: 'Filled' },
+              width: 240,
+              properties: {
+                Value:
+                  'First line\nSecond line with enough words to wrap within this narrow field\nThird line\nFourth line\nFifth line\nSixth line',
+                Required: true,
+              },
+            },
+          ],
+        },
+        optionalProperties: {
+          'Show label': { nodeName: 'mg-form-label', defaultValue: true },
+          'Show help': { nodeName: 'mg-form-help', defaultValue: true },
+          'Show error': { nodeName: 'mg-form-error', defaultValue: true },
+          Required: {
+            nodeName: 'mg-form-label--required',
+            defaultValue: false,
+          },
+        },
+      }
+    ),
   ];
   function validate(node) {
     const names = [
@@ -1184,7 +1367,8 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
     limitations: [
       'Latin script and left-to-right scaffold. Arabic font routing and mirrored logical corners remain pending.',
       'Chromium source comparison confirmed bundled Bold 700 for CSS 600. Identical Figma font-file versions remain unverified.',
-      'Filled TextInput uses component/text-input/browser-fieldtext, a literal #000000 helper for the measured Chromium baseline. Mangrove color/black is #1a1a1a and cannot represent that observation. Source does not declare an input colour role; system-colour and other-browser parity remain unverified.',
+      'Filled TextInput and Textarea use component/text-input/browser-fieldtext, a literal #000000 helper for the measured Chromium baseline. Mangrove color/black is #1a1a1a and cannot represent that observation. Source does not declare an input colour role; system-colour and other-browser parity remain unverified.',
+      'Textarea represents the default JSX row count using a source-derived initial height. Chromium row quantization, native scrollbars, vertical resize handle and resize behaviour are not reproduced.',
       'Required field labels use a separate marker layer. Narrow multiline labels do not reproduce the source inline ::after flow yet.',
       'ComboBox popover is a specimen in flow; runtime overlay position, viewport cap and behaviour are not reproduced.',
       'Transparent resets, glyphs and source literals have no invented brand overrides.',

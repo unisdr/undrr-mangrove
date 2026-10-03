@@ -55,6 +55,23 @@ Initial matrix: `State=Default|Filled|Focused|Invalid|InvalidFocused|Disabled`, 
 
 The separate required-marker layer does not reproduce the source inline `::after` position on a wrapping label. The current HUG label geometry also needs a native multiline solution. Record narrow required labels as an acceptance gap; changing the label to FILL alone places the marker beside the block rather than after its final word.
 
+## Textarea (`mg-form-textarea`)
+
+Source: [form base](../../stories/Components/Forms/_form-base.scss) and [Textarea.jsx](../../stories/Components/Forms/Textarea/Textarea.jsx). The textarea partial adds no independent styling.
+
+- Reuse TextInput's form-input fills, border roles, padding and radius, Roboto text family and `font-size/form-input`. Normalize's 115% line height remains in effect.
+- The JSX defaults to four rows. CSS extends the form input base but overrides its fixed height with `height: auto`, caps width at 100% and allows vertical resizing.
+- The initial kit height is `component/textarea/default-block-size`: four rows times the control font size and Normalize ratio, plus two block paddings and two borders. This source formula gives 88.1px. Chromium 153 on macOS measured 88.0625px at 16px/18.4px, 6.25px padding and 1px border because each row is quantized to 18.390625px.
+- Value is a top-aligned, wrapping text layer. Entered text uses the measured `component/text-input/browser-fieldtext` helper; placeholder uses `color/neutral-500`. Preserve newlines when editing the Value property.
+- Focus and InvalidFocused use the white focus surface, focus-blue border and outward ring. Invalid uses the red border; its error remains red when focused. Disabled uses white fill and neutral-400 label, value, placeholder and border.
+- Label, help and errors reuse TextInput's shared source typography and spacing. The separate required-marker layer has the same multiline inline-flow limitation.
+
+Initial matrix: `State=Default|Filled|Focused|Invalid|InvalidFocused|Disabled`, six variants. Expose Label, Value, Help text and Error message, with booleans for label, help, error and required-marker visibility. The initial specimen represents the default four-row height; Rows is not a native numeric component property.
+
+The Figma frame clips excess text but does not reproduce native scrolling, scrollbars, the browser's resize handle or vertical resize behaviour. Native textarea content preserves newlines (`pre-wrap`); compare real multiline edits before accepting the kit representation. The browser baseline is established, while native Figma rendering remains a separate check.
+
+The review page adds one Filled specimen at a 240px consumer width with six explicit lines and a long line that should wrap. Its `Value` and `Required` properties are seeded only on creation so reimport preserves later edits. This specimen exercises wrapping and clipping; required-label inline flow, long help/error text and native rendering still need separate acceptance checks.
+
 ## ComboBox (`mg-combobox`)
 
 Source: [ComboBox SCSS](../../stories/assets/scss/aria/_combo-box.scss) and [ComboBox.jsx](../../stories/Components/Forms/ComboBox/ComboBox.jsx).
