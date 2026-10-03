@@ -89,6 +89,17 @@ Limits: one brand is visible at a time, and Starter cannot publish libraries, so
 
 The plugin runs locally in Figma and has no network access.
 
+## Checking changes without Figma
+
+`dev/mock-figma.cjs` runs `code.js` against a small mock of the Figma variables API. It covers importing every brand as a mode, re-import, the 1-mode limit, and the brand switcher:
+
+```sh
+yarn build:figma-tokens
+node examples/figma-plugin/dev/mock-figma.cjs
+```
+
+The mock copies the Figma behaviours that have caused bugs here, but it is not Figma. Confirm a change in the desktop app before relying on it.
+
 ## What this spike does not cover yet
 
 - Text styles. The variables exist (`font-family/*`, `font-size/*`), but styles need fonts loaded in Figma and a decision on which type roles to publish.
