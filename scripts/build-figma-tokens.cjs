@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * EXPLORATORY: Mangrove tokens -> Figma Variables JSON.
+ * EXPLORATORY: Mangrove tokens -> Figma variables and styles JSON.
  *
  * Reads the same tokens/*.yaml sources as build-tokens.cjs, resolves every
  * brand through the same merge and reference rules, and writes one JSON file
@@ -28,6 +28,8 @@
  *   - The --mg-control-* roles are parsed from _control-tokens.scss, and the
  *     --mg-font-family-* roles from _variables.scss, because those files are
  *     their only source. They are exported under control/ and font-family/.
+ *   - The styles section pairs font roles with sizes and translates raised
+ *     shadows and the focus mixin into variable-bound Figma effects.
  */
 'use strict';
 
@@ -42,6 +44,7 @@ const CONTROL_SCSS = path.join(
   'stories/assets/scss/_control-tokens.scss'
 );
 const VARIABLES_SCSS = path.join(ROOT, 'stories/assets/scss/_variables.scss');
+const MIXINS_SCSS = path.join(ROOT, 'stories/assets/scss/_mixins.scss');
 const HTML_FONT_SIZE = 16;
 const COLLECTION = 'Mangrove';
 
@@ -230,6 +233,241 @@ function readFontRoles() {
       roles.push({ name: m[1], role: m[2], family: faces.get(m[3]) });
   }
   return roles;
+}
+
+/* ------------------------------------------------------------------ *
+ * Style definitions. Values stay in the exporter, alongside variables.
+ * ------------------------------------------------------------------ */
+const DEFAULT_TEXT_SIZES = {
+  text: ['300', 'button', 'form-input'],
+  heading: ['400', '500', '600', '900', '1000', '1100'],
+  display: ['900', '1000'],
+  ui: ['tab'],
+};
+
+function buildStyles(modes, resolved, output) {
+  const byName = new Map(output.map(variable => [variable.name, variable]));
+  const literal = (id, mode) => {
+    const record = resolved.get(mode.id).emitted.get(id);
+    if (!record) throw new Error(`Style token ${id} missing in ${mode.name}`);
+    return record.literal;
+  };
+  const text = [];
+  const sizes = output.filter(variable => variable.id.startsWith('font-size.'));
+  for (const role of readFontRoles()) {
+    for (const size of sizes) {
+      const step = size.id.slice('font-size.'.length);
+      text.push({
+        id: `text.${role.role}.${step}.regular`,
+        name: `${COLLECTION}/${role.role}/${step}/Regular`,
+        recommended: DEFAULT_TEXT_SIZES[role.role]?.includes(step) || false,
+        description:
+          `Latin-script ${role.role} foundation, Regular. ` +
+          'Automatic line height; component weights and line heights are not implied.\n\n' +
+          `CSS: ${role.name}; ${size.codeSyntax.WEB}`,
+        bindings: {
+          fontFamily: `font-family/${role.role}`,
+          fontSize: size.name,
+        },
+        values: Object.fromEntries(
+          modes.map(mode => [
+            mode.id,
+            {
+              fontName: { family: role.family, style: 'Regular' },
+              fontSize: parseLength(literal(size.id, mode)),
+              lineHeight: { unit: 'AUTO' },
+            },
+          ])
+        ),
+      });
+    }
+  }
+
+  // An alpha cast needs its own colour variable so the effect keeps both
+  // the source opacity and brand switching. Binding the opaque source
+  // colour would replace the cast's alpha.
+  function derived(id, type, values, description, codeSyntax = {}) {
+    const name = figmaName(id);
+    const variable = {
+      id,
+      name,
+      type,
+      description,
+      scopes: [type === 'COLOR' ? 'EFFECT_COLOR' : 'EFFECT_FLOAT'],
+      hiddenFromPublishing: false,
+      codeSyntax,
+      values,
+    };
+    output.push(variable);
+    byName.set(name, variable);
+    return name;
+  }
+
+  const effect = [];
+  for (const id of ['shadow.raised', 'shadow.raised-hover']) {
+    const values = {};
+    const colors = {};
+    let colorVariable = null;
+    for (const mode of modes) {
+      const record = resolved.get(mode.id).emitted.get(id);
+      const match = /^(inset\s+)?(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(.+)$/.exec(
+        record.literal
+      );
+      const lengths = match && match.slice(2, 6).map(parseLength);
+      const color = match && parseColor(match[6]);
+      if (!match || lengths.some(value => value == null) || !color) {
+        throw new Error(
+          `Cannot export effect ${id} [${mode.name}]: ${record.literal}`
+        );
+      }
+      const [x, y, radius, spread] = lengths;
+      values[mode.id] = [
+        {
+          effect: {
+            type: match[1] ? 'INNER_SHADOW' : 'DROP_SHADOW',
+            color,
+            offset: { x, y },
+            radius,
+            spread,
+            visible: true,
+            blendMode: 'NORMAL',
+          },
+          bindings: {},
+        },
+      ];
+      colors[mode.id] = color;
+      const reference = /\{rgb\(([^\s/()]+)\)\}/.exec(
+        String(record.token.value)
+      );
+      const target = reference && figmaName(reference[1]);
+      if (
+        target &&
+        byName.has(target) &&
+        (colorVariable == null || colorVariable === target)
+      ) {
+        colorVariable = target;
+      }
+    }
+    // Verify the direct colour binding against every brand, including alpha.
+    const direct =
+      colorVariable &&
+      modes.every(mode =>
+        sameValue(
+          parseColor(literal(colorVariable.replaceAll('/', '.'), mode)),
+          colors[mode.id]
+        )
+      );
+    if (!direct) {
+      colorVariable = derived(
+        `effect-color.${id}`,
+        'COLOR',
+        colors,
+        `Colour extracted from --mg-${id.replaceAll('.', '-')}, including its alpha cast.`
+      );
+    }
+    for (const mode of modes) values[mode.id][0].bindings.color = colorVariable;
+    // Bind geometry if a future brand gives the shadow different dimensions.
+    for (const field of ['radius', 'spread', 'offsetX', 'offsetY']) {
+      const get = entry =>
+        field.startsWith('offset')
+          ? entry.effect.offset[field === 'offsetX' ? 'x' : 'y']
+          : entry.effect[field];
+      const numbers = Object.fromEntries(
+        modes.map(mode => [mode.id, get(values[mode.id][0])])
+      );
+      if (new Set(Object.values(numbers)).size > 1) {
+        const name = derived(
+          `effect-size.${id}.${field}`,
+          'FLOAT',
+          numbers,
+          `Derived ${field} of ${figmaName(id)}.`
+        );
+        for (const mode of modes) values[mode.id][0].bindings[field] = name;
+      }
+    }
+    effect.push({
+      id,
+      name: `${COLLECTION}/${figmaName(id)}`,
+      description: `CSS: var(--mg-${id.replaceAll('.', '-')}). Inset border, represented as an inner shadow.`,
+      values,
+    });
+  }
+
+  // Fail visibly if the mixin's recipe changes rather than exporting an
+  // obsolete focus effect. Dimensions and colours are resolved per brand.
+  const mixin = /@mixin mg-focus-ring\s*\{([^}]+)\}/.exec(
+    fs.readFileSync(MIXINS_SCSS, 'utf8')
+  )?.[1];
+  if (
+    !mixin ||
+    !/box-shadow:\s*0 0 0 var\(--mg-focus-ring-offset\) rgb\(var\(--mg-color-neutral-0\)\);/.test(
+      mixin
+    ) ||
+    !/outline:\s*var\(--mg-focus-ring-width\) solid rgb\(var\(--mg-color-focus-ring\)\);/.test(
+      mixin
+    ) ||
+    !/outline-offset:\s*var\(--mg-focus-ring-offset\);/.test(mixin)
+  ) {
+    throw new Error('mg-focus-ring changed: update its Figma effect recipe.');
+  }
+  const outer = derived(
+    'effect-size.focus-ring.outer-spread',
+    'FLOAT',
+    Object.fromEntries(
+      modes.map(mode => {
+        const offset = parseLength(literal('focus-ring.offset', mode));
+        const width = parseLength(literal('focus-ring.width', mode));
+        if (offset == null || width == null || offset < 0 || width < 0) {
+          throw new Error(
+            `Cannot export focus ring dimensions [${mode.name}].`
+          );
+        }
+        return [mode.id, offset + width];
+      })
+    ),
+    'Outer extent of mg-focus-ring: offset plus width.',
+    { WEB: 'calc(var(--mg-focus-ring-offset) + var(--mg-focus-ring-width))' }
+  );
+  effect.push({
+    id: 'focus-ring',
+    name: `${COLLECTION}/focus-ring`,
+    description:
+      'mg-focus-ring: neutral separator above a coloured outer band. Two zero-blur outward shadows approximate the CSS outline; check geometry in Figma.',
+    values: Object.fromEntries(
+      modes.map(mode => [
+        mode.id,
+        [
+          {
+            effect: {
+              type: 'DROP_SHADOW',
+              color: parseColor(literal('color.neutral-0', mode)),
+              offset: { x: 0, y: 0 },
+              radius: 0,
+              spread: parseLength(literal('focus-ring.offset', mode)),
+              visible: true,
+              blendMode: 'NORMAL',
+            },
+            bindings: { color: 'color/neutral-0', spread: 'focus-ring/offset' },
+          },
+          {
+            effect: {
+              type: 'DROP_SHADOW',
+              color: parseColor(literal('color.focus-ring', mode)),
+              offset: { x: 0, y: 0 },
+              radius: 0,
+              spread:
+                parseLength(literal('focus-ring.offset', mode)) +
+                parseLength(literal('focus-ring.width', mode)),
+              visible: true,
+              blendMode: 'NORMAL',
+            },
+            bindings: { color: 'color/focus-ring', spread: outer },
+          },
+        ],
+      ])
+    ),
+  });
+  return { text, effect };
 }
 
 /* ------------------------------------------------------------------ *
@@ -433,12 +671,14 @@ function buildFigmaVariables() {
     });
   }
 
+  const styles = buildStyles(modes, resolved, output);
   return {
     $comment:
       'GENERATED by scripts/build-figma-tokens.cjs from tokens/*.yaml. EXPLORATORY. Import with examples/figma-plugin.',
     collection: COLLECTION,
     modes,
     variables: output,
+    styles,
     skipped,
   };
 }
@@ -454,7 +694,8 @@ function main(argv) {
   process.stdout.write(
     `build-figma-tokens: wrote ${path.relative(ROOT, OUTPUT)} ` +
       `(${doc.variables.length} variables, ${doc.modes.length} modes, ` +
-      `${doc.skipped.length} skipped)\n`
+      `${doc.styles.text.length} text style choices, ${doc.styles.effect.length} effect styles, ` +
+      `${doc.skipped.length} skipped as variables)\n`
   );
 }
 

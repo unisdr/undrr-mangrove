@@ -4,7 +4,7 @@ Give this to Figma's AI (First Draft or Make) or to a designer, in a file where 
 
 ## Context
 
-Mangrove is the UNDRR design system. One component library serves five brands: UNDRR, PreventionWeb, IRP, MCR2030 and DELTA Resilience. In code, a brand is a CSS class that re-values the same custom properties. In Figma, the **Mangrove** variable collection has one mode per brand. Build every component once, bound to variables, and the brand is chosen by setting the frame's variable mode. Never make per-brand copies of a component.
+Mangrove is the UNDRR design system. One component library serves five brands: UNDRR, PreventionWeb, IRP, MCR2030 and DELTA Resilience. In code, a brand is a CSS class that re-values the same custom properties. In Figma, the **Mangrove** variable collection has one mode per brand on a paid team file; Starter uses one mode and re-imports a single brand to switch it. Build every component once, bound to variables, and choose the brand through the available mode workflow. Never make per-brand copies of a component.
 
 ## Rules
 
@@ -16,6 +16,8 @@ Mangrove is the UNDRR design system. One component library serves five brands: U
 6. Text: `font-family/text` (Roboto) for body and controls, and `font-family/ui` (Roboto Condensed) where a component uses the UI role.
 7. Every interactive component needs a visible focus state: a 2-band ring with an inner `color/neutral-0` band of `focus-ring/offset` width, then a `color/focus-ring` outline of `focus-ring/width`.
 
+The importer can also create Regular text foundations and three effect styles. Use `Mangrove/focus-ring` for the two-band approximation and verify its rendering. Foundation text styles bind family and size but use automatic line height; verify each component's weight and line height against its SCSS before treating it as complete.
+
 ## Components
 
 ### ComboBox (`mg-combobox`)
@@ -26,7 +28,7 @@ A searchable single choice: a text input with a toggle button, and a popover lis
 - **Control row**: a horizontal auto layout of Input and Trigger with no gap.
   - **Input**: fill `control/surface`; stroke `control/border` at `form-input/border-width`; radius `radius/form-input` on the start corners only; min height `form-input/block-size`; padding `form-input/padding`; text `control/text` at `font-size/form-input`; placeholder `control/muted-text`. Fills the remaining width; whole component max width 448.
   - **Trigger**: fill `control/surface`; same stroke with no start-side border; radius `radius/form-input` on the end corners only; min width 44; a chevron icon in `control/text`.
-- **Popover**: fill `control/surface-focus`; 1px stroke `control/border`; radius `radius/form-input`; padding `spacing/25`; same width as the control row; max height 320 with scroll; a subtle raised shadow (the shadow is not a variable yet).
+- **Popover**: fill `control/surface-focus`; 1px stroke `control/border`; radius `radius/form-input`; padding `spacing/25`; same width as the control row; max height 320 with scroll. Inspect the ComboBox source for its elevation recipe. `Mangrove/shadow/raised` is an inset border effect, so it does not provide elevation despite its name.
 - **Option**: padding `spacing/100`; radius `radius/form-input`; text `control/text`.
 - **Error message**: `control/error`, `font-size/200`, gap above it of `spacing/25`.
 
@@ -63,6 +65,6 @@ A horizontal row of tab triggers.
 
 ## Check before handing back
 
-- Switch the page between the five modes. Every component must re-theme with no detached values.
+- Switch the page between the five modes, or re-import each single brand on Starter. Every component must re-theme with no detached values.
 - Select each layer and confirm Dev Mode shows a `var(--mg-...)` code name, not a raw value.
 - Check text contrast on every state in every mode. PreventionWeb and DELTA use different interactive colours from UNDRR.

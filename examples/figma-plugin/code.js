@@ -1,15 +1,16 @@
 /* global figma, __html__ */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
- * scripts/build-figma-tokens.cjs) into local Figma variables.
+ * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
  *
  * Re-running is an update, not a second copy: variables are matched by the
  * Mangrove token id stored in plugin data, then by name, so a token renamed
  * in YAML renames its Figma variable and keeps every binding to it.
  */
 const ID_KEY = 'mgId';
+const STYLE_ID_KEY = 'mgStyleId';
 
-figma.showUI(__html__, { width: 400, height: 520, themeColors: true });
+figma.showUI(__html__, { width: 440, height: 680, themeColors: true });
 
 function post(type, payload) {
   figma.ui.postMessage(Object.assign({ type }, payload));
@@ -66,7 +67,157 @@ function ensureModes(collection, modes, created) {
   return { modeIds, errors };
 }
 
-async function importVariables(doc, selectedModeIds, prune) {
+async function importStyles(
+  doc,
+  variables,
+  modeId,
+  selectedTextIds,
+  importEffects
+) {
+  const counts = {
+    text: { created: 0, updated: 0, failed: 0 },
+    effect: { created: 0, updated: 0, failed: 0 },
+  };
+  const errors = [];
+  const missingFonts = new Set();
+  if (!doc.styles) return { counts, errors, missingFonts: [] };
+  const textSpecs = (doc.styles.text || []).filter(spec =>
+    selectedTextIds ? selectedTextIds.includes(spec.id) : spec.recommended
+  );
+  const effectSpecs = importEffects ? doc.styles.effect || [] : [];
+  const fontLoads = new Map();
+  let fonts = [];
+  if (textSpecs.length) {
+    try {
+      fonts = await figma.listAvailableFontsAsync();
+    } catch (error) {
+      errors.push(`Could not list fonts: ${error.message}`);
+    }
+  }
+  async function loadFont(font) {
+    const key = `${font.family} ${font.style}`;
+    if (!fontLoads.has(key)) {
+      fontLoads.set(
+        key,
+        (async () => {
+          if (
+            !fonts.some(
+              entry =>
+                entry.fontName.family === font.family &&
+                entry.fontName.style === font.style
+            )
+          ) {
+            missingFonts.add(key);
+            throw new Error(
+              `Font "${key}" is not available. Install or enable it in Figma, then re-import.`
+            );
+          }
+          try {
+            await figma.loadFontAsync(font);
+          } catch (error) {
+            missingFonts.add(key);
+            throw new Error(`Could not load font "${key}": ${error.message}`);
+          }
+        })()
+      );
+    }
+    await fontLoads.get(key);
+  }
+  function binding(name, type) {
+    const variable = variables.get(name);
+    if (!variable || variable.resolvedType !== type) {
+      throw new Error(`Missing ${type} style variable ${name}`);
+    }
+    return variable;
+  }
+  for (const [kind, specs, getLocal, create] of [
+    [
+      'text',
+      textSpecs,
+      () => figma.getLocalTextStylesAsync(),
+      () => figma.createTextStyle(),
+    ],
+    [
+      'effect',
+      effectSpecs,
+      () => figma.getLocalEffectStylesAsync(),
+      () => figma.createEffectStyle(),
+    ],
+  ]) {
+    if (!specs.length) continue;
+    let local;
+    try {
+      local = await getLocal();
+    } catch (error) {
+      counts[kind].failed += specs.length;
+      errors.push(`Could not list ${kind} styles: ${error.message}`);
+      continue;
+    }
+    const byId = new Map(
+      local.map(style => [style.getPluginData(STYLE_ID_KEY), style])
+    );
+    const byName = new Map(local.map(style => [style.name, style]));
+    for (const spec of specs) {
+      let style = byId.get(spec.id) || byName.get(spec.name);
+      const existing = Boolean(style);
+      try {
+        const value = spec.values[modeId];
+        if (!value) throw new Error(`No style value for brand ${modeId}`);
+        let family;
+        let size;
+        let effects;
+        if (kind === 'text') {
+          family = binding(spec.bindings.fontFamily, 'STRING');
+          size = binding(spec.bindings.fontSize, 'FLOAT');
+          // Load every family the style can resolve to before binding it.
+          for (const entry of Object.values(spec.values))
+            await loadFont(entry.fontName);
+          if (style) await loadFont(style.fontName);
+        } else {
+          effects = value.map(entry => {
+            let effect = entry.effect;
+            for (const [field, name] of Object.entries(entry.bindings || {})) {
+              effect = figma.variables.setBoundVariableForEffect(
+                effect,
+                field,
+                binding(name, field === 'color' ? 'COLOR' : 'FLOAT')
+              );
+            }
+            return effect;
+          });
+        }
+        style = style || create();
+        if (kind === 'text') {
+          style.fontName = value.fontName;
+          style.fontSize = value.fontSize;
+          style.lineHeight = value.lineHeight;
+          style.setBoundVariable('fontFamily', family);
+          style.setBoundVariable('fontSize', size);
+        } else {
+          style.effects = effects;
+        }
+        style.name = spec.name;
+        style.description = spec.description || '';
+        style.setPluginData(STYLE_ID_KEY, spec.id);
+        counts[kind][existing ? 'updated' : 'created'] += 1;
+      } catch (error) {
+        // Do not leave a new, partly configured style after a failed import.
+        if (style && !existing) style.remove();
+        counts[kind].failed += 1;
+        errors.push(`${spec.name}: ${error.message}`);
+      }
+    }
+  }
+  return { counts, errors, missingFonts: [...missingFonts] };
+}
+
+async function importVariables(
+  doc,
+  selectedModeIds,
+  prune,
+  textStyles,
+  effects
+) {
   const modes = doc.modes.filter(m => selectedModeIds.includes(m.id));
   if (modes.length === 0) throw new Error('Select at least one brand.');
 
@@ -162,10 +313,23 @@ async function importVariables(doc, selectedModeIds, prune) {
     counts.removed = stale.length;
   }
 
+  const importedMode = modes.find(mode => modeIds[mode.id]);
+  const styles = importedMode
+    ? await importStyles(
+        doc,
+        resolvedByName,
+        importedMode.id,
+        textStyles,
+        effects !== false
+      )
+    : null;
+  if (styles) errors.push(...styles.errors);
+
   return {
     collection: collection.name,
     modes: modes.map(m => m.name),
     counts,
+    styles,
     stale: prune ? [] : stale.map(v => v.name),
     skipped: doc.skipped || [],
     errors,
@@ -179,11 +343,17 @@ figma.ui.onmessage = async msg => {
   }
   if (msg.type !== 'import') return;
   try {
-    const result = await importVariables(msg.doc, msg.modes, msg.prune);
+    const result = await importVariables(
+      msg.doc,
+      msg.modes,
+      msg.prune,
+      msg.textStyles,
+      msg.effects
+    );
     post('result', { result });
     figma.notify(
-      `Mangrove: ${result.counts.created} created, ` +
-        `${result.counts.updated} updated` +
+      `Mangrove variables: ${result.counts.created} created, ` +
+        `${result.counts.updated} updated. See the plugin report for styles` +
         (result.errors.length ? `, ${result.errors.length} errors` : '')
     );
   } catch (error) {

@@ -59,7 +59,7 @@
     <p>
       Choose <code>mangrove-variables.json</code> from
       <code>yarn build:figma-tokens</code>. Re-importing updates the same
-      variables.
+      variables and styles.
     </p>
     <input id="file" type="file" accept=".json,application/json" />
     <fieldset id="modes" hidden>
@@ -69,12 +69,20 @@
         mode. Tick several to add them as modes.
       </p>
     </fieldset>
+    <fieldset id="text-styles" hidden>
+      <legend>Text styles to import</legend>
+      <p>Choose roles and sizes. All use Regular and automatic line height.</p>
+    </fieldset>
+    <label id="effects-label" hidden
+      ><input id="effects" type="checkbox" checked /> Import raised,
+      raised-hover and focus ring effect styles</label
+    >
     <label
       ><input id="prune" type="checkbox" /> Remove Mangrove variables no longer
       in the file</label
     >
     <p></p>
-    <button id="import" disabled>Import variables</button>
+    <button id="import" disabled>Import variables and styles</button>
     <pre id="log" hidden></pre>
     <script>
       let doc = null;
@@ -90,7 +98,11 @@
         if (!file) return;
         try {
           doc = JSON.parse(await file.text());
-          if (!doc.collection || !Array.isArray(doc.variables)) {
+          if (
+            !doc.collection ||
+            !Array.isArray(doc.variables) ||
+            !Array.isArray(doc.modes)
+          ) {
             throw new Error('Not a mangrove-variables.json file.');
           }
         } catch (error) {
@@ -111,10 +123,35 @@
           box.append(label);
         });
         box.hidden = false;
+        const stylesBox = $('text-styles');
+        stylesBox.querySelectorAll('details').forEach(group => group.remove());
+        const groups = new Map();
+        (doc.styles?.text || []).forEach(spec => {
+          const role = spec.bindings.fontFamily.split('/')[1];
+          if (!groups.has(role)) {
+            const group = document.createElement('details');
+            const summary = document.createElement('summary');
+            summary.textContent = role;
+            group.append(summary);
+            stylesBox.append(group);
+            groups.set(role, group);
+          }
+          const label = document.createElement('label');
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.value = spec.id;
+          input.checked = Boolean(spec.recommended);
+          label.append(input, ` ${spec.name}`);
+          groups.get(role).append(label);
+        });
+        stylesBox.hidden = !groups.size;
+        $('effects-label').hidden = !(doc.styles?.effect || []).length;
         $('import').disabled = false;
         log(
           `${doc.variables.length} variables, ${doc.modes.length} brands, ` +
-            `${doc.skipped.length} tokens skipped.`
+            `${doc.styles?.text?.length || 0} text style choices, ` +
+            `${doc.styles?.effect?.length || 0} effect styles.\n` +
+            `${doc.skipped?.length || 0} tokens skipped as variables.`
         );
       });
 
@@ -123,7 +160,7 @@
           input => input.value
         );
         $('import').disabled = true;
-        log('Importing...');
+        log('Importing…');
         parent.postMessage(
           {
             pluginMessage: {
@@ -131,6 +168,10 @@
               doc,
               modes,
               prune: $('prune').checked,
+              textStyles: [
+                ...$('text-styles').querySelectorAll('input:checked'),
+              ].map(input => input.value),
+              effects: $('effects').checked,
             },
           },
           '*'
@@ -151,6 +192,18 @@
           `Created ${r.counts.created}, updated ${r.counts.updated}, ` +
             `removed ${r.counts.removed}, values set ${r.counts.values}.`,
         ];
+        if (r.styles) {
+          for (const kind of ['text', 'effect']) {
+            const counts = r.styles.counts[kind];
+            lines.push(
+              `${kind === 'text' ? 'Text' : 'Effect'} styles: ` +
+                `${counts.created} created, ${counts.updated} updated, ${counts.failed} failed.`
+            );
+          }
+          if (r.styles.missingFonts.length) {
+            lines.push('', 'Missing fonts:', ...r.styles.missingFonts);
+          }
+        }
         if (r.stale.length) {
           lines.push('', `Stale (not in file, kept): ${r.stale.join(', ')}`);
         }
