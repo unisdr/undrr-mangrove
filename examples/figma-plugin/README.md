@@ -23,7 +23,7 @@ Not imported, with the reason listed in the JSON's `skipped` array: shadows, dur
 ### Requirements
 
 - The Figma **desktop app**. Development plugins cannot be imported in the browser.
-- A Figma plan with at least five modes per variable collection. Professional allows 10. On a plan with fewer, untick brands at import time.
+- Any Figma plan for a local kit. Starter and Drafts allow one mode: tick one brand and use the brand switcher below. To keep all five brands as modes and publish a shared library, use a Professional team file and a Full seat. Professional allows 10 modes per collection.
 - A checkout of this branch with dependencies installed (`yarn install`).
 
 ### 1. Generate the variables file
@@ -46,12 +46,12 @@ The plugin now appears under **Plugins > Development**. On a Professional plan, 
 
 ### 3. Import into the library file
 
-1. Open the Figma file that will be the Mangrove library. Use a dedicated file, saved in a project that belongs to the Professional team. A file in Drafts or a Starter team is limited to 1 mode.
+1. Open the dedicated Figma Design file that will hold the Mangrove kit. A file in Drafts or a Starter team is limited to 1 mode. For all five modes, save it in a project that belongs to the Professional team.
 2. Run **Plugins > Development > Mangrove tokens (exploratory)**.
 3. Choose the `mangrove-variables.json` you generated.
-4. Leave all five brands ticked, then select **Import variables**.
+4. On Starter or in Drafts, tick only one brand. In a Professional team file, leave all five brands ticked. Select **Import variables**.
 5. Read the report in the plugin window: the counts, any errors, and the tokens that could not be represented.
-6. Open **Local variables** to see the **Mangrove** collection, with one column per brand.
+6. Open **Local variables** to see the **Mangrove** collection, with one column per imported brand.
 
 ### On a file limited to 1 mode: brand switcher
 
@@ -61,9 +61,11 @@ A file in Drafts or a Starter team allows only 1 mode, so the five brands cannot
 2. Bind your designs to the Mangrove variables as usual.
 3. To see another brand, run the plugin again with only that brand ticked. Its values overwrite the mode in place and every bound layer in the file re-themes. Variables are reused, so no bindings break.
 
-Limits: one brand is visible at a time, and Starter cannot publish libraries, so the variables, components and designs stay in this one file. When the file moves to a Professional team project, import with all brands ticked: the existing mode is kept and the others are added.
+Limits: one brand is visible at a time, and Starter cannot publish libraries, so the variables, components and designs stay in this one file. Local text styles, effect styles and components can still be created and reused within the file. When the file moves to a Professional team project, import with all brands ticked: the existing mode is kept and the others are added. This migration and the brand switcher pass the mock harness; they still need a check in real Figma.
 
 ### 4. Publish and use
+
+Publishing needs a Full seat on a paid plan and edit access to the source file. On Starter, use local assets in the kit file and defer publishing. See [Figma's publishing requirements](https://help.figma.com/hc/en-us/articles/360025508373-Publish-a-library).
 
 1. Publish the file as a library (**Assets > Libraries > Publish**). Private brand primitives stay out of the published list.
 2. In a design file, enable the library, then bind fills, strokes, padding, gaps, radii and font sizes to Mangrove variables.
@@ -88,6 +90,55 @@ Limits: one brand is visible at a time, and Starter cannot publish libraries, so
 | A variable shows the wrong type                   | Its token changed type in YAML. The plugin deletes and recreates it, so rebind any layers that used it.                                                                                                                     |
 
 The plugin runs locally in Figma and has no network access.
+
+## Connect Codex to Figma
+
+There are two separate plugins: the Mangrove development plugin above imports the generated JSON inside Figma; the Figma plugin for Codex connects the agent to Figma through its remote MCP server. Opening the Figma desktop app alone does not connect Codex.
+
+1. In the **Codex app**, open **Plugins** in the upper-left corner.
+2. Find **Figma**, click **+**, then **Install Figma**.
+3. Sign in to your Figma account and choose **Allow access**.
+4. Give Codex the URL of the dedicated Figma Design file. The existing file with Mangrove variables is suitable; public sharing is not required.
+5. Ask the agent to confirm the authenticated account, plan and seat with `whoami`, then inspect the file before making changes.
+
+These steps follow [Figma's Codex connection guide](https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/). The remote server does not require the Figma desktop app to be running. The desktop app is needed for Mangrove's development plugin.
+
+The official [figma-use](https://github.com/figma/mcp-server-guide/tree/main/skills/figma-use) and [figma-generate-library](https://github.com/figma/mcp-server-guide/tree/main/skills/figma-generate-library) skills provide API guidance and a workflow for building libraries from code. Installing a skill supplies instructions; it does not connect an account or grant a seat. For a Codex installation that does not already bundle them:
+
+```sh
+npx skills add figma/mcp-server-guide --skill figma-use figma-generate-library
+```
+
+### Free account now, Professional later
+
+As checked on **3 October 2026**, Figma documents these limits:
+
+| Capability                               | Starter workflow                                                                        | Professional workflow                                                                 |
+| ---------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Variables and brands                     | One mode; re-import a single brand to switch the file                                   | Up to 10 modes per collection in a Professional team file                             |
+| Styles and components                    | Create and reuse local assets in the same file                                          | Publish a shared library with a Full seat and edit access                             |
+| Remote MCP reads                         | Starter allowance of up to 20 tool calls per month; conserve reads                      | Full or Dev seats have higher limits                                                  |
+| Direct agent canvas writes (`use_figma`) | A free account alone does not establish write eligibility; the docs require a Full seat | Confirm a Full seat and edit permission on the target file                            |
+| Code Connect                             | Unavailable                                                                             | Still unavailable; requires an Organization or Enterprise plan and a Full or Dev seat |
+
+Sources: [plans and features](https://help.figma.com/hc/en-us/articles/360040328273-Figma-plans-and-features), [publish a library](https://help.figma.com/hc/en-us/articles/360025508373-Publish-a-library), [MCP rate limits and access](https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/), [write to canvas](https://developers.figma.com/docs/figma-mcp-server/write-to-canvas/) and [Code Connect](https://developers.figma.com/docs/code-connect/). Recheck these when the account or plan changes.
+
+The practical Starter route is to extend the Mangrove development plugin to create the local kit, then run it in the desktop app. The current plugin imports variables only; style and component generation are planned work. Keep one canonical kit file, bind components to the same variables and defer shared-library publishing. When Professional access is available, ask for a Full seat on your own account and edit access to the team file, move the kit into that team, then import all five brands. Joining a Professional team with a View or Dev seat does not meet the documented requirement for direct agent writes.
+
+## Spike learnings
+
+Keep observations separate from API documentation and mock results. Update this record as the spike is exercised in Figma.
+
+| Finding                                                                            | Evidence and consequence                                                                                                                                                        |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Variables were created in the user's free file, but additional modes were rejected | User-reported desktop import: `Limited to 1 modes only`. The file can hold the token collection even when five brand modes are unavailable.                                     |
+| Removing absent WEB code syntax throws                                             | Observed in real Figma, fixed in the importer and reproduced by the mock. Remove syntax only when it is present. A complete desktop re-import after the fix remains unverified. |
+| A single mode can be reused as a brand switcher                                    | All five brands pass the mock scenario without new variables. Visual re-theming and preserved bindings still need desktop verification.                                         |
+| Text and effect styles are local foundations                                       | Figma documents local styles on any plan. Missing fonts must be reported, and text styles must load fonts before edits. Styles are not implemented in this spike yet.           |
+| A connected agent and a local development plugin have different constraints        | Remote canvas writes require a Full seat. The desktop importer has already run in the free file. Confirm the connector's API support before reusing desktop plugin code.        |
+| An editable captured screen is not yet a reusable component kit                    | Kit acceptance needs native components, variants, auto layout, shared styles and variable bindings verified against Mangrove's source and rendered stories.                     |
+
+For each future change, record the source token or component, the Figma representation, the local verification, the desktop or connector observation and any remaining limitation. Preserve asset identities during updates so existing bindings and instances survive. The exporter remains the source of values: add style definitions to its JSON rather than duplicating values in the plugin.
 
 ## Checking changes without Figma
 
