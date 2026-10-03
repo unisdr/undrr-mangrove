@@ -41,6 +41,49 @@ let chapter = 'start';
 let chosenSwatch = 0;
 let routeRevision = 0;
 let messageTimer;
+let application = 'social';
+const applications = {
+  social: {
+    ratio: 'Social / 1.91:1',
+    title: 'A message worth sharing',
+    intent: 'Introduce the idea to people who may meet it for the first time.',
+    decisions: [
+      'The short prevention message leads in a solid colour panel.',
+      'The image supplies human context without carrying text.',
+      'A white signature area protects the mark; the Sendai rule stays thin.',
+    ],
+  },
+  web: {
+    ratio: 'Web / landing page',
+    title: 'From attention to a next step',
+    intent: 'Turn the shared message into an invitation to learn and act.',
+    decisions: [
+      'The property name and institutional signature occupy separate header areas.',
+      'The headline, supporting line and next step form one clear hierarchy.',
+      'Three resources continue the story beneath the hero.',
+    ],
+  },
+  guide: {
+    ratio: 'Guide / A4 cover and interior',
+    title: 'Make room for deeper reading',
+    intent: 'Give practitioners a durable reference they can return to.',
+    decisions: [
+      'The title sits in the upper third with generous margins.',
+      'The photograph connects the guide with its purpose; the footer carries ownership.',
+      'The interior quietens the colour and organises advice into practical steps.',
+    ],
+  },
+  learning: {
+    ratio: 'Learning / 16:9',
+    title: 'Frame a conversation',
+    intent: 'Help a facilitator connect people’s experience with evidence.',
+    decisions: [
+      'A question invites participation before a process is explained.',
+      'Three steps use hierarchy and labels rather than decorative colour.',
+      'The image panel keeps context visible while the footer holds ownership and a concept label.',
+    ],
+  },
+};
 
 function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -179,6 +222,29 @@ function paintIdentity() {
     );
     leaf.setAttribute('aria-pressed', String(id === theme));
   }
+}
+function paintApplication() {
+  const selected = applications[application];
+  $('#application-ratio').textContent = selected.ratio;
+  $('#application-title').textContent = selected.title;
+  $('#application-intent').textContent = selected.intent;
+  $('#application-decisions').replaceChildren(
+    ...selected.decisions.map(text => element('li', text))
+  );
+  for (const id of Object.keys(applications)) {
+    $(`#lookbook-${id}`).hidden = id !== application;
+  }
+  document
+    .querySelectorAll('[data-format]')
+    .forEach(button =>
+      button.setAttribute(
+        'aria-pressed',
+        String(button.dataset.format === application)
+      )
+    );
+  document.querySelectorAll('[data-property-name]').forEach(label => {
+    label.textContent = dictionary.brands[theme].title;
+  });
 }
 function paintSwatches() {
   $('#swatches').replaceChildren();
@@ -324,6 +390,7 @@ async function route(focus = false) {
     }
   }
   paintIdentity();
+  paintApplication();
   paintSwatches();
   paintReference();
   paintRecipe();
@@ -366,6 +433,11 @@ try {
     if (swatch) {
       chosenSwatch = Number(swatch.dataset.swatch);
       paintColourDetail();
+    }
+    const format = event.target.closest('[data-format]');
+    if (format) {
+      application = format.dataset.format;
+      paintApplication();
     }
   });
   $('#theme').addEventListener('change', () => setTheme($('#theme').value));

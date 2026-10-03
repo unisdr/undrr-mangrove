@@ -9,6 +9,11 @@ artwork, animation code or generated lookbook images are copied.
 This work starts from `spike/figma-token-bridge` at `f3531558`, in the separate
 branch `spike/mangrove-field-guide`. It changes no existing component or token.
 
+Edition 02 applies a user-requested brand analyst review of DELTA’s lookbook.
+See [BRAND-REVIEW.md](BRAND-REVIEW.md) for the critique and resulting changes.
+The new fictional community image, generated with the built-in image tool,
+is documented with its complete prompt in [assets/README.md](assets/README.md).
+
 ## Run
 
 From the repository root, with the repository’s dependencies installed:
@@ -38,19 +43,20 @@ are included locally. There are no new runtime packages, analytics or storage.
 
 ## Explore
 
-| Before                                       | After                                                                                                                                                 |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DELTA’s linear brand-book reference          | Nine Mangrove chapters: introduction, identities, colour, type, patterns, voice, handoff, tokens and next steps                                       |
-| One project identity                         | UNDRR, PreventionWeb, MCR2030, IRP and DELTA Resilience, with a persistent property selector                                                          |
-| Static palette examples                      | Semantic swatches, correct CSS expressions, copy actions and a live WCAG contrast pairing                                                             |
-| Static type samples                          | Editable specimens, Latin/Arabic language boundaries and role-based typography                                                                        |
-| Application lookbook                         | Listing, editorial and action specimens using real Mangrove styles and current card/button/tag markup; wide/mobile previews and working demo feedback |
-| Separate design and implementation reference | YAML-to-CSS/Figma/component overview, HTML/React/CSS examples and searchable generated tokens with descriptions, value formats, copying and download  |
-| Sequential reading                           | Chapter contents dialog, keyboard arrows, stable `#chapter/property` links, browser history, keyboard focus and skip navigation                       |
-| Screen-only prototype                        | Responsive layout, reduced-motion support and all-chapter browser printing with compact specimen styles                                               |
+| Before                                       | After                                                                                                                                                |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DELTA’s linear brand-book reference          | Ten Mangrove chapters: introduction, identities, applications, colour, type, patterns, voice, handoff, tokens and next steps                         |
+| One project identity                         | UNDRR, PreventionWeb, MCR2030, IRP and DELTA Resilience, with a persistent property selector                                                         |
+| Static palette examples                      | Semantic swatches, correct CSS expressions, copy actions and a live WCAG contrast pairing                                                            |
+| Static type samples                          | Editable specimens, Latin/Arabic language boundaries and role-based typography                                                                       |
+| Application lookbook                         | Social, web, guide and learning compositions with audience and hierarchy notes, followed by working Mangrove card/button/tag specimens               |
+| Separate design and implementation reference | YAML-to-CSS/Figma/component overview, HTML/React/CSS examples and searchable generated tokens with descriptions, value formats, copying and download |
+| Sequential reading                           | Chapter contents dialog, keyboard arrows, stable `#chapter/property` links, browser history, keyboard focus and skip navigation                      |
+| Screen-only prototype                        | Responsive layout, reduced-motion support and all-chapter browser printing with compact specimen styles                                              |
 
 Examples:
 
+- `/#applications/undrr`
 - `/#colour/delta`
 - `/#type/preventionweb`
 - `/#patterns/mcr`
@@ -61,7 +67,8 @@ dialog. Escape dismisses the dialog. Copying requires a browser secure context
 (localhost qualifies); failures show a message so the visible example can be
 copied manually.
 
-The print action uses the current property and includes all chapters. The
+The print action uses the current property and includes all chapters, with the
+selected application format and its annotations. The
 reference table follows its current search query. This is a browser print view,
 not a separately typeset publication.
 
@@ -98,7 +105,7 @@ does not read or write a Figma file. Figma decisions can continue independently.
 
 No deployment or pull request is required for this local exploration.
 
-## Validation performed
+## Initial edition validation
 
 - Built all five property bundles and the 202-token dictionary successfully.
 - Passed scoped ESLint, Prettier, JavaScript syntax and Git whitespace checks.
@@ -117,3 +124,21 @@ No deployment or pull request is required for this local exploration.
 
 The Sass build emits the repository’s existing syndication-search deprecation
 warning. The guide adds no suppression for that component.
+
+## Edition 02 validation
+
+- Rebuilt all five property bundles and the 202-token dictionary; passed scoped
+  ESLint, Prettier, JavaScript syntax and Git whitespace checks.
+- Inspected the four application compositions on desktop and mobile. At 390px,
+  all formats have no horizontal overflow or broken images.
+- Ran axe 4.12 on each of the four formats across all five properties, and on
+  all four mobile formats with UNDRR: zero violations after refinement. The
+  existing incomplete contrast checks for symbol navigation still require
+  human review.
+- Removed the format selector’s background fade so its selected text/background
+  contrast changes together, including during rapid switching.
+- Rendered the browser print view with the A4 guide selected and a one-token
+  reference filter: ten complete chapter pages. Visually checked the new
+  applications and voice/imagery pages, including image crops, ownership,
+  concept labels and chapter footers. The unfiltered token appendix remains
+  longer.

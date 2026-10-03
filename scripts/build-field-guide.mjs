@@ -18,6 +18,9 @@ for (const [file, contents] of build()) {
   fs.writeFileSync(file, contents);
 }
 fs.mkdirSync(path.join(output, 'assets'), { recursive: true });
+fs.cpSync(path.join(source, 'assets'), path.join(output, 'assets'), {
+  recursive: true,
+});
 for (const file of ['index.html', 'guide.css', 'guide.js', 'specimen.html']) {
   fs.copyFileSync(path.join(source, file), path.join(output, file));
 }
