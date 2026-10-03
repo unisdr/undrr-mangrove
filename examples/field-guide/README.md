@@ -14,6 +14,12 @@ See [BRAND-REVIEW.md](BRAND-REVIEW.md) for the critique and resulting changes.
 The new fictional community image, generated with the built-in image tool,
 is documented with its complete prompt in [assets/README.md](assets/README.md).
 
+Edition 03 applies the subsequent design-studio critique as an editorial atlas:
+a compact applications introduction, complete objects, quiet format controls,
+marginal notes and a simplified ownership panel. See
+[DESIGN-STUDIO-REVIEW.md](DESIGN-STUDIO-REVIEW.md) for all changes and current
+visual/interaction checks.
+
 ## Run
 
 From the repository root, with the repository’s dependencies installed:
@@ -112,7 +118,8 @@ commits were rebased onto parent revision `201cd8be`. Keep the PR base at
 `spike/figma-token-bridge` while that parent remains open.
 
 For another agent taking over, start with this README and
-[BRAND-REVIEW.md](BRAND-REVIEW.md), then run the guide and review its applications
+[BRAND-REVIEW.md](BRAND-REVIEW.md) and
+[DESIGN-STUDIO-REVIEW.md](DESIGN-STUDIO-REVIEW.md), then run the guide and review its applications
 chapter in all five properties. Continue the audience and format decisions
 above; approved documentary imagery and actual property artwork are the next
 brand refinements. Preserve the source/provenance distinctions and check mobile,

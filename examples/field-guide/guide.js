@@ -42,9 +42,11 @@ let chosenSwatch = 0;
 let routeRevision = 0;
 let messageTimer;
 let application = 'social';
+const narrowLayout = window.matchMedia('(max-width: 700px)');
 const applications = {
   social: {
     ratio: 'Social / 1.91:1',
+    compactRatio: 'Social / 4:5',
     title: 'A message worth sharing',
     intent: 'Introduce the idea to people who may meet it for the first time.',
     decisions: [
@@ -55,6 +57,7 @@ const applications = {
   },
   web: {
     ratio: 'Web / landing page',
+    compactRatio: 'Web / mobile',
     title: 'From attention to a next step',
     intent: 'Turn the shared message into an invitation to learn and act.',
     decisions: [
@@ -65,6 +68,7 @@ const applications = {
   },
   guide: {
     ratio: 'Guide / A4 cover and interior',
+    compactRatio: 'Guide / A4, stacked',
     title: 'Make room for deeper reading',
     intent: 'Give practitioners a durable reference they can return to.',
     decisions: [
@@ -75,6 +79,7 @@ const applications = {
   },
   learning: {
     ratio: 'Learning / 16:9',
+    compactRatio: 'Learning / stacked',
     title: 'Frame a conversation',
     intent: 'Help a facilitator connect people’s experience with evidence.',
     decisions: [
@@ -171,6 +176,7 @@ function setTheme(id) {
 
 function showChapter(id, focus = false) {
   chapter = id;
+  document.body.dataset.chapter = id;
   const index = pages.findIndex(page => page.id === chapter);
   for (const page of pages) page.hidden = page.id !== chapter;
   $('#chapter-name').textContent = pages[index].dataset.title;
@@ -225,7 +231,9 @@ function paintIdentity() {
 }
 function paintApplication() {
   const selected = applications[application];
-  $('#application-ratio').textContent = selected.ratio;
+  $('#application-ratio').textContent = narrowLayout.matches
+    ? selected.compactRatio
+    : selected.ratio;
   $('#application-title').textContent = selected.title;
   $('#application-intent').textContent = selected.intent;
   $('#application-decisions').replaceChildren(
@@ -474,6 +482,7 @@ try {
     paintType();
   });
   $('#print').addEventListener('click', () => window.print());
+  narrowLayout.addEventListener('change', paintApplication);
   window.addEventListener('hashchange', () => {
     route(true).catch(error => announce(error.message));
   });

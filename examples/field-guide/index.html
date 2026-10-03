@@ -41,7 +41,7 @@
         data-title="A shared language"
       >
         <div class="mg-guide__eyebrow">
-          UNDRR design system / Exploratory edition 02
+          UNDRR design system / Exploratory edition 03
         </div>
         <div class="mg-guide__cover-grid">
           <div>
@@ -140,28 +140,48 @@
         hidden
       >
         <div class="mg-guide__eyebrow">02 / Applications lookbook</div>
-        <h1 class="mg-guide__chapter-title">
-          One message.<br />A life beyond the screen.
-        </h1>
+        <h1 class="mg-guide__chapter-title">Applications</h1>
         <p class="mg-guide__lede">
-          Help communities understand local risk. Follow that message from a
-          social card to a web page, a practical guide and a learning session.
+          One prevention message, adapted for sharing, reading and learning.
         </p>
-        <div
-          class="mg-guide__format-picker"
-          role="group"
-          aria-label="Application format"
-        >
-          <button data-format="social" aria-pressed="true">
-            Social / 1.91:1
-          </button>
-          <button data-format="web" aria-pressed="false">
-            Web / landing page
-          </button>
-          <button data-format="guide" aria-pressed="false">Guide / A4</button>
-          <button data-format="learning" aria-pressed="false">
-            Learning / 16:9
-          </button>
+        <div class="mg-guide__format-row">
+          <div
+            class="mg-guide__format-picker"
+            role="group"
+            aria-label="Application format"
+          >
+            <button
+              data-format="social"
+              aria-pressed="true"
+              aria-controls="lookbook-social"
+            >
+              Social
+            </button>
+            <button
+              data-format="web"
+              aria-pressed="false"
+              aria-controls="lookbook-web"
+            >
+              Web
+            </button>
+            <button
+              data-format="guide"
+              aria-pressed="false"
+              aria-controls="lookbook-guide"
+            >
+              Guide
+            </button>
+            <button
+              data-format="learning"
+              aria-pressed="false"
+              aria-controls="lookbook-learning"
+            >
+              Learning
+            </button>
+          </div>
+          <span id="application-ratio" class="mg-guide__eyebrow"
+            >Social / 1.91:1</span
+          >
         </div>
         <div class="mg-guide__lookbook-grid">
           <div class="mg-guide__lookbook-stage">
@@ -171,7 +191,7 @@
             >
               <div class="mg-guide__application-message">
                 <span data-property-name>UNDRR</span>
-                <h2>Understand<br />local risk.<br />Act together.</h2>
+                <h2>Understand <br />local risk. <br />Act together.</h2>
               </div>
               <img
                 class="mg-guide__application-photo"
@@ -180,7 +200,6 @@
               />
               <div class="mg-guide__application-signature">
                 <img src="assets/undrr-logo-blue.svg" alt="UNDRR" />
-                <p>Knowledge into action</p>
                 <small>AI-generated concept</small>
               </div>
               <div class="mg-guide__sendai-rule" aria-hidden="true"></div>
@@ -302,19 +321,12 @@
             class="mg-guide__application-notes"
             aria-label="Compositional decisions"
           >
-            <span id="application-ratio" class="mg-guide__eyebrow"
-              >Social / 1.91:1</span
-            >
+            <span class="mg-guide__eyebrow">Behind the layout</span>
             <h2 id="application-title" class="mg-guide__subheading">
               A message worth sharing
             </h2>
             <p id="application-intent"></p>
             <ol id="application-decisions"></ol>
-            <p class="mg-guide__small">
-              Property names are text labels. The UNDRR signature carries
-              institutional ownership. These are illustrative communications
-              using the selected colour layer.
-            </p>
           </aside>
         </div>
         <div class="mg-guide__provenance">
@@ -325,7 +337,12 @@
           >
         </div>
         <details class="mg-guide__reference-note">
-          <summary>What the DELTA lookbook taught us</summary>
+          <summary>Sources and ownership</summary>
+          <p>
+            Property names are text labels. The UNDRR signature carries
+            institutional ownership. These are illustrative communications using
+            the selected colour layer.
+          </p>
           <p>
             The application sequence and varied formats are inspired by DELTA’s
             link card, report spread, web composition and training slide. Its
@@ -746,7 +763,7 @@
       </button>
       <div>
         <span id="chapter-name">A shared language</span
-        ><span id="page-count">01 / 09</span>
+        ><span id="page-count">01 / 10</span>
       </div>
       <button id="next-page" aria-label="Next chapter">
         <span>Next</span> →
