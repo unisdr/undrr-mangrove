@@ -205,6 +205,12 @@ function environment(doc, options = {}) {
     findAllWithCriteria({ types }) {
       return this.findAll(node => types.includes(node.type));
     }
+    isNestedInstance() {
+      if (this.type !== 'INSTANCE') return false;
+      for (let parent = this.parent; parent; parent = parent.parent)
+        if (parent.type === 'INSTANCE') return true;
+      return false;
+    }
     resize(width, height) {
       assert(
         Number.isFinite(width) &&
@@ -212,8 +218,13 @@ function environment(doc, options = {}) {
           Number.isFinite(height) &&
           height > 0
       );
+      // Observed in desktop Figma: nested instance dimensions can silently
+      // retain the main component value while the Plugin API reports success.
+      if (this.isNestedInstance()) return;
       this.width = width;
       this.height = height;
+      this._horizontal = 'FIXED';
+      this._vertical = 'FIXED';
     }
     resizeWithoutConstraints(width, height) {
       this.resize(width, height);
@@ -282,6 +293,8 @@ function environment(doc, options = {}) {
       return [this.fontName];
     }
     setBoundVariable(field, variable) {
+      if (['width', 'height'].includes(field) && this.isNestedInstance())
+        return;
       if (!variable) {
         delete this.boundVariables[field];
         return;
@@ -823,6 +836,98 @@ async function main() {
     );
   }
   {
+    const composed = copy(doc);
+    const family = composed.components.families.find(
+      item => item.id === 'tabs'
+    );
+    family.review = {
+      genericLabels: false,
+      width: 720,
+      specimens: [
+        {
+          id: 'coordinated-columns',
+          name: 'Nested content and measured geometry',
+          variant: { Layout: 'Horizontal' },
+          width: 240,
+          instanceWidth: 293,
+          properties: {},
+          nodes: [
+            {
+              path: ['mg-tabs__item-1'],
+              properties: { Label: 'Nested edited seed' },
+            },
+          ],
+        },
+      ],
+    };
+    const env = environment(composed);
+    await importFoundation(env, composed);
+    const first = await env.call('buildMangroveComponents', composed, 'undrr', [
+      'tabs',
+    ]);
+    assert.strictEqual(first.errors.length, 0, first.errors.join('\n'));
+    const instance = [...env.state.nodes.values()].find(
+      node =>
+        identity(node, 'mgKitId') ===
+        'review/tabs/specimen/coordinated-columns/instance'
+    );
+    assert.strictEqual(instance.width, 293);
+    assert.strictEqual(instance.layoutSizingHorizontal, 'FIXED');
+    const nested = instance.children.find(
+      node => node.name === 'mg-tabs__item-1'
+    );
+    const property = Object.keys(nested.componentProperties).find(key =>
+      key.startsWith('Label#')
+    );
+    assert.strictEqual(
+      nested.componentProperties[property].value,
+      'Nested edited seed'
+    );
+    assert(
+      ![...env.state.nodes.values()].some(
+        node =>
+          identity(node, 'mgKitId') ===
+          'review/tabs/specimen/long-label/instance'
+      )
+    );
+    nested.setProperties({ [property]: 'Keep the nested designer edit' });
+    instance.resize(311, instance.height);
+    const ids = ownership(env.state);
+    const second = await env.call(
+      'buildMangroveComponents',
+      composed,
+      'undrr',
+      ['tabs']
+    );
+    assert.strictEqual(second.errors.length, 0, second.errors.join('\n'));
+    assert.strictEqual(second.createdNodeIds.length, 0);
+    assert.deepStrictEqual(ownership(env.state), ids);
+    assert.strictEqual(
+      nested.componentProperties[property].value,
+      'Keep the nested designer edit'
+    );
+    assert.strictEqual(instance.width, 311);
+    for (const invalid of [
+      { path: ['Missing'], width: 100 },
+      { path: ['mg-tabs__item-1'], properties: { Label: false } },
+      { path: ['mg-tabs__item-1'], width: -1 },
+    ]) {
+      const bad = copy(composed);
+      bad.components.families.find(
+        item => item.id === 'tabs'
+      ).review.specimens[0].nodes = [invalid];
+      const rejected = await env.call('buildMangroveComponents', bad, 'undrr', [
+        'tabs',
+      ]);
+      assert(!rejected.families.some(item => item.id === 'tabs'));
+      assert(rejected.errors.length);
+      assert(!rejected.updatedNodeIds.includes(instance.id));
+    }
+    console.log(
+      'ok  composed review seeds nested properties and shared geometry only on fresh instances, preserving edits and rejecting malformed paths/types/sizes'
+    );
+  }
+  {
     for (const properties of [
       { Required: 'true' },
       { Missing: 'value' },
@@ -860,6 +965,287 @@ async function main() {
     }
     console.log(
       'ok  review specimen preflight rejects unknown properties and wrong TEXT/BOOLEAN values before canvas or style writes'
+    );
+  }
+  {
+    const env = environment(doc, {
+      rejectedFonts: ['RobotoCondensed Regular', 'RobotoCondensed Bold'],
+    });
+    await importFoundation(env, doc);
+    const first = await env.call('buildMangroveComponents', doc, 'undrr', [
+      'table',
+    ]);
+    assert.strictEqual(first.errors.length, 0, first.errors.join('\n'));
+    assert.deepStrictEqual(
+      copy(first.families.map(family => [family.id, family.variantIds.length])),
+      [
+        ['table-header-cell', 4],
+        ['table-body-cell', 4],
+        ['table-row', 24],
+        ['table', 8],
+      ]
+    );
+    const variables = new Map(
+      env.state.variables.map(variable => [variable.name, variable])
+    );
+    const tableBuilt = first.families.find(family => family.id === 'table');
+    const rowsBuilt = first.families.find(family => family.id === 'table-row');
+    for (const [preset, columns, height] of [
+      ['story', [131.78125, 131.78125, 456.4375], 65.78125],
+      ['narrowstory', [86.125, 86.125, 120.453125], 222.515625],
+    ]) {
+      const row = env.state.nodes.get(
+        rowsBuilt.variantIds.find(
+          variant => variant.id === `table-row.large.default.odd.${preset}`
+        ).nodeId
+      );
+      assert.strictEqual(row.layoutSizingVertical, 'HUG');
+      assert.strictEqual(row.minHeight, height);
+      assert(
+        !row.boundVariables.height,
+        'Hugging rows must clear inherited fixed-height bindings'
+      );
+      assert(
+        row.boundVariables.minHeight,
+        'Measured row minimum belongs on its master'
+      );
+      for (let index = 0; index < 3; index++) {
+        const cell = row.children[index];
+        assert.strictEqual(cell.width, columns[index]);
+        assert(
+          cell.boundVariables.width,
+          'Shared column width belongs on the primary cell instance inside a Row master'
+        );
+        assert.strictEqual(cell.layoutSizingHorizontal, 'FIXED');
+        assert.strictEqual(cell.layoutSizingVertical, 'HUG');
+        assert(
+          !cell.boundVariables.height,
+          'Hugging story cells must clear inherited fixed-height bindings'
+        );
+      }
+    }
+    const tableRecipe = doc.components.families.find(
+      family => family.id === 'table'
+    );
+    for (const specimen of tableRecipe.review.specimens) {
+      assert(['Story', 'NarrowStory'].includes(specimen.variant.Content));
+      assert(
+        specimen.nodes.every(
+          node => node.width === undefined && node.height === undefined
+        ),
+        'Nested Table review nodes seed content only; real Figma ignored descendant geometry overrides'
+      );
+    }
+    const tableDefault = env.state.nodes.get(
+      tableBuilt.variantIds.find(
+        variant => variant.id === 'table.large.default'
+      ).nodeId
+    );
+    assert.strictEqual(tableDefault.children.length, 5);
+    for (const row of tableDefault.children) {
+      assert.strictEqual(
+        row.children.filter(child => child.type === 'INSTANCE').length,
+        3
+      );
+      assert.strictEqual(row.layoutSizingHorizontal, 'FILL');
+      assert(row.isExposedInstance);
+      for (const cell of row.children.filter(
+        child => child.type === 'INSTANCE'
+      )) {
+        assert.strictEqual(cell.layoutSizingHorizontal, 'FILL');
+        assert.strictEqual(cell.layoutSizingVertical, 'FILL');
+        assert(cell.isExposedInstance);
+        assert.strictEqual(cell.clipsContent, false);
+        const value = cell.findAll(child => child.type === 'TEXT')[0];
+        assert.strictEqual(value.textAutoResize, 'HEIGHT');
+        assert.strictEqual(value.lineHeight.value, 140);
+      }
+    }
+    const firstBody = tableDefault.children.find(
+      row => row.name === 'mg-table__body-row-1'
+    );
+    assert.strictEqual(firstBody.paddingTop, 0);
+    assert.strictEqual(
+      firstBody.boundVariables.paddingTop.id,
+      variables.get('component/geometry/zero').id
+    );
+    assert.strictEqual(firstBody.height, 42.890625);
+    const laterBody = tableDefault.children.find(
+      row => row.name === 'mg-table__body-row-3'
+    );
+    assert.strictEqual(laterBody.height, 43.390625);
+    assert.strictEqual(laterBody.paddingTop, 0.5);
+    assert.strictEqual(tableDefault.paddingBottom, 0.5);
+    const grid = env.state.nodes.get(
+      tableBuilt.variantIds.find(variant => variant.id === 'table.large.border')
+        .nodeId
+    );
+    assert.strictEqual(grid.strokeWeight, 0.5);
+    assert.strictEqual(grid.strokesIncludedInLayout, true);
+    const half = variables.get('component/table/half-border-width');
+    const halfValue = half.resolveForConsumer(grid).value;
+    assert.strictEqual(
+      halfValue + halfValue,
+      1,
+      'Adjacent half strokes must form one source grid seam'
+    );
+    const stripe = env.state.nodes.get(
+      tableBuilt.variantIds.find(
+        variant => variant.id === 'table.large.striped'
+      ).nodeId
+    );
+    assert.strictEqual(stripe.children[1].fills.length, 0);
+    assert.strictEqual(
+      stripe.children[2].fills[0].boundVariables.color.id,
+      variables.get('color/neutral-25').id
+    );
+    assert.strictEqual(stripe.children[2].strokes.length, 0);
+    assert.strictEqual(
+      stripe.children[4].fills[0].boundVariables.color.id,
+      variables.get('color/neutral-25').id
+    );
+    const findReview = id =>
+      [...env.state.nodes.values()].find(
+        node =>
+          identity(node, 'mgKitId') === `review/table/specimen/${id}/instance`
+      );
+    const wide = findReview('long-content'),
+      narrow = findReview('narrow-content');
+    assert(
+      wide && narrow,
+      'Source long and narrow Table review specimens missing'
+    );
+    const find = (node, path) =>
+      path.reduce(
+        (parent, name) => parent.children.find(child => child.name === name),
+        node
+      );
+    const labelProperty = node =>
+      Object.keys(node.componentProperties).find(name =>
+        name.startsWith('Label#')
+      );
+    for (const instance of [wide, narrow]) {
+      for (let row = 0; row < 5; row++) {
+        const parent = find(instance, [
+          row === 0 ? 'mg-table__head' : `mg-table__body-row-${row}`,
+        ]);
+        for (let col = 0; col < 3; col++) {
+          const cell = parent.children.find(
+            child => child.name === `mg-table__cell-${col + 1}`
+          );
+          assert.strictEqual(
+            cell.width,
+            instance === wide
+              ? [131.78125, 131.78125, 456.4375][col]
+              : [86.125, 86.125, 120.453125][col]
+          );
+          assert.strictEqual(
+            cell.boundVariables.width.id,
+            variables.get(
+              `component/table/specimen/${instance === wide ? 'long-content' : 'narrow-content'}/column-${col + 1}`
+            ).id
+          );
+          assert.strictEqual(
+            cell.componentProperties[labelProperty(cell)].value,
+            row === 0
+              ? 'Table header'
+              : col < 2
+                ? 'Content Goes Here'
+                : 'In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate'
+          );
+        }
+      }
+    }
+    assert.strictEqual(narrow.width, 292.703125);
+    assert.strictEqual(
+      narrow.parent.width -
+        narrow.parent.paddingLeft -
+        narrow.parent.paddingRight,
+      240
+    );
+    assert.strictEqual(narrow.layoutSizingHorizontal, 'FIXED');
+    assert.strictEqual(
+      find(narrow, ['mg-table__body-row-1']).minHeight,
+      222.015625
+    );
+    assert.strictEqual(
+      find(narrow, ['mg-table__body-row-2']).minHeight,
+      222.515625
+    );
+    assert.strictEqual(
+      find(narrow, ['mg-table__body-row-1']).layoutSizingVertical,
+      'HUG'
+    );
+    assert(!find(narrow, ['mg-table__body-row-1']).boundVariables.height);
+    assert(find(narrow, ['mg-table__body-row-1']).boundVariables.minHeight);
+    assert(
+      !findReview('long-label') && !findReview('narrow'),
+      'Composed Table must not seed a nonexistent root Label'
+    );
+    const edited = find(wide, ['mg-table__body-row-1', 'mg-table__cell-3']);
+    const label = labelProperty(edited);
+    edited.setProperties({
+      [label]: 'Designer table content\nPreserve this second line',
+    });
+    const owned = ownership(env.state);
+    const second = await env.call('buildMangroveComponents', doc, 'undrr', [
+      'table',
+    ]);
+    assert.strictEqual(second.errors.length, 0, second.errors.join('\n'));
+    assert.strictEqual(second.createdNodeIds.length, 0);
+    assert.deepStrictEqual(ownership(env.state), owned);
+    assert.strictEqual(
+      edited.componentProperties[label].value,
+      'Designer table content\nPreserve this second line'
+    );
+    assert.strictEqual(
+      edited.width,
+      456.4375,
+      'Geometry remains linked to the measured Row master, not a nested resize override'
+    );
+    const {
+      buildFigmaVariables,
+    } = require('../../../scripts/build-figma-tokens.cjs');
+    const read = fs.readFileSync;
+    for (const [file, before, after] of [
+      [
+        '/stories/Atom/Table/table.scss',
+        'line-height: 1.4;',
+        'line-height: 1.5;',
+      ],
+      [
+        '/stories/Atom/Table/table.scss',
+        'font-weight: 600;',
+        'font-weight: 700;',
+      ],
+      [
+        '/stories/Atom/Table/table.scss',
+        'var(--mg-color-neutral-25)',
+        'var(--mg-color-neutral-50)',
+      ],
+      [
+        '/stories/Atom/Table/Table.jsx',
+        '<td>{details}</td>',
+        '<td>{tdtext}</td>',
+      ],
+    ]) {
+      fs.readFileSync = function (filename, ...args) {
+        const source = read.call(this, filename, ...args);
+        return typeof filename === 'string' && filename.endsWith(file)
+          ? source.replace(before, after)
+          : source;
+      };
+      try {
+        assert.throws(
+          () => buildFigmaVariables(),
+          /no longer matches|inventory changed/
+        );
+      } finally {
+        fs.readFileSync = read;
+      }
+    }
+    console.log(
+      'ok  Table composes40 bounded variants with source columns on Row masters, hugging Story cells/rows above browser minimum heights, collapsed seams and editable text; review never resizes nested geometry and reimport preserves text edits'
     );
   }
   {
@@ -1590,6 +1976,64 @@ async function main() {
       connector.decompressJSON(connector.compressJSON(doc)),
       doc
     );
+    // Exercise both the local codec and its dependency-free emitted decoder.
+    const isolatedDecoder = vm.runInNewContext(
+      `(${connector.decompressJSON.toString()})`
+    );
+    const fixtures = [
+      null,
+      '',
+      [],
+      {},
+      false,
+      'Latin café, العربية, 中文, 🦀\nSecond line',
+      'Repeated Unicode 災 🦀'.repeat(2000),
+    ];
+    let seed = 573;
+    let saturated = '';
+    for (let i = 0; i < 400000; i += 1) {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      saturated += String.fromCharCode(32 + (seed % 95));
+    }
+    fixtures.push(saturated);
+    for (const fixture of fixtures) {
+      const packed = connector.compressJSON(fixture);
+      assert.deepStrictEqual(connector.decompressJSON(packed), fixture);
+      assert.strictEqual(
+        JSON.stringify(isolatedDecoder(packed)),
+        JSON.stringify(fixture)
+      );
+    }
+    const saturatedHeader = connector.compressJSON(saturated).split(':');
+    assert.strictEqual(Number(saturatedHeader[0]), 16);
+    assert(
+      Number(saturatedHeader[1]) > 65536,
+      'Dictionary cap was not exercised'
+    );
+    for (const malformed of [
+      '',
+      '7:1:AA==',
+      '17:1:AA==',
+      '8:0:',
+      '8:2:AA==',
+      '9:1:AP8=',
+    ])
+      assert.throws(() => connector.decompressJSON(malformed));
+    for (const mode of doc.modes) {
+      const payload = await connector.buildConnector({
+        operation: 'import',
+        brandId: mode.id,
+        doc,
+      });
+      assert(payload.characters <= 50000 && payload.bytes <= 50000);
+      const subset = connector.subsetDocument(doc, 'import', mode.id, []);
+      assert.strictEqual(subset.variables.length, doc.variables.length);
+      assert.deepStrictEqual(
+        connector.decompressJSON(connector.compressJSON(subset)),
+        subset,
+        'Metadata or values were lost to fit the connector limit'
+      );
+    }
     const env = environment(doc, { sharedOnly: true });
     const importScript = await connector.buildConnector({
       operation: 'import',
@@ -1663,8 +2107,163 @@ async function main() {
       failedImport.result.styles.counts.text.updated +
         failedImport.result.styles.counts.effect.updated
     );
+    const table = doc.components.families.find(family => family.id === 'table');
+    assert(table, 'Table connector batching fixture missing');
+    const setIds = new Map();
+    const variantNodeIds = new Map();
+    function stableBatch(report) {
+      assert.strictEqual(report.errors.length, 0, report.errors.join('\n'));
+      for (const family of report.families) {
+        if (setIds.has(family.id))
+          assert.strictEqual(family.setId, setIds.get(family.id));
+        else setIds.set(family.id, family.setId);
+        for (const variant of family.variantIds) {
+          const key = `${family.id}/${variant.id}`;
+          if (variantNodeIds.has(key))
+            assert.strictEqual(variant.nodeId, variantNodeIds.get(key));
+          else variantNodeIds.set(key, variant.nodeId);
+        }
+      }
+      for (const setId of setIds.values()) {
+        const variants = env.state.nodes
+          .get(setId)
+          .children.filter(node => node.type === 'COMPONENT');
+        for (let i = 0; i < variants.length; i += 1)
+          for (let j = i + 1; j < variants.length; j += 1) {
+            const a = variants[i];
+            const b = variants[j];
+            assert(
+              a.x + a.width <= b.x ||
+                b.x + b.width <= a.x ||
+                a.y + a.height <= b.y ||
+                b.y + b.height <= a.y,
+              'Retained variants overlap after a scoped connector batch'
+            );
+          }
+      }
+      for (const nodeId of variantNodeIds.values())
+        assert(!env.state.nodes.get(nodeId).removed);
+    }
+    stableBatch(built);
+    for (const variant of table.variants) {
+      const subset = connector.subsetDocument(
+        doc,
+        'build',
+        'undrr',
+        ['table'],
+        [variant.id]
+      );
+      assert.strictEqual(
+        subset.components.families.find(family => family.id === 'table')
+          .variants.length,
+        1
+      );
+      for (const family of subset.components.families)
+        for (const specimen of family.review?.specimens || [])
+          assert(
+            family.variants.some(item =>
+              Object.entries(specimen.variant).every(
+                ([key, value]) => item.properties[key] === value
+              )
+            ),
+            'A scoped batch retained a review selector for an omitted variant'
+          );
+      const payload = await connector.buildConnector({
+        operation: 'build',
+        familyIds: ['table'],
+        variantIds: [variant.id],
+        doc,
+      });
+      assert(payload.characters <= 50000 && payload.bytes <= 50000);
+      const report = await env.runCode(payload.code);
+      assert.deepStrictEqual(copy(report.scope), {
+        familyIds: ['table'],
+        variantIds: [variant.id],
+      });
+      stableBatch(report);
+    }
+    assert.strictEqual(
+      env.state.nodes.get(setIds.get('table')).children.length,
+      table.variants.length
+    );
+    const repeatBatch = await connector.buildConnector({
+      operation: 'build',
+      familyIds: ['table'],
+      variantIds: [table.variants[0].id],
+      doc,
+    });
+    const repeated = await env.runCode(repeatBatch.code);
+    stableBatch(repeated);
+    assert.strictEqual(repeated.createdNodeIds.length, 0);
+    await assert.rejects(
+      connector.buildConnector({
+        operation: 'build',
+        familyIds: ['table'],
+        variantIds: ['unknown-variant'],
+        doc,
+      }),
+      /Unknown table variant/
+    );
+    await assert.rejects(
+      connector.buildConnector({
+        operation: 'build',
+        familyIds: ['button', 'table'],
+        variantIds: [table.variants[0].id],
+        doc,
+      }),
+      /Variant batches require one family/
+    );
+    await assert.rejects(
+      connector.buildConnector({
+        operation: 'build',
+        familyIds: ['table'],
+        doc,
+      }),
+      /batch one family with explicit variantIds/
+    );
+    await assert.rejects(
+      connector.buildConnector({
+        operation: 'build',
+        familyIds: ['text-cta'],
+        doc,
+      }),
+      /batch one family with explicit variantIds/
+    );
+    const cta = doc.components.families.find(
+      family => family.id === 'text-cta'
+    );
+    assert(cta, 'Text CTA connector batching fixture missing');
+    env.state.rejectedFonts.delete('Roboto Condensed Regular');
+    for (const variant of cta.variants) {
+      const payload = await connector.buildConnector({
+        operation: 'build',
+        familyIds: ['text-cta'],
+        variantIds: [variant.id],
+        doc,
+      });
+      assert(payload.characters <= 50000 && payload.bytes <= 50000);
+      const report = await env.runCode(payload.code);
+      assert.deepStrictEqual(copy(report.scope), {
+        familyIds: ['text-cta'],
+        variantIds: [variant.id],
+      });
+      stableBatch(report);
+    }
+    assert.strictEqual(
+      env.state.nodes.get(setIds.get('text-cta')).children.length,
+      cta.variants.length
+    );
+    const ctaRepeatPayload = await connector.buildConnector({
+      operation: 'build',
+      familyIds: ['text-cta'],
+      variantIds: [cta.variants[0].id],
+      doc,
+    });
+    const ctaRepeated = await env.runCode(ctaRepeatPayload.code);
+    stableBatch(ctaRepeated);
+    assert.strictEqual(ctaRepeated.createdNodeIds.length, 0);
     console.log(
-      'ok  connector codec, canonical import IDs and font failures, minified remote build, bounded Unicode summary and selected node inspection'
+      'ok  packed connector codec, all-brand import bounds, canonical IDs/font failures, scoped Table/CTA batch identities/nonoverlapping grids and bounded inspection'
     );
   }
 }

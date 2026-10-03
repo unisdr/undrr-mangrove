@@ -111,7 +111,7 @@ Shared-library publishing and five simultaneous brand modes require a suitable p
 
 When Professional access arrives, use the user's own account with a Full seat and edit access to the team file. Move the canonical kit and re-import all brands. Migration has mock coverage but needs real-file verification. Code Connect remains a separate later option requiring Organization or Enterprise access.
 
-Professional access is planned. Follow [the handoff checklist](MAINTAINING-KIT.md#professional-access-handoff) from the verified 246-variable, seven-family, 47-variant UNDRR checkpoint. It records the documented 10-mode allowance, library publishing and MCP read limits, then the actual migration, brand review and consumer-update checks still required. Condensed font loading, cloud synchronisation and component fidelity remain separate unresolved issues after access changes.
+Professional access is planned. Follow [the handoff checklist](MAINTAINING-KIT.md#professional-access-handoff) from the latest Table/Text CTA checkpoint below: 277 variables, 12 families and 93 variants with UNDRR restored. The earlier 246-variable checkpoint remains historical evidence. It records the documented 10-mode allowance, library publishing and MCP read limits, then the actual migration, brand review and consumer-update checks still required. Condensed font loading, cloud synchronisation and component fidelity remain separate unresolved issues after access changes.
 
 ## Record the next observation
 
@@ -171,3 +171,31 @@ The generic `review.specimens` contract adds up to eight stable examples with an
 The existing PR was updated successfully through the known-number GitHub CLI GraphQL route after direct REST updates encountered a TCP refusal. Listing endpoints remain suppressed for this organisation. GitHub Actions remain unavailable, so local verification is the recorded gate.
 
 The desktop Textarea repeat created zero nodes, updated 77 and reported no errors, with unchanged set, variant and property IDs. A fresh local `.fig` backup was saved after restoring UNDRR. Cloud synchronisation remains unconfirmed; the desktop file was left open. Edited multiline Value/visibility retention has mock coverage; an actual edited-instance repeat remains pending.
+
+## Table, Text CTA and native composition checks on 3 October 2026
+
+Source baseline `ea33e7b8`, with the recipes and runtime in this change, expands the exporter to **277 variables, 73 text definitions, four effects, 12 families and 93 variants**. Table contributes Header cell 4, Body cell 4, Row 24 and Table 8; Text CTA contributes six. The source was measured using actual JSX and freshly compiled SCSS in isolated browser fixtures, including narrow content and conventional actions. The [architecture review](ARCHITECTURE-REVIEW.md) records independent Plugin API guidance and concrete acceptance gates.
+
+### Native instance geometry can fail silently
+
+The initial mock accepted nested row heights and cell widths on Table review instances. Real Figma returned success but retained the masters' dimensions and bindings. The screenshot showed overlapping content. Restoring sizing axes and clearing inherited bindings did not make these nested dimensions effective. Do not infer successful native geometry from API return values or a mock.
+
+The repair puts shared columns on Row masters and selects linked Story/NarrowStory Table presets. Review nodes seed TEXT properties only; descendant width/height seeds are rejected before writes. The explicit review refresh selects the current master preset and restores the root width while preserving content. Ordinary builds retain existing review references and edits. The mock now reproduces ignored nested INSTANCE resize and width/height binding calls, and records `resize()` fixing both sizing axes.
+
+Figma's narrow text still breaks into more lines than the browser at the measured column widths. The cause is unverified; exact installed font-file equivalence and engine line-breaking remain open. Default Story rows/cells now hug their content above browser-measured minimum heights. Actual narrow body rows grow to 262.5/263px, compared with source 222.015625/222.515625px, so the content fits. Wide story rows retain source heights 65.28125/65.78125px. The narrow table remains 292.703125px wide in a 240px consumer and is 1116.78125px high. Equal short templates and bordered seams remain bounded fixtures, with no claim of arbitrary native column resizing or the HTML auto-table algorithm.
+
+### Source-defined CTA context and wrapping
+
+Default Latin TextCta headings inherit Roboto. The headline utility gives 32px/40px desktop and 23px/28.75px mobile, rather than requiring Condensed. Strong conventional actions need neutral-0 fill, neutral-0 at 0.72 alpha border and hero-coloured Label. The generic native-instance appearance contract binds those paints without detaching Button.
+
+Short CTA masters retain HUG actions; explicit long presets put 200px/120px actions and FILL/HEIGHT labels on their masters. Actual desktop actions measure 200 × 64px and 120 × 106px with unclipped wrapping. The 720px desktop CTA is 259px high. The 320px mobile CTA is 325px versus browser 324.5px; this is a measured half-pixel difference, not exact metric parity. The bounded six-variant set does not establish arbitrary responsive resizing, extra actions, rich text, media, editorial CTA links or Arabic typography.
+
+### Identity, evidence and access
+
+The desktop file now contains 277 variables, 12 sets/93 variants, 25 selected text styles and four effects. Inspection reports no errors. All 246 preceding variable IDs and seven original sets/47 variants remain unchanged. A normal repeat creates zero nodes, updates 322 and has no errors, preserving selected family, variant and property IDs. Designer text/visibility edits and migration behaviours have mock checks; a new edited native consumer experiment and all-brand visual acceptance remain pending.
+
+Saved local evidence includes `mangrove-kit-before-table-2026-10-03.json`, `mangrove-table-cta-build-2026-10-03.json`, `mangrove-table-cta-repeat-2026-10-03.json` and `mangrove-kit-table-cta-final-2026-10-03.json`. Keep actual asset IDs and private paths in the local evidence ledger. Cloud synchronisation remains unconfirmed and the file stays open. The connector is available but still rejects library discovery at its Starter allowance; that failure is not evidence that no libraries exist.
+
+The connector codec now packs LZW codes at the smallest required width and preserves complete metadata. Full Table/Row/CTA builds exceed 50,000 characters or bytes and require explicit variant batches. Mocks execute all eight Table and six CTA batches, retain IDs, arrange every retained main variant without overlap and verify zero-node repeats. Native connector batch assembly remains unverified while quota is exhausted. Full desktop builds work independently of that allowance.
+
+Local gates: token Jest 3 suites/1328 tests, lint 0 errors/22 existing warnings, importer 10 scenarios, kit 15 scenarios, CTA 6 scenarios and UI 2 scenarios pass. Touched-file Prettier and whitespace checks are recorded with the final commit. No production JSX or SCSS changed.

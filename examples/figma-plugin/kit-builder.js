@@ -81,6 +81,37 @@ async function buildMangroveComponents(
     visit(tree);
     for (const child of tree.children || []) treeWalk(child, visit);
   };
+  // Review geometry and content are initial specimen seeds, not repeat-build edits.
+  function reviewTarget(tree, path) {
+    if (
+      !Array.isArray(path) ||
+      !path.length ||
+      path.some(name => typeof name !== 'string' || !name)
+    )
+      throw new Error('Review node needs a nonempty anatomy path.');
+    for (const name of path) {
+      if (tree.type === 'INSTANCE')
+        tree = families
+          .get(tree.family)
+          ?.variants.find(item =>
+            matches(item.properties, tree.variant || {})
+          )?.tree;
+      const children = (tree?.children || []).filter(
+        child => child.name === name
+      );
+      if (children.length !== 1)
+        throw new Error(`Ambiguous or missing review node ${name}`);
+      tree = children[0];
+    }
+    return tree;
+  }
+  function reviewDimension(value) {
+    if (typeof value === 'string') variable(value, 'FLOAT');
+    else if (!Number.isFinite(value) || value <= 0)
+      throw new Error(
+        'Review geometry must be a positive size or FLOAT variable.'
+      );
+  }
   const dependencies = recipe => {
     const names = new Set();
     for (const variant of recipe.variants)
@@ -217,6 +248,16 @@ async function buildMangroveComponents(
       }
       for (const name of Object.keys(family.optionalProperties || {}))
         recordProperty(name, 'BOOLEAN');
+      if (
+        family.review?.genericLabels !== undefined &&
+        typeof family.review.genericLabels !== 'boolean'
+      )
+        throw new Error('Review genericLabels must be a boolean.');
+      if (
+        family.review?.width !== undefined &&
+        (!Number.isFinite(family.review.width) || family.review.width <= 0)
+      )
+        throw new Error('Review width must be positive and finite.');
       for (const variant of family.variants) {
         if (variantIds.has(variant.id))
           throw new Error(`Duplicate variant ${variant.id}`);
@@ -288,10 +329,16 @@ async function buildMangroveComponents(
             variable(name, field === 'visible' ? 'BOOLEAN' : 'FLOAT');
           }
           const layout = tree.layout || {};
+          if (
+            layout.wrap !== undefined &&
+            !['NO_WRAP', 'WRAP'].includes(layout.wrap)
+          )
+            throw new Error('Layout wrap must be NO_WRAP or WRAP.');
           for (const name of [
             layout.padding?.block,
             layout.padding?.inline,
             layout.gap,
+            layout.counterGap,
             layout.minHeight,
             layout.maxHeight,
             layout.maxWidth,
@@ -303,6 +350,11 @@ async function buildMangroveComponents(
               variable(name, 'FLOAT');
           }
           if (tree.type === 'TEXT') {
+            if (
+              tree.textWrap !== undefined &&
+              !['BALANCE', 'WRAP', 'TRUNCATE'].includes(tree.textWrap)
+            )
+              throw new Error('Unsupported text wrapping style.');
             if (!textSpecs.has(tree.textStyle))
               throw new Error(`Missing exported text style ${tree.textStyle}`);
             familyText.add(tree.textStyle);
@@ -315,6 +367,8 @@ async function buildMangroveComponents(
             familyEffects.add(tree.effectStyle);
           }
           if (tree.type === 'INSTANCE') {
+            if (tree.labelSizing !== undefined && tree.labelSizing !== 'FILL')
+              throw new Error('Instance labelSizing supports only FILL.');
             const dependency = families.get(tree.family);
             if (
               !dependency?.variants.some(item =>
@@ -322,7 +376,39 @@ async function buildMangroveComponents(
               )
             )
               throw new Error(`No matching ${tree.family} variant.`);
-          }
+            if (tree.appearance !== undefined) {
+              if (
+                !tree.appearance ||
+                typeof tree.appearance !== 'object' ||
+                Array.isArray(tree.appearance) ||
+                Object.keys(tree.appearance).some(
+                  field => !['fill', 'stroke', 'labelFill'].includes(field)
+                )
+              )
+                throw new Error(
+                  'Instance appearance supports only fill, stroke and labelFill.'
+                );
+              for (const name of Object.values(tree.appearance))
+                variable(name, 'COLOR');
+              if (tree.appearance.labelFill) {
+                const selected = dependency.variants.find(item =>
+                  matches(item.properties, tree.variant || {})
+                );
+                const labels = [];
+                treeWalk(selected.tree, child => {
+                  if (child.type === 'TEXT' && child.textProperty === 'Label')
+                    labels.push(child);
+                });
+                if (labels.length !== 1)
+                  throw new Error(
+                    'Contextual label fill requires exactly one Label text node.'
+                  );
+              }
+            }
+          } else if (tree.appearance !== undefined)
+            throw new Error(
+              'Contextual appearance is only supported on native instances.'
+            );
         });
       }
       if (family.review?.specimens !== undefined) {
@@ -374,6 +460,55 @@ async function buildMangroveComponents(
               throw new Error(
                 `Review specimen ${specimen.id} property ${name} must match a named TEXT or BOOLEAN property.`
               );
+          }
+          if (specimen.instanceWidth !== undefined)
+            reviewDimension(specimen.instanceWidth);
+          if (specimen.nodes !== undefined) {
+            if (!Array.isArray(specimen.nodes) || specimen.nodes.length > 64)
+              throw new Error(
+                'Review nodes must be an array of at most 64 entries.'
+              );
+            const root = family.variants.find(item =>
+              matches(item.properties, specimen.variant)
+            ).tree;
+            for (const seed of specimen.nodes) {
+              const target = reviewTarget(root, seed.path);
+              if (seed.width !== undefined || seed.height !== undefined)
+                throw new Error(
+                  'Nested review dimensions are unsupported in real Figma. Put shared geometry on component masters.'
+                );
+              if (seed.properties !== undefined) {
+                if (
+                  target.type !== 'INSTANCE' ||
+                  !seed.properties ||
+                  typeof seed.properties !== 'object' ||
+                  Array.isArray(seed.properties)
+                )
+                  throw new Error(
+                    'Review property seeds require a nested instance and named properties.'
+                  );
+                const dependency = families
+                  .get(target.family)
+                  .variants.find(item =>
+                    matches(item.properties, target.variant || {})
+                  );
+                const types = new Map();
+                treeWalk(dependency.tree, node => {
+                  if (node.textProperty) types.set(node.textProperty, 'TEXT');
+                  if (node.visibilityProperty)
+                    types.set(node.visibilityProperty, 'BOOLEAN');
+                });
+                for (const [name, value] of Object.entries(seed.properties))
+                  if (
+                    !types.has(name) ||
+                    typeof value !==
+                      (types.get(name) === 'TEXT' ? 'string' : 'boolean')
+                  )
+                    throw new Error(
+                      `Review nested property ${name} does not match its component contract.`
+                    );
+              }
+            }
           }
         }
       }
@@ -555,6 +690,7 @@ async function buildMangroveComponents(
           ? 'MIN'
           : layout.align || layout.counterAlign || 'MIN';
       node.clipsContent = Boolean(layout.clipsContent);
+      if (layout.wrap !== undefined) node.layoutWrap = layout.wrap;
     }
     if (layout.padding) {
       setNumeric(node, 'paddingTop', layout.padding.block);
@@ -563,6 +699,7 @@ async function buildMangroveComponents(
       setNumeric(node, 'paddingRight', layout.padding.inline);
     }
     setNumeric(node, 'itemSpacing', layout.gap);
+    setNumeric(node, 'counterAxisSpacing', layout.counterGap);
     setNumeric(node, 'minHeight', layout.minHeight);
     setNumeric(node, 'maxHeight', layout.maxHeight);
     setNumeric(node, 'minWidth', layout.minWidth);
@@ -585,11 +722,26 @@ async function buildMangroveComponents(
       node.parent?.type === 'COMPONENT_SET' && layout.width === 'FILL';
     // FILL requires an auto-layout parent. Main variants have a fixed specimen width.
     if (rootFill) node.resize(320, node.height);
-    if (fixedWidth || fixedHeight)
+    const previousHorizontal = node.layoutSizingHorizontal;
+    const previousVertical = node.layoutSizingVertical;
+    if (['HUG', 'FILL'].includes(layout.width))
+      node.setBoundVariable('width', null);
+    if (['HUG', 'FILL'].includes(layout.height))
+      node.setBoundVariable('height', null);
+    if (fixedWidth) node.setBoundVariable('width', null);
+    if (fixedHeight) node.setBoundVariable('height', null);
+    if (fixedWidth || fixedHeight) {
       node.resize(
         fixedWidth ? width : node.width,
         fixedHeight ? height : node.height
       );
+      // resize fixes both axes in real Figma. Preserve an unspecified FILL/HUG
+      // axis, especially for nested table rows and cells.
+      if (!fixedWidth && !layout.width)
+        node.layoutSizingHorizontal = previousHorizontal;
+      if (!fixedHeight && !layout.height)
+        node.layoutSizingVertical = previousVertical;
+    }
     if (node.type === 'TEXT') {
       const wraps = layout.width === 'FILL' || fixedWidth;
       node.textAutoResize = wraps ? 'HEIGHT' : 'WIDTH_AND_HEIGHT';
@@ -728,6 +880,7 @@ async function buildMangroveComponents(
       await node.setTextStyleIdAsync(style.id);
       node.characters = spec.characters || '';
       node.textAlignHorizontal = spec.textAlign || 'LEFT';
+      if (spec.textWrap !== undefined) node.textWrapStyle = spec.textWrap;
     }
     if (spec.type !== 'INSTANCE') {
       if (spec.layout?.mode && 'layoutMode' in node)
@@ -799,8 +952,55 @@ async function buildMangroveComponents(
       // These are primary nested instances in the owned main component.
       // Review descendants inherit exposure; do not write their inherited flag.
       node.isExposedInstance = Boolean(spec.expose);
+      // Explicit instance bindings override only the declared inherited fields.
+      for (const [field, name] of Object.entries(spec.bindings || {}))
+        bind(node, field, name);
+      // Contextual CSS colours stay on the native instance; geometry and identity
+      // continue to come from its source component. Never detach nested actions.
+      if (spec.appearance) {
+        if (spec.appearance.fill) paint(node, 'fills', spec.appearance.fill);
+        if (spec.appearance.stroke)
+          paint(node, 'strokes', spec.appearance.stroke);
+        if (spec.appearance.labelFill) {
+          const labels = node
+            .findAllWithCriteria({ types: ['TEXT'] })
+            .filter(
+              child =>
+                child.componentPropertyReferences?.characters?.replace(
+                  /#[^#]+$/,
+                  ''
+                ) === 'Label'
+            );
+          if (labels.length !== 1)
+            throw new Error(
+              'Contextual label fill requires exactly one Label text node.'
+            );
+          paint(labels[0], 'fills', spec.appearance.labelFill);
+          if (fresh) created.add(labels[0].id);
+          else updated.add(labels[0].id);
+        }
+      }
     }
     applyLayout(node, spec.layout);
+    if (spec.labelSizing === 'FILL') {
+      const labels = node
+        .findAllWithCriteria({ types: ['TEXT'] })
+        .filter(
+          child =>
+            child.componentPropertyReferences?.characters?.replace(
+              /#[^#]+$/,
+              ''
+            ) === 'Label'
+        );
+      if (labels.length !== 1)
+        throw new Error(
+          'Instance labelSizing requires exactly one Label text node.'
+        );
+      labels[0].textAutoResize = 'HEIGHT';
+      labels[0].layoutSizingHorizontal = 'FILL';
+      labels[0].layoutSizingVertical = 'HUG';
+      labels[0].textAlignHorizontal = 'CENTER';
+    }
     if (spec.effectStyle && ['FRAME', 'COMPONENT'].includes(node.type))
       node.clipsContent = true;
     if (spec.type === 'FRAME') {
@@ -955,17 +1155,23 @@ async function buildMangroveComponents(
             .join(', ');
         variants.push({ node: component, recipe });
       }
-      const columns = Math.min(3, variants.length);
-      const cellWidth = Math.max(...variants.map(item => item.node.width)) + 48;
+      // Scoped connector batches retain prior variants. Include every retained
+      // component in the main grid so later batches cannot overlap them.
+      const layoutVariants = set.children.filter(
+        node => node.type === 'COMPONENT'
+      );
+      const columns = Math.min(3, layoutVariants.length);
+      const cellWidth =
+        Math.max(...layoutVariants.map(node => node.width)) + 48;
       const cellHeight =
-        Math.max(...variants.map(item => item.node.height)) + 48;
-      variants.forEach(({ node }, index) => {
+        Math.max(...layoutVariants.map(node => node.height)) + 48;
+      layoutVariants.forEach((node, index) => {
         node.x = 24 + (index % columns) * cellWidth;
         node.y = 24 + Math.floor(index / columns) * cellHeight;
       });
       set.resizeWithoutConstraints(
         24 + columns * cellWidth,
-        24 + Math.ceil(variants.length / columns) * cellHeight
+        24 + Math.ceil(layoutVariants.length / columns) * cellHeight
       );
       built.set(family.id, { set, variants });
       result.families.push({
@@ -1100,20 +1306,27 @@ async function buildMangroveComponents(
         id: item.recipe.id,
         name: item.recipe.name,
         variant: item,
+        width:
+          reviewOptions.width ||
+          (typeof item.recipe.tree.layout?.width === 'number'
+            ? item.recipe.tree.layout.width
+            : undefined),
       }));
-      specimens.push({
-        id: 'long-label',
-        name: 'Long label, editable instance',
-        variant: family.variants[0],
-        label: 'A longer Mangrove label to check resizing and wrapping',
-      });
-      specimens.push({
-        id: 'narrow',
-        name: 'Narrow layout, 240px',
-        variant: family.variants[0],
-        width: 240,
-        label: 'A longer Mangrove label in a narrow layout',
-      });
+      if (reviewOptions.genericLabels !== false)
+        specimens.push({
+          id: 'long-label',
+          name: 'Long label, editable instance',
+          variant: family.variants[0],
+          label: 'A longer Mangrove label to check resizing and wrapping',
+        });
+      if (reviewOptions.genericLabels !== false)
+        specimens.push({
+          id: 'narrow',
+          name: 'Narrow layout, 240px',
+          variant: family.variants[0],
+          width: 240,
+          label: 'A longer Mangrove label in a narrow layout',
+        });
       specimens.push(
         ...(reviewOptions.specimens || []).map(specimen => ({
           ...specimen,
@@ -1193,6 +1406,54 @@ async function buildMangroveComponents(
             specimen.variant.recipe.tree.layout?.width === 'FILL'
           )
             instance.layoutSizingHorizontal = 'FILL';
+          if (specimen.instanceWidth !== undefined)
+            applyLayout(instance, { width: specimen.instanceWidth });
+          // Apply content before geometry, then resolve fresh descendants again.
+          // Nested property changes can rebuild instance descendants in Figma.
+        }
+        if (specimen.nodes?.length && (fresh || refreshNarrowReview)) {
+          if (!fresh) {
+            const current = await instance.getMainComponentAsync();
+            if (current?.id !== specimen.variant.node.id) {
+              instance.swapComponent(specimen.variant.node);
+              await loadNodeFonts(instance);
+            }
+          }
+          applyLayout(instance, {
+            width: specimen.instanceWidth ?? specimen.width,
+            height: 'HUG',
+          });
+          for (const seed of fresh ? specimen.nodes : []) {
+            let target = instance;
+            for (const name of seed.path) {
+              const children = target.children.filter(
+                child => child.name === name
+              );
+              if (children.length !== 1)
+                throw new Error(`Ambiguous or missing review node ${name}`);
+              target = children[0];
+            }
+            await loadNodeFonts(target);
+            const values = {};
+            for (const [name, value] of Object.entries(seed.properties || {})) {
+              const property = Object.keys(target.componentProperties).find(
+                key => key.replace(/#[^#]+$/, '') === name
+              );
+              if (!property)
+                throw new Error(
+                  `Review nested property ${name} is unavailable.`
+                );
+              values[property] = value;
+            }
+            if (Object.keys(values).length) target.setProperties(values);
+            created.add(target.id);
+          }
+          if (!fresh)
+            result.audit.push({
+              nodeId: instance.id,
+              status: 'composed-review-geometry-refreshed',
+              preservedContent: true,
+            });
         }
         if (!fresh && specimen.label && reviewOptions.longLabelTarget) {
           result.audit.push({

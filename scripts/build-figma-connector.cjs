@@ -7,8 +7,10 @@ const { minify } = require('terser');
 const PLUGIN = path.resolve(__dirname, '../examples/figma-plugin');
 const LIMIT = 50000;
 
-// Fixed-width LZW codes over UTF-8 bytes. The decoder uses only JavaScript,
-// keeping the payload independent of Figma-specific base64 helpers.
+// LZW codes over UTF-8 bytes, packed at the smallest fixed code width needed
+// by this payload. The decoder uses only JavaScript, keeping the payload
+// independent of Figma-specific base64 helpers. Width and count precede base64
+// so padding bits cannot be mistaken for another dictionary code.
 function compressJSON(value) {
   const input = Buffer.from(JSON.stringify(value), 'utf8').toString('latin1');
   const dictionary = new Map();
@@ -27,17 +29,43 @@ function compressJSON(value) {
   }
   if (word)
     codes.push(word.length === 1 ? word.charCodeAt(0) : dictionary.get(word));
-  const bytes = Buffer.alloc(codes.length * 2);
-  codes.forEach((code, index) => bytes.writeUInt16BE(code, index * 2));
-  return bytes.toString('base64');
+  const largest = codes.reduce((maximum, code) => Math.max(maximum, code), 0);
+  const width = Math.max(8, Math.ceil(Math.log2(largest + 1)));
+  const bytes = Buffer.alloc(Math.ceil((codes.length * width) / 8));
+  let buffer = 0;
+  let bits = 0;
+  let index = 0;
+  for (const code of codes) {
+    buffer = (buffer << width) | code;
+    bits += width;
+    while (bits >= 8) {
+      bits -= 8;
+      bytes[index++] = (buffer >>> bits) & 255;
+    }
+    buffer &= (1 << bits) - 1;
+  }
+  if (bits) bytes[index] = (buffer << (8 - bits)) & 255;
+  return `${width}:${codes.length}:${bytes.toString('base64')}`;
 }
 function decompressJSON(encoded) {
+  const header = /^(\d+):(\d+):/.exec(encoded);
+  if (!header) throw new Error('Invalid connector data header');
+  const width = Number(header[1]);
+  const count = Number(header[2]);
+  if (
+    !Number.isInteger(width) ||
+    width < 8 ||
+    width > 16 ||
+    !Number.isSafeInteger(count) ||
+    count < 1
+  )
+    throw new Error('Invalid connector code width or count');
   const alphabet =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
   const bytes = [];
   let bits = 0;
   let buffer = 0;
-  for (const character of encoded) {
+  for (const character of encoded.slice(header[0].length)) {
     if (character === '=') break;
     const index = alphabet.indexOf(character);
     if (index < 0) throw new Error('Invalid connector data encoding');
@@ -48,9 +76,22 @@ function decompressJSON(encoded) {
       bytes.push((buffer >> bits) & 255);
     }
   }
+  if (bytes.length !== Math.ceil((count * width) / 8))
+    throw new Error('Invalid connector data length');
   const codes = [];
-  for (let i = 0; i < bytes.length; i += 2)
-    codes.push((bytes[i] << 8) | bytes[i + 1]);
+  bits = 0;
+  buffer = 0;
+  const mask = (1 << width) - 1;
+  for (const byte of bytes) {
+    buffer = (buffer << 8) | byte;
+    bits += 8;
+    while (bits >= width && codes.length < count) {
+      bits -= width;
+      codes.push((buffer >>> bits) & mask);
+    }
+    buffer &= (1 << bits) - 1;
+  }
+  if (buffer !== 0) throw new Error('Invalid connector padding');
   const dictionary = Array.from({ length: 256 }, (_, index) =>
     String.fromCharCode(index)
   );
@@ -74,12 +115,71 @@ function decompressJSON(encoded) {
   return JSON.parse(decodeURIComponent(utf8));
 }
 
-function selectFamilies(doc, requested) {
+function selectFamilies(doc, requested, variantIds) {
   const families = new Map(
     doc.components.families.map(family => [family.id, family])
   );
   const selected = new Set();
   const visiting = new Set();
+  if (variantIds) {
+    const selectedVariants = new Map();
+    const root = families.get(requested[0]);
+    if (!root) throw new Error(`Unknown component family ${requested[0]}`);
+    for (const id of variantIds)
+      if (!root.variants.some(variant => variant.id === id))
+        throw new Error(`Unknown ${root.id} variant ${id}`);
+    const matches = (variant, selector) =>
+      Object.entries(selector).every(
+        ([key, value]) => variant.properties?.[key] === value
+      );
+    function variantVisit(family, variant) {
+      const key = `${family.id}/${variant.id}`;
+      if (selectedVariants.get(family.id)?.has(variant.id)) return;
+      if (visiting.has(family.id))
+        throw new Error(`Recipe dependency cycle at ${key}`);
+      visiting.add(family.id);
+      function tree(node) {
+        if (node.type === 'INSTANCE') {
+          const dependency = families.get(node.family);
+          if (!dependency)
+            throw new Error(`Unknown component family ${node.family}`);
+          const variants = dependency.variants.filter(item =>
+            matches(item, node.variant || {})
+          );
+          if (variants.length !== 1)
+            throw new Error(
+              `Dependency ${node.family} needs one exact variant`
+            );
+          variantVisit(dependency, variants[0]);
+        }
+        (node.children || []).forEach(tree);
+      }
+      tree(variant.tree);
+      visiting.delete(family.id);
+      if (!selectedVariants.has(family.id))
+        selectedVariants.set(family.id, new Set());
+      selectedVariants.get(family.id).add(variant.id);
+    }
+    for (const variant of root.variants)
+      if (variantIds.includes(variant.id)) variantVisit(root, variant);
+    return [...selectedVariants].map(([id, ids]) => {
+      const family = families.get(id);
+      const variants = family.variants.filter(variant => ids.has(variant.id));
+      return {
+        ...family,
+        variants,
+        ...(family.review && {
+          review: {
+            ...family.review,
+            // A scoped batch cannot validate specimens for omitted variants.
+            specimens: (family.review.specimens || []).filter(specimen =>
+              variants.some(variant => matches(variant, specimen.variant))
+            ),
+          },
+        }),
+      };
+    });
+  }
   function visit(id) {
     if (selected.has(id)) return;
     if (visiting.has(id)) throw new Error(`Recipe dependency cycle at ${id}`);
@@ -97,7 +197,7 @@ function selectFamilies(doc, requested) {
   requested.forEach(visit);
   return [...selected].map(id => families.get(id));
 }
-function subsetDocument(doc, operation, brandId, requested) {
+function subsetDocument(doc, operation, brandId, requested, variantIds) {
   const mode = doc.modes.find(item => item.id === brandId);
   if (!mode) throw new Error(`Unknown brand ${brandId}`);
   const oneBrand = spec => ({
@@ -111,7 +211,7 @@ function subsetDocument(doc, operation, brandId, requested) {
     styles: { text: [], effect: [] },
   };
   if (operation === 'build') {
-    const families = selectFamilies(doc, requested);
+    const families = selectFamilies(doc, requested, variantIds);
     const textIds = new Set();
     const effectIds = new Set();
     function tree(node) {
@@ -304,6 +404,7 @@ async function buildConnector({
   operation = 'build',
   brandId = 'undrr',
   familyIds,
+  variantIds,
   nodeIds = [],
   checkFonts = false,
   doc,
@@ -332,7 +433,19 @@ async function buildConnector({
       : []);
   if (operation === 'build' && !requested.length)
     throw new Error('No component recipes. Rebuild the token JSON.');
-  const subset = subsetDocument(doc, operation, brandId, requested);
+  if (
+    variantIds !== undefined &&
+    (operation !== 'build' ||
+      requested.length !== 1 ||
+      !Array.isArray(variantIds) ||
+      !variantIds.length ||
+      new Set(variantIds).size !== variantIds.length ||
+      variantIds.some(id => typeof id !== 'string' || !id))
+  )
+    throw new Error(
+      'Variant batches require one family and unique variant IDs.'
+    );
+  const subset = subsetDocument(doc, operation, brandId, requested, variantIds);
   let source = 'const MG_SHARED_ONLY = true;\n';
   source += fs.readFileSync(path.join(PLUGIN, 'kit-identity.js'), 'utf8');
   source += `\n;\n${coreSource()}\n;\n`;
@@ -347,9 +460,12 @@ async function buildConnector({
   if (subset) {
     source += `const doc = (${decompressJSON.toString()})(${JSON.stringify(compressJSON(subset))});\n`;
   }
-  if (operation === 'build')
-    source += `return await buildMangroveComponents(doc, ${JSON.stringify(brandId)}, ${JSON.stringify(requested)});`;
-  else if (operation === 'import')
+  if (operation === 'build') {
+    const invocation = `await buildMangroveComponents(doc, ${JSON.stringify(brandId)}, ${JSON.stringify(requested)})`;
+    source += variantIds
+      ? `const result = ${invocation}; return {...result, scope: ${JSON.stringify({ familyIds: requested, variantIds })}};`
+      : `return ${invocation};`;
+  } else if (operation === 'import')
     source += `
       const {createdVariableIds, updatedVariableIds, removedVariableIds, styles, ...result} = await importVariables(doc, [${JSON.stringify(brandId)}], false, undefined, true);
       const {createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds, ...styleReport} = styles;
@@ -373,30 +489,36 @@ async function buildConnector({
   const bytes = Buffer.byteLength(code, 'utf8');
   if (code.length > LIMIT || bytes > LIMIT)
     throw new Error(
-      `Connector payload exceeds ${LIMIT}: ${code.length} characters / ${bytes} bytes. Select fewer component families.`
+      `Connector payload exceeds ${LIMIT}: ${code.length} characters / ${bytes} bytes. ${
+        operation === 'build'
+          ? 'Select fewer families, or batch one family with explicit variantIds (CLI fourth argument: comma-separated recipe variant IDs).'
+          : 'Use the desktop plugin for this operation; no metadata was truncated.'
+      }`
     );
   return {
     code,
     operation,
     brandId,
     families: operation === 'build' ? requested : [],
+    variantIds: variantIds || null,
     characters: code.length,
     bytes,
   };
 }
 if (require.main === module) {
-  const [operation = 'build', brandId = 'undrr', familyList] =
+  const [operation = 'build', brandId = 'undrr', familyList, variantList] =
     process.argv.slice(2);
   buildConnector({
     operation,
     brandId,
     familyIds: familyList ? familyList.split(',') : undefined,
+    variantIds: variantList ? variantList.split(',') : undefined,
     nodeIds: operation === 'inspect' && familyList ? familyList.split(',') : [],
   })
     .then(result => {
       process.stdout.write(`${result.code}\n`);
       process.stderr.write(
-        `build-figma-connector: ${result.operation} / ${result.brandId}, ${result.characters} characters / ${result.bytes} bytes\n`
+        `build-figma-connector: ${result.operation} / ${result.brandId}, ${result.characters} characters / ${result.bytes} bytes${result.variantIds ? `, variants: ${result.variantIds.join(',')}` : ''}\n`
       );
     })
     .catch(error => {

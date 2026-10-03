@@ -2,6 +2,8 @@
 
 This runbook covers source changes, local verification and updates to the canonical Figma kit. Start with [README.md](README.md) for installation and access, [LEARNINGS.md](LEARNINGS.md) for observed behaviour, and [FIGMA-KIT-BRIEF.md](FIGMA-KIT-BRIEF.md) for the component scope. This remains an exploratory kit.
 
+The [architecture review](ARCHITECTURE-REVIEW.md) records the current composition, responsiveness, identity and publication gates. Check affected findings when adding a composed component.
+
 ## Where changes belong
 
 | File or source                            | Responsibility                                                                             |
@@ -10,6 +12,7 @@ This runbook covers source changes, local verification and updates to the canoni
 | `scripts/build-tokens.cjs`                | Shared token loading, layers, merging and resolution                                       |
 | `scripts/build-figma-tokens.cjs`          | Figma variable conversion, foundation styles, aliases and skipped-token reasons            |
 | `scripts/figma-component-recipes.cjs`     | Source guards, derived helpers, component typography, bounded variants and anatomy recipes |
+| `scripts/figma-cta-recipes.cjs`           | Source-backed text CTA composition, contextual action colours and bounded viewport styles  |
 | `examples/figma-plugin/kit-builder.js`    | Generic native construction, bindings, dependencies, identity and review specimens         |
 | `examples/figma-plugin/code.js`           | Import preflight, variable/style updates and message handling                              |
 | `examples/figma-plugin/kit-identity.js`   | Shared metadata and desktop legacy identity reads                                          |
@@ -60,6 +63,14 @@ The builder validates this contract before the affected family's style or canvas
 - `variant` selects exactly one variant in that family. Include enough axis values to make the match unique.
 - `width` is a positive finite number representing the consumer width; the review row adds its own padding.
 - `properties` is an object of logical property names declared by the family. TEXT values must be strings and BOOLEAN values must be booleans. Numeric properties, variant-axis overrides and undeclared names are rejected.
+
+Compositions without a meaningful root Label can set `review.genericLabels: false`. Their variant specimens can use a positive `review.width` instead of the default narrow review card. Provide deliberate long and narrow examples rather than inventing a Label property.
+
+Native instance recipes can declare `appearance: { fill, stroke, labelFill }` using COLOR variable names for source-defined contextual colours. `labelFill` requires exactly one Label text node in the dependency. Explicit instance `bindings` override only their declared inherited fields. These changes retain native instances and source identity. A changed or removed context override needs a deliberate update check; do not detach actions to bypass the contract. Auto layout accepts `wrap` and `counterGap`, and text recipes accept `textWrap` for native wrapping behaviour. Confirm normal-scale rendering against the source.
+
+For coordinated composition examples, `nodes` accepts up to 64 entries with a unique child-name `path` and nested-instance `properties`. Paths cross nested component instances and must resolve uniquely; property names and TEXT/BOOLEAN types are checked against the nested source recipe. Descendant width/height seeds are rejected: actual Figma silently retained nested instance dimensions and bindings despite successful API returns. Put shared column and row geometry on component masters, then select the matching preset. `instanceWidth` can give the root instance an explicit positive size or FLOAT binding independently of the consumer width, preserving measured source overflow. Content seeds apply to fresh specimens; repeat builds preserve edited text. A fixed measured preset does not provide the browser's automatic table algorithm or responsive breakpoint logic.
+
+The explicit review refresh selects the specimen's current master preset and reapplies its root width while keeping content overrides. Save an inspection before refreshing designer-adjusted geometry; Figma's component-swap heuristics still need actual override checks. Real Figma's `resize()` fixes both axes, so a one-axis size change must restore the other axis's FILL/HUG policy. The mock models that side effect and the observed silent rejection on nested INSTANCE dimensions. Desktop checks remain necessary for inherited bindings, swaps and reflow. [Resize behaviour](https://developers.figma.com/docs/plugins/api/properties/nodes-resize/), [Native instance updates](https://developers.figma.com/docs/plugins/api/InstanceNode/), [Wrapping auto layout](https://developers.figma.com/docs/plugins/api/properties/nodes-layoutwrap/)
 
 Properties seed only newly created review instances. Repeat builds preserve designer edits and the existing instance reference; changing a specimen's seed values or variant selector does not reset it. Edit an existing specimen explicitly or plan a reviewed reseed when a new baseline is required. Keep its ID stable for routine updates. Other valid families may still build when one family's specimen preflight fails.
 
@@ -166,6 +177,8 @@ Splitting the collection into Primitives and Brand collections remains an open d
 
 ## Professional access handoff
 
+**Latest extension checkpoint:** Table/Text CTA now brings the kit to 277 variables, 12 families and 93 variants in UNDRR, with 25 selected text styles and four effects. The desktop repeat created zero nodes and retained actual family, variant and property IDs. Start migration from this checkpoint and a fresh backup; the earlier 246-variable checkpoint below remains historical evidence. See [the architecture review outcome](ARCHITECTURE-REVIEW.md#extension-outcome) for source/Figma differences and remaining publication gates.
+
 Professional access is planned but has not been verified for the canonical kit. This is the place to resume when it becomes available.
 
 ### Starting checkpoint
@@ -238,3 +251,7 @@ gh pr view 1319 --repo unisdr/undrr-mangrove --json baseRefName,headRefName,isDr
 ```
 
 Verify the resulting body, draft state, branch names and head revision. This is an observed transport fallback, not a fix for suppressed listing endpoints. The organisation's listing/search endpoints can return empty results despite existing items; state that limitation rather than infer an empty queue. GitHub Actions are unavailable for this organisation at this checkpoint, so report local gate results in the PR.
+
+## Full component implementation
+
+The continuing scope and acceptance status are tracked in [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md). Implement families in dependency order, retaining verified identities and recording source, mock and native evidence separately. See [ARCHITECTURE-REVIEW.md](ARCHITECTURE-REVIEW.md) for the independent review and scaling priorities.

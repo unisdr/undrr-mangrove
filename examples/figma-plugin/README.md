@@ -2,6 +2,8 @@
 
 A spike, stacked on the React Aria pilot (unisdr/undrr-mangrove#1088). It turns Mangrove's tokens into local Figma variables, text styles, effect styles and native component recipes so a Figma kit can use the same spacing, colour and theme layers as the code. Nothing here is published or supported yet.
 
+See the [architecture review](ARCHITECTURE-REVIEW.md) for the acceptance gates when composing and maintaining the kit.
+
 ## How it fits together
 
 ```
@@ -18,7 +20,7 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows are represented as effect styles instead.
 
-Current output contains 246 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), seven component text styles and four effect styles. Read the build report for current totals. Component recipes cover 47 variants across seven families; 16 tokens remain skipped as variables.
+Current output contains 277 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 13 component text styles and four effect styles. Read the build report for current totals. Component recipes cover 93 variants across 12 families; 16 tokens remain skipped as variables.
 
 ### Text and effect foundations
 
@@ -105,12 +107,17 @@ Import one brand first, then select families and choose **Build selected compone
 | Tab trigger          |        6 |
 | Horizontal pill Tabs |        1 |
 | Textarea             |        6 |
+| Table header cell    |        4 |
+| Table body cell      |        4 |
+| Table row            |       24 |
+| Table                |        8 |
+| Text CTA             |        6 |
 
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
 
 Composed Tabs exposes the nested trigger properties; open ComboBox exposes its nested options. Review label targets follow the recipe anatomy, and responsive formatting is normally seeded only on new specimens. Existing Tabs long-label specimens keep their prior labels; edit the exposed nested Label property or explicitly reseed the review. The four Roboto families have been rebuilt in the desktop file, and inspection confirms three exposed instances in open ComboBox. Updated Tabs recipes still need a real-file rebuild. See [the source measurements and acceptance record](LEARNINGS.md#browser-acceptance-measurements) for targeted visual checks and remaining gaps.
 
-**Refresh narrow Button review layout, keeping labels** is off by default. Tick it when an existing narrow Button specimen needs wrapping repaired, then build Button or the selected Roboto families. It explicitly updates that specimen's text layout while preserving its Label value and node IDs. Normal rebuilds preserve existing text formatting. Narrow review rows include 8px padding on each side outside the advertised 240px consumer width. The corrected Button specimen renders at 240 × 50px with its retained label on two unclipped lines. This option does not repair required field label wrapping.
+**Refresh narrow Button and composed review geometry, keeping content** is off by default. Tick it when an existing narrow Button specimen needs wrapping repaired or a composed specimen needs its current master preset and root width reapplied, then build the affected families. It preserves editable content and node IDs, while explicitly replacing the selected review geometry overrides. Normal rebuilds preserve existing formatting and geometry edits. Narrow review rows include 8px padding on each side outside the advertised 240px consumer width. The corrected Button specimen renders at 240 × 50px with its retained label on two unclipped lines. This option does not repair required field label wrapping.
 
 **Inspect kit** records actual IDs and resolved consumer bindings without loading fonts. Tick **Check font loading during inspection** to include font probes when needed; unchecked reports contain `fonts: null`. The window displays a bounded inventory summary, while **Save inspection report** downloads the complete JSON. **Focus diagnostics** compares literal effect order with bound styles; PNG export buttons capture review frames. These are local development operations and do not publish a library.
 
@@ -128,10 +135,13 @@ node scripts/build-figma-connector.cjs build undrr button > /tmp/mangrove-button
 node scripts/build-figma-connector.cjs build undrr text-input > /tmp/mangrove-input.js
 node scripts/build-figma-connector.cjs build undrr combobox > /tmp/mangrove-combobox.js
 node scripts/build-figma-connector.cjs build undrr tabs > /tmp/mangrove-tabs.js
+node scripts/build-figma-connector.cjs build undrr table table.large.default > /tmp/mangrove-table-default.js
 node scripts/build-figma-connector.cjs inspect undrr > /tmp/mangrove-inspect.js
 ```
 
 Pass the emitted JavaScript to `use_figma` after loading its skill. The builder includes nested component dependencies, trims other brands, compresses data with a local codec and rejects payloads over 50,000 characters or bytes. It does not use `eval` or fetch code. Connector execution uses shared metadata only: first migrate legacy private identities through the desktop importer, or verify unchanged unique names before adoption. Privately identified assets that were renamed cannot be recovered by the connector's name fallback.
+
+The optional fourth argument selects comma-separated variant IDs from one family. Full Table, Row and Text CTA dependency matrices exceed the connector limit; emit one variant or a checked small batch at a time. Dependencies retain only the matching variants for that batch, and reports identify the requested scope. Existing variants remain in place and the builder arranges all retained main variants together. Complete all intended batches and inspect the resulting family. The full desktop plugin build remains available. Packed LZW preserves metadata; payload rejection never silently drops variants. Native connector batch assembly remains unverified while the Starter allowance is exhausted.
 
 On 3 October 2026, the connected Starter account reported a Full seat and canvas writes worked. Screenshot reads subsequently hit the Starter tool-call allowance. This is an observation for this account, not a promise that every Starter account can write. Conserve read calls and record structural evidence returned from writes. Do not upgrade plans or change permissions automatically. See [rate limits and access](https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/).
 
@@ -200,7 +210,7 @@ Sources: [plans and features](https://help.figma.com/hc/en-us/articles/360040328
 
 The practical Starter route is to run the Mangrove development plugin in the desktop app. It imports variables and selected text and effect styles; component generation uses the exporter recipes described above. Keep one canonical kit file, bind components to the same variables and defer shared-library publishing. When Professional access is available, ask for a Full seat on your own account and edit access to the team file, move the kit into that team, then import all five brands. Joining a Professional team with a View or Dev seat does not meet the documented requirement for direct agent writes.
 
-Professional access is planned. Resume from [the Professional access handoff checklist](MAINTAINING-KIT.md#professional-access-handoff), starting with the verified 246-variable, seven-family, 47-variant kit in UNDRR. The checklist covers migration, simultaneous brand reviews and library publication. Condensed font loading, cloud synchronisation and visual discrepancies remain separate unresolved work. Code Connect still requires Organization or Enterprise access.
+Professional access is planned. Resume from [the Professional access handoff checklist](MAINTAINING-KIT.md#professional-access-handoff) and its latest kit checkpoint in UNDRR. The checklist covers migration, simultaneous brand reviews and library publication. Condensed font loading, cloud synchronisation and visual discrepancies remain separate unresolved work. Code Connect still requires Organization or Enterprise access.
 
 ## Spike learnings
 
@@ -290,3 +300,13 @@ The mock copies the Figma behaviours that have caused bugs here, but it is not F
 - Browser measurement gives 88.0625px for the four-row control versus the source-derived 88.1px recipe. Scrolling, native resize, identical font-file metrics and all-brand Textarea rendering remain unverified. See [the maintenance runbook](MAINTAINING-KIT.md) for adding components, preserving identities, recording evidence and applying changes.
 
 The desktop Textarea repeat created zero nodes, updated 77 and reported no errors, with unchanged set, variant and property IDs. A fresh local `.fig` backup was saved after restoring UNDRR. Cloud synchronisation remains unconfirmed; the desktop file was left open. Edited multiline Value/visibility retention has mock coverage; an actual edited-instance repeat remains pending.
+
+### Table and Text CTA checkpoint on 3 October 2026
+
+The kit now has 277 variables, 12 families and 93 variants, including 40 Table variants across cells/rows/tables and six text CTA variants. The desktop file has 25 selected text styles and four effects. Source-measured Table presets keep columns on their masters because nested size/binding writes were silently ignored by real Figma. Story rows hug content above source minimum heights; narrow font/line-breaking differences remain documented. Strong CTA actions bind contextual colours on native Button instances; long presets wrap at 200 × 64px and 120 × 106px.
+
+An ordinary desktop repeat created zero nodes, updated 322 and had no errors, with unchanged selected family/variant/property IDs. The original 246 variables and seven original sets/47 variants retain their identities. Saved inspection and PNG checks cover UNDRR, not every brand or arbitrary width. A fresh local backup follows this checkpoint; cloud synchronisation remains unconfirmed. See [the architecture outcome](ARCHITECTURE-REVIEW.md#extension-outcome), [the component brief](FIGMA-KIT-BRIEF.md) and [the maintenance workflow](MAINTAINING-KIT.md).
+
+## Full component implementation
+
+The continuing scope and acceptance status are tracked in [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md). Implement families in dependency order, retaining verified identities and recording source, mock and native evidence separately. See [ARCHITECTURE-REVIEW.md](ARCHITECTURE-REVIEW.md) for the independent review and scaling priorities.
