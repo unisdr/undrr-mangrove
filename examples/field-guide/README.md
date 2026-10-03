@@ -103,7 +103,25 @@ does not read or write a Figma file. Figma decisions can continue independently.
 - If promoted to maintained documentation, automate the build and check guide
   links, token freshness and browser interactions in CI.
 
-No deployment or pull request is required for this local exploration.
+## Draft handoff
+
+The exploration is stacked on the Figma token branch in
+[PR #1319](https://github.com/unisdr/undrr-mangrove/pull/1319), which is itself
+stacked on the React Aria work. Before opening the field-guide draft, its two
+commits were rebased onto parent revision `201cd8be`. Keep the PR base at
+`spike/figma-token-bridge` while that parent remains open.
+
+For another agent taking over, start with this README and
+[BRAND-REVIEW.md](BRAND-REVIEW.md), then run the guide and review its applications
+chapter in all five properties. Continue the audience and format decisions
+above; approved documentary imagery and actual property artwork are the next
+brand refinements. Preserve the source/provenance distinctions and check mobile,
+keyboard and print behaviour after edits. The existing Storybook documentation
+and YAML tokens remain authoritative.
+
+Generated `dist/` files and the local `node_modules` symlink are not committed.
+A fresh checkout needs repository dependencies installed. No deployment is
+included in this draft.
 
 ## Initial edition validation
 
