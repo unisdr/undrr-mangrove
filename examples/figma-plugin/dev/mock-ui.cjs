@@ -19,6 +19,11 @@ function mountUI() {
       hidden: /\bhidden\b/.test(match[0]),
       checked: /\bchecked\b/.test(match[0]),
       textContent: '',
+      checkedInputs: [],
+      querySelectorAll(selector) {
+        assert.strictEqual(selector, 'input:checked');
+        return this.checkedInputs;
+      },
       addEventListener() {},
     });
   }
@@ -60,7 +65,16 @@ function mountUI() {
     Uint8Array,
   });
   vm.runInContext(script, context);
-  return { elements, messages, downloads, window };
+  return {
+    elements,
+    messages,
+    downloads,
+    window,
+    setDocument(doc) {
+      context.fixtureDoc = doc;
+      vm.runInContext('doc = fixtureDoc; refreshControls()', context);
+    },
+  };
 }
 
 async function main() {
@@ -145,6 +159,83 @@ async function main() {
   assert.deepStrictEqual(JSON.parse(await ui.downloads[1].blob.text()), report);
   console.log(
     'ok  excessive mode names, font failures and inspection errors remain bounded without truncating saved reports'
+  );
+
+  const exportsUI = mountUI();
+  const exportElement = id => exportsUI.elements.get(id);
+  assert.strictEqual(exportElement('export-family').disabled, true);
+  exportsUI.setDocument(doc);
+  assert.strictEqual(exportElement('export-family').disabled, false);
+  exportElement('export-family').onclick();
+  assert.strictEqual(exportsUI.messages.length, 0);
+  assert(exportElement('log').textContent.includes('exactly one'));
+  exportElement('components').checkedInputs = [
+    { value: 'button' },
+    { value: 'text-input' },
+  ];
+  exportElement('export-family').onclick();
+  assert.strictEqual(exportsUI.messages.length, 0);
+  exportElement('components').checkedInputs = [{ value: 'button' }];
+  exportElement('export-family').onclick();
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(exportsUI.messages[0])), {
+    type: 'export-review',
+    name: 'Mangrove / Review',
+    familyId: 'button',
+  });
+  assert.strictEqual(exportElement('export-family').disabled, true);
+  assert.strictEqual(exportElement('export-review').disabled, true);
+  const pngBytes = [137, 80, 78, 71];
+  exportsUI.window.onmessage({
+    data: {
+      pluginMessage: {
+        type: 'export',
+        result: {
+          id: 'family-review-id',
+          rootId: 'review-id',
+          name: 'Mangrove/Button',
+          width: 736,
+          height: 1200,
+          scope: 'family',
+          familyId: 'button',
+          bytes: pngBytes,
+        },
+      },
+    },
+  });
+  assert.strictEqual(exportElement('export-family').disabled, false);
+  assert.strictEqual(exportsUI.downloads[0].name, 'Mangrove-Button.png');
+  assert.strictEqual(exportsUI.downloads[0].blob.type, 'image/png');
+  assert.deepStrictEqual(
+    [...new Uint8Array(await exportsUI.downloads[0].blob.arrayBuffer())],
+    pngBytes
+  );
+  assert(exportElement('log').textContent.includes('Family: button.'));
+  exportElement('export-review').onclick();
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(exportsUI.messages[1])), {
+    type: 'export-review',
+    name: 'Mangrove / Review',
+  });
+  exportsUI.window.onmessage({
+    data: {
+      pluginMessage: {
+        type: 'export',
+        result: {
+          name: 'Mangrove / Review',
+          width: 800,
+          height: 31328,
+          scope: 'review',
+          bytes: pngBytes,
+        },
+      },
+    },
+  });
+  assert.strictEqual(exportsUI.downloads[1].name, 'Mangrove - Review.png');
+  assert.deepStrictEqual(
+    [...new Uint8Array(await exportsUI.downloads[1].blob.arrayBuffer())],
+    pngBytes
+  );
+  console.log(
+    'ok  family PNG requires one selection, serialises export actions and preserves scoped/full download bytes'
   );
 }
 

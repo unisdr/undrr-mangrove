@@ -185,7 +185,7 @@ function environment(doc, options = {}) {
     }
     insertChild(index, node) {
       assert(
-        !['TEXT', 'RECTANGLE'].includes(this.type),
+        !['TEXT', 'RECTANGLE', 'ELLIPSE'].includes(this.type),
         'Cannot parent in a leaf'
       );
       if (node.type === 'TEXT') node.requireFont();
@@ -497,6 +497,7 @@ function environment(doc, options = {}) {
   figma.mixed = Symbol('mixed');
   for (const [name, type] of [
     ['createFrame', 'FRAME'],
+    ['createEllipse', 'ELLIPSE'],
     ['createText', 'TEXT'],
     ['createComponent', 'COMPONENT'],
     ['createRectangle', 'RECTANGLE'],
@@ -2019,25 +2020,330 @@ async function main() {
       '9:1:AP8=',
     ])
       assert.throws(() => connector.decompressJSON(malformed));
-    for (const mode of doc.modes) {
-      const payload = await connector.buildConnector({
-        operation: 'import',
-        brandId: mode.id,
-        doc,
-      });
-      assert(payload.characters <= 50000 && payload.bytes <= 50000);
-      const subset = connector.subsetDocument(doc, 'import', mode.id, []);
-      assert.strictEqual(subset.variables.length, doc.variables.length);
+    const env = environment(doc, { sharedOnly: true });
+    const allStyles = [...doc.styles.text, ...doc.styles.effect];
+    const chunks = (ids, size) =>
+      Array.from({ length: Math.ceil(ids.length / size) }, (_, index) =>
+        ids.slice(index * size, (index + 1) * size)
+      );
+    // Explicit caller batches cover every exported asset, including optional
+    // text styles. The compiler may add dependencies, never omit requested IDs.
+    const importBatches = [
+      ...chunks(
+        doc.variables.map(spec => spec.id),
+        70
+      ).map(variableIds => ({ variableIds })),
+      ...chunks(
+        allStyles.map(spec => spec.id),
+        20
+      ).map(styleIds => ({ styleIds })),
+    ];
+    const nativeVariableIds = new Map();
+    const nativeStyleIds = new Map();
+    const importSizes = [];
+    const aliasSpec = doc.variables.find(spec => spec.values.undrr?.alias);
+    const expectedClosure = new Set();
+    function aliasClosure(spec) {
+      expectedClosure.add(spec.id);
+      const target = spec.values.undrr?.alias;
+      if (target)
+        aliasClosure(doc.variables.find(item => item.name === target));
+    }
+    aliasClosure(aliasSpec);
+    const aliasSubset = connector.subsetDocument(
+      doc,
+      'import',
+      'undrr',
+      [],
+      undefined,
+      { variableIds: [aliasSpec.id] }
+    );
+    assert.deepStrictEqual(
+      aliasSubset.variables.map(spec => spec.id).sort(),
+      [...expectedClosure].sort()
+    );
+    assert.strictEqual(
+      aliasSubset.styles.text.length + aliasSubset.styles.effect.length,
+      0
+    );
+    expectedClosure.clear();
+    const oneStyle = doc.styles.text[0];
+    Object.values(oneStyle.bindings).forEach(name =>
+      aliasClosure(doc.variables.find(spec => spec.name === name))
+    );
+    const styleSubset = connector.subsetDocument(
+      doc,
+      'import',
+      'undrr',
+      [],
+      undefined,
+      { styleIds: [oneStyle.id] }
+    );
+    assert.deepStrictEqual(
+      styleSubset.variables.map(spec => spec.id).sort(),
+      [...expectedClosure].sort()
+    );
+    assert.deepStrictEqual(
+      styleSubset.styles.text.map(style => style.id),
+      [oneStyle.id]
+    );
+    assert.strictEqual(styleSubset.styles.effect.length, 0);
+    for (const [iteration, mode] of [...doc.modes, doc.modes[0]].entries()) {
+      const coveredVariables = new Set();
+      const coveredStyles = new Set();
+      for (const selection of importBatches) {
+        const payload = await connector.buildConnector({
+          operation: 'import',
+          brandId: mode.id,
+          doc,
+          ...selection,
+        });
+        assert(payload.characters <= 50000 && payload.bytes <= 50000);
+        importSizes.push(payload.bytes);
+        const subset = connector.subsetDocument(
+          doc,
+          'import',
+          mode.id,
+          [],
+          undefined,
+          selection
+        );
+        const byName = new Map(subset.variables.map(spec => [spec.name, spec]));
+        for (const spec of subset.variables) {
+          const value = spec.values[mode.id];
+          if (value && typeof value === 'object' && 'alias' in value)
+            assert(
+              byName.has(value.alias),
+              'Batch omitted an alias dependency'
+            );
+        }
+        for (const style of [...subset.styles.text, ...subset.styles.effect]) {
+          const bindingNames = style.bindings
+            ? Object.values(style.bindings)
+            : style.values[mode.id].flatMap(entry =>
+                Object.values(entry.bindings || {})
+              );
+          for (const name of bindingNames)
+            assert(
+              byName.has(name),
+              'Batch omitted a style binding dependency'
+            );
+        }
+        assert.deepStrictEqual(
+          connector.decompressJSON(connector.compressJSON(subset)),
+          subset
+        );
+        for (const [specs, originals, covered] of [
+          [subset.variables, doc.variables, coveredVariables],
+          [
+            [...subset.styles.text, ...subset.styles.effect],
+            allStyles,
+            coveredStyles,
+          ],
+        ]) {
+          for (const spec of specs) {
+            covered.add(spec.id);
+            const original = originals.find(item => item.id === spec.id);
+            assert.deepStrictEqual(
+              spec,
+              { ...original, values: { [mode.id]: original.values[mode.id] } },
+              'Import batching discarded metadata'
+            );
+          }
+        }
+        const imported = await env.runCode(payload.code);
+        assert.strictEqual(
+          imported.result.errors.length,
+          0,
+          imported.result.errors.join('\n')
+        );
+        assert.strictEqual(
+          imported.result.styles.errors.length,
+          0,
+          imported.result.styles.errors.join('\n')
+        );
+        assert.deepStrictEqual(copy(imported.scope), payload.scope);
+        assert.strictEqual(imported.scope.prune, false);
+        assert.strictEqual(
+          imported.removedVariableIds.length + imported.removedStyleIds.length,
+          0
+        );
+        assert.strictEqual(
+          imported.createdStyleIds.length,
+          imported.result.styles.counts.text.created +
+            imported.result.styles.counts.effect.created
+        );
+        for (const [assets, key, nativeIds] of [
+          [env.state.variables, 'mgId', nativeVariableIds],
+          [env.state.styles, 'mgStyleId', nativeStyleIds],
+        ]) {
+          for (const asset of assets) {
+            const id = identity(asset, key);
+            if (nativeIds.has(id))
+              assert.strictEqual(asset.id, nativeIds.get(id));
+            else nativeIds.set(id, asset.id);
+          }
+        }
+        if (iteration > 0) {
+          // Subsequent brands and the final repeat must reuse every native ID.
+          assert.strictEqual(
+            imported.createdVariableIds.length +
+              imported.createdStyleIds.length,
+            0
+          );
+        }
+      }
       assert.deepStrictEqual(
-        connector.decompressJSON(connector.compressJSON(subset)),
-        subset,
-        'Metadata or values were lost to fit the connector limit'
+        [...coveredVariables].sort(),
+        doc.variables.map(spec => spec.id).sort()
+      );
+      assert.deepStrictEqual(
+        [...coveredStyles].sort(),
+        allStyles.map(spec => spec.id).sort()
+      );
+      const physicalMode = env.state.collections[0].modes[0].modeId;
+      for (const spec of doc.variables) {
+        const variable = env.state.variables.find(
+          asset => identity(asset, 'mgId') === spec.id
+        );
+        const value = spec.values[mode.id];
+        const expected =
+          value && typeof value === 'object' && 'alias' in value
+            ? {
+                type: 'VARIABLE_ALIAS',
+                id: nativeVariableIds.get(
+                  doc.variables.find(target => target.name === value.alias).id
+                ),
+              }
+            : value;
+        assert.deepStrictEqual(
+          copy(variable.valuesByMode[physicalMode]),
+          expected
+        );
+        assert.strictEqual(variable.description, spec.description);
+        assert.deepStrictEqual(copy(variable.scopes), spec.scopes);
+        assert.deepStrictEqual(copy(variable.codeSyntax), spec.codeSyntax);
+        assert.strictEqual(
+          variable.hiddenFromPublishing,
+          spec.hiddenFromPublishing
+        );
+      }
+      for (const spec of allStyles) {
+        const style = env.state.styles.find(
+          asset => identity(asset, 'mgStyleId') === spec.id
+        );
+        assert.strictEqual(style.name, spec.name);
+        assert.strictEqual(style.description, spec.description || '');
+        const expectedAlias = name => ({
+          type: 'VARIABLE_ALIAS',
+          id: nativeVariableIds.get(
+            doc.variables.find(variable => variable.name === name).id
+          ),
+        });
+        if (spec.bindings) {
+          assert.deepStrictEqual(
+            copy(style.fontName),
+            spec.values[mode.id].fontName
+          );
+          assert.strictEqual(style.fontSize, spec.values[mode.id].fontSize);
+          assert.deepStrictEqual(
+            copy(style.lineHeight),
+            spec.values[mode.id].lineHeight
+          );
+          for (const [field, name] of Object.entries(spec.bindings))
+            assert.deepStrictEqual(
+              copy(style.boundVariables[field]),
+              expectedAlias(name)
+            );
+        } else {
+          assert.deepStrictEqual(
+            copy(style.effects),
+            spec.values[mode.id].map(entry => ({
+              ...entry.effect,
+              boundVariables: Object.fromEntries(
+                Object.entries(entry.bindings || {}).map(([field, name]) => [
+                  field,
+                  expectedAlias(name),
+                ])
+              ),
+            }))
+          );
+        }
+      }
+    }
+    assert.strictEqual(nativeVariableIds.size, doc.variables.length);
+    assert.strictEqual(nativeStyleIds.size, allStyles.length);
+    await assert.rejects(
+      connector.buildConnector({ operation: 'import', doc }),
+      /exceeds 50000.*variableIds\/styleIds batches/
+    );
+    // Validation happens in the compiler before any script or native writes.
+    const untouched = JSON.stringify({
+      variables: [...nativeVariableIds],
+      styles: [...nativeStyleIds],
+    });
+    for (const options of [
+      { variableIds: [] },
+      { variableIds: ['missing'] },
+      { styleIds: ['missing'] },
+      { variableIds: [doc.variables[0].id, doc.variables[0].id] },
+      { styleIds: [allStyles[0].id, allStyles[0].id] },
+      { variableIds: [null] },
+      { styleIds: 'invalid' },
+    ])
+      await assert.rejects(
+        connector.buildConnector({ operation: 'import', doc, ...options })
+      );
+    for (const mutate of [
+      bad => bad.variables.push(copy(bad.variables[0])),
+      bad => bad.styles.effect.push(copy(bad.styles.effect[0])),
+      bad => {
+        bad.variables[0].values.undrr = { alias: 'missing' };
+      },
+      bad => {
+        bad.variables[0].values.undrr = { alias: 'font-size/100' };
+      },
+      bad => {
+        bad.styles.text[0].bindings.fontFamily = 'font-size/100';
+      },
+      bad => {
+        bad.styles.effect[0].values.undrr[0].bindings.color = 'font-size/100';
+      },
+      bad => {
+        bad.variables[0].values.undrr = { alias: bad.variables[0].name };
+      },
+      bad => {
+        bad.variables[0].values.undrr = { r: NaN };
+      },
+    ]) {
+      const bad = copy(doc);
+      mutate(bad);
+      await assert.rejects(
+        connector.buildConnector({
+          operation: 'import',
+          doc: bad,
+          variableIds: [doc.variables[0].id],
+        }),
+        /Import preflight/
       );
     }
-    const env = environment(doc, { sharedOnly: true });
+    assert.strictEqual(
+      JSON.stringify({
+        variables: [...nativeVariableIds],
+        styles: [...nativeStyleIds],
+      }),
+      untouched
+    );
+    console.log(
+      `ok  lossless import batches: ${doc.modes.length} brands, ${doc.variables.length} variables / ${allStyles.length} styles, ${Math.min(...importSizes)}-${Math.max(...importSizes)} bytes`
+    );
     const importScript = await connector.buildConnector({
       operation: 'import',
       doc,
+      styleIds: [
+        ...doc.styles.text.filter(style => style.recommended),
+        ...doc.styles.effect,
+      ].map(style => style.id),
     });
     const imported = await env.runCode(importScript.code);
     assert.strictEqual(
@@ -2045,10 +2351,7 @@ async function main() {
       0,
       imported.result.errors.join('\n')
     );
-    assert.strictEqual(
-      imported.createdVariableIds.length,
-      doc.variables.length
-    );
+    assert.strictEqual(imported.createdVariableIds.length, 0);
     assert.strictEqual(
       imported.createdStyleIds.length,
       imported.result.styles.counts.text.created +

@@ -74,8 +74,8 @@
       <p>Choose roles and sizes. All use Regular and automatic line height.</p>
     </fieldset>
     <label id="effects-label" hidden
-      ><input id="effects" type="checkbox" checked /> Import raised,
-      raised-hover and focus ring effect styles</label
+      ><input id="effects" type="checkbox" checked /> Import shadow, focus and
+      component effect styles</label
     >
     <label
       ><input id="prune" type="checkbox" /> Remove Mangrove variables no longer
@@ -104,6 +104,7 @@
     <button id="save-report" disabled>Save inspection report</button>
     <button id="save-operation-report" disabled>Save operation report</button>
     <button id="export-review">Export review PNG</button>
+    <button id="export-family" disabled>Export selected family PNG</button>
     <button id="export-diagnostics">Export focus PNG</button>
     <pre id="log" hidden></pre>
     <script>
@@ -118,6 +119,7 @@
         $('file').disabled = busy;
         $('import').disabled = busy || !doc;
         $('build').disabled = busy || !doc?.components;
+        $('export-family').disabled = busy || !doc?.components;
         $('refresh-narrow-review').disabled = busy || !doc?.components;
         $('diagnostics').disabled = busy || !doc;
         $('check-fonts').disabled = busy;
@@ -342,6 +344,17 @@
       };
       $('export-review').onclick = () =>
         send('export-review', { name: 'Mangrove / Review' });
+      $('export-family').onclick = () => {
+        const selected = [...$('components').querySelectorAll('input:checked')];
+        if (selected.length !== 1) {
+          log('Select exactly one component family to export its review PNG.');
+          return;
+        }
+        send('export-review', {
+          name: 'Mangrove / Review',
+          familyId: selected[0].value,
+        });
+      };
       $('export-diagnostics').onclick = () =>
         send('export-review', { name: 'Mangrove diagnostics / focus ring' });
 
@@ -392,7 +405,10 @@
             'image/png',
             `${r.name.replaceAll('/', '-')}.png`
           );
-          log(`Exported ${r.name} (${r.width} × ${r.height}).`);
+          log(
+            `Exported ${r.name} (${r.width} × ${r.height}).` +
+              (r.scope === 'family' ? ` Family: ${r.familyId}.` : '')
+          );
           return;
         }
         const r = msg.result;

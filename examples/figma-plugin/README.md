@@ -18,9 +18,9 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 - Source variables carry their CSS name as Dev Mode code syntax, for example `rgb(var(--mg-color-interactive))`, so developers inspecting a design see the token to use. Derived effect helpers have descriptions explaining their source; the focus extent also carries a CSS calculation.
 - Two-value shorthands become `/block` and `/inline` pairs (`padding/button/block`, `padding/button/inline`) that bind to auto layout's vertical and horizontal padding.
 
-Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows are represented as effect styles instead.
+Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 277 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 13 component text styles and four effect styles. Read the build report for current totals. Component recipes cover 93 variants across 12 families; 16 tokens remain skipped as variables.
+Current output contains 290 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 13 component text styles and five effect styles. Read the build report for current totals. Component recipes cover 123 variants across 13 families; 16 tokens remain skipped as variables.
 
 ### Text and effect foundations
 
@@ -37,11 +37,12 @@ Expand a role in the plugin to change the selection. The 60 foundation choices u
 
 The importer discovers exact font names with `listAvailableFontsAsync` and loads them with `loadFontAsync` before editing. An unavailable or unloadable font skips the affected text styles and appears in the report. Variables, effect styles and other text styles still import. Install or enable the missing font and re-import to complete the set; no fallback font is substituted.
 
-| Effect style                   | Source and Figma representation                                                                                                                                      |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Mangrove/shadow/raised`       | `shadow.raised`: a zero-blur inner shadow, preserving the 1px inset border and 0.24 alpha through `effect-color/shadow/raised`.                                      |
-| `Mangrove/shadow/raised-hover` | `shadow.raised-hover`: a zero-blur 2px inner shadow, colour bound to `color/interactive`.                                                                            |
-| `Mangrove/focus-ring`          | `mg-focus-ring` in `_mixins.scss`: two zero-blur outward shadows, with a neutral separator over the coloured outer band. Colours and spreads are bound to variables. |
+| Effect style                             | Source and Figma representation                                                                                                                                           |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Mangrove/shadow/raised`                 | `shadow.raised`: a zero-blur inner shadow, preserving the 1px inset border and 0.24 alpha through `effect-color/shadow/raised`.                                           |
+| `Mangrove/shadow/raised-hover`           | `shadow.raised-hover`: a zero-blur 2px inner shadow, colour bound to `color/interactive`.                                                                                 |
+| `Mangrove/component/radio/checked-inset` | Source 3px white inset on the checked Radio ellipse. Native spread binds to the derived 5px helper, including its 2px inside border; see the actual PNG correction below. |
+| `Mangrove/focus-ring`                    | `mg-focus-ring` in `_mixins.scss`: two zero-blur outward shadows, with a neutral separator over the coloured outer band. Colours and spreads are bound to variables.      |
 
 These shadows are inset borders in the CSS, not elevated drop shadows. The focus effect approximates a CSS outline; opaque diagnostic shapes have been rendered in Figma to compare ordering. Figma paints the later effect over the earlier one, so the coloured outer spread precedes the white separator. Actual control and inset rendering still need checking. Figma documents spread support for rectangles, ellipses and filled frames with clipping enabled. Check the effect on the actual control shapes, including whether an ancestor clips the outward ring. The exporter fails if the focus mixin's supported recipe changes.
 
@@ -112,6 +113,7 @@ Import one brand first, then select families and choose **Build selected compone
 | Table row            |       24 |
 | Table                |        8 |
 | Text CTA             |        6 |
+| Radio                |       30 |
 
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
 
@@ -119,7 +121,7 @@ Composed Tabs exposes the nested trigger properties; open ComboBox exposes its n
 
 **Refresh narrow Button and composed review geometry, keeping content** is off by default. Tick it when an existing narrow Button specimen needs wrapping repaired or a composed specimen needs its current master preset and root width reapplied, then build the affected families. It preserves editable content and node IDs, while explicitly replacing the selected review geometry overrides. Normal rebuilds preserve existing formatting and geometry edits. Narrow review rows include 8px padding on each side outside the advertised 240px consumer width. The corrected Button specimen renders at 240 × 50px with its retained label on two unclipped lines. This option does not repair required field label wrapping.
 
-**Inspect kit** records actual IDs and resolved consumer bindings without loading fonts. Tick **Check font loading during inspection** to include font probes when needed; unchecked reports contain `fonts: null`. The window displays a bounded inventory summary, while **Save inspection report** downloads the complete JSON. **Focus diagnostics** compares literal effect order with bound styles; PNG export buttons capture review frames. These are local development operations and do not publish a library.
+**Inspect kit** records actual IDs and resolved consumer bindings without loading fonts. Tick **Check font loading during inspection** to include font probes when needed; unchecked reports contain `fonts: null`. The window displays a bounded inventory summary, while **Save inspection report** downloads the complete JSON. **Focus diagnostics** compares literal effect order with bound styles; PNG export buttons capture review frames. Select exactly one family and use **Export selected family PNG** for a bounded image of its owned review section; **Export review PNG** captures the whole growing sheet. These are local development operations and do not publish a library.
 
 **Save operation report** downloads the latest import, component build or focus diagnostics result without shortening its IDs, errors or audit entries. Filenames identify the operation: `mangrove-import-report.json`, `mangrove-component-build-report.json` or `mangrove-focus-diagnostics-report.json`. Inspection reports remain separate. Actions run one at a time; the previous operation report stays available while another action runs or after an error. Reports are held in the plugin window until it closes, so save them before restarting it.
 
@@ -130,7 +132,8 @@ Stable public token and component identities use shared plugin data in namespace
 When `use_figma` is available, generate a bounded script from the same runtime:
 
 ```sh
-node scripts/build-figma-connector.cjs import undrr > /tmp/mangrove-import.js
+# One scoped foundation batch, not the complete import.
+node scripts/build-figma-connector.cjs import undrr --variables=color.neutral-0 --styles=focus-ring > /tmp/mangrove-import-batch.js
 node scripts/build-figma-connector.cjs build undrr button > /tmp/mangrove-button.js
 node scripts/build-figma-connector.cjs build undrr text-input > /tmp/mangrove-input.js
 node scripts/build-figma-connector.cjs build undrr combobox > /tmp/mangrove-combobox.js
@@ -141,7 +144,11 @@ node scripts/build-figma-connector.cjs inspect undrr > /tmp/mangrove-inspect.js
 
 Pass the emitted JavaScript to `use_figma` after loading its skill. The builder includes nested component dependencies, trims other brands, compresses data with a local codec and rejects payloads over 50,000 characters or bytes. It does not use `eval` or fetch code. Connector execution uses shared metadata only: first migrate legacy private identities through the desktop importer, or verify unchanged unique names before adoption. Privately identified assets that were renamed cannot be recovered by the connector's name fallback.
 
-The optional fourth argument selects comma-separated variant IDs from one family. Full Table, Row and Text CTA dependency matrices exceed the connector limit; emit one variant or a checked small batch at a time. Dependencies retain only the matching variants for that batch, and reports identify the requested scope. Existing variants remain in place and the builder arranges all retained main variants together. Complete all intended batches and inspect the resulting family. The full desktop plugin build remains available. Packed LZW preserves metadata; payload rejection never silently drops variants. Native connector batch assembly remains unverified while the Starter allowance is exhausted.
+The optional fourth argument selects comma-separated variant IDs from one family. Full Table, Row, Text CTA and Radio dependency matrices exceed the connector limit; emit one variant or a checked small batch at a time. Dependencies retain only the matching variants for that batch, and reports identify the requested scope. Existing variants remain in place and the builder arranges all retained main variants together. Complete all intended batches and inspect the resulting family. The full desktop plugin build remains available. Packed LZW preserves metadata; payload rejection never silently drops variants. Native connector batch assembly remains unverified while the Starter allowance is exhausted.
+
+Foundation imports also support explicit batches: `buildConnector({operation: 'import', brandId: 'undrr', variableIds, styleIds, doc})`, or CLI `--variables=id,id --styles=id,id`. IDs are the canonical exporter IDs, such as `color.neutral-0` and `focus-ring`, rather than Figma display names. Providing either list selects a batch; an omitted list selects none. Alias dependencies and style font/effect bindings are included automatically. Empty, duplicate or unknown selections fail before writes. Reports include requested and actual scope, and pruning is always disabled.
+
+Partition all `doc.variables[].id` and `doc.styles.text[].id` / `doc.styles.effect[].id` into explicit lists, retaining every definition. Mocks cover five brands with batches of 70 variables and 20 styles, measuring 17,194–33,790 bytes at this checkpoint. Check each emitted payload because the limit depends on the source data. Complete **every** batch and inspect values/bindings before accepting a brand switch: the one physical Starter mode temporarily mixes brands during a partial import. Full desktop import remains available. Native connector import batches are unverified while the tool allowance is exhausted.
 
 On 3 October 2026, the connected Starter account reported a Full seat and canvas writes worked. Screenshot reads subsequently hit the Starter tool-call allowance. This is an observation for this account, not a promise that every Starter account can write. Conserve read calls and record structural evidence returned from writes. Do not upgrade plans or change permissions automatically. See [rate limits and access](https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/).
 
@@ -277,9 +284,12 @@ See [LEARNINGS.md](LEARNINGS.md) for source findings, evidence boundaries and th
 yarn build:figma-tokens
 node examples/figma-plugin/dev/mock-figma.cjs
 node examples/figma-plugin/dev/mock-kit.cjs
+node examples/figma-plugin/dev/mock-choice.cjs
+node examples/figma-plugin/dev/mock-review-export.cjs
+node examples/figma-plugin/dev/mock-ui.cjs
 ```
 
-The kit harness has nine scenarios covering native identity and properties, instance overrides and nested exposure, dependency and font blocking, a scoped Roboto rebuild without loading or rewriting unavailable Tabs, font preflight before container mode transitions, transparent focus geometry, codec transport and the actual API restrictions encountered.
+The kit harness covers native identity and properties, instance overrides and nested exposure, dependency and font blocking, a scoped Roboto rebuild without loading or rewriting unavailable Tabs, font preflight before container mode transitions, transparent focus geometry, codec transport and the actual API restrictions encountered.
 
 The mock copies the Figma behaviours that have caused bugs here, but it is not Figma. Confirm a change in the desktop app before relying on it.
 
@@ -310,3 +320,9 @@ An ordinary desktop repeat created zero nodes, updated 322 and had no errors, wi
 ## Full component implementation
 
 The continuing scope and acceptance status are tracked in [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md). Implement families in dependency order, retaining verified identities and recording source, mock and native evidence separately. See [ARCHITECTURE-REVIEW.md](ARCHITECTURE-REVIEW.md) for the independent review and scaling priorities.
+
+### Radio and bounded verification checkpoint
+
+The kit now exports 290 variables, 73 text definitions, five effects and 123 variants across 13 families. Radio adds 30 source-backed variants and a checked-inset effect. Actual desktop inspection found 25 selected text styles and all five effects. Its normal repeat created zero nodes, updated 331 and reported no errors; all 277 preceding variable IDs and all main set/variant/property IDs survived. A fresh local `.fig` backup was saved.
+
+The scoped Radio PNG exposed a real inner-shadow difference: a literal 3px spread left only 1px of white inside Figma's 2px inside stroke. The derived native spread is 5px, retaining the source inset helper at 3px. The new PNG shows the intended 3px white band and 14px centre. Measured 240px source consumers also retain their 96px/144px heights and shrinking ellipses. These are bounded UNDRR observations. Before/focused narrow presets, arbitrary CSS resizing, other brands, Arabic, edited native consumer repeats, Condensed fonts and cloud/publication checks remain open. See [Radio learnings](LEARNINGS.md#radio-and-bounded-verification-on-3-october-2026).

@@ -6,19 +6,19 @@ The [architecture review](ARCHITECTURE-REVIEW.md) records the current compositio
 
 ## Where changes belong
 
-| File or source                            | Responsibility                                                                             |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `tokens/*.yaml` and component JSX/SCSS    | Mangrove's intended values, anatomy, states and cascade                                    |
-| `scripts/build-tokens.cjs`                | Shared token loading, layers, merging and resolution                                       |
-| `scripts/build-figma-tokens.cjs`          | Figma variable conversion, foundation styles, aliases and skipped-token reasons            |
-| `scripts/figma-component-recipes.cjs`     | Source guards, derived helpers, component typography, bounded variants and anatomy recipes |
-| `scripts/figma-cta-recipes.cjs`           | Source-backed text CTA composition, contextual action colours and bounded viewport styles  |
-| `examples/figma-plugin/kit-builder.js`    | Generic native construction, bindings, dependencies, identity and review specimens         |
-| `examples/figma-plugin/code.js`           | Import preflight, variable/style updates and message handling                              |
-| `examples/figma-plugin/kit-identity.js`   | Shared metadata and desktop legacy identity reads                                          |
-| `examples/figma-plugin/kit-inspection.js` | Read-only inspection, font diagnostics, focus diagnostics and PNG export                   |
-| `examples/figma-plugin/ui.html`           | Selection, explicit actions and report downloads                                           |
-| `scripts/build-figma-connector.cjs`       | Bounded connector scripts using the same runtime and recipes                               |
+| File or source                                                         | Responsibility                                                                             |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `tokens/*.yaml` and component JSX/SCSS                                 | Mangrove's intended values, anatomy, states and cascade                                    |
+| `scripts/build-tokens.cjs`                                             | Shared token loading, layers, merging and resolution                                       |
+| `scripts/build-figma-tokens.cjs`                                       | Figma variable conversion, foundation styles, aliases and skipped-token reasons            |
+| `scripts/figma-component-recipes.cjs`                                  | Source guards, derived helpers, component typography, bounded variants and anatomy recipes |
+| `scripts/figma-cta-recipes.cjs` and `scripts/figma-choice-recipes.cjs` | Source-backed text CTA composition, contextual action colours and bounded viewport styles  |
+| `examples/figma-plugin/kit-builder.js`                                 | Generic native construction, bindings, dependencies, identity and review specimens         |
+| `examples/figma-plugin/code.js`                                        | Import preflight, variable/style updates and message handling                              |
+| `examples/figma-plugin/kit-identity.js`                                | Shared metadata and desktop legacy identity reads                                          |
+| `examples/figma-plugin/kit-inspection.js`                              | Read-only inspection, font diagnostics, focus diagnostics and PNG export                   |
+| `examples/figma-plugin/ui.html`                                        | Selection, explicit actions and report downloads                                           |
+| `scripts/build-figma-connector.cjs`                                    | Bounded connector scripts using the same runtime and recipes                               |
 
 `mangrove-variables.json` and `build/main.js` are generated, ignored output. Regenerate them after a source or runtime change. Add source-derived design values to the exporter or recipes; keep construction logic generic.
 
@@ -28,7 +28,7 @@ The [architecture review](ARCHITECTURE-REVIEW.md) records the current compositio
 2. Add the relevant paths to the recipes' `sources` map. Use `source()` or `reference()` guards for the selectors or expressions the recipe depends on. A changed expression should produce an actionable build failure. Extend the supported expression grammar deliberately when the source requires it.
 3. Reuse exported semantic roles first. Add a helper only for a source literal, calculation or measured browser baseline that existing roles cannot represent. Give it a description, source reference, appropriate scope and WEB syntax where a truthful CSS expression exists. Resolve aliases for every brand. Document browser-dependent values, such as the measured black field-text helper.
 4. Add component text or effect styles to the generated `styles` section. Specify exact font family/style and explicit line-height units where the component needs them. The importer loads fonts before writing; missing fonts remain reported failures.
-5. Define the smallest useful variant inventory. Use a stable family `id`, stable variant IDs and clear variant axes. Current recipe nodes support `FRAME`, `TEXT` and `INSTANCE`; variant roots are `FRAME` recipes that become native components. A new primitive type needs runtime support and preflight coverage before a recipe can use it.
+5. Define the smallest useful variant inventory. Use a stable family `id`, stable variant IDs and clear variant axes. Current recipe nodes support `FRAME`, `TEXT`, `INSTANCE` and leaf `ELLIPSE`; variant roots are `FRAME` recipes that become native components. A new primitive type needs runtime support and preflight coverage before a recipe can use it.
 6. Use nested `INSTANCE` recipes for existing component families. Set `family` and a matching `variant` selector; dependencies are built first. Declare `expose: true` only for primary nested instances whose properties should be available to consumers. Use `textProperty` and family `optionalProperties` for editable text and boolean visibility.
 7. Add the family to the exported `families` list. For a composed long-label specimen, set `review.longLabelTarget` to an exact child-name path ending at a nested instance with a Label property. Each path segment must match uniquely. Horizontal Tabs retain their source nowrap behaviour.
 8. Add meaningful mock checks for the new risk: bindings and resolved values, dependency failure, repeat identity, override preservation, finite-width layout or a rejected migration. Render the new family in Figma and compare it with the measured browser fixture before expanding the scope.
@@ -125,6 +125,8 @@ yarn lint:check
 node examples/figma-plugin/dev/mock-figma.cjs
 node examples/figma-plugin/dev/mock-kit.cjs
 node examples/figma-plugin/dev/mock-ui.cjs
+node examples/figma-plugin/dev/mock-choice.cjs
+node examples/figma-plugin/dev/mock-review-export.cjs
 ```
 
 Run `npx prettier --check` with the exact touched files. Run explicit ESLint checks for touched runtime `.js` and mock `.cjs` files when needed to cover paths outside the normal lint script. If the token source test reports stale generated partials, run `node scripts/build-tokens.cjs` and repeat the failing check. Those partials are local build output.
@@ -150,7 +152,7 @@ If the change also modifies production JSX, SCSS, stories or component metadata,
 3. Select the affected family and its required dependencies. Choose **Build selected components**. For repair of an existing narrow Button only, intentionally tick the refresh option. Leave it off for normal updates that must retain formatting overrides.
 4. Save the build operation report. Check successful family IDs, created/updated IDs, failures and audit entries. Existing-object failures can retain partial changes; a returned object ID is insufficient evidence that the update succeeded.
 5. Run **Inspect kit** with font checks off for the structural comparison. The window shows a bounded inventory, modes, font status and error summary; **Save inspection report** retains the complete JSON. Compare set, variant and property IDs, resolved consumer values, effect bindings, dimensions, exposed nested instances and overrides with the baseline. Use the downloaded report for complete IDs and messages.
-6. Export the review PNG and, when relevant, focus diagnostics. Compare default and changed states, long labels, narrow consumers, clipping, alpha composition and focus geometry against the browser fixture.
+6. Select exactly one family and export its scoped family PNG. Use the full review PNG for sheet organisation and, when relevant, export focus diagnostics. Compare default and changed states, long labels, narrow consumers, clipping, alpha composition and focus geometry against the browser fixture.
 7. Repeat the same bounded build. An unchanged recipe should create no replacement nodes. Confirm IDs and edited Label values remain stable, then record the evidence and next discrepancy.
 
 Operation reports use fixed filenames for import, component build and focus diagnostics. Rename saved copies with a date and revision so they are not overwritten. Inspection is a separate download. Only one action runs at a time, and a previous operation report remains available during work or after an error. Reports live only for the plugin window's lifetime.
@@ -177,7 +179,7 @@ Splitting the collection into Primitives and Brand collections remains an open d
 
 ## Professional access handoff
 
-**Latest extension checkpoint:** Table/Text CTA now brings the kit to 277 variables, 12 families and 93 variants in UNDRR, with 25 selected text styles and four effects. The desktop repeat created zero nodes and retained actual family, variant and property IDs. Start migration from this checkpoint and a fresh backup; the earlier 246-variable checkpoint below remains historical evidence. See [the architecture review outcome](ARCHITECTURE-REVIEW.md#extension-outcome) for source/Figma differences and remaining publication gates.
+**Latest extension checkpoint:** Radio now brings the kit to 290 variables, 13 families and 123 variants in UNDRR, with 25 selected text styles and five effects. The desktop repeat created zero nodes and retained actual family, variant and property IDs. Start migration from this checkpoint and a fresh backup; the earlier 246-variable checkpoint below remains historical evidence. See [the architecture review outcome](ARCHITECTURE-REVIEW.md#extension-outcome) for source/Figma differences and remaining publication gates.
 
 Professional access is planned but has not been verified for the canonical kit. This is the place to resume when it becomes available.
 
@@ -255,3 +257,13 @@ Verify the resulting body, draft state, branch names and head revision. This is 
 ## Full component implementation
 
 The continuing scope and acceptance status are tracked in [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md). Implement families in dependency order, retaining verified identities and recording source, mock and native evidence separately. See [ARCHITECTURE-REVIEW.md](ARCHITECTURE-REVIEW.md) for the independent review and scaling priorities.
+
+Ellipse recipes use native geometry, fills, strokes and effects. They reject children, frame layout fields, corner radii and HUG sizing before style/canvas writes. FILL remains valid inside an auto-layout parent. Bind source dimensions and document any derived Figma geometry, such as the Radio inset spread that includes its inside border. Check the actual PNG because a correct effect value does not prove its painted extent.
+
+## Keep transport and review bounded
+
+The growing review sheet should be checked by family. Tick exactly one family and choose **Export selected family PNG**. This reads the exact owned `review/<family>` FRAME directly below the owned review root; it rejects ambiguous or foreign targets and does not create temporary nodes. Display renames retain identity. Save the full inspection and operation report alongside the family PNG; a bounded image does not replace structural or cross-family acceptance. The Radio family export has been exercised in the desktop app. The export and UI mocks cover ownership, selection and exact downloaded bytes.
+
+For connector foundation imports, use explicit `variableIds` / `styleIds` batches through `buildConnector`, or CLI `--variables` / `--styles`. Follow [the connector instructions](README.md#drive-the-same-recipes-through-the-connector), including alias/style dependency closure. Partition every exported definition and verify requested versus actual scope. A missing batch is a partial import. Complete all batches before accepting a Starter brand switch because one physical mode temporarily contains mixed-brand values. Batches never prune. The current five-brand mock checks 290 variables and 78 styles with stable IDs and full metadata; real connector execution remains unverified while quota is exhausted.
+
+Source Checkbox/Switch research follows Radio. Preserve the exact source SVG checkmark, including narrow repeated tiles, and Switch compositing/size differences. Before introducing native vector recipes, define source asset identity, safe in-place update policy and actual rendered acceptance. Do not replace the checkmark with a similar icon or promote a source browser capture to Figma acceptance.

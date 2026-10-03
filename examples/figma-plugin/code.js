@@ -655,7 +655,10 @@ figma.ui.onmessage = async msg => {
     }
     if (msg.type === 'export-review') {
       post('export', {
-        result: await exportMangroveReview(msg.name, { scale: 2 }),
+        result: await exportMangroveReview(msg.name, {
+          scale: 2,
+          familyId: msg.familyId,
+        }),
       });
       return;
     }

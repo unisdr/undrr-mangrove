@@ -3,6 +3,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 const { minify } = require('terser');
 const PLUGIN = path.resolve(__dirname, '../examples/figma-plugin');
 const LIMIT = 50000;
@@ -197,7 +198,71 @@ function selectFamilies(doc, requested, variantIds) {
   requested.forEach(visit);
   return [...selected].map(id => families.get(id));
 }
-function subsetDocument(doc, operation, brandId, requested, variantIds) {
+function validateImportSource(doc, brandId) {
+  // Share the plugin's pure preflight instead of maintaining a second schema.
+  // This runs before compilation and has no Figma globals or write access.
+  const source = fs.readFileSync(path.join(PLUGIN, 'code.js'), 'utf8');
+  const start = source.indexOf('function validateMangroveImport(');
+  const end = source.indexOf('\nfunction mangroveAssetIndex(', start);
+  if (start < 0 || end < 0)
+    throw new Error(
+      'Import preflight boundary changed. Update connector build.'
+    );
+  const validate = vm.runInNewContext(`(${source.slice(start, end)})`);
+  validate(doc, [brandId]);
+}
+function importSelection(doc, brandId, selection) {
+  validateImportSource(doc, brandId);
+  const byId = new Map(doc.variables.map(spec => [spec.id, spec]));
+  const byName = new Map(doc.variables.map(spec => [spec.name, spec]));
+  const styles = [...doc.styles.text, ...doc.styles.effect];
+  const styleById = new Map(styles.map(spec => [spec.id, spec]));
+  const variableIds = new Set();
+  const styleIds = new Set(
+    selection
+      ? selection.styleIds || []
+      : styles
+          .filter(spec => spec.recommended || doc.styles.effect.includes(spec))
+          .map(spec => spec.id)
+  );
+  function visit(spec) {
+    if (variableIds.has(spec.id)) return;
+    if (spec.values[brandId] === undefined)
+      throw new Error(`Import preflight: ${spec.name} has no ${brandId} value`);
+    variableIds.add(spec.id);
+    const value = spec.values[brandId];
+    if (value && typeof value === 'object' && 'alias' in value)
+      visit(byName.get(value.alias));
+  }
+  for (const id of selection ? selection.variableIds || [] : byId.keys()) {
+    const spec = byId.get(id);
+    if (!spec) throw new Error(`Unknown import variable ID ${id}`);
+    visit(spec);
+  }
+  for (const id of styleIds) {
+    const style = styleById.get(id);
+    if (!style) throw new Error(`Unknown import style ID ${id}`);
+    if (style.values[brandId] === undefined)
+      throw new Error(
+        `Import preflight: ${style.name} has no ${brandId} value`
+      );
+    const bindings = style.bindings
+      ? Object.values(style.bindings)
+      : style.values[brandId].flatMap(entry =>
+          Object.values(entry.bindings || {})
+        );
+    bindings.forEach(name => visit(byName.get(name)));
+  }
+  return { variableIds, styleIds };
+}
+function subsetDocument(
+  doc,
+  operation,
+  brandId,
+  requested,
+  variantIds,
+  importScope
+) {
   const mode = doc.modes.find(item => item.id === brandId);
   if (!mode) throw new Error(`Unknown brand ${brandId}`);
   const oneBrand = spec => ({
@@ -232,11 +297,16 @@ function subsetDocument(doc, operation, brandId, requested, variantIds) {
     return base;
   }
   if (operation === 'import') {
-    base.variables = doc.variables.map(oneBrand);
-    base.styles.text = doc.styles.text
-      .filter(style => style.recommended)
+    const selected = importSelection(doc, brandId, importScope);
+    base.variables = doc.variables
+      .filter(spec => selected.variableIds.has(spec.id))
       .map(oneBrand);
-    base.styles.effect = doc.styles.effect.map(oneBrand);
+    base.styles.text = doc.styles.text
+      .filter(style => selected.styleIds.has(style.id))
+      .map(oneBrand);
+    base.styles.effect = doc.styles.effect
+      .filter(style => selected.styleIds.has(style.id))
+      .map(oneBrand);
     return base;
   }
   if (operation === 'diagnostics') {
@@ -405,6 +475,8 @@ async function buildConnector({
   brandId = 'undrr',
   familyIds,
   variantIds,
+  variableIds,
+  styleIds,
   nodeIds = [],
   checkFonts = false,
   doc,
@@ -445,7 +517,42 @@ async function buildConnector({
     throw new Error(
       'Variant batches require one family and unique variant IDs.'
     );
-  const subset = subsetDocument(doc, operation, brandId, requested, variantIds);
+  const scopedImport = variableIds !== undefined || styleIds !== undefined;
+  if (
+    scopedImport &&
+    (operation !== 'import' ||
+      [variableIds, styleIds].some(
+        ids =>
+          ids !== undefined &&
+          (!Array.isArray(ids) ||
+            new Set(ids).size !== ids.length ||
+            ids.some(id => typeof id !== 'string' || !id.trim()))
+      ) ||
+      !(variableIds?.length || styleIds?.length))
+  )
+    throw new Error(
+      'Import batches require unique variableIds/styleIds and at least one selected ID.'
+    );
+  const subset = subsetDocument(
+    doc,
+    operation,
+    brandId,
+    requested,
+    variantIds,
+    scopedImport ? { variableIds, styleIds } : undefined
+  );
+  const importScope = scopedImport
+    ? {
+        brandId,
+        requestedVariableIds: variableIds || [],
+        requestedStyleIds: styleIds || [],
+        variableIds: subset.variables.map(spec => spec.id),
+        styleIds: [...subset.styles.text, ...subset.styles.effect].map(
+          spec => spec.id
+        ),
+        prune: false,
+      }
+    : null;
   let source = 'const MG_SHARED_ONLY = true;\n';
   source += fs.readFileSync(path.join(PLUGIN, 'kit-identity.js'), 'utf8');
   source += `\n;\n${coreSource()}\n;\n`;
@@ -467,10 +574,10 @@ async function buildConnector({
       : `return ${invocation};`;
   } else if (operation === 'import')
     source += `
-      const {createdVariableIds, updatedVariableIds, removedVariableIds, styles, ...result} = await importVariables(doc, [${JSON.stringify(brandId)}], false, undefined, true);
+      const {createdVariableIds, updatedVariableIds, removedVariableIds, styles, ...result} = await importVariables(doc, [${JSON.stringify(brandId)}], false, ${JSON.stringify(subset.styles.text.map(spec => spec.id))}, true);
       const {createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds, ...styleReport} = styles;
       result.styles = styleReport;
-      return {result, createdVariableIds, updatedVariableIds, removedVariableIds, createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds};
+      return {result, createdVariableIds, updatedVariableIds, removedVariableIds, createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds${importScope ? `, scope: ${JSON.stringify(importScope)}` : ''}};
     `;
   else if (operation === 'diagnostics')
     source += `return await createMangroveFocusDiagnostics(doc, ${JSON.stringify(brandId)});`;
@@ -492,7 +599,9 @@ async function buildConnector({
       `Connector payload exceeds ${LIMIT}: ${code.length} characters / ${bytes} bytes. ${
         operation === 'build'
           ? 'Select fewer families, or batch one family with explicit variantIds (CLI fourth argument: comma-separated recipe variant IDs).'
-          : 'Use the desktop plugin for this operation; no metadata was truncated.'
+          : operation === 'import'
+            ? 'Import explicit variableIds/styleIds batches (CLI --variables=id,id --styles=id,id). Each batch includes alias and style-binding dependencies with pruning off; reduce the requested IDs if needed. No metadata was truncated.'
+            : 'Use the desktop plugin for this operation; no metadata was truncated.'
       }`
     );
   return {
@@ -501,24 +610,41 @@ async function buildConnector({
     brandId,
     families: operation === 'build' ? requested : [],
     variantIds: variantIds || null,
+    scope: importScope,
     characters: code.length,
     bytes,
   };
 }
 if (require.main === module) {
+  const args = process.argv.slice(2);
+  const positional = args.filter(arg => !arg.startsWith('--'));
   const [operation = 'build', brandId = 'undrr', familyList, variantList] =
-    process.argv.slice(2);
-  buildConnector({
-    operation,
-    brandId,
-    familyIds: familyList ? familyList.split(',') : undefined,
-    variantIds: variantList ? variantList.split(',') : undefined,
-    nodeIds: operation === 'inspect' && familyList ? familyList.split(',') : [],
-  })
+    positional;
+  const flags = {};
+  let cliError;
+  for (const arg of args.filter(arg => arg.startsWith('--'))) {
+    const match = /^--(variables|styles)=(.*)$/.exec(arg);
+    if (!match || flags[match[1]] !== undefined)
+      cliError = `Unknown or duplicate connector option ${arg}`;
+    else flags[match[1]] = match[2] ? match[2].split(',') : [];
+  }
+  (cliError
+    ? Promise.reject(new Error(cliError))
+    : buildConnector({
+        operation,
+        brandId,
+        familyIds: familyList ? familyList.split(',') : undefined,
+        variantIds: variantList ? variantList.split(',') : undefined,
+        variableIds: flags.variables,
+        styleIds: flags.styles,
+        nodeIds:
+          operation === 'inspect' && familyList ? familyList.split(',') : [],
+      })
+  )
     .then(result => {
       process.stdout.write(`${result.code}\n`);
       process.stderr.write(
-        `build-figma-connector: ${result.operation} / ${result.brandId}, ${result.characters} characters / ${result.bytes} bytes${result.variantIds ? `, variants: ${result.variantIds.join(',')}` : ''}\n`
+        `build-figma-connector: ${result.operation} / ${result.brandId}, ${result.characters} characters / ${result.bytes} bytes${result.variantIds ? `, variants: ${result.variantIds.join(',')}` : ''}${result.scope ? `, requested: ${result.scope.requestedVariableIds.length} variables / ${result.scope.requestedStyleIds.length} styles, dependency closure: ${result.scope.variableIds.length} variables / ${result.scope.styleIds.length} styles, pruning off` : ''}\n`
       );
     })
     .catch(error => {

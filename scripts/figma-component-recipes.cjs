@@ -1780,6 +1780,14 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       styles,
     })
   );
+  families.push(
+    ...require('./figma-choice-recipes.cjs').buildChoiceRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
   for (const variable of variables) byName.set(variable.name, variable);
   function validate(node) {
     const names = [

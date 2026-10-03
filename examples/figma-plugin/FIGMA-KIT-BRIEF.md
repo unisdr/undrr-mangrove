@@ -140,6 +140,18 @@ The composed review deliberately disables generic root `Label` seeding because T
 
 Browser measurements and structural mock checks establish separate checkpoints. The six short-content variants rendered correctly at 720px in real Figma. The corrected master column widths and bound heights matched their helpers, and the wide Story specimen fit. At the same measured narrow column width, real Figma wrapped the detail text into more lines than Chromium and exceeded the fixed row height. Font-file equivalence and native line-breaking differences remain unverified. Hugging Story/NarrowStory rows preserve that text by growing beyond the browser minimum rather than forcing a font or clipping; The final native narrow specimen grew to 1116.78125px overall, with first/later body rows at 262.5px/263px, and its PNG showed readable text without overlap. The full state/brand matrix and edited-consumer checks remain separate acceptance work.
 
+## Radio (`mg-form-check`)
+
+Source: [Radio.jsx](../../stories/Components/Forms/Radio/Radio.jsx) and [shared form SCSS](../../stories/Components/Forms/_form-base.scss). Recipes live in `scripts/figma-choice-recipes.cjs`.
+
+The native family has 30 variants: Checked=False|True, State=Default|Hover|Focus|Disabled|Invalid|InvalidFocus|InvalidDisabled and LabelPosition=After|Before for 28 short specimens; two checked After LongNarrow presets record measured 240px English content. Invalid hover and disabled hover have the same border appearance as their respective states. Pointer-hover plus focus is not a separate preset yet.
+
+Source root is horizontal, centred and at least 40px tall. The control is 24px with a 2px border. Label and inline error use Roboto Regular 400, 16px/24px; label has 7px inline padding. The JSX error is a horizontal sibling with 2.5px top margin, despite older JSDoc describing below. Label/Error are editable; Show label/Show error default true, while valid states hide the error wrapper.
+
+Checked Radio changes fill only. Border precedence remains Invalid over Disabled over Hover over base. Disabled labels and checked fills do not dim. Native ellipses keep bound colour roles. Focus wraps the 24px circle with the existing opaque two-band geometry. CSS checked inset is a 3px white band inside the border. The initial Figma INNER_SHADOW spread of 3 rendered only a 1px white band because the 2px inside border covered it; the derived native spread adds that border, giving 5, while preserving the source helper at 3. This is a Figma translation, not a changed CSS token.
+
+At 240px, source flex shrink can compress a long-label control to 11.140625 × 24px, or 8.484375 × 24px with a long inline error. Preset label widths are 228.859375px and 148.921875px; error width is 82.59375px. Initial native inspection matched the source 96px and 144px row heights with the recorded English text. These are finite content/width presets rather than a native CSS flex algorithm. Before-label narrow, focused narrow, arbitrary consumer resizing, all-brand and Arabic/RTL acceptance remain work for the full inventory.
+
 ## Acceptance before expanding
 
 - Confirm native sets, variants, instances and editable properties.

@@ -607,16 +607,40 @@ async function createMangroveFocusDiagnostics(doc, brandId) {
   };
 }
 
-async function exportMangroveReview(name, { scale = 2 } = {}) {
+async function exportMangroveReview(name, { scale = 2, familyId } = {}) {
   if (!Number.isFinite(scale) || scale <= 0 || scale > 4)
     throw new Error('Review export scale must be greater than 0 and at most 4');
-  const nodes = figma.currentPage.children.filter(
-    node => node.name === name && Object.keys(mgInspectionIdentity(node)).length
-  );
-  if (nodes.length !== 1)
-    throw new Error(`Expected one owned review frame named ${name}`);
-  const node = nodes[0];
-  if (node.type !== 'FRAME') throw new Error(`${name} is not a review frame`);
+  const rootKey =
+    name === 'Mangrove / Review'
+      ? 'review'
+      : name === 'Mangrove diagnostics / focus ring'
+        ? MG_FOCUS_DIAGNOSTIC_ID
+        : null;
+  if (!rootKey) throw new Error('Unknown Mangrove review export target.');
+  if (
+    familyId !== undefined &&
+    (rootKey !== 'review' ||
+      typeof familyId !== 'string' ||
+      !/^[a-z0-9][a-z0-9-]*$/.test(familyId))
+  )
+    throw new Error(
+      'Family export needs one valid family ID and the review root.'
+    );
+  const page = figma.currentPage;
+  function ownedFrame(key, parent) {
+    const nodes = page.findAll(node => mgReadIdentity(node, 'mgKitId') === key);
+    if (nodes.length !== 1)
+      throw new Error(`Expected one owned review frame with identity ${key}`);
+    const node = nodes[0];
+    if (node.type !== 'FRAME')
+      throw new Error(`Owned review ${key} is not a frame.`);
+    if (node.parent !== parent)
+      throw new Error(`Owned review ${key} is outside its expected parent.`);
+    return node;
+  }
+  const root = ownedFrame(rootKey, page);
+  const node =
+    familyId === undefined ? root : ownedFrame(`review/${familyId}`, root);
   const bytes = await node.exportAsync({
     format: 'PNG',
     constraint: { type: 'SCALE', value: scale },
@@ -627,6 +651,14 @@ async function exportMangroveReview(name, { scale = 2 } = {}) {
     width: node.width,
     height: node.height,
     scale,
+    scope:
+      familyId !== undefined
+        ? 'family'
+        : rootKey === 'review'
+          ? 'review'
+          : 'diagnostics',
+    familyId: familyId ?? null,
+    rootId: root.id,
     bytes: Array.from(bytes),
   };
 }

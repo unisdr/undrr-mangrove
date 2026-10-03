@@ -293,8 +293,34 @@ async function buildMangroveComponents(
           if (tree.textProperty) recordProperty(tree.textProperty, 'TEXT');
           if (tree.visibilityProperty)
             recordProperty(tree.visibilityProperty, 'BOOLEAN');
-          if (!['FRAME', 'TEXT', 'INSTANCE'].includes(tree.type))
+          if (!['FRAME', 'TEXT', 'INSTANCE', 'ELLIPSE'].includes(tree.type))
             throw new Error(`Unsupported recipe node ${tree.type}`);
+          if (tree.type === 'ELLIPSE') {
+            const geometry = [
+              'width',
+              'height',
+              'minWidth',
+              'maxWidth',
+              'minHeight',
+              'maxHeight',
+            ];
+            if (
+              tree.children?.length ||
+              tree.textProperty ||
+              Object.entries(tree.layout || {}).some(
+                ([field, value]) => !geometry.includes(field) || value === 'HUG'
+              ) ||
+              Object.keys(tree.bindings || {}).some(
+                field =>
+                  ![...geometry, 'strokeWeight', 'opacity', 'visible'].includes(
+                    field
+                  )
+              )
+            )
+              throw new Error(
+                'Ellipse recipes are leaf shapes with geometry only, without HUG sizing, frame layout, text or corner radii.'
+              );
+          }
           if (!tree.id && !tree.key)
             throw new Error(`Node ${tree.name} needs a stable id.`);
           if (
@@ -856,6 +882,7 @@ async function buildMangroveComponents(
     if (!node) {
       if (spec.type === 'TEXT') node = figma.createText();
       else if (spec.type === 'FRAME') node = figma.createFrame();
+      else if (spec.type === 'ELLIPSE') node = figma.createEllipse();
       else {
         const dependency = built.get(spec.family);
         const variant = dependency?.variants.find(item =>
