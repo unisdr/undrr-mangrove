@@ -1,7 +1,309 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage */
+/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
+const MG_SVG_KEY = 'mgSvgAsset';
+const MG_SVG_ENABLED =
+  typeof MG_CONNECTOR_SVG === 'undefined' || MG_CONNECTOR_SVG;
+
+// A bounded source-vector subset, not a general SVG sanitizer or renderer.
+// Reject unsupported XML before the native importer creates any canvas nodes.
+function mgSvgPlan(tree) {
+  const object = value =>
+    value && typeof value === 'object' && !Array.isArray(value);
+  const fail = message => {
+    throw new Error(`SVG ${tree.name || tree.id}: ${message}`);
+  };
+  const allowed = [
+    'type',
+    'id',
+    'key',
+    'name',
+    'svg',
+    'layout',
+    'position',
+    'visible',
+    'bindings',
+    'visibilityProperty',
+  ];
+  if (Object.keys(tree).some(field => !allowed.includes(field)))
+    fail(
+      'unsupported recipe field; SVG is a leaf viewport without frame styles or children.'
+    );
+  const svg = tree.svg;
+  if (
+    !object(svg) ||
+    Object.keys(svg).some(
+      field => !['assetId', 'markup', 'monochrome'].includes(field)
+    ) ||
+    typeof svg.assetId !== 'string' ||
+    !/^[a-z0-9][a-z0-9._-]*$/.test(svg.assetId) ||
+    typeof svg.markup !== 'string' ||
+    !svg.markup.length ||
+    svg.markup.length > 32768
+  )
+    fail(
+      'needs a stable assetId and at most 32768 characters of source markup.'
+    );
+  if (
+    !object(tree.layout) ||
+    Object.keys(tree.layout).some(
+      field => !['width', 'height'].includes(field)
+    ) ||
+    !['width', 'height'].every(
+      field => Number.isFinite(tree.layout[field]) && tree.layout[field] > 0
+    )
+  )
+    fail(
+      'layout requires fixed positive width and height; HUG/FILL and live viewport bindings cannot scale source strokes.'
+    );
+  if (
+    tree.position !== undefined &&
+    (!object(tree.position) ||
+      Object.keys(tree.position).some(field => !['x', 'y'].includes(field)) ||
+      !['x', 'y'].every(field => Number.isFinite(tree.position[field])))
+  )
+    fail('position requires finite x and y.');
+  if (tree.visible !== undefined && typeof tree.visible !== 'boolean')
+    fail('visible must be boolean.');
+  if (
+    tree.bindings !== undefined &&
+    (!object(tree.bindings) ||
+      Object.keys(tree.bindings).some(
+        field => !['opacity', 'visible'].includes(field)
+      ))
+  )
+    fail('only opacity and visible bindings are supported.');
+  if (
+    svg.monochrome !== undefined &&
+    (!object(svg.monochrome) ||
+      !Object.keys(svg.monochrome).length ||
+      Object.keys(svg.monochrome).some(
+        field => !['fills', 'strokes'].includes(field)
+      ) ||
+      Object.values(svg.monochrome).some(
+        value => typeof value !== 'string' || !value
+      ))
+  )
+    fail(
+      'monochrome must explicitly name fills and/or strokes COLOR variables.'
+    );
+  const tags = new Set([
+    'svg',
+    'g',
+    'path',
+    'rect',
+    'circle',
+    'ellipse',
+    'line',
+    'polygon',
+    'polyline',
+  ]);
+  const attributes = new Set([
+    'xmlns',
+    'id',
+    'viewBox',
+    'width',
+    'height',
+    'fill',
+    'stroke',
+    'stroke-width',
+    'stroke-linecap',
+    'stroke-linejoin',
+    'stroke-miterlimit',
+    'stroke-dasharray',
+    'stroke-dashoffset',
+    'opacity',
+    'fill-opacity',
+    'stroke-opacity',
+    'fill-rule',
+    'clip-rule',
+    'transform',
+    'd',
+    'x',
+    'y',
+    'x1',
+    'x2',
+    'y1',
+    'y2',
+    'cx',
+    'cy',
+    'r',
+    'rx',
+    'ry',
+    'points',
+  ]);
+  const stack = [];
+  const palettes = { fills: new Set(), strokes: new Set() };
+  let cursor = 0;
+  let root;
+  let shapes = 0;
+  const tokens = svg.markup.matchAll(/<!--[^]*?-->|<[^>]*>/g);
+  for (const token of tokens) {
+    if (svg.markup.slice(cursor, token.index).trim())
+      fail('malformed XML or unsupported text content.');
+    cursor = token.index + token[0].length;
+    if (token[0].startsWith('<!--')) continue;
+    const match = /^<(\/?)([a-zA-Z][\w-]*)([^]*?)(\/?)>$/.exec(token[0]);
+    if (!match || !tags.has(match[2]))
+      fail('unsupported XML element; use inline source vector shapes.');
+    const [, closing, tag, raw, selfClosing] = match;
+    if (closing) {
+      if (raw.trim() || selfClosing || stack.pop()?.tag !== tag)
+        fail('malformed XML closing tag.');
+      continue;
+    }
+    const values = {};
+    let remaining = raw;
+    remaining = remaining.replace(
+      /([a-zA-Z_][\w:.-]*)\s*=\s*("[^"<]*"|'[^'<]*')/g,
+      (_, field, quoted) => {
+        if (!attributes.has(field) || field in values)
+          fail(`unsupported or duplicate XML attribute ${field}.`);
+        values[field] = quoted.slice(1, -1);
+        if (
+          /&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-f]+;)/i.test(
+            values[field]
+          )
+        )
+          fail('malformed XML entity.');
+        return '';
+      }
+    );
+    if (remaining.trim()) fail('malformed XML attribute.');
+    if (tag === 'svg') {
+      if (root || stack.length) fail('exactly one SVG root is supported.');
+      root = values;
+    } else if (!stack.length)
+      fail('vector shapes must be inside the SVG root.');
+    const inherited = stack.at(-1) || { fill: 'black', stroke: 'none' };
+    const paint = {
+      tag,
+      fill: values.fill ?? inherited.fill,
+      stroke: values.stroke ?? inherited.stroke,
+    };
+    if (!['svg', 'g'].includes(tag)) {
+      shapes += 1;
+      if (shapes > 128) fail('at most 128 source shapes are supported.');
+      for (const [field, name] of [
+        ['fills', paint.fill],
+        ['strokes', paint.stroke],
+      ]) {
+        if (name.toLowerCase() !== 'none')
+          palettes[field].add(
+            name
+              .trim()
+              .toLowerCase()
+              .replace(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/, '#$1$1$2$2$3$3')
+              .replace(/^white$/, '#ffffff')
+              .replace(/^black$/, '#000000')
+          );
+      }
+    }
+    if (!selfClosing) stack.push(paint);
+  }
+  if (stack.length || !root || !shapes || svg.markup.slice(cursor).trim())
+    fail('malformed or empty SVG XML.');
+  const viewBox = root.viewBox
+    ?.trim()
+    .split(/[\s,]+/)
+    .map(Number);
+  if (
+    !viewBox ||
+    viewBox.length !== 4 ||
+    !viewBox.every(Number.isFinite) ||
+    viewBox[2] <= 0 ||
+    viewBox[3] <= 0
+  )
+    fail('source needs a finite viewBox with positive dimensions.');
+  if (
+    Math.abs(tree.layout.width / tree.layout.height - viewBox[2] / viewBox[3]) >
+    1e-6
+  )
+    fail('viewport sizing must preserve the source viewBox aspect ratio.');
+  for (const field of Object.keys(svg.monochrome || {}))
+    if (palettes[field].size !== 1)
+      fail(
+        `monochrome ${field} needs exactly one source paint colour; preserve multicolour assets unchanged.`
+      );
+  let hash = 2166136261;
+  for (let i = 0; i < svg.markup.length; i += 1)
+    hash = Math.imul(hash ^ svg.markup.charCodeAt(i), 16777619) >>> 0;
+  const identity = {
+    assetId: svg.assetId,
+    hash: `fnv1a32-utf16:${hash.toString(16).padStart(8, '0')}`,
+    markup: svg.markup,
+    paintPolicy: svg.monochrome || {},
+  };
+  // Explicit intrinsic dimensions preserve the viewport instead of fitting paths.
+  // Reject a native importer that trims these bounds; never guess path offsets.
+  const markup = svg.markup.replace(
+    /<svg\b([^>]*?)>/,
+    (_, attrs) =>
+      `<svg${attrs.replace(/\s+(width|height)\s*=\s*("[^"]*"|'[^']*')/g, '')} width="${viewBox[2]}" height="${viewBox[3]}">`
+  );
+  return {
+    ...identity,
+    importedMarkup: markup,
+    width: viewBox[2],
+    height: viewBox[3],
+  };
+}
+function mgSvgTopology(node) {
+  return [
+    {
+      id: node.id,
+      type: node.type,
+      children: (node.children || []).map(child => child.id),
+    },
+    ...(node.children || []).flatMap(mgSvgTopology),
+  ];
+}
+function mgSvgGeometry(node) {
+  return node
+    .findAll(() => true)
+    .map(child => {
+      const fields = [
+        'x',
+        'y',
+        'width',
+        'height',
+        'rotation',
+        'vectorPaths',
+        'strokeWeight',
+        'strokeCap',
+        'strokeJoin',
+        'strokeAlign',
+        'strokeMiterLimit',
+        'dashPattern',
+      ];
+      return Object.fromEntries(
+        fields
+          .filter(field => field in child)
+          .map(field => [field, child[field]])
+      );
+    });
+}
+function mgSvgMonochrome(node, field) {
+  const paints = node
+    .findAll(() => true)
+    .flatMap(child => {
+      if (!(field in child)) return [];
+      if (!Array.isArray(child[field]))
+        throw new Error(`SVG monochrome ${field} cannot bind mixed paints.`);
+      return child[field].filter(
+        paint => paint.visible !== false && (paint.opacity ?? 1) > 0
+      );
+    });
+  if (
+    !paints.length ||
+    paints.some(paint => paint.type !== 'SOLID') ||
+    new Set(paints.map(paint => JSON.stringify(paint.color))).size !== 1
+  )
+    throw new Error(
+      `SVG monochrome ${field} needs visible SOLID paints of one colour; preserve multicolour or gradient assets unchanged.`
+    );
+}
 
 async function buildMangroveComponents(
   doc,
@@ -231,6 +533,8 @@ async function buildMangroveComponents(
   const blocked = new Set();
   const usedText = new Set();
   const usedEffects = new Set();
+  const svgPlans = new Map();
+  const svgAssetSources = new Map();
   for (const family of ordered) {
     try {
       if (dependencies(family).some(id => blocked.has(id)))
@@ -293,8 +597,36 @@ async function buildMangroveComponents(
           if (tree.textProperty) recordProperty(tree.textProperty, 'TEXT');
           if (tree.visibilityProperty)
             recordProperty(tree.visibilityProperty, 'BOOLEAN');
-          if (!['FRAME', 'TEXT', 'INSTANCE', 'ELLIPSE'].includes(tree.type))
+          if (
+            tree.textDecoration !== undefined &&
+            (tree.type !== 'TEXT' ||
+              !['UNDERLINE', 'NONE'].includes(tree.textDecoration))
+          )
+            throw new Error(
+              'Only TEXT recipes support textDecoration UNDERLINE or NONE.'
+            );
+          if (
+            !['FRAME', 'TEXT', 'INSTANCE', 'ELLIPSE', 'SVG'].includes(tree.type)
+          )
             throw new Error(`Unsupported recipe node ${tree.type}`);
+          if (tree.type === 'SVG' && !MG_SVG_ENABLED)
+            throw new Error(
+              'SVG recipes are disabled in this connector scope. Compile the selected SVG family before building it.'
+            );
+          if (MG_SVG_ENABLED && tree.type === 'SVG') {
+            const plan = mgSvgPlan(tree);
+            if (
+              svgAssetSources.has(plan.assetId) &&
+              svgAssetSources.get(plan.assetId) !== plan.markup
+            )
+              throw new Error(
+                `SVG asset ${plan.assetId} has conflicting source markup. Use distinct asset IDs or an explicit SVG migration.`
+              );
+            svgAssetSources.set(plan.assetId, plan.markup);
+            svgPlans.set(tree, plan);
+            for (const name of Object.values(tree.svg.monochrome || {}))
+              variable(name, 'COLOR');
+          }
           if (tree.type === 'ELLIPSE') {
             const geometry = [
               'width',
@@ -378,7 +710,7 @@ async function buildMangroveComponents(
           if (tree.type === 'TEXT') {
             if (
               tree.textWrap !== undefined &&
-              !['BALANCE', 'WRAP', 'TRUNCATE'].includes(tree.textWrap)
+              !['AUTO', 'BALANCE', 'PRETTY'].includes(tree.textWrap)
             )
               throw new Error('Unsupported text wrapping style.');
             if (!textSpecs.has(tree.textStyle))
@@ -436,6 +768,59 @@ async function buildMangroveComponents(
               'Contextual appearance is only supported on native instances.'
             );
         });
+        function checkSvgOwnership(tree, key) {
+          if (MG_SVG_ENABLED && tree.type === 'SVG') {
+            const node = owned.get(key);
+            if (node) {
+              let previous;
+              try {
+                previous = JSON.parse(mgReadIdentity(node, MG_SVG_KEY));
+              } catch {
+                /* Missing or malformed metadata is a migration. */
+              }
+              const plan = svgPlans.get(tree);
+              if (
+                node.type !== 'FRAME' ||
+                !previous ||
+                previous.assetId !== plan.assetId ||
+                previous.hash !== plan.hash ||
+                previous.markup !== plan.markup ||
+                !Number.isFinite(previous.sourceOpacity) ||
+                previous.sourceOpacity < 0 ||
+                previous.sourceOpacity > 1 ||
+                JSON.stringify(previous.paintPolicy) !==
+                  JSON.stringify(plan.paintPolicy) ||
+                JSON.stringify(previous.topology) !==
+                  JSON.stringify(mgSvgTopology(node)) ||
+                JSON.stringify(previous.geometry) !==
+                  JSON.stringify(mgSvgGeometry(node))
+              )
+                throw new Error(
+                  `SVG ${key} content, asset identity or imported geometry/topology changed. Explicit SVG migration required; preserve existing wrapper and vector IDs before replacing source.`
+                );
+              if (
+                ![node.width, node.height].every(
+                  value => Number.isFinite(value) && value > 0
+                ) ||
+                Math.abs(node.width / node.height - plan.width / plan.height) >
+                  1e-6
+              )
+                throw new Error(
+                  `SVG ${key} viewport aspect ratio changed. Explicit SVG migration required.`
+                );
+              for (const field of Object.keys(tree.svg.monochrome || {}))
+                mgSvgMonochrome(node, field);
+              plan.sourceOpacity = previous.sourceOpacity;
+            }
+          }
+          for (const child of tree.children || [])
+            checkSvgOwnership(child, `${key}/${child.id || child.key}`);
+        }
+        if (MG_SVG_ENABLED)
+          checkSvgOwnership(
+            variant.tree,
+            `family/${family.id}/variant/${variant.id}`
+          );
       }
       if (family.review?.specimens !== undefined) {
         const specimens = family.review.specimens;
@@ -873,6 +1258,95 @@ async function buildMangroveComponents(
     return decorations;
   }
   async function treeNode(spec, parent, component, key, rootNode) {
+    if (MG_SVG_ENABLED && spec.type === 'SVG') {
+      const plan = svgPlans.get(spec);
+      let node = owned.get(key);
+      const fresh = !node;
+      if (fresh) {
+        try {
+          node = figma.createNodeFromSvg(plan.importedMarkup);
+          if (
+            node.type !== 'FRAME' ||
+            Math.abs(node.width - plan.width) > 1e-6 ||
+            Math.abs(node.height - plan.height) > 1e-6
+          )
+            throw new Error(
+              'native SVG importer did not preserve the explicit viewBox viewport. Verify native SVG acceptance before using this asset; path-bound scaling is unsupported.'
+            );
+          for (const field of Object.keys(spec.svg.monochrome || {}))
+            mgSvgMonochrome(node, field);
+          plan.sourceOpacity = node.opacity;
+        } catch (error) {
+          if (node && !node.removed) node.remove();
+          throw new Error(
+            `SVG ${plan.assetId} import failed: ${reportError(error)}`
+          );
+        }
+      }
+      mark(node, key, fresh);
+      const descendants = node.findAll(() => true);
+      for (const child of descendants)
+        (fresh ? created : updated).add(child.id);
+      if (node.parent !== parent) parent.appendChild(node);
+      node.name = spec.name || spec.id;
+      node.visible = spec.visible !== false;
+      // resize only changes a frame viewport. rescale also scales source paths,
+      // stroke widths and positions. Equal-size repeats perform no rescale.
+      let scale = spec.layout.width / node.width;
+      while (scale < 0.01) {
+        node.rescale(0.01);
+        scale /= 0.01;
+      }
+      if (Math.abs(scale - 1) > 1e-12) node.rescale(scale);
+      node.layoutSizingHorizontal = node.layoutSizingVertical = 'FIXED';
+      if (spec.position) {
+        if (parent.layoutMode !== 'NONE') node.layoutPositioning = 'ABSOLUTE';
+        node.x = spec.position.x;
+        node.y = spec.position.y;
+      }
+      for (const field of ['opacity', 'visible']) {
+        if (spec.bindings?.[field]) bind(node, field, spec.bindings[field]);
+        else node.setBoundVariable(field, null);
+      }
+      if (!spec.bindings?.opacity) node.opacity = plan.sourceOpacity;
+      if (spec.visibilityProperty)
+        node.componentPropertyReferences = {
+          ...(node.componentPropertyReferences || {}),
+          visible: ensureProperty(
+            component,
+            spec.visibilityProperty,
+            'BOOLEAN',
+            spec.visible !== false
+          ),
+        };
+      for (const [field, name] of Object.entries(spec.svg.monochrome || {})) {
+        const bound = variable(name, 'COLOR');
+        for (const child of descendants) {
+          if (!Array.isArray(child[field])) continue;
+          child[field] = child[field].map(paint =>
+            paint.type === 'SOLID' &&
+            paint.visible !== false &&
+            (paint.opacity ?? 1) > 0
+              ? figma.variables.setBoundVariableForPaint(paint, 'color', bound)
+              : paint
+          );
+        }
+      }
+      mgWriteIdentity(
+        node,
+        MG_SVG_KEY,
+        JSON.stringify({
+          assetId: plan.assetId,
+          hash: plan.hash,
+          markup: plan.markup,
+          paintPolicy: plan.paintPolicy,
+          sourceOpacity: plan.sourceOpacity,
+          topology: mgSvgTopology(node),
+          geometry: mgSvgGeometry(node),
+        })
+      );
+      return node;
+    }
     let node = rootNode || owned.get(key);
     const fresh = !node;
     if (node && !rootNode && node.type !== spec.type)
@@ -1009,6 +1483,10 @@ async function buildMangroveComponents(
       }
     }
     applyLayout(node, spec.layout);
+    // Apply decoration after character property references and sizing. Shared
+    // link styles also carry it so consumer text edits inherit the decoration.
+    if (spec.type === 'TEXT')
+      node.textDecoration = spec.textDecoration || 'NONE';
     if (spec.labelSizing === 'FILL') {
       const labels = node
         .findAllWithCriteria({ types: ['TEXT'] })

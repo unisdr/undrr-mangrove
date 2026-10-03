@@ -553,6 +553,16 @@ async function buildConnector({
         prune: false,
       }
     : null;
+  // Compile the native SVG importer only when the exact dependency/variant
+  // subset needs it. The desktop plugin keeps every capability available.
+  function needsSvg(node) {
+    return node.type === 'SVG' || (node.children || []).some(needsSvg);
+  }
+  const svgEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsSvg(variant.tree))
+    );
   let source = 'const MG_SHARED_ONLY = true;\n';
   source += fs.readFileSync(path.join(PLUGIN, 'kit-identity.js'), 'utf8');
   source += `\n;\n${coreSource()}\n;\n`;
@@ -584,7 +594,7 @@ async function buildConnector({
   else if (operation === 'inspect')
     source += `return (${connectorInspectionSummary.toString()})(await inspectMangroveKit({checkFonts:${Boolean(checkFonts)}}), ${JSON.stringify(nodeIds)});`;
   const minified = await minify(`async function mgRun(){${source}}`, {
-    compress: true,
+    compress: { global_defs: { MG_CONNECTOR_SVG: svgEnabled } },
     mangle: true,
     format: { comments: false },
   });
@@ -611,6 +621,7 @@ async function buildConnector({
     families: operation === 'build' ? requested : [],
     variantIds: variantIds || null,
     scope: importScope,
+    svgEnabled,
     characters: code.length,
     bytes,
   };

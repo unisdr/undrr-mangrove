@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview */
+/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
  * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
@@ -151,6 +151,16 @@ function validateMangroveImport(doc, selectedModeIds, selectedTextIds) {
         value.fontSize <= 0
       )
         fail(`${spec.name} [${mode}]: invalid text style value`);
+      if (
+        value.textDecoration !== undefined &&
+        !['NONE', 'UNDERLINE'].includes(value.textDecoration)
+      )
+        fail(`${spec.name} [${mode}]: invalid text style decoration`);
+      if (
+        value.textWrapStyle !== undefined &&
+        !['AUTO', 'BALANCE', 'PRETTY'].includes(value.textWrapStyle)
+      )
+        fail(`${spec.name} [${mode}]: invalid text style wrapping`);
     }
   }
   for (const spec of effects) {
@@ -459,6 +469,8 @@ async function importStyles(
           style.lineHeight = value.lineHeight;
           style.setBoundVariable('fontFamily', family);
           style.setBoundVariable('fontSize', size);
+          style.textDecoration = value.textDecoration || 'NONE';
+          style.textWrapStyle = value.textWrapStyle || 'AUTO';
         } else {
           style.effects = effects;
         }
@@ -650,6 +662,27 @@ figma.ui.onmessage = async msg => {
           msg.families,
           { refreshNarrowReview: msg.refreshNarrowReview ?? false }
         ),
+      });
+      return;
+    }
+    if (msg.type === 'prepare-override-probes') {
+      post('operation', {
+        result: await prepareMangroveOverrideProbes(msg.doc, msg.brand),
+      });
+      return;
+    }
+    if (msg.type === 'compare-override-probes') {
+      post('operation', {
+        result: await compareMangroveOverrideProbes(
+          msg.rootId,
+          msg.buildResult
+        ),
+      });
+      return;
+    }
+    if (msg.type === 'remove-override-probes') {
+      post('operation', {
+        result: await removeMangroveOverrideProbes(msg.rootId),
       });
       return;
     }

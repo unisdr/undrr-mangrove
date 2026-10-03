@@ -6,19 +6,20 @@ The [architecture review](ARCHITECTURE-REVIEW.md) records the current compositio
 
 ## Where changes belong
 
-| File or source                                                         | Responsibility                                                                             |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `tokens/*.yaml` and component JSX/SCSS                                 | Mangrove's intended values, anatomy, states and cascade                                    |
-| `scripts/build-tokens.cjs`                                             | Shared token loading, layers, merging and resolution                                       |
-| `scripts/build-figma-tokens.cjs`                                       | Figma variable conversion, foundation styles, aliases and skipped-token reasons            |
-| `scripts/figma-component-recipes.cjs`                                  | Source guards, derived helpers, component typography, bounded variants and anatomy recipes |
-| `scripts/figma-cta-recipes.cjs` and `scripts/figma-choice-recipes.cjs` | Source-backed text CTA composition, contextual action colours and bounded viewport styles  |
-| `examples/figma-plugin/kit-builder.js`                                 | Generic native construction, bindings, dependencies, identity and review specimens         |
-| `examples/figma-plugin/code.js`                                        | Import preflight, variable/style updates and message handling                              |
-| `examples/figma-plugin/kit-identity.js`                                | Shared metadata and desktop legacy identity reads                                          |
-| `examples/figma-plugin/kit-inspection.js`                              | Read-only inspection, font diagnostics, focus diagnostics and PNG export                   |
-| `examples/figma-plugin/ui.html`                                        | Selection, explicit actions and report downloads                                           |
-| `scripts/build-figma-connector.cjs`                                    | Bounded connector scripts using the same runtime and recipes                               |
+| File or source                                                                                                                                         | Responsibility                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `tokens/*.yaml` and component JSX/SCSS                                                                                                                 | Mangrove's intended values, anatomy, states and cascade                                    |
+| `scripts/build-tokens.cjs`                                                                                                                             | Shared token loading, layers, merging and resolution                                       |
+| `scripts/build-figma-tokens.cjs`                                                                                                                       | Figma variable conversion, foundation styles, aliases and skipped-token reasons            |
+| `scripts/figma-component-recipes.cjs`                                                                                                                  | Source guards, derived helpers, component typography, bounded variants and anatomy recipes |
+| `scripts/figma-cta-recipes.cjs`, `scripts/figma-choice-recipes.cjs`, `scripts/figma-checkbox-recipes.cjs` and `scripts/figma-form-summary-recipes.cjs` | Source-backed composition, choice geometry, source SVGs and error-summary typography       |
+| `examples/figma-plugin/kit-builder.js`                                                                                                                 | Generic native construction, bindings, dependencies, identity and review specimens         |
+| `examples/figma-plugin/code.js`                                                                                                                        | Import preflight, variable/style updates and message handling                              |
+| `examples/figma-plugin/kit-identity.js`                                                                                                                | Shared metadata and desktop legacy identity reads                                          |
+| `examples/figma-plugin/kit-inspection.js`                                                                                                              | Read-only inspection, font diagnostics, focus diagnostics and PNG export                   |
+| `examples/figma-plugin/kit-acceptance.js`                                                                                                              | Temporary edited-instance probes, persisted baseline comparison and exact-owned cleanup    |
+| `examples/figma-plugin/ui.html`                                                                                                                        | Selection, explicit actions and report downloads                                           |
+| `scripts/build-figma-connector.cjs`                                                                                                                    | Bounded connector scripts using the same runtime and recipes                               |
 
 `mangrove-variables.json` and `build/main.js` are generated, ignored output. Regenerate them after a source or runtime change. Add source-derived design values to the exporter or recipes; keep construction logic generic.
 
@@ -28,7 +29,7 @@ The [architecture review](ARCHITECTURE-REVIEW.md) records the current compositio
 2. Add the relevant paths to the recipes' `sources` map. Use `source()` or `reference()` guards for the selectors or expressions the recipe depends on. A changed expression should produce an actionable build failure. Extend the supported expression grammar deliberately when the source requires it.
 3. Reuse exported semantic roles first. Add a helper only for a source literal, calculation or measured browser baseline that existing roles cannot represent. Give it a description, source reference, appropriate scope and WEB syntax where a truthful CSS expression exists. Resolve aliases for every brand. Document browser-dependent values, such as the measured black field-text helper.
 4. Add component text or effect styles to the generated `styles` section. Specify exact font family/style and explicit line-height units where the component needs them. The importer loads fonts before writing; missing fonts remain reported failures.
-5. Define the smallest useful variant inventory. Use a stable family `id`, stable variant IDs and clear variant axes. Current recipe nodes support `FRAME`, `TEXT`, `INSTANCE` and leaf `ELLIPSE`; variant roots are `FRAME` recipes that become native components. A new primitive type needs runtime support and preflight coverage before a recipe can use it.
+5. Define the smallest useful variant inventory. Use a stable family `id`, stable variant IDs and clear variant axes. Current recipe nodes support `FRAME`, `TEXT`, `INSTANCE`, leaf `ELLIPSE` and a bounded `SVG` viewport; variant roots are `FRAME` recipes that become native components. A new primitive type needs runtime support and preflight coverage before a recipe can use it.
 6. Use nested `INSTANCE` recipes for existing component families. Set `family` and a matching `variant` selector; dependencies are built first. Declare `expose: true` only for primary nested instances whose properties should be available to consumers. Use `textProperty` and family `optionalProperties` for editable text and boolean visibility.
 7. Add the family to the exported `families` list. For a composed long-label specimen, set `review.longLabelTarget` to an exact child-name path ending at a nested instance with a Label property. Each path segment must match uniquely. Horizontal Tabs retain their source nowrap behaviour.
 8. Add meaningful mock checks for the new risk: bindings and resolved values, dependency failure, repeat identity, override preservation, finite-width layout or a rejected migration. Render the new family in Figma and compare it with the measured browser fixture before expanding the scope.
@@ -66,7 +67,11 @@ The builder validates this contract before the affected family's style or canvas
 
 Compositions without a meaningful root Label can set `review.genericLabels: false`. Their variant specimens can use a positive `review.width` instead of the default narrow review card. Provide deliberate long and narrow examples rather than inventing a Label property.
 
-Native instance recipes can declare `appearance: { fill, stroke, labelFill }` using COLOR variable names for source-defined contextual colours. `labelFill` requires exactly one Label text node in the dependency. Explicit instance `bindings` override only their declared inherited fields. These changes retain native instances and source identity. A changed or removed context override needs a deliberate update check; do not detach actions to bypass the contract. Auto layout accepts `wrap` and `counterGap`, and text recipes accept `textWrap` for native wrapping behaviour. Confirm normal-scale rendering against the source.
+Native instance recipes can declare `appearance: { fill, stroke, labelFill }` using COLOR variable names for source-defined contextual colours. `labelFill` requires exactly one Label text node in the dependency. Explicit instance `bindings` override only their declared inherited fields. These changes retain native instances and source identity. A changed or removed context override needs a deliberate update check; do not detach actions to bypass the contract. Auto layout accepts `wrap` and `counterGap`. Confirm normal-scale rendering against the source.
+
+TEXT recipes accept `textWrap: 'AUTO'`, `'BALANCE'` or `'PRETTY'`; the builder writes the native `textWrapStyle` property. `DEFAULT` is not a valid value. Wrapping style does not set a finite width or replace HUG/FILL sizing. Source underline uses `textDecoration: 'UNDERLINE'`; `'NONE'` is also supported, and omitted decoration is reset to NONE on owned main text. Load exact fonts before applying text styles, changing characters, alignment, wrapping or decoration. Mixed text requires every current range face; a missing font remains an error. Whole-node underline does not imply rich-text ranges, native links or source navigation. Error-summary link recipes specify the measured Roboto Bold face and source underline; the requested CSS weight 600 is recorded separately from the bundled face. [Native text properties](https://developers.figma.com/docs/plugins/api/TextNode/)
+
+For attributes that editable TEXT properties must inherit, put `textDecoration` and `textWrapStyle` in the exported shared text-style values as well. The importer validates the enums and writes native TextStyle fields after font loading, defaulting omitted values to NONE/AUTO. Form error summary exports UNDERLINE/AUTO on the link style and NONE/BALANCE on its title style. Native review first showed links with NONE despite the node recipe requesting underline. Applying node decoration after property references/layout corrected mains and normal review, while the edited long review still lost underline. Style-level inheritance corrected both ordinary and edited long native examples. Final inspection reads UNDERLINE/AUTO on all link nodes and BALANCE on every title. Keep this bounded evidence separate from font-file, brand/script and wrapped inline-focus acceptance; the cause of the observed resets is unconfirmed. [Native text styles](https://developers.figma.com/docs/plugins/api/TextStyle/)
 
 For coordinated composition examples, `nodes` accepts up to 64 entries with a unique child-name `path` and nested-instance `properties`. Paths cross nested component instances and must resolve uniquely; property names and TEXT/BOOLEAN types are checked against the nested source recipe. Descendant width/height seeds are rejected: actual Figma silently retained nested instance dimensions and bindings despite successful API returns. Put shared column and row geometry on component masters, then select the matching preset. `instanceWidth` can give the root instance an explicit positive size or FLOAT binding independently of the consumer width, preserving measured source overflow. Content seeds apply to fresh specimens; repeat builds preserve edited text. A fixed measured preset does not provide the browser's automatic table algorithm or responsive breakpoint logic.
 
@@ -89,16 +94,30 @@ Textarea uses this contract for a multiline Value specimen, rather than changing
 
 The outward focus diagnostic established that the coloured outer effect must precede the neutral separator. Transparent outlined controls use the recipe's `focusRing` contract and native OUTSIDE strokes. Do not add an opaque or nearly transparent fill to make shadow spread appear. The builder binds colour, width and corner-radius roles, but expanded rectangle positions are computed at build time; rebuild and test resizing after an offset change. Inward focus and every consumer shape require their own acceptance.
 
+### Source SVG viewport contract
+
+Use a leaf `SVG` recipe with a stable anatomy ID, `svg: { assetId, markup }` and numeric positive `layout.width`/`height`. The source must have a finite positive `viewBox`, and target sizing must preserve its aspect ratio. Optional `position: { x, y }` supplies absolute placement in an auto-layout parent. Only `opacity` and `visible` bindings are supported; `visibilityProperty` can expose a BOOLEAN. Children, HUG/FILL sizing, live viewport bindings and ordinary frame paint/effect fields are rejected.
+
+The runtime accepts a bounded set of source shapes and attributes, not arbitrary SVG XML or a general asset renderer. It supplies explicit intrinsic dimensions from the viewBox before `createNodeFromSvg`, requires a native FRAME viewport of those dimensions, then uses `rescale` for proportional paths, positions and strokes. A frame `resize` alone would change the viewport without scaling the artwork. Equal-size repeats do not rescale. Wrapper and imported descendant IDs are retained. [Native rescale](https://developers.figma.com/docs/plugins/api/properties/nodes-rescale/)
+
+Original colours remain unchanged unless the recipe explicitly declares `svg.monochrome: { fills: '<COLOR role>', strokes: '<COLOR role>' }` for the intended paint channel. Each declared channel must contain visible SOLID paints of one source colour in both source preflight and the native import. Do not recolour multicolour assets through this contract. Gradients and other unsupported SVG features remain outside the bounded parser. Preserve caps, joins, dash patterns, stroke weights, source opacity and transparent geometry.
+
+Shared `mgSvgAsset` metadata records the exact asset ID, full original markup, content hash, paint policy, native topology and geometry fingerprint. The fingerprint includes imported vector paths, positions, dimensions and stroke geometry. Repeat preflight rejects changed source content, asset identity, paint policy, topology, geometry or viewport aspect ratio. A same-aspect target-size change can rescale the retained tree. A source correction needs an explicit reviewed migration with a backup, actual wrapper/vector ID mapping and consumer-override checks; do not change only the hash or delete/reimport existing descendants to bypass rejection.
+
+Native Checkbox SVG construction succeeded for the source checkmark, including bounded narrow tiles. This does not establish arbitrary icon/logo import, every SVG feature, all-brand paint or changed-source migration. The SVG mock parses bounded fixtures and does not prove general XML/path rendering.
+
 ## Preserve identity and plan migrations
 
 Shared metadata uses namespace `orgundrrmangrove`. It stores public source identities; keep account details, credentials and private file identifiers out of it.
 
-| Identity          | Used for                                                                        |
-| ----------------- | ------------------------------------------------------------------------------- |
-| `mgId`            | Variables                                                                       |
-| `mgStyleId`       | Text and effect styles                                                          |
-| `mgKitId`         | Owned component sets, variants, anatomy nodes, review specimens and diagnostics |
-| `mgKitProperties` | Mapping logical property names to actual Figma property IDs                     |
+| Identity             | Used for                                                                        |
+| -------------------- | ------------------------------------------------------------------------------- |
+| `mgId`               | Variables                                                                       |
+| `mgStyleId`          | Text and effect styles                                                          |
+| `mgKitId`            | Owned component sets, variants, anatomy nodes, review specimens and diagnostics |
+| `mgKitProperties`    | Mapping logical property names to actual Figma property IDs                     |
+| `mgSvgAsset`         | Exact source asset, paint policy and retained native vector topology/geometry   |
+| `mgAcceptanceLedger` | Public synthetic probe baseline, exact created IDs and cleanup ownership        |
 
 Variables and styles match identity first, with a compatible unique name fallback. Duplicate collections, ambiguous matches, foreign ownership and incompatible types are rejected. The desktop helper reads legacy private identities and detects conflicts; connector execution uses shared metadata only. A renamed asset carrying only legacy private identity needs desktop migration before connector adoption.
 
@@ -127,6 +146,10 @@ node examples/figma-plugin/dev/mock-kit.cjs
 node examples/figma-plugin/dev/mock-ui.cjs
 node examples/figma-plugin/dev/mock-choice.cjs
 node examples/figma-plugin/dev/mock-review-export.cjs
+node examples/figma-plugin/dev/mock-svg.cjs
+node examples/figma-plugin/dev/mock-checkbox.cjs
+node examples/figma-plugin/dev/mock-form-summary.cjs
+node examples/figma-plugin/dev/mock-acceptance.cjs
 ```
 
 Run `npx prettier --check` with the exact touched files. Run explicit ESLint checks for touched runtime `.js` and mock `.cjs` files when needed to cover paths outside the normal lint script. If the token source test reports stale generated partials, run `node scripts/build-tokens.cjs` and repeat the failing check. Those partials are local build output.
@@ -157,6 +180,20 @@ If the change also modifies production JSX, SCSS, stories or component metadata,
 
 Operation reports use fixed filenames for import, component build and focus diagnostics. Rename saved copies with a date and revision so they are not overwritten. Inspection is a separate download. Only one action runs at a time, and a previous operation report remains available during work or after an error. Reports live only for the plugin window's lifetime.
 
+### Check edited native instances
+
+The **Instance override acceptance** section prepares three temporary probes outside main/review: ComboBox Open, checked Default Radio and checked Invalid Radio, using exact existing owned masters. It preflights their actual TEXT/BOOLEAN keys, variant axes and Roboto fonts before creating nodes. Preparation edits root text/visibility, all three exposed option Labels and one direct text-alignment override. It reads the edits back before recording the baseline. The first native run passed 441 assertions, followed by a visual review and cleanup after plugin restart. These three default-UNDRR probes establish bounded edit preservation; they do not establish every family or a published consumer-file update.
+
+1. Save a fresh inspection and backup. Keep the current brand applied and select it in the plugin; preparation does not switch brands.
+2. Choose **Prepare override probes**, then **Save operation report**. Retain the complete ledger, root ID, created tree IDs and any errors. The Probe root ID field is filled automatically. A preparation error can leave partial owned evidence; inspect it rather than assuming no nodes were created.
+3. Select ComboBox and Radio for an ordinary build. ComboBox option is included as a dependency. Leave review refresh off, choose **Build selected components**, and save its complete report. Do not swap variants, change brands, edit the source or detach probes during this experiment.
+4. Choose **Compare after normal build** and save the comparison report. It requires a successful build report covering ComboBox, ComboBox option and Radio, and checks exact main/set IDs, actual suffixed property keys/values, descendant identities, exposure, text, visibility and formatting. Comparison does not load fonts or write nodes. A failed/skipped family blocks acceptance. Visibility flags alone do not prove painted visibility under clipping or occlusion; inspect the probe area at normal scale and retain rendered evidence separately.
+5. After saving evidence, choose **Remove owned probes** for that exact root ID. Cleanup removes only recorded owned INSTANCE trees with their original parent and no unrecorded descendants. Moved, detached, retyped, foreign-identity or user-extended probes are retained, as is a root with additional children. Inspect the cleanup report; never delete by display name or prefix.
+
+The root stores a versioned, bounded synthetic ledger in public shared metadata. After a plugin restart, paste the saved root ID into **Probe root ID** to recover the persisted baseline. Run a new ordinary scoped build to supply the comparison's current build report; the UI-held last build report does not survive restart. Preparation is a new run, not an upsert of the old probes. Keep private workflow/account details outside shared metadata.
+
+Current coverage is deliberately narrow: Radio Checked is a VARIANT string axis, not a BOOLEAN. Default Radio's hidden error ancestor cannot be shown by its Show error property; positive error visibility is exercised on Invalid Radio. Open ComboBox has no Error message consumer. The acceptance helper reports these limits and makes no publishing, all-brand, font-equivalence or arbitrary-width claim. The focused mock verifies read-only comparison, actual property/formatting readbacks, partial evidence and safe cleanup; actual master-update propagation still needs the native run.
+
 ### Font failures and scoped retries
 
 An exact face appearing in `listAvailableFontsAsync` does not establish that `loadFontAsync` will succeed. Preserve the underlying message, including string rejections. As observed on 3 October 2026, the connector loaded Roboto Condensed while the desktop runtime still rejected it; that is not a general recovery procedure.
@@ -179,7 +216,7 @@ Splitting the collection into Primitives and Brand collections remains an open d
 
 ## Professional access handoff
 
-**Latest extension checkpoint:** Radio now brings the kit to 290 variables, 13 families and 123 variants in UNDRR, with 25 selected text styles and five effects. The desktop repeat created zero nodes and retained actual family, variant and property IDs. Start migration from this checkpoint and a fresh backup; the earlier 246-variable checkpoint below remains historical evidence. See [the architecture review outcome](ARCHITECTURE-REVIEW.md#extension-outcome) for source/Figma differences and remaining publication gates.
+**Latest extension checkpoint:** The generated output contains 308 variables, 75 text-style definitions, five effects, 15 families and 159 variants. These definition counts do not mean every text style is imported. Native Checkbox SVG construction succeeded, and Form error summary constructed its six variants successfully; Summary normal/edited-long native examples retain underline and balanced titles, and its repeat created zero nodes, updated 114 and reported no errors. The ComboBox/Radio edited-instance probe passed 441 assertions; restart recovery and cleanup removed 32 recorded nodes with none retained. Final inspection found 27 selected text styles, five effects and no errors, with all 290 preceding variable and 136 family asset IDs retained. A fresh local backup was saved; cloud synchronisation remains unconfirmed. The preceding Radio repeat retained actual family, variant and property IDs. Begin migration only from a fresh inspection and backup of the current file; earlier checkpoints below remain historical evidence. See [the architecture review outcome](ARCHITECTURE-REVIEW.md#svg-summary-and-edited-instance-checkpoint) for current evidence boundaries.
 
 Professional access is planned but has not been verified for the canonical kit. This is the place to resume when it becomes available.
 
@@ -264,6 +301,14 @@ Ellipse recipes use native geometry, fills, strokes and effects. They reject chi
 
 The growing review sheet should be checked by family. Tick exactly one family and choose **Export selected family PNG**. This reads the exact owned `review/<family>` FRAME directly below the owned review root; it rejects ambiguous or foreign targets and does not create temporary nodes. Display renames retain identity. Save the full inspection and operation report alongside the family PNG; a bounded image does not replace structural or cross-family acceptance. The Radio family export has been exercised in the desktop app. The export and UI mocks cover ownership, selection and exact downloaded bytes.
 
-For connector foundation imports, use explicit `variableIds` / `styleIds` batches through `buildConnector`, or CLI `--variables` / `--styles`. Follow [the connector instructions](README.md#drive-the-same-recipes-through-the-connector), including alias/style dependency closure. Partition every exported definition and verify requested versus actual scope. A missing batch is a partial import. Complete all batches before accepting a Starter brand switch because one physical mode temporarily contains mixed-brand values. Batches never prune. The current five-brand mock checks 290 variables and 78 styles with stable IDs and full metadata; real connector execution remains unverified while quota is exhausted.
+For connector foundation imports, use explicit `variableIds` / `styleIds` batches through `buildConnector`, or CLI `--variables` / `--styles`. Follow [the connector instructions](README.md#drive-the-same-recipes-through-the-connector), including alias/style dependency closure. Partition every exported definition and verify requested versus actual scope. A missing batch is a partial import. Complete all batches before accepting a Starter brand switch because one physical mode temporarily contains mixed-brand values. Batches never prune. The earlier five-brand 290-variable/78-style batch mock is historical evidence; rerun batch checks for the current 308-variable/80-style definitions before using that scope. Actual connector execution remains unverified while quota is exhausted.
 
-Source Checkbox/Switch research follows Radio. Preserve the exact source SVG checkmark, including narrow repeated tiles, and Switch compositing/size differences. Before introducing native vector recipes, define source asset identity, safe in-place update policy and actual rendered acceptance. Do not replace the checkmark with a similar icon or promote a source browser capture to Figma acceptance.
+Connector compilation includes SVG support only when the exact selected variant/dependency subset contains an SVG recipe; minification removes it from other scopes. The desktop bundle retains SVG support. Conditional elimination does not guarantee a small payload: the full non-SVG ComboBox scope now exceeds the earlier 48k payload budget, so use explicit one-family `variantIds` batches. The compiler rejects payloads over 50,000 characters or UTF-8 bytes and never truncates metadata. Supply exact recipe variant IDs through `buildConnector` or the CLI fourth positional argument, and record each batch's scope and counts. Runtime/mock transport checks do not establish remote execution.
+
+Checkbox now uses the exact source SVG checkmark, including bounded narrow tiles, and native import has succeeded. Continue source Switch research with its compositing/size differences. Do not replace source assets with similar icons or promote a source browser capture to Figma acceptance. Changed-source SVG migration, arbitrary tiling widths and broader consumer updates remain explicit acceptance work.
+
+### Probe placement and rendered comparison
+
+Fresh probes are placed beyond the rightmost finite page-level bounds, including review, diagnostics and user content, with a 160px gap. Their root is excluded from that calculation. Existing page nodes are never moved. A page with no usable finite bounds fails before probe creation. This correction passes bounded mocks; exercise a new native preparation to verify future placement. The first native run used the old position and overlaid the review sheet, so the root was moved clear before visual review. Transparent probe roots require a clear canvas location.
+
+The accepted LTR summary uses source title line-height 17.6px. Native line boxes round to 18px, giving short heights 79.5/137.5px and long 240px height 341.5px, versus browser 79.09375/137.09375/340.28125px. Record these differences when comparing screenshots; do not silently tune the source role to compensate for one renderer.

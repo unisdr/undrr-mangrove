@@ -106,12 +106,24 @@
     <button id="export-review">Export review PNG</button>
     <button id="export-family" disabled>Export selected family PNG</button>
     <button id="export-diagnostics">Export focus PNG</button>
+    <details>
+      <summary>Instance override acceptance</summary>
+      <p>
+        Prepare temporary ComboBox and Radio probes, save the report, rebuild
+        those families with review refresh off, then compare.
+      </p>
+      <button id="prepare-probes" disabled>Prepare override probes</button>
+      <label>Probe root ID <input id="probe-root" type="text" /></label>
+      <button id="compare-probes" disabled>Compare after normal build</button>
+      <button id="remove-probes" disabled>Remove owned probes</button>
+    </details>
     <pre id="log" hidden></pre>
     <script>
       let doc = null;
       let inspection = null;
       let operationReport = null;
       let pendingOperation = null;
+      let lastBuildReport = null;
       const $ = id => document.getElementById(id);
 
       function refreshControls() {
@@ -123,6 +135,11 @@
         $('refresh-narrow-review').disabled = busy || !doc?.components;
         $('diagnostics').disabled = busy || !doc;
         $('check-fonts').disabled = busy;
+        $('prepare-probes').disabled = busy || !doc?.components;
+        $('probe-root').disabled = busy;
+        const hasProbe = String($('probe-root').value || '').trim().length > 0;
+        $('compare-probes').disabled = busy || !hasProbe || !lastBuildReport;
+        $('remove-probes').disabled = busy || !hasProbe;
         for (const id of ['inspect', 'export-review', 'export-diagnostics'])
           $(id).disabled = busy;
         $('save-operation-report').disabled = !operationReport;
@@ -342,6 +359,23 @@
         const brand = singleBrand();
         if (brand) send('diagnostics', { doc, brand });
       };
+      $('probe-root').oninput = refreshControls;
+      $('prepare-probes').onclick = () => {
+        lastBuildReport = null;
+        const brand = singleBrand();
+        if (brand) send('prepare-override-probes', { doc, brand });
+      };
+      $('compare-probes').onclick = () => {
+        if (lastBuildReport)
+          send('compare-override-probes', {
+            rootId: String($('probe-root').value || '').trim(),
+            buildResult: lastBuildReport,
+          });
+      };
+      $('remove-probes').onclick = () =>
+        send('remove-override-probes', {
+          rootId: String($('probe-root').value || '').trim(),
+        });
       $('export-review').onclick = () =>
         send('export-review', { name: 'Mangrove / Review' });
       $('export-family').onclick = () => {
@@ -381,6 +415,29 @@
           return;
         }
         if (msg.type === 'operation') {
+          if (completedOperation?.includes('override-probes')) {
+            const r = msg.result;
+            if (r.rootId) $('probe-root').value = r.rootId;
+            if (r.removedNodeIds?.includes(r.rootId))
+              $('probe-root').value = '';
+            rememberOperation(completedOperation, r);
+            const failed = (r.assertions || []).filter(a => !a.passed);
+            log(
+              [
+                `${completedOperation}: root ${r.rootId || 'not created'}`,
+                `Created ${r.createdNodeIds?.length || 0}; removed ${r.removedNodeIds?.length || 0}; retained ${r.retained?.length || 0}.`,
+                `Comparison: ${r.passed === undefined ? 'not run' : r.passed ? 'passed' : 'failed'}; ${failed.length} failed assertions.`,
+                ...(r.errors || [])
+                  .slice(0, 5)
+                  .map(e => String(e).slice(0, 300)),
+                ...failed.slice(0, 5).map(a => String(a.name).slice(0, 160)),
+                'Save operation report for complete evidence. Rendered review remains required.',
+              ].join('\n')
+            );
+            return;
+          }
+          if (completedOperation === 'build-components')
+            lastBuildReport = msg.result;
           const operation =
             completedOperation === 'diagnostics'
               ? 'focus-diagnostics'

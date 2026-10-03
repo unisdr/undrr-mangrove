@@ -1788,6 +1788,22 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       styles,
     })
   );
+  families.push(
+    ...require('./figma-checkbox-recipes.cjs').buildCheckboxRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
+  families.push(
+    ...require('./figma-form-summary-recipes.cjs').buildFormSummaryRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
   for (const variable of variables) byName.set(variable.name, variable);
   function validate(node) {
     const names = [

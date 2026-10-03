@@ -237,6 +237,76 @@ async function main() {
   console.log(
     'ok  family PNG requires one selection, serialises export actions and preserves scoped/full download bytes'
   );
+  const probesUI = mountUI();
+  probesUI.setDocument(doc);
+  const probeElement = name => probesUI.elements.get(name);
+  probeElement('modes').checkedInputs = [{ value: 'undrr' }];
+  probeElement('components').checkedInputs = [
+    { value: 'combobox' },
+    { value: 'radio' },
+  ];
+  const deliver = result =>
+    probesUI.window.onmessage({
+      data: { pluginMessage: { type: 'operation', result } },
+    });
+  probeElement('build').onclick();
+  deliver(JSON.parse(JSON.stringify(built)));
+  probeElement('probe-root').value = 'probe:before';
+  probeElement('probe-root').oninput();
+  assert.equal(probeElement('compare-probes').disabled, false);
+  probeElement('prepare-probes').onclick();
+  assert.equal(probesUI.messages.at(-1).type, 'prepare-override-probes');
+  assert.equal(probeElement('remove-probes').disabled, true);
+  const prepared = {
+    operation: 'prepare-override-probes',
+    rootId: 'probe:synthetic',
+    createdNodeIds: ['probe:synthetic'],
+    ledger: { evidence: 'synthetic-long-evidence'.repeat(20000) },
+    errors: [],
+  };
+  deliver(prepared);
+  assert.equal(probeElement('probe-root').value, prepared.rootId);
+  assert.equal(
+    probeElement('compare-probes').disabled,
+    true,
+    'Preparation must invalidate a cached pre-edit build'
+  );
+  assert(probeElement('log').textContent.length < 1500);
+  probeElement('save-operation-report').onclick();
+  assert.deepEqual(
+    JSON.parse(await probesUI.downloads.at(-1).blob.text()),
+    prepared
+  );
+  probeElement('build').onclick();
+  assert.equal(probesUI.messages.at(-1).refreshNarrowReview, false);
+  deliver(JSON.parse(JSON.stringify(built)));
+  assert.equal(probeElement('compare-probes').disabled, false);
+  probeElement('compare-probes').onclick();
+  assert.equal(probesUI.messages.at(-1).rootId, prepared.rootId);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(probesUI.messages.at(-1).buildResult)),
+    JSON.parse(JSON.stringify(built))
+  );
+  deliver({
+    rootId: prepared.rootId,
+    passed: true,
+    assertions: [{ passed: true }],
+    errors: [],
+  });
+  assert.match(probeElement('log').textContent, /Comparison: passed/);
+  probeElement('remove-probes').onclick();
+  assert.equal(probesUI.messages.at(-1).type, 'remove-override-probes');
+  deliver({
+    rootId: prepared.rootId,
+    removedNodeIds: [prepared.rootId],
+    retained: [],
+    errors: [],
+  });
+  assert.equal(probeElement('probe-root').value, '');
+  assert.equal(probeElement('compare-probes').disabled, true);
+  console.log(
+    'ok  override probes require a fresh post-edit build, persist full report bytes, serialise actions and clear removed root IDs'
+  );
 }
 
 if (require.main === module)

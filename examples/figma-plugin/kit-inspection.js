@@ -122,6 +122,9 @@ async function mgInspectNode(node, variables, errors) {
       'bottomRightRadius',
       'strokeWeight',
       'strokeAlign',
+      'strokeCap',
+      'strokeJoin',
+      'vectorPaths',
       'fills',
       'strokes',
       'effects',
@@ -137,6 +140,9 @@ async function mgInspectNode(node, variables, errors) {
       'lineHeight',
       'letterSpacing',
       'textAutoResize',
+      'textAlignHorizontal',
+      'textDecoration',
+      'textWrapStyle',
       'hasMissingFont',
       'componentPropertyReferences',
     ],
@@ -144,6 +150,14 @@ async function mgInspectNode(node, variables, errors) {
   );
   result.identity = mgInspectionIdentity(node);
   result.mgKitId = mgReadIdentity(node, 'mgKitId');
+  const svgAsset = mgReadIdentity(node, 'mgSvgAsset');
+  if (svgAsset) {
+    try {
+      result.svgAsset = JSON.parse(svgAsset);
+    } catch (error) {
+      errors.push(`${node.id} SVG metadata: ${errorMessage(error)}`);
+    }
+  }
   result.parentId = node.parent && node.parent.id;
   result.childIds =
     'children' in node ? node.children.map(child => child.id) : [];

@@ -20,7 +20,7 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 290 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 13 component text styles and five effect styles. Read the build report for current totals. Component recipes cover 123 variants across 13 families; 16 tokens remain skipped as variables.
+Current output contains 308 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 15 component text styles and five effect styles. Read the build report for current totals. Component recipes cover 159 variants across 15 families; 16 tokens remain skipped as variables.
 
 ### Text and effect foundations
 
@@ -114,6 +114,8 @@ Import one brand first, then select families and choose **Build selected compone
 | Table                |        8 |
 | Text CTA             |        6 |
 | Radio                |       30 |
+| Checkbox             |       30 |
+| Form error summary   |        6 |
 
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
 
@@ -125,7 +127,7 @@ Composed Tabs exposes the nested trigger properties; open ComboBox exposes its n
 
 **Save operation report** downloads the latest import, component build or focus diagnostics result without shortening its IDs, errors or audit entries. Filenames identify the operation: `mangrove-import-report.json`, `mangrove-component-build-report.json` or `mangrove-focus-diagnostics-report.json`. Inspection reports remain separate. Actions run one at a time; the previous operation report stays available while another action runs or after an error. Reports are held in the plugin window until it closes, so save them before restarting it.
 
-Stable public token and component identities use shared plugin data in namespace `orgundrrmangrove`. Desktop imports also read legacy private IDs and reject conflicting ownership. Shared metadata contains no workflow ledger, account information or secrets. See [Figma shared plugin data](https://developers.figma.com/docs/plugins/api/properties/nodes-setsharedplugindata/).
+Stable public token and component identities use shared plugin data in namespace `orgundrrmangrove`. Desktop imports also read legacy private IDs and reject conflicting ownership. Shared identity metadata contains no account information or secrets. The optional acceptance probes store a bounded synthetic workflow ledger on their temporary root; save and remove it using the acceptance controls. See [Figma shared plugin data](https://developers.figma.com/docs/plugins/api/properties/nodes-setsharedplugindata/).
 
 ### Drive the same recipes through the connector
 
@@ -136,7 +138,7 @@ When `use_figma` is available, generate a bounded script from the same runtime:
 node scripts/build-figma-connector.cjs import undrr --variables=color.neutral-0 --styles=focus-ring > /tmp/mangrove-import-batch.js
 node scripts/build-figma-connector.cjs build undrr button > /tmp/mangrove-button.js
 node scripts/build-figma-connector.cjs build undrr text-input > /tmp/mangrove-input.js
-node scripts/build-figma-connector.cjs build undrr combobox > /tmp/mangrove-combobox.js
+node scripts/build-figma-connector.cjs build undrr combobox combobox.open > /tmp/mangrove-combobox-open.js
 node scripts/build-figma-connector.cjs build undrr tabs > /tmp/mangrove-tabs.js
 node scripts/build-figma-connector.cjs build undrr table table.large.default > /tmp/mangrove-table-default.js
 node scripts/build-figma-connector.cjs inspect undrr > /tmp/mangrove-inspect.js
@@ -144,7 +146,7 @@ node scripts/build-figma-connector.cjs inspect undrr > /tmp/mangrove-inspect.js
 
 Pass the emitted JavaScript to `use_figma` after loading its skill. The builder includes nested component dependencies, trims other brands, compresses data with a local codec and rejects payloads over 50,000 characters or bytes. It does not use `eval` or fetch code. Connector execution uses shared metadata only: first migrate legacy private identities through the desktop importer, or verify unchanged unique names before adoption. Privately identified assets that were renamed cannot be recovered by the connector's name fallback.
 
-The optional fourth argument selects comma-separated variant IDs from one family. Full Table, Row, Text CTA and Radio dependency matrices exceed the connector limit; emit one variant or a checked small batch at a time. Dependencies retain only the matching variants for that batch, and reports identify the requested scope. Existing variants remain in place and the builder arranges all retained main variants together. Complete all intended batches and inspect the resulting family. The full desktop plugin build remains available. Packed LZW preserves metadata; payload rejection never silently drops variants. Native connector batch assembly remains unverified while the Starter allowance is exhausted.
+The optional fourth argument selects comma-separated variant IDs from one family. Full ComboBox, Table, Row, Text CTA, Radio and Checkbox dependency matrices exceed the connector limit; emit one variant or a checked small batch at a time. Dependencies retain only the matching variants for that batch, and reports identify the requested scope. Existing variants remain in place and the builder arranges all retained main variants together. Complete all intended batches and inspect the resulting family. The full desktop plugin build remains available. Packed LZW preserves metadata; payload rejection never silently drops variants. Native connector batch assembly remains unverified while the Starter allowance is exhausted.
 
 Foundation imports also support explicit batches: `buildConnector({operation: 'import', brandId: 'undrr', variableIds, styleIds, doc})`, or CLI `--variables=id,id --styles=id,id`. IDs are the canonical exporter IDs, such as `color.neutral-0` and `focus-ring`, rather than Figma display names. Providing either list selects a batch; an omitted list selects none. Alias dependencies and style font/effect bindings are included automatically. Empty, duplicate or unknown selections fail before writes. Reports include requested and actual scope, and pruning is always disabled.
 
@@ -285,6 +287,10 @@ yarn build:figma-tokens
 node examples/figma-plugin/dev/mock-figma.cjs
 node examples/figma-plugin/dev/mock-kit.cjs
 node examples/figma-plugin/dev/mock-choice.cjs
+node examples/figma-plugin/dev/mock-checkbox.cjs
+node examples/figma-plugin/dev/mock-form-summary.cjs
+node examples/figma-plugin/dev/mock-svg.cjs
+node examples/figma-plugin/dev/mock-acceptance.cjs
 node examples/figma-plugin/dev/mock-review-export.cjs
 node examples/figma-plugin/dev/mock-ui.cjs
 ```
@@ -326,3 +332,11 @@ The continuing scope and acceptance status are tracked in [COMPONENT-INVENTORY.m
 The kit now exports 290 variables, 73 text definitions, five effects and 123 variants across 13 families. Radio adds 30 source-backed variants and a checked-inset effect. Actual desktop inspection found 25 selected text styles and all five effects. Its normal repeat created zero nodes, updated 331 and reported no errors; all 277 preceding variable IDs and all main set/variant/property IDs survived. A fresh local `.fig` backup was saved.
 
 The scoped Radio PNG exposed a real inner-shadow difference: a literal 3px spread left only 1px of white inside Figma's 2px inside stroke. The derived native spread is 5px, retaining the source inset helper at 3px. The new PNG shows the intended 3px white band and 14px centre. Measured 240px source consumers also retain their 96px/144px heights and shrinking ellipses. These are bounded UNDRR observations. Before/focused narrow presets, arbitrary CSS resizing, other brands, Arabic, edited native consumer repeats, Condensed fonts and cloud/publication checks remain open. See [Radio learnings](LEARNINGS.md#radio-and-bounded-verification-on-3-october-2026).
+
+### Checkbox and error-summary checkpoint
+
+The current recipes add 30 Checkbox variants and six LTR Form error summary variants, bringing the export to 308 variables, 75 text definitions and five effects. Desktop builds created both families; Checkbox repeated with zero new nodes and no errors. Its checkmark imports the exact source SVG into native vectors, preserving the white paint, round caps and square tile repetition in the two measured narrow presets. The current SVG runtime rejects changed assets or edited native geometry before rebuilding them. See the [maintenance contract](MAINTAINING-KIT.md).
+
+The error summary exposes Title and error messages as editable text properties. Its shared link style carries UNDERLINE and its title style carries BALANCE, as well as source font weights and line heights. Native visual checks caught and corrected lost underlines after text property assignment. The corrected 240px long examples show underlined wrapped links and balanced title text; the repeat created zero nodes, updated 114 and reported no errors. These checks cover default UNDRR LTR specimens. Wrapped inline link focus, arbitrary error counts, RTL and script-specific typography remain pending.
+
+**Instance override acceptance** prepares temporary edited ComboBox and Radio consumers. Save the preparation report, build those families with review refresh off, then compare and save the comparison report. The comparison is read-only; cleanup removes only recorded owned probes and retains changed or foreign content. A saved root ID recovers the ledger after plugin restart. See the [acceptance runbook](MAINTAINING-KIT.md) for the exact contract and native verification status.

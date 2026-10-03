@@ -269,6 +269,17 @@ function environment(doc, options = {}) {
         `Text mutation with unloaded ${this._fontName.family} ${this._fontName.style}`
       );
     }
+    set textWrapStyle(value) {
+      this.requireFont();
+      assert(
+        ['AUTO', 'BALANCE', 'PRETTY'].includes(value),
+        'Invalid native textWrapStyle enum'
+      );
+      this._textWrapStyle = value;
+    }
+    get textWrapStyle() {
+      return this._textWrapStyle || 'AUTO';
+    }
     set fontName(value) {
       assert(
         state.loadedFonts.has(`${value.family} ${value.style}`),
@@ -337,6 +348,8 @@ function environment(doc, options = {}) {
       this.fontName = style.fontName;
       this.fontSize = style.fontSize;
       this.lineHeight = copy(style.lineHeight);
+      this.textDecoration = style.textDecoration || 'NONE';
+      this.textWrapStyle = style.textWrapStyle || 'AUTO';
       this.textStyleId = id;
     }
     async setEffectStyleIdAsync(id) {
@@ -431,6 +444,12 @@ function environment(doc, options = {}) {
           'clipsContent',
           'fills',
           'strokes',
+          'strokeWeight',
+          'strokeCap',
+          'strokeJoin',
+          'strokeAlign',
+          'vectorPaths',
+          'textDecoration',
           'effects',
           'boundVariables',
           '_opacity',
@@ -457,6 +476,7 @@ function environment(doc, options = {}) {
           'fontSize',
           'textAutoResize',
           'textAlignHorizontal',
+          '_textWrapStyle',
           '_horizontal',
           '_vertical',
         ])
@@ -498,6 +518,7 @@ function environment(doc, options = {}) {
   for (const [name, type] of [
     ['createFrame', 'FRAME'],
     ['createEllipse', 'ELLIPSE'],
+    ['createVector', 'VECTOR'],
     ['createText', 'TEXT'],
     ['createComponent', 'COMPONENT'],
     ['createRectangle', 'RECTANGLE'],
@@ -510,6 +531,9 @@ function environment(doc, options = {}) {
       return node;
     };
   }
+  require('./mock-svg.cjs').installSvgMock(figma, state, {
+    createVector: () => figma.createVector(),
+  });
   figma.combineAsVariants = (components, parent) => {
     assert(
       components.length > 0 &&

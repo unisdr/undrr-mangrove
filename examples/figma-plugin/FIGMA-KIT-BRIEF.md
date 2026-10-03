@@ -18,6 +18,10 @@ Regular foundations have automatic line height. Component typography needs expli
 
 Body line height is 1.5em on a 16px body, computing 24px. Component help and ComboBox errors inherit that fixed computed length; applying 150% to their 12.5px text would produce a different line height. TextInput retains vendored Normalize's 115% ratio, observed as 18.4px at 16px. ComboBox uses `font: inherit` and therefore 24px. See [the measured source baseline](LEARNINGS.md#browser-acceptance-measurements).
 
+## Current native checkpoint
+
+On 4 October 2026, the kit export contains 308 variables, 75 text definitions, five effects, 15 native families and 159 variants. Desktop inspection found 27 selected text styles and all five effects. Checkbox adds 30 variants with bounded UNDRR source comparisons. FormErrorSummary adds six variants; corrected underlining and balanced titles were observed in ordinary and edited long default-UNDRR consumers. These counts do not establish complete state, brand or script coverage. See [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md).
+
 ## Button (`mg-button`)
 
 Source: [cta-button.scss](../../stories/Components/Buttons/CtaButton/cta-button.scss) and [CtaButton.jsx](../../stories/Components/Buttons/CtaButton/CtaButton.jsx).
@@ -152,7 +156,40 @@ Checked Radio changes fill only. Border precedence remains Invalid over Disabled
 
 At 240px, source flex shrink can compress a long-label control to 11.140625 × 24px, or 8.484375 × 24px with a long inline error. Preset label widths are 228.859375px and 148.921875px; error width is 82.59375px. Initial native inspection matched the source 96px and 144px row heights with the recorded English text. These are finite content/width presets rather than a native CSS flex algorithm. Before-label narrow, focused narrow, arbitrary consumer resizing, all-brand and Arabic/RTL acceptance remain work for the full inventory.
 
+## Checkbox (`mg-form-check`)
+
+Source: [Checkbox.jsx](../../stories/Components/Forms/Checkbox/Checkbox.jsx) and [shared form SCSS](../../stories/Components/Forms/_form-base.scss). The component partial adds no independent appearance. Recipes live in `scripts/figma-checkbox-recipes.cjs`.
+
+The native family has 30 variants: Checked=False|True, State=Default|Hover|Focus|Disabled|Invalid|InvalidFocus|InvalidDisabled and LabelPosition=After|Before for 28 short specimens, plus two checked After LongNarrow presets at a 240px English consumer width. The source has no indeterminate design. Label/Error are editable with Show label/Show error booleans; the source error is a horizontal sibling rather than a message stacked below the row.
+
+Geometry shares the 40px minimum row, 24px control, 2px border and 7px label padding with Radio. Labels and inline errors are Roboto Regular 400, 16px/24px. The control radius is `radius/form-input`, currently 5px. Unchecked border precedence is Invalid over Disabled over Hover over base. The later checked selector overrides both fill and border with `color/form-check--checked`, including checked invalid and disabled states. The error text remains red. Preserve this cascade rather than copying Radio's checked-border treatment.
+
+Use the actual source SVG checkmark: viewBox 0 0 16 16, path `M3.5 8l3 3 6-6`, white stroke 2.5 with round caps and joins. Its CSS background scales to the inner width, repeats and clips inside the rounded control. At a normal 24px control the square tile is 20px and the scaled stroke is 3.125px. Source flex shrink narrows the two measured controls to 11.140625px and 8.484375px, with square tiles of 7.140625px and 4.484375px that repeat vertically. This produces multiple tiny checkmarks in narrow consumers. A single tall checkmark or fixed 24px control would change the source.
+
+Native construction uses owned source vector paths and rounded clipping, with bound white paint. Source SVG/vector paint, control shape and repeated narrow marks matched the isolated UNDRR browser specimens. First construction created 647 nodes and updated two; re-import created zero and updated 375, with no errors. These observations do not cover other brands/scripts, arbitrary consumer resizing, Before-label narrow or focused narrow states. Invalid/disabled checked boundaries remain the source blue; document any proposed CSS change separately.
+
+## FormErrorSummary (`mg-form-error-summary`)
+
+Source: [FormErrorSummary.jsx](../../stories/Components/Forms/FormErrorSummary/FormErrorSummary.jsx), [shared form SCSS](../../stories/Components/Forms/_form-base.scss) and [foundational typography](../../stories/assets/scss/_foundational.scss). Recipes live in `scripts/figma-form-summary-recipes.cjs`.
+
+The bounded family has six variants: Errors=One|Three, State=Default|Focus for four short templates, plus two Three/LongNarrow masters at 240px. The source accepts arbitrary error arrays, but these cardinality and content axes are kit presets. Empty or missing errors return no source component; do not create an empty panel variant. Editable Title, Name error, Email error and Interests error have consistent defaults. One uses the email error; Three uses name, email and interests. Fresh long specimens seed actual long text and preserve later designer edits.
+
+- Surface: `color/red-50`, with a square 4px `color/red-900` inline-start accent; source padding `spacing/150`, 15px. External bottom margin is `spacing/200`, 20px, rather than internal component padding.
+- Title: `font-family/text`, `font-size/300`, Roboto Bold 700, `color/red-900`, `spacing/75` bottom gap. The source h2 retains foundational line height 1.1, so 16px text uses 17.6px, rather than shared 24px body typography. The shared native title style owns BALANCE wrapping. Its corrected balancing was observed in ordinary and edited long UNDRR consumers; exact font-file and line-break equivalence remains unverified.
+- Links: source CSS requests weight600 and Chromium matches bundled Roboto Bold700. Text is 16px/24px, red-900 and underlined through the shared native link style. The component colour rule keeps links red on hover. Corrected underlining survived ordinary and edited long native consumers.
+- Markers: the source uses ordinary outside UL disc markers, not an alert icon or source SVG. Marker text inherits Regular400 and normal `color/text`, separate from the Bold red links. Measured browser marker geometry is exported with explicit provenance. The native glyph was visually observed; pixel-identical equivalence to the browser-generated marker has not been established.
+- List: source inline indent10px, row gap5px except after the last row. Native source-derived layout preserves title and message alignment; long message text must fill its finite column and hug height.
+- Root Focus: source two-band white separator and gold outline around the whole summary. Individual link focus, including its wrapped inline fragments, is not represented by this family. A large rectangle around a wrapped link would change the source focus shape.
+
+Fresh source browser measurements at 320px are approximately 79.09px high for one error and 137.09px for three. The 240px long specimen is approximately 340.28px high. These are browser bounds, not fixed native height requirements: text metrics and line breaking must be checked independently. Source JSX focuses the summary once on its first nonempty render and links to field IDs; native visual states do not implement that behavior or validation.
+
+All six variants were constructed natively: first build created 220 nodes and updated two; the corrected repeat created zero and updated 114, with no errors. Inspection exposed underline and wrapping defects; repairs in the shared link/title styles were then observed in screenshots of ordinary and edited long consumers. This is bounded default-UNDRR acceptance of those treatments. Native marker pixel parity, font-file equivalence, RTL, other brands/scripts, arbitrary arrays and wrapped individual link focus remain unverified.
+
+FormGroup has source/browser measurements but no native family yet. Its responsive legend and fieldset border cutout require a dedicated layout contract. Do not approximate it as a fully stroked padded rectangle, or mark grouped disabled story children with their standalone disabled paints when source only disables them through the fieldset.
+
 ## Acceptance before expanding
+
+A separate native comparison passed 441 assertions for edited ComboBox and Radio text, booleans, nested option properties and direct alignment surviving normal builds. The rendered probes were visually reviewed. Cleanup after plugin restart removed 32 temporary probes, retained zero and reported no errors. This verifies those bounded edit-preservation cases, while the remaining checklist still applies.
 
 - Confirm native sets, variants, instances and editable properties.
 - Re-import and verify stable identities and preserved instance overrides.
