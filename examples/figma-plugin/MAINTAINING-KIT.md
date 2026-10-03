@@ -164,6 +164,41 @@ Starter local reuse and paid shared-library publication are separate workflows. 
 
 Splitting the collection into Primitives and Brand collections remains an open design question. It needs an explicit alias, mode and consumer-binding migration. Script/direction layers and Code Connect are also separate work; Latin brand modes do not establish Arabic font routing or mirrored layout support.
 
+## Professional access handoff
+
+Professional access is planned but has not been verified for the canonical kit. This is the place to resume when it becomes available.
+
+### Starting checkpoint
+
+At source revision `e41d774b`, the desktop kit has 246 variables, seven component families and 47 variants. UNDRR is restored in its single physical mode. Saved inspections for all five brands match the preceding 245 exported values and aliases and preserve the original variable, set, variant and property identities. Textarea construction and repeat updates succeeded; its multiline review PNG establishes bounded wrapping and clipping. A fresh local `.fig` backup was saved. Actual report IDs and backup paths belong in the local evidence ledger, not this document.
+
+### Access and remaining limits
+
+As checked on 3 October 2026:
+
+| Capability                   | Professional access and remaining work                                                                                                                                                                                                        |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Simultaneous brands          | Up to 10 modes per collection in a Professional team file, enough for the five Mangrove brands. Move the kit into that team before testing the multiple-mode workflow.                                                                        |
+| Team library                 | Publishing components, variables and styles requires a Full seat and edit access to the source file. Move the source out of Drafts into a team folder. Colleagues can review and accept published updates in their consuming files.           |
+| Agent inspection and editing | Full or Dev seats have documented MCP read limits of up to 200 calls per day and 10 per minute. Team-file canvas editing requires a Full seat and file edit permission. Verify the connected account and actual tool access after the change. |
+| Development plugin           | Professional does not provide private team plugin publication. The maintainer continues importing the development manifest locally; consuming library users do not need the importer.                                                         |
+| Code Connect                 | Still requires an Organization or Enterprise plan and a Full or Dev seat. Keep React component mappings as later work.                                                                                                                        |
+| Font loading and cloud state | Desktop Condensed font loading remains unresolved despite earlier connector success. Cloud synchronisation remains unconfirmed. Resolve these separately and preserve local backups.                                                          |
+| Component fidelity           | Required-label inline flow, long help/error wrapping, native Textarea scrolling/resizing, exact font metrics and full visual acceptance across brands remain open.                                                                            |
+
+Sources: [plan comparison](https://help.figma.com/hc/en-us/articles/360040328273-Compare-Figma-plans-and-features), [library publishing](https://help.figma.com/hc/en-us/articles/360025508373-Publish-a-library), [MCP limits](https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/), [canvas editing](https://developers.figma.com/docs/figma-mcp-server/write-to-canvas/), [private plugin publication](https://help.figma.com/hc/en-us/articles/4404228629655-Create-internal-plugins-for-an-organization) and [Code Connect](https://developers.figma.com/docs/code-connect/). Recheck the current terms when access changes.
+
+### Resume in this order
+
+1. Confirm a Full seat on the user's own account, membership of the Professional team and edit access to the kit. Record the effective plan, connected account and file location in local evidence.
+2. Save a fresh full structural inspection and local `.fig` backup. Check cloud synchronisation before moving or restarting the file. Preserve the canonical kit and compare actual identities with the saved baseline.
+3. Move the canonical file into a folder in the Professional team. Verify access and the collection's mode allowance. Refresh connector authentication if needed, then perform a bounded read to establish actual access and available quota.
+4. Regenerate the current JSON and bundle with `yarn build:figma-tokens`. Import all five brands with pruning off. Save the full operation report and inspection; confirm five modes, unchanged existing variable IDs, correct aliases in every mode and unchanged component/property identities. Paid-team migration currently has mock coverage only.
+5. Create review frames for each brand using instances of the shared components. Apply each frame's mode and compare default, focus, invalid and disabled states at normal and narrow widths. Check consumer-resolved colours, alpha, typography and geometry. Rebuild supported families where geometry is computed at construction time; report blocked fonts without substitution. Keep the baseline UNDRR review intact.
+6. Recover exact Condensed loading and apply the pending Tab trigger/Tabs corrections. Check nested properties, long labels and focus geometry in the actual file. Continue tracking field-label flow and Textarea limitations separately.
+7. Review the accepted assets and publish a bounded library release with a change description. Enable it in a separate consumer file, place instances and verify variable modes and an accepted update. Record publication and consumer evidence before treating the library as ready for wider use.
+8. Update this checkpoint, README, LEARNINGS and draft PR #1319 with the new source revision, actual migration results, local gates and remaining gaps. Continue component additions through the workflow above. Resolve collection splitting before a broad library release; defer Code Connect until suitable access exists.
+
 ## Record a checkpoint and update the pull request
 
 For each meaningful change, add a short entry to [LEARNINGS.md](LEARNINGS.md) with:

@@ -111,6 +111,8 @@ Shared-library publishing and five simultaneous brand modes require a suitable p
 
 When Professional access arrives, use the user's own account with a Full seat and edit access to the team file. Move the canonical kit and re-import all brands. Migration has mock coverage but needs real-file verification. Code Connect remains a separate later option requiring Organization or Enterprise access.
 
+Professional access is planned. Follow [the handoff checklist](MAINTAINING-KIT.md#professional-access-handoff) from the verified 246-variable, seven-family, 47-variant UNDRR checkpoint. It records the documented 10-mode allowance, library publishing and MCP read limits, then the actual migration, brand review and consumer-update checks still required. Condensed font loading, cloud synchronisation and component fidelity remain separate unresolved issues after access changes.
+
 ## Record the next observation
 
 For each meaningful result, record:

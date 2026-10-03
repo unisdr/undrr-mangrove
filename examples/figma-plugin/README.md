@@ -90,7 +90,7 @@ A file in Drafts or a Starter team allows only 1 mode, so the five brands cannot
 2. Bind your designs to the Mangrove variables as usual.
 3. To see another brand, run the plugin again with only that brand ticked. Its values overwrite the mode in place and every bound layer in the file re-themes. Variables are reused, so no bindings break.
 
-Limits: one brand is visible at a time, and Starter cannot publish libraries, so the variables, components and designs stay in this one file. Local text styles, effect styles and components can still be created and reused within the file. When the file moves to a Professional team project, import with all brands ticked: the existing mode is kept and the others are added. This migration and the brand switcher pass the mock harness; they still need a check in real Figma.
+Limits: one brand is visible at a time, and Starter cannot publish libraries, so the variables, components and designs stay in this one file. Local text styles, effect styles and components can still be created and reused within the file. When the file moves to a Professional team project, import with all brands ticked: the existing mode is kept and the others are added. Both workflows pass the mock harness. Saved desktop brand inspections establish single-mode values, aliases and identity preservation; paid-team migration and complete rendered brand acceptance remain pending.
 
 ### Build and inspect the native kit
 
@@ -192,13 +192,15 @@ As checked on **3 October 2026**, Figma documents these limits:
 | ---------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Variables and brands                     | One mode; re-import a single brand to switch the file                                   | Up to 10 modes per collection in a Professional team file                             |
 | Styles and components                    | Create and reuse local assets in the same file                                          | Publish a shared library with a Full seat and edit access                             |
-| Remote MCP reads                         | Starter allowance of up to 20 tool calls per month; conserve reads                      | Full or Dev seats have higher limits                                                  |
+| Remote MCP reads                         | Starter allowance of up to 20 tool calls per month; conserve reads                      | Full or Dev seats: up to 200 calls per day and 10 per minute                          |
 | Direct agent canvas writes (`use_figma`) | A free account alone does not establish write eligibility; the docs require a Full seat | Confirm a Full seat and edit permission on the target file                            |
 | Code Connect                             | Unavailable                                                                             | Still unavailable; requires an Organization or Enterprise plan and a Full or Dev seat |
 
 Sources: [plans and features](https://help.figma.com/hc/en-us/articles/360040328273-Figma-plans-and-features), [publish a library](https://help.figma.com/hc/en-us/articles/360025508373-Publish-a-library), [MCP rate limits and access](https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/), [write to canvas](https://developers.figma.com/docs/figma-mcp-server/write-to-canvas/) and [Code Connect](https://developers.figma.com/docs/code-connect/). Recheck these when the account or plan changes.
 
 The practical Starter route is to run the Mangrove development plugin in the desktop app. It imports variables and selected text and effect styles; component generation uses the exporter recipes described above. Keep one canonical kit file, bind components to the same variables and defer shared-library publishing. When Professional access is available, ask for a Full seat on your own account and edit access to the team file, move the kit into that team, then import all five brands. Joining a Professional team with a View or Dev seat does not meet the documented requirement for direct agent writes.
+
+Professional access is planned. Resume from [the Professional access handoff checklist](MAINTAINING-KIT.md#professional-access-handoff), starting with the verified 246-variable, seven-family, 47-variant kit in UNDRR. The checklist covers migration, simultaneous brand reviews and library publication. Condensed font loading, cloud synchronisation and visual discrepancies remain separate unresolved work. Code Connect still requires Organization or Enterprise access.
 
 ## Spike learnings
 
