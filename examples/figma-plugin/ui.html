@@ -96,7 +96,11 @@
     >
     <button id="build" disabled>Build selected components</button>
     <button id="diagnostics" disabled>Focus diagnostics</button>
-    <button id="inspect">Inspect kit and fonts</button>
+    <label
+      ><input id="check-fonts" type="checkbox" /> Check font loading during
+      inspection</label
+    >
+    <button id="inspect">Inspect kit</button>
     <button id="save-report" disabled>Save inspection report</button>
     <button id="save-operation-report" disabled>Save operation report</button>
     <button id="export-review">Export review PNG</button>
@@ -116,6 +120,7 @@
         $('build').disabled = busy || !doc?.components;
         $('refresh-narrow-review').disabled = busy || !doc?.components;
         $('diagnostics').disabled = busy || !doc;
+        $('check-fonts').disabled = busy;
         for (const id of ['inspect', 'export-review', 'export-diagnostics'])
           $(id).disabled = busy;
         $('save-operation-report').disabled = !operationReport;
@@ -135,6 +140,50 @@
       function log(text) {
         $('log').hidden = false;
         $('log').textContent = text;
+      }
+
+      function inspectionSummary(report) {
+        const short = (value, limit = 160) =>
+          String(value || '').slice(0, limit);
+        const nodes = report.nodes || [];
+        const collections = report.collections || [];
+        const errors = report.errors || [];
+        const lines = [
+          'Inspection complete.',
+          `Page: ${short(report.currentPage?.name)}`,
+          `${collections.length} collections, ${report.variables?.length || 0} variables, ${nodes.length} nodes.`,
+          `${report.styles?.text?.length || 0} text styles, ${report.styles?.effect?.length || 0} effect styles.`,
+          `${nodes.filter(node => node.type === 'COMPONENT_SET').length} component sets, ${nodes.filter(node => node.type === 'COMPONENT').length} components, ${nodes.filter(node => node.type === 'INSTANCE').length} instances.`,
+        ];
+        for (const collection of collections.slice(0, 5)) {
+          const modes = collection.modes || [];
+          lines.push(
+            `${short(collection.name)}: ${modes
+              .slice(0, 5)
+              .map(mode => short(mode.name, 80))
+              .join(', ')}${modes.length > 5 ? ' (more modes in report)' : ''}`
+          );
+        }
+        if (!report.fonts) lines.push('Fonts: not checked.');
+        else {
+          const loads = report.fonts.loads || [];
+          const failed = loads.filter(entry => !entry.loaded);
+          lines.push(
+            `Fonts: ${loads.length - failed.length} loads passed, ${failed.length} failed.`
+          );
+          for (const entry of failed.slice(0, 4))
+            lines.push(
+              `${short(entry.fontName?.family, 80)} ${short(entry.fontName?.style, 40)}: ${short(entry.error, 200)}`
+            );
+          for (const error of (report.fonts.errors || []).slice(0, 3))
+            lines.push(`Font check: ${short(error, 200)}`);
+        }
+        lines.push(`Inspection errors: ${errors.length}.`);
+        for (const error of errors.slice(0, 5)) lines.push(short(error, 200));
+        return (
+          lines.join('\n').slice(0, 3900) +
+          '\nUse Save inspection report for full details.'
+        );
       }
 
       $('file').addEventListener('change', async event => {
@@ -255,7 +304,8 @@
         link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       }
-      $('inspect').onclick = () => send('inspect');
+      $('inspect').onclick = () =>
+        send('inspect', { checkFonts: $('check-fonts').checked });
       $('save-report').onclick = () =>
         download(
           JSON.stringify(inspection, null, 2),
@@ -314,7 +364,7 @@
         if (msg.type === 'inspection') {
           inspection = msg.result;
           $('save-report').disabled = false;
-          log(JSON.stringify(inspection, null, 2));
+          log(inspectionSummary(inspection));
           return;
         }
         if (msg.type === 'operation') {

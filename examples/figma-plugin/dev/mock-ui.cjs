@@ -1,0 +1,155 @@
+#!/usr/bin/env node
+/** Exercise real UI messages and downloads without rendering a browser. */
+'use strict';
+const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+const vm = require('vm');
+const { environment, importFoundation } = require('./mock-kit.cjs');
+const DIR = path.resolve(__dirname, '..');
+
+function mountUI() {
+  const html = fs.readFileSync(path.join(DIR, 'ui.html'), 'utf8');
+  const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+  assert(script, 'Plugin UI script is missing');
+  const elements = new Map();
+  for (const match of html.matchAll(/<[a-z][^>]*\bid="([^"]+)"[^>]*>/g)) {
+    elements.set(match[1], {
+      disabled: /\bdisabled\b/.test(match[0]),
+      hidden: /\bhidden\b/.test(match[0]),
+      checked: /\bchecked\b/.test(match[0]),
+      textContent: '',
+      addEventListener() {},
+    });
+  }
+  const messages = [];
+  const downloads = [];
+  const blobs = new Map();
+  const window = {};
+  const context = vm.createContext({
+    window,
+    document: {
+      getElementById(id) {
+        assert(elements.has(id), `Unknown UI element ${id}`);
+        return elements.get(id);
+      },
+      createElement(tag) {
+        assert.strictEqual(tag, 'a', 'Only report download anchors are needed');
+        return {
+          click() {
+            downloads.push({ name: this.download, blob: blobs.get(this.href) });
+          },
+        };
+      },
+    },
+    parent: {
+      postMessage(message) {
+        messages.push(message.pluginMessage);
+      },
+    },
+    Blob,
+    URL: {
+      createObjectURL(blob) {
+        const id = `blob:mock-${blobs.size}`;
+        blobs.set(id, blob);
+        return id;
+      },
+      revokeObjectURL() {},
+    },
+    setTimeout() {},
+    Uint8Array,
+  });
+  vm.runInContext(script, context);
+  return { elements, messages, downloads, window };
+}
+
+async function main() {
+  const doc = JSON.parse(
+    fs.readFileSync(path.join(DIR, 'mangrove-variables.json'), 'utf8')
+  );
+  const env = environment(doc);
+  await importFoundation(env, doc);
+  const built = await env.call('buildMangroveComponents', doc, 'undrr');
+  assert.strictEqual(built.errors.length, 0, built.errors.join('\n'));
+  const report = JSON.parse(
+    JSON.stringify(await env.call('inspectMangroveKit'))
+  );
+  const text = report.nodes.find(node => node.type === 'TEXT');
+  text.characters = 'fixture-only-large-text'.repeat(160000);
+  const fullJSON = JSON.stringify(report, null, 2);
+  assert(Buffer.byteLength(fullJSON) > 3_000_000);
+
+  const ui = mountUI();
+  const element = id => ui.elements.get(id);
+  element('inspect').onclick();
+  assert.strictEqual(ui.messages[0].type, 'inspect');
+  assert.strictEqual(ui.messages[0].checkFonts, false);
+  assert.strictEqual(element('inspect').disabled, true);
+  assert.strictEqual(element('log').textContent, 'Working…');
+  ui.window.onmessage({
+    data: { pluginMessage: { type: 'inspection', result: report } },
+  });
+  assert.strictEqual(element('inspect').disabled, false);
+  assert.strictEqual(element('save-report').disabled, false);
+  const displayed = element('log').textContent;
+  assert(displayed.startsWith('Inspection complete.'));
+  assert(displayed.includes(`${report.variables.length} variables`));
+  assert(displayed.includes(`${report.nodes.length} nodes`));
+  assert(displayed.includes('UNDRR'));
+  assert(displayed.includes('Fonts: not checked.'));
+  assert(!displayed.includes('fixture-only-large-text'));
+  assert(
+    displayed.length < 4096,
+    'Large report must have a bounded UI summary'
+  );
+  element('save-report').onclick();
+  assert.strictEqual(ui.downloads[0].name, 'mangrove-kit-inspection.json');
+  assert.strictEqual(ui.downloads[0].blob.type, 'application/json');
+  const downloaded = await ui.downloads[0].blob.text();
+  assert.strictEqual(
+    downloaded,
+    fullJSON,
+    'Download must retain every report field'
+  );
+  assert.deepStrictEqual(JSON.parse(downloaded), report);
+  console.log(
+    'ok  multi-megabyte real inspection fixture displays a bounded summary, enables controls and downloads exact full data'
+  );
+
+  report.collections = Array.from({ length: 100 }, () => ({
+    name: 'collection-name'.repeat(100),
+    modes: Array.from({ length: 100 }, () => ({
+      name: 'brand-name'.repeat(100),
+    })),
+  }));
+  report.errors = Array(100).fill('inspection-error'.repeat(10000));
+  report.fonts = {
+    loads: Array.from({ length: 100 }, () => ({
+      fontName: { family: 'Roboto Condensed', style: 'Bold' },
+      loaded: false,
+      error: 'font-failure'.repeat(10000),
+    })),
+    errors: Array(100).fill('font-service-error'.repeat(10000)),
+  };
+  element('check-fonts').checked = true;
+  element('inspect').onclick();
+  assert.strictEqual(ui.messages[1].checkFonts, true);
+  ui.window.onmessage({
+    data: { pluginMessage: { type: 'inspection', result: report } },
+  });
+  assert(element('log').textContent.length < 4096);
+  assert(element('log').textContent.includes('100 failed'));
+  assert.strictEqual(element('inspect').disabled, false);
+  assert.strictEqual(element('save-report').disabled, false);
+  element('save-report').onclick();
+  assert.deepStrictEqual(JSON.parse(await ui.downloads[1].blob.text()), report);
+  console.log(
+    'ok  excessive mode names, font failures and inspection errors remain bounded without truncating saved reports'
+  );
+}
+
+if (require.main === module)
+  main().catch(error => {
+    console.error(`FAIL ${error.stack || error}`);
+    process.exitCode = 1;
+  });
