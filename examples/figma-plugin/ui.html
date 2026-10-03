@@ -90,17 +90,47 @@
         are updated.
       </p>
     </fieldset>
+    <label
+      ><input id="refresh-narrow-review" type="checkbox" disabled /> Refresh
+      narrow Button review layout, keeping labels</label
+    >
     <button id="build" disabled>Build selected components</button>
     <button id="diagnostics" disabled>Focus diagnostics</button>
     <button id="inspect">Inspect kit and fonts</button>
     <button id="save-report" disabled>Save inspection report</button>
+    <button id="save-operation-report" disabled>Save operation report</button>
     <button id="export-review">Export review PNG</button>
     <button id="export-diagnostics">Export focus PNG</button>
     <pre id="log" hidden></pre>
     <script>
       let doc = null;
       let inspection = null;
+      let operationReport = null;
+      let pendingOperation = null;
       const $ = id => document.getElementById(id);
+
+      function refreshControls() {
+        const busy = pendingOperation !== null;
+        $('file').disabled = busy;
+        $('import').disabled = busy || !doc;
+        $('build').disabled = busy || !doc?.components;
+        $('refresh-narrow-review').disabled = busy || !doc?.components;
+        $('diagnostics').disabled = busy || !doc;
+        for (const id of ['inspect', 'export-review', 'export-diagnostics'])
+          $(id).disabled = busy;
+        $('save-operation-report').disabled = !operationReport;
+      }
+
+      function rememberOperation(operation, result) {
+        if (!result || typeof result !== 'object' || Array.isArray(result))
+          throw new Error('Operation did not return a report.');
+        // Store the full result before rendering its shorter log summary.
+        operationReport = {
+          json: JSON.stringify(result, null, 2),
+          filename: `mangrove-${operation}-report.json`,
+        };
+        refreshControls();
+      }
 
       function log(text) {
         $('log').hidden = false;
@@ -121,7 +151,7 @@
           }
         } catch (error) {
           doc = null;
-          $('import').disabled = true;
+          refreshControls();
           log(error.message);
           return;
         }
@@ -172,9 +202,7 @@
           components.append(label);
         });
         components.hidden = !doc.components;
-        $('build').disabled = !doc.components;
-        $('diagnostics').disabled = false;
-        $('import').disabled = false;
+        refreshControls();
         log(
           `${doc.variables.length} variables, ${doc.modes.length} brands, ` +
             `${doc.styles?.text?.length || 0} text style choices, ` +
@@ -187,28 +215,29 @@
         const modes = [...$('modes').querySelectorAll('input:checked')].map(
           input => input.value
         );
-        $('import').disabled = true;
-        log('Importing…');
-        parent.postMessage(
-          {
-            pluginMessage: {
-              type: 'import',
-              doc,
-              modes,
-              prune: $('prune').checked,
-              textStyles: [
-                ...$('text-styles').querySelectorAll('input:checked'),
-              ].map(input => input.value),
-              effects: $('effects').checked,
-            },
-          },
-          '*'
-        );
+        send('import', {
+          doc,
+          modes,
+          prune: $('prune').checked,
+          textStyles: [
+            ...$('text-styles').querySelectorAll('input:checked'),
+          ].map(input => input.value),
+          effects: $('effects').checked,
+        });
       });
 
       function send(type, payload = {}) {
-        parent.postMessage({ pluginMessage: { type, ...payload } }, '*');
-        log('Working…');
+        if (pendingOperation !== null) return;
+        pendingOperation = type;
+        refreshControls();
+        try {
+          parent.postMessage({ pluginMessage: { type, ...payload } }, '*');
+          log('Working…');
+        } catch (error) {
+          pendingOperation = null;
+          refreshControls();
+          log(`Error: ${error.message || String(error)}`);
+        }
       }
       function singleBrand() {
         const selected = [...$('modes').querySelectorAll('input:checked')];
@@ -233,6 +262,18 @@
           'application/json',
           'mangrove-kit-inspection.json'
         );
+      $('save-operation-report').onclick = () => {
+        if (!operationReport) return;
+        try {
+          download(
+            operationReport.json,
+            'application/json',
+            operationReport.filename
+          );
+        } catch (error) {
+          log(`Could not save report: ${error.message || String(error)}`);
+        }
+      };
       $('build').onclick = () => {
         const brand = singleBrand();
         if (brand)
@@ -242,6 +283,7 @@
             families: [
               ...$('components').querySelectorAll('input:checked'),
             ].map(i => i.value),
+            refreshNarrowReview: $('refresh-narrow-review').checked,
           });
       };
       $('diagnostics').onclick = () => {
@@ -256,7 +298,15 @@
       window.onmessage = event => {
         const msg = event.data.pluginMessage;
         if (!msg) return;
-        $('import').disabled = false;
+        if (
+          !['error', 'inspection', 'operation', 'export', 'result'].includes(
+            msg.type
+          )
+        )
+          return;
+        const completedOperation = pendingOperation;
+        pendingOperation = null;
+        refreshControls();
         if (msg.type === 'error') {
           log(`Error: ${msg.message}`);
           return;
@@ -268,6 +318,20 @@
           return;
         }
         if (msg.type === 'operation') {
+          const operation =
+            completedOperation === 'diagnostics'
+              ? 'focus-diagnostics'
+              : completedOperation === 'build-components'
+                ? 'component-build'
+                : Array.isArray(msg.result?.families)
+                  ? 'component-build'
+                  : 'focus-diagnostics';
+          try {
+            rememberOperation(operation, msg.result);
+          } catch (error) {
+            log(`Error: ${error.message || String(error)}`);
+            return;
+          }
           log(JSON.stringify(msg.result, null, 2));
           return;
         }
@@ -282,6 +346,12 @@
           return;
         }
         const r = msg.result;
+        try {
+          rememberOperation('import', r);
+        } catch (error) {
+          log(`Error: ${error.message || String(error)}`);
+          return;
+        }
         const lines = [
           `Collection "${r.collection}", modes: ${r.modes.join(', ')}`,
           `Created ${r.counts.created}, updated ${r.counts.updated}, ` +

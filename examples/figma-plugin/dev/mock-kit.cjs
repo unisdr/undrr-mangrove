@@ -118,6 +118,7 @@ function environment(doc, options = {}) {
       this.strokes = [];
       this.effects = [];
       this.boundVariables = {};
+      this._opacity = 1;
       this.explicitVariableModes = {};
       this.visible = true;
       this.removed = false;
@@ -139,6 +140,19 @@ function environment(doc, options = {}) {
     }
     get name() {
       return this._name;
+    }
+    get opacity() {
+      const binding = this.boundVariables.opacity;
+      if (!binding) return this._opacity;
+      const variable = state.variables.find(item => item.id === binding.id);
+      return Math.max(0, Math.min(100, resolve(variable, this))) / 100;
+    }
+    set opacity(value) {
+      assert(
+        Number.isFinite(value) && value >= 0 && value <= 1,
+        'Native node opacity must be in 0..1, unlike percentage variables'
+      );
+      this._opacity = value;
     }
     set strokesIncludedInLayout(value) {
       assert(
@@ -284,6 +298,8 @@ function environment(doc, options = {}) {
     }
     setExplicitVariableModeForCollection(collection, modeId) {
       assert(collection.modes.some(mode => mode.modeId === modeId));
+      for (const text of this.findAllWithCriteria({ types: ['TEXT'] }))
+        text.requireFont();
       this.explicitVariableModes[collection.id] = modeId;
     }
     get resolvedVariableModes() {
@@ -403,6 +419,7 @@ function environment(doc, options = {}) {
           'strokes',
           'effects',
           'boundVariables',
+          '_opacity',
           'data',
           'sharedData',
           '_fontName',
@@ -565,6 +582,33 @@ async function main() {
     const variableByName = new Map(
       env.state.variables.map(variable => [variable.name, variable])
     );
+    const disabledOpacity = variableByName.get(
+      'component/combobox/disabled-opacity'
+    );
+    const disabledCombo = [...env.state.nodes.values()].find(
+      node =>
+        identity(node, 'mgKitId') ===
+        'family/combobox/variant/combobox.disabled'
+    );
+    const disabledReview = [...env.state.nodes.values()].find(
+      node =>
+        identity(node, 'mgKitId') ===
+        'review/combobox/specimen/combobox.disabled/instance'
+    );
+    assert.strictEqual(
+      disabledOpacity.resolveForConsumer(disabledCombo).value,
+      55,
+      'CSS 0.55 exports as a Figma opacity percentage'
+    );
+    for (const node of [disabledCombo, disabledReview]) {
+      assert(node, 'Disabled component and review instance both exist');
+      assert.strictEqual(node.opacity, 0.55);
+      assert.strictEqual(node.boundVariables.opacity.id, disabledOpacity.id);
+      assert(
+        node.findAll(child => child.opacity !== 1).length === 0,
+        'Disabled opacity belongs on the root without compounding descendants'
+      );
+    }
     for (const variant of buttonRecipe.variants.filter(
       item => item.tree.focusRing
     )) {
@@ -686,6 +730,12 @@ async function main() {
       .find(node =>
         node.componentPropertyReferences?.characters?.startsWith('Label#')
       );
+    const narrowProperty = Object.keys(narrowButton.componentProperties).find(
+      name => name.startsWith('Label#')
+    );
+    narrowButton.setProperties({
+      [narrowProperty]: 'A designer keeps this narrow Button label',
+    });
     narrowText.textAutoResize = 'WIDTH_AND_HEIGHT';
     narrowText.textAlignHorizontal = 'RIGHT';
     narrowText.resize(177, 21);
@@ -726,8 +776,17 @@ async function main() {
       .find(node => node.name === 'mg-form-input__value');
     assert.strictEqual(
       filledValue.fills[0].boundVariables.color.id,
-      variableByName.get('color/black').id,
+      variableByName.get('component/text-input/browser-fieldtext').id,
       'Filled input preserves observed browser field-text black, with its source caveat'
+    );
+    assert.deepStrictEqual(
+      copy(
+        variableByName
+          .get('component/text-input/browser-fieldtext')
+          .resolveForConsumer(filledValue).value
+      ),
+      { r: 0, g: 0, b: 0, a: 1 },
+      'Measured input fieldtext must resolve to actual black, not Mangrove near-black'
     );
     const editable = [...env.state.nodes.values()].find(
       node =>
@@ -749,6 +808,8 @@ async function main() {
       0,
       'Rebuild duplicated nodes'
     );
+    assert.strictEqual(disabledCombo.opacity, 0.55);
+    assert.strictEqual(disabledReview.opacity, 0.55);
     assert.deepStrictEqual(
       ownership(env.state),
       owned,
@@ -774,6 +835,88 @@ async function main() {
     assert(
       !second.updatedNodeIds.includes(narrowText.id),
       'Existing narrow label is not rewritten'
+    );
+    assert.strictEqual(
+      narrowButton.componentProperties[narrowProperty].value,
+      'A designer keeps this narrow Button label'
+    );
+    const fieldNarrow = [...env.state.nodes.values()].find(
+      node =>
+        identity(node, 'mgKitId') ===
+        'review/text-input/specimen/narrow/instance'
+    );
+    const fieldReviewBefore = JSON.stringify({
+      properties: fieldNarrow.componentProperties,
+      text: fieldNarrow.findAllWithCriteria({ types: ['TEXT'] }).map(node => ({
+        id: node.id,
+        autoResize: node.textAutoResize,
+        horizontal: node.layoutSizingHorizontal,
+        vertical: node.layoutSizingVertical,
+      })),
+    });
+    const refreshed = await env.call(
+      'buildMangroveComponents',
+      doc,
+      'undrr',
+      ['button'],
+      { refreshNarrowReview: true }
+    );
+    assert.strictEqual(refreshed.errors.length, 0, refreshed.errors.join('\n'));
+    assert.strictEqual(refreshed.createdNodeIds.length, 0);
+    assert.deepStrictEqual(ownership(env.state), owned);
+    assert.strictEqual(
+      narrowButton.componentProperties[narrowProperty].value,
+      'A designer keeps this narrow Button label',
+      'Explicit layout refresh preserves the Label override'
+    );
+    assert.strictEqual(narrowButton.parent.width, 256);
+    assert.strictEqual(
+      narrowButton.parent.width -
+        narrowButton.parent.paddingLeft -
+        narrowButton.parent.paddingRight,
+      240,
+      'The narrow consumer has 240px available after review padding'
+    );
+    assert.strictEqual(narrowButton.width, 240);
+    assert.strictEqual(narrowButton.layoutSizingHorizontal, 'FILL');
+    assert.strictEqual(narrowButton.layoutSizingVertical, 'HUG');
+    assert.strictEqual(narrowText.textAutoResize, 'HEIGHT');
+    assert.strictEqual(narrowText.textAlignHorizontal, 'CENTER');
+    assert.strictEqual(narrowText.layoutSizingHorizontal, 'FILL');
+    assert.strictEqual(narrowText.layoutSizingVertical, 'HUG');
+    assert.strictEqual(
+      narrowText.width,
+      240 - narrowButton.paddingLeft - narrowButton.paddingRight
+    );
+    assert(refreshed.updatedNodeIds.includes(narrowText.id));
+    assert(
+      env.state.loadedFonts.has(
+        `${narrowText.fontName.family} ${narrowText.fontName.style}`
+      ),
+      'The existing label font is loaded before layout edits'
+    );
+    assert(
+      refreshed.audit.some(
+        entry =>
+          entry.nodeId === narrowButton.id &&
+          entry.status === 'narrow-review-layout-refreshed' &&
+          entry.preservedLabel === true
+      )
+    );
+    assert.strictEqual(
+      JSON.stringify({
+        properties: fieldNarrow.componentProperties,
+        text: fieldNarrow
+          .findAllWithCriteria({ types: ['TEXT'] })
+          .map(node => ({
+            id: node.id,
+            autoResize: node.textAutoResize,
+            horizontal: node.layoutSizingHorizontal,
+            vertical: node.layoutSizingVertical,
+          })),
+      }),
+      fieldReviewBefore,
+      'Button layout refresh does not change TextInput review formatting'
     );
     assert(
       second.audit.some(
@@ -867,6 +1010,106 @@ async function main() {
     assert.deepStrictEqual(ownership(env.state), owned);
     console.log(
       'ok  failed shared style update blocks its family instead of using stale style'
+    );
+  }
+  {
+    const env = environment(doc);
+    await importFoundation(env, doc);
+    const initial = await env.call('buildMangroveComponents', doc, 'undrr');
+    assert.strictEqual(initial.errors.length, 0, initial.errors.join('\n'));
+    const originalIds = ownership(env.state);
+    const unselectedIds = [...env.state.nodes.values()]
+      .filter(node =>
+        /^(family|review)\/tabs(?:-trigger)?(?:\/|$)/.test(
+          identity(node, 'mgKitId')
+        )
+      )
+      .map(node => node.id);
+    const editable = [...env.state.nodes.values()].find(
+      node =>
+        identity(node, 'mgKitId') ===
+        'review/button/specimen/long-label/instance'
+    );
+    const label = Object.keys(editable.componentProperties).find(name =>
+      name.startsWith('Label#')
+    );
+    editable.setProperties({ [label]: 'Keep this designer override' });
+    env.state.rejectedFonts.add('Roboto Condensed Regular');
+    env.state.rejectedFonts.add('Roboto Condensed Bold');
+    env.state.loadedFonts.clear();
+    const updated = await env.call('buildMangroveComponents', doc, 'undrr', [
+      'button',
+      'text-input',
+      'combobox-option',
+      'combobox',
+    ]);
+    assert.strictEqual(updated.errors.length, 0, updated.errors.join('\n'));
+    assert.strictEqual(updated.families.length, 4);
+    assert.strictEqual(updated.createdNodeIds.length, 0);
+    assert.deepStrictEqual(ownership(env.state), originalIds);
+    assert(
+      unselectedIds.every(id => !updated.updatedNodeIds.includes(id)),
+      'Unselected Tabs construction and review nodes must remain untouched'
+    );
+    assert.strictEqual(
+      editable.componentProperties[label].value,
+      'Keep this designer override'
+    );
+    assert(!env.state.loadedFonts.has('Roboto Condensed Regular'));
+    assert(!env.state.loadedFonts.has('Roboto Condensed Bold'));
+    console.log(
+      'ok  selected Roboto families update existing kit without loading or rewriting unavailable Tabs'
+    );
+
+    env.state.modeLimit = 5;
+    const collection = env.state.collections[0];
+    collection.addMode(doc.modes.find(mode => mode.id === 'delta').name);
+    const beforeModes = [...env.state.nodes.values()].map(node => [
+      node.id,
+      copy(node.explicitVariableModes),
+    ]);
+    let styleWrites = 0;
+    for (const style of env.state.styles) {
+      const original = style.setBoundVariable;
+      style.setBoundVariable = function (...args) {
+        styleWrites += 1;
+        return original.apply(this, args);
+      };
+    }
+    env.state.loadedFonts.clear();
+    const blocked = await env.call('buildMangroveComponents', doc, 'delta', [
+      'button',
+    ]);
+    assert.strictEqual(blocked.families.length, 0);
+    assert.strictEqual(blocked.createdNodeIds.length, 0);
+    assert.strictEqual(blocked.updatedNodeIds.length, 0);
+    assert.strictEqual(
+      styleWrites,
+      0,
+      'Mode transition must block before styles'
+    );
+    assert.strictEqual(blocked.styles, undefined);
+    assert(
+      blocked.errors.some(error => error.includes('Roboto Condensed')),
+      'Unavailable descendant font must report its exact family'
+    );
+    assert(
+      blocked.audit.some(
+        entry =>
+          entry.nodeId && entry.status === 'blocked-container-mode-transition'
+      )
+    );
+    assert.deepStrictEqual(ownership(env.state), originalIds);
+    assert.deepStrictEqual(
+      [...env.state.nodes.values()].map(node => [
+        node.id,
+        copy(node.explicitVariableModes),
+      ]),
+      beforeModes,
+      'Blocked mode transition must preserve every explicit mode'
+    );
+    console.log(
+      'ok  unavailable descendant font blocks a container mode transition before style or canvas writes'
     );
   }
   {

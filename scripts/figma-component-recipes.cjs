@@ -94,10 +94,12 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
   }
   function literal(file, pattern, name, description, scale = 1) {
     const found = source(file, pattern);
-    return constant(name, Number(found.match[1]) * scale, description, {
-      file,
-      line: found.line,
-    });
+    return constant(
+      name,
+      Number((Number(found.match[1]) * scale).toFixed(6)),
+      description,
+      { file, line: found.line }
+    );
   }
 
   // Only the expression grammar actually used by _tokens-tabs.scss is supported.
@@ -209,7 +211,8 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
     sources.combo,
     /\.mg-combobox\[data-disabled\]\s*\{\s*opacity: ([\d.]+)/,
     'combobox/disabled-opacity',
-    'Source disabled opacity of the whole ComboBox.'
+    'Source disabled opacity of the whole ComboBox, expressed as a Figma percentage.',
+    100
   );
   const popoverHeight = literal(
     sources.combo,
@@ -239,6 +242,34 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       sources.button,
       /\.mg-button\.disabled \{\s*border-color: transparent/
     )
+  );
+  // Native inputs retain the browser's fieldtext system colour. This literal
+  // records the measured Chromium baseline, not an authored Mangrove role.
+  for (const pattern of [/%mg-form-input-base\s*\{/, /\.mg-form-input\s*\{/]) {
+    const { match } = source(sources.input, pattern);
+    const body = read(sources.input)
+      .slice(match.index + match[0].length)
+      .replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, '');
+    let depth = 1;
+    let declarations = '';
+    for (const character of body) {
+      if (character === '{') depth++;
+      else if (character === '}') depth--;
+      else if (depth === 1) declarations += character;
+      if (depth === 0) break;
+    }
+    if (depth !== 0) throw new Error('TextInput source block is incomplete.');
+    if (/(?:^|[;\n])\s*color\s*:/.test(declarations))
+      throw new Error(
+        'TextInput now declares a value colour: replace the measured browser fieldtext baseline.'
+      );
+  }
+  const inputFieldText = addVariable(
+    'component/text-input/browser-fieldtext',
+    'COLOR',
+    perMode(() => ({ r: 0, g: 0, b: 0, a: 1 })),
+    'Measured Chromium 153/macOS UNDRR fieldtext baseline on 3 October 2026: #000000. The form source has no authored value-colour declaration. This helper is not a Mangrove semantic role; other browsers and system colours remain unverified.',
+    reference(sources.input, /%mg-form-input-base\s*\{/)
   );
   source(sources.combo, /font: inherit/);
   source(sources.input, /font-size: var\(--mg-font-size-form-input\)/);
@@ -672,7 +703,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
             : filled
               ? // Chromium's UA fieldtext is black; source has no colour role.
                 // This is the measured baseline, not a cross-platform CSS role.
-                'color/black'
+                inputFieldText
               : 'color/neutral-500',
           'Value'
         ),
@@ -1153,7 +1184,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
     limitations: [
       'Latin script and left-to-right scaffold. Arabic font routing and mirrored logical corners remain pending.',
       'Chromium source comparison confirmed bundled Bold 700 for CSS 600. Identical Figma font-file versions remain unverified.',
-      'Filled TextInput uses the measured Chromium black fieldtext baseline. Source does not declare an input colour role; system-colour and other-browser parity remain unverified.',
+      'Filled TextInput uses component/text-input/browser-fieldtext, a literal #000000 helper for the measured Chromium baseline. Mangrove color/black is #1a1a1a and cannot represent that observation. Source does not declare an input colour role; system-colour and other-browser parity remain unverified.',
       'Required field labels use a separate marker layer. Narrow multiline labels do not reproduce the source inline ::after flow yet.',
       'ComboBox popover is a specimen in flow; runtime overlay position, viewport cap and behaviour are not reproduced.',
       'Transparent resets, glyphs and source literals have no invented brand overrides.',

@@ -642,7 +642,12 @@ figma.ui.onmessage = async msg => {
     }
     if (msg.type === 'build-components') {
       post('operation', {
-        result: await buildMangroveComponents(msg.doc, msg.brand, msg.families),
+        result: await buildMangroveComponents(
+          msg.doc,
+          msg.brand,
+          msg.families,
+          { refreshNarrowReview: msg.refreshNarrowReview ?? false }
+        ),
       });
       return;
     }

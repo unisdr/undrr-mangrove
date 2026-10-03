@@ -3,7 +3,14 @@
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
 
-async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
+async function buildMangroveComponents(
+  doc,
+  brandId,
+  selectedFamilyIds,
+  { refreshNarrowReview = false } = {}
+) {
+  if (typeof refreshNarrowReview !== 'boolean')
+    throw new Error('Refresh narrow review must be a boolean.');
   const result = {
     createdNodeIds: [],
     updatedNodeIds: [],
@@ -141,6 +148,27 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
       else
         for (const segment of text.getStyledTextSegments(['fontName']))
           await load(segment.fontName);
+    }
+  }
+  // Changing a container's mode can change text across every descendant family.
+  // Prepare that whole subtree only for a real transition, before any writes.
+  for (const key of ['main', 'review']) {
+    const frame = owned.get(key);
+    if (!frame) continue;
+    try {
+      if (frame.type !== 'FRAME')
+        throw new Error(`Owned ${key} container has changed type.`);
+      if (frame.explicitVariableModes[collection.id] !== mode.modeId)
+        await loadNodeFonts(frame);
+    } catch (error) {
+      const reason = reportError(error);
+      result.errors.push(`${frame.name}: ${reason}`);
+      result.audit.push({
+        nodeId: frame.id,
+        status: 'blocked-container-mode-transition',
+        reason,
+      });
+      return result;
     }
   }
   const allowedBindings = new Set([
@@ -420,7 +448,12 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
         field === 'width' ? resolved.value : node.width,
         field === 'height' ? resolved.value : node.height
       );
-    else node[field] = resolved.value;
+    else
+      // Opacity variables use percentages; native node properties use 0..1.
+      node[field] =
+        field === 'opacity'
+          ? Math.max(0, Math.min(100, resolved.value)) / 100
+          : resolved.value;
     node.setBoundVariable(field, bound);
   }
   function paint(node, field, name) {
@@ -790,13 +823,13 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
       frame.x = right + 160;
       frame.y = 160;
     }
-    frame.setExplicitVariableModeForCollection(collection, mode.modeId);
+    if (frame.explicitVariableModes[collection.id] !== mode.modeId)
+      frame.setExplicitVariableModeForCollection(collection, mode.modeId);
     return frame;
   }
   const main = container('main', 'Mangrove / Main components', 1200);
   const review = container('review', 'Mangrove / Review', 800);
   result.reviewRootId = review.id;
-  await loadNodeFonts(review);
   paint(review, 'fills', 'color/neutral-0');
 
   for (const family of surviving) {
@@ -920,6 +953,7 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
     }
   }
 
+  const reviewPadding = 8;
   async function reviewFrame(key, name, parent, width) {
     let frame = owned.get(key);
     const fresh = !frame;
@@ -937,7 +971,7 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
       frame.paddingBottom =
       frame.paddingLeft =
       frame.paddingRight =
-        8;
+        reviewPadding;
     frame.itemSpacing = 12;
     frame.clipsContent = false;
     frame.fills = [];
@@ -1023,7 +1057,11 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
           key,
           specimen.name,
           grid,
-          specimen.width || (specimen.label ? 704 : 344)
+          specimen.width
+            ? specimen.width + 2 * reviewPadding
+            : specimen.label
+              ? 704
+              : 344
         );
         await reviewLabel(`${key}/caption`, specimen.name, row);
         let instance = owned.get(`${key}/instance`);
@@ -1074,7 +1112,12 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
             note: 'Nested label seeding applies to fresh review specimens only. Existing labels are preserved; use the exposed nested Label property to edit a prior specimen or explicitly reseed the review.',
           });
         }
-        if (fresh && specimen.width && reviewOptions.responsiveLabel) {
+        if (
+          Number.isFinite(specimen.width) &&
+          specimen.width > 0 &&
+          reviewOptions.responsiveLabel &&
+          (fresh || (refreshNarrowReview && id === 'button'))
+        ) {
           const label = instance
             .findAllWithCriteria({ types: ['TEXT'] })
             .find(
@@ -1086,6 +1129,9 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
             );
           if (label) {
             await loadNodeFonts(label);
+            instance.resize(specimen.width, Math.max(1, instance.height));
+            instance.layoutSizingHorizontal = 'FILL';
+            instance.layoutSizingVertical = 'HUG';
             label.textAutoResize = 'HEIGHT';
             label.textAlignHorizontal = 'CENTER';
             label.resize(
@@ -1099,9 +1145,17 @@ async function buildMangroveComponents(doc, brandId, selectedFamilyIds) {
             label.layoutSizingVertical = 'HUG';
             if (fresh) created.add(label.id);
             else updated.add(label.id);
+            if (!fresh)
+              result.audit.push({
+                nodeId: instance.id,
+                labelNodeId: label.id,
+                status: 'narrow-review-layout-refreshed',
+                width: specimen.width,
+                preservedLabel: true,
+              });
           }
         }
-        // Existing review instances are deliberately editable. Do not reset overrides.
+        // Existing labels remain editable, including during explicit layout refresh.
       }
     } catch (error) {
       result.errors.push(`Review ${family.set.name}: ${reportError(error)}`);
