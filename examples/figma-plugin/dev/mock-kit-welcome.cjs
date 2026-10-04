@@ -86,6 +86,33 @@ const subtree = node => [
   record(node),
   ...node.findAll().map(child => record(child)),
 ];
+function assertWelcomePaints(env) {
+  let count = 0;
+  for (const node of env.state.nodes.values()) {
+    if (key(node) !== 'welcome' && !key(node).startsWith('welcome/')) continue;
+    for (const paint of node.fills) {
+      assert.strictEqual(paint.type, 'SOLID');
+      const alias = paint.boundVariables?.color;
+      assert.strictEqual(alias?.type, 'VARIABLE_ALIAS');
+      const variable = env.state.variables.find(item => item.id === alias.id);
+      assert.strictEqual(variable?.resolvedType, 'COLOR');
+      const value = variable.resolveForConsumer(node).value;
+      assert.deepStrictEqual(
+        copy(paint.color),
+        { r: value.r, g: value.g, b: value.b },
+        `Welcome RGB must match its live bound role: ${key(node)}`
+      );
+      assert.strictEqual(
+        paint.opacity ?? 1,
+        value.a ?? 1,
+        `Welcome opacity must match its live bound role: ${key(node)}`
+      );
+      count += 1;
+    }
+  }
+  assert(count > 0, 'Actual Welcome must contain bound paint specimens');
+  return count;
+}
 function owned(env, value) {
   const matches = [...env.state.nodes.values()].filter(
     node => key(node) === value
@@ -187,6 +214,19 @@ async function main() {
     assert.strictEqual(welcome.type, 'FRAME');
     assert.strictEqual(welcome.parent, env.figma.currentPage);
     assert.strictEqual(owned(env, 'welcome/content').parent, welcome);
+    const paintCount = assertWelcomePaints(env);
+    const whiteLabel = owned(env, 'welcome/content/hero/label');
+    const valid = copy(whiteLabel.fills);
+    whiteLabel.fills = valid.map(paint => ({
+      ...paint,
+      color: { r: 0, g: 0, b: 0 },
+    }));
+    assert.throws(
+      () => assertWelcomePaints(env),
+      /Welcome RGB must match/,
+      'The observed placeholder-black defect must fail even when its alias stays correct'
+    );
+    whiteLabel.fills = valid;
     assert(
       ![...env.state.nodes.values()].some(node => key(node) === 'layout/start'),
       'Welcome does not install the migration sentinel'
@@ -212,6 +252,7 @@ async function main() {
       assert.strictEqual(repeated.createdNodeIds.length, 0);
       assert.deepStrictEqual([...env.state.nodes.keys()].sort(), ids);
       assert.strictEqual(owned(env, 'welcome').id, welcome.id);
+      assert.strictEqual(assertWelcomePaints(env), paintCount);
       assert.deepStrictEqual(
         record(note),
         noteBefore,
@@ -226,7 +267,7 @@ async function main() {
       [welcome.id]
     );
     console.log(
-      'ok Welcome leaves existing canonical/styles and unavailable pending fonts untouched, creates no migration sentinel, preserves manual notes, and is idempotent after fresh plugin globals'
+      'ok Welcome bound literal RGB/opacity match live roles on first/repeat/restart; existing canonical/styles and pending fonts stay untouched, manual notes persist, and no migration sentinel is created'
     );
     const welcomeIds = [welcome.id, ...welcome.findAll().map(node => node.id)];
     env.state.rejectedFonts.clear();

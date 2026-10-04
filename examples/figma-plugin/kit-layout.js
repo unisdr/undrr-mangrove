@@ -463,12 +463,21 @@ async function organizeMangroveKit(
     index.set(key, node);
     (fresh ? created : updated).add(node.id);
   };
-  const solid = name =>
-    figma.variables.setBoundVariableForPaint(
-      { type: 'SOLID', color: { r: 0, g: 0, b: 0 } },
+  const solid = name => {
+    const variable = variables.get(name);
+    // Main's existing mode was validated above. Seed new presentation paints
+    // from that brand so repeated aliases cannot retain a black placeholder.
+    const value = variable.resolveForConsumer(index.get('main')).value;
+    return figma.variables.setBoundVariableForPaint(
+      {
+        type: 'SOLID',
+        color: { r: value.r, g: value.g, b: value.b },
+        opacity: value.a ?? 1,
+      },
       'color',
-      variables.get(name)
+      variable
     );
+  };
   function ensure(key, type, parent, name) {
     let node = index.get(key);
     const fresh = !node;

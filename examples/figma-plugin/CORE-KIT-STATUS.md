@@ -4,7 +4,7 @@ Updated 4 October 2026. The **local UNDRR core construction and bounded consumer
 
 ## Onboarding status
 
-The standalone welcome board and **Open Start here** action are implemented and mock-tested, including preserved identities/manual notes and reuse during later organization. Native application and visual/novice acceptance remain open because desktop inspection timed out on 4 October 2026. The historical diagnostic overlap correction is also awaiting native review. See [the welcome checkpoint](KIT-ARCHITECTURE.md#welcome-checkpoint). The Condensed font blocker and broader hierarchy gate remain unchanged.
+The standalone welcome board is now applied and visually reviewed at 100% zoom. **Open Start here** also works after a plugin restart without loading JSON. Two final zero-create repeats retain all 6,476 inspected asset records, including the 23 new guidance nodes; all 6,453 original inspected IDs remain. Historical diagnostics now clear Review by 160px. Native paint repetition exposed a placeholder-colour issue that is fixed and regression-tested. Independent verification passes 19,482 checks with zero failures. Native manual-note preservation and novice handoff remain open. See [the welcome checkpoint](KIT-ARCHITECTURE.md#welcome-checkpoint). The Condensed font blocker and broader hierarchy gate remain unchanged.
 
 ## Core scope
 

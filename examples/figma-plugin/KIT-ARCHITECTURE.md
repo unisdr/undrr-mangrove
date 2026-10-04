@@ -29,13 +29,14 @@ The main root still has its legacy nominal width, and the six-section reading se
 
 A branded, source-bound welcome board and persistent **Open Start here** action are now implemented. This can give a novice an entry point before the font-blocked migration: a reading sequence, Assets/instance instructions, supported and pending scope, brand limitations, and the maintenance boundary. It is not a substitute for the six-section organization. `welcome` and its generated child identities survive reruns and later reparenting into `layout/start`; direct manual root notes are preserved. Historical focus diagnostics are spaced beyond legacy content using x/y only and a stable rendered-bounds anchor.
 
-Native onboarding acceptance is still open. Desktop connection and inspection timed out on 4 October 2026; no native assets were changed by this onboarding work. Current-viewport navigation is implemented; persistence on reopening and a file thumbnail are not configured or claimed.
+Desktop access recovered on 4 October 2026. Native Welcome is now applied and reviewed at 100% zoom: 1,440 × 1,169px, 23 new guidance nodes, one historical diagnostic x/y move and a 160px rendered gap. All 6,453 original inspected asset IDs remain; source/component/style/variable records and diagnostic-local anatomy are unchanged. Two final zero-create repeats, including a plugin restart, retain all 6,476 resulting inspected asset records exactly. Independent verification passes 19,482 checks with zero failures, including live-alias/literal paint agreement. Document-free navigation works, and a fresh local backup is saved. Cloud sync, reopening persistence, a file thumbnail, native manual-note tests and novice handoff are not established.
 
 - [x] Standalone creation, restart/rerun identities, direct manual-note preservation, typed variable/font/ownership refusals and later full-migration reuse pass the actual-runtime mock.
-- [ ] Apply to the native file after a fresh backup and inspection; capture exact affected IDs and unchanged source/consumer records.
-- [ ] Review the welcome board at normal zoom for readable headings, unclipped cards, correct brand and useful novice instructions.
-- [ ] Confirm historical diagnostics clear Main, Review and Welcome without changing child geometry or fonts.
-- [ ] Repeat from a plugin restart, create zero duplicate nodes, and navigate Start here without loading JSON.
+- [x] Apply to the native file after a fresh backup and inspection; capture exact affected IDs and unchanged source/consumer records.
+- [x] Review the welcome board at normal zoom for readable headings, unclipped cards and the correct brand. Novice usability is a separate gate.
+- [x] Confirm historical diagnostics clear Main, Review and Welcome without changing child geometry or fonts.
+- [x] Repeat from a plugin restart, create zero duplicate nodes, and navigate Start here without loading JSON.
+- [ ] Add a native manual note and verify its preservation through update and later section migration.
 - [ ] Ask a novice to find a foundation, component, composition and pending item; retain the broader designer-handoff gate below.
 
 ## Intended reading sequence

@@ -167,12 +167,21 @@ async function createMangroveWelcome(
   if (validateOnly) return { operation: 'kit-welcome-preflight', errors: [] };
   const created = new Set();
   const updated = new Set();
-  const solid = name =>
-    figma.variables.setBoundVariableForPaint(
-      { type: 'SOLID', color: { r: 0, g: 0, b: 0 } },
+  const solid = (name, consumer) => {
+    const variable = variables.get(name);
+    const value = variable.resolveForConsumer(consumer).value;
+    // Native repeated bindings can retain a replacement paint's literal value.
+    // Seed it from the current resolved token while preserving the live alias.
+    return figma.variables.setBoundVariableForPaint(
+      {
+        type: 'SOLID',
+        color: { r: value.r, g: value.g, b: value.b },
+        opacity: value.a ?? 1,
+      },
       'color',
-      variables.get(name)
+      variable
     );
+  };
   function ensure(key, owner) {
     let node = index.get(key);
     if (!node) {
@@ -207,7 +216,7 @@ async function createMangroveWelcome(
         padding;
     node.itemSpacing = horizontal ? 24 : 16;
     node.clipsContent = false;
-    node.fills = fill ? [solid(fill)] : [];
+    node.fills = fill ? [solid(fill, node)] : [];
     return node;
   }
   function text(key, owner, content, size, width, colour = 'color/text') {
@@ -221,14 +230,14 @@ async function createMangroveWelcome(
     node.resize(width, Math.max(1, node.height));
     node.layoutSizingHorizontal = 'FIXED';
     node.layoutSizingVertical = 'HUG';
-    node.fills = [solid(colour)];
+    node.fills = [solid(colour, node)];
   }
   try {
     const root = ensure('welcome', destination);
     root.name = '00 Start here / Mangrove';
-    root.fills = [solid('color/neutral-0')];
     root.clipsContent = false;
     root.setExplicitVariableModeForCollection(collection, mode.modeId);
+    root.fills = [solid('color/neutral-0', root)];
     const content = frame('welcome/content', root, 1328, {
       padding: 0,
       fill: null,
@@ -288,12 +297,12 @@ async function createMangroveWelcome(
         'Understand the canvas',
         mgKitLayoutInstalled()
           ? 'Use the numbered sections and the plugin Go menu. Main components are source-owned. Review examples demonstrate content and states; they are not page templates.'
-          : 'This file still has Main components and Review sheets. Assets is the quickest way to find a component. The six-section organization is prepared but its native migration needs the missing Roboto Condensed Bold font.',
+          : 'Find components in Assets and use Review to compare states and content. This file still has Main components and Review sheets. The numbered sections above describe where the kit is headed while we finish organizing the file.',
       ],
       [
         'maintain',
         'What is ready, what is next',
-        'The core has bounded component and edited-instance acceptance. Full catalogue coverage, page templates, other brands and right-to-left layouts need further review. On Free, use one brand at a time; the plugin can switch that brand.',
+        'Use the core controls and content for draft designs, following the documented sizing and editing limits for each family. Page templates, the full catalogue, other brands and right-to-left layouts still need review. On Free, work in one brand at a time; the plugin can switch it.',
       ],
       [
         'maintain',
