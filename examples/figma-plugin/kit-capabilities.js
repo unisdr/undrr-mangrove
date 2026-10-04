@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes */
+/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned */
 // Isolated diagnostic assets, not FormGroup components or source fidelity claims.
 const MG_CAPABILITY_KEY = 'mgCapabilityProbeId';
 let mgCapabilitySequence = 0;
@@ -31,6 +31,7 @@ async function runMangroveCapabilityProbes(
   let font;
   let rangeSource;
   let segmentedPlan;
+  let canonicalPlan;
   try {
     if (
       ![
@@ -38,6 +39,7 @@ async function runMangroveCapabilityProbes(
         'toc-link-sizing',
         'toc-range-paints',
         'segmented-joining',
+        'segmented-canonical',
       ].includes(scope)
     )
       throw new Error(`Unknown capability probe scope ${scope}.`);
@@ -255,6 +257,14 @@ async function runMangroveCapabilityProbes(
         mode,
         report
       );
+    if (scope === 'segmented-canonical')
+      canonicalPlan = await mgSegmentedCanonicalPreflight(
+        doc,
+        brandId,
+        collection,
+        mode,
+        report
+      );
     if (scope === 'toc-link-sizing') {
       report.preflight.diagnosticWidths = [240, 390, 900];
       report.preflight.diagnosticCaps = [195.5, 345.5, 855.5];
@@ -315,11 +325,13 @@ async function runMangroveCapabilityProbes(
     root.name =
       scope === 'segmented-joining'
         ? 'Mangrove native capability probes / Segmented joining'
-        : scope === 'toc-link-sizing'
-          ? 'Mangrove native capability probes / TOC link sizing'
-          : scope === 'toc-range-paints'
-            ? 'Mangrove native capability probes / TOC range paints'
-            : 'Mangrove native capability probes';
+        : scope === 'segmented-canonical'
+          ? 'Mangrove native capability probes / Segmented canonical'
+          : scope === 'toc-link-sizing'
+            ? 'Mangrove native capability probes / TOC link sizing'
+            : scope === 'toc-range-paints'
+              ? 'Mangrove native capability probes / TOC range paints'
+              : 'Mangrove native capability probes';
     root.layoutMode = 'NONE';
     root.clipsContent = false;
     root.fills = [];
@@ -407,6 +419,29 @@ async function runMangroveCapabilityProbes(
       );
     } catch (error) {
       report.errors.push(`Segmented probes: ${message(error)}`);
+    }
+    report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
+    report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
+    return report;
+  }
+  if (scope === 'segmented-canonical') {
+    try {
+      await mgRunSegmentedCanonicalProbes(
+        {
+          report,
+          root,
+          record,
+          create,
+          instance,
+          test,
+          bounds,
+          collection,
+          mode,
+        },
+        canonicalPlan
+      );
+    } catch (error) {
+      report.errors.push(`Segmented canonical probes: ${message(error)}`);
     }
     report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
     report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
@@ -2725,6 +2760,21 @@ async function removeMangroveCapabilityProbes(report) {
           );
       }
       return result;
+    }
+    if (report.scope === 'segmented-canonical') {
+      if (report.segmentedCanonical) await mgSegmentedCanonicalOwned(report);
+      else if (
+        ids.size !== 1 ||
+        root.type !== 'FRAME' ||
+        report.ledger[0]?.type !== 'FRAME' ||
+        root.parent?.id !== figma.currentPage.id ||
+        root.children.length !== 0 ||
+        mgReadIdentity(root, 'mgCapabilityProbeId') !== report.runId ||
+        mgReadIdentity(root, 'mgSegmentedCanonicalManifest')
+      )
+        throw new Error(
+          'Cleanup refused an incomplete or changed pre-manifest Segmented root.'
+        );
     }
     const descendants = [];
     const visit = async id => {

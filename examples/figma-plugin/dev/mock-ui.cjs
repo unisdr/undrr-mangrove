@@ -976,6 +976,130 @@ async function main() {
     'ok  capability snapshots retain recovery ledgers, failed/foreign audits cannot adopt nodes, successful audits authorize exact cleanup and preserve full reports'
   );
 
+  const canonicalUI = mountUI();
+  const canonicalElement = id => canonicalUI.elements.get(id);
+  const deliverCanonical = result =>
+    canonicalUI.window.onmessage({
+      data: { pluginMessage: { type: 'operation', result: clone(result) } },
+    });
+  canonicalUI.setDocument(doc);
+  canonicalElement('modes').checkedInputs = [{ value: 'undrr' }];
+  canonicalElement('components').checkedInputs = [
+    { value: 'segmented-control.segment' },
+  ];
+  const canonicalBuild = {
+    ...clone(built),
+    createdNodeIds: [],
+    families: clone(built.families).filter(
+      f => f.id === 'segmented-control.segment'
+    ),
+  };
+  canonicalElement('build').click();
+  deliverCanonical(canonicalBuild);
+  canonicalElement('capability-scope').value = 'segmented-canonical';
+  canonicalElement('capability-probes').click();
+  assert.strictEqual(canonicalUI.messages.at(-1).scope, 'segmented-canonical');
+  const canonicalPrepared = {
+    ...clone(capabilityReport),
+    scope: 'segmented-canonical',
+    tests: {},
+    segmentedCanonical: { verdict: 'pending', completedAdvances: 0 },
+  };
+  deliverCanonical(canonicalPrepared);
+  assert.strictEqual(
+    canonicalElement('advance-segmented-capability-probes').disabled,
+    true,
+    'Preparation invalidates a cached earlier build'
+  );
+  canonicalElement('build').click();
+  assert.strictEqual(canonicalUI.messages.at(-1).refreshNarrowReview, false);
+  deliverCanonical(canonicalBuild);
+  assert.strictEqual(
+    canonicalElement('advance-segmented-capability-probes').disabled,
+    false
+  );
+  canonicalElement('advance-segmented-capability-probes').click();
+  assert.deepStrictEqual(clone(canonicalUI.messages.at(-1)), {
+    type: 'advance-segmented-capability-probes',
+    doc,
+    brand: 'undrr',
+    report: canonicalPrepared,
+    buildResult: canonicalBuild,
+  });
+  const afterAdvanceMessageCount = canonicalUI.messages.length;
+  canonicalElement('advance-segmented-capability-probes').click();
+  assert.strictEqual(canonicalUI.messages.length, afterAdvanceMessageCount);
+  const canonicalAdvanced = {
+    ...clone(canonicalPrepared),
+    segmentedCanonical: { verdict: 'pending', completedAdvances: 1 },
+  };
+  deliverCanonical(canonicalAdvanced);
+  assert.strictEqual(
+    canonicalElement('advance-segmented-capability-probes').disabled,
+    true,
+    'An advance consumes its build; another advance requires a new build'
+  );
+  canonicalElement('build').click();
+  deliverCanonical(canonicalBuild);
+  canonicalElement('advance-segmented-capability-probes').click();
+  const canonicalPartial = {
+    ...clone(canonicalAdvanced),
+    ledger: [
+      ...clone(canonicalAdvanced.ledger),
+      { id: 'capability:partial-fresh', type: 'INSTANCE' },
+    ],
+    errors: ['Synthetic fresh-cohort failure'],
+    evidence: 'exact partial details'.repeat(3000),
+  };
+  deliverCanonical(canonicalPartial);
+  canonicalElement('save-operation-report').click();
+  assert.strictEqual(
+    await canonicalUI.downloads.at(-1).blob.text(),
+    JSON.stringify(canonicalPartial, null, 2)
+  );
+  assert(canonicalElement('log').textContent.length < 4096);
+  canonicalElement('remove-capability-probes').click();
+  assert.deepStrictEqual(
+    clone(canonicalUI.messages.at(-1).report),
+    canonicalPartial,
+    'Partial advance ledgers replace the previous ledger for exact cleanup recovery'
+  );
+  deliverCanonical({
+    removedNodeIds: canonicalPartial.ledger.map(x => x.id),
+    errors: [],
+  });
+  assert.strictEqual(
+    canonicalElement('advance-segmented-capability-probes').disabled,
+    true
+  );
+  const canonicalComplete = {
+    ...clone(canonicalPrepared),
+    segmentedCanonical: { verdict: 'accepted', completedAdvances: 2 },
+  };
+  const loadCanonical = report =>
+    canonicalElement('capability-file').onchange({
+      target: { files: [{ text: async () => JSON.stringify(report) }] },
+    });
+  canonicalElement('build').click();
+  deliverCanonical(canonicalBuild);
+  await loadCanonical(canonicalPrepared);
+  assert.strictEqual(
+    canonicalElement('advance-segmented-capability-probes').disabled,
+    true,
+    'Loading a saved ledger requires a new post-recovery build'
+  );
+  await loadCanonical(canonicalComplete);
+  canonicalElement('build').click();
+  deliverCanonical(canonicalBuild);
+  assert.strictEqual(
+    canonicalElement('advance-segmented-capability-probes').disabled,
+    true,
+    'Completed two-advance proof cannot create a third cohort'
+  );
+  console.log(
+    'ok  Segmented canonical checks consume fresh builds, serialise advances, preserve partial ledgers/full downloads and require new evidence after saved-report recovery'
+  );
+
   const editorialUI = mountUI();
   const editorialElement = id => editorialUI.elements.get(id);
   const deliverEditorial = result =>

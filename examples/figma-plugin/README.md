@@ -20,7 +20,7 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 416 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 31 component text styles and eight effect styles. Read the build report for current totals. Component recipes cover 293 variants across 26 families; 16 tokens remain skipped as variables. Component-specific text styles are not default foundation selections; the builder imports the styles required by the selected family.
+Current output contains 417 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 32 component text styles and eight effect styles. Read the build report for current totals. Component recipes cover 296 variants across 27 families; 16 tokens remain skipped as variables. Component-specific text styles are not default foundation selections; the builder imports the styles required by the selected family.
 
 ### Text and effect foundations
 
@@ -127,8 +127,11 @@ Import one brand first, then select families and choose **Build selected compone
 | Table of contents / Link     |       12 |
 | Table of contents / Numbered |        3 |
 | Status Label                 |        7 |
+| Segmented control / Segment  |        3 |
 
 TOC links use the imported source text style as a typography template, with font-family and font-size variables bound directly on their 12 main labels. Their native text-style association is deliberately empty: controlled desktop experiments found incorrect effective range colours when the shared Label property and style association were combined. This exception is restricted to TOC links and guarded against changed source anatomy or missing bindings. Rebuild the affected components after importing a changed template; editing the local style alone does not update directly applied labels. See [the native findings](LEARNINGS.md) and [maintenance checks](MAINTAINING-KIT.md).
+
+Segmented Control currently contains three Position=First states: unselected Default, selected Default and unselected Hover. They retain the actual shared 120% source text style. Edited and newly created consumers pass 980 independent native checks through two ordinary rebuilds, with exact temporary cleanup. Remaining positions/states, Small, focus, wrapping and compositions are still unaccepted. See [the evidence](LEARNINGS.md#canonical-segmented-shared-style-preparation) before expanding this subset.
 
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
 
@@ -145,6 +148,8 @@ Composed Tabs exposes the nested trigger properties; open ComboBox exposes its n
 **Native capability diagnostics** creates a separate temporary area for legend sizing, editable slots and instance-vector experiments. Save its report before closing the plugin. After restart, **Load saved capability report** recovers the exact ledger; **Audit saved capability ledger** reads current ownership and reconciles permitted inherited probe descendants without changing the canvas. Cleanup refuses foreign or unrecorded children and moved assets. A failed capability test is evidence for the component contract, not a reason to detach consumers or invent equivalent behaviour. See [the runbook](MAINTAINING-KIT.md#native-capability-experiments).
 
 The **Segmented Control joining** diagnostic reads an exporter-owned `capabilities.segmentedJoining` packet. It checks typed source roles, native identities, selected-mode values and exact fonts before creating four temporary fixtures for seams/corners, focus paint order, full-width edited labels and wrapping. The first measured scope is UNDRR. These fixtures do not add canonical variables, styles or component families; direct diagnostic typography does not establish shared-style or ordinary rebuild acceptance. Save the full report, review the fixtures at normal scale, then remove the exact owned nodes before rebuilding the plugin. See [source packets](MAINTAINING-KIT.md#source-packets-for-native-capability-checks).
+
+The **Segmented Control shared style** diagnostic prepares edited and untouched instances of the canonical three-state subset. After each of two ordinary scoped builds, **Advance Segmented check after build** checks retained consumers and creates three new untouched instances. Save every full report, inspect the rendered states, then clean up the exact temporary ledger. Each advance requires a newly completed build; loading a saved report also requires a fresh build. See [the repeated shared-style runbook](MAINTAINING-KIT.md#repeated-shared-style-checks-for-segmented-control) for recovery, ownership checks and the limited acceptance scope.
 
 Stable public token and component identities use shared plugin data in namespace `orgundrrmangrove`. Desktop imports also read legacy private IDs and reject conflicting ownership. Shared identity metadata contains no account information or secrets. The optional acceptance probes store a bounded synthetic workflow ledger on their temporary root; save and remove it using the acceptance controls. See [Figma shared plugin data](https://developers.figma.com/docs/plugins/api/properties/nodes-setsharedplugindata/).
 
@@ -311,6 +316,11 @@ node examples/figma-plugin/dev/mock-form-summary.cjs
 node examples/figma-plugin/dev/mock-switch.cjs
 node examples/figma-plugin/dev/mock-font-diagnostics.cjs
 node examples/figma-plugin/dev/mock-capabilities.cjs
+node examples/figma-plugin/dev/mock-segmented-source.cjs
+node examples/figma-plugin/dev/mock-segmented-capabilities.cjs
+node examples/figma-plugin/dev/mock-segmented.cjs
+node examples/figma-plugin/dev/mock-segmented-canonical-capabilities.cjs
+node examples/figma-plugin/dev/mock-form-action-source.cjs
 node examples/figma-plugin/dev/mock-svg.cjs
 node examples/figma-plugin/dev/mock-acceptance.cjs
 node examples/figma-plugin/dev/mock-editorial-cta.cjs

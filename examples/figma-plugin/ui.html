@@ -158,6 +158,9 @@
             Table of Contents text range paints
           </option>
           <option value="segmented-joining">Segmented Control joining</option>
+          <option value="segmented-canonical">
+            Segmented Control shared style
+          </option>
         </select>
       </label>
       <p>
@@ -169,6 +172,14 @@
         plugin.
       </p>
       <button id="capability-probes" disabled>Run capability probes</button>
+      <p>
+        For the Segmented shared-style check, prepare the temporary consumers,
+        rebuild only the Segment family with review refresh off, then advance.
+        Repeat the rebuild and advance once more. Save each full report.
+      </p>
+      <button id="advance-segmented-capability-probes" disabled>
+        Advance Segmented check after build
+      </button>
       <label
         >Load saved capability report
         <input id="capability-file" type="file" accept=".json"
@@ -212,6 +223,13 @@
           busy || !capabilityReport?.rootId;
         $('remove-capability-probes').disabled =
           busy || !capabilityReport?.rootId;
+        $('advance-segmented-capability-probes').disabled =
+          busy ||
+          !doc ||
+          capabilityReport?.scope !== 'segmented-canonical' ||
+          !capabilityReport?.rootId ||
+          !lastBuildReport ||
+          (capabilityReport?.segmentedCanonical?.completedAdvances || 0) >= 2;
         $('check-fonts').disabled = busy;
         $('prepare-probes').disabled = busy || !doc?.components;
         $('probe-group').disabled = busy;
@@ -469,12 +487,28 @@
         });
       $('capability-probes').onclick = () => {
         const brand = singleBrand();
-        if (brand)
+        if (brand) {
+          lastBuildReport = null;
           send('capability-probes', {
             doc,
             brand,
             scope: $('capability-scope').value || 'legacy',
           });
+        }
+      };
+      $('advance-segmented-capability-probes').onclick = () => {
+        const brand = singleBrand();
+        if (!brand || !doc || !capabilityReport || !lastBuildReport) return;
+        const buildResult = lastBuildReport;
+        // Each advance consumes a newly completed build. Preparation and
+        // saved-ledger recovery also discard earlier build evidence.
+        lastBuildReport = null;
+        send('advance-segmented-capability-probes', {
+          doc,
+          brand,
+          report: capabilityReport,
+          buildResult,
+        });
       };
       $('capability-file').onchange = async event => {
         try {
@@ -491,6 +525,7 @@
               'Select a saved capability probe report with its exact ledger.'
             );
           capabilityReport = report;
+          lastBuildReport = null;
           refreshControls();
           log(
             `Loaded capability ledger for root ${String(report.rootId).slice(0, 120)}. Cleanup will validate ownership in Figma.`
@@ -576,6 +611,16 @@
             if (completedOperation === 'capability-probes')
               capabilityReport = r;
             if (
+              completedOperation === 'advance-segmented-capability-probes' &&
+              r.kind === 'mangrove-native-capability-probes' &&
+              r.version === 1 &&
+              r.rootId === capabilityReport?.rootId &&
+              r.runId === capabilityReport?.runId &&
+              Array.isArray(r.ledger)
+            )
+              // Preserve partial ledgers even when comparison fails.
+              capabilityReport = r;
+            if (
               completedOperation === 'audit-capability-probes' &&
               !(r.errors || []).length &&
               r.kind === 'mangrove-native-capability-probes' &&
@@ -594,6 +639,11 @@
             log(
               [
                 `${completedOperation}: created ${r.ledger?.length || 0}; removed ${r.removedNodeIds?.length || 0}.`,
+                ...(r.segmentedCanonical
+                  ? [
+                      `Segmented shared style: ${r.segmentedCanonical.verdict}; ${r.segmentedCanonical.completedAdvances || 0}/2 rebuild checks.`,
+                    ]
+                  : []),
                 ...Object.entries(r.tests || {})
                   .slice(0, 3)
                   .map(
