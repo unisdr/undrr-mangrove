@@ -229,3 +229,7 @@ Known multiline-label boundary: browser labels use an inline red required `::aft
 ### Segmented focus sizing checkpoint
 
 The corrected 103-node native diagnostic retains the exact shared 120% style and verifies coincident SCALE outline geometry across 33 samples. STRETCH remains a failing comparison. Both runs clean up exactly and retain all 6,158 existing assets unchanged. Source variables, complete native fonts, editable Label keys, source range paints, fractional sizing and exact private-master repeat baselines are recorded. Canonical recipes remain three Position=First states; focused leaves, Small, rail compositions, matched pixels and middle focus stacking are not yet accepted. A separate expanded native gate must preserve existing identities through two ordinary builds.
+
+### Form Action optional-wrapper checkpoint
+
+Fixed Joined/Stacked private masters now pass all 17,674 independent native predicates over 44 phases, with set-owned text/visibility keys and positive-width optional wrappers. Exact 172-node cleanup retains all 6,158 saved assets. This addresses the earlier visible zero-width paragraph failure in a bounded diagnostic. Actual Layout variant switching, canonical shared styles, reusable nested masters, ordinary rebuilds, Select anatomy and focus rendering remain unaccepted; no canonical Form Action recipe has been added.

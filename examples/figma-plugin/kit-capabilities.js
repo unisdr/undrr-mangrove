@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned, mgFormActionJoiningPreflight, mgRunFormActionJoiningProbes, mgSegmentedFocusSizingPreflight, mgRunSegmentedFocusSizingProbes */
+/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned, mgFormActionJoiningPreflight, mgRunFormActionJoiningProbes, mgSegmentedFocusSizingPreflight, mgRunSegmentedFocusSizingProbes, mgFormActionOptionalPreflight, mgRunFormActionOptionalProbes */
 // Isolated diagnostic assets, not FormGroup components or source fidelity claims.
 const MG_CAPABILITY_KEY = 'mgCapabilityProbeId';
 let mgCapabilitySequence = 0;
@@ -34,6 +34,7 @@ async function runMangroveCapabilityProbes(
   let canonicalPlan;
   let formActionPlan;
   let focusSizingPlan;
+  let formActionOptionalPlan;
   try {
     if (
       ![
@@ -43,6 +44,7 @@ async function runMangroveCapabilityProbes(
         'segmented-joining',
         'segmented-canonical',
         'form-action-joining',
+        'form-action-optional',
         'segmented-focus-sizing',
       ].includes(scope)
     )
@@ -277,6 +279,14 @@ async function runMangroveCapabilityProbes(
         mode,
         report
       );
+    if (scope === 'form-action-optional')
+      formActionOptionalPlan = await mgFormActionOptionalPreflight(
+        doc,
+        brandId,
+        collection,
+        mode,
+        report
+      );
     if (scope === 'segmented-focus-sizing')
       focusSizingPlan = await mgSegmentedFocusSizingPreflight(
         doc,
@@ -343,19 +353,21 @@ async function runMangroveCapabilityProbes(
     report.rootId = root.id;
     record(root);
     root.name =
-      scope === 'segmented-focus-sizing'
-        ? 'Mangrove native capability probes / Segmented focus sizing'
-        : scope === 'form-action-joining'
-          ? 'Mangrove native capability probes / Form Action joining'
-          : scope === 'segmented-joining'
-            ? 'Mangrove native capability probes / Segmented joining'
-            : scope === 'segmented-canonical'
-              ? 'Mangrove native capability probes / Segmented canonical'
-              : scope === 'toc-link-sizing'
-                ? 'Mangrove native capability probes / TOC link sizing'
-                : scope === 'toc-range-paints'
-                  ? 'Mangrove native capability probes / TOC range paints'
-                  : 'Mangrove native capability probes';
+      scope === 'form-action-optional'
+        ? 'Mangrove native capability probes / Form Action optional wrappers'
+        : scope === 'segmented-focus-sizing'
+          ? 'Mangrove native capability probes / Segmented focus sizing'
+          : scope === 'form-action-joining'
+            ? 'Mangrove native capability probes / Form Action joining'
+            : scope === 'segmented-joining'
+              ? 'Mangrove native capability probes / Segmented joining'
+              : scope === 'segmented-canonical'
+                ? 'Mangrove native capability probes / Segmented canonical'
+                : scope === 'toc-link-sizing'
+                  ? 'Mangrove native capability probes / TOC link sizing'
+                  : scope === 'toc-range-paints'
+                    ? 'Mangrove native capability probes / TOC range paints'
+                    : 'Mangrove native capability probes';
     root.layoutMode = 'NONE';
     root.clipsContent = false;
     root.fills = [];
@@ -363,13 +375,18 @@ async function runMangroveCapabilityProbes(
       [
         'segmented-joining',
         'form-action-joining',
+        'form-action-optional',
         'segmented-focus-sizing',
       ].includes(scope)
         ? 1500
         : scope === 'toc-link-sizing'
           ? 2820
           : 1120,
-      ['segmented-joining', 'form-action-joining'].includes(scope)
+      [
+        'segmented-joining',
+        'form-action-joining',
+        'form-action-optional',
+      ].includes(scope)
         ? 1600
         : scope === 'toc-range-paints'
           ? 1640
@@ -447,6 +464,29 @@ async function runMangroveCapabilityProbes(
       );
     } catch (error) {
       report.errors.push(`Segmented focus sizing: ${message(error)}`);
+    }
+    report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
+    report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
+    return report;
+  }
+  if (scope === 'form-action-optional') {
+    try {
+      await mgRunFormActionOptionalProbes(
+        {
+          report,
+          root,
+          record,
+          create,
+          instance,
+          test,
+          bounds,
+          collection,
+          mode,
+        },
+        formActionOptionalPlan
+      );
+    } catch (error) {
+      report.errors.push(`Form Action optional wrappers: ${message(error)}`);
     }
     report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
     report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
