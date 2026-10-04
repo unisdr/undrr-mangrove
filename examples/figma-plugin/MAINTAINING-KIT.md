@@ -448,3 +448,20 @@ When adding focus leaves, use the tested coincident SCALE sizing policy only beh
 Generate the document, then run `node examples/figma-plugin/dev/mock-form-action-optional-capabilities.cjs`. It uses the real diagnostic dispatch and verifies exact 172-node cleanup, before-root guards, partial positive-width initialization failure recovery, foreign/moved refusal and the earlier ignored-mode/zero-width regression. Its paragraph geometry is synthetic.
 
 For native acceptance, record positive wrapper/text widths before hiding, actual shared set property keys, all visible consumer widths after each ordering/empty-value phase, and fuller exact typography/paint/geometry baselines through both private reapplications. Save full reports, restart/recover the exact ledger, remove only owned nodes and compare all retained assets. Variant switching needs a separate regeneration-aware topology gate. Canonical shared typography, nested component reuse and two ordinary builds need their own acceptance; keep raw diagnostic success distinct in the inventory.
+
+### Independently checking saved Form Action reports
+
+The portable verifier reads saved evidence and current source guards without controlling Figma:
+
+```sh
+node examples/figma-plugin/dev/verify-form-action-optional-native.cjs \
+  --report report.json \
+  --before baseline.json \
+  --after post-cleanup.json \
+  --cleanup cleanup.json \
+  --out verdict.json
+```
+
+The three inventory arguments must appear together. `--document` can select a generated source document; by default the verifier reads the repository build output. It checks the bounded 172-node, 44-observation optional-wrapper experiment, exact properties/fonts/ranges/geometry, full repeat snapshots and cleanup/retention. A controlled Help wrapper width change fails the checks. Missing or duplicated topology/phase records are refused before retention comparisons. JSON cannot authenticate native execution; keep actual desktop provenance with the saved evidence.
+
+Without inventory arguments, report-only checks cannot independently establish foundation identities or asset retention. Passing this verifier does not establish shared-style association, variant switching, ordinary canonical rebuilds or source pixel equality. Standard output contains counts; detailed failure fields remain in the optional verdict file. Keep private node IDs and artifact paths out of public PR text.
