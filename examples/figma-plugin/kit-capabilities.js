@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity */
+/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes */
 // Isolated diagnostic assets, not FormGroup components or source fidelity claims.
 const MG_CAPABILITY_KEY = 'mgCapabilityProbeId';
 let mgCapabilitySequence = 0;
@@ -30,8 +30,16 @@ async function runMangroveCapabilityProbes(
   let mode;
   let font;
   let rangeSource;
+  let segmentedPlan;
   try {
-    if (!['legacy', 'toc-link-sizing', 'toc-range-paints'].includes(scope))
+    if (
+      ![
+        'legacy',
+        'toc-link-sizing',
+        'toc-range-paints',
+        'segmented-joining',
+      ].includes(scope)
+    )
       throw new Error(`Unknown capability probe scope ${scope}.`);
     if (figma.editorType !== 'figma')
       throw new Error('Capability probes require Figma Design.');
@@ -239,6 +247,14 @@ async function runMangroveCapabilityProbes(
       lineHeight: 24,
       diagnosticWidths: [320, 240],
     };
+    if (scope === 'segmented-joining')
+      segmentedPlan = await mgSegmentedJoiningPreflight(
+        doc,
+        brandId,
+        collection,
+        mode,
+        report
+      );
     if (scope === 'toc-link-sizing') {
       report.preflight.diagnosticWidths = [240, 390, 900];
       report.preflight.diagnosticCaps = [195.5, 345.5, 855.5];
@@ -297,17 +313,27 @@ async function runMangroveCapabilityProbes(
     report.rootId = root.id;
     record(root);
     root.name =
-      scope === 'toc-link-sizing'
-        ? 'Mangrove native capability probes / TOC link sizing'
-        : scope === 'toc-range-paints'
-          ? 'Mangrove native capability probes / TOC range paints'
-          : 'Mangrove native capability probes';
+      scope === 'segmented-joining'
+        ? 'Mangrove native capability probes / Segmented joining'
+        : scope === 'toc-link-sizing'
+          ? 'Mangrove native capability probes / TOC link sizing'
+          : scope === 'toc-range-paints'
+            ? 'Mangrove native capability probes / TOC range paints'
+            : 'Mangrove native capability probes';
     root.layoutMode = 'NONE';
     root.clipsContent = false;
     root.fills = [];
     root.resize(
-      scope === 'toc-link-sizing' ? 2820 : 1120,
-      scope === 'toc-range-paints' ? 1640 : 900
+      scope === 'segmented-joining'
+        ? 1500
+        : scope === 'toc-link-sizing'
+          ? 2820
+          : 1120,
+      scope === 'segmented-joining'
+        ? 1600
+        : scope === 'toc-range-paints'
+          ? 1640
+          : 900
     );
     const existingBottoms = figma.currentPage.children
       .filter(node => node.id !== root.id)
@@ -362,6 +388,29 @@ async function runMangroveCapabilityProbes(
       result.errors.push(message(error));
     }
     result.affectedNodeIds = report.ledger.slice(start).map(item => item.id);
+  }
+  if (scope === 'segmented-joining') {
+    try {
+      await mgRunSegmentedJoiningProbes(
+        {
+          report,
+          root,
+          record,
+          create,
+          instance,
+          test,
+          bounds,
+          collection,
+          mode,
+        },
+        segmentedPlan
+      );
+    } catch (error) {
+      report.errors.push(`Segmented probes: ${message(error)}`);
+    }
+    report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
+    report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
+    return report;
   }
   if (scope === 'toc-range-paints') {
     await test('tocRangePaints', async result => {

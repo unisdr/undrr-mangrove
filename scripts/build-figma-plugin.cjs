@@ -12,6 +12,7 @@ const SOURCES = [
   'kit-acceptance.js',
   'kit-editorial-acceptance.js',
   'font-diagnostics.js',
+  'kit-segmented-capabilities.js',
   'kit-capabilities.js',
 ];
 
