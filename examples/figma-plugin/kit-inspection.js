@@ -127,6 +127,7 @@ async function mgInspectNode(node, variables, errors) {
       'strokeCap',
       'strokeJoin',
       'vectorPaths',
+      'arcData',
       'fills',
       'strokes',
       'effects',

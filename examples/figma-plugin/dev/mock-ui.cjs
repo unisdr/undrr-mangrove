@@ -441,6 +441,7 @@ async function main() {
   const probesUI = mountUI();
   probesUI.setDocument(doc);
   const probeElement = name => probesUI.elements.get(name);
+  probeElement('probe-group').value = 'legacy';
   probeElement('modes').checkedInputs = [{ value: 'undrr' }];
   probeElement('components').checkedInputs = [
     { value: 'combobox' },
@@ -457,6 +458,8 @@ async function main() {
   assert.equal(probeElement('compare-probes').disabled, false);
   probeElement('prepare-probes').onclick();
   assert.equal(probesUI.messages.at(-1).type, 'prepare-override-probes');
+  assert.equal(probesUI.messages.at(-1).groupId, 'legacy');
+  assert.equal(probeElement('probe-group').disabled, true);
   assert.equal(probeElement('remove-probes').disabled, true);
   const prepared = {
     operation: 'prepare-override-probes',
@@ -505,8 +508,68 @@ async function main() {
   });
   assert.equal(probeElement('probe-root').value, '');
   assert.equal(probeElement('compare-probes').disabled, true);
+  probeElement('probe-group').value = 'details-select';
+  probeElement('components').checkedInputs = [
+    { value: 'details' },
+    { value: 'select' },
+  ];
+  probeElement('prepare-probes').click();
+  assert.equal(probesUI.messages.at(-1).groupId, 'details-select');
+  assert.equal(probeElement('probe-group').disabled, true);
+  const detailsPrepared = {
+    operation: 'prepare-override-probes',
+    groupId: 'details-select',
+    rootId: 'probe:details-select',
+    createdNodeIds: ['probe:details-select'],
+    ledger: {
+      groupId: 'details-select',
+      requestedFamilyIds: ['details', 'select'],
+      probes: [{ requestedWidth: 240 }, { requestedWidth: 240 }],
+    },
+    errors: [],
+  };
+  deliver(detailsPrepared);
+  assert.equal(probeElement('probe-group').disabled, false);
+  assert.equal(probeElement('compare-probes').disabled, true);
+  probeElement('save-operation-report').click();
+  assert.deepEqual(
+    JSON.parse(await probesUI.downloads.at(-1).blob.text()),
+    detailsPrepared
+  );
+  probeElement('build').click();
+  assert.deepEqual(
+    [...probesUI.messages.at(-1).families],
+    ['details', 'select']
+  );
+  assert.equal(probesUI.messages.at(-1).refreshNarrowReview, false);
+  const detailsRebuild = {
+    ...JSON.parse(JSON.stringify(built)),
+    families: built.families.filter(item =>
+      ['details', 'select'].includes(item.id)
+    ),
+    audit: built.audit.filter(item =>
+      ['details', 'select'].includes(item.family)
+    ),
+  };
+  deliver(detailsRebuild);
+  probeElement('compare-probes').click();
+  assert.equal(probesUI.messages.at(-1).rootId, detailsPrepared.rootId);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(probesUI.messages.at(-1).buildResult)),
+    JSON.parse(JSON.stringify(detailsRebuild))
+  );
+  deliver({ rootId: detailsPrepared.rootId, passed: true, errors: [] });
+  probeElement('remove-probes').click();
+  assert.equal(probesUI.messages.at(-1).rootId, detailsPrepared.rootId);
+  deliver({
+    rootId: detailsPrepared.rootId,
+    removedNodeIds: [detailsPrepared.rootId],
+    retained: [],
+    errors: [],
+  });
+  assert.equal(probeElement('probe-root').value, '');
   console.log(
-    'ok  override probes require a fresh post-edit build, persist full report bytes, serialise actions and clear removed root IDs'
+    'ok  explicit legacy/Details-Select override groups require a fresh scoped post-edit build, persist full report bytes, serialise actions and clear removed root IDs'
   );
 
   const capabilitiesUI = mountUI();

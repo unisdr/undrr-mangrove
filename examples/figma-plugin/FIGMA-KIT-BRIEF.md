@@ -14,13 +14,13 @@ Mangrove serves five brands through shared structure: UNDRR, PreventionWeb, IRP,
 6. Mirror logical start and end for right-to-left layouts. The first scaffold is Latin and left to right; it does not establish Arabic typography.
 7. Place focus on the actual focused element. Use outward `Mangrove/focus-ring` or inward `Mangrove/focus-ring-inset` according to source, then verify geometry and clipping on actual nodes.
 
-Regular foundations have automatic line height. Component typography needs explicit source weights and line heights. Buttons request CSS 600 and line height 100%; tabs request CSS 600 and 142.1%. Chromium source comparison confirmed bundled Bold 700 for Button, selected options and tabs. Figma font-file equivalence remains unverified. Report missing or unloadable fonts without substituting another family.
+Regular foundations have automatic line height. Component typography needs explicit source weights and line heights; keep component styles out of the default foundation selection with `recommended: false`, since the builder imports required family styles. Buttons request CSS 600 and line height 100%; tabs request CSS 600 and 142.1%. Chromium source comparison confirmed bundled Bold 700 for Button, selected options and tabs. Figma font-file equivalence remains unverified. Report missing or unloadable fonts without substituting another family.
 
 Body line height is 1.5em on a 16px body, computing 24px. Component help and ComboBox errors inherit that fixed computed length; applying 150% to their 12.5px text would produce a different line height. TextInput retains vendored Normalize's 115% ratio, observed as 18.4px at 16px. ComboBox uses `font: inherit` and therefore 24px. See [the measured source baseline](LEARNINGS.md#browser-acceptance-measurements).
 
 ## Current native checkpoint
 
-On 4 October 2026, the kit export contains 384 variables, 86 text definitions, eight effects, 21 native families and 265 variants. Desktop inspection found 38 selected text styles and all eight effects. Checkbox adds 30 variants with bounded UNDRR source comparisons. FormErrorSummary adds six variants; corrected underlining and balanced titles were observed in ordinary and edited long default-UNDRR consumers. These counts do not establish complete state, brand or script coverage. See [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md).
+On 4 October 2026, the kit export contains 394 variables, 87 text definitions (60 foundations and 27 component styles), eight effects, 23 families and 271 recipe variants. Final native inspection records 39 local text styles, eight effects and 272 components including one historical diagnostic, with no errors. Loader and Compact Empty State add six bounded variants; ordinary repeat created zero nodes and updated 74. All 5,528 preceding inspected IDs survived and a fresh local backup is saved; cloud sync remains unconfirmed. The full text audit matched 561/561 paths, with the same 51 older Tabs-font/editorial-CTA findings; the four newest families' 79 paths added none. Checkbox and FormErrorSummary retain bounded UNDRR observations, including corrected Summary underlining and balanced titles in ordinary and edited long consumers. These counts do not establish complete state, brand or script coverage. See [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md).
 
 ## Button (`mg-button`)
 
@@ -191,6 +191,8 @@ FormGroup has source/browser measurements but no native family yet. Its responsi
 
 A separate native comparison passed 441 assertions for edited ComboBox and Radio text, booleans, nested option properties and direct alignment surviving normal builds. The rendered probes were visually reviewed. Cleanup after plugin restart removed 32 temporary probes, retained zero and reported no errors. This verifies those bounded edit-preservation cases, while the remaining checklist still applies.
 
+The explicit Details + closed Select group subsequently passed 274 native assertions for two edited 240px consumers. Its scoped ordinary rebuild created zero nodes and updated 303; strict cleanup removed 20 nodes and retained none. Long Title/Paragraph on open BelowMedium390 Details and short Value with label/help/error/BOOLEAN edits on Invalid Select retained actual properties, identities and FIXED/HUG sizing. This does not accept automatic breakpoint switching, long single-line Select values or other families' edited consumers.
+
 - Confirm native sets, variants, instances and editable properties.
 - Re-import and verify stable identities and preserved instance overrides.
 - Check long labels, narrow widths, transparent-border sizing and focus on filled nodes, including ordering and ancestor clipping.
@@ -221,10 +223,28 @@ Keep the transparent outer root with 1px border, 4px radius and 10px padding. Su
 
 Generic review specimens preserve main widths390/900/240. Explicit long1280/900/390/240 and unbroken240 consumers prove bounded content growth. Accordion groups and flush variants, automatic responsive type, active marker scaling, motion, keyboard behavior, all-brand/RTL and font-file equality remain separate work.
 
+An edited open BelowMedium390 consumer at 240px retained long Title/Paragraph and FIXED/HUG sizing after ordinary rebuild in the Details + closed Select group. The selected typography stays BelowMedium390; narrowing does not run source breakpoints.
+
 ## Closed Select (`mg-form-select`)
 
 Use five closed states: Default, Focus, Invalid, InvalidFocus and Disabled. The first native scope supports short placeholder/selected Value copy. Editable Label/Value/Help/Error and presentation booleans retain actual property keys; Invalid owns the outer error state. Focus overrides the Invalid border with blue while feedback remains red. Do not create a separate Filled paint state: selected text uses the same source surface and browser fieldtext black.
 
-Keep the source46px control height,20px end padding and exact inline12×8 SVG chevron with original#1a1a1a fill. Its native fixed wrapper uses END/CENTER; measuredx300.75 at320px andx220.75 at240px, y19. Chromium's disabled control opacity is0.7, scoped only to the control; this is a recorded UA baseline, not a Mangrove SCSS rule. Label/help remain undimmed except their own source colours.
+Keep the source46px control height,20px end padding and exact inline12×8 SVG chevron with original#1a1a1a fill. Its native fixed wrapper uses END/CENTER; measuredx300.75 at320px andx220.75 at 240px, y19. Chromium's disabled control opacity is0.7, scoped only to the control; this is a recorded UA baseline, not a Mangrove SCSS rule. Label/help remain undimmed except their own source colours.
 
 Native popup/keyboard behavior, long single-line/truncated Values, inline required-marker wrapping, cross-platform UA paint and broader brand/script acceptance remain unimplemented. FILL text currently wraps in Figma, so do not claim arbitrary long-value fidelity.
+
+An edited Invalid240px consumer retained short Value `Depth`, label/help/error copy and presentation booleans after ordinary rebuild in the Details + closed Select group. That short-value observation does not establish a native select's long single-line layout.
+
+## Static Loader (`mg-loader`)
+
+Recipes live in `scripts/figma-loader-recipes.cjs`. Two explicit Viewport presets preserve source border-box geometry: BelowMedium 40px with 8px border and MediumUp 96px with 14px border. Use native filled annular ELLIPSE sectors, bound to `color/blue-600` and `color/neutral-300`. The blue 270-degree sweep crosses a full turn; retain its positive endpoint rather than normalising it to a negative sweep. The neutral top band spans 90 degrees.
+
+This is the source's static zero-degree frame. Do not imply 2s rotation, reduced-motion behaviour or automatic 48em sizing. Native innerRadius has no variable binding; source size/border changes need regeneration and fresh geometry inspection. The accessible source label stays hidden rather than becoming invented visible text. Source/native rasterisation, arbitrary ring resizing and all-brand appearance require separate evidence; ordinary repeat retained identities with zero new nodes.
+
+## Compact Empty State (`mg-empty-state--compact`)
+
+Recipes live in `scripts/figma-empty-state-recipes.cjs`. Scope is the source compact dashboard/chart well: Surface=Plain|Panel and Alignment=Centre|Start, four variants with editable Description and optional Show media. Start represents the current LTR source. General Empty State titles, actions and interaction states are not part of this family.
+
+Keep content-driven vertical auto layout with source compact padding/gap, Panel background/radius and the exact 56×44 tray viewport. The 34px media frame centres its proportionally scaled native source SVG; source paths/joins remain native vectors with the explicit media-colour stroke binding. Description uses its required shared Roboto Regular 14px style, 150% line height, NONE decoration and PRETTY wrapping.
+
+Bind the source 440px max-inline-size to a FILL/HUG FRAME around FILL/HUG Description TEXT. Native Figma rejects maxWidth variable binding directly on TEXT. The wider short-text bounds of native FILL do not reproduce CSS intrinsic text bounds; compare actual alignment and finite-width wrapping. Four bounded default-UNDRR source comparisons passed, while arbitrary edited Description/Show media consumer repeats, live SVG token scaling, font-file equivalence, RTL and all-brand appearance remain unverified. Ordinary repeat created zero nodes, and all four main TEXT paths pass the final saved-field audit.

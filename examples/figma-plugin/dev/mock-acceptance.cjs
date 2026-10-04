@@ -138,6 +138,11 @@ function environment(options = {}) {
       state.writes++;
       this.explicitVariableModes = { [collection.id]: mode };
     }
+    resize(width, height) {
+      state.writes++;
+      this.width = width;
+      this.height = height;
+    }
     createInstance() {
       assert.strictEqual(this.type, 'COMPONENT');
       for (const text of this.findAll(node => node.type === 'TEXT'))
@@ -157,6 +162,10 @@ function environment(options = {}) {
           'axes',
           'propertyOverrides',
           'data',
+          'width',
+          'height',
+          'layoutSizingHorizontal',
+          'layoutSizingVertical',
         ])
           if (source[key] !== undefined) node[key] = copy(source[key]);
         if (root) node.main = source;
@@ -206,10 +215,26 @@ function environment(options = {}) {
   const optionSet = set('combobox-option', {
     'Label#option-label': definition('TEXT', 'Option'),
   });
+  const details = set('details', {
+    'Title#details-title': definition('TEXT', 'The Sendai Framework'),
+    'Paragraph#details-paragraph': definition('TEXT', 'Supporting content'),
+  });
+  const select = set('select', {
+    'Label#select-label': definition('TEXT', 'Category'),
+    'Value#select-value': definition('TEXT', 'Select an option'),
+    'Help text#select-help': definition('TEXT', 'Help'),
+    'Error message#select-error': definition('TEXT', 'Please select an option'),
+    'Show label#select-showlabel': definition('BOOLEAN', true),
+    'Show help#select-showhelp': definition('BOOLEAN', true),
+    'Show error#select-showerror': definition('BOOLEAN', true),
+    'Required#select-required': definition('BOOLEAN', false),
+  });
+  const familyId = parent =>
+    parent.data['orgundrrmangrove/mgKitId'].replace('family/', '');
   const variant = (parent, id, axes) => {
     const node = own(
       new Node('COMPONENT', id),
-      `family/${parent === combo ? 'combobox' : parent === radio ? 'radio' : 'combobox-option'}/variant/${id}`
+      `family/${familyId(parent)}/variant/${id}`
     );
     node.axes = axes;
     parent.appendChild(node);
@@ -278,6 +303,47 @@ function environment(options = {}) {
       visible: 'Show error#radio-showerror',
     });
   }
+  const detail = variant(details, 'details.open.default.belowmedium.390', {
+    Open: 'True',
+    State: 'Default',
+    Typography: 'BelowMedium',
+    MeasuredViewport: '390',
+  });
+  detail.width = 390;
+  detail.layoutSizingHorizontal = 'FIXED';
+  detail.layoutSizingVertical = 'HUG';
+  add(detail, 'TEXT', 'Title', { characters: 'Title#details-title' });
+  add(detail, 'TEXT', 'Paragraph', {
+    characters: 'Paragraph#details-paragraph',
+  });
+  const invalidSelect = variant(select, 'select.invalid', { State: 'Invalid' });
+  invalidSelect.layoutSizingHorizontal = 'FIXED';
+  invalidSelect.layoutSizingVertical = 'HUG';
+  const selectLabel = add(invalidSelect, 'FRAME', 'mg-form-label', {
+    visible: 'Show label#select-showlabel',
+  });
+  add(selectLabel, 'TEXT', 'Label', { characters: 'Label#select-label' });
+  add(
+    selectLabel,
+    'TEXT',
+    'Required marker',
+    { visible: 'Required#select-required' },
+    false
+  );
+  add(invalidSelect, 'TEXT', 'Value', { characters: 'Value#select-value' });
+  add(invalidSelect, 'TEXT', 'Help', {
+    characters: 'Help text#select-help',
+    visible: 'Show help#select-showhelp',
+  });
+  const selectError = add(
+    invalidSelect,
+    'FRAME',
+    'Invalid message source state'
+  );
+  add(selectError, 'TEXT', 'Error', {
+    characters: 'Error message#select-error',
+    visible: 'Show error#select-showerror',
+  });
   const collection = {
     id: 'collection:1',
     name: 'Mangrove',
@@ -303,40 +369,31 @@ function environment(options = {}) {
     collection: 'Mangrove',
     modes: [{ id: 'undrr', name: 'UNDRR' }],
     components: {
-      families: [
-        {
-          id: 'combobox',
-          variants: [{ id: 'combobox.open', properties: open.axes }],
-        },
-        {
-          id: 'radio',
-          variants: radio.children.map(node => ({
-            id: node.name,
-            properties: node.axes,
-          })),
-        },
-      ],
+      families: [combo, radio, details, select].map(parent => ({
+        id: familyId(parent),
+        variants: parent.children.map(node => ({
+          id: node.name,
+          properties: node.axes,
+        })),
+      })),
     },
   };
   const rebuild = {
     errors: [],
-    families: [combo, radio, optionSet].map(parent => ({
-      id:
-        parent === combo
-          ? 'combobox'
-          : parent === radio
-            ? 'radio'
-            : 'combobox-option',
+    families: [combo, radio, optionSet, details, select].map(parent => ({
+      id: familyId(parent),
       setId: parent.id,
       variantIds: parent.children.map(node => ({
         id: node.name,
         nodeId: node.id,
       })),
     })),
-    audit: ['combobox', 'radio', 'combobox-option'].map(family => ({
-      family,
-      status: 'built',
-    })),
+    audit: ['combobox', 'radio', 'combobox-option', 'details', 'select'].map(
+      family => ({
+        family,
+        status: 'built',
+      })
+    ),
   };
   const context = vm.createContext({ figma, Date, Math, console });
   for (const file of ['kit-identity.js', 'kit-acceptance.js'])
@@ -353,6 +410,8 @@ function environment(options = {}) {
     combo,
     radio,
     open,
+    details,
+    select,
     collection,
     doc,
     rebuild,
@@ -373,6 +432,240 @@ async function prepare(env) {
 }
 
 async function main() {
+  {
+    const env = environment();
+    const original = [...env.state.nodes.keys()];
+    // The explicit group does not need the legacy recipes or a legacy rebuild.
+    const doc = copy(env.doc);
+    doc.components.families = doc.components.families.filter(family =>
+      ['details', 'select'].includes(family.id)
+    );
+    const prepared = await env.call(
+      'prepareMangroveOverrideProbes',
+      doc,
+      'undrr',
+      'details-select'
+    );
+    assert.deepStrictEqual(copy(prepared.errors), []);
+    assert(prepared.ledger.complete);
+    assert.strictEqual(prepared.ledger.groupId, 'details-select');
+    assert.deepStrictEqual(copy(prepared.ledger.requestedFamilyIds), [
+      'details',
+      'select',
+    ]);
+    assert.strictEqual(prepared.ledger.probes.length, 2);
+    const [detail, select] = prepared.ledger.probes;
+    assert.deepStrictEqual(
+      copy(detail.baseline.nodes[0].componentProperties.Open),
+      {
+        type: 'VARIANT',
+        value: 'True',
+      }
+    );
+    for (const probe of prepared.ledger.probes) {
+      const instance = env.state.nodes.get(probe.nodeId);
+      assert.strictEqual(instance.width, 240);
+      assert.deepStrictEqual(copy(probe.consumerSizing), {
+        width: 240,
+        horizontal: 'FIXED',
+        vertical: 'HUG',
+      });
+      for (const target of probe.targets) {
+        assert.strictEqual(
+          env.state.nodes.get(target.nodeId)[target.field],
+          target.value,
+          target.name
+        );
+      }
+    }
+    assert(detail.targets.every(target => target.value.length > 90));
+    assert.strictEqual(
+      select.targets.find(target => target.name === 'Value').value,
+      'Depth'
+    );
+    assert.strictEqual(select.transitions.length, 8);
+    assert(select.transitions.every(item => item.expected === item.actual));
+    const persisted = env.state.nodes
+      .get(prepared.rootId)
+      .getSharedPluginData('orgundrrmangrove', 'mgAcceptanceLedger');
+    assert(persisted.length <= 90000);
+    const rebuild = {
+      ...env.rebuild,
+      families: env.rebuild.families.filter(item =>
+        ['details', 'select'].includes(item.id)
+      ),
+      audit: env.rebuild.audit.filter(item =>
+        ['details', 'select'].includes(item.family)
+      ),
+    };
+    // Model changed source defaults, not Figma layout or native propagation.
+    env.details.definitions['Title#details-title'].defaultValue =
+      'New source title';
+    env.select.definitions['Value#select-value'].defaultValue =
+      'New source value';
+    const beforeWrites = env.state.writes;
+    const beforeLoads = env.state.loads;
+    const comparison = await env.call(
+      'compareMangroveOverrideProbes',
+      prepared.rootId,
+      rebuild
+    );
+    assert.strictEqual(
+      comparison.passed,
+      true,
+      JSON.stringify(comparison.errors)
+    );
+    assert.strictEqual(env.state.writes, beforeWrites);
+    assert.strictEqual(env.state.loads, beforeLoads);
+    assert.strictEqual(
+      comparison.assertions.filter(item =>
+        item.name.endsWith(': consumer width')
+      ).length,
+      2
+    );
+    assert.deepStrictEqual(copy(comparison.requestedFamilyIds), [
+      'details',
+      'select',
+    ]);
+    const instance = env.state.nodes.get(detail.nodeId);
+    instance.width = 320;
+    const lostWidth = await env.call(
+      'compareMangroveOverrideProbes',
+      prepared.rootId,
+      rebuild
+    );
+    assert.strictEqual(lostWidth.passed, false);
+    assert(
+      lostWidth.assertions.some(
+        item => !item.passed && item.name.endsWith(': consumer width')
+      )
+    );
+    instance.width = 240;
+    instance.height += 37;
+    const diagnosticOnly = await env.call(
+      'compareMangroveOverrideProbes',
+      prepared.rootId,
+      rebuild
+    );
+    assert.strictEqual(
+      diagnosticOnly.passed,
+      true,
+      'Height diagnostics are not source-geometry assertions'
+    );
+    const missingFamily = await env.call(
+      'compareMangroveOverrideProbes',
+      prepared.rootId,
+      {
+        ...rebuild,
+        audit: rebuild.audit.filter(item => item.family !== 'select'),
+      }
+    );
+    assert.strictEqual(missingFamily.passed, false);
+    assert(missingFamily.errors.some(error => error.includes('cover select')));
+    const cleanup = await env.call(
+      'removeMangroveOverrideProbes',
+      prepared.rootId
+    );
+    assert.deepStrictEqual(copy(cleanup.errors), []);
+    assert.deepStrictEqual(copy(cleanup.retained), []);
+    assert.deepStrictEqual([...env.state.nodes.keys()], original);
+    assert.deepStrictEqual(
+      new Set(cleanup.removedNodeIds),
+      new Set(prepared.createdNodeIds)
+    );
+    console.log(
+      'ok  explicit Details/Select scope preserves long text, short value, BOOLEAN edits, axes and 240px consumer sizing; geometry remains diagnostic and cleanup exact'
+    );
+  }
+  {
+    for (const groupId of ['unknown', null, 1, {}, '__proto__']) {
+      const env = environment();
+      const before = [...env.state.nodes.keys()];
+      const writes = env.state.writes;
+      const result = await env.call(
+        'prepareMangroveOverrideProbes',
+        env.doc,
+        'undrr',
+        groupId
+      );
+      assert(
+        result.errors.some(error => error.includes('Unknown acceptance group'))
+      );
+      assert.strictEqual(env.state.writes, writes);
+      assert.strictEqual(env.state.loads, 0);
+      assert.deepStrictEqual([...env.state.nodes.keys()], before);
+    }
+    const legacy = environment();
+    const prepared = await prepare(legacy);
+    assert.strictEqual(prepared.ledger.groupId, 'legacy');
+    const oldLedger = copy(prepared.ledger);
+    delete oldLedger.groupId;
+    legacy.state.nodes
+      .get(prepared.rootId)
+      .setSharedPluginData(
+        'orgundrrmangrove',
+        'mgAcceptanceLedger',
+        JSON.stringify(oldLedger)
+      );
+    const oldComparison = await legacy.call(
+      'compareMangroveOverrideProbes',
+      prepared.ledger,
+      legacy.rebuild
+    );
+    assert.strictEqual(oldComparison.passed, true);
+    const oldCleanup = await legacy.call(
+      'removeMangroveOverrideProbes',
+      prepared.rootId
+    );
+    assert.deepStrictEqual(copy(oldCleanup.errors), []);
+    const scoped = environment();
+    const scopedRun = await scoped.call(
+      'prepareMangroveOverrideProbes',
+      scoped.doc,
+      'undrr',
+      'details-select'
+    );
+    const root = scoped.state.nodes.get(scopedRun.rootId);
+    for (const mutation of ['unknown-group', 'wrong-families', 'wrong-probe']) {
+      const ledger = copy(scopedRun.ledger);
+      if (mutation === 'unknown-group') ledger.groupId = 'other';
+      if (mutation === 'wrong-families')
+        ledger.requestedFamilyIds = ['details'];
+      if (mutation === 'wrong-probe') ledger.probes[0].familyId = 'radio';
+      root.setSharedPluginData(
+        'orgundrrmangrove',
+        'mgAcceptanceLedger',
+        JSON.stringify(ledger)
+      );
+      const ids = [...scoped.state.nodes.keys()];
+      const writes = scoped.state.writes;
+      const rejected = await scoped.call(
+        'removeMangroveOverrideProbes',
+        root.id
+      );
+      assert(rejected.errors.length, mutation);
+      assert.strictEqual(scoped.state.writes, writes, mutation);
+      assert.deepStrictEqual([...scoped.state.nodes.keys()], ids, mutation);
+    }
+    root.setSharedPluginData(
+      'orgundrrmangrove',
+      'mgAcceptanceLedger',
+      JSON.stringify(scopedRun.ledger)
+    );
+    const user = new scoped.Node('FRAME', 'Unrecorded Select child');
+    scoped.state.nodes.get(scopedRun.ledger.probes[1].nodeId).appendChild(user);
+    const retained = await scoped.call('removeMangroveOverrideProbes', root.id);
+    assert.deepStrictEqual(copy(retained.errors), []);
+    assert(scoped.state.nodes.has(user.id));
+    assert(
+      retained.retained.some(
+        item => item.id === scopedRun.ledger.probes[1].nodeId
+      )
+    );
+    console.log(
+      'ok  unknown groups reject before writes/font loads, group-less legacy ledgers remain compatible, scope tampering and foreign descendants cannot authorise cleanup'
+    );
+  }
   {
     const env = environment();
     const review = new env.Node('FRAME', 'Owned review');

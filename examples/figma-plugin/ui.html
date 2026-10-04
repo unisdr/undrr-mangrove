@@ -109,9 +109,20 @@
     <button id="export-diagnostics">Export focus PNG</button>
     <details>
       <summary>Instance override acceptance</summary>
+      <label>
+        Acceptance group
+        <select id="probe-group">
+          <option value="legacy">ComboBox + Radio (existing default)</option>
+          <option value="details-select">Details + closed Select</option>
+        </select>
+      </label>
       <p>
-        Prepare temporary ComboBox and Radio probes, save the report, rebuild
-        those families with review refresh off, then compare.
+        Prepare temporary probes and save the report. For ComboBox + Radio,
+        rebuild ComboBox, ComboBox option and Radio. For Details + closed
+        Select, rebuild Details and Select. Keep review refresh off, then
+        compare and visually review before removing the owned probes. Details +
+        Select tests edited long Details text and a short Invalid Select value
+        at 240px.
       </p>
       <button id="prepare-probes" disabled>Prepare override probes</button>
       <label>Probe root ID <input id="probe-root" type="text" /></label>
@@ -184,6 +195,7 @@
           busy || !capabilityReport?.rootId;
         $('check-fonts').disabled = busy;
         $('prepare-probes').disabled = busy || !doc?.components;
+        $('probe-group').disabled = busy;
         $('probe-root').disabled = busy;
         const hasProbe = String($('probe-root').value || '').trim().length > 0;
         $('compare-probes').disabled = busy || !hasProbe || !lastBuildReport;
@@ -478,7 +490,12 @@
       $('prepare-probes').onclick = () => {
         lastBuildReport = null;
         const brand = singleBrand();
-        if (brand) send('prepare-override-probes', { doc, brand });
+        if (brand)
+          send('prepare-override-probes', {
+            doc,
+            brand,
+            groupId: $('probe-group').value || 'legacy',
+          });
       };
       $('compare-probes').onclick = () => {
         if (lastBuildReport)

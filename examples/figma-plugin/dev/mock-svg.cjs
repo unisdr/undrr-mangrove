@@ -27,6 +27,7 @@ function installSvgMock(figma, state, { createVector } = {}) {
       white: [1, 1, 1],
       black: [0, 0, 0],
       '#000': [0, 0, 0],
+      '#000000': [0, 0, 0],
       '#1a1a1a': [26 / 255, 26 / 255, 26 / 255],
       red: [1, 0, 0],
       blue: [0, 0, 1],
@@ -86,6 +87,16 @@ function installSvgMock(figma, state, { createVector } = {}) {
       } else if (attrs.d === 'M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z') {
         vector.x = vector.y = 0;
         vector.resize(12, 7.41);
+      } else if (attrs.d === 'M8 18 14 4h28l6 14') {
+        vector.x = 8;
+        vector.y = 4;
+        vector.resize(40, 14);
+      } else if (
+        attrs.d === 'M8 18h12l3 6h10l3-6h12v18a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z'
+      ) {
+        vector.x = 8;
+        vector.y = 18;
+        vector.resize(40, 22);
       } else
         throw new Error(
           `SVG mock needs an explicit path fixture for ${attrs.d}`

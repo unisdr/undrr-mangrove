@@ -116,6 +116,12 @@ function environment(doc, options = {}) {
       this.width = this.height = 100;
       this.fills = [];
       this.strokes = [];
+      if (type === 'ELLIPSE')
+        this.arcData = {
+          startingAngle: 0,
+          endingAngle: 2 * Math.PI,
+          innerRadius: 0,
+        };
       this.effects = [];
       this.boundVariables = {};
       this._opacity = 1;
@@ -241,6 +247,13 @@ function environment(doc, options = {}) {
       return this._horizontal;
     }
     set layoutSizingVertical(value) {
+      if (value === 'HUG')
+        assert(
+          (this.type === 'TEXT' && this.parent?.layoutMode !== 'NONE') ||
+            (['FRAME', 'COMPONENT', 'INSTANCE'].includes(this.type) &&
+              this.layoutMode !== 'NONE'),
+          'HUG needs an auto-layout frame or text child of auto-layout'
+        );
       if (value === 'FILL')
         assert(
           this.parent && this.parent.layoutMode !== 'NONE',
@@ -480,6 +493,7 @@ function environment(doc, options = {}) {
           'strokeJoin',
           'strokeAlign',
           'vectorPaths',
+          'arcData',
           'textDecoration',
           '_textDecorationOffset',
           '_layoutPositioning',

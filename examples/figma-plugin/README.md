@@ -20,7 +20,7 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 384 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 26 component text styles and eight effect styles. Read the build report for current totals. Component recipes cover 265 variants across 21 families; 16 tokens remain skipped as variables.
+Current output contains 394 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 27 component text styles and eight effect styles. Read the build report for current totals. Component recipes cover 271 variants across 23 families; 16 tokens remain skipped as variables. Component-specific text styles are not default foundation selections; the builder imports the styles required by the selected family.
 
 ### Text and effect foundations
 
@@ -118,6 +118,12 @@ Import one brand first, then select families and choose **Build selected compone
 | Form error summary   |        6 |
 | Switch               |       22 |
 | Switch small         |       20 |
+| Editorial CTA        |       23 |
+| Chips                |       16 |
+| Details              |       20 |
+| Closed Select        |        5 |
+| Loader               |        2 |
+| Compact Empty State  |        4 |
 
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
 
@@ -306,6 +312,8 @@ node examples/figma-plugin/dev/mock-editorial-acceptance.cjs
 node examples/figma-plugin/dev/mock-chips.cjs
 node examples/figma-plugin/dev/mock-details.cjs
 node examples/figma-plugin/dev/mock-select.cjs
+node examples/figma-plugin/dev/mock-loader.cjs
+node examples/figma-plugin/dev/mock-empty-state.cjs
 node examples/figma-plugin/dev/mock-audit-native-text.cjs
 node examples/figma-plugin/dev/mock-connector-scopes.cjs
 node examples/figma-plugin/dev/mock-review-export.cjs
@@ -364,10 +372,18 @@ That checkpoint added 30 Checkbox variants and six LTR Form error summary varian
 
 The error summary exposes Title and error messages as editable text properties. Its shared link style carries UNDERLINE and its title style carries BALANCE, as well as source font weights and line heights. Native visual checks caught and corrected lost underlines after text property assignment. The corrected 240px long examples show underlined wrapped links and balanced title text; the repeat created zero nodes, updated 114 and reported no errors. These checks cover default UNDRR LTR specimens. Wrapped inline link focus, arbitrary error counts, RTL and script-specific typography remain pending.
 
-**Instance override acceptance** prepares temporary edited ComboBox and Radio consumers. Save the preparation report, build those families with review refresh off, then compare and save the comparison report. The comparison is read-only; cleanup removes only recorded owned probes and retains changed or foreign content. A saved root ID recovers the ledger after plugin restart. See the [acceptance runbook](MAINTAINING-KIT.md) for the exact contract and native verification status.
+**Instance override acceptance** has two explicit groups: the existing ComboBox + Radio default and Details + closed Select. The latter prepares an open BelowMedium390 Details with edited long Title/Paragraph and an Invalid Select with short Value and edited label/help/error/booleans, both at a fixed 240px consumer width. Save the preparation report, build only the group's families with review refresh off, then compare and save the comparison report. Details + Select passed 274 native preservation assertions after an ordinary rebuild that created zero nodes and updated 303; exact cleanup removed 20 probes with none retained. Width and FIXED/HUG sizing are explicit checks for this group; other bounds remain diagnostics, not source-fidelity assertions. The comparison is read-only; cleanup retains changed or foreign content. A saved root ID recovers the ledger after plugin restart. See the [acceptance runbook](MAINTAINING-KIT.md#check-edited-native-instances).
 
 ### Editorial CTA is under native review
 
 The 23 editorial CTA recipes extend the conventional Button with the source circular chevron action used by Hero. The first desktop build succeeded, including source-coloured review wrappers, but actual inspection found every Label inherited the final Focus style. Default and Hover typography are therefore not yet accepted. Shared-text-property propagation, consumer underline offsets and finite-width resizing are being checked in isolated native probes. See [the recorded findings](LEARNINGS.md#editorial-cta-construction-and-a-text-property-mismatch); do not treat passing mock construction as a faithful rendered component.
 
 The **Editorial CTA consumer acceptance** panel creates three temporary instances, exercises short/French/unbroken labels at finite widths and records actual text, font, badge and constraint readbacks. Save its full operation report before closing. Rebuild Editorial CTA with review refresh off, then compare against the saved baseline. Cleanup can recover the exact shared ledger from the saved Editorial root ID after restart. Failures remain in the report and do not authorise repairs to canonical components; the current styling mismatch is expected to fail those checks.
+
+### Loader and Compact Empty State checkpoint on 4 October 2026
+
+Loader adds two static source presets: BelowMedium 40px with an 8px ring and MediumUp 96px with a 14px ring. Native ellipse sectors retain the source blue body and neutral top band. The blue sector uses a positive 270-degree sweep crossing a full turn; reducing its endpoint modulo a full turn changed the native geometry and was corrected. Rotation, reduced-motion behaviour, live breakpoint switching and accessibility semantics remain code responsibilities.
+
+Compact Empty State adds Plain/Panel × Centre/Start, with editable Description, optional Show media and the exact source tray SVG bound to its colour role. Roboto Regular 14px/21px and PRETTY wrapping belong to its required shared style. The source 440px description cap binds to a FILL/HUG FRAME, since native Figma rejects maxWidth variable binding on TEXT. Four bounded default-UNDRR source comparisons passed; arbitrary edited descriptions, live media-token scaling, RTL, all-brand rendering and font-file equivalence remain unverified.
+
+The new-family ordinary repeat created zero nodes and updated 74 with no errors. Final inspection records 394 variables, 39 local text styles, eight effects, 23 sets, 272 components including the historical diagnostic, 5,221 nodes and 752 instances, with no inspection errors. All 5,528 preceding inspected IDs survived; the current inventory contains 5,663 IDs. The full text audit matched 561/561 paths and retained the older 51 Tabs-font/editorial-CTA findings; the four newest families' 79 paths added none. All 20 temporary Details/Select probe IDs are absent, and a fresh local backup is saved. Cloud sync remains unconfirmed. Professional migration should begin with a fresh inspection and backup, then verify all five modes and an actual consuming-file update; these new local families do not complete publication acceptance.

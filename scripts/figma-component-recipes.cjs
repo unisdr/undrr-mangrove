@@ -1844,6 +1844,21 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       styles,
     })
   );
+  families.push(
+    ...require('./figma-loader-recipes.cjs').buildLoaderRecipes({
+      root,
+      modes,
+      variables,
+    })
+  );
+  families.push(
+    ...require('./figma-empty-state-recipes.cjs').buildEmptyStateRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
   for (const variable of variables) byName.set(variable.name, variable);
   function validate(node) {
     const names = [

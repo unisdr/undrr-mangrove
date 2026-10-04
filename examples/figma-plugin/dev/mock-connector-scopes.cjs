@@ -83,6 +83,7 @@ async function main() {
     'Review variantSurfaces must',
     'TEXT textDecorationOffset requires',
     'Review nodes must',
+    'Ellipse arcData requires',
   ])
     assert(
       !checked.payload.code.includes(marker),
@@ -212,8 +213,38 @@ async function main() {
   console.log(
     `ok Chips intrinsic ${chips.payload.bytes}, Hero CTA absolute/offset/surface ${cta.payload.bytes}, Table nested seeds ${table.payload.bytes}`
   );
+  const loader = await execute(doc, 'loader', 'loader.below-medium');
+  assert(loader.payload.code.includes('Ellipse arcData requires'));
+  const loaderMain = loader.env.state.nodes.get(
+    loader.report.families[0].variantIds[0].nodeId
+  );
+  const loaderBody = loaderMain.children.find(
+    node => node.type === 'ELLIPSE' && node.name === 'Blue border'
+  );
+  assert.deepStrictEqual(copy(loaderBody.arcData), {
+    startingAngle: (7 * Math.PI) / 4,
+    endingAngle: (13 * Math.PI) / 4,
+    innerRadius: 0.6,
+  });
+  const loaderRepeat = await loader.env.runCode(loader.payload.code);
+  assert.strictEqual(
+    loaderRepeat.errors.length,
+    0,
+    loaderRepeat.errors.join('\n')
+  );
+  assert.strictEqual(loaderRepeat.createdNodeIds.length, 0);
+  console.log(
+    `ok scoped Loader retains native arc validation and positive clockwise sweep at ${loader.payload.bytes} bytes`
+  );
 
   for (const value of [null, false, 0]) {
+    await malformed(
+      doc,
+      (_family, variant) => {
+        variant.tree.children[0].arcData = value;
+      },
+      'Ellipse arcData requires'
+    );
     if (value !== false)
       await malformed(
         doc,

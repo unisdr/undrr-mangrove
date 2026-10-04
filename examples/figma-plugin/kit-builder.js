@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW */
+/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -12,6 +12,35 @@ const MG_ABSOLUTE_ENABLED =
 const MG_INTRINSIC_REVIEW_ENABLED =
   typeof MG_CONNECTOR_INTRINSIC_REVIEW === 'undefined' ||
   MG_CONNECTOR_INTRINSIC_REVIEW;
+const MG_ARC_ENABLED =
+  typeof MG_CONNECTOR_ARC === 'undefined' || MG_CONNECTOR_ARC;
+
+function mgEllipseArcPlan(tree) {
+  const arc = tree.arcData;
+  if (
+    tree.type !== 'ELLIPSE' ||
+    !arc ||
+    typeof arc !== 'object' ||
+    Array.isArray(arc) ||
+    Object.keys(arc).length !== 3 ||
+    Object.keys(arc).some(
+      field => !['startingAngle', 'endingAngle', 'innerRadius'].includes(field)
+    ) ||
+    !['startingAngle', 'endingAngle', 'innerRadius'].every(field =>
+      Number.isFinite(arc[field])
+    ) ||
+    arc.startingAngle < 0 ||
+    arc.startingAngle > 2 * Math.PI ||
+    arc.endingAngle > arc.startingAngle + 2 * Math.PI ||
+    arc.endingAngle <= arc.startingAngle ||
+    arc.innerRadius < 0 ||
+    arc.innerRadius >= 1
+  )
+    throw new Error(
+      'Ellipse arcData requires a start angle in [0,2π], a positive clockwise sweep of at most2π and innerRadius in [0,1).'
+    );
+  return { ...arc };
+}
 
 function mgAbsolutePlan(tree, parent) {
   const spec = tree.absolute;
@@ -733,6 +762,7 @@ async function buildMangroveComponents(
             for (const name of Object.values(tree.svg.monochrome || {}))
               variable(name, 'COLOR');
           }
+          if (MG_ARC_ENABLED && 'arcData' in tree) mgEllipseArcPlan(tree);
           if (tree.type === 'ELLIPSE') {
             const geometry = [
               'width',
@@ -1602,6 +1632,11 @@ async function buildMangroveComponents(
       node.textAlignHorizontal = spec.textAlign || 'LEFT';
     }
     if (spec.type !== 'INSTANCE') {
+      if (spec.type === 'ELLIPSE')
+        node.arcData =
+          MG_ARC_ENABLED && spec.arcData
+            ? mgEllipseArcPlan(spec)
+            : { startingAngle: 0, endingAngle: 2 * Math.PI, innerRadius: 0 };
       if (spec.layout?.mode && 'layoutMode' in node)
         node.layoutMode = spec.layout.mode;
       if ('fills' in node) paint(node, 'fills', spec.fill);
@@ -2014,26 +2049,34 @@ async function buildMangroveComponents(
         'Variant review geometry refresh refused a changed consumer variant.'
       );
     const horizontal = master.layoutSizingHorizontal;
+    const vertical = master.layoutSizingVertical;
     if (
       !['HUG', 'FIXED'].includes(horizontal) ||
+      !['HUG', 'FIXED'].includes(vertical) ||
       !Number.isFinite(master.width) ||
-      master.width <= 0
+      master.width <= 0 ||
+      !Number.isFinite(master.height) ||
+      master.height <= 0
     )
       throw new Error(
-        'Variant review master sizing must be HUG or a positive fixed width.'
+        'Variant review master sizing must be HUG or positive fixed geometry.'
       );
     instance.setBoundVariable('width', null);
     instance.setBoundVariable('height', null);
-    if (horizontal === 'FIXED')
-      instance.resize(master.width, Math.max(1, instance.height));
+    if (horizontal === 'FIXED' || vertical === 'FIXED')
+      instance.resize(
+        horizontal === 'FIXED' ? master.width : instance.width,
+        vertical === 'FIXED' ? master.height : Math.max(1, instance.height)
+      );
     instance.layoutSizingHorizontal = horizontal;
-    instance.layoutSizingVertical = 'HUG';
+    instance.layoutSizingVertical = vertical;
     if (
       instance.layoutSizingHorizontal !== horizontal ||
-      instance.layoutSizingVertical !== 'HUG' ||
+      instance.layoutSizingVertical !== vertical ||
       (horizontal === 'FIXED' &&
         (!Number.isFinite(instance.width) ||
-          Math.abs(instance.width - master.width) > 0.01))
+          Math.abs(instance.width - master.width) > 0.01)) ||
+      (vertical === 'FIXED' && Math.abs(instance.height - master.height) > 0.01)
     )
       throw new Error(
         'Native variant review sizing did not retain the requested geometry.'

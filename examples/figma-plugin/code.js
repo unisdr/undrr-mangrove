@@ -681,7 +681,11 @@ figma.ui.onmessage = async msg => {
     }
     if (msg.type === 'prepare-override-probes') {
       post('operation', {
-        result: await prepareMangroveOverrideProbes(msg.doc, msg.brand),
+        result: await prepareMangroveOverrideProbes(
+          msg.doc,
+          msg.brand,
+          msg.groupId
+        ),
       });
       return;
     }

@@ -48,6 +48,87 @@ const MG_ACCEPTANCE_PLANS = [
     transitions: ['Show error'],
   },
 ];
+const MG_ACCEPTANCE_GROUPS = {
+  legacy: {
+    plans: MG_ACCEPTANCE_PLANS,
+    requestedFamilyIds: ['combobox', 'combobox-option', 'radio'],
+    coverage: [
+      'root TEXT/BOOLEAN',
+      'three exposed option TEXT properties',
+      'one direct text alignment override',
+      'unchanged checked/invalid variant axes',
+    ],
+    limitations: [
+      'Default Radio has a hidden error ancestor.',
+      'Open Combo has no Error message consumer.',
+    ],
+  },
+  'details-select': {
+    plans: [
+      {
+        id: 'details-open-240',
+        familyId: 'details',
+        variantId: 'details.open.default.belowmedium.390',
+        text: {
+          Title:
+            'A detailed explanation of disaster risk reduction and resilient communities across the Sendai Framework',
+          Paragraph:
+            'Long supporting information explains how communities can prepare for hazards, reduce exposure and make evidence-informed decisions. The Sendai Framework',
+        },
+        boolean: {},
+        axes: {
+          Open: 'True',
+          State: 'Default',
+          Typography: 'BelowMedium',
+          MeasuredViewport: '390',
+        },
+        transitions: [],
+        width: 240,
+      },
+      {
+        id: 'select-invalid-240',
+        familyId: 'select',
+        variantId: 'select.invalid',
+        text: {
+          Label: 'Probe category',
+          Value: 'Depth',
+          'Help text': 'Probe supporting information for the selected category',
+          'Error message': 'Probe choose an available category',
+        },
+        boolean: {
+          'Show label': true,
+          'Show help': true,
+          'Show error': true,
+          Required: true,
+        },
+        axes: { State: 'Invalid' },
+        transitions: ['Show label', 'Show help', 'Show error', 'Required'],
+        width: 240,
+      },
+    ],
+    requestedFamilyIds: ['details', 'select'],
+    coverage: [
+      'open BelowMedium390 Details edited long Title/Paragraph',
+      'closed Invalid Select short Value and label/help/error/BOOLEAN edits',
+      '240px consumer width and FIXED/HUG sizing preservation',
+      'unchanged Details/Select variant axes',
+    ],
+    limitations: [
+      'Select uses a short Value only; native popup and long-value behaviour are not covered.',
+      'Details remains the BelowMedium390 variant at a 240px consumer width; no automatic breakpoint switching is implied.',
+      'Consumer width checks do not establish source geometry or rendered wrapping.',
+    ],
+  },
+};
+
+function mgAcceptanceGroup(groupId = 'legacy') {
+  if (
+    typeof groupId !== 'string' ||
+    !Object.prototype.hasOwnProperty.call(MG_ACCEPTANCE_GROUPS, groupId)
+  )
+    throw new Error(`Unknown acceptance group ${String(groupId)}.`);
+  return MG_ACCEPTANCE_GROUPS[groupId];
+}
 
 function mgAcceptanceError(error) {
   return error?.message || String(error);
@@ -208,13 +289,17 @@ async function mgAcceptanceLoad(input) {
   const raw = mgReadIdentity(root, MG_ACCEPTANCE_LEDGER_KEY);
   if (!raw) throw new Error('Acceptance root has no persisted ledger.');
   const ledger = JSON.parse(raw);
+  const group = mgAcceptanceGroup(ledger.groupId);
   if (
     ledger.version !== 1 ||
     ledger.rootId !== root.id ||
     typeof ledger.runId !== 'string' ||
     !/^[a-z0-9-]+$/.test(ledger.runId) ||
     !Array.isArray(ledger.probes) ||
-    ledger.probes.length > 3 ||
+    ledger.probes.length > group.plans.length ||
+    (ledger.complete && ledger.probes.length !== group.plans.length) ||
+    JSON.stringify(ledger.requestedFamilyIds) !==
+      JSON.stringify(group.requestedFamilyIds) ||
     !Array.isArray(ledger.createdNodeIds) ||
     root.type !== 'FRAME' ||
     mgReadIdentity(root, 'mgKitId') !== `acceptance/${ledger.runId}` ||
@@ -224,9 +309,15 @@ async function mgAcceptanceLoad(input) {
   if (typeof input !== 'string' && input.runId !== ledger.runId)
     throw new Error('Saved run does not match the persisted acceptance root.');
   const ids = new Set([root.id]);
+  const planIds = new Set();
   for (const probe of ledger.probes) {
+    const plan = group.plans.find(item => item.id === probe.id);
     if (
-      !MG_ACCEPTANCE_PLANS.some(plan => plan.id === probe.id) ||
+      !plan ||
+      planIds.has(probe.id) ||
+      probe.familyId !== plan.familyId ||
+      probe.variantId !== plan.variantId ||
+      probe.requestedWidth !== plan.width ||
       typeof probe.nodeId !== 'string' ||
       ids.has(probe.nodeId) ||
       !Array.isArray(probe.createdTreeIds) ||
@@ -237,11 +328,12 @@ async function mgAcceptanceLoad(input) {
     )
       throw new Error('Invalid acceptance probe ledger.');
     ids.add(probe.nodeId);
+    planIds.add(probe.id);
   }
   return { root, ledger };
 }
 
-async function prepareMangroveOverrideProbes(doc, brandId) {
+async function prepareMangroveOverrideProbes(doc, brandId, groupId = 'legacy') {
   const result = {
     operation: 'prepare-override-probes',
     createdNodeIds: [],
@@ -253,6 +345,8 @@ async function prepareMangroveOverrideProbes(doc, brandId) {
   let root;
   let ledger;
   try {
+    const group = mgAcceptanceGroup(groupId);
+    result.groupId = groupId;
     const brands = (doc?.modes || []).filter(mode => mode.id === brandId);
     if (brands.length !== 1) throw new Error('Unknown or ambiguous brand.');
     const collections = (
@@ -286,7 +380,7 @@ async function prepareMangroveOverrideProbes(doc, brandId) {
     const main = unique('main', 'FRAME');
     if (main.parent !== page) throw new Error('Main root is not page-owned.');
     const sources = [];
-    for (const plan of MG_ACCEPTANCE_PLANS) {
+    for (const plan of group.plans) {
       const families = (doc.components?.families || []).filter(
         family => family.id === plan.familyId
       );
@@ -369,6 +463,7 @@ async function prepareMangroveOverrideProbes(doc, brandId) {
       throw new Error('Acceptance run identity collision.');
     ledger = {
       version: 1,
+      groupId,
       runId,
       rootId: null,
       pageId: page.id,
@@ -378,21 +473,15 @@ async function prepareMangroveOverrideProbes(doc, brandId) {
         modeId: modes[0].modeId,
         name: modes[0].name,
       },
-      requestedFamilyIds: ['combobox', 'combobox-option', 'radio'],
+      requestedFamilyIds: [...group.requestedFamilyIds],
       createdNodeIds: result.createdNodeIds,
       probes: [],
       complete: false,
       errors: result.errors,
-      coverage: [
-        'root TEXT/BOOLEAN',
-        'three exposed option TEXT properties',
-        'one direct text alignment override',
-        'unchanged checked/invalid variant axes',
-      ],
+      coverage: [...group.coverage],
       limitations: [
         'Visibility flags do not establish painted visibility under clipping or occlusion.',
-        'Default Radio has a hidden error ancestor.',
-        'Open Combo has no Error message consumer.',
+        ...group.limitations,
         'No all-brand, arbitrary-size, publishing or keyboard acceptance is implied.',
       ],
     };
@@ -426,6 +515,7 @@ async function prepareMangroveOverrideProbes(doc, brandId) {
         id: plan.id,
         familyId: plan.familyId,
         variantId: plan.variantId,
+        ...(plan.width ? { requestedWidth: plan.width } : {}),
         nodeId: instance.id,
         parentId: root.id,
         mgKitId: `acceptance/${runId}/${plan.id}`,
@@ -554,6 +644,22 @@ async function prepareMangroveOverrideProbes(doc, brandId) {
         if (instance.componentProperties[key].value !== value)
           throw new Error(`Probe changed variant axis ${name}.`);
       }
+      if (plan.width) {
+        instance.resize(plan.width, Math.max(1, instance.height));
+        instance.layoutSizingHorizontal = 'FIXED';
+        instance.layoutSizingVertical = 'HUG';
+        probe.consumerSizing = {
+          width: instance.width,
+          horizontal: instance.layoutSizingHorizontal,
+          vertical: instance.layoutSizingVertical,
+        };
+        if (
+          probe.consumerSizing.width !== plan.width ||
+          probe.consumerSizing.horizontal !== 'FIXED' ||
+          probe.consumerSizing.vertical !== 'HUG'
+        )
+          throw new Error(`Consumer sizing was not retained for ${plan.id}.`);
+      }
       probe.baseline = await mgAcceptanceSnapshot(instance);
       probe.complete = true;
       mgAcceptancePersist(root, ledger);
@@ -594,6 +700,8 @@ async function compareMangroveOverrideProbes(input, buildResult) {
     const { root, ledger } = await mgAcceptanceLoad(input);
     result.rootId = root.id;
     result.runId = ledger.runId;
+    result.groupId = ledger.groupId || 'legacy';
+    result.requestedFamilyIds = ledger.requestedFamilyIds;
     result.coverage = ledger.coverage;
     result.limitations = ledger.limitations;
     if (!ledger.complete || ledger.errors.length)
@@ -647,6 +755,20 @@ async function compareMangroveOverrideProbes(input, buildResult) {
       );
       assert(`${probe.id}: rebuild set ID`, probe.setId, family.setId);
       const after = await mgAcceptanceSnapshot(instance);
+      if (probe.requestedWidth) {
+        if (!probe.consumerSizing)
+          throw new Error(`Missing consumer sizing evidence for ${probe.id}.`);
+        assert(
+          `${probe.id}: consumer width`,
+          probe.requestedWidth,
+          instance.width
+        );
+        assert(`${probe.id}: consumer sizing`, probe.consumerSizing, {
+          width: instance.width,
+          horizontal: instance.layoutSizingHorizontal,
+          vertical: instance.layoutSizingVertical,
+        });
+      }
       result.after.push(after);
       assert(
         `${probe.id}: descendant IDs`,

@@ -635,6 +635,14 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsAbsolute(variant.tree))
     );
+  function needsArc(node) {
+    return 'arcData' in node || (node.children || []).some(needsArc);
+  }
+  const arcEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsArc(variant.tree))
+    );
   const intrinsicReviewEnabled =
     operation === 'build' &&
     subset.components.families.some(
@@ -713,6 +721,7 @@ async function buildConnector({
       global_defs: {
         MG_CONNECTOR_SVG: svgEnabled,
         MG_CONNECTOR_ABSOLUTE: absoluteEnabled,
+        MG_CONNECTOR_ARC: arcEnabled,
         MG_CONNECTOR_INTRINSIC_REVIEW: intrinsicReviewEnabled,
         MG_CONNECTOR_INTRINSIC_VALIDATION: intrinsicValidationEnabled,
         MG_CONNECTOR_REVIEW_SURFACES: reviewSurfacesEnabled,
