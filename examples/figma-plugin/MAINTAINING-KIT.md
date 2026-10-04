@@ -610,3 +610,11 @@ Run `node examples/figma-plugin/dev/mock-core-content-capabilities.cjs` for stan
 Close the development plugin before editing watched UI source or rebuilding its bundle. A sandbox reload discards pending inspections and unsaved receipts. The latest native UX checkpoint is recorded in [the architecture document](KIT-ARCHITECTURE.md#incremental-ux-checkpoint-4-october-2026).
 
 Bounded connector builds use the registry’s compact scope-and-contract link to stay below the existing 50,000-character/byte limit. Desktop builds and **Update kit guidance** apply full consumer prose. Re-run the packet harness after changing either description format; do not raise the transport gate.
+
+## Card/Hero media and planned entries
+
+Use [Card/Hero status](CARD-HERO-STATUS.md) for finite source presets, consumer checks and media limits. New families start outside the core allowlist until explicitly reviewed. Select them individually; import variables without pruning before building affected families.
+
+The exporter embeds the repository sample JPEG and derives gradient alpha colours from source roles. Consumer image fills are local overrides; source media layers retain stable IDs. Native nested instance recipes use `overrides`, not `properties`, for action labels. Keep family/variant/layer/property keys stable. Exporter normalization is part of the identity contract, so never splice raw recipe trees into a previously normalized JSON document.
+
+The generated `plannedInventory` scans named Storybook examples without executing them. Add explicit source-export-to-existing-variant mappings only where the mapping is justified; they describe scaffolds, not acceptance. Catalogue rows reconcile from source and keep stable path IDs. Put personal notes outside generated rows. Source-file renames/removals and manual content inside a generated row need an explicit reviewed migration.

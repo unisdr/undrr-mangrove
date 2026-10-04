@@ -159,6 +159,102 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
       ? mainMatches[0]
       : null;
   if (!main) gap('missing-or-ambiguous-main-root');
+  const organizedParent = (set, familyId) => {
+    const boards = mainNodes.get(`layout/family/${familyId}/main`) || [];
+    const overviews = mainNodes.get(`layout/family/${familyId}/overview`) || [];
+    if (
+      boards.length !== 1 ||
+      boards[0].type !== 'FRAME' ||
+      set.parentId !== boards[0].id ||
+      overviews.length !== 1 ||
+      overviews[0].type !== 'FRAME' ||
+      boards[0].parentId !== overviews[0].id
+    )
+      return false;
+    // Organized ownership must be evidenced by both actual parents and the
+    // saved ancestry. A matching wrapper name alone is not sufficient.
+    const verifiedAncestors = new Set();
+    for (const node of [set, boards[0], overviews[0]]) {
+      if (!Array.isArray(node.ancestry) || !node.ancestry.length) return false;
+      let parentId = node.parentId;
+      for (const ancestor of node.ancestry) {
+        if (ancestor.id !== parentId) return false;
+        const actual = nativeById.get(parentId);
+        if (!actual) {
+          // Page/document records may not be serialized, but cannot establish
+          // the ownership of a later, disconnected layout section.
+          if (!['PAGE', 'DOCUMENT'].includes(ancestor.type)) return false;
+          break;
+        }
+        if (actual.type !== ancestor.type || actual.name !== ancestor.name)
+          return false;
+        if (node === set) verifiedAncestors.add(actual.id);
+        parentId = actual.parentId;
+      }
+    }
+    const expectedSection =
+      doc.kitGuidance?.families?.find(item => item.id === familyId)?.status ===
+      'outside-core'
+        ? 'layout/pending'
+        : 'layout/components';
+    const sections = mainNodes.get(expectedSection) || [];
+    return (
+      sections.length === 1 &&
+      sections[0].type === 'SECTION' &&
+      verifiedAncestors.has(sections[0].id)
+    );
+  };
+  const directSourceFace = (node, sourceStyle, familyId, key, check) => {
+    const face = value => ({
+      fontName: value.fontName,
+      fontSize: value.fontSize,
+      lineHeight: value.lineHeight,
+    });
+    const values = Object.values(sourceStyle?.values || {});
+    const hasModeEvidence =
+      inspection.collections !== undefined ||
+      doc.modes !== undefined ||
+      node.resolvedVariableModes !== undefined;
+    if (!hasModeEvidence) {
+      // Older fabricated/saved evidence remains usable only when choosing a
+      // brand cannot affect the typography being checked.
+      if (
+        values.length &&
+        new Set(values.map(value => json(face(value)))).size === 1
+      ) {
+        check.sourceModeEvidence = { kind: 'identical-source-faces' };
+        return face(values[0]);
+      }
+    } else {
+      const collections = (
+        Array.isArray(inspection.collections) ? inspection.collections : []
+      ).filter(item => item?.name === doc.collection);
+      const collection = collections.length === 1 ? collections[0] : null;
+      const modeId = collection && node.resolvedVariableModes?.[collection.id];
+      const modes = (
+        Array.isArray(collection?.modes) ? collection.modes : []
+      ).filter(
+        item => typeof modeId === 'string' && modeId && item?.modeId === modeId
+      );
+      const sourceModes = (Array.isArray(doc.modes) ? doc.modes : []).filter(
+        item => modes.length === 1 && item?.name === modes[0].name
+      );
+      const sourceMode = sourceModes.length === 1 ? sourceModes[0] : null;
+      const value = sourceMode && sourceStyle?.values?.[sourceMode.id];
+      if (collection && modes.length === 1 && sourceMode && value) {
+        check.sourceModeEvidence = {
+          kind: 'resolved-native-mode',
+          collectionId: collection.id,
+          nativeModeId: modeId,
+          sourceModeId: sourceMode.id,
+          sourceModeName: sourceMode.name,
+        };
+        return face(value);
+      }
+    }
+    gap('ambiguous-direct-source-typography', { familyId, path: key });
+    return null;
+  };
   for (const familyId of requested) {
     const recipe = source.get(familyId);
     if (!recipe) {
@@ -211,7 +307,7 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
       report.scope.skipped.push(familyId);
       continue;
     }
-    if (!main || set.parentId !== main.id)
+    if ((!main || set.parentId !== main.id) && !organizedParent(set, familyId))
       gap('wrong-main-family-parent', { familyId, nodeId: set.id });
     report.scope.checked.push(familyId);
     const expectedPaths = new Set(),
@@ -285,9 +381,15 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
           if (
             tree.textStyleApplication !== undefined &&
             (!direct ||
-              familyId !== 'toc-link' ||
               tree.textProperty !== 'Label' ||
-              tree.textStyle !== 'component.table-of-contents.link')
+              !(
+                (familyId === 'toc-link' &&
+                  tree.textStyle === 'component.table-of-contents.link') ||
+                (familyId === 'editorial-cta' &&
+                  /^component\.editorial-cta\.label(?:-hover|-focus)?$/.test(
+                    tree.textStyle
+                  ))
+              ))
           )
             gap('unsupported-text-style-application', { familyId, path: key });
           if (!sourceStyle)
@@ -321,21 +423,14 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
               });
             if (direct) {
               report.counts.directTypography++;
-              // The scoped source guard currently requires identical Latin
-              // typography across brands. Fail closed if that contract changes.
-              const values = Object.values(sourceStyle?.values || {});
-              const faces = values.map(value => ({
-                fontName: value.fontName,
-                fontSize: value.fontSize,
-                lineHeight: value.lineHeight,
-              }));
-              if (!faces.length || new Set(faces.map(json)).size !== 1)
-                gap('ambiguous-direct-source-typography', {
-                  familyId,
-                  path: key,
-                });
-              else {
-                const expected = faces[0];
+              const expected = directSourceFace(
+                node,
+                sourceStyle,
+                familyId,
+                key,
+                check
+              );
+              if (expected) {
                 const face = value =>
                   value && { family: value.family, style: value.style };
                 const linePixels = (line, size) =>
@@ -392,7 +487,11 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
                     variable =>
                       variable.name === role &&
                       variable.resolvedType === type &&
-                      variable.mgId === definition[0]?.id
+                      variable.mgId === definition[0]?.id &&
+                      (check.sourceModeEvidence?.kind !==
+                        'resolved-native-mode' ||
+                        variable.variableCollectionId ===
+                          check.sourceModeEvidence.collectionId)
                   ) || [];
                 if (definition.length !== 1 || imported.length !== 1)
                   gap('missing-or-ambiguous-direct-typography-variable', {

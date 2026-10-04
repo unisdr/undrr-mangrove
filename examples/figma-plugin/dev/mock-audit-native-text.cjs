@@ -292,6 +292,128 @@ function main() {
     'ok  duplicate/missing native style or main identities, reused style IDs and wrong construction parents block acceptance'
   );
 
+  const organized = fixture();
+  organized.doc.kitGuidance = {
+    families: [
+      { id: 'alpha', status: 'bounded-draft' },
+      { id: 'beta', status: 'outside-core' },
+    ],
+  };
+  for (const [section, familyId] of [
+    ['components', 'alpha'],
+    ['pending', 'beta'],
+  ]) {
+    organized.inspection.nodes.push(
+      {
+        id: `section:${section}`,
+        mgKitId: `layout/${section}`,
+        name: section,
+        type: 'SECTION',
+        parentId: 'synthetic-page',
+      },
+      {
+        id: `overview:${familyId}`,
+        mgKitId: `layout/family/${familyId}/overview`,
+        name: familyId,
+        type: 'FRAME',
+        parentId: `section:${section}`,
+      },
+      {
+        id: `board:${familyId}`,
+        mgKitId: `layout/family/${familyId}/main`,
+        name: 'Source components',
+        type: 'FRAME',
+        parentId: `overview:${familyId}`,
+      }
+    );
+    organized.inspection.nodes.find(
+      node => node.mgKitId === `family/${familyId}`
+    ).parentId = `board:${familyId}`;
+  }
+  const organizedById = new Map(
+    organized.inspection.nodes.map(node => [node.id, node])
+  );
+  for (const node of organized.inspection.nodes) {
+    node.ancestry = [];
+    let parent = organizedById.get(node.parentId);
+    while (parent) {
+      node.ancestry.push({
+        id: parent.id,
+        type: parent.type,
+        name: parent.name,
+      });
+      parent = organizedById.get(parent.parentId);
+    }
+    node.ancestry.push({ id: 'synthetic-page', type: 'PAGE' });
+  }
+  assert(
+    auditNativeText(organized.inspection, organized.doc).passed,
+    'Exact organized source boards and current parent/ancestry chains are accepted'
+  );
+  for (const mutate of [
+    fixture => {
+      fixture.nodes.find(n => n.id === 'board:alpha').mgKitId =
+        'layout/family/other/main';
+    },
+    fixture => {
+      fixture.nodes.find(n => n.id === 'board:alpha').type = 'RECTANGLE';
+    },
+    fixture => {
+      fixture.nodes.find(n => n.id === 'board:alpha').parentId =
+        'overview:beta';
+    },
+    fixture => {
+      fixture.nodes.find(n => n.mgKitId === 'family/alpha').ancestry[0].id =
+        'stale-board';
+    },
+    fixture => {
+      fixture.nodes.find(n => n.id === 'section:components').mgKitId =
+        'layout/patterns';
+    },
+    fixture => {
+      fixture.nodes.push({
+        ...copy(fixture.nodes.find(n => n.id === 'board:alpha')),
+        id: 'duplicate-board',
+      });
+    },
+    fixture => {
+      delete fixture.nodes.find(n => n.mgKitId === 'family/alpha').ancestry;
+    },
+    fixture => {
+      const overview = fixture.nodes.find(n => n.id === 'overview:alpha');
+      const section = fixture.nodes.find(n => n.id === 'section:components');
+      overview.parentId = 'synthetic-page';
+      for (const id of [
+        'synthetic-set:alpha',
+        'board:alpha',
+        'overview:alpha',
+      ]) {
+        const node = fixture.nodes.find(n => n.id === id);
+        node.ancestry = node.ancestry.filter(
+          ancestor => ancestor.id !== section.id
+        );
+        // A fabricated section after the unrecorded PAGE cannot prove that
+        // the actual parent chain reaches an owned component section.
+        node.ancestry.push({
+          id: section.id,
+          type: section.type,
+          name: section.name,
+        });
+      }
+    },
+  ]) {
+    const invalid = copy(organized);
+    mutate(invalid.inspection);
+    assert(
+      auditNativeText(invalid.inspection, invalid.doc).gaps.some(
+        gap => gap.code === 'wrong-main-family-parent'
+      )
+    );
+  }
+  console.log(
+    'ok  organized v2 uses exact source-board/overview/section ownership and saved ancestry; wrong, duplicate, moved or unproven wrappers refuse'
+  );
+
   const partial = copy(inspection);
   partial.nodes = partial.nodes.filter(
     n => !n.mgKitId.startsWith('family/beta')
@@ -461,6 +583,141 @@ function main() {
   }
   console.log(
     'ok  scoped DIRECT templates retain typography/binding checks and reject stale associations, missing aliases, wrong type and ambiguous source modes'
+  );
+
+  const branded = copy(direct);
+  branded.doc.collection = 'Mangrove';
+  branded.doc.modes = [
+    { id: 'undrr', name: 'UNDRR' },
+    { id: 'mcr', name: 'MCR2030' },
+  ];
+  branded.inspection.collections = [
+    {
+      id: 'synthetic-collection',
+      name: 'Mangrove',
+      modes: [
+        { modeId: 'native-undrr', name: 'UNDRR' },
+        { modeId: 'native-mcr', name: 'MCR2030' },
+      ],
+    },
+  ];
+  branded.doc.components.families[0].id = 'editorial-cta';
+  const editorialStyle = 'component.editorial-cta.label-hover';
+  branded.doc.styles.text[0].id = editorialStyle;
+  branded.doc.styles.text[0].bindings.fontSize = 'font-size/button';
+  branded.doc.variables[1].id = 'font-size.button';
+  branded.doc.variables[1].name = 'font-size/button';
+  branded.inspection.variables[1].mgId = 'font-size.button';
+  branded.inspection.variables[1].name = 'font-size/button';
+  for (const variable of branded.inspection.variables)
+    variable.variableCollectionId = 'synthetic-collection';
+  branded.doc.styles.text[0].values = Object.fromEntries(
+    [14, 18].map((size, index) => [
+      index ? 'mcr' : 'undrr',
+      {
+        fontName: { family: 'Roboto', style: 'Bold' },
+        fontSize: size,
+        lineHeight: { unit: 'PERCENT', value: 100 },
+      },
+    ])
+  );
+  function editorialTree(tree) {
+    if (tree.type === 'TEXT') tree.textStyle = editorialStyle;
+    for (const child of tree.children || []) editorialTree(child);
+  }
+  for (const variant of branded.doc.components.families[0].variants)
+    editorialTree(variant.tree);
+  const setBrand = (fixture, size, modeId) => {
+    Object.assign(fixture.inspection.styles.text[0], {
+      mgStyleId: editorialStyle,
+      fontName: { family: 'Roboto', style: 'Bold' },
+      fontSize: size,
+      lineHeight: { unit: 'PERCENT', value: 100 },
+    });
+    for (const node of fixture.inspection.nodes) {
+      node.mgKitId = node.mgKitId.replace(
+        'family/toc-link',
+        'family/editorial-cta'
+      );
+      if (
+        node.type === 'TEXT' &&
+        node.id.startsWith('synthetic-node:family/alpha')
+      )
+        Object.assign(node, {
+          fontName: { family: 'Roboto', style: 'Bold' },
+          fontSize: size,
+          lineHeight: { unit: 'PERCENT', value: 100 },
+          resolvedVariableModes: { 'synthetic-collection': modeId },
+        });
+    }
+  };
+  for (const [size, modeId, sourceModeId] of [
+    [14, 'native-undrr', 'undrr'],
+    [18, 'native-mcr', 'mcr'],
+  ]) {
+    setBrand(branded, size, modeId);
+    const audit = auditNativeText(branded.inspection, branded.doc);
+    assert(audit.passed, JSON.stringify(audit.gaps));
+    assert(
+      audit.checks
+        .filter(check => check.textStyleApplication === 'DIRECT')
+        .every(check => check.sourceModeEvidence.sourceModeId === sourceModeId)
+    );
+  }
+  const brandedLabel = fixture =>
+    fixture.inspection.nodes.find(
+      node =>
+        node.type === 'TEXT' &&
+        node.id.startsWith('synthetic-node:family/alpha')
+    );
+  for (const mutate of [
+    fixture => {
+      delete brandedLabel(fixture).resolvedVariableModes;
+    },
+    fixture => {
+      brandedLabel(fixture).resolvedVariableModes['synthetic-collection'] =
+        'unknown';
+    },
+    fixture => {
+      fixture.inspection.collections = [];
+    },
+    fixture => {
+      fixture.inspection.collections.push(
+        copy(fixture.inspection.collections[0])
+      );
+    },
+    fixture => {
+      fixture.doc.modes.push({ id: 'other', name: 'MCR2030' });
+    },
+    fixture => {
+      fixture.inspection.collections[0].modes[1].name = 'Unknown brand';
+    },
+    fixture => {
+      brandedLabel(fixture).fontSize = 14;
+    },
+    fixture => {
+      fixture.inspection.styles.text[0].fontSize = 14;
+    },
+    fixture => {
+      fixture.inspection.variables[1].variableCollectionId = 'foreign';
+    },
+  ]) {
+    const invalid = copy(branded);
+    mutate(invalid);
+    assert.strictEqual(
+      auditNativeText(invalid.inspection, invalid.doc).passed,
+      false
+    );
+  }
+  const partialMode = copy(direct);
+  partialMode.inspection.collections = [];
+  assert.strictEqual(
+    auditNativeText(partialMode.inspection, partialMode.doc).passed,
+    false,
+    'Partial mode evidence must not use identical-face legacy fallback'
+  );
+  console.log(
+    'ok  resolved Mangrove native mode selects UNDRR14/MCR18 DIRECT typography; missing, conflicting or partial mode evidence and stale type refuse'
   );
 
   const directory = fs.mkdtempSync(

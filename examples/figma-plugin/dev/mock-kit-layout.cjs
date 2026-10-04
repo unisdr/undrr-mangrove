@@ -673,6 +673,157 @@ async function main() {
     'ok actual source migration and two ordinary repeats preserve canonical/property IDs, unadopted overrides, manual assets and section-local notes'
   );
   {
+    const catalogueKey = 'layout/compositions/catalogue';
+    const catalogue = owned(env, catalogueKey);
+    assert.strictEqual(catalogue.type, 'FRAME');
+    assert.strictEqual(key(catalogue.parent), 'layout/compositions');
+    assert(
+      catalogue.findAll().every(node => ['FRAME', 'TEXT'].includes(node.type)),
+      'Planned documentation must not create fake Assets masters, variants or instances'
+    );
+    const rows = catalogue.children.filter(node =>
+      key(node).startsWith(`${catalogueKey}/entry/`)
+    );
+    assert.strictEqual(rows.length, doc.plannedInventory.entries.length);
+    assert.strictEqual(
+      rows.length,
+      doc.plannedInventory.counts.includedStoryFiles
+    );
+    assert.strictEqual(
+      owned(env, `${catalogueKey}/body`).characters.startsWith(
+        `${rows.length} source catalogue entries.`
+      ),
+      true
+    );
+    for (const entry of doc.plannedInventory.entries) {
+      const rowKey = `${catalogueKey}/entry/${entry.id}`;
+      const row = owned(env, rowKey);
+      assert.strictEqual(row.type, 'FRAME');
+      assert.strictEqual(key(row.parent), catalogueKey);
+      assert.strictEqual(row.children.length, 2);
+      assert(row.children.every(node => node.type === 'TEXT'));
+      assert.strictEqual(
+        row.name,
+        `${entry.scaffoldFamilyIds.length ? 'Partial scaffold' : 'Not yet implemented'} / ${entry.label}`
+      );
+      const title = owned(env, `${rowKey}/title`).characters;
+      assert(title.startsWith(`${entry.label} · `));
+      const body = owned(env, `${rowKey}/body`).characters;
+      assert(body.includes(entry.catalogueTitle));
+      assert(body.includes(entry.source));
+      assert(body.includes('Source examples still to map or verify:'));
+      for (const example of entry.remainingExamples.slice(0, 6))
+        assert(body.includes(example.label));
+      if (entry.remainingExamples.length > 6)
+        assert(
+          body.includes(`plus ${entry.remainingExamples.length - 6} more`)
+        );
+      if (entry.scaffoldFamilyIds.length)
+        assert(
+          body.includes(
+            `Related families: ${entry.scaffoldFamilyIds.join(', ')}.`
+          )
+        );
+    }
+    const before = subtree(catalogue);
+    const savedIds = [...env.state.nodes.keys()].sort();
+    const restarted = await restart(env)(
+      'buildMangroveComponents',
+      doc,
+      'undrr',
+      selected
+    );
+    assert.deepStrictEqual(copy(restarted.errors), []);
+    assert.strictEqual(restarted.createdNodeIds.length, 0);
+    assert.strictEqual(restarted.layout.createdNodeIds.length, 0);
+    assert.deepStrictEqual(subtree(catalogue), before);
+    assert.deepStrictEqual([...env.state.nodes.keys()].sort(), savedIds);
+    console.log(
+      'ok actual planned catalogue uses source-counted keyed FRAME/TEXT rows only, truthful source/example labels and exact zero-create ordinary restart identities'
+    );
+  }
+  for (const owner of [
+    'layout/compositions/catalogue',
+    `layout/compositions/catalogue/entry/${doc.plannedInventory.entries[0].id}`,
+  ]) {
+    const invalid = await fixture();
+    await invalid.call('organizeMangroveKit', doc, 'undrr');
+    const note = invalid.figma.createText();
+    note.characters = 'Designer-owned catalogue note';
+    owned(invalid, owner).appendChild(note);
+    note.x = 73;
+    note.y = 41;
+    await refuse(invalid, doc, `manual content inside ${owner}`);
+  }
+  console.log(
+    'ok manual content in generated planned catalogue or source row causes mutation-free refusal rather than adoption/deletion'
+  );
+  {
+    const scaffoldIds = [
+      'card-vertical',
+      'card-horizontal',
+      'hero-background',
+      'hero-split',
+    ];
+    const scaffold = environment(doc);
+    await importFoundation(scaffold, doc);
+    const built = await scaffold.call(
+      'buildMangroveComponents',
+      doc,
+      'undrr',
+      scaffoldIds
+    );
+    assert.deepStrictEqual(copy(built.errors), []);
+    const canonicalBefore = originals(scaffold);
+    const organized = await scaffold.call('organizeMangroveKit', doc, 'undrr');
+    assert.deepStrictEqual(copy(organized.errors), []);
+    assert.strictEqual(doc.kitGuidance.scope.coreFamilyCount, 25);
+    assert.strictEqual(doc.kitGuidance.scope.scaffoldFamilyCount, 4);
+    const browsing = doc.kitGuidance.groups.find(
+      group => group.id === 'content-data'
+    );
+    for (const id of scaffoldIds) {
+      const meta = doc.kitGuidance.families.find(item => item.id === id);
+      assert.strictEqual(meta.status, 'source-scaffold');
+      assert.strictEqual(meta.groupId, 'content-data');
+      const overview = owned(scaffold, `layout/family/${id}/overview`);
+      assert(
+        owned(
+          scaffold,
+          `layout/family/${id}/overview/body`
+        ).characters.startsWith('New source scaffold, acceptance pending\n')
+      );
+      if (meta.kind === 'primary') {
+        assert(browsing.familyIds.includes(id));
+        assert.strictEqual(key(overview.parent), 'layout/group/content-data');
+      } else {
+        assert(!browsing.familyIds.includes(id));
+        assert.strictEqual(
+          key(overview.parent),
+          `layout/family/${meta.parentFamilyId}/advanced`
+        );
+      }
+      assert.strictEqual(
+        key(owned(scaffold, `family/${id}`).parent),
+        `layout/family/${id}/main`
+      );
+    }
+    assertOriginals(scaffold, canonicalBefore);
+    const savedIds = [...scaffold.state.nodes.keys()].sort();
+    const repeated = await scaffold.call(
+      'buildMangroveComponents',
+      doc,
+      'undrr',
+      scaffoldIds
+    );
+    assert.deepStrictEqual(copy(repeated.errors), []);
+    assert.strictEqual(repeated.createdNodeIds.length, 0);
+    assert.deepStrictEqual([...scaffold.state.nodes.keys()].sort(), savedIds);
+    console.log(
+      'ok four actual Card/Hero source scaffolds retain acceptance-pending status outside the25-family core and browse in Content and data with advanced orientation/layout alternatives'
+    );
+  }
+  {
     // A bounded synthetic recipe delta uses an existing valid semantic role.
     // This checks dependency identities and explicit master paint application;
     // native nested-instance propagation remains a separate visual gate.

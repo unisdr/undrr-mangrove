@@ -50,12 +50,15 @@ async function inspectMangroveNavigation(doc) {
     .filter(
       item =>
         item.kind === 'primary' &&
-        item.status === 'bounded-draft' &&
+        item.status !== 'outside-core' &&
         index.has(`family/${item.id}`)
     )
     .map(item => ({
       id: item.id,
-      label: item.label,
+      label:
+        item.status === 'source-scaffold'
+          ? `${item.label} (new scaffold)`
+          : item.label,
       group:
         guidance.groups.find(group => group.id === item.groupId)?.label || '',
       hasExamples: index.has(`review/${item.id}`),
@@ -176,7 +179,9 @@ async function refreshMangroveGuidance(doc) {
       !known.has(item.id) ||
       seen.has(item.id) ||
       !item.description ||
-      !['bounded-draft', 'outside-core'].includes(item.status)
+      !['bounded-draft', 'source-scaffold', 'outside-core'].includes(
+        item.status
+      )
     )
       throw new Error('Invalid or incomplete consumer guidance.');
     seen.add(item.id);

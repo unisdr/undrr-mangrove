@@ -7,7 +7,7 @@
  * - groups: {id,label,familyIds}, ordered primary browsing entries only;
  * - families: every family once, in widget-first task order, with id, label,
  *   groupId, kind (primary/support), optional parentFamilyId/supportRole,
- *   status (bounded-draft/outside-core), purpose, usage, supported[],
+ *   status (bounded-draft/outside-core/source-scaffold), purpose, usage, supported[],
  *   limitations[], docsUrl, a full native description and a compact connectorDescription.
  *
  * Support parts remain construction families. Their presence does not imply
@@ -31,6 +31,71 @@ const SCOPE =
 // Status follows CORE-KIT-STATUS.md, not older construction descriptions.
 // Geometry and font details remain in source recipes; this is usage guidance.
 const ENTRIES = [
+  {
+    id: 'card-vertical',
+    label: 'Card / Vertical',
+    groupId: 'content-data',
+    status: 'source-scaffold',
+    purpose: 'Introduce editorial content with optional media and an action.',
+    usage:
+      'Choose a declared orientation, viewport and colour treatment; edit text and optional visibility on a linked instance. Replace the image fill on the media layer.',
+    supported: [
+      'Source-derived unlinked Vertical presets; editable content and a linked button-only editorial action. Horizontal is an advanced orientation alternative.',
+    ],
+    limitations: [
+      'New scaffold: native consumer and rendered acceptance are recorded separately from the existing core preset.',
+      'Book, Icon and Stats cards, responsive browser behaviour, rich HTML and group equal-height behaviour remain separate scopes.',
+    ],
+  },
+  {
+    id: 'hero-background',
+    label: 'Hero / Background',
+    groupId: 'content-data',
+    status: 'source-scaffold',
+    purpose: 'Lead a page or feature with a headline, photograph and actions.',
+    usage:
+      'Choose an explicit source layout and viewport preset. Edit headline and supporting content, replace media and keep actions linked. A resize does not switch breakpoints.',
+    supported: [
+      'Source-derived background banner/panel layouts with native image fills. Split layouts are an advanced alternative.',
+    ],
+    limitations: [
+      'New scaffold: native consumer and rendered acceptance are recorded separately from the existing core preset.',
+      'Immersive, child hero, custom HTML, video, RTL and arbitrary responsive content remain separate scopes.',
+    ],
+  },
+  {
+    id: 'card-horizontal',
+    label: 'Card / Horizontal',
+    groupId: 'content-data',
+    kind: 'support',
+    parentFamilyId: 'card-vertical',
+    supportRole: 'orientation-alternative',
+    status: 'source-scaffold',
+    purpose: 'Offer the source horizontal and phone-stacked card composition.',
+    usage:
+      'Choose Desktop or Mobile explicitly, edit unlinked content and retain the nested action.',
+    supported: ['Four colour treatments at declared desktop and phone widths.'],
+    limitations: [
+      'New source scaffold; linked title, hover/focus and arbitrary resizing are separate acceptance scopes.',
+    ],
+  },
+  {
+    id: 'hero-split',
+    label: 'Hero / Split',
+    groupId: 'content-data',
+    kind: 'support',
+    parentFamilyId: 'hero-background',
+    supportRole: 'layout-alternative',
+    status: 'source-scaffold',
+    purpose: 'Pair a source solid hero content panel with a photograph.',
+    usage: 'Choose a declared desktop column ratio or mobile stacked preset.',
+    supported: [
+      'Four colour treatments, three desktop ratios and a stacked phone layout.',
+    ],
+    limitations: [
+      'New source scaffold; no live video or custom HTML, browser grid reflow or arbitrary width/content guarantee.',
+    ],
+  },
   {
     id: 'button',
     label: 'Button',
@@ -76,7 +141,7 @@ const ENTRIES = [
       'Source recipes and native assets exist for declared editorial/Hero contexts.',
     ],
     limitations: [
-      'Native Label styling does not yet preserve Default/Hover appearances; edited consumers need a separate repair.',
+      'Canonical Default/Hover/Focus Label formatting is repaired; broader edited state-switch and resize contracts remain outside core acceptance.',
       'This family is outside core use; a plan upgrade does not repair it.',
     ],
   },
@@ -513,12 +578,17 @@ function buildKitGuidance(families) {
       status: entry.status || 'bounded-draft',
       supported: [...entry.supported],
       limitations: [...entry.limitations],
-      docsUrl: `${DOCS}#${entry.status === 'outside-core' ? 'deferred-and-blocked-work' : 'core-scope'}`,
+      docsUrl:
+        entry.status === 'source-scaffold'
+          ? DOCS.replace('CORE-KIT-STATUS.md', 'CARD-HERO-STATUS.md')
+          : `${DOCS}#${entry.status === 'outside-core' ? 'deferred-and-blocked-work' : 'core-scope'}`,
     };
     value.description = [
       value.status === 'outside-core'
         ? 'Not in core scope.'
-        : 'Bounded draft use: local UNDRR source presets.',
+        : value.status === 'source-scaffold'
+          ? 'New source scaffold. Native acceptance is separate from core use.'
+          : 'Bounded draft use: local UNDRR source presets.',
       value.kind === 'support'
         ? `Supporting ${value.supportRole === 'size-alternative' ? 'size alternative' : 'part'} of ${ENTRIES.find(parent => parent.id === value.parentFamilyId).label}.`
         : '',
@@ -533,7 +603,9 @@ function buildKitGuidance(families) {
     value.connectorDescription = [
       value.status === 'outside-core'
         ? 'Not in core scope.'
-        : 'Bounded UNDRR draft.',
+        : value.status === 'source-scaffold'
+          ? 'New source scaffold. Native acceptance pending.'
+          : 'Bounded UNDRR draft.',
       `Supported edits and limits: ${value.docsUrl}`,
     ].join('\n');
     return value;
@@ -550,6 +622,9 @@ function buildKitGuidance(families) {
         .length,
       outsideCoreFamilyCount: ordered.filter(
         entry => entry.status === 'outside-core'
+      ).length,
+      scaffoldFamilyCount: ordered.filter(
+        entry => entry.status === 'source-scaffold'
       ).length,
     },
     groups: GROUPS.map(group => ({

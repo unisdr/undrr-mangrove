@@ -332,7 +332,9 @@ function mgLayoutGuidance(doc) {
       families.has(family.id) ||
       !groups.has(family.groupId) ||
       !['primary', 'support'].includes(family.kind) ||
-      !['bounded-draft', 'outside-core'].includes(family.status) ||
+      !['bounded-draft', 'source-scaffold', 'outside-core'].includes(
+        family.status
+      ) ||
       ['label', 'purpose', 'usage'].some(
         field => typeof family[field] !== 'string' || !family[field].trim()
       ) ||
@@ -424,6 +426,55 @@ async function mgLayoutPreflight(
     version === '1' ||
     (partial && mgReadIdentity(start, 'mgLayoutFromVersion') === '1');
   const { registry, families } = guidance;
+  const planned = doc.plannedInventory;
+  if (
+    planned &&
+    (planned.version !== 1 ||
+      planned.representation !== 'documentation-only' ||
+      !Array.isArray(planned.entries) ||
+      new Set(planned.entries.map(entry => entry.id)).size !==
+        planned.entries.length)
+  )
+    throw new Error(
+      'Planned catalogue requires a unique documentation-only source inventory.'
+    );
+  for (const [key, node] of index) {
+    if (!key.startsWith('layout/compositions/catalogue')) continue;
+    const entry = planned?.entries.find(
+      item => key === `layout/compositions/catalogue/entry/${item.id}`
+    );
+    const expected =
+      key === 'layout/compositions/catalogue'
+        ? 'layout/compositions'
+        : entry
+          ? 'layout/compositions/catalogue'
+          : null;
+    if (expected && mgReadIdentity(node.parent, 'mgKitId') !== expected)
+      throw new Error(
+        `Planned catalogue ${key} was moved; preserve it before updating.`
+      );
+    if (key === 'layout/compositions/catalogue' || entry) {
+      const allowed = new Set(
+        key === 'layout/compositions/catalogue'
+          ? [
+              `${key}/title`,
+              `${key}/body`,
+              ...(planned?.entries || []).map(
+                item => `${key}/entry/${item.id}`
+              ),
+            ]
+          : [`${key}/title`, `${key}/body`]
+      );
+      if (
+        node.children.some(
+          child => !allowed.has(mgReadIdentity(child, 'mgKitId'))
+        )
+      )
+        throw new Error(
+          `Manual or retired content in ${key}; keep notes beside generated catalogue rows.`
+        );
+    }
+  }
   if (registry.size !== doc.components.families.length)
     throw new Error('Duplicate source family identifiers.');
   for (const [key, node] of index) {
@@ -606,7 +657,7 @@ async function mgLayoutPreflight(
       allowed = new Set([
         `${key}/title`,
         ...group.familyIds
-          .filter(id => families.get(id).status === 'bounded-draft')
+          .filter(id => families.get(id).status !== 'outside-core')
           .map(id => `layout/family/${id}/overview`),
       ]);
       expectedParent = 'layout/components';
@@ -1043,11 +1094,71 @@ async function organizeMangroveKit(
       'Find a component by task',
       'Browse complete controls and content. Each family pairs its usage and states with source components. Advanced parts belong to their complete component. Bounded draft use applies only to the documented brand, content and sizing contracts.'
     );
-    await info(
+    const examplesIntro = await info(
       'compositions',
       'Examples and templates',
-      'Accepted page templates are not available yet. Component usage examples live beside their families in Components. This destination is a placeholder for future accepted page compositions, not a populated template library.'
+      'Accepted page templates are not available yet. Component usage examples live beside their families in Components. The planned catalogue below records source components and examples still to implement or verify. Its entries are documentation, not usable Assets or accepted templates.'
     );
+    let catalogue;
+    if (doc.plannedInventory) {
+      catalogue = frame(
+        'layout/compositions/catalogue',
+        sections.get('compositions'),
+        'Planned catalogue / documentation only',
+        2800
+      );
+      const title = await text(
+        'layout/compositions/catalogue/title',
+        catalogue,
+        'Not yet implemented and source examples still to verify',
+        28,
+        2736
+      );
+      const body = await text(
+        'layout/compositions/catalogue/body',
+        catalogue,
+        `${doc.plannedInventory.entries.length} source catalogue entries. A scaffold does not imply that every source example is implemented or accepted. These stubs never appear as components in Assets. See COMPONENT-INVENTORY.md and the generated plannedInventory for full source names and coverage.`,
+        16,
+        2736
+      );
+      const rows = [];
+      for (const entry of doc.plannedInventory.entries) {
+        const key = `layout/compositions/catalogue/entry/${entry.id}`;
+        const row = frame(
+          key,
+          catalogue,
+          `${entry.scaffoldFamilyIds.length ? 'Partial scaffold' : 'Not yet implemented'} / ${entry.label}`,
+          880
+        );
+        await text(
+          `${key}/title`,
+          row,
+          `${entry.label} · ${entry.scaffoldFamilyIds.length ? 'Scaffold exists; remaining scope' : 'Not yet implemented'}`,
+          18,
+          832
+        );
+        const examples = entry.remainingExamples || [];
+        const preview = examples
+          .slice(0, 6)
+          .map(item => item.label)
+          .join(', ');
+        await text(
+          `${key}/body`,
+          row,
+          `${entry.catalogueTitle}\n${entry.source}\n${entry.scaffoldFamilyIds.length ? `Related families: ${entry.scaffoldFamilyIds.join(', ')}.\n` : ''}Source examples still to map or verify: ${preview || 'Declared mappings need native verification'}${examples.length > 6 ? `; plus ${examples.length - 6} more in the source inventory` : ''}.\nStatic source stories can also describe browser behaviour, not a distinct visual variant.`,
+          14,
+          832
+        );
+        rows.push(row);
+      }
+      mgLayoutBrowseFlow(catalogue, [title, body], rows, 3);
+      catalogue.x = 32;
+      catalogue.y = examplesIntro.y + examplesIntro.height + 48;
+      mgLayoutLayerOrder(sections.get('compositions'), [
+        examplesIntro,
+        catalogue,
+      ]);
+    }
     await info(
       'patterns',
       'Your workspace',
@@ -1158,7 +1269,7 @@ async function organizeMangroveKit(
       const body = await text(
         `layout/family/${meta.id}/overview/body`,
         overview,
-        `${meta.status === 'bounded-draft' ? 'Bounded draft use' : 'Not in core scope'}\n${meta.purpose}\n${meta.usage}\nSupported: ${meta.supported.join('; ')}\nLimits: ${meta.limitations.join('; ')}`,
+        `${meta.status === 'bounded-draft' ? 'Bounded draft use' : meta.status === 'source-scaffold' ? 'New source scaffold, acceptance pending' : 'Not in core scope'}\n${meta.purpose}\n${meta.usage}\nSupported: ${meta.supported.join('; ')}\nLimits: ${meta.limitations.join('; ')}`,
         16,
         width - 64
       );

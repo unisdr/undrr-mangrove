@@ -703,6 +703,10 @@ function buildFigmaVariables() {
     variables: output,
     styles,
     components,
+    plannedInventory:
+      require('./figma-planned-inventory.cjs').buildPlannedInventory(
+        components.families
+      ),
     kitGuidance: require('./figma-kit-guidance.cjs').buildKitGuidance(
       components.families
     ),

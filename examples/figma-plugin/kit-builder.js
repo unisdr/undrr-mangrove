@@ -2,6 +2,101 @@
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
+// Source-embedded raster media uses native image fills, never network fetches.
+// Keep the recipe a FRAME so existing geometry/visibility/property ownership
+// and normal instance image overrides follow the established update contract.
+function mgImagePlan(tree) {
+  const image = tree.image;
+  if (
+    tree.type !== 'FRAME' ||
+    !image ||
+    typeof image !== 'object' ||
+    Array.isArray(image) ||
+    Object.keys(image).some(
+      key => !['assetId', 'base64', 'scaleMode'].includes(key)
+    ) ||
+    typeof image.assetId !== 'string' ||
+    !/^[a-z0-9][a-z0-9._-]*$/.test(image.assetId) ||
+    typeof image.base64 !== 'string' ||
+    !image.base64.length ||
+    image.base64.length > 4 * 1024 * 1024 ||
+    !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(
+      image.base64
+    ) ||
+    image.scaleMode !== 'FILL' ||
+    tree.fill ||
+    tree.children?.length
+  )
+    throw new Error(
+      'Image recipes require a leaf FRAME, a bounded embedded PNG/JPEG and FILL crop.'
+    );
+  const bytes = figma.base64Decode(image.base64);
+  const png =
+    bytes.length > 24 &&
+    [137, 80, 78, 71, 13, 10, 26, 10].every((v, i) => bytes[i] === v);
+  const jpeg =
+    bytes.length > 4 &&
+    bytes[0] === 255 &&
+    bytes[1] === 216 &&
+    bytes[bytes.length - 2] === 255 &&
+    bytes[bytes.length - 1] === 217;
+  if (!png && !jpeg)
+    throw new Error(`Image ${image.assetId} is not PNG or JPEG.`);
+  return { ...image, bytes };
+}
+function mgGradientPlan(tree) {
+  const gradient = tree.gradient;
+  if (
+    tree.type !== 'FRAME' ||
+    !gradient ||
+    Object.keys(gradient).join(',') !== 'layers' ||
+    !Array.isArray(gradient.layers) ||
+    !gradient.layers.length ||
+    gradient.layers.length > 2 ||
+    tree.fill ||
+    tree.image ||
+    tree.children?.length
+  )
+    throw new Error(
+      'Gradient recipes require a leaf FRAME and one or two source layers.'
+    );
+  for (const layer of gradient.layers) {
+    if (
+      !layer ||
+      Object.keys(layer).some(k => !['stops', 'transform'].includes(k)) ||
+      !Array.isArray(layer.stops) ||
+      layer.stops.length < 2 ||
+      layer.stops.length > 5 ||
+      !Array.isArray(layer.transform) ||
+      layer.transform.length !== 2 ||
+      layer.transform.some(
+        row =>
+          !Array.isArray(row) ||
+          row.length !== 3 ||
+          row.some(v => !Number.isFinite(v))
+      )
+    )
+      throw new Error('Invalid source gradient geometry.');
+    let previous = -1;
+    for (const stop of layer.stops) {
+      if (
+        !stop ||
+        Object.keys(stop).some(k => !['position', 'color'].includes(k)) ||
+        !Number.isFinite(stop.position) ||
+        stop.position < previous ||
+        stop.position < 0 ||
+        stop.position > 1 ||
+        typeof stop.color !== 'string' ||
+        !stop.color
+      )
+        throw new Error(
+          'Gradient stops need ordered 0..1 positions and COLOR variables.'
+        );
+      previous = stop.position;
+    }
+  }
+  return gradient;
+}
 const MG_SVG_KEY = 'mgSvgAsset';
 const MG_SVG_ENABLED =
   typeof MG_CONNECTOR_SVG === 'undefined' || MG_CONNECTOR_SVG;
@@ -661,14 +756,112 @@ async function buildMangroveComponents(
   const usedEffects = new Set();
   const directText = MG_DIRECT_TEXT_ENABLED ? new Map() : null;
   if (MG_DIRECT_TEXT_ENABLED) {
-    // One native-proven exception. Validate the whole selected scope before any
+    // Exact source profiles. Editorial native acceptance remains pending.
+    // Validate the whole selected scope before any
     // style/canvas writes, including when other selected families are valid.
     try {
       for (const family of ordered)
         for (const variant of family.variants)
           treeWalk(variant.tree, (tree, parent) => {
             if (tree.textStyleApplication === undefined) return;
-            if (
+            const editorial = family.id === 'editorial-cta';
+            let sizeRole = 'font-size/300';
+            if (editorial) {
+              const p = variant.properties || {};
+              const contexts = [
+                'Base',
+                'HeroPrimary',
+                'HeroTertiary',
+                'HeroQuaternary',
+              ];
+              const allowed = new Set();
+              for (const context of contexts) {
+                const states =
+                  context === 'Base'
+                    ? ['Default', 'Focus', 'Disabled']
+                    : ['Default', 'Focus'];
+                for (const state of states)
+                  allowed.add(
+                    [context, state, 'Short', 'NoPreference']
+                      .join('.')
+                      .toLowerCase()
+                  );
+                for (const motion of ['NoPreference', 'Reduce'])
+                  allowed.add(
+                    [context, 'Hover', 'Short', motion].join('.').toLowerCase()
+                  );
+                allowed.add(
+                  [context, 'Default', 'Long', 'NoPreference']
+                    .join('.')
+                    .toLowerCase()
+                );
+              }
+              for (const state of ['Hover', 'Focus'])
+                allowed.add(
+                  ['Base', state, 'Long', 'NoPreference']
+                    .join('.')
+                    .toLowerCase()
+                );
+              const identity = [p.Context, p.State, p.Content, p.Motion]
+                .join('.')
+                .toLowerCase();
+              const expectedStyle =
+                p.State === 'Focus'
+                  ? 'component.editorial-cta.label-focus'
+                  : p.State === 'Hover'
+                    ? 'component.editorial-cta.label-hover'
+                    : 'component.editorial-cta.label';
+              const expectedDecoration = ['Focus', 'Hover'].includes(p.State)
+                ? 'UNDERLINE'
+                : 'NONE';
+              const expectedOffset =
+                p.State === 'Hover'
+                  ? { unit: 'PERCENT', value: 20 }
+                  : { unit: 'AUTO' };
+              const expectedFill =
+                p.Context !== 'Base'
+                  ? 'color/neutral-0'
+                  : p.State === 'Hover'
+                    ? 'color/interactive-active'
+                    : 'color/text';
+              if (
+                tree.textStyleApplication !== 'DIRECT' ||
+                Object.keys(p).sort().join(',') !==
+                  'Content,Context,Motion,State' ||
+                !allowed.has(identity) ||
+                variant.id !== 'editorial-cta.' + identity ||
+                tree.type !== 'TEXT' ||
+                tree.name !== 'mg-button-cta / label' ||
+                ![
+                  'label',
+                  'mg-button mg-button-cta/mg-button-cta / label',
+                ].includes(tree.id) ||
+                tree.textProperty !== 'Label' ||
+                tree.textStyle !== expectedStyle ||
+                tree.textDecoration !== expectedDecoration ||
+                tree.textWrap !== 'AUTO' ||
+                JSON.stringify(tree.textDecorationOffset) !==
+                  JSON.stringify(expectedOffset) ||
+                tree.fill !== expectedFill ||
+                tree.stroke !== null ||
+                tree.layout?.width !==
+                  (p.Content === 'Long' ? 'FILL' : 'HUG') ||
+                tree.layout?.height !== 'HUG' ||
+                parent !== variant.tree ||
+                parent.type !== 'FRAME' ||
+                parent.name !== 'mg-button mg-button-cta' ||
+                !['action', 'mg-button mg-button-cta'].includes(parent.id) ||
+                (parent.id === 'action') !== (tree.id === 'label') ||
+                parent.children.length !== 2 ||
+                parent.children[0] !== tree ||
+                parent.children[1].type !== 'FRAME' ||
+                parent.children[1].name !== 'mg-button-cta / badge'
+              )
+                throw new Error(
+                  'DIRECT Editorial is restricted to its exact source-owned Label state.'
+                );
+              sizeRole = 'font-size/button';
+            } else if (
               tree.textStyleApplication !== 'DIRECT' ||
               family.id !== 'toc-link' ||
               !/^toc-link\.(240|390|900)\.(default|hover|focus|hoverfocus)$/.test(
@@ -688,28 +881,39 @@ async function buildMangroveComponents(
               parent.children.length !== 1
             )
               throw new Error(
-                'textStyleApplication DIRECT is restricted to source TOC Link label TEXT.'
+                'textStyleApplication DIRECT is restricted to source TOC or Editorial Label TEXT.'
               );
             const matches = doc.styles.text.filter(
               s => s.id === tree.textStyle
             );
             const template = matches[0],
               values = template?.values?.[brandId];
+            const expectedFontSize = editorial ? absoluteNumber(sizeRole) : 16;
             if (
               matches.length !== 1 ||
               (template.type !== undefined && template.type !== 'TEXT') ||
+              (editorial &&
+                (template.source?.file !==
+                  'stories/Components/Buttons/CtaButton/cta-button.scss' ||
+                  template.name !==
+                    'Mangrove/component/editorial-cta/' +
+                      tree.textStyle.split('.').at(-1))) ||
               template.bindings?.fontFamily !== 'font-family/text' ||
-              template.bindings?.fontSize !== 'font-size/300' ||
+              template.bindings?.fontSize !== sizeRole ||
               values?.fontName?.family !== 'Roboto' ||
-              values.fontName.style !== 'Regular' ||
-              values.fontSize !== 16 ||
+              values.fontName.style !== (editorial ? 'Bold' : 'Regular') ||
+              values.fontSize !== expectedFontSize ||
               values.lineHeight?.unit !== 'PERCENT' ||
-              values.lineHeight.value !== 150 ||
-              values.textDecoration !== 'UNDERLINE' ||
-              values.textWrapStyle !== 'AUTO'
+              values.lineHeight.value !== (editorial ? 100 : 150) ||
+              values.textDecoration !==
+                (editorial ? tree.textDecoration : 'UNDERLINE') ||
+              values.textWrapStyle !== 'AUTO' ||
+              (editorial &&
+                JSON.stringify(values.textDecorationOffset) !==
+                  JSON.stringify(tree.textDecorationOffset))
             )
               throw new Error(
-                'DIRECT TOC typography needs its exact source template and brand values.'
+                'DIRECT typography needs its exact source template and brand values.'
               );
             const bindings = {};
             for (const [field, type] of [
@@ -1040,6 +1244,10 @@ async function buildMangroveComponents(
   }
   const svgPlans = new Map();
   const svgAssetSources = new Map();
+  const imagePlans = new Map();
+  const imageAssetSources = new Map();
+  const imageHashes = new Map();
+  const gradientPlans = new Map();
   for (const family of ordered) {
     try {
       if (dependencies(family).some(id => blocked.has(id)))
@@ -1210,11 +1418,43 @@ async function buildMangroveComponents(
           if (!tree.id && !tree.key)
             throw new Error(`Node ${tree.name} needs a stable id.`);
           if (
+            tree.type === 'FRAME' &&
+            tree.position !== undefined &&
+            (!parent ||
+              parent.type !== 'FRAME' ||
+              !tree.position ||
+              Object.keys(tree.position).sort().join(',') !== 'x,y' ||
+              !['x', 'y'].every(field => Number.isFinite(tree.position[field])))
+          )
+            throw new Error(
+              'Positioned FRAME recipes require finite x/y inside a source frame.'
+            );
+          if (tree.image !== undefined) {
+            const plan = mgImagePlan(tree);
+            if (
+              imageAssetSources.has(plan.assetId) &&
+              imageAssetSources.get(plan.assetId) !== plan.base64
+            )
+              throw new Error(`Conflicting source image ${plan.assetId}.`);
+            imageAssetSources.set(plan.assetId, plan.base64);
+            imagePlans.set(tree, plan);
+          }
+          if (tree.gradient !== undefined) {
+            const plan = mgGradientPlan(tree);
+            for (const layer of plan.layers)
+              for (const stop of layer.stops) variable(stop.color, 'COLOR');
+            gradientPlans.set(tree, plan);
+          }
+          if (
             tree.expose !== undefined &&
             (tree.type !== 'INSTANCE' || typeof tree.expose !== 'boolean')
           )
             throw new Error(
               'Only nested instance recipes may declare boolean expose.'
+            );
+          if (tree.type === 'INSTANCE' && tree.properties !== undefined)
+            throw new Error(
+              'Nested instance property values must use overrides, not properties.'
             );
           const key = tree.id || tree.key;
           if (keys.has(key)) throw new Error(`Duplicate recipe node id ${key}`);
@@ -2169,6 +2409,36 @@ async function buildMangroveComponents(
       if (spec.layout?.mode && 'layoutMode' in node)
         node.layoutMode = spec.layout.mode;
       if ('fills' in node) paint(node, 'fills', spec.fill);
+      if (imagePlans.has(spec)) {
+        const image = imagePlans.get(spec);
+        if (!imageHashes.has(image.assetId))
+          imageHashes.set(image.assetId, figma.createImage(image.bytes).hash);
+        node.fills = [
+          {
+            type: 'IMAGE',
+            imageHash: imageHashes.get(image.assetId),
+            scaleMode: image.scaleMode,
+          },
+        ];
+        node.clipsContent = true;
+      }
+      if (gradientPlans.has(spec)) {
+        node.fills = gradientPlans.get(spec).layers.map(layer => ({
+          type: 'GRADIENT_LINEAR',
+          gradientTransform: layer.transform,
+          gradientStops: layer.stops.map(stop => {
+            const role = variable(stop.color, 'COLOR');
+            const color = role.resolveForConsumer(node).value;
+            return {
+              position: stop.position,
+              color: { r: color.r, g: color.g, b: color.b, a: color.a ?? 1 },
+              boundVariables: {
+                color: { type: 'VARIABLE_ALIAS', id: role.id },
+              },
+            };
+          }),
+        }));
+      }
       if ('strokes' in node) paint(node, 'strokes', spec.stroke);
       node.strokeAlign = spec.strokeAlign || 'INSIDE';
       if ('strokesIncludedInLayout' in node && node.layoutMode !== 'NONE')
@@ -2327,6 +2597,14 @@ async function buildMangroveComponents(
             key: mgReadIdentity(child, MG_KIT_KEY),
           });
       }
+    }
+    if (
+      spec.type === 'FRAME' &&
+      spec.position &&
+      parent.layoutMode === 'NONE'
+    ) {
+      node.x = spec.position.x;
+      node.y = spec.position.y;
     }
     return node;
   }

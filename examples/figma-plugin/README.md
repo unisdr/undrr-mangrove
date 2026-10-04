@@ -21,18 +21,22 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 418 variables, 92 text definitions (60 Regular foundations and 32 component styles), eight effects and 327 recipe variants across 28 families; 16 tokens remain skipped as variables. The plugin initially selects nine core Regular foundation styles. Condensed font loading is now recovered locally, while source-fixture equivalence and Tabs acceptance remain separate checks. Component styles are imported when their selected family requires them. Exported definitions do not imply that every style has passed rendered acceptance.
+Current output contains 519 variables, 100 text definitions (60 Regular foundations and 40 component styles), eight effects and 367 recipe variants across 32 families; 16 tokens remain skipped as variables. The plugin initially selects nine core Regular foundation styles. Condensed font loading is now recovered locally, while source-fixture equivalence and Tabs acceptance remain separate checks. Card and Hero add 40 variants across four new source scaffolds, outside the unchanged 25-family core preset. The [Card/Hero status and planned catalogue](CARD-HERO-STATUS.md) records their current boundaries. Component styles are imported when their selected family requires them. Exported definitions do not imply that every style has passed rendered acceptance.
 
 ### Find your way around the plugin
 
 - **1. Import:** load the generated JSON and choose one brand on Starter. Nine core text styles and all effects are initially selected; advanced import choices remain available.
-- **2. Core kit:** use the explicit 25-family candidate preset, search by name, or choose individual families. Search hides rows without changing selection. Tabs and Editorial CTA have visible pending-check labels and start unticked. The explicit core allowlist stays unchanged until deliberately reviewed; the guidance registry rejects unknown family IDs during export.
+- **2. Core kit:** use the explicit 25-family candidate preset, search by name, or choose individual families. Search hides rows without changing selection. Tabs and Editorial CTA have visible pending-check labels and start unticked. Card/Vertical, Card/Horizontal, Hero/Background and Hero/Split start unticked and are labelled New source scaffold. The explicit core allowlist stays unchanged until deliberately reviewed; the guidance registry rejects unknown family IDs during export.
 - **3. Diagnostics:** inspect the file, export previews, or run temporary native checks. Native behaviour, edited-instance checks and Editorial CTA have separate navigation.
 - Brand, loaded-variable count, navigation and recent results stay visible. Save the complete results and inspection rather than relying on the bounded on-screen summary. Temporary checks have a separate saved record for restart recovery.
 
 **Kit destination > Go** lists and opens only installed destinations, using their actual names in the legacy file or the v2 sections. **Browse component** lists installed whole widgets by task; choose **Usage and states** or **Source components**, then **Open component**. Navigation and **Refresh navigation** are read-only and do not load fonts or change component selection. **Organize file** is the separate explicit migration to six v2 sections. See [the organisation workflow](#organize-and-navigate-the-file) before migrating.
 
 The panel uses Mangrove-inspired UNDRR blue, clear typography and a two-band keyboard focus indicator, while respecting Figma's theme colours. Panel styling does not import fonts or change component recipes. [Core status](CORE-KIT-STATUS.md) states what is accepted and what remains.
+
+### Planned catalogue
+
+**03 Examples and templates** includes 68 documentation-only source entries, covering 414 named source examples. Each entry identifies its source file, related scaffolds and examples still to map or verify. These frames and text are not components in Assets. The complete generated `plannedInventory` retains source/export IDs and exclusion reasons. Read [the stub contract](CARD-HERO-STATUS.md#planned-catalogue-stubs) before adding mappings or changing source paths.
 
 ### Text and effect foundations
 

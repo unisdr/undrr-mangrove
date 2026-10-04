@@ -291,6 +291,10 @@ function subsetDocument(
     const directTemplateIds = new Set();
     const coincidentRings = [];
     function tree(node, family, variant) {
+      if (node.type === 'INSTANCE' && node.properties !== undefined)
+        throw new Error(
+          'Nested instance property values must use overrides, not properties.'
+        );
       const ring = node.focusRing;
       const focusedSegment =
         family.id === 'segmented-control.segment' &&
@@ -511,6 +515,39 @@ function specializeBuilder(source) {
     source =
       source.slice(0, start) + after + source.slice(start + before.length);
   };
+  for (const condition of [
+    'tree.image !== undefined',
+    'tree.gradient !== undefined',
+    'imagePlans.has(spec)',
+    'gradientPlans.has(spec)',
+  ])
+    replaceOnce(
+      `if (${condition}) {`,
+      `if (MG_CONNECTOR_MEDIA && ${condition}) {`
+    );
+  replaceOnce(
+    "tree.type === 'FRAME' &&\n            tree.position !== undefined &&",
+    "MG_CONNECTOR_FRAME_POSITION && tree.type === 'FRAME' &&\n            tree.position !== undefined &&"
+  );
+  replaceOnce(
+    "spec.type === 'FRAME' &&\n      spec.position &&",
+    "MG_CONNECTOR_FRAME_POSITION && spec.type === 'FRAME' &&\n      spec.position &&"
+  );
+  // The immutable embedded DTO has already passed this exact guard above.
+  replaceOnce(
+    "if (tree.type === 'INSTANCE' && tree.properties !== undefined)",
+    'if (false)'
+  );
+  for (const name of [
+    'imagePlans',
+    'imageAssetSources',
+    'imageHashes',
+    'gradientPlans',
+  ])
+    replaceOnce(
+      `const ${name} = new Map();`,
+      `const ${name} = MG_CONNECTOR_MEDIA ? new Map() : null;`
+    );
   replaceOnce(
     'if (tree.absolute !== undefined) {',
     'if (MG_CONNECTOR_ABSOLUTE && tree.absolute !== undefined) {'
@@ -859,6 +896,23 @@ async function buildConnector({
         Array.isArray(family.review?.specimens) &&
         family.review.specimens.some(specimen => specimen?.nodes !== undefined)
     );
+  const needsMedia = tree =>
+    tree.image !== undefined ||
+    tree.gradient !== undefined ||
+    (tree.children || []).some(needsMedia);
+  const mediaEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsMedia(variant.tree))
+    );
+  const needsFramePosition = tree =>
+    (tree.type === 'FRAME' && tree.position !== undefined) ||
+    (tree.children || []).some(needsFramePosition);
+  const framePositionEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsFramePosition(variant.tree))
+    );
   let source = 'const MG_SHARED_ONLY = true;\n';
   source += fs.readFileSync(path.join(PLUGIN, 'kit-identity.js'), 'utf8');
   source += `\n;\n${coreSource()}\n;\n`;
@@ -896,7 +950,10 @@ async function buildConnector({
     source += `return (${connectorInspectionSummary.toString()})(await inspectMangroveKit({checkFonts:${Boolean(checkFonts)}}), ${JSON.stringify(nodeIds)});`;
   const minified = await minify(`async function mgRun(){${source}}`, {
     compress: {
+      passes: 2,
       global_defs: {
+        MG_CONNECTOR_FRAME_POSITION: framePositionEnabled,
+        MG_CONNECTOR_MEDIA: mediaEnabled,
         MG_CONNECTOR_SVG: svgEnabled,
         MG_CONNECTOR_ABSOLUTE: absoluteEnabled,
         MG_CONNECTOR_ARC: arcEnabled,

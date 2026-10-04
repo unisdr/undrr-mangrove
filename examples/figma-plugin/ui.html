@@ -1549,7 +1549,14 @@
                 ? 'Styling check pending'
                 : CORE_EXCLUDED.has(family.id)
                   ? 'Font check pending'
-                  : 'Outside core';
+                  : [
+                        'card-vertical',
+                        'card-horizontal',
+                        'hero-background',
+                        'hero-split',
+                      ].includes(family.id)
+                    ? 'New source scaffold'
+                    : 'Outside core';
             label.append(status);
           }
           components.append(label);

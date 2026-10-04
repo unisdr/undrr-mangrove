@@ -502,6 +502,7 @@ function buildEditorialCtaRecipes({ root, modes, variables, styles }) {
           id: 'label',
           characters: 'Browse all publications',
           textProperty: 'Label',
+          textStyleApplication: 'DIRECT',
           textStyle: focused
             ? typography.focus
             : hovered

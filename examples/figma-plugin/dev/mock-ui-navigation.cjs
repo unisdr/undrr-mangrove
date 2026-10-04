@@ -158,16 +158,20 @@ async function main() {
   assert.strictEqual(get('save-test-record').disabled, true);
   await ui.load();
   const expectedCore = doc.components.families
-    .filter(f => !['tabs-trigger', 'tabs', 'editorial-cta'].includes(f.id))
+    .filter(
+      f =>
+        doc.kitGuidance.families.find(g => g.id === f.id).status ===
+        'bounded-draft'
+    )
     .map(f => f.id);
   assert.strictEqual(
     expectedCore.length,
     25,
-    'Current actual source core excludes three pending families'
+    'Current actual source core excludes pending and source scaffold families'
   );
   assert.deepStrictEqual(ui.selectedFamilies(), expectedCore);
   assert.strictEqual(get('prune').checked, false);
-  assert(get('selection-count').textContent.includes('25 of 28'));
+  assert(get('selection-count').textContent.includes('25 of 32'));
   const styles = [...get('text-styles').querySelectorAll('input:checked')].map(
     i => i.value
   );
@@ -227,7 +231,10 @@ async function main() {
     'Filtering must not change hidden selections'
   );
   get('select-all').click();
-  assert.strictEqual(ui.selectedFamilies().length, 28);
+  assert.strictEqual(
+    ui.selectedFamilies().length,
+    doc.components.families.length
+  );
   get('select-core').click();
   assert.deepStrictEqual(ui.selectedFamilies(), expectedCore);
   get('clear-selection').click();

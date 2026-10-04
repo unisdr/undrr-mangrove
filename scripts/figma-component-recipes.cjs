@@ -1821,6 +1821,14 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
     })
   );
   families.push(
+    ...require('./figma-card-hero-recipes.cjs').buildCardHeroRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
+  families.push(
     ...require('./figma-chip-recipes.cjs').buildChipRecipes({
       root,
       modes,

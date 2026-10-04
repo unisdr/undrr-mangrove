@@ -47,6 +47,16 @@ function environment(doc, options = {}) {
     staleTextRangeFillWrites: 0,
   };
   const figma = factoryModule.exports(state);
+  state.images = new Map();
+  figma.base64Decode = value => new Uint8Array(Buffer.from(value, 'base64'));
+  figma.createImage = bytes => {
+    const hash = require('crypto')
+      .createHash('sha256')
+      .update(bytes)
+      .digest('hex');
+    state.images.set(hash, Buffer.from(bytes));
+    return { hash };
+  };
   const rejectPrivate = () => {
     throw new Error('Private plugin data is unsupported in this runtime');
   };
