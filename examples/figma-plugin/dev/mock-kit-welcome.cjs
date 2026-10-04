@@ -206,6 +206,7 @@ async function main() {
     );
     env.state.rejectedFonts.add('Roboto Condensed Bold');
     env.state.loadedFonts.delete('Roboto Condensed Bold');
+    owned(env, 'review').name = 'Mangrove / Review examples';
     const baseline = all(env),
       styles = copy(env.state.styles);
     const created = await env.call('createMangroveWelcome', doc, 'undrr');
@@ -214,6 +215,33 @@ async function main() {
     assert.strictEqual(welcome.type, 'FRAME');
     assert.strictEqual(welcome.parent, env.figma.currentPage);
     assert.strictEqual(owned(env, 'welcome/content').parent, welcome);
+    const contents = owned(env, 'welcome/content/index/body').characters;
+    assert.deepStrictEqual(
+      contents.split('\n').slice(1, 4),
+      env.figma.currentPage.children
+        .slice()
+        .reverse()
+        .filter(node => ['welcome', 'main', 'review'].includes(key(node)))
+        .map(node => node.name),
+      'Legacy contents follow the current Layers order'
+    );
+    for (const id of ['welcome', 'main', 'review'])
+      assert(
+        contents.includes(owned(env, id).name),
+        'Contents use the current owned board name'
+      );
+    for (const absent of [
+      '01 Foundations',
+      '02 Components',
+      '03 Compositions',
+      '04 Page patterns',
+      '90 Pending work',
+      'Mangrove diagnostics / focus ring',
+    ])
+      assert(
+        !contents.includes(absent),
+        'Contents must not list an absent canvas destination'
+      );
     const paintCount = assertWelcomePaints(env);
     const whiteLabel = owned(env, 'welcome/content/hero/label');
     const valid = copy(whiteLabel.fills);
@@ -280,6 +308,26 @@ async function main() {
       welcomeIds
     );
     assert.deepStrictEqual(record(note), noteBefore);
+    const migratedContents = owned(
+      env,
+      'welcome/content/index/body'
+    ).characters;
+    for (const id of [
+      'start',
+      'foundations',
+      'components',
+      'compositions',
+      'patterns',
+      'pending',
+    ])
+      assert(
+        migratedContents.includes(owned(env, `layout/${id}`).name),
+        'Migrated contents match actual section names'
+      );
+    assert(
+      !migratedContents.includes('Mangrove / Review examples'),
+      'Section navigation replaces the legacy board index after migration'
+    );
     assert(
       ![...env.state.nodes.values()].some(
         node => key(node) === 'layout/start/intro'

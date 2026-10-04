@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity, mgLayoutIndex, mgKitLayoutInstalled */
+/* global figma, mgReadIdentity, mgWriteIdentity, mgLayoutIndex, mgKitLayoutInstalled, MG_LAYOUT_DESTINATIONS */
 // A plan-independent entry point. It does not install the section hierarchy.
 function mgWelcomeBounds(node) {
   const b = node.absoluteRenderBounds;
@@ -282,7 +282,25 @@ async function createMangroveWelcome(
     text(
       'welcome/content/index/body',
       guide,
-      '01 Foundations   Colours, type, spacing and effects in Variables and local styles.\n02 Components   Buttons, fields and reusable content. Main components supply instances.\n03 Compositions   Table, ComboBox, Text CTA and other assemblies of components.\n04 Page patterns   Your page examples and future templates.\n90 Pending work   Diagnostics and assets awaiting acceptance.',
+      'On this page, use the matching names in Layers:\n' +
+        (mgKitLayoutInstalled()
+          ? MG_LAYOUT_DESTINATIONS.map(([id]) => index.get(`layout/${id}`))
+          : figma.currentPage.children
+              .slice()
+              .reverse()
+              .filter(node =>
+                [
+                  'welcome',
+                  'main',
+                  'review',
+                  'diagnostics.focus-ring',
+                ].includes(mgReadIdentity(node, 'mgKitId'))
+              )
+        )
+          .filter(Boolean)
+          .map(node => node.name)
+          .join('\n') +
+        '\n\nFor foundations, open Variables in the left sidebar or use local text and effect styles in the right sidebar.',
       18,
       1264
     );
@@ -297,7 +315,7 @@ async function createMangroveWelcome(
         'Understand the canvas',
         mgKitLayoutInstalled()
           ? 'Use the numbered sections and the plugin Go menu. Main components are source-owned. Review examples demonstrate content and states; they are not page templates.'
-          : 'Find components in Assets and use Review to compare states and content. This file still has Main components and Review sheets. The numbered sections above describe where the kit is headed while we finish organizing the file.',
+          : 'Find components in Assets and use Review to compare states and content. The contents above list the boards that exist on this page. Foundations are in Variables and local styles; the wider section organization is still being completed.',
       ],
       [
         'maintain',

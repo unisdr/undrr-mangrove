@@ -34,6 +34,7 @@ Desktop access recovered on 4 October 2026. Native Welcome is now applied and re
 - [x] Standalone creation, restart/rerun identities, direct manual-note preservation, typed variable/font/ownership refusals and later full-migration reuse pass the actual-runtime mock.
 - [x] Apply to the native file after a fresh backup and inspection; capture exact affected IDs and unchanged source/consumer records.
 - [x] Review the welcome board at normal zoom for readable headings, unclipped cards and the correct brand. Novice usability is a separate gate.
+- [x] Match contents to actual owned destination names and Layers order; exclude absent planned sections. Native correction is reviewed at 100% zoom, measures 1,440 × 1,223px, creates zero nodes and retains all 6,476 inspected asset IDs. Non-Welcome records are unchanged and a repeat preserves the complete result. The mock also verifies switching to actual section names after migration.
 - [x] Confirm historical diagnostics clear Main, Review and Welcome without changing child geometry or fonts.
 - [x] Repeat from a plugin restart, create zero duplicate nodes, and navigate Start here without loading JSON.
 - [ ] Add a native manual note and verify its preservation through update and later section migration.
