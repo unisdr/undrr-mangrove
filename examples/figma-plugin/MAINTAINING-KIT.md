@@ -1,8 +1,20 @@
 # Maintaining the Mangrove Figma kit
 
+Start with [core kit status](CORE-KIT-STATUS.md) for the next delivery scope, completed tasks, remaining gates and exact Starter import choices. The full catalogue and Professional publication are separate follow-up scopes.
+
 This runbook covers source changes, local verification and updates to the canonical Figma kit. Start with [README.md](README.md) for installation and access, [LEARNINGS.md](LEARNINGS.md) for observed behaviour, and [FIGMA-KIT-BRIEF.md](FIGMA-KIT-BRIEF.md) for the component scope. This remains an exploratory kit.
 
 The [architecture review](ARCHITECTURE-REVIEW.md) records the current composition, responsiveness, identity and publication gates. Check affected findings when adding a composed component.
+
+## Maintain the plugin interface
+
+Keep everyday work in **Import** and **Core kit**, with temporary tests and exports in **Diagnostics**. Preserve the persistent navigation, brand context and results area. The component list should scroll within its available space; selection counts, refresh choice and Build must stay visible without overlapping rows.
+
+The UI's `CORE_FAMILIES` is an explicit candidate allowlist. Adding an exported family does not add it to core. To expand core, record source contracts and bounded native acceptance in [CORE-KIT-STATUS.md](CORE-KIT-STATUS.md), then update the allowlist deliberately. Keep unknown families outside core and preserve access through explicit selection. The nine initial foundation styles are selected from source IDs and bindings; missing fonts remain reported errors.
+
+Preserve control IDs and controller message contracts when reorganising screens. Block mutating choices during operations, invalidate cached rebuild evidence after token/brand changes, and retain the live temporary-check record independently of the most recent result. On-screen summaries may be bounded; downloaded receipts and recovery ledgers must remain complete.
+
+Run `node examples/figma-plugin/dev/mock-ui.cjs` for the existing operation/recovery contracts and `node examples/figma-plugin/dev/mock-ui-navigation.cjs` for actual DOM navigation, core presets, filtering, busy states, full downloads and core-content rebuild freshness. These checks do not establish rendered layout. Rebuild the plugin, reopen it in the Figma desktop app, and review Import, Core kit and Diagnostics with the source document loaded. Check that important actions remain visible, keyboard focus is clear and saved reports still download. Save the live test record, remove its exact owned probes, then close the plugin before changing watched runtime files or regenerating the bundle. Closing the window alone leaves probes in the file.
 
 ## Where changes belong
 
@@ -398,9 +410,9 @@ TEXT recipes may specify `textDecorationOffset` in PIXELS, PERCENT or AUTO units
 
 Editorial CTA's first native run found all shared Label nodes using the final Focus style. Until an isolated property experiment and consumer checks establish a correction, this family is built with known styling gaps. Review all state styles through actual node readbacks and PNGs; the ordinary mock does not reproduce this propagation.
 
-### Latest TOC and Status Label handoff checkpoint
+### TOC and Status Label checkpoint before Segmented
 
-Current output contains 416 variables, 91 text definitions, eight effects and 293 variants across 26 families. Native inspection has 43 local text styles, 26 sets, 294 components including one diagnostic, 5,666 nodes and 817 instances, with no errors. TOC's six edited finite-width consumers pass 2,819 assertions; all seven edited Status Label consumers pass 816. Their exact cleanup leaves no temporary acceptance nodes. The scoped text audit passes 40/40; the full 601/601 audit retains 51 older Tabs/Editorial CTA findings. Twelve TOC labels intentionally use directly applied typography with imported source templates and font-variable bindings.
+That checkpoint contains 416 variables, 91 text definitions, eight effects and 293 variants across 26 families. Native inspection has 43 local text styles, 26 sets, 294 components including one diagnostic, 5,666 nodes and 817 instances, with no errors. TOC's six edited finite-width consumers pass 2,819 assertions; all seven edited Status Label consumers pass 816. Their exact cleanup leaves no temporary acceptance nodes. The scoped text audit passes 40/40; the full 601/601 audit retains 51 older Tabs/Editorial CTA findings. Twelve TOC labels intentionally use directly applied typography with imported source templates and font-variable bindings.
 
 A fresh local backup is saved; cloud sync is unconfirmed. Begin Professional migration from this current inspection and backup, retain IDs, then verify modes and a real consuming-file update. Keep unresolved font/style findings and remaining source-pattern coverage in the inventory. The narrow TOC template exception and Status polygon regeneration rules above also apply when adding or changing components.
 
@@ -431,7 +443,7 @@ The **Segmented Control shared style** diagnostic checks the canonical three-sta
 
 Each advance consumes the UI's latest build report, so another ordinary build is required before the next advance. Preparing probes, loading a saved report or advancing clears that cached build. After restarting the plugin, load the full saved capability report and perform a fresh scoped build. The reports are development evidence, not a cryptographic ordering record.
 
-Temporary root instances inherit their masters' `mgKitId`. Give each its own stable probe identity before invoking the ordinary builder, and record its actual source master independently. The builder ignores inherited descendants inside instances but indexes the instance roots. A mock that clears inherited identities can hide a real duplicate-key rejection; run the actual builder with faithfully inherited probe data in the focused regression.
+Temporary root instances inherit their masters' `mgKitId`. Give each its own stable probe identity before invoking the ordinary builder, and record its actual source master independently. The builder ignores inherited descendants inside instances. It also ignores a normal root INSTANCE's inherited canonical key only when its actual main is a COMPONENT carrying that exact key; it neither adopts nor clears the user instance. A conflicting key or missing/wrong main is refused before writes. A mock that clears inherited identities can hide a real duplicate-key rejection; run the actual builder with faithfully inherited probe data in the focused regression.
 
 The final temporary ledger contains 25 nodes. Cleanup validates the stored creation manifest, actual node types, parent relationships and attached canonical masters before removing its root. A moved, detached, changed or foreign consumer is refused. Failed advances retain their complete partial ledger for inspection and conservative cleanup. Do not bypass a refusal with a name scan or broad deletion.
 
@@ -487,3 +499,37 @@ node examples/figma-plugin/dev/verify-form-action-optional-native.cjs \
 The three inventory arguments must appear together. `--document` can select a generated source document; by default the verifier reads the repository build output. It checks the bounded 172-node, 44-observation optional-wrapper experiment, exact properties/fonts/ranges/geometry, full repeat snapshots and cleanup/retention. A controlled Help wrapper width change fails the checks. Missing or duplicated topology/phase records are refused before retention comparisons. JSON cannot authenticate native execution; keep actual desktop provenance with the saved evidence.
 
 Without inventory arguments, report-only checks cannot independently establish foundation identities or asset retention. Passing this verifier does not establish shared-style association, variant switching, ordinary canonical rebuilds or source pixel equality. Standard output contains counts; detailed failure fields remain in the optional verdict file. Keep private node IDs and artifact paths out of public PR text.
+
+### Maintain the core ownership and Segmented composition contracts
+
+Use [core kit status](CORE-KIT-STATUS.md) for the current 25-family candidate and outstanding content/handoff gates. The ordinary Assets workflow ownership fix has actual native proof for one edited Primary/Filled/Default Button at 156×36 HUG through two zero-create updates. Other manual insertion and variant-switch workflows remain separate scopes. Keep both the inherited key and actual main lookup intact; clearing user metadata would conceal the ownership problem.
+
+Run the source/build regression and the reusable consumer gate:
+
+```sh
+node examples/figma-plugin/dev/mock-inherited-root.cjs
+node examples/figma-plugin/dev/mock-segmented-wrapper.cjs
+node examples/figma-plugin/dev/mock-segmented-wrapper-capabilities.cjs
+```
+
+For **Segmented FullWidth four Default presets (two rebuilds)**:
+
+1. Import the current UNDRR variables without pruning. Build only **FullWidth BelowMedium**; the complete 30-leaf Segment dependency builds automatically. Keep review refresh off.
+2. Prepare the diagnostic. Save the full report and inspection. Successful preparation records 73 nodes: four edited and four untouched nine-node consumers, plus their temporary frame.
+3. Perform an ordinary build of only **FullWidth BelowMedium**, save its zero-create/error-free receipt, then advance and save the report. Repeat once. Successful ledgers contain 109 and 145 nodes, four consumer cohorts and two completed advances. The UI consumes each receipt, so a new build is required for each advance.
+4. Independently compare raw source fields and exact repeated snapshots, then review the four selection presets at 100%. The accepted scope is UNDRR Default, three exposed choices, 240/390px widths, long Label/Legend edits and Legend hide/edit/show. Short 390px rail height is 44px. Native short 240px rail height is 56px against source 55.59375px; keep that measured 0.40625px line-box delta visible. Only fresh equal allocations admit one float32 ULP; repeated snapshots remain exact.
+5. Restart the plugin, load the exact saved report, audit without adding descendants and remove the exact ledger. Compare the clean inspection against all preceding assets and save a local backup before changing watched files. The recorded run removes all 145 temporary nodes and preserves every field of all 6,453 assets.
+
+The Legend uses the shared `component.body` 16/24 style and positive FILL/HUG bounds when visible. Hidden TEXT may report FIXED sizing; reappearance must restore positive visible geometry. Figma may return Regular's full variation descriptor (`wdth: 100`, `wght: 400`); validate it and retain it in exact snapshots. The mock includes this actual getter form and rejects a wrong weight before canvas writes.
+
+Keep Selection switching, nested Hover/Focus/Position edits, Small, other brands/scripts, arbitrary option counts, browser accessibility, source font files and pixel parity outside this bounded acceptance. The seam helper is source-derived negative border width with GAP scope, including MCR2030's different border width. Default selected/unselected border paint equality is guarded for all brands; changed paint priority requires a source-backed implementation and a new native gate.
+
+## Maintain bounded core content edits
+
+Use **Diagnostics > Native behaviour > Core edited content** in the single-mode UNDRR file. Create temporary checks and save the independent **Save test record** immediately. The preparation records 39 nodes, including the parent before any stage that can fail. Select Chips, Text CTA and Empty state / Compact in Core kit; leave review refresh off. Their Button dependency updates automatically. Run an ordinary build, save its complete results, then **Check after rebuild** and save the new test record. Repeat once: the ledgers grow to 58 and 77 nodes with fresh cohorts. The native accepted receipts each create zero nodes and update 303; other counts need investigation.
+
+The bounded cases are Chips `chips.linked.default.long` at 240px, Text CTA `text-cta.soft.mobile` at 390px and Compact Empty State `empty-state-compact.plain.centre` at 240/390px. Description changes while media is hidden, then reappears with the media. The gate changes only consumer root sizing and exposed properties. Preserve every canonical variant, property key and full imported font descriptor. Nonempty native Roboto variation coordinates must be exactly standard width 100 with Regular 400, Medium 500 or Bold 700 as the source requires; matching an incorrectly edited template is insufficient.
+
+Save all raw stage reports and review the actual native render. After restarting the plugin, load the saved final test record, verify its ledger without adopting nodes, then remove only the owned 77 nodes. Inspect the clean file and compare all original assets. Native acceptance passes 10,757 independent checks and retains all 6,453 assets unchanged. The 12-consumer native 1x render was reviewed; the transparent diagnostic parent affects the image viewer background. These observations do not prove browser font-file/pixel equality, arbitrary content/widths, every edited variant, Desktop CTA consumer editing, RTL or other brands.
+
+Run `node examples/figma-plugin/dev/mock-core-content-capabilities.cjs` for standard-font guards, actual ordinary builder repeats, full/partial ownership and cleanup refusals. Its six groups complement native evidence. Keep source values in the exporter and component recipes; diagnostic findings alone do not extend a family's authoring contract.

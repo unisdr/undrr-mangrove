@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned, mgFormActionJoiningPreflight, mgRunFormActionJoiningProbes, mgSegmentedFocusSizingPreflight, mgRunSegmentedFocusSizingProbes, mgFormActionOptionalPreflight, mgRunFormActionOptionalProbes, mgSegmentedLeavesPreflight, mgRunSegmentedLeavesProbes, mgSegmentedLeavesOwned */
+/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned, mgFormActionJoiningPreflight, mgRunFormActionJoiningProbes, mgSegmentedFocusSizingPreflight, mgRunSegmentedFocusSizingProbes, mgFormActionOptionalPreflight, mgRunFormActionOptionalProbes, mgSegmentedLeavesPreflight, mgRunSegmentedLeavesProbes, mgSegmentedLeavesOwned, mgSegmentedWrapperPreflight, mgRunSegmentedWrapperProbes, mgSegmentedWrapperOwned, runMangroveCoreContentProbes, mgCoreContentOwned, removeMangroveCoreContentProbes */
 // Isolated diagnostic assets, not FormGroup components or source fidelity claims.
 const MG_CAPABILITY_KEY = 'mgCapabilityProbeId';
 let mgCapabilitySequence = 0;
@@ -8,6 +8,8 @@ async function runMangroveCapabilityProbes(
   brandId = 'undrr',
   scope = 'legacy'
 ) {
+  if (scope === 'core-content')
+    return runMangroveCoreContentProbes(doc, brandId);
   const report = {
     version: 1,
     kind: 'mangrove-native-capability-probes',
@@ -36,6 +38,7 @@ async function runMangroveCapabilityProbes(
   let focusSizingPlan;
   let formActionOptionalPlan;
   let leavesPlan;
+  let wrapperPlan;
   try {
     if (
       ![
@@ -44,6 +47,7 @@ async function runMangroveCapabilityProbes(
         'toc-range-paints',
         'segmented-joining',
         'segmented-canonical',
+        'segmented-wrapper',
         'segmented-leaves-default',
         'segmented-leaves-hover',
         'segmented-leaves-focus',
@@ -269,6 +273,14 @@ async function runMangroveCapabilityProbes(
         mode,
         report
       );
+    if (scope === 'segmented-wrapper')
+      wrapperPlan = await mgSegmentedWrapperPreflight(
+        doc,
+        brandId,
+        collection,
+        mode,
+        report
+      );
     if (scope.startsWith('segmented-leaves-'))
       leavesPlan = await mgSegmentedLeavesPreflight(
         doc,
@@ -373,23 +385,26 @@ async function runMangroveCapabilityProbes(
     root = figma.createFrame();
     report.rootId = root.id;
     record(root);
-    root.name = scope.startsWith('segmented-leaves-')
-      ? `Mangrove native capability probes / Segmented Default leaves / ${leavesPlan.batchState}`
-      : scope === 'form-action-optional'
-        ? 'Mangrove native capability probes / Form Action optional wrappers'
-        : scope === 'segmented-focus-sizing'
-          ? 'Mangrove native capability probes / Segmented focus sizing'
-          : scope === 'form-action-joining'
-            ? 'Mangrove native capability probes / Form Action joining'
-            : scope === 'segmented-joining'
-              ? 'Mangrove native capability probes / Segmented joining'
-              : scope === 'segmented-canonical'
-                ? 'Mangrove native capability probes / Segmented canonical'
-                : scope === 'toc-link-sizing'
-                  ? 'Mangrove native capability probes / TOC link sizing'
-                  : scope === 'toc-range-paints'
-                    ? 'Mangrove native capability probes / TOC range paints'
-                    : 'Mangrove native capability probes';
+    root.name =
+      scope === 'segmented-wrapper'
+        ? 'Mangrove native capability probes / Segmented FullWidth wrappers'
+        : scope.startsWith('segmented-leaves-')
+          ? `Mangrove native capability probes / Segmented Default leaves / ${leavesPlan.batchState}`
+          : scope === 'form-action-optional'
+            ? 'Mangrove native capability probes / Form Action optional wrappers'
+            : scope === 'segmented-focus-sizing'
+              ? 'Mangrove native capability probes / Segmented focus sizing'
+              : scope === 'form-action-joining'
+                ? 'Mangrove native capability probes / Form Action joining'
+                : scope === 'segmented-joining'
+                  ? 'Mangrove native capability probes / Segmented joining'
+                  : scope === 'segmented-canonical'
+                    ? 'Mangrove native capability probes / Segmented canonical'
+                    : scope === 'toc-link-sizing'
+                      ? 'Mangrove native capability probes / TOC link sizing'
+                      : scope === 'toc-range-paints'
+                        ? 'Mangrove native capability probes / TOC range paints'
+                        : 'Mangrove native capability probes';
     root.layoutMode = 'NONE';
     root.clipsContent = false;
     root.fills = [];
@@ -412,11 +427,13 @@ async function runMangroveCapabilityProbes(
         'form-action-optional',
       ].includes(scope)
         ? 1600
-        : scope.startsWith('segmented-leaves-')
-          ? 1400
-          : scope === 'toc-range-paints'
-            ? 1640
-            : 900
+        : scope === 'segmented-wrapper'
+          ? 2200
+          : scope.startsWith('segmented-leaves-')
+            ? 1400
+            : scope === 'toc-range-paints'
+              ? 1640
+              : 900
     );
     const existingBottoms = figma.currentPage.children
       .filter(node => node.id !== root.id)
@@ -471,6 +488,24 @@ async function runMangroveCapabilityProbes(
       result.errors.push(message(error));
     }
     result.affectedNodeIds = report.ledger.slice(start).map(item => item.id);
+  }
+  if (scope === 'segmented-wrapper') {
+    await mgRunSegmentedWrapperProbes(
+      {
+        report,
+        root,
+        record,
+        create,
+        instance,
+        test,
+        bounds,
+        collection,
+        mode,
+      },
+      wrapperPlan
+    );
+    // No refresh/adoption: the runner captures exact original parent topology.
+    return report;
   }
   if (scope.startsWith('segmented-leaves-')) {
     try {
@@ -2797,6 +2832,8 @@ async function inspectMangroveCapabilityProbeLedger(report) {
     errors: [],
   };
   try {
+    if (report?.coreContent || report?.scope === 'core-content')
+      await mgCoreContentOwned(report);
     const ids = mgCapabilityLedgerIds(report);
     const root = await figma.getNodeByIdAsync(report.rootId);
     if (
@@ -2863,6 +2900,14 @@ async function refreshMangroveCapabilityProbeLedger(report) {
     errors: [],
   };
   try {
+    if (report?.coreContent || report?.scope === 'core-content') {
+      await mgCoreContentOwned(report);
+      return result;
+    }
+    if (report?.segmentedWrapper || report?.scope === 'segmented-wrapper') {
+      await mgSegmentedWrapperOwned(report);
+      return result;
+    }
     const ids = mgCapabilityLedgerIds(report);
     async function visit(id, generatedAllowed = false) {
       const node = await figma.getNodeByIdAsync(id);
@@ -2910,6 +2955,8 @@ async function refreshMangroveCapabilityProbeLedger(report) {
 }
 
 async function removeMangroveCapabilityProbes(report) {
+  if (report?.coreContent || report?.scope === 'core-content')
+    return removeMangroveCoreContentProbes(report);
   const result = { removedNodeIds: [], errors: [] };
   try {
     const ids = mgCapabilityLedgerIds(report);
@@ -2923,6 +2970,21 @@ async function removeMangroveCapabilityProbes(report) {
           );
       }
       return result;
+    }
+    if (report.segmentedWrapper || report.scope === 'segmented-wrapper') {
+      if (report.segmentedWrapper) await mgSegmentedWrapperOwned(report);
+      else if (
+        ids.size !== 1 ||
+        root.type !== 'FRAME' ||
+        report.ledger[0]?.type !== 'FRAME' ||
+        root.parent?.id !== figma.currentPage.id ||
+        root.children.length !== 0 ||
+        mgReadIdentity(root, 'mgCapabilityProbeId') !== report.runId ||
+        mgReadIdentity(root, 'mgSegmentedWrapperManifest')
+      )
+        throw new Error(
+          'Cleanup refused incomplete or changed pre-manifest wrapper root.'
+        );
     }
     if (report.scope?.startsWith('segmented-leaves-')) {
       if (report.segmentedLeaves) await mgSegmentedLeavesOwned(report);

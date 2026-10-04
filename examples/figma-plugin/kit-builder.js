@@ -424,6 +424,23 @@ async function buildMangroveComponents(
     }
     if (insideInstance) continue;
     const key = mgReadIdentity(node, MG_KIT_KEY);
+    // Root consumers can inherit a main's canonical source identity.
+    // Read the actual main; never adopt, clear or rewrite consumer metadata.
+    if (
+      node.type === 'INSTANCE' &&
+      /^family\/[^/]+\/variant\/[^/]+$/.test(key)
+    ) {
+      const main = await node.getMainComponentAsync();
+      if (
+        !main ||
+        main.type !== 'COMPONENT' ||
+        mgReadIdentity(main, MG_KIT_KEY) !== key
+      )
+        throw new Error(
+          'Inherited Mangrove variant identity does not match its actual main.'
+        );
+      continue;
+    }
     if (owned.has(key))
       throw new Error(`Duplicate Mangrove ownership key ${key}`);
     owned.set(key, node);

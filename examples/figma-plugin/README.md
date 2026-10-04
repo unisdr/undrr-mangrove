@@ -2,7 +2,7 @@
 
 A spike, stacked on the React Aria pilot (unisdr/undrr-mangrove#1088). It turns Mangrove's tokens into local Figma variables, text styles, effect styles and native component recipes so a Figma kit can use the same spacing, colour and theme layers as the code. Nothing here is published or supported yet.
 
-See the [architecture review](ARCHITECTURE-REVIEW.md) for the acceptance gates when composing and maintaining the kit.
+See the [architecture review](ARCHITECTURE-REVIEW.md) for the acceptance gates when composing and maintaining the kit. The next delivery milestone is the [core kit](CORE-KIT-STATUS.md), with an explicit done/remaining checklist and deferred catalogue work.
 
 ## How it fits together
 
@@ -20,20 +20,29 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 417 variables, 92 text definitions (60 Regular foundations and 32 component styles), eight effects and 323 recipe variants across 27 families; 16 tokens remain skipped as variables. The 12 default foundation selections are unchanged. Component styles are imported when their selected family requires them. Exported definitions do not imply that every font or style is available in the native file.
+Current output contains 418 variables, 92 text definitions (60 Regular foundations and 32 component styles), eight effects and 327 recipe variants across 28 families; 16 tokens remain skipped as variables. The plugin initially selects nine core Regular foundation styles; three Roboto Condensed choices remain available explicitly while native font loading is unresolved. Component styles are imported when their selected family requires them. Exported definitions do not imply that every font or style is available in the native file.
+
+### Find your way around the plugin
+
+- **1. Import:** load the generated JSON and choose one brand on Starter. Nine core text styles and all effects are initially selected; advanced import choices remain available.
+- **2. Core kit:** use the explicit 25-family candidate preset, search by name, or choose individual families. Search hides rows without changing selection. Tabs and Editorial CTA have visible pending-check labels and start unticked. New families stay outside core until deliberately reviewed.
+- **3. Diagnostics:** inspect the file, export previews, or run temporary native checks. Native behaviour, edited-instance checks and Editorial CTA have separate navigation.
+- Brand, loaded-variable count, navigation and recent results stay visible. Save the complete results and inspection rather than relying on the bounded on-screen summary. Temporary checks have a separate saved record for restart recovery.
+
+The panel uses Mangrove-inspired UNDRR blue, clear typography and a two-band keyboard focus indicator, while respecting Figma's theme colours. Panel styling does not import fonts or change component recipes. [Core status](CORE-KIT-STATUS.md) states what is accepted and what remains.
 
 ### Text and effect foundations
 
 The JSON's `styles` section holds values and binding names. The plugin chooses what to import, loads fonts, and applies those definitions; it does not hold a second set of design values.
 
-| Text role | Default size steps                         | Family           |
+| Text role | Available role sizes                       | Family           |
 | --------- | ------------------------------------------ | ---------------- |
 | `text`    | `300`, `button`, `form-input`              | Roboto           |
 | `heading` | `400`, `500`, `600`, `900`, `1000`, `1100` | Roboto           |
 | `display` | `900`, `1000`                              | Roboto Condensed |
 | `ui`      | `tab`                                      | Roboto Condensed |
 
-Expand a role in the plugin to change the selection. The 60 foundation choices use **Regular** with **automatic line height**, with `fontFamily` bound to `font-family/*` and `fontSize` bound to `font-size/*`. Component styles add source weights and explicit line heights. Chromium source comparison confirmed bundled Bold 700 for CSS600, 115% line height for TextInput and inherited 24px for smaller help text. Figma font-file equivalence and script-specific fonts remain pending. The SCSS `code` role uses a generic monospace stack, so no specific Figma font is exported for it.
+Open **Import > Styles and import options** to change the selection. **Use core text styles** restores the nine Roboto choices. Display and UI roles use Roboto Condensed and are outside the initial selection. The 60 foundation choices use **Regular** with **automatic line height**, with `fontFamily` bound to `font-family/*` and `fontSize` bound to `font-size/*`. Component styles add source weights and explicit line heights. Chromium source comparison confirmed bundled Bold 700 for CSS600, 115% line height for TextInput and inherited 24px for smaller help text. Figma font-file equivalence and script-specific fonts remain pending. The SCSS `code` role uses a generic monospace stack, so no specific Figma font is exported for it.
 
 The importer discovers exact font names with `listAvailableFontsAsync` and loads them with `loadFontAsync` before editing. An unavailable or unloadable font skips the affected text styles and appears in the report. Variables, effect styles and other text styles still import. Install or enable the missing font and re-import to complete the set; no fallback font is substituted.
 
@@ -80,9 +89,9 @@ The plugin now appears under **Plugins > Development**. On a Professional plan, 
 
 1. Open the dedicated Figma Design file that will hold the Mangrove kit. A file in Drafts or a Starter team is limited to 1 mode. For all five modes, save it in a project that belongs to the Professional team.
 2. Run **Plugins > Development > Mangrove tokens (exploratory)**.
-3. Choose the `mangrove-variables.json` you generated.
-4. On Starter or in Drafts, tick only one brand. In a Professional team file, tick all five brands. Expand the text roles to choose sizes, and leave effect styles ticked to import the effects. UNDRR is selected initially for the Starter workflow. Select **Import variables and styles**.
-5. Read the report in the plugin window: the counts, any errors, and the tokens that could not be represented. Choose **Save operation report** to retain the complete result JSON, including affected IDs and errors.
+3. In **1. Import**, choose the `mangrove-variables.json` you generated.
+4. On Starter or in Drafts, tick only one brand. In a Professional team file, tick all five brands. Open **Styles and import options** for additional text roles, and leave effect styles ticked to import the effects. UNDRR is selected initially for the Starter workflow. Select **Import variables and styles**.
+5. Read the report in the plugin window: the counts, any errors, and the tokens that could not be represented. Choose **Save results** to retain the complete result JSON, including affected IDs and errors.
 6. Open **Local variables** to see the **Mangrove** collection, with one column per imported brand. In local styles, inspect the text and effect styles under **Mangrove**.
 
 ### On a file limited to 1 mode: brand switcher
@@ -99,47 +108,50 @@ Limits: one brand is visible at a time, and Starter cannot publish libraries, so
 
 Import one brand first, then select families and choose **Build selected components**. Dependencies are built first. The generated kit contains main components outside **Mangrove / Review**, where editable instances show states, long labels and narrow examples.
 
-| Family                       | Variants |
-| ---------------------------- | -------: |
-| Button                       |       16 |
-| Text input                   |        6 |
-| ComboBox option              |        6 |
-| ComboBox                     |        6 |
-| Tab trigger                  |        6 |
-| Horizontal pill Tabs         |        1 |
-| Textarea                     |        6 |
-| Table header cell            |        4 |
-| Table body cell              |        4 |
-| Table row                    |       24 |
-| Table                        |        8 |
-| Text CTA                     |        6 |
-| Radio                        |       30 |
-| Checkbox                     |       30 |
-| Form error summary           |        6 |
-| Switch                       |       22 |
-| Switch small                 |       20 |
-| Editorial CTA                |       23 |
-| Chips                        |       16 |
-| Details                      |       20 |
-| Closed Select                |        5 |
-| Loader                       |        2 |
-| Compact Empty State          |        4 |
-| Table of contents / Link     |       12 |
-| Table of contents / Numbered |        3 |
-| Status Label                 |        7 |
-| Segmented control / Segment  |       30 |
+| Family                            | Variants |
+| --------------------------------- | -------: |
+| Button                            |       16 |
+| Text input                        |        6 |
+| ComboBox option                   |        6 |
+| ComboBox                          |        6 |
+| Tab trigger                       |        6 |
+| Horizontal pill Tabs              |        1 |
+| Textarea                          |        6 |
+| Table header cell                 |        4 |
+| Table body cell                   |        4 |
+| Table row                         |       24 |
+| Table                             |        8 |
+| Text CTA                          |        6 |
+| Radio                             |       30 |
+| Checkbox                          |       30 |
+| Form error summary                |        6 |
+| Switch                            |       22 |
+| Switch small                      |       20 |
+| Editorial CTA                     |       23 |
+| Chips                             |       16 |
+| Details                           |       20 |
+| Closed Select                     |        5 |
+| Loader                            |        2 |
+| Compact Empty State               |        4 |
+| Table of contents / Link          |       12 |
+| Table of contents / Numbered      |        3 |
+| Status Label                      |        7 |
+| Segmented control / Segment       |       30 |
+| Segmented / FullWidth BelowMedium |        4 |
 
 TOC links use the imported source text style as a typography template, with font-family and font-size variables bound directly on their 12 main labels. Their native text-style association is deliberately empty: controlled desktop experiments found incorrect effective range colours when the shared Label property and style association were combined. This exception is restricted to TOC links and guarded against changed source anatomy or missing bindings. Rebuild the affected components after importing a changed template; editing the local style alone does not update directly applied labels. See [the native findings](LEARNINGS.md) and [maintenance checks](MAINTAINING-KIT.md).
 
 Segmented Control now contains 30 Default-size leaves: Selected=False/True, State=Default/Hover/Focus/HoverFocus/Disabled and Position=First/Middle/Last. They keep the shared source Bold 120% style, one editable Label and the original three component/TEXT identities. The [expanded evidence record](LEARNINGS.md#expanded-default-size-segmented-leaves) distinguishes initial source checks, each state's two ordinary rebuilds and rendered observations. Intrinsic HUG labels do not establish arbitrary wrapping, full-width rails, middle focus stacking, Small or broader brand/script acceptance. Follow the [five-state maintenance procedure](MAINTAINING-KIT.md#maintain-segmented-default-size-leaves).
 
+The four FullWidth BelowMedium Segmented presets compose real First/Middle/Last leaf instances at State=Default. Edit the shared Legend and exposed leaf Labels; changing nested Selected/State/Position can contradict the preset and is outside its initial contract. The native Legend fills the consumer width for editable wrapping; source short legend bounds are intrinsic. `Show legend=false` removes its visible layout contribution and does not implement the source accessible clipped legend. All four pass bounded 240/390px long edits, Legend hide/edit/show and two ordinary zero-create updates with fresh consumers. Independent verification passes 1,746 predicate groups; exact restart cleanup removes all 145 temporary nodes and preserves all 6,453 existing assets. The short 240px rail is 56px against the source 55.59375px, a recorded native line-box difference. One derived per-brand negative-gap variable represents the source overlapping borders. Small, composed focus and Selection switching remain follow-up scopes.
+
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
 
 Composed Tabs exposes the nested trigger properties; open ComboBox exposes its nested options. Review label targets follow the recipe anatomy, and responsive formatting is normally seeded only on new specimens. Existing Tabs long-label specimens keep their prior labels; edit the exposed nested Label property or explicitly reseed the review. The four Roboto families have been rebuilt in the desktop file, and inspection confirms three exposed instances in open ComboBox. Updated Tabs recipes still need a real-file rebuild. See [the source measurements and acceptance record](LEARNINGS.md#browser-acceptance-measurements) for targeted visual checks and remaining gaps.
 
-**Refresh narrow Button and composed review geometry, keeping content** is off by default. Tick it when an existing narrow Button specimen needs wrapping repaired or a composed specimen needs its current master preset and root width reapplied, then build the affected families. It preserves editable content and node IDs, while explicitly replacing the selected review geometry overrides. Normal rebuilds preserve existing formatting and geometry edits. Narrow review rows include 8px padding on each side outside the advertised 240px consumer width. The corrected Button specimen renders at 240 × 50px with its retained label on two unclipped lines. This option does not repair required field label wrapping.
+**Refresh review sizes, keeping edited content** is off by default. Tick it when an existing narrow Button specimen needs wrapping repaired or a composed specimen needs its current master preset and root width reapplied, then build the affected families. It preserves editable content and node IDs, while explicitly replacing the selected review geometry overrides. Normal rebuilds preserve existing formatting and geometry edits. Narrow review rows include 8px padding on each side outside the advertised 240px consumer width. The corrected Button specimen renders at 240 × 50px with its retained label on two unclipped lines. This option does not repair required field label wrapping.
 
-**Inspect kit** records actual IDs and resolved consumer bindings without loading fonts. Tick **Check font loading during inspection** to include font probes when needed; unchecked reports contain `fonts: null`. The window displays a bounded inventory summary, while **Save inspection report** downloads the complete JSON. **Focus diagnostics** compares literal effect order with bound styles; PNG export buttons capture review frames. Select exactly one family and use **Export selected family PNG** for a bounded image of its owned review section; **Export review PNG** captures the whole growing sheet. These are local development operations and do not publish a library.
+**Inspect kit** records actual IDs and resolved consumer bindings without loading fonts. Tick **Check font loading during inspection** to include font probes when needed; unchecked reports contain `fonts: null`. The persistent results area displays a bounded inventory summary, while **Save inspection** downloads the complete JSON. **Focus diagnostics** compares literal effect order with bound styles; PNG export buttons capture review frames. Select exactly one family and use **Export selected family PNG** for a bounded image of its owned review section; **Export review PNG** captures the whole growing sheet. These are local development operations and do not publish a library.
 
 **Save operation report** downloads the latest import, component build or focus diagnostics result without shortening its IDs, errors or audit entries. Filenames identify the operation: `mangrove-import-report.json`, `mangrove-component-build-report.json` or `mangrove-focus-diagnostics-report.json`. Inspection reports remain separate. Actions run one at a time; the previous operation report stays available while another action runs or after an error. Reports are held in the plugin window until it closes, so save them before restarting it.
 
@@ -429,3 +441,9 @@ The corrected diagnostic preserves shared style association and exact fractional
 Choose **Form Action optional wrappers** to test the next bounded layout architecture. A private set owns two fixed Joined/Stacked masters and eight shared text/visibility keys. Optional Label/Help/Error visibility belongs to transparent wrappers; their nonempty TEXT initializes at the actual 390px width before hiding. Consumers change root width and properties without assigning descendant geometry. The 172-node run records 44 phases through hidden edits, show/edit ordering, empty diagnostic values, 240/390px widths, two private-master reapplications and new fresh cohorts. Save reports and remove the exact owned ledger after review.
 
 The first native run passes independent source, geometry, typography, property and repeat checks. Actual variant switching, canonical shared-style association, reusable nested masters, ordinary builds and focus rendering remain separate acceptance gates.
+
+### Core content and plugin workflow checkpoint, 4 October 2026
+
+The local core candidate contains 25 families and 297 recipe variants. Bounded Chips Label at 240px, Text CTA Mobile Headline at 390px and Compact Empty State Description/Show media at 240/390px pass two ordinary zero-create/303-update builds with four cohorts and 12 consumers. Independent raw source/readback verification passes 10,757 checks. Exact cleanup after plugin restart removes all 77 temporary nodes and retains all 6,453 original assets unchanged. A native 1x PNG was reviewed for all 12 consumers. These observations do not establish Desktop CTA editing, arbitrary widths, font-file/pixel parity, RTL or broader brands.
+
+The redesigned plugin separates Import, Core kit and Diagnostics; navigation, context and results remain visible. Core selection uses an explicit 25-family list, nine exact Regular foundation style IDs and search that preserves selection. Core count, refresh option and Build remain visible while the list scrolls. Native review at 600×740 caught and corrected action overlap and inherited section scroll position. Builds show compact counts; full receipts, inspections and live test records download independently. Token/brand changes invalidate cached build evidence while preserving recovery records. The [core status](CORE-KIT-STATUS.md) and [maintenance runbook](MAINTAINING-KIT.md) state the accepted contracts and follow-up work.

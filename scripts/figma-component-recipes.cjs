@@ -1883,6 +1883,17 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       styles,
     })
   );
+  families.push(
+    ...require('./figma-segmented-wrapper-recipes.cjs').buildSegmentedWrapperRecipes(
+      {
+        root,
+        modes,
+        variables,
+        styles,
+        families,
+      }
+    )
+  );
   for (const variable of variables) byName.set(variable.name, variable);
   function validate(node, component, entry) {
     const names = [

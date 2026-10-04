@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes */
+/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes, advanceMangroveSegmentedWrapperProbes, advanceMangroveCoreContentProbes */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
  * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
@@ -10,7 +10,7 @@
 const ID_KEY = 'mgId';
 const STYLE_ID_KEY = 'mgStyleId';
 
-figma.showUI(__html__, { width: 440, height: 680, themeColors: true });
+figma.showUI(__html__, { width: 600, height: 740, themeColors: true });
 
 // Figma API rejections can be strings rather than Error instances.
 function errorMessage(error) {
@@ -733,9 +733,13 @@ figma.ui.onmessage = async msg => {
     if (msg.type === 'advance-segmented-capability-probes') {
       post('operation', {
         result: await (
-          msg.report?.scope?.startsWith('segmented-leaves-')
-            ? advanceMangroveSegmentedLeavesProbes
-            : advanceMangroveSegmentedCanonicalProbes
+          msg.report?.scope === 'core-content'
+            ? advanceMangroveCoreContentProbes
+            : msg.report?.scope === 'segmented-wrapper'
+              ? advanceMangroveSegmentedWrapperProbes
+              : msg.report?.scope?.startsWith('segmented-leaves-')
+                ? advanceMangroveSegmentedLeavesProbes
+                : advanceMangroveSegmentedCanonicalProbes
         )(msg.doc, msg.brand, msg.report, msg.buildResult),
       });
       return;
