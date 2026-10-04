@@ -1,0 +1,74 @@
+# Figma kit organisation and update contract
+
+Updated 4 October 2026 after designer review of the native canvas. **This is the next open acceptance gate.** The bounded core components have construction and consumer evidence; the file is not yet accepted as an understandable designer library. Complete this gate before expanding the catalogue.
+
+## Why the Table selection is so large
+
+The purple selection in the reported screenshot is the Table component set, containing eight variants. Selecting a set includes the empty space between its variants. It does not mean that the neighbouring Review examples are Table children.
+
+There are two actual layout defects in `kit-builder.js`:
+
+1. Every variant uses a grid cell based on the largest width and largest height in the family. Table variants range from about 148px to 1,117px high, so the small tables inherit very large empty row gaps.
+2. `Mangrove / Main components` has a fixed 1,200px width, while Table's set is 2,328px wide and clipping is off. The Review root was positioned beside the nominal main width when first created; later growth does not reposition it. Table therefore extends into the Review area.
+
+The saved clean inspection confirms a 2,328 × 3,518.34375px Table set, a 1,200px main root and a Review root beginning within the Table set's horizontal extent. Individual component acceptance does not establish a usable canvas layout. Clipping the main frame would hide the defect rather than repair it.
+
+## Intended reading sequence
+
+Use numbered native sections on the existing page for the first migration. These are named destinations in the Layers panel, with headings and a visual index. Multiple pages can follow when useful, but building on another page currently creates a separate scope, not a migration. Do not require a paid plan merely to make the local kit understandable.
+
+| Destination                         | What a designer finds                                                                                                                      | Ownership                                                                      |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| **00 Start here**                   | Purpose, current brand, supported core, acceptance labels, how to insert/edit components, links to Storybook and maintenance, visual index | Generated skeleton; separately identified manual guidance                      |
+| **01 Foundations**                  | Colours and semantic roles, typography, spacing, radii, shadows/focus, layout rules and eventually icons/logos                             | Source-generated specimens; manual usage annotations                           |
+| **02 Components**                   | Reusable controls and content elements, grouped by task, with compact variant sets and nearby instance-based examples                      | Generated main components and generated review examples in distinct containers |
+| **03 Compositions (organisms)**     | Table with rows/cells, ComboBox with options, Text CTA, TOC and Segmented composition; documented dependencies and supported edits         | Generated source-backed compositions and examples                              |
+| **04 Page patterns**                | Clearly labelled article, landing, search/results and form examples as they become accepted; current missing coverage listed               | Explicit generated recipes or designer-owned instances; ownership labelled     |
+| **90 Diagnostics and pending work** | Temporary tests, known font/style failures and unsupported assets, visually separate from the usable library                               | Explicit diagnostic ownership and exact cleanup records                        |
+
+Table rows and cells remain real reusable dependencies, with links from Table's documentation. Their physical grouping must not change the dependency model. A composition and a page example are distinct deliverables; do not invent empty production components to fill the index.
+
+Tokens remain variables in the Variables interface. Foundations specimens explain those variables on the canvas. Start with the current collection and aliases; a Primitives/Brand collection split is a separate migration decision.
+
+## Layout rules
+
+- Size each variant row from the variants in that row, rather than the tallest variant anywhere in the set. Use measured column widths and explicit padding/gaps. Arrange or label extreme content presets separately within the family where useful.
+- Fit generated containers to their actual child extents, including declared overflow. Place neighbouring sections from their measured bounds after layout. Check both selection bounds and rendered overflow; a nominal frame width is insufficient.
+- Keep main components, review instances, manual examples and diagnostics visibly distinct. Shared dependencies stay linked; no detachment or duplication is needed for presentation.
+- Use readable headings, source/usage descriptions, consistent labels and a visual index. Verify at normal zoom with someone unfamiliar with the file. A vertical build-order dump is not the intended designer navigation.
+- Restrict any automatic repositioning to generated containers and main-component presentation. Do not move designer-owned page examples or change reusable component internal geometry as a side effect of tidying the canvas.
+
+## Automatic and manual synchronisation
+
+This table defines the intended maintenance boundary. Some current update behaviour is proven; the section migration and layout reconciliation still need implementation and native acceptance.
+
+| Change                                               | Automatic update contract                                                                        | Manual or reviewed step                                                                                                           |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Token values and aliases                             | Import into existing variable IDs, maintaining valid aliases and style bindings                  | Review affected brands and rendered consumers; skipped values and fonts remain explicit issues                                    |
+| Existing component visuals/anatomy under stable keys | Update existing sets, variants, properties and nested dependencies in place                      | Review affected consumer overrides and source fidelity; stable paths do not make arbitrary anatomy refactors safe                 |
+| Canvas section or family placement                   | Reconcile a versioned generated layout; preserve main, variant, property and instance identities | Perform the first migration from the existing page; capture a baseline and explicitly map old container locations                 |
+| Generated review specimens                           | Create missing specimens; preserve existing edited content on an ordinary update                 | Review changed seed content; use explicit reseeding or supported refresh when intended                                            |
+| Documentation                                        | Update separately keyed generated headings, metadata and source examples                         | Keep manual annotations and designer examples in identified, preserved areas; never replace a whole mixed-content frame           |
+| Family, variant, property or anatomy rename/removal  | Report a migration or retirement requirement                                                     | Supply an explicit old-to-new mapping and test existing overrides before applying it; no automatic name-based recreation/deletion |
+| Designer-authored page/example                       | Existing linked instances inherit accepted main-component changes                                | Designer reviews composition, content, crop, layout and interaction; plugin does not regenerate the page from its appearance      |
+| Published library update                             | Later: publish accepted assets and offer updates to consuming files                              | Maintainer describes release; consumers review/accept updates and verify preserved overrides                                      |
+
+Current anatomy identity includes name paths. A display rename or reparenting can therefore change keys unless a migration preserves the existing identity. Current builder ownership is indexed on the current page and generated roots are reattached to that page. Moving frames manually into new sections will not establish a durable architecture: the builder must learn the hierarchy first.
+
+Use explicit immutable presentation keys independent of section titles, with a versioned migration map for existing roots. Keep the currently proven component keys. Distinguish inherited metadata on normal instances from canonical ownership using the existing validated main-component check. Reject duplicate, missing or conflicting ownership before migration writes. Do not adopt unrelated objects by their names.
+
+## Acceptance criteria before designer handoff
+
+- [ ] A novice can locate foundations, a component, a composition, page patterns and pending work from Start here and the Layers panel without understanding build order.
+- [ ] Table's variant grid has row-specific spacing, fits its containing section, and does not intersect unrelated sections or Review examples. Check all families, not just Table, at normal zoom.
+- [ ] Existing canonical IDs, property IDs, variable/style bindings and nested instance links survive the hierarchy migration. No detach/recreate shortcut.
+- [ ] Two ordinary reruns create no duplicate sections, sets, variants or review specimens and retain manual guidance, edited consumer content and designer-owned placement.
+- [ ] A bounded source change updates the affected component and its dependent composition; unrelated assets and manual areas remain unchanged. New families enter their declared destination once, with a visible acceptance label.
+- [ ] Rename/removal conflicts produce an actionable migration report. Verify a refusal before writes and a deliberate mapped migration with existing overrides.
+- [ ] Save pre/post inspection and operation records, visually review the reorganized file, and repeat from a plugin restart. Mock success alone is insufficient.
+
+## Remaining mature-kit deliverables
+
+After the organisation gate, track these as separate accepted scopes: visual foundation sheets and layout presets; searchable source icons/logos; broader component and composition coverage; realistic page examples; Condensed font/Tabs and Editorial CTA repairs; wider content/resize/variant-switch acceptance; accessibility guidance and contrast review; other brands and Arabic/RTL; optional prototype interactions; and published-library consumption and release practices. Code Connect is optional later integration.
+
+See [core status](CORE-KIT-STATUS.md) for bounded component evidence and [the inventory](COMPONENT-INVENTORY.md) for source coverage. A plan upgrade enables additional distribution/theme capabilities, but does not repair organisation, fonts or update architecture.

@@ -2,7 +2,7 @@
 
 A spike, stacked on the React Aria pilot (unisdr/undrr-mangrove#1088). It turns Mangrove's tokens into local Figma variables, text styles, effect styles and native component recipes so a Figma kit can use the same spacing, colour and theme layers as the code. Nothing here is published or supported yet.
 
-See the [architecture review](ARCHITECTURE-REVIEW.md) for the acceptance gates when composing and maintaining the kit. The next delivery milestone is the [core kit](CORE-KIT-STATUS.md), with an explicit done/remaining checklist and deferred catalogue work.
+See the [architecture review](ARCHITECTURE-REVIEW.md) for the acceptance gates when composing and maintaining the kit. The [core kit](CORE-KIT-STATUS.md) records bounded component evidence and deferred catalogue work. **The next acceptance gate is [file organisation and durable updates](KIT-ARCHITECTURE.md):** readable foundations/components/compositions/page-pattern sequencing, non-overlapping variant grids and preserved identities, edited instances and manual areas through reruns. Designer handoff remains open until that gate passes.
 
 ## How it fits together
 

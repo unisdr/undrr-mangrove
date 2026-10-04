@@ -6,6 +6,14 @@ This runbook covers source changes, local verification and updates to the canoni
 
 The [architecture review](ARCHITECTURE-REVIEW.md) records the current composition, responsiveness, identity and publication gates. Check affected findings when adding a composed component.
 
+## Organize the file before expanding the catalogue
+
+The next acceptance gate is [file organisation and durable updates](KIT-ARCHITECTURE.md). Use its reading sequence, layout rules, automatic/manual ownership table and migration checks. The current main/review build-order sheet is not accepted as a designer handoff; Table's large set overflows its fixed-width parent into Review.
+
+Do not fix this by dragging generated roots to another page or section, clipping overflow, detaching instances or rebuilding canonical assets. The builder currently indexes ownership on the current page and reattaches generated roots there. First implement explicit generated-section identities and a versioned in-place migration, then prove retained component/property IDs, bindings, edited overrides and manual annotations through ordinary reruns. Inspect actual child and rendered bounds when reconciling layout. Reorganizing the canvas must not alter source component anatomy or consumer geometry.
+
+Routine token/style/component changes remain source-owned. Manual documentation and designer-authored page compositions need separately identified preserved areas; changed defaults, anatomy/property renames, retirements and published updates require review. The architecture contract lists what is automatic, what is manual and the native evidence needed. Building more families is deferred until this gate passes.
+
 ## Maintain the plugin interface
 
 Keep everyday work in **Import** and **Core kit**, with temporary tests and exports in **Diagnostics**. Preserve the persistent navigation, brand context and results area. The component list should scroll within its available space; selection counts, refresh choice and Build must stay visible without overlapping rows.

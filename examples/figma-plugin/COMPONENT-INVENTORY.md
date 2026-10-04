@@ -2,7 +2,7 @@
 
 Catalogue audit: 3 October 2026. The current TOC, Status Label and initial Segmented subset checkpoint is dated 4 October 2026, with browser sources and native evidence documented in [LEARNINGS.md](LEARNINGS.md). This is the build inventory for the full Mangrove kit. An inventory entry is a source pattern, not a promise that every prop becomes a variant.
 
-The next delivery milestone is the [core kit](CORE-KIT-STATUS.md): 25 candidate families and 297 recipe variants, with explicit completed tasks, remaining native gates and deferred work. The full inventory remains follow-up work.
+The [core kit](CORE-KIT-STATUS.md) contains 25 candidate families and 297 recipe variants with bounded construction/consumer evidence. **File organisation and durable updates are the next open gate**, before catalogue expansion: see [KIT-ARCHITECTURE.md](KIT-ARCHITECTURE.md). The full inventory remains follow-up work.
 
 ## Scope and evidence
 

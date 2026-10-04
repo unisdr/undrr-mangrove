@@ -4,6 +4,14 @@ Reviewed on **3 October 2026**, against source revision `ea33e7b8`, before the h
 
 The numbered findings describe that historical baseline. The outcome sections record later implementation and evidence. The [current checkpoint](#loader-and-compact-empty-state-checkpoint) contains 394 variables, 87 text definitions, eight effects, 23 families and 271 recipe variants; generated definitions are distinct from successfully imported native styles.
 
+## Designer review on 4 October 2026: organisation gate reopened
+
+The bounded core construction and consumer gates passed, but designer review of the actual file identified a separate high-priority handoff defect. The Table set has a 2,328px width and 3,518.34375px height; a family-wide maximum-height grid leaves large gaps, and the 1,200px main root does not contain the set. Review remains at its original neighbouring position, so the two areas intersect. These values are confirmed in the saved clean native inspection. The Review examples are not Table descendants.
+
+[The kit architecture contract](KIT-ARCHITECTURE.md) defines the next gate: a readable numbered sequence, compact family layouts, distinct main/review/manual/diagnostic areas, generated ownership and versioned in-place migration. Preserve existing canonical and property IDs, bindings, nested references and overrides; prove ordinary reruns and a bounded source change without duplicate or overwritten manual content. Current-page ownership and root reattachment must be updated before a durable hierarchy move. Clipping or moving frames by hand is insufficient.
+
+This supersedes the historical recommendation below to defer file organisation: usability feedback makes it necessary before wider component construction. The plugin UI acceptance and bounded component evidence remain recorded; designer file handoff is open. Mature-kit coverage gaps are listed in the contract as separate follow-up scopes.
+
 ## Assessment
 
 The current approach is suitable for continuing a bounded exploratory kit. Values belong to the exporter, construction is generic, aliases survive import, main components are separate from instance-based review specimens, and composites build their dependencies first. Shared text/effect styles, editable TEXT/BOOLEAN properties and exposed nested instances give it a useful native Figma structure. Repeat-build and actual desktop identity evidence are stronger than a one-time generated canvas.
