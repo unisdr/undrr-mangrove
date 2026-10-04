@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned, mgFormActionJoiningPreflight, mgRunFormActionJoiningProbes */
+/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned, mgFormActionJoiningPreflight, mgRunFormActionJoiningProbes, mgSegmentedFocusSizingPreflight, mgRunSegmentedFocusSizingProbes */
 // Isolated diagnostic assets, not FormGroup components or source fidelity claims.
 const MG_CAPABILITY_KEY = 'mgCapabilityProbeId';
 let mgCapabilitySequence = 0;
@@ -33,6 +33,7 @@ async function runMangroveCapabilityProbes(
   let segmentedPlan;
   let canonicalPlan;
   let formActionPlan;
+  let focusSizingPlan;
   try {
     if (
       ![
@@ -42,6 +43,7 @@ async function runMangroveCapabilityProbes(
         'segmented-joining',
         'segmented-canonical',
         'form-action-joining',
+        'segmented-focus-sizing',
       ].includes(scope)
     )
       throw new Error(`Unknown capability probe scope ${scope}.`);
@@ -275,6 +277,14 @@ async function runMangroveCapabilityProbes(
         mode,
         report
       );
+    if (scope === 'segmented-focus-sizing')
+      focusSizingPlan = await mgSegmentedFocusSizingPreflight(
+        doc,
+        brandId,
+        collection,
+        mode,
+        report
+      );
     if (scope === 'toc-link-sizing') {
       report.preflight.diagnosticWidths = [240, 390, 900];
       report.preflight.diagnosticCaps = [195.5, 345.5, 855.5];
@@ -333,22 +343,28 @@ async function runMangroveCapabilityProbes(
     report.rootId = root.id;
     record(root);
     root.name =
-      scope === 'form-action-joining'
-        ? 'Mangrove native capability probes / Form Action joining'
-        : scope === 'segmented-joining'
-          ? 'Mangrove native capability probes / Segmented joining'
-          : scope === 'segmented-canonical'
-            ? 'Mangrove native capability probes / Segmented canonical'
-            : scope === 'toc-link-sizing'
-              ? 'Mangrove native capability probes / TOC link sizing'
-              : scope === 'toc-range-paints'
-                ? 'Mangrove native capability probes / TOC range paints'
-                : 'Mangrove native capability probes';
+      scope === 'segmented-focus-sizing'
+        ? 'Mangrove native capability probes / Segmented focus sizing'
+        : scope === 'form-action-joining'
+          ? 'Mangrove native capability probes / Form Action joining'
+          : scope === 'segmented-joining'
+            ? 'Mangrove native capability probes / Segmented joining'
+            : scope === 'segmented-canonical'
+              ? 'Mangrove native capability probes / Segmented canonical'
+              : scope === 'toc-link-sizing'
+                ? 'Mangrove native capability probes / TOC link sizing'
+                : scope === 'toc-range-paints'
+                  ? 'Mangrove native capability probes / TOC range paints'
+                  : 'Mangrove native capability probes';
     root.layoutMode = 'NONE';
     root.clipsContent = false;
     root.fills = [];
     root.resize(
-      ['segmented-joining', 'form-action-joining'].includes(scope)
+      [
+        'segmented-joining',
+        'form-action-joining',
+        'segmented-focus-sizing',
+      ].includes(scope)
         ? 1500
         : scope === 'toc-link-sizing'
           ? 2820
@@ -412,6 +428,29 @@ async function runMangroveCapabilityProbes(
       result.errors.push(message(error));
     }
     result.affectedNodeIds = report.ledger.slice(start).map(item => item.id);
+  }
+  if (scope === 'segmented-focus-sizing') {
+    try {
+      await mgRunSegmentedFocusSizingProbes(
+        {
+          report,
+          root,
+          record,
+          create,
+          instance,
+          test,
+          bounds,
+          collection,
+          mode,
+        },
+        focusSizingPlan
+      );
+    } catch (error) {
+      report.errors.push(`Segmented focus sizing: ${message(error)}`);
+    }
+    report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
+    report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
+    return report;
   }
   if (scope === 'form-action-joining') {
     try {

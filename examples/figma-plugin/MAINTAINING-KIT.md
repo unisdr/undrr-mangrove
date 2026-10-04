@@ -434,3 +434,11 @@ Temporary root instances inherit their masters' `mgKitId`. Give each its own sta
 The final temporary ledger contains 25 nodes. Cleanup validates the stored creation manifest, actual node types, parent relationships and attached canonical masters before removing its root. A moved, detached, changed or foreign consumer is refused. Failed advances retain their complete partial ledger for inspection and conservative cleanup. Do not bypass a refusal with a name scan or broad deletion.
 
 This gate covers UNDRR's three Position=First states only. It does not accept remaining positions, Small, focused or disabled states, legend breakpoints, full-width focus contours or wrapped rows. Keep the canonical family, variant, text-style and Label identities when expanding the subset.
+
+### Extending Segmented focus after the sizing diagnostic
+
+Run `node examples/figma-plugin/dev/mock-segmented-focus-capabilities.cjs` after generating tokens. This checks source preflight, exact temporary ownership, typography ordering, partial failure recovery and conservative cleanup. It does not simulate native fractional constraints or pixel rendering.
+
+For the native diagnostic, save complete operation and inspection reports before changing watched plugin files. Restart the plugin, load the saved operation ledger and remove its exact owned nodes. Save cleanup and a new inspection, compare all existing asset fields, then save a local Figma backup. Refuse cleanup on foreign or changed topology; do not delete by layer names.
+
+When adding focus leaves, use the tested coincident SCALE sizing policy only behind a source-specific recipe. Retain source corner aliases, constant 4/2 outside strokes and gold-before-white paint order. Apply typography literals before shared style attachment and inherit its validated aliases. Preserve exact existing family/variant/TEXT/Label identities. The old three-state acceptance scope must retain its declared coverage; add a separate expanded matrix gate with edited and fresh consumers, two ordinary scoped builds, normal-scale browser/native review and conservative cleanup. Full-width/intrinsic rail focus stacking and wrapped seams require composition evidence separately.

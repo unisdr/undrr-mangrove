@@ -225,3 +225,7 @@ For each build, update this inventory or link an evidence entry in LEARNINGS wit
 - All-brand and Arabic/RTL results, or an explicit remaining boundary. Report source-browser versus Figma layout differences instead of hiding them with clipping, invented fonts or detached instances.
 
 Known multiline-label boundary: browser labels use an inline red required `::after` marker immediately after the last wrapped text line. A HUG label plus separate Boolean marker cannot reproduce that flow. A single native TEXT with a styled suffix can reproduce appearance, but arbitrary TEXT edits and a separate required Boolean need an explicit formatting repair contract. Until implemented and observed, retain this as a documented field gap rather than claiming full inline-flow equivalence.
+
+### Segmented focus sizing checkpoint
+
+The corrected 103-node native diagnostic retains the exact shared 120% style and verifies coincident SCALE outline geometry across 33 samples. STRETCH remains a failing comparison. Both runs clean up exactly and retain all 6,158 existing assets unchanged. Source variables, complete native fonts, editable Label keys, source range paints, fractional sizing and exact private-master repeat baselines are recorded. Canonical recipes remain three Position=First states; focused leaves, Small, rail compositions, matched pixels and middle focus stacking are not yet accepted. A separate expanded native gate must preserve existing identities through two ordinary builds.
