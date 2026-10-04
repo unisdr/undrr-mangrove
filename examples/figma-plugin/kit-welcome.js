@@ -9,7 +9,11 @@ function mgWelcomeBounds(node) {
   };
 }
 
-function mgWelcomeLegacySpacing(main, review) {
+async function mgWelcomeLegacySpacing(
+  main,
+  review,
+  { validateOnly = false } = {}
+) {
   const page = figma.currentPage;
   const roots = page.children.filter(node =>
     ['main', 'review', 'welcome'].includes(mgReadIdentity(node, 'mgKitId'))
@@ -21,14 +25,37 @@ function mgWelcomeLegacySpacing(main, review) {
   );
   if (diagnostics.length > 1)
     throw new Error('Duplicate historical focus diagnostics.');
+  const diagnostic = diagnostics[0];
+  if (diagnostic && diagnostic.type !== 'FRAME')
+    throw new Error(
+      'Historical focus diagnostics must retain their original frame.'
+    );
+  const reorder = diagnostic && page.children[0] !== diagnostic;
+  if (reorder) {
+    const fonts = new Map();
+    for (const node of diagnostic.findAll(node => node.type === 'TEXT'))
+      for (const run of node.getStyledTextSegments(['fontName']))
+        fonts.set(JSON.stringify(run.fontName), run.fontName);
+    for (const font of fonts.values()) await figma.loadFontAsync(font);
+  }
+  if (validateOnly) return { updatedNodeIds: [] };
   const updatedNodeIds = [];
   const x = Math.max(...roots.map(node => mgWelcomeBounds(node).right)) + 160;
   const y = Math.min(...roots.map(node => mgWelcomeBounds(node).top));
   for (const node of diagnostics) {
-    if (node.x === x && node.y === y) continue;
-    node.x = x;
-    node.y = y;
-    updatedNodeIds.push(node.id);
+    let changed = false;
+    if (reorder) {
+      // Index zero is the backmost child, shown last in the Layers panel.
+      // Only the diagnostic moves; the other page roots keep their order.
+      page.insertChild(0, node);
+      changed = true;
+    }
+    if (node.x !== x || node.y !== y) {
+      node.x = x;
+      node.y = y;
+      changed = true;
+    }
+    if (changed) updatedNodeIds.push(node.id);
   }
   return { updatedNodeIds, gap: 160 };
 }
@@ -164,6 +191,10 @@ async function createMangroveWelcome(
       for (const run of node.getStyledTextSegments(['fontName']))
         fonts.set(JSON.stringify(run.fontName), run.fontName);
   for (const face of fonts.values()) await figma.loadFontAsync(face);
+  if (destination === page && index.get('main') && index.get('review'))
+    await mgWelcomeLegacySpacing(index.get('main'), index.get('review'), {
+      validateOnly: true,
+    });
   if (validateOnly) return { operation: 'kit-welcome-preflight', errors: [] };
   const created = new Set();
   const updated = new Set();
@@ -238,6 +269,11 @@ async function createMangroveWelcome(
     root.clipsContent = false;
     root.setExplicitVariableModeForCollection(collection, mode.modeId);
     root.fills = [solid('color/neutral-0', root)];
+    if (destination === page && index.get('main') && index.get('review'))
+      for (const id of (
+        await mgWelcomeLegacySpacing(index.get('main'), index.get('review'))
+      ).updatedNodeIds)
+        updated.add(id);
     const content = frame('welcome/content', root, 1328, {
       padding: 0,
       fill: null,
@@ -358,7 +394,8 @@ async function createMangroveWelcome(
       const main = index.get('main');
       const review = index.get('review');
       if (main && review)
-        for (const id of mgWelcomeLegacySpacing(main, review).updatedNodeIds)
+        for (const id of (await mgWelcomeLegacySpacing(main, review))
+          .updatedNodeIds)
           updated.add(id);
     } else root.x = root.y = 32;
     if (zoom) {

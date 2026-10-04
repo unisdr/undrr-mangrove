@@ -36,6 +36,7 @@ Desktop access recovered on 4 October 2026. Native Welcome is now applied and re
 - [x] Review the welcome board at normal zoom for readable headings, unclipped cards and the correct brand. Novice usability is a separate gate.
 - [x] Match contents to actual owned destination names and Layers order; exclude absent planned sections. Native correction is reviewed at 100% zoom, measures 1,440 × 1,223px, creates zero nodes and retains all 6,476 inspected asset IDs. Non-Welcome records are unchanged and a repeat preserves the complete result. The mock also verifies switching to actual section names after migration.
 - [x] Confirm historical diagnostics clear Main, Review and Welcome without changing child geometry or fonts.
+- [x] Keep maintenance diagnostics last in legacy Layers. Native first update and repeat create zero nodes, preserve all 6,476 inspected asset IDs, retain exact diagnostic/component/style/variable records and other-root order, and update only the index text. The final 100% view shows the collapsed diagnostic root last. Placement in the pending-work section remains part of the full migration gate.
 - [x] Repeat from a plugin restart, create zero duplicate nodes, and navigate Start here without loading JSON.
 - [ ] Add a native manual note and verify its preservation through update and later section migration.
 - [ ] Ask a novice to find a foundation, component, composition and pending item; retain the broader designer-handoff gate below.

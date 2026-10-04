@@ -126,7 +126,7 @@ function preserved(env, baseline, omit = new Map()) {
     assert(node, 'Every prior source/manual asset must remain');
     const actual = record(node);
     const original = copy(expected);
-    if (node.type === 'PAGE') {
+    if (node.type === 'PAGE' && !omit.get(id)?.includes('childIds')) {
       assert.deepStrictEqual(
         actual.childIds.filter(child => original.childIds.includes(child)),
         original.childIds,
@@ -416,6 +416,8 @@ async function main() {
       height: review.height,
     };
     const root = owned(env, 'diagnostics.focus-ring');
+    const manual = env.figma.createFrame();
+    manual.name = 'Manual working frame';
     root.x = 0;
     root.y = -80;
     const baseline = all(env),
@@ -432,14 +434,51 @@ async function main() {
       root.x >= right + 160,
       'Diagnostics must clear both rendered roots by at least160'
     );
-    preserved(env, baseline, new Map([[root.id, ['x', 'y']]]));
+    assert.strictEqual(env.figma.currentPage.children[0], root);
+    assert.deepStrictEqual(
+      env.figma.currentPage.children
+        .filter(node => node !== root)
+        .map(node => node.id),
+      baseline
+        .get(env.figma.currentPage.id)
+        .childIds.filter(id => id !== root.id),
+      'Moving diagnostics last in Layers preserves every other root order'
+    );
+    preserved(
+      env,
+      baseline,
+      new Map([
+        [root.id, ['x', 'y']],
+        [env.figma.currentPage.id, ['childIds']],
+      ])
+    );
     assert.deepStrictEqual(subtree(root).slice(1), diagnosticChildren);
     const stable = complete(env);
     const repeated = await env.call('mgWelcomeLegacySpacing', main, review);
     assert.deepStrictEqual(copy(repeated.updatedNodeIds), []);
     assert.deepStrictEqual(complete(env), stable);
+    env.figma.currentPage.appendChild(root);
+    const label = root.findAll(node => node.type === 'TEXT')[0];
+    label.fontName = { family: 'Roboto', style: 'Bold' };
+    env.state.rejectedFonts.add('Roboto Bold');
+    env.state.loadedFonts.delete('Roboto Bold');
+    await refuse(env, 'missing diagnostic font before Welcome/reorder writes');
+    env.state.rejectedFonts.delete('Roboto Bold');
+    const beforeWelcomeDiagnosticChildren = subtree(root).slice(1);
+    const welcomed = await env.call('createMangroveWelcome', doc, 'undrr');
+    assert.deepStrictEqual(copy(welcomed.errors), []);
+    const contents = owned(env, 'welcome/content/index/body').characters;
+    assert.strictEqual(contents.split('\n').slice(1, 5).at(-1), root.name);
+    assert(
+      !contents.includes(manual.name),
+      'Manual roots stay outside the generated kit index'
+    );
+    assert.deepStrictEqual(
+      subtree(root).slice(1),
+      beforeWelcomeDiagnosticChildren
+    );
     console.log(
-      'ok diagnostics move beyond nominal and rendered Main/Review extents by160 without source subtree changes and repeat idempotently'
+      'ok diagnostics stay last in Layers and clear rendered bounds, preserving other root order and anatomy; missing diagnostic fonts refuse before writes'
     );
   }
   {

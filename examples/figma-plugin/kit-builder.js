@@ -2922,9 +2922,15 @@ async function buildMangroveComponents(
     result.presentation = mgLayoutLegacySpacing(main, review);
     if (result.presentation.changed && !created.has(review.id))
       updated.add(review.id);
-    if (typeof mgWelcomeLegacySpacing === 'function')
-      for (const id of mgWelcomeLegacySpacing(main, review).updatedNodeIds)
-        updated.add(id);
+    if (typeof mgWelcomeLegacySpacing === 'function') {
+      try {
+        for (const id of (await mgWelcomeLegacySpacing(main, review))
+          .updatedNodeIds)
+          updated.add(id);
+      } catch (error) {
+        result.errors.push(`Legacy diagnostics: ${reportError(error)}`);
+      }
+    }
   }
   result.createdNodeIds = [...created];
   result.updatedNodeIds = [...updated];
