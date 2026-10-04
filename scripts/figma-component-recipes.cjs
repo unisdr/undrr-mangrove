@@ -1804,6 +1804,30 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       styles,
     })
   );
+  families.push(
+    ...require('./figma-switch-recipes.cjs').buildSwitchRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
+  families.push(
+    ...require('./figma-editorial-cta-recipes.cjs').buildEditorialCtaRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
+  families.push(
+    ...require('./figma-chip-recipes.cjs').buildChipRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
   for (const variable of variables) byName.set(variable.name, variable);
   function validate(node) {
     const names = [
@@ -1820,6 +1844,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       node.layout?.maxWidth,
     ].filter(Boolean);
     if (node.focusRing) names.push(...Object.values(node.focusRing));
+    if (node.absolute) names.push(node.absolute.offsetX, node.absolute.offsetY);
     for (const field of ['width', 'height'])
       if (
         typeof node.layout?.[field] === 'string' &&

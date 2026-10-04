@@ -20,7 +20,7 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 308 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 15 component text styles and five effect styles. Read the build report for current totals. Component recipes cover 159 variants across 15 families; 16 tokens remain skipped as variables.
+Current output contains 359 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 21 component text styles and seven effect styles. Read the build report for current totals. Component recipes cover 240 variants across 19 families; 16 tokens remain skipped as variables.
 
 ### Text and effect foundations
 
@@ -116,6 +116,8 @@ Import one brand first, then select families and choose **Build selected compone
 | Radio                |       30 |
 | Checkbox             |       30 |
 | Form error summary   |        6 |
+| Switch               |       22 |
+| Switch small         |       20 |
 
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
 
@@ -126,6 +128,10 @@ Composed Tabs exposes the nested trigger properties; open ComboBox exposes its n
 **Inspect kit** records actual IDs and resolved consumer bindings without loading fonts. Tick **Check font loading during inspection** to include font probes when needed; unchecked reports contain `fonts: null`. The window displays a bounded inventory summary, while **Save inspection report** downloads the complete JSON. **Focus diagnostics** compares literal effect order with bound styles; PNG export buttons capture review frames. Select exactly one family and use **Export selected family PNG** for a bounded image of its owned review section; **Export review PNG** captures the whole growing sheet. These are local development operations and do not publish a library.
 
 **Save operation report** downloads the latest import, component build or focus diagnostics result without shortening its IDs, errors or audit entries. Filenames identify the operation: `mangrove-import-report.json`, `mangrove-component-build-report.json` or `mangrove-focus-diagnostics-report.json`. Inspection reports remain separate. Actions run one at a time; the previous operation report stays available while another action runs or after an error. Reports are held in the plugin window until it closes, so save them before restarting it.
+
+**Diagnose font loading** performs a bounded probe of the exact selected-brand UI/display faces and at most one already-listed naming candidate per face. It reads the supplied font inventory, tests at most four exact names and reports variable-axis tags. It creates no nodes and assigns no fonts. Save its full operation report. On 4 October, the exact `Roboto Condensed` Regular/Bold faces failed while the listed `Roboto` / `Condensed Regular` and `Condensed Bold` names loaded. This distinguishes resolution paths, not matching font files, axis coordinates or rendering. Font roles remain unchanged. See [the font investigation](LEARNINGS.md#font-names-and-loading-do-not-prove-font-identity).
+
+**Native capability diagnostics** creates a separate temporary area for legend sizing, editable slots and instance-vector experiments. Save its report before closing the plugin. After restart, **Load saved capability report** recovers the exact ledger; **Audit saved capability ledger** reads current ownership and reconciles permitted inherited probe descendants without changing the canvas. Cleanup refuses foreign or unrecorded children and moved assets. A failed capability test is evidence for the component contract, not a reason to detach consumers or invent equivalent behaviour. See [the runbook](MAINTAINING-KIT.md#native-capability-experiments).
 
 Stable public token and component identities use shared plugin data in namespace `orgundrrmangrove`. Desktop imports also read legacy private IDs and reject conflicting ownership. Shared identity metadata contains no account information or secrets. The optional acceptance probes store a bounded synthetic workflow ledger on their temporary root; save and remove it using the acceptance controls. See [Figma shared plugin data](https://developers.figma.com/docs/plugins/api/properties/nodes-setsharedplugindata/).
 
@@ -289,8 +295,17 @@ node examples/figma-plugin/dev/mock-kit.cjs
 node examples/figma-plugin/dev/mock-choice.cjs
 node examples/figma-plugin/dev/mock-checkbox.cjs
 node examples/figma-plugin/dev/mock-form-summary.cjs
+node examples/figma-plugin/dev/mock-switch.cjs
+node examples/figma-plugin/dev/mock-font-diagnostics.cjs
+node examples/figma-plugin/dev/mock-capabilities.cjs
 node examples/figma-plugin/dev/mock-svg.cjs
 node examples/figma-plugin/dev/mock-acceptance.cjs
+node examples/figma-plugin/dev/mock-editorial-cta.cjs
+node examples/figma-plugin/dev/mock-editorial-contracts.cjs
+node examples/figma-plugin/dev/mock-editorial-acceptance.cjs
+node examples/figma-plugin/dev/mock-chips.cjs
+node examples/figma-plugin/dev/mock-audit-native-text.cjs
+node examples/figma-plugin/dev/mock-connector-scopes.cjs
 node examples/figma-plugin/dev/mock-review-export.cjs
 node examples/figma-plugin/dev/mock-ui.cjs
 ```
@@ -298,6 +313,14 @@ node examples/figma-plugin/dev/mock-ui.cjs
 The kit harness covers native identity and properties, instance overrides and nested exposure, dependency and font blocking, a scoped Roboto rebuild without loading or rewriting unavailable Tabs, font preflight before container mode transitions, transparent focus geometry, codec transport and the actual API restrictions encountered.
 
 The mock copies the Figma behaviours that have caused bugs here, but it is not Figma. Confirm a change in the desktop app before relying on it.
+
+Audit a saved **Inspect kit** report against the current generated recipes:
+
+```sh
+node examples/figma-plugin/dev/audit-native-text.cjs inspection.json --report text-audit.json
+```
+
+The audit checks owned main TEXT paths, style IDs, decoration, explicit wrapping, offsets and recorded missing fonts. It exits with failure for gaps or incomplete source coverage. Use `--families chips,switch` for a clearly labelled subset and `--doc` for the exact JSON used to build an older inspection. It does not load fonts or prove rendering. Keep reports containing native IDs local; publish bounded findings in the learnings and PR.
 
 ## What this spike does not cover yet
 
@@ -335,8 +358,14 @@ The scoped Radio PNG exposed a real inner-shadow difference: a literal 3px sprea
 
 ### Checkbox and error-summary checkpoint
 
-The current recipes add 30 Checkbox variants and six LTR Form error summary variants, bringing the export to 308 variables, 75 text definitions and five effects. Desktop builds created both families; Checkbox repeated with zero new nodes and no errors. Its checkmark imports the exact source SVG into native vectors, preserving the white paint, round caps and square tile repetition in the two measured narrow presets. The current SVG runtime rejects changed assets or edited native geometry before rebuilding them. See the [maintenance contract](MAINTAINING-KIT.md).
+That checkpoint added 30 Checkbox variants and six LTR Form error summary variants, bringing its export to 308 variables, 75 text definitions and five effects. Desktop builds created both families; Checkbox repeated with zero new nodes and no errors. Its checkmark imports the exact source SVG into native vectors, preserving the white paint, round caps and square tile repetition in the two measured narrow presets. The current SVG runtime rejects changed assets or edited native geometry before rebuilding them. See the [maintenance contract](MAINTAINING-KIT.md).
 
 The error summary exposes Title and error messages as editable text properties. Its shared link style carries UNDERLINE and its title style carries BALANCE, as well as source font weights and line heights. Native visual checks caught and corrected lost underlines after text property assignment. The corrected 240px long examples show underlined wrapped links and balanced title text; the repeat created zero nodes, updated 114 and reported no errors. These checks cover default UNDRR LTR specimens. Wrapped inline link focus, arbitrary error counts, RTL and script-specific typography remain pending.
 
 **Instance override acceptance** prepares temporary edited ComboBox and Radio consumers. Save the preparation report, build those families with review refresh off, then compare and save the comparison report. The comparison is read-only; cleanup removes only recorded owned probes and retains changed or foreign content. A saved root ID recovers the ledger after plugin restart. See the [acceptance runbook](MAINTAINING-KIT.md) for the exact contract and native verification status.
+
+### Editorial CTA is under native review
+
+The 23 editorial CTA recipes extend the conventional Button with the source circular chevron action used by Hero. The first desktop build succeeded, including source-coloured review wrappers, but actual inspection found every Label inherited the final Focus style. Default and Hover typography are therefore not yet accepted. Shared-text-property propagation, consumer underline offsets and finite-width resizing are being checked in isolated native probes. See [the recorded findings](LEARNINGS.md#editorial-cta-construction-and-a-text-property-mismatch); do not treat passing mock construction as a faithful rendered component.
+
+The **Editorial CTA consumer acceptance** panel creates three temporary instances, exercises short/French/unbroken labels at finite widths and records actual text, font, badge and constraint readbacks. Save its full operation report before closing. Rebuild Editorial CTA with review refresh off, then compare against the saved baseline. Cleanup can recover the exact shared ledger from the saved Editorial root ID after restart. Failures remain in the report and do not authorise repairs to canonical components; the current styling mismatch is expected to fail those checks.

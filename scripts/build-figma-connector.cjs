@@ -176,6 +176,15 @@ function selectFamilies(doc, requested, variantIds) {
             specimens: (family.review.specimens || []).filter(specimen =>
               variants.some(variant => matches(variant, specimen.variant))
             ),
+            ...(family.review.variantSurfaces &&
+              typeof family.review.variantSurfaces === 'object' &&
+              !Array.isArray(family.review.variantSurfaces) && {
+                variantSurfaces: Object.fromEntries(
+                  Object.entries(family.review.variantSurfaces).filter(([id]) =>
+                    ids.has(id)
+                  )
+                ),
+              }),
           },
         }),
       };
@@ -365,6 +374,59 @@ function coreSource() {
   const end = prefix.indexOf(';', start);
   if (end < 0) throw new Error('Plugin UI startup terminator missing.');
   return prefix.slice(0, start) + prefix.slice(end + 1);
+}
+function specializeBuilder(source) {
+  // The exact subset is embedded losslessly in this connector. Gate only
+  // declarations absent from that subset, allowing Terser to remove helpers
+  // otherwise retained by unconditional schema checks. Every enabled branch
+  // keeps the desktop runtime's original validation. A changed source boundary
+  // fails closed rather than silently omitting a guard.
+  const replaceOnce = (before, after) => {
+    const start = source.indexOf(before);
+    if (start < 0 || source.indexOf(before, start + before.length) >= 0)
+      throw new Error(`Connector specialization boundary changed: ${before}`);
+    source =
+      source.slice(0, start) + after + source.slice(start + before.length);
+  };
+  replaceOnce(
+    'if (tree.absolute !== undefined) {',
+    'if (MG_CONNECTOR_ABSOLUTE && tree.absolute !== undefined) {'
+  );
+  replaceOnce(
+    'if (family.review?.preserveVariantSizing !== undefined) {',
+    'if (MG_CONNECTOR_INTRINSIC_VALIDATION && family.review?.preserveVariantSizing !== undefined) {'
+  );
+  replaceOnce(
+    'if (family.review?.variantSurfaces !== undefined) {',
+    'if (MG_CONNECTOR_REVIEW_SURFACES && family.review?.variantSurfaces !== undefined) {'
+  );
+  replaceOnce(
+    'if (specimen.surface !== undefined)',
+    'if (MG_CONNECTOR_REVIEW_SURFACES && specimen.surface !== undefined)'
+  );
+  replaceOnce(
+    'if (tree.textDecorationOffset !== undefined) {',
+    'if (MG_CONNECTOR_TEXT_OFFSET && tree.textDecorationOffset !== undefined) {'
+  );
+  replaceOnce(
+    'spec.textDecorationOffset !== undefined &&\n        node.textDecoration ===',
+    'MG_CONNECTOR_TEXT_OFFSET && spec.textDecorationOffset !== undefined &&\n        node.textDecoration ==='
+  );
+  replaceOnce(
+    'if (specimen.nodes !== undefined) {',
+    'if (MG_CONNECTOR_REVIEW_NODES && specimen.nodes !== undefined) {'
+  );
+  replaceOnce(
+    'if (specimen.nodes?.length && (fresh || refreshNarrowReview)) {',
+    'if (MG_CONNECTOR_REVIEW_NODES && specimen.nodes?.length && (fresh || refreshNarrowReview)) {'
+  );
+  replaceOnce(
+    'const surface =\n          specimen.surface ??\n          reviewOptions.variantSurfaces?.[specimen.variant.recipe.id];',
+    'const surface = MG_CONNECTOR_REVIEW_SURFACES && (specimen.surface ?? reviewOptions.variantSurfaces?.[specimen.variant.recipe.id]);'
+  );
+  // When surfaces are absent, the existing else branch still clears/hides an
+  // obsolete owned surface. Only new surface construction becomes unreachable.
+  return source;
 }
 function connectorInspectionSummary(report, nodeIds) {
   const nodes = report.nodes;
@@ -563,6 +625,54 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsSvg(variant.tree))
     );
+  function needsAbsolute(node) {
+    return (
+      node.absolute !== undefined || (node.children || []).some(needsAbsolute)
+    );
+  }
+  const absoluteEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsAbsolute(variant.tree))
+    );
+  const intrinsicReviewEnabled =
+    operation === 'build' &&
+    subset.components.families.some(
+      family => family.review?.preserveVariantSizing
+    );
+  const intrinsicValidationEnabled =
+    operation === 'build' &&
+    subset.components.families.some(
+      family => family.review?.preserveVariantSizing !== undefined
+    );
+  const reviewSurfacesEnabled =
+    operation === 'build' &&
+    subset.components.families.some(
+      family =>
+        family.review?.variantSurfaces !== undefined ||
+        (Array.isArray(family.review?.specimens) &&
+          family.review.specimens.some(
+            specimen => specimen?.surface !== undefined
+          ))
+    );
+  function needsTextOffset(node) {
+    return (
+      node.textDecorationOffset !== undefined ||
+      (node.children || []).some(needsTextOffset)
+    );
+  }
+  const textOffsetEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsTextOffset(variant.tree))
+    );
+  const reviewNodesEnabled =
+    operation === 'build' &&
+    subset.components.families.some(
+      family =>
+        Array.isArray(family.review?.specimens) &&
+        family.review.specimens.some(specimen => specimen?.nodes !== undefined)
+    );
   let source = 'const MG_SHARED_ONLY = true;\n';
   source += fs.readFileSync(path.join(PLUGIN, 'kit-identity.js'), 'utf8');
   source += `\n;\n${coreSource()}\n;\n`;
@@ -572,8 +682,13 @@ async function buildConnector({
       : ['diagnostics', 'inspect'].includes(operation)
         ? 'kit-inspection.js'
         : null;
-  if (runtime)
-    source += fs.readFileSync(path.join(PLUGIN, runtime), 'utf8') + '\n;\n';
+  if (runtime) {
+    const runtimeSource = fs.readFileSync(path.join(PLUGIN, runtime), 'utf8');
+    source +=
+      (operation === 'build'
+        ? specializeBuilder(runtimeSource)
+        : runtimeSource) + '\n;\n';
+  }
   if (subset) {
     source += `const doc = (${decompressJSON.toString()})(${JSON.stringify(compressJSON(subset))});\n`;
   }
@@ -594,7 +709,17 @@ async function buildConnector({
   else if (operation === 'inspect')
     source += `return (${connectorInspectionSummary.toString()})(await inspectMangroveKit({checkFonts:${Boolean(checkFonts)}}), ${JSON.stringify(nodeIds)});`;
   const minified = await minify(`async function mgRun(){${source}}`, {
-    compress: { global_defs: { MG_CONNECTOR_SVG: svgEnabled } },
+    compress: {
+      global_defs: {
+        MG_CONNECTOR_SVG: svgEnabled,
+        MG_CONNECTOR_ABSOLUTE: absoluteEnabled,
+        MG_CONNECTOR_INTRINSIC_REVIEW: intrinsicReviewEnabled,
+        MG_CONNECTOR_INTRINSIC_VALIDATION: intrinsicValidationEnabled,
+        MG_CONNECTOR_REVIEW_SURFACES: reviewSurfacesEnabled,
+        MG_CONNECTOR_TEXT_OFFSET: textOffsetEnabled,
+        MG_CONNECTOR_REVIEW_NODES: reviewNodesEnabled,
+      },
+    },
     mangle: true,
     format: { comments: false },
   });

@@ -20,7 +20,7 @@ Body line height is 1.5em on a 16px body, computing 24px. Component help and Com
 
 ## Current native checkpoint
 
-On 4 October 2026, the kit export contains 308 variables, 75 text definitions, five effects, 15 native families and 159 variants. Desktop inspection found 27 selected text styles and all five effects. Checkbox adds 30 variants with bounded UNDRR source comparisons. FormErrorSummary adds six variants; corrected underlining and balanced titles were observed in ordinary and edited long default-UNDRR consumers. These counts do not establish complete state, brand or script coverage. See [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md).
+On 4 October 2026, the kit export contains 359 variables, 81 text definitions, seven effects, 19 native families and 240 variants. Desktop inspection found 33 selected text styles and all seven effects. Checkbox adds 30 variants with bounded UNDRR source comparisons. FormErrorSummary adds six variants; corrected underlining and balanced titles were observed in ordinary and edited long default-UNDRR consumers. These counts do not establish complete state, brand or script coverage. See [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md).
 
 ## Button (`mg-button`)
 
@@ -198,3 +198,17 @@ A separate native comparison passed 441 assertions for edited ComboBox and Radio
 - Re-import each brand on Starter or inspect all modes on a capable file. Check colour bindings, alpha composition and contrast on actual surfaces.
 - Treat direction checks separately from Arabic fonts. Code maps Arabic text/UI to Noto Sans Arabic and heading/display to Noto Kufi Arabic; those routes are not yet exported.
 - Record source facts, API documentation, mock checks and real Figma observations separately. Native construction has been observed; visual acceptance remains pending for the full state and theme matrix. See the dated learnings for exact checks.
+
+## Switch (`mg-form-switch`)
+
+Source: the Switch stories in Checkbox and the shared form SCSS. Recipes live in `scripts/figma-switch-recipes.cjs`; there is no separate source `Switch.jsx` component. Two native families preserve Default and Small geometry, with 22 and 20 source-backed variants. Off/on states cover default, focus, native disabled, aria-disabled and Invalid combinations. The default-size family includes measured 240px long labels.
+
+Use editable Label, Help and Error properties with their visibility controls. Source state owns the outer error wrapper; Show error controls its inner text. Preserve compatible BOOLEAN references and edited master defaults on normal rebuilds. Default tracks are 42px with 20px thumbs; Small tracks are 31.5px with 15px thumbs. Native-disabled opacity applies to track chrome, while aria-disabled uses resolved source washes and retains opaque focus and invalid borders. The focused ring does not become translucent with the track.
+
+Both sizes have bounded UNDRR Latin desktop observations. Pending, reduced motion, arbitrary custom sizing, RTL and forced colours are not implemented. Do not invent an animated loader or equate visual specimens with browser form semantics.
+
+## Editorial CTA (`mg-button-cta`)
+
+Recipes live in `scripts/figma-editorial-cta-recipes.cjs`. The family has 23 bounded Base and Hero source-context states, including measured long labels and reduced-motion hover presets. Its actual source circle is 22px and uses the Roboto Bold `›` glyph. Review surface colours belong to padded wrappers, while the component remains transparent. Source underline offset metadata applies only to native text nodes.
+
+Native construction exists, but the first inspection showed every shared Label using the final Focus style. Do not claim Default/Hover typography or consumer resizing accepted until the isolated property experiment and edited-instance checks pass. Hero itself also requires exact Condensed fonts and a media contract.

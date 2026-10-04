@@ -86,6 +86,7 @@ function blockNestedGeometry(env) {
 async function main() {
   const doc = document();
   const counts = [doc.variables.length, doc.styles.text.length];
+  const sourceStyleIds = doc.styles.text.map(style => style.id);
   buildTextCtaRecipes({
     root,
     modes: doc.modes,
@@ -96,6 +97,21 @@ async function main() {
     doc.variables.length,
     doc.styles.text.length,
   ]);
+  assert.deepStrictEqual(
+    doc.styles.text.map(style => style.id),
+    sourceStyleIds,
+    'Repeated export must update the existing heading roles in place'
+  );
+  const headingRoles = [
+    'component.text-cta.heading.desktop',
+    'component.text-cta.heading.mobile',
+  ];
+  for (const id of headingRoles) {
+    const style = doc.styles.text.find(style => style.id === id);
+    assert(style, `Missing existing heading role ${id}`);
+    for (const mode of doc.modes)
+      assert.strictEqual(style.values[mode.id].textWrapStyle, 'BALANCE');
+  }
   assert.strictEqual(
     doc.components.families.find(family => family.id === 'text-cta').variants
       .length,
@@ -143,6 +159,14 @@ async function main() {
     'text-cta',
   ]);
   assert.strictEqual(first.errors.length, 0, first.errors.join('\n'));
+  const nativeHeadingIds = env.state.styles
+    .filter(style =>
+      headingRoles.includes(
+        style.getSharedPluginData('orgundrrmangrove', 'mgStyleId')
+      )
+    )
+    .map(style => style.id);
+  assert.strictEqual(nativeHeadingIds.length, 2);
   const family = first.families.find(family => family.id === 'text-cta');
   assert.strictEqual(family.variantIds.length, 6);
   const variables = new Map(
@@ -169,6 +193,11 @@ async function main() {
     const headingStyle = env.state.styles.find(
       style => style.id === headline.textStyleId
     );
+    assert.strictEqual(
+      headingStyle.getSharedPluginData('orgundrrmangrove', 'mgStyleId'),
+      `component.text-cta.heading.${desktop ? 'desktop' : 'mobile'}`
+    );
+    assert.strictEqual(headingStyle.textWrapStyle, 'BALANCE');
     assert.strictEqual(
       headingStyle.boundVariables.fontFamily.id,
       variables.get('font-family/text').id
@@ -270,6 +299,17 @@ async function main() {
   ]);
   assert.strictEqual(second.errors.length, 0, second.errors.join('\n'));
   assert.strictEqual(second.createdNodeIds.length, 0);
+  assert.deepStrictEqual(
+    env.state.styles
+      .filter(style =>
+        headingRoles.includes(
+          style.getSharedPluginData('orgundrrmangrove', 'mgStyleId')
+        )
+      )
+      .map(style => style.id),
+    nativeHeadingIds,
+    'Ordinary repeat must retain both native heading style IDs'
+  );
   assert.deepStrictEqual(ownedIds(env), ids);
   assert.deepStrictEqual(
     env.state.nodes.get(family.setId).componentPropertyDefinitions,

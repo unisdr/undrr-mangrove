@@ -195,6 +195,7 @@ function buildTextCtaRecipes({ root, modes, variables, styles }) {
         fontName: { family: value('font-family/text', mode), style: 'Bold' },
         fontSize: value(`font-size/${size}`, mode),
         lineHeight: { unit: 'PERCENT', value: Number(ratio[1]) * 100 },
+        textWrapStyle: 'BALANCE',
       })),
     };
     const index = styles.text.findIndex(style => style.id === id);

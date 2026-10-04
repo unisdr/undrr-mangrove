@@ -92,10 +92,11 @@
     </fieldset>
     <label
       ><input id="refresh-narrow-review" type="checkbox" disabled /> Refresh
-      narrow Button and composed review geometry, keeping content</label
+      bounded review geometry, keeping content</label
     >
     <button id="build" disabled>Build selected components</button>
     <button id="diagnostics" disabled>Focus diagnostics</button>
+    <button id="font-diagnostics" disabled>Diagnose font loading</button>
     <label
       ><input id="check-fonts" type="checkbox" /> Check font loading during
       inspection</label
@@ -117,6 +118,42 @@
       <button id="compare-probes" disabled>Compare after normal build</button>
       <button id="remove-probes" disabled>Remove owned probes</button>
     </details>
+    <details>
+      <summary>Editorial CTA consumer acceptance</summary>
+      <p>
+        Test temporary CTA instances through label edits and finite widths. Save
+        the report, rebuild Editorial CTA with review refresh off, then compare.
+      </p>
+      <button id="prepare-editorial" disabled>Prepare editorial probes</button>
+      <label>Editorial root ID <input id="editorial-root" type="text" /></label>
+      <button id="compare-editorial" disabled>
+        Compare editorial after build
+      </button>
+      <button id="remove-editorial" disabled>
+        Remove owned editorial probes
+      </button>
+    </details>
+    <details>
+      <summary>Native capability diagnostics</summary>
+      <p>
+        Test legend wrapping, editable slots and instance vector edits in
+        temporary assets. Save the operation report before closing the plugin.
+      </p>
+      <button id="capability-probes" disabled>Run capability probes</button>
+      <label
+        >Load saved capability report
+        <input id="capability-file" type="file" accept=".json"
+      /></label>
+      <button id="audit-capability-probes" disabled>
+        Audit saved capability ledger
+      </button>
+      <button id="inspect-capability-probes" disabled>
+        Inspect saved capability topology
+      </button>
+      <button id="remove-capability-probes" disabled>
+        Remove owned capability probes
+      </button>
+    </details>
     <pre id="log" hidden></pre>
     <script>
       let doc = null;
@@ -124,6 +161,7 @@
       let operationReport = null;
       let pendingOperation = null;
       let lastBuildReport = null;
+      let capabilityReport = null;
       const $ = id => document.getElementById(id);
 
       function refreshControls() {
@@ -134,12 +172,29 @@
         $('export-family').disabled = busy || !doc?.components;
         $('refresh-narrow-review').disabled = busy || !doc?.components;
         $('diagnostics').disabled = busy || !doc;
+        $('font-diagnostics').disabled = busy || !doc;
+        $('capability-probes').disabled =
+          busy || !doc || !!capabilityReport?.rootId;
+        $('capability-file').disabled = busy;
+        $('audit-capability-probes').disabled =
+          busy || !capabilityReport?.rootId;
+        $('inspect-capability-probes').disabled =
+          busy || !capabilityReport?.rootId;
+        $('remove-capability-probes').disabled =
+          busy || !capabilityReport?.rootId;
         $('check-fonts').disabled = busy;
         $('prepare-probes').disabled = busy || !doc?.components;
         $('probe-root').disabled = busy;
         const hasProbe = String($('probe-root').value || '').trim().length > 0;
         $('compare-probes').disabled = busy || !hasProbe || !lastBuildReport;
         $('remove-probes').disabled = busy || !hasProbe;
+        $('prepare-editorial').disabled = busy || !doc?.components;
+        $('editorial-root').disabled = busy;
+        const hasEditorial =
+          String($('editorial-root').value || '').trim().length > 0;
+        $('compare-editorial').disabled =
+          busy || !hasEditorial || !lastBuildReport;
+        $('remove-editorial').disabled = busy || !hasEditorial;
         for (const id of ['inspect', 'export-review', 'export-diagnostics'])
           $(id).disabled = busy;
         $('save-operation-report').disabled = !operationReport;
@@ -359,7 +414,67 @@
         const brand = singleBrand();
         if (brand) send('diagnostics', { doc, brand });
       };
+      $('font-diagnostics').onclick = () => {
+        const brand = singleBrand();
+        if (brand) send('font-diagnostics', { doc, brand });
+      };
       $('probe-root').oninput = refreshControls;
+      $('editorial-root').oninput = refreshControls;
+      $('prepare-editorial').onclick = () => {
+        lastBuildReport = null;
+        const brand = singleBrand();
+        if (brand) send('prepare-editorial-probes', { doc, brand });
+      };
+      $('compare-editorial').onclick = () => {
+        if (lastBuildReport)
+          send('compare-editorial-probes', {
+            rootId: String($('editorial-root').value || '').trim(),
+            buildResult: lastBuildReport,
+          });
+      };
+      $('remove-editorial').onclick = () =>
+        send('remove-editorial-probes', {
+          rootId: String($('editorial-root').value || '').trim(),
+        });
+      $('capability-probes').onclick = () => {
+        const brand = singleBrand();
+        if (brand) send('capability-probes', { doc, brand });
+      };
+      $('capability-file').onchange = async event => {
+        try {
+          const file = event.target.files[0];
+          if (!file) return;
+          const report = JSON.parse(await file.text());
+          if (
+            report.kind !== 'mangrove-native-capability-probes' ||
+            report.version !== 1 ||
+            !report.rootId ||
+            !Array.isArray(report.ledger)
+          )
+            throw new Error(
+              'Select a saved capability probe report with its exact ledger.'
+            );
+          capabilityReport = report;
+          refreshControls();
+          log(
+            `Loaded capability ledger for root ${String(report.rootId).slice(0, 120)}. Cleanup will validate ownership in Figma.`
+          );
+        } catch (error) {
+          log(`Error: ${error.message || String(error)}`);
+        }
+      };
+      $('remove-capability-probes').onclick = () => {
+        if (capabilityReport)
+          send('remove-capability-probes', { report: capabilityReport });
+      };
+      $('audit-capability-probes').onclick = () => {
+        if (capabilityReport)
+          send('audit-capability-probes', { report: capabilityReport });
+      };
+      $('inspect-capability-probes').onclick = () => {
+        if (capabilityReport)
+          send('inspect-capability-probes', { report: capabilityReport });
+      };
       $('prepare-probes').onclick = () => {
         lastBuildReport = null;
         const brand = singleBrand();
@@ -415,11 +530,73 @@
           return;
         }
         if (msg.type === 'operation') {
-          if (completedOperation?.includes('override-probes')) {
+          if (completedOperation?.includes('capability-probes')) {
             const r = msg.result;
-            if (r.rootId) $('probe-root').value = r.rootId;
-            if (r.removedNodeIds?.includes(r.rootId))
-              $('probe-root').value = '';
+            if (completedOperation === 'capability-probes')
+              capabilityReport = r;
+            if (
+              completedOperation === 'audit-capability-probes' &&
+              !(r.errors || []).length &&
+              r.kind === 'mangrove-native-capability-probes' &&
+              r.version === 1 &&
+              r.rootId === capabilityReport?.rootId &&
+              r.runId === capabilityReport?.runId &&
+              Array.isArray(r.ledger)
+            )
+              capabilityReport = r;
+            if (
+              completedOperation === 'remove-capability-probes' &&
+              !(r.errors || []).length
+            )
+              capabilityReport = null;
+            rememberOperation(completedOperation, r);
+            log(
+              [
+                `${completedOperation}: created ${r.ledger?.length || 0}; removed ${r.removedNodeIds?.length || 0}.`,
+                ...Object.entries(r.tests || {})
+                  .slice(0, 3)
+                  .map(
+                    ([id, test]) =>
+                      `${id}: ${test.status}; criteria ${test.supported ? 'passed' : 'not satisfied'}`
+                  ),
+                ...(r.errors || [])
+                  .slice(0, 5)
+                  .map(e => String(e).slice(0, 300)),
+                'Save operation report for native observations and cleanup recovery. Rendered review remains required.',
+              ].join('\n')
+            );
+            return;
+          }
+          if (completedOperation === 'font-diagnostics') {
+            const r = msg.result;
+            rememberOperation(completedOperation, r);
+            log(
+              [
+                `Font loading diagnostic: ${(r.loads || []).length} exact names tested.`,
+                ...(r.loads || [])
+                  .slice(0, 4)
+                  .map(
+                    item =>
+                      `${String(item.fontName?.family || '').slice(0, 120)} / ${String(item.fontName?.style || '').slice(0, 120)}: ${item.loaded ? 'loaded' : 'failed'}`
+                  ),
+                ...(r.errors || [])
+                  .slice(0, 5)
+                  .map(e => String(e).slice(0, 300)),
+                'Font identity and rendering remain unconfirmed. Save operation report for full evidence.',
+              ].join('\n')
+            );
+            return;
+          }
+          if (
+            completedOperation?.includes('override-probes') ||
+            completedOperation?.includes('editorial-probes')
+          ) {
+            const r = msg.result;
+            const rootInput = completedOperation.includes('editorial-probes')
+              ? $('editorial-root')
+              : $('probe-root');
+            if (r.rootId) rootInput.value = r.rootId;
+            if (r.removedNodeIds?.includes(r.rootId)) rootInput.value = '';
             rememberOperation(completedOperation, r);
             const failed = (r.assertions || []).filter(a => !a.passed);
             log(

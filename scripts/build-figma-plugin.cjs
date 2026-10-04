@@ -10,6 +10,9 @@ const SOURCES = [
   'kit-inspection.js',
   'kit-builder.js',
   'kit-acceptance.js',
+  'kit-editorial-acceptance.js',
+  'font-diagnostics.js',
+  'kit-capabilities.js',
 ];
 
 function buildPlugin() {

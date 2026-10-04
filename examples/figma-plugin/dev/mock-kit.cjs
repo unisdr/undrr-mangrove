@@ -280,6 +280,37 @@ function environment(doc, options = {}) {
     get textWrapStyle() {
       return this._textWrapStyle || 'AUTO';
     }
+    set textDecorationOffset(value) {
+      this.requireFont();
+      assert(value && typeof value === 'object' && !Array.isArray(value));
+      assert(
+        value.unit === 'AUTO'
+          ? Object.keys(value).length === 1
+          : ['PIXELS', 'PERCENT'].includes(value.unit) &&
+              Number.isFinite(value.value) &&
+              Object.keys(value).length === 2 &&
+              Object.keys(value).every(key => ['unit', 'value'].includes(key)),
+        'Invalid native text decoration offset'
+      );
+      this._textDecorationOffset = copy(value);
+    }
+    get textDecorationOffset() {
+      if (this.type !== 'TEXT') return undefined;
+      return this.textDecoration === 'UNDERLINE'
+        ? this._textDecorationOffset || { unit: 'AUTO' }
+        : null;
+    }
+    set layoutPositioning(value) {
+      assert(['AUTO', 'ABSOLUTE'].includes(value), 'Invalid positioning enum');
+      assert(
+        this.parent && this.parent.layoutMode !== 'NONE',
+        'Positioning needs an auto-layout parent'
+      );
+      this._layoutPositioning = value;
+    }
+    get layoutPositioning() {
+      return this._layoutPositioning || 'AUTO';
+    }
     set fontName(value) {
       assert(
         state.loadedFonts.has(`${value.family} ${value.style}`),
@@ -450,6 +481,8 @@ function environment(doc, options = {}) {
           'strokeAlign',
           'vectorPaths',
           'textDecoration',
+          '_textDecorationOffset',
+          '_layoutPositioning',
           'effects',
           'boundVariables',
           '_opacity',

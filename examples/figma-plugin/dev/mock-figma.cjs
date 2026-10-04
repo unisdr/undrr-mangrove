@@ -578,6 +578,16 @@ async function main() {
     candidate('duplicate style name', copy =>
       copy.styles.text.push({ ...copy.styles.text[0], id: 'duplicate.style' })
     );
+    for (const offset of [
+      { unit: 'AUTO', value: 0 },
+      { unit: 'PERCENT', value: '20' },
+      { unit: 'EM', value: 0.2 },
+      { unit: 'PIXELS', value: 2, unexpected: true },
+    ])
+      candidate('invalid decoration offset metadata', copy => {
+        for (const value of Object.values(copy.styles.text[0].values))
+          value.textDecorationOffset = offset;
+      });
     candidate('missing alias', copy => {
       copy.variables[0].values[all[0]] = { alias: 'missing/target' };
     });

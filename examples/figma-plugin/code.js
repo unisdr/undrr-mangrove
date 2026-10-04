@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes */
+/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
  * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
@@ -161,6 +161,20 @@ function validateMangroveImport(doc, selectedModeIds, selectedTextIds) {
         !['AUTO', 'BALANCE', 'PRETTY'].includes(value.textWrapStyle)
       )
         fail(`${spec.name} [${mode}]: invalid text style wrapping`);
+      // Source metadata only: native TextStyle has no decoration offset API.
+      // Component TextNodes apply this value after their shared style.
+      if (value.textDecorationOffset !== undefined) {
+        const offset = value.textDecorationOffset;
+        if (
+          !offset ||
+          !['AUTO', 'PIXELS', 'PERCENT'].includes(offset.unit) ||
+          (offset.unit === 'AUTO'
+            ? Object.keys(offset).some(key => key !== 'unit')
+            : !Number.isFinite(offset.value) ||
+              Object.keys(offset).some(key => !['unit', 'value'].includes(key)))
+        )
+          fail(`${spec.name} [${mode}]: invalid decoration offset metadata`);
+      }
     }
   }
   for (const spec of effects) {
@@ -668,6 +682,68 @@ figma.ui.onmessage = async msg => {
     if (msg.type === 'prepare-override-probes') {
       post('operation', {
         result: await prepareMangroveOverrideProbes(msg.doc, msg.brand),
+      });
+      return;
+    }
+    if (msg.type === 'prepare-editorial-probes') {
+      post('operation', {
+        result: await prepareMangroveEditorialProbes(msg.doc, msg.brand),
+      });
+      return;
+    }
+    if (msg.type === 'compare-editorial-probes') {
+      post('operation', {
+        result: await compareMangroveEditorialProbes(
+          msg.rootId,
+          msg.buildResult
+        ),
+      });
+      return;
+    }
+    if (msg.type === 'remove-editorial-probes') {
+      post('operation', {
+        result: await removeMangroveEditorialProbes(msg.rootId),
+      });
+      return;
+    }
+    if (msg.type === 'font-diagnostics') {
+      const availableFonts = await figma.listAvailableFontsAsync();
+      post('operation', {
+        result: await mgDiagnoseFontLoading(msg.doc, {
+          brandId: msg.brand,
+          availableFonts,
+        }),
+      });
+      return;
+    }
+    if (msg.type === 'capability-probes') {
+      post('operation', {
+        result: await runMangroveCapabilityProbes(msg.doc, msg.brand),
+      });
+      return;
+    }
+    if (msg.type === 'remove-capability-probes') {
+      post('operation', {
+        result: await removeMangroveCapabilityProbes(msg.report),
+      });
+      return;
+    }
+    if (msg.type === 'audit-capability-probes') {
+      const reconciliation = await refreshMangroveCapabilityProbeLedger(
+        msg.report
+      );
+      post('operation', {
+        result: {
+          ...msg.report,
+          reconciliation,
+          errors: reconciliation.errors,
+        },
+      });
+      return;
+    }
+    if (msg.type === 'inspect-capability-probes') {
+      post('operation', {
+        result: await inspectMangroveCapabilityProbeLedger(msg.report),
       });
       return;
     }

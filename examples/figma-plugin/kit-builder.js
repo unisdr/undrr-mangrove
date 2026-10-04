@@ -1,10 +1,50 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG */
+/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
 const MG_SVG_KEY = 'mgSvgAsset';
 const MG_SVG_ENABLED =
   typeof MG_CONNECTOR_SVG === 'undefined' || MG_CONNECTOR_SVG;
+
+const MG_ABSOLUTE_ENABLED =
+  typeof MG_CONNECTOR_ABSOLUTE === 'undefined' || MG_CONNECTOR_ABSOLUTE;
+
+const MG_INTRINSIC_REVIEW_ENABLED =
+  typeof MG_CONNECTOR_INTRINSIC_REVIEW === 'undefined' ||
+  MG_CONNECTOR_INTRINSIC_REVIEW;
+
+function mgAbsolutePlan(tree, parent) {
+  const spec = tree.absolute;
+  if (
+    !spec ||
+    typeof spec !== 'object' ||
+    Array.isArray(spec) ||
+    Object.keys(spec).length !== 4 ||
+    Object.keys(spec).some(
+      key => !['horizontal', 'vertical', 'offsetX', 'offsetY'].includes(key)
+    ) ||
+    spec.horizontal !== 'END' ||
+    spec.vertical !== 'CENTER' ||
+    !['offsetX', 'offsetY'].every(
+      key => typeof spec[key] === 'string' && spec[key]
+    ) ||
+    !['FRAME', 'TEXT', 'ELLIPSE'].includes(tree.type) ||
+    !parent ||
+    parent.type !== 'FRAME' ||
+    !['HORIZONTAL', 'VERTICAL'].includes(parent.layout?.mode) ||
+    tree.position !== undefined ||
+    !['width', 'height'].every(key => {
+      const value = tree.layout?.[key];
+      return typeof value === 'string'
+        ? !!value && !['HUG', 'FILL'].includes(value)
+        : Number.isFinite(value) && value > 0;
+    })
+  )
+    throw new Error(
+      'Absolute recipes require a native fixed-size child of an auto-layout FRAME, END/CENTER alignment and FLOAT offset token IDs, without position.'
+    );
+  return spec;
+}
 
 // A bounded source-vector subset, not a general SVG sanitizer or renderer.
 // Reject unsupported XML before the native importer creates any canvas nodes.
@@ -379,9 +419,9 @@ async function buildMangroveComponents(
         ? `${family.source.file}:${family.source.line}`
         : '';
   const chosen = new Set(selectedFamilyIds || recipes.map(recipe => recipe.id));
-  const treeWalk = (tree, visit) => {
-    visit(tree);
-    for (const child of tree.children || []) treeWalk(child, visit);
+  const treeWalk = (tree, visit, parent = null) => {
+    visit(tree, parent);
+    for (const child of tree.children || []) treeWalk(child, visit, tree);
   };
   // Review geometry and content are initial specimen seeds, not repeat-build edits.
   function reviewTarget(tree, path) {
@@ -529,6 +569,24 @@ async function buildMangroveComponents(
     'paddingRight',
     'visible',
   ]);
+  function absoluteNumber(name, seen = new Set()) {
+    const entry = variable(name, 'FLOAT');
+    if (seen.has(entry.id))
+      throw new Error(`Absolute variable alias cycle at ${name}.`);
+    seen.add(entry.id);
+    const value = entry.valuesByMode[mode.modeId];
+    if (value && typeof value === 'object' && value.type === 'VARIABLE_ALIAS') {
+      const alias = [...variables.values()].find(item => item.id === value.id);
+      if (!alias)
+        throw new Error(`Missing absolute variable alias at ${name}.`);
+      return absoluteNumber(alias.name, seen);
+    }
+    if (!Number.isFinite(value))
+      throw new Error(
+        `Absolute FLOAT ${name} must be finite in the imported brand mode.`
+      );
+    return value;
+  }
   const ready = [];
   const blocked = new Set();
   const usedText = new Set();
@@ -557,6 +615,14 @@ async function buildMangroveComponents(
         typeof family.review.genericLabels !== 'boolean'
       )
         throw new Error('Review genericLabels must be a boolean.');
+      if (family.review?.preserveVariantSizing !== undefined) {
+        if (typeof family.review.preserveVariantSizing !== 'boolean')
+          throw new Error('Review preserveVariantSizing must be a boolean.');
+        if (family.review.preserveVariantSizing && !MG_INTRINSIC_REVIEW_ENABLED)
+          throw new Error(
+            'Intrinsic review sizing is disabled in this connector scope. Compile the selected family before building it.'
+          );
+      }
       if (
         family.review?.width !== undefined &&
         (!Number.isFinite(family.review.width) || family.review.width <= 0)
@@ -593,10 +659,50 @@ async function buildMangroveComponents(
             throw new Error('Long-label target must be a nested instance.');
         }
         const keys = new Set();
-        treeWalk(variant.tree, tree => {
+        treeWalk(variant.tree, (tree, parent) => {
+          if (tree.absolute !== undefined) {
+            if (!MG_ABSOLUTE_ENABLED)
+              throw new Error(
+                'Absolute recipes are disabled in this connector scope. Compile the selected family before building it.'
+              );
+            const absolute = mgAbsolutePlan(tree, parent);
+            absoluteNumber(absolute.offsetX);
+            absoluteNumber(absolute.offsetY);
+            for (const field of ['width', 'height']) {
+              const value = tree.layout[field];
+              if (typeof value === 'string' && absoluteNumber(value) <= 0)
+                throw new Error(
+                  'Absolute width and height FLOAT helpers must be positive.'
+                );
+            }
+          }
+          if (tree.textDecorationOffset !== undefined) {
+            const offset = tree.textDecorationOffset;
+            if (
+              tree.type !== 'TEXT' ||
+              !offset ||
+              typeof offset !== 'object' ||
+              Array.isArray(offset) ||
+              (offset.unit === 'AUTO'
+                ? Object.keys(offset).length !== 1
+                : !['PIXELS', 'PERCENT'].includes(offset.unit) ||
+                  Object.keys(offset).length !== 2 ||
+                  !Number.isFinite(offset.value) ||
+                  Object.keys(offset).some(
+                    key => !['unit', 'value'].includes(key)
+                  ))
+            )
+              throw new Error(
+                'TEXT textDecorationOffset requires AUTO or finite PIXELS/PERCENT units.'
+              );
+          }
           if (tree.textProperty) recordProperty(tree.textProperty, 'TEXT');
           if (tree.visibilityProperty)
             recordProperty(tree.visibilityProperty, 'BOOLEAN');
+          if (tree.visibilityProperty && tree.bindings?.visible !== undefined)
+            throw new Error(
+              'A visible variable binding and BOOLEAN property cannot control the same node.'
+            );
           if (
             tree.textDecoration !== undefined &&
             (tree.type !== 'TEXT' ||
@@ -768,7 +874,13 @@ async function buildMangroveComponents(
               'Contextual appearance is only supported on native instances.'
             );
         });
-        function checkSvgOwnership(tree, key) {
+        function checkTreeOwnership(tree, key) {
+          const existing = owned.get(key);
+          if (existing?.componentPropertyReferences?.visible)
+            managedVisibilityReference(
+              existing,
+              owned.get(`family/${family.id}/variant/${variant.id}`)
+            );
           if (MG_SVG_ENABLED && tree.type === 'SVG') {
             const node = owned.get(key);
             if (node) {
@@ -814,13 +926,28 @@ async function buildMangroveComponents(
             }
           }
           for (const child of tree.children || [])
-            checkSvgOwnership(child, `${key}/${child.id || child.key}`);
+            checkTreeOwnership(child, `${key}/${child.id || child.key}`);
         }
-        if (MG_SVG_ENABLED)
-          checkSvgOwnership(
-            variant.tree,
-            `family/${family.id}/variant/${variant.id}`
+        checkTreeOwnership(
+          variant.tree,
+          `family/${family.id}/variant/${variant.id}`
+        );
+      }
+      if (family.review?.variantSurfaces !== undefined) {
+        const surfaces = family.review.variantSurfaces;
+        if (
+          !surfaces ||
+          typeof surfaces !== 'object' ||
+          Array.isArray(surfaces)
+        )
+          throw new Error(
+            'Review variantSurfaces must map exact variant IDs to COLOR tokens.'
           );
+        for (const [id, name] of Object.entries(surfaces)) {
+          if (!variantIds.has(id))
+            throw new Error(`Unknown review surface variant ${id}.`);
+          variable(name, 'COLOR');
+        }
       }
       if (family.review?.specimens !== undefined) {
         const specimens = family.review.specimens;
@@ -872,6 +999,8 @@ async function buildMangroveComponents(
                 `Review specimen ${specimen.id} property ${name} must match a named TEXT or BOOLEAN property.`
               );
           }
+          if (specimen.surface !== undefined)
+            variable(specimen.surface, 'COLOR');
           if (specimen.instanceWidth !== undefined)
             reviewDimension(specimen.instanceWidth);
           if (specimen.nodes !== undefined) {
@@ -1049,6 +1178,57 @@ async function buildMangroveComponents(
     }
     return key;
   }
+  function managedVisibilityReference(node, component) {
+    const reference = node.componentPropertyReferences?.visible;
+    if (!reference) return null;
+    if (!component)
+      throw new Error(
+        `Cannot resolve visibility property owner at ${node.id}.`
+      );
+    const owner = getPropertyOwner(component);
+    let map;
+    try {
+      map = JSON.parse(mgReadIdentity(owner, MG_KIT_PROPERTY_KEY) || '{}');
+    } catch {
+      throw new Error('Owned component property map is invalid.');
+    }
+    if (
+      !map ||
+      typeof map !== 'object' ||
+      Array.isArray(map) ||
+      !Object.values(map).includes(reference) ||
+      owner.componentPropertyDefinitions[reference]?.type !== 'BOOLEAN'
+    )
+      throw new Error(
+        `Visibility reference ${reference} at ${node.id} is not an owned BOOLEAN property. Explicit migration required.`
+      );
+    return reference;
+  }
+  function applyVisibility(spec, node, component) {
+    const old = managedVisibilityReference(node, component);
+    const expected = spec.visibilityProperty
+      ? ensureProperty(
+          component,
+          spec.visibilityProperty,
+          'BOOLEAN',
+          spec.visible !== false
+        )
+      : null;
+    if (old && old !== expected) {
+      const references = { ...node.componentPropertyReferences };
+      delete references.visible;
+      node.componentPropertyReferences = references;
+    }
+    // Referenced main-layer writes can change the shared BOOLEAN default.
+    // Compatible references own visibility. Assign source state flags only
+    // after obsolete managed references have been detached.
+    if (!old || old !== expected) node.visible = spec.visible !== false;
+    if (expected && old !== expected)
+      node.componentPropertyReferences = {
+        ...(node.componentPropertyReferences || {}),
+        visible: expected,
+      };
+  }
   function bind(node, field, name) {
     const bound = variable(name, field === 'visible' ? 'BOOLEAN' : 'FLOAT');
     const resolved = bound.resolveForConsumer(node);
@@ -1173,6 +1353,53 @@ async function buildMangroveComponents(
     if (boundHeight)
       node.setBoundVariable('height', variable(layout.height, 'FLOAT'));
   }
+  function applyAbsolute(spec, node, parent) {
+    const absolute = spec.absolute;
+    const offsetX = variable(absolute.offsetX, 'FLOAT').resolveForConsumer(
+      node
+    ).value;
+    const offsetY = variable(absolute.offsetY, 'FLOAT').resolveForConsumer(
+      node
+    ).value;
+    if (
+      ![parent.width, parent.height, node.width, node.height].every(
+        value => Number.isFinite(value) && value > 0
+      ) ||
+      ![offsetX, offsetY].every(Number.isFinite)
+    )
+      throw new Error(
+        `Absolute geometry must be finite and positive at ${node.id}.`
+      );
+    for (const field of ['width', 'height']) {
+      const expected =
+        typeof spec.layout[field] === 'string'
+          ? variable(spec.layout[field], 'FLOAT').resolveForConsumer(node).value
+          : spec.layout[field];
+      if (
+        !Number.isFinite(expected) ||
+        expected <= 0 ||
+        Math.abs(node[field] - expected) > 1e-6
+      )
+        throw new Error(
+          `Native absolute ${field} did not retain requested sizing at ${node.id}.`
+        );
+    }
+    const x = parent.width - node.width + offsetX;
+    const y = (parent.height - node.height) / 2 + offsetY;
+    if (![x, y].every(Number.isFinite))
+      throw new Error(`Absolute endpoint overflow at ${node.id}.`);
+    node.constraints = { horizontal: 'MAX', vertical: 'CENTER' };
+    node.x = x;
+    node.y = y;
+    if (
+      Math.abs(node.x - x) > 1e-6 ||
+      Math.abs(node.y - y) > 1e-6 ||
+      ![node.x, node.y].every(Number.isFinite)
+    )
+      throw new Error(
+        `Native absolute position did not retain endpoint geometry at ${node.id}.`
+      );
+  }
   const built = new Map();
   async function focusDecorations(spec, parent, key) {
     const roles = ['outer', 'separator'];
@@ -1289,7 +1516,7 @@ async function buildMangroveComponents(
         (fresh ? created : updated).add(child.id);
       if (node.parent !== parent) parent.appendChild(node);
       node.name = spec.name || spec.id;
-      node.visible = spec.visible !== false;
+      applyVisibility(spec, node, component);
       // resize only changes a frame viewport. rescale also scales source paths,
       // stroke widths and positions. Equal-size repeats perform no rescale.
       let scale = spec.layout.width / node.width;
@@ -1309,16 +1536,6 @@ async function buildMangroveComponents(
         else node.setBoundVariable(field, null);
       }
       if (!spec.bindings?.opacity) node.opacity = plan.sourceOpacity;
-      if (spec.visibilityProperty)
-        node.componentPropertyReferences = {
-          ...(node.componentPropertyReferences || {}),
-          visible: ensureProperty(
-            component,
-            spec.visibilityProperty,
-            'BOOLEAN',
-            spec.visible !== false
-          ),
-        };
       for (const [field, name] of Object.entries(spec.svg.monochrome || {})) {
         const bound = variable(name, 'COLOR');
         for (const child of descendants) {
@@ -1372,7 +1589,9 @@ async function buildMangroveComponents(
     if (node.parent !== parent) parent.appendChild(node);
     // A variant name must remain valid while reading its set's property definitions.
     if (!rootNode) node.name = spec.name || spec.id || spec.type;
-    node.visible = spec.visible !== false;
+    applyVisibility(spec, node, component);
+    if (MG_ABSOLUTE_ENABLED && spec.absolute)
+      node.layoutPositioning = 'ABSOLUTE';
     if (spec.type === 'TEXT') {
       const style = localText.get(spec.textStyle);
       if (!style)
@@ -1381,7 +1600,6 @@ async function buildMangroveComponents(
       await node.setTextStyleIdAsync(style.id);
       node.characters = spec.characters || '';
       node.textAlignHorizontal = spec.textAlign || 'LEFT';
-      if (spec.textWrap !== undefined) node.textWrapStyle = spec.textWrap;
     }
     if (spec.type !== 'INSTANCE') {
       if (spec.layout?.mode && 'layoutMode' in node)
@@ -1420,16 +1638,6 @@ async function buildMangroveComponents(
             spec.textProperty,
             'TEXT',
             spec.characters || ''
-          ),
-        };
-      if (spec.visibilityProperty)
-        node.componentPropertyReferences = {
-          ...(node.componentPropertyReferences || {}),
-          visible: ensureProperty(
-            component,
-            spec.visibilityProperty,
-            'BOOLEAN',
-            spec.visible !== false
           ),
         };
     } else {
@@ -1483,10 +1691,17 @@ async function buildMangroveComponents(
       }
     }
     applyLayout(node, spec.layout);
-    // Apply decoration after character property references and sizing. Shared
-    // link styles also carry it so consumer text edits inherit the decoration.
-    if (spec.type === 'TEXT')
+    // Apply wrapping and decoration after character property references and
+    // sizing. Shared styles carry them for editable consumer text as well.
+    if (spec.type === 'TEXT') {
+      if (spec.textWrap !== undefined) node.textWrapStyle = spec.textWrap;
       node.textDecoration = spec.textDecoration || 'NONE';
+      if (
+        spec.textDecorationOffset !== undefined &&
+        node.textDecoration === 'UNDERLINE'
+      )
+        node.textDecorationOffset = { ...spec.textDecorationOffset };
+    }
     if (spec.labelSizing === 'FILL') {
       const labels = node
         .findAllWithCriteria({ types: ['TEXT'] })
@@ -1520,6 +1735,17 @@ async function buildMangroveComponents(
       expected.forEach((child, index) => {
         if (node.children[index] !== child) node.insertChild(index, child);
       });
+      // ABSOLUTE excludes children from layout before dimensions are read.
+      // Position only after child construction/reordering has settled the parent.
+      if (MG_ABSOLUTE_ENABLED)
+        for (const child of spec.children || []) {
+          if (child.absolute)
+            applyAbsolute(
+              child,
+              owned.get(`${key}/${child.id || child.key}`),
+              node
+            );
+        }
       // Retain user-owned additions. Report obsolete importer-owned children for review.
       for (const child of node.children) {
         if (mgReadIdentity(child, MG_KIT_KEY) && !expected.includes(child))
@@ -1781,6 +2007,38 @@ async function buildMangroveComponents(
     paint(node, 'fills', 'color/neutral-900');
     return node;
   }
+  async function intrinsicReviewGeometry(instance, master) {
+    const current = await instance.getMainComponentAsync();
+    if (current?.id !== master.id)
+      throw new Error(
+        'Variant review geometry refresh refused a changed consumer variant.'
+      );
+    const horizontal = master.layoutSizingHorizontal;
+    if (
+      !['HUG', 'FIXED'].includes(horizontal) ||
+      !Number.isFinite(master.width) ||
+      master.width <= 0
+    )
+      throw new Error(
+        'Variant review master sizing must be HUG or a positive fixed width.'
+      );
+    instance.setBoundVariable('width', null);
+    instance.setBoundVariable('height', null);
+    if (horizontal === 'FIXED')
+      instance.resize(master.width, Math.max(1, instance.height));
+    instance.layoutSizingHorizontal = horizontal;
+    instance.layoutSizingVertical = 'HUG';
+    if (
+      instance.layoutSizingHorizontal !== horizontal ||
+      instance.layoutSizingVertical !== 'HUG' ||
+      (horizontal === 'FIXED' &&
+        (!Number.isFinite(instance.width) ||
+          Math.abs(instance.width - master.width) > 0.01))
+    )
+      throw new Error(
+        'Native variant review sizing did not retain the requested geometry.'
+      );
+  }
   for (const [id, family] of built) {
     if (!chosen.has(id)) continue;
     try {
@@ -1842,17 +2100,42 @@ async function buildMangroveComponents(
       );
       for (const specimen of specimens) {
         const key = `review/${id}/specimen/${specimen.id}`;
+        const preserveVariantSizing =
+          MG_INTRINSIC_REVIEW_ENABLED &&
+          reviewOptions.preserveVariantSizing === true &&
+          specimen.id === specimen.variant.recipe.id;
+        const surface =
+          specimen.surface ??
+          reviewOptions.variantSurfaces?.[specimen.variant.recipe.id];
         const row = await reviewFrame(
           key,
           specimen.name,
           grid,
-          specimen.width
+          (specimen.width
             ? specimen.width + 2 * reviewPadding
             : specimen.label
               ? 704
-              : 344
+              : 344) + (surface ? 2 * reviewPadding : 0)
         );
         await reviewLabel(`${key}/caption`, specimen.name, row);
+        let consumerParent = row;
+        if (surface) {
+          consumerParent = await reviewFrame(
+            `${key}/surface`,
+            'Source context surface',
+            row,
+            row.width - 2 * reviewPadding
+          );
+          consumerParent.visible = true;
+          paint(consumerParent, 'fills', surface);
+        } else {
+          const previousSurface = owned.get(`${key}/surface`);
+          if (previousSurface) {
+            paint(previousSurface, 'fills', null);
+            previousSurface.visible = false;
+            mark(previousSurface, `${key}/surface`, false);
+          }
+        }
         let instance = owned.get(`${key}/instance`);
         const fresh = !instance;
         if (instance && instance.type !== 'INSTANCE')
@@ -1860,7 +2143,8 @@ async function buildMangroveComponents(
         if (!instance) instance = specimen.variant.node.createInstance();
         mark(instance, `${key}/instance`, fresh);
         await loadNodeFonts(instance);
-        if (instance.parent !== row) row.appendChild(instance);
+        if (instance.parent !== consumerParent)
+          consumerParent.appendChild(instance);
         if (fresh) {
           instance.name = specimen.name;
           let labelTarget = instance;
@@ -1907,14 +2191,26 @@ async function buildMangroveComponents(
           }
           if (Object.keys(overrides).length) instance.setProperties(overrides);
           if (
-            specimen.width ||
-            specimen.variant.recipe.tree.layout?.width === 'FILL'
+            !preserveVariantSizing &&
+            (specimen.width ||
+              specimen.variant.recipe.tree.layout?.width === 'FILL')
           )
             instance.layoutSizingHorizontal = 'FILL';
           if (specimen.instanceWidth !== undefined)
             applyLayout(instance, { width: specimen.instanceWidth });
           // Apply content before geometry, then resolve fresh descendants again.
           // Nested property changes can rebuild instance descendants in Figma.
+        }
+        if (preserveVariantSizing && (fresh || refreshNarrowReview)) {
+          await intrinsicReviewGeometry(instance, specimen.variant.node);
+          if (!fresh)
+            result.audit.push({
+              nodeId: instance.id,
+              status: 'variant-review-geometry-refreshed',
+              width: instance.width,
+              horizontalSizing: instance.layoutSizingHorizontal,
+              preservedContent: true,
+            });
         }
         if (specimen.nodes?.length && (fresh || refreshNarrowReview)) {
           if (!fresh) {

@@ -24,6 +24,10 @@ function mountUI() {
         assert.strictEqual(selector, 'input:checked');
         return this.checkedInputs;
       },
+      click() {
+        // Native disabled buttons do not dispatch their click handler.
+        if (!this.disabled) this.onclick?.();
+      },
       addEventListener() {},
     });
   }
@@ -159,6 +163,203 @@ async function main() {
   assert.deepStrictEqual(JSON.parse(await ui.downloads[1].blob.text()), report);
   console.log(
     'ok  excessive mode names, font failures and inspection errors remain bounded without truncating saved reports'
+  );
+
+  const fontsUI = mountUI();
+  const fontElement = id => fontsUI.elements.get(id);
+  assert.strictEqual(
+    fontElement('font-diagnostics').disabled,
+    true,
+    'Font diagnostics needs a loaded token document'
+  );
+  fontsUI.setDocument(doc);
+  assert.strictEqual(fontElement('font-diagnostics').disabled, false);
+  fontElement('font-diagnostics').onclick();
+  assert.strictEqual(fontsUI.messages.length, 0, 'No brand cannot dispatch');
+  assert(fontElement('log').textContent.includes('Select one brand'));
+  fontElement('modes').checkedInputs = [{ value: 'undrr' }, { value: 'delta' }];
+  fontElement('font-diagnostics').onclick();
+  assert.strictEqual(
+    fontsUI.messages.length,
+    0,
+    'Multiple brands cannot dispatch'
+  );
+  fontElement('modes').checkedInputs = [{ value: 'undrr' }];
+  fontElement('font-diagnostics').onclick();
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(fontsUI.messages[0])), {
+    type: 'font-diagnostics',
+    doc,
+    brand: 'undrr',
+  });
+  for (const id of [
+    'font-diagnostics',
+    'file',
+    'import',
+    'build',
+    'diagnostics',
+    'inspect',
+    'check-fonts',
+    'export-review',
+    'export-family',
+    'prepare-probes',
+  ])
+    assert.strictEqual(fontElement(id).disabled, true, `${id} serialised`);
+  fontElement('font-diagnostics').onclick();
+  fontElement('inspect').onclick();
+  assert.strictEqual(
+    fontsUI.messages.length,
+    1,
+    'Pending diagnostic blocks duplicate and independent operations'
+  );
+  const exactFontReport = {
+    loads: [
+      {
+        fontName: { family: 'Roboto', style: 'Regular' },
+        loaded: false,
+        error: 'Static family rejected',
+      },
+      {
+        fontName: { family: 'Roboto', style: 'Bold' },
+        loaded: false,
+        error: 'Static family rejected',
+      },
+      {
+        fontName: { family: 'Roboto Condensed', style: 'Regular' },
+        loaded: true,
+      },
+      { fontName: { family: 'Roboto Condensed', style: 'Bold' }, loaded: true },
+    ],
+    errors: [],
+    evidence: {
+      synthetic: true,
+      assignments: [],
+      detail: 'Full diagnostic payload',
+    },
+  };
+  const deliverFontReport = result =>
+    fontsUI.window.onmessage({
+      data: { pluginMessage: { type: 'operation', result } },
+    });
+  deliverFontReport(exactFontReport);
+  assert.strictEqual(fontElement('font-diagnostics').disabled, false);
+  assert.strictEqual(fontElement('inspect').disabled, false);
+  assert.strictEqual(fontElement('save-operation-report').disabled, false);
+  assert(fontElement('log').textContent.includes('4 exact names tested'));
+  assert(fontElement('log').textContent.includes('Roboto / Regular: failed'));
+  assert(
+    fontElement('log').textContent.includes('Roboto Condensed / Bold: loaded')
+  );
+  assert(
+    fontElement('log').textContent.includes(
+      'Font identity and rendering remain unconfirmed'
+    )
+  );
+  fontElement('save-operation-report').onclick();
+  assert.strictEqual(
+    fontsUI.downloads[0].name,
+    'mangrove-font-diagnostics-report.json'
+  );
+  assert.strictEqual(fontsUI.downloads[0].blob.type, 'application/json');
+  assert.strictEqual(
+    await fontsUI.downloads[0].blob.text(),
+    JSON.stringify(exactFontReport, null, 2)
+  );
+
+  const oversizedFontReport = {
+    loads: Array.from({ length: 100 }, (_, index) => ({
+      fontName: {
+        family:
+          index < 4
+            ? `visible-font-${index}-${'family'.repeat(2000)}`
+            : `hidden-font-${index}`,
+        style:
+          index < 4
+            ? `visible-style-${index}-${'style'.repeat(2000)}`
+            : `hidden-style-${index}`,
+      },
+      loaded: index % 2 === 0,
+      error: 'Full load error detail'.repeat(300),
+    })),
+    errors: Array.from(
+      { length: 100 },
+      (_, index) => `diagnostic-error-${index}-${'failure'.repeat(2000)}`
+    ),
+    evidence: exactFontReport.evidence,
+  };
+  fontElement('font-diagnostics').onclick();
+  deliverFontReport(oversizedFontReport);
+  const fontSummary = fontElement('log').textContent;
+  assert(
+    fontSummary.length < 4096,
+    'Font names and errors must have a bounded display'
+  );
+  assert(fontSummary.includes('100 exact names tested'));
+  for (let index = 0; index < 4; index++) {
+    assert(fontSummary.includes(`visible-font-${index}`));
+    assert(fontSummary.includes(`visible-style-${index}`));
+  }
+  assert(
+    !fontSummary.includes('hidden-font-4'),
+    'Display includes only four load rows'
+  );
+  for (let index = 0; index < 5; index++)
+    assert(fontSummary.includes(`diagnostic-error-${index}-`));
+  assert(
+    !fontSummary.includes('diagnostic-error-5-'),
+    'Display includes only five errors'
+  );
+  fontElement('save-operation-report').onclick();
+  const exactOversizedDownload = await fontsUI.downloads.at(-1).blob.text();
+  assert.strictEqual(
+    exactOversizedDownload,
+    JSON.stringify(oversizedFontReport, null, 2),
+    'Saved operation report retains every oversized name/load/error'
+  );
+  assert.deepStrictEqual(
+    JSON.parse(exactOversizedDownload),
+    oversizedFontReport
+  );
+  fontElement('font-diagnostics').onclick();
+  assert.strictEqual(fontElement('font-diagnostics').disabled, true);
+  assert.strictEqual(
+    fontElement('save-operation-report').disabled,
+    false,
+    'A preceding valid report remains downloadable during work'
+  );
+  fontElement('save-operation-report').onclick();
+  assert.strictEqual(
+    await fontsUI.downloads.at(-1).blob.text(),
+    exactOversizedDownload
+  );
+  fontsUI.window.onmessage({
+    data: {
+      pluginMessage: { type: 'error', message: 'Diagnostic transport failed' },
+    },
+  });
+  assert.strictEqual(fontElement('font-diagnostics').disabled, false);
+  assert.strictEqual(fontElement('save-operation-report').disabled, false);
+  fontElement('save-operation-report').onclick();
+  assert.strictEqual(
+    await fontsUI.downloads.at(-1).blob.text(),
+    exactOversizedDownload,
+    'Failed retry preserves the preceding valid report'
+  );
+  const unnamedFontReport = {
+    loads: [{ loaded: false }, { fontName: {}, loaded: false }],
+    errors: ['Missing diagnostic font names'],
+  };
+  fontElement('font-diagnostics').onclick();
+  deliverFontReport(unnamedFontReport);
+  assert(fontElement('log').textContent.includes('2 exact names tested'));
+  assert(fontElement('log').textContent.includes(' / : failed'));
+  assert.strictEqual(fontElement('font-diagnostics').disabled, false);
+  fontElement('save-operation-report').onclick();
+  assert.deepStrictEqual(
+    JSON.parse(await fontsUI.downloads.at(-1).blob.text()),
+    unnamedFontReport
+  );
+  console.log(
+    'ok  font diagnostics require a document/single brand, serialise controls, bound four loads/five errors and oversized names, preserve exact reports and recover from errors'
   );
 
   const exportsUI = mountUI();
@@ -306,6 +507,688 @@ async function main() {
   assert.equal(probeElement('compare-probes').disabled, true);
   console.log(
     'ok  override probes require a fresh post-edit build, persist full report bytes, serialise actions and clear removed root IDs'
+  );
+
+  const capabilitiesUI = mountUI();
+  const capabilityElement = id => capabilitiesUI.elements.get(id);
+  assert.strictEqual(capabilityElement('capability-probes').disabled, true);
+  assert.strictEqual(
+    capabilityElement('remove-capability-probes').disabled,
+    true
+  );
+  capabilitiesUI.setDocument(doc);
+  capabilityElement('capability-probes').click();
+  assert.strictEqual(
+    capabilitiesUI.messages.length,
+    0,
+    'Capability run requires one brand'
+  );
+  capabilityElement('modes').checkedInputs = [{ value: 'undrr' }];
+  capabilityElement('capability-probes').click();
+  assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(capabilitiesUI.messages[0])),
+    {
+      type: 'capability-probes',
+      doc,
+      brand: 'undrr',
+    }
+  );
+  for (const id of [
+    'capability-probes',
+    'capability-file',
+    'audit-capability-probes',
+    'inspect-capability-probes',
+    'remove-capability-probes',
+    'file',
+    'build',
+    'inspect',
+    'font-diagnostics',
+    'prepare-probes',
+  ])
+    assert.strictEqual(
+      capabilityElement(id).disabled,
+      true,
+      `${id} serialised during capability run`
+    );
+  capabilityElement('capability-probes').click();
+  capabilityElement('font-diagnostics').onclick();
+  assert.strictEqual(
+    capabilitiesUI.messages.length,
+    1,
+    'Capability run cannot be duplicated or interleaved'
+  );
+  const capabilityReport = {
+    kind: 'mangrove-native-capability-probes',
+    version: 1,
+    runId: 'capabilities-synthetic',
+    rootId: 'capability:synthetic-root',
+    ledger: [
+      { id: 'capability:synthetic-root', type: 'FRAME' },
+      { id: 'capability:synthetic-component', type: 'COMPONENT' },
+      { id: 'capability:synthetic-slot', type: 'SLOT' },
+    ],
+    tests: {
+      legend: {
+        status: 'mock-supported',
+        supported: true,
+        observations: 'full-details'.repeat(20000),
+      },
+      slots: { status: 'mock-unavailable', supported: false },
+      vectors: { status: 'mock-supported', supported: true },
+    },
+    autodiscoveredIds: ['capability:synthetic-auto-child'],
+    errors: [],
+  };
+  const deliverCapability = result =>
+    capabilitiesUI.window.onmessage({
+      data: { pluginMessage: { type: 'operation', result } },
+    });
+  deliverCapability(capabilityReport);
+  assert.strictEqual(
+    capabilityElement('capability-probes').disabled,
+    true,
+    'Cached run prevents duplicate assets'
+  );
+  assert.strictEqual(
+    capabilityElement('remove-capability-probes').disabled,
+    false
+  );
+  assert.strictEqual(capabilityElement('capability-file').disabled, false);
+  assert(capabilityElement('log').textContent.length < 4096);
+  assert(!capabilityElement('log').textContent.includes('full-details'));
+  capabilityElement('capability-probes').click();
+  assert.strictEqual(capabilitiesUI.messages.length, 1);
+  capabilityElement('save-operation-report').click();
+  assert.strictEqual(
+    capabilitiesUI.downloads[0].name,
+    'mangrove-capability-probes-report.json'
+  );
+  assert.strictEqual(capabilitiesUI.downloads[0].blob.type, 'application/json');
+  assert.strictEqual(
+    await capabilitiesUI.downloads[0].blob.text(),
+    JSON.stringify(capabilityReport, null, 2),
+    'Capability download retains complete ledger/observations/discovered IDs'
+  );
+  capabilityElement('remove-capability-probes').click();
+  assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(capabilitiesUI.messages.at(-1))),
+    { type: 'remove-capability-probes', report: capabilityReport }
+  );
+  assert.strictEqual(capabilityElement('capability-file').disabled, true);
+  deliverCapability({
+    removedNodeIds: [],
+    errors: ['Cleanup refused an unrecorded child'],
+  });
+  assert.strictEqual(
+    capabilityElement('capability-probes').disabled,
+    true,
+    'Rejected cleanup retains the original run cache'
+  );
+  assert.strictEqual(
+    capabilityElement('remove-capability-probes').disabled,
+    false
+  );
+  capabilityElement('remove-capability-probes').click();
+  assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(capabilitiesUI.messages.at(-1).report)),
+    capabilityReport,
+    'Cleanup retry uses the original exact ledger, not the failure report'
+  );
+  const cleanupReport = {
+    removedNodeIds: capabilityReport.ledger.map(item => item.id),
+    errors: [],
+  };
+  deliverCapability(cleanupReport);
+  assert.strictEqual(
+    capabilityElement('capability-probes').disabled,
+    false,
+    'Successful cleanup clears cache'
+  );
+  assert.strictEqual(
+    capabilityElement('remove-capability-probes').disabled,
+    true
+  );
+  capabilityElement('save-operation-report').click();
+  assert.strictEqual(
+    capabilitiesUI.downloads.at(-1).name,
+    'mangrove-remove-capability-probes-report.json'
+  );
+  assert.deepStrictEqual(
+    JSON.parse(await capabilitiesUI.downloads.at(-1).blob.text()),
+    cleanupReport
+  );
+
+  // A new UI window has no cache or token JSON; cleanup needs only the saved ledger.
+  const recoveredUI = mountUI();
+  const recoveredElement = id => recoveredUI.elements.get(id);
+  const loadCapability = text =>
+    recoveredElement('capability-file').onchange({
+      target: { files: [{ text: async () => text }] },
+    });
+  await loadCapability(JSON.stringify(capabilityReport));
+  assert.strictEqual(
+    recoveredElement('remove-capability-probes').disabled,
+    false,
+    'Saved ledger recovers cleanup after restart without a document'
+  );
+  assert.strictEqual(recoveredElement('capability-probes').disabled, true);
+  assert(recoveredElement('log').textContent.includes(capabilityReport.rootId));
+  assert.strictEqual(
+    recoveredUI.messages.length,
+    0,
+    'Loading a ledger performs no native writes'
+  );
+  await loadCapability('{malformed JSON');
+  assert(recoveredElement('log').textContent.startsWith('Error:'));
+  assert.strictEqual(
+    recoveredElement('remove-capability-probes').disabled,
+    false,
+    'Invalid JSON retains the previous valid ledger'
+  );
+  await loadCapability(
+    JSON.stringify({ ...capabilityReport, kind: 'foreign-report' })
+  );
+  assert(
+    recoveredElement('log').textContent.includes(
+      'saved capability probe report'
+    )
+  );
+  recoveredUI.setDocument(doc);
+  assert.strictEqual(
+    recoveredElement('capability-probes').disabled,
+    true,
+    'Recovered assets still block another run when document becomes available'
+  );
+  recoveredElement('remove-capability-probes').click();
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(recoveredUI.messages[0])), {
+    type: 'remove-capability-probes',
+    report: capabilityReport,
+  });
+  recoveredUI.window.onmessage({
+    data: { pluginMessage: { type: 'operation', result: cleanupReport } },
+  });
+  assert.strictEqual(
+    recoveredElement('remove-capability-probes').disabled,
+    true
+  );
+  assert.strictEqual(recoveredElement('capability-probes').disabled, false);
+  console.log(
+    'ok  capability run/cache serialise assets, retain exact downloaded ledgers and cleanup retries, clear successful cleanup and recover saved ledgers after restart'
+  );
+
+  // Evidence-only snapshots never authorize cleanup adoption. An explicit,
+  // successful audit supplies the next exact ledger; failed audits preserve it.
+  const auditUI = mountUI();
+  const auditElement = id => auditUI.elements.get(id);
+  const clone = value => JSON.parse(JSON.stringify(value));
+  const deliverAudit = result =>
+    auditUI.window.onmessage({
+      data: { pluginMessage: { type: 'operation', result: clone(result) } },
+    });
+  await auditElement('capability-file').onchange({
+    target: {
+      files: [{ text: async () => JSON.stringify(capabilityReport) }],
+    },
+  });
+  for (const id of [
+    'audit-capability-probes',
+    'inspect-capability-probes',
+    'remove-capability-probes',
+  ])
+    assert.strictEqual(
+      auditElement(id).disabled,
+      false,
+      `${id} recovers from an exact ledger without token JSON`
+    );
+  auditElement('inspect-capability-probes').click();
+  assert.deepStrictEqual(clone(auditUI.messages.at(-1)), {
+    type: 'inspect-capability-probes',
+    report: capabilityReport,
+  });
+  for (const id of [
+    'audit-capability-probes',
+    'inspect-capability-probes',
+    'remove-capability-probes',
+    'capability-file',
+  ])
+    assert.strictEqual(
+      auditElement(id).disabled,
+      true,
+      `${id} serialised while snapshot is pending`
+    );
+  auditElement('audit-capability-probes').click();
+  auditElement('remove-capability-probes').click();
+  assert.strictEqual(auditUI.messages.length, 1);
+  const snapshot = {
+    evidenceOnly: true,
+    canAuthorizeAdoption: false,
+    rootId: capabilityReport.rootId,
+    nodes: [
+      {
+        id: 'capability:unrecorded-foreign-child',
+        recorded: false,
+        owner: 'foreign-owner',
+        errors: [],
+      },
+    ],
+    missingNodeIds: [],
+    errors: [],
+  };
+  deliverAudit(snapshot);
+  auditElement('save-operation-report').click();
+  assert.strictEqual(
+    auditUI.downloads.at(-1).name,
+    'mangrove-inspect-capability-probes-report.json'
+  );
+  assert.strictEqual(
+    await auditUI.downloads.at(-1).blob.text(),
+    JSON.stringify(snapshot, null, 2),
+    'Read-only snapshot evidence is saved exactly'
+  );
+  auditElement('audit-capability-probes').click();
+  assert.deepStrictEqual(clone(auditUI.messages.at(-1)), {
+    type: 'audit-capability-probes',
+    report: capabilityReport,
+  });
+  auditUI.window.onmessage({
+    data: {
+      pluginMessage: { type: 'error', message: 'Synthetic audit failure' },
+    },
+  });
+  auditElement('audit-capability-probes').click();
+  assert.deepStrictEqual(
+    clone(auditUI.messages.at(-1).report),
+    capabilityReport,
+    'Transport failure and evidence snapshot retain the original recovery ledger'
+  );
+  const failedAudit = {
+    ...clone(capabilityReport),
+    ledger: [
+      ...clone(capabilityReport.ledger),
+      { id: 'capability:partial-generated-child', type: 'TEXT' },
+    ],
+    reconciliation: {
+      addedNodeIds: ['capability:partial-generated-child'],
+      unrecordedNodeIds: ['capability:unrecorded-foreign-child'],
+      missingNodeIds: [],
+      errors: ['Ledger refresh refused foreign or unrecorded node'],
+    },
+    errors: ['Ledger refresh refused foreign or unrecorded node'],
+  };
+  deliverAudit(failedAudit);
+  auditElement('save-operation-report').click();
+  assert.strictEqual(
+    await auditUI.downloads.at(-1).blob.text(),
+    JSON.stringify(failedAudit, null, 2),
+    'Failed audit preserves complete partial reconciliation evidence'
+  );
+  auditElement('audit-capability-probes').click();
+  assert.deepStrictEqual(
+    clone(auditUI.messages.at(-1).report),
+    capabilityReport,
+    'Failed reconciliation cannot silently adopt partial or foreign descendants'
+  );
+  const foreignAudit = {
+    ...clone(capabilityReport),
+    runId: 'capability:foreign-run',
+    rootId: 'capability:foreign-root',
+    ledger: [{ id: 'capability:foreign-root', type: 'FRAME' }],
+    errors: [],
+  };
+  deliverAudit(foreignAudit);
+  auditElement('audit-capability-probes').click();
+  assert.deepStrictEqual(
+    clone(auditUI.messages.at(-1).report),
+    capabilityReport,
+    'A mismatched successful response cannot replace the recovered root/run'
+  );
+  const auditedReport = {
+    ...clone(capabilityReport),
+    ledger: [
+      ...clone(capabilityReport.ledger),
+      { id: 'capability:verified-generated-child', type: 'TEXT' },
+    ],
+    reconciliation: {
+      addedNodeIds: ['capability:verified-generated-child'],
+      unrecordedNodeIds: [],
+      missingNodeIds: [],
+      errors: [],
+    },
+  };
+  deliverAudit(auditedReport);
+  auditElement('save-operation-report').click();
+  assert.strictEqual(
+    auditUI.downloads.at(-1).name,
+    'mangrove-audit-capability-probes-report.json'
+  );
+  assert.strictEqual(
+    await auditUI.downloads.at(-1).blob.text(),
+    JSON.stringify(auditedReport, null, 2),
+    'Successful audit saves the complete updated recovery ledger'
+  );
+  auditElement('inspect-capability-probes').click();
+  assert.deepStrictEqual(clone(auditUI.messages.at(-1).report), auditedReport);
+  deliverAudit({ ...snapshot, errors: ['Read-only inspection failure'] });
+  auditElement('remove-capability-probes').click();
+  assert.deepStrictEqual(clone(auditUI.messages.at(-1)), {
+    type: 'remove-capability-probes',
+    report: auditedReport,
+  });
+  deliverAudit({
+    removedNodeIds: [],
+    errors: ['Cleanup refused foreign or unrecorded node'],
+  });
+  auditElement('remove-capability-probes').click();
+  assert.deepStrictEqual(
+    clone(auditUI.messages.at(-1).report),
+    auditedReport,
+    'Cleanup retry retains the audited ledger after failed snapshot or cleanup'
+  );
+  deliverAudit({
+    removedNodeIds: auditedReport.ledger.map(item => item.id),
+    errors: [],
+  });
+  for (const id of [
+    'audit-capability-probes',
+    'inspect-capability-probes',
+    'remove-capability-probes',
+  ])
+    assert.strictEqual(
+      auditElement(id).disabled,
+      true,
+      `${id} disabled after successful exact-ledger cleanup`
+    );
+  console.log(
+    'ok  capability snapshots retain recovery ledgers, failed/foreign audits cannot adopt nodes, successful audits authorize exact cleanup and preserve full reports'
+  );
+
+  const editorialUI = mountUI();
+  const editorialElement = id => editorialUI.elements.get(id);
+  const deliverEditorial = result =>
+    editorialUI.window.onmessage({
+      data: { pluginMessage: { type: 'operation', result: clone(result) } },
+    });
+  for (const id of [
+    'prepare-editorial',
+    'compare-editorial',
+    'remove-editorial',
+  ])
+    assert.strictEqual(editorialElement(id).disabled, true);
+  editorialElement('prepare-editorial').click();
+  assert.strictEqual(
+    editorialUI.messages.length,
+    0,
+    'Editorial preparation requires loaded component JSON'
+  );
+  editorialUI.setDocument(doc);
+  editorialElement('probe-root').value = 'override:unrelated-root';
+  editorialElement('probe-root').oninput();
+  editorialElement('editorial-root').value = 'editorial:previous-root';
+  editorialElement('editorial-root').oninput();
+  for (const brands of [[], [{ value: 'undrr' }, { value: 'irp' }]]) {
+    editorialElement('modes').checkedInputs = brands;
+    editorialElement('prepare-editorial').click();
+    assert.strictEqual(
+      editorialUI.messages.length,
+      0,
+      'Editorial preparation requires exactly one brand'
+    );
+  }
+  editorialElement('modes').checkedInputs = [{ value: 'undrr' }];
+  editorialElement('components').checkedInputs = [{ value: 'editorial-cta' }];
+  const editorialBuild = {
+    ...clone(built),
+    families: clone(built.families.filter(f => f.id === 'editorial-cta')),
+    audit: clone(built.audit.filter(a => a.family === 'editorial-cta')),
+  };
+  assert.strictEqual(
+    editorialBuild.families.length,
+    1,
+    'Real mock build must include editorial CTA'
+  );
+  editorialElement('build').click();
+  deliverEditorial(editorialBuild);
+  assert.strictEqual(editorialElement('compare-editorial').disabled, false);
+  editorialElement('prepare-editorial').click();
+  assert.deepStrictEqual(clone(editorialUI.messages.at(-1)), {
+    type: 'prepare-editorial-probes',
+    doc,
+    brand: 'undrr',
+  });
+  for (const id of [
+    'prepare-editorial',
+    'compare-editorial',
+    'remove-editorial',
+    'editorial-root',
+    'probe-root',
+    'prepare-probes',
+    'compare-probes',
+    'remove-probes',
+    'build',
+    'inspect',
+    'capability-probes',
+    'capability-file',
+    'font-diagnostics',
+    'file',
+  ])
+    assert.strictEqual(
+      editorialElement(id).disabled,
+      true,
+      `${id} serialized during editorial prepare`
+    );
+  const pendingEditorialCount = editorialUI.messages.length;
+  editorialElement('prepare-editorial').click();
+  editorialElement('remove-editorial').click();
+  editorialElement('inspect').onclick();
+  assert.strictEqual(
+    editorialUI.messages.length,
+    pendingEditorialCount,
+    'Pending prepare cannot be interleaved'
+  );
+  const failedEditorial = {
+    operation: 'prepare-editorial-probes',
+    rootId: 'editorial:partial-root',
+    createdNodeIds: ['editorial:partial-root', 'editorial:partial-instance'],
+    ledger: {
+      kind: 'mangrove-editorial-acceptance',
+      complete: false,
+      steps: 'synthetic-full-readbacks'.repeat(20000),
+    },
+    errors: Array.from(
+      { length: 30 },
+      (_, i) => `native offset failure ${i}: ${'details'.repeat(200)}`
+    ),
+  };
+  deliverEditorial(failedEditorial);
+  assert.strictEqual(
+    editorialElement('editorial-root').value,
+    failedEditorial.rootId
+  );
+  assert.strictEqual(
+    editorialElement('remove-editorial').disabled,
+    false,
+    'Failed prepare preserves its exact cleanup root'
+  );
+  assert.strictEqual(
+    editorialElement('compare-editorial').disabled,
+    true,
+    'Preparation discards the pre-edit build cache'
+  );
+  assert.strictEqual(
+    editorialElement('probe-root').value,
+    'override:unrelated-root'
+  );
+  assert(editorialElement('log').textContent.length < 4096);
+  assert(
+    !editorialElement('log').textContent.includes('synthetic-full-readbacks')
+  );
+  editorialElement('save-operation-report').click();
+  assert.strictEqual(
+    editorialUI.downloads.at(-1).name,
+    'mangrove-prepare-editorial-probes-report.json'
+  );
+  assert.strictEqual(
+    await editorialUI.downloads.at(-1).blob.text(),
+    JSON.stringify(failedEditorial, null, 2)
+  );
+  editorialElement('remove-editorial').click();
+  assert.deepStrictEqual(clone(editorialUI.messages.at(-1)), {
+    type: 'remove-editorial-probes',
+    rootId: failedEditorial.rootId,
+  });
+  const refusedEditorial = {
+    operation: 'remove-editorial-probes',
+    rootId: failedEditorial.rootId,
+    removedNodeIds: [],
+    retained: [{ id: failedEditorial.rootId }],
+    errors: ['Exact-ledger cleanup refused foreign child'],
+  };
+  deliverEditorial(refusedEditorial);
+  assert.strictEqual(
+    editorialElement('editorial-root').value,
+    failedEditorial.rootId
+  );
+  assert.strictEqual(editorialElement('remove-editorial').disabled, false);
+  editorialElement('remove-editorial').click();
+  deliverEditorial({
+    operation: 'remove-editorial-probes',
+    rootId: failedEditorial.rootId,
+    removedNodeIds: failedEditorial.createdNodeIds,
+    retained: [],
+    errors: [],
+  });
+  assert.strictEqual(editorialElement('editorial-root').value, '');
+  assert.strictEqual(editorialElement('compare-editorial').disabled, true);
+  assert.strictEqual(editorialElement('remove-editorial').disabled, true);
+  assert.strictEqual(
+    editorialElement('probe-root').value,
+    'override:unrelated-root',
+    'Editorial cleanup never clears the other acceptance root'
+  );
+
+  editorialElement('prepare-editorial').click();
+  const completeEditorial = {
+    ...clone(failedEditorial),
+    rootId: 'editorial:complete-root',
+    createdNodeIds: ['editorial:complete-root', 'editorial:complete-instance'],
+    ledger: { ...clone(failedEditorial.ledger), complete: true },
+    errors: [],
+  };
+  deliverEditorial(completeEditorial);
+  assert.strictEqual(editorialElement('compare-editorial').disabled, true);
+  editorialElement('compare-editorial').click();
+  const beforeFreshBuild = editorialUI.messages.length;
+  editorialElement('build').click();
+  assert.strictEqual(editorialUI.messages.length, beforeFreshBuild + 1);
+  assert.strictEqual(
+    editorialUI.messages.at(-1).refreshNarrowReview,
+    false,
+    'Ordinary post-prepare build preserves existing consumer content'
+  );
+  deliverEditorial(editorialBuild);
+  assert.strictEqual(editorialElement('compare-editorial').disabled, false);
+  editorialElement('compare-editorial').click();
+  assert.deepStrictEqual(clone(editorialUI.messages.at(-1)), {
+    type: 'compare-editorial-probes',
+    rootId: completeEditorial.rootId,
+    buildResult: editorialBuild,
+  });
+  const editorialComparison = {
+    operation: 'compare-editorial-probes',
+    rootId: completeEditorial.rootId,
+    passed: true,
+    assertions: [{ name: 'IDs/Label/geometry retained', passed: true }],
+    after: [{ readbacks: 'full-geometry-evidence'.repeat(10000) }],
+    errors: [],
+  };
+  deliverEditorial(editorialComparison);
+  assert(editorialElement('log').textContent.includes('Comparison: passed'));
+  editorialElement('save-operation-report').click();
+  assert.strictEqual(
+    editorialUI.downloads.at(-1).name,
+    'mangrove-compare-editorial-probes-report.json'
+  );
+  assert.strictEqual(
+    await editorialUI.downloads.at(-1).blob.text(),
+    JSON.stringify(editorialComparison, null, 2)
+  );
+  assert.strictEqual(
+    editorialElement('probe-root').value,
+    'override:unrelated-root'
+  );
+
+  // Server-side shared data recovers by exact root ID; no token JSON or UI cache.
+  const editorialRestart = mountUI();
+  const restartEditorialElement = id => editorialRestart.elements.get(id);
+  restartEditorialElement('probe-root').value = 'override:restart-unrelated';
+  restartEditorialElement('editorial-root').value =
+    `  ${completeEditorial.rootId}  `;
+  restartEditorialElement('editorial-root').oninput();
+  assert.strictEqual(
+    restartEditorialElement('prepare-editorial').disabled,
+    true
+  );
+  assert.strictEqual(
+    restartEditorialElement('compare-editorial').disabled,
+    true
+  );
+  assert.strictEqual(
+    restartEditorialElement('remove-editorial').disabled,
+    false
+  );
+  restartEditorialElement('remove-editorial').click();
+  assert.deepStrictEqual(clone(editorialRestart.messages[0]), {
+    type: 'remove-editorial-probes',
+    rootId: completeEditorial.rootId,
+  });
+  editorialRestart.window.onmessage({
+    data: {
+      pluginMessage: {
+        type: 'error',
+        message: 'Synthetic cleanup transport failure',
+      },
+    },
+  });
+  assert.strictEqual(
+    restartEditorialElement('editorial-root').value.trim(),
+    completeEditorial.rootId
+  );
+  assert.strictEqual(
+    restartEditorialElement('remove-editorial').disabled,
+    false,
+    'Restart transport failure retains cleanup recovery'
+  );
+  restartEditorialElement('remove-editorial').click();
+  const editorialCleanup = {
+    operation: 'remove-editorial-probes',
+    rootId: completeEditorial.rootId,
+    removedNodeIds: completeEditorial.createdNodeIds,
+    retained: [],
+    errors: [],
+  };
+  editorialRestart.window.onmessage({
+    data: { pluginMessage: { type: 'operation', result: editorialCleanup } },
+  });
+  assert.strictEqual(restartEditorialElement('editorial-root').value, '');
+  assert.strictEqual(
+    restartEditorialElement('remove-editorial').disabled,
+    true
+  );
+  assert.strictEqual(
+    restartEditorialElement('probe-root').value,
+    'override:restart-unrelated'
+  );
+  restartEditorialElement('save-operation-report').click();
+  assert.strictEqual(
+    editorialRestart.downloads.at(-1).name,
+    'mangrove-remove-editorial-probes-report.json'
+  );
+  assert.strictEqual(
+    await editorialRestart.downloads.at(-1).blob.text(),
+    JSON.stringify(editorialCleanup, null, 2)
+  );
+  console.log(
+    'ok  editorial controls enforce document/single-brand and fresh post-prepare builds, serialize actions, preserve failed cleanup roots/full reports and recover exact restart cleanup without touching override roots'
   );
 }
 
