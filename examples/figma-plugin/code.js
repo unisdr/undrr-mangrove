@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes, advanceMangroveSegmentedWrapperProbes, advanceMangroveCoreContentProbes */
+/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes, advanceMangroveSegmentedWrapperProbes, advanceMangroveCoreContentProbes, organizeMangroveKit, navigateMangroveKit */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
  * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
@@ -677,6 +677,29 @@ figma.ui.onmessage = async msg => {
           { refreshNarrowReview: msg.refreshNarrowReview ?? false }
         ),
       });
+      return;
+    }
+    if (msg.type === 'organize-kit') {
+      let result;
+      try {
+        result = await organizeMangroveKit(msg.doc, msg.brand);
+      } catch (error) {
+        // The reconciler catches mutation failures itself. Thrown failures are
+        // read-only preflight refusals and still need a downloadable receipt.
+        result = {
+          operation: 'kit-layout',
+          version: '1',
+          phase: 'refused',
+          createdNodeIds: [],
+          updatedNodeIds: [],
+          errors: [error.message || String(error)],
+        };
+      }
+      post('operation', { result });
+      return;
+    }
+    if (msg.type === 'navigate-kit') {
+      post('operation', { result: navigateMangroveKit(msg.destination) });
       return;
     }
     if (msg.type === 'prepare-override-probes') {

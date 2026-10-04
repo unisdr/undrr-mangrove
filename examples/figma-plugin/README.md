@@ -29,6 +29,8 @@ Current output contains 418 variables, 92 text definitions (60 Regular foundatio
 - **3. Diagnostics:** inspect the file, export previews, or run temporary native checks. Native behaviour, edited-instance checks and Editorial CTA have separate navigation.
 - Brand, loaded-variable count, navigation and recent results stay visible. Save the complete results and inspection rather than relying on the bounded on-screen summary. Temporary checks have a separate saved record for restart recovery.
 
+**Organize file** in Core kit creates six named sections on the current page. The persistent **Kit destination** selector and **Go** navigate to those sections without changing the selected component families. See [the organisation workflow](#organize-and-navigate-the-file) before the first migration.
+
 The panel uses Mangrove-inspired UNDRR blue, clear typography and a two-band keyboard focus indicator, while respecting Figma's theme colours. Panel styling does not import fonts or change component recipes. [Core status](CORE-KIT-STATUS.md) states what is accepted and what remains.
 
 ### Text and effect foundations
@@ -104,9 +106,19 @@ A file in Drafts or a Starter team allows only 1 mode, so the five brands cannot
 
 Limits: one brand is visible at a time, and Starter cannot publish libraries, so the variables, components and designs stay in this one file. Local text styles, effect styles and components can still be created and reused within the file. When the file moves to a Professional team project, import with all brands ticked: the existing mode is kept and the others are added. Both workflows pass the mock harness. Saved desktop brand inspections establish single-mode values, aliases and identity preservation; paid-team migration and complete rendered brand acceptance remain pending.
 
+### Organize and navigate the file
+
+Use the desktop plugin with the complete `mangrove-variables.json`, the existing main/review frames and their current imported brand. Save a backup and inspection, remove temporary checks using their exact records, then choose **Core kit > Organize file**. Organisation migrates the existing assets in place on the current page into **00 Start here**, **01 Foundations**, **02 Components**, **03 Compositions (organisms)**, **04 Page patterns** and **90 Diagnostics and pending work**. It adds generated guidance and foundation specimens, fits containers and arranges variant grids; it does not change the source component anatomy or re-theme the kit.
+
+Use **Kit destination > Go** to select and view a section. After a complete migration, ordinary desktop component builds automatically reconcile the generated layout. Use the complete exporter document even for a selected-family build in an organised file. Put designer notes and page compositions beside generated containers, rather than inside main/review or family boards. Their section-local positions are preserved; section positions can move as generated content grows. Generated guidance and grids are maintained by the plugin. Renames, retirements, ownership conflicts and moving canonical assets require an explicit migration.
+
+Exact fonts for existing text must load before reparenting an auto-layout subtree. Missing fonts are reported without substitution. Save **results** after every attempt: a failure during migration retains its affected IDs and `phase: migrating` for an explicit **Organize file** retry. Ordinary component builds refuse a partial migration. Do not delete partial sections or manually move assets to bypass that guard. See [maintenance and recovery](MAINTAINING-KIT.md#organize-the-file-before-expanding-the-catalogue).
+
+Native hierarchy acceptance remains pending because the exact existing `Roboto Condensed` Bold face cannot load. The failed attempt and sizing experiment preserved the originals; exact cleanup removed all 74 staging nodes and restored all 6,453 saved assets unchanged. The runtime now refuses that font before writes and saves a `phase: refused` receipt. A smaller native Table/dependency update compacts the grid to 1,108.703125 × 1,632.703125px and separates Review from visible main bounds, with zero new nodes and unchanged component internals. See the [checkpoint and remaining checks](KIT-ARCHITECTURE.md#implementation-and-native-checkpoint).
+
 ### Build and inspect the native kit
 
-Import one brand first, then select families and choose **Build selected components**. Dependencies are built first. The generated kit contains main components outside **Mangrove / Review**, where editable instances show states, long labels and narrow examples.
+Import one brand first, then select families and choose **Build selected components**. Dependencies are built first; the viewport then shows the first successfully requested family, rather than the entire review sheet. Before section migration, ordinary desktop builds also position the generated Review root beyond the main render/direct-child extents without resizing component internals. The generated kit contains main components outside **Mangrove / Review**, where editable instances show states, long labels and narrow examples.
 
 | Family                            | Variants |
 | --------------------------------- | -------: |
@@ -183,6 +195,8 @@ node scripts/build-figma-connector.cjs inspect undrr > /tmp/mangrove-inspect.js
 ```
 
 Pass the emitted JavaScript to `use_figma` after loading its skill. The builder includes nested component dependencies, trims other brands, compresses data with a local codec and rejects payloads over 50,000 characters or bytes. It does not use `eval` or fetch code. Connector execution uses shared metadata only: first migrate legacy private identities through the desktop importer, or verify unchanged unique names before adoption. Privately identified assets that were renamed cannot be recovered by the connector's name fallback.
+
+The connector runtime deliberately omits the layout module and refuses component builds in an organised file. Use the layout-aware desktop plugin for those updates and for **Organize file**. Foundation import batches remain separate operations; they do not organise or reconcile the canvas.
 
 The optional fourth argument selects comma-separated variant IDs from one family. Full ComboBox, Table, Row, Text CTA, Radio and Checkbox dependency matrices exceed the connector limit; emit one variant or a checked small batch at a time. Dependencies retain only the matching variants for that batch, and reports identify the requested scope. Existing variants remain in place and the builder arranges all retained main variants together. Complete all intended batches and inspect the resulting family. The full desktop plugin build remains available. Packed LZW preserves metadata; payload rejection never silently drops variants. Native connector batch assembly remains unverified while the Starter allowance is exhausted.
 
@@ -354,11 +368,15 @@ node examples/figma-plugin/dev/mock-audit-native-text.cjs
 node examples/figma-plugin/dev/mock-connector-scopes.cjs
 node examples/figma-plugin/dev/mock-review-export.cjs
 node examples/figma-plugin/dev/mock-ui.cjs
+node examples/figma-plugin/dev/mock-kit-layout.cjs
+node examples/figma-plugin/dev/mock-ui-layout.cjs
 ```
 
 The kit harness covers native identity and properties, instance overrides and nested exposure, dependency and font blocking, a scoped Roboto rebuild without loading or rewriting unavailable Tabs, font preflight before container mode transitions, transparent focus geometry, codec transport and the actual API restrictions encountered.
 
 The mock copies the Figma behaviours that have caused bugs here, but it is not Figma. Confirm a change in the desktop app before relying on it.
+
+The layout harness has thirteen groups for in-place migration, compact grids, ordinary updates, manual/consumer preservation, refusals and partial retry. The three actual DOM layout groups check six destination actions, serialized controls, independent receipts, unchanged family selection and build-evidence freshness. They do not establish native font loading or rendered organisation.
 
 Audit a saved **Inspect kit** report against the current generated recipes:
 

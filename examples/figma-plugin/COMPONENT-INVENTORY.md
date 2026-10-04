@@ -4,6 +4,8 @@ Catalogue audit: 3 October 2026. The current TOC, Status Label and initial Segme
 
 The [core kit](CORE-KIT-STATUS.md) contains 25 candidate families and 297 recipe variants with bounded construction/consumer evidence. **File organisation and durable updates are the next open gate**, before catalogue expansion: see [KIT-ARCHITECTURE.md](KIT-ARCHITECTURE.md). The full inventory remains follow-up work.
 
+The desktop section reconciler is implemented, but native hierarchy migration remains blocked by existing Condensed Bold fonts. Table grid compaction and Review separation have a bounded native checkpoint; see [kit architecture](KIT-ARCHITECTURE.md#implementation-and-native-checkpoint). Catalogue expansion remains deferred until that gate passes.
+
 ## Scope and evidence
 
 Discovery reconciles the 74 curated entries in [component-data.js](../../scripts/ai-manifest/component-data.js), the ordinary Storybook catalogue, JSX and SCSS under `stories/Atom`, `stories/Components`, `stories/Molecules`, `stories/Patterns` and `stories/Utilities`, and the published component entries in [webpack.config.js](../../webpack.config.js). The curated manifest alone misses visual dependencies and some catalogue entries, including Snackbar and CookieConsentBanner. Conversely, `src/index.js` is not a complete public-component list: the assembled npm package exposes component subpaths and CSS/vanilla patterns. See [assemble-npm-package.mjs](../../scripts/assemble-npm-package.mjs).

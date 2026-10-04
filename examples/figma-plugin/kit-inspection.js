@@ -650,12 +650,24 @@ async function exportMangroveReview(name, { scale = 2, familyId } = {}) {
     familyId !== undefined &&
     (rootKey !== 'review' ||
       typeof familyId !== 'string' ||
-      !/^[a-z0-9][a-z0-9-]*$/.test(familyId))
+      !/^[a-z0-9][a-z0-9.-]*$/.test(familyId))
   )
     throw new Error(
       'Family export needs one valid family ID and the review root.'
     );
   const page = figma.currentPage;
+  function sectionParent(key) {
+    const matches = page.findAll(
+      node => mgReadIdentity(node, 'mgKitId') === key
+    );
+    if (
+      matches.length !== 1 ||
+      matches[0].type !== 'SECTION' ||
+      matches[0].parent !== page
+    )
+      throw new Error(`Expected one top-level kit section ${key}.`);
+    return matches[0];
+  }
   function ownedFrame(key, parent) {
     const nodes = page.findAll(node => mgReadIdentity(node, 'mgKitId') === key);
     if (nodes.length !== 1)
@@ -667,9 +679,33 @@ async function exportMangroveReview(name, { scale = 2, familyId } = {}) {
       throw new Error(`Owned review ${key} is outside its expected parent.`);
     return node;
   }
-  const root = ownedFrame(rootKey, page);
+  const organized =
+    page.findAll(node => mgReadIdentity(node, 'mgKitId') === 'layout/start')
+      .length > 0;
+  const root = ownedFrame(
+    rootKey,
+    organized
+      ? sectionParent(
+          rootKey === 'review' ? 'layout/components' : 'layout/pending'
+        )
+      : page
+  );
+  let familyParent = root;
+  if (organized && familyId !== undefined) {
+    const area =
+      typeof mgLayoutDestination === 'function'
+        ? mgLayoutDestination(familyId)
+        : 'components';
+    if (area !== 'components')
+      familyParent = ownedFrame(
+        `layout/${area}/review`,
+        sectionParent(`layout/${area}`)
+      );
+  }
   const node =
-    familyId === undefined ? root : ownedFrame(`review/${familyId}`, root);
+    familyId === undefined
+      ? root
+      : ownedFrame(`review/${familyId}`, familyParent);
   const bytes = await node.exportAsync({
     format: 'PNG',
     constraint: { type: 'SCALE', value: scale },

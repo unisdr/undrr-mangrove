@@ -4,6 +4,8 @@ Reviewed on **3 October 2026**, against source revision `ea33e7b8`, before the h
 
 The numbered findings describe that historical baseline. The outcome sections record later implementation and evidence. The [current checkpoint](#loader-and-compact-empty-state-checkpoint) contains 394 variables, 87 text definitions, eight effects, 23 families and 271 recipe variants; generated definitions are distinct from successfully imported native styles.
 
+See the [4 October organisation implementation and native checkpoint](KIT-ARCHITECTURE.md#implementation-and-native-checkpoint): section reconciliation is implemented and mock-tested; native migration is font-blocked. The Table grid and legacy Review separation are corrected without changing source component internals. Designer handoff remains open.
+
 ## Designer review on 4 October 2026: organisation gate reopened
 
 The bounded core construction and consumer gates passed, but designer review of the actual file identified a separate high-priority handoff defect. The Table set has a 2,328px width and 3,518.34375px height; a family-wide maximum-height grid leaves large gaps, and the 1,200px main root does not contain the set. Review remains at its original neighbouring position, so the two areas intersect. These values are confirmed in the saved clean native inspection. The Review examples are not Table descendants.

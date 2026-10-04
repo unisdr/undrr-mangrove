@@ -1,17 +1,29 @@
 # Figma kit organisation and update contract
 
-Updated 4 October 2026 after designer review of the native canvas. **This is the next open acceptance gate.** The bounded core components have construction and consumer evidence; the file is not yet accepted as an understandable designer library. Complete this gate before expanding the catalogue.
+Updated 4 October 2026 after designer review and a native migration attempt. **This acceptance gate remains open.** Section migration and reconciliation are implemented locally, but native migration is blocked by an unavailable existing font. Table grid compaction and separation from Review are accepted within the native scope below. Complete the remaining gate before expanding the catalogue.
 
 ## Why the Table selection is so large
 
 The purple selection in the reported screenshot is the Table component set, containing eight variants. Selecting a set includes the empty space between its variants. It does not mean that the neighbouring Review examples are Table children.
 
-There are two actual layout defects in `kit-builder.js`:
+The preceding builder had two layout defects:
 
 1. Every variant uses a grid cell based on the largest width and largest height in the family. Table variants range from about 148px to 1,117px high, so the small tables inherit very large empty row gaps.
 2. `Mangrove / Main components` has a fixed 1,200px width, while Table's set is 2,328px wide and clipping is off. The Review root was positioned beside the nominal main width when first created; later growth does not reposition it. Table therefore extends into the Review area.
 
-The saved clean inspection confirms a 2,328 × 3,518.34375px Table set, a 1,200px main root and a Review root beginning within the Table set's horizontal extent. Individual component acceptance does not establish a usable canvas layout. Clipping the main frame would hide the defect rather than repair it.
+The pre-change inspection confirms a 2,328 × 3,518.34375px Table set, a 1,200px main root and a Review root beginning within the Table set's horizontal extent. Individual component acceptance does not establish a usable canvas layout. Clipping the main frame would hide the defect rather than repair it.
+
+## Implementation and native checkpoint
+
+`kit-layout.js` implements the six SECTION destinations below, variable-bound colour and spacing specimens, five available Regular text-style specimens, family/source headings, explicit missing page-pattern coverage, compact grids and versioned reconciliation. It moves whole canonical sets and existing review-family frames under stable presentation keys; it does not recreate their anatomy. **Organize file** applies the initial migration. Ordinary desktop builds subsequently reconcile it. **Kit destination > Go** navigates without producing build evidence.
+
+Native section migration did not complete. Reparenting the legacy auto-layout main root requires its existing `Roboto Condensed` Bold face. All 26 existing TEXT nodes with that face report a missing font. Exact loading fails. A bounded experiment fixing only the main presentation root's primary sizing also failed to append; its original fields were restored exactly. No font was substituted, installed or reassigned.
+
+The first attempt created 74 presentation nodes before the native append failure. Its saved partial receipt supports explicit recovery. Exact cleanup removed those 74 nodes, retained none and restored all 6,453 pre-existing inspected assets byte-for-byte in their saved field records. The production runtime now loads all required existing managed fonts before writes, and the same refusal creates or updates zero nodes. Never delete a mixed or partially migrated section as a shortcut; use its exact receipt and fresh inspection.
+
+The smaller native correction succeeded without moving the font-blocked subtree. A Table build updates its four dependency families and their grids, creates zero nodes, updates 199 and reports zero errors. Initial compaction measured 1,504 × 1,632.703125px. Native visual review then separated short-state rows from Story/NarrowStory, removing the remaining wide column gap. Table now measures **1,108.703125 × 1,632.703125px** and fits the legacy main frame. Review moves beyond the measured main render/direct-child extents, with a measured 112px rendered gap (the rule requires at least 80px). Canonical variant and descendant dimensions, local source anatomy, property IDs, fonts, style associations, paints, aliases, instance links and existing review-local content/placement remain unchanged. Only presentation-set grids, the main root's resulting HUG height and Review's page position change. Two ordinary repeats, including a plugin restart, retain all resulting saved asset records exactly. Independent verification passes 6,019 checks with zero failures and retains all 6,453 original asset IDs. Native review confirms the compact rows at 77% zoom. A fresh local backup is saved; cloud synchronisation remains unconfirmed.
+
+The main root still has its legacy nominal width, and the six-section reading sequence is not yet present in the native file. Mock coverage proves migration, two repeats, bounded source propagation, inherited instance ownership, manual preservation, conflicts and interrupted/restarted recovery; it does not establish native hierarchy acceptance, all-family rendered containment or novice usability.
 
 ## Intended reading sequence
 
@@ -36,11 +48,11 @@ Tokens remain variables in the Variables interface. Foundations specimens explai
 - Fit generated containers to their actual child extents, including declared overflow. Place neighbouring sections from their measured bounds after layout. Check both selection bounds and rendered overflow; a nominal frame width is insufficient.
 - Keep main components, review instances, manual examples and diagnostics visibly distinct. Shared dependencies stay linked; no detachment or duplication is needed for presentation.
 - Use readable headings, source/usage descriptions, consistent labels and a visual index. Verify at normal zoom with someone unfamiliar with the file. A vertical build-order dump is not the intended designer navigation.
-- Restrict any automatic repositioning to generated containers and main-component presentation. Do not move designer-owned page examples or change reusable component internal geometry as a side effect of tidying the canvas.
+- Restrict automatic repositioning to generated containers and main-component presentation. Preserve section-local placement of manual additions; a containing generated section can move as its contents grow. Preserve absolute placement of unowned page roots. Do not change reusable component internal geometry as a side effect of tidying the canvas.
 
 ## Automatic and manual synchronisation
 
-This table defines the intended maintenance boundary. Some current update behaviour is proven; the section migration and layout reconciliation still need implementation and native acceptance.
+This table defines the maintenance boundary. Section migration and reconciliation are implemented and mock-tested; native acceptance remains open.
 
 | Change                                               | Automatic update contract                                                                        | Manual or reviewed step                                                                                                           |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -53,7 +65,7 @@ This table defines the intended maintenance boundary. Some current update behavi
 | Designer-authored page/example                       | Existing linked instances inherit accepted main-component changes                                | Designer reviews composition, content, crop, layout and interaction; plugin does not regenerate the page from its appearance      |
 | Published library update                             | Later: publish accepted assets and offer updates to consuming files                              | Maintainer describes release; consumers review/accept updates and verify preserved overrides                                      |
 
-Current anatomy identity includes name paths. A display rename or reparenting can therefore change keys unless a migration preserves the existing identity. Current builder ownership is indexed on the current page and generated roots are reattached to that page. Moving frames manually into new sections will not establish a durable architecture: the builder must learn the hierarchy first.
+Current anatomy identity includes name paths. A display rename or reparenting can therefore change keys unless a migration preserves the existing identity. Ownership remains indexed on the current page. The layout-aware desktop builder now respects the generated section hierarchy; the bounded connector runtime refuses organized-kit writes because it lacks the layout module. Moving frames manually or running an older runtime does not establish a durable migration.
 
 Use explicit immutable presentation keys independent of section titles, with a versioned migration map for existing roots. Keep the currently proven component keys. Distinguish inherited metadata on normal instances from canonical ownership using the existing validated main-component check. Reject duplicate, missing or conflicting ownership before migration writes. Do not adopt unrelated objects by their names.
 

@@ -178,6 +178,22 @@
       .context-info {
         min-width: 0;
       }
+      .kit-jump {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .kit-jump select {
+        width: 145px;
+      }
+      #panel-core .panel-actions {
+        display: flex;
+        gap: 8px;
+      }
+      #panel-core .panel-actions .primary {
+        flex: 1;
+        width: auto;
+      }
       .context-info strong {
         color: var(--ink);
       }
@@ -597,6 +613,22 @@
           <strong id="brand-state">Choose a brand</strong
           ><span id="document-state"> · No token file loaded</span>
         </div>
+        <div class="kit-jump">
+          <select id="kit-destination" aria-label="Kit destination">
+            <option value="start">00 Start here</option>
+            <option value="foundations">01 Foundations</option>
+            <option value="components">02 Components</option>
+            <option value="compositions">03 Compositions</option>
+            <option value="patterns">04 Page patterns</option>
+            <option value="pending">90 Pending work</option>
+          </select>
+          <button
+            id="navigate-kit"
+            title="Organize the file once, then jump to a named section"
+          >
+            Go
+          </button>
+        </div>
         <button id="change-brand" class="quiet">Change brand</button>
       </div>
       <main class="workspace" id="workspace" data-section="import">
@@ -720,6 +752,13 @@
             <button id="build" class="primary" disabled="">
               Build selected components
             </button>
+            <button
+              id="organize-kit"
+              disabled=""
+              title="Migrate the existing generated kit in place and reconcile its six destinations"
+            >
+              Organize file
+            </button>
           </div>
         </section>
         <section
@@ -749,7 +788,7 @@
             <div class="action-row">
               <button id="export-family" disabled="">
                 Export selected family PNG</button
-              ><button id="export-review">Export full review PNG</button>
+              ><button id="export-review">Export controls review PNG</button>
             </div>
             <p class="hint">
               Choose exactly one family in Core kit for a smaller preview.
@@ -1187,6 +1226,14 @@
         $('file').disabled = busy;
         $('import').disabled = busy || !doc;
         $('build').disabled = busy || !doc?.components;
+        $('organize-kit').disabled =
+          busy ||
+          !doc?.components ||
+          !!capabilityReport?.rootId ||
+          !!String($('probe-root').value || '').trim() ||
+          !!String($('editorial-root').value || '').trim();
+        $('kit-destination').disabled = busy;
+        $('navigate-kit').disabled = busy;
         $('export-family').disabled = busy || !doc?.components;
         $('refresh-narrow-review').disabled = busy || !doc?.components;
         $('diagnostics').disabled = busy || !doc;
@@ -1515,6 +1562,17 @@
             refreshNarrowReview: $('refresh-narrow-review').checked,
           });
       };
+      $('organize-kit').onclick = () => {
+        const brand = singleBrand();
+        if (brand) {
+          lastBuildReport = null;
+          send('organize-kit', { doc, brand });
+        }
+      };
+      $('navigate-kit').onclick = () =>
+        send('navigate-kit', {
+          destination: $('kit-destination').value || 'start',
+        });
       $('diagnostics').onclick = () => {
         const brand = singleBrand();
         if (brand) send('diagnostics', { doc, brand });
@@ -1711,6 +1769,15 @@
           return;
         }
         if (msg.type === 'operation') {
+          if (['organize-kit', 'navigate-kit'].includes(completedOperation)) {
+            rememberOperation(completedOperation, result);
+            resultLog(
+              completedOperation === 'organize-kit'
+                ? `File organization ${hasErrors ? 'needs review' : 'finished'}. ${result.sections?.length || 0} destinations; ${result.createdNodeIds?.length || 0} created, ${result.updatedNodeIds?.length || 0} updated. Save results for the complete migration record.`
+                : `Viewing ${$('kit-destination').selectedOptions?.[0]?.textContent || result.destination || 'kit section'}.`
+            );
+            return;
+          }
           if (completedOperation?.includes('capability-probes')) {
             const r = msg.result;
             if (completedOperation === 'capability-probes')

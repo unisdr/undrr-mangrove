@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS */
+/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -444,6 +444,21 @@ async function buildMangroveComponents(
     if (owned.has(key))
       throw new Error(`Duplicate Mangrove ownership key ${key}`);
     owned.set(key, node);
+  }
+  const organized = owned.has('layout/start');
+  if (organized) {
+    if (typeof mgLayoutPreflight !== 'function')
+      throw new Error(
+        'Organized kit updates require the layout-aware desktop runtime.'
+      );
+    await mgLayoutPreflight(doc, { allowProbes: true });
+    if (
+      mgReadIdentity(owned.get('layout/start'), 'mgLayoutPhase') !== 'complete'
+    )
+      throw new Error(
+        'Finish the pending Organize file operation before building components.'
+      );
+    await mgLayoutLoadExistingFonts();
   }
   const collections = await figma.variables.getLocalVariableCollectionsAsync();
   const collection = collections.find(item => item.name === doc.collection);
@@ -2350,12 +2365,16 @@ async function buildMangroveComponents(
     const fresh = !frame;
     frame = frame || figma.createFrame();
     mark(frame, key, fresh);
-    if (frame.parent !== page) page.appendChild(frame);
+    const parent =
+      typeof mgLayoutContainerParent === 'function'
+        ? mgLayoutContainerParent(key)
+        : page;
+    if (frame.parent !== parent) parent.appendChild(frame);
     frame.name = name;
     frame.layoutMode = 'VERTICAL';
     frame.primaryAxisSizingMode = 'AUTO';
     frame.counterAxisSizingMode = 'FIXED';
-    frame.resize(width, Math.max(frame.height, 100));
+    frame.resize(organized ? frame.width : width, Math.max(frame.height, 100));
     frame.paddingTop =
       frame.paddingBottom =
       frame.paddingLeft =
@@ -2448,19 +2467,23 @@ async function buildMangroveComponents(
       const layoutVariants = set.children.filter(
         node => node.type === 'COMPONENT'
       );
-      const columns = Math.min(3, layoutVariants.length);
-      const cellWidth =
-        Math.max(...layoutVariants.map(node => node.width)) + 48;
-      const cellHeight =
-        Math.max(...layoutVariants.map(node => node.height)) + 48;
-      layoutVariants.forEach((node, index) => {
-        node.x = 24 + (index % columns) * cellWidth;
-        node.y = 24 + Math.floor(index / columns) * cellHeight;
-      });
-      set.resizeWithoutConstraints(
-        24 + columns * cellWidth,
-        24 + Math.ceil(layoutVariants.length / columns) * cellHeight
-      );
+      if (typeof mgLayoutGrid === 'function') {
+        mgLayoutGrid(set, family);
+      } else {
+        const columns = Math.min(3, layoutVariants.length);
+        const cellWidth =
+          Math.max(...layoutVariants.map(node => node.width)) + 48;
+        const cellHeight =
+          Math.max(...layoutVariants.map(node => node.height)) + 48;
+        layoutVariants.forEach((node, index) => {
+          node.x = 24 + (index % columns) * cellWidth;
+          node.y = 24 + Math.floor(index / columns) * cellHeight;
+        });
+        set.resizeWithoutConstraints(
+          24 + columns * cellWidth,
+          24 + Math.ceil(layoutVariants.length / columns) * cellHeight
+        );
+      }
       built.set(family.id, { set, variants });
       result.families.push({
         id: family.id,
@@ -2518,7 +2541,11 @@ async function buildMangroveComponents(
       throw new Error(`Review node ${key} changed type.`);
     frame = frame || figma.createFrame();
     mark(frame, key, fresh);
-    if (frame.parent !== parent) parent.appendChild(frame);
+    const destination =
+      typeof mgLayoutReviewParent === 'function'
+        ? mgLayoutReviewParent(key, parent)
+        : parent;
+    if (frame.parent !== destination) destination.appendChild(frame);
     frame.name = name;
     frame.layoutMode = 'VERTICAL';
     frame.primaryAxisSizingMode = 'AUTO';
@@ -2878,8 +2905,37 @@ async function buildMangroveComponents(
       result.errors.push(`Review ${family.set.name}: ${reportError(error)}`);
     }
   }
+  if (organized) {
+    try {
+      result.layout = await organizeMangroveKit(doc, brandId, {
+        zoom: false,
+        allowProbes: true,
+      });
+      for (const id of result.layout.createdNodeIds) created.add(id);
+      for (const id of result.layout.updatedNodeIds) updated.add(id);
+      for (const error of result.layout.errors)
+        result.errors.push(`Kit layout: ${error}`);
+    } catch (error) {
+      result.errors.push(`Kit layout: ${reportError(error)}`);
+    }
+  } else if (typeof mgLayoutLegacySpacing === 'function') {
+    result.presentation = mgLayoutLegacySpacing(main, review);
+    if (result.presentation.changed && !created.has(review.id))
+      updated.add(review.id);
+  }
   result.createdNodeIds = [...created];
   result.updatedNodeIds = [...updated];
-  if (result.families.length) figma.viewport.scrollAndZoomIntoView([review]);
+  if (result.families.length) {
+    const focusId =
+      [...chosen].find(id =>
+        result.families.some(family => family.id === id)
+      ) || result.families[0].id;
+    figma.viewport.scrollAndZoomIntoView([
+      owned.get(`layout/family/${focusId}/main`) ||
+        owned.get(`family/${focusId}`) ||
+        owned.get(`review/${focusId}`) ||
+        review,
+    ]);
+  }
   return result;
 }

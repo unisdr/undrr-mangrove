@@ -628,6 +628,7 @@ function environment(doc, options = {}) {
   figma.mixed = Symbol('mixed');
   for (const [name, type] of [
     ['createFrame', 'FRAME'],
+    ['createSection', 'SECTION'],
     ['createEllipse', 'ELLIPSE'],
     ['createVector', 'VECTOR'],
     ['createText', 'TEXT'],
@@ -703,6 +704,9 @@ function environment(doc, options = {}) {
     'kit-builder.js',
   ])
     vm.runInContext(fs.readFileSync(path.join(DIR, file), 'utf8'), context);
+  const layoutFile = path.join(DIR, 'kit-layout.js');
+  if (fs.existsSync(layoutFile))
+    vm.runInContext(fs.readFileSync(layoutFile, 'utf8'), context);
   const call = (name, ...args) => {
     context.mockArgs = args;
     return vm.runInContext(`${name}(...mockArgs)`, context);

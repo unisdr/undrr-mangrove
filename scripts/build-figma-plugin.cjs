@@ -9,6 +9,7 @@ const SOURCES = [
   'code.js',
   'kit-inspection.js',
   'kit-builder.js',
+  'kit-layout.js',
   'kit-acceptance.js',
   'kit-editorial-acceptance.js',
   'font-diagnostics.js',
