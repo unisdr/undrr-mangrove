@@ -177,6 +177,8 @@
         font-size: 12px;
       }
       .context-info {
+        grid-column: 1;
+        grid-row: 1;
         min-width: 0;
       }
       #change-brand {
@@ -188,19 +190,59 @@
         grid-row: 2;
       }
       .kit-jump {
+        grid-column: 1;
+        grid-row: 2;
         display: flex;
         gap: 6px;
         align-items: center;
       }
       .kit-jump select {
-        width: 145px;
+        width: 230px;
+        min-width: 0;
+      }
+      #refresh-navigation {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: end;
+        padding: 4px 7px;
+      }
+      .context-info {
+        padding-right: 115px;
+      }
+      .component-browser {
+        grid-template-columns: 1fr auto;
+        gap: 6px 8px;
+      }
+      .component-browser label {
+        grid-column: 1 / -1;
+        font-weight: 600;
+      }
+      #browse-family {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+      #browse-view {
+        min-width: 0;
+        width: 100%;
+      }
+      #browse-component {
+        min-width: 120px;
+      }
+      @media (min-width: 560px) {
+        .component-browser {
+          grid-template-columns: minmax(0, 1fr) 145px auto;
+        }
+        #browse-family {
+          grid-column: 1;
+        }
       }
       #panel-core .panel-actions {
         display: flex;
+        flex-wrap: wrap;
         gap: 8px;
       }
       #panel-core .panel-actions .primary {
-        flex: 1;
+        flex: 1 1 100%;
         width: auto;
       }
       .context-info strong {
@@ -624,16 +666,11 @@
         </div>
         <div class="kit-jump">
           <select id="kit-destination" aria-label="Kit destination">
-            <option value="start">00 Start here</option>
-            <option value="foundations">01 Foundations</option>
-            <option value="components">02 Components</option>
-            <option value="compositions">03 Compositions</option>
-            <option value="patterns">04 Page patterns</option>
-            <option value="pending">90 Pending work</option>
+            <option value="">Inspecting installed destinations…</option>
           </select>
           <button
             id="navigate-kit"
-            title="Start here opens the welcome board; other destinations need Organize file"
+            title="Open an installed destination on this page"
           >
             Go
           </button>
@@ -645,8 +682,30 @@
         >
           Open Start here
         </button>
+        <button
+          id="refresh-navigation"
+          class="quiet"
+          title="Refresh installed destinations without changing the file"
+        >
+          Refresh navigation
+        </button>
         <button id="change-brand" class="quiet">Change brand</button>
       </div>
+      <div
+        class="context component-browser"
+        aria-label="Browse installed components"
+      >
+        <label for="browse-family">Browse component</label>
+        <select id="browse-family">
+          <option value="">Inspecting components…</option>
+        </select>
+        <select id="browse-view" aria-label="Component view">
+          <option value="example">Usage and states</option>
+          <option value="source">Source components</option>
+        </select>
+        <button id="browse-component" disabled="">Open component</button>
+      </div>
+      <p id="navigation-warning" class="hint" hidden=""></p>
       <main class="workspace" id="workspace" data-section="import">
         <section id="panel-import" aria-labelledby="nav-import">
           <div class="panel-intro">
@@ -719,8 +778,8 @@
           <div class="panel-intro">
             <h2>Build the component kit</h2>
             <p>
-              25 candidate families. Use their documented presets and supported
-              edits.
+              Maintain the 25 core families. Browse installed components above
+              to use them in your own designs.
             </p>
             <p class="hint">Guide: CORE-KIT-STATUS.md</p>
           </div>
@@ -767,6 +826,13 @@
           <div class="panel-actions">
             <button id="build" class="primary" disabled="">
               Build selected components
+            </button>
+            <button
+              id="refresh-kit-guidance"
+              disabled=""
+              title="Update source descriptions and scope labels without rebuilding geometry"
+            >
+              Update kit guidance
             </button>
             <button
               id="organize-kit"
@@ -1043,6 +1109,7 @@
     </div>
     <script>
       let doc = null;
+      let navigationState = { destinations: [], families: [], errors: [] };
       let inspection = null;
       let operationReport = null;
       let pendingOperation = null;
@@ -1248,8 +1315,16 @@
           !!capabilityReport?.rootId ||
           !!String($('probe-root').value || '').trim() ||
           !!String($('editorial-root').value || '').trim();
-        $('kit-destination').disabled = busy;
-        $('navigate-kit').disabled = busy;
+        $('kit-destination').disabled =
+          busy || !navigationState.destinations.length;
+        $('navigate-kit').disabled =
+          busy || !navigationState.destinations.length;
+        $('browse-family').disabled = busy || !navigationState.families.length;
+        $('browse-view').disabled = busy || !navigationState.families.length;
+        $('browse-component').disabled =
+          busy || !navigationState.families.length;
+        $('refresh-navigation').disabled = busy;
+        $('refresh-kit-guidance').disabled = busy || !doc?.kitGuidance;
         $('open-welcome').disabled = busy;
         $('export-family').disabled = busy || !doc?.components;
         $('refresh-narrow-review').disabled = busy || !doc?.components;
@@ -1594,6 +1669,56 @@
         const brand = singleBrand();
         if (brand) send('create-welcome', { doc, brand });
       };
+      function requestNavigation() {
+        parent.postMessage(
+          { pluginMessage: { type: 'kit-navigation-state' } },
+          '*'
+        );
+      }
+      function renderNavigation(state) {
+        navigationState = state;
+        $('navigation-warning').hidden = !(state.errors || []).length;
+        $('navigation-warning').textContent = (state.errors || []).join(' ');
+        for (const [id, entries, empty] of [
+          [
+            'kit-destination',
+            state.destinations || [],
+            'No installed destinations',
+          ],
+          [
+            'browse-family',
+            state.families || [],
+            'No installed core components',
+          ],
+        ]) {
+          const select = $(id),
+            previous = select.value;
+          select.textContent = '';
+          for (const entry of entries) {
+            const option = document.createElement('option');
+            option.value = entry.id;
+            option.textContent = entry.group
+              ? `${entry.group} / ${entry.label}`
+              : entry.label;
+            select.append(option);
+          }
+          if (!entries.length) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = empty;
+            select.append(option);
+          } else if (entries.some(entry => entry.id === previous))
+            select.value = previous;
+        }
+        refreshControls();
+      }
+      $('refresh-navigation').onclick = requestNavigation;
+      $('browse-component').onclick = () =>
+        send('navigate-kit', {
+          destination: `${$('browse-view').value}:${$('browse-family').value}`,
+        });
+      $('refresh-kit-guidance').onclick = () =>
+        send('refresh-kit-guidance', { doc });
       $('navigate-kit').onclick = () =>
         send('navigate-kit', {
           destination: $('kit-destination').value || 'start',
@@ -1734,6 +1859,12 @@
       window.onmessage = event => {
         const msg = event.data.pluginMessage;
         if (!msg) return;
+        if (msg.type === 'kit-navigation-state') {
+          renderNavigation(
+            msg.result || { destinations: [], families: [], errors: [] }
+          );
+          return;
+        }
         if (
           !['error', 'inspection', 'operation', 'export', 'result'].includes(
             msg.type
@@ -1788,25 +1919,35 @@
           return;
         }
         if (msg.type === 'inspection') {
+          requestNavigation();
           inspection = msg.result;
           $('save-report').disabled = false;
           resultLog(inspectionSummary(inspection));
           return;
         }
         if (msg.type === 'operation') {
+          requestNavigation();
+          if (completedOperation === 'refresh-kit-guidance') {
+            rememberOperation(completedOperation, result);
+            resultLog(
+              `Kit guidance ${hasErrors ? 'needs review' : 'updated'}. ${result.updatedNodeIds?.length || 0} source descriptions updated; geometry unchanged.`
+            );
+            return;
+          }
           if (
             ['organize-kit', 'navigate-kit', 'create-welcome'].includes(
               completedOperation
             )
           ) {
-            rememberOperation(completedOperation, result);
+            if (completedOperation !== 'navigate-kit')
+              rememberOperation(completedOperation, result);
             resultLog(
               completedOperation === 'create-welcome'
                 ? `Start here ${hasErrors ? 'needs review' : 'ready'}. ${result.createdNodeIds?.length || 0} created, ${result.updatedNodeIds?.length || 0} updated. Save results for the complete record.` +
                     (hasErrors ? '\n' + result.errors.join('\n') : '')
                 : completedOperation === 'organize-kit'
                   ? `File organization ${hasErrors ? 'needs review' : 'finished'}. ${result.sections?.length || 0} destinations; ${result.createdNodeIds?.length || 0} created, ${result.updatedNodeIds?.length || 0} updated. Save results for the complete migration record.`
-                  : `Viewing ${$('kit-destination').selectedOptions?.[0]?.textContent || result.destination || 'kit section'}.`
+                  : `Viewing ${result.destination || 'installed destination'}.`
             );
             return;
           }
@@ -2048,6 +2189,7 @@
       };
       refreshControls();
       updateDiagnosticHint();
+      requestNavigation();
     </script>
   </body>
 </html>

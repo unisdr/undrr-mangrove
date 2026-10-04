@@ -1,13 +1,13 @@
 /* global figma, mgReadIdentity, mgWriteIdentity, createMangroveWelcome */
 /** Versioned presentation only. Canonical component anatomy remains source-owned. */
-const MG_LAYOUT_VERSION = '1';
+const MG_LAYOUT_VERSION = '2';
 const MG_LAYOUT_DESTINATIONS = [
   ['start', '00 Start here'],
   ['foundations', '01 Foundations'],
   ['components', '02 Components'],
-  ['compositions', '03 Compositions (organisms)'],
-  ['patterns', '04 Page patterns'],
-  ['pending', '90 Diagnostics and pending work'],
+  ['compositions', '03 Examples and templates'],
+  ['patterns', '04 Your workspace'],
+  ['pending', '90 Maintenance'],
 ];
 const MG_LAYOUT_COMPOSITIONS = new Set([
   'combobox',
@@ -196,11 +196,93 @@ function mgLayoutExpectedType(key) {
   return 'FRAME';
 }
 
-async function mgLayoutPreflight(doc, { allowProbes = false } = {}) {
+function mgLayoutGuidance(doc) {
+  const guidance = doc?.kitGuidance;
+  if (
+    guidance?.version !== 1 ||
+    !Array.isArray(guidance.groups) ||
+    !Array.isArray(guidance.families)
+  )
+    throw new Error('Organisation needs the current task-based kit guidance.');
+  const registry = new Map(
+    doc.components.families.map(family => [family.id, family])
+  );
+  const families = new Map();
+  const groups = new Map();
+  for (const group of guidance.groups) {
+    if (
+      !/^[a-z][a-z0-9-]*$/.test(group.id) ||
+      groups.has(group.id) ||
+      typeof group.label !== 'string' ||
+      !group.label.trim() ||
+      !Array.isArray(group.familyIds)
+    )
+      throw new Error('Conflicting task-group guidance.');
+    groups.set(group.id, group);
+  }
+  for (const family of guidance.families) {
+    if (
+      !registry.has(family.id) ||
+      families.has(family.id) ||
+      !groups.has(family.groupId) ||
+      !['primary', 'support'].includes(family.kind) ||
+      !['bounded-draft', 'outside-core'].includes(family.status) ||
+      ['label', 'purpose', 'usage'].some(
+        field => typeof family[field] !== 'string' || !family[field].trim()
+      ) ||
+      ['supported', 'limitations'].some(
+        field =>
+          !Array.isArray(family[field]) ||
+          family[field].some(value => typeof value !== 'string')
+      )
+    )
+      throw new Error(`Invalid family guidance ${family.id}.`);
+    families.set(family.id, family);
+  }
+  if (families.size !== registry.size)
+    throw new Error('Guidance must cover every source family.');
+  const primaryIds = [];
+  for (const group of groups.values()) {
+    for (const id of group.familyIds) {
+      const family = families.get(id);
+      if (
+        !family ||
+        family.kind !== 'primary' ||
+        family.groupId !== group.id ||
+        primaryIds.includes(id)
+      )
+        throw new Error(
+          'Task groups must list each primary family exactly once.'
+        );
+      primaryIds.push(id);
+    }
+  }
+  for (const family of families.values()) {
+    if (family.kind === 'primary' && !primaryIds.includes(family.id))
+      throw new Error(`Missing browsing family ${family.id}.`);
+    if (family.kind === 'support') {
+      const parent = families.get(family.parentFamilyId);
+      if (
+        !parent ||
+        parent.kind !== 'primary' ||
+        parent.groupId !== family.groupId ||
+        parent.status !== family.status
+      )
+        throw new Error(`Invalid advanced-part parent ${family.id}.`);
+    }
+  }
+  return { groups, families, registry };
+}
+
+async function mgLayoutPreflight(
+  doc,
+  { allowProbes = false, allowVersion1Migration = false } = {}
+) {
   if (doc?.components?.version !== 1 || !doc.components.families?.length)
     throw new Error(
       'Organisation needs the complete supported token document.'
     );
+  const guidance = mgLayoutGuidance(doc);
   if (
     !allowProbes &&
     figma.currentPage.findAll(node =>
@@ -213,143 +295,190 @@ async function mgLayoutPreflight(doc, { allowProbes = false } = {}) {
   const index = await mgLayoutIndex();
   if (
     !allowProbes &&
-    [...index.keys()].some(
-      key =>
-        key.startsWith('acceptance/') ||
-        key.startsWith('capability/') ||
-        key.startsWith('capabilities/')
+    [...index.keys()].some(key =>
+      /^(acceptance|capability|capabilities)\//.test(key)
     )
   )
     throw new Error(
       'Remove recorded temporary acceptance checks before reorganizing the kit.'
     );
   const start = index.get('layout/start');
+  const version = start && mgReadIdentity(start, 'mgLayoutVersion');
   const partial =
     start && mgReadIdentity(start, 'mgLayoutPhase') === 'migrating';
-  if (start && mgReadIdentity(start, 'mgLayoutVersion') !== MG_LAYOUT_VERSION)
+  if (start && !['1', MG_LAYOUT_VERSION].includes(version))
     throw new Error(
       'Unsupported kit layout version; an explicit migration is required.'
     );
+  if (version === '1' && !allowVersion1Migration)
+    throw new Error(
+      'Use Organize file explicitly to migrate layout version 1 to version 2 before ordinary builds.'
+    );
+  const legacy =
+    version === '1' ||
+    (partial && mgReadIdentity(start, 'mgLayoutFromVersion') === '1');
+  const { registry, families } = guidance;
+  if (registry.size !== doc.components.families.length)
+    throw new Error('Duplicate source family identifiers.');
   for (const [key, node] of index) {
     const type = mgLayoutExpectedType(key);
     if (type && node.type !== type)
       throw new Error(`Layout ownership ${key} must be ${type}.`);
-  }
-  const registry = new Map(
-    doc.components.families.map(family => [family.id, family])
-  );
-  if (registry.size !== doc.components.families.length)
-    throw new Error('Duplicate source family identifiers.');
-  for (const [key, node] of index) {
     const variant = /^family\/([^/]+)\/variant\/([^/]+)$/.exec(key);
     if (variant) {
       const family = registry.get(variant[1]);
-      const set = index.get(`family/${variant[1]}`);
-      if (!family || !set || node.type !== 'COMPONENT' || node.parent !== set)
+      if (
+        !family ||
+        node.type !== 'COMPONENT' ||
+        node.parent !== index.get(`family/${variant[1]}`) ||
+        !family.variants.some(item => item.id === variant[2])
+      )
         throw new Error(
           `Orphan or conflicting canonical variant ${key}; explicit migration required.`
         );
-      if (!family.variants.some(item => item.id === variant[2]))
-        throw new Error(`Retired variant ${key}; explicit migration required.`);
     }
-    const match = /^family\/([^/]+)$/.exec(key);
-    if (match) {
-      if (!registry.has(match[1]))
-        throw new Error(
-          `Missing family ${match[1]}: use the complete document or supply a migration.`
-        );
-      if (node.type !== 'COMPONENT_SET')
-        throw new Error(`Canonical ${key} must remain a component set.`);
-      const expectedParent = start ? `layout/family/${match[1]}/main` : 'main';
+    const familyMatch = /^family\/([^/]+)$/.exec(key);
+    if (familyMatch) {
+      if (!registry.has(familyMatch[1]) || node.type !== 'COMPONENT_SET')
+        throw new Error(`Missing or conflicting family ${familyMatch[1]}.`);
+      const expected = start ? `layout/family/${familyMatch[1]}/main` : 'main';
       const staged =
         start &&
-        (partial || !index.has(expectedParent)) &&
+        (partial || !index.has(expected)) &&
         mgReadIdentity(node.parent, 'mgKitId') === 'main';
-      if (!staged && mgReadIdentity(node.parent, 'mgKitId') !== expectedParent)
+      if (!staged && mgReadIdentity(node.parent, 'mgKitId') !== expected)
         throw new Error(
           `Canonical ${key} has an unexpected parent; migration refused.`
         );
     }
     const reviewMatch = /^review\/([^/]+)$/.exec(key);
     if (reviewMatch) {
-      if (!registry.has(reviewMatch[1]) || node.type !== 'FRAME')
+      const id = reviewMatch[1];
+      if (!registry.has(id) || node.type !== 'FRAME')
         throw new Error(`Review ${key} needs its original family and frame.`);
-      const area = mgLayoutDestination(reviewMatch[1]);
-      const expectedParent =
-        !start || area === 'components' ? 'review' : `layout/${area}/review`;
+      const current = mgReadIdentity(node.parent, 'mgKitId');
+      const expected =
+        start && version === MG_LAYOUT_VERSION
+          ? `layout/family/${id}/overview`
+          : !start || mgLayoutDestination(id) === 'components'
+            ? 'review'
+            : `layout/${mgLayoutDestination(id)}/review`;
+      const oldParents = [
+        'review',
+        'layout/compositions/review',
+        'layout/pending/review',
+      ];
       if (
-        !(partial && mgReadIdentity(node.parent, 'mgKitId') === 'review') &&
-        mgReadIdentity(node.parent, 'mgKitId') !== expectedParent
+        current !== expected &&
+        !(partial && oldParents.includes(current)) &&
+        !(
+          version === MG_LAYOUT_VERSION &&
+          current === 'review' &&
+          !index.has(expected)
+        )
       )
         throw new Error(
           `Review ${key} has an unexpected parent; migration refused.`
         );
+    }
+    const sourceBoard = /^layout\/family\/([^/]+)\/main$/.exec(key);
+    if (sourceBoard) {
+      if (!registry.has(sourceBoard[1]))
+        throw new Error(`Unknown source board ${key}.`);
+      const allowed = new Set([
+        `${key}/title`,
+        `${key}/body`,
+        `family/${sourceBoard[1]}`,
+      ]);
+      if (
+        node.children.some(
+          child =>
+            !allowed.has(mgReadIdentity(child, 'mgKitId')) ||
+            index.get(mgReadIdentity(child, 'mgKitId')) !== child
+        )
+      )
+        throw new Error(
+          `Manual or conflicting content in ${key}; preserve it before updating generated layout.`
+        );
+      if (
+        version === MG_LAYOUT_VERSION &&
+        !partial &&
+        mgReadIdentity(node.parent, 'mgKitId') !==
+          `layout/family/${sourceBoard[1]}/overview`
+      )
+        throw new Error(`Source board ${key} was moved.`);
+    }
+    const overview = /^layout\/family\/([^/]+)\/overview$/.exec(key);
+    if (overview) {
+      const meta = families.get(overview[1]);
+      if (!meta) throw new Error(`Unknown family overview ${key}.`);
+      const expected =
+        meta.kind === 'support'
+          ? `layout/family/${meta.parentFamilyId}/advanced`
+          : meta.status === 'outside-core'
+            ? 'layout/pending/browse'
+            : `layout/group/${meta.groupId}`;
+      if (mgReadIdentity(node.parent, 'mgKitId') !== expected)
+        throw new Error(`Family overview ${key} was moved.`);
+      const allowed = new Set([
+        `${key}/title`,
+        `${key}/body`,
+        `layout/family/${meta.id}/main`,
+        `review/${meta.id}`,
+        `layout/family/${meta.id}/advanced`,
+      ]);
+      if (
+        node.children.some(
+          child =>
+            !allowed.has(mgReadIdentity(child, 'mgKitId')) ||
+            index.get(mgReadIdentity(child, 'mgKitId')) !== child
+        )
+      )
+        throw new Error(`Manual content in generated overview ${key}.`);
     }
   }
   for (const key of ['main', 'review']) {
     const root = index.get(key);
     if (!root || root.type !== 'FRAME')
       throw new Error(`Organisation requires the existing ${key} frame.`);
-    const expectedParent = start
-      ? index.get('layout/components')
+    const expected = start
+      ? index.get(
+          version === MG_LAYOUT_VERSION ? 'layout/pending' : 'layout/components'
+        )
       : figma.currentPage;
     if (
-      root.parent !== expectedParent &&
-      !(partial && root.parent === figma.currentPage)
+      root.parent !== expected &&
+      !(
+        partial &&
+        [figma.currentPage, index.get('layout/components')].includes(
+          root.parent
+        )
+      )
     )
       throw new Error(
         `The existing ${key} frame is outside its migration scope.`
       );
-    const allowedChild = node => {
-      const childKey = mgReadIdentity(node, 'mgKitId');
-      if (index.get(childKey) !== node) return false;
-      if (key === 'review')
+    if (
+      !start &&
+      root.children.some(child => {
+        const childKey = mgReadIdentity(child, 'mgKitId');
         return (
-          node.type === 'FRAME' &&
-          /^review\/[^/]+$/.test(childKey) &&
-          registry.has(childKey.slice(7))
+          index.get(childKey) !== child ||
+          !(key === 'main'
+            ? child.type === 'COMPONENT_SET' &&
+              /^family\/[^/]+$/.test(childKey) &&
+              registry.has(childKey.slice(7))
+            : child.type === 'FRAME' &&
+              /^review\/[^/]+$/.test(childKey) &&
+              registry.has(childKey.slice(7)))
         );
-      if (!start || partial) {
-        if (
-          node.type === 'COMPONENT_SET' &&
-          /^family\/[^/]+$/.test(childKey) &&
-          registry.has(childKey.slice(7))
-        )
-          return true;
-      }
-      const match = /^layout\/family\/([^/]+)\/main$/.exec(childKey);
-      return (
-        node.type === 'FRAME' &&
-        !!match &&
-        registry.has(match[1]) &&
-        mgLayoutDestination(match[1]) === 'components'
-      );
-    };
-    if (root.children.some(node => !allowedChild(node)))
+      })
+    )
       throw new Error(
         `Manual content in ${key}: preserve it explicitly before migrating the generated container.`
       );
   }
-  for (const [key, node] of index) {
-    const match = /^layout\/family\/([^/]+)\/main$/.exec(key);
-    if (!match) continue;
-    const allowed = new Set([
-      `${key}/title`,
-      `${key}/body`,
-      `family/${match[1]}`,
-    ]);
-    if (
-      node.children.some(
-        child =>
-          !allowed.has(mgReadIdentity(child, 'mgKitId')) ||
-          index.get(mgReadIdentity(child, 'mgKitId')) !== child
-      )
-    )
-      throw new Error(
-        `Manual or conflicting content in ${key}; preserve it before updating generated layout.`
-      );
-  }
-  if (start) {
+  if (start)
     for (const [id] of MG_LAYOUT_DESTINATIONS) {
       const section = index.get(`layout/${id}`);
       if (
@@ -360,25 +489,114 @@ async function mgLayoutPreflight(doc, { allowProbes = false } = {}) {
           `Layout section ${id} is missing or moved; explicit migration required.`
         );
     }
+  for (const [key, node] of index) {
+    const groupMatch = /^layout\/group\/([^/]+)$/.exec(key);
+    const advancedMatch = /^layout\/family\/([^/]+)\/advanced$/.exec(key);
+    let allowed;
+    let expectedParent;
+    if (groupMatch) {
+      const group = guidance.groups.get(groupMatch[1]);
+      if (!group) throw new Error(`Unknown task group ${key}.`);
+      allowed = new Set([
+        `${key}/title`,
+        ...group.familyIds
+          .filter(id => families.get(id).status === 'bounded-draft')
+          .map(id => `layout/family/${id}/overview`),
+      ]);
+      expectedParent = 'layout/components';
+    } else if (advancedMatch) {
+      const parent = families.get(advancedMatch[1]);
+      if (!parent || parent.kind !== 'primary')
+        throw new Error(`Invalid advanced-parts board ${key}.`);
+      allowed = new Set([
+        `${key}/title`,
+        `${key}/body`,
+        ...[...families.values()]
+          .filter(meta => meta.parentFamilyId === parent.id)
+          .map(meta => `layout/family/${meta.id}/overview`),
+      ]);
+      expectedParent = `layout/family/${parent.id}/overview`;
+    } else if (key === 'layout/pending/browse') {
+      allowed = new Set([
+        `${key}/title`,
+        ...[...families.values()]
+          .filter(
+            meta => meta.kind === 'primary' && meta.status === 'outside-core'
+          )
+          .map(meta => `layout/family/${meta.id}/overview`),
+      ]);
+      expectedParent = 'layout/pending';
+    }
+    if (
+      allowed &&
+      (mgReadIdentity(node.parent, 'mgKitId') !== expectedParent ||
+        node.children.some(
+          child =>
+            !allowed.has(mgReadIdentity(child, 'mgKitId')) ||
+            index.get(mgReadIdentity(child, 'mgKitId')) !== child
+        ))
+    )
+      throw new Error(
+        `Manual or moved content in generated task board ${key}.`
+      );
+  }
+  // Historical v1 containers retain any manual contents; no deletion or adoption.
+  if (!legacy && version === MG_LAYOUT_VERSION && !partial) {
+    for (const [key, node] of index)
+      if (
+        /^layout\/(compositions|pending)\/(main|review)$/.test(key) &&
+        node.parent !== index.get('layout/pending')
+      )
+        throw new Error(`Historical staging container ${key} was moved.`);
   }
   return index;
 }
 
 function mgLayoutContainerParent(key) {
-  const matches = figma.currentPage.findAll(
-    node => mgReadIdentity(node, 'mgKitId') === 'layout/components'
+  const page = figma.currentPage;
+  const start = page.findAll(
+    node => mgReadIdentity(node, 'mgKitId') === 'layout/start'
+  )[0];
+  const destination =
+    start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
+      ? 'layout/pending'
+      : 'layout/components';
+  const matches = page.findAll(
+    node => mgReadIdentity(node, 'mgKitId') === destination
   );
   return ['main', 'review'].includes(key) && matches.length === 1
     ? matches[0]
-    : figma.currentPage;
+    : page;
 }
 
 function mgLayoutReviewParent(key, fallback) {
   const match = /^review\/([^/]+)$/.exec(key);
   if (!match || !mgKitLayoutInstalled()) return fallback;
+  const page = figma.currentPage;
+  const start = page.findAll(
+    node => mgReadIdentity(node, 'mgKitId') === 'layout/start'
+  )[0];
+  if (mgReadIdentity(start, 'mgLayoutVersion') === '2') {
+    const existing = page.findAll(
+      node => mgReadIdentity(node, 'mgKitId') === key
+    );
+    if (existing.length > 1) throw new Error(`Duplicate review ${key}.`);
+    if (
+      existing.length &&
+      ['review', `layout/family/${match[1]}/overview`].includes(
+        mgReadIdentity(existing[0].parent, 'mgKitId')
+      )
+    )
+      return existing[0].parent;
+    const overview = page.findAll(
+      node =>
+        mgReadIdentity(node, 'mgKitId') === `layout/family/${match[1]}/overview`
+    );
+    return overview.length === 1 ? overview[0] : fallback;
+  }
   const area = mgLayoutDestination(match[1]);
   if (area === 'components') return fallback;
-  const nodes = figma.currentPage.findAll(
+  const nodes = page.findAll(
     node => mgReadIdentity(node, 'mgKitId') === `layout/${area}/review`
   );
   if (nodes.length !== 1) throw new Error(`Missing ${area} review container.`);
@@ -395,7 +613,16 @@ async function organizeMangroveKit(
     throw new Error(
       'Rebuild the desktop plugin with the Welcome module before organizing.'
     );
-  const index = await mgLayoutPreflight(doc, { allowProbes });
+  const index = await mgLayoutPreflight(doc, {
+    allowProbes,
+    allowVersion1Migration: true,
+  });
+  const guidance = mgLayoutGuidance(doc);
+  if (doc.kitGuidance.scope?.brandId !== brandId)
+    throw new Error('Layout guidance is bounded to its documented brand.');
+  const previousVersion = index.has('layout/start')
+    ? mgReadIdentity(index.get('layout/start'), 'mgLayoutVersion')
+    : '';
   const brand = doc.modes.find(mode => mode.id === brandId);
   const collection = (
     await figma.variables.getLocalVariableCollectionsAsync()
@@ -448,11 +675,61 @@ async function organizeMangroveKit(
       .map(item => [item.name, item])
   );
   for (const name of ['color/text', 'color/neutral-0', 'color/interactive'])
-    if (!variables.has(name)) throw new Error(`Missing foundation ${name}.`);
+    if (variables.get(name)?.resolvedType !== 'COLOR')
+      throw new Error(`Missing typed foundation ${name}.`);
+  for (const [name, variable] of variables) {
+    if (
+      [
+        'color/text',
+        'color/interactive',
+        'color/neutral-0',
+        'color/neutral-25',
+        'color/neutral-100',
+        'color/neutral-400',
+        'color/neutral-900',
+      ].includes(name)
+    ) {
+      const value = variable.resolveForConsumer(index.get('main')).value;
+      if (
+        variable.resolvedType !== 'COLOR' ||
+        !value ||
+        ['r', 'g', 'b'].some(
+          channel =>
+            !Number.isFinite(value[channel]) ||
+            value[channel] < 0 ||
+            value[channel] > 1
+        ) ||
+        (value.a !== undefined &&
+          (!Number.isFinite(value.a) || value.a < 0 || value.a > 1))
+      )
+        throw new Error(`Foundation ${name} needs a resolved source colour.`);
+    }
+    if (
+      [
+        'spacing/50',
+        'spacing/100',
+        'spacing/150',
+        'spacing/200',
+        'spacing/300',
+        'spacing/400',
+      ].includes(name)
+    ) {
+      const value = variable.resolveForConsumer(index.get('main')).value;
+      if (
+        variable.resolvedType !== 'FLOAT' ||
+        !Number.isFinite(value) ||
+        value <= 0
+      )
+        throw new Error(
+          `Spacing specimen ${name} needs a positive source value.`
+        );
+    }
+  }
   const created = new Set();
   const updated = new Set();
   const migrated =
     !index.has('layout/start') ||
+    previousVersion !== MG_LAYOUT_VERSION ||
     mgReadIdentity(index.get('layout/start'), 'mgLayoutPhase') === 'migrating';
   const page = figma.currentPage;
   const anchor = !index.has('layout/start')
@@ -522,7 +799,7 @@ async function organizeMangroveKit(
     node.textAutoResize = 'HEIGHT';
     node.resize(width, Math.max(1, node.height));
     node.layoutSizingHorizontal = 'FIXED';
-    node.layoutSizingVertical = 'HUG';
+    if (parent.layoutMode !== 'NONE') node.layoutSizingVertical = 'HUG';
     node.fills = [solid('color/text')];
     return node;
   }
@@ -533,6 +810,8 @@ async function organizeMangroveKit(
       if (id === 'start') {
         section.x = anchor;
         section.y = 160;
+        if (previousVersion === '1')
+          mgWriteIdentity(section, 'mgLayoutFromVersion', '1');
         mgWriteIdentity(section, 'mgLayoutVersion', MG_LAYOUT_VERSION);
         mgWriteIdentity(section, 'mgLayoutPhase', 'migrating');
       }
@@ -646,178 +925,308 @@ async function organizeMangroveKit(
       );
       await sample.setTextStyleIdAsync(style.id);
     }
-    const pattern = frame(
-      'layout/patterns/intro',
-      sections.get('patterns'),
-      'Page patterns and designer workspace'
+    const info = async (area, title, body) => {
+      const node = frame(`layout/${area}/intro`, sections.get(area), title);
+      await text(`layout/${area}/intro/title`, node, title, 32);
+      await text(`layout/${area}/intro/body`, node, body);
+      node.x = node.y = 32;
+      return node;
+    };
+    const componentsIntro = await info(
+      'components',
+      'Find a component by task',
+      'Browse complete controls and content. Each family pairs its usage and states with source components. Advanced parts belong to their complete component. Bounded draft use applies only to the documented brand, content and sizing contracts.'
     );
-    await text('layout/patterns/intro/title', pattern, 'Page patterns', 32);
-    await text(
-      'layout/patterns/intro/body',
-      pattern,
-      'Page-level examples are not yet accepted. Planned scopes include article/reading layout, landing page, search/results and forms.\n\nYou can place designer-owned linked instances and notes beside this generated introduction. They are preserved by the importer. Do not detach components to create an example.'
+    await info(
+      'compositions',
+      'Examples and templates',
+      'Accepted page templates are not available yet. Component usage examples live beside their families in Components. This destination is a placeholder for future accepted page compositions, not a populated template library.'
     );
-    const areaRoots = new Map();
-    for (const area of ['components', 'compositions', 'pending']) {
-      const section = sections.get(area);
-      const info = frame(
-        `layout/${area}/intro`,
-        section,
-        'Purpose and acceptance'
-      );
-      await text(
-        `layout/${area}/intro/title`,
-        info,
-        area === 'components'
-          ? 'Reusable components'
-          : area === 'compositions'
-            ? 'Compositions (organisms)'
-            : 'Diagnostics and pending work',
-        32
-      );
-      await text(
-        `layout/${area}/intro/body`,
-        info,
-        area === 'pending'
-          ? 'Tabs and Editorial CTA remain outside core acceptance. Exact Condensed fonts and the CTA style repair are still open. Diagnostics are construction aids, not publishable components.'
-          : 'Main components on the left are source-owned. Usage and state examples on the right are linked, editable instances. Use the exposed properties and documented sizing presets. Native examples are accepted only within their recorded contracts.'
-      );
-      const mainKey = area === 'components' ? 'main' : `layout/${area}/main`;
-      const reviewKey =
-        area === 'components' ? 'review' : `layout/${area}/review`;
-      const main =
-        area === 'components'
-          ? index.get(mainKey)
-          : frame(mainKey, section, 'Main components');
-      const review =
-        area === 'components'
-          ? index.get(reviewKey)
-          : frame(reviewKey, section, 'Usage and states');
-      for (const [node, key, name] of [
-        [main, mainKey, 'Main components'],
-        [review, reviewKey, 'Usage and states'],
-      ]) {
-        if (node.parent !== section) section.appendChild(node);
-        mark(node, key, false);
-        node.name = name;
-        node.layoutMode = 'VERTICAL';
-        node.paddingTop =
-          node.paddingBottom =
-          node.paddingLeft =
-          node.paddingRight =
-            32;
-        node.itemSpacing = 48;
-        node.clipsContent = false;
-        node.fills = [solid('color/neutral-0')];
-        node.setExplicitVariableModeForCollection(collection, mode.modeId);
-      }
-      areaRoots.set(area, { main, review, info });
+    await info(
+      'patterns',
+      'Your workspace',
+      'Create a frame here and drag a linked component from Assets into it. Edit its exposed properties in the right sidebar. Frames and notes you add beside this generated guide are designer-owned and remain unchanged through ordinary updates. Do not put personal content inside generated family or foundation boards.'
+    );
+    const maintenanceIntro = await info(
+      'pending',
+      'Maintenance and outside-core assets',
+      'Tabs, Tab trigger and Editorial CTA remain outside core scope. Read each family’s exact limitations before use. Historical diagnostics and operational staging are construction assets. Source imports and component rebuilds preserve identities; removals and renames require an explicit migration.'
+    );
+    const staging = [];
+    for (const key of [
+      'main',
+      'review',
+      'layout/compositions/main',
+      'layout/compositions/review',
+      'layout/pending/main',
+      'layout/pending/review',
+    ]) {
+      const node = index.get(key);
+      if (!node) continue;
+      mark(node, key, false);
+      if (node.parent !== sections.get('pending'))
+        sections.get('pending').appendChild(node);
+      node.name =
+        key === 'main'
+          ? 'Source staging / Main components'
+          : key === 'review'
+            ? 'Usage staging / Review'
+            : `Historical staging / ${key}`;
+      staging.push(node);
     }
-    for (const family of doc.components.families) {
-      const set = index.get(`family/${family.id}`);
-      if (!set) continue;
-      const area = areaRoots.get(mgLayoutDestination(family.id));
+    const groupBoards = new Map();
+    for (const group of guidance.groups.values()) {
+      const board = frame(
+        `layout/group/${group.id}`,
+        sections.get('components'),
+        group.label
+      );
+      await text(`layout/group/${group.id}/title`, board, group.label, 28);
+      groupBoards.set(group.id, board);
+    }
+    const pendingBrowse = frame(
+      'layout/pending/browse',
+      sections.get('pending'),
+      'Families outside core scope'
+    );
+    await text(
+      'layout/pending/browse/title',
+      pendingBrowse,
+      'Not in core scope',
+      28
+    );
+    const familyBoards = new Map();
+    const advancedBoards = new Map();
+    const buildOverview = async (meta, owner) => {
+      const family = guidance.registry.get(meta.id);
+      const set = index.get(`family/${meta.id}`);
+      if (!set) return null;
       updated.add(set.id);
       for (const node of set.children) updated.add(node.id);
-      // Measure before sizing the heading, so the initial migration and later
-      // reconciliation use the same presentation dimensions.
       mgLayoutGrid(set, family);
+      const overview = ensure(
+        `layout/family/${meta.id}/overview`,
+        'FRAME',
+        owner,
+        meta.label
+      );
+      overview.layoutMode = 'NONE';
+      overview.clipsContent = false;
+      overview.fills = [solid('color/neutral-0')];
+      overview.setExplicitVariableModeForCollection(collection, mode.modeId);
       const board = frame(
-        `layout/family/${family.id}/main`,
-        area.main,
-        family.name
+        `layout/family/${meta.id}/main`,
+        overview,
+        'Source components'
       );
       await text(
-        `layout/family/${family.id}/main/title`,
+        `layout/family/${meta.id}/main/title`,
         board,
-        family.name,
+        'Source components',
         24,
         Math.max(850, Math.min(1400, set.width))
       );
       await text(
-        `layout/family/${family.id}/main/body`,
+        `layout/family/${meta.id}/main/body`,
         board,
-        `${MG_LAYOUT_PENDING.has(family.id) ? 'Pending acceptance' : 'Source scaffold: see core status for accepted scope'} · ${set.children.length} variants\n${typeof family.source === 'string' ? family.source : family.source?.file || ''}`
+        `${meta.label} · ${set.children.length} source variants\n${typeof family.source === 'string' ? family.source : family.source?.file || ''}`
       );
       if (set.parent !== board) board.appendChild(set);
-      const review = index.get(`review/${family.id}`);
-      if (review && review.parent !== area.review) {
+      const review = index.get(`review/${meta.id}`);
+      if (review) {
         updated.add(review.id);
-        area.review.appendChild(review);
+        if (review.parent !== overview) overview.appendChild(review);
+        review.name = 'Usage and states';
       }
-    }
+      const width = Math.max(
+        900,
+        board.width + (review ? review.width + 80 : 0) + 64
+      );
+      const title = await text(
+        `layout/family/${meta.id}/overview/title`,
+        overview,
+        meta.label,
+        28,
+        width - 64
+      );
+      const body = await text(
+        `layout/family/${meta.id}/overview/body`,
+        overview,
+        `${meta.status === 'bounded-draft' ? 'Bounded draft use' : 'Not in core scope'}\n${meta.purpose}\n${meta.usage}\nSupported: ${meta.supported.join('; ')}\nLimits: ${meta.limitations.join('; ')}`,
+        16,
+        width - 64
+      );
+      title.x = title.y = 32;
+      body.x = 32;
+      body.y = title.y + title.height + 16;
+      familyBoards.set(meta.id, { overview, board, review, title, body });
+      return overview;
+    };
+    for (const group of guidance.groups.values())
+      for (const id of group.familyIds) {
+        const meta = guidance.families.get(id);
+        const overview = await buildOverview(
+          meta,
+          meta.status === 'outside-core'
+            ? pendingBrowse
+            : groupBoards.get(group.id)
+        );
+        if (!overview) continue;
+        const supports = [...guidance.families.values()].filter(
+          item => item.parentFamilyId === id && index.has(`family/${item.id}`)
+        );
+        if (supports.length) {
+          const advanced = frame(
+            `layout/family/${id}/advanced`,
+            overview,
+            'Advanced parts'
+          );
+          await text(
+            `layout/family/${id}/advanced/title`,
+            advanced,
+            'Advanced parts',
+            24
+          );
+          await text(
+            `layout/family/${id}/advanced/body`,
+            advanced,
+            'Supporting source components and size alternatives. Start with the complete component above. These parts do not establish an arbitrary composition or slot contract.'
+          );
+          advancedBoards.set(id, advanced);
+          for (const support of supports)
+            await buildOverview(support, advanced);
+        }
+      }
     const diagnostics = index.get('diagnostics.focus-ring');
     if (diagnostics) {
       updated.add(diagnostics.id);
       if (diagnostics.parent !== sections.get('pending'))
         sections.get('pending').appendChild(diagnostics);
     }
-    // Fit generated flows from actual local/rendered child extents without
-    // resizing canonical components or instance descendants.
+    // Actual rendered extents account for focus/shadow overflow. Internal
+    // component and consumer geometry is never resized by presentation fitting.
+    const rightExtent = node => {
+      const bounds = node.absoluteRenderBounds,
+        box = node.absoluteBoundingBox;
+      return (
+        node.width +
+        (bounds && box
+          ? Math.max(0, bounds.x + bounds.width - box.x - node.width)
+          : 0)
+      );
+    };
     function fitFlow(node, minWidth = 900) {
       const children = node.children.filter(child => child.visible !== false);
-      const width = Math.max(
-        minWidth,
-        ...children.map(child => {
-          const bounds = child.absoluteRenderBounds;
-          const extra =
-            bounds && child.absoluteBoundingBox
-              ? Math.max(
-                  0,
-                  bounds.x +
-                    bounds.width -
-                    child.absoluteBoundingBox.x -
-                    child.width
-                )
-              : 0;
-          return child.width + extra + node.paddingLeft + node.paddingRight;
-        })
+      node.resizeWithoutConstraints(
+        Math.max(
+          minWidth,
+          ...children.map(
+            child => rightExtent(child) + node.paddingLeft + node.paddingRight
+          )
+        ),
+        Math.max(40, node.height)
       );
-      node.resizeWithoutConstraints(width, Math.max(40, node.height));
       node.primaryAxisSizingMode = 'AUTO';
       node.counterAxisSizingMode = 'FIXED';
     }
-    for (const [key, node] of index)
-      if (/^layout\/family\/[^/]+\/main$/.test(key)) fitFlow(node);
-    for (const { main, review } of areaRoots.values()) {
-      fitFlow(main);
-      fitFlow(review);
-    }
-    for (const [area, { main, review, info }] of areaRoots) {
-      info.x = info.y = 32;
-      main.x = 32;
-      main.y = info.y + info.height + 48;
-      review.x = main.x + main.width + 80;
-      review.y = main.y;
-      const section = sections.get(area);
-      if (area === 'pending' && diagnostics) {
-        diagnostics.x = 32;
-        diagnostics.y =
-          Math.max(main.y + main.height, review.y + review.height) + 80;
+    for (const { board } of familyBoards.values()) fitFlow(board);
+    const bottomExtent = node => {
+      const bounds = node.absoluteRenderBounds,
+        box = node.absoluteBoundingBox;
+      return (
+        node.height +
+        (bounds && box
+          ? Math.max(0, bounds.y + bounds.height - box.y - node.height)
+          : 0)
+      );
+    };
+    const fitOverview = id => {
+      const item = familyBoards.get(id);
+      if (!item) return;
+      const { overview, board, review, title, body } = item;
+      const advanced = advancedBoards.get(id);
+      if (advanced) fitFlow(advanced);
+      const boardX = review ? 32 + rightExtent(review) + 80 : 32;
+      const width = Math.max(
+        900,
+        boardX + rightExtent(board) + 32,
+        advanced ? 64 + rightExtent(advanced) : 0
+      );
+      title.resize(width - 64, Math.max(1, title.height));
+      body.resize(width - 64, Math.max(1, body.height));
+      body.y = title.y + title.height + 16;
+      const y = body.y + body.height + 32;
+      if (review) {
+        review.x = 32;
+        review.y = y;
       }
-      updated.add(section.id);
+      board.x = boardX;
+      board.y = y;
+      let bottom = Math.max(
+        board.y + bottomExtent(board),
+        review ? review.y + bottomExtent(review) : 0
+      );
+      if (advanced) {
+        advanced.x = 32;
+        advanced.y = bottom + 48;
+        bottom = advanced.y + bottomExtent(advanced);
+      }
+      overview.resizeWithoutConstraints(width, bottom + 32);
+    };
+    for (const meta of guidance.families.values())
+      if (meta.kind === 'support') fitOverview(meta.id);
+    for (const meta of guidance.families.values())
+      if (meta.kind === 'primary') fitOverview(meta.id);
+    for (const board of groupBoards.values()) fitFlow(board);
+    fitFlow(pendingBrowse);
+    const groups = [...groupBoards.values()];
+    const leftWidth = Math.max(
+      900,
+      ...groups.filter((_, i) => i % 2 === 0).map(rightExtent)
+    );
+    let rowY = componentsIntro.y + componentsIntro.height + 48;
+    for (let i = 0; i < groups.length; i += 2) {
+      for (let j = 0; j < 2 && groups[i + j]; j++) {
+        groups[i + j].x = j ? 32 + leftWidth + 80 : 32;
+        groups[i + j].y = rowY;
+      }
+      rowY += Math.max(...groups.slice(i, i + 2).map(node => node.height)) + 80;
+    }
+    pendingBrowse.x = 32;
+    pendingBrowse.y = maintenanceIntro.y + maintenanceIntro.height + 48;
+    let maintenanceY = pendingBrowse.y + pendingBrowse.height + 80;
+    for (const node of [...staging, ...(diagnostics ? [diagnostics] : [])]) {
+      updated.add(node.id);
+      node.x = 32;
+      node.y = maintenanceY;
+      maintenanceY += bottomExtent(node) + 80;
     }
     for (const [id, section] of sections) {
-      if (!areaRoots.has(id)) {
-        const first = section.children.find(
-          child =>
-            mgReadIdentity(child, 'mgKitId') === `layout/${id}/intro` ||
-            (id === 'start' && mgReadIdentity(child, 'mgKitId') === 'welcome')
-        );
-        if (first) first.x = first.y = 32;
-      }
+      if (id === 'foundations') foundations.x = foundations.y = 32;
       const bounds = section.children.filter(node => node.visible !== false);
       section.resizeWithoutConstraints(
-        Math.max(1000, ...bounds.map(node => node.x + node.width + 32)),
-        Math.max(300, ...bounds.map(node => node.y + node.height + 32))
+        Math.max(1000, ...bounds.map(node => node.x + rightExtent(node) + 32)),
+        Math.max(300, ...bounds.map(node => node.y + bottomExtent(node) + 32))
       );
     }
-    let x = anchor;
-    for (const [id] of MG_LAYOUT_DESTINATIONS) {
-      const section = sections.get(id);
-      section.x = x;
-      section.y = 160;
-      x += section.width + 160;
+    // Reading order: introduction/foundations, components, examples/workspace,
+    // maintenance last. Manual section children keep their exact local positions.
+    const rows = [
+      ['start', 'foundations'],
+      ['components'],
+      ['compositions', 'patterns'],
+      ['pending'],
+    ];
+    let y = 160;
+    for (const row of rows) {
+      let x = anchor;
+      for (const id of row) {
+        const section = sections.get(id);
+        section.x = x;
+        section.y = y;
+        x += section.width + 160;
+      }
+      y += Math.max(...row.map(id => sections.get(id).height)) + 160;
     }
     for (const [id] of [...MG_LAYOUT_DESTINATIONS].reverse())
       page.insertChild(page.children.length, sections.get(id));
@@ -827,6 +1236,8 @@ async function organizeMangroveKit(
       operation: 'kit-layout',
       version: MG_LAYOUT_VERSION,
       migrated,
+      previousVersion: previousVersion || null,
+      phase: 'complete',
       createdNodeIds: [...created],
       updatedNodeIds: [...updated].filter(id => !created.has(id)),
       sections: [...sections].map(([id, node]) => ({
@@ -849,6 +1260,7 @@ async function organizeMangroveKit(
       version: MG_LAYOUT_VERSION,
       migrated,
       phase: 'migrating',
+      previousVersion: previousVersion || null,
       createdNodeIds: [...created],
       updatedNodeIds: [...updated].filter(id => !created.has(id)),
       sections: [...sections].map(([id, node]) => ({ id, nodeId: node.id })),

@@ -334,8 +334,19 @@ async function main() {
       ),
       'Full organisation must reuse Welcome instead of creating a duplicate Start introduction'
     );
+    const canvasCopy = () =>
+      owned(env, 'welcome/content/use/1/body').characters;
+    assert(canvasCopy().includes('records pending page-pattern coverage'));
+    const start = owned(env, 'layout/start');
+    start.setSharedPluginData('orgundrrmangrove', 'mgLayoutVersion', '1');
+    await env.call('createMangroveWelcome', doc, 'undrr');
+    assert(canvasCopy().includes('earlier section layout'));
+    assert(!canvasCopy().includes('sit beside'));
+    start.setSharedPluginData('orgundrrmangrove', 'mgLayoutVersion', '2');
+    await env.call('createMangroveWelcome', doc, 'undrr');
+    assert(canvasCopy().includes('Source components and advanced parts'));
     console.log(
-      'ok full organisation reuses the existing Welcome subtree and preserves its direct manual notes'
+      'ok full organisation reuses Welcome/manual notes; orientation distinguishes pending templates and v1 upgrade from installed v2'
     );
   }
   for (const fault of [

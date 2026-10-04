@@ -1,43 +1,44 @@
 # Figma kit user experience review
 
-Reviewed 4 October 2026 using the latest accepted native inventory, supplied screenshots, runtime source and kit documentation. This is an expert heuristic review, not a novice usability study. Recommendations below are not implemented or natively accepted.
+Reviewed 4 October 2026 using the latest accepted native inventory, supplied screenshots, runtime source and kit documentation. This is an expert heuristic review, not a novice usability study. The findings below describe that review checkpoint. The approved recommendations are now implemented in source; native acceptance of the newer UX and the novice tasks remains pending. Component acceptance stays at the recorded 25 core construction families and three outside-core families.
 
 ## Main finding
 
 The file exposes its construction process too strongly. The Welcome board, corrected contents and last-position diagnostics improve orientation, but the user still has to navigate two distant catalogues to understand and use one component. The planned section migration addresses containment without fully addressing component discovery.
 
-The current Layers order is **Start here**, **Review**, **Main components**, **focus-ring diagnostics**. Welcome's contents match it. The original contents mismatch and diagnostics appearing second are resolved findings, not current defects.
+At the reviewed native checkpoint, Layers order is **Start here**, **Review**, **Main components**, **focus-ring diagnostics**. Welcome's contents match it. The original contents mismatch and diagnostics appearing second are resolved findings, not current defects.
 
 ## Prioritized findings
 
 P0 means a barrier to designer handoff. P1 means substantial friction to address in the presentation redesign. User impacts are expert judgments to test, not observed completion results.
 
-| Priority | Evidence                                                                                                                                                                                                                                                                                                              | User impact and recommendation                                                                                                                                                                                  |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| P0       | Native Main is approximately 17,521px tall; Review is 38,635px tall. Main's rendered width is 2,900px inside a nominal 1,200px root. Family heights differ between the two boards.                                                                                                                                    | A whole-file state catalogue is cumbersome to browse. Provide a compact family overview with its representative instance, supported edits and nearby states. Preserve detailed specimens for verification.      |
-| P0       | The plugin offers six planned destinations. In the current legacy file, `navigateMangroveKit` can open only Start here; other destinations require section migration.                                                                                                                                                 | Navigation advertises unavailable routes. Contents, Layers and plugin navigation should agree about installed destinations; omit or explicitly mark unavailable choices.                                        |
-| P0       | Tabs and Editorial CTA are mixed with bounded core families. Table of contents / Link still says canonical repeat/edited-consumer acceptance is pending. Segmented Segment and FullWidth BelowMedium similarly describe completed bounded gates as pending. [Core status](CORE-KIT-STATUS.md) records later evidence. | Readiness guidance conflicts. Maintain one source of truth for current scope and reconcile concise native descriptions. Use **Bounded draft use**, with precise limits, rather than an unqualified Ready label. |
-| P1       | Build/dependency order places ComboBox option before ComboBox and Table cells/rows before Table. Forms are interrupted by Tabs, Table and Text CTA.                                                                                                                                                                   | Finding a complete control should not require knowledge of its internals. Group complete components by user task, with supporting parts under the relevant family.                                              |
-| P1       | Welcome tells users to use their working frame without identifying an area or explaining how to create one. It mixes instance editing with import/rebuild procedures.                                                                                                                                                 | Provide one concrete first task and a clear designer-owned working area. Keep maintainer instructions separate from normal design use.                                                                          |
-| P1       | The implemented but unapplied migration retains independent Main and Usage columns inside Components and Compositions, then lays six destinations along a horizontal strip.                                                                                                                                           | Section names alone will not resolve family-level wayfinding. Pair family guidance and examples locally, and avoid requiring an atomic-design classification before finding a widget.                           |
+| Priority | Evidence                                                                                                                                                                                                                                                                                                                                 | User impact and recommendation                                                                                                                                                                                  |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P0       | Native Main is approximately 17,521px tall; Review is 38,635px tall. Main's rendered width is 2,900px inside a nominal 1,200px root. Family heights differ between the two boards.                                                                                                                                                       | A whole-file state catalogue is cumbersome to browse. Provide a compact family overview with its representative instance, supported edits and nearby states. Preserve detailed specimens for verification.      |
+| P0       | The plugin offers six planned destinations. In the current legacy file, `navigateMangroveKit` can open only Start here; other destinations require section migration.                                                                                                                                                                    | Navigation advertises unavailable routes. Contents, Layers and plugin navigation should agree about installed destinations; omit or explicitly mark unavailable choices.                                        |
+| P0       | Tabs and Editorial CTA are mixed with bounded core families. At the review baseline, Table of contents / Link said canonical repeat/edited-consumer acceptance is pending. Segmented Segment and FullWidth BelowMedium similarly described completed bounded gates as pending. [Core status](CORE-KIT-STATUS.md) records later evidence. | Readiness guidance conflicts. Maintain one source of truth for current scope and reconcile concise native descriptions. Use **Bounded draft use**, with precise limits, rather than an unqualified Ready label. |
+| P1       | Build/dependency order places ComboBox option before ComboBox and Table cells/rows before Table. Forms are interrupted by Tabs, Table and Text CTA.                                                                                                                                                                                      | Finding a complete control should not require knowledge of its internals. Group complete components by user task, with supporting parts under the relevant family.                                              |
+| P1       | Welcome tells users to use their working frame without identifying an area or explaining how to create one. It mixes instance editing with import/rebuild procedures.                                                                                                                                                                    | Provide one concrete first task and a clear designer-owned working area. Keep maintainer instructions separate from normal design use.                                                                          |
+| P1       | The implemented but unapplied migration retains independent Main and Usage columns inside Components and Compositions, then lays six destinations along a horizontal strip.                                                                                                                                                              | Section names alone will not resolve family-level wayfinding. Pair family guidance and examples locally, and avoid requiring an atomic-design classification before finding a widget.                           |
 
 Evidence comes from the accepted native inspection and [kit layout](kit-layout.js), [Welcome](kit-welcome.js), [plugin interface](ui.html) and [core status](CORE-KIT-STATUS.md). No new native writes were made for this review.
 
-## Proposed user-facing structure
+## Approved user-facing structure
 
-This is a presentation proposal for a reviewed migration, not a replacement for the currently implemented six destination identities.
+The source implementation retains all six durable destination identities in layout version 2. Native migration is still blocked by exact existing Roboto Condensed Bold loading. This table describes the intended result, not an applied native layout.
 
-| Destination                   | Contents                                                                                                                                                |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **00 Start here**             | Current brand, exploratory status, a short first task and a compact index of actual destinations.                                                       |
-| **01 Foundations**            | Visual colour, typography, spacing and effect specimens pointing to the variables and styles.                                                           |
-| **02 Components**             | Complete widgets grouped into **Actions**, **Forms and selection**, **Content and data**, and **Navigation**. ComboBox and Table are discoverable here. |
-| **03 Examples and templates** | Accepted page compositions and templates when available. Clearly state missing coverage; an empty destination must not appear populated.                |
-| **90 Maintenance**            | Diagnostics, families outside core scope and maintainer guidance, outside the everyday browsing path.                                                   |
+| Durable key           | Destination                   | Contents                                                                                                                                                      |
+| --------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `layout/start`        | **00 Start here**             | Current brand, exploratory status, a concrete My design task and actual installed destinations.                                                               |
+| `layout/foundations`  | **01 Foundations**            | Colour, typography, spacing and effect specimens pointing to variables and styles.                                                                            |
+| `layout/components`   | **02 Components**             | Whole widgets grouped by Actions, Forms and selection, Content and data, and Navigation and disclosure; paired usage/source boards and nested advanced parts. |
+| `layout/compositions` | **03 Examples and templates** | Available composition guidance with an explicit notice that accepted page templates are not yet available.                                                    |
+| `layout/patterns`     | **04 Your workspace**         | Designer-created frames beside the generated guide, preserved by ordinary updates.                                                                            |
+| `layout/pending`      | **90 Maintenance**            | Diagnostics, outside-core families and maintainer material.                                                                                                   |
 
 Designer-owned working frames must be visibly distinct from generated material, with an explicit preservation boundary. Keep “organisms” as optional implementation terminology in documentation rather than required navigation vocabulary.
 
-A family overview should include:
+The source family overview includes:
 
 - A plain purpose and representative default instance.
 - Primary edit controls and supported width/content presets.
@@ -54,26 +55,26 @@ Review can precede Main if it is the consumer entry point, but its current name 
 
 For the interim file, explain Review as linked examples for inspecting supported states and content, Main components as source assets maintained by the importer, and personal working frames as the place to create designs. Later pair these areas within each family. Changing maintained display names must follow the source and migration rules.
 
-## Implementation sequence
+## Implementation status
 
-### Before resolving the font blocker
+### Implemented in source, incremental native UX checked
 
-1. Make plugin navigation reflect installed destinations.
-2. Give Welcome one short, concrete first-use task and move maintenance procedures to an advanced area.
-3. Establish consistent readiness metadata and identify stale native descriptions. Reconcile through the normal source path when required exact fonts can load.
-4. Explain how to create a personal working frame outside generated containers.
-5. Prototype the family browsing layout in documentation before changing hierarchy.
+- `scripts/figma-kit-guidance.cjs` centralizes purpose, usage, scope and limitations for all 28 construction families. The exporter writes `doc.kitGuidance`; the bundler embeds the same metadata for startup. Unknown, missing or duplicate family IDs refuse export rather than receiving a generic acceptance label.
+- Plugin destinations use actual installed names in legacy or v2 layouts. **Browse component** presents installed bounded whole widgets by task; **Usage and states** and **Source components** open their corresponding owned assets. Refresh/navigation are read-only and require no font loads or loaded JSON.
+- **Update kit guidance** uses a complete loaded document to update only existing set/variant descriptions. It is independent of component builds and does not broaden native scope.
+- Welcome's first task asks the designer to create **My design** outside generated boards, or in **Your workspace** when available, insert a linked Mangrove/Button from Assets and edit Label. Generated examples remain maintainer-owned.
+- Layout v2 pairs usage/source boards and nests supporting parts. The six keys above remain stable. Version 1 needs explicit **Organize file** migration; an ordinary build cannot silently upgrade it.
 
-These are candidates for incremental work, not guarantees that every native mutation is font-independent. Keep exact-font preflight.
+The three outside-core families remain Tab trigger, Tabs and Editorial CTA. Supporting parts still count in the 25 core construction-family total; whole-widget browsing has fewer primary entries. Neither guidance metadata nor improved presentation establishes new component, brand, script or width acceptance.
 
-### Presentation migration and handoff
+### Presentation migration and handoff remain open
 
-6. Resolve exact required fonts, then apply a reviewed, versioned migration preserving canonical, property and instance identities and overrides. Changing the existing six destinations to this proposed structure requires an explicit mapping.
-7. Group families by task and colocate their overview, examples and source assets.
-8. Check all families' selection and rendered bounds. Verify ordinary updates preserve the new arrangement and designer-owned work.
-9. Run the novice tasks below before accepting designer handoff.
+1. Apply and inspect the newer legacy navigation, Welcome copy and description refresh. Save independent native receipts and compare unchanged geometry, styles, property identities and consumer fields.
+2. Resolve exact required fonts, then apply the explicit v2 migration with a backup and reviewed identity mapping. Preserve existing sets, properties, linked review instances and manual content.
+3. Review family boards and rendered bounds at normal scale. Verify two ordinary updates, restart recovery and designer-owned **My design** frames/manual notes.
+4. Run the novice tasks below before accepting designer handoff.
 
-Accepted page examples, the wider catalogue and shared-library publishing follow separately. Paid access does not resolve the current font blocker or establish usability.
+The older Welcome observations remain recorded in [README](README.md#start-here-and-onboarding). Accepted page templates, the wider catalogue and shared-library publishing follow separately. Paid access does not resolve the current font blocker or establish usability.
 
 ## Proposed novice acceptance tasks
 

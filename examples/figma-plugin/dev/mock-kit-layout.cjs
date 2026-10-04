@@ -11,6 +11,8 @@ const {
   buildFigmaVariables,
 } = require('../../../scripts/build-figma-tokens.cjs');
 const doc = buildFigmaVariables();
+const { buildKitGuidance } = require('../../../scripts/figma-kit-guidance.cjs');
+doc.kitGuidance ||= buildKitGuidance(doc.components.families);
 const copy = value => JSON.parse(JSON.stringify(value));
 const key = (node, field = 'mgKitId') =>
   node.getSharedPluginData('orgundrrmangrove', field);
@@ -155,6 +157,69 @@ async function fixture() {
     0,
     'Ordinary builds must not silently migrate a legacy kit'
   );
+  return env;
+}
+async function version1Fixture() {
+  const env = await fixture();
+  const sections = new Map();
+  for (const id of [
+    'start',
+    'foundations',
+    'components',
+    'compositions',
+    'patterns',
+    'pending',
+  ]) {
+    const section = env.figma.createSection();
+    own(section, `layout/${id}`);
+    sections.set(id, section);
+  }
+  sections
+    .get('start')
+    .setSharedPluginData('orgundrrmangrove', 'mgLayoutVersion', '1');
+  sections
+    .get('start')
+    .setSharedPluginData('orgundrrmangrove', 'mgLayoutPhase', 'complete');
+  const areas = new Map();
+  for (const area of ['components', 'compositions', 'pending']) {
+    const main =
+      area === 'components' ? owned(env, 'main') : env.figma.createFrame();
+    const review =
+      area === 'components' ? owned(env, 'review') : env.figma.createFrame();
+    if (area !== 'components') {
+      own(main, `layout/${area}/main`);
+      own(review, `layout/${area}/review`);
+    }
+    sections.get(area).appendChild(main);
+    sections.get(area).appendChild(review);
+    areas.set(area, { main, review });
+  }
+  for (const family of doc.components.families) {
+    const sets = [...env.state.nodes.values()].filter(
+      node =>
+        key(node) === `family/${family.id}` && node.type === 'COMPONENT_SET'
+    );
+    if (!sets.length) continue;
+    const area = ['tabs', 'tabs-trigger', 'editorial-cta'].includes(family.id)
+      ? 'pending'
+      : [
+            'combobox',
+            'table',
+            'text-cta',
+            'table-of-contents',
+            'segmented-control.full-width-below-medium',
+          ].includes(family.id)
+        ? 'compositions'
+        : 'components';
+    const wrapper = env.figma.createFrame();
+    own(wrapper, `layout/family/${family.id}/main`);
+    areas.get(area).main.appendChild(wrapper);
+    wrapper.appendChild(sets[0]);
+    const reviews = [...env.state.nodes.values()].filter(
+      node => key(node) === `review/${family.id}`
+    );
+    if (reviews.length) areas.get(area).review.appendChild(reviews[0]);
+  }
   return env;
 }
 async function refuse(
@@ -338,7 +403,7 @@ async function main() {
   );
   for (const [value, id] of roots) {
     assert.strictEqual(owned(env, value).id, id);
-    assert.strictEqual(key(owned(env, value).parent), 'layout/components');
+    assert.strictEqual(key(owned(env, value).parent), 'layout/pending');
   }
   for (const [value, id] of reviews)
     assert.strictEqual(owned(env, value).id, id);
@@ -459,6 +524,206 @@ async function main() {
     assert.deepStrictEqual(record(sectionNote), noteBaseline);
     console.log(
       'ok bounded recipe paint update reaches existing Cell masters and retains dependent Row/Table links and unrelated/manual identities'
+    );
+  }
+
+  {
+    const root = owned(env, 'layout/components');
+    assert.strictEqual(
+      key(owned(env, 'layout/group/actions').parent),
+      'layout/components'
+    );
+    assert.strictEqual(
+      key(owned(env, 'layout/family/button/overview').parent),
+      'layout/group/actions'
+    );
+    assert.strictEqual(
+      key(owned(env, 'layout/family/table/overview').parent),
+      'layout/group/content-data'
+    );
+    assert.strictEqual(
+      key(owned(env, 'review/table').parent),
+      'layout/family/table/overview'
+    );
+    for (const support of [
+      'table-header-cell',
+      'table-body-cell',
+      'table-row',
+    ]) {
+      assert.strictEqual(
+        key(owned(env, `layout/family/${support}/overview`).parent),
+        'layout/family/table/advanced'
+      );
+      const supportReviews = [...env.state.nodes.values()].filter(
+        node => key(node) === `review/${support}`
+      );
+      if (supportReviews.length)
+        assert.strictEqual(
+          key(supportReviews[0].parent),
+          `layout/family/${support}/overview`
+        );
+    }
+    assert.strictEqual(
+      key(owned(env, 'layout/family/tabs/overview').parent),
+      'layout/pending/browse'
+    );
+    assert.strictEqual(
+      key(owned(env, 'layout/family/tabs-trigger/overview').parent),
+      'layout/family/tabs/advanced'
+    );
+    assert.strictEqual(root.name, '02 Components');
+    assert.strictEqual(
+      owned(env, 'layout/compositions').name,
+      '03 Examples and templates'
+    );
+    assert.strictEqual(owned(env, 'layout/patterns').name, '04 Your workspace');
+    assert.strictEqual(owned(env, 'layout/pending').name, '90 Maintenance');
+    assert(owned(env, 'layout/components').y > owned(env, 'layout/start').y);
+    assert.strictEqual(
+      owned(env, 'layout/compositions').y,
+      owned(env, 'layout/patterns').y
+    );
+    console.log(
+      'ok v2 complete-family browsing, local usage/source pairing, nested advanced parts and two-dimensional section reading order'
+    );
+  }
+  {
+    const legacy = await version1Fixture();
+    const before = originals(legacy),
+      rootIds = ['main', 'review'].map(id => owned(legacy, id).id);
+    const oldContainers = [
+      'layout/compositions/main',
+      'layout/compositions/review',
+      'layout/pending/main',
+      'layout/pending/review',
+    ].map(id => owned(legacy, id));
+    const note = legacy.figma.createFrame();
+    note.x = 37;
+    note.y = 95;
+    note.resize(71, 29);
+    oldContainers[0].appendChild(note);
+    const manualBefore = record(note);
+    const ids = [...legacy.state.nodes.keys()];
+    const ordinaryBefore = complete(legacy);
+    let ordinaryError;
+    try {
+      await legacy.call('buildMangroveComponents', doc, 'undrr', ['button']);
+    } catch (error) {
+      ordinaryError = error;
+    }
+    assert.match(String(ordinaryError), /Organize file explicitly/);
+    assert.deepStrictEqual(
+      complete(legacy),
+      ordinaryBefore,
+      'Version1 ordinary builds must not silently upgrade'
+    );
+    const migrated = await legacy.call('organizeMangroveKit', doc, 'undrr');
+    assert.deepStrictEqual(copy(migrated.errors), []);
+    assert.strictEqual(migrated.previousVersion, '1');
+    assert.strictEqual(migrated.version, '2');
+    for (const id of ids)
+      assert(
+        legacy.state.nodes.has(id),
+        'Explicit v1 migration retains every old identity'
+      );
+    for (const container of oldContainers)
+      assert.strictEqual(key(container.parent), 'layout/pending');
+    assert.deepStrictEqual(
+      record(note),
+      manualBefore,
+      'Mixed historical container contents remain exact'
+    );
+    assert.deepStrictEqual(
+      ['main', 'review'].map(id => owned(legacy, id).id),
+      rootIds
+    );
+    assertOriginals(legacy, before);
+    const rerun = await restart(legacy)('organizeMangroveKit', doc, 'undrr');
+    assert.deepStrictEqual(copy(rerun.errors), []);
+    assert.strictEqual(rerun.createdNodeIds.length, 0);
+    console.log(
+      'ok explicit v1-to-v2 migration preserves old section/staging/wrapper/canonical identities and mixed manual historical containers; ordinary v1 build refuses'
+    );
+  }
+  {
+    const added = await fixture();
+    await added.call('organizeMangroveKit', doc, 'undrr');
+    const before = originals(added);
+    const rootIds = ['main', 'review'].map(id => owned(added, id).id);
+    const result = await added.call('buildMangroveComponents', doc, 'undrr', [
+      'status-label',
+    ]);
+    assert.deepStrictEqual(copy(result.errors), []);
+    assert.strictEqual(
+      key(owned(added, 'family/status-label').parent),
+      'layout/family/status-label/main'
+    );
+    assert.strictEqual(
+      key(owned(added, 'review/status-label').parent),
+      'layout/family/status-label/overview'
+    );
+    assert.deepStrictEqual(
+      ['main', 'review'].map(id => owned(added, id).id),
+      rootIds
+    );
+    assertOriginals(added, before);
+    const rerun = await added.call('buildMangroveComponents', doc, 'undrr', [
+      'status-label',
+    ]);
+    assert.deepStrictEqual(copy(rerun.errors), []);
+    assert.strictEqual(rerun.createdNodeIds.length, 0);
+    console.log(
+      'ok new v2 families stage once then adopt task grouping while existing canonical parents and IDs survive'
+    );
+  }
+  for (const fault of [
+    'missing-guidance',
+    'bad-support',
+    'bad-group',
+    'wrong-status',
+  ]) {
+    const invalid = await fixture(),
+      document = copy(doc);
+    if (fault === 'missing-guidance') delete document.kitGuidance;
+    if (fault === 'bad-support')
+      document.kitGuidance.families.find(
+        meta => meta.id === 'table-row'
+      ).parentFamilyId = 'button';
+    if (fault === 'bad-group')
+      document.kitGuidance.groups[0].familyIds.push('table-row');
+    if (fault === 'wrong-status')
+      document.kitGuidance.families[0].status = 'ready';
+    await refuse(invalid, document, fault);
+  }
+  console.log(
+    'ok incomplete or inconsistent guidance refuses before mutations without invented readiness'
+  );
+  {
+    const invalid = await fixture();
+    await invalid.call('organizeMangroveKit', doc, 'undrr');
+    owned(invalid, 'layout/group/actions').appendChild(
+      invalid.figma.createFrame()
+    );
+    await refuse(invalid, doc, 'manual content inside generated task group');
+    console.log(
+      'ok generated task boards refuse foreign content before updates rather than adopting or deleting it'
+    );
+  }
+
+  {
+    const invalid = await fixture();
+    const variable = invalid.state.variables.find(
+      value => value.name === 'color/text'
+    );
+    variable.resolvedType = 'FLOAT';
+    await refuse(invalid, doc, 'wrong foundation colour type');
+    const alias = await fixture();
+    alias.state.variables.find(
+      value => value.name === 'color/interactive'
+    ).resolveForConsumer = () => ({ value: { r: NaN, g: 0, b: 0 } });
+    await refuse(alias, doc, 'invalid resolved foundation alias value');
+    console.log(
+      'ok typed and resolved foundation roles refuse before writes rather than seeding invalid specimen paints'
     );
   }
 
@@ -641,7 +906,7 @@ async function main() {
     assert.strictEqual(failed.errors.length, 1);
     assert.match(failed.errors[0], /Injected/);
     const start = owned(partial, 'layout/start');
-    assert.strictEqual(key(start, 'mgLayoutVersion'), '1');
+    assert.strictEqual(key(start, 'mgLayoutVersion'), '2');
     assert.strictEqual(key(start, 'mgLayoutPhase'), 'migrating');
     assert(failed.createdNodeIds.includes(start.id));
     assert.deepStrictEqual(

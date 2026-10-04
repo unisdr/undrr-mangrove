@@ -10,6 +10,7 @@ const SOURCES = [
   'kit-inspection.js',
   'kit-builder.js',
   'kit-layout.js',
+  'kit-navigation.js',
   'kit-welcome.js',
   'kit-acceptance.js',
   'kit-editorial-acceptance.js',
@@ -27,10 +28,14 @@ const SOURCES = [
 
 function buildPlugin() {
   const output = path.join(PLUGIN, 'build/main.js');
-  const source = SOURCES.map(
-    file =>
-      `// Source: ${file}\n${fs.readFileSync(path.join(PLUGIN, file), 'utf8')}`
-  ).join('\n;\n');
+  const { buildDefaultKitGuidance } = require('./figma-kit-guidance.cjs');
+  const guidance = `const MG_KIT_GUIDANCE = ${JSON.stringify(buildDefaultKitGuidance())};\n`;
+  const source =
+    guidance +
+    SOURCES.map(
+      file =>
+        `// Source: ${file}\n${fs.readFileSync(path.join(PLUGIN, file), 'utf8')}`
+    ).join('\n;\n');
   fs.mkdirSync(path.dirname(output), { recursive: true });
   fs.writeFileSync(output, `${source}\n`);
   return output;

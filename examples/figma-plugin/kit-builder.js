@@ -2370,7 +2370,11 @@ async function buildMangroveComponents(
         ? mgLayoutContainerParent(key)
         : page;
     if (frame.parent !== parent) parent.appendChild(frame);
-    frame.name = name;
+    frame.name =
+      organized &&
+      mgReadIdentity(owned.get('layout/start'), 'mgLayoutVersion') === '2'
+        ? `Operational staging / ${key}`
+        : name;
     frame.layoutMode = 'VERTICAL';
     frame.primaryAxisSizingMode = 'AUTO';
     frame.counterAxisSizingMode = 'FIXED';
@@ -2425,6 +2429,8 @@ async function buildMangroveComponents(
       } else mark(set, familyKey, false);
       set.name = family.name;
       set.description =
+        doc.kitGuidance?.families?.find(item => item.id === family.id)
+          ?.description ||
         family.description ||
         `Reusable ${family.name} controls. Source: ${sourceLabel(family)}`;
       set.layoutMode = 'NONE';
@@ -2452,7 +2458,10 @@ async function buildMangroveComponents(
             .map(([name, value]) => `${name}=${value}`)
             .join(', ');
         component.description =
-          family.description || `Source: ${sourceLabel(family)}`;
+          doc.kitGuidance?.families?.find(item => item.id === family.id)
+            ?.description ||
+          family.description ||
+          `Source: ${sourceLabel(family)}`;
         await treeNode(recipe.tree, set, component, key, component);
         // Tree labels are useful internally; the root name must encode variants.
         component.name =

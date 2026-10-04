@@ -320,6 +320,20 @@ function subsetDocument(
       family.variants.forEach(variant => tree(variant.tree, family, variant))
     );
     base.components = { version: doc.components.version, families };
+    // The bounded DTO carries consumer guidance as the existing description
+    // field. Avoid a second registry and duplicate construction prose in packets.
+    if (doc.kitGuidance) {
+      const descriptions = new Map(
+        doc.kitGuidance.families.map(item => [
+          item.id,
+          item.connectorDescription || item.description,
+        ])
+      );
+      base.components.families = families.map(family => ({
+        ...family,
+        description: descriptions.get(family.id) || family.description,
+      }));
+    }
     base.styles.text = doc.styles.text
       .filter(style => textIds.has(style.id))
       .map(oneBrand);

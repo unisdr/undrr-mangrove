@@ -703,6 +703,9 @@ function buildFigmaVariables() {
     variables: output,
     styles,
     components,
+    kitGuidance: require('./figma-kit-guidance.cjs').buildKitGuidance(
+      components.families
+    ),
     capabilities: { segmentedJoining, formActionJoining },
     skipped,
   };

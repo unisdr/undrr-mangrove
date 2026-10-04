@@ -2,7 +2,7 @@
 
 Updated 4 October 2026 after designer review and a native migration attempt. **This acceptance gate remains open.** Section migration and reconciliation are implemented locally, but native migration is blocked by an unavailable existing font. Table grid compaction and separation from Review are accepted within the native scope below. Complete the remaining gate before expanding the catalogue.
 
-The subsequent [user experience review](UX-REVIEW.md) finds that the planned six-section migration still leaves discovery and family-level comparison problems. It proposes task-based component groups, nearby examples, clear readiness labels and a separate maintenance destination. That proposal is not implemented; changing destination identities requires a reviewed versioned migration. The novice task targets below supplement the existing structural and preservation gate.
+The subsequent [user experience review](UX-REVIEW.md) finds that the planned six-section migration still leaves discovery and family-level comparison problems. It proposes task-based component groups, nearby examples, clear readiness labels and a separate maintenance destination. That proposal is implemented in presentation version2, retaining the existing section identities through an explicit migration map. Native migration remains font-blocked. The novice task targets below supplement the existing structural and preservation gate.
 
 ## Why the Table selection is so large
 
@@ -17,7 +17,7 @@ The pre-change inspection confirms a 2,328 × 3,518.34375px Table set, a 1,200px
 
 ## Implementation and native checkpoint
 
-`kit-layout.js` implements the six SECTION destinations below, variable-bound colour and spacing specimens, five available Regular text-style specimens, family/source headings, explicit missing page-pattern coverage, compact grids and versioned reconciliation. It moves whole canonical sets and existing review-family frames under stable presentation keys; it does not recreate their anatomy. **Organize file** applies the initial migration. Ordinary desktop builds subsequently reconcile it. **Kit destination > Go** navigates without producing build evidence.
+`kit-layout.js` implements presentation version2 with the six SECTION destinations below, variable-bound colour and spacing specimens, five available Regular text-style specimens, task groups, family-local guidance and usage/source pairing, supporting parts under their parent widget, explicit missing template coverage, compact grids and versioned reconciliation. It moves whole canonical sets and existing review-family frames under stable presentation keys; it does not recreate their anatomy. **Organize file** applies the initial migration. Ordinary desktop builds subsequently reconcile version2. An existing version1 layout requires explicit Organize file; ordinary builds refuse to silently upgrade it. **Kit destination > Go** offers only installed destinations and navigates without replacing the latest mutation receipt. **Browse component** opens existing Usage and states or Source components for complete core widgets, without JSON, font loading or asset writes.
 
 Native section migration did not complete. Reparenting the legacy auto-layout main root requires its existing `Roboto Condensed` Bold face. All 26 existing TEXT nodes with that face report a missing font. Exact loading fails. A bounded experiment fixing only the main presentation root's primary sizing also failed to append; its original fields were restored exactly. No font was substituted, installed or reassigned.
 
@@ -43,20 +43,28 @@ Desktop access recovered on 4 October 2026. Native Welcome is now applied and re
 - [ ] Add a native manual note and verify its preservation through update and later section migration.
 - [ ] Ask a novice to find a foundation, component, composition and pending item; retain the broader designer-handoff gate below.
 
+## Incremental UX checkpoint, 4 October 2026
+
+Native plugin navigation now lists exactly the four installed legacy roots in Layers order. Document-free browsing offers 18 complete core widgets by task; supporting parts and the two outside-core primary widgets are not advertised as complete core entries. Button usage, Table usage and Table source navigation work without JSON or font loading. Navigation preserves the latest mutation receipt and selected build families.
+
+**Update kit guidance** updates 355 existing canonical set/variant descriptions, creates zero nodes and reports zero errors. Welcome updates its existing 23 guidance nodes, creates zero and remains readable/unclipped at 1,440 × 1,223px and 100% zoom. Its contents still match Layers, diagnostics stay collapsed/last, and the first task identifies My design and editable Button Label. All 6,476 inspected asset IDs remain; variables, collections, styles, component/property identities, typography, paints and instance links are retained. Five Welcome text records change. Ten inherited Table cell x values show native numerical drift of about 0.0000153px, with no requested geometry writes; this is recorded rather than claimed byte-identical to baseline. The resulting complete asset records match exactly on repeat, and description refresh repeats with zero updates.
+
+Explicit version2 Organize file is retried natively and returns `phase: refused`, zero created/updated IDs and the exact Roboto Condensed Bold loading failure. No new migration staging is created. Full grouped hierarchy, native manual-container reflow and novice task acceptance remain open. A fresh local Figma checkpoint and private before/after/receipt records are saved. Cloud sync remains unconfirmed.
+
 ## Intended reading sequence
 
 Use numbered native sections on the existing page for the first migration. These are named destinations in the Layers panel, with headings and a visual index. Multiple pages can follow when useful, but building on another page currently creates a separate scope, not a migration. Do not require a paid plan merely to make the local kit understandable.
 
-| Destination                         | What a designer finds                                                                                                                      | Ownership                                                                      |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| **00 Start here**                   | Purpose, current brand, supported core, acceptance labels, how to insert/edit components, links to Storybook and maintenance, visual index | Generated skeleton; separately identified manual guidance                      |
-| **01 Foundations**                  | Colours and semantic roles, typography, spacing, radii, shadows/focus, layout rules and eventually icons/logos                             | Source-generated specimens; manual usage annotations                           |
-| **02 Components**                   | Reusable controls and content elements, grouped by task, with compact variant sets and nearby instance-based examples                      | Generated main components and generated review examples in distinct containers |
-| **03 Compositions (organisms)**     | Table with rows/cells, ComboBox with options, Text CTA, TOC and Segmented composition; documented dependencies and supported edits         | Generated source-backed compositions and examples                              |
-| **04 Page patterns**                | Clearly labelled article, landing, search/results and form examples as they become accepted; current missing coverage listed               | Explicit generated recipes or designer-owned instances; ownership labelled     |
-| **90 Diagnostics and pending work** | Temporary tests, known font/style failures and unsupported assets, visually separate from the usable library                               | Explicit diagnostic ownership and exact cleanup records                        |
+| Destination                   | What a designer finds                                                                                                                      | Ownership                                                                      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| **00 Start here**             | Purpose, current brand, supported core, acceptance labels, how to insert/edit components, links to Storybook and maintenance, visual index | Generated skeleton; separately identified manual guidance                      |
+| **01 Foundations**            | Colours and semantic roles, typography, spacing, radii, shadows/focus, layout rules and eventually icons/logos                             | Source-generated specimens; manual usage annotations                           |
+| **02 Components**             | Reusable controls and content elements, grouped by task, with compact variant sets and nearby instance-based examples                      | Generated main components and generated review examples in distinct containers |
+| **03 Examples and templates** | Accepted page compositions when available; current missing coverage is explicit                                                            | Generated guidance; reviewed future recipes                                    |
+| **04 Your workspace**         | Personal frames and linked instances, separate from generated specimens                                                                    | Designer-owned children retained at local positions                            |
+| **90 Maintenance**            | Diagnostics, outside-core assets and operational staging                                                                                   | Existing roots retained; exact probe cleanup records required                  |
 
-Table rows and cells remain real reusable dependencies, with links from Table's documentation. Their physical grouping must not change the dependency model. A composition and a page example are distinct deliverables; do not invent empty production components to fill the index.
+Table rows and cells remain real reusable dependencies, with links from Table's documentation. Their physical grouping must not change the dependency model. Complete widgets, including Table and ComboBox, belong in task groups within Components. A composition and a page example are distinct deliverables; do not invent empty production components to fill the index.
 
 Tokens remain variables in the Variables interface. Foundations specimens explain those variables on the canvas. Start with the current collection and aliases; a Primitives/Brand collection split is a separate migration decision.
 
@@ -67,6 +75,18 @@ Tokens remain variables in the Variables interface. Foundations specimens explai
 - Keep main components, review instances, manual examples and diagnostics visibly distinct. Shared dependencies stay linked; no detachment or duplication is needed for presentation.
 - Use readable headings, source/usage descriptions, consistent labels and a visual index. Verify at normal zoom with someone unfamiliar with the file. A vertical build-order dump is not the intended designer navigation.
 - Restrict automatic repositioning to generated containers and main-component presentation. Preserve section-local placement of manual additions; a containing generated section can move as its contents grow. Preserve absolute placement of unowned page roots. Do not change reusable component internal geometry as a side effect of tidying the canvas.
+
+## Version2 migration map and guidance source
+
+The stable keys `layout/start`, `layout/foundations`, `layout/components`, `layout/compositions`, `layout/patterns` and `layout/pending` retain their identities. Their version2 titles are respectively Start here, Foundations, Components, Examples and templates, Your workspace and Maintenance. The historical compositions and patterns keys are presentation identities, not current taxonomy.
+
+`doc.kitGuidance` comes from `scripts/figma-kit-guidance.cjs`; the same metadata is embedded in the built plugin for document-free browsing. It defines task order, whole widgets and supporting parts, purposes, supported edits, limitations and bounded draft/outside-core status. Unknown/missing/duplicate families require a deliberate registry update. Acceptance is unchanged:25 core construction families and three outside-core families.
+
+Version2 reuses `layout/family/<id>/main` wrappers and whole `review/<id>` frames within local family boards. Supporting source sets and examples nest under their parent's Advanced parts. `main` and `review` become small operational staging roots in Maintenance. Historical version1 main/review containers are retained whole, including manual content. Two-dimensional placement uses rendered extents. An explicit partial migration remains resumable from its exact receipt.
+
+The guidance-only action updates canonical set/variant descriptions after complete ownership/inventory validation. It loads no fonts and changes no source geometry, properties or styles. A partial setter failure returns exact affected IDs; retry skips completed descriptions. Ordinary component builds apply the same guidance so stale construction-status prose does not return. Read-only navigation state replies cannot unblock a pending mutation or replace its saved receipt.
+
+Native migration, auto-layout reflow of manual children in historical mixed containers, all-family bounds and the novice tasks remain acceptance gates. Mock preservation is insufficient to close them.
 
 ## Automatic and manual synchronisation
 
@@ -89,7 +109,7 @@ Use explicit immutable presentation keys independent of section titles, with a v
 
 ## Acceptance criteria before designer handoff
 
-- [ ] A novice can locate foundations, a component, a composition, page patterns and pending work from Start here and the Layers panel without understanding build order.
+- [ ] A novice can locate foundations, a complete component, available examples, their own workspace and maintenance from Start here and Layers without understanding build order.
 - [ ] Contents, Layers and plugin navigation agree about available destinations. Planned routes are omitted or explicitly marked unavailable before migration.
 - [ ] A user can find a complete widget without first navigating its supporting parts, compare its nearby states and identify supported edits. Current scope descriptions agree with the accepted bounded evidence.
 - [ ] A user can locate and create personal work outside generated containers, insert/edit a linked instance without changing its main, and complete the six [novice task targets](UX-REVIEW.md#proposed-novice-acceptance-tasks) with the plugin initially closed and no coaching. Record outcomes and assistance; the targets are not current results.

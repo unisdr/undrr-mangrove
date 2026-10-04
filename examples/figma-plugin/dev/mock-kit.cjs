@@ -691,7 +691,11 @@ function environment(doc, options = {}) {
       state.viewportCalls += 1;
     },
   };
+  const {
+    buildDefaultKitGuidance,
+  } = require('../../../scripts/figma-kit-guidance.cjs');
   const context = vm.createContext({
+    MG_KIT_GUIDANCE: buildDefaultKitGuidance(),
     figma,
     __html__: '',
     console,
@@ -707,6 +711,8 @@ function environment(doc, options = {}) {
   const layoutFile = path.join(DIR, 'kit-layout.js');
   if (fs.existsSync(layoutFile))
     vm.runInContext(fs.readFileSync(layoutFile, 'utf8'), context);
+  const navigationFile = path.join(DIR, 'kit-navigation.js');
+  vm.runInContext(fs.readFileSync(navigationFile, 'utf8'), context);
   const welcomeFile = path.join(DIR, 'kit-welcome.js');
   if (fs.existsSync(welcomeFile))
     vm.runInContext(fs.readFileSync(welcomeFile, 'utf8'), context);
@@ -2663,6 +2669,14 @@ async function main() {
     function stableBatch(report) {
       assert.strictEqual(report.errors.length, 0, report.errors.join('\n'));
       for (const family of report.families) {
+        const guidance = doc.kitGuidance.families.find(
+          item => item.id === family.id
+        );
+        assert.strictEqual(
+          env.state.nodes.get(family.setId).description,
+          guidance.connectorDescription,
+          'Scoped connector builds must retain current consumer guidance'
+        );
         if (setIds.has(family.id))
           assert.strictEqual(family.setId, setIds.get(family.id));
         else setIds.set(family.id, family.setId);

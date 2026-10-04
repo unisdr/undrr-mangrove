@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes, advanceMangroveSegmentedWrapperProbes, advanceMangroveCoreContentProbes, organizeMangroveKit, navigateMangroveKit, createMangroveWelcome */
+/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes, advanceMangroveSegmentedWrapperProbes, advanceMangroveCoreContentProbes, organizeMangroveKit, navigateMangroveKit, createMangroveWelcome, inspectMangroveNavigation, navigateMangroveInstalled, refreshMangroveGuidance */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
  * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
@@ -654,6 +654,24 @@ figma.ui.onmessage = async msg => {
     return;
   }
   try {
+    if (msg.type === 'kit-navigation-state') {
+      let result;
+      try {
+        result = await inspectMangroveNavigation(msg.doc);
+      } catch (error) {
+        result = {
+          destinations: [],
+          families: [],
+          errors: [errorMessage(error)],
+        };
+      }
+      post('kit-navigation-state', { result });
+      return;
+    }
+    if (msg.type === 'refresh-kit-guidance') {
+      post('operation', { result: await refreshMangroveGuidance(msg.doc) });
+      return;
+    }
     if (msg.type === 'inspect') {
       post('inspection', {
         result: await inspectMangroveKit({
@@ -688,7 +706,7 @@ figma.ui.onmessage = async msg => {
         // read-only preflight refusals and still need a downloadable receipt.
         result = {
           operation: 'kit-layout',
-          version: '1',
+          version: '2',
           phase: 'refused',
           createdNodeIds: [],
           updatedNodeIds: [],
@@ -699,7 +717,9 @@ figma.ui.onmessage = async msg => {
       return;
     }
     if (msg.type === 'navigate-kit') {
-      post('operation', { result: navigateMangroveKit(msg.destination) });
+      post('operation', {
+        result: await navigateMangroveInstalled(msg.destination),
+      });
       return;
     }
     if (msg.type === 'create-welcome') {

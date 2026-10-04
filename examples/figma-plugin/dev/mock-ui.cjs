@@ -53,7 +53,8 @@ function mountUI() {
     },
     parent: {
       postMessage(message) {
-        messages.push(message.pluginMessage);
+        if (message.pluginMessage.type !== 'kit-navigation-state')
+          messages.push(message.pluginMessage);
       },
     },
     Blob,

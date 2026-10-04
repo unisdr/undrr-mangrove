@@ -344,24 +344,26 @@ async function createMangroveWelcome(
       [
         'use',
         'Make your first design',
-        'Open Assets in the left sidebar. Search for Mangrove, then drag a component onto your working frame. Select the instance and change its exposed properties in the right sidebar. Keep the instance linked to its main component.',
+        '1. Create a frame named My design outside the generated boards, or in Your workspace when available. 2. Open Assets and search for Mangrove/Button. Drag an instance into My design. 3. Select it and change Label in the right sidebar. Keep it linked to its main component.',
       ],
       [
         'use',
         'Understand the canvas',
-        mgKitLayoutInstalled()
-          ? 'Use the numbered sections and the plugin Go menu. Main components are source-owned. Review examples demonstrate content and states; they are not page templates.'
-          : 'Find components in Assets and use Review to compare states and content. The contents above list the boards that exist on this page. Foundations are in Variables and local styles; the wider section organization is still being completed.',
+        start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
+          ? 'Browse complete widgets in Components. Usage and states sit beside their Source components and advanced parts. Examples and templates records pending page-pattern coverage. Your workspace is for your designs; Maintenance is for kit upkeep.'
+          : start
+            ? 'This file still uses the earlier section layout. The maintainer must apply Organize file before grouped component browsing and Your workspace are available. Use the actual destinations above and keep My design outside generated boards.'
+            : 'Use Browse component in the plugin to open an installed example. Review contains linked usage examples; Main components supplies their source assets. The contents above match this page. Foundations are in Variables and local styles. The grouped layout is still pending.',
       ],
       [
         'maintain',
         'What is ready, what is next',
-        'Use the core controls and content for draft designs, following the documented sizing and editing limits for each family. Page templates, the full catalogue, other brands and right-to-left layouts still need review. On Free, work in one brand at a time; the plugin can switch it.',
+        'The core set supports bounded draft use in UNDRR. Read each component description for supported presets, edits and limits. Tabs and Editorial CTA are outside core scope. Page templates, other brands and right-to-left layouts still need review. On Free, work in one brand at a time.',
       ],
       [
         'maintain',
-        'Keep your work through updates',
-        'Use linked instances in your own working frames. Add notes outside generated content. Import current tokens without pruning, then rebuild the affected families. Renames and removals need a reviewed migration. Source and status: github.com/unisdr/undrr-mangrove · examples/figma-plugin/CORE-KIT-STATUS.md',
+        'Keep your own designs safe',
+        'Keep My design and your notes outside generated boards, or in Your workspace when available. Update linked instances using supported properties. Generated examples belong to the kit maintainer and may be refreshed. Source, limits and maintenance: github.com/unisdr/undrr-mangrove · examples/figma-plugin/CORE-KIT-STATUS.md',
       ],
     ];
     for (const rowId of ['use', 'maintain']) {

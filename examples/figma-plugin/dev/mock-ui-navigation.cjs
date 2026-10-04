@@ -23,7 +23,10 @@ function mount() {
     messages = [],
     downloads = [],
     blobs = new Map();
-  window.parent.postMessage = data => messages.push(copy(data.pluginMessage));
+  window.parent.postMessage = data => {
+    if (data.pluginMessage.type !== 'kit-navigation-state')
+      messages.push(copy(data.pluginMessage));
+  };
   window.Blob = Blob;
   window.URL.createObjectURL = blob => {
     const key = 'blob:mock-' + blobs.size;
