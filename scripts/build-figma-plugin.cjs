@@ -15,6 +15,7 @@ const SOURCES = [
   'kit-segmented-capabilities.js',
   'kit-segmented-canonical-capabilities.js',
   'kit-segmented-focus-capabilities.js',
+  'kit-segmented-leaves-capabilities.js',
   'kit-form-action-capabilities.js',
   'kit-form-action-optional-capabilities.js',
   'kit-capabilities.js',

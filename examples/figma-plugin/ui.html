@@ -161,6 +161,21 @@
           <option value="segmented-canonical">
             Segmented Control shared style
           </option>
+          <option value="segmented-leaves-default">
+            Segmented Default leaves / Default
+          </option>
+          <option value="segmented-leaves-hover">
+            Segmented Default leaves / Hover
+          </option>
+          <option value="segmented-leaves-focus">
+            Segmented Default leaves / Focus
+          </option>
+          <option value="segmented-leaves-hoverfocus">
+            Segmented Default leaves / HoverFocus
+          </option>
+          <option value="segmented-leaves-disabled">
+            Segmented Default leaves / Disabled
+          </option>
           <option value="form-action-joining">Form Action joining</option>
           <option value="form-action-optional">
             Form Action optional wrappers
@@ -182,9 +197,10 @@
       </p>
       <button id="capability-probes" disabled>Run capability probes</button>
       <p>
-        For the Segmented shared-style check, prepare the temporary consumers,
-        rebuild only the Segment family with review refresh off, then advance.
-        Repeat the rebuild and advance once more. Save each full report.
+        For the Segmented shared-style or Default leaves check, prepare the
+        temporary consumers, rebuild only the Segment family with review refresh
+        off, then advance. Repeat the rebuild and advance once more. Save each
+        full report.
       </p>
       <button id="advance-segmented-capability-probes" disabled>
         Advance Segmented check after build
@@ -235,10 +251,15 @@
         $('advance-segmented-capability-probes').disabled =
           busy ||
           !doc ||
-          capabilityReport?.scope !== 'segmented-canonical' ||
+          !(
+            capabilityReport?.scope === 'segmented-canonical' ||
+            capabilityReport?.scope?.startsWith('segmented-leaves-')
+          ) ||
           !capabilityReport?.rootId ||
           !lastBuildReport ||
-          (capabilityReport?.segmentedCanonical?.completedAdvances || 0) >= 2;
+          (capabilityReport?.segmentedCanonical?.completedAdvances ||
+            capabilityReport?.segmentedLeaves?.completedAdvances ||
+            0) >= 2;
         $('check-fonts').disabled = busy;
         $('prepare-probes').disabled = busy || !doc?.components;
         $('probe-group').disabled = busy;
@@ -651,6 +672,11 @@
                 ...(r.segmentedCanonical
                   ? [
                       `Segmented shared style: ${r.segmentedCanonical.verdict}; ${r.segmentedCanonical.completedAdvances || 0}/2 rebuild checks.`,
+                    ]
+                  : []),
+                ...(r.segmentedLeaves
+                  ? [
+                      `Segmented Default leaves / ${String(r.segmentedLeaves.batchState || '').slice(0, 30)}: ${String(r.segmentedLeaves.verdict || '').slice(0, 60)}; ${r.segmentedLeaves.completedAdvances || 0}/2 rebuild checks.`,
                     ]
                   : []),
                 ...Object.entries(r.tests || {})

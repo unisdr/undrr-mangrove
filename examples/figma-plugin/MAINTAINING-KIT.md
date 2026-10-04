@@ -378,6 +378,8 @@ For connector foundation imports, use explicit `variableIds` / `styleIds` batche
 
 Connector compilation includes SVG support only when the exact selected variant/dependency subset contains an SVG recipe; minification removes it from other scopes. The desktop bundle retains SVG support. Conditional elimination does not guarantee a small payload: the full non-SVG ComboBox scope now exceeds the earlier 48k payload budget, so use explicit one-family `variantIds` batches. The compiler rejects payloads over 50,000 characters or UTF-8 bytes and never truncates metadata. Supply exact recipe variant IDs through `buildConnector` or the CLI fourth positional argument, and record each batch's scope and counts. Runtime/mock transport checks do not establish remote execution.
 
+Individual focused Segmented leaves currently measure approximately 47.9–48.3k characters/bytes; check each exact compiled payload. Focused six-variant batches and the full 30-leaf family exceed the 50,000-character/UTF-8-byte limit. Emit individual recipe IDs with their typed focus-role alias closure and complete every intended batch. Desktop six-consumer state diagnostics still require ordinary complete-family builds. Neither local transport checks nor desktop evidence establishes connector execution.
+
 Checkbox now uses the exact source SVG checkmark, including bounded narrow tiles, and native import has succeeded. Both Switch sizes now have bounded native construction and rendered observations; pending and custom-size behaviour remain open. Do not replace source assets with similar icons or promote a source browser capture to Figma acceptance. Changed-source SVG migration, arbitrary tiling widths and broader consumer updates remain explicit acceptance work.
 
 ### Probe placement and rendered comparison
@@ -433,15 +435,35 @@ Temporary root instances inherit their masters' `mgKitId`. Give each its own sta
 
 The final temporary ledger contains 25 nodes. Cleanup validates the stored creation manifest, actual node types, parent relationships and attached canonical masters before removing its root. A moved, detached, changed or foreign consumer is refused. Failed advances retain their complete partial ledger for inspection and conservative cleanup. Do not bypass a refusal with a name scan or broad deletion.
 
-This gate covers UNDRR's three Position=First states only. It does not accept remaining positions, Small, focused or disabled states, legend breakpoints, full-width focus contours or wrapped rows. Keep the canonical family, variant, text-style and Label identities when expanding the subset.
+This historical gate covers UNDRR's three Position=First states only. It must not be promoted to 30-leaf acceptance. Use the [five-state runbook](#maintain-segmented-default-size-leaves) for the expanded matrix while preserving these original identities. Leaf gates remain separate from Small, legend breakpoints, full-width focus contours and wrapped rows.
 
-### Extending Segmented focus after the sizing diagnostic
+### Maintain Segmented Default-size leaves
 
-Run `node examples/figma-plugin/dev/mock-segmented-focus-capabilities.cjs` after generating tokens. This checks source preflight, exact temporary ownership, typography ordering, partial failure recovery and conservative cleanup. It does not simulate native fractional constraints or pixel rendering.
+The family contains 30 intrinsic Default-size leaves. Preserve its SET, variant, normalized TEXT, Label and shared-style identities when editing source recipes. `COINCIDENT_SCALE` is restricted to guarded Segmented Focus/HoverFocus leaves. Transparent outside outlines coincide with body bounds, with coloured offset+width (currently 4px) behind the neutral offset (currently 2px), identical per-corner aliases and SCALE constraints. Write their geometry on masters and inspect inheritance; native consumer positions are not overridable. Apply font literals before final shared-style attachment and retain its validated family/size aliases. No DIRECT typography exception is authorised here.
 
-For the native diagnostic, save complete operation and inspection reports before changing watched plugin files. Restart the plugin, load the saved operation ledger and remove its exact owned nodes. Save cleanup and a new inspection, compare all existing asset fields, then save a local Figma backup. Refuse cleanup on foreign or changed topology; do not delete by layer names.
+Generate the document, then run the targeted checks before Figma:
 
-When adding focus leaves, use the tested coincident SCALE sizing policy only behind a source-specific recipe. Retain source corner aliases, constant 4/2 outside strokes and gold-before-white paint order. Apply typography literals before shared style attachment and inherit its validated aliases. Preserve exact existing family/variant/TEXT/Label identities. The old three-state acceptance scope must retain its declared coverage; add a separate expanded matrix gate with edited and fresh consumers, two ordinary scoped builds, normal-scale browser/native review and conservative cleanup. Full-width/intrinsic rail focus stacking and wrapped seams require composition evidence separately.
+```sh
+node examples/figma-plugin/dev/mock-segmented-source.cjs
+node examples/figma-plugin/dev/mock-segmented.cjs
+node examples/figma-plugin/dev/mock-segmented-focus-capabilities.cjs
+node examples/figma-plugin/dev/mock-segmented-coincident.cjs
+node examples/figma-plugin/dev/mock-segmented-leaves-capabilities.cjs
+```
+
+These exercise API control flow, source guards, identity, preservation and cleanup, not native raster geometry. Build the complete family in the imported UNDRR mode before the following five state checks. Leave review geometry refresh off.
+
+For **Segmented Default leaves / Default**, then Hover, Focus, HoverFocus and Disabled:
+
+1. Run the explicit diagnostic once. It reads all 30 canonical mains and prepares six edited plus six untouched consumers for that state's selected/position combinations. Save the full operation report.
+2. Build only **Mangrove/Segmented control/Segment**, using its complete 30-variant family. Save the ordinary build report; zero created nodes, no errors and updated canonical IDs are required.
+3. Choose **Advance Segmented check after build** and save the advanced report. Existing canonical/consumer source fields and exact baselines are checked before six new untouched consumers are created.
+4. Repeat the ordinary full-family build and advance once. Require `completedAdvances: 2`, verdict `rebuild-fields-verified` and no errors. Save inspection and independently verify complete range fills, styles, full fonts, aliases, properties, body/focus geometry and exact repeat snapshots on mains, edited consumers and every fresh cohort.
+5. Review the relevant rendered states at normal scale against the source fixture and save the evidence. Recover the saved ledger after restart, remove only its exact owned nodes and save cleanup. Compare preceding assets before the next state or any watched runtime edit.
+
+Preparing, loading a saved report or advancing clears the UI's cached build result. Each advance needs a newly completed ordinary build. Final ledgers contain 49 nodes for Default/Hover/Disabled or 97 for Focus/HoverFocus. Confirm actual reports, including partial failures. Refuse moved, detached, retyped, foreign or user-extended trees; do not adopt unknown children or delete by names. Unique temporary root-instance identities keep ordinary builder indexing safe while source main/TEXT identities remain recorded independently.
+
+The historical three-state diagnostic stays narrower than this matrix. Intrinsic HUG labels and saved repeat fields do not accept arbitrary wrapping or composed full-width rails. Matched pixels, new canonical fractional stress, middle focus stacking, Small, other brands/scripts and font-file equality require separate evidence. Record the completed state/visual scope once in [LEARNINGS](LEARNINGS.md#expanded-default-size-segmented-leaves), not as repeated count paragraphs in every document.
 
 ### Form Action optional-wrapper acceptance boundaries
 

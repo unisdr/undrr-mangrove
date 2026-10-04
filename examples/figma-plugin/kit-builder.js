@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT */
+/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -16,6 +16,10 @@ const MG_ARC_ENABLED =
   typeof MG_CONNECTOR_ARC === 'undefined' || MG_CONNECTOR_ARC;
 const MG_DIRECT_TEXT_ENABLED =
   typeof MG_CONNECTOR_DIRECT_TEXT === 'undefined' || MG_CONNECTOR_DIRECT_TEXT;
+
+const MG_COINCIDENT_FOCUS_ENABLED =
+  typeof MG_CONNECTOR_COINCIDENT_FOCUS === 'undefined' ||
+  MG_CONNECTOR_COINCIDENT_FOCUS;
 
 function mgEllipseArcPlan(tree) {
   const arc = tree.arcData;
@@ -725,6 +729,283 @@ async function buildMangroveComponents(
       return result;
     }
   }
+  const coincidentFocus = MG_COINCIDENT_FOCUS_ENABLED ? new Map() : null;
+  // This renderer is a source-family exception, not a generic focus-ring API.
+  // Validate every selected recipe before importing styles or touching the canvas.
+  try {
+    for (const family of ordered)
+      for (const variant of family.variants)
+        treeWalk(variant.tree, (tree, parent) => {
+          const ring = tree.focusRing;
+          const focused = ['Focus', 'HoverFocus'].includes(
+            variant.properties?.State
+          );
+          if (
+            family.id === 'segmented-control.segment' &&
+            tree === variant.tree &&
+            focused &&
+            !ring
+          )
+            throw new Error(
+              'Focused source Segmented leaves require COINCIDENT_SCALE outlines.'
+            );
+          if (
+            !ring ||
+            (ring.renderer === undefined &&
+              ring.outerStroke === undefined &&
+              ring.cornerBindings === undefined)
+          )
+            return;
+          if (!MG_COINCIDENT_FOCUS_ENABLED)
+            throw new Error(
+              'COINCIDENT_SCALE is unavailable in this compiled component scope.'
+            );
+          if (MG_COINCIDENT_FOCUS_ENABLED) {
+            const selected = variant.properties?.Selected,
+              state = variant.properties?.State,
+              position = variant.properties?.Position;
+            const fields = [
+              'topLeftRadius',
+              'topRightRadius',
+              'bottomLeftRadius',
+              'bottomRightRadius',
+            ];
+            const roles = {
+              color: 'color/focus-ring',
+              separatorColor: 'color/neutral-0',
+              offset: 'focus-ring/offset',
+              width: 'focus-ring/width',
+              outerStroke: 'effect-size/focus-ring/outer-spread',
+            };
+            const templates = (doc.styles?.text || []).filter(
+              value => value.id === 'component.segmented-control.segment'
+            );
+            const template = templates[0],
+              templateValue = template?.values?.[brandId];
+            const paintRole =
+              selected === 'True'
+                ? state === 'HoverFocus'
+                  ? 'color/button-background--hover'
+                  : 'color/button-background'
+                : state === 'HoverFocus'
+                  ? 'color/button-outline-primary--hover'
+                  : 'color/button-outline-primary';
+            const label = tree.children?.[0];
+            const raw = tree.id === 'segment' && label?.id === 'label';
+            const normalized =
+              tree.id === 'mg-segmented-control__label' &&
+              label?.id === `${tree.id}/Segment label`;
+            if (
+              ring.renderer !== 'COINCIDENT_SCALE' ||
+              Object.keys(ring).length !== 7 ||
+              Object.keys(ring).some(
+                field =>
+                  ![
+                    ...Object.keys(roles),
+                    'renderer',
+                    'cornerBindings',
+                  ].includes(field)
+              ) ||
+              family.id !== 'segmented-control.segment' ||
+              family.source?.file !==
+                'stories/Components/Forms/SegmentedControl/segmented-control.scss' ||
+              !/^[a-f0-9]{64}$/.test(family.source.normalizedSha256 || '') ||
+              templates.length !== 1 ||
+              template.type !== 'TEXT' ||
+              template.source?.file !== family.source.file ||
+              template.source?.normalizedSha256 !==
+                family.source.normalizedSha256 ||
+              template.bindings?.fontFamily !== 'font-family/text' ||
+              template.bindings?.fontSize !== 'font-size/button' ||
+              templateValue?.fontName?.style !== 'Bold' ||
+              templateValue.lineHeight?.unit !== 'PERCENT' ||
+              templateValue.lineHeight.value !== 120 ||
+              !['False', 'True'].includes(selected) ||
+              !focused ||
+              !['First', 'Middle', 'Last'].includes(position) ||
+              variant.id !==
+                `segmented-control.segment.${selected.toLowerCase()}.${state.toLowerCase()}.${position.toLowerCase()}` ||
+              variant.name !==
+                `Selected=${selected}, State=${state}, Position=${position}` ||
+              Object.keys(variant.properties).length !== 3 ||
+              tree !== variant.tree ||
+              parent ||
+              tree.type !== 'FRAME' ||
+              !(raw || normalized) ||
+              tree.name !== 'mg-segmented-control__label' ||
+              tree.children.length !== 1 ||
+              label.type !== 'TEXT' ||
+              label.name !== 'Segment label' ||
+              label.textProperty !== 'Label' ||
+              label.characters !== 'Depth' ||
+              label.textStyle !== 'component.segmented-control.segment' ||
+              label.textStyleApplication !== undefined ||
+              tree.layout?.mode !== 'HORIZONTAL' ||
+              tree.layout.width !== 'HUG' ||
+              tree.layout.height !== 'HUG' ||
+              tree.layout.minHeight !==
+                'component/segmented-control/minimum-height' ||
+              tree.clipsContent !== false ||
+              tree.strokesIncludedInLayout !== true ||
+              tree.effectStyle !== null ||
+              tree.stroke !== paintRole ||
+              tree.fill !==
+                (selected === 'True' || state === 'HoverFocus'
+                  ? paintRole
+                  : null) ||
+              label.fill !==
+                (selected === 'True' || state === 'HoverFocus'
+                  ? 'color/button'
+                  : paintRole) ||
+              Object.entries(roles).some(
+                ([field, name]) => ring[field] !== name
+              ) ||
+              !ring.cornerBindings ||
+              Object.keys(ring.cornerBindings).length !== 4
+            )
+              throw new Error(
+                'COINCIDENT_SCALE is restricted to exact source Default Segmented Focus/HoverFocus leaves.'
+              );
+            for (const field of fields) {
+              const rounded =
+                position === 'First'
+                  ? field.includes('Left')
+                  : position === 'Last'
+                    ? field.includes('Right')
+                    : false;
+              const name = rounded ? 'radius/button' : 'spacing/0';
+              if (
+                ring.cornerBindings[field] !== name ||
+                tree.bindings?.[field] !== name
+              )
+                throw new Error(
+                  `COINCIDENT_SCALE source corner alias differs at ${field}.`
+                );
+            }
+            const sourceRole = (name, type, sourceMode, seen = new Set()) => {
+              const matches = (doc.variables || []).filter(
+                value => value.name === name
+              );
+              const source = matches[0];
+              if (
+                matches.length !== 1 ||
+                source.id !== name.replaceAll('/', '.') ||
+                source.type !== type ||
+                seen.has(name)
+              )
+                throw new Error(
+                  `COINCIDENT_SCALE requires one exact ${type} source role ${name}.`
+                );
+              seen.add(name);
+              const value = source.values?.[sourceMode];
+              if (value && typeof value === 'object' && 'alias' in value) {
+                if (
+                  Object.keys(value).length !== 1 ||
+                  typeof value.alias !== 'string'
+                )
+                  throw new Error(
+                    `Malformed COINCIDENT_SCALE source alias ${name}.`
+                  );
+                return sourceRole(value.alias, type, sourceMode, seen);
+              }
+              if (
+                type === 'FLOAT'
+                  ? !Number.isFinite(value) || value < 0
+                  : !value ||
+                    Object.keys(value).length !== 4 ||
+                    !['r', 'g', 'b', 'a'].every(
+                      field =>
+                        Number.isFinite(value[field]) &&
+                        value[field] >= 0 &&
+                        value[field] <= 1
+                    )
+              )
+                throw new Error(
+                  `Invalid COINCIDENT_SCALE source value ${name}.`
+                );
+              return value;
+            };
+            const nativeRole = (name, type, seen = new Set()) => {
+              const matches = nativeVariables.filter(
+                value => value.name === name
+              );
+              const native = matches[0];
+              if (
+                matches.length !== 1 ||
+                native.resolvedType !== type ||
+                native.variableCollectionId !== collection.id ||
+                mgReadIdentity(native, 'mgId') !== name.replaceAll('/', '.') ||
+                seen.has(native.id)
+              )
+                throw new Error(
+                  `COINCIDENT_SCALE requires one exact imported ${type} role ${name}.`
+                );
+              seen.add(native.id);
+              const value = native.valuesByMode[mode.modeId];
+              if (value?.type === 'VARIABLE_ALIAS') {
+                const target = nativeVariables.find(
+                  value2 => value2.id === value.id
+                );
+                if (!target)
+                  throw new Error(
+                    `Missing COINCIDENT_SCALE native alias ${name}.`
+                  );
+                return nativeRole(target.name, type, seen);
+              }
+              const expected = sourceRole(name, type, brandId);
+              const represented = (actual, source) =>
+                actual === source || actual === Math.fround(source);
+              if (
+                type === 'FLOAT'
+                  ? !represented(value, expected)
+                  : !value ||
+                    Object.keys(value).length !== 4 ||
+                    !['r', 'g', 'b', 'a'].every(field =>
+                      represented(value[field], expected[field])
+                    )
+              )
+                throw new Error(
+                  `COINCIDENT_SCALE imported brand differs at ${name}.`
+                );
+              return value;
+            };
+            for (const sourceMode of doc.modes) {
+              const offset = sourceRole(ring.offset, 'FLOAT', sourceMode.id),
+                width = sourceRole(ring.width, 'FLOAT', sourceMode.id),
+                sum = sourceRole(ring.outerStroke, 'FLOAT', sourceMode.id);
+              if (
+                !(offset > 0 && width > 0) ||
+                sum !== offset + width ||
+                sourceRole('spacing/0', 'FLOAT', sourceMode.id) !== 0
+              )
+                throw new Error(
+                  `COINCIDENT_SCALE focus sum/zero differs for ${sourceMode.id}.`
+                );
+              for (const name of Object.values(ring.cornerBindings))
+                sourceRole(name, 'FLOAT', sourceMode.id);
+              sourceRole(ring.color, 'COLOR', sourceMode.id);
+              sourceRole(ring.separatorColor, 'COLOR', sourceMode.id);
+            }
+            for (const name of [
+              ring.offset,
+              ring.width,
+              ring.outerStroke,
+              ...Object.values(ring.cornerBindings),
+            ])
+              nativeRole(name, 'FLOAT');
+            nativeRole(ring.color, 'COLOR');
+            nativeRole(ring.separatorColor, 'COLOR');
+            coincidentFocus.set(tree, {
+              offset: nativeRole(ring.offset, 'FLOAT'),
+              width: nativeRole(ring.width, 'FLOAT'),
+              outerStroke: nativeRole(ring.outerStroke, 'FLOAT'),
+            });
+          }
+        });
+  } catch (error) {
+    result.errors.push(reportError(error));
+    return result;
+  }
   const svgPlans = new Map();
   const svgAssetSources = new Map();
   for (const family of ordered) {
@@ -917,8 +1198,14 @@ async function buildMangroveComponents(
               throw new Error('Native focus outlines require a frame recipe.');
             variable(tree.focusRing.color, 'COLOR');
             variable(tree.focusRing.separatorColor, 'COLOR');
-            for (const field of ['offset', 'width', 'radius'])
-              variable(tree.focusRing[field], 'FLOAT');
+            if (MG_COINCIDENT_FOCUS_ENABLED && coincidentFocus.has(tree)) {
+              for (const field of ['offset', 'width', 'outerStroke'])
+                variable(tree.focusRing[field], 'FLOAT');
+              for (const name of Object.values(tree.focusRing.cornerBindings))
+                variable(name, 'FLOAT');
+            } else
+              for (const field of ['offset', 'width', 'radius'])
+                variable(tree.focusRing[field], 'FLOAT');
             if (tree.focusRing.outerRadius)
               variable(tree.focusRing.outerRadius, 'FLOAT');
           }
@@ -1551,6 +1838,93 @@ async function buildMangroveComponents(
       return retained;
     }
     const ring = spec.focusRing;
+    if (MG_COINCIDENT_FOCUS_ENABLED && coincidentFocus.has(spec)) {
+      if (parent.type !== 'COMPONENT')
+        throw new Error(
+          'COINCIDENT_SCALE geometry is written only on canonical Segmented masters.'
+        );
+      const plan = coincidentFocus.get(spec);
+      parent.clipsContent = false;
+      parent.itemReverseZIndex = false;
+      const decorations = [];
+      for (const role of roles) {
+        const id = `${key}/focus/${role}`;
+        let node = owned.get(id);
+        if (node && node.type !== 'RECTANGLE')
+          throw new Error(`Native focus outline ${id} changed type.`);
+        const fresh = !node;
+        node = node || figma.createRectangle();
+        mark(node, id, fresh);
+        if (node.parent !== parent) parent.appendChild(node);
+        node.name =
+          role === 'outer'
+            ? 'mg-focus-ring / coloured outline'
+            : 'mg-focus-ring / neutral separator';
+        node.visible = true;
+        node.opacity = 1;
+        node.layoutPositioning = 'ABSOLUTE';
+        node.constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
+        node.fills = [];
+        await node.setEffectStyleIdAsync('');
+        node.effects = [];
+        node.strokeAlign = 'OUTSIDE';
+        node.strokeJoin = 'MITER';
+        node.resize(parent.width, parent.height);
+        node.x = 0;
+        node.y = 0;
+        paint(
+          node,
+          'strokes',
+          role === 'outer' ? ring.color : ring.separatorColor
+        );
+        bind(
+          node,
+          'strokeWeight',
+          role === 'outer' ? ring.outerStroke : ring.offset
+        );
+        node.setBoundVariable('cornerRadius', null);
+        for (const [field, name] of Object.entries(ring.cornerBindings))
+          bind(node, field, name);
+        decorations.push(node);
+      }
+      result.audit.push({
+        nodeId: parent.id,
+        status: 'native-focus-outline',
+        renderer: 'COINCIDENT_SCALE',
+        rectangleIds: decorations.map(node => node.id),
+        geometry: {
+          offset: plan.offset,
+          width: plan.width,
+          outerStroke: plan.outerStroke,
+        },
+        sourceBindings: ring,
+        paintOrder: {
+          itemReverseZIndex: parent.itemReverseZIndex,
+          roles: roles.slice(),
+        },
+        outlines: decorations.map((node, index) => ({
+          nodeId: node.id,
+          role: roles[index],
+          bounds: {
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+          },
+          constraints: node.constraints,
+          strokeWeight: node.strokeWeight,
+          strokeAlign: node.strokeAlign,
+          strokeJoin: node.strokeJoin,
+          corners: Object.fromEntries(
+            Object.keys(ring.cornerBindings).map(field => [field, node[field]])
+          ),
+          bindings: node.boundVariables,
+        })),
+        limitation:
+          'Coincident SCALE outlines retain source strokes and per-corner aliases; ordinary reimport/rebuild is required when token values change. Matched raster and joined middle-focus occlusion need separate native acceptance.',
+      });
+      return decorations;
+    }
     const number = name =>
       variable(name, 'FLOAT').resolveForConsumer(parent).value;
     const offset = number(ring.offset);

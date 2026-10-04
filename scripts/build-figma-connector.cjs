@@ -289,15 +289,35 @@ function subsetDocument(
     const textIds = new Set();
     const effectIds = new Set();
     const directTemplateIds = new Set();
-    function tree(node) {
+    const coincidentRings = [];
+    function tree(node, family, variant) {
+      const ring = node.focusRing;
+      const focusedSegment =
+        family.id === 'segmented-control.segment' &&
+        node === variant.tree &&
+        ['Focus', 'HoverFocus'].includes(variant.properties?.State);
+      const extension =
+        ring &&
+        ['renderer', 'outerStroke', 'cornerBindings'].some(
+          field => ring[field] !== undefined
+        );
+      if (
+        (focusedSegment || extension) &&
+        ring?.renderer !== 'COINCIDENT_SCALE'
+      )
+        throw new Error(
+          'Connector preflight: unknown or missing COINCIDENT_SCALE source focus extension.'
+        );
       if (node.textStyle) textIds.add(node.textStyle);
       if ('textStyleApplication' in node && node.textStyle)
         directTemplateIds.add(node.textStyle);
       if (node.effectStyle) effectIds.add(node.effectStyle);
-      (node.children || []).forEach(tree);
+      if (node.focusRing?.renderer === 'COINCIDENT_SCALE')
+        coincidentRings.push(node.focusRing);
+      (node.children || []).forEach(child => tree(child, family, variant));
     }
     families.forEach(family =>
-      family.variants.forEach(variant => tree(variant.tree))
+      family.variants.forEach(variant => tree(variant.tree, family, variant))
     );
     base.components = { version: doc.components.version, families };
     base.styles.text = doc.styles.text
@@ -323,8 +343,74 @@ function subsetDocument(
       if (directTemplateIds.has(style.id))
         for (const name of Object.values(style.bindings || {}))
           includeDirectVariable(name);
+    // Preserve exact source definitions needed by the source-family focus
+    // renderer. Traverse every source mode, while the DTO remains one brand.
+    // Alias edges are typed and cycle-checked independently for each mode.
+    const focusVariables = new Set();
+    function includeFocusVariable(name, type, modeId, visiting = new Set()) {
+      const matches = doc.variables.filter(variable => variable.name === name);
+      const variable = matches[0];
+      if (
+        matches.length !== 1 ||
+        variable.id !== name.replaceAll('/', '.') ||
+        doc.variables.filter(value => value.id === variable.id).length !== 1 ||
+        variable.type !== type ||
+        visiting.has(variable.id)
+      )
+        throw new Error(
+          `Missing, ambiguous, wrong-typed or cyclic COINCIDENT_SCALE source role ${name}`
+        );
+      visiting.add(variable.id);
+      const value = variable.values?.[modeId];
+      if (value && typeof value === 'object' && 'alias' in value) {
+        if (Object.keys(value).length !== 1 || typeof value.alias !== 'string')
+          throw new Error(
+            `Malformed COINCIDENT_SCALE alias ${name} / ${modeId}`
+          );
+        focusVariables.add(variable.id);
+        return includeFocusVariable(value.alias, type, modeId, visiting);
+      }
+      if (
+        type === 'FLOAT'
+          ? !Number.isFinite(value) || value < 0
+          : !value ||
+            Object.keys(value).length !== 4 ||
+            !['r', 'g', 'b', 'a'].every(
+              field =>
+                Number.isFinite(value[field]) &&
+                value[field] >= 0 &&
+                value[field] <= 1
+            )
+      )
+        throw new Error(
+          `Invalid COINCIDENT_SCALE source value ${name} / ${modeId}`
+        );
+      focusVariables.add(variable.id);
+      return value;
+    }
+    for (const ring of coincidentRings)
+      for (const sourceMode of doc.modes) {
+        includeFocusVariable(ring.color, 'COLOR', sourceMode.id);
+        includeFocusVariable(ring.separatorColor, 'COLOR', sourceMode.id);
+        const offset = includeFocusVariable(
+            ring.offset,
+            'FLOAT',
+            sourceMode.id
+          ),
+          width = includeFocusVariable(ring.width, 'FLOAT', sourceMode.id),
+          sum = includeFocusVariable(ring.outerStroke, 'FLOAT', sourceMode.id);
+        if (!(offset > 0 && width > 0) || sum !== offset + width)
+          throw new Error(
+            `COINCIDENT_SCALE source outerStroke must equal offset+width for ${sourceMode.id}`
+          );
+        for (const name of Object.values(ring.cornerBindings || {}))
+          includeFocusVariable(name, 'FLOAT', sourceMode.id);
+      }
     base.variables = doc.variables
-      .filter(variable => directVariables.has(variable.id))
+      .filter(
+        variable =>
+          directVariables.has(variable.id) || focusVariables.has(variable.id)
+      )
       .map(oneBrand);
     return base;
   }
@@ -451,6 +537,35 @@ function specializeBuilder(source) {
     'if (MG_DIRECT_TEXT_ENABLED) {',
     'if (MG_CONNECTOR_DIRECT_TEXT) {'
   );
+  // The source DTO is embedded self-contained, not supplied at execution time.
+  // subsetDocument refuses unknown/missing source focus extensions before
+  // compilation. Only that source-proven extension-free scope may omit this
+  // additional desktop preflight; the enabled branch keeps every native guard.
+  const focusStart =
+    '  const coincidentFocus = MG_COINCIDENT_FOCUS_ENABLED ? new Map() : null;';
+  const focusEnd = '  const svgPlans = new Map();';
+  const start = source.indexOf(focusStart),
+    end = source.indexOf(focusEnd);
+  if (
+    start < 0 ||
+    end <= start ||
+    source.indexOf(focusStart, start + 1) >= 0 ||
+    source.indexOf(focusEnd, end + 1) >= 0
+  )
+    throw new Error(
+      'Connector COINCIDENT_SCALE specialization boundary changed.'
+    );
+  const section = source.slice(start, end),
+    tryStart = section.indexOf('  try {');
+  if (tryStart < 0 || !section.endsWith('    return result;\n  }\n'))
+    throw new Error('Connector COINCIDENT_SCALE preflight shape changed.');
+  source =
+    source.slice(0, start) +
+    section.slice(0, tryStart) +
+    '  if (MG_CONNECTOR_COINCIDENT_FOCUS) {\n' +
+    section.slice(tryStart) +
+    '  }\n' +
+    source.slice(end);
   // When surfaces are absent, the existing else branch still clears/hides an
   // obsolete owned surface. Only new surface construction becomes unreachable.
   return source;
@@ -712,6 +827,17 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsDirectText(variant.tree))
     );
+  function needsCoincidentFocus(node) {
+    return (
+      node.focusRing?.renderer === 'COINCIDENT_SCALE' ||
+      (node.children || []).some(needsCoincidentFocus)
+    );
+  }
+  const coincidentFocusEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsCoincidentFocus(variant.tree))
+    );
   const reviewNodesEnabled =
     operation === 'build' &&
     subset.components.families.some(
@@ -766,6 +892,7 @@ async function buildConnector({
         MG_CONNECTOR_TEXT_OFFSET: textOffsetEnabled,
         MG_CONNECTOR_REVIEW_NODES: reviewNodesEnabled,
         MG_CONNECTOR_DIRECT_TEXT: directTextEnabled,
+        MG_CONNECTOR_COINCIDENT_FOCUS: coincidentFocusEnabled,
       },
     },
     mangle: true,
@@ -796,6 +923,7 @@ async function buildConnector({
     scope: importScope,
     svgEnabled,
     directTextEnabled,
+    coincidentFocusEnabled,
     characters: code.length,
     bytes,
   };

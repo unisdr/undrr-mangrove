@@ -812,7 +812,9 @@ async function advanceMangroveSegmentedCanonicalProbes(
     const built = buildResult.families[0].variantIds;
     if (
       !Array.isArray(built) ||
-      built.length !== 3 ||
+      // A full-family build may contain additional leaves. This gate still
+      // captures and compares only its original three declared variants.
+      built.length !== plan.family.variants.length ||
       plan.masters.some(
         master =>
           !built.some(

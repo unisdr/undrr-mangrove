@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes */
+/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
  * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
@@ -732,12 +732,11 @@ figma.ui.onmessage = async msg => {
     }
     if (msg.type === 'advance-segmented-capability-probes') {
       post('operation', {
-        result: await advanceMangroveSegmentedCanonicalProbes(
-          msg.doc,
-          msg.brand,
-          msg.report,
-          msg.buildResult
-        ),
+        result: await (
+          msg.report?.scope?.startsWith('segmented-leaves-')
+            ? advanceMangroveSegmentedLeavesProbes
+            : advanceMangroveSegmentedCanonicalProbes
+        )(msg.doc, msg.brand, msg.report, msg.buildResult),
       });
       return;
     }

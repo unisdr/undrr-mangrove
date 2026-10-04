@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned, mgFormActionJoiningPreflight, mgRunFormActionJoiningProbes, mgSegmentedFocusSizingPreflight, mgRunSegmentedFocusSizingProbes, mgFormActionOptionalPreflight, mgRunFormActionOptionalProbes */
+/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned, mgFormActionJoiningPreflight, mgRunFormActionJoiningProbes, mgSegmentedFocusSizingPreflight, mgRunSegmentedFocusSizingProbes, mgFormActionOptionalPreflight, mgRunFormActionOptionalProbes, mgSegmentedLeavesPreflight, mgRunSegmentedLeavesProbes, mgSegmentedLeavesOwned */
 // Isolated diagnostic assets, not FormGroup components or source fidelity claims.
 const MG_CAPABILITY_KEY = 'mgCapabilityProbeId';
 let mgCapabilitySequence = 0;
@@ -35,6 +35,7 @@ async function runMangroveCapabilityProbes(
   let formActionPlan;
   let focusSizingPlan;
   let formActionOptionalPlan;
+  let leavesPlan;
   try {
     if (
       ![
@@ -43,6 +44,11 @@ async function runMangroveCapabilityProbes(
         'toc-range-paints',
         'segmented-joining',
         'segmented-canonical',
+        'segmented-leaves-default',
+        'segmented-leaves-hover',
+        'segmented-leaves-focus',
+        'segmented-leaves-hoverfocus',
+        'segmented-leaves-disabled',
         'form-action-joining',
         'form-action-optional',
         'segmented-focus-sizing',
@@ -263,6 +269,21 @@ async function runMangroveCapabilityProbes(
         mode,
         report
       );
+    if (scope.startsWith('segmented-leaves-'))
+      leavesPlan = await mgSegmentedLeavesPreflight(
+        doc,
+        brandId,
+        collection,
+        mode,
+        report,
+        {
+          default: 'Default',
+          hover: 'Hover',
+          focus: 'Focus',
+          hoverfocus: 'HoverFocus',
+          disabled: 'Disabled',
+        }[scope.slice('segmented-leaves-'.length)]
+      );
     if (scope === 'segmented-canonical')
       canonicalPlan = await mgSegmentedCanonicalPreflight(
         doc,
@@ -352,8 +373,9 @@ async function runMangroveCapabilityProbes(
     root = figma.createFrame();
     report.rootId = root.id;
     record(root);
-    root.name =
-      scope === 'form-action-optional'
+    root.name = scope.startsWith('segmented-leaves-')
+      ? `Mangrove native capability probes / Segmented Default leaves / ${leavesPlan.batchState}`
+      : scope === 'form-action-optional'
         ? 'Mangrove native capability probes / Form Action optional wrappers'
         : scope === 'segmented-focus-sizing'
           ? 'Mangrove native capability probes / Segmented focus sizing'
@@ -379,18 +401,22 @@ async function runMangroveCapabilityProbes(
         'segmented-focus-sizing',
       ].includes(scope)
         ? 1500
-        : scope === 'toc-link-sizing'
-          ? 2820
-          : 1120,
+        : scope.startsWith('segmented-leaves-')
+          ? 1120
+          : scope === 'toc-link-sizing'
+            ? 2820
+            : 1120,
       [
         'segmented-joining',
         'form-action-joining',
         'form-action-optional',
       ].includes(scope)
         ? 1600
-        : scope === 'toc-range-paints'
-          ? 1640
-          : 900
+        : scope.startsWith('segmented-leaves-')
+          ? 1400
+          : scope === 'toc-range-paints'
+            ? 1640
+            : 900
     );
     const existingBottoms = figma.currentPage.children
       .filter(node => node.id !== root.id)
@@ -445,6 +471,29 @@ async function runMangroveCapabilityProbes(
       result.errors.push(message(error));
     }
     result.affectedNodeIds = report.ledger.slice(start).map(item => item.id);
+  }
+  if (scope.startsWith('segmented-leaves-')) {
+    try {
+      await mgRunSegmentedLeavesProbes(
+        {
+          report,
+          root,
+          record,
+          create,
+          instance,
+          test,
+          bounds,
+          collection,
+          mode,
+        },
+        leavesPlan
+      );
+    } catch (error) {
+      report.errors.push(`Segmented Default leaves: ${message(error)}`);
+    }
+    report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
+    report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
+    return report;
   }
   if (scope === 'segmented-focus-sizing') {
     try {
@@ -2874,6 +2923,21 @@ async function removeMangroveCapabilityProbes(report) {
           );
       }
       return result;
+    }
+    if (report.scope?.startsWith('segmented-leaves-')) {
+      if (report.segmentedLeaves) await mgSegmentedLeavesOwned(report);
+      else if (
+        ids.size !== 1 ||
+        root.type !== 'FRAME' ||
+        report.ledger[0]?.type !== 'FRAME' ||
+        root.parent?.id !== figma.currentPage.id ||
+        root.children.length !== 0 ||
+        mgReadIdentity(root, 'mgCapabilityProbeId') !== report.runId ||
+        mgReadIdentity(root, 'mgSegmentedLeavesManifest')
+      )
+        throw new Error(
+          'Cleanup refused an incomplete or changed pre-manifest Segmented root.'
+        );
     }
     if (report.scope === 'segmented-canonical') {
       if (report.segmentedCanonical) await mgSegmentedCanonicalOwned(report);

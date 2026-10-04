@@ -56,9 +56,9 @@ async function main() {
   const family = doc.components.families.find(
     value => value.id === 'segmented-control.segment'
   );
-  assert.strictEqual(family.variants.length, 3);
+  assert.strictEqual(family.variants.length, 30);
   assert.deepStrictEqual(
-    family.variants.map(value => value.id),
+    family.variants.slice(0, 3).map(value => value.id),
     [
       'segmented-control.segment.false.default.first',
       'segmented-control.segment.true.default.first',
@@ -132,7 +132,7 @@ async function main() {
     /wrong-typed/
   );
   console.log(
-    'ok  exact guarded source, idempotent3 final identities, all-brand120% Bold template, typed roles and mutation-free source/template drift rejection'
+    'ok  exact guarded source, idempotent30 final identities with original3 retained, all-brand120% Bold template, typed roles and mutation-free source/template drift rejection'
   );
   // Real exporter registry and normalization. Do not replace its families with raw source trees.
   const nativeDoc = buildFigmaVariables();
@@ -162,7 +162,7 @@ async function main() {
   ]);
   assert.deepStrictEqual(copy(report.errors), []);
   assert.strictEqual(report.families.length, 1);
-  assert.strictEqual(report.families[0].variantIds.length, 3);
+  assert.strictEqual(report.families[0].variantIds.length, 30);
   const variables = new Map(
     env.state.variables.map(value => [value.name, value])
   );

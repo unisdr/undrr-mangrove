@@ -20,7 +20,7 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 417 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 32 component text styles and eight effect styles. Read the build report for current totals. Component recipes cover 296 variants across 27 families; 16 tokens remain skipped as variables. Component-specific text styles are not default foundation selections; the builder imports the styles required by the selected family.
+Current output contains 417 variables, 92 text definitions (60 Regular foundations and 32 component styles), eight effects and 323 recipe variants across 27 families; 16 tokens remain skipped as variables. The 12 default foundation selections are unchanged. Component styles are imported when their selected family requires them. Exported definitions do not imply that every font or style is available in the native file.
 
 ### Text and effect foundations
 
@@ -127,11 +127,11 @@ Import one brand first, then select families and choose **Build selected compone
 | Table of contents / Link     |       12 |
 | Table of contents / Numbered |        3 |
 | Status Label                 |        7 |
-| Segmented control / Segment  |        3 |
+| Segmented control / Segment  |       30 |
 
 TOC links use the imported source text style as a typography template, with font-family and font-size variables bound directly on their 12 main labels. Their native text-style association is deliberately empty: controlled desktop experiments found incorrect effective range colours when the shared Label property and style association were combined. This exception is restricted to TOC links and guarded against changed source anatomy or missing bindings. Rebuild the affected components after importing a changed template; editing the local style alone does not update directly applied labels. See [the native findings](LEARNINGS.md) and [maintenance checks](MAINTAINING-KIT.md).
 
-Segmented Control currently contains three Position=First states: unselected Default, selected Default and unselected Hover. They retain the actual shared 120% source text style. Edited and newly created consumers pass 980 independent native checks through two ordinary rebuilds, with exact temporary cleanup. Remaining positions/states, Small, focus, wrapping and compositions are still unaccepted. See [the evidence](LEARNINGS.md#canonical-segmented-shared-style-preparation) before expanding this subset.
+Segmented Control now contains 30 Default-size leaves: Selected=False/True, State=Default/Hover/Focus/HoverFocus/Disabled and Position=First/Middle/Last. They keep the shared source Bold 120% style, one editable Label and the original three component/TEXT identities. The [expanded evidence record](LEARNINGS.md#expanded-default-size-segmented-leaves) distinguishes initial source checks, each state's two ordinary rebuilds and rendered observations. Intrinsic HUG labels do not establish arbitrary wrapping, full-width rails, middle focus stacking, Small or broader brand/script acceptance. Follow the [five-state maintenance procedure](MAINTAINING-KIT.md#maintain-segmented-default-size-leaves).
 
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
 
@@ -173,6 +173,8 @@ node scripts/build-figma-connector.cjs inspect undrr > /tmp/mangrove-inspect.js
 Pass the emitted JavaScript to `use_figma` after loading its skill. The builder includes nested component dependencies, trims other brands, compresses data with a local codec and rejects payloads over 50,000 characters or bytes. It does not use `eval` or fetch code. Connector execution uses shared metadata only: first migrate legacy private identities through the desktop importer, or verify unchanged unique names before adoption. Privately identified assets that were renamed cannot be recovered by the connector's name fallback.
 
 The optional fourth argument selects comma-separated variant IDs from one family. Full ComboBox, Table, Row, Text CTA, Radio and Checkbox dependency matrices exceed the connector limit; emit one variant or a checked small batch at a time. Dependencies retain only the matching variants for that batch, and reports identify the requested scope. Existing variants remain in place and the builder arranges all retained main variants together. Complete all intended batches and inspect the resulting family. The full desktop plugin build remains available. Packed LZW preserves metadata; payload rejection never silently drops variants. Native connector batch assembly remains unverified while the Starter allowance is exhausted.
+
+Individual focused Segmented leaves currently compile at approximately 47.9–48.3k characters/bytes. Check each exact payload. A focused six-variant batch and the full 30-leaf family exceed the 50,000-character/UTF-8-byte limit and reject without truncation. The desktop's six-consumer state diagnostics use ordinary full-family builds; they are not a connector batch-size promise. Native connector execution remains unverified.
 
 Foundation imports also support explicit batches: `buildConnector({operation: 'import', brandId: 'undrr', variableIds, styleIds, doc})`, or CLI `--variables=id,id --styles=id,id`. IDs are the canonical exporter IDs, such as `color.neutral-0` and `focus-ring`, rather than Figma display names. Providing either list selects a batch; an omitted list selects none. Alias dependencies and style font/effect bindings are included automatically. Empty, duplicate or unknown selections fail before writes. Reports include requested and actual scope, and pruning is always disabled.
 
@@ -420,7 +422,7 @@ TOC ordinary repeats create zero nodes and update 172. Six edited consumers at 2
 
 Choose **Segmented focus sizing** under Native capability diagnostics after loading the generated document. It creates 103 temporary nodes and compares coincident, variable-bound outside outlines with STRETCH and SCALE constraints. The source shared 120% style, complete native font, Label properties, range paints, end corners and 240/390px equal-width reflow are recorded through two private-master reapplications and fresh cohorts. Save the full operation and inspection reports, review the canvas at 100%, then remove the exact owned ledger. Saved reports support cleanup after plugin restart without reloading the source document.
 
-The corrected native run preserves shared style association and exact fractional outline bounds with SCALE. STRETCH rounds widths and remains a failing comparison. This is diagnostic evidence, not acceptance of canonical focus variants: ordinary rebuilds, matched source pixels, middle focus stacking, Small and composed rails remain separate gates. See [learnings](LEARNINGS.md) and [maintenance guidance](MAINTAINING-KIT.md).
+The corrected diagnostic preserves shared style association and exact fractional outline bounds with SCALE; STRETCH rounds widths and remains a failing comparison. Canonical focused leaves now use this guarded source-specific construction. Getter and ordinary-repeat evidence remain separate from matched pixels, new canonical fractional stress, middle focus stacking, Small and composed rails. See the [current leaf evidence](LEARNINGS.md#expanded-default-size-segmented-leaves).
 
 ### Form Action optional-wrapper diagnostic
 

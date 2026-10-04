@@ -1100,6 +1100,77 @@ async function main() {
     'ok  Segmented canonical checks consume fresh builds, serialise advances, preserve partial ledgers/full downloads and require new evidence after saved-report recovery'
   );
 
+  const leavesUI = mountUI();
+  const leavesElement = id => leavesUI.elements.get(id);
+  const deliverLeaves = result =>
+    leavesUI.window.onmessage({
+      data: { pluginMessage: { type: 'operation', result: clone(result) } },
+    });
+  leavesUI.setDocument(doc);
+  leavesElement('modes').checkedInputs = [{ value: 'undrr' }];
+  leavesElement('components').checkedInputs = [
+    { value: 'segmented-control.segment' },
+  ];
+  leavesElement('capability-scope').value = 'segmented-leaves-focus';
+  leavesElement('capability-probes').click();
+  assert.strictEqual(leavesUI.messages.at(-1).scope, 'segmented-leaves-focus');
+  let leavesReport = {
+    ...clone(capabilityReport),
+    scope: 'segmented-leaves-focus',
+    tests: {},
+    segmentedLeaves: {
+      batchState: 'Focus',
+      verdict: 'pending',
+      completedAdvances: 0,
+    },
+  };
+  deliverLeaves(leavesReport);
+  assert.strictEqual(
+    leavesElement('advance-segmented-capability-probes').disabled,
+    true
+  );
+  for (let phase = 1; phase <= 2; phase++) {
+    leavesElement('build').click();
+    deliverLeaves(canonicalBuild);
+    assert.strictEqual(
+      leavesElement('advance-segmented-capability-probes').disabled,
+      false
+    );
+    leavesElement('advance-segmented-capability-probes').click();
+    assert.deepStrictEqual(
+      clone(leavesUI.messages.at(-1).report),
+      leavesReport
+    );
+    leavesReport = {
+      ...leavesReport,
+      segmentedLeaves: {
+        batchState: 'Focus',
+        verdict: phase === 2 ? 'rebuild-fields-verified' : 'pending',
+        completedAdvances: phase,
+      },
+    };
+    deliverLeaves(leavesReport);
+    assert.strictEqual(
+      leavesElement('advance-segmented-capability-probes').disabled,
+      true
+    );
+  }
+  assert(leavesElement('log').textContent.includes('Default leaves / Focus'));
+  leavesElement('save-operation-report').click();
+  assert.strictEqual(
+    await leavesUI.downloads.at(-1).blob.text(),
+    JSON.stringify(leavesReport, null, 2)
+  );
+  leavesElement('build').click();
+  deliverLeaves(canonicalBuild);
+  assert.strictEqual(
+    leavesElement('advance-segmented-capability-probes').disabled,
+    true
+  );
+  console.log(
+    'ok  expanded Default leaves use their own scope/state/verdict, consume two fresh build reports, retain exact downloads and block a third advance'
+  );
+
   const editorialUI = mountUI();
   const editorialElement = id => editorialUI.elements.get(id);
   const deliverEditorial = result =>

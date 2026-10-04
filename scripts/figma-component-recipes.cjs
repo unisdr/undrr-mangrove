@@ -1884,7 +1884,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
     })
   );
   for (const variable of variables) byName.set(variable.name, variable);
-  function validate(node) {
+  function validate(node, component, entry) {
     const names = [
       node.fill,
       node.stroke,
@@ -1898,7 +1898,79 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       node.layout?.maxHeight,
       node.layout?.maxWidth,
     ].filter(Boolean);
-    if (node.focusRing) names.push(...Object.values(node.focusRing));
+    if (node.focusRing) {
+      const ring = node.focusRing;
+      if (ring.renderer !== undefined) {
+        const cornerFields = [
+          'topLeftRadius',
+          'topRightRadius',
+          'bottomLeftRadius',
+          'bottomRightRadius',
+        ];
+        const allowed = [
+          'renderer',
+          'color',
+          'separatorColor',
+          'offset',
+          'width',
+          'outerStroke',
+          'cornerBindings',
+        ];
+        if (
+          ring.renderer !== 'COINCIDENT_SCALE' ||
+          component.id !== 'segmented-control.segment' ||
+          node !== entry.tree ||
+          node.type !== 'FRAME' ||
+          !['Focus', 'HoverFocus'].includes(entry.properties.State) ||
+          Object.keys(ring).length !== allowed.length ||
+          Object.keys(ring).some(key => !allowed.includes(key)) ||
+          !ring.cornerBindings ||
+          Object.keys(ring.cornerBindings).length !== 4 ||
+          !cornerFields.every(
+            field =>
+              ring.cornerBindings[field] === node.bindings?.[field] &&
+              byName.get(ring.cornerBindings[field])?.type === 'FLOAT'
+          )
+        )
+          throw new Error(`Unsupported source focus renderer at ${node.name}`);
+        for (const field of [
+          'color',
+          'separatorColor',
+          'offset',
+          'width',
+          'outerStroke',
+        ]) {
+          const type = ['color', 'separatorColor'].includes(field)
+            ? 'COLOR'
+            : 'FLOAT';
+          if (byName.get(ring[field])?.type !== type)
+            throw new Error(`Invalid ${type} focus role at ${node.name}`);
+        }
+        for (const mode of modes) {
+          const offset = value(ring.offset, mode);
+          const width = value(ring.width, mode);
+          const sum = value(ring.outerStroke, mode);
+          if (
+            !Number.isFinite(offset) ||
+            offset <= 0 ||
+            !Number.isFinite(width) ||
+            width <= 0 ||
+            sum !== offset + width
+          )
+            throw new Error(
+              `Invalid source focus sum at ${node.name} in ${mode.id}`
+            );
+        }
+        names.push(
+          ring.color,
+          ring.separatorColor,
+          ring.offset,
+          ring.width,
+          ring.outerStroke,
+          ...Object.values(ring.cornerBindings)
+        );
+      } else names.push(...Object.values(ring));
+    }
     if (node.absolute) names.push(node.absolute.offsetX, node.absolute.offsetY);
     for (const field of ['width', 'height'])
       if (
@@ -1921,7 +1993,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       !styles.effect.some(style => style.id === node.effectStyle)
     )
       throw new Error(`Missing component effect style ${node.effectStyle}`);
-    for (const child of node.children || []) validate(child);
+    for (const child of node.children || []) validate(child, component, entry);
   }
   function identity(node, parent = '') {
     node.id = parent ? `${parent}/${node.name}` : node.name;
@@ -1930,7 +2002,7 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
   for (const component of families)
     for (const entry of component.variants) {
       identity(entry.tree);
-      validate(entry.tree);
+      validate(entry.tree, component, entry);
     }
   return {
     version: 1,

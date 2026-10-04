@@ -1,4 +1,4 @@
-/** Source-owned Segmented segment subset for the native shared-style/paint gate. */
+/** Source-owned Default-size Segmented leaves. Native expansion acceptance is separate. */
 'use strict';
 const {
   buildSegmentedJoiningCapability,
@@ -19,6 +19,35 @@ function buildSegmentedRecipes({ root, modes, variables, styles }) {
     ref.file.endsWith('/segmented-control.scss')
   );
   if (!source) fail('Missing guarded segment source');
+  const sumName = 'effect-size/focus-ring/outer-spread';
+  const sumMatches = variables.filter(value => value.name === sumName);
+  if (
+    sumMatches.length !== 1 ||
+    sumMatches[0].id !== sumName.replaceAll('/', '.') ||
+    sumMatches[0].type !== 'FLOAT'
+  )
+    fail('One exact existing focus outer-spread FLOAT is required');
+  const sourceNumber = (name, modeId, seen = new Set()) => {
+    const matches = variables.filter(value => value.name === name);
+    if (matches.length !== 1 || matches[0].type !== 'FLOAT' || seen.has(name))
+      fail(`Missing, incompatible or cyclic focus source role ${name}`);
+    seen.add(name);
+    const value = matches[0].values?.[modeId];
+    if (value && typeof value === 'object') {
+      if (Object.keys(value).length !== 1 || typeof value.alias !== 'string')
+        fail(`Malformed focus source alias ${name}`);
+      return sourceNumber(value.alias, modeId, seen);
+    }
+    if (!Number.isFinite(value) || value < 0)
+      fail(`Invalid focus source value ${name}`);
+    return value;
+  };
+  for (const mode of modes) {
+    const brand = packet.brands[mode.id];
+    const sum = sourceNumber(sumName, mode.id);
+    if (sum !== brand.geometry.focusOffset + brand.geometry.focusWidth)
+      fail(`Focus outer-spread must equal source offset+width for ${mode.id}`);
+  }
   const perMode = get =>
     Object.fromEntries(
       modes.map(mode => [mode.id, get(packet.brands[mode.id])])
@@ -108,40 +137,69 @@ function buildSegmentedRecipes({ root, modes, variables, styles }) {
     kind: 'component-set',
     source,
     description:
-      'Canonical three-variant First-position subset for shared-style and range-paint acceptance. Label is editable. Default-size, Latin LTR source roles only; the source still represents a native radio label, not a tab or standalone browser interaction.',
+      'Thirty Default-size source segment endpoints with editable Label, shared120% typography and per-position native focus outlines. Latin LTR leaves only; the source represents a radio label, not a tab or standalone browser interaction. New native mains, edited/fresh consumers and ordinary rebuild acceptance remain required. Joined paint stacking and wrapping are separate composition gates.',
     coverage: {
       included: [
-        'Selected=False/True, State=Default, Position=First',
-        'Selected=False, State=Hover, Position=First',
+        'Selected=False/True × State=Default/Hover/Focus/HoverFocus/Disabled × Position=First/Middle/Last',
+        'Source transparent/selected/hover/disabled semantic paint roles',
+        'Twelve focused endpoints with coincident OUTSIDE outlines, SCALE constraints and live per-corner aliases',
       ],
       pending: [
-        'Remaining 27 Default-size segment variants',
         'Shared style and effective range paints on native mains, fresh and edited consumers through two ordinary repeats',
-        'Focus, middle/last, Disabled, Small, joined compositions, wrapping, live focus geometry, RTL, forced colours and motion',
+        'New leaf native shared-style, effective paints, focus raster and edited/fresh repeat acceptance; Small, joined compositions, wrapping, middle-focus occlusion, RTL, forced colours and motion',
         'Consumer CSS min-block-size/radius hook overrides and native font-file equivalence',
       ],
     },
     review: { genericLabels: false, preserveVariantSizing: true, width: 320 },
     variants: [],
   };
-  for (const [selected, state] of [
-    ['False', 'Default'],
-    ['True', 'Default'],
-    ['False', 'Hover'],
-  ]) {
+  // Preserve the accepted first three recipe objects and their order.
+  const axes = [
+    ['False', 'Default', 'First'],
+    ['True', 'Default', 'First'],
+    ['False', 'Hover', 'First'],
+  ];
+  for (const selected of ['False', 'True'])
+    for (const state of ['Default', 'Hover', 'Focus', 'HoverFocus', 'Disabled'])
+      for (const position of ['First', 'Middle', 'Last'])
+        if (
+          !axes.some(
+            values =>
+              values[0] === selected &&
+              values[1] === state &&
+              values[2] === position
+          )
+        )
+          axes.push([selected, state, position]);
+  for (const [selected, state, position] of axes) {
+    const hover = state === 'Hover' || state === 'HoverFocus';
     const paintKey =
-      selected === 'True'
-        ? 'selected'
-        : state === 'Hover'
-          ? 'hover'
-          : 'default';
+      state === 'Disabled'
+        ? selected === 'True'
+          ? 'selectedDisabled'
+          : 'disabled'
+        : selected === 'True'
+          ? hover
+            ? 'selectedHover'
+            : 'selected'
+          : hover
+            ? 'hover'
+            : 'default';
     const reference = packet.brands[modes[0].id].paints[paintKey];
     // Every paint is a semantic role reference. Values follow the selected native brand.
-    const id = `segmented-control.segment.${selected.toLowerCase()}.${state.toLowerCase()}.first`;
+    const id = `segmented-control.segment.${selected.toLowerCase()}.${state.toLowerCase()}.${position.toLowerCase()}`;
+    const corners = Object.fromEntries(
+      packet.cornersOrder.map((field, index) => [
+        field,
+        packet.brands[modes[0].id].geometry.corners[position][index] === 0
+          ? packet.roles.zero.name
+          : packet.roles.radius.name,
+      ])
+    );
     family.variants.push({
       id,
-      name: `Selected=${selected}, State=${state}, Position=First`,
-      properties: { Selected: selected, State: state, Position: 'First' },
+      name: `Selected=${selected}, State=${state}, Position=${position}`,
+      properties: { Selected: selected, State: state, Position: position },
       tree: {
         type: 'FRAME',
         id: 'segment',
@@ -162,15 +220,28 @@ function buildSegmentedRecipes({ root, modes, variables, styles }) {
         },
         bindings: {
           strokeWeight: packet.roles.border.name,
-          topLeftRadius: packet.roles.radius.name,
-          bottomLeftRadius: packet.roles.radius.name,
-          topRightRadius: packet.roles.zero.name,
-          bottomRightRadius: packet.roles.zero.name,
+          topLeftRadius: corners.topLeftRadius,
+          bottomLeftRadius: corners.bottomLeftRadius,
+          topRightRadius: corners.topRightRadius,
+          bottomRightRadius: corners.bottomRightRadius,
           paddingTop: packet.roles.paddingBlock.name,
           paddingBottom: packet.roles.paddingBlock.name,
           paddingLeft: packet.roles.paddingInline.name,
           paddingRight: packet.roles.paddingInline.name,
         },
+        ...(state === 'Focus' || state === 'HoverFocus'
+          ? {
+              focusRing: {
+                renderer: 'COINCIDENT_SCALE',
+                color: packet.roles.focusColor.name,
+                separatorColor: packet.roles.separatorColor.name,
+                offset: packet.roles.focusOffset.name,
+                width: packet.roles.focusWidth.name,
+                outerStroke: sumName,
+                cornerBindings: { ...corners },
+              },
+            }
+          : {}),
         children: [
           {
             type: 'TEXT',
