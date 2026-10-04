@@ -43,6 +43,8 @@ function environment(doc, options = {}) {
     rejectedFonts: new Set(options.rejectedFonts || []),
     nodes: new Map(),
     viewportCalls: 0,
+    textRangeFillWrites: [],
+    staleTextRangeFillWrites: 0,
   };
   const figma = factoryModule.exports(state);
   const rejectPrivate = () => {
@@ -334,12 +336,56 @@ function environment(doc, options = {}) {
     get fontName() {
       return this.type === 'TEXT' ? this._fontName : undefined;
     }
+    set fontSize(value) {
+      this.requireFont();
+      assert(Number.isFinite(value) && value >= 1, 'Invalid native font size');
+      this._fontSize = value;
+      delete this.boundVariables.fontSize;
+    }
+    get fontSize() {
+      const binding = this.boundVariables.fontSize;
+      return binding
+        ? resolve(
+            state.variables.find(variable => variable.id === binding.id),
+            this
+          )
+        : this._fontSize;
+    }
     set characters(value) {
       this.requireFont();
       this._characters = value;
     }
     get characters() {
       return this.type === 'TEXT' ? this._characters : undefined;
+    }
+    checkTextRange(start, end) {
+      assert.strictEqual(this.type, 'TEXT', 'Text range API requires TEXT');
+      assert(
+        start === 0 && end === this.characters.length,
+        'Mock supports the complete text range only'
+      );
+    }
+    getRangeFills(start, end) {
+      this.checkTextRange(start, end);
+      if (this._textRangeSource && !this._textRangeFillOverride)
+        return this._textRangeSource.getRangeFills(
+          0,
+          this._textRangeSource.characters.length
+        );
+      return copy(this._textRangeFills ?? this.fills);
+    }
+    setRangeFills(start, end, fills) {
+      this.checkTextRange(start, end);
+      this.requireFont();
+      assert(Array.isArray(fills), 'Range fills must be paints');
+      this._textRangeFills = copy(fills);
+      this._textRangeFillOverride = true;
+      const aliases = fills.flatMap(paint =>
+        paint.boundVariables?.color ? [copy(paint.boundVariables.color)] : []
+      );
+      if (aliases.length) this.boundVariables.textRangeFills = aliases;
+      else delete this.boundVariables.textRangeFills;
+      state.textRangeFillWrites.push({ nodeId: this.id, start, end });
     }
     getStyledTextSegments() {
       return [{ fontName: this.fontName }];
@@ -385,6 +431,10 @@ function environment(doc, options = {}) {
     }
     async setTextStyleIdAsync(id) {
       this.requireFont();
+      if (id === '') {
+        this.textStyleId = '';
+        return;
+      }
       const style = state.styles.find(
         item => item.id === id && item.type === 'TEXT'
       );
@@ -395,6 +445,17 @@ function environment(doc, options = {}) {
       this.textDecoration = style.textDecoration || 'NONE';
       this.textWrapStyle = style.textWrapStyle || 'AUTO';
       this.textStyleId = id;
+      // Native style reattachment may retain stale range colour independently
+      // of node.fills. This opt-in reproduces the observed TOC repeat defect.
+      const stale = options.staleTextRangeFillsAfterStyle?.(this, style);
+      if (stale) {
+        this._textRangeFills = copy(stale);
+        this._textRangeFillOverride = true;
+        this.boundVariables.textRangeFills = stale.flatMap(paint =>
+          paint.boundVariables?.color ? [copy(paint.boundVariables.color)] : []
+        );
+        state.staleTextRangeFillWrites += 1;
+      }
     }
     async setEffectStyleIdAsync(id) {
       this.effectStyleId = id;
@@ -528,6 +589,9 @@ function environment(doc, options = {}) {
           '_vertical',
         ])
           if (source[field] !== undefined) node[field] = copy(source[field]);
+        // Unedited instance text inherits master range paints. Direct consumer
+        // range overrides remain distinct from that inheritance.
+        if (node.type === 'TEXT') node._textRangeSource = source;
         if (root) node.main = source;
         else if (source.type === 'INSTANCE') {
           node.main = source.main;
@@ -578,8 +642,34 @@ function environment(doc, options = {}) {
       return node;
     };
   }
+  const statusFixtures = new Map();
+  if (doc.components?.families?.some(family => family.id === 'status-label')) {
+    // Compare the caller's asset IDs and raw markup with a fresh guarded source
+    // recipe. A modified document cannot register itself as an exact fixture.
+    const source = JSON.parse(
+      fs.readFileSync(path.join(DIR, 'mangrove-variables.json'), 'utf8')
+    );
+    const status =
+      require('../../../scripts/figma-status-label-recipes.cjs').buildStatusLabelRecipes(
+        { root: path.resolve(DIR, '../..'), ...source }
+      )[0];
+    const expected = new Map();
+    const visit = (tree, map) => {
+      if (tree.type === 'SVG') map.set(tree.svg.assetId, tree.svg.markup);
+      for (const child of tree.children || []) visit(child, map);
+    };
+    for (const variant of status.variants) visit(variant.tree, expected);
+    const actual = new Map();
+    for (const family of doc.components.families.filter(
+      family => family.id === 'status-label'
+    ))
+      for (const variant of family.variants) visit(variant.tree, actual);
+    for (const [assetId, markup] of actual)
+      if (expected.get(assetId) === markup) statusFixtures.set(assetId, markup);
+  }
   require('./mock-svg.cjs').installSvgMock(figma, state, {
     createVector: () => figma.createVector(),
+    sourceFixtures: statusFixtures,
   });
   figma.combineAsVariants = (components, parent) => {
     assert(
@@ -645,6 +735,84 @@ async function main() {
     fs.readFileSync(path.join(DIR, 'mangrove-variables.json'), 'utf8')
   );
   assert(doc.components?.families.length, 'Build updated token JSON first');
+  {
+    const env = environment(doc);
+    await importFoundation(env, doc);
+    const imported = await env.call(
+      'importVariables',
+      doc,
+      ['undrr'],
+      false,
+      ['text.text.300.regular'],
+      false
+    );
+    assert.strictEqual(imported.errors.length, 0, imported.errors.join('\n'));
+    await env.figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+    const text = env.figma.createText();
+    const style = env.state.styles.find(
+      asset => identity(asset, 'mgStyleId') === 'text.text.300.regular'
+    );
+    assert(style, 'Imported source Regular text style is missing');
+    text.fontName = style.fontName;
+    await text.setTextStyleIdAsync(style.id);
+    text.characters = 'Keep edited label and current source typography';
+    const family = env.state.variables.find(
+      variable => variable.name === 'font-family/text'
+    );
+    const size = env.state.variables.find(
+      variable => variable.name === 'font-size/300'
+    );
+    text.setBoundVariable('fontFamily', family);
+    text.setBoundVariable('fontSize', size);
+    const snapshot = () =>
+      JSON.stringify({
+        id: text.id,
+        type: text.type,
+        fontName: text.fontName,
+        fontSize: text.fontSize,
+        lineHeight: text.lineHeight,
+        characters: text.characters,
+        boundVariables: text.boundVariables,
+        textDecoration: text.textDecoration,
+        textWrapStyle: text.textWrapStyle,
+        width: text.width,
+        height: text.height,
+      });
+    const before = snapshot();
+    env.state.loadedFonts.delete(
+      `${text.fontName.family} ${text.fontName.style}`
+    );
+    await assert.rejects(text.setTextStyleIdAsync(''), /unloaded/);
+    assert.strictEqual(text.textStyleId, style.id);
+    assert.strictEqual(snapshot(), before);
+    await env.figma.loadFontAsync(style.fontName);
+    await text.setTextStyleIdAsync('');
+    assert.strictEqual(text.textStyleId, '');
+    assert.strictEqual(
+      snapshot(),
+      before,
+      'Empty association setter changed source typography, identity, content or current aliases'
+    );
+    text.fontSize = 16;
+    assert.strictEqual(
+      text.boundVariables.fontSize,
+      undefined,
+      'Literal size write must clear its previous variable alias'
+    );
+    assert(
+      text.boundVariables.fontFamily,
+      'Literal size write must preserve the unrelated family alias'
+    );
+    text.setBoundVariable('fontSize', size);
+    assert.strictEqual(
+      snapshot(),
+      before,
+      'Explicit direct size binding did not restore the exact source record'
+    );
+  }
+  console.log(
+    'ok  empty text-style association requires loaded font and preserves type, typography, identity and aliases; literal font-size clears only its alias before explicit rebind'
+  );
   {
     const {
       buildFigmaVariables,

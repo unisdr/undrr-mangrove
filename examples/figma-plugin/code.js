@@ -722,7 +722,11 @@ figma.ui.onmessage = async msg => {
     }
     if (msg.type === 'capability-probes') {
       post('operation', {
-        result: await runMangroveCapabilityProbes(msg.doc, msg.brand),
+        result: await runMangroveCapabilityProbes(
+          msg.doc,
+          msg.brand,
+          msg.scope
+        ),
       });
       return;
     }

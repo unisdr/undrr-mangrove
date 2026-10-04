@@ -288,8 +288,11 @@ function subsetDocument(
     const families = selectFamilies(doc, requested, variantIds);
     const textIds = new Set();
     const effectIds = new Set();
+    const directTemplateIds = new Set();
     function tree(node) {
       if (node.textStyle) textIds.add(node.textStyle);
+      if ('textStyleApplication' in node && node.textStyle)
+        directTemplateIds.add(node.textStyle);
       if (node.effectStyle) effectIds.add(node.effectStyle);
       (node.children || []).forEach(tree);
     }
@@ -302,6 +305,26 @@ function subsetDocument(
       .map(oneBrand);
     base.styles.effect = doc.styles.effect
       .filter(style => effectIds.has(style.id))
+      .map(oneBrand);
+    // DIRECT validation retains the exact source binding definitions and their
+    // alias dependency closure. Native variables remain read-only in builds.
+    const directVariables = new Set();
+    function includeDirectVariable(name) {
+      const matches = doc.variables.filter(variable => variable.name === name);
+      if (matches.length !== 1)
+        throw new Error(`Missing or ambiguous DIRECT source variable ${name}`);
+      const variable = matches[0];
+      if (directVariables.has(variable.id)) return;
+      directVariables.add(variable.id);
+      const value = variable.values?.[brandId];
+      if (value?.alias) includeDirectVariable(value.alias);
+    }
+    for (const style of base.styles.text)
+      if (directTemplateIds.has(style.id))
+        for (const name of Object.values(style.bindings || {}))
+          includeDirectVariable(name);
+    base.variables = doc.variables
+      .filter(variable => directVariables.has(variable.id))
       .map(oneBrand);
     return base;
   }
@@ -423,6 +446,10 @@ function specializeBuilder(source) {
   replaceOnce(
     'const surface =\n          specimen.surface ??\n          reviewOptions.variantSurfaces?.[specimen.variant.recipe.id];',
     'const surface = MG_CONNECTOR_REVIEW_SURFACES && (specimen.surface ?? reviewOptions.variantSurfaces?.[specimen.variant.recipe.id]);'
+  );
+  replaceOnce(
+    'if (MG_DIRECT_TEXT_ENABLED) {',
+    'if (MG_CONNECTOR_DIRECT_TEXT) {'
   );
   // When surfaces are absent, the existing else branch still clears/hides an
   // obsolete owned surface. Only new surface construction becomes unreachable.
@@ -674,6 +701,17 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsTextOffset(variant.tree))
     );
+  function needsDirectText(node) {
+    return (
+      'textStyleApplication' in node ||
+      (node.children || []).some(needsDirectText)
+    );
+  }
+  const directTextEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsDirectText(variant.tree))
+    );
   const reviewNodesEnabled =
     operation === 'build' &&
     subset.components.families.some(
@@ -727,6 +765,7 @@ async function buildConnector({
         MG_CONNECTOR_REVIEW_SURFACES: reviewSurfacesEnabled,
         MG_CONNECTOR_TEXT_OFFSET: textOffsetEnabled,
         MG_CONNECTOR_REVIEW_NODES: reviewNodesEnabled,
+        MG_CONNECTOR_DIRECT_TEXT: directTextEnabled,
       },
     },
     mangle: true,
@@ -756,6 +795,7 @@ async function buildConnector({
     variantIds: variantIds || null,
     scope: importScope,
     svgEnabled,
+    directTextEnabled,
     characters: code.length,
     bytes,
   };

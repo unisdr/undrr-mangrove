@@ -32,6 +32,7 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
       checkedText: 0,
       mismatchedText: 0,
       wrongStyleIds: 0,
+      directTypography: 0,
       gaps: 0,
     },
     families: [],
@@ -252,6 +253,7 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
             nodeId: node.id,
             sourceStyleId: tree.textStyle,
             nativeStyleId: node.textStyleId,
+            textStyleApplication: tree.textStyleApplication || 'STYLE',
             fontEvidence: {
               fontName: node.fontName ?? null,
               hasMissingFont: node.hasMissingFont ?? null,
@@ -279,6 +281,15 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
           };
           const sourceStyle = sourceStyles.get(tree.textStyle),
             styles = nativeStyles.get(tree.textStyle) || [];
+          const direct = tree.textStyleApplication === 'DIRECT';
+          if (
+            tree.textStyleApplication !== undefined &&
+            (!direct ||
+              familyId !== 'toc-link' ||
+              tree.textProperty !== 'Label' ||
+              tree.textStyle !== 'component.table-of-contents.link')
+          )
+            gap('unsupported-text-style-application', { familyId, path: key });
           if (!sourceStyle)
             gap('missing-source-style', {
               familyId,
@@ -297,8 +308,9 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
               { familyId, path: key, styleId: tree.textStyle }
             );
           } else {
-            assert('textStyleId', styles[0].id, node.textStyleId);
-            if (node.textStyleId !== styles[0].id)
+            const expectedStyleId = direct ? '' : styles[0].id;
+            assert('textStyleId', expectedStyleId, node.textStyleId);
+            if (node.textStyleId !== expectedStyleId)
               report.counts.wrongStyleIds++;
             if (!styles[0].fontName?.family || !styles[0].fontName?.style)
               gap('missing-style-font-evidence', {
@@ -307,6 +319,108 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
                 styleId: tree.textStyle,
                 verification: 'unverified',
               });
+            if (direct) {
+              report.counts.directTypography++;
+              // The scoped source guard currently requires identical Latin
+              // typography across brands. Fail closed if that contract changes.
+              const values = Object.values(sourceStyle?.values || {});
+              const faces = values.map(value => ({
+                fontName: value.fontName,
+                fontSize: value.fontSize,
+                lineHeight: value.lineHeight,
+              }));
+              if (!faces.length || new Set(faces.map(json)).size !== 1)
+                gap('ambiguous-direct-source-typography', {
+                  familyId,
+                  path: key,
+                });
+              else {
+                const expected = faces[0];
+                const face = value =>
+                  value && { family: value.family, style: value.style };
+                const linePixels = (line, size) =>
+                  line?.unit === 'PERCENT'
+                    ? (line.value * size) / 100
+                    : line?.unit === 'PIXELS'
+                      ? line.value
+                      : null;
+                for (const [name, actual] of [
+                  ['template', styles[0]],
+                  ['node', node],
+                ]) {
+                  assert(
+                    `${name}.fontName`,
+                    face(expected.fontName),
+                    face(actual.fontName)
+                  );
+                  assert(
+                    `${name}.fontSize`,
+                    expected.fontSize,
+                    actual.fontSize
+                  );
+                  assert(
+                    `${name}.lineHeight`,
+                    expected.lineHeight,
+                    actual.lineHeight
+                  );
+                  const expectedPixels = linePixels(
+                    expected.lineHeight,
+                    expected.fontSize
+                  );
+                  const actualPixels = linePixels(
+                    actual.lineHeight,
+                    actual.fontSize
+                  );
+                  assert(
+                    `${name}.lineHeightPixels`,
+                    expectedPixels,
+                    actualPixels
+                  );
+                }
+              }
+              for (const [field, type] of [
+                ['fontFamily', 'STRING'],
+                ['fontSize', 'FLOAT'],
+              ]) {
+                const role = sourceStyle?.bindings?.[field];
+                const definition =
+                  doc.variables?.filter(
+                    variable => variable.name === role && variable.type === type
+                  ) || [];
+                const imported =
+                  inspection.variables?.filter(
+                    variable =>
+                      variable.name === role &&
+                      variable.resolvedType === type &&
+                      variable.mgId === definition[0]?.id
+                  ) || [];
+                if (definition.length !== 1 || imported.length !== 1)
+                  gap('missing-or-ambiguous-direct-typography-variable', {
+                    familyId,
+                    path: key,
+                    field,
+                    role,
+                  });
+                else {
+                  const alias = value =>
+                    Array.isArray(value)
+                      ? value.length === 1
+                        ? value[0]
+                        : null
+                      : value;
+                  assert(
+                    `${field}.nodeBinding`,
+                    imported[0].id,
+                    alias(node.boundVariables?.[field])?.id
+                  );
+                  assert(
+                    `${field}.templateBinding`,
+                    imported[0].id,
+                    alias(styles[0].boundVariables?.[field])?.id
+                  );
+                }
+              }
+            }
           }
           if (
             !node.fontName?.family ||
@@ -373,6 +487,7 @@ function summary(report) {
   const lines = [
     `Native TEXT audit: ${report.passed ? 'passed saved-field checks' : 'gaps found'}.`,
     `Families ${report.scope.checked.length}/${report.scope.requested.length}; matched TEXT ${report.counts.matchedText}/${report.counts.expectedText}; wrong style IDs ${report.counts.wrongStyleIds}; gaps ${report.counts.gaps}.`,
+    `Explicit direct typography templates: ${report.counts.directTypography}.`,
     `Scope: ${report.fullSourceScope ? 'all source families requested' : 'selected families only'}. Font loading and rendered acceptance unverified.`,
   ];
   for (const item of report.gaps.slice(0, 10))

@@ -20,7 +20,7 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 394 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 27 component text styles and eight effect styles. Read the build report for current totals. Component recipes cover 271 variants across 23 families; 16 tokens remain skipped as variables. Component-specific text styles are not default foundation selections; the builder imports the styles required by the selected family.
+Current output contains 416 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 31 component text styles and eight effect styles. Read the build report for current totals. Component recipes cover 293 variants across 26 families; 16 tokens remain skipped as variables. Component-specific text styles are not default foundation selections; the builder imports the styles required by the selected family.
 
 ### Text and effect foundations
 
@@ -99,31 +99,36 @@ Limits: one brand is visible at a time, and Starter cannot publish libraries, so
 
 Import one brand first, then select families and choose **Build selected components**. Dependencies are built first. The generated kit contains main components outside **Mangrove / Review**, where editable instances show states, long labels and narrow examples.
 
-| Family               | Variants |
-| -------------------- | -------: |
-| Button               |       16 |
-| Text input           |        6 |
-| ComboBox option      |        6 |
-| ComboBox             |        6 |
-| Tab trigger          |        6 |
-| Horizontal pill Tabs |        1 |
-| Textarea             |        6 |
-| Table header cell    |        4 |
-| Table body cell      |        4 |
-| Table row            |       24 |
-| Table                |        8 |
-| Text CTA             |        6 |
-| Radio                |       30 |
-| Checkbox             |       30 |
-| Form error summary   |        6 |
-| Switch               |       22 |
-| Switch small         |       20 |
-| Editorial CTA        |       23 |
-| Chips                |       16 |
-| Details              |       20 |
-| Closed Select        |        5 |
-| Loader               |        2 |
-| Compact Empty State  |        4 |
+| Family                       | Variants |
+| ---------------------------- | -------: |
+| Button                       |       16 |
+| Text input                   |        6 |
+| ComboBox option              |        6 |
+| ComboBox                     |        6 |
+| Tab trigger                  |        6 |
+| Horizontal pill Tabs         |        1 |
+| Textarea                     |        6 |
+| Table header cell            |        4 |
+| Table body cell              |        4 |
+| Table row                    |       24 |
+| Table                        |        8 |
+| Text CTA                     |        6 |
+| Radio                        |       30 |
+| Checkbox                     |       30 |
+| Form error summary           |        6 |
+| Switch                       |       22 |
+| Switch small                 |       20 |
+| Editorial CTA                |       23 |
+| Chips                        |       16 |
+| Details                      |       20 |
+| Closed Select                |        5 |
+| Loader                       |        2 |
+| Compact Empty State          |        4 |
+| Table of contents / Link     |       12 |
+| Table of contents / Numbered |        3 |
+| Status Label                 |        7 |
+
+TOC links use the imported source text style as a typography template, with font-family and font-size variables bound directly on their 12 main labels. Their native text-style association is deliberately empty: controlled desktop experiments found incorrect effective range colours when the shared Label property and style association were combined. This exception is restricted to TOC links and guarded against changed source anatomy or missing bindings. Rebuild the affected components after importing a changed template; editing the local style alone does not update directly applied labels. See [the native findings](LEARNINGS.md) and [maintenance checks](MAINTAINING-KIT.md).
 
 The JSON `components` section owns typography, geometry, token bindings and source references. Rebuilding updates owned nodes in place, preserves property IDs and keeps review instance overrides. Unexpected node types or ambiguous identities are rejected. User additions are retained and obsolete owned children are reported. A failed update to an existing family can retain partial changes; inspect the report before continuing.
 
@@ -314,6 +319,8 @@ node examples/figma-plugin/dev/mock-details.cjs
 node examples/figma-plugin/dev/mock-select.cjs
 node examples/figma-plugin/dev/mock-loader.cjs
 node examples/figma-plugin/dev/mock-empty-state.cjs
+node examples/figma-plugin/dev/mock-toc.cjs
+node examples/figma-plugin/dev/mock-status-label.cjs
 node examples/figma-plugin/dev/mock-audit-native-text.cjs
 node examples/figma-plugin/dev/mock-connector-scopes.cjs
 node examples/figma-plugin/dev/mock-review-export.cjs
@@ -372,7 +379,7 @@ That checkpoint added 30 Checkbox variants and six LTR Form error summary varian
 
 The error summary exposes Title and error messages as editable text properties. Its shared link style carries UNDERLINE and its title style carries BALANCE, as well as source font weights and line heights. Native visual checks caught and corrected lost underlines after text property assignment. The corrected 240px long examples show underlined wrapped links and balanced title text; the repeat created zero nodes, updated 114 and reported no errors. These checks cover default UNDRR LTR specimens. Wrapped inline link focus, arbitrary error counts, RTL and script-specific typography remain pending.
 
-**Instance override acceptance** has two explicit groups: the existing ComboBox + Radio default and Details + closed Select. The latter prepares an open BelowMedium390 Details with edited long Title/Paragraph and an Invalid Select with short Value and edited label/help/error/booleans, both at a fixed 240px consumer width. Save the preparation report, build only the group's families with review refresh off, then compare and save the comparison report. Details + Select passed 274 native preservation assertions after an ordinary rebuild that created zero nodes and updated 303; exact cleanup removed 20 probes with none retained. Width and FIXED/HUG sizing are explicit checks for this group; other bounds remain diagnostics, not source-fidelity assertions. The comparison is read-only; cleanup retains changed or foreign content. A saved root ID recovers the ledger after plugin restart. See the [acceptance runbook](MAINTAINING-KIT.md#check-edited-native-instances).
+**Instance override acceptance** has four explicit groups: ComboBox + Radio, Details + closed Select, TOC links + numbered list, and all seven Status Label shapes. The latter prepares an open BelowMedium390 Details with edited long Title/Paragraph and an Invalid Select with short Value and edited label/help/error/booleans, both at a fixed 240px consumer width. Save the preparation report, build only the group's families with review refresh off, then compare and save the comparison report. Details + Select passed 274 native preservation assertions after an ordinary rebuild that created zero nodes and updated 303; exact cleanup removed 20 probes with none retained. Width and FIXED/HUG sizing are explicit checks for this group; other bounds remain diagnostics, not source-fidelity assertions. The comparison is read-only; cleanup retains changed or foreign content. A saved root ID recovers the ledger after plugin restart. See the [acceptance runbook](MAINTAINING-KIT.md#check-edited-native-instances).
 
 ### Editorial CTA is under native review
 
@@ -387,3 +394,9 @@ Loader adds two static source presets: BelowMedium 40px with an 8px ring and Med
 Compact Empty State adds Plain/Panel × Centre/Start, with editable Description, optional Show media and the exact source tray SVG bound to its colour role. Roboto Regular 14px/21px and PRETTY wrapping belong to its required shared style. The source 440px description cap binds to a FILL/HUG FRAME, since native Figma rejects maxWidth variable binding on TEXT. Four bounded default-UNDRR source comparisons passed; arbitrary edited descriptions, live media-token scaling, RTL, all-brand rendering and font-file equivalence remain unverified.
 
 The new-family ordinary repeat created zero nodes and updated 74 with no errors. Final inspection records 394 variables, 39 local text styles, eight effects, 23 sets, 272 components including the historical diagnostic, 5,221 nodes and 752 instances, with no inspection errors. All 5,528 preceding inspected IDs survived; the current inventory contains 5,663 IDs. The full text audit matched 561/561 paths and retained the older 51 Tabs-font/editorial-CTA findings; the four newest families' 79 paths added none. All 20 temporary Details/Select probe IDs are absent, and a fresh local backup is saved. Cloud sync remains unconfirmed. Professional migration should begin with a fresh inspection and backup, then verify all five modes and an actual consuming-file update; these new local families do not complete publication acceptance.
+
+### TOC and Status Label checkpoint on 4 October 2026
+
+The export now contains 416 variables, 91 text definitions, eight effects and 293 recipe variants across 26 families. Native inspection records 43 local text styles, 26 sets, 294 components including one historical diagnostic, 5,666 nodes and 817 instances, with no inspection errors. The full saved-field audit matches 601/601 main TEXT paths and retains the same 51 older Tabs/Editorial CTA findings. TOC and Status Label's 40 scoped paths add none; 12 TOC labels use the explicit directly applied source typography exception described above.
+
+TOC ordinary repeats create zero nodes and update 172. Six edited consumers at 240/390/900px pass 2,819 assertions, including nested labels, Title, alignment, typography, range paints, widths and IDs. Status Label's seven edited consumers pass 816 assertions through a zero-created/83-updated repeat. Strict cleanup removes 106 TOC and 36 Status Label temporary nodes with none retained. Native rendering was reviewed at normal scale and a fresh local backup is saved; cloud sync remains unconfirmed. Source glyph/font-file equality, arbitrary responsive widths, grouped Status layouts, bulleted TOC, broader scripts/brands and publication remain pending. See [the measured findings and precision checks](LEARNINGS.md) before adding or changing these recipes.

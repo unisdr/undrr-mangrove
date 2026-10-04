@@ -340,6 +340,129 @@ function main() {
     'ok  partial/missing families or variants never imply full-source success; missing-font/style evidence stays unverified and explicit selected scope remains labeled'
   );
 
+  // An explicit exception still checks its imported template and live aliases.
+  const direct = fixture();
+  direct.doc.components.families[0].id = 'toc-link';
+  const templateId = 'component.table-of-contents.link';
+  const face = { family: 'Roboto', style: 'Regular' };
+  const line = { unit: 'PERCENT', value: 150 };
+  const bindings = {
+    fontFamily: { type: 'VARIABLE_ALIAS', id: 'synthetic-family-variable' },
+    fontSize: { type: 'VARIABLE_ALIAS', id: 'synthetic-size-variable' },
+  };
+  direct.doc.variables = [
+    { id: 'font-family.text', name: 'font-family/text', type: 'STRING' },
+    { id: 'font-size.300', name: 'font-size/300', type: 'FLOAT' },
+  ];
+  direct.inspection.variables = direct.doc.variables.map((variable, index) => ({
+    id: index ? 'synthetic-size-variable' : 'synthetic-family-variable',
+    mgId: variable.id,
+    name: variable.name,
+    resolvedType: variable.type,
+  }));
+  const template = {
+    id: templateId,
+    bindings: { fontFamily: 'font-family/text', fontSize: 'font-size/300' },
+    values: { synthetic: { fontName: face, fontSize: 16, lineHeight: line } },
+  };
+  direct.doc.styles.text = [template, direct.doc.styles.text[2]];
+  direct.inspection.styles.text = [
+    {
+      id: 'synthetic-template',
+      mgStyleId: templateId,
+      type: 'TEXT',
+      fontName: face,
+      fontSize: 16,
+      lineHeight: line,
+      boundVariables: bindings,
+    },
+    direct.inspection.styles.text[2],
+  ];
+  function directTree(tree) {
+    if (tree.type === 'TEXT')
+      Object.assign(tree, {
+        textStyle: templateId,
+        textStyleApplication: 'DIRECT',
+        textProperty: 'Label',
+        textDecoration: 'UNDERLINE',
+        textDecorationOffset: { unit: 'PERCENT', value: 15 },
+        textWrap: 'AUTO',
+      });
+    for (const child of tree.children || []) directTree(child);
+  }
+  for (const variant of direct.doc.components.families[0].variants)
+    directTree(variant.tree);
+  for (const node of direct.inspection.nodes) {
+    node.mgKitId = node.mgKitId.replace('family/alpha', 'family/toc-link');
+    if (
+      node.type === 'TEXT' &&
+      node.id.startsWith('synthetic-node:family/alpha')
+    )
+      Object.assign(node, {
+        textStyleId: '',
+        fontName: face,
+        fontSize: 16,
+        lineHeight: line,
+        boundVariables: copy(bindings),
+        textDecoration: 'UNDERLINE',
+        textDecorationOffset: { unit: 'PERCENT', value: 15 },
+        textWrapStyle: 'AUTO',
+      });
+  }
+  const directAudit = auditNativeText(direct.inspection, direct.doc);
+  assert(directAudit.passed, JSON.stringify(directAudit.gaps));
+  assert.strictEqual(directAudit.counts.directTypography, 2);
+  const directLabel = fixture =>
+    fixture.inspection.nodes.find(
+      node =>
+        node.type === 'TEXT' &&
+        node.mgKitId.startsWith('family/toc-link') &&
+        node.id.startsWith('synthetic-node:')
+    );
+  for (const mutate of [
+    fixture => {
+      directLabel(fixture).textStyleId = 'synthetic-template';
+    },
+    fixture => {
+      directLabel(fixture).fontName.family = 'Wrong face';
+    },
+    fixture => {
+      directLabel(fixture).fontSize = 17;
+    },
+    fixture => {
+      directLabel(fixture).lineHeight.value = 140;
+    },
+    fixture => {
+      delete directLabel(fixture).boundVariables.fontSize;
+    },
+    fixture => {
+      directLabel(fixture).boundVariables.fontFamily.id = 'foreign';
+    },
+    fixture => {
+      fixture.inspection.styles.text.shift();
+    },
+    fixture => {
+      fixture.doc.styles.text[0].values.other = {
+        ...template.values.synthetic,
+        fontSize: 18,
+      };
+    },
+    fixture => {
+      fixture.doc.components.families[0].variants[0].tree.children[0].children[0].textStyleApplication =
+        'UNKNOWN';
+    },
+  ]) {
+    const invalid = copy(direct);
+    mutate(invalid);
+    assert.strictEqual(
+      auditNativeText(invalid.inspection, invalid.doc).passed,
+      false
+    );
+  }
+  console.log(
+    'ok  scoped DIRECT templates retain typography/binding checks and reject stale associations, missing aliases, wrong type and ambiguous source modes'
+  );
+
   const directory = fs.mkdtempSync(
     path.join(os.tmpdir(), 'mangrove-synthetic-text-audit-')
   );

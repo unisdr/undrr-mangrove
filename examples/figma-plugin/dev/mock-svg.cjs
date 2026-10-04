@@ -8,10 +8,38 @@ const copy = value => JSON.parse(JSON.stringify(value));
 const identity = (node, key) =>
   node.getSharedPluginData('orgundrrmangrove', key);
 
-function installSvgMock(figma, state, { createVector } = {}) {
+function installSvgMock(
+  figma,
+  state,
+  { createVector, sourceFixtures = new Map() } = {}
+) {
   if (figma.createNodeFromSvg) return;
   state.svgImportCalls = [];
   state.svgScaleCalls = [];
+  state.svgExactFixtureCalls = [];
+  const exactStatusIds = new Set([
+    'status-label-waiting-validation-diamond',
+    'status-label-warning-outer-ring',
+    'status-label-warning-inner-fill',
+    'status-label-negative-outer-ring',
+    'status-label-negative-inner-fill',
+  ]);
+  const exactMarkup = new Map();
+  for (const [assetId, source] of sourceFixtures) {
+    assert(
+      exactStatusIds.has(assetId),
+      'Only named source-owned Status SVG fixtures are supported'
+    );
+    const box = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(source);
+    assert(box, 'Exact Status fixture has no source viewport');
+    const imported = source.replace(
+      /<svg\b([^>]*?)>/,
+      (_, attrs) =>
+        `<svg${attrs.replace(/\s+(width|height)\s*=\s*("[^"]*"|'[^']*')/g, '')} width="${box[1]}" height="${box[2]}">`
+    );
+    assert(!exactMarkup.has(imported), 'Ambiguous exact SVG fixture markup');
+    exactMarkup.set(imported, { assetId, source });
+  }
   const attributes = text =>
     Object.fromEntries(
       [...text.matchAll(/([\w:-]+)\s*=\s*("[^"]*"|'[^']*')/g)].map(match => [
@@ -29,6 +57,7 @@ function installSvgMock(figma, state, { createVector } = {}) {
       '#000': [0, 0, 0],
       '#000000': [0, 0, 0],
       '#1a1a1a': [26 / 255, 26 / 255, 26 / 255],
+      '#666666': [0.4, 0.4, 0.4],
       red: [1, 0, 0],
       blue: [0, 0, 1],
     };
@@ -42,6 +71,11 @@ function installSvgMock(figma, state, { createVector } = {}) {
   figma.createNodeFromSvg = markup => {
     state.svgImportCalls.push(markup);
     if (state.svgImportFailure) throw state.svgImportFailure;
+    const exact = exactMarkup.get(markup);
+    if (!exact && /<(?:rect|polygon)\b/.test(markup))
+      throw new Error(
+        'SVG mock needs an exact source-owned rect/polygon fixture'
+      );
     const root = attributes(/^\s*<svg\b([^>]*)>/.exec(markup)?.[1] || '');
     const frame = figma.createFrame();
     const prototype = Object.getPrototypeOf(frame);
@@ -68,6 +102,30 @@ function installSvgMock(figma, state, { createVector } = {}) {
       };
     frame.resize(Number(root.width), Number(root.height));
     frame.opacity = Number(root.opacity ?? 1);
+    if (exact) {
+      // Bounded viewport/paint fixture only. This does not reconstruct source
+      // path bounds, rounded corners, polygon outlines, AA or native topology.
+      state.svgExactFixtureCalls.push({
+        assetId: exact.assetId,
+        markup: exact.source,
+      });
+      const shape = /<(rect|polygon)\b([^>]*?)\/?\s*>/.exec(markup);
+      assert(
+        shape && [...markup.matchAll(/<(rect|polygon)\b/g)].length === 1,
+        'Exact Status fixture must contain one source shape'
+      );
+      const attrs = attributes(shape[2]);
+      const vector = createVector ? createVector() : figma.createVector();
+      vector.resize(Number(root.width), Number(root.height));
+      vector.vectorPaths = [{ windingRule: 'NONZERO', data: 'M0 0' }];
+      vector.fills = paint(attrs.fill);
+      vector.strokes = paint(attrs.stroke || 'none');
+      vector.strokeWeight = Number(attrs['stroke-width'] || 1);
+      vector.strokeAlign = 'CENTER';
+      frame.appendChild(vector);
+      if (state.svgTrimViewport) frame.resizeWithoutConstraints(9, 6);
+      return frame;
+    }
     for (const match of markup.matchAll(/<path\b([^>]*?)\/?\s*>/g)) {
       const attrs = attributes(match[1]);
       const vector = createVector
@@ -448,6 +506,113 @@ async function main() {
   assert.strictEqual(colourEnv.state.svgImportCalls.length, count);
   console.log(
     'ok  explicit monochrome paint binding preserves source opacity; multicolour source remains unchanged and cannot be rebound wholesale'
+  );
+  {
+    const statusDoc = copy(source);
+    statusDoc.components.families = statusDoc.components.families.filter(
+      family => family.id === 'status-label'
+    );
+    assert.strictEqual(
+      statusDoc.components.families.length,
+      1,
+      'Generated Status source fixture is missing'
+    );
+    const statusEnv = svgEnvironment(statusDoc);
+    await require('./mock-kit.cjs').importFoundation(statusEnv, statusDoc);
+    const result = await statusEnv.call(
+      'buildMangroveComponents',
+      statusDoc,
+      'undrr',
+      ['status-label']
+    );
+    assert.strictEqual(result.errors.length, 0, result.errors.join('\n'));
+    assert.strictEqual(statusEnv.state.svgExactFixtureCalls.length, 5);
+    assert.strictEqual(
+      new Set(
+        statusEnv.state.svgExactFixtureCalls.map(fixture => fixture.assetId)
+      ).size,
+      5
+    );
+    const inMain = node => {
+      for (let current = node.parent; current; current = current.parent) {
+        if (current.type === 'INSTANCE') return false;
+        if (current.type === 'COMPONENT') return true;
+      }
+      return false;
+    };
+    const wrappers = [...statusEnv.state.nodes.values()].filter(
+      node => identity(node, 'mgSvgAsset') && inMain(node)
+    );
+    assert.strictEqual(wrappers.length, 5);
+    const ids = wrappers.flatMap(wrapper => [
+      wrapper.id,
+      ...wrapper.children.map(child => child.id),
+    ]);
+    const diamond = wrappers.find(
+      wrapper =>
+        JSON.parse(identity(wrapper, 'mgSvgAsset')).assetId ===
+        'status-label-waiting-validation-diamond'
+    );
+    const descriptor = JSON.parse(identity(diamond, 'mgSvgAsset'));
+    assert(descriptor.markup.includes('stroke="#666666"'));
+    assert.strictEqual(diamond.children[0].strokes.length, 1);
+    assert(
+      diamond.children[0].strokes[0].boundVariables.color,
+      'Source monochrome ring stroke is bound by the runtime'
+    );
+    const repeated = await statusEnv.call(
+      'buildMangroveComponents',
+      statusDoc,
+      'undrr',
+      ['status-label']
+    );
+    assert.strictEqual(repeated.errors.length, 0);
+    assert.strictEqual(repeated.createdNodeIds.length, 0);
+    assert(ids.every(id => statusEnv.state.nodes.has(id)));
+    assert.strictEqual(statusEnv.state.svgExactFixtureCalls.length, 5);
+    const normalized = statusEnv.state.svgImportCalls.find(markup =>
+      markup.includes('<rect')
+    );
+    assert.throws(
+      () =>
+        statusEnv.figma.createNodeFromSvg(
+          normalized.replace('x="4.26"', 'x="4.27"')
+        ),
+      /exact source-owned rect\/polygon fixture/
+    );
+    const raw = descriptor.markup;
+    assert.throws(
+      () => statusEnv.figma.createNodeFromSvg(raw),
+      /exact source-owned rect\/polygon fixture/,
+      'Unnormalized raw source cannot bypass viewport matching'
+    );
+    const changedIdentity = copy(statusDoc);
+    const findSvg = tree =>
+      tree.type === 'SVG'
+        ? tree
+        : (tree.children || []).map(findSvg).find(Boolean);
+    const diamondRecipe = findSvg(
+      changedIdentity.components.families[0].variants.find(
+        variant => variant.id === 'status-label.waiting-validation'
+      ).tree
+    );
+    diamondRecipe.svg.assetId = 'foreign-status-diamond';
+    const foreignEnv = svgEnvironment(changedIdentity);
+    assert.throws(
+      () => foreignEnv.figma.createNodeFromSvg(normalized),
+      /exact source-owned rect\/polygon fixture/,
+      'Foreign asset ID cannot register known markup'
+    );
+    const fixturePaintEnv = svgEnvironment(statusDoc);
+    const sourceDiamond = fixturePaintEnv.figma.createNodeFromSvg(normalized);
+    assert.deepStrictEqual(sourceDiamond.children[0].strokes[0].color, {
+      r: 0.4,
+      g: 0.4,
+      b: 0.4,
+    });
+  }
+  console.log(
+    'ok  five exact recipe-owned Status viewport/paint fixtures support shared builds and repeat IDs; foreign identity/markup rejected without arbitrary shape parsing or raster claims'
   );
   const textDoc = copy(source);
   const textStyle = source.styles.text.find(

@@ -75,6 +75,7 @@ async function main() {
   const checkedId = 'checkbox.true.default.after.short';
   const checked = await execute(doc, 'checkbox', checkedId);
   assert(checked.payload.svgEnabled);
+  assert.strictEqual(checked.payload.directTextEnabled, false);
   assert(checked.payload.bytes <= 48000, checked.payload.bytes);
   assert(checked.payload.code.includes('SVG'));
   for (const marker of [
@@ -84,6 +85,8 @@ async function main() {
     'TEXT textDecorationOffset requires',
     'Review nodes must',
     'Ellipse arcData requires',
+    'textStyleApplication DIRECT is restricted',
+    'DIRECT TOC typography needs',
   ])
     assert(
       !checked.payload.code.includes(marker),
@@ -237,6 +240,173 @@ async function main() {
     `ok scoped Loader retains native arc validation and positive clockwise sweep at ${loader.payload.bytes} bytes`
   );
 
+  for (const payload of [
+    unchecked.payload,
+    chips.payload,
+    cta.payload,
+    table.payload,
+    loader.payload,
+  ]) {
+    assert.strictEqual(payload.directTextEnabled, false);
+    assert(
+      payload.bytes <= 48000 && payload.characters <= 48000,
+      `${payload.families}: ${payload.bytes}`
+    );
+    assert(!payload.code.includes('DIRECT TOC typography needs'));
+  }
+  const directDoc = copy(doc);
+  const directFamily = directDoc.components.families.find(
+    family => family.id === 'toc-link'
+  );
+  for (const variant of directFamily.variants)
+    nodes(variant.tree).find(
+      node => node.type === 'TEXT' && node.name === 'Link label'
+    ).textStyleApplication = 'DIRECT';
+  const directVariant = directFamily.variants.find(
+    variant => variant.id === 'toc-link.240.default'
+  );
+  assert(directVariant);
+  const directSubset = subsetDocument(
+    directDoc,
+    'build',
+    'undrr',
+    ['toc-link'],
+    [directVariant.id]
+  );
+  assert.deepStrictEqual(
+    decompressJSON(compressJSON(directSubset)),
+    directSubset
+  );
+  assert.deepStrictEqual(
+    directSubset.variables.map(variable => variable.name).sort(),
+    ['font-family/text', 'font-size/300']
+  );
+  for (const variable of directSubset.variables) {
+    const original = doc.variables.find(item => item.id === variable.id);
+    assert.deepStrictEqual(variable, {
+      ...original,
+      values: { undrr: original.values.undrr },
+    });
+  }
+  const aliasDoc = copy(directDoc);
+  const sourceSize = aliasDoc.variables.find(
+    variable => variable.name === 'font-size/300'
+  );
+  sourceSize.values.undrr = { alias: 'font-size/direct-transport-fixture' };
+  const aliasPrimitive = {
+    ...copy(sourceSize),
+    id: 'font-size.direct-transport-fixture',
+    name: 'font-size/direct-transport-fixture',
+    description: 'Synthetic transport alias fixture, not a source token.',
+    values: { ...sourceSize.values, undrr: 16 },
+  };
+  aliasDoc.variables.push(aliasPrimitive);
+  const aliasSubset = subsetDocument(
+    aliasDoc,
+    'build',
+    'undrr',
+    ['toc-link'],
+    [directVariant.id]
+  );
+  assert.deepStrictEqual(
+    aliasSubset.variables.map(variable => variable.name).sort(),
+    ['font-family/text', 'font-size/300', 'font-size/direct-transport-fixture']
+  );
+  assert.deepStrictEqual(
+    decompressJSON(compressJSON(aliasSubset)),
+    aliasSubset
+  );
+  const aliased = await execute(aliasDoc, 'toc-link', directVariant.id);
+  assert.strictEqual(aliased.payload.directTextEnabled, true);
+  const aliasedMain = find(
+    aliased.env,
+    `family/toc-link/variant/${directVariant.id}`
+  );
+  assert.strictEqual(
+    aliasedMain.findAll(node => node.type === 'TEXT')[0].fontSize,
+    16
+  );
+  const direct = await execute(directDoc, 'toc-link', directVariant.id);
+  assert.strictEqual(direct.payload.directTextEnabled, true);
+  assert(
+    direct.payload.bytes <= 48000 && direct.payload.characters <= 48000,
+    direct.payload.bytes
+  );
+  assert(
+    direct.payload.code.includes(
+      'DIRECT TOC typography needs its exact source template'
+    )
+  );
+  const directMain = find(
+    direct.env,
+    `family/toc-link/variant/${directVariant.id}`
+  );
+  const directLabel = directMain.findAll(node => node.type === 'TEXT')[0];
+  assert.strictEqual(directLabel.textStyleId, '');
+  assert.strictEqual(directLabel.fontName.family, 'Roboto');
+  assert.strictEqual(directLabel.fontSize, 16);
+  assert.deepStrictEqual(copy(directLabel.lineHeight), {
+    unit: 'PERCENT',
+    value: 150,
+  });
+  for (const [field, role] of [
+    ['fontFamily', 'font-family/text'],
+    ['fontSize', 'font-size/300'],
+  ]) {
+    const native = direct.env.state.variables.find(
+      variable => variable.name === role
+    );
+    assert.strictEqual(directLabel.boundVariables[field].id, native.id);
+  }
+  const directStyles = direct.env.state.styles.map(style => style.id);
+  const directIds = [...direct.env.state.nodes.values()]
+    .filter(identity)
+    .map(node => [identity(node), node.id]);
+  const directReview = [...direct.env.state.nodes.values()].find(
+    node =>
+      node.type === 'INSTANCE' && identity(node)?.startsWith('review/toc-link/')
+  );
+  const directKey = Object.keys(directReview.componentProperties).find(key =>
+    key.startsWith('Label#')
+  );
+  directReview.setProperties({
+    [directKey]: 'Edited source-direct TOC consumer',
+  });
+  const directRepeat = await direct.env.runCode(direct.payload.code);
+  assert.strictEqual(
+    directRepeat.errors.length,
+    0,
+    directRepeat.errors.join('\n')
+  );
+  assert.strictEqual(directRepeat.createdNodeIds.length, 0);
+  assert.strictEqual(
+    directReview.componentProperties[directKey].value,
+    'Edited source-direct TOC consumer'
+  );
+  assert.deepStrictEqual(
+    [...direct.env.state.nodes.values()]
+      .filter(identity)
+      .map(node => [identity(node), node.id]),
+    directIds
+  );
+  assert.deepStrictEqual(
+    direct.env.state.styles.map(style => style.id),
+    directStyles
+  );
+  for (const value of [null, false, 0, 'INVALID', 'DIRECT'])
+    await malformed(
+      doc,
+      (_family, variant) => {
+        nodes(variant.tree).find(
+          node => node.type === 'TEXT'
+        ).textStyleApplication = value;
+      },
+      'textStyleApplication DIRECT is restricted'
+    );
+  console.log(
+    `ok DIRECT TOC ${direct.payload.bytes} bytes retains exact source templates/bindings, empty association and edited IDs; malformed declarations enable strict preflight`
+  );
+
   for (const value of [null, false, 0]) {
     await malformed(
       doc,
@@ -356,6 +526,7 @@ async function main() {
   assert.strictEqual(surface.fills.length, 0);
 
   const anchors = [
+    'if (MG_DIRECT_TEXT_ENABLED) {',
     'if (tree.absolute !== undefined) {',
     'if (family.review?.preserveVariantSizing !== undefined) {',
     'if (family.review?.variantSurfaces !== undefined) {',
@@ -387,7 +558,7 @@ async function main() {
     }
   }
   console.log(
-    'ok obsolete owned surface cleanup retained; all nine changed source anchors fail closed'
+    'ok obsolete owned surface cleanup retained; all ten changed source anchors fail closed'
   );
 }
 if (require.main === module)

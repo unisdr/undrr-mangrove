@@ -114,15 +114,18 @@
         <select id="probe-group">
           <option value="legacy">ComboBox + Radio (existing default)</option>
           <option value="details-select">Details + closed Select</option>
+          <option value="toc">Table of Contents links + numbered list</option>
+          <option value="status">Status Label (all seven shapes)</option>
         </select>
       </label>
       <p>
         Prepare temporary probes and save the report. For ComboBox + Radio,
         rebuild ComboBox, ComboBox option and Radio. For Details + closed
-        Select, rebuild Details and Select. Keep review refresh off, then
-        compare and visually review before removing the owned probes. Details +
-        Select tests edited long Details text and a short Invalid Select value
-        at 240px.
+        Select, rebuild Details and Select. For Table of Contents, rebuild both
+        link and numbered families. For Status Label, rebuild Status Label. Keep
+        review refresh off, then compare and visually review before removing the
+        owned probes. Details + Select tests edited long Details text and a
+        short Invalid Select value at 240px.
       </p>
       <button id="prepare-probes" disabled>Prepare override probes</button>
       <label>Probe root ID <input id="probe-root" type="text" /></label>
@@ -146,9 +149,21 @@
     </details>
     <details>
       <summary>Native capability diagnostics</summary>
+      <label>
+        Diagnostic group
+        <select id="capability-scope">
+          <option value="legacy">Existing capability probes</option>
+          <option value="toc-link-sizing">Table of Contents link sizing</option>
+          <option value="toc-range-paints">
+            Table of Contents text range paints
+          </option>
+        </select>
+      </label>
       <p>
-        Test legend wrapping, editable slots and instance vector edits in
-        temporary assets. Save the operation report before closing the plugin.
+        Test native behaviour in temporary assets. The existing group checks
+        legend wrapping, editable slots and instance vector edits. Table of
+        Contents checks bounded link sizing, text range colours and edited
+        labels. Save the operation report before closing the plugin.
       </p>
       <button id="capability-probes" disabled>Run capability probes</button>
       <label
@@ -186,6 +201,7 @@
         $('font-diagnostics').disabled = busy || !doc;
         $('capability-probes').disabled =
           busy || !doc || !!capabilityReport?.rootId;
+        $('capability-scope').disabled = busy || !!capabilityReport?.rootId;
         $('capability-file').disabled = busy;
         $('audit-capability-probes').disabled =
           busy || !capabilityReport?.rootId;
@@ -450,7 +466,12 @@
         });
       $('capability-probes').onclick = () => {
         const brand = singleBrand();
-        if (brand) send('capability-probes', { doc, brand });
+        if (brand)
+          send('capability-probes', {
+            doc,
+            brand,
+            scope: $('capability-scope').value || 'legacy',
+          });
       };
       $('capability-file').onchange = async event => {
         try {

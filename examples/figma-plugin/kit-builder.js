@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC */
+/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -14,6 +14,8 @@ const MG_INTRINSIC_REVIEW_ENABLED =
   MG_CONNECTOR_INTRINSIC_REVIEW;
 const MG_ARC_ENABLED =
   typeof MG_CONNECTOR_ARC === 'undefined' || MG_CONNECTOR_ARC;
+const MG_DIRECT_TEXT_ENABLED =
+  typeof MG_CONNECTOR_DIRECT_TEXT === 'undefined' || MG_CONNECTOR_DIRECT_TEXT;
 
 function mgEllipseArcPlan(tree) {
   const arc = tree.arcData;
@@ -429,10 +431,11 @@ async function buildMangroveComponents(
   const mode = collection.modes.find(item => item.name === brand.name);
   if (!mode)
     throw new Error(`Import the ${brand.name} brand before components.`);
+  const nativeVariables = (
+    await figma.variables.getLocalVariablesAsync()
+  ).filter(variable => variable.variableCollectionId === collection.id);
   const variables = new Map(
-    (await figma.variables.getLocalVariablesAsync())
-      .filter(variable => variable.variableCollectionId === collection.id)
-      .map(variable => [variable.name, variable])
+    nativeVariables.map(variable => [variable.name, variable])
   );
   const textSpecs = new Map(
     (doc.styles?.text || []).map(spec => [spec.id, spec])
@@ -620,6 +623,108 @@ async function buildMangroveComponents(
   const blocked = new Set();
   const usedText = new Set();
   const usedEffects = new Set();
+  const directText = MG_DIRECT_TEXT_ENABLED ? new Map() : null;
+  if (MG_DIRECT_TEXT_ENABLED) {
+    // One native-proven exception. Validate the whole selected scope before any
+    // style/canvas writes, including when other selected families are valid.
+    try {
+      for (const family of ordered)
+        for (const variant of family.variants)
+          treeWalk(variant.tree, (tree, parent) => {
+            if (tree.textStyleApplication === undefined) return;
+            if (
+              tree.textStyleApplication !== 'DIRECT' ||
+              family.id !== 'toc-link' ||
+              !/^toc-link\.(240|390|900)\.(default|hover|focus|hoverfocus)$/.test(
+                variant.id
+              ) ||
+              tree.type !== 'TEXT' ||
+              !['label', 'mg-table-of-contents / a/Link label'].includes(
+                tree.id
+              ) ||
+              tree.name !== 'Link label' ||
+              tree.textProperty !== 'Label' ||
+              tree.textStyle !== 'component.table-of-contents.link' ||
+              parent !== variant.tree ||
+              !['link', 'mg-table-of-contents / a'].includes(parent.id) ||
+              parent.name !== 'mg-table-of-contents / a' ||
+              (parent.id === 'link') !== (tree.id === 'label') ||
+              parent.children.length !== 1
+            )
+              throw new Error(
+                'textStyleApplication DIRECT is restricted to source TOC Link label TEXT.'
+              );
+            const matches = doc.styles.text.filter(
+              s => s.id === tree.textStyle
+            );
+            const template = matches[0],
+              values = template?.values?.[brandId];
+            if (
+              matches.length !== 1 ||
+              (template.type !== undefined && template.type !== 'TEXT') ||
+              template.bindings?.fontFamily !== 'font-family/text' ||
+              template.bindings?.fontSize !== 'font-size/300' ||
+              values?.fontName?.family !== 'Roboto' ||
+              values.fontName.style !== 'Regular' ||
+              values.fontSize !== 16 ||
+              values.lineHeight?.unit !== 'PERCENT' ||
+              values.lineHeight.value !== 150 ||
+              values.textDecoration !== 'UNDERLINE' ||
+              values.textWrapStyle !== 'AUTO'
+            )
+              throw new Error(
+                'DIRECT TOC typography needs its exact source template and brand values.'
+              );
+            const bindings = {};
+            for (const [field, type] of [
+              ['fontFamily', 'STRING'],
+              ['fontSize', 'FLOAT'],
+            ]) {
+              const name = template.bindings[field],
+                sources = doc.variables.filter(v => v.name === name),
+                native = variable(name, type);
+              if (
+                sources.length !== 1 ||
+                sources[0].type !== type ||
+                nativeVariables.filter(v => v.name === name).length !== 1 ||
+                mgReadIdentity(native, 'mgId') !== sources[0].id
+              )
+                throw new Error(
+                  `DIRECT needs the exact ${type} source role ${name}.`
+                );
+              const seen = new Set();
+              let current = native,
+                value;
+              while (current) {
+                if (seen.has(current.id))
+                  throw new Error(`DIRECT alias cycle at ${name}.`);
+                seen.add(current.id);
+                if (current.resolvedType !== type)
+                  throw new Error(`DIRECT alias type changed at ${name}.`);
+                value = current.valuesByMode[mode.modeId];
+                if (value?.type !== 'VARIABLE_ALIAS') break;
+                current = [...variables.values()].find(v => v.id === value.id);
+                if (!current)
+                  throw new Error(`DIRECT alias is missing at ${name}.`);
+              }
+              if (
+                value !==
+                (field === 'fontFamily'
+                  ? values.fontName.family
+                  : values.fontSize)
+              )
+                throw new Error(
+                  `DIRECT imported brand role differs at ${name}.`
+                );
+              bindings[field] = native;
+            }
+            directText.set(tree, bindings);
+          });
+    } catch (error) {
+      result.errors.push(reportError(error));
+      return result;
+    }
+  }
   const svgPlans = new Map();
   const svgAssetSources = new Map();
   for (const family of ordered) {
@@ -1627,7 +1732,25 @@ async function buildMangroveComponents(
       if (!style)
         throw new Error(`Text style ${spec.textStyle} did not import.`);
       await figma.loadFontAsync(style.fontName);
-      await node.setTextStyleIdAsync(style.id);
+      if (MG_DIRECT_TEXT_ENABLED && directText.has(spec)) {
+        await node.setTextStyleIdAsync('');
+        node.fontName = { ...style.fontName };
+        node.fontSize = style.fontSize;
+        node.lineHeight = { ...style.lineHeight };
+        // Copy the imported template, including native defaults, without
+        // reattaching the shared style that couples linked state range paints.
+        for (const field of [
+          'letterSpacing',
+          'paragraphSpacing',
+          'paragraphIndent',
+          'textCase',
+        ])
+          if (style[field] !== undefined)
+            node[field] =
+              typeof style[field] === 'object'
+                ? { ...style[field] }
+                : style[field];
+      } else await node.setTextStyleIdAsync(style.id);
       node.characters = spec.characters || '';
       node.textAlignHorizontal = spec.textAlign || 'LEFT';
     }
@@ -1736,6 +1859,14 @@ async function buildMangroveComponents(
         node.textDecoration === 'UNDERLINE'
       )
         node.textDecorationOffset = { ...spec.textDecorationOffset };
+      if (MG_DIRECT_TEXT_ENABLED && directText.has(spec)) {
+        // Typed aliases follow all literals, property references and layout.
+        // This ordering is proven only by the isolated native TOC diagnostic.
+        for (const [field, native] of Object.entries(directText.get(spec)))
+          node.setBoundVariable(field, native);
+        paint(node, 'fills', spec.fill);
+        node.setRangeFills(0, node.characters.length, node.fills);
+      }
     }
     if (spec.labelSizing === 'FILL') {
       const labels = node

@@ -223,6 +223,15 @@ async function mgInspectNode(node, variables, errors) {
     variables,
     errors
   );
+  if (node.type === 'TEXT' && node.characters.length) {
+    try {
+      result.textRangeFills = mgInspectionJSON(
+        node.getRangeFills(0, node.characters.length)
+      );
+    } catch (error) {
+      errors.push(`${node.id} textRangeFills: ${errorMessage(error)}`);
+    }
+  }
   return result;
 }
 

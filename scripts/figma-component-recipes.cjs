@@ -1859,6 +1859,22 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       styles,
     })
   );
+  families.push(
+    ...require('./figma-toc-recipes.cjs').buildTocRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
+  families.push(
+    ...require('./figma-status-label-recipes.cjs').buildStatusLabelRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
   for (const variable of variables) byName.set(variable.name, variable);
   function validate(node) {
     const names = [

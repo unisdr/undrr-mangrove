@@ -3,12 +3,17 @@
 const MG_CAPABILITY_KEY = 'mgCapabilityProbeId';
 let mgCapabilitySequence = 0;
 
-async function runMangroveCapabilityProbes(doc, brandId = 'undrr') {
+async function runMangroveCapabilityProbes(
+  doc,
+  brandId = 'undrr',
+  scope = 'legacy'
+) {
   const report = {
     version: 1,
     kind: 'mangrove-native-capability-probes',
     runId: `capabilities-${Date.now()}-${++mgCapabilitySequence}`,
     brandId,
+    scope,
     rootId: null,
     ledger: [],
     tests: {},
@@ -24,7 +29,10 @@ async function runMangroveCapabilityProbes(doc, brandId = 'undrr') {
   let collection;
   let mode;
   let font;
+  let rangeSource;
   try {
+    if (!['legacy', 'toc-link-sizing', 'toc-range-paints'].includes(scope))
+      throw new Error(`Unknown capability probe scope ${scope}.`);
     if (figma.editorType !== 'figma')
       throw new Error('Capability probes require Figma Design.');
     const brand = doc?.modes?.find(item => item.id === brandId);
@@ -39,13 +47,190 @@ async function runMangroveCapabilityProbes(doc, brandId = 'undrr') {
     if (modes.length !== 1)
       throw new Error(`Import the ${brand.name} mode first.`);
     mode = modes[0];
-    font = doc.styles?.text?.find(item => item.id === 'text.text.300.regular')
-      ?.values?.[brandId]?.fontName;
+    const foundation = doc.styles?.text?.find(
+      item => item.id === 'text.text.300.regular'
+    )?.values?.[brandId];
+    font = foundation?.fontName;
     if (!font || typeof font.family !== 'string' || font.style !== 'Regular')
       throw new Error('A source Regular text font is required.');
+    if (
+      scope.startsWith('toc-') &&
+      (font.family !== 'Roboto' || foundation.fontSize !== 16)
+    )
+      throw new Error('TOC probes require the exact source Roboto Regular.');
+    if (scope === 'toc-range-paints') {
+      const specs =
+        doc.styles?.text?.filter(
+          item => item.id === 'component.table-of-contents.link'
+        ) || [];
+      const sourceValue = specs[0]?.values?.[brandId];
+      if (
+        specs.length !== 1 ||
+        sourceValue?.fontName?.family !== 'Roboto' ||
+        sourceValue.fontName.style !== 'Regular' ||
+        sourceValue.fontSize !== 16 ||
+        sourceValue.lineHeight?.unit !== 'PERCENT' ||
+        sourceValue.lineHeight.value !== 150 ||
+        sourceValue.textDecoration !== 'UNDERLINE'
+      )
+        throw new Error('An exact source TOC link style is required.');
+      const styles = (await figma.getLocalTextStylesAsync()).filter(
+        style => mgReadIdentity(style, 'mgStyleId') === specs[0].id
+      );
+      if (
+        styles.length !== 1 ||
+        styles[0].fontName?.family !== 'Roboto' ||
+        styles[0].fontName.style !== 'Regular' ||
+        styles[0].fontSize !== 16 ||
+        styles[0].lineHeight?.unit !== 'PERCENT' ||
+        styles[0].lineHeight.value !== 150 ||
+        styles[0].textDecoration !== 'UNDERLINE'
+      )
+        throw new Error('Import one exact native TOC link style first.');
+      const nativeVariables = await figma.variables.getLocalVariablesAsync();
+      const markerSpecs = (doc.styles?.text || []).filter(
+        item => item.id === 'component.table-of-contents.marker'
+      );
+      const markerValue = markerSpecs[0]?.values?.[brandId];
+      const markerStyles = (await figma.getLocalTextStylesAsync()).filter(
+        style => mgReadIdentity(style, 'mgStyleId') === markerSpecs[0]?.id
+      );
+      if (
+        markerSpecs.length !== 1 ||
+        markerStyles.length !== 1 ||
+        markerStyles[0].id === styles[0].id ||
+        ![markerValue, markerStyles[0]].every(
+          value =>
+            value?.fontName?.family === 'Roboto' &&
+            value.fontName.style === 'Regular' &&
+            value.fontSize === 16 &&
+            value.lineHeight?.unit === 'PERCENT' &&
+            value.lineHeight.value === 150 &&
+            value.textDecoration === 'NONE'
+        )
+      )
+        throw new Error(
+          'Import one distinct exact native/source TOC marker style first.'
+        );
+      const definitions = new Map(
+        (doc.variables || []).map(variable => [variable.name, variable])
+      );
+      function sourceValueFor(name, seen = new Set(), type = 'COLOR') {
+        if (seen.has(name)) throw new Error('TOC color alias cycle.');
+        seen.add(name);
+        const definition = definitions.get(name);
+        if (definition?.type !== type)
+          throw new Error(`Missing source ${type} ${name}.`);
+        const value = definition.values?.[brandId];
+        return value?.alias ? sourceValueFor(value.alias, seen, type) : value;
+      }
+      const typographyBindings = [];
+      const nativeValueFor = (variable, type, seen = new Set()) => {
+        if (seen.has(variable.id))
+          throw new Error('TOC native typography alias cycle.');
+        seen.add(variable.id);
+        if (
+          variable.resolvedType !== type ||
+          variable.variableCollectionId !== collection.id
+        )
+          throw new Error(
+            'TOC typography variable has an incompatible type or collection.'
+          );
+        const value = variable.valuesByMode?.[mode.modeId];
+        if (value?.type === 'VARIABLE_ALIAS') {
+          const targets = nativeVariables.filter(item => item.id === value.id);
+          if (targets.length !== 1)
+            throw new Error(
+              'TOC typography alias target is missing or ambiguous.'
+            );
+          return nativeValueFor(targets[0], type, seen);
+        }
+        return value;
+      };
+      for (const [field, type, required] of [
+        ['fontFamily', 'STRING', 'Roboto'],
+        ['fontSize', 'FLOAT', 16],
+      ]) {
+        const raw = styles[0].boundVariables?.[field];
+        const aliases = Array.isArray(raw) ? raw : raw ? [raw] : [];
+        const sourceRole = specs[0].bindings?.[field];
+        const expected = sourceValueFor(sourceRole, new Set(), type);
+        if (
+          aliases.length !== 1 ||
+          aliases[0]?.type !== 'VARIABLE_ALIAS' ||
+          typeof aliases[0].id !== 'string'
+        )
+          throw new Error(`TOC style needs one exact ${field} variable alias.`);
+        const matches = nativeVariables.filter(
+          variable => variable.id === aliases[0].id
+        );
+        if (
+          matches.length !== 1 ||
+          matches[0].name !== sourceRole ||
+          expected !== required ||
+          nativeValueFor(matches[0], type) !== expected
+        )
+          throw new Error(
+            `TOC ${field} binding does not resolve to its exact source value.`
+          );
+        const lookup = await figma.variables.getVariableByIdAsync(
+          aliases[0].id
+        );
+        if (
+          !lookup ||
+          lookup.id !== matches[0].id ||
+          lookup.resolvedType !== type
+        )
+          throw new Error(`TOC ${field} variable lookup failed.`);
+        typographyBindings.push({
+          field,
+          type,
+          sourceRole,
+          variable: lookup,
+          expected,
+          sourceAlias: aliases[0],
+        });
+      }
+      const roles = ['color/interactive', 'color/interactive-active'].map(
+        name => {
+          const matches = nativeVariables.filter(
+            variable =>
+              variable.name === name &&
+              variable.variableCollectionId === collection.id
+          );
+          const expected = sourceValueFor(name);
+          if (
+            matches.length !== 1 ||
+            matches[0].resolvedType !== 'COLOR' ||
+            !expected ||
+            !['r', 'g', 'b', 'a'].every(field =>
+              Number.isFinite(expected[field])
+            )
+          )
+            throw new Error(`Import one exact COLOR ${name} first.`);
+          return { name, variable: matches[0], expected };
+        }
+      );
+      rangeSource = {
+        style: styles[0],
+        markerStyle: markerStyles[0],
+        roles,
+        typographyBindings,
+      };
+      font = { ...styles[0].fontName };
+    }
     report.fonts.requested.push({ ...font });
     await figma.loadFontAsync(font);
     report.fonts.loaded.push({ ...font });
+    if (
+      rangeSource &&
+      JSON.stringify(rangeSource.markerStyle.fontName) !== JSON.stringify(font)
+    ) {
+      const markerFont = { ...rangeSource.markerStyle.fontName };
+      report.fonts.requested.push(markerFont);
+      await figma.loadFontAsync(markerFont);
+      report.fonts.loaded.push(markerFont);
+    }
     report.preflight = {
       collectionId: collection.id,
       modeId: mode.modeId,
@@ -54,6 +239,43 @@ async function runMangroveCapabilityProbes(doc, brandId = 'undrr') {
       lineHeight: 24,
       diagnosticWidths: [320, 240],
     };
+    if (scope === 'toc-link-sizing') {
+      report.preflight.diagnosticWidths = [240, 390, 900];
+      report.preflight.diagnosticCaps = [195.5, 345.5, 855.5];
+      report.limitations = [
+        'Isolated TOC link sizing observations only, not a canonical TOC component or source pixel acceptance.',
+        'Direct maxWidth values describe finite source consumers; live consumer-relative caps and arbitrary resizing remain unproven.',
+        'The source unbroken stress word overflows at narrow widths. Native splitting is reported as a discrepancy, not contained acceptance.',
+        'Mock geometry is synthetic. Native fonts, wrapping, decoration and edited-property inheritance require actual readbacks and visual review.',
+      ];
+    }
+    if (scope === 'toc-range-paints') {
+      report.preflight.styleId = rangeSource.style.id;
+      report.preflight.distinctStyleId = rangeSource.markerStyle.id;
+      report.preflight.typographyBindings = rangeSource.typographyBindings.map(
+        ({ field, type, sourceRole, variable, expected, sourceAlias }) => ({
+          field,
+          type,
+          sourceRole,
+          variableId: variable.id,
+          expected,
+          sourceAlias,
+        })
+      );
+      report.preflight.colorVariableIds = rangeSource.roles.map(role => ({
+        name: role.name,
+        id: role.variable.id,
+        expected: role.expected,
+      }));
+      report.preflight.diagnosticWidths = [195.5];
+      report.limitations = [
+        'Isolated paint/property/style discriminator only; no canonical nodes, styles or variables are changed.',
+        'PairD separate property IDs are diagnostic controls, not a canonical migration.',
+        'PairE uses the existing marker style only as a distinct-ID typography control, with explicit link underline overrides. PairF style detachment is diagnostic, not canonical acceptance.',
+        'Source RGBA checks allow1e-6 channel precision; all raw font/paint/alias/style/reference readbacks remain evidence.',
+        'Mock propagation is explicitly synthetic; native phases and fresh/edited consumer rasterisation require actual verification.',
+      ];
+    }
   } catch (error) {
     report.errors.push(`Preflight: ${message(error)}`);
     return report;
@@ -74,11 +296,19 @@ async function runMangroveCapabilityProbes(doc, brandId = 'undrr') {
     root = figma.createFrame();
     report.rootId = root.id;
     record(root);
-    root.name = 'Mangrove native capability probes';
+    root.name =
+      scope === 'toc-link-sizing'
+        ? 'Mangrove native capability probes / TOC link sizing'
+        : scope === 'toc-range-paints'
+          ? 'Mangrove native capability probes / TOC range paints'
+          : 'Mangrove native capability probes';
     root.layoutMode = 'NONE';
     root.clipsContent = false;
     root.fills = [];
-    root.resize(1120, 900);
+    root.resize(
+      scope === 'toc-link-sizing' ? 2820 : 1120,
+      scope === 'toc-range-paints' ? 1640 : 900
+    );
     const existingBottoms = figma.currentPage.children
       .filter(node => node.id !== root.id)
       .map(node => node.y + node.height)
@@ -132,6 +362,926 @@ async function runMangroveCapabilityProbes(doc, brandId = 'undrr') {
       result.errors.push(message(error));
     }
     result.affectedNodeIds = report.ledger.slice(start).map(item => item.id);
+  }
+  if (scope === 'toc-range-paints') {
+    await test('tocRangePaints', async result => {
+      result.interpretation =
+        'Fresh-read both labels and consumers after each exact setter. Cross-variant changes identify a phase, not a proven Figma implementation cause.';
+      result.source = {
+        styleId: rangeSource.style.id,
+        fontName: { ...font },
+        fontSize: 16,
+        lineHeight: 24,
+        underlineOffset: { unit: 'PERCENT', value: 15 },
+        channelTolerance: 1e-6,
+      };
+      result.cases = [];
+      const caption = 'TOC source range paint probe';
+      const edited = 'Edited TOC range paint consumer';
+      const json = value => {
+        if (typeof value === 'symbol') return 'MIXED';
+        if (Array.isArray(value)) return value.map(json);
+        if (value && typeof value === 'object')
+          return Object.fromEntries(
+            Object.keys(value)
+              .sort()
+              .filter(key => value[key] !== undefined)
+              .map(key => [key, json(value[key])])
+          );
+        return value;
+      };
+      async function resolved(paints, node) {
+        if (!Array.isArray(paints))
+          return { mixed: true, paints: json(paints), resolved: [] };
+        const colors = [];
+        for (const paint of paints) {
+          if (paint.type !== 'SOLID')
+            throw new Error('Diagnostic text has a non-SOLID fill.');
+          let color = paint.color;
+          if (paint.boundVariables?.color?.id) {
+            const variable = await figma.variables.getVariableByIdAsync(
+              paint.boundVariables.color.id
+            );
+            if (!variable || variable.resolvedType !== 'COLOR')
+              throw new Error('Diagnostic range COLOR variable is missing.');
+            color = variable.resolveForConsumer(node).value;
+          }
+          colors.push({
+            r: color.r,
+            g: color.g,
+            b: color.b,
+            a: (color.a ?? 1) * (paint.opacity ?? 1),
+            visible: paint.visible !== false,
+          });
+        }
+        return { mixed: false, paints: json(paints), resolved: json(colors) };
+      }
+      const sourceMatches = (expected, actual) =>
+        actual.length === 1 &&
+        actual[0].visible &&
+        ['r', 'g', 'b', 'a'].every(
+          field =>
+            Number.isFinite(actual[0][field]) &&
+            Math.abs(expected[field] - actual[0][field]) <= 1e-6
+        );
+      function freshPaint(index, node) {
+        const role = rangeSource.roles[index],
+          color = role.variable.resolveForConsumer(node).value;
+        return [
+          figma.variables.setBoundVariableForPaint(
+            {
+              type: 'SOLID',
+              color: { r: color.r, g: color.g, b: color.b },
+              opacity: color.a ?? 1,
+            },
+            'color',
+            role.variable
+          ),
+        ];
+      }
+      for (const [caseIndex, condition] of [
+        { id: 'A', property: 'shared', styled: true },
+        { id: 'B', property: 'none', styled: true },
+        { id: 'C', property: 'shared', styled: false },
+        { id: 'D', property: 'distinct', styled: true },
+        { id: 'E', property: 'shared', styled: true, distinctStyles: true },
+        { id: 'F', property: 'shared', styled: true, detachTransition: true },
+      ].entries()) {
+        const sample = {
+          ...condition,
+          status: 'observed',
+          observations: [],
+          errors: [],
+          requestedRoles: rangeSource.roles.map(role => ({
+            name: role.name,
+            id: role.variable.id,
+            expected: role.expected,
+          })),
+        };
+        result.cases.push(sample);
+        try {
+          const masters = ['Default', 'Hover'].map((State, index) => {
+            const component = create('createComponent');
+            component.name = `State=${State}`;
+            component.layoutMode = 'VERTICAL';
+            component.fills = [];
+            component.clipsContent = false;
+            component.paddingTop = component.paddingBottom = 2.5;
+            component.resize(195.5, 29);
+            component.maxWidth = 195.5;
+            component.layoutSizingHorizontal = component.layoutSizingVertical =
+              'HUG';
+            component.x = index * 280;
+            component.y = caseIndex * 260;
+            return component;
+          });
+          const set = record(figma.combineAsVariants(masters, root), false);
+          set.name = `${condition.id} / ${condition.property} Label / ${condition.distinctStyles ? 'distinct style IDs' : condition.detachTransition ? 'style detach transition' : condition.styled ? 'shared style' : 'no style'}`;
+          set.layoutMode = 'NONE';
+          set.fills = [];
+          set.clipsContent = false;
+          set.x = 0;
+          set.y = caseIndex * 260;
+          masters.forEach((node, index) => {
+            node.x = index * 280;
+            node.y = 0;
+          });
+          const labels = masters.map(master => text(master, caption));
+          labels.forEach(node => {
+            node.name = 'Link label';
+          });
+          const keys =
+            condition.property === 'none'
+              ? [null, null]
+              : condition.property === 'shared'
+                ? Array(2).fill(
+                    set.addComponentProperty('Label', 'TEXT', caption)
+                  )
+                : ['Default', 'Hover'].map(State =>
+                    set.addComponentProperty(`Label ${State}`, 'TEXT', caption)
+                  );
+          sample.setId = set.id;
+          sample.masterIds = masters.map(node => node.id);
+          sample.labelIds = labels.map(node => node.id);
+          sample.propertyIds = keys;
+          const requestedStyles = condition.distinctStyles
+            ? [rangeSource.style, rangeSource.markerStyle]
+            : [rangeSource.style, rangeSource.style];
+          sample.requestedStyleIds = requestedStyles.map(style =>
+            condition.styled ? style.id : ''
+          );
+          let detached = false;
+          const consumers = [];
+          async function readText(id, roleIndex) {
+            const node = await figma.getNodeByIdAsync(id);
+            if (
+              !node ||
+              node.type !== 'TEXT' ||
+              mgReadIdentity(node, MG_CAPABILITY_KEY) !== report.runId
+            )
+              throw new Error('Exact diagnostic TEXT is missing or foreign.');
+            const nominal = await resolved(node.fills, node),
+              range = await resolved(
+                node.getRangeFills(0, node.characters.length),
+                node
+              );
+            const typographyBindingValues = [];
+            for (const binding of rangeSource.typographyBindings) {
+              const raw = node.boundVariables?.[binding.field];
+              const aliases = Array.isArray(raw) ? raw : raw ? [raw] : [];
+              const actual = [];
+              for (const alias of aliases) {
+                const variable = await figma.variables.getVariableByIdAsync(
+                  alias.id
+                );
+                if (!variable)
+                  throw new Error(
+                    'Diagnostic typography alias variable is missing.'
+                  );
+                actual.push({
+                  id: variable.id,
+                  type: variable.resolvedType,
+                  value: json(variable.resolveForConsumer(node).value),
+                });
+              }
+              typographyBindingValues.push({
+                field: binding.field,
+                sourceRole: binding.sourceRole,
+                expectedId: binding.variable.id,
+                expected: binding.expected,
+                raw: json(raw),
+                actual,
+                sourceMatches:
+                  actual.length === 1 &&
+                  actual[0].id === binding.variable.id &&
+                  actual[0].type === binding.type &&
+                  actual[0].value === binding.expected,
+              });
+            }
+            return {
+              id: node.id,
+              parentId: node.parent?.id,
+              characters: node.characters,
+              textStyleId: json(node.textStyleId),
+              fontName: json(node.fontName),
+              fontSize: node.fontSize,
+              lineHeight: json(node.lineHeight),
+              references: json(node.componentPropertyReferences || {}),
+              boundVariables: json(node.boundVariables || {}),
+              typographyBindingValues,
+              nominal,
+              range,
+              sourceRole: rangeSource.roles[roleIndex].name,
+              sourceRangeMatches: sourceMatches(
+                rangeSource.roles[roleIndex].expected,
+                range.resolved
+              ),
+              textDecoration: json(node.textDecoration),
+              textDecorationOffset: json(node.textDecorationOffset),
+              textWrapStyle: json(node.textWrapStyle),
+              bounds: bounds(node),
+              textAutoResize: node.textAutoResize,
+              horizontal: node.layoutSizingHorizontal,
+              vertical: node.layoutSizingVertical,
+            };
+          }
+          async function snapshot(phase, operation = null) {
+            const observation = {
+              phase,
+              operation,
+              definitions: json(set.componentPropertyDefinitions),
+              labels: [],
+              consumers: [],
+              errors: [],
+            };
+            sample.observations.push(observation);
+            for (let index = 0; index < 2; index++)
+              observation.labels.push(
+                await readText(sample.labelIds[index], index)
+              );
+            for (const consumer of consumers) {
+              const node = await figma.getNodeByIdAsync(consumer.id);
+              if (
+                !node ||
+                node.type !== 'INSTANCE' ||
+                mgReadIdentity(node, MG_CAPABILITY_KEY) !== report.runId
+              )
+                throw new Error(
+                  'Exact diagnostic consumer is missing or foreign.'
+                );
+              const texts = node.findAll(child => child.type === 'TEXT');
+              if (texts.length !== 1)
+                throw new Error(
+                  'Diagnostic consumer TEXT is missing or ambiguous.'
+                );
+              observation.consumers.push({
+                id: node.id,
+                index: consumer.index,
+                propertyId: keys[consumer.index],
+                originalTextId: consumer.textId,
+                actualMainComponentId: (await node.getMainComponentAsync())?.id,
+                properties: json(node.componentProperties),
+                requestedEdit: consumer.edited ? edited : caption,
+                edited: consumer.edited,
+                label: await readText(texts[0].id, consumer.index),
+              });
+            }
+            return observation;
+          }
+          async function setter(index, name, phase, guardUnchanged = false) {
+            sample.phase = `${phase}_${index}_${name}`;
+            const node = await figma.getNodeByIdAsync(sample.labelIds[index]);
+            if (
+              !node ||
+              mgReadIdentity(node, MG_CAPABILITY_KEY) !== report.runId
+            )
+              throw new Error(
+                'Exact diagnostic setter target is missing or foreign.'
+              );
+            let skipped = false;
+            if (name === 'style') {
+              const style = requestedStyles[index];
+              if (
+                condition.styled &&
+                !detached &&
+                !(guardUnchanged && node.textStyleId === style.id)
+              )
+                await node.setTextStyleIdAsync(style.id);
+              else skipped = true;
+            }
+            if (name === 'detachStyle') await node.setTextStyleIdAsync('');
+            if (name === 'directTypography') {
+              node.fontName = { ...font };
+              node.fontSize = 16;
+              node.lineHeight = { unit: 'PERCENT', value: 150 };
+            }
+            if (name === 'fontFamilyBinding' || name === 'fontSizeBinding') {
+              const field =
+                name === 'fontFamilyBinding' ? 'fontFamily' : 'fontSize';
+              const binding = rangeSource.typographyBindings.find(
+                item => item.field === field
+              );
+              node.setBoundVariable(field, binding.variable);
+            }
+            if (name === 'characters') {
+              if (guardUnchanged && node.characters === caption) skipped = true;
+              else node.characters = caption;
+            }
+            if (name === 'nominalFill') node.fills = freshPaint(index, node);
+            if (name === 'reference') {
+              if (keys[index])
+                node.componentPropertyReferences = {
+                  ...node.componentPropertyReferences,
+                  characters: keys[index],
+                };
+              else skipped = true;
+            }
+            if (name === 'layout') {
+              node.textAutoResize = 'HEIGHT';
+              node.layoutSizingHorizontal = 'FILL';
+              node.layoutSizingVertical = 'HUG';
+            }
+            if (name === 'decoration') {
+              node.textDecoration = 'UNDERLINE';
+              node.textDecorationOffset = { unit: 'PERCENT', value: 15 };
+              node.textWrapStyle = 'AUTO';
+            }
+            if (name === 'rangeFill')
+              node.setRangeFills(
+                0,
+                node.characters.length,
+                freshPaint(index, node)
+              );
+            await snapshot(`${phase}_${index}_${name}`, {
+              index,
+              name,
+              targetId: node.id,
+              skipped,
+              guardUnchanged,
+            });
+          }
+          const order = [
+            'style',
+            'characters',
+            'nominalFill',
+            'reference',
+            'layout',
+            'decoration',
+            'rangeFill',
+          ];
+          await snapshot('unlinked');
+          for (let index = 0; index < 2; index++)
+            for (const name of order) await setter(index, name, 'initial');
+          const initial = await snapshot('initial_complete');
+          for (let index = 0; index < 2; index++) {
+            const node = instance(masters[index]);
+            node.name = `${condition.id} / ${index ? 'Edited Hover' : 'Fresh Default'}`;
+            node.x = 600 + index * 240;
+            node.y = caseIndex * 260;
+            const child = node.findAll(item => item.type === 'TEXT')[0];
+            if (!child)
+              throw new Error('Diagnostic instance has no generated TEXT.');
+            consumers.push({
+              id: node.id,
+              textId: child.id,
+              index,
+              edited: index === 1,
+            });
+            if (index === 1) {
+              if (keys[index]) node.setProperties({ [keys[index]]: edited });
+              else child.characters = edited;
+            }
+          }
+          const before = await snapshot('consumers_ready');
+          let repeated;
+          for (const pass of [1, 2]) {
+            for (let index = 0; index < 2; index++)
+              for (const name of order)
+                await setter(index, name, `repeat${pass}`);
+            repeated = await snapshot(`repeat${pass}_complete`);
+          }
+          for (let index = 0; index < 2; index++)
+            for (const name of ['nominalFill', 'rangeFill'])
+              await setter(index, name, 'paintOnly');
+          const paintOnly = await snapshot('paintOnly_freshLookup');
+          for (let index = 0; index < 2; index++)
+            for (const name of order)
+              await setter(index, name, 'guarded', true);
+          const guarded = await snapshot('guarded_complete');
+          let detachedAfter;
+          if (condition.detachTransition) {
+            sample.beforeDetachment = await snapshot('detach_before');
+            for (let index = 0; index < 2; index++)
+              await setter(index, 'detachStyle', 'detach');
+            detached = true;
+            for (let index = 0; index < 2; index++)
+              for (const name of [
+                'directTypography',
+                'decoration',
+                'nominalFill',
+                'rangeFill',
+              ])
+                await setter(index, name, 'detachRepair');
+            sample.afterDetachment = await snapshot('detach_repainted');
+            for (const pass of [1, 2]) {
+              for (let index = 0; index < 2; index++)
+                for (const name of [
+                  'directTypography',
+                  'characters',
+                  'nominalFill',
+                  'reference',
+                  'layout',
+                  'decoration',
+                  'rangeFill',
+                ])
+                  await setter(index, name, `detachedRepeat${pass}`);
+              detachedAfter = await snapshot(`detachedRepeat${pass}_complete`);
+            }
+          }
+          const after = await snapshot('final');
+          const typographyMatches = (node, index) =>
+            JSON.stringify(json(node.fontName)) ===
+              JSON.stringify(
+                json(
+                  detached || !condition.styled
+                    ? font
+                    : requestedStyles[index].fontName
+                )
+              ) &&
+            node.fontSize === 16 &&
+            (node.lineHeight?.unit === 'PERCENT'
+              ? (node.lineHeight.value * node.fontSize) / 100
+              : node.lineHeight?.unit === 'PIXELS'
+                ? node.lineHeight.value
+                : null) === 24 &&
+            node.textDecoration === 'UNDERLINE' &&
+            node.textDecorationOffset?.unit === 'PERCENT' &&
+            node.textDecorationOffset.value === 15 &&
+            node.textWrapStyle === 'AUTO';
+          sample.findings = {
+            initialRangeRolesMatch: initial.labels.every(
+              node => node.sourceRangeMatches
+            ),
+            repeatedRangeRolesMatch: repeated.labels.every(
+              node => node.sourceRangeMatches
+            ),
+            labelIdsStable:
+              JSON.stringify(initial.labels.map(node => node.id)) ===
+              JSON.stringify(after.labels.map(node => node.id)),
+            propertyIdsStable: after.labels.every(
+              (node, index) =>
+                (node.references.characters || null) === keys[index]
+            ),
+            mainStyleIdsMatch: after.labels.every(
+              (node, index) =>
+                (node.textStyleId || '') ===
+                (detached || !condition.styled ? '' : requestedStyles[index].id)
+            ),
+            consumerStyleIdsMatch: after.consumers.every(
+              consumer =>
+                (consumer.label.textStyleId || '') ===
+                (detached || !condition.styled
+                  ? ''
+                  : requestedStyles[consumer.index].id)
+            ),
+            mainTypographyMatches: after.labels.every(typographyMatches),
+            consumerTypographyMatches: after.consumers.every(consumer =>
+              typographyMatches(consumer.label, consumer.index)
+            ),
+            consumerSourceRolesMatch: after.consumers.every(
+              node => node.label.sourceRangeMatches
+            ),
+            consumerEditsRetained: after.consumers.every(
+              node =>
+                node.label.characters === node.requestedEdit &&
+                (!node.propertyId ||
+                  node.properties[node.propertyId]?.value ===
+                    node.requestedEdit)
+            ),
+            consumerIdsStable:
+              JSON.stringify(
+                before.consumers.map(node => [node.id, node.label.id])
+              ) ===
+              JSON.stringify(
+                after.consumers.map(node => [node.id, node.label.id])
+              ),
+            consumersAttached: after.consumers.every(
+              (node, index) => node.actualMainComponentId === masters[index].id
+            ),
+          };
+          sample.candidateFindings = {
+            paintOnlyRangeRolesMatch: paintOnly.labels.every(
+              node => node.sourceRangeMatches
+            ),
+            paintOnlyConsumerRangeRolesMatch: paintOnly.consumers.every(
+              node => node.label.sourceRangeMatches
+            ),
+            guardedRangeRolesMatch: guarded.labels.every(
+              node => node.sourceRangeMatches
+            ),
+            guardedConsumerRangeRolesMatch: guarded.consumers.every(
+              node => node.label.sourceRangeMatches
+            ),
+            guardedSkips: sample.observations
+              .filter(
+                item => item.operation?.guardUnchanged && item.operation.skipped
+              )
+              .map(item => ({
+                phase: item.phase,
+                targetId: item.operation.targetId,
+                setter: item.operation.name,
+              })),
+          };
+          if (condition.detachTransition)
+            sample.detachFindings = {
+              beforeRangeRolesMatch: sample.beforeDetachment.labels.every(
+                node => node.sourceRangeMatches
+              ),
+              repairedRangeRolesMatch: sample.afterDetachment.labels.every(
+                node => node.sourceRangeMatches
+              ),
+              repeatedRangeRolesMatch: detachedAfter.labels.every(
+                node => node.sourceRangeMatches
+              ),
+              consumerRangeRolesMatch: after.consumers.every(
+                node => node.label.sourceRangeMatches
+              ),
+              styleIdsCleared: after.labels.every(
+                node => node.textStyleId === ''
+              ),
+              consumerStyleIdsCleared: after.consumers.every(
+                node => node.label.textStyleId === ''
+              ),
+              typographyMatches:
+                after.labels.every(typographyMatches) &&
+                after.consumers.every(consumer =>
+                  typographyMatches(consumer.label, consumer.index)
+                ),
+              identitiesAndEditsRetained:
+                sample.findings.labelIdsStable &&
+                sample.findings.propertyIdsStable &&
+                sample.findings.consumerIdsStable &&
+                sample.findings.consumerEditsRetained &&
+                sample.findings.consumersAttached,
+            };
+          if (condition.detachTransition) {
+            sample.bindingRepairSource = {
+              styleId: rangeSource.style.id,
+              aliases: report.preflight.typographyBindings,
+            };
+            for (let index = 0; index < 2; index++)
+              for (const name of [
+                'directTypography',
+                'decoration',
+                'fontFamilyBinding',
+                'fontSizeBinding',
+                'nominalFill',
+                'rangeFill',
+              ])
+                await setter(index, name, 'bindingRepair');
+            const repaired = await snapshot('binding_repaired');
+            let bindingRepeated;
+            for (const pass of [1, 2]) {
+              for (let index = 0; index < 2; index++)
+                for (const name of [
+                  'directTypography',
+                  'characters',
+                  'reference',
+                  'layout',
+                  'decoration',
+                  'fontFamilyBinding',
+                  'fontSizeBinding',
+                  'nominalFill',
+                  'rangeFill',
+                ])
+                  await setter(index, name, `bindingRepeat${pass}`);
+              bindingRepeated = await snapshot(`bindingRepeat${pass}_complete`);
+            }
+            const boundAfter = await snapshot('binding_final');
+            const bindingsMatch = node =>
+              node.typographyBindingValues.length === 2 &&
+              node.typographyBindingValues.every(
+                binding => binding.sourceMatches
+              );
+            const editedBefore = after.consumers.find(node => node.edited);
+            const editedAfter = boundAfter.consumers.find(node => node.edited);
+            sample.bindingFindings = {
+              repairedMainBindingsMatch: repaired.labels.every(bindingsMatch),
+              repeatedMainBindingsMatch:
+                bindingRepeated.labels.every(bindingsMatch),
+              uneditedConsumerBindingsMatch: boundAfter.consumers
+                .filter(node => !node.edited)
+                .every(node => bindingsMatch(node.label)),
+              mainRangeRolesMatch: boundAfter.labels.every(
+                node => node.sourceRangeMatches
+              ),
+              consumerRangeRolesMatch: boundAfter.consumers.every(
+                node => node.label.sourceRangeMatches
+              ),
+              mainTypographyMatches: boundAfter.labels.every(typographyMatches),
+              consumerTypographyMatches: boundAfter.consumers.every(node =>
+                typographyMatches(node.label, node.index)
+              ),
+              mainStyleIdsRemainDetached: boundAfter.labels.every(
+                node => node.textStyleId === ''
+              ),
+              uneditedConsumerStyleRemainsDetached: boundAfter.consumers
+                .filter(node => !node.edited)
+                .every(node => node.label.textStyleId === ''),
+              editedConsumerExactReadbackPreserved:
+                JSON.stringify(editedBefore) === JSON.stringify(editedAfter),
+              mainIdsAndPropertiesPreserved:
+                JSON.stringify(
+                  after.labels.map(node => [node.id, node.references])
+                ) ===
+                JSON.stringify(
+                  boundAfter.labels.map(node => [node.id, node.references])
+                ),
+              consumerIdsAndPropertiesPreserved:
+                JSON.stringify(
+                  after.consumers.map(node => [
+                    node.id,
+                    node.label.id,
+                    node.actualMainComponentId,
+                    node.properties,
+                  ])
+                ) ===
+                JSON.stringify(
+                  boundAfter.consumers.map(node => [
+                    node.id,
+                    node.label.id,
+                    node.actualMainComponentId,
+                    node.properties,
+                  ])
+                ),
+              sharedStyleAssociationSatisfied: false,
+            };
+          }
+          sample.crossVariantChanges = [];
+          for (let index = 1; index < sample.observations.length; index++) {
+            const current = sample.observations[index],
+              previous = sample.observations[index - 1];
+            if (!current.operation || current.operation.skipped) continue;
+            const peer = 1 - current.operation.index;
+            if (
+              JSON.stringify(current.labels[peer].range) !==
+              JSON.stringify(previous.labels[peer].range)
+            )
+              sample.crossVariantChanges.push({
+                phase: current.phase,
+                setter: current.operation.name,
+                targetId: current.operation.targetId,
+                changedPeerId: current.labels[peer].id,
+                before: previous.labels[peer].range,
+                after: current.labels[peer].range,
+              });
+          }
+          sample.supported = Object.values(sample.findings).every(Boolean);
+        } catch (error) {
+          sample.status = 'error';
+          sample.errors.push(message(error));
+          result.errors.push(`${condition.id}: ${message(error)}`);
+          sample.supported = false;
+        }
+      }
+      result.supported = result.cases[0].supported;
+      result.findings = result.cases.map(sample => ({
+        id: sample.id,
+        property: sample.property,
+        styled: sample.styled,
+        status: sample.status,
+        findings: sample.findings,
+        candidateFindings: sample.candidateFindings,
+        detachFindings: sample.detachFindings,
+        bindingFindings: sample.bindingFindings,
+        firstCrossVariantChange: sample.crossVariantChanges?.[0] || null,
+      }));
+    });
+    report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
+    report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
+    return report;
+  }
+  if (scope === 'toc-link-sizing') {
+    await test('tocLinkSizing', async result => {
+      result.interpretation =
+        'Three actual native sizing patterns at three source-derived caps. A retained requested setting is not proof of CSS shrink-to-fit or live responsive geometry.';
+      result.source = {
+        file: 'stories/Components/TableOfContents/table-of-contents.scss',
+        consumerWidths: [240, 390, 900],
+        availableWidthBasis:
+          'consumer width minus border2, padding20, marker allocation20 and link-leading2.5',
+        firstStoryLink:
+          'What is the Global Platform for Disaster Risk Reduction?',
+        firstStoryLinkHeights: [77, 53, 29],
+        firstStoryLinkWideWidth: 398.8125,
+        unbrokenWideWidth: 636.625,
+        browser: 'Chromium153.0.8010.47/macOS, UNDRR Latin source fixture',
+      };
+      const captions = [
+        ['short', 'Short link'],
+        ['first-story', result.source.firstStoryLink],
+        [
+          'long-words',
+          'How does the Global Platform for DRR link to the Sustainable Development Goals and the Paris Agreement?',
+        ],
+        ['multiline', 'First explicit line\nSecond explicit line'],
+        [
+          'unbroken',
+          'DisasterRiskReductionAndResilienceAcrossInternationalCommunitiesWithoutWordBreaks',
+        ],
+        ['short-restored', 'Short link'],
+      ];
+      result.diagnosticUnbrokenText = captions[4][1];
+      result.diagnosticUnbrokenNote =
+        'Exact explicit source research stress string. Its native font-file advance is not assumed equal to the source636.625px; narrow source overflows rather than splitting.';
+      for (const [column, pattern] of [
+        'frame-cap-hug-text',
+        'frame-cap-fill-text',
+        'direct-text-cap-hug-text',
+      ].entries())
+        for (const [row, cap] of [195.5, 345.5, 855.5].entries()) {
+          const sample = {
+            pattern,
+            requestedCap: cap,
+            consumerWidth: cap + 44.5,
+            status: 'observed',
+            observations: [],
+            errors: [],
+          };
+          result.observations.push(sample);
+          try {
+            const caption = text(
+              root,
+              `${pattern} / ${sample.consumerWidth}px consumer`
+            );
+            sample.captionId = caption.id;
+            caption.x = column * 940;
+            caption.y = row * 280;
+            caption.textAutoResize = 'WIDTH_AND_HEIGHT';
+            const master = create('createComponent');
+            sample.masterId = master.id;
+            master.name = `TOC diagnostic / ${pattern} / ${sample.consumerWidth}px`;
+            master.x = column * 940;
+            master.y = row * 280 + 30;
+            master.layoutMode = 'VERTICAL';
+            master.fills = [];
+            master.clipsContent = false;
+            master.paddingTop = master.paddingBottom = 2.5;
+            master.paddingLeft = master.paddingRight = 0;
+            master.resize(cap, 29);
+            master.layoutSizingHorizontal = master.layoutSizingVertical = 'HUG';
+            if (pattern !== 'direct-text-cap-hug-text') master.maxWidth = cap;
+            const label = text(master, captions[0][1]);
+            label.name = 'TOC diagnostic editable Label';
+            label.textDecoration = 'UNDERLINE';
+            label.textDecorationOffset = { unit: 'PERCENT', value: 15 };
+            label.textWrapStyle = 'AUTO';
+            if (pattern === 'direct-text-cap-hug-text') label.maxWidth = cap;
+            label.textAutoResize =
+              pattern === 'frame-cap-fill-text' ? 'HEIGHT' : 'WIDTH_AND_HEIGHT';
+            label.layoutSizingHorizontal =
+              pattern === 'frame-cap-fill-text' ? 'FILL' : 'HUG';
+            label.layoutSizingVertical = 'HUG';
+            const property = master.addComponentProperty(
+              'Label',
+              'TEXT',
+              captions[0][1]
+            );
+            sample.propertyId = property;
+            label.componentPropertyReferences = { characters: property };
+            const consumer = instance(master);
+            sample.instanceId = consumer.id;
+            consumer.name = `Edited TOC diagnostic / ${pattern} / ${sample.consumerWidth}px`;
+            consumer.x = master.x;
+            consumer.y = master.y + 110;
+            const originalTextId = consumer.findAll(
+              node => node.type === 'TEXT'
+            )[0]?.id;
+            if (!originalTextId)
+              throw new Error('Diagnostic instance has no Label text.');
+            async function snapshot(phase, requestedCharacters) {
+              // Fresh lookup is essential if the native API regenerates handles.
+              const fresh = await figma.getNodeByIdAsync(consumer.id);
+              const current = fresh?.findAll(node => node.type === 'TEXT')[0];
+              if (!fresh || !current)
+                throw new Error('Diagnostic instance or Label disappeared.');
+              const freshMaster = await figma.getNodeByIdAsync(master.id);
+              const currentMain = await fresh.getMainComponentAsync();
+              const nodeMetrics = node => ({
+                ...bounds(node),
+                layoutSizingHorizontal: node.layoutSizingHorizontal,
+                layoutSizingVertical: node.layoutSizingVertical,
+                maxWidth: node.maxWidth ?? null,
+                clipsContent: node.clipsContent,
+                paddingTop: node.paddingTop,
+                paddingBottom: node.paddingBottom,
+                paddingLeft: node.paddingLeft,
+                paddingRight: node.paddingRight,
+                absoluteRenderBounds: node.absoluteRenderBounds,
+              });
+              const observation = {
+                phase,
+                requestedCharacters,
+                propertyId: property,
+                property: fresh.componentProperties[property],
+                masterProperty:
+                  freshMaster.componentPropertyDefinitions[property],
+                characters: current.characters,
+                master: nodeMetrics(freshMaster),
+                masterText: nodeMetrics(
+                  freshMaster.findAll(node => node.type === 'TEXT')[0]
+                ),
+                instance: nodeMetrics(fresh),
+                text: nodeMetrics(current),
+                textAutoResize: current.textAutoResize,
+                fontName: current.fontName,
+                fontSize: current.fontSize,
+                lineHeight: current.lineHeight,
+                textWrapStyle: current.textWrapStyle,
+                textDecoration: current.textDecoration,
+                textDecorationOffset: current.textDecorationOffset,
+                componentPropertyReferences:
+                  current.componentPropertyReferences,
+                actualMainComponentId: currentMain?.id || null,
+                stableTextId: current.id === originalTextId,
+              };
+              sample.observations.push(observation);
+              return observation;
+            }
+            for (const [phase, characters] of captions) {
+              consumer.setProperties({ [property]: characters });
+              await Promise.resolve();
+              await snapshot(phase, characters);
+            }
+            const edited =
+              'Edited source link label retained after a master cap write';
+            consumer.setProperties({ [property]: edited });
+            await snapshot('before-master-cap-write', edited);
+            const nextCap = cap - 10;
+            sample.rewrittenMasterCap = nextCap;
+            if (pattern === 'direct-text-cap-hug-text')
+              label.maxWidth = nextCap;
+            else master.maxWidth = nextCap;
+            await Promise.resolve();
+            const after = await snapshot('after-master-cap-write', edited);
+            const [short, firstStory, , multiline, unbroken, restored] =
+              sample.observations;
+            sample.criteria = {
+              propertyTextPropagates: sample.observations.every(
+                item =>
+                  item.characters === item.requestedCharacters &&
+                  item.property?.value === item.requestedCharacters
+              ),
+              stableTextIds: sample.observations.every(
+                item => item.stableTextId
+              ),
+              attachedToOwnedMaster: sample.observations.every(
+                item => item.actualMainComponentId === master.id
+              ),
+              shortHugsBelowCap: short.instance.width < cap - 0.01,
+              normalLinkCapsAndGrows:
+                firstStory.instance.width <= cap + 0.01 &&
+                firstStory.text.width <= cap + 0.01 &&
+                firstStory.instance.height >= short.instance.height &&
+                (cap >= result.source.firstStoryLinkWideWidth ||
+                  firstStory.text.height > short.text.height),
+              multilineGrowsVertically:
+                multiline.instance.height > short.instance.height,
+              shortRestores:
+                Math.abs(restored.instance.width - short.instance.width) <
+                  0.01 &&
+                Math.abs(restored.instance.height - short.instance.height) <
+                  0.01,
+              verticalHugRetained: sample.observations.every(
+                item => item.instance.layoutSizingVertical === 'HUG'
+              ),
+              horizontalHugRetained: sample.observations.every(
+                item => item.instance.layoutSizingHorizontal === 'HUG'
+              ),
+              editedLabelRetainedAfterMasterWrite:
+                after.characters === edited &&
+                after.property?.value === edited &&
+                after.stableTextId,
+              masterCapWriteRetained:
+                (pattern === 'direct-text-cap-hug-text'
+                  ? after.masterText.maxWidth
+                  : after.master.maxWidth) === nextCap,
+            };
+            sample.sourceComparison = {
+              firstStoryLinkExpectedHeight:
+                result.source.firstStoryLinkHeights[row],
+              firstStoryLinkActualHeight: firstStory.instance.height,
+              firstStoryLinkHeightMatches:
+                Math.abs(
+                  firstStory.instance.height -
+                    result.source.firstStoryLinkHeights[row]
+                ) < 0.01,
+              stressOverflowsCap: unbroken.instance.width > cap + 0.01,
+              note: 'Unbroken stress text is diagnostic; normal source word wrapping and exact glyph widths are independently judged from actual font/PNG evidence.',
+            };
+            sample.supported = Object.values(sample.criteria).every(Boolean);
+          } catch (error) {
+            sample.status = 'error';
+            sample.errors.push(message(error));
+            result.errors.push(
+              `${pattern}/${sample.consumerWidth}px: ${message(error)}`
+            );
+            sample.supported = false;
+          }
+        }
+      result.supported = [
+        'frame-cap-hug-text',
+        'frame-cap-fill-text',
+        'direct-text-cap-hug-text',
+      ].some(pattern =>
+        result.observations
+          .filter(sample => sample.pattern === pattern)
+          .every(sample => sample.supported)
+      );
+    });
+    report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
+    report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
+    return report;
   }
   await test('legend', async result => {
     result.fallback =

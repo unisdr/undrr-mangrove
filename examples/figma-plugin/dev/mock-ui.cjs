@@ -594,10 +594,12 @@ async function main() {
       type: 'capability-probes',
       doc,
       brand: 'undrr',
+      scope: 'legacy',
     }
   );
   for (const id of [
     'capability-probes',
+    'capability-scope',
     'capability-file',
     'audit-capability-probes',
     'inspect-capability-probes',
@@ -720,6 +722,14 @@ async function main() {
     JSON.parse(await capabilitiesUI.downloads.at(-1).blob.text()),
     cleanupReport
   );
+  assert.strictEqual(capabilityElement('capability-scope').disabled, false);
+  capabilityElement('capability-scope').value = 'toc-link-sizing';
+  capabilityElement('capability-probes').click();
+  assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(capabilitiesUI.messages.at(-1))),
+    { type: 'capability-probes', doc, brand: 'undrr', scope: 'toc-link-sizing' }
+  );
+  assert.strictEqual(capabilityElement('capability-scope').disabled, true);
 
   // A new UI window has no cache or token JSON; cleanup needs only the saved ledger.
   const recoveredUI = mountUI();
@@ -735,6 +745,7 @@ async function main() {
     'Saved ledger recovers cleanup after restart without a document'
   );
   assert.strictEqual(recoveredElement('capability-probes').disabled, true);
+  assert.strictEqual(recoveredElement('capability-scope').disabled, true);
   assert(recoveredElement('log').textContent.includes(capabilityReport.rootId));
   assert.strictEqual(
     recoveredUI.messages.length,
