@@ -2,6 +2,8 @@
 
 Updated 4 October 2026 after designer review and a native migration attempt. **This acceptance gate remains open.** Section migration and reconciliation are implemented locally, but native migration is blocked by an unavailable existing font. Table grid compaction and separation from Review are accepted within the native scope below. Complete the remaining gate before expanding the catalogue.
 
+The subsequent [user experience review](UX-REVIEW.md) finds that the planned six-section migration still leaves discovery and family-level comparison problems. It proposes task-based component groups, nearby examples, clear readiness labels and a separate maintenance destination. That proposal is not implemented; changing destination identities requires a reviewed versioned migration. The novice task targets below supplement the existing structural and preservation gate.
+
 ## Why the Table selection is so large
 
 The purple selection in the reported screenshot is the Table component set, containing eight variants. Selecting a set includes the empty space between its variants. It does not mean that the neighbouring Review examples are Table children.
@@ -88,6 +90,9 @@ Use explicit immutable presentation keys independent of section titles, with a v
 ## Acceptance criteria before designer handoff
 
 - [ ] A novice can locate foundations, a component, a composition, page patterns and pending work from Start here and the Layers panel without understanding build order.
+- [ ] Contents, Layers and plugin navigation agree about available destinations. Planned routes are omitted or explicitly marked unavailable before migration.
+- [ ] A user can find a complete widget without first navigating its supporting parts, compare its nearby states and identify supported edits. Current scope descriptions agree with the accepted bounded evidence.
+- [ ] A user can locate and create personal work outside generated containers, insert/edit a linked instance without changing its main, and complete the six [novice task targets](UX-REVIEW.md#proposed-novice-acceptance-tasks) with the plugin initially closed and no coaching. Record outcomes and assistance; the targets are not current results.
 - [ ] Table's variant grid has row-specific spacing, fits its containing section, and does not intersect unrelated sections or Review examples. Check all families, not just Table, at normal zoom.
 - [ ] Existing canonical IDs, property IDs, variable/style bindings and nested instance links survive the hierarchy migration. No detach/recreate shortcut.
 - [ ] Two ordinary reruns create no duplicate sections, sets, variants or review specimens and retain manual guidance, edited consumer content and designer-owned placement.

@@ -2,6 +2,8 @@
 
 Updated 4 October 2026. The **local UNDRR core construction and bounded consumer gates are complete** for the tested contracts below. **Designer handoff remains open:** canvas organisation, generated layout and durable reconciliation must pass [the kit architecture gate](KIT-ARCHITECTURE.md) before this is treated as an approachable library. The wider catalogue remains follow-up work in [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md). This is an exploratory kit, not a published or supported library.
 
+The [user experience review](UX-REVIEW.md) records remaining discovery, ordering, navigation and readiness-label gaps, with a proposed presentation structure and novice task targets. Some native component descriptions still predate the bounded acceptance below; reconcile them through the source update contract. The review recommendations are not implemented and do not change component acceptance.
+
 ## Onboarding status
 
 The standalone welcome board is now applied and visually reviewed at 100% zoom. **Open Start here** also works after a plugin restart without loading JSON. Two final zero-create repeats retain all 6,476 inspected asset records, including the 23 new guidance nodes; all 6,453 original inspected IDs remain. Historical diagnostics now clear Review by 160px. Native paint repetition exposed a placeholder-colour issue that is fixed and regression-tested. Independent verification passes 19,482 checks with zero failures. Native manual-note preservation and novice handoff remain open. See [the welcome checkpoint](KIT-ARCHITECTURE.md#welcome-checkpoint). The Condensed font blocker and broader hierarchy gate remain unchanged.

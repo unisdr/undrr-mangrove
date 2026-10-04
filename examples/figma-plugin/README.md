@@ -108,6 +108,8 @@ Limits: one brand is visible at a time, and Starter cannot publish libraries, so
 
 ### Start here and onboarding
 
+The [user experience review](UX-REVIEW.md) records remaining file-navigation and discovery problems, a proposed component browsing structure and novice handoff tasks. Those recommendations are pending; a readable Welcome board does not establish a usable library handoff.
+
 A design kit needs an entry point that explains its structure. **Open Start here** is always visible in the plugin header. With the current token document loaded and one existing kit brand selected, it creates or updates a branded welcome board, then selects and zooms to it. Without a loaded document, it opens the existing board without writing. **Kit destination > 00 Start here > Go** also navigates without updating content.
 
 The board lists the existing owned boards using their current names and Layers order, explains how to insert linked instances from Assets, and describes supported scope and the automatic/manual update boundary. Foundations are located separately in Variables and local styles. After section migration, the contents use the actual six section names; planned destinations are not presented as installed. It uses the exact exported body font and imported colour variables. It works on the current single-page, single-brand Free setup and does not require the full section migration or load unavailable Condensed assets.
