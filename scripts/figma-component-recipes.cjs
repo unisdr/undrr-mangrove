@@ -1828,6 +1828,22 @@ function buildComponentRecipes({ root, modes, variables, styles }) {
       styles,
     })
   );
+  families.push(
+    ...require('./figma-details-recipes.cjs').buildDetailsRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
+  families.push(
+    ...require('./figma-select-recipes.cjs').buildSelectRecipes({
+      root,
+      modes,
+      variables,
+      styles,
+    })
+  );
   for (const variable of variables) byName.set(variable.name, variable);
   function validate(node) {
     const names = [

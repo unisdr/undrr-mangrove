@@ -27,6 +27,7 @@ function installSvgMock(figma, state, { createVector } = {}) {
       white: [1, 1, 1],
       black: [0, 0, 0],
       '#000': [0, 0, 0],
+      '#1a1a1a': [26 / 255, 26 / 255, 26 / 255],
       red: [1, 0, 0],
       blue: [0, 0, 1],
     };
@@ -73,7 +74,7 @@ function installSvgMock(figma, state, { createVector } = {}) {
         : figma.createVector
           ? figma.createVector()
           : new frame.constructor('VECTOR');
-      // Exact source Checkbox geometry. Extend fixtures deliberately for other
+      // Exact source asset geometry. Extend fixtures deliberately for other
       // assets rather than silently approximating arbitrary SVG path bounds.
       if (attrs.d === 'M3.5 8l3 3 6-6') {
         vector.x = 3.5;
@@ -82,6 +83,9 @@ function installSvgMock(figma, state, { createVector } = {}) {
       } else if (attrs.d === 'M0 0L16 16') {
         vector.x = vector.y = 0;
         vector.resize(16, 16);
+      } else if (attrs.d === 'M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z') {
+        vector.x = vector.y = 0;
+        vector.resize(12, 7.41);
       } else
         throw new Error(
           `SVG mock needs an explicit path fixture for ${attrs.d}`

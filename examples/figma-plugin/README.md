@@ -20,7 +20,7 @@ tokens/*.yaml + SCSS ──> scripts/build-figma-tokens.cjs ──> mangrove-var
 
 Not represented as variables, with the reason listed in the JSON's `skipped` array: shadows, durations and easings (no Figma variable type), percentages and `em` line heights, four-value shorthands, and `none`. Raised shadows and the source Radio checked inset are represented as effect styles instead.
 
-Current output contains 359 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 21 component text styles and seven effect styles. Read the build report for current totals. Component recipes cover 240 variants across 19 families; 16 tokens remain skipped as variables.
+Current output contains 384 variables, adding source-backed component roles to the original 219-variable bridge. It includes 60 Regular text foundations (12 selected by default), 26 component text styles and eight effect styles. Read the build report for current totals. Component recipes cover 265 variants across 21 families; 16 tokens remain skipped as variables.
 
 ### Text and effect foundations
 
@@ -304,6 +304,8 @@ node examples/figma-plugin/dev/mock-editorial-cta.cjs
 node examples/figma-plugin/dev/mock-editorial-contracts.cjs
 node examples/figma-plugin/dev/mock-editorial-acceptance.cjs
 node examples/figma-plugin/dev/mock-chips.cjs
+node examples/figma-plugin/dev/mock-details.cjs
+node examples/figma-plugin/dev/mock-select.cjs
 node examples/figma-plugin/dev/mock-audit-native-text.cjs
 node examples/figma-plugin/dev/mock-connector-scopes.cjs
 node examples/figma-plugin/dev/mock-review-export.cjs

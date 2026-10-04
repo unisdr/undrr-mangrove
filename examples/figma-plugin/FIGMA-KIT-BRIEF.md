@@ -20,7 +20,7 @@ Body line height is 1.5em on a 16px body, computing 24px. Component help and Com
 
 ## Current native checkpoint
 
-On 4 October 2026, the kit export contains 359 variables, 81 text definitions, seven effects, 19 native families and 240 variants. Desktop inspection found 33 selected text styles and all seven effects. Checkbox adds 30 variants with bounded UNDRR source comparisons. FormErrorSummary adds six variants; corrected underlining and balanced titles were observed in ordinary and edited long default-UNDRR consumers. These counts do not establish complete state, brand or script coverage. See [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md).
+On 4 October 2026, the kit export contains 384 variables, 86 text definitions, eight effects, 21 native families and 265 variants. Desktop inspection found 38 selected text styles and all eight effects. Checkbox adds 30 variants with bounded UNDRR source comparisons. FormErrorSummary adds six variants; corrected underlining and balanced titles were observed in ordinary and edited long default-UNDRR consumers. These counts do not establish complete state, brand or script coverage. See [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md).
 
 ## Button (`mg-button`)
 
@@ -212,3 +212,19 @@ Both sizes have bounded UNDRR Latin desktop observations. Pending, reduced motio
 Recipes live in `scripts/figma-editorial-cta-recipes.cjs`. The family has 23 bounded Base and Hero source-context states, including measured long labels and reduced-motion hover presets. Its actual source circle is 22px and uses the Roboto Bold `›` glyph. Review surface colours belong to padded wrappers, while the component remains transparent. Source underline offset metadata applies only to native text nodes.
 
 Native construction exists, but the first inspection showed every shared Label using the final Focus style. Do not claim Default/Hover typography or consumer resizing accepted until the isolated property experiment and edited-instance checks pass. Hero itself also requires exact Condensed fonts and a media contract.
+
+## Styled Details (`mg-details`)
+
+Use 20 source presets: Open False/True, Default/Hover/Focus/HoverFocus and BelowMedium/MediumUp typography, plus the measured 240px Default/Focus presets. Source typography switches at 48em (768px); native resizing does not run that breakpoint. MeasuredViewport is a documented source preset, not another CSS breakpoint. Summary Title and Paragraph are editable. Closed has no paragraph; do not add a Show body property that conflicts with Open.
+
+Keep the transparent outer root with 1px border, 4px radius and 10px padding. Summary minimum is 48px; its actual Title uses Roboto Bold at 16/18px with 24px line height. Paragraph uses Regular 12.5/16px at 160%. The source +/− marker is Regular18px in a 30px circle, positioned END−10 and CENTER, with an Open−0.5px compensation for the bottom border. Focus belongs to the summary: square corners by default, radius2px when HoverFocus. Hover retains its source alpha fill and outer shadow.
+
+Generic review specimens preserve main widths390/900/240. Explicit long1280/900/390/240 and unbroken240 consumers prove bounded content growth. Accordion groups and flush variants, automatic responsive type, active marker scaling, motion, keyboard behavior, all-brand/RTL and font-file equality remain separate work.
+
+## Closed Select (`mg-form-select`)
+
+Use five closed states: Default, Focus, Invalid, InvalidFocus and Disabled. The first native scope supports short placeholder/selected Value copy. Editable Label/Value/Help/Error and presentation booleans retain actual property keys; Invalid owns the outer error state. Focus overrides the Invalid border with blue while feedback remains red. Do not create a separate Filled paint state: selected text uses the same source surface and browser fieldtext black.
+
+Keep the source46px control height,20px end padding and exact inline12×8 SVG chevron with original#1a1a1a fill. Its native fixed wrapper uses END/CENTER; measuredx300.75 at320px andx220.75 at240px, y19. Chromium's disabled control opacity is0.7, scoped only to the control; this is a recorded UA baseline, not a Mangrove SCSS rule. Label/help remain undimmed except their own source colours.
+
+Native popup/keyboard behavior, long single-line/truncated Values, inline required-marker wrapping, cross-platform UA paint and broader brand/script acceptance remain unimplemented. FILL text currently wraps in Figma, so do not claim arbitrary long-value fidelity.
