@@ -74,6 +74,15 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
     /outline:\s*(\d+)px solid rgb\(var\(--mg-color-neutral-900\) \/ 0\.1\)/,
     1
   );
+  const pageLetterSpacingRatio = literal(
+    read('stories/assets/scss/_foundational.scss'),
+    /h1\s*{\s*font-size:\s*var\(--mg-font-size-600\);\s*letter-spacing:\s*([\d.]+)em;/,
+    0.02
+  );
+  const pageLetterSpacingSource = source(
+    'stories/assets/scss/_foundational.scss',
+    /letter-spacing: 0\.02em/
+  );
   const titleRatio = YAML.parse(read('tokens/mangrove.yaml'))[
     'font-line-height'
   ]['500'].$value;
@@ -348,6 +357,11 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
       328.1875,
       'Measured UNDRR actual JSX Section h2, plain copy and two editorial CTAs at1280. Fixed research preset, longer edits may extend past the image/veil.'
     ),
+    backgroundPageDesktopHeight: number(
+      'background-page-desktop-height',
+      371.375,
+      'Measured UNDRR actual source Page h1 at1280 with the existing plain-copy fixture: inherited .02em letter spacing increases the title to two lines. Finite source height; native font-file/wrapping equivalence is not promised.'
+    ),
     bannerHeight: number(
       'mobile-banner-height',
       Math.min(390 * 0.56, 320),
@@ -440,7 +454,8 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
     fontSize,
     face,
     lineHeight,
-    wrap = 'AUTO'
+    wrap = 'AUTO',
+    letterSpacing
   ) => {
     const definition = {
       id: `component.${id}`,
@@ -457,6 +472,12 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
         fontWeightRequested: face === 'Bold' ? 700 : 400,
         fontWeightBundled: face === 'Bold' ? 700 : 400,
         fontStyleBundled: face,
+        ...(letterSpacing
+          ? {
+              letterSpacingRatio: pageLetterSpacingRatio,
+              letterSpacingSource: pageLetterSpacingSource,
+            }
+          : {}),
         lineHeightBasis:
           lineHeight === 'body' ? 'inherited-computed-body' : 'own-font-size',
         verification:
@@ -472,6 +493,7 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
             : { unit: 'PERCENT', value: lineHeight },
         textDecoration: 'NONE',
         textWrapStyle: wrap,
+        ...(letterSpacing ? { letterSpacing: { ...letterSpacing } } : {}),
       })),
     };
     put(styles.text, definition);
@@ -516,6 +538,24 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
       'Bold',
       120,
       'BALANCE'
+    ),
+    heroPageTitleDesktop: textStyle(
+      'hero.page-title-desktop',
+      'font-family/display',
+      'font-size/800',
+      'Bold',
+      120,
+      'BALANCE',
+      { unit: 'PERCENT', value: pageLetterSpacingRatio * 100 }
+    ),
+    heroPageTitleMobile: textStyle(
+      'hero.page-title-mobile',
+      'font-family/display',
+      'font-size/600',
+      'Bold',
+      120,
+      'BALANCE',
+      { unit: 'PERCENT', value: pageLetterSpacingRatio * 100 }
     ),
     heroLabel: textStyle(
       'hero.label',
@@ -615,7 +655,7 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
     'Measured source browser geometry uses UNDRR. All-brand token/style values are exported, not visually accepted.',
   ];
   const heroLimits = [
-    'Unlinked Section h2, Default size, two editorial actions and existing sample image only. Page h1 letter spacing, linked heading focus, logo, rich HTML, video/HTML media, no-media Split, Immersive/contained/Child, RTL and arbitrary responsive widths remain pending.',
+    'Unlinked Section h2 and bounded Page h1, Default size, two editorial actions and existing sample image only. Page h1 retains source .02em letter spacing; Page Split is limited to default2/3 Desktop and stacked Mobile. Linked heading focus, logo, rich HTML, video/HTML media, no-media Split, Immersive/contained/Child, RTL and arbitrary responsive widths remain pending.',
     'Background Desktop image/veil is a finite measured-height preset. Edited copy may grow beyond it; gradients are bounded geometry, not live CSS viewport functions.',
     'Exact Condensed fonts are required; no substitution. Native gradient/crop/paint order, action style propagation and edited text acceptance are pending.',
     'Four source tones are represented. Secondary uses a leading8px rule, not an orange text-bearing surface.',
@@ -868,7 +908,7 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
   };
   background.optionalProperties = { ...heroOptional };
   split.optionalProperties = { ...heroOptional };
-  const heroContent = (tone, mobile, isSplit) => {
+  const heroContent = (tone, mobile, isSplit, heading = 'Section') => {
     const context =
       tone === 'Tertiary'
         ? 'HeroTertiary'
@@ -932,10 +972,16 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
           'mg-hero__title box',
           [
             text(
-              'mg-hero__title h2',
+              heading === 'Page' ? 'mg-hero__title h1' : 'mg-hero__title h2',
               'Title',
               'Principles for resilient infrastructure',
-              mobile ? typography.heroTitleMobile : typography.heroTitleDesktop,
+              heading === 'Page'
+                ? mobile
+                  ? typography.heroPageTitleMobile
+                  : typography.heroPageTitleDesktop
+                : mobile
+                  ? typography.heroTitleMobile
+                  : typography.heroTitleDesktop,
               'color/hero-title',
               { textWrap: 'BALANCE' }
             ),
@@ -1000,7 +1046,13 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
       }
     );
   };
-  function heroVariant(target, tone, mobile, ratio = 'Background') {
+  function heroVariant(
+    target,
+    tone,
+    mobile,
+    ratio = 'Background',
+    heading = 'Section'
+  ) {
     const viewport = mobile ? 390 : 1280,
       secondary = tone === 'Secondary',
       isSplit = target === split;
@@ -1008,10 +1060,14 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
       Tone: tone,
       Viewport: String(viewport),
       Layout: isSplit ? (mobile ? 'Stacked' : ratio) : 'Background',
-      Heading: 'Section',
+      Heading: heading,
       State: 'Default',
     };
-    const id = `${target.id}.${tone.toLowerCase()}.${viewport}.${properties.Layout.toLowerCase().replace('/', '-')}.section.default`;
+    const id = `${target.id}.${tone.toLowerCase()}.${viewport}.${properties.Layout.toLowerCase().replace('/', '-')}.${heading.toLowerCase()}.default`;
+    const desktopHeight =
+      heading === 'Page'
+        ? geometry.backgroundPageDesktopHeight
+        : geometry.backgroundDesktopHeight;
     let tree;
     if (isSplit) {
       const fraction =
@@ -1047,7 +1103,7 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
             'Source mobile split media16/9.'
           )
         : 'FILL';
-      const content = heroContent(tone, mobile, true);
+      const content = heroContent(tone, mobile, true, heading);
       content.layout.width = cw;
       const grid = frame(
         'mg-hero__split-grid mg-container',
@@ -1108,7 +1164,7 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
           gap: 'spacing/0',
           align: 'MIN',
         },
-        [heroContent(tone, true, false)],
+        [heroContent(tone, true, false, heading)],
         {
           fill: p.panel,
           bindings: {
@@ -1195,7 +1251,7 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
         {
           mode: 'NONE',
           width: veilWidth,
-          height: geometry.backgroundDesktopHeight,
+          height: desktopHeight,
           clipsContent: true,
         },
         [],
@@ -1243,7 +1299,7 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
           gap: 'spacing/0',
           align: 'MIN',
         },
-        [heroContent(tone, false, false)],
+        [heroContent(tone, false, false, heading)],
         {
           position: { x: start + (secondary ? heroRule : 0), y: 0 },
           bindings: {
@@ -1259,16 +1315,13 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
         {
           mode: 'NONE',
           width: widths[viewport],
-          height: geometry.backgroundDesktopHeight,
+          height: desktopHeight,
           clipsContent: false,
         },
         [
-          image(
-            'mg-hero / background image',
-            veilWidth,
-            geometry.backgroundDesktopHeight,
-            { position: { x: secondary ? heroRule : 0, y: 0 } }
-          ),
+          image('mg-hero / background image', veilWidth, desktopHeight, {
+            position: { x: secondary ? heroRule : 0, y: 0 },
+          }),
           veil,
           ...(secondary
             ? [
@@ -1277,7 +1330,7 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
                   {
                     mode: 'NONE',
                     width: geometry.heroRule,
-                    height: geometry.backgroundDesktopHeight,
+                    height: desktopHeight,
                   },
                   [],
                   { fill: 'color/hero--secondary', position: { x: 0, y: 0 } }
@@ -1303,6 +1356,12 @@ function buildCardHeroRecipes({ root, modes, variables, styles }) {
     for (const ratio of ['2/3', '1/2', '1/3'])
       heroVariant(split, tone, false, ratio);
     heroVariant(split, tone, true);
+  }
+  for (const tone of tones) {
+    for (const mobile of [false, true])
+      heroVariant(background, tone, mobile, 'Background', 'Page');
+    heroVariant(split, tone, false, '2/3', 'Page');
+    heroVariant(split, tone, true, 'Background', 'Page');
   }
   for (const f of [cardVertical, cardHorizontal, background, split]) {
     f.review.specimens = [

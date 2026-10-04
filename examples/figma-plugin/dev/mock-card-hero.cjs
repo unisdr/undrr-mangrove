@@ -58,6 +58,23 @@ function property(instance, name) {
   return key;
 }
 async function main() {
+  const priorDoc = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '../mangrove-variables.json'), 'utf8')
+  );
+  const priorVariants = priorDoc.components.families
+    .filter(f => ids.includes(f.id))
+    .flatMap(f =>
+      f.variants
+        .filter(
+          v => f.id.startsWith('card') || v.properties.Heading === 'Section'
+        )
+        .map(v => ({ familyId: f.id, variant: v }))
+    );
+  assert.strictEqual(
+    priorVariants.length,
+    40,
+    'Generated baseline must contain all40 prior recipes'
+  );
   const doc = document(),
     families = doc.components.families.filter(f => ids.includes(f.id));
   assert.deepStrictEqual(
@@ -65,10 +82,58 @@ async function main() {
     [
       ['card-vertical', 8],
       ['card-horizontal', 8],
-      ['hero-background', 8],
-      ['hero-split', 16],
+      ['hero-background', 16],
+      ['hero-split', 24],
     ]
   );
+  for (const before of priorVariants) {
+    const retained = families
+      .find(f => f.id === before.familyId)
+      .variants.find(v => v.id === before.variant.id);
+    assert.deepStrictEqual(
+      retained,
+      before.variant,
+      'Previously exported canonical recipe changed'
+    );
+  }
+  const pages = families
+    .flatMap(f => f.variants.map(v => ({ family: f.id, ...v })))
+    .filter(v => v.properties.Heading === 'Page');
+  assert.strictEqual(pages.length, 16);
+  assert(
+    pages
+      .filter(v => v.family === 'hero-split')
+      .every(
+        v => v.properties.Layout === '2/3' || v.properties.Layout === 'Stacked'
+      )
+  );
+  for (const v of pages) {
+    const title = walk(v.tree).find(n => n.textProperty === 'Title');
+    assert.strictEqual(title.name, 'mg-hero__title h1');
+    const style = doc.styles.text.find(s => s.id === title.textStyle);
+    assert(style.id.includes('page-title-'));
+    for (const m of doc.modes) {
+      assert.deepStrictEqual(style.values[m.id].letterSpacing, {
+        unit: 'PERCENT',
+        value: 2,
+      });
+      assert.strictEqual(
+        style.values[m.id].fontSize,
+        resolve(
+          doc,
+          v.properties.Viewport === '390' ? 'font-size/600' : 'font-size/800',
+          m.id
+        )
+      );
+      assert.deepStrictEqual(style.values[m.id].lineHeight, {
+        unit: 'PERCENT',
+        value: 120,
+      });
+      assert.strictEqual(style.bindings.fontFamily, 'font-family/display');
+    }
+    if (v.family === 'hero-background' && v.properties.Viewport === '1280')
+      assert.strictEqual(resolve(doc, v.tree.layout.height, 'undrr'), 371.375);
+  }
   assert(
     families.every(
       f => f.review.preserveVariantSizing && f.review.genericLabels === false
@@ -147,7 +212,7 @@ async function main() {
     }
   }
   console.log(
-    'ok 40 bounded source variants, all-mode helpers/styles and idempotent pure append'
+    'ok56 bounded source variants preserve prior40 recipes, exact Page font roles/2% letterspacing and idempotent append'
   );
   const bytes = fs.readFileSync(
     path.join(root, 'stories/assets/images/sample_image-lg.jpg')
@@ -187,7 +252,7 @@ async function main() {
             'Base'
         );
       } else {
-        assert.strictEqual(v.properties.Heading, 'Section');
+        assert(['Section', 'Page'].includes(v.properties.Heading));
         if (f.id === 'hero-background' && v.properties.Tone === 'Secondary') {
           const rule = v.tree.children.find(
             n => n.name === 'mg-hero / leading secondary rule'
@@ -208,7 +273,9 @@ async function main() {
         }
         assert.strictEqual(
           nodes.find(n => n.textProperty === 'Title').name,
-          'mg-hero__title h2'
+          v.properties.Heading === 'Page'
+            ? 'mg-hero__title h1'
+            : 'mg-hero__title h2'
         );
         assert(
           nodes
@@ -233,13 +300,24 @@ async function main() {
       }
     }
   console.log(
-    'ok source JPEG identity, unlinked Card paints, separate rules, h2 and veil layer order'
+    'ok source JPEG identity, unlinked Card paints, separate rules, sourceheading levels and veil layer order'
   );
   const read = fs.readFileSync;
   fs.readFileSync = function (file, ...args) {
     const value = read.call(this, file, ...args);
     return typeof file === 'string' && file.endsWith('/Card/card.scss')
       ? value.replace('mg-rem(4) solid', 'mg-rem(8) solid')
+      : value;
+  };
+  try {
+    assert.throws(document, /Guarded source changed/);
+  } finally {
+    fs.readFileSync = read;
+  }
+  fs.readFileSync = function (file, ...args) {
+    const value = read.call(this, file, ...args);
+    return typeof file === 'string' && file.endsWith('/scss/_foundational.scss')
+      ? value.replace('letter-spacing: 0.02em;', 'letter-spacing: 0.03em;')
       : value;
   };
   try {
@@ -288,7 +366,7 @@ async function main() {
   assert.strictEqual(
     first.families.filter(f => ids.includes(f.id)).flatMap(f => f.variantIds)
       .length,
-    40
+    56
   );
   for (const f of first.families.filter(f => ids.includes(f.id)))
     for (const entry of f.variantIds) {
@@ -297,6 +375,23 @@ async function main() {
           .find(family => family.id === f.id)
           .variants.find(v => v.id === entry.id);
       assert.strictEqual(c.width, Number(recipe.properties.Viewport));
+      const title = walk(c).find(
+        n =>
+          n.componentPropertyReferences?.characters?.replace(/#[^#]+$/, '') ===
+          'Title'
+      );
+      if (recipe.properties.Heading) {
+        assert(
+          title,
+          'Canonical source title must retain the shared Title key'
+        );
+        assert.deepStrictEqual(
+          title.letterSpacing,
+          recipe.properties.Heading === 'Page'
+            ? { unit: 'PERCENT', value: 2 }
+            : { unit: 'PIXELS', value: 0 }
+        );
+      }
       for (const action of walk(recipe.tree).filter(
         n => n.type === 'INSTANCE' && n.family === 'editorial-cta'
       )) {
@@ -375,7 +470,7 @@ async function main() {
     );
   }
   console.log(
-    'ok actual builder normalized identities,40 mains, preserved widths and two zero-create reruns with edited text/visibility/image fill'
+    'ok actual builder normalized identities,56 mains, preserved widths and two zero-create reruns with edited text/visibility/image fill'
   );
   const malformed = clone(doc);
   const invalid = walk(

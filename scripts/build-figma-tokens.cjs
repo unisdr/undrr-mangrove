@@ -9,6 +9,7 @@
  *
  *   node scripts/build-figma-tokens.cjs           write the JSON
  *   node scripts/build-figma-tokens.cjs --stdout  print it instead
+ *   node scripts/build-figma-tokens.cjs --check   verify JSON and runtime, no writes
  *
  * Mapping rules:
  *   - One collection, one mode per brand, default brand first. Figma
@@ -721,7 +722,29 @@ function main(argv) {
     process.stdout.write(json);
     return;
   }
-  fs.writeFileSync(OUTPUT, json);
+  if (argv.includes('--check')) {
+    const bundle = path.join(ROOT, 'examples/figma-plugin/build/main.js');
+    const expectedBundle = require('./build-figma-plugin.cjs').renderPlugin();
+    const stale = [
+      [OUTPUT, json],
+      [bundle, expectedBundle],
+    ]
+      .filter(
+        ([file, expected]) =>
+          !fs.existsSync(file) || fs.readFileSync(file, 'utf8') !== expected
+      )
+      .map(([file]) => path.relative(ROOT, file));
+    if (stale.length)
+      throw new Error(
+        `Stale or missing output: ${stale.join(', ')}. Close the plugin and run yarn build:figma-tokens.`
+      );
+    process.stdout.write(
+      'build-figma-tokens: JSON and plugin runtime are current; no files changed\n'
+    );
+    return;
+  }
+  if (!fs.existsSync(OUTPUT) || fs.readFileSync(OUTPUT, 'utf8') !== json)
+    fs.writeFileSync(OUTPUT, json);
   require('./build-figma-plugin.cjs').buildPlugin();
   const doc = JSON.parse(json);
   process.stdout.write(

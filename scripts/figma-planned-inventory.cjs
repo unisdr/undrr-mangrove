@@ -19,6 +19,12 @@
 const fs = require('fs');
 const path = require('path');
 const { parse } = require('@babel/parser');
+const {
+  isExportStory,
+  storyNameFromExport,
+  toId,
+} = require('storybook/internal/csf');
+const { loadCsf } = require('storybook/internal/csf-tools');
 const ROOT = path.resolve(__dirname, '..');
 const STORY_EXTENSION = /\.stories\.(?:js|jsx|ts|tsx)$/;
 
@@ -91,6 +97,22 @@ const EXCLUDED_COMPONENTS = new Map([
     'Reading is a CSS-composition demonstration wrapper; document the readable-width/sticky-contents layout in page specimens rather than a dummy reusable component.',
   ],
 ]);
+// Additional source contracts are not necessarily separate named stories.
+// These are documentation scopes, never recipes or accepted native variants.
+const PENDING_VARIANT_SCOPES = {
+  'Components/Cards/Card/VerticalCard': [
+    'Linked titles and inline link hover/focus presentation.',
+    'Related Book, Icon and Stats card families and equal-height card groups.',
+  ],
+  'Components/Cards/Card/HorizontalCard': [
+    'Linked titles and inline link hover/focus presentation.',
+    'Related Book, Icon and Stats card families and equal-height card groups.',
+  ],
+  'Components/Hero/Hero': [
+    'Page variants and alternate one-half/two-thirds/one-third split ratios.',
+    'Immersive, video and logo presentations; RTL and richer HTML content.',
+  ],
+};
 
 const sourceId = file => file.replace(STORY_EXTENSION, '');
 const shortPath = file => sourceId(file).replace(/^stories\//, '');
@@ -135,6 +157,94 @@ function staticString(node) {
   return null;
 }
 
+// Only inspect identity annotations, never execute stories or imported code.
+// Spreads/computed keys can replace these fields, so withhold their links.
+function identityProperty(node, name, bindings) {
+  node = unwrap(node, bindings);
+  if (node?.type !== 'ObjectExpression') return { unknown: true };
+  if (
+    node.properties.some(item => item.type === 'SpreadElement' || item.computed)
+  )
+    return { unknown: true };
+  const matches = node.properties.filter(
+    item => (item.key?.name || item.key?.value) === name
+  );
+  if (matches.length > 1 || matches[0]?.type === 'ObjectMethod')
+    return { unknown: true };
+  return { value: unwrap(matches[0]?.value, bindings) };
+}
+function staticFilter(field, bindings) {
+  if (field.unknown) return { unknown: true };
+  if (!field.value) return {};
+  const node = unwrap(field.value, bindings);
+  if (node.type === 'RegExpLiteral') {
+    // Stateful regular expressions depend on prior calls, not just this export.
+    if (/[gy]/.test(node.flags)) return { unknown: true };
+    return { value: new RegExp(node.pattern, node.flags) };
+  }
+  if (node.type === 'ArrayExpression') {
+    const values = node.elements.map(item =>
+      staticString(unwrap(item, bindings))
+    );
+    if (values.every(item => item !== null)) return { value: values };
+  }
+  return { unknown: true };
+}
+function previewIdentity(
+  name,
+  declaration,
+  metaId,
+  title,
+  bindings,
+  unsafe,
+  indexInputs
+) {
+  let reason = unsafe;
+  let override;
+  const node = unwrap(declaration, bindings);
+  if (!reason && node?.type === 'ObjectExpression') {
+    const parameters = identityProperty(node, 'parameters', bindings);
+    const deprecated = identityProperty(node, 'story', bindings);
+    if (parameters.unknown || deprecated.unknown || deprecated.value)
+      reason = 'Unsupported dynamic or deprecated story identity annotations.';
+    else if (parameters.value) {
+      const id = identityProperty(parameters.value, '__id', bindings);
+      if (id.unknown || (id.value && !staticString(id.value)))
+        reason = 'Story parameters.__id is not a supported static string.';
+      else override = staticString(id.value);
+    }
+  } else if (
+    !reason &&
+    ![
+      'ArrowFunctionExpression',
+      'FunctionExpression',
+      'FunctionDeclaration',
+    ].includes(node?.type) &&
+    !(
+      node?.type === 'CallExpression' &&
+      node.callee.type === 'MemberExpression' &&
+      !node.callee.computed &&
+      node.callee.property.name === 'bind'
+    )
+  )
+    reason =
+      'Story declaration needs a built Storybook index to verify its ID.';
+  if (reason) return { previewUnavailableReason: reason };
+  const storybookId =
+    override || toId(metaId || title, storyNameFromExport(name));
+  if (indexInputs?.get(name) !== storybookId)
+    return {
+      previewUnavailableReason:
+        'Static identity does not match the installed Storybook indexer.',
+    };
+  return {
+    storybookId,
+    previewUrl: `https://mangrove.undrr.org/?path=/story/${encodeURIComponent(storybookId)}`,
+    previewKind: 'reference-preview',
+    previewVerification: 'source-csf',
+  };
+}
+
 function parseStorySource(file, source) {
   const ast = parse(source, {
     sourceType: 'module',
@@ -142,6 +252,8 @@ function parseStorySource(file, source) {
   });
   const bindings = new Map();
   const exports = [];
+  const locals = new Map();
+  const mutations = new Set();
   let meta;
   for (const statement of ast.program.body) {
     const declaration =
@@ -153,7 +265,8 @@ function parseStorySource(file, source) {
         if (item.id.type === 'Identifier') {
           bindings.set(item.id.name, item.init);
           if (statement.type === 'ExportNamedDeclaration')
-            exports.push(item.id.name);
+            (exports.push(item.id.name),
+              locals.set(item.id.name, item.id.name));
         }
     if (
       statement.type === 'ExportNamedDeclaration' &&
@@ -165,14 +278,47 @@ function parseStorySource(file, source) {
         ) &&
         declaration.id
       )
-        exports.push(declaration.id.name);
+        (exports.push(declaration.id.name),
+          locals.set(declaration.id.name, declaration.id.name),
+          bindings.set(declaration.id.name, declaration));
       for (const item of statement.specifiers)
-        if (item.exportKind !== 'type')
-          exports.push(item.exported.name || item.exported.value);
+        if (item.exportKind !== 'type') {
+          const name = item.exported.name || item.exported.value;
+          exports.push(name);
+          if (!statement.source) locals.set(name, item.local.name);
+        }
     }
     if (statement.type === 'ExportDefaultDeclaration')
       meta = statement.declaration;
+    const assignment =
+      statement.type === 'ExpressionStatement' && statement.expression;
+    if (assignment?.type === 'AssignmentExpression') {
+      let member = assignment.left;
+      const keys = [];
+      while (member.type === 'MemberExpression') {
+        keys.push(
+          member.computed ? staticString(member.property) : member.property.name
+        );
+        member = member.object;
+      }
+      if (
+        member.type === 'Identifier' &&
+        keys.some(
+          key =>
+            !key ||
+            [
+              'parameters',
+              'story',
+              'id',
+              'includeStories',
+              'excludeStories',
+            ].includes(key)
+        )
+      )
+        mutations.add(member.name);
+    }
   }
+  const metaLocal = meta?.type === 'Identifier' && meta.name;
   meta = unwrap(meta, bindings);
   const title = staticString(unwrap(property(meta, 'title'), bindings));
   if (!title)
@@ -181,11 +327,67 @@ function parseStorySource(file, source) {
     );
   if (new Set(exports).size !== exports.length)
     throw new Error(`Duplicate source story exports: ${file}`);
-  const stories = exports.map(name => ({
-    id: `${sourceId(file)}/${name}`,
-    exportName: name,
-  }));
-  return { file, title, stories };
+  let indexInputs;
+  try {
+    indexInputs = new Map(
+      loadCsf(source, { fileName: file, makeTitle: value => value })
+        .parse()
+        .indexInputs.filter(
+          item => item.type === 'story' && item.subtype === 'story'
+        )
+        .map(item => [item.exportName, item.__id])
+    );
+  } catch {
+    // Keep the source inventory usable, but never guess an unindexed URL.
+  }
+  const metaId = identityProperty(meta, 'id', bindings);
+  const include = staticFilter(
+    identityProperty(meta, 'includeStories', bindings),
+    bindings
+  );
+  const exclude = staticFilter(
+    identityProperty(meta, 'excludeStories', bindings),
+    bindings
+  );
+  const unsafe =
+    metaId.unknown ||
+    (metaId.value && staticString(metaId.value) === null) ||
+    include.unknown ||
+    exclude.unknown ||
+    mutations.has(metaLocal)
+      ? 'Storybook meta identity or export filters need a built index to verify.'
+      : null;
+  const excludedExports = [];
+  const stories = exports
+    .filter(name => {
+      const included =
+        name !== '__namedExportsOrder' &&
+        isExportStory(
+          name,
+          unsafe
+            ? {}
+            : { includeStories: include.value, excludeStories: exclude.value }
+        );
+      if (!included) excludedExports.push(name);
+      return included;
+    })
+    .map(name => ({
+      id: `${sourceId(file)}/${name}`,
+      exportName: name,
+      ...previewIdentity(
+        name,
+        bindings.get(locals.get(name)),
+        staticString(metaId.value),
+        title,
+        bindings,
+        unsafe ||
+          (mutations.has(locals.get(name))
+            ? 'Story identity is assigned outside its static declaration.'
+            : null),
+        indexInputs
+      ),
+    }));
+  return { file, title, stories, excludedExports };
 }
 
 function scanStorySources(repoRoot) {
@@ -320,6 +522,9 @@ function buildPlannedInventory(
       groupId: classification.groupId,
       representation: 'documentation-only',
       nativeAcceptance: 'unverified',
+      pendingVariantScopes: [
+        ...(PENDING_VARIANT_SCOPES[shortPath(story.file)] || []),
+      ],
       scaffoldFamilyIds: associated.map(family => family.id),
       stories: selected.map(item => ({
         ...item,
@@ -327,9 +532,12 @@ function buildPlannedInventory(
         nativeAcceptance: 'unverified',
         scaffoldMappings: [],
       })),
-      excludedStoryExports: story.stories
-        .filter(item => !selected.includes(item))
-        .map(item => item.exportName),
+      excludedStoryExports: [
+        ...story.excludedExports,
+        ...story.stories
+          .filter(item => !selected.includes(item))
+          .map(item => item.exportName),
+      ],
     });
   }
   const bySource = new Map(entries.map(entry => [entry.source, entry]));
@@ -393,6 +601,13 @@ function buildPlannedInventory(
   return {
     version: 1,
     representation: 'documentation-only',
+    sourcePreview: {
+      baseUrl: 'https://mangrove.undrr.org',
+      kind: 'reference-preview',
+      verification: 'source-csf',
+      limitations:
+        'Links reference the public Storybook deployment. Its current branch, availability, brand and native Figma appearance are not verified; opening a link does not synchronise variables or components.',
+    },
     scope:
       'Ordinary named Storybook examples. This is not a complete public API, MDX-only anatomy or native variant inventory. Source examples may exercise browser behaviour rather than a distinct visual variant.',
     sources: [

@@ -791,8 +791,29 @@ async function main() {
         owned(
           scaffold,
           `layout/family/${id}/overview/body`
-        ).characters.startsWith('New source scaffold, acceptance pending\n')
+        ).characters.startsWith('Draft component, acceptance pending\n')
       );
+      assert(
+        owned(scaffold, `layout/family/${id}/overview/body`).width <= 720,
+        'Readable guidance width is independent of the variant matrix'
+      );
+      const states = owned(scaffold, `review/${id}`);
+      const statesGrid = owned(scaffold, `review/${id}/grid`);
+      assert(
+        organized.updatedNodeIds.includes(statesGrid.id),
+        'Receipt records presentation grid writes'
+      );
+      assert(
+        states.width >=
+          statesGrid.width + states.paddingLeft + states.paddingRight,
+        'States board contains its wide grid'
+      );
+      for (const row of statesGrid.children)
+        assert(
+          statesGrid.width >=
+            row.width + statesGrid.paddingLeft + statesGrid.paddingRight,
+          'Wide desktop specimens fit the states grid'
+        );
       if (meta.kind === 'primary') {
         assert(browsing.familyIds.includes(id));
         assert.strictEqual(key(overview.parent), 'layout/group/content-data');

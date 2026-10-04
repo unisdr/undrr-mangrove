@@ -161,6 +161,16 @@ function validateMangroveImport(doc, selectedModeIds, selectedTextIds) {
         !['AUTO', 'BALANCE', 'PRETTY'].includes(value.textWrapStyle)
       )
         fail(`${spec.name} [${mode}]: invalid text style wrapping`);
+      if (value.letterSpacing !== undefined) {
+        const spacing = value.letterSpacing;
+        if (
+          !spacing ||
+          !['PIXELS', 'PERCENT'].includes(spacing.unit) ||
+          !Number.isFinite(spacing.value) ||
+          Object.keys(spacing).some(key => !['unit', 'value'].includes(key))
+        )
+          fail(`${spec.name} [${mode}]: invalid text style letter spacing`);
+      }
       // Source metadata only: native TextStyle has no decoration offset API.
       // Component TextNodes apply this value after their shared style.
       if (value.textDecorationOffset !== undefined) {
@@ -481,6 +491,10 @@ async function importStyles(
           style.fontName = value.fontName;
           style.fontSize = value.fontSize;
           style.lineHeight = value.lineHeight;
+          style.letterSpacing = value.letterSpacing || {
+            unit: 'PIXELS',
+            value: 0,
+          };
           style.setBoundVariable('fontFamily', family);
           style.setBoundVariable('fontSize', size);
           style.textDecoration = value.textDecoration || 'NONE';

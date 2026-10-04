@@ -26,8 +26,7 @@ const SOURCES = [
   'kit-capabilities.js',
 ];
 
-function buildPlugin() {
-  const output = path.join(PLUGIN, 'build/main.js');
+function renderPlugin() {
   const { buildDefaultKitGuidance } = require('./figma-kit-guidance.cjs');
   const guidance = `const MG_KIT_GUIDANCE = ${JSON.stringify(buildDefaultKitGuidance())};\n`;
   const source =
@@ -36,12 +35,19 @@ function buildPlugin() {
       file =>
         `// Source: ${file}\n${fs.readFileSync(path.join(PLUGIN, file), 'utf8')}`
     ).join('\n;\n');
+  return `${source}\n`;
+}
+
+function buildPlugin() {
+  const output = path.join(PLUGIN, 'build/main.js');
   fs.mkdirSync(path.dirname(output), { recursive: true });
-  fs.writeFileSync(output, `${source}\n`);
+  const source = renderPlugin();
+  if (!fs.existsSync(output) || fs.readFileSync(output, 'utf8') !== source)
+    fs.writeFileSync(output, source);
   return output;
 }
 
 if (require.main === module) {
   process.stdout.write(`build-figma-plugin: wrote ${buildPlugin()}\n`);
 }
-module.exports = { buildPlugin };
+module.exports = { buildPlugin, renderPlugin };

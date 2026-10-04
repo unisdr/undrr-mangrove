@@ -214,8 +214,14 @@
         gap: 6px 8px;
       }
       .component-browser label {
-        grid-column: 1 / -1;
+        min-height: 0;
+        grid-column: 1;
         font-weight: 600;
+      }
+      #browse-source {
+        min-height: 28px;
+        grid-column: -2 / -1;
+        grid-row: 1;
       }
       #browse-family {
         grid-column: 1 / -1;
@@ -604,7 +610,9 @@
       }
 
       .workspace[data-section='core'] {
-        overflow: hidden;
+        overflow: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
       }
       #panel-core {
         display: flex;
@@ -617,7 +625,7 @@
       }
       #panel-core .family-scroll {
         flex: 1;
-        min-height: 80px;
+        min-height: 64px;
         max-height: none;
         margin-top: 8px;
         overflow: auto;
@@ -696,6 +704,14 @@
         aria-label="Browse installed components"
       >
         <label for="browse-family">Browse component</label>
+        <button
+          id="browse-source"
+          class="quiet"
+          disabled=""
+          title="Load the current token file to browse this component's public source references"
+        >
+          Source examples
+        </button>
         <select id="browse-family">
           <option value="">Inspecting components…</option>
         </select>
@@ -775,7 +791,7 @@
           </div>
         </section>
         <section id="panel-core" aria-labelledby="nav-core" hidden="">
-          <div class="panel-intro">
+          <div class="panel-intro sr-only">
             <h2>Build the component kit</h2>
             <p>
               Maintain the 25 core families. Browse installed components above
@@ -827,20 +843,6 @@
             <button id="build" class="primary" disabled="">
               Build selected components
             </button>
-            <button
-              id="refresh-kit-guidance"
-              disabled=""
-              title="Update source descriptions and scope labels without rebuilding geometry"
-            >
-              Update kit guidance
-            </button>
-            <button
-              id="organize-kit"
-              disabled=""
-              title="Migrate the existing generated kit in place and reconcile its six destinations"
-            >
-              Organize file
-            </button>
           </div>
         </section>
         <section
@@ -876,6 +878,53 @@
               Choose exactly one family in Core kit for a smaller preview.
             </p>
           </div>
+          <details id="kit-maintenance" class="card">
+            <summary>Kit maintenance</summary>
+            <p>
+              Update generated guidance or organize installed assets. Your own
+              frames belong in Your workspace.
+            </p>
+            <div class="action-row">
+              <button
+                id="refresh-kit-guidance"
+                disabled=""
+                title="Update source descriptions and scope labels without rebuilding geometry"
+              >
+                Update kit guidance
+              </button>
+              <button
+                id="organize-kit"
+                disabled=""
+                title="Migrate the existing generated kit in place and reconcile its six destinations"
+              >
+                Organize file
+              </button>
+            </div>
+          </details>
+          <details id="source-previews" class="card">
+            <summary>Source previews in Storybook</summary>
+            <label for="source-component">Source component</label>
+            <select id="source-component" disabled=""></select>
+            <label for="source-story">Source example</label>
+            <select id="source-story" disabled=""></select>
+            <p>
+              <a
+                id="source-preview"
+                target="_blank"
+                rel="noopener noreferrer"
+                hidden=""
+                >Open public source example</a
+              >
+            </p>
+            <p id="source-preview-note" class="hint">
+              Load a token file to see source references.
+            </p>
+            <p class="hint">
+              Public Storybook may differ from this draft branch. A preview is a
+              reference, not a synchronized Figma variant or acceptance
+              evidence.
+            </p>
+          </details>
           <nav class="group-nav" aria-label="Diagnostic groups">
             <button
               id="diag-native"
@@ -1187,6 +1236,68 @@
           input.checked = isCoreTextStyle(spec);
       }
       let familyLabels = [];
+      function renderSourceStories() {
+        const entry = doc?.plannedInventory?.entries?.find(
+          item => item.id === $('source-component').value
+        );
+        const select = $('source-story');
+        select.textContent = '';
+        for (const story of entry?.stories || []) {
+          const option = document.createElement('option');
+          option.value = story.id;
+          option.textContent = story.exportName;
+          select.append(option);
+        }
+        select.disabled = pendingOperation !== null || !select.value;
+        renderSourcePreview();
+      }
+      function renderSourcePreview() {
+        const entry = doc?.plannedInventory?.entries?.find(
+          item => item.id === $('source-component').value
+        );
+        const story = entry?.stories?.find(
+          item => item.id === $('source-story').value
+        );
+        const link = $('source-preview');
+        const safe =
+          story?.previewKind === 'reference-preview' &&
+          /^https:\/\/mangrove\.undrr\.org\/\?path=\/story\/[a-z0-9][a-z0-9-]*$/.test(
+            story.previewUrl || ''
+          );
+        link.hidden = !safe;
+        if (safe) link.href = story.previewUrl;
+        else link.removeAttribute?.('href');
+        $('source-preview-note').textContent = safe
+          ? `${entry.source} · ${story.storybookId}. Source-derived reference; public deployment revision is not verified.`
+          : story?.previewUnavailableReason ||
+            'No verified source reference available. Load a current token file.';
+      }
+      function renderSourceComponents() {
+        const select = $('source-component');
+        select.textContent = '';
+        for (const entry of doc?.plannedInventory?.entries || []) {
+          const option = document.createElement('option');
+          option.value = entry.id;
+          option.textContent = entry.catalogueTitle;
+          select.append(option);
+        }
+        renderSourceStories();
+      }
+      $('source-component').onchange = renderSourceStories;
+      $('source-story').onchange = renderSourcePreview;
+      $('browse-source').onclick = () => {
+        const entry = doc?.plannedInventory?.entries?.find(item =>
+          item.scaffoldFamilyIds?.includes($('browse-family').value)
+        );
+        if (!entry || pendingOperation !== null) return;
+        $('source-component').value = entry.id;
+        renderSourceStories();
+        showPanel('diagnostics');
+        $('source-previews').open = true;
+        $('source-previews').scrollIntoView?.({ block: 'start' });
+        $('source-story').focus?.();
+      };
+      $('browse-family').onchange = refreshControls;
       function showPanel(name) {
         $('workspace').setAttribute?.('data-section', name);
         $('workspace').scrollTop = 0;
@@ -1307,6 +1418,11 @@
         $('results').setAttribute?.('data-state', busy ? 'busy' : 'idle');
         updateContext();
         $('file').disabled = busy;
+        $('source-component').disabled =
+          busy || !doc?.plannedInventory?.entries?.length;
+        $('source-story').disabled = busy || !$('source-story').value;
+        if (busy) $('source-preview').hidden = true;
+        else if (doc) renderSourcePreview();
         $('import').disabled = busy || !doc;
         $('build').disabled = busy || !doc?.components;
         $('organize-kit').disabled =
@@ -1323,6 +1439,11 @@
         $('browse-view').disabled = busy || !navigationState.families.length;
         $('browse-component').disabled =
           busy || !navigationState.families.length;
+        $('browse-source').disabled =
+          busy ||
+          !doc?.plannedInventory?.entries?.some(item =>
+            item.scaffoldFamilyIds?.includes($('browse-family').value)
+          );
         $('refresh-navigation').disabled = busy;
         $('refresh-kit-guidance').disabled = busy || !doc?.kitGuidance;
         $('open-welcome').disabled = busy;
@@ -1555,7 +1676,7 @@
                         'hero-background',
                         'hero-split',
                       ].includes(family.id)
-                    ? 'New source scaffold'
+                    ? 'Draft component'
                     : 'Outside core';
             label.append(status);
           }
@@ -1564,6 +1685,7 @@
           familyLabels.push(label);
         });
         components.hidden = !doc.components;
+        renderSourceComponents();
         refreshControls();
         log(
           `${doc.variables.length} variables, ${doc.modes.length} brands, ` +

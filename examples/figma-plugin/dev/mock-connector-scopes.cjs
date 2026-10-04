@@ -76,6 +76,8 @@ async function main() {
   const checked = await execute(doc, 'checkbox', checkedId);
   assert(checked.payload.svgEnabled);
   assert.strictEqual(checked.payload.directTextEnabled, false);
+  assert.strictEqual(checked.payload.letterSpacingEnabled, false);
+  assert.strictEqual(checked.payload.focusEnabled, false);
   assert(checked.payload.bytes <= 48000, checked.payload.bytes);
   assert(checked.payload.code.includes('SVG'));
   for (const marker of [
@@ -86,7 +88,7 @@ async function main() {
     'Review nodes must',
     'Ellipse arcData requires',
     'textStyleApplication DIRECT is restricted',
-    'DIRECT TOC typography needs',
+    'DIRECT typography needs',
   ])
     assert(
       !checked.payload.code.includes(marker),
@@ -247,13 +249,194 @@ async function main() {
     table.payload,
     loader.payload,
   ]) {
-    assert.strictEqual(payload.directTextEnabled, false);
+    const expectedDirect = payload === cta.payload;
+    assert.strictEqual(payload.directTextEnabled, expectedDirect);
+    // The two larger source packets retain at least 1,000 bytes of headroom
+    // below the unchanged 50,000-byte connector limit.
+    const budget = payload.families.some(id =>
+      ['table', 'editorial-cta'].includes(id)
+    )
+      ? 49000
+      : 48000;
     assert(
-      payload.bytes <= 48000 && payload.characters <= 48000,
+      payload.bytes <= budget && payload.characters <= budget,
       `${payload.families}: ${payload.bytes}`
     );
-    assert(!payload.code.includes('DIRECT TOC typography needs'));
+    assert.strictEqual(
+      payload.code.includes('DIRECT typography needs'),
+      expectedDirect
+    );
   }
+  const spacingDoc = copy(doc);
+  const plainIdForSpacing = 'checkbox.false.default.after.short';
+  const spacingStyleId = subsetDocument(
+    doc,
+    'build',
+    'undrr',
+    ['checkbox'],
+    [plainIdForSpacing]
+  ).styles.text[0].id;
+  const sourceStyle = spacingDoc.styles.text.find(
+    style => style.id === spacingStyleId
+  );
+  sourceStyle.values.undrr.letterSpacing = { unit: 'PERCENT', value: 2 };
+  const spaced = await execute(spacingDoc, 'checkbox', plainIdForSpacing);
+  assert.strictEqual(spaced.payload.letterSpacingEnabled, true);
+  const nativeStyle = spaced.env.state.styles.find(
+    style =>
+      style.getSharedPluginData('orgundrrmangrove', 'mgStyleId') ===
+      spacingStyleId
+  );
+  assert(nativeStyle);
+  assert.deepStrictEqual(copy(nativeStyle.letterSpacing), {
+    unit: 'PERCENT',
+    value: 2,
+  });
+  const spacingIds = [...spaced.env.state.nodes.values()]
+    .filter(identity)
+    .map(node => [identity(node), node.id]);
+  const plainSpacingBuild = await buildConnector(
+    scope(doc, 'checkbox', plainIdForSpacing)
+  );
+  assert.strictEqual(plainSpacingBuild.letterSpacingEnabled, false);
+  const zeroBuild = await spaced.env.runCode(plainSpacingBuild.code);
+  assert.strictEqual(zeroBuild.errors.length, 0);
+  assert.strictEqual(zeroBuild.createdNodeIds.length, 0);
+  assert.deepStrictEqual(copy(nativeStyle.letterSpacing), {
+    unit: 'PIXELS',
+    value: 0,
+  });
+  assert.deepStrictEqual(
+    [...spaced.env.state.nodes.values()]
+      .filter(identity)
+      .map(node => [identity(node), node.id]),
+    spacingIds
+  );
+  const importSpacing = fixture =>
+    buildConnector({
+      operation: 'import',
+      brandId: 'undrr',
+      styleIds: [spacingStyleId],
+      variableIds: [],
+      doc: fixture,
+    });
+  const spacedImport = await importSpacing(spacingDoc);
+  assert.strictEqual(spacedImport.letterSpacingEnabled, true);
+  assert(spacedImport.code.includes('invalid text style letter spacing'));
+  const importedP2 = await spaced.env.runCode(spacedImport.code);
+  assert.strictEqual(importedP2.result.errors.length, 0);
+  assert.deepStrictEqual(copy(nativeStyle.letterSpacing), {
+    unit: 'PERCENT',
+    value: 2,
+  });
+  const zeroImportPayload = await importSpacing(doc);
+  assert.strictEqual(zeroImportPayload.letterSpacingEnabled, false);
+  assert(!zeroImportPayload.code.includes('invalid text style letter spacing'));
+  const zeroImport = await spaced.env.runCode(zeroImportPayload.code);
+  assert.strictEqual(zeroImport.result.errors.length, 0);
+  assert.deepStrictEqual(copy(nativeStyle.letterSpacing), {
+    unit: 'PIXELS',
+    value: 0,
+  });
+  assert.strictEqual(zeroImport.createdStyleIds.length, 0);
+  for (const value of [
+    null,
+    { unit: 'EMS', value: 2 },
+    { unit: 'PERCENT', value: Infinity },
+    { unit: 'PIXELS', value: 2, extra: true },
+  ]) {
+    const bad = copy(spacingDoc);
+    bad.styles.text.find(
+      style => style.id === spacingStyleId
+    ).values.undrr.letterSpacing = value;
+    const before = snapshot(spaced.env);
+    await assert.rejects(
+      buildConnector(scope(bad, 'checkbox', plainIdForSpacing)),
+      /invalid text style letter spacing/
+    );
+    await assert.rejects(
+      importSpacing(bad),
+      /invalid text style letter spacing/
+    );
+    assert.strictEqual(snapshot(spaced.env), before);
+  }
+  console.log(
+    `ok compiled PERCENT2 spacing and omitted PIXELS0 reset on build/import; invalid profiles refuse before compilation (${spaced.payload.bytes}/${spacedImport.bytes} bytes)`
+  );
+  const unrelatedSpacingDoc = copy(doc);
+  unrelatedSpacingDoc.styles.text.find(
+    style => style.id !== spacingStyleId
+  ).values.undrr.letterSpacing = { unit: 'PERCENT', value: 2 };
+  const unrelatedSpacing = await buildConnector(
+    scope(unrelatedSpacingDoc, 'checkbox', plainIdForSpacing)
+  );
+  assert.strictEqual(unrelatedSpacing.letterSpacingEnabled, false);
+
+  const focusId = 'checkbox.false.focus.after.short';
+  const focused = await execute(doc, 'checkbox', focusId);
+  assert.strictEqual(focused.payload.focusEnabled, true);
+  assert(
+    focused.payload.code.includes('Invalid native focus outline dimensions')
+  );
+  const focusMain = find(focused.env, `family/checkbox/variant/${focusId}`);
+  assert.strictEqual(focusMain.type, 'COMPONENT');
+  const outlines = focusMain.findAll(
+    node => node.type === 'RECTANGLE' && identity(node)?.includes('/focus/')
+  );
+  assert.strictEqual(outlines.length, 2);
+  const outer = outlines.find(node => identity(node).endsWith('/focus/outer'));
+  const separator = outlines.find(node =>
+    identity(node).endsWith('/focus/separator')
+  );
+  const variableByName = new Map(
+    focused.env.state.variables.map(variable => [variable.name, variable])
+  );
+  const offset = variableByName
+    .get('focus-ring/offset')
+    .resolveForConsumer(outer.parent).value;
+  assert.strictEqual(outer.x, -offset);
+  assert.strictEqual(outer.y, -offset);
+  assert.strictEqual(outer.width, outer.parent.width + 2 * offset);
+  assert.strictEqual(
+    outer.boundVariables.strokeWeight.id,
+    variableByName.get('focus-ring/width').id
+  );
+  assert.strictEqual(
+    separator.boundVariables.strokeWeight.id,
+    variableByName.get('focus-ring/offset').id
+  );
+  assert.deepStrictEqual(copy(outer.constraints), {
+    horizontal: 'STRETCH',
+    vertical: 'STRETCH',
+  });
+  const obsoleteFocusDoc = copy(doc);
+  for (const node of nodes(
+    obsoleteFocusDoc.components.families
+      .find(f => f.id === 'checkbox')
+      .variants.find(v => v.id === focusId).tree
+  ))
+    delete node.focusRing;
+  const noFocus = await buildConnector(
+    scope(obsoleteFocusDoc, 'checkbox', focusId)
+  );
+  assert.strictEqual(noFocus.focusEnabled, false);
+  assert(!noFocus.code.includes('Invalid native focus outline dimensions'));
+  const outlineIds = outlines.map(node => node.id);
+  const hidden = await focused.env.runCode(noFocus.code);
+  assert.strictEqual(hidden.errors.length, 0);
+  assert.strictEqual(hidden.createdNodeIds.length, 0);
+  assert(outlines.every(node => !node.removed && !node.visible));
+  const restored = await focused.env.runCode(focused.payload.code);
+  assert.strictEqual(restored.errors.length, 0);
+  assert.strictEqual(restored.createdNodeIds.length, 0);
+  assert.deepStrictEqual(
+    outlines.map(node => node.id),
+    outlineIds
+  );
+  assert(outlines.every(node => node.visible));
+  console.log(
+    `ok enabled focus geometry/bindings and absent-focus owned-outline cleanup (${focused.payload.bytes} bytes)`
+  );
   const directDoc = copy(doc);
   const directFamily = directDoc.components.families.find(
     family => family.id === 'toc-link'
@@ -334,7 +517,7 @@ async function main() {
   );
   assert(
     direct.payload.code.includes(
-      'DIRECT TOC typography needs its exact source template'
+      'DIRECT typography needs its exact source template'
     )
   );
   const directMain = find(
@@ -535,14 +718,23 @@ async function main() {
     'spec.textDecorationOffset !== undefined &&\n        node.textDecoration ===',
     'if (specimen.nodes !== undefined) {',
     'if (specimen.nodes?.length && (fresh || refreshNarrowReview)) {',
+    'if (tree.focusRing) {',
+    'if (!spec.focusRing) {',
     'const surface =\n          specimen.surface ??\n          reviewOptions.variantSurfaces?.[specimen.variant.recipe.id];',
   ];
-  for (const anchor of anchors) {
+  const boundaries = [
+    ...anchors.map(anchor => ({ file: 'kit-builder.js', anchor })),
+    ...[
+      'if (value.letterSpacing !== undefined) {',
+      'style.letterSpacing = value.letterSpacing || {',
+    ].map(anchor => ({ file: 'code.js', anchor })),
+  ];
+  for (const { file, anchor } of boundaries) {
     const read = fs.readFileSync;
     let matched = false;
     fs.readFileSync = function (filename, ...args) {
       const result = read.call(this, filename, ...args);
-      if (typeof filename !== 'string' || !filename.endsWith('/kit-builder.js'))
+      if (typeof filename !== 'string' || !filename.endsWith(`/${file}`))
         return result;
       matched = result.includes(anchor);
       return result.replace(anchor, '/* removed specialization boundary */');
@@ -558,7 +750,7 @@ async function main() {
     }
   }
   console.log(
-    'ok obsolete owned surface cleanup retained; all ten changed source anchors fail closed'
+    `ok obsolete owned surface cleanup retained; all ${boundaries.length} changed source anchors fail closed`
   );
 }
 if (require.main === module)

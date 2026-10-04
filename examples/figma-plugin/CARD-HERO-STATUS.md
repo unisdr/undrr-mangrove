@@ -1,13 +1,13 @@
 # Card, Hero and planned catalogue
 
-This checkpoint adds source scaffolds for two content patterns. The existing **25-family core preset stays unchanged**. New families are labelled **New source scaffold** in the importer and native browsing, with their own acceptance boundary.
+This checkpoint adds source scaffolds for two content patterns. The existing **25-family core preset stays unchanged**. New families are labelled **Draft component** in the importer and native browsing, with their own acceptance boundary.
 
-## Initial component scope
+## Component scope
 
-| Pattern | Source families         | Initial variants                                                                                                      | Explicit limits                                                                                                                                                               |
-| ------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Card    | Vertical and Horizontal | Four source colour treatments at two declared widths for each orientation                                             | Unlinked, plain titles with a button-only editorial CTA. Linked title chevrons, inline focus, hover, Book, Icon, Stats and group equal-height behaviour remain separate work. |
-| Hero    | Background and Split    | Four colour treatments; background desktop and phone presets; three desktop split ratios and one stacked phone layout | Unlinked section heading; no immersive, child, video, custom HTML, logo, RTL or automatic breakpoint switching.                                                               |
+| Pattern | Source families         | Initial variants                                                                                                                                                       | Explicit limits                                                                                                                                                               |
+| ------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card    | Vertical and Horizontal | Four source colour treatments at two declared widths for each orientation                                                                                              | Unlinked, plain titles with a button-only editorial CTA. Linked title chevrons, inline focus, hover, Book, Icon, Stats and group equal-height behaviour remain separate work. |
+| Hero    | Background and Split    | Four colour treatments; background desktop and phone presets; Section: three desktop split ratios and stacked phone; Page: default 2/3 desktop split and stacked phone | Unlinked Page (h1) and Section (h2) presets; no immersive, child, video, custom HTML, logo, RTL or automatic breakpoint switching.                                            |
 
 The recipes come from current JSX, SCSS and tokens. Figma is a static representation: resizing an instance does not invoke CSS media queries. Supported presets and text edits must be checked natively before being accepted. Source typography, browser balanced wrapping and exact font-file equivalence remain separate checks.
 
@@ -63,3 +63,21 @@ Connector calls remain quota-blocked on Starter. Desktop import and native inspe
 API references: [native image handles](https://developers.figma.com/docs/plugins/api/figma/#createimage) and [image fills, gradient stops and variable bindings](https://developers.figma.com/docs/plugins/api/Paint/).
 
 Final native view: Start here at 100%, plugin closed, six collapsed Layers destinations. Local backup: 1,126,552 bytes. Cloud sync and persistent first-open view remain unconfirmed.
+
+## Page heading expansion
+
+The next bounded scope adds 16 Page heading presets: eight Background variants and eight Split variants across four treatments and desktop/phone widths. Existing 40 variant definitions and IDs remain intact. The total becomes 56 Card/Hero variants, with 520 variables, 102 text-style choices and 383 construction variants across the same 32 families. The 25-family core selection remains unchanged.
+
+Page headings retain Hero's source 36/32px sizing and 120% line height, plus the foundational h1 letter spacing of 0.02em (2% in Figma). Section headings retain zero letter spacing. Page 1/2 and 1/3 desktop split ratios are still planned; the current Page desktop Split preset is 2/3. Bounded native acceptance of this expansion is recorded below.
+
+### Native Page construction check
+
+The scoped build creates 804 nodes and updates 1,786, with zero errors. The saved inspection contains 9,407 scene records, 520 variables, 54 local text styles and eight effect styles. All 9,183 earlier asset IDs remain, including the 8,603 earlier scene nodes. Existing 40 canonical widths, heights and property definitions remain exact; ID retention does not imply full-field equality of unrelated assets.
+
+An independent audit passes 10,865 getter/source checks for all 56 mains, 224 own text nodes, native photo handles, eight desktop gradient leaves with 64 bound stops and correct nested action copy. Exactly 16 new h1 titles carry 2% spacing. All 68 planned rows remain inside their catalogue and do not overlap after adding explicit remaining scope notes. The full saved typography audit passes 32 families and 859 canonical TEXT with zero gaps.
+
+Desktop Background Page height matches the measured source 371.375px. Phone and Split retain small native/source line box differences already observed in the Section scope. Saved fields do not establish pixel equivalence or exact source-font-file matching. A fresh Card consumer retains edited title/action text and restored labels. A Hero consumer switches from Section/Desktop to Page/390px while retaining edited title/action text and restoring its second action. After the presentation update, two scoped repeats, including restart, create zero nodes and report zero errors. All 40 consumer records and all 583 foundation records remain exact. The restart receipt updates 2,136 nodes. Every saved canonical local component field stays exact, excluding presentation positions and absolute bounds; the strict scene report separately records 14 generated placement/bounds changes no larger than 0.00390625px.
+
+[UX dogfooding](UX-DOGFOOD.md) records the expert review and fixes: bounded guidance width, review boards that contain desktop specimens, clearer instance insertion/media instructions, source shortcuts and Core controls that fit the plugin. The targeted native recheck passes; human novice handoff remains open. [Storybook integrations](STORYBOOK-INTEGRATIONS.md) distinguishes public references from source/native coverage and service-backed maintenance options.
+
+Final cleanup removes only the two temporary consumers and their 40 records, leaving 9,407 scene records with every retained field and foundation exact. The final typography audit passes all 859 canonical TEXT. The local backup is 1,164,261 bytes; Start here is visible at 90%, with the plugin closed and six collapsed Layers destinations. Cloud sync and persistent first-open view remain unconfirmed.

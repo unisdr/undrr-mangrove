@@ -38,7 +38,7 @@ const ENTRIES = [
     status: 'source-scaffold',
     purpose: 'Introduce editorial content with optional media and an action.',
     usage:
-      'Choose a declared orientation, viewport and colour treatment; edit text and optional visibility on a linked instance. Replace the image fill on the media layer.',
+      'Choose a declared orientation, viewport and colour treatment; edit text and optional visibility on a linked instance. In Layers, expand the Card instance > mg-card / source layout > mg-card__visual, select that frame, then open its Image fill to upload media.',
     supported: [
       'Source-derived unlinked Vertical presets; editable content and a linked button-only editorial action. Horizontal is an advanced orientation alternative.',
     ],
@@ -54,9 +54,9 @@ const ENTRIES = [
     status: 'source-scaffold',
     purpose: 'Lead a page or feature with a headline, photograph and actions.',
     usage:
-      'Choose an explicit source layout and viewport preset. Edit headline and supporting content, replace media and keep actions linked. A resize does not switch breakpoints.',
+      'Choose an explicit source layout and viewport preset. Edit headline and supporting content, replace media and keep actions linked. Choose Heading Page for h1 or Section for h2. Background media: select mg-hero / background image on Desktop, or mobile composition > banner image on Phone. Split media: split-grid > mg-hero__media. Open Image fill > Upload from computer. A resize does not switch breakpoints.',
     supported: [
-      'Source-derived background banner/panel layouts with native image fills. Split layouts are an advanced alternative.',
+      'Source-derived background layouts with native image fills and declared Page or Section heading presets. Split layouts are an advanced alternative.',
     ],
     limitations: [
       'New scaffold: native consumer and rendered acceptance are recorded separately from the existing core preset.',
@@ -90,7 +90,7 @@ const ENTRIES = [
     purpose: 'Pair a source solid hero content panel with a photograph.',
     usage: 'Choose a declared desktop column ratio or mobile stacked preset.',
     supported: [
-      'Four colour treatments, three desktop ratios and a stacked phone layout.',
+      'Section headings: four colour treatments, three desktop ratios and a stacked phone layout. Page headings: default 2/3 desktop ratio and stacked phone presets.',
     ],
     limitations: [
       'New source scaffold; no live video or custom HTML, browser grid reflow or arbitrary width/content guarantee.',
@@ -587,7 +587,7 @@ function buildKitGuidance(families) {
       value.status === 'outside-core'
         ? 'Not in core scope.'
         : value.status === 'source-scaffold'
-          ? 'New source scaffold. Native acceptance is separate from core use.'
+          ? 'New draft component. Native acceptance is separate from core use.'
           : 'Bounded draft use: local UNDRR source presets.',
       value.kind === 'support'
         ? `Supporting ${value.supportRole === 'size-alternative' ? 'size alternative' : 'part'} of ${ENTRIES.find(parent => parent.id === value.parentFamilyId).label}.`
@@ -604,7 +604,7 @@ function buildKitGuidance(families) {
       value.status === 'outside-core'
         ? 'Not in core scope.'
         : value.status === 'source-scaffold'
-          ? 'New source scaffold. Native acceptance pending.'
+          ? 'New draft component. Native acceptance pending.'
           : 'Bounded UNDRR draft.',
       `Supported edits and limits: ${value.docsUrl}`,
     ].join('\n');

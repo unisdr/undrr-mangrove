@@ -502,6 +502,46 @@ function coreSource() {
   if (end < 0) throw new Error('Plugin UI startup terminator missing.');
   return prefix.slice(0, start) + prefix.slice(end + 1);
 }
+function specializeCore(source) {
+  // The connector embeds its immutable DTO. Omit only the absent optional
+  // profile validation; every text style still resets old spacing to zero.
+  for (const [before, after] of [
+    [
+      'if (value.letterSpacing !== undefined) {',
+      'if (MG_CONNECTOR_LETTER_SPACING && value.letterSpacing !== undefined) {',
+    ],
+    [
+      'style.letterSpacing = value.letterSpacing || {',
+      'style.letterSpacing = (MG_CONNECTOR_LETTER_SPACING && value.letterSpacing) || {',
+    ],
+  ]) {
+    const start = source.indexOf(before);
+    if (start < 0 || source.indexOf(before, start + before.length) >= 0)
+      throw new Error(`Connector specialization boundary changed: ${before}`);
+    source =
+      source.slice(0, start) + after + source.slice(start + before.length);
+  }
+  return source;
+}
+function retainedLetterSpacing(subset) {
+  let enabled = false;
+  for (const spec of subset?.styles.text || [])
+    for (const [mode, value] of Object.entries(spec.values || {})) {
+      if (value?.letterSpacing === undefined) continue;
+      enabled = true;
+      const spacing = value.letterSpacing;
+      if (
+        !spacing ||
+        !['PIXELS', 'PERCENT'].includes(spacing.unit) ||
+        !Number.isFinite(spacing.value) ||
+        Object.keys(spacing).some(key => !['unit', 'value'].includes(key))
+      )
+        throw new Error(
+          `Connector preflight: ${spec.name} [${mode}]: invalid text style letter spacing`
+        );
+    }
+  return enabled;
+}
 function specializeBuilder(source) {
   // The exact subset is embedded losslessly in this connector. Gate only
   // declarations absent from that subset, allowing Terser to remove helpers
@@ -587,6 +627,16 @@ function specializeBuilder(source) {
   replaceOnce(
     'if (MG_DIRECT_TEXT_ENABLED) {',
     'if (MG_CONNECTOR_DIRECT_TEXT) {'
+  );
+  replaceOnce(
+    'if (tree.focusRing) {',
+    'if (MG_CONNECTOR_FOCUS && tree.focusRing) {'
+  );
+  // Keep the existing obsolete-outline cleanup even for an extension-free
+  // embedded scope. Only the absent outline renderer is unreachable.
+  replaceOnce(
+    'if (!spec.focusRing) {',
+    'if (!MG_CONNECTOR_FOCUS || !spec.focusRing) {'
   );
   // The source DTO is embedded self-contained, not supplied at execution time.
   // subsetDocument refuses unknown/missing source focus extensions before
@@ -808,6 +858,7 @@ async function buildConnector({
         prune: false,
       }
     : null;
+  const letterSpacingEnabled = retainedLetterSpacing(subset);
   // Compile the native SVG importer only when the exact dependency/variant
   // subset needs it. The desktop plugin keeps every capability available.
   function needsSvg(node) {
@@ -878,6 +929,16 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsDirectText(variant.tree))
     );
+  function needsFocus(node) {
+    return (
+      node.focusRing !== undefined || (node.children || []).some(needsFocus)
+    );
+  }
+  const focusEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsFocus(variant.tree))
+    );
   function needsCoincidentFocus(node) {
     return (
       node.focusRing?.renderer === 'COINCIDENT_SCALE' ||
@@ -915,7 +976,7 @@ async function buildConnector({
     );
   let source = 'const MG_SHARED_ONLY = true;\n';
   source += fs.readFileSync(path.join(PLUGIN, 'kit-identity.js'), 'utf8');
-  source += `\n;\n${coreSource()}\n;\n`;
+  source += `\n;\n${specializeCore(coreSource())}\n;\n`;
   const runtime =
     operation === 'build'
       ? 'kit-builder.js'
@@ -953,6 +1014,7 @@ async function buildConnector({
       passes: 2,
       global_defs: {
         MG_CONNECTOR_FRAME_POSITION: framePositionEnabled,
+        MG_CONNECTOR_LETTER_SPACING: letterSpacingEnabled,
         MG_CONNECTOR_MEDIA: mediaEnabled,
         MG_CONNECTOR_SVG: svgEnabled,
         MG_CONNECTOR_ABSOLUTE: absoluteEnabled,
@@ -963,6 +1025,7 @@ async function buildConnector({
         MG_CONNECTOR_TEXT_OFFSET: textOffsetEnabled,
         MG_CONNECTOR_REVIEW_NODES: reviewNodesEnabled,
         MG_CONNECTOR_DIRECT_TEXT: directTextEnabled,
+        MG_CONNECTOR_FOCUS: focusEnabled,
         MG_CONNECTOR_COINCIDENT_FOCUS: coincidentFocusEnabled,
       },
     },
@@ -995,6 +1058,8 @@ async function buildConnector({
     svgEnabled,
     directTextEnabled,
     coincidentFocusEnabled,
+    letterSpacingEnabled,
+    focusEnabled,
     characters: code.length,
     bytes,
   };

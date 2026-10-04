@@ -452,6 +452,9 @@ function environment(doc, options = {}) {
       this.fontName = style.fontName;
       this.fontSize = style.fontSize;
       this.lineHeight = copy(style.lineHeight);
+      this.letterSpacing = copy(
+        style.letterSpacing || { unit: 'PIXELS', value: 0 }
+      );
       this.textDecoration = style.textDecoration || 'NONE';
       this.textWrapStyle = style.textWrapStyle || 'AUTO';
       this.textStyleId = id;
@@ -595,6 +598,7 @@ function environment(doc, options = {}) {
           'textAutoResize',
           'textAlignHorizontal',
           '_textWrapStyle',
+          'letterSpacing',
           '_horizontal',
           '_vertical',
         ])

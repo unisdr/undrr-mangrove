@@ -1097,7 +1097,7 @@ async function organizeMangroveKit(
     const examplesIntro = await info(
       'compositions',
       'Examples and templates',
-      'Accepted page templates are not available yet. Component usage examples live beside their families in Components. The planned catalogue below records source components and examples still to implement or verify. Its entries are documentation, not usable Assets or accepted templates.'
+      'Accepted page templates are not available yet. Component usage examples live beside their families in Components. The planned catalogue below records source components and examples still to implement or verify. Its entries are documentation, not usable Assets or accepted templates. To read an entry, select its row in Layers or on the canvas, then press Shift+2 to zoom to it.'
     );
     let catalogue;
     if (doc.plannedInventory) {
@@ -1145,7 +1145,7 @@ async function organizeMangroveKit(
         await text(
           `${key}/body`,
           row,
-          `${entry.catalogueTitle}\n${entry.source}\n${entry.scaffoldFamilyIds.length ? `Related families: ${entry.scaffoldFamilyIds.join(', ')}.\n` : ''}Source examples still to map or verify: ${preview || 'Declared mappings need native verification'}${examples.length > 6 ? `; plus ${examples.length - 6} more in the source inventory` : ''}.\nStatic source stories can also describe browser behaviour, not a distinct visual variant.`,
+          `${entry.catalogueTitle}\n${entry.source}\n${entry.scaffoldFamilyIds.length ? `Related families: ${entry.scaffoldFamilyIds.join(', ')}.\n` : ''}Source examples still to map or verify: ${preview || 'Declared mappings need native verification'}${examples.length > 6 ? `; plus ${examples.length - 6} more in the source inventory` : ''}.\n${entry.pendingVariantScopes?.length ? `Planned scope: ${entry.pendingVariantScopes.join('; ')}.\n` : ''}Static source stories can also describe browser behaviour, not a distinct visual variant.`,
           14,
           832
         );
@@ -1162,12 +1162,12 @@ async function organizeMangroveKit(
     await info(
       'patterns',
       'Your workspace',
-      'Create a frame here and drag a linked component from Assets into it. Edit its exposed properties in the right sidebar. Frames and notes you add beside this generated guide are designer-owned and remain unchanged through ordinary updates. Do not put personal content inside generated family or foundation boards.'
+      'Press F and draw your own frame beside this guide; name it My design. Select the frame, then drag a local Mangrove component from Assets into it. Assets may show only the last name: Vertical/Horizontal for Card and Background/Split for Hero. Check that the asset comes from this file. Edit its exposed properties in the right sidebar. Frames and notes you add beside this generated guide are designer-owned and remain unchanged through ordinary updates. Do not put personal content inside generated family or foundation boards.'
     );
     const maintenanceIntro = await info(
       'pending',
       'Maintenance and outside-core assets',
-      'Tabs, Tab trigger and Editorial CTA remain outside core scope. Read each family’s exact limitations before use. Historical diagnostics and operational staging are construction assets. Source imports and component rebuilds preserve identities; removals and renames require an explicit migration.'
+      'Card and Hero are new draft components with their own limits. Tabs, Tab trigger and Editorial CTA remain outside core scope. Read each family’s exact limitations before use. Historical diagnostics and operational staging are construction assets. Source imports and component rebuilds preserve identities; removals and renames require an explicit migration.'
     );
     const staging = [];
     for (const key of [
@@ -1264,14 +1264,14 @@ async function organizeMangroveKit(
         overview,
         meta.label,
         28,
-        width - 64
+        Math.min(850, width - 64)
       );
       const body = await text(
         `layout/family/${meta.id}/overview/body`,
         overview,
-        `${meta.status === 'bounded-draft' ? 'Bounded draft use' : meta.status === 'source-scaffold' ? 'New source scaffold, acceptance pending' : 'Not in core scope'}\n${meta.purpose}\n${meta.usage}\nSupported: ${meta.supported.join('; ')}\nLimits: ${meta.limitations.join('; ')}`,
+        `${meta.status === 'bounded-draft' ? 'Bounded draft use' : meta.status === 'source-scaffold' ? 'Draft component, acceptance pending' : 'Not in core scope'}\n${meta.purpose}\n${meta.usage}\nSupported: ${meta.supported.join('; ')}\nLimits: ${meta.limitations.join('; ')}`,
         16,
-        width - 64
+        Math.min(720, width - 64)
       );
       title.x = title.y = 32;
       body.x = 32;
@@ -1346,7 +1346,36 @@ async function organizeMangroveKit(
       node.primaryAxisSizingMode = 'AUTO';
       node.counterAxisSizingMode = 'FIXED';
     }
-    for (const { board } of familyBoards.values()) fitFlow(board);
+    for (const { board, review } of familyBoards.values()) {
+      fitFlow(board);
+      if (review) {
+        // Fit the generated presentation frame to its specimens. A desktop
+        // example can be wider than the original 720px states grid. Keep
+        // every instance and specimen row's existing sizing and content.
+        const grid = index.get(`${mgReadIdentity(review, 'mgKitId')}/grid`);
+        if (grid) {
+          updated.add(grid.id);
+          updated.add(review.id);
+          const width = Math.max(
+            720,
+            ...grid.children
+              .filter(child => child.visible !== false)
+              .map(
+                child =>
+                  rightExtent(child) + grid.paddingLeft + grid.paddingRight
+              )
+          );
+          grid.resizeWithoutConstraints(width, Math.max(40, grid.height));
+          review.resizeWithoutConstraints(
+            Math.max(
+              736,
+              rightExtent(grid) + review.paddingLeft + review.paddingRight
+            ),
+            Math.max(40, review.height)
+          );
+        }
+      }
+    }
     const bottomExtent = node => {
       const bounds = node.absoluteRenderBounds,
         box = node.absoluteBoundingBox;
@@ -1382,8 +1411,8 @@ async function organizeMangroveKit(
         boardX + rightExtent(board) + 32,
         advanced ? 64 + rightExtent(advanced) : 0
       );
-      title.resize(width - 64, Math.max(1, title.height));
-      body.resize(width - 64, Math.max(1, body.height));
+      title.resize(Math.min(850, width - 64), Math.max(1, title.height));
+      body.resize(Math.min(720, width - 64), Math.max(1, body.height));
       body.y = title.y + title.height + 16;
       const y = body.y + body.height + 32;
       if (review) {

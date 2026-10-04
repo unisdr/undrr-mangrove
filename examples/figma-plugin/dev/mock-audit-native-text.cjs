@@ -158,6 +158,21 @@ function fixture() {
     consumer.id,
     { textStyleId: 'wrong inherited style' }
   );
+  // Figma-created INSTANCE roots inherit their main component's plugin data.
+  // Both that root and its copied descendants are consumer records.
+  const inheritedRoot = node(
+    'synthetic-inherited-consumer',
+    'family/alpha/variant/alpha.default',
+    'INSTANCE',
+    'synthetic-main'
+  );
+  node(
+    'synthetic-inherited-root-label',
+    'family/alpha/variant/alpha.default/body/label',
+    'TEXT',
+    inheritedRoot.id,
+    { textStyleId: 'wrong inherited style' }
+  );
   return { doc, inspection };
 }
 function main() {
@@ -173,6 +188,22 @@ function main() {
     )
   );
   assert(audited.checks.every(c => !c.path.includes('ignored-root-id')));
+  assert(
+    !audited.gaps.some(gap => gap.code === 'duplicate-main-identity'),
+    'An inherited INSTANCE root must not collide with its canonical COMPONENT'
+  );
+  const wrongOwnedRoot = copy(inspection);
+  wrongOwnedRoot.nodes.find(
+    node => node.id === 'synthetic-inherited-consumer'
+  ).type = 'COMPONENT';
+  assert(
+    auditNativeText(wrongOwnedRoot, doc).gaps.some(
+      gap =>
+        gap.code === 'duplicate-main-identity' &&
+        gap.path === 'family/alpha/variant/alpha.default'
+    ),
+    'A wrongly owned COMPONENT root still refuses duplicate canonical identity'
+  );
   assert.strictEqual(audited.renderedAcceptance, false);
   assert(audited.fontLoadingVerification.includes('Not performed'));
   assert.strictEqual(
@@ -231,6 +262,135 @@ function main() {
   );
   console.log(
     'ok  cross-variant shared-style drift, non-inherited underline offsets, NONE/null and explicit wrapping mismatches are isolated'
+  );
+
+  const page = fixture();
+  const pageStyle = page.doc.styles.text[0];
+  const pageTemplate = page.inspection.styles.text[0];
+  const pageLabel = page.inspection.nodes.find(
+    node => node.mgKitId === 'family/alpha/variant/alpha.default/body/label'
+  );
+  const pageType = {
+    fontName: { family: 'Roboto Condensed', style: 'Bold' },
+    fontSize: 36,
+    lineHeight: { unit: 'PERCENT', value: 120 },
+    letterSpacing: { unit: 'PERCENT', value: 2 },
+  };
+  Object.assign(pageStyle.values.synthetic, copy(pageType));
+  Object.assign(pageTemplate, copy(pageType));
+  Object.assign(pageLabel, copy(pageType));
+  assert(auditNativeText(page.inspection, page.doc).passed);
+  for (const target of ['template', 'node', 'both']) {
+    for (const omitted of [false, true]) {
+      const invalid = copy(page);
+      const template = invalid.inspection.styles.text[0];
+      const node = invalid.inspection.nodes.find(n => n.id === pageLabel.id);
+      for (const actual of target === 'both'
+        ? [template, node]
+        : [target === 'template' ? template : node]) {
+        if (omitted) delete actual.letterSpacing;
+        else actual.letterSpacing.value = 0;
+        for (const field of ['fontName', 'fontSize', 'lineHeight'])
+          assert.deepStrictEqual(actual[field], pageType[field]);
+      }
+      const auditedSpacing = auditNativeText(invalid.inspection, invalid.doc);
+      assert.strictEqual(auditedSpacing.passed, false);
+      assert.strictEqual(auditedSpacing.counts.wrongStyleIds, 0);
+      assert.strictEqual(
+        auditedSpacing.gaps.filter(gap => gap.field?.endsWith('.letterSpacing'))
+          .length,
+        target === 'both' ? 2 : 1
+      );
+    }
+  }
+  const explicitZero = fixture();
+  explicitZero.inspection.styles.text[0].letterSpacing = {
+    unit: 'PIXELS',
+    value: 0,
+  };
+  explicitZero.inspection.nodes.find(n => n.id === pageLabel.id).letterSpacing =
+    {
+      value: 0,
+      unit: 'PIXELS',
+    };
+  assert(auditNativeText(explicitZero.inspection, explicitZero.doc).passed);
+  const nativePercentZero = copy(explicitZero);
+  nativePercentZero.inspection.styles.text[0].letterSpacing.unit = 'PERCENT';
+  nativePercentZero.inspection.nodes.find(
+    n => n.id === pageLabel.id
+  ).letterSpacing.unit = 'PERCENT';
+  assert(
+    auditNativeText(nativePercentZero.inspection, nativePercentZero.doc).passed,
+    'Native PERCENT0 is equivalent to an omitted source PIXELS0 default'
+  );
+  nativePercentZero.doc.styles.text[0].values.synthetic.letterSpacing = {
+    unit: 'PERCENT',
+    value: 0,
+  };
+  nativePercentZero.inspection.styles.text[0].letterSpacing.unit = 'PIXELS';
+  assert(
+    auditNativeText(nativePercentZero.inspection, nativePercentZero.doc).passed,
+    'Valid source PERCENT0 and native PIXELS0 are equivalent'
+  );
+  for (const unit of ['AUTO', 'INVALID']) {
+    const malformedZero = copy(explicitZero);
+    malformedZero.inspection.styles.text[0].letterSpacing.unit = unit;
+    assert(
+      auditNativeText(malformedZero.inspection, malformedZero.doc).gaps.some(
+        gap => gap.field === 'template.letterSpacing'
+      ),
+      'Malformed zero spacing must retain its invalid unit and fail'
+    );
+  }
+  const wrongNonzeroUnit = copy(page);
+  wrongNonzeroUnit.inspection.styles.text[0].letterSpacing.unit = 'PIXELS';
+  assert(
+    auditNativeText(
+      wrongNonzeroUnit.inspection,
+      wrongNonzeroUnit.doc
+    ).gaps.some(gap => gap.field === 'template.letterSpacing'),
+    'Nonzero spacing retains exact unit comparison'
+  );
+  const sourceZeroDrift = copy(explicitZero);
+  sourceZeroDrift.inspection.styles.text[0].letterSpacing.value = 2;
+  assert(
+    auditNativeText(sourceZeroDrift.inspection, sourceZeroDrift.doc).gaps.some(
+      gap => gap.field === 'template.letterSpacing'
+    )
+  );
+  const invalidSpacing = copy(page);
+  invalidSpacing.doc.styles.text[0].values.synthetic.letterSpacing.unit =
+    'AUTO';
+  assert(
+    auditNativeText(invalidSpacing.inspection, invalidSpacing.doc).gaps.some(
+      gap => gap.code === 'invalid-source-letter-spacing'
+    )
+  );
+  const brandedSpacing = copy(page);
+  brandedSpacing.doc.styles.text[0].values.other = {
+    ...copy(pageStyle.values.synthetic),
+    letterSpacing: { unit: 'PERCENT', value: 3 },
+  };
+  assert(
+    auditNativeText(brandedSpacing.inspection, brandedSpacing.doc).gaps.some(
+      gap => gap.code === 'ambiguous-source-letter-spacing'
+    )
+  );
+  brandedSpacing.doc.collection = 'Mangrove';
+  brandedSpacing.doc.modes = [{ id: 'synthetic', name: 'UNDRR' }];
+  brandedSpacing.inspection.collections = [
+    {
+      id: 'spacing-collection',
+      name: 'Mangrove',
+      modes: [{ modeId: 'spacing-mode', name: 'UNDRR' }],
+    },
+  ];
+  brandedSpacing.inspection.nodes.find(
+    n => n.id === pageLabel.id
+  ).resolvedVariableModes = { 'spacing-collection': 'spacing-mode' };
+  assert(auditNativeText(brandedSpacing.inspection, brandedSpacing.doc).passed);
+  console.log(
+    'ok  Page-like 2% letter spacing checks source/template/node independently, rejects missing or zero native spacing without type drift and preserves legacy PIXELS0 defaults'
   );
 
   const duplicateStyle = copy(inspection);

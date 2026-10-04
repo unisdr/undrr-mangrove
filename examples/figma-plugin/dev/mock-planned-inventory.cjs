@@ -83,9 +83,137 @@ test('Static parsing preserves source identities and never executes story code',
   );
 });
 
+test('Official CSF IDs honor explicit meta/story IDs and export names rather than display names', () => {
+  const source = 'stories/Components/Fixture/Fixture.stories.jsx';
+  const parsed = parseStorySource(
+    source,
+    `
+    export default { title: 'Renamed display group', id: 'stable-component' };
+    export const SplitDefault = { name: 'Custom display name' };
+    export const Explicit = { parameters: { __id: 'stable-custom-story' } };
+  `
+  );
+  assert.deepEqual(
+    parsed.stories.map(item => item.storybookId),
+    ['stable-component--split-default', 'stable-custom-story']
+  );
+  assert.equal(
+    parsed.stories[0].id,
+    'stories/Components/Fixture/Fixture/SplitDefault'
+  );
+  assert.equal(
+    parsed.stories[0].previewUrl,
+    'https://mangrove.undrr.org/?path=/story/stable-component--split-default'
+  );
+  assert.ok(
+    parsed.stories.every(
+      item =>
+        item.previewKind === 'reference-preview' &&
+        item.previewVerification === 'source-csf'
+    )
+  );
+});
+
+test('Static include/exclude filters and reserved ordering exports exclude non-story helpers', () => {
+  const parsed = parseStorySource(
+    'filter.stories.jsx',
+    `
+    export default { title: 'Filter', includeStories: /^Example/, excludeStories: ['ExampleInternal'] };
+    export const ExamplePublic = {};
+    export const ExampleInternal = {};
+    export const Helper = {};
+    export const __namedExportsOrder = ['ExamplePublic'];
+    export const __esModule = true;
+  `
+  );
+  assert.deepEqual(
+    parsed.stories.map(item => item.exportName),
+    ['ExamplePublic']
+  );
+  assert.equal(parsed.stories[0].storybookId, 'filter--example-public');
+  assert.deepEqual(parsed.excludedExports, [
+    'ExampleInternal',
+    'Helper',
+    '__namedExportsOrder',
+    '__esModule',
+  ]);
+  const included = parseStorySource(
+    'included.stories.jsx',
+    `
+    export default { title: 'Included', includeStories: ['Visible'] };
+    export const Visible = {}; export const Helper = {};
+  `
+  );
+  assert.deepEqual(
+    included.stories.map(item => item.exportName),
+    ['Visible']
+  );
+});
+
+test('Dynamic IDs, spreads, filters and post-declaration annotations never produce guessed links', () => {
+  for (const source of [
+    `export default { title: 'Fixture', id: getId() }; export const Default = {};`,
+    `export default { title: 'Fixture', ...importedMeta }; export const Default = {};`,
+    `export default { title: 'Fixture', includeStories: getFilters() }; export const Default = {};`,
+    `export default { title: 'Fixture' }; export const Default = { parameters: { __id: getId() } };`,
+    `export default { title: 'Fixture' }; export const Default = { ...importedStory };`,
+    `export default { title: 'Fixture' }; export const Default = {}; Default.parameters = { __id: 'changed' };`,
+    `const meta = { title: 'Fixture' }; meta.id = 'changed'; export default meta; export const Default = {};`,
+    `export default { title: 'Fixture' }; export { Default } from './unexecuted.js';`,
+  ]) {
+    const story = parseStorySource('dynamic.stories.jsx', source).stories[0];
+    assert.equal(story.id, 'dynamic/Default');
+    assert.equal(story.previewUrl, undefined);
+    assert.equal(story.storybookId, undefined);
+    assert.ok(story.previewUnavailableReason);
+  }
+});
+
+test('Aliased export identity must match the official indexer, including explicit override limitations', () => {
+  const parsed = parseStorySource(
+    'alias.stories.jsx',
+    `
+    export default { title: 'Alias' };
+    const local = {}; export { local as AlternateName };
+    const overridden = { parameters: { __id: 'custom-alias' } };
+    export { overridden as AliasOverride };
+  `
+  );
+  assert.equal(parsed.stories[0].storybookId, 'alias--alternate-name');
+  // The installed CSF indexer does not extract __id from aliased declarations.
+  assert.equal(parsed.stories[1].previewUrl, undefined);
+  assert.match(parsed.stories[1].previewUnavailableReason, /indexer/);
+});
+
 const inventory = buildPlannedInventory(families);
 const entry = fragment =>
   inventory.entries.find(item => item.source.endsWith(fragment));
+
+test('Public reference links retain internal identities and explicitly disclaim native synchronisation', () => {
+  assert.equal(inventory.sourcePreview.baseUrl, 'https://mangrove.undrr.org');
+  assert.match(inventory.sourcePreview.limitations, /branch/);
+  assert.match(inventory.sourcePreview.limitations, /does not synchronise/);
+  const stories = inventory.entries.flatMap(item => item.stories);
+  assert.ok(stories.some(item => item.previewUnavailableReason));
+  const linked = stories.filter(item => item.previewUrl);
+  assert.ok(linked.length > 350);
+  assert.equal(
+    new Set(linked.map(item => item.storybookId)).size,
+    linked.length
+  );
+  for (const story of linked) {
+    assert.equal(story.id.endsWith(`/${story.exportName}`), true);
+    assert.equal(
+      new URL(story.previewUrl).origin,
+      'https://mangrove.undrr.org'
+    );
+    assert.equal(
+      new URL(story.previewUrl).searchParams.get('path'),
+      `/story/${story.storybookId}`
+    );
+    assert.equal(story.nativeAcceptance, 'unverified');
+  }
+});
 
 test('Actual catalogue includes missing public components and all existing family associations', () => {
   for (const fragment of [

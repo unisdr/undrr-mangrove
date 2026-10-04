@@ -578,6 +578,16 @@ async function main() {
     candidate('duplicate style name', copy =>
       copy.styles.text.push({ ...copy.styles.text[0], id: 'duplicate.style' })
     );
+    for (const spacing of [
+      { unit: 'EM', value: 0.02 },
+      { unit: 'PERCENT', value: '2' },
+      { unit: 'PIXELS', value: 2, unexpected: true },
+      { unit: 'AUTO' },
+    ])
+      candidate('invalid letter spacing', copy => {
+        for (const value of Object.values(copy.styles.text[0].values))
+          value.letterSpacing = spacing;
+      });
     for (const offset of [
       { unit: 'AUTO', value: 0 },
       { unit: 'PERCENT', value: '20' },
@@ -801,6 +811,10 @@ async function main() {
     const renamed = JSON.parse(JSON.stringify(doc));
     renamed.styles.text.find(style => style.id === spec.id).name =
       'Mangrove/renamed';
+    for (const value of Object.values(
+      renamed.styles.text.find(style => style.id === spec.id).values
+    ))
+      value.letterSpacing = { unit: 'PERCENT', value: 2 };
     r = await run(renamed, [all[0]], false, {
       textStyles: [spec.id],
       effects: false,
@@ -808,6 +822,16 @@ async function main() {
     assert.strictEqual(r.styles.counts.text.updated, 1);
     assert.strictEqual(state.styles[0].id, id);
     assert.strictEqual(state.styles[0].name, 'Mangrove/renamed');
+    assert.deepStrictEqual(state.styles[0].letterSpacing, {
+      unit: 'PERCENT',
+      value: 2,
+    });
+    await run(doc, [all[0]], false, { textStyles: [spec.id], effects: false });
+    assert.deepStrictEqual(
+      JSON.parse(JSON.stringify(state.styles[0].letterSpacing)),
+      { unit: 'PIXELS', value: 0 },
+      'Removing source spacing resets the retained style'
+    );
     const legacy = { ...doc };
     delete legacy.styles;
     r = await run(legacy, [all[0]]);

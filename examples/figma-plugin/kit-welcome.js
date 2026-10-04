@@ -344,7 +344,10 @@ async function createMangroveWelcome(
       [
         'use',
         'Make your first design',
-        '1. Create a frame named My design outside the generated boards, or in Your workspace when available. 2. Open Assets and search for Mangrove/Button. Drag an instance into My design. 3. Select it and change Label in the right sidebar. Keep it linked to its main component.',
+        (start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
+          ? '1. Open Your workspace, press F and draw a frame beside the guide. '
+          : '1. Press F and draw a frame outside the generated boards. ') +
+          'Name it My design. 2. Open Assets, find Mangrove/Button under this file and drag it into My design. Clicking an asset inserts at the current view centre and can cover a guide. 3. Select your instance and edit Label in the right sidebar. Keep it linked.',
       ],
       [
         'use',
@@ -358,7 +361,7 @@ async function createMangroveWelcome(
       [
         'maintain',
         'What is ready, what is next',
-        'The core set supports bounded draft use in UNDRR. Read each component description for supported presets, edits and limits. Tabs and Editorial CTA are outside core scope. Page templates, other brands and right-to-left layouts still need review. On Free, work in one brand at a time.',
+        'The core set supports bounded draft use in UNDRR. Read each component description for supported presets, edits and limits. Card and Hero are new draft components with limited tested presets. Tabs and Editorial CTA remain outside core scope. Page templates, other brands and right-to-left layouts still need review. On Free, work in one brand at a time.',
       ],
       [
         'maintain',

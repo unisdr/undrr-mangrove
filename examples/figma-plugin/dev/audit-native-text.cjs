@@ -15,6 +15,11 @@ function ordered(value) {
 }
 const json = value => JSON.stringify(ordered(value));
 const keyOf = node => node.mgKitId || node.identity?.mgKitId || '';
+const spacing = value =>
+  value === undefined ||
+  (value && ['PIXELS', 'PERCENT'].includes(value.unit) && value.value === 0)
+    ? { unit: 'PIXELS', value: 0 }
+    : value;
 function auditNativeText(inspection, doc, { familyIds } = {}) {
   const report = {
     kind: 'mangrove-native-text-audit',
@@ -104,7 +109,7 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
     if (parent && seen.has(parent.id))
       gap('native-parent-cycle', { nodeId: node.id });
     const key = keyOf(node);
-    if (!insideInstance && key) {
+    if (node.type !== 'INSTANCE' && !insideInstance && key) {
       const matches = mainNodes.get(key) || [];
       matches.push(node);
       mainNodes.set(key, matches);
@@ -253,6 +258,44 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
       }
     }
     gap('ambiguous-direct-source-typography', { familyId, path: key });
+    return null;
+  };
+  const sourceLetterSpacing = (node, sourceStyle, familyId, key) => {
+    const values = Object.values(sourceStyle?.values || {}).map(value =>
+      spacing(value.letterSpacing)
+    );
+    if (
+      !values.length ||
+      values.some(
+        value =>
+          !value ||
+          !['PIXELS', 'PERCENT'].includes(value.unit) ||
+          !Number.isFinite(value.value)
+      )
+    ) {
+      gap('invalid-source-letter-spacing', { familyId, path: key });
+      return null;
+    }
+    // Equal source spacing has no brand ambiguity, including the omitted
+    // zero-spacing default in older source recipes.
+    if (new Set(values.map(json)).size === 1) return values[0];
+    const collections = (
+      Array.isArray(inspection.collections) ? inspection.collections : []
+    ).filter(item => item?.name === doc.collection);
+    const collection = collections.length === 1 ? collections[0] : null;
+    const modeId = collection && node.resolvedVariableModes?.[collection.id];
+    const modes = (
+      Array.isArray(collection?.modes) ? collection.modes : []
+    ).filter(
+      item => typeof modeId === 'string' && modeId && item?.modeId === modeId
+    );
+    const sourceModes = (Array.isArray(doc.modes) ? doc.modes : []).filter(
+      item => modes.length === 1 && item?.name === modes[0].name
+    );
+    const value =
+      sourceModes.length === 1 && sourceStyle.values[sourceModes[0].id];
+    if (value) return spacing(value.letterSpacing);
+    gap('ambiguous-source-letter-spacing', { familyId, path: key });
     return null;
   };
   for (const familyId of requested) {
@@ -412,6 +455,26 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
           } else {
             const expectedStyleId = direct ? '' : styles[0].id;
             assert('textStyleId', expectedStyleId, node.textStyleId);
+            if (sourceStyle) {
+              const expectedSpacing = sourceLetterSpacing(
+                node,
+                sourceStyle,
+                familyId,
+                key
+              );
+              if (expectedSpacing) {
+                assert(
+                  'template.letterSpacing',
+                  expectedSpacing,
+                  spacing(styles[0].letterSpacing)
+                );
+                assert(
+                  'node.letterSpacing',
+                  expectedSpacing,
+                  spacing(node.letterSpacing)
+                );
+              }
+            }
             if (node.textStyleId !== expectedStyleId)
               report.counts.wrongStyleIds++;
             if (!styles[0].fontName?.family || !styles[0].fontName?.style)

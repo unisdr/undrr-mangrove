@@ -707,3 +707,31 @@ Outer bounds success does not accept every internal stress case. Table-row revie
 - Planned entries are ordinary documentation frames/text with stable source-file/export IDs. Do not create empty components in Assets or treat Storybook examples as public component counts. Static AST parsing avoids executing story files; MDX anatomy and prop combinations still need separate review.
 
 The media helpers initially grew an existing Table connector batch beyond its 50,000-character/byte limit. Connector compilation now detects whether the exact immutable subset uses raster/gradient media or positioned frames, removes only absent helpers and uses two minification passes. Malformed nested `properties` is checked before compilation. Existing packed Table/CTA batches and a compiled media fixture pass locally; new native connector execution remains quota-blocked. Large embedded photographs may still exceed the connector limit and must use the desktop importer rather than silently losing media.
+
+## Hero Page typography and native zero spacing
+
+Hero Page headings inherit foundational h1 letter spacing of `0.02em` while Hero controls the 36/32px sizes and 120% line height. Export the spacing as Figma `PERCENT: 2` in distinct Page styles; preserve existing Section styles and variant IDs. Generic style import now validates optional spacing, applies it, and resets an omitted value to zero rather than retaining a stale nonzero value.
+
+The first expanded native text audit reported 1,178 spacing mismatches on earlier assets because Figma stores its default as `PERCENT: 0`, while omitted source spacing normalizes to `PIXELS: 0`. Both are mathematically zero. The auditor now normalizes only exact zero in those two valid units. Nonzero values, unsupported units and missing native evidence for a nonzero source value still fail. The corrected saved-field audit passes all 32 families and 859 canonical TEXT, including 35 DIRECT nodes. This does not establish raster wrapping, font-file equivalence or font loading.
+
+## Storybook reference links and importer freshness
+
+Use the installed Storybook CSF helpers and actual source indexer output to derive reference IDs. Static metadata IDs, story IDs and include/exclude filters matter; display names and Figma family names are insufficient. Preserve catalogue path/export identities independently. Unsupported or dynamic source forms omit their links with reasons; they are not evidence that a story does not exist.
+
+The public index check finds all 27 Card/Hero references and 385 of 391 generated URLs. Six new ComboBox examples are absent from the deployment. Source previews remain references to the public site, whose revision may differ from the stacked draft. Designs and Storybook Connect can improve comparison, but they do not implement our native identity/update contract. [Integration choices and next steps](STORYBOOK-INTEGRATIONS.md) records current account requirements and unverified service access.
+
+A pure runtime renderer makes `build-figma-tokens --check` read-only. Normal generation skips writes when bytes are identical. Verification confirms both JSON and runtime retain their contents and modification times on an unchanged check/build. This reduces reloads without authorising regeneration during a pending native operation or an unsaved probe.
+
+## UX dogfood and wide specimen presentation
+
+Expert native dogfooding found that a family's source matrix width was also used as its guidance line width, and 1280px Hero examples overflowed a nominal 736px review frame. The layout now caps family body guidance at 720px and fits generated review grids/boards around their existing rows. It does not resize reusable source components or edited consumers. The update receipt records these grid writes. Independent comparison retains all 40 edited consumer records and 583 foundation records exactly; all 383 canonical local component fields remain unchanged, apart from intended Card/Hero description updates.
+
+The first contextual source shortcut also exposed a Core-tab height problem: too many fixed controls could clip its preset buttons. Less frequent guidance/organisation buttons moved into Diagnostics > Kit maintenance. The redundant Core introduction stays available to accessibility, and the panel allows scrolling if expanded results reduce its height. A native collapsed-results check now shows preset buttons, search, two family rows, counts, refresh and Build together. Expanded-results and independent final recheck are separate observations recorded in [UX-DOGFOOD.md](UX-DOGFOOD.md).
+
+A normal Assets instance can inherit a main component's identity on its root as well as on descendants. The read-only typography auditor now excludes INSTANCE roots themselves from canonical indexing. A conflicting owned COMPONENT still refuses as a duplicate. The final saved audit checks all 859 canonical TEXT with zero gaps; it does not promote consumers into importer-owned mains.
+
+Restart comparison preserves edited consumers, foundations and canonical local component fields exactly. Fourteen generated presentation records differ by at most 0.00390625px in placement/bounds. Keep the strict differences in the evidence rather than broadening numerical tolerances or claiming whole-scene equality.
+
+## Scoped connector compiler growth
+
+Optional Page letter spacing and richer guidance pushed older connector subsets toward the fixed 50,000-byte/character transport limit. Compilation removes spacing validation or focus rendering only when the exact retained source subset proves those paths absent. It retains zero-spacing resets and obsolete owned focus-outline cleanup. Source anchors fail closed when they change. Compiled Table and Editorial CTA fixtures measure 48,018 and 48,506 bytes; enabled focus bindings, retained IDs and explicit spacing validation pass the scoped mock. Native connector execution remains quota-blocked.

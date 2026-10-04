@@ -247,6 +247,6 @@ Chips Label at the source 240px long preset, Text CTA Mobile Headline at 390px a
 
 ## Card/Hero and generated planned catalogue
 
-Four new source scaffolds add 40 variants: Card/Vertical 8, Card/Horizontal 8, Hero/Background 8 and Hero/Split 16. These remain outside the 25-family core preset. See [Card/Hero status](CARD-HERO-STATUS.md) for explicit unlinked/default scope, native evidence and deferred variants.
+Four new source scaffolds now add 56 variants: Card/Vertical 8, Card/Horizontal 8, Hero/Background 16 and Hero/Split 24. Hero includes Page and Section heading choices at declared presets; alternate Page split ratios remain planned. These remain outside the 25-family core preset. See [Card/Hero status](CARD-HERO-STATUS.md) for explicit unlinked/default scope, native evidence and deferred variants.
 
 The exporter now includes `plannedInventory`: 68 source-story entries and 414 named examples across the included files. Canvas stubs are documentation-only and retain stable source-file/export IDs. Counts describe examples still to map or verify, not missing public components or acceptance percentages. MDX anatomy, runtime behaviour and all public prop combinations still require human/source review.

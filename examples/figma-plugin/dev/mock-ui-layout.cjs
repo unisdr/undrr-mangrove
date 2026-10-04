@@ -122,6 +122,83 @@ async function savedOperation(ui, expected) {
   );
 }
 async function main() {
+  const sourceUi = mount();
+  const sourceDoc = copy(doc);
+  sourceDoc.plannedInventory.entries = [
+    {
+      id: 'source-fixture',
+      catalogueTitle: 'Components/Fixture',
+      source: 'stories/Fixture.stories.jsx',
+      stories: [
+        {
+          id: 'good',
+          exportName: 'Default',
+          storybookId: 'components-fixture--default',
+          previewKind: 'reference-preview',
+          previewUrl:
+            'https://mangrove.undrr.org/?path=/story/components-fixture--default',
+        },
+        {
+          id: 'unsafe',
+          exportName: 'Unsafe',
+          previewKind: 'reference-preview',
+          previewUrl: 'javascript:alert(1)',
+        },
+        {
+          id: 'missing',
+          exportName: 'Dynamic',
+          previewUnavailableReason: 'Dynamic source identity requires review.',
+        },
+      ],
+    },
+  ];
+  await sourceUi.load(sourceDoc);
+  assert.strictEqual(
+    sourceUi.get('source-preview').href,
+    sourceDoc.plannedInventory.entries[0].stories[0].previewUrl
+  );
+  assert.strictEqual(sourceUi.get('source-preview').hidden, false);
+  const sourceSelection = sourceUi.selectedFamilies();
+  const messageCount = sourceUi.messages.length;
+  for (const id of ['unsafe', 'missing']) {
+    sourceUi.get('source-story').value = id;
+    sourceUi
+      .get('source-story')
+      .dispatchEvent(new sourceUi.window.Event('change'));
+    assert.strictEqual(sourceUi.get('source-preview').hidden, true);
+    assert.strictEqual(
+      sourceUi.get('source-preview').hasAttribute('href'),
+      false
+    );
+  }
+  assert.deepStrictEqual(sourceUi.selectedFamilies(), sourceSelection);
+  assert.strictEqual(
+    sourceUi.messages.length,
+    messageCount,
+    'References never request a native mutation or network fetch'
+  );
+  sourceDoc.plannedInventory.entries[0].scaffoldFamilyIds = ['hero-background'];
+  await sourceUi.load(sourceDoc);
+  sourceUi.send('kit-navigation-state', {
+    destinations: [],
+    families: [{ id: 'hero-background', label: 'Hero / Background' }],
+  });
+  assert.strictEqual(sourceUi.get('browse-source').disabled, false);
+  const contextualMessages = sourceUi.messages.length;
+  sourceUi.get('browse-source').click();
+  assert.strictEqual(sourceUi.get('source-component').value, 'source-fixture');
+  assert.strictEqual(sourceUi.get('source-story').value, 'good');
+  assert.strictEqual(sourceUi.get('source-previews').open, true);
+  assert.strictEqual(sourceUi.get('panel-diagnostics').hidden, false);
+  assert.strictEqual(
+    sourceUi.messages.length,
+    contextualMessages,
+    'Contextual source browsing is read-only'
+  );
+  sourceUi.dom.window.close();
+  console.log(
+    'ok source references reject unsafe links and preserve build selection'
+  );
   const welcomeUi = mount();
   assert.deepStrictEqual(welcomeUi.messages.at(-1), {
     type: 'kit-navigation-state',

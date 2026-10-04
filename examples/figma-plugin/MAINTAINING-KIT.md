@@ -618,3 +618,13 @@ Use [Card/Hero status](CARD-HERO-STATUS.md) for finite source presets, consumer 
 The exporter embeds the repository sample JPEG and derives gradient alpha colours from source roles. Consumer image fills are local overrides; source media layers retain stable IDs. Native nested instance recipes use `overrides`, not `properties`, for action labels. Keep family/variant/layer/property keys stable. Exporter normalization is part of the identity contract, so never splice raw recipe trees into a previously normalized JSON document.
 
 The generated `plannedInventory` scans named Storybook examples without executing them. Add explicit source-export-to-existing-variant mappings only where the mapping is justified; they describe scaffolds, not acceptance. Catalogue rows reconcile from source and keep stable path IDs. Put personal notes outside generated rows. Source-file renames/removals and manual content inside a generated row need an explicit reviewed migration.
+
+## Check freshness and compare Storybook references
+
+Use `node scripts/build-figma-tokens.cjs --check` before an update. It compares the current expected DTO and runtime with ignored output and reports stale/missing files without writing. Close the plugin and run `yarn build:figma-tokens` when output is stale; unchanged generation preserves modification times. Reload the new JSON explicitly, import without pruning, and rebuild affected families with their dependencies.
+
+Diagnostics > **Source previews in Storybook** provides source-derived public preview links, including examples still awaiting a scaffold. Public deployment is a reference and may differ from this branch. It does not mark a native variant implemented or accepted. Current integrations, access requirements and later efficiencies are documented in [STORYBOOK-INTEGRATIONS.md](STORYBOOK-INTEGRATIONS.md). Do not regenerate watched plugin files while native operations or unsaved probes are active.
+
+### Consumer-facing presentation changes
+
+Use [UX-DOGFOOD.md](UX-DOGFOOD.md) when extending navigation or component guidance. Match actual section names, explain local Assets tile names and drag insertion into a personal frame, cap family body guidance at 720px, and fit usage boards to actual desktop specimens without changing component internals. Record retained presentation grid IDs before writes in layout receipts. Guidance and organization actions now live in Diagnostics > Kit maintenance; Core kit retains its preset/search/count/build flow. After UI changes, check the native 600×740 window, both collapsed and expanded results, and a contextual source-reference route.
