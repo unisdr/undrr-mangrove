@@ -34,9 +34,111 @@ function mgKitLayoutInstalled() {
   );
 }
 
+function mgLayoutFootprint(node) {
+  const box = node.absoluteBoundingBox;
+  const paint = node.absoluteRenderBounds;
+  const left = box && paint ? Math.min(0, paint.x - box.x) : 0;
+  const top = box && paint ? Math.min(0, paint.y - box.y) : 0;
+  const right =
+    box && paint
+      ? Math.max(node.width, paint.x + paint.width - box.x)
+      : node.width;
+  const bottom =
+    box && paint
+      ? Math.max(node.height, paint.y + paint.height - box.y)
+      : node.height;
+  return { left, top, width: right - left, height: bottom - top };
+}
+
+// Figma Layers reverses paint order. Reorder only the named generated siblings
+// in their existing slots; unrelated children keep their slots and local fields.
+function mgLayoutLayerOrder(parent, readingOrder) {
+  if (parent.type === 'FRAME' && parent.layoutMode !== 'NONE')
+    throw new Error(
+      'Semantic layer ordering requires a free-positioned presentation parent.'
+    );
+  const nodes = readingOrder.filter(Boolean);
+  const ids = new Set(nodes.map(node => node.id));
+  if (ids.size !== nodes.length || nodes.some(node => node.parent !== parent))
+    throw new Error('Conflicting generated presentation reading order.');
+  const paintOrder = [...nodes].reverse();
+  let next = 0;
+  const desired = parent.children.map(node =>
+    ids.has(node.id) ? paintOrder[next++] : node
+  );
+  desired.forEach((target, index) => {
+    let moves = 0;
+    while (parent.children[index] !== target) {
+      if (++moves > desired.length)
+        throw new Error('Could not preserve manual sibling slots.');
+      if (ids.has(target.id)) parent.insertChild(index, target);
+      else {
+        const displaced = parent.children[index];
+        if (!ids.has(displaced.id))
+          throw new Error('Unrelated sibling order changed unexpectedly.');
+        parent.insertChild(desired.indexOf(displaced), displaced);
+      }
+    }
+  });
+}
+
+// Presentation-only geometry. Source children and their inherited descendants
+// retain their widths/heights and every internal field.
+function mgLayoutBrowseFlow(parent, headers, items, columns = 1) {
+  parent.layoutMode = 'NONE';
+  let y = parent.paddingTop;
+  let headingWidth = 0;
+  for (const node of headers) {
+    const footprint = mgLayoutFootprint(node);
+    node.x = parent.paddingLeft - footprint.left;
+    node.y = y - footprint.top;
+    y += footprint.height + parent.itemSpacing;
+    headingWidth = Math.max(headingWidth, footprint.width);
+  }
+  const widths = Array(columns).fill(0);
+  const measured = items.map(mgLayoutFootprint);
+  measured.forEach((size, i) => {
+    widths[i % columns] = Math.max(widths[i % columns], size.width);
+  });
+  const xs = widths.map(
+    (_, column) =>
+      parent.paddingLeft +
+      widths.slice(0, column).reduce((sum, width) => sum + width + 48, 0)
+  );
+  for (let i = 0; i < items.length; i += columns) {
+    const row = items.slice(i, i + columns);
+    row.forEach((node, j) => {
+      node.x = xs[j] - measured[i + j].left;
+      node.y = y - measured[i + j].top;
+    });
+    y +=
+      Math.max(...row.map((_, j) => measured[i + j].height)) +
+      parent.itemSpacing;
+  }
+  const width = Math.max(
+    900,
+    headingWidth + parent.paddingLeft + parent.paddingRight,
+    widths.reduce((sum, value) => sum + value, 0) +
+      48 * (columns - 1) +
+      parent.paddingLeft +
+      parent.paddingRight
+  );
+  parent.resizeWithoutConstraints(
+    width,
+    Math.max(
+      40,
+      y -
+        (headers.length || items.length ? parent.itemSpacing : 0) +
+        parent.paddingBottom
+    )
+  );
+  mgLayoutLayerOrder(parent, [...headers, ...items]);
+}
+
 function mgLayoutGrid(set, family) {
   const nodes = set.children.filter(node => node.type === 'COMPONENT');
   if (!nodes.length) return;
+  const sizes = new Map(nodes.map(node => [node.id, mgLayoutFootprint(node)]));
   if (family?.id === 'table') {
     const byKey = new Map(
       family.variants.map(variant => [
@@ -61,12 +163,13 @@ function mgLayoutGrid(set, family) {
             const row = items.slice(i, i + 3);
             let x = 24;
             for (const node of row) {
-              node.x = x;
-              node.y = top;
-              x += node.width + 48;
+              const size = sizes.get(node.id);
+              node.x = x - size.left;
+              node.y = top - size.top;
+              x += size.width + 48;
             }
             width = Math.max(width, x - 24);
-            top += Math.max(...row.map(node => node.height)) + 48;
+            top += Math.max(...row.map(node => sizes.get(node.id).height)) + 48;
           }
           return { width, next: top };
         };
@@ -86,10 +189,13 @@ function mgLayoutGrid(set, family) {
   const widths = Array(columns).fill(0);
   const heights = Array(Math.ceil(nodes.length / columns)).fill(0);
   nodes.forEach((node, i) => {
-    widths[i % columns] = Math.max(widths[i % columns], node.width);
+    widths[i % columns] = Math.max(
+      widths[i % columns],
+      sizes.get(node.id).width
+    );
     heights[Math.floor(i / columns)] = Math.max(
       heights[Math.floor(i / columns)],
-      node.height
+      sizes.get(node.id).height
     );
   });
   const offsets = values => {
@@ -103,8 +209,8 @@ function mgLayoutGrid(set, family) {
   const xs = offsets(widths);
   const ys = offsets(heights);
   nodes.forEach((node, i) => {
-    node.x = xs[i % columns];
-    node.y = ys[Math.floor(i / columns)];
+    node.x = xs[i % columns] - sizes.get(node.id).left;
+    node.y = ys[Math.floor(i / columns)] - sizes.get(node.id).top;
   });
   set.resizeWithoutConstraints(
     48 + widths.reduce((sum, width) => sum + width, 0) + 48 * (columns - 1),
@@ -1145,7 +1251,20 @@ async function organizeMangroveKit(
       if (!item) return;
       const { overview, board, review, title, body } = item;
       const advanced = advancedBoards.get(id);
-      if (advanced) fitFlow(advanced);
+      if (advanced) {
+        const supports = [...guidance.families.values()]
+          .filter(meta => meta.parentFamilyId === id)
+          .map(meta => familyBoards.get(meta.id)?.overview)
+          .filter(Boolean);
+        mgLayoutBrowseFlow(
+          advanced,
+          [
+            index.get(`layout/family/${id}/advanced/title`),
+            index.get(`layout/family/${id}/advanced/body`),
+          ],
+          supports
+        );
+      }
       const boardX = review ? 32 + rightExtent(review) + 80 : 32;
       const width = Math.max(
         900,
@@ -1172,13 +1291,33 @@ async function organizeMangroveKit(
         bottom = advanced.y + bottomExtent(advanced);
       }
       overview.resizeWithoutConstraints(width, bottom + 32);
+      mgLayoutLayerOrder(overview, [title, body, review, board, advanced]);
     };
     for (const meta of guidance.families.values())
       if (meta.kind === 'support') fitOverview(meta.id);
     for (const meta of guidance.families.values())
       if (meta.kind === 'primary') fitOverview(meta.id);
-    for (const board of groupBoards.values()) fitFlow(board);
-    fitFlow(pendingBrowse);
+    for (const group of guidance.groups.values()) {
+      const board = groupBoards.get(group.id);
+      const items = group.familyIds
+        .map(id => familyBoards.get(id)?.overview)
+        .filter(node => node?.parent === board);
+      mgLayoutBrowseFlow(
+        board,
+        [index.get(`layout/group/${group.id}/title`)],
+        items,
+        group.id === 'forms-selection' ? 2 : 1
+      );
+    }
+    const pendingItems = [...guidance.families.values()]
+      .filter(meta => meta.kind === 'primary' && meta.status === 'outside-core')
+      .map(meta => familyBoards.get(meta.id)?.overview)
+      .filter(Boolean);
+    mgLayoutBrowseFlow(
+      pendingBrowse,
+      [index.get('layout/pending/browse/title')],
+      pendingItems
+    );
     const groups = [...groupBoards.values()];
     const leftWidth = Math.max(
       900,
@@ -1228,8 +1367,20 @@ async function organizeMangroveKit(
       }
       y += Math.max(...row.map(id => sections.get(id).height)) + 160;
     }
-    for (const [id] of [...MG_LAYOUT_DESTINATIONS].reverse())
-      page.insertChild(page.children.length, sections.get(id));
+    mgLayoutLayerOrder(sections.get('components'), [
+      componentsIntro,
+      ...groups,
+    ]);
+    mgLayoutLayerOrder(sections.get('pending'), [
+      maintenanceIntro,
+      pendingBrowse,
+      ...staging,
+      diagnostics,
+    ]);
+    mgLayoutLayerOrder(
+      page,
+      MG_LAYOUT_DESTINATIONS.map(([id]) => sections.get(id))
+    );
     mgWriteIdentity(sections.get('start'), 'mgLayoutPhase', 'complete');
     if (zoom) figma.viewport.scrollAndZoomIntoView([sections.get('start')]);
     return {

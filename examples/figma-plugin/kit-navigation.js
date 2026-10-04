@@ -63,6 +63,58 @@ async function inspectMangroveNavigation(doc) {
   return { destinations, families, errors: [] };
 }
 
+function mgNavigateUsageEntry(node, familyId, index) {
+  // bounds uses page coordinates; multiplying by the current zoom preserves
+  // screen capacity when setting a new zoom. Only viewport/selection changes.
+  // https://developers.figma.com/docs/plugins/api/figma-viewport/
+  const viewport = figma.viewport;
+  const bounds = viewport.bounds;
+  const box = node.absoluteBoundingBox;
+  const validRect = rect =>
+    rect &&
+    ['x', 'y', 'width', 'height'].every(field =>
+      Number.isFinite(rect[field])
+    ) &&
+    rect.width > 0 &&
+    rect.height > 0;
+  if (
+    !validRect(bounds) ||
+    !validRect(box) ||
+    !Number.isFinite(viewport.zoom) ||
+    viewport.zoom <= 0
+  )
+    return false;
+  const screenWidth = bounds.width * viewport.zoom;
+  const screenHeight = bounds.height * viewport.zoom;
+  const margin = 48;
+  const first = node.children.find(child => child.type === 'INSTANCE');
+  const firstBox = first?.absoluteBoundingBox;
+  const width = Math.max(box.width, validRect(firstBox) ? firstBox.width : 0);
+  const widthZoom = Math.min(1, screenWidth / (width + margin * 2));
+  if (box.height + margin * 2 <= screenHeight / widthZoom) return false;
+  const heading = index.get(`layout/family/${familyId}/overview/title`);
+  const headingBox = heading?.absoluteBoundingBox;
+  // Include the existing family heading and purpose above the normal examples.
+  // Never navigate to a detached heading or invent a temporary focus frame.
+  const top =
+    validRect(headingBox) && heading.parent === node.parent
+      ? Math.min(box.y, headingBox.y)
+      : box.y;
+  const firstChunk = validRect(firstBox)
+    ? Math.min(box.height, Math.max(256, firstBox.y - box.y + firstBox.height))
+    : Math.min(box.height, 320);
+  const zoom = Math.min(
+    widthZoom,
+    screenHeight / (box.y - top + firstChunk + margin * 2)
+  );
+  viewport.zoom = zoom;
+  viewport.center = {
+    x: box.x - margin + screenWidth / (2 * zoom),
+    y: top - margin + screenHeight / (2 * zoom),
+  };
+  return true;
+}
+
 async function navigateMangroveInstalled(destination) {
   const state = await inspectMangroveNavigation();
   const index = await mgLayoutIndex();
@@ -92,12 +144,16 @@ async function navigateMangroveInstalled(destination) {
     throw new Error(
       'No installed example exists for this component. Choose Source components.'
     );
-  figma.viewport.scrollAndZoomIntoView([node]);
+  const usageEntry =
+    destination.startsWith('example:') &&
+    mgNavigateUsageEntry(node, destination.split(':')[1], index);
+  if (!usageEntry) figma.viewport.scrollAndZoomIntoView([node]);
   figma.currentPage.selection = [node];
   return {
     operation: 'kit-navigation',
     destination,
     nodeId: node.id,
+    viewportMode: usageEntry ? 'usage-entry' : 'fit',
     errors: [],
   };
 }

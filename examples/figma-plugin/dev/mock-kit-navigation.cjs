@@ -139,6 +139,135 @@ async function fixture() {
 }
 async function main() {
   {
+    const { env, frame } = await fixture();
+    // Fixture preparation may move text; navigation starts with no fonts loaded.
+    env.state.loadedFonts.add('Inter Regular');
+    const page = env.figma.currentPage;
+    const overview = frame('layout/family/table/overview', 'Table');
+    const review = page.findAll(
+      node =>
+        node.getSharedPluginData('orgundrrmangrove', 'mgKitId') ===
+        'review/table'
+    )[0];
+    overview.appendChild(review);
+    const heading = env.figma.createText();
+    own(heading, 'layout/family/table/overview/title');
+    overview.appendChild(heading);
+    const box = (node, rect) =>
+      Object.defineProperty(node, 'absoluteBoundingBox', {
+        configurable: true,
+        value: rect,
+      });
+    box(review, { x: 2000, y: 1200, width: 736, height: 4659 });
+    box(heading, { x: 2000, y: 980, width: 2400, height: 42 });
+    box(review.children[0], { x: 2032, y: 1240, width: 672, height: 200 });
+    const buttonReview = page.findAll(
+      node =>
+        node.getSharedPluginData('orgundrrmangrove', 'mgKitId') ===
+        'review/button'
+    )[0];
+    box(buttonReview, { x: 2000, y: 2000, width: 736, height: 500 });
+    let zoom = 0.27,
+      center = { x: 0, y: 0 };
+    const screen = { width: 1200, height: 900 };
+    env.figma.viewport = {
+      get zoom() {
+        return zoom;
+      },
+      set zoom(value) {
+        assert(Number.isFinite(value) && value > 0);
+        zoom = value;
+      },
+      get center() {
+        return center;
+      },
+      set center(value) {
+        center = copy(value);
+      },
+      get bounds() {
+        return {
+          x: center.x - screen.width / (2 * zoom),
+          y: center.y - screen.height / (2 * zoom),
+          width: screen.width / zoom,
+          height: screen.height / zoom,
+        };
+      },
+      scrollAndZoomIntoView() {
+        env.state.viewportCalls += 1;
+      },
+    };
+    env.state.loadedFonts.clear();
+    const before = snapshot(env);
+    const result = await env.call('navigateMangroveInstalled', 'example:table');
+    assert.strictEqual(result.viewportMode, 'usage-entry');
+    assert.strictEqual(
+      zoom,
+      1,
+      'Tall review opens at normal scale when the first chunk fits'
+    );
+    assert.strictEqual(
+      env.state.viewportCalls,
+      0,
+      'Tall entry does not fit the entire review catalogue'
+    );
+    const visible = env.figma.viewport.bounds;
+    assert.strictEqual(visible.y, heading.absoluteBoundingBox.y - 48);
+    assert(
+      visible.y + visible.height >=
+        review.children[0].absoluteBoundingBox.y + 200
+    );
+    assert.strictEqual(page.selection[0].id, review.id);
+    const repeat = await env.call('navigateMangroveInstalled', 'example:table');
+    assert.strictEqual(repeat.viewportMode, 'usage-entry');
+    assert.deepStrictEqual(
+      env.figma.viewport.bounds,
+      visible,
+      'Entry is independent of the preceding zoom'
+    );
+    screen.width = 480;
+    screen.height = 400;
+    await env.call('navigateMangroveInstalled', 'example:table');
+    assert(zoom <= 1 && zoom > 0);
+    const narrow = env.figma.viewport.bounds;
+    assert(
+      narrow.width >= 736 + 96,
+      'Narrow screens fit usage width without overscaling'
+    );
+    assert(
+      narrow.y + narrow.height >= review.children[0].absoluteBoundingBox.y + 200
+    );
+    screen.width = 1200;
+    screen.height = 900;
+    const short = await env.call('navigateMangroveInstalled', 'example:button');
+    assert.strictEqual(short.viewportMode, 'fit');
+    assert.strictEqual(
+      env.state.viewportCalls,
+      1,
+      'Short usage keeps ordinary fit navigation'
+    );
+    await env.call('navigateMangroveInstalled', 'source:table');
+    assert.strictEqual(
+      env.state.viewportCalls,
+      2,
+      'Source navigation retains the whole-set overview'
+    );
+    await env.call('navigateMangroveInstalled', 'legacy-review');
+    assert.strictEqual(
+      env.state.viewportCalls,
+      3,
+      'Root Go retains overview navigation'
+    );
+    assert.deepStrictEqual(
+      snapshot(env),
+      before,
+      'Top-entry navigation changes no source, guide, consumer, font or binding records'
+    );
+    assert.strictEqual(env.state.loadedFonts.size, 0);
+    console.log(
+      'ok tall usage opens its heading and first normal state at capped scale, repeats independently of zoom, and preserves all assets on narrow screens'
+    );
+  }
+  {
     const { env, sets, review } = await fixture();
     const before = snapshot(env);
     const state = copy(await env.call('inspectMangroveNavigation'));

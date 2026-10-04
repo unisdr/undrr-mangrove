@@ -1,10 +1,10 @@
 # Figma kit user experience review
 
-Reviewed 4 October 2026 using the latest accepted native inventory, supplied screenshots, runtime source and kit documentation. This is an expert heuristic review, not a novice usability study. The findings below describe that review checkpoint. The approved recommendations are now implemented in source; native acceptance of the newer UX and the novice tasks remains pending. Component acceptance stays at the recorded 25 core construction families and three outside-core families.
+Reviewed 4 October 2026 using the then-accepted native inventory, supplied screenshots, runtime source and kit documentation. This is an expert heuristic review, not a novice usability study. The findings describe the earlier legacy checkpoint. The approved recommendations are now applied and refined in the native v2 canvas; ordinary repeats and bounded source propagation pass, while novice acceptance remains open. Component acceptance stays at the recorded 25 core construction families and three outside-core families.
 
 ## Main finding
 
-The file exposes its construction process too strongly. The Welcome board, corrected contents and last-position diagnostics improve orientation, but the user still has to navigate two distant catalogues to understand and use one component. The planned section migration addresses containment without fully addressing component discovery.
+At the review baseline, the file exposed its construction process too strongly. Welcome, corrected contents and last-position diagnostics improved orientation, but two distant catalogues remained difficult to use. The later v2 migration addresses the documented presentation defects with task grouping and local usage/source pairing; the novice impact still needs testing.
 
 At the reviewed native checkpoint, Layers order is **Start here**, **Review**, **Main components**, **focus-ring diagnostics**. Welcome's contents match it. The original contents mismatch and diagnostics appearing second are resolved findings, not current defects.
 
@@ -25,12 +25,12 @@ Evidence comes from the accepted native inspection and [kit layout](kit-layout.j
 
 ## Approved user-facing structure
 
-The source implementation retains all six durable destination identities in layout version 2. Native migration is still blocked by exact existing Roboto Condensed Bold loading. This table describes the intended result, not an applied native layout.
+The native v2 implementation now retains all six durable destination identities and applies the structure below. The earlier Condensed loading blocker is recovered after an authorized official static-font installation and desktop restart. Source-fixture font equivalence and Tabs acceptance are separate pending checks.
 
 | Durable key           | Destination                   | Contents                                                                                                                                                      |
 | --------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `layout/start`        | **00 Start here**             | Current brand, exploratory status, a concrete My design task and actual installed destinations.                                                               |
-| `layout/foundations`  | **01 Foundations**            | Colour, typography, spacing and effect specimens pointing to variables and styles.                                                                            |
+| `layout/foundations`  | **01 Foundations**            | Colour, typography and spacing specimens pointing to variables/styles; imported effect styles remain available in Figma.                                      |
 | `layout/components`   | **02 Components**             | Whole widgets grouped by Actions, Forms and selection, Content and data, and Navigation and disclosure; paired usage/source boards and nested advanced parts. |
 | `layout/compositions` | **03 Examples and templates** | Available composition guidance with an explicit notice that accepted page templates are not yet available.                                                    |
 | `layout/patterns`     | **04 Your workspace**         | Designer-created frames beside the generated guide, preserved by ordinary updates.                                                                            |
@@ -38,7 +38,7 @@ The source implementation retains all six durable destination identities in layo
 
 Designer-owned working frames must be visibly distinct from generated material, with an explicit preservation boundary. Keep “organisms” as optional implementation terminology in documentation rather than required navigation vocabulary.
 
-The source family overview includes:
+The native family overview includes:
 
 - A plain purpose and representative default instance.
 - Primary edit controls and supported width/content presets.
@@ -51,13 +51,13 @@ Preserve canonical sets and existing review instances. Do not detach, recreate o
 
 ### Does Review need to follow Main?
 
-Review can precede Main if it is the consumer entry point, but its current name does not explain that purpose. Moving Main above Review would align Layers with the current left-to-right canvas while foregrounding source assets. Neither ordering solves the separation between whole-file catalogues.
+Review can precede Main if it is the consumer entry point, but its former name did not explain that purpose. Moving Main above Review would align Layers with the former left-to-right canvas while foregrounding source assets. Neither ordering solves the separation between whole-file catalogues.
 
-For the interim file, explain Review as linked examples for inspecting supported states and content, Main components as source assets maintained by the importer, and personal working frames as the place to create designs. Later pair these areas within each family. Changing maintained display names must follow the source and migration rules.
+The former interim file explained Review as linked examples and Main as importer-owned source assets. Native v2 now pairs Usage and states with Source components within each family, preserving the existing assets. Their Layers order follows heading, guidance, usage, source and advanced parts. Personal designs belong in the separate workspace. Changing maintained display names still follows source and migration rules.
 
 ## Implementation status
 
-### Implemented in source, incremental native UX checked
+### Applied natively, bounded presentation verified
 
 - `scripts/figma-kit-guidance.cjs` centralizes purpose, usage, scope and limitations for all 28 construction families. The exporter writes `doc.kitGuidance`; the bundler embeds the same metadata for startup. Unknown, missing or duplicate family IDs refuse export rather than receiving a generic acceptance label.
 - Plugin destinations use actual installed names in legacy or v2 layouts. **Browse component** presents installed bounded whole widgets by task; **Usage and states** and **Source components** open their corresponding owned assets. Refresh/navigation are read-only and require no font loads or loaded JSON.
@@ -67,14 +67,23 @@ For the interim file, explain Review as linked examples for inspecting supported
 
 The three outside-core families remain Tab trigger, Tabs and Editorial CTA. Supporting parts still count in the 25 core construction-family total; whole-widget browsing has fewer primary entries. Neither guidance metadata nor improved presentation establishes new component, brand, script or width acceptance.
 
-### Presentation migration and handoff remain open
+### Native refinement checkpoint and remaining handoff
 
-1. Apply and inspect the newer legacy navigation, Welcome copy and description refresh. Save independent native receipts and compare unchanged geometry, styles, property identities and consumer fields.
-2. Resolve exact required fonts, then apply the explicit v2 migration with a backup and reviewed identity mapping. Preserve existing sets, properties, linked review instances and manual content.
-3. Review family boards and rendered bounds at normal scale. Verify two ordinary updates, restart recovery and designer-owned **My design** frames/manual notes.
-4. Run the novice tasks below before accepting designer handoff.
+**Native v2 migration and refinement, 4 October 2026:** six SECTION destinations are applied and match Layers. Initial migration creates 271 presentation nodes with zero errors; refinement creates zero nodes and updates 677. Whole widgets have paired usage/source boards and advanced parts. Forms and selection uses two columns and measures 4,494 × 11,832.5px, compared with 2,290 × 21,023.5px before compaction. Layers follows introduction, Actions, Forms and selection, Content and data, then Navigation and disclosure; family children follow heading, guidance, usage, source and advanced parts. Seven Switch grid render overhangs are repaired. All section/family/source/usage boundaries are disjoint in the verified scope. Canonical anatomy, reusable dimensions, properties, style/variable associations and instance links remain intact across all 28 families.
 
-The older Welcome observations remain recorded in [README](README.md#start-here-and-onboarding). Accepted page templates, the wider catalogue and shared-library publishing follow separately. Paid access does not resolve the current font blocker or establish usability.
+Independent migration/refinement verification retains all 6,005 pre-existing scene-node IDs, unchanged foundations, 271 added presentation nodes and four manual acceptance fixtures, passing 16,119 checks with zero failures. The manual-fixture baseline comparison retains all 6,280 scene-node IDs and passes 16,672 checks with zero failures. Workspace frame/text keep their local positions, an Assets-inserted Button keeps its edited Label, and that unowned page-level instance keeps its absolute position. Two ordinary full-core builds, including plugin restarts, create zero nodes and preserve all 6,553 resulting scene records exactly. A reversible Large Table header colour change reaches exactly 72 intended text nodes; restoration matches the full pre-probe records. Exact cleanup removes the four manual test nodes, leaving 6,549 scene nodes. A fresh local Figma checkpoint is saved (569,061 bytes), with the plugin closed on Start here at 100% and six collapsed Layers destinations. The final outer-layout verification passes 17,221 checks. See [the full update checkpoint](KIT-ARCHITECTURE.md#native-update-and-cleanup-checkpoint) for scope and remaining internal stress-specimen limits.
+
+The Forms group contains ten primary boards. Its two-column row pairs are Text input/Textarea, Select/ComboBox, Radio/Checkbox, Switch/Segmented control and Chips/Form error summary. This shortens the dominant group without widening every category or adding another catalogue. All 18 primary core widgets are available through document-free browsing. Native Table entry shows its existing heading, limits and first normal states at 100%; section/source navigation retains an overview.
+
+For personal designs, insert a fresh instance from **Assets** into **Your workspace** or an unowned working frame. Copying a generated Review specimen can retain importer review ownership and cause a conflict. Do not clear metadata automatically to hide that conflict; preserve the object and resolve its ownership explicitly.
+
+Remaining checks:
+
+1. Run the novice tasks below before accepting designer handoff.
+2. Review fixed-cell stress examples separately from outer canvas containment; internal overflow is not newly accepted.
+3. Verify source font-file/raster fidelity, wider contracts and shared-library consumption in their own scopes.
+
+Examples and templates records missing accepted coverage. Other brands, RTL, wider catalogue and shared-library publishing remain follow-up scopes. Cloud synchronisation is unconfirmed after a returned unsaved/sync warning; local backups remain necessary. A paid plan is not required for this local organization, and it does not establish usability.
 
 ## Proposed novice acceptance tasks
 

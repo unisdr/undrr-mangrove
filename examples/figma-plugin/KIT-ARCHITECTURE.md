@@ -1,8 +1,34 @@
 # Figma kit organisation and update contract
 
-Updated 4 October 2026 after designer review and a native migration attempt. **This acceptance gate remains open.** Section migration and reconciliation are implemented locally, but native migration is blocked by an unavailable existing font. Table grid compaction and separation from Review are accepted within the native scope below. Complete the remaining gate before expanding the catalogue.
+Updated 4 October 2026 after the full native version2 migration. **The six-section hierarchy is applied. Designer handoff remains open.** Existing component identities, geometry, properties, bindings and instance links survive the presentation migration. The novice tasks and broader component contracts below remain separate acceptance gates.
 
-The subsequent [user experience review](UX-REVIEW.md) finds that the planned six-section migration still leaves discovery and family-level comparison problems. It proposes task-based component groups, nearby examples, clear readiness labels and a separate maintenance destination. That proposal is implemented in presentation version2, retaining the existing section identities through an explicit migration map. Native migration remains font-blocked. The novice task targets below supplement the existing structural and preservation gate.
+The [user experience review](UX-REVIEW.md) supplies task-based component groups, nearby examples, clear readiness labels and a separate maintenance destination. These are now installed in presentation version2, retaining existing identities through an explicit migration map. The older failed-font and incremental checkpoints below are historical evidence.
+
+## Full native migration checkpoint, 4 October 2026
+
+Roboto Condensed Regular and Bold load after installing official static faces and restarting Figma. No existing text was reassigned. Exact font-file equivalence with Mangrove's web fixtures and Tabs acceptance remain open; see [the font recovery learning](LEARNINGS.md#official-condensed-font-installation-and-desktop-restart).
+
+The initial migration creates 271 presentation nodes, reuses all 6,005 existing scene nodes and reports zero errors. A zero-create refinement fixes seven Switch/Switch small rendered-grid findings, orders generated Layers semantically and arranges the ten Forms families in two measured columns. Forms measures 4,494 × 11,832.5px, down from 2,290 × 21,023.5px. Components measures 7,534 × 23,201.5625px. Source variants keep their original dimensions and internal geometry.
+
+Independent comparison passes 16,119 checks from the post-font baseline to the refined hierarchy and 16,672 from the manual-note baseline, with zero failures. All 28 source families retain property keys and values, typography, styles, range paints, aliases and nested instance links. Variables, collections and styles remain unchanged. Checks cover section, group, overview, source-set and variant rendered containment and non-intersection. World-coordinate bounds use a 0.5px float32 tolerance; preserved local fields use exact equality.
+
+Start here, Foundations, Components, Examples and templates, Your workspace and Maintenance match the Layers and navigation sequence. Components follows Actions, Forms and selection, Content and data, then Navigation and disclosure. Family Layers follow title, scope guidance, Usage and states, Source components and Advanced parts. Supporting parts are nested under their complete widget. Table's readable Usage entry opens its heading, limits and first states at 100%; its tall board is not fitted into an unreadable whole-board thumbnail.
+
+A real manual frame and note in Your workspace retain their section-local placement and content through reconciliation. A fresh Assets-inserted Button retains its edited Label, source link and absolute PAGE placement. The four temporary test nodes are tracked separately from generated presentation assets. Ordinary-build and reversible source-propagation results pass in the native update checkpoint below. Novice task outcomes, cloud synchronisation and a persistent first-open view remain unverified. Examples and templates explicitly records missing accepted page coverage.
+
+## Native update and cleanup checkpoint
+
+The first broad ordinary core build creates 273 previously absent standalone review nodes for Table row (219), Header cell (27) and Body cell (27). Earlier dependency-only builds skipped their standalone review phase. No canonical component, set, variable, style or layout node is recreated. All 6,280 previous scene IDs remain. Ten existing Table review middle-cell x readbacks shift by one float32 ULP, 0.0000152587890625px, and then remain exactly stable on subsequent checkpoints; this observed difference is recorded rather than treated as exact preservation.
+
+A scoped Button update creates zero nodes and preserves all 6,553 resulting scene records exactly, including the fresh Assets-inserted edited instance. A reversible private exporter-document probe changes only the two Large Table header text fill roles from `color/text` to `color/interactive`. A Table/dependency build creates zero nodes and updates exactly 72 intended TEXT paint/binding records: two canonical text nodes and 70 inherited nodes. All other fields, IDs, foundations and manual content are unchanged. Independent verification passes 7,641 checks with zero failures. This construction probe is restored; it does not change the repository source or broaden component acceptance.
+
+Restoring byte-identical exporter data through a full 25-family core build after a plugin restart creates zero nodes, updates 3,456 and reports zero errors. A second full-core build after another plugin restart has the same counts. Both restored and repeated inspections match the complete pre-probe records exactly. The independent final repeat passes 13,123 exact-record checks and 17,230 outer-layout checks with zero failures, including all new supporting review nodes and manual content.
+
+Exact native cleanup removes only the four temporary manual-test nodes. It retains all 6,549 remaining scene records, with only the workspace parent's child list reflecting removal. Independent cleanup passes 6,556 strict checks and final bounds/ordering passes 17,221, with zero failures. All 6,005 original scene nodes, 271 presentation additions, 273 supporting review nodes, 418 variables, 52 styles and the collection remain. Final Components measures 8,046 × 25,237.984375px after the new supporting examples enter Advanced parts. The workspace retains its empty 632px test-era extent until ordinary reconciliation; it is available for personal work.
+
+A fresh local Figma checkpoint is saved at 569,061 bytes. Final native review leaves Start here at 100%, with the plugin closed and six collapsed destinations matching the index. Foundation overview, Table and Switch Usage, Examples and templates, workspace and isolated Maintenance are visually checked. A persistent opening view is not established.
+
+These checks establish outer canvas organization and the recorded stable update contracts. They do not establish containment of every text line inside a reusable cell. The new Table-row review renders 752px wide from a nominal 736px board; its family overview accounts for the full rendered extent. Generic narrow header/body stress labels can overflow fixed-height cells by about 9.0234375px. Source cell dimensions are intentionally preserved, and these stress cases remain a documented limitation. No novice study, cloud-sync proof, persistent opening-view setting or new page-template acceptance is inferred.
 
 ## Why the Table selection is so large
 
@@ -15,7 +41,7 @@ The preceding builder had two layout defects:
 
 The pre-change inspection confirms a 2,328 × 3,518.34375px Table set, a 1,200px main root and a Review root beginning within the Table set's horizontal extent. Individual component acceptance does not establish a usable canvas layout. Clipping the main frame would hide the defect rather than repair it.
 
-## Implementation and native checkpoint
+## Earlier implementation and native checkpoint
 
 `kit-layout.js` implements presentation version2 with the six SECTION destinations below, variable-bound colour and spacing specimens, five available Regular text-style specimens, task groups, family-local guidance and usage/source pairing, supporting parts under their parent widget, explicit missing template coverage, compact grids and versioned reconciliation. It moves whole canonical sets and existing review-family frames under stable presentation keys; it does not recreate their anatomy. **Organize file** applies the initial migration. Ordinary desktop builds subsequently reconcile version2. An existing version1 layout requires explicit Organize file; ordinary builds refuse to silently upgrade it. **Kit destination > Go** offers only installed destinations and navigates without replacing the latest mutation receipt. **Browse component** opens existing Usage and states or Source components for complete core widgets, without JSON, font loading or asset writes.
 
@@ -86,11 +112,11 @@ Version2 reuses `layout/family/<id>/main` wrappers and whole `review/<id>` frame
 
 The guidance-only action updates canonical set/variant descriptions after complete ownership/inventory validation. It loads no fonts and changes no source geometry, properties or styles. A partial setter failure returns exact affected IDs; retry skips completed descriptions. Ordinary component builds apply the same guidance so stale construction-status prose does not return. Read-only navigation state replies cannot unblock a pending mutation or replace its saved receipt.
 
-Native migration, auto-layout reflow of manual children in historical mixed containers, all-family bounds and the novice tasks remain acceptance gates. Mock preservation is insufficient to close them.
+Native version2 migration and all-family bounds are checked in the newer checkpoint above. Auto-layout reflow of manual children in historical mixed containers and novice tasks remain acceptance gates. The real manual test covers a workspace frame/note and a page-level linked instance; it does not exercise every historical mixed-container topology.
 
 ## Automatic and manual synchronisation
 
-This table defines the maintenance boundary. Section migration and reconciliation are implemented and mock-tested; native acceptance remains open.
+This table defines the maintenance boundary. Section migration and reconciliation are implemented and checked natively for the recorded hierarchy. Designer handoff and broader update contracts remain open.
 
 | Change                                               | Automatic update contract                                                                        | Manual or reviewed step                                                                                                           |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -110,18 +136,19 @@ Use explicit immutable presentation keys independent of section titles, with a v
 ## Acceptance criteria before designer handoff
 
 - [ ] A novice can locate foundations, a complete component, available examples, their own workspace and maintenance from Start here and Layers without understanding build order.
-- [ ] Contents, Layers and plugin navigation agree about available destinations. Planned routes are omitted or explicitly marked unavailable before migration.
+- [x] Contents, Layers and plugin navigation agree about available destinations. Planned routes are omitted or explicitly marked unavailable before migration.
 - [ ] A user can find a complete widget without first navigating its supporting parts, compare its nearby states and identify supported edits. Current scope descriptions agree with the accepted bounded evidence.
 - [ ] A user can locate and create personal work outside generated containers, insert/edit a linked instance without changing its main, and complete the six [novice task targets](UX-REVIEW.md#proposed-novice-acceptance-tasks) with the plugin initially closed and no coaching. Record outcomes and assistance; the targets are not current results.
-- [ ] Table's variant grid has row-specific spacing, fits its containing section, and does not intersect unrelated sections or Review examples. Check all families, not just Table, at normal zoom.
-- [ ] Existing canonical IDs, property IDs, variable/style bindings and nested instance links survive the hierarchy migration. No detach/recreate shortcut.
-- [ ] Two ordinary reruns create no duplicate sections, sets, variants or review specimens and retain manual guidance, edited consumer content and designer-owned placement.
-- [ ] A bounded source change updates the affected component and its dependent composition; unrelated assets and manual areas remain unchanged. New families enter their declared destination once, with a visible acceptance label.
+- [x] Table's variant grid has row-specific spacing, fits its containing section, and does not intersect unrelated sections or Review examples. Check all families, not just Table, at normal zoom.
+- [x] Existing canonical IDs, property IDs, variable/style bindings and nested instance links survive the hierarchy migration. No detach/recreate shortcut.
+- [x] Two ordinary reruns create no duplicate sections, sets, variants or review specimens and retain manual guidance, edited consumer content and designer-owned placement.
+- [x] A bounded source change updates the affected component and its dependent composition; unrelated assets and manual areas remain unchanged. The native Large Table header probe and exact restoration pass.
+- [ ] A new family enters its declared destination once, with a visible acceptance label, and passes its own native consumer gate. Source mocks cover placement; this migration adds no new canonical family.
 - [ ] Rename/removal conflicts produce an actionable migration report. Verify a refusal before writes and a deliberate mapped migration with existing overrides.
-- [ ] Save pre/post inspection and operation records, visually review the reorganized file, and repeat from a plugin restart. Mock success alone is insufficient.
+- [x] Save pre/post inspection and operation records, visually review the reorganized file, and repeat from a plugin restart. Mock success alone is insufficient.
 
 ## Remaining mature-kit deliverables
 
-After the organisation gate, track these as separate accepted scopes: visual foundation sheets and layout presets; searchable source icons/logos; broader component and composition coverage; realistic page examples; Condensed font/Tabs and Editorial CTA repairs; wider content/resize/variant-switch acceptance; accessibility guidance and contrast review; other brands and Arabic/RTL; optional prototype interactions; and published-library consumption and release practices. Code Connect is optional later integration.
+After the organisation gate, track these as separate accepted scopes: visual foundation sheets and layout presets; searchable source icons/logos; broader component and composition coverage; realistic page examples; Tabs/source font equivalence and Editorial CTA repairs; wider content/resize/variant-switch acceptance; accessibility guidance and contrast review; other brands and Arabic/RTL; optional prototype interactions; and published-library consumption and release practices. Code Connect is optional later integration.
 
 See [core status](CORE-KIT-STATUS.md) for bounded component evidence and [the inventory](COMPONENT-INVENTORY.md) for source coverage. A plan upgrade enables additional distribution/theme capabilities, but does not repair organisation, fonts or update architecture.

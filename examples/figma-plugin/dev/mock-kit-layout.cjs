@@ -343,6 +343,214 @@ async function main() {
       'ok independent per-row and per-column maxima, exact padding/gaps and bounds without canonical resizing'
     );
   }
+  {
+    const rendered = [0, 1, 2, 3, 4, 5].map(index => {
+      const node = env.figma.createComponent();
+      node.name = `Case=${index}`;
+      node.resize(320, 36);
+      const child = env.figma.createRectangle();
+      node.appendChild(child);
+      child.resize(20, 7);
+      child.x = 8;
+      child.y = 9;
+      Object.defineProperties(node, {
+        absoluteBoundingBox: {
+          get: () => ({
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+          }),
+        },
+        absoluteRenderBounds: {
+          get: () => ({
+            x: node.x - 2,
+            y: node.y - 32,
+            width: node.width + 4,
+            height: 100,
+          }),
+        },
+      });
+      return node;
+    });
+    const grid = env.figma.combineAsVariants(rendered, env.figma.currentPage);
+    const internals = rendered.map(node => subtree(node).slice(1));
+    for (let pass = 0; pass < 2; pass++) {
+      await env.call('mgLayoutGrid', grid);
+      assert.deepStrictEqual(
+        rendered.map(node => [node.x, node.y]),
+        [
+          [26, 56],
+          [398, 56],
+          [770, 56],
+          [26, 204],
+          [398, 204],
+          [770, 204],
+        ]
+      );
+      assert.deepStrictEqual([grid.width, grid.height], [1116, 296]);
+      assert.deepStrictEqual(
+        rendered.map(node => [node.width, node.height]),
+        rendered.map(() => [320, 36])
+      );
+      assert.deepStrictEqual(
+        rendered.map(node => subtree(node).slice(1)),
+        internals
+      );
+      for (const node of rendered) {
+        const paint = node.absoluteRenderBounds;
+        assert(
+          paint.x >= 24 &&
+            paint.y >= 24 &&
+            paint.x + paint.width <= grid.width - 24 &&
+            paint.y + paint.height <= grid.height - 24
+        );
+      }
+    }
+    grid.remove();
+    console.log(
+      'ok live relative rendered overhangs set grid row/column footprints and padding without changing component dimensions or descendants; rerun stable'
+    );
+  }
+  {
+    const section = env.figma.createSection();
+    const named = [];
+    for (const value of ['A', 'manual1', 'B', 'manual2', 'C']) {
+      const node = env.figma.createFrame();
+      section.appendChild(node);
+      node.name = value;
+      node.x = 23;
+      node.y = 71;
+      if (value.length === 1) {
+        own(node, `layout/order/${value}`);
+        named.push(node);
+      }
+    }
+    const manual = section.children.filter(node =>
+        node.name.startsWith('manual')
+      ),
+      baseline = manual.map(node => record(node));
+    const inserted = [],
+      insert = section.insertChild.bind(section);
+    section.insertChild = (index, node) => {
+      inserted.push(node.id);
+      insert(index, node);
+    };
+    await env.call('mgLayoutLayerOrder', section, named);
+    assert.deepStrictEqual(
+      section.children.map(node => node.name),
+      ['C', 'manual1', 'B', 'manual2', 'A']
+    );
+    assert.deepStrictEqual(
+      manual.map(node => record(node)),
+      baseline
+    );
+    assert(
+      !inserted.some(id => manual.some(node => node.id === id)),
+      'Only generated siblings are reordered'
+    );
+    const calls = inserted.length;
+    await env.call('mgLayoutLayerOrder', section, named);
+    assert.strictEqual(
+      inserted.length,
+      calls,
+      'Stable Layers order does not move siblings again'
+    );
+    section.remove();
+    console.log(
+      'ok semantic Layers ordering reverses only generated siblings in their original slots, preserves manual local placement/fields and reruns without moves'
+    );
+  }
+  {
+    const forms = environment(doc);
+    await importFoundation(forms, doc);
+    const ids = doc.kitGuidance.groups.find(
+      group => group.id === 'forms-selection'
+    ).familyIds;
+    const built = await forms.call(
+      'buildMangroveComponents',
+      doc,
+      'undrr',
+      ids
+    );
+    assert.deepStrictEqual(copy(built.errors), []);
+    const canonicalBefore = originals(forms);
+    const organized = await forms.call('organizeMangroveKit', doc, 'undrr');
+    assert.deepStrictEqual(copy(organized.errors), []);
+    const board = owned(forms, 'layout/group/forms-selection');
+    const overviews = ids.map(id =>
+      owned(forms, `layout/family/${id}/overview`)
+    );
+    assert.strictEqual(
+      board.layoutMode,
+      'NONE',
+      'Reverse Layers ordering must not reverse an auto-layout visual flow'
+    );
+    assert.deepStrictEqual(
+      [...board.children].reverse().map(node => key(node)),
+      [
+        'layout/group/forms-selection/title',
+        ...ids.map(id => `layout/family/${id}/overview`),
+      ]
+    );
+    for (let i = 0; i < overviews.length; i += 2) {
+      const left = overviews[i],
+        right = overviews[i + 1];
+      assert.strictEqual(left.x, 24);
+      if (right) {
+        assert.strictEqual(left.y, right.y);
+        assert(right.x - left.x - left.width >= 48);
+      }
+      if (overviews[i + 2])
+        assert(
+          overviews[i + 2].y >=
+            left.y + Math.max(left.height, right?.height || 0) + 24
+        );
+    }
+    const section = owned(forms, 'layout/components');
+    assert.deepStrictEqual(
+      [...section.children].reverse().map(node => key(node)),
+      [
+        'layout/components/intro',
+        'layout/group/actions',
+        'layout/group/forms-selection',
+        'layout/group/content-data',
+        'layout/group/navigation',
+      ]
+    );
+    const input = owned(forms, 'layout/family/text-input/overview');
+    assert.deepStrictEqual(
+      [...input.children].reverse().map(node => key(node)),
+      [
+        'layout/family/text-input/overview/title',
+        'layout/family/text-input/overview/body',
+        'review/text-input',
+        'layout/family/text-input/main',
+      ]
+    );
+    for (const other of ['actions', 'content-data', 'navigation']) {
+      const group = owned(forms, `layout/group/${other}`);
+      const items = group.children.filter(node =>
+        /\/overview$/.test(key(node))
+      );
+      assert(
+        items.every(node => node.x === 24),
+        'Only Forms gains two browsing columns'
+      );
+    }
+    assertOriginals(forms, canonicalBefore);
+    const layoutBefore = subtree(board),
+      allIds = [...forms.state.nodes.keys()].sort();
+    const rerun = await forms.call('organizeMangroveKit', doc, 'undrr');
+    assert.deepStrictEqual(copy(rerun.errors), []);
+    assert.strictEqual(rerun.createdNodeIds.length, 0);
+    assert.deepStrictEqual(subtree(board), layoutBefore);
+    assert.deepStrictEqual([...forms.state.nodes.keys()].sort(), allIds);
+    assertOriginals(forms, canonicalBefore);
+    console.log(
+      'ok actual ten-family Forms use measured two-column rows and semantic Layers while other tasks remain single-column; all source identities/fields and zero-create rerun retained'
+    );
+  }
   const sourceBaseline = originals(env);
   const roots = new Map(
     ['main', 'review'].map(value => [value, owned(env, value).id])
