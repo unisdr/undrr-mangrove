@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned */
+/* global figma, mgReadIdentity, mgWriteIdentity, mgSegmentedJoiningPreflight, mgRunSegmentedJoiningProbes, mgSegmentedCanonicalPreflight, mgRunSegmentedCanonicalProbes, mgSegmentedCanonicalOwned, mgFormActionJoiningPreflight, mgRunFormActionJoiningProbes */
 // Isolated diagnostic assets, not FormGroup components or source fidelity claims.
 const MG_CAPABILITY_KEY = 'mgCapabilityProbeId';
 let mgCapabilitySequence = 0;
@@ -32,6 +32,7 @@ async function runMangroveCapabilityProbes(
   let rangeSource;
   let segmentedPlan;
   let canonicalPlan;
+  let formActionPlan;
   try {
     if (
       ![
@@ -40,6 +41,7 @@ async function runMangroveCapabilityProbes(
         'toc-range-paints',
         'segmented-joining',
         'segmented-canonical',
+        'form-action-joining',
       ].includes(scope)
     )
       throw new Error(`Unknown capability probe scope ${scope}.`);
@@ -265,6 +267,14 @@ async function runMangroveCapabilityProbes(
         mode,
         report
       );
+    if (scope === 'form-action-joining')
+      formActionPlan = await mgFormActionJoiningPreflight(
+        doc,
+        brandId,
+        collection,
+        mode,
+        report
+      );
     if (scope === 'toc-link-sizing') {
       report.preflight.diagnosticWidths = [240, 390, 900];
       report.preflight.diagnosticCaps = [195.5, 345.5, 855.5];
@@ -323,25 +333,27 @@ async function runMangroveCapabilityProbes(
     report.rootId = root.id;
     record(root);
     root.name =
-      scope === 'segmented-joining'
-        ? 'Mangrove native capability probes / Segmented joining'
-        : scope === 'segmented-canonical'
-          ? 'Mangrove native capability probes / Segmented canonical'
-          : scope === 'toc-link-sizing'
-            ? 'Mangrove native capability probes / TOC link sizing'
-            : scope === 'toc-range-paints'
-              ? 'Mangrove native capability probes / TOC range paints'
-              : 'Mangrove native capability probes';
+      scope === 'form-action-joining'
+        ? 'Mangrove native capability probes / Form Action joining'
+        : scope === 'segmented-joining'
+          ? 'Mangrove native capability probes / Segmented joining'
+          : scope === 'segmented-canonical'
+            ? 'Mangrove native capability probes / Segmented canonical'
+            : scope === 'toc-link-sizing'
+              ? 'Mangrove native capability probes / TOC link sizing'
+              : scope === 'toc-range-paints'
+                ? 'Mangrove native capability probes / TOC range paints'
+                : 'Mangrove native capability probes';
     root.layoutMode = 'NONE';
     root.clipsContent = false;
     root.fills = [];
     root.resize(
-      scope === 'segmented-joining'
+      ['segmented-joining', 'form-action-joining'].includes(scope)
         ? 1500
         : scope === 'toc-link-sizing'
           ? 2820
           : 1120,
-      scope === 'segmented-joining'
+      ['segmented-joining', 'form-action-joining'].includes(scope)
         ? 1600
         : scope === 'toc-range-paints'
           ? 1640
@@ -400,6 +412,29 @@ async function runMangroveCapabilityProbes(
       result.errors.push(message(error));
     }
     result.affectedNodeIds = report.ledger.slice(start).map(item => item.id);
+  }
+  if (scope === 'form-action-joining') {
+    try {
+      await mgRunFormActionJoiningProbes(
+        {
+          report,
+          root,
+          record,
+          create,
+          instance,
+          test,
+          bounds,
+          collection,
+          mode,
+        },
+        formActionPlan
+      );
+    } catch (error) {
+      report.errors.push(`Form Action probes: ${message(error)}`);
+    }
+    report.ledgerRefresh = await refreshMangroveCapabilityProbeLedger(report);
+    report.unrecordedDescendantIds = report.ledgerRefresh.unrecordedNodeIds;
+    return report;
   }
   if (scope === 'segmented-joining') {
     try {

@@ -14,6 +14,7 @@ const SOURCES = [
   'font-diagnostics.js',
   'kit-segmented-capabilities.js',
   'kit-segmented-canonical-capabilities.js',
+  'kit-form-action-capabilities.js',
   'kit-capabilities.js',
 ];
 

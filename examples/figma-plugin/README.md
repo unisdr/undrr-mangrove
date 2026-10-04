@@ -149,6 +149,8 @@ Composed Tabs exposes the nested trigger properties; open ComboBox exposes its n
 
 The **Segmented Control joining** diagnostic reads an exporter-owned `capabilities.segmentedJoining` packet. It checks typed source roles, native identities, selected-mode values and exact fonts before creating four temporary fixtures for seams/corners, focus paint order, full-width edited labels and wrapping. The first measured scope is UNDRR. These fixtures do not add canonical variables, styles or component families; direct diagnostic typography does not establish shared-style or ordinary rebuild acceptance. Save the full report, review the fixtures at normal scale, then remove the exact owned nodes before rebuilding the plugin. See [source packets](MAINTAINING-KIT.md#source-packets-for-native-capability-checks).
 
+The **Form Action joining** diagnostic uses `capabilities.formActionJoining` for four UNDRR specimens: joined Search, Subscribe with long edits, independent error/disabled appearance and the explicit 480/481px source viewport presets. It tests raw control/action geometry, individual focus outlines and a clipped single-line value inside one private field master per specimen. Separate reusable control/action masters remain pending. Two private-master reapplications test diagnostic retention; they are not ordinary canonical rebuilds. Save the complete report and inspection, review the actual canvas, then remove the exact owned ledger. Source and mock checks alone do not accept native geometry or shared style association.
+
 The **Segmented Control shared style** diagnostic prepares edited and untouched instances of the canonical three-state subset. After each of two ordinary scoped builds, **Advance Segmented check after build** checks retained consumers and creates three new untouched instances. Save every full report, inspect the rendered states, then clean up the exact temporary ledger. Each advance requires a newly completed build; loading a saved report also requires a fresh build. See [the repeated shared-style runbook](MAINTAINING-KIT.md#repeated-shared-style-checks-for-segmented-control) for recovery, ownership checks and the limited acceptance scope.
 
 Stable public token and component identities use shared plugin data in namespace `orgundrrmangrove`. Desktop imports also read legacy private IDs and reject conflicting ownership. Shared identity metadata contains no account information or secrets. The optional acceptance probes store a bounded synthetic workflow ledger on their temporary root; save and remove it using the acceptance controls. See [Figma shared plugin data](https://developers.figma.com/docs/plugins/api/properties/nodes-setsharedplugindata/).
@@ -321,6 +323,7 @@ node examples/figma-plugin/dev/mock-segmented-capabilities.cjs
 node examples/figma-plugin/dev/mock-segmented.cjs
 node examples/figma-plugin/dev/mock-segmented-canonical-capabilities.cjs
 node examples/figma-plugin/dev/mock-form-action-source.cjs
+node examples/figma-plugin/dev/mock-form-action-capabilities.cjs
 node examples/figma-plugin/dev/mock-svg.cjs
 node examples/figma-plugin/dev/mock-acceptance.cjs
 node examples/figma-plugin/dev/mock-editorial-cta.cjs
