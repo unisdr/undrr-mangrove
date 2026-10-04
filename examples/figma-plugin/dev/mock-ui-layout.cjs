@@ -93,6 +93,56 @@ const layoutReceipt = {
   evidence: 'exact-synthetic-layout-data'.repeat(200),
 };
 async function main() {
+  const welcomeUi = mount();
+  welcomeUi.get('open-welcome').click();
+  assert.deepStrictEqual(welcomeUi.messages.at(-1), {
+    type: 'navigate-kit',
+    destination: 'start',
+  });
+  assert.strictEqual(welcomeUi.get('open-welcome').disabled, true);
+  welcomeUi.send('operation', {
+    operation: 'kit-navigation',
+    destination: 'start',
+    errors: [],
+  });
+  await welcomeUi.load();
+  const welcomeChoices = welcomeUi.selectedFamilies();
+  welcomeUi.get('open-welcome').click();
+  assert.deepStrictEqual(welcomeUi.messages.at(-1), {
+    type: 'create-welcome',
+    doc: copy(doc),
+    brand: 'undrr',
+  });
+  assert.strictEqual(welcomeUi.get('navigate-kit').disabled, true);
+  const welcomeReceipt = {
+    operation: 'kit-welcome',
+    createdNodeIds: ['synthetic-welcome'],
+    updatedNodeIds: [],
+    errors: [],
+  };
+  welcomeUi.send('operation', welcomeReceipt);
+  assert(welcomeUi.get('status').textContent.startsWith('Start here ready'));
+  assert.deepStrictEqual(welcomeUi.selectedFamilies(), welcomeChoices);
+  welcomeUi.get('save-operation-report').click();
+  assert.strictEqual(
+    await welcomeUi.downloads.at(-1).blob.text(),
+    JSON.stringify(welcomeReceipt, null, 2)
+  );
+  welcomeUi.get('open-welcome').click();
+  welcomeUi.send('operation', {
+    operation: 'kit-welcome',
+    phase: 'refused',
+    createdNodeIds: [],
+    updatedNodeIds: [],
+    errors: ['Exact source font unavailable'],
+  });
+  assert(
+    welcomeUi.get('log').textContent.includes('Exact source font unavailable')
+  );
+  welcomeUi.dom.window.close();
+  console.log(
+    'ok persistent Welcome action selects read-only navigation without JSON, serializes source upsert, preserves choices/full receipts and displays refusal reasons'
+  );
   const ui = mount(),
     { get } = ui;
   assert.deepStrictEqual(

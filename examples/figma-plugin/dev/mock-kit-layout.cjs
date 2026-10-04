@@ -186,6 +186,7 @@ function restart(env) {
     'code.js',
     'kit-builder.js',
     'kit-layout.js',
+    'kit-welcome.js',
   ])
     vm.runInContext(
       fs.readFileSync(path.join(__dirname, '..', file), 'utf8'),

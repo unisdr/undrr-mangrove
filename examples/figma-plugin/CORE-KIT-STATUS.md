@@ -2,6 +2,10 @@
 
 Updated 4 October 2026. The **local UNDRR core construction and bounded consumer gates are complete** for the tested contracts below. **Designer handoff remains open:** canvas organisation, generated layout and durable reconciliation must pass [the kit architecture gate](KIT-ARCHITECTURE.md) before this is treated as an approachable library. The wider catalogue remains follow-up work in [COMPONENT-INVENTORY.md](COMPONENT-INVENTORY.md). This is an exploratory kit, not a published or supported library.
 
+## Onboarding status
+
+The standalone welcome board and **Open Start here** action are implemented and mock-tested, including preserved identities/manual notes and reuse during later organization. Native application and visual/novice acceptance remain open because desktop inspection timed out on 4 October 2026. The historical diagnostic overlap correction is also awaiting native review. See [the welcome checkpoint](KIT-ARCHITECTURE.md#welcome-checkpoint). The Condensed font blocker and broader hierarchy gate remain unchanged.
+
 ## Core scope
 
 The candidate contains **25 native families and 297 recipe variants**, grouped below for designers. Dependencies and size splits count as families; these numbers are not public-component coverage percentages. All candidate components exist in the current file. A built component is not automatically accepted for every content edit or width.

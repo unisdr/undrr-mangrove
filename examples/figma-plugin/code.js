@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes, advanceMangroveSegmentedWrapperProbes, advanceMangroveCoreContentProbes, organizeMangroveKit, navigateMangroveKit */
+/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes, advanceMangroveSegmentedWrapperProbes, advanceMangroveCoreContentProbes, organizeMangroveKit, navigateMangroveKit, createMangroveWelcome */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
  * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
@@ -700,6 +700,22 @@ figma.ui.onmessage = async msg => {
     }
     if (msg.type === 'navigate-kit') {
       post('operation', { result: navigateMangroveKit(msg.destination) });
+      return;
+    }
+    if (msg.type === 'create-welcome') {
+      let result;
+      try {
+        result = await createMangroveWelcome(msg.doc, msg.brand);
+      } catch (error) {
+        result = {
+          operation: 'kit-welcome',
+          phase: 'refused',
+          createdNodeIds: [],
+          updatedNodeIds: [],
+          errors: [error.message || String(error)],
+        };
+      }
+      post('operation', { result });
       return;
     }
     if (msg.type === 'prepare-override-probes') {

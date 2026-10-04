@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity */
+/* global figma, mgReadIdentity, mgWriteIdentity, createMangroveWelcome */
 /** Versioned presentation only. Canonical component anatomy remains source-owned. */
 const MG_LAYOUT_VERSION = '1';
 const MG_LAYOUT_DESTINATIONS = [
@@ -139,7 +139,12 @@ async function mgLayoutLoadExistingFonts() {
     let owner = node;
     while (owner && owner !== figma.currentPage) {
       const key = mgReadIdentity(owner, 'mgKitId');
-      if (key === 'main' || key === 'review' || key.startsWith('layout/')) {
+      if (
+        key === 'main' ||
+        key === 'review' ||
+        key === 'welcome' ||
+        key.startsWith('layout/')
+      ) {
         for (const run of node.getStyledTextSegments(['fontName']))
           faces.set(JSON.stringify(run.fontName), run.fontName);
         break;
@@ -386,6 +391,10 @@ async function organizeMangroveKit(
   { zoom = true, allowProbes = false } = {}
 ) {
   // Complete read-only validation and font preparation precede migration writes.
+  if (typeof createMangroveWelcome !== 'function')
+    throw new Error(
+      'Rebuild the desktop plugin with the Welcome module before organizing.'
+    );
   const index = await mgLayoutPreflight(doc, { allowProbes });
   const brand = doc.modes.find(mode => mode.id === brandId);
   const collection = (
@@ -428,6 +437,11 @@ async function organizeMangroveKit(
       for (const run of node.getStyledTextSegments(['fontName']))
         await figma.loadFontAsync(run.fontName);
   await mgLayoutLoadExistingFonts();
+  if (typeof createMangroveWelcome === 'function')
+    await createMangroveWelcome(doc, brandId, {
+      validateOnly: true,
+      zoom: false,
+    });
   const variables = new Map(
     (await figma.variables.getLocalVariablesAsync())
       .filter(item => item.variableCollectionId === collection.id)
@@ -524,29 +538,13 @@ async function organizeMangroveKit(
       'mgLayoutVersion',
       MG_LAYOUT_VERSION
     );
-    const intro = frame(
-      'layout/start/intro',
-      sections.get('start'),
-      'Welcome and visual index'
-    );
-    await text('layout/start/intro/title', intro, 'Mangrove design kit', 36);
-    await text(
-      'layout/start/intro/body',
-      intro,
-      `${brand.name} · Exploratory local core\n\n01 Foundations: colour roles, typography and spacing.\n02 Components: controls and reusable content, with their usage examples.\n03 Compositions: components assembled into Table, ComboBox, Text CTA, TOC and Segmented control.\n04 Page patterns: your page examples and the remaining catalogue.\n90 Diagnostics: unsupported assets and temporary checks.\n\nInsert components from Assets. Edit the exposed properties on instances. Main components are source-owned; usage examples remain editable. Ordinary updates retain existing identities and edited examples.`,
-      18
-    );
-    await text(
-      'layout/start/update/title',
-      intro,
-      'Keeping the kit up to date',
-      24
-    );
-    await text(
-      'layout/start/update/body',
-      intro,
-      'Load the current mangrove-variables.json, import the chosen brand without pruning, then build the affected families. The generated layout reconciles automatically after organisation.\n\nPut your notes and page compositions outside the generated main/review containers. Section-local placement of manual additions is preserved; section positions can move as generated content grows. Renames and removals require a reviewed migration.\n\nBounded acceptance is recorded in CORE-KIT-STATUS.md. Full catalogue coverage, fonts, other brands/RTL and Professional publishing remain separate work.'
-    );
+    const welcome = await createMangroveWelcome(doc, brandId, {
+      zoom: false,
+      parent: sections.get('start'),
+    });
+    for (const id of welcome.createdNodeIds) created.add(id);
+    for (const id of welcome.updatedNodeIds) updated.add(id);
+    if (welcome.errors.length) throw new Error(welcome.errors.join('; '));
     const foundations = frame(
       'layout/foundations/intro',
       sections.get('foundations'),
@@ -793,7 +791,9 @@ async function organizeMangroveKit(
     for (const [id, section] of sections) {
       if (!areaRoots.has(id)) {
         const first = section.children.find(
-          child => mgReadIdentity(child, 'mgKitId') === `layout/${id}/intro`
+          child =>
+            mgReadIdentity(child, 'mgKitId') === `layout/${id}/intro` ||
+            (id === 'start' && mgReadIdentity(child, 'mgKitId') === 'welcome')
         );
         if (first) first.x = first.y = 32;
       }
@@ -853,11 +853,27 @@ async function organizeMangroveKit(
 function navigateMangroveKit(destination = 'start') {
   if (!MG_LAYOUT_DESTINATIONS.some(([id]) => id === destination))
     throw new Error('Unknown kit destination.');
-  const nodes = figma.currentPage.findAll(
+  let nodes = figma.currentPage.findAll(
     node => mgReadIdentity(node, 'mgKitId') === `layout/${destination}`
   );
-  if (nodes.length !== 1 || nodes[0].type !== 'SECTION')
-    throw new Error('Organize the kit before using its navigation.');
+  if (!nodes.length && destination === 'start')
+    nodes = figma.currentPage.findAll(
+      node =>
+        mgReadIdentity(node, 'mgKitId') === 'welcome' && node.type === 'FRAME'
+    );
+  if (
+    nodes.length !== 1 ||
+    nodes[0].parent !== figma.currentPage ||
+    (nodes[0].type !== 'SECTION' &&
+      !(
+        destination === 'start' &&
+        nodes[0].type === 'FRAME' &&
+        mgReadIdentity(nodes[0], 'mgKitId') === 'welcome'
+      ))
+  )
+    throw new Error(
+      'Create the welcome board for Start here. Other destinations need Organize file.'
+    );
   figma.viewport.scrollAndZoomIntoView(nodes);
   figma.currentPage.selection = nodes;
   return {

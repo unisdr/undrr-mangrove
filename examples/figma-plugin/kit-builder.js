@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit */
+/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -2922,6 +2922,9 @@ async function buildMangroveComponents(
     result.presentation = mgLayoutLegacySpacing(main, review);
     if (result.presentation.changed && !created.has(review.id))
       updated.add(review.id);
+    if (typeof mgWelcomeLegacySpacing === 'function')
+      for (const id of mgWelcomeLegacySpacing(main, review).updatedNodeIds)
+        updated.add(id);
   }
   result.createdNodeIds = [...created];
   result.updatedNodeIds = [...updated];

@@ -25,6 +25,19 @@ The smaller native correction succeeded without moving the font-blocked subtree.
 
 The main root still has its legacy nominal width, and the six-section reading sequence is not yet present in the native file. Mock coverage proves migration, two repeats, bounded source propagation, inherited instance ownership, manual preservation, conflicts and interrupted/restarted recovery; it does not establish native hierarchy acceptance, all-family rendered containment or novice usability.
 
+## Welcome checkpoint
+
+A branded, source-bound welcome board and persistent **Open Start here** action are now implemented. This can give a novice an entry point before the font-blocked migration: a reading sequence, Assets/instance instructions, supported and pending scope, brand limitations, and the maintenance boundary. It is not a substitute for the six-section organization. `welcome` and its generated child identities survive reruns and later reparenting into `layout/start`; direct manual root notes are preserved. Historical focus diagnostics are spaced beyond legacy content using x/y only and a stable rendered-bounds anchor.
+
+Native onboarding acceptance is still open. Desktop connection and inspection timed out on 4 October 2026; no native assets were changed by this onboarding work. Current-viewport navigation is implemented; persistence on reopening and a file thumbnail are not configured or claimed.
+
+- [x] Standalone creation, restart/rerun identities, direct manual-note preservation, typed variable/font/ownership refusals and later full-migration reuse pass the actual-runtime mock.
+- [ ] Apply to the native file after a fresh backup and inspection; capture exact affected IDs and unchanged source/consumer records.
+- [ ] Review the welcome board at normal zoom for readable headings, unclipped cards, correct brand and useful novice instructions.
+- [ ] Confirm historical diagnostics clear Main, Review and Welcome without changing child geometry or fonts.
+- [ ] Repeat from a plugin restart, create zero duplicate nodes, and navigate Start here without loading JSON.
+- [ ] Ask a novice to find a foundation, component, composition and pending item; retain the broader designer-handoff gate below.
+
 ## Intended reading sequence
 
 Use numbered native sections on the existing page for the first migration. These are named destinations in the Layers panel, with headings and a visual index. Multiple pages can follow when useful, but building on another page currently creates a separate scope, not a migration. Do not require a paid plan merely to make the local kit understandable.

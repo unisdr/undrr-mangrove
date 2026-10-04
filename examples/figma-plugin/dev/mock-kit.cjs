@@ -707,6 +707,9 @@ function environment(doc, options = {}) {
   const layoutFile = path.join(DIR, 'kit-layout.js');
   if (fs.existsSync(layoutFile))
     vm.runInContext(fs.readFileSync(layoutFile, 'utf8'), context);
+  const welcomeFile = path.join(DIR, 'kit-welcome.js');
+  if (fs.existsSync(welcomeFile))
+    vm.runInContext(fs.readFileSync(welcomeFile, 'utf8'), context);
   const call = (name, ...args) => {
     context.mockArgs = args;
     return vm.runInContext(`${name}(...mockArgs)`, context);

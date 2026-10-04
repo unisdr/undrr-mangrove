@@ -106,7 +106,19 @@ A file in Drafts or a Starter team allows only 1 mode, so the five brands cannot
 
 Limits: one brand is visible at a time, and Starter cannot publish libraries, so the variables, components and designs stay in this one file. Local text styles, effect styles and components can still be created and reused within the file. When the file moves to a Professional team project, import with all brands ticked: the existing mode is kept and the others are added. Both workflows pass the mock harness. Saved desktop brand inspections establish single-mode values, aliases and identity preservation; paid-team migration and complete rendered brand acceptance remain pending.
 
-### Organize and navigate the file
+### Start here and onboarding
+
+A design kit needs an entry point that explains its structure. **Open Start here** is always visible in the plugin header. With the current token document loaded and one existing kit brand selected, it creates or updates a branded welcome board, then selects and zooms to it. Without a loaded document, it opens the existing board without writing. **Kit destination > 00 Start here > Go** also navigates without updating content.
+
+The board explains the foundations, components, compositions, page patterns and pending work; how to insert linked instances from Assets; supported versus pending scope; and the automatic/manual update boundary. It uses the exact exported body font and imported colour variables. It works on the current single-page, single-brand Free setup and does not require the full section migration or load unavailable Condensed assets.
+
+The standalone board uses the durable `welcome` identity, not `layout/start`. Creating it does not mark the six-section hierarchy installed. Later **Organize file** reuses that same board and its children in the Start here section. Add manual notes as direct children of the welcome root or in your own working frames; generated `welcome/content` is reconciled from the plugin. Ordinary component builds keep their requested-family view. Navigation sets the current viewport; a persistent first-open view or file thumbnail is not configured or verified.
+
+The historical focus diagnostic frame is positioned beyond the measured Main, Review and Welcome bounds by at least 160px. Only its page x/y change. Component builds repeat that spacing check so growing content cannot place it over Review again. Temporary capability and acceptance assets are outside this rule.
+
+**Checkpoint, 4 October 2026:** onboarding and diagnostics separation are implemented and mock-tested. Desktop inspection timed out on two Figma connection attempts and the surface inventory also timed out, so this change has not been applied or visually accepted in the native file. The existing native Table checkpoint remains the last accepted file state. Next: save a fresh backup/inspection, create Welcome, save results and inspection, review readable/unclipped content at normal zoom, then repeat after a plugin restart. The missing Roboto Condensed Bold font still blocks the full hierarchy migration.
+
+## Organize and navigate the file
 
 Use the desktop plugin with the complete `mangrove-variables.json`, the existing main/review frames and their current imported brand. Save a backup and inspection, remove temporary checks using their exact records, then choose **Core kit > Organize file**. Organisation migrates the existing assets in place on the current page into **00 Start here**, **01 Foundations**, **02 Components**, **03 Compositions (organisms)**, **04 Page patterns** and **90 Diagnostics and pending work**. It adds generated guidance and foundation specimens, fits containers and arranges variant grids; it does not change the source component anatomy or re-theme the kit.
 
@@ -368,6 +380,7 @@ node examples/figma-plugin/dev/mock-audit-native-text.cjs
 node examples/figma-plugin/dev/mock-connector-scopes.cjs
 node examples/figma-plugin/dev/mock-review-export.cjs
 node examples/figma-plugin/dev/mock-ui.cjs
+node examples/figma-plugin/dev/mock-kit-welcome.cjs
 node examples/figma-plugin/dev/mock-kit-layout.cjs
 node examples/figma-plugin/dev/mock-ui-layout.cjs
 ```
@@ -376,7 +389,7 @@ The kit harness covers native identity and properties, instance overrides and ne
 
 The mock copies the Figma behaviours that have caused bugs here, but it is not Figma. Confirm a change in the desktop app before relying on it.
 
-The layout harness has thirteen groups for in-place migration, compact grids, ordinary updates, manual/consumer preservation, refusals and partial retry. The three actual DOM layout groups check six destination actions, serialized controls, independent receipts, unchanged family selection and build-evidence freshness. They do not establish native font loading or rendered organisation.
+The layout harness has thirteen groups for in-place migration, compact grids, ordinary updates, manual/consumer preservation, refusals and partial retry. The four actual DOM layout groups check six destination actions, serialized controls, independent receipts, unchanged family selection and build-evidence freshness. They do not establish native font loading or rendered organisation.
 
 Audit a saved **Inspect kit** report against the current generated recipes:
 

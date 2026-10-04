@@ -163,7 +163,8 @@
         flex: none;
         padding: 7px 18px;
         background: var(--surface);
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr auto;
         align-items: center;
         justify-content: space-between;
         gap: 8px;
@@ -177,6 +178,14 @@
       }
       .context-info {
         min-width: 0;
+      }
+      #change-brand {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      #open-welcome {
+        grid-column: 2;
+        grid-row: 2;
       }
       .kit-jump {
         display: flex;
@@ -624,11 +633,18 @@
           </select>
           <button
             id="navigate-kit"
-            title="Organize the file once, then jump to a named section"
+            title="Start here opens the welcome board; other destinations need Organize file"
           >
             Go
           </button>
         </div>
+        <button
+          id="open-welcome"
+          class="quiet"
+          title="Create or update Welcome from loaded tokens; without a token file, open the existing board"
+        >
+          Open Start here
+        </button>
         <button id="change-brand" class="quiet">Change brand</button>
       </div>
       <main class="workspace" id="workspace" data-section="import">
@@ -1234,6 +1250,7 @@
           !!String($('editorial-root').value || '').trim();
         $('kit-destination').disabled = busy;
         $('navigate-kit').disabled = busy;
+        $('open-welcome').disabled = busy;
         $('export-family').disabled = busy || !doc?.components;
         $('refresh-narrow-review').disabled = busy || !doc?.components;
         $('diagnostics').disabled = busy || !doc;
@@ -1569,6 +1586,14 @@
           send('organize-kit', { doc, brand });
         }
       };
+      $('open-welcome').onclick = () => {
+        if (!doc) {
+          send('navigate-kit', { destination: 'start' });
+          return;
+        }
+        const brand = singleBrand();
+        if (brand) send('create-welcome', { doc, brand });
+      };
       $('navigate-kit').onclick = () =>
         send('navigate-kit', {
           destination: $('kit-destination').value || 'start',
@@ -1769,12 +1794,19 @@
           return;
         }
         if (msg.type === 'operation') {
-          if (['organize-kit', 'navigate-kit'].includes(completedOperation)) {
+          if (
+            ['organize-kit', 'navigate-kit', 'create-welcome'].includes(
+              completedOperation
+            )
+          ) {
             rememberOperation(completedOperation, result);
             resultLog(
-              completedOperation === 'organize-kit'
-                ? `File organization ${hasErrors ? 'needs review' : 'finished'}. ${result.sections?.length || 0} destinations; ${result.createdNodeIds?.length || 0} created, ${result.updatedNodeIds?.length || 0} updated. Save results for the complete migration record.`
-                : `Viewing ${$('kit-destination').selectedOptions?.[0]?.textContent || result.destination || 'kit section'}.`
+              completedOperation === 'create-welcome'
+                ? `Start here ${hasErrors ? 'needs review' : 'ready'}. ${result.createdNodeIds?.length || 0} created, ${result.updatedNodeIds?.length || 0} updated. Save results for the complete record.` +
+                    (hasErrors ? '\n' + result.errors.join('\n') : '')
+                : completedOperation === 'organize-kit'
+                  ? `File organization ${hasErrors ? 'needs review' : 'finished'}. ${result.sections?.length || 0} destinations; ${result.createdNodeIds?.length || 0} created, ${result.updatedNodeIds?.length || 0} updated. Save results for the complete migration record.`
+                  : `Viewing ${$('kit-destination').selectedOptions?.[0]?.textContent || result.destination || 'kit section'}.`
             );
             return;
           }
