@@ -71,3 +71,15 @@ See [source browser status](SOURCE-BROWSER-STATUS.md) for the Range correction,
 other family observations and the desktop control blocker. No importable DTO,
 guarded runtime, new Figma file, native construction or publication was prepared
 by this audit.
+
+## Holistic goal follow-up
+
+After this historical audit, the user authorised full catalogue implementation.
+The cloud connector has now created a separate empty unpublished experiment,
+key `GbVTvFbuWjoJr6Bf5t4fhg`, and read-only inspection confirms that exact actual
+Plugin API file key. No component construction, importable adaptation or
+publication has occurred. This establishes cloud target identification only;
+ordinary desktop plugin file-key access and all native acceptance gates remain
+open. The next cloud import/build requires a reviewed fail-closed target guard
+before controller evaluation and at mutation entry. See the
+[holistic acceptance tracker](holistic/ACCEPTANCE.md).
