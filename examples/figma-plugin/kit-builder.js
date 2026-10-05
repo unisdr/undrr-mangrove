@@ -1,4 +1,4 @@
-/* global mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingSourceValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingSourceValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -368,6 +368,10 @@ const MG_SVG_ENABLED =
 const MG_ABSOLUTE_ENABLED =
   typeof MG_CONNECTOR_ABSOLUTE === 'undefined' || MG_CONNECTOR_ABSOLUTE;
 
+const MG_ABSOLUTE_START_ENABLED =
+  typeof MG_CONNECTOR_ABSOLUTE_START === 'undefined' ||
+  MG_CONNECTOR_ABSOLUTE_START;
+
 const MG_INTRINSIC_REVIEW_ENABLED =
   typeof MG_CONNECTOR_INTRINSIC_REVIEW === 'undefined' ||
   MG_CONNECTOR_INTRINSIC_REVIEW;
@@ -420,8 +424,12 @@ function mgAbsolutePlan(tree, parent) {
     Object.keys(spec).some(
       key => !['horizontal', 'vertical', 'offsetX', 'offsetY'].includes(key)
     ) ||
-    spec.horizontal !== 'END' ||
-    spec.vertical !== 'CENTER' ||
+    !(
+      (spec.horizontal === 'END' && spec.vertical === 'CENTER') ||
+      (MG_ABSOLUTE_START_ENABLED &&
+        spec.horizontal === 'START' &&
+        spec.vertical === 'START')
+    ) ||
     !['offsetX', 'offsetY'].every(
       key => typeof spec[key] === 'string' && spec[key]
     ) ||
@@ -438,9 +446,50 @@ function mgAbsolutePlan(tree, parent) {
     })
   )
     throw new Error(
-      'Absolute recipes require a native fixed-size child of an auto-layout FRAME, END/CENTER alignment and FLOAT offset token IDs, without position.'
+      'Absolute recipes require a native fixed-size child of an auto-layout FRAME, END/CENTER or START/START alignment and FLOAT offset token IDs, without position.'
     );
   return spec;
+}
+
+function mgAbsoluteStartSource(doc, tree) {
+  const roles = new Map();
+  for (const item of doc.variables || []) {
+    if (roles.has(item.name))
+      throw new Error('Absolute START source variable is ambiguous.');
+    roles.set(item.name, item);
+  }
+  function number(name, mode, seen = new Set()) {
+    const role = roles.get(name);
+    if (!role || role.type !== 'FLOAT' || seen.has(name))
+      throw new Error(
+        'Absolute START source FLOAT is missing, wrong typed or cyclic.'
+      );
+    seen.add(name);
+    const value = role.values?.[mode.id];
+    if (value && typeof value === 'object') {
+      if (
+        Object.keys(value).join(',') !== 'alias' ||
+        typeof value.alias !== 'string'
+      )
+        throw new Error('Absolute START source alias is malformed.');
+      return number(value.alias, mode, seen);
+    }
+    if (!Number.isFinite(value))
+      throw new Error('Absolute START source FLOAT must be finite.');
+    return value;
+  }
+  if (!Array.isArray(doc.modes) || !doc.modes.length)
+    throw new Error('Absolute START source modes are missing.');
+  for (const mode of doc.modes) {
+    number(tree.absolute.offsetX, mode);
+    number(tree.absolute.offsetY, mode);
+    for (const field of ['width', 'height'])
+      if (
+        typeof tree.layout[field] === 'string' &&
+        number(tree.layout[field], mode) <= 0
+      )
+        throw new Error('Absolute START source sizing must be positive.');
+  }
 }
 
 // A bounded source-vector subset, not a general SVG sanitizer or renderer.
@@ -1043,17 +1092,17 @@ async function buildMangroveComponents(
     'paddingRight',
     'visible',
   ]);
-  function absoluteNumber(name, seen = new Set()) {
+  function absoluteNumber(name, seen = new Set(), nativeModeId = mode.modeId) {
     const entry = variable(name, 'FLOAT');
     if (seen.has(entry.id))
       throw new Error(`Absolute variable alias cycle at ${name}.`);
     seen.add(entry.id);
-    const value = entry.valuesByMode[mode.modeId];
+    const value = entry.valuesByMode[nativeModeId];
     if (value && typeof value === 'object' && value.type === 'VARIABLE_ALIAS') {
       const alias = [...variables.values()].find(item => item.id === value.id);
       if (!alias)
         throw new Error(`Missing absolute variable alias at ${name}.`);
-      return absoluteNumber(alias.name, seen);
+      return absoluteNumber(alias.name, seen, nativeModeId);
     }
     if (!Number.isFinite(value))
       throw new Error(
@@ -1099,6 +1148,17 @@ async function buildMangroveComponents(
       throw new Error('SVG sizing native FLOAT is unresolved.');
     return value;
   }
+  const absoluteStartScope =
+    MG_ABSOLUTE_START_ENABLED &&
+    ordered.some(family =>
+      family.variants.some(variant => {
+        let found = false;
+        treeWalk(variant.tree, tree => {
+          if (tree.absolute?.horizontal === 'START') found = true;
+        });
+        return found;
+      })
+    );
   let richContext;
   const ready = [];
   const blocked = new Set();
@@ -1671,6 +1731,25 @@ async function buildMangroveComponents(
                 'Absolute recipes are disabled in this connector scope. Compile the selected family before building it.'
               );
             const absolute = mgAbsolutePlan(tree, parent);
+            if (MG_ABSOLUTE_START_ENABLED && absolute.horizontal === 'START') {
+              mgAbsoluteStartSource(doc, tree);
+              for (const nativeMode of collection.modes) {
+                absoluteNumber(absolute.offsetX, new Set(), nativeMode.modeId);
+                absoluteNumber(absolute.offsetY, new Set(), nativeMode.modeId);
+                for (const field of ['width', 'height'])
+                  if (
+                    typeof tree.layout[field] === 'string' &&
+                    absoluteNumber(
+                      tree.layout[field],
+                      new Set(),
+                      nativeMode.modeId
+                    ) <= 0
+                  )
+                    throw new Error(
+                      'Absolute START native sizing must be positive.'
+                    );
+              }
+            }
             absoluteNumber(absolute.offsetX);
             absoluteNumber(absolute.offsetY);
             for (const field of ['width', 'height']) {
@@ -2184,7 +2263,8 @@ async function buildMangroveComponents(
   }
   if (
     ((MG_RICH_TEXT_ENABLED && richTextScope) ||
-      (MG_SVG_SIZING_ENABLED && svgSizingScope)) &&
+      (MG_SVG_SIZING_ENABLED && svgSizingScope) ||
+      (MG_ABSOLUTE_START_ENABLED && absoluteStartScope)) &&
     result.errors.length
   )
     return result;
@@ -2220,10 +2300,60 @@ async function buildMangroveComponents(
         throw new Error(
           'Rich text requires native font-axis discovery before import.'
         );
+      const requestedFonts = [
+        { family: 'Inter', style: 'Regular' },
+        ...[...usedText].map(id => textSpecs.get(id).values[brandId].fontName),
+      ];
+      let fontInventory = available;
+      const unresolvedDefaults = requestedFonts.some(input => {
+        const tags = figma.getFontFamilyVariationAxes(input.family);
+        return (
+          Array.isArray(tags) &&
+          tags.length > 0 &&
+          !available.some(
+            entry =>
+              entry.fontName.family === input.family &&
+              entry.fontName.style === input.style &&
+              entry.fontName.variationSettings &&
+              tags.every(tag =>
+                Object.hasOwn(entry.fontName.variationSettings, tag)
+              )
+          )
+        );
+      });
+      if (unresolvedDefaults) {
+        if (
+          typeof mgResolveNamedFontDefaults !== 'function' ||
+          typeof mgAssertExperimentOperationTarget !== 'function'
+        )
+          throw new Error(
+            'Rich native default axes are unresolved; guarded font preparation is required.'
+          );
+        result.fontPreparation = await mgResolveNamedFontDefaults(
+          figma,
+          requestedFonts,
+          mgAssertExperimentOperationTarget
+        );
+        mgAssertExperimentOperationTarget();
+        const preparation = result.fontPreparation;
+        if (
+          preparation.errors.length ||
+          preparation.residualNodeIds.length ||
+          preparation.unverifiedRemovalNodeIds.length ||
+          !preparation.recordedSceneExact ||
+          !preparation.recordedAssetsExact
+        )
+          throw new Error(
+            `Named font preparation failed: ${preparation.errors.join('; ')}`
+          );
+        fontInventory = preparation.resolvedFonts.map(entry => ({
+          fontName: entry.fontName,
+        }));
+      }
       const concreteFont = input =>
         mgRichText.resolveFontInput(
           input,
-          available,
+          fontInventory,
           figma.getFontFamilyVariationAxes(input.family)
         );
       const projected = new Map();
@@ -2635,11 +2765,14 @@ async function buildMangroveComponents(
           `Native absolute ${field} did not retain requested sizing at ${node.id}.`
         );
     }
-    const x = parent.width - node.width + offsetX;
-    const y = (parent.height - node.height) / 2 + offsetY;
+    const start = MG_ABSOLUTE_START_ENABLED && absolute.horizontal === 'START';
+    const x = start ? offsetX : parent.width - node.width + offsetX;
+    const y = start ? offsetY : (parent.height - node.height) / 2 + offsetY;
     if (![x, y].every(Number.isFinite))
       throw new Error(`Absolute endpoint overflow at ${node.id}.`);
-    node.constraints = { horizontal: 'MAX', vertical: 'CENTER' };
+    node.constraints = start
+      ? { horizontal: 'MIN', vertical: 'MIN' }
+      : { horizontal: 'MAX', vertical: 'CENTER' };
     node.x = x;
     node.y = y;
     if (

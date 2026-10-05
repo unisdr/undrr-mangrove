@@ -173,8 +173,9 @@ uses its existing listAvailableFontsAsync inventory and resolveFontInput to
 resolve each source named instance and the Inter Regular creation font to one
 unambiguous concrete font before asset import. It also calls the documented
 getFontFamilyVariationAxes discovery API and requires the available-font entry
-to contain every declared native axis. Missing API support or unresolved defaults
-refuse before any style or scene writes. Explicit source axes currently
+to contain every declared native axis. Missing API support refuses. When named
+font inventory omits axes, the optional guarded preparation described below
+must succeed before any asset/style import or authored scene construction. Explicit source axes currently
 must agree with the native named-instance defaults. Arbitrary authored variable
 axis overrides are outside this bounded capability.
 
@@ -192,14 +193,21 @@ fonts carrying default axes, then verifies fresh styles, repeated builds and
 edited rich copy. These API fixtures remain offline evidence. Actual isolated
 native rich-text execution and rendering acceptance are still open.
 
-The isolated cloud evidence currently exposes an unresolved native gate:
-listAvailableFontsAsync omits axes while TextStyle and text/segment reads include
-them. The builder therefore refuses these variable-font rich scopes before
-import. A supported separate guarded experiment can create a disposable TEXT,
-load and assign a named FontNameInput without axes, read its concrete FontName
-and remove it in finally while recording created/removed IDs. This probe is not
-part of mutation-free preflight. A future verified defaults-map design needs
-native evidence for each actual family/style, clear lifetime and font identity
-rules, and independent review. No default map from another file or brand is
-silently generalized. The experiment file now contains Tag assets, so any probe
-must also preserve its existing content and use the established exact file guard.
+The isolated native inventory omits axes while TextStyle and text/segment reads
+include them. The builder now has an optional guarded operation-local disposable
+TEXT preparation phase to resolve these defaults through documented named font
+assignment and concrete readback. This phase is real mutation, journaled
+separately from mutation-free rich ownership preflight. It requires the trusted
+compiled experiment assertion, verifies owned probe removal and recorded scene
+and asset equality, and refuses missing guards, changed targets, failed reads,
+cleanup uncertainty or source-axis disagreement. Its concrete map lasts only
+for that operation. The ordinary unguarded plugin still refuses unresolved
+defaults. See [Font defaults preparation](FONT-DEFAULTS-PREPARATION.md) for the
+API, scoped verification fields and partial failure contract.
+
+The root's isolated native five-face probe proves the supported primitive and
+cleanup. The installed shared path has offline actual-builder coverage across
+all five brands, fresh styles, two component zero-create repeats, edited rich
+copy and failed target/cleanup refusal. Installed end-to-end native rich build
+and rendering acceptance remain open, as does the unchanged connector payload
+ceiling. No default map from another file or brand is generalized.

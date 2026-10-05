@@ -291,7 +291,8 @@ function subsetDocument(
     const directTemplateIds = new Set();
     const richStyles = new Set(),
       richPaints = new Set(),
-      sizingRoles = new Set();
+      sizingRoles = new Set(),
+      absoluteRoles = new Set();
     const coincidentRings = [];
     function tree(node, family, variant) {
       if (node.type === 'INSTANCE' && node.properties !== undefined)
@@ -329,6 +330,13 @@ function subsetDocument(
           richStyles.add(run.textStyle);
           richPaints.add(run.fill);
         }
+      }
+      if (node.absolute?.horizontal === 'START') {
+        absoluteRoles.add(node.absolute.offsetX);
+        absoluteRoles.add(node.absolute.offsetY);
+        for (const field of ['width', 'height'])
+          if (typeof node.layout?.[field] === 'string')
+            absoluteRoles.add(node.layout[field]);
       }
       if (node.svg?.sizing !== undefined && node.type !== 'SVG')
         throw new Error('SVG sizing is only supported on SVG leaves.');
@@ -386,6 +394,7 @@ function subsetDocument(
           includeDirectVariable(name);
     for (const name of richPaints) includeDirectVariable(name);
     for (const name of sizingRoles) includeDirectVariable(name);
+    for (const name of absoluteRoles) includeDirectVariable(name);
     // Preserve exact source definitions needed by the source-family focus
     // renderer. Traverse every source mode, while the DTO remains one brand.
     // Alias edges are typed and cycle-checked independently for each mode.
@@ -1025,6 +1034,17 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsAbsolute(variant.tree))
     );
+  function needsAbsoluteStart(node) {
+    return (
+      node.absolute?.horizontal === 'START' ||
+      (node.children || []).some(needsAbsoluteStart)
+    );
+  }
+  const absoluteStartEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsAbsoluteStart(variant.tree))
+    );
   function needsArc(node) {
     return 'arcData' in node || (node.children || []).some(needsArc);
   }
@@ -1252,14 +1272,35 @@ async function buildConnector({
         ? 'kit-inspection.js'
         : null;
   if (richTextEnabled)
-    source +=
-      fs.readFileSync(path.join(PLUGIN, 'kit-rich-text.js'), 'utf8') + '\n;\n';
+    for (const module of ['kit-rich-text.js', 'kit-font-defaults.js'])
+      source += fs.readFileSync(path.join(PLUGIN, module), 'utf8') + '\n;\n';
   if (svgSizingEnabled)
     source +=
       fs.readFileSync(path.join(PLUGIN, 'kit-svg-sizing.js'), 'utf8') + '\n;\n';
   let packedDocument = subset;
   if (runtime) {
     const runtimeSource = fs.readFileSync(path.join(PLUGIN, runtime), 'utf8');
+    if (absoluteStartEnabled) {
+      const start = runtimeSource.indexOf(
+          'function mgAbsolutePlan(tree, parent) {'
+        ),
+        end = runtimeSource.indexOf('// A bounded source-vector subset', start);
+      if (start < 0 || end <= start)
+        throw new Error('Absolute START source validation boundary changed.');
+      const validate = vm.runInNewContext(
+        '((doc,tree,parent)=>{' +
+          runtimeSource.slice(start, end) +
+          'mgAbsolutePlan(tree,parent);mgAbsoluteStartSource(doc,tree);})',
+        { MG_ABSOLUTE_START_ENABLED: true }
+      );
+      function visit(tree, parent = null) {
+        if (tree.absolute?.horizontal === 'START') validate(doc, tree, parent);
+        (tree.children || []).forEach(child => visit(child, tree));
+      }
+      subset.components.families.forEach(f =>
+        f.variants.forEach(v => visit(v.tree))
+      );
+    }
     if (svgEnabled)
       packedDocument = {
         ...subset,
@@ -1309,6 +1350,7 @@ async function buildConnector({
         MG_CONNECTOR_SVG_SIZING_SOURCE: false,
         MG_CONNECTOR_ELLIPSE: ellipseEnabled,
         MG_CONNECTOR_ABSOLUTE: absoluteEnabled,
+        MG_CONNECTOR_ABSOLUTE_START: absoluteStartEnabled,
         MG_CONNECTOR_ARC: arcEnabled,
         MG_CONNECTOR_INTRINSIC_REVIEW: intrinsicReviewEnabled,
         MG_CONNECTOR_INTRINSIC_VALIDATION: intrinsicValidationEnabled,
