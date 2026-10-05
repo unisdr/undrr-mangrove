@@ -9,6 +9,7 @@ const {
   inspectNewsDetailPrerequisites,
   buildNewsDetailRecipes,
   buildNewsDetailDependencyRecipes,
+  buildNewsRelatedCardRecipes,
 } = require('../../../scripts/figma-news-detail-recipes.cjs');
 const root = path.resolve(__dirname, '../../..');
 function auditTests() {
@@ -91,6 +92,9 @@ function dependencyDocument() {
 function installNewsDetailSvgFixture(env) {
   const doc = dependencyDocument(),
     expected = new Set();
+  doc.components.families.push(
+    ...buildNewsRelatedCardRecipes({ root, ...doc })
+  );
   function visit(t) {
     if (t.type === 'SVG') expected.add(t.svg.markup);
     for (const c of t.children || []) visit(c);
@@ -101,10 +105,14 @@ function installNewsDetailSvgFixture(env) {
   env.figma.createNodeFromSvg = markup => {
     const raw = markup.replace(/ width="[\d.]+" height="[\d.]+"/, '');
     if (!expected.has(raw)) return previous(markup);
+    const viewport = /viewBox="0 0 ([\d.e+-]+) ([\d.e+-]+)"/.exec(raw);
+    assert(viewport);
+    const width = Number(viewport[1]),
+      height = Number(viewport[2]);
     const frame = env.figma.createFrame();
-    frame.resize(24, 24);
+    frame.resize(width, height);
     const vector = env.figma.createVector();
-    vector.resize(24, 24);
+    vector.resize(width, height);
     vector.vectorPaths = [
       {
         windingRule: 'NONZERO',
@@ -156,6 +164,10 @@ const snapshot = env =>
     styles: env.state.styles,
     variables: env.state.variables,
     collections: env.state.collections,
+    images: [...env.state.images.entries()].map(([hash, bytes]) => [
+      hash,
+      bytes.length,
+    ]),
   });
 async function dependencyTests() {
   const source = dependencyDocument();
@@ -400,10 +412,203 @@ async function dependencyTests() {
     'News ArticleHeader2/ShareButtons4 finite source variants: all5 actual builder, two zero-create repeats/plain properties and source/consumer rich edits, SVG sizing fixtures pass. Exact native paths/modes/rendering/publication and complete article remain open.'
   );
 }
+function relatedDocument() {
+  const doc = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '../mangrove-variables.json'))
+  );
+  doc.components.families = buildNewsRelatedCardRecipes({ root, ...doc });
+  return doc;
+}
+async function relatedTests() {
+  const doc = relatedDocument(),
+    family = doc.components.families[0];
+  assert.strictEqual(family.id, 'news-related-card');
+  assert.strictEqual(family.variants.length, 6);
+  const old = copy({ variables: doc.variables, styles: doc.styles });
+  assert.deepStrictEqual(
+    buildNewsRelatedCardRecipes({ root, ...doc }),
+    doc.components.families
+  );
+  assert.deepStrictEqual({ variables: doc.variables, styles: doc.styles }, old);
+  for (const mode of doc.modes) {
+    const env =
+      await require('./mock-rich-text-integration.cjs').rangeEnvironment(doc);
+    await installNewsDetailSvgFixture(env);
+    await env.call('importVariables', doc, [mode.id], false, [], true);
+    const build = () =>
+      env.call('buildMangroveComponents', doc, mode.id, ['news-related-card']);
+    const first = await build();
+    assert.deepStrictEqual(copy(first.errors), []);
+    const properties = [];
+    const number = name => {
+      const value = doc.variables.find(v => v.name === name).values[mode.id];
+      return typeof value === 'number' ? value : number(value.alias);
+    };
+    for (const variant of family.variants) {
+      const master = [...env.state.nodes.values()].find(
+        n => identity(n) === 'family/news-related-card/variant/' + variant.id
+      );
+      assert(master);
+      assert.strictEqual(master.width, number(variant.tree.layout.width));
+      assert.strictEqual(master.height, number(variant.tree.layout.height));
+      const title = master
+        .findAllWithCriteria({ types: ['TEXT'] })
+        .find(n => identity(n).endsWith('/title'));
+      assert.strictEqual(title.textDecoration, 'UNDERLINE');
+      assert.deepStrictEqual(copy(title.textDecorationOffset), {
+        unit: 'PIXELS',
+        value: 3,
+      });
+      assert.strictEqual(title.textWrapStyle, 'BALANCE');
+      assert(!title.componentPropertyReferences?.characters);
+      assert(
+        variant.sourceHref.title.startsWith(
+          'https://www.undrr.org/news/related-story-'
+        )
+      );
+      const caret = master.children.find(n =>
+        identity(n).endsWith('/initial-caret')
+      );
+      assert.strictEqual(caret.layoutPositioning, 'ABSOLUTE');
+      assert.strictEqual(
+        caret.x,
+        number(variant.tree.children[2].absolute.offsetX)
+      );
+      assert.strictEqual(
+        caret.y,
+        number(variant.tree.children[2].absolute.offsetY)
+      );
+      assert.deepStrictEqual(copy(caret.constraints), {
+        horizontal: 'MIN',
+        vertical: 'MIN',
+      });
+      const visual = master.children.find(n => identity(n).endsWith('/visual'));
+      assert.strictEqual(visual.fills[0].type, 'IMAGE');
+      assert.strictEqual(
+        visual.fills[0].imageHash,
+        'c85730db17a9ea844cfcba3d6239b9e94f6a4c0a6a8535855ed2d578c55a7b83'
+      );
+      assert.strictEqual(visual.strokeAlign, 'OUTSIDE');
+      const consumer = master.createInstance();
+      env.figma.currentPage.appendChild(consumer);
+      consumer.x = 901;
+      consumer.y = 702;
+      const key = Object.keys(consumer.componentProperties).find(k =>
+        k.startsWith('Summary#')
+      );
+      assert(key);
+      const edited = 'Reviewed ' + mode.id + ' summary';
+      consumer.setProperties({ [key]: edited });
+      properties.push({ consumer, key, edited, main: consumer.main.id });
+    }
+    assert.strictEqual(env.state.images.size, 1);
+    const before = snapshot(env);
+    for (let i = 0; i < 2; i++) {
+      const repeat = await build();
+      assert.deepStrictEqual(copy(repeat.errors), []);
+      assert.strictEqual(repeat.createdNodeIds.length, 0);
+      assert.strictEqual(snapshot(env), before);
+      for (const p of properties) {
+        assert.strictEqual(p.consumer.main.id, p.main);
+        assert.strictEqual(
+          p.consumer.componentProperties[p.key].value,
+          p.edited
+        );
+        assert.strictEqual(p.consumer.x, 901);
+        assert.strictEqual(p.consumer.y, 702);
+      }
+      assert.strictEqual(env.state.images.size, 1);
+    }
+  }
+  for (const font of ['Roboto Condensed Bold', 'Roboto Regular']) {
+    const env =
+      await require('./mock-rich-text-integration.cjs').rangeEnvironment(doc, {
+        rejectedFonts: [font],
+      });
+    await installNewsDetailSvgFixture(env);
+    await env.call('importVariables', doc, ['undrr'], false, [], true);
+    const before = snapshot(env),
+      refused = await env.call('buildMangroveComponents', doc, 'undrr', [
+        'news-related-card',
+      ]);
+    assert(refused.errors.length);
+    assert.strictEqual(snapshot(env), before);
+  }
+  for (const mutate of [
+    d => (d.variables.find(v => v.name === 'card/padding').values.mcr = 16),
+    d =>
+      (d.variables.find(v => v.name === 'font-family/ui').values.irp =
+        'Foreign'),
+    d =>
+      (d.variables.find(v => v.name === 'color/interactive').values.delta = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 1,
+      }),
+    d =>
+      (d.variables.find(
+        v => v.name === 'effect-color/shadow/raised'
+      ).values.irp = { r: 0, g: 0, b: 0, a: 0.24 }),
+    d =>
+      d.variables.push({
+        id: 'component.news-related.zero',
+        name: 'Foreign',
+        type: 'FLOAT',
+        values: {},
+      }),
+    d =>
+      d.styles.text.push({
+        id: 'Foreign',
+        name: 'Mangrove/source/news-related/title',
+        values: {},
+      }),
+  ]) {
+    const d = JSON.parse(
+      fs.readFileSync(path.join(__dirname, '../mangrove-variables.json'))
+    );
+    mutate(d);
+    const before = copy({ variables: d.variables, styles: d.styles });
+    assert.throws(
+      () => buildNewsRelatedCardRecipes({ root, ...d }),
+      /source changed/
+    );
+    assert.deepStrictEqual(
+      { variables: d.variables, styles: d.styles },
+      before
+    );
+  }
+  const read = fs.readFileSync;
+  for (const suffix of [
+    'related-card-provenance.json',
+    'related-card-footprints.json',
+    'related-source-photo.jpg',
+    'related-caret-mirror-capture.js',
+    'RobotoCondensed-Bold.woff2',
+  ]) {
+    fs.readFileSync = function (file, ...args) {
+      const v = read.call(this, file, ...args);
+      return typeof file === 'string' && file.endsWith(suffix)
+        ? Buffer.isBuffer(v)
+          ? Buffer.concat([v, Buffer.from('drift')])
+          : v + 'drift'
+        : v;
+    };
+    try {
+      assert.throws(relatedDocument, /source changed/);
+    } finally {
+      fs.readFileSync = read;
+    }
+  }
+  console.log(
+    'News related six source presets allfive actual builder, exact nonempty repeat geometry, source asset/cache/alias guards and supported short Summary consumer edits pass. Native title link/caret reflow, fonts/pixels and full article remain open.'
+  );
+}
 if (require.main === module)
   (async () => {
     auditTests();
     await dependencyTests();
+    await relatedTests();
   })().catch(e => {
     console.error(e);
     process.exitCode = 1;

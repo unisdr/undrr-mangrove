@@ -8,7 +8,7 @@ The existing news-detail source correspondence is `stories/Patterns/ArticleStory
 
 Fifty authored English source cases cover the five actual stories, five themes and viewport390/1164 after `document.fonts.ready` and two animation frames. Two initial captures caught pending images and were retained externally, then remeasured after awaiting image decode. All archived final source images report loaded natural dimensions. Ten additional source diagnostics record actual next-paragraph text fragments, source float bounds and native-share feature presence.
 
-Full receipts and one full-page screenshot are external at `/tmp/mangrove-news-detail-source-20261005`. [Source footprints](assets/news-detail/source-footprints.json) archives the relevant geometry and layout fields. [Provenance](assets/news-detail/provenance.json) pins the exact31-module transitive ArticleStory import graph plus source cascade, tokens, font dependencies and evidence. No Figma mutation or publication occurred. External image response bytes are not pinned for a native image family here. Live iframe pixels are not authored source assets or accepted native media.
+Full receipts and one full-page screenshot are external at `/tmp/mangrove-news-detail-source-20261005`. [Source footprints](assets/news-detail/source-footprints.json) archives the relevant geometry and layout fields. [Provenance](assets/news-detail/provenance.json) pins the exact31-module transitive ArticleStory import graph plus source cascade, tokens, font dependencies and evidence. No Figma mutation or publication occurred. Header image response bytes remain unpinned here; the related-card source dependency below separately pins its photograph. Live iframe pixels are not authored source assets or accepted native media.
 
 A clean committed `yarn scss` rebuild exposed a stale ignored generated CSS input
 in the original captures. The current build adds a comment and ten framework-neutral
@@ -127,3 +127,69 @@ properties plus source and consumer formatted metadata edits through two
 zero-create repeats. Native text widths/heights, exact font file matching,
 exposed nested Tag consumer edits, full header nesting/reflow and publication
 remain open. These are finite allocations, not a responsive engine.
+
+## Actual related-card source dependencies
+
+The separately exported `buildNewsRelatedCardRecipes({root,modes,variables,styles})`
+prepares one `news-related-card` family with six finite English presets: the
+three actual authored card data records at390/1164. This factory does not change
+the accepted header/share factory or imply registration/native acceptance.
+
+Each card keeps its actual title and summary, exact related-story1/2/3 source
+destination, centered object-cover photograph, source15px padding,5px outer
+radius,2.5px visual radius and1px visual outside hairline. The normal
+`shadow.raised` inset effect and its bound theme paint are checked against the
+observed source shadow in every mode. The actual source photo URL is archived
+as exact2160x1440 bytes with SHA256
+`c85730db17a9ea844cfcba3d6239b9e94f6a4c0a6a8535855ed2d578c55a7b83`.
+No redistribution licence grant or invented credit is asserted for this photo.
+
+Source titles use loaded Roboto Condensed Bold700 at23px/28.75px, balanced
+wrapping, permanent underlining and3px underline offset. The active declared
+Condensed Bold source WOFF2 bytes and bundled Apache licence are pinned. Summary
+uses Roboto Regular16px/24px and pretty wrapping; its5px bottom padding and16px
+paragraph margin are retained. Captured border-box/container allocations retain
+the actual stretched content space. These measurements do not prove native font
+ink, baselines, line breaks or parent layout pixels.
+
+The inline title chevron uses the actual computed3px border quantization.
+Twenty fresh current-CSS source diagnostics cover five themes at both widths.
+An ephemeral inline word-joiner span mirrors all computed `::after` properties
+while the original pseudo is suppressed only for that diagnostic read. Every
+original anchor fragment exactly matches the mirrored anchor fragments. The
+rotated mirror bounds provide finite initial glyph placement. This is an
+explicit source surrogate diagnostic, without direct pseudo bounding-box or
+native raster proof. The previous normal Card HORIZONTAL title/caret candidate
+is not substituted for this multi-line layout. Raw diagnostics are external at
+`/tmp/mangrove-news-related-details-rebuilt-source-20261006` and
+`/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006`; both browser
+sessions were closed. [Related footprints](assets/news-detail/related-card-footprints.json)
+and [provenance](assets/news-detail/related-card-provenance.json) pin those
+observations, scripts, source font/image bytes and current source base.
+
+Summary is the exposed editable plain property, with supported short edits
+inside the finite allocation. Title remains an editable TEXT anatomy node with
+its authored initial copy, but has no exposed property. Edited-title inline
+caret reflow and native title hyperlink are unsupported in this tranche.
+Exact destinations remain `sourceHref` metadata so the3px offset is preserved
+without weakening the rich-run ownership contract. Native title URLs with
+per-range underline offset need a separate reviewed capability. Hover/focus,
+arbitrary wrapping/overflow, RTL and prototype behavior also remain open.
+
+The dedicated actual-builder tests cover all five brands, six nonempty master
+allocations, initial caret placement/constraints and underline offset, one
+shared image cache entry, supported short Summary consumer edits/links/positions,
+and two zero-create repeats with exact recorded mock geometry/assets. Missing
+Condensed Bold or Roboto Regular, source/font/image/evidence drift, theme or
+effect paint drift and foreign helper/style identities refuse before build
+mutation or source-factory caller-array changes, as applicable. SVG fixtures
+model a whitelisted source viewport and paint, rather than reconstructing the
+native polygon topology or raster. Native image crop, fonts, glyphs, title link,
+consumer and publication acceptance remain separate. Recommendation/taxonomy
+composition, image-bearing headers, float/media and complete news assembly are
+still in progress.
+
+One guarded UNDRR390 Story1 related-card scope is refused by the unchanged
+50,000-byte cloud compiler ceiling at890,136 bytes. The source photograph remains
+intact; no overlimit code was executed and no asset/validation was removed to
+make it fit. This is a transport gate, without native component acceptance.

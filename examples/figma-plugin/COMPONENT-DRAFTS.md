@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **35 families / 209 bounded variants**.
+The current holistic packet contains **36 families / 215 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -28,7 +28,10 @@ navigation section in [page chrome](holistic/page-chrome.md).
 News dependencies add two families/six variants: two actual no-image article
 headers and four ShareButtons presets for the source viewport and device-share
 capability branches. They use the existing draft Tag without duplicating it.
-All five brands pass dedicated mock rebuild and supported edit checks. Their
+One further family adds six actual related news-card presets, with exact source
+photo, initial inline caret and editable Summary. Native Title URLs and edited
+caret reflow remain explicit gates. All five brands pass dedicated mock rebuild
+and supported edit checks. Their
 guarded cloud scopes exceed the unchanged transport ceiling, so native
 construction and full article assembly remain open. See [news dependencies](holistic/news-detail.md).
 

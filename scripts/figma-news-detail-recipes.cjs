@@ -707,3 +707,526 @@ function buildNewsDetailDependencyRecipes({ root, modes, variables, styles }) {
 }
 module.exports.buildNewsDetailDependencyRecipes =
   buildNewsDetailDependencyRecipes;
+
+const RELATED_PROVENANCE =
+  'examples/figma-plugin/holistic/assets/news-detail/related-card-provenance.json';
+const RELATED_PROVENANCE_HASH =
+  'a9c051c8ad2de4b06c781c7cdaf56973d9a1b76364a2cb6bb80d14a8780bfa6d';
+/** Six actual ArticleStory cards. Static title/caret projection, not a general inline renderer. */
+function buildNewsRelatedCardRecipes({ root, modes, variables, styles }) {
+  const targetVariables = variables,
+    targetStyles = styles;
+  variables = structuredClone(variables);
+  styles = { ...styles, text: structuredClone(styles.text) };
+  inspectNewsDetailPrerequisites({ root });
+  const read = f => fs.readFileSync(path.join(root, f)),
+    hash = f => crypto.createHash('sha256').update(read(f)).digest('hex'),
+    fail = m => {
+      throw Error('News related-card source changed: ' + m);
+    };
+  if (hash(RELATED_PROVENANCE) !== RELATED_PROVENANCE_HASH)
+    fail('related provenance');
+  const provenance = JSON.parse(read(RELATED_PROVENANCE));
+  if (hash(PROVENANCE) !== provenance.sourceBaseProvenanceSHA256)
+    fail('source base provenance');
+  for (const [f, expected] of Object.entries(provenance.files))
+    if (hash(f) !== expected) fail(f);
+  if (
+    modes
+      .map(m => m.id)
+      .sort()
+      .join(',') !== 'delta,irp,mcr,preventionweb,undrr'
+  )
+    fail('five source modes required');
+  const evidence = JSON.parse(
+    read(
+      'examples/figma-plugin/holistic/assets/news-detail/related-card-footprints.json'
+    )
+  );
+  const names = new Map(variables.map(v => [v.name, v]));
+  function value(name, mode, type, seen = new Set()) {
+    const v = names.get(name);
+    if (!v || v.type !== type || seen.has(name))
+      fail('missing/wrong/cyclic ' + name);
+    seen.add(name);
+    const x = v.values[mode.id];
+    if (x == null) fail(name + '/' + mode.id);
+    return x.alias ? value(x.alias, mode, type, seen) : x;
+  }
+  function upsert(list, entry) {
+    const hits = list.filter(e => e.id === entry.id || e.name === entry.name);
+    if (
+      hits.length > 1 ||
+      (hits.length && (hits[0].id !== entry.id || hits[0].name !== entry.name))
+    )
+      fail('foreign identity ' + entry.id);
+    if (hits.length) list[list.indexOf(hits[0])] = entry;
+    else list.push(entry);
+    if (entry.type) names.set(entry.name, entry);
+  }
+  const ref = { file: 'stories/Components/Cards/Card/card.scss', line: 32 };
+  function role(slug, type, get, scopes = ['ALL_SCOPES']) {
+    const name = 'component/news-related/' + slug;
+    const values = Object.fromEntries(
+      modes.map(m => {
+        const x = typeof get === 'function' ? get(m) : get;
+        const resolved = x?.alias ? value(x.alias, m, type) : x;
+        if (type === 'FLOAT' && !Number.isFinite(resolved))
+          fail('nonfinite ' + name);
+        return [m.id, x];
+      })
+    );
+    upsert(variables, {
+      id: name.replaceAll('/', '.'),
+      name,
+      type,
+      scopes,
+      sourceRef: ref,
+      description:
+        'Finite ArticleStory initial related-card source allocation.',
+      hiddenFromPublishing: false,
+      codeSyntax: {},
+      values,
+    });
+    return name;
+  }
+  const number = (slug, get, scopes) => role(slug, 'FLOAT', get, scopes),
+    alias = (slug, target, type = 'FLOAT', scopes) =>
+      role(slug, type, () => ({ alias: target }), scopes);
+  // Numeric source foundations are verified in every mode before any staged upsert.
+  for (const m of modes) {
+    for (const [key, expected] of [
+      ['card/padding', 15],
+      ['card/border-radius', 5],
+      ['spacing/100', 10],
+      ['spacing/75', 7.5],
+      ['spacing/50', 5],
+      ['font-size/500', 23],
+      ['font-size/300', 16],
+    ])
+      if (value(key, m, 'FLOAT') !== expected) fail('source foundation ' + key);
+    if (
+      value('font-family/ui', m, 'STRING') !== 'Roboto Condensed' ||
+      value('font-family/text', m, 'STRING') !== 'Roboto'
+    )
+      fail('source Latin font roles');
+    for (const width of [390, 1164]) {
+      const faces = evidence.cards[m.id + '-' + width].fonts;
+      if (
+        !faces.some(
+          f =>
+            f.family === 'Roboto Condensed' &&
+            f.style === 'normal' &&
+            f.weight === '700'
+        )
+      )
+        fail('source loaded Condensed Bold');
+    }
+  }
+  const sizeTitle = alias('title-size', 'font-size/500', 'FLOAT', [
+      'FONT_SIZE',
+    ]),
+    sizeSummary = alias('summary-size', 'font-size/300', 'FLOAT', [
+      'FONT_SIZE',
+    ]),
+    zero = number('zero', 0),
+    outlineWidth = number('visual-outline', 1, ['STROKE_FLOAT']),
+    visualRadius = number('visual-radius', 2.5, ['CORNER_RADIUS']),
+    paragraphBottom = number('summary-bottom', 21),
+    outlinePaint = role('visual-outline-paint', 'COLOR', m => ({
+      ...value('color/neutral-900', m, 'COLOR'),
+      a: 0.1,
+    }));
+  function cssColor(raw) {
+    const parts = raw
+      .match(/^rgba?\(([^)]+)\)$/)?.[1]
+      .split(',')
+      .map(Number);
+    if (
+      !parts ||
+      ![3, 4].includes(parts.length) ||
+      parts.some(n => !Number.isFinite(n))
+    )
+      fail('source color ' + raw);
+    return {
+      r: parts[0] / 255,
+      g: parts[1] / 255,
+      b: parts[2] / 255,
+      a: parts[3] ?? 1,
+    };
+  }
+  function colorMatches(raw, x) {
+    const c = cssColor(raw);
+    return (
+      ['r', 'g', 'b'].every(
+        k => Math.round(x[k] * 255) === Math.round(c[k] * 255)
+      ) && (x.a ?? 1) === c.a
+    );
+  }
+  function style(slug, family, size, line, weight) {
+    const id = 'component.news-related.' + slug;
+    upsert(styles.text, {
+      id,
+      name: 'Mangrove/source/news-related/' + slug,
+      description:
+        'Actual loaded Latin source role and declared weight; native font-byte/render equivalence remains open.',
+      bindings: { fontFamily: family, fontSize: size },
+      values: Object.fromEntries(
+        modes.map(m => [
+          m.id,
+          {
+            fontName: { family: value(family, m, 'STRING'), style: weight },
+            fontSize: value(size, m, 'FLOAT'),
+            lineHeight: { unit: 'PIXELS', value: line },
+            letterSpacing: { unit: 'PIXELS', value: 0 },
+            textDecoration: 'NONE',
+            textWrapStyle: 'AUTO',
+          },
+        ])
+      ),
+    });
+    return id;
+  }
+  const titleStyle = style('title', 'font-family/ui', sizeTitle, 28.75, 'Bold'),
+    summaryStyle = style(
+      'summary',
+      'font-family/text',
+      sizeSummary,
+      24,
+      'Regular'
+    );
+  const effect = styles.effect.find(s => s.id === 'shadow.raised');
+  if (!effect) fail('missing source card raised effect');
+  const photo = read(
+      'examples/figma-plugin/holistic/assets/news-detail/related-source-photo.jpg'
+    ),
+    image = {
+      assetId: 'news-detail-related-source-photo',
+      base64: photo.toString('base64'),
+      scaleMode: 'FILL',
+    },
+    variants = [];
+  for (const width of [390, 1164])
+    for (const index of [0, 1, 2]) {
+      const key = width + '-' + (index + 1),
+        card = m =>
+          evidence.cards[m.id + '-' + width].section.children[1].children[
+            index
+          ],
+        diagnostic = m =>
+          evidence.caretDiagnostics[m.id + '-' + width].cards[index],
+        sample = card({ id: 'undrr' }),
+        title = sample.children[1].children[0],
+        link = title.children[0],
+        summary = sample.children[1].children[1];
+      if (
+        link.href !==
+        'https://www.undrr.org/news/related-story-' + (index + 1)
+      )
+        fail('authored destination');
+      for (const m of modes) {
+        const c = card(m),
+          d = diagnostic(m),
+          t = c.children[1].children[0],
+          a = t.children[0],
+          p = c.children[1].children[1];
+        if (
+          a.text !== link.text ||
+          p.text !== summary.text ||
+          a.href !== link.href ||
+          c.children[0].children[0].src !== provenance.image.url
+        )
+          fail('authored source content/assets');
+        if (
+          c.style.paddingTop !== '15px' ||
+          c.style.borderRadius !== '5px' ||
+          t.style.paddingTop !== '10px' ||
+          t.style.paddingBottom !== '7.5px' ||
+          p.style.paddingBottom !== '5px' ||
+          p.style.marginBottom !== '16px'
+        )
+          fail('source content spacing');
+        if (
+          a.style.fontFamily !== '"Roboto Condensed", sans-serif' ||
+          a.style.fontSize !== '23px' ||
+          a.style.fontWeight !== '700' ||
+          a.style.lineHeight !== '28.75px' ||
+          a.style.textDecorationLine !== 'underline' ||
+          a.style.textUnderlineOffset !== '3px' ||
+          t.style.textWrapStyle !== 'balance' ||
+          p.style.textWrapStyle !== 'pretty' ||
+          p.style.fontFamily !== 'Roboto, sans-serif' ||
+          p.style.fontSize !== '16px' ||
+          p.style.lineHeight !== '24px'
+        )
+          fail('source type/link treatment');
+        if (
+          !colorMatches(
+            c.style.backgroundColor,
+            value('card/background', m, 'COLOR')
+          ) ||
+          !colorMatches(
+            a.style.color,
+            value('color/interactive', m, 'COLOR')
+          ) ||
+          !colorMatches(p.style.color, value('color/text', m, 'COLOR'))
+        )
+          fail('source theme paint');
+        if (
+          JSON.stringify(d.sourceFragments) !==
+            JSON.stringify(d.mirrorFragments) ||
+          d.after.borderTopWidth !== '3px' ||
+          d.after.borderRightWidth !== '3px' ||
+          d.after.width !== '8.04688px' ||
+          d.after.marginInlineStart !== '5.75px'
+        )
+          fail('quantized source caret projection');
+        const e = effect.values[m.id];
+        const shadowColor = d.computed.boxShadow.match(/^rgba?\([^)]*\)/)?.[0];
+        if (
+          !shadowColor ||
+          !d.computed.boxShadow.endsWith(' 0px 0px 0px 1px inset') ||
+          e?.length !== 1 ||
+          e[0].effect.type !== 'INNER_SHADOW' ||
+          e[0].effect.radius !== 0 ||
+          e[0].effect.spread !== 1 ||
+          e[0].effect.offset.x !== 0 ||
+          e[0].effect.offset.y !== 0 ||
+          e[0].effect.color.a !== 0.24 ||
+          e[0].effect.visible !== true ||
+          e[0].effect.blendMode !== 'NORMAL' ||
+          e[0].bindings?.color !== 'effect-color/shadow/raised' ||
+          !colorMatches(shadowColor, e[0].effect.color) ||
+          !colorMatches(
+            shadowColor,
+            value('effect-color/shadow/raised', m, 'COLOR')
+          )
+        )
+          fail('source raised effect');
+      }
+      const n = (slug, get) => number(key + '/' + slug, get, ['WIDTH_HEIGHT']),
+        cardWidth = n('width', m => card(m).rect.width),
+        cardHeight = n('height', m => card(m).rect.height),
+        visualWidth = n('visual-width', m => card(m).children[0].rect.width),
+        visualHeight = n('visual-height', m => card(m).children[0].rect.height),
+        contentHeight = n(
+          'content-height',
+          m => card(m).children[1].rect.height
+        ),
+        titleHeight = n(
+          'title-height',
+          m => card(m).children[1].children[0].rect.height
+        ),
+        titleTextHeight = n(
+          'title-text-height',
+          m => card(m).children[1].children[0].rect.height - 17.5
+        ),
+        summaryHeight = n(
+          'summary-height',
+          m => card(m).children[1].children[1].rect.height + 16
+        ),
+        caretWidth = n('caret-width', m => diagnostic(m).mirrorCaret.width),
+        caretHeight = n('caret-height', m => diagnostic(m).mirrorCaret.height),
+        caretX = number(
+          key + '/caret-x',
+          m => diagnostic(m).mirrorCaret.x - card(m).rect.x
+        ),
+        caretY = number(
+          key + '/caret-y',
+          m => diagnostic(m).mirrorCaret.y - card(m).rect.y
+        );
+      const side = 8.046875,
+        border = 3,
+        v = side * Math.SQRT2,
+        rotate = ([x, y]) => [
+          (x - y + side) / Math.SQRT2,
+          (x + y) / Math.SQRT2,
+        ],
+        polygon = points =>
+          `<polygon fill="#000000" points="${points.map(p => rotate(p).join(',')).join(' ')}"/>`,
+        markup = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${v} ${v}">${polygon(
+          [
+            [0, 0],
+            [side, 0],
+            [side, border],
+            [0, border],
+          ]
+        )}${polygon([
+          [side - border, border],
+          [side, border],
+          [side, side],
+          [side - border, side],
+        ])}</svg>`;
+      variants.push({
+        id: 'news-related-card.' + width + '.story-' + (index + 1),
+        name: 'SourceViewport=' + width + ', Story=' + (index + 1),
+        properties: {
+          SourceViewport: String(width),
+          Story: String(index + 1),
+          Locale: 'English',
+        },
+        sourceHref: { title: link.href },
+        sourceGeometry: {
+          initialCardAllocation:
+            'Recorded source border box with source parent stretch.',
+          caret:
+            'Initial computed-style mirror of authored inline pseudo, exact original/mirrored source anchor fragments. Native vector bounds and baselines remain open.',
+        },
+        contentContract: {
+          Summary:
+            'Plain editable short content within finite captured allocation. Arbitrary wrapping, source font ink and overflow remain open.',
+          Title:
+            'Authored source text remains editable TEXT but has no exposed property. Changed title/caret inline reflow and native title hyperlink are unsupported in this preset.',
+        },
+        tree: {
+          id: 'card',
+          type: 'FRAME',
+          name: 'Authored related news card',
+          fill: 'card/background',
+          effectStyle: 'shadow.raised',
+          bindings: {
+            paddingTop: 'card/padding',
+            paddingBottom: 'card/padding',
+            paddingLeft: 'card/padding',
+            paddingRight: 'card/padding',
+            cornerRadius: 'card/border-radius',
+          },
+          layout: {
+            mode: 'VERTICAL',
+            width: cardWidth,
+            height: cardHeight,
+            gap: 'spacing/50',
+          },
+          children: [
+            {
+              id: 'visual',
+              type: 'FRAME',
+              name: 'Exact authored related photograph',
+              image,
+              stroke: outlinePaint,
+              strokeAlign: 'OUTSIDE',
+              bindings: {
+                strokeWeight: outlineWidth,
+                cornerRadius: visualRadius,
+              },
+              layout: {
+                mode: 'NONE',
+                width: visualWidth,
+                height: visualHeight,
+              },
+            },
+            {
+              id: 'content',
+              type: 'FRAME',
+              name: 'Source stretched content allocation',
+              layout: {
+                mode: 'VERTICAL',
+                width: visualWidth,
+                height: contentHeight,
+                gap: zero,
+              },
+              children: [
+                {
+                  id: 'title-box',
+                  type: 'FRAME',
+                  name: 'Source linked title treatment',
+                  bindings: {
+                    paddingTop: 'spacing/100',
+                    paddingBottom: 'spacing/75',
+                  },
+                  layout: {
+                    mode: 'VERTICAL',
+                    width: visualWidth,
+                    height: titleHeight,
+                  },
+                  children: [
+                    {
+                      id: 'title',
+                      type: 'TEXT',
+                      name: 'Authored initial title, edited-caret reflow unsupported',
+                      characters: link.text,
+                      textStyle: titleStyle,
+                      fill: 'color/interactive',
+                      textDecoration: 'UNDERLINE',
+                      textDecorationOffset: { unit: 'PIXELS', value: 3 },
+                      textWrap: 'BALANCE',
+                      layout: { width: 'FILL', height: titleTextHeight },
+                    },
+                  ],
+                },
+                {
+                  id: 'summary-box',
+                  type: 'FRAME',
+                  name: 'Source summary plus paragraph bottom margin',
+                  bindings: { paddingBottom: paragraphBottom },
+                  layout: {
+                    mode: 'VERTICAL',
+                    width: visualWidth,
+                    height: summaryHeight,
+                  },
+                  children: [
+                    {
+                      id: 'summary',
+                      type: 'TEXT',
+                      name: 'Editable authored summary',
+                      characters: summary.text,
+                      textProperty: 'Summary',
+                      textStyle: summaryStyle,
+                      fill: 'color/text',
+                      textWrap: 'PRETTY',
+                      layout: { width: 'FILL', height: 'HUG' },
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'initial-caret',
+              type: 'FRAME',
+              name: 'Finite initial inline caret source projection',
+              absolute: {
+                horizontal: 'START',
+                vertical: 'START',
+                offsetX: caretX,
+                offsetY: caretY,
+              },
+              layout: { mode: 'NONE', width: caretWidth, height: caretHeight },
+              children: [
+                {
+                  id: 'caret-ink',
+                  type: 'SVG',
+                  name: 'Source CSS quantized border chevron',
+                  svg: {
+                    assetId: 'news-detail-related-source-caret-23',
+                    markup,
+                    monochrome: { fills: 'color/interactive' },
+                  },
+                  layout: { width: v, height: v },
+                },
+              ],
+            },
+          ],
+        },
+      });
+    }
+  targetVariables.splice(0, targetVariables.length, ...variables);
+  targetStyles.text.splice(0, targetStyles.text.length, ...styles.text);
+  return [
+    {
+      id: 'news-related-card',
+      name: 'Mangrove/Page patterns/ArticleStory exact related cards',
+      kind: 'component-set',
+      sourceRef: ref,
+      review: { genericLabels: false, preserveVariantSizing: true },
+      defaultVariantId: 'news-related-card.390.story-1',
+      limitations: [
+        'Six finite initial English cards use actual three source titles/summaries/destinations and one pinned2160x1440 source photograph. No image redistribution licence grant is established.',
+        'Caret geometry is a source computed-style mirror with matching original anchor fragments, using actual3px border quantization. Native raster/vector/baseline parity and edited-title inline caret reflow remain open.',
+        'Summary alone is an exposed plain property. Title has exact sourceHref metadata and3px underline offset; native title hyperlink/prototype interaction is unsupported in this source tranche.',
+        'Source allocations retain parent stretch and paragraph margins. Arbitrary edited wrapping/overflow, focus/hover, RTL, native all-brand fonts/pixels, consumer/publication and full news assembly remain separate gates.',
+      ],
+      variants,
+    },
+  ];
+}
+module.exports.buildNewsRelatedCardRecipes = buildNewsRelatedCardRecipes;

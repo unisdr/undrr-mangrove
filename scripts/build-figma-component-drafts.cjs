@@ -84,6 +84,11 @@ const recipes = [
     'buildNewsDetailDependencyRecipes',
   ],
   [
+    ['news-related-card'],
+    './figma-news-detail-recipes.cjs',
+    'buildNewsRelatedCardRecipes',
+  ],
+  [
     ['search-result-item', 'search-result-fields', 'search-result-state'],
     './figma-search-result-recipes.cjs',
     'buildSearchResultRecipes',

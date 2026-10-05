@@ -1,0 +1,55 @@
+{
+  "source": "stories/Patterns/ArticleStory/ArticleStory.jsx",
+  "scope": "Six finite English source cards. Initial caret bounds measured using ephemeral computed-style mirror; original and mirrored anchor fragments are exact. Not direct pseudo bounding-box or native acceptance.",
+  "files": {
+    "examples/figma-plugin/holistic/assets/news-detail/related-card-footprints.json": "4f2eee6275f63e83a66f68fd1305286554d721770aba06b18d98cc05195b0547",
+    "examples/figma-plugin/holistic/assets/news-detail/related-source-photo.jpg": "c85730db17a9ea844cfcba3d6239b9e94f6a4c0a6a8535855ed2d578c55a7b83",
+    "examples/figma-plugin/holistic/assets/news-detail/related-details-capture.js": "56cad308dc805bcb2463fbec7a64c6ec15a76d3d3b52ec40b5ea50e59ca42cc0",
+    "examples/figma-plugin/holistic/assets/news-detail/related-caret-mirror-capture.js": "1029f779e0c443c912add3a07d27ea2a6bc7d5cbeb0cfd5ba1178675ccc3fb9f",
+    "examples/figma-plugin/holistic/assets/news-detail/source-fonts/RobotoCondensed-Bold.woff2": "bd6d419bb130520905ba3ba1525d9e3936b3335cabc9070eeabdfe7e1102d758",
+    "stories/assets/fonts/roboto-condensed/roboto-condensed.scss": "206a320cb9cefbabb300a7bd233a2950267ebdf087cf026e5c3d8279a41ada02",
+    "stories/assets/fonts/roboto-condensed/sass/_Bold.scss": "efc8c49d945c5d2cd940ed51f2cf1fc16d6011cc5f4ac85bbaaca1868bccb70b",
+    "stories/assets/fonts/roboto-condensed/sass/_mixins.scss": "a53206df9ff982de438f1472ccb571acb7c923d2fdcc8c72f2ce5ece96a1f6d4",
+    "stories/assets/fonts/roboto-condensed/sass/_variables.scss": "af157df7df4276d396e7a636039dd353e9e9849163564b30dbbb299aafc34940",
+    "examples/figma-plugin/holistic/assets/news-detail/source-fonts/RobotoCondensed-LICENSE.txt": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "rawCaptures": {
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/preventionweb-390.json": "1b873d4e2ea5a5ba76b1dc496ecd9ef2826f02007e1f4da575011a4ed61505ce",
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/delta-1164.json": "783f89a110e75c09d01fa78f65e48964ed8a2e655cfa01384e2a49bebd6def5c",
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/irp-390.json": "13453192a9cf65e6706f12373527f9d77e4791d09f087ae5b032e4763b95331c",
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/undrr-390.json": "0efa1894820ffb60d584214bd3dccefdb35e24e1ef74a67da4be17843c165d39",
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/undrr-1164.json": "25494eb038ed56101e515ae7330796b22a963d2ba1547d589cc3b79852301c25",
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/preventionweb-1164.json": "8809fee4fc9ca52a150337843a9f99b4b2532cd9da15375703599a3947636485",
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/delta-390.json": "446790fd38ceefe3a519bec439136103ab229e1a0bd65e93b012a40ec2a1cddd",
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/irp-1164.json": "dcdd5f672c4925ba01ee32540fb9822eabecb1950c7ca88725204e7957cf2f71",
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/mcr-390.json": "129461c2d645df14078c2e81f0bdc7294ae9090d88522454640e107d0cfcd3ea",
+    "/tmp/mangrove-news-related-details-rebuilt-source-20261006/mcr-1164.json": "6f563f1e101eb43f954f00507f6c59464aa745e579b86805b9ab5b7ad58cd734",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/preventionweb-390.json": "193b12816ad7743e2a280f379cdb09b1801a9f178d97a4b234ca54f2bea5d367",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/delta-1164.json": "40f0044943a5b06eb14142cb0cab94cc6d96eb7cce8baf255a588c493e3030ae",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/irp-390.json": "c1a7e93bd899a464a4a240c931e1a9b2d913ba2fede6c737ad9efc30efa4daeb",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/undrr-390.json": "23c1ad384495805d94d06db106aeb9050eba56401f937c844a64236cd41b16c8",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/undrr-1164.json": "852f5f951d33a86a99dd19feb70a6e54922c59b58964ea4279384a2d582469f1",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/preventionweb-1164.json": "43936b438aa8ea6185d223dd84cedd8c58ff85101fae2db6c8e589f138ecc4c1",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/delta-390.json": "2531da0cf8120edf1a543648b122f4e3312f204fef8231660c1bc5ab53fb5991",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/irp-1164.json": "61a7ca51324a69211d45eb445390fd598e4924341fe816dac9a918b363ec9643",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/mcr-390.json": "fc3f9cad75b957dc902c070c01cfebf67859438a72072274fc2e2a922ded91a8",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-source-20261006/mcr-1164.json": "cf0b86a9e95c3378450c537ddb18d9b6ce437ac07edce4adf569bd6076d11cb8"
+  },
+  "image": {
+    "url": "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+    "width": 2160,
+    "height": 1440,
+    "licence": "No redistribution licence grant established; no invented credit."
+  },
+  "font": {
+    "url": "https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/Bold/RobotoCondensed-Bold.woff2?v=2.137",
+    "scope": "Active source font declared Bold700; pins do not establish native installed font byte equivalence.",
+    "licence": "Exact bundled Apache License2.0 archived as source-fonts/RobotoCondensed-LICENSE.txt."
+  },
+  "executedCaptureScripts": {
+    "/tmp/mangrove-news-related-details-rebuilt-capture.js": "9ff82503b7b29b96e2cf3c8ad59374eb014979602331aa92a1b3483cf893350c",
+    "/tmp/mangrove-news-related-caret-mirror-rebuilt-capture.js": "b51e159b33275fd73f81888c984a2c2c0badb27454d77897b634b954d2a21615"
+  },
+  "generatedCssSHA256": "1806dd1446f5df7252676c69ad2a0da168aa46343c3e668cf17fc06f2dd3fd60",
+  "sourceBaseProvenanceSHA256": "62b6ec051903a5124b2f80625e1990c5c339fe4c0dc0c69ed2d34c34f3b3ccec"
+}
