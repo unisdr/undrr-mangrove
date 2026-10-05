@@ -211,3 +211,26 @@ all five brands, fresh styles, two component zero-create repeats, edited rich
 copy and failed target/cleanup refusal. Installed end-to-end native rich build
 and rendering acceptance remain open, as does the unchanged connector payload
 ceiling. No default map from another file or brand is generalized.
+
+## Plain text paragraph indentation boundary
+
+The optional source style `paragraphIndent` profile is restricted to plain TEXT.
+It expresses native first-line indentation, rather than padding every line.
+The importer validates finite nonnegative values across every authored mode
+before writing assets, copies a declared profile and resets an omitted profile
+to zero. The report breadcrumb's28px first line is a plain source contract;
+its native continuation wrapping still requires acceptance.
+
+Rich run ownership does not yet migrate paragraph formatting. Selected rich
+styles declaring nonzero indentation in any source mode refuse before font
+preparation or import. Existing rich style indentation, and existing main TEXT
+nonzero or mixed indentation, also refuse instead of being reset. Finalization
+checks the existing main TEXT and imported rich styles remain zero before scene
+construction. Plain indented nodes can coexist with rich zero-indent nodes
+in the same closure. This is a bounded zero-profile check, not a claim that
+the rich ledger compares every typography property.
+
+The dedicated rich indentation adapter covers source mode drift, shared native
+style edits, native node and mixed edits, expected plain28/rich0 repeats and
+failed imported-profile finalization. A finalization failure can retain style
+imports but creates no component scenes; no general rollback is claimed.

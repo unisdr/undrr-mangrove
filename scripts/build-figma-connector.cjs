@@ -211,13 +211,15 @@ function validateImportSource(doc, brandId) {
   // Share the plugin's pure preflight instead of maintaining a second schema.
   // This runs before compilation and has no Figma globals or write access.
   const source = fs.readFileSync(path.join(PLUGIN, 'importer.js'), 'utf8');
-  const start = source.indexOf('function validateMangroveImport(');
+  const start = source.indexOf('function validateMangroveParagraphIndent(');
   const end = source.indexOf('\nfunction mangroveAssetIndex(', start);
   if (start < 0 || end < 0)
     throw new Error(
       'Import preflight boundary changed. Update connector build.'
     );
-  const validate = vm.runInNewContext(`(${source.slice(start, end)})`);
+  const validate = vm.runInNewContext(
+    `(()=>{${source.slice(start, end)};return validateMangroveImport;})()`
+  );
   validate(doc, [brandId]);
 }
 function importSelection(doc, brandId, selection) {
@@ -527,6 +529,10 @@ function specializeCore(source) {
   // The connector embeds its immutable DTO. Omit only the absent optional
   // profile validation; every text style still resets old spacing to zero.
   for (const [before, after] of [
+    [
+      'function validateMangroveParagraphIndent(doc, selectedTextIds) {',
+      'function validateMangroveParagraphIndent(doc, selectedTextIds) { if (!MG_CONNECTOR_PARAGRAPH_INDENT) return;',
+    ],
     [
       'if (value.letterSpacing !== undefined) {',
       'if (MG_CONNECTOR_LETTER_SPACING && value.letterSpacing !== undefined) {',
@@ -994,6 +1000,23 @@ async function buildConnector({
         prune: false,
       }
     : null;
+  // The full source must reject invalid nonselected mode indent values too.
+  function retainedParagraphIndent(document) {
+    let retained = false;
+    for (const spec of document?.styles?.text || [])
+      for (const value of Object.values(spec.values || {})) {
+        if (value.paragraphIndent === undefined) continue;
+        if (
+          !Number.isFinite(value.paragraphIndent) ||
+          value.paragraphIndent < 0
+        )
+          throw new Error(`Invalid source paragraph indent: ${spec.id}`);
+        retained = true;
+      }
+    return retained;
+  }
+  retainedParagraphIndent(doc);
+  const paragraphIndentEnabled = retainedParagraphIndent(subset);
   const letterSpacingEnabled = retainedLetterSpacing(subset);
   // Compile the native SVG importer only when the exact dependency/variant
   // subset needs it. The desktop plugin keeps every capability available.
@@ -1344,6 +1367,7 @@ async function buildConnector({
       global_defs: {
         MG_CONNECTOR_FRAME_POSITION: framePositionEnabled,
         MG_CONNECTOR_LETTER_SPACING: letterSpacingEnabled,
+        MG_CONNECTOR_PARAGRAPH_INDENT: paragraphIndentEnabled,
         MG_CONNECTOR_MEDIA: mediaEnabled,
         MG_CONNECTOR_SVG: svgEnabled,
         MG_CONNECTOR_SVG_SIZING: svgSizingEnabled,

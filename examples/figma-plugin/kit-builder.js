@@ -1111,6 +1111,8 @@ async function buildMangroveComponents(
     return value;
   }
   const richTextPlans = MG_RICH_TEXT_ENABLED ? new Map() : null;
+  const richParagraphStyles = MG_RICH_TEXT_ENABLED ? new Set() : null;
+  const richParagraphNodes = MG_RICH_TEXT_ENABLED ? [] : null;
   const richTextScope =
     MG_RICH_TEXT_ENABLED &&
     ordered.some(family =>
@@ -2285,6 +2287,38 @@ async function buildMangroveComponents(
         MG_CONNECTOR_RICH_SOURCE_VALIDATION
       )
         mgRichSourceStylePreflight(styleDoc);
+      // Nonzero paragraph indentation is a bounded plain TEXT profile only.
+      // Rich ownership does not yet migrate paragraph formatting signatures.
+      function checkRichParagraphs(tree, key) {
+        if (tree.textRuns !== undefined) {
+          const node = owned.get(key);
+          if ((node?.paragraphIndent ?? 0) !== 0)
+            throw new Error(
+              'Rich paragraph indent edit requires explicit migration.'
+            );
+          if (node) richParagraphNodes.push(node);
+          for (const run of tree.textRuns) {
+            richParagraphStyles.add(run.textStyle);
+            const spec = textSpecs.get(run.textStyle);
+            if (
+              Object.values(spec.values).some(
+                value => (value.paragraphIndent ?? 0) !== 0
+              )
+            )
+              throw new Error(
+                'Nonzero paragraphIndent is restricted to plain TEXT styles.'
+              );
+          }
+        }
+        for (const child of tree.children || [])
+          checkRichParagraphs(child, `${key}/${child.id || child.key}`);
+      }
+      for (const family of ready)
+        for (const variant of family.variants)
+          checkRichParagraphs(
+            variant.tree,
+            `family/${family.id}/variant/${variant.id}`
+          );
       await preflightMangroveAssets(
         styleDoc,
         [...usedText],
@@ -2296,6 +2330,11 @@ async function buildMangroveComponents(
           style,
         ])
       );
+      for (const key of richParagraphStyles)
+        if ((priorStyles.get(key)?.paragraphIndent ?? 0) !== 0)
+          throw new Error(
+            'Existing rich style paragraph indent requires explicit migration.'
+          );
       if (typeof figma.getFontFamilyVariationAxes !== 'function')
         throw new Error(
           'Rich text requires native font-axis discovery before import.'
@@ -2495,11 +2534,21 @@ async function buildMangroveComponents(
         throw new Error(
           'Rich scope style import failed; scene construction refused.'
         );
+      for (const node of richParagraphNodes)
+        if ((node.paragraphIndent ?? 0) !== 0)
+          throw new Error('Rich paragraph indent changed after preflight.');
       const importedContext = {
         ...richContext,
         deferredStyles: false,
         resolveStyle: key => {
           const style = localText.get(key);
+          if (
+            richParagraphStyles.has(key) &&
+            (style?.paragraphIndent ?? 0) !== 0
+          )
+            throw new Error(
+              'Imported rich style paragraph indent must remain zero.'
+            );
           return style ? { key, style } : undefined;
         },
       };

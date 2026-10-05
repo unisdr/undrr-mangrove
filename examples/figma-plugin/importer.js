@@ -8,6 +8,21 @@ function errorMessage(error) {
   return error && error.message ? error.message : String(error);
 }
 
+function validateMangroveParagraphIndent(doc, selectedTextIds) {
+  for (const spec of doc.styles?.text || []) {
+    if (selectedTextIds && !selectedTextIds.includes(spec.id)) continue;
+    for (const [mode, value] of Object.entries(spec.values || {})) {
+      if (
+        value.paragraphIndent !== undefined &&
+        (!Number.isFinite(value.paragraphIndent) || value.paragraphIndent < 0)
+      )
+        throw new Error(
+          `Import preflight: ${spec.name} [${mode}]: invalid paragraph indent`
+        );
+    }
+  }
+}
+
 function validateMangroveImport(doc, selectedModeIds, selectedTextIds) {
   const fail = message => {
     throw new Error(`Import preflight: ${message}`);
@@ -110,6 +125,7 @@ function validateMangroveImport(doc, selectedModeIds, selectedTextIds) {
   if (!Array.isArray(text) || !Array.isArray(effects))
     fail('Style definitions must be arrays');
   unique([...text, ...effects], 'style');
+  validateMangroveParagraphIndent(doc);
   if (selectedTextIds !== undefined) {
     if (
       !Array.isArray(selectedTextIds) ||
@@ -342,6 +358,9 @@ async function importStyles(
   selectedTextIds,
   importEffects
 ) {
+  // Direct component builds call importStyles without importVariables.
+  // Validate every selected authored mode before any style is created or updated.
+  validateMangroveParagraphIndent(doc, selectedTextIds);
   const counts = {
     text: { created: 0, updated: 0, failed: 0 },
     effect: { created: 0, updated: 0, failed: 0 },
@@ -486,6 +505,7 @@ async function importStyles(
           style.setBoundVariable('fontSize', size);
           style.textDecoration = value.textDecoration || 'NONE';
           style.textWrapStyle = value.textWrapStyle || 'AUTO';
+          style.paragraphIndent = value.paragraphIndent ?? 0;
         } else {
           style.effects = effects;
         }
