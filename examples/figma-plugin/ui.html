@@ -1151,6 +1151,7 @@
           ><button id="save-test-record" disabled="">Save test record</button
           ><button id="save-report" disabled="">Save inspection</button>
         </div>
+        <p id="inspection-age" class="hint" hidden=""></p>
         <details id="result-details">
           <summary>Latest details</summary>
           <pre id="log" hidden=""></pre>
@@ -1494,6 +1495,11 @@
         $('remove-editorial').disabled = busy || !hasEditorial;
         for (const id of ['inspect', 'export-review', 'export-diagnostics'])
           $(id).disabled = busy;
+        $('save-report').disabled = busy || !inspection;
+        $('inspection-age').hidden = !inspection;
+        $('inspection-age').textContent = inspection
+          ? `Inspection captured: ${String(inspection.capturedAt || 'time unavailable').slice(0, 100)}. Inspect again after changes.`
+          : '';
         $('save-operation-report').disabled = !operationReport;
         $('save-test-record').disabled = !capabilityReport?.rootId;
         $('live-test-warning').hidden =
@@ -1742,12 +1748,14 @@
       }
       $('inspect').onclick = () =>
         send('inspect', { checkFonts: $('check-fonts').checked });
-      $('save-report').onclick = () =>
+      $('save-report').onclick = () => {
+        if (pendingOperation !== null || !inspection) return;
         download(
           JSON.stringify(inspection, null, 2),
           'application/json',
           'mangrove-kit-inspection.json'
         );
+      };
       $('save-test-record').onclick = () => {
         if (!capabilityReport?.rootId) return;
         download(
@@ -2051,7 +2059,7 @@
         if (msg.type === 'inspection') {
           requestNavigation();
           inspection = msg.result;
-          $('save-report').disabled = false;
+          refreshControls();
           resultLog(inspectionSummary(inspection));
           return;
         }

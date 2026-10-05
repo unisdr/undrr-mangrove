@@ -135,6 +135,57 @@ async function main() {
     'ok  multi-megabyte real inspection fixture displays a bounded summary, enables controls and downloads exact full data'
   );
 
+  const freshnessUI = mountUI();
+  const freshnessElement = id => freshnessUI.elements.get(id);
+  const oldInspection = { ...report, capturedAt: '2026-10-05T09:01:00.000Z' };
+  const freshInspection = { ...report, capturedAt: '2026-10-05T09:07:00.000Z' };
+  freshnessUI.window.onmessage({
+    data: { pluginMessage: { type: 'inspection', result: oldInspection } },
+  });
+  assert.strictEqual(freshnessElement('save-report').disabled, false);
+  assert(
+    freshnessElement('inspection-age').textContent.includes(
+      oldInspection.capturedAt
+    )
+  );
+  freshnessElement('inspect').click();
+  assert.strictEqual(freshnessElement('save-report').disabled, true);
+  freshnessElement('save-report').click();
+  freshnessElement('save-report').onclick();
+  assert.strictEqual(
+    freshnessUI.downloads.length,
+    0,
+    'Pending inspection must not download the preceding report'
+  );
+  freshnessUI.window.onmessage({
+    data: { pluginMessage: { type: 'inspection', result: freshInspection } },
+  });
+  assert.strictEqual(freshnessElement('save-report').disabled, false);
+  assert(
+    freshnessElement('inspection-age').textContent.includes(
+      freshInspection.capturedAt
+    )
+  );
+  freshnessElement('save-report').click();
+  assert.deepStrictEqual(
+    JSON.parse(await freshnessUI.downloads[0].blob.text()),
+    freshInspection
+  );
+  freshnessElement('inspect').click();
+  freshnessUI.window.onmessage({
+    data: { pluginMessage: { type: 'error', message: 'Read failed' } },
+  });
+  assert.strictEqual(freshnessElement('save-report').disabled, false);
+  assert(
+    freshnessElement('inspection-age').textContent.includes(
+      freshInspection.capturedAt
+    ),
+    'A failed inspection must not relabel the previous capture as new'
+  );
+  console.log(
+    'ok  pending inspections cannot download stale data and capture time stays truthful after failures'
+  );
+
   report.collections = Array.from({ length: 100 }, () => ({
     name: 'collection-name'.repeat(100),
     modes: Array.from({ length: 100 }, () => ({
