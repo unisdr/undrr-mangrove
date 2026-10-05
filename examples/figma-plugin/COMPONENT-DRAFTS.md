@@ -1,10 +1,10 @@
 # Source-only component drafts
 
-The current holistic packet contains **24 families / 97 bounded variants**.
+The current holistic packet contains **29 families / 110 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
-is cloned as a separate dependency (23 variants), not counted as a new draft.
+is cloned as a separate dependency (23 variants), and the exact normal Button is cloned as `page-chrome-button` (16 variants). Neither dependency is counted as a new draft.
 The packet remains deliberately non-importable and the normal exporter remains
 32 families/383 variants. See [the holistic scope](holistic/README.md) and
 [authored card contracts](holistic/card-content.md).
@@ -14,8 +14,13 @@ variants, closed chrome adds one family/six variants, and bulleted contents list
 and quote patterns add two families/16 variants. See [search controls](holistic/search-controls.md),
 [page prose](holistic/page-patterns.md), [closed chrome](holistic/page-chrome.md)
 and [reading patterns](holistic/page-reading.md) for their source evidence and
-limits. These prepare reusable page and search dependencies. They do not yet
-represent complete landing pages, news-detail pages or the syndicated widget.
+limits. The next accepted source cohort adds three report families/six variants
+and two open navigation families/seven variants. The report scene now composes
+actual reusable instances for its complete finite English closed-chrome authored
+anatomy at390/1164. Other landing templates, full news-detail pages and the
+syndicated widget remain under implementation. Native page acceptance is open.
+See [report composition](holistic/landing-report.md) and the authored open
+navigation section in [page chrome](holistic/page-chrome.md).
 
 Editorial source observations cover 90 Chromium cases and Card observations
 cover 95. Their dedicated actual-builder mocks exercise all five brands,

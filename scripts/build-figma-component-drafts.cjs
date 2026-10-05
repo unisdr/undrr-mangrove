@@ -60,6 +60,20 @@ const recipes = [
     './figma-page-reading-recipes.cjs',
     'buildPageReadingRecipes',
   ],
+  [
+    ['page-chrome-desktop-panel', 'page-chrome-mobile'],
+    './figma-page-chrome-recipes.cjs',
+    'buildPageChromeOpenRecipes',
+  ],
+  [
+    [
+      'landing-report-breadcrumb',
+      'landing-report-feature-band',
+      'landing-report',
+    ],
+    './figma-landing-report-recipes.cjs',
+    'buildLandingReportRecipes',
+  ],
 ];
 
 function validateDrafts(families, assets, dependencies = []) {
@@ -225,6 +239,19 @@ function buildDraftPacket() {
   // proof of publication. Clone only the transitive closure actually referenced.
   const candidates = new Map(families.map(f => [f.id, f]));
   const sourceFamilies = new Map(base.components.families.map(f => [f.id, f]));
+  const sourceButton = copy(sourceFamilies.get('button'));
+  assert(sourceButton, 'Exact source Button required');
+  sourceButton.id = 'page-chrome-button';
+  sourceButton.name = 'Page chrome source Button dependency';
+  sourceButton.variants.forEach(v => {
+    v.id = v.id.replace(/^button\./, 'page-chrome-button.');
+  });
+  if (sourceButton.defaultVariantId)
+    sourceButton.defaultVariantId = sourceButton.defaultVariantId.replace(
+      /^button\./,
+      'page-chrome-button.'
+    );
+  sourceFamilies.set(sourceButton.id, sourceButton);
   const dependencies = new Map();
   const seen = new Set();
   const visiting = new Set();

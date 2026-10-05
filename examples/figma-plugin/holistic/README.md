@@ -35,17 +35,22 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 24 families and 97 bounded variants, deliberately
+- Separate source draft packet: 29 families and 110 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants. Page prose, closed chrome,
   bulleted contents lists and quotes add five families/26 variants. These are
-  bounded parts of the requested compositions; complete pages and the syndicated
-  search widget remain under implementation. See [search controls](search-controls.md),
+  bounded parts of the requested compositions. Three report families/six variants
+  now provide the complete finite authored English closed-chrome report scene
+  at390/1164, and two open navigation families/seven variants preserve actual
+  desktop About and mobile All/About surfaces. Other page templates and the
+  syndicated search widget remain under implementation; native page gates remain
+  open. See [report composition](landing-report.md). See [search controls](search-controls.md),
   [page prose](page-patterns.md), [closed chrome](page-chrome.md) and
   [reading patterns](page-reading.md).
-  A cloned existing Editorial CTA family is an explicit dependency, not a new
-  draft or publication claim. See [draft scope](../COMPONENT-DRAFTS.md) and
+  Cloned existing Editorial CTA (23 variants) and source Button as
+  `page-chrome-button` (16 variants) are explicit dependencies, not new drafts
+  or publication claims. See [draft scope](../COMPONENT-DRAFTS.md) and
   [browser observations](../SOURCE-BROWSER-STATUS.md).
 - Desktop launch and screenshots work. The restored-window interaction probe
   fails `window_not_focused`, reporting no focused window. Both relevant

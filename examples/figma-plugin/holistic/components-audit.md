@@ -2,7 +2,7 @@
 
 Current source renderers, CSS patterns, curated AI metadata and package exports were reconciled with the normal recipes and isolated drafts. This audit does not use story totals as missing-component totals.
 
-The normal exporter contains **32 families / 383 variants**. Its documented published subset remains **25 families / 297 variants**. The isolated packet now adds **24 source-only families / 97 bounded variants**. Supporting Table cells/rows, ComboBox options and size splits are families within owning source units, not extra complete public widgets. Published status is documented pilot evidence; no fresh Figma publication verification was performed for this audit.
+The normal exporter contains **32 families / 383 variants**. Its documented published subset remains **25 families / 297 variants**. The isolated packet now adds **29 source-only families / 110 bounded variants**. Supporting Table cells/rows, ComboBox options and size splits are families within owning source units, not extra complete public widgets. Published status is documented pilot evidence; no fresh Figma publication verification was performed for this audit.
 
 SectionHeader, Imagecaption and EmbedContainer add three families/nine variants; BookCard, HorizontalBookCard and IconCard add three families/19 variants. They are wired into the non-importable draft packet with exact existing Editorial CTA as a cloned dependency (23 variants, counted separately). The normal exporter is unchanged. Bounded source Chromium observations and all-brand actual-builder mock checks exist; native and publication acceptance remain open. The original source audit revision remains recorded in JSON, with the explicit packet follow-up distinguished from a fresh native audit.
 
@@ -12,6 +12,14 @@ contents lists and quote patterns. These contracts have source browser evidence
 and five-brand builder mocks. They do not close complete-page, full-widget,
 native library or publication gates. The original 98-row source classification
 remains a historical audit, with current packet additions recorded separately.
+
+The current follow-up also adds three report composition families/six variants
+and two open navigation families/seven variants. The report has complete finite
+source anatomy at390/1164 with genuine reusable instances and closed chrome.
+Other pages, live interaction, native composition/recovery and publication remain
+open. Its open About navigation uses an exact source Button clone as
+`page-chrome-button` (16 variants), separate from the23-variant Editorial CTA
+dependency; neither clone is counted as a new draft family.
 
 Every mapped unit remains partial. A recipe or a passing mock does not establish native/source visual parity, publication or linked consumer uptake. The JSON contains source paths, package exports, authored story names and prop enums, recipe contracts, dependency evidence, missing scope and builder limits for each row.
 

@@ -487,3 +487,669 @@ function buildPageChromeRecipes({ root, modes, variables, styles }) {
   ];
 }
 module.exports = { buildPageChromeRecipes, SOURCE_HASHES, WIDTHS };
+
+// Separate factory. The accepted closed cohort above retains its return shape.
+const OPEN_HASHES = {
+  'stories/assets/fonts/roboto/roboto.scss':
+    'b881ae0ebeb56f49523c791faafc1a10299fc1d7a875fa91c028b06164b8197c',
+  'stories/assets/fonts/roboto/sass/_variables.scss':
+    'ce141aa75263b9b51a301463ddc4ac755458baf84c6636f854852394a6190ea6',
+  'stories/assets/fonts/roboto/sass/_mixins.scss':
+    'da42b1344b5a5ca7c059c96374b92286381a0a36e2d0ffadefe30683c2e916a7',
+  'stories/assets/fonts/roboto-condensed/sass/_variables.scss':
+    'af157df7df4276d396e7a636039dd353e9e9849163564b30dbbb299aafc34940',
+  'stories/assets/fonts/roboto-condensed/sass/_mixins.scss':
+    'a53206df9ff982de438f1472ccb571acb7c923d2fdcc8c72f2ce5ece96a1f6d4',
+  'examples/figma-plugin/holistic/assets/page-patterns/source-fonts/Roboto-Regular.woff2':
+    '47107401d0adb375ab9aa167f9d62489a849d510e740a307b5a4db60e5db3562',
+  'examples/figma-plugin/holistic/assets/page-patterns/source-fonts/Roboto-Bold.woff2':
+    '8e44376b735dcc9027acbcc8a0df64c3f886a23529eff27b022f344d719e90f2',
+  'stories/Components/MegaMenu/TopBar/Sidebar.jsx':
+    '270b31598a7d22650d7fcc29a888228b904870c2fcde3cc0ebac1140586afbc8',
+  'stories/Components/MegaMenu/Section/Section.jsx':
+    'e04e35ec2b85a6b0d20d578604f86f3432f724d8328123c119820a9030a34345',
+  'stories/assets/fonts/roboto/sass/_Regular.scss':
+    'cb27bc0dd02ba21b4dda3249a59e352e0a42c5ea45b83d7cba0a1a2cb79f5845',
+  'stories/assets/fonts/roboto/sass/_Bold.scss':
+    '9f24cf0a077b2087c47c55bbb665a4086a38818680eee9ca0dfac4c0ce0d273e',
+  'stories/assets/fonts/roboto-condensed/sass/_Regular.scss':
+    '83e36cfc43d952acf7e4e15f3f8068de84930b5412a433926fab097d44105ce7',
+  [ASSETS + 'open-source-footprints.json']:
+    '5248e7b4f274748afbb69f87b9d51926c4e9e3fc9f48ba97810df84a75980406',
+};
+function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
+  const fail = message => {
+    throw new Error(
+      'Open page chrome source contract needs updating: ' + message
+    );
+  };
+  for (const [file, hash] of Object.entries({
+    ...SOURCE_HASHES,
+    ...OPEN_HASHES,
+  }))
+    if (
+      crypto
+        .createHash('sha256')
+        .update(fs.readFileSync(path.join(root, file)))
+        .digest('hex') !== hash
+    )
+      fail(file);
+  if (
+    modes
+      .map(m => m.id)
+      .sort()
+      .join(',') !== 'delta,irp,mcr,preventionweb,undrr'
+  )
+    fail('five modes required');
+  const source = JSON.parse(
+    fs.readFileSync(path.join(root, ASSETS + 'open-source-footprints.json'))
+  );
+  const byName = new Map(variables.map(v => [v.name, v]));
+  const ref = {
+    file: 'stories/Components/MegaMenu/TopBar/Sidebar.jsx',
+    line: 178,
+  };
+  function upsert(list, entry, key) {
+    const found = list.filter(
+      x =>
+        x.id === entry.id ||
+        x[key] === entry[key] ||
+        (entry.name && x.name === entry.name)
+    );
+    if (
+      found.length > 1 ||
+      (found.length &&
+        (found[0].id !== entry.id ||
+          found[0][key] !== entry[key] ||
+          found[0].name !== entry.name))
+    )
+      fail('Foreign identity ' + entry.id);
+    if (found.length) list[list.indexOf(found[0])] = entry;
+    else list.push(entry);
+  }
+  function role(name, type, get, scopes) {
+    const n = 'component/page-chrome-open/' + name;
+    const entry = {
+      id: n.replaceAll('/', '.'),
+      name: n,
+      type,
+      scopes,
+      sourceRef: ref,
+      description: 'Measured finite authored English open MegaMenu source role',
+      hiddenFromPublishing: false,
+      codeSyntax: {},
+      values: Object.fromEntries(modes.map(m => [m.id, get(m)])),
+    };
+    upsert(variables, entry, 'name');
+    byName.set(n, entry);
+    return n;
+  }
+  function resolve(name, mode, type, seen = new Set()) {
+    const v = byName.get(name);
+    if (!v || v.type !== type || seen.has(name))
+      fail('Missing/wrong-type/cyclic ' + name);
+    seen.add(name);
+    const x = v.values[mode.id];
+    if (x === undefined) fail('Missing mode ' + mode.id);
+    return x && typeof x === 'object' && x.alias
+      ? resolve(x.alias, mode, type, seen)
+      : x;
+  }
+  for (const m of modes) {
+    if (
+      resolve('font-family/ui', m, 'STRING') !== 'Roboto Condensed' ||
+      resolve('font-family/text', m, 'STRING') !== 'Roboto'
+    )
+      fail('Measured UI/body fonts changed');
+    for (const n of [
+      'color/interactive',
+      'color/neutral-900',
+      'color/neutral-600',
+      'color/neutral-0',
+    ])
+      resolve(n, m, 'COLOR');
+  }
+  const rgba = str => {
+    const x = /^rgba?\(([^)]+)\)$/.exec(str);
+    if (!x) fail('Unsupported source color ' + str);
+    const n = x[1].split(',').map(Number);
+    return { r: n[0] / 255, g: n[1] / 255, b: n[2] / 255, a: n[3] ?? 1 };
+  };
+  const sets = key =>
+    Object.fromEntries(
+      modes.map(m => [
+        m.id,
+        source.scenes[m.id][key].roots.flatMap(r => [r.root, ...r.children]),
+      ])
+    );
+  function matching(nodes, predicate) {
+    const result = {};
+    for (const m of modes) result[m.id] = nodes[m.id].filter(predicate);
+    for (const m of modes)
+      if (result[m.id].length !== result.undrr.length)
+        fail('Source anatomy changed');
+    return result;
+  }
+  function one(nodes, predicate, index = 0) {
+    const matches = matching(nodes, predicate);
+    const result = {};
+    for (const m of modes) {
+      if (!matches[m.id][index]) fail('Missing measured anatomy');
+      result[m.id] = matches[m.id][index];
+    }
+    return result;
+  }
+  let sceneKey;
+  const float = (key, all, field) => {
+    const values = modes.map(m => all[m.id][field]);
+    if (!values.every(Number.isFinite)) fail('Source geometry nonfinite');
+    return values.every(x => x === values[0])
+      ? values[0]
+      : role(
+          sceneKey + '/' + key + '-' + field,
+          'FLOAT',
+          m => all[m.id][field],
+          ['WIDTH_HEIGHT']
+        );
+  };
+  const color = (key, all, field = 'color', scope = 'FRAME_FILL') => {
+    const base = [
+      'color/interactive',
+      'color/neutral-800',
+      'color/neutral-600',
+      'color/neutral-0',
+    ].find(name =>
+      modes.every(m => {
+        const measured = rgba(all[m.id][field]),
+          token = resolve(name, m, 'COLOR');
+        return ['r', 'g', 'b'].every(
+          k => measured[k] === Math.round(token[k] * 255) / 255
+        );
+      })
+    );
+    if (!base) fail('Measured source paint requires remeasurement: ' + key);
+    return role(
+      key,
+      'COLOR',
+      m => {
+        const a = rgba(all[m.id][field]).a;
+        return a === 1 ? { alias: base } : { ...resolve(base, m, 'COLOR'), a };
+      },
+      [scope]
+    );
+  };
+  function fixed(id, all, parent, children = [], fill, clips = false) {
+    const base = all.undrr,
+      origin = parent?.undrr ?? { x: 0, y: 0 };
+    for (const m of modes)
+      if (
+        all[m.id].x - (parent?.[m.id].x ?? 0) !== base.x - origin.x ||
+        all[m.id].y - (parent?.[m.id].y ?? 0) !== base.y - origin.y
+      )
+        fail('Mode-dependent source positions need explicit bound contract');
+    return {
+      id,
+      type: 'FRAME',
+      name: base.cls || base.tag,
+      position: { x: base.x - origin.x, y: base.y - origin.y },
+      layout: {
+        mode: 'NONE',
+        width: float(id, all, 'w'),
+        height: float(id, all, 'h'),
+        clipsContent: clips,
+      },
+      ...(fill ? { fill } : {}),
+      children,
+    };
+  }
+  function style(key, all, decoration = 'NONE') {
+    const id = 'component/page-chrome-open/' + key;
+    const values = Object.fromEntries(
+      modes.map(m => {
+        const n = all[m.id],
+          font = n.font.includes('Roboto Condensed')
+            ? 'Roboto Condensed'
+            : 'Roboto',
+          weight = Number(n.weight);
+        if (![400, 600, 700].includes(weight))
+          fail('Unsupported measured font weight');
+        return [
+          m.id,
+          {
+            fontName: {
+              family: font,
+              style: weight === 400 ? 'Regular' : 'Bold',
+            },
+            fontSize: parseFloat(n.size),
+            lineHeight: { unit: 'PIXELS', value: parseFloat(n.line) },
+            letterSpacing: { unit: 'PIXELS', value: 0 },
+            textCase: 'ORIGINAL',
+            textDecoration: decoration,
+            paragraphSpacing: 0,
+          },
+        ];
+      })
+    );
+    const size = role(key + '-size', 'FLOAT', m => values[m.id].fontSize, [
+      'FONT_SIZE',
+    ]);
+    upsert(
+      styles.text,
+      {
+        id,
+        name: 'Mangrove draft / Open page chrome / ' + key,
+        description:
+          'Source computed named face; requested600 maps to bundled Bold700 as explicit browser-face inference, not native acceptance.',
+        sourceRef: ref,
+        bindings: {
+          fontFamily: all.undrr.font.includes('Roboto Condensed')
+            ? 'font-family/ui'
+            : 'font-family/text',
+          fontSize: size,
+        },
+        values,
+      },
+      'id'
+    );
+    return id;
+  }
+  function textBox(id, all, parent, characters, property, options = {}) {
+    if (!characters) fail('Missing authored text');
+    const text = {
+      id: id + '-text',
+      type: 'TEXT',
+      name: id + ' source text',
+      characters,
+      textProperty: property,
+      textStyle: style(id, all, options.underline ? 'UNDERLINE' : 'NONE'),
+      fill: color(id + '-text', all, 'color', 'TEXT_FILL'),
+      textWrap: 'AUTO',
+      layout: { width: 'FILL', height: 'HUG' },
+    };
+    const box = fixed(id, all, parent, [text]);
+    // Retain actual source line allocation and padding. Glyph pixels are separate.
+    box.layout.mode = 'VERTICAL';
+    if (options.padding) box.layout.padding = options.padding;
+    return box;
+  }
+  function shadow(id, all) {
+    const key = 'component/page-chrome-open/' + id;
+    const count = (all.undrr.shadow.match(/rgba?\([^)]+\) [^,]+/g) || [])
+      .length;
+    const colors = Array.from({ length: count }, (_, i) =>
+      role(
+        id + '-shadow-' + i,
+        'COLOR',
+        m => {
+          const s = all[m.id].shadow.match(/rgba?\([^)]+\) [^,]+/g)[i];
+          return rgba(/^(rgba?\([^)]+\))/.exec(s)[1]);
+        },
+        ['EFFECT_COLOR']
+      )
+    );
+    const values = Object.fromEntries(
+      modes.map(m => {
+        const sourceShadows =
+          all[m.id].shadow.match(/rgba?\([^)]+\) [^,]+/g) || [];
+        if (sourceShadows.length !== count) fail('Source shadows changed');
+        return [
+          m.id,
+          sourceShadows.map((s, i) => {
+            const a =
+              /^(rgba?\([^)]+\)) (-?[\d.]+)px (-?[\d.]+)px (-?[\d.]+)px (-?[\d.]+)px( inset)?$/.exec(
+                s
+              );
+            if (!a) fail('Source shadow ' + s);
+            return {
+              effect: {
+                type: a[6] ? 'INNER_SHADOW' : 'DROP_SHADOW',
+                color: rgba(a[1]),
+                offset: { x: Number(a[2]), y: Number(a[3]) },
+                radius: Number(a[4]),
+                spread: Number(a[5]),
+                visible: true,
+                blendMode: 'NORMAL',
+              },
+              bindings: { color: colors[i] },
+            };
+          }),
+        ];
+      })
+    );
+    upsert(
+      styles.effect,
+      {
+        id: key,
+        name: 'Mangrove draft / Open page chrome / ' + id,
+        sourceRef: ref,
+        values,
+      },
+      'id'
+    );
+    return key;
+  }
+  const desktop = [901, 1164, 1440].map(width => {
+    const key = 'desktop-about-' + width;
+    sceneKey = key;
+    const nodes = sets(key),
+      panel = one(nodes, n => n.tag === 'ARTICLE'),
+      left = one(nodes, n => n.cls === 'mg-mega-content__left'),
+      banner = one(nodes, n => n.cls === 'mg-mega-content__banner'),
+      right = one(nodes, n => n.cls === 'mg-mega-content__right'),
+      list = one(nodes, n => n.cls === 'mg-mega-content__menu--desktop'),
+      heading = one(nodes, n => n.tag === 'HEADER'),
+      paragraph = one(nodes, n => n.tag === 'P'),
+      cta = one(nodes, n => n.cls === 'mg-button mg-button-primary');
+    const children = [
+      textBox('desktop-heading', heading, banner, 'About UNDRR', 'Heading'),
+      textBox(
+        'desktop-summary',
+        paragraph,
+        banner,
+        'How the office is organized and where it works.',
+        'Summary'
+      ),
+    ];
+    children.push(
+      fixed('action-slot', cta, banner, [
+        {
+          id: 'action',
+          type: 'INSTANCE',
+          name: 'Exact source mg-button primary',
+          family: 'page-chrome-button',
+          variant: {
+            Emphasis: 'Primary',
+            Treatment: 'Filled',
+            State: 'Default',
+          },
+          overrides: { Label: 'About UNDRR' },
+          expose: true,
+          layout: { width: 'HUG', height: 'HUG' },
+        },
+      ])
+    );
+    const bannerTree = fixed('banner', banner, left, children),
+      leftTree = fixed(
+        'left',
+        left,
+        panel,
+        [bannerTree],
+        color('left-background', left, 'bg')
+      );
+    leftTree.children.push({
+      id: 'left-border',
+      type: 'FRAME',
+      name: 'Source end border',
+      layout: { mode: 'NONE', width: 1, height: 350 },
+      position: { x: left.undrr.w - 1, y: 0 },
+      fill: role(
+        'left-border',
+        'COLOR',
+        m => ({ ...resolve('color/neutral-600', m, 'COLOR'), a: 0.24 }),
+        ['FRAME_FILL']
+      ),
+      children: [],
+    });
+    const links = matching(nodes, n => n.tag === 'A' && n.cls === '');
+    if (links.undrr.length !== 4) fail('Four authored About links required');
+    const linkTrees = links.undrr.map((n, i) => {
+      const all = Object.fromEntries(modes.map(m => [m.id, links[m.id][i]]));
+      return textBox(
+        'desktop-item-' + (i + 1),
+        all,
+        list,
+        n.text,
+        'Item ' + (i + 1),
+        { padding: { inline: 5, block: 5 } }
+      );
+    });
+    const rightTree = fixed('right', right, panel, [
+      fixed('items', list, right, linkTrees),
+    ]);
+    const tree = fixed(
+      'root',
+      panel,
+      null,
+      [leftTree, rightTree],
+      'color/neutral-0',
+      false
+    );
+    delete tree.position;
+    tree.effectStyle = shadow('desktop-panel', panel);
+    return {
+      id: 'page-chrome-desktop-panel.about-' + width,
+      name: 'Viewport=' + width + ', Section=About',
+      properties: { Viewport: String(width), Section: 'About' },
+      sourceGeometry: {
+        top: panel.undrr.y,
+        height: 350,
+        viewportHeight: 1000,
+        context:
+          'Overlay anchored after existing closed chrome flow, not an expanded header.',
+      },
+      tree,
+    };
+  });
+  const chevron =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>';
+  const mobile = [390, 899].flatMap(width =>
+    ['all', 'about'].map(level => {
+      const key = 'mobile-' + level + '-' + width;
+      sceneKey = key;
+      const nodes = sets(key),
+        overlay = one(nodes, n =>
+          n.cls.startsWith('mg-mega-mobile-sidebar-overlay')
+        ),
+        surface = one(nodes, n =>
+          n.cls.startsWith(
+            'mg-mega-mobile-sidebar mg-mega-mobile-sidebar--progressive'
+          )
+        ),
+        header = one(nodes, n => n.cls === 'mg-mega-mobile-sidebar__header'),
+        page = one(nodes, n =>
+          n.cls.startsWith('mg-mega-mobile-sidebar__page')
+        ),
+        close = one(nodes, n => n.cls === 'mg-mega-mobile-sidebar__close'),
+        closeIcon = one(nodes, n => n.tag === 'SPAN' && n.text === '×'),
+        title = one(nodes, n => n.cls === 'mg-mega-mobile-sidebar__title'),
+        list = one(nodes, n => n.cls === 'mg-mega-sidebar__list');
+      function controlLabel(id, all, parent, index = 0) {
+        const textAll = Object.fromEntries(
+          modes.map(m => {
+            const n = all[m.id],
+              r = n.texts[index];
+            if (!r) fail('Missing direct source text');
+            return [
+              m.id,
+              {
+                ...n,
+                x: r.x,
+                y: n.y + (n.h - parseFloat(n.line)) / 2,
+                w: r.w,
+                h: parseFloat(n.line),
+              },
+            ];
+          })
+        );
+        return textBox(id, textAll, parent, all.undrr.texts[index].text, id);
+      }
+      const closeTree = fixed('close', close, header, [
+        controlLabel('close-label', close, close),
+        textBox('close-icon', closeIcon, close, '×', 'Close icon'),
+      ]);
+      const headerTree = fixed(
+        'header',
+        header,
+        surface,
+        [closeTree],
+        'color/neutral-0'
+      );
+      headerTree.effectStyle = shadow('mobile-header', header);
+      const pageChildren = [];
+      if (level === 'about') {
+        const back = one(nodes, n => n.cls === 'mg-mega-mobile-sidebar__back'),
+          arrow = one(nodes, n => n.cls === 'mg-mega-mobile-sidebar__arrow');
+        pageChildren.push(
+          fixed('back', back, page, [
+            controlLabel('back-label', back, back),
+            textBox('back-arrow', arrow, back, '←', 'Back arrow'),
+          ])
+        );
+      }
+      pageChildren.push(
+        textBox(
+          'mobile-heading-' + level,
+          title,
+          page,
+          level === 'all' ? 'All sections' : 'About UNDRR',
+          'Heading',
+          { underline: level === 'about' }
+        )
+      );
+      const entries = matching(
+        nodes,
+        n => n.cls === 'mg-mega-sidebar-section__item'
+      );
+      if (entries.undrr.length !== 4)
+        fail('Four authored mobile entries required');
+      const entriesTrees = entries.undrr.map((n, i) => {
+        const all = Object.fromEntries(
+          modes.map(m => [m.id, entries[m.id][i]])
+        );
+        if (level === 'about')
+          return textBox(
+            'mobile-about-item-' + (i + 1),
+            all,
+            list,
+            n.text,
+            'Item ' + (i + 1),
+            { padding: { inline: 10, block: 10 } }
+          );
+        const label = Object.fromEntries(
+          modes.map(m => {
+            const a = all[m.id];
+            return [
+              m.id,
+              {
+                ...a,
+                x: a.x + 10,
+                y: a.y + 15,
+                w: a.w - 48,
+                h: parseFloat(a.line),
+              },
+            ];
+          })
+        );
+        const itemTree = fixed('mobile-all-item-' + (i + 1), all, list, [
+          textBox(
+            'caption-' + (i + 1),
+            label,
+            all,
+            n.texts[0].text,
+            'Item ' + (i + 1)
+          ),
+        ]);
+        const icons = matching(
+            nodes,
+            n => n.cls === 'mg-mega-mobile-sidebar__chevron'
+          ),
+          svgAll = Object.fromEntries(modes.map(m => [m.id, icons[m.id][i]]));
+        itemTree.children.push({
+          id: 'chevron-' + (i + 1),
+          type: 'SVG',
+          name: 'Exact source progressive chevron',
+          position: {
+            x: svgAll.undrr.x - all.undrr.x,
+            y: svgAll.undrr.y - all.undrr.y,
+          },
+          layout: { width: 18, height: 18 },
+          svg: {
+            assetId: 'page-chrome.mobile-chevron',
+            markup: chevron,
+            monochrome: {
+              strokes: color('mobile-chevron', all, 'color', 'STROKE_COLOR'),
+            },
+          },
+        });
+        return itemTree;
+      });
+      pageChildren.push(fixed('items', list, page, entriesTrees));
+      if (level === 'about') {
+        const intro = one(
+            nodes,
+            n => n.cls === 'mg-mega-mobile-sidebar__intro'
+          ),
+          p = one(nodes, n => n.tag === 'P');
+        pageChildren.push(
+          fixed('intro', intro, page, [
+            textBox('mobile-summary', p, intro, p.undrr.text, 'Summary'),
+          ])
+        );
+      }
+      const surfaceTree = fixed(
+        'surface',
+        surface,
+        overlay,
+        [headerTree, fixed('page', page, surface, pageChildren)],
+        'color/neutral-0',
+        false
+      );
+      surfaceTree.effectStyle = shadow('mobile-surface', surface);
+      const tree = fixed(
+        'root',
+        overlay,
+        null,
+        [surfaceTree],
+        color('mobile-backdrop', overlay, 'bg')
+      );
+      delete tree.position;
+      return {
+        id: 'page-chrome-mobile.' + level + '-' + width,
+        name: 'Viewport=' + width + ', Level=' + level,
+        properties: { Viewport: String(width), Level: level },
+        sourceGeometry: {
+          viewportHeight: 1000,
+          surfaceHeight: surface.undrr.h,
+          context:
+            'Fixed progressive modal overlay. Existing page remains behind translucent backdrop.',
+        },
+        tree,
+      };
+    })
+  );
+  const limitations = [
+    'English authored UndrrChrome About desktop and AllSections/About mobile only, viewportheight1000. Other three authored selected panels and progressive levels are pending.',
+    'Finite measured source allocations with editable text and real normal Button dependency, not arbitrary nested MegaMenu or locale/RTL coverage.',
+    'Desktop requested600 Button and mobile drill-in requested600 use bundled Bold700 as browser-face inference. Native font pixels and live mode acceptance remain open.',
+    'Source fixed mobile backdrop and surface are independent overlay compositions. Do not include their height in normal header flow.',
+    'No keyboard, focus trap, hover, click, URL navigation, sticky scrolling, safe-area environment, motion or publication acceptance is inferred.',
+  ];
+  return [
+    {
+      id: 'page-chrome-desktop-panel',
+      kind: 'component-set',
+      name: 'Page chrome / Authored About desktop panel',
+      description:
+        'Exact source About flyouts with complete four-link content and real source Button.',
+      sourceRef: ref,
+      review: { genericLabels: false, preserveVariantSizing: true },
+      defaultVariantId: 'page-chrome-desktop-panel.about-1164',
+      limitations,
+      variants: desktop,
+    },
+    {
+      id: 'page-chrome-mobile',
+      kind: 'component-set',
+      name: 'Page chrome / Authored progressive mobile',
+      description:
+        'Actual progressive first level and About level with close/back/list/intro/backdrop.',
+      sourceRef: ref,
+      review: { genericLabels: false, preserveVariantSizing: true },
+      defaultVariantId: 'page-chrome-mobile.all-390',
+      limitations,
+      variants: mobile,
+    },
+  ];
+}
+module.exports.buildPageChromeOpenRecipes = buildPageChromeOpenRecipes;
+module.exports.OPEN_HASHES = OPEN_HASHES;

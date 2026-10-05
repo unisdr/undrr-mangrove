@@ -81,11 +81,16 @@ async function main() {
       ['page-chrome', 6],
       ['page-bulleted-toc', 4],
       ['quote-highlight', 12],
+      ['page-chrome-desktop-panel', 3],
+      ['page-chrome-mobile', 4],
+      ['landing-report-breadcrumb', 2],
+      ['landing-report-feature-band', 2],
+      ['landing-report', 2],
     ]
   );
   assert.strictEqual(
     packet.draftFamilies.reduce((n, f) => n + f.variants.length, 0),
-    97
+    110
   );
   for (const field of [
     'collection',
@@ -105,13 +110,31 @@ async function main() {
         expanded.find(v => v.id === entry.id),
         entry
       );
+  const expectedButton = copy(
+    original.components.families.find(f => f.id === 'button')
+  );
+  expectedButton.id = 'page-chrome-button';
+  expectedButton.name = 'Page chrome source Button dependency';
+  expectedButton.variants.forEach(v => {
+    v.id = v.id.replace(/^button\./, 'page-chrome-button.');
+  });
+  if (expectedButton.defaultVariantId)
+    expectedButton.defaultVariantId = expectedButton.defaultVariantId.replace(
+      /^button\./,
+      'page-chrome-button.'
+    );
+  assert.strictEqual(expectedButton.variants.length, 16);
+  assert.deepStrictEqual(
+    packet.draftDependencies.find(f => f.id === 'page-chrome-button'),
+    expectedButton
+  );
   const foundation = packet.foundationCatalogue;
   const validate = (families, assets = foundation) =>
     validateDrafts(families, assets, packet.draftDependencies);
   validate(packet.draftFamilies);
   assert.deepStrictEqual(
     packet.draftDependencies.map(f => f.id),
-    ['editorial-cta']
+    ['editorial-cta', 'page-chrome-button']
   );
   assert.deepStrictEqual(
     packet.draftDependencies[0],
@@ -178,7 +201,7 @@ async function main() {
   tree.children[0].id = tree.id;
   assert.throws(() => validate(duplicate), /Missing\/duplicate anatomy ID/);
   console.log(
-    'ok  isolated deterministic 24-family/97-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
+    'ok  isolated deterministic 29-family/110-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
   );
 
   // Use the actual importer entry, not a duplicated preflight. The packet must
