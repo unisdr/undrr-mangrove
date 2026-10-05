@@ -61,8 +61,8 @@ async function main() {
       thumb.stroke,
       disabled ? 'color/neutral-200' : 'color/neutral-0'
     );
-    assert.deepStrictEqual(thumbSlot.position, { x: (width - 24) / 2, y: 0 });
-    assert.strictEqual(track.position.y, 10);
+    assert.deepStrictEqual(thumbSlot.position, { x: (width - 24) / 2, y: -10 });
+    assert.strictEqual(track.position.y, 0);
     assert.strictEqual(
       thumb.effectStyle,
       disabled ? null : 'range.thumb-shadow'
@@ -124,6 +124,14 @@ async function main() {
       const width = Number(spec.properties.Width),
         disabled = spec.properties.State === 'Disabled';
       assert.strictEqual(main.width, width);
+      assert.strictEqual(main.children[0].height, 4);
+      // The mock records HUG but does not compute frame flow height. Verify
+      // the explicit allocation separately, without claiming native bounds.
+      assert.strictEqual(main.layoutSizingVertical, 'HUG');
+      assert.strictEqual(
+        main.paddingTop + main.children[0].height + main.paddingBottom,
+        44
+      );
       assert.strictEqual(
         main.paddingTop,
         doc.variables.find(v => v.name === 'spacing/200').values[mode.id]
@@ -135,8 +143,12 @@ async function main() {
       assert.strictEqual(thumb.height, 24);
       assert.strictEqual(thumb.strokeWeight, 2);
       assert.strictEqual(thumbSlot.x, (width - 24) / 2);
+      assert.strictEqual(thumbSlot.y, -10);
+      assert.strictEqual(main.clipsContent, false);
+      assert.strictEqual(main.children[0].clipsContent, false);
+      assert.strictEqual(thumbSlot.clipsContent, false);
       assert.strictEqual(track.height, 4);
-      assert.strictEqual(track.y, 10);
+      assert.strictEqual(track.y, 0);
       assert.strictEqual(Boolean(thumb.effectStyleId), !disabled);
       const roleName = disabled ? 'color/neutral-400' : 'color/interactive';
       const imported = env.state.variables.find(v => v.name === roleName);
@@ -184,6 +196,10 @@ async function main() {
       'range.scss',
       text => text.replace('block-size: 1.5rem', 'block-size: 1.6rem'),
     ],
+    [
+      'range.scss',
+      text => text.replace('calc(-0.75rem + 2px)', 'calc(-0.75rem + 3px)'),
+    ],
     ['Range.jsx', text => text.replace('type="range"', 'type="number"')],
   ]) {
     fs.readFileSync = function (file, ...args) {
@@ -210,6 +226,13 @@ async function main() {
         styles: broken.styles,
       }),
     /all-brand COLOR/
+  );
+  const changedSpacing = copy(doc);
+  changedSpacing.variables.find(v => v.name === 'spacing/200').values.delta =
+    22;
+  assert.throws(
+    () => buildRangeRecipes({ root, ...changedSpacing }),
+    /remeasure margin-flow allocation/
   );
   console.log(
     'ok  source anatomy/geometry drift and missing brand values fail closed'

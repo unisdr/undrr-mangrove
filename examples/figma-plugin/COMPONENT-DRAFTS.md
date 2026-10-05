@@ -32,7 +32,10 @@ reuse, supported overrides and refusal of source drift.
 Passing mocks do not establish browser/native layout, raster appearance or
 publication and consumer uptake.
 
-Range widths and vertical drawing placement are candidate scaffold geometry.
+The [source browser comparison](SOURCE-BROWSER-STATUS.md) records bounded
+observations across all nine families and the resulting Range correction.
+Range now uses a measured Chromium 4px input/rail and overflowing 24px thumb;
+its 44px root remains an explicit margin-flow allocation, not wrapper bounds.
 Tag's CSS weight 500 to Condensed Regular 400 and Notice's CSS weight 600 to Bold
 700 are provisional font matching inferences, pending browser/native comparison.
 Notice icon dimensions are source-derived numeric viewport values because the

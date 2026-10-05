@@ -56,6 +56,8 @@ function buildRangeRecipes({ root, modes, variables, styles }) {
   const thumb = Number(read(scss).match(/block-size: ([\d.]+)rem;/)[1]) * 16;
   const border = Number(read(scss).match(/border: (\d+)px solid/)[1]);
   const track = Number(read(scss).match(/block-size: (\d+)px;/)[1]);
+  source(scss, /margin-block-start: calc\(-0\.75rem \+ 2px\);/);
+  const thumbY = (track - thumb) / 2;
   const byName = new Map(variables.map(v => [v.name, v]));
   for (const name of [
     'color/interactive',
@@ -75,11 +77,12 @@ function buildRangeRecipes({ root, modes, variables, styles }) {
   }
   if (
     !byName.has('spacing/200') ||
-    modes.some(
-      mode => !Number.isFinite(byName.get('spacing/200').values[mode.id])
-    )
+    byName.get('spacing/200').type !== 'FLOAT' ||
+    modes.some(mode => byName.get('spacing/200').values[mode.id] !== 20)
   )
-    fail('Missing numeric all-brand spacing/200');
+    fail(
+      'Measured all-brand spacing/200 must remain20px; remeasure margin-flow allocation'
+    );
   function upsert(array, entry, key) {
     const i = array.findIndex(v => v[key] === entry[key]);
     if (i >= 0 && array[i].id !== entry.id)
@@ -194,9 +197,12 @@ function buildRangeRecipes({ root, modes, variables, styles }) {
           trackHeight: track,
           borderWidth: border,
           thumbX: (width - thumb) / 2,
-          trackY: (thumb - track) / 2,
+          thumbY,
+          trackY: 0,
+          inputHeight: track,
+          marginSurrogateHeight: track + 40,
           derivation:
-            'Continuous story midpoint with centred candidate rail/thumb drawing. Width and vertical box geometry require browser/native acceptance.',
+            'Chromium Storybook source: input and wrapper both 4px high, native thumb margin calc(-0.75rem + 2px) centres24px thumb at y-10. The explicit240/390px allocations require272/422px padded Storybook viewports. Root20px block padding is a44px margin-flow surrogate, not measured wrapper bounds or CSS collapse. Native acceptance remains pending.',
         },
         tree: {
           type: 'FRAME',
@@ -221,7 +227,7 @@ function buildRangeRecipes({ root, modes, variables, styles }) {
               layout: {
                 mode: 'NONE',
                 width: widthRole,
-                height: thumbSize,
+                height: trackSize,
                 clipsContent: false,
               },
               children: [
@@ -238,7 +244,7 @@ function buildRangeRecipes({ root, modes, variables, styles }) {
                     height: trackSize,
                     clipsContent: false,
                   },
-                  position: { x: 0, y: (thumb - track) / 2 },
+                  position: { x: 0, y: 0 },
                   children: [],
                 },
                 {
@@ -253,7 +259,7 @@ function buildRangeRecipes({ root, modes, variables, styles }) {
                     height: thumbSize,
                     clipsContent: false,
                   },
-                  position: { x: (width - thumb) / 2, y: 0 },
+                  position: { x: (width - thumb) / 2, y: thumbY },
                   children: [
                     {
                       type: 'ELLIPSE',
@@ -289,8 +295,9 @@ function buildRangeRecipes({ root, modes, variables, styles }) {
         'Four fixed static continuous midpoint drawings from the Default and Disabled source stories. No label or selected-value prose is added: those belong to the story wrapper, not Range.',
       review: { genericLabels: false, preserveVariantSizing: true },
       limitations: [
-        'Source-only scaffold. Browser/native visual comparison, ordinary native repeats, publication and consumer acceptance remain pending.',
-        '240px/390px widths and a centred 24px thumb box are explicit drawing contracts, not measured browser input geometry. Source vertical margins are represented as root padding; CSS margin collapse and browser input defaults are not reproduced.',
+        'Source-only scaffold with finite Chromium Storybook geometry observations. Native/other-browser visual comparison, ordinary native repeats, publication and consumer acceptance remain pending.',
+        'Chromium source input/wrapper height4px was measured at390px component allocation (422px viewport with16px Storybook side padding).240px/390px are finite allocations; the24px thumb overflows the4px input by10px above/below. Browser screenshots support the authored thumb treatment; pseudo-element computed styles do not independently measure native thumb ink. Other browser engines and native rendering remain unverified.',
+        'Root20px block padding is an explicit44px margin-flow surrogate. It does not match the browser wrapper4px bounds or reproduce CSS margin collapse/context spacing. Compare input/rail and total flow separately.',
         'Only continuous min=0, max=100, value=50 Default and Disabled presets. No editable value, progress fill, drag, keyboard behaviour, min/max/step or programmatic value calculation.',
         'Stepped labels, endpoint positions, Hover scale, FocusVisible ring, reduced motion, forced colours, RTL and arbitrary resizing are excluded until separately measured.',
         'Native ellipse border/shadow rasterisation is unverified. Accessible naming, announcements and form submission remain code responsibilities.',
