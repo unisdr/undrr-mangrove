@@ -48,6 +48,41 @@ async function run() {
   );
   assert.deepStrictEqual(context.evaluations, ['evaluated']);
   assert.deepStrictEqual(context.mutations, []);
+  const afterAwait = {
+    figma: { fileKey: KEY },
+    mutations: [],
+  };
+  afterAwait.load = async () => {
+    afterAwait.figma.fileKey = PROTECTED_FILES[1];
+  };
+  const probePreparation = guardExperimentSource(
+    'async function importVariables(){ await load(); mgAssertExperimentOperationTarget(); mutations.push("probe"); } await importVariables();',
+    KEY,
+    ['importVariables']
+  );
+  await assert.rejects(
+    vm.runInNewContext(`(async()=>{${probePreparation}})()`, afterAwait),
+    /target refused/
+  );
+  assert.deepStrictEqual(afterAwait.mutations, []);
+  for (const collision of [
+    'const mgAssertExperimentOperationTarget = () => {};',
+    'function f(mgAssertExperimentOperationTarget) {}',
+    'const o = { f(mgAssertExperimentOperationTarget) {} };',
+    'class C { f(mgAssertExperimentOperationTarget) {} }',
+    'class C { #f(mgAssertExperimentOperationTarget) {} }',
+    'const { x: mgAssertExperimentTarget } = {};',
+    'try {} catch (mgAssertExperimentOperationTarget) {}',
+  ])
+    assert.throws(
+      () =>
+        guardExperimentSource(
+          `${collision} async function importVariables(){}`,
+          KEY,
+          ['importVariables']
+        ),
+      /binding collision/
+    );
   assert.throws(
     () =>
       guardExperimentSource(source, PROTECTED_FILES[0], ['importVariables']),
