@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -374,6 +374,9 @@ const MG_ARC_ENABLED =
 const MG_DIRECT_TEXT_ENABLED =
   typeof MG_CONNECTOR_DIRECT_TEXT === 'undefined' || MG_CONNECTOR_DIRECT_TEXT;
 
+const MG_RICH_TEXT_ENABLED =
+  typeof MG_CONNECTOR_RICH_TEXT === 'undefined' || MG_CONNECTOR_RICH_TEXT;
+
 const MG_COINCIDENT_FOCUS_ENABLED =
   typeof MG_CONNECTOR_COINCIDENT_FOCUS === 'undefined' ||
   MG_CONNECTOR_COINCIDENT_FOCUS;
@@ -737,6 +740,43 @@ function mgSvgMonochrome(node, field) {
     );
 }
 
+function mgRichSourceStylePreflight(doc) {
+  validateMangroveImport(
+    doc,
+    doc.modes.map(item => item.id),
+    doc.styles.text.map(item => item.id)
+  );
+  const sourceVariables = new Map(
+    doc.variables.map(entry => [entry.name, entry])
+  );
+  function sourceValue(name, modeId, type, seen = new Set()) {
+    const entry = sourceVariables.get(name);
+    if (!entry || entry.type !== type || seen.has(name))
+      throw new Error(
+        'Rich style source role is missing, wrong typed or cyclic.'
+      );
+    seen.add(name);
+    const value = entry.values[modeId];
+    return value && typeof value === 'object' && value.alias
+      ? sourceValue(value.alias, modeId, type, seen)
+      : value;
+  }
+  for (const spec of doc.styles.text)
+    for (const sourceMode of doc.modes) {
+      const value = spec.values[sourceMode.id];
+      if (
+        !value ||
+        value.fontName.family !==
+          sourceValue(spec.bindings.fontFamily, sourceMode.id, 'STRING') ||
+        value.fontSize !==
+          sourceValue(spec.bindings.fontSize, sourceMode.id, 'FLOAT')
+      )
+        throw new Error(
+          'Rich scope style template disagrees with source font/size aliases.'
+        );
+    }
+}
+
 async function buildMangroveComponents(
   doc,
   brandId,
@@ -1018,6 +1058,19 @@ async function buildMangroveComponents(
       );
     return value;
   }
+  const richTextPlans = MG_RICH_TEXT_ENABLED ? new Map() : null;
+  const richTextScope =
+    MG_RICH_TEXT_ENABLED &&
+    ordered.some(family =>
+      family.variants.some(variant => {
+        let found = false;
+        treeWalk(variant.tree, tree => {
+          if (tree.textRuns !== undefined) found = true;
+        });
+        return found;
+      })
+    );
+  let richContext;
   const ready = [];
   const blocked = new Set();
   const usedText = new Set();
@@ -1599,6 +1652,19 @@ async function buildMangroveComponents(
                 );
             }
           }
+          if (MG_RICH_TEXT_ENABLED && tree.textRuns !== undefined) {
+            if (
+              tree.type !== 'TEXT' ||
+              tree.bindings !== undefined ||
+              tree.effectStyle !== undefined ||
+              tree.focusRing !== undefined ||
+              tree.visibilityProperty !== undefined ||
+              tree.appearance !== undefined
+            )
+              throw new Error(
+                'Rich TEXT forbids whole-node bindings/effects/properties/appearance conflicts.'
+              );
+          }
           if (tree.textDecorationOffset !== undefined) {
             const offset = tree.textDecorationOffset;
             if (
@@ -1781,9 +1847,21 @@ async function buildMangroveComponents(
               !['AUTO', 'BALANCE', 'PRETTY'].includes(tree.textWrap)
             )
               throw new Error('Unsupported text wrapping style.');
-            if (!textSpecs.has(tree.textStyle))
-              throw new Error(`Missing exported text style ${tree.textStyle}`);
-            familyText.add(tree.textStyle);
+            if (MG_RICH_TEXT_ENABLED && tree.textRuns !== undefined) {
+              if (!Array.isArray(tree.textRuns))
+                throw new Error('Rich textRuns must be an array.');
+              for (const run of tree.textRuns) {
+                if (!run || !textSpecs.has(run.textStyle))
+                  throw new Error('Missing rich run exported text style.');
+                familyText.add(run.textStyle);
+              }
+            } else {
+              if (!textSpecs.has(tree.textStyle))
+                throw new Error(
+                  `Missing exported text style ${tree.textStyle}`
+                );
+              familyText.add(tree.textStyle);
+            }
           }
           if (tree.effectStyle) {
             if (!effectSpecs.has(tree.effectStyle))
@@ -2050,7 +2128,127 @@ async function buildMangroveComponents(
       });
     }
   }
+  if (MG_RICH_TEXT_ENABLED && richTextScope && result.errors.length)
+    return result;
   if (!ready.length) return result;
+  if (MG_RICH_TEXT_ENABLED && richTextScope) {
+    try {
+      if (typeof mgRichText === 'undefined')
+        throw new Error('Rich TEXT capability was not compiled.');
+      const styleDoc = {
+        ...doc,
+        styles: {
+          text: [...usedText].map(id => textSpecs.get(id)),
+          effect: [...usedEffects].map(id => effectSpecs.get(id)),
+        },
+      };
+      if (
+        typeof MG_CONNECTOR_RICH_SOURCE_VALIDATION === 'undefined' ||
+        MG_CONNECTOR_RICH_SOURCE_VALIDATION
+      )
+        mgRichSourceStylePreflight(styleDoc);
+      await preflightMangroveAssets(
+        styleDoc,
+        [...usedText],
+        usedEffects.size > 0
+      );
+      const priorStyles = new Map(
+        (await figma.getLocalTextStylesAsync()).map(style => [
+          mgReadIdentity(style, 'mgStyleId'),
+          style,
+        ])
+      );
+      if (typeof figma.getFontFamilyVariationAxes !== 'function')
+        throw new Error(
+          'Rich text requires native font-axis discovery before import.'
+        );
+      const concreteFont = input =>
+        mgRichText.resolveFontInput(
+          input,
+          available,
+          figma.getFontFamilyVariationAxes(input.family)
+        );
+      const projected = new Map();
+      for (const id of usedText) {
+        const spec = textSpecs.get(id);
+        const existing = priorStyles.get(id);
+        projected.set(id, {
+          key: id,
+          pending: !existing,
+          style: {
+            type: 'TEXT',
+            id: existing?.id ?? null,
+            fontName: concreteFont(spec.values[brandId].fontName),
+          },
+        });
+      }
+      const byNativeId = new Map(
+        [...variables.values()].map(entry => [entry.id, entry])
+      );
+      function nativeColor(entry, modeId, seen = new Set()) {
+        if (!entry || entry.resolvedType !== 'COLOR' || seen.has(entry.id))
+          throw new Error(
+            'Rich COLOR alias is missing, wrong typed or cyclic.'
+          );
+        seen.add(entry.id);
+        const value = entry.valuesByMode[modeId];
+        return value?.type === 'VARIABLE_ALIAS'
+          ? nativeColor(byNativeId.get(value.id), modeId, seen)
+          : value;
+      }
+      const readState = node => mgReadIdentity(node, 'mgRichTextRunsV1');
+      const writeState = (node, value) =>
+        mgWriteIdentity(node, 'mgRichTextRunsV1', value);
+      richContext = {
+        figma,
+        deferredStyles: true,
+        modeIds: collection.modes.map(item => item.modeId),
+        creationFont: concreteFont({ family: 'Inter', style: 'Regular' }),
+        resolveStyle: id => projected.get(id),
+        readState,
+        writeState,
+        resolveColor: key => {
+          const entry = variable(key, 'COLOR');
+          return {
+            key,
+            variable: entry,
+            values: Object.fromEntries(
+              collection.modes.map(item => [
+                item.modeId,
+                nativeColor(entry, item.modeId),
+              ])
+            ),
+          };
+        },
+      };
+      async function prepareTree(tree, key) {
+        if (tree.textRuns !== undefined)
+          richTextPlans.set(
+            tree,
+            await mgRichText.prepare(
+              { ...tree, id: key },
+              richContext,
+              owned.get(key) || null
+            )
+          );
+        for (const child of tree.children || [])
+          await prepareTree(child, `${key}/${child.id || child.key}`);
+      }
+      for (const family of ready)
+        for (const variant of family.variants)
+          await prepareTree(
+            variant.tree,
+            `family/${family.id}/variant/${variant.id}`
+          );
+    } catch (error) {
+      result.errors.push(reportError(error));
+      result.audit.push({
+        status: 'blocked-rich-text-preflight',
+        reason: reportError(error),
+      });
+      return result;
+    }
+  }
   // Restrict effects to the recipes being prepared, avoiding unrelated updates.
   const styleDoc = {
     ...doc,
@@ -2095,6 +2293,32 @@ async function buildMangroveComponents(
     )
   )
     usedEffects.forEach(id => failedStyleIds.add(id));
+
+  if (MG_RICH_TEXT_ENABLED && richTextScope) {
+    try {
+      if (styles.errors.length)
+        throw new Error(
+          'Rich scope style import failed; scene construction refused.'
+        );
+      const importedContext = {
+        ...richContext,
+        deferredStyles: false,
+        resolveStyle: key => {
+          const style = localText.get(key);
+          return style ? { key, style } : undefined;
+        },
+      };
+      for (const plan of richTextPlans.values())
+        mgRichText.finalize(plan, importedContext);
+    } catch (error) {
+      result.errors.push(reportError(error));
+      result.audit.push({
+        status: 'blocked-rich-text-finalization',
+        reason: reportError(error),
+      });
+      return result;
+    }
+  }
 
   function mark(node, key, isNew) {
     if (isNew) {
@@ -2641,7 +2865,10 @@ async function buildMangroveComponents(
     applyVisibility(spec, node, component);
     if (MG_ABSOLUTE_ENABLED && spec.absolute)
       node.layoutPositioning = 'ABSOLUTE';
-    if (spec.type === 'TEXT') {
+    if (
+      spec.type === 'TEXT' &&
+      !(MG_RICH_TEXT_ENABLED && richTextPlans.has(spec))
+    ) {
       const style = localText.get(spec.textStyle);
       if (!style)
         throw new Error(`Text style ${spec.textStyle} did not import.`);
@@ -2676,7 +2903,8 @@ async function buildMangroveComponents(
             : { startingAngle: 0, endingAngle: 2 * Math.PI, innerRadius: 0 };
       if (spec.layout?.mode && 'layoutMode' in node)
         node.layoutMode = spec.layout.mode;
-      if ('fills' in node) paint(node, 'fills', spec.fill);
+      if ('fills' in node && !(MG_RICH_TEXT_ENABLED && richTextPlans.has(spec)))
+        paint(node, 'fills', spec.fill);
       if (imagePlans.has(spec)) {
         const image = imagePlans.get(spec);
         if (!imageHashes.has(image.assetId))
@@ -2795,7 +3023,16 @@ async function buildMangroveComponents(
     applyLayout(node, spec.layout);
     // Apply wrapping and decoration after character property references and
     // sizing. Shared styles carry them for editable consumer text as well.
-    if (spec.type === 'TEXT') {
+    if (MG_RICH_TEXT_ENABLED && richTextPlans.has(spec)) {
+      const audit = await mgRichText.apply(richTextPlans.get(spec), node);
+      node.textAlignHorizontal = spec.textAlign || 'LEFT';
+      if (spec.textWrap !== undefined) node.textWrapStyle = spec.textWrap;
+      result.audit.push({
+        ...audit,
+        status: 'rich-text-applied',
+        identity: key,
+      });
+    } else if (spec.type === 'TEXT') {
       if (spec.textWrap !== undefined) node.textWrapStyle = spec.textWrap;
       node.textDecoration = spec.textDecoration || 'NONE';
       if (
@@ -2882,7 +3119,14 @@ async function buildMangroveComponents(
       treeWalk(variant.tree, tree => {
         if (
           tree.textStyle &&
-          (!localText.has(tree.textStyle) || failedStyleIds.has(tree.textStyle))
+          (MG_RICH_TEXT_ENABLED && tree.textRuns !== undefined
+            ? tree.textRuns.some(
+                run =>
+                  !localText.has(run.textStyle) ||
+                  failedStyleIds.has(run.textStyle)
+              )
+            : !localText.has(tree.textStyle) ||
+              failedStyleIds.has(tree.textStyle))
         )
           failure = `Missing text style ${tree.textStyle}`;
         if (
@@ -2922,9 +3166,9 @@ async function buildMangroveComponents(
         ? `Operational staging / ${key}`
         : name;
     frame.layoutMode = 'VERTICAL';
+    frame.resize(organized ? frame.width : width, Math.max(frame.height, 100));
     frame.primaryAxisSizingMode = 'AUTO';
     frame.counterAxisSizingMode = 'FIXED';
-    frame.resize(organized ? frame.width : width, Math.max(frame.height, 100));
     frame.paddingTop =
       frame.paddingBottom =
       frame.paddingLeft =
@@ -3103,9 +3347,9 @@ async function buildMangroveComponents(
     if (frame.parent !== destination) destination.appendChild(frame);
     frame.name = name;
     frame.layoutMode = 'VERTICAL';
+    frame.resize(width, Math.max(frame.height, 40));
     frame.primaryAxisSizingMode = 'AUTO';
     frame.counterAxisSizingMode = 'FIXED';
-    frame.resize(width, Math.max(frame.height, 40));
     frame.paddingTop =
       frame.paddingBottom =
       frame.paddingLeft =

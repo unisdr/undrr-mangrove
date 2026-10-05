@@ -9,6 +9,7 @@ const {
   compileCloudDraftOperation,
   FILE_KEY,
   COLLECTION,
+  cloudDraftImportScope,
 } = require('../../../scripts/figma-cloud-draft-experiment.cjs');
 const { environment, importFoundation } = require('./mock-kit.cjs');
 const {
@@ -48,6 +49,20 @@ async function run() {
   assert.strictEqual(doc.kitGuidance, undefined);
   assert.strictEqual(doc.plannedInventory, undefined);
   assert.strictEqual(packet.collection, undefined);
+  const required = cloudDraftImportScope(doc);
+  for (const name of ['font-family/text', 'font-size/300', 'color/neutral-900'])
+    assert(
+      required.variableIds.includes(doc.variables.find(v => v.name === name).id)
+    );
+  assert(required.styleIds.includes('component.tag.label'));
+  const missingReview = JSON.parse(JSON.stringify(doc));
+  missingReview.variables = missingReview.variables.filter(
+    v => v.name !== 'font-family/text'
+  );
+  assert.throws(
+    () => cloudDraftImportScope(missingReview),
+    /Missing draft review dependency/
+  );
   const scopedImport = await compileCloudDraftOperation({
     ...opts,
     operation: 'import',
@@ -81,6 +96,19 @@ async function run() {
   assert.strictEqual(imported.createdVariableIds.length, 1);
   assert.strictEqual(scopedImport.scope.prune, false);
   const env = environment(doc);
+  // Native resize resets both axis modes. The base mock intentionally does not
+  // render layout, so model this API behavior for review-scaffold regression.
+  const createFrame = env.figma.createFrame;
+  env.figma.createFrame = (...args) => {
+    const frame = createFrame(...args);
+    const resize = frame.resize;
+    frame.resize = (...sizes) => {
+      resize.apply(frame, sizes);
+      frame.primaryAxisSizingMode = 'FIXED';
+      frame.counterAxisSizingMode = 'FIXED';
+    };
+    return frame;
+  };
   await importFoundation(env, doc);
   const payload = await compileCloudDraftOperation({
     ...opts,
@@ -95,10 +123,21 @@ async function run() {
   const first = await env.runCode(payload.code);
   assert.strictEqual(first.errors.length, 0, first.errors.join('\n'));
   assert(first.createdNodeIds.length);
+  const assertReviewHugs = () => {
+    const review = env.state.nodes.get(first.reviewRootId);
+    assert.strictEqual(review.primaryAxisSizingMode, 'AUTO');
+    assert.strictEqual(review.counterAxisSizingMode, 'FIXED');
+    const family = review.children.find(n => n.name === 'Mangrove/Tag');
+    assert(family, 'Tag review family missing');
+    assert.strictEqual(family.primaryAxisSizingMode, 'AUTO');
+    assert.strictEqual(family.counterAxisSizingMode, 'FIXED');
+  };
+  assertReviewHugs();
   for (let i = 0; i < 2; i++) {
     const repeat = await env.runCode(payload.code);
     assert.strictEqual(repeat.errors.length, 0, repeat.errors.join('\n'));
     assert.strictEqual(repeat.createdNodeIds.length, 0);
+    assertReviewHugs();
   }
   process.stdout.write(
     'Cloud draft adapter: exact target, preserved foundations/IDs, guarded compiled Tag construction and two zero-create mock repeats pass. No Figma writes or native acceptance.\n'

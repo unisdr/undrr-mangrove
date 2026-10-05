@@ -289,6 +289,8 @@ function subsetDocument(
     const textIds = new Set();
     const effectIds = new Set();
     const directTemplateIds = new Set();
+    const richStyles = new Set(),
+      richPaints = new Set();
     const coincidentRings = [];
     function tree(node, family, variant) {
       if (node.type === 'INSTANCE' && node.properties !== undefined)
@@ -312,6 +314,21 @@ function subsetDocument(
         throw new Error(
           'Connector preflight: unknown or missing COINCIDENT_SCALE source focus extension.'
         );
+      if (node.textRuns !== undefined) {
+        if (node.type !== 'TEXT' || !Array.isArray(node.textRuns))
+          throw new Error('Rich textRuns require TEXT and array.');
+        for (const run of node.textRuns) {
+          if (
+            !run ||
+            typeof run.textStyle !== 'string' ||
+            typeof run.fill !== 'string'
+          )
+            throw new Error('Rich runs require style and paint roles.');
+          textIds.add(run.textStyle);
+          richStyles.add(run.textStyle);
+          richPaints.add(run.fill);
+        }
+      }
       if (node.textStyle) textIds.add(node.textStyle);
       if ('textStyleApplication' in node && node.textStyle)
         directTemplateIds.add(node.textStyle);
@@ -358,9 +375,10 @@ function subsetDocument(
       if (value?.alias) includeDirectVariable(value.alias);
     }
     for (const style of base.styles.text)
-      if (directTemplateIds.has(style.id))
+      if (directTemplateIds.has(style.id) || richStyles.size)
         for (const name of Object.values(style.bindings || {}))
           includeDirectVariable(name);
+    for (const name of richPaints) includeDirectVariable(name);
     // Preserve exact source definitions needed by the source-family focus
     // renderer. Traverse every source mode, while the DTO remains one brand.
     // Alias edges are typed and cycle-checked independently for each mode.
@@ -1012,6 +1030,128 @@ async function buildConnector({
       (node.children || []).some(needsDirectText)
     );
   }
+  function needsRichText(node) {
+    return (
+      node.textRuns !== undefined || (node.children || []).some(needsRichText)
+    );
+  }
+  const richTextEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsRichText(variant.tree))
+    );
+  if (richTextEnabled) {
+    // The DTO is immutable at execution time. Validate using the exact full-runtime
+    // source/style and rich DTO validators before allowing their pure checks to prune.
+    const builder = fs.readFileSync(
+      path.join(PLUGIN, 'kit-builder.js'),
+      'utf8'
+    );
+    const start = builder.indexOf('function mgRichSourceStylePreflight(doc) {');
+    const end = builder.indexOf(
+      'async function buildMangroveComponents(',
+      start
+    );
+    if (
+      start < 0 ||
+      end <= start ||
+      builder.indexOf(
+        'function mgRichSourceStylePreflight(doc) {',
+        start + 1
+      ) >= 0
+    )
+      throw new Error('Rich source validator specialization boundary changed.');
+    const context = vm.createContext({
+      richSourceDoc: subset,
+      module: { exports: {} },
+    });
+    vm.runInContext(coreSource() + '\n' + builder.slice(start, end), context, {
+      timeout: 1000,
+    });
+    vm.runInContext('mgRichSourceStylePreflight(richSourceDoc)', context, {
+      timeout: 1000,
+    });
+    vm.runInContext(
+      fs.readFileSync(path.join(PLUGIN, 'kit-rich-text.js'), 'utf8'),
+      context,
+      { timeout: 1000 }
+    );
+    const variables = new Map(
+      subset.variables.map(entry => [entry.name, entry])
+    );
+    const styleSpecs = new Map(
+      subset.styles.text.map(entry => [entry.id, entry])
+    );
+    const sourceValue = (entry, modeId) =>
+      entry.values[modeId]?.alias
+        ? sourceValue(variables.get(entry.values[modeId].alias), modeId)
+        : entry.values[modeId];
+    context.richSourceContext = {
+      deferredStyles: true,
+      modeIds: subset.modes.map(mode => mode.id),
+      creationFont: { family: 'Inter', style: 'Regular' },
+      readState: () => '',
+      writeState: () => {
+        throw new Error('Compiler source validation cannot write identity.');
+      },
+      resolveStyle: key => {
+        const spec = styleSpecs.get(key);
+        return spec
+          ? {
+              key,
+              pending: true,
+              style: {
+                type: 'TEXT',
+                id: null,
+                fontName: spec.values[brandId].fontName,
+              },
+            }
+          : undefined;
+      },
+      resolveColor: key => {
+        const spec = variables.get(key);
+        return spec
+          ? {
+              key,
+              variable: { id: spec.id, resolvedType: spec.type },
+              values: Object.fromEntries(
+                subset.modes.map(mode => [mode.id, sourceValue(spec, mode.id)])
+              ),
+            }
+          : undefined;
+      },
+      // Pure dependency projections. Native availability/API alias checks still run in Figma.
+      figma: {
+        loadFontAsync: async () => {},
+        variables: {
+          setBoundVariableForPaint: (paint, field, variable) => ({
+            ...paint,
+            boundVariables: {
+              [field]: { type: 'VARIABLE_ALIAS', id: variable.id },
+            },
+          }),
+        },
+      },
+    };
+    async function validateRichTree(tree, key) {
+      if (tree.textRuns !== undefined) {
+        context.richSourceTree = { ...tree, id: key };
+        await vm.runInContext(
+          'mgRichText.prepare(richSourceTree, richSourceContext)',
+          context,
+          { timeout: 1000 }
+        );
+      }
+      for (const child of tree.children || [])
+        await validateRichTree(child, `${key}/${child.id || child.key}`);
+    }
+    for (const family of subset.components.families)
+      for (const variant of family.variants)
+        await validateRichTree(
+          variant.tree,
+          `family/${family.id}/variant/${variant.id}`
+        );
+  }
   const directTextEnabled =
     operation === 'build' &&
     subset.components.families.some(family =>
@@ -1071,6 +1211,9 @@ async function buildConnector({
       : ['diagnostics', 'inspect'].includes(operation)
         ? 'kit-inspection.js'
         : null;
+  if (richTextEnabled)
+    source +=
+      fs.readFileSync(path.join(PLUGIN, 'kit-rich-text.js'), 'utf8') + '\n;\n';
   let packedDocument = subset;
   if (runtime) {
     const runtimeSource = fs.readFileSync(path.join(PLUGIN, runtime), 'utf8');
@@ -1127,6 +1270,9 @@ async function buildConnector({
         MG_CONNECTOR_REVIEW_SURFACES: reviewSurfacesEnabled,
         MG_CONNECTOR_TEXT_OFFSET: textOffsetEnabled,
         MG_CONNECTOR_REVIEW_NODES: reviewNodesEnabled,
+        MG_CONNECTOR_RICH_DTO_VALIDATION: false,
+        MG_CONNECTOR_RICH_SOURCE_VALIDATION: false,
+        MG_CONNECTOR_RICH_TEXT: richTextEnabled,
         MG_CONNECTOR_DIRECT_TEXT: directTextEnabled,
         MG_CONNECTOR_FOCUS: focusEnabled,
         MG_CONNECTOR_COINCIDENT_FOCUS: coincidentFocusEnabled,
@@ -1161,6 +1307,7 @@ async function buildConnector({
     svgEnabled,
     ellipseEnabled,
     directTextEnabled,
+    richTextEnabled,
     coincidentFocusEnabled,
     letterSpacingEnabled,
     focusEnabled,

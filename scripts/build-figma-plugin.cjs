@@ -9,6 +9,7 @@ const SOURCES = [
   'importer.js',
   'code.js',
   'kit-inspection.js',
+  'kit-rich-text.js',
   'kit-builder.js',
   'kit-layout.js',
   'kit-navigation.js',

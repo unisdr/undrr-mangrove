@@ -29,7 +29,7 @@ its controls need a shared foundation, rather than a circular recipe dependency.
 | Remaining reusable contracts          | Source inventory and existing partial scopes                              | root coordination | Expand each meaningful missing appearance through reviewed batches                                                  |
 | Search composition                    | Audit S2 through S6 pending                                               | root coordination | Custom facets/results/status/drawer and authored portal/book/card presets                                           |
 | Landing/news/hub pages                | Audit P4 through P8 pending                                               | root coordination | Actual linked reusable child instances and source page contracts                                                    |
-| Native integration                    | Empty unpublished experiment created                                      | root              | Guarded construction, structural/visual review and ordinary repeats                                                 |
+| Native integration                    | Isolated UNDRR Tag cloud cohort constructed; ordinary desktop gates open  | root              | Further cohorts, source parity, native mode checks and ordinary repeats                                             |
 | Publication and consumer verification | Pending                                                                   | root and reviewer | Selective publication, linked consumer update and restoration                                                       |
 
 Owners identify active subagent work, not permanent approvals or a completion
@@ -60,11 +60,15 @@ The cloud connector created
 Its returned key is `GbVTvFbuWjoJr6Bf5t4fhg`. A read-only Plugin API call confirmed
 the same actual `figma.fileKey`, root `0:0`, page `0:1`, no scene children, no
 local variable collections and no local text/effect styles. It is unpublished.
-No component or foundation asset has been constructed there yet.
+This describes the initial empty checkpoint. The file now contains a separate
+UNDRR foundation collection, five Tag masters, review instances and one edited
+local consumer instance. It remains unpublished. The guarded Tag cloud build
+passed two zero-create repeats with exact recorded geometry after a reviewed
+review-scaffold sizing correction. See [the cloud evidence](CLOUD-DRAFT-EXPERIMENT.md).
 
 Cloud file-key availability does not establish desktop plugin availability.
-Before any cloud import/build, implement and independently review an exact target
-guard that runs before controller evaluation and at mutation entry. Preserve the
+The independently reviewed exact target guard runs before controller evaluation
+and at mutation entry. Preserve the
 normal runtime and use shared identity mode. The canonical kit, consumer and
 recovery keys are denied. No publication or consumer reconnection belongs to
 this experiment. See the [native experiment plan](../DRAFT-NATIVE-EXPERIMENT.md).
