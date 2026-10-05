@@ -532,6 +532,11 @@ The redesigned plugin separates Import, Core kit and Diagnostics; navigation, co
 
 ## Source references and build freshness
 
+The separately requested [Range, Tag and Notice source drafts](COMPONENT-DRAFTS.md)
+prepare 13 bounded variants through recipes and mock tests. Their distinct review
+packet is not importer input. They remain outside the normal catalogue, core
+selection, published library and reduced maintenance merge cohort.
+
 **Source examples** beside Browse component opens references for the selected family. Diagnostics > **Source previews in Storybook** also lists source components and examples from the loaded inventory, including planned entries. Links open the public Storybook as reference previews; deployment revision and native-variant correspondence are unverified. Unsupported identities show a reason instead of a guessed link. See [Storybook integrations](STORYBOOK-INTEGRATIONS.md) for Designs, Storybook Connect and the account requirements.
 
 Run `node scripts/build-figma-tokens.cjs --check` to check ignored JSON and runtime freshness without writing. Normal generation writes only changed bytes. Close the plugin before generating and reopen it before loading the new JSON. This reduces unnecessary reloads; it does not automate source propagation or consumer acceptance.
