@@ -1,9 +1,21 @@
 {
   "schema": "mangrove-news-detail-source-evidence-v1",
   "scope": "Actual authored English ArticleStory five stories, five themes, 390/1164. No Figma or native claim. Live external iframe pixels not authored or accepted.",
-  "rawDirectory": "/tmp/mangrove-news-detail-source-20261005",
+  "rawDirectory": "/tmp/mangrove-news-detail-source-rebuilt-20261006",
   "scenes": {
     "delta-alternate-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3996,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -746,7 +758,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:51.511Z",
+      "timestamp": "2026-10-05T23:21:00.418Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -754,6 +766,18 @@
       }
     },
     "delta-alternate-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6099,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -1496,7 +1520,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:48.911Z",
+      "timestamp": "2026-10-05T23:20:55.983Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -1504,6 +1528,18 @@
       }
     },
     "delta-compact-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 4061,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -2246,7 +2282,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:51.013Z",
+      "timestamp": "2026-10-05T23:20:59.656Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -2254,6 +2290,18 @@
       }
     },
     "delta-compact-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6113,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -2996,7 +3044,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:48.362Z",
+      "timestamp": "2026-10-05T23:20:55.183Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -3004,6 +3052,18 @@
       }
     },
     "delta-large-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 4072,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -3746,7 +3806,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:50.512Z",
+      "timestamp": "2026-10-05T23:20:58.737Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -3754,6 +3814,18 @@
       }
     },
     "delta-large-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6123,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -4496,7 +4568,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:47.828Z",
+      "timestamp": "2026-10-05T23:20:54.318Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -4504,6 +4576,18 @@
       }
     },
     "delta-no-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3396,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -5163,7 +5247,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:49.996Z",
+      "timestamp": "2026-10-05T23:20:57.818Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -5171,6 +5255,18 @@
       }
     },
     "delta-no-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 5847,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -5830,7 +5926,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:47.312Z",
+      "timestamp": "2026-10-05T23:20:53.516Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -5838,6 +5934,18 @@
       }
     },
     "delta-split-hero-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3395,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -6505,7 +6613,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:51.996Z",
+      "timestamp": "2026-10-05T23:21:01.342Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -6513,6 +6621,18 @@
       }
     },
     "delta-split-hero-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 5920,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -7180,7 +7300,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:49.412Z",
+      "timestamp": "2026-10-05T23:20:56.884Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -7188,6 +7308,18 @@
       }
     },
     "irp-alternate-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3996,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -7930,7 +8062,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:57.096Z",
+      "timestamp": "2026-10-05T23:21:11.508Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -7938,6 +8070,18 @@
       }
     },
     "irp-alternate-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6099,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -8680,7 +8824,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:54.245Z",
+      "timestamp": "2026-10-05T23:21:05.133Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -8688,6 +8832,18 @@
       }
     },
     "irp-compact-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 4061,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -9430,7 +9586,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:56.412Z",
+      "timestamp": "2026-10-05T23:21:10.499Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -9438,6 +9594,18 @@
       }
     },
     "irp-compact-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6113,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -10180,7 +10348,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:53.678Z",
+      "timestamp": "2026-10-05T23:21:04.266Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -10188,6 +10356,18 @@
       }
     },
     "irp-large-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 4072,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -10930,15 +11110,26 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:53:04.464Z",
+      "timestamp": "2026-10-05T23:21:08.635Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
         "width": 1164
-      },
-      "remeasuredAfterPendingImageDecode": true
+      }
     },
     "irp-large-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6123,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -11681,7 +11872,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:53.079Z",
+      "timestamp": "2026-10-05T23:21:03.284Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -11689,6 +11880,18 @@
       }
     },
     "irp-no-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3396,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -12348,7 +12551,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:55.396Z",
+      "timestamp": "2026-10-05T23:21:07.323Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -12356,6 +12559,18 @@
       }
     },
     "irp-no-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 5847,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -13015,7 +13230,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:52.579Z",
+      "timestamp": "2026-10-05T23:21:02.367Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -13023,6 +13238,18 @@
       }
     },
     "irp-split-hero-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3395,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -13690,7 +13917,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:57.627Z",
+      "timestamp": "2026-10-05T23:21:12.638Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -13698,6 +13925,18 @@
       }
     },
     "irp-split-hero-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 5920,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -14365,7 +14604,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:54.811Z",
+      "timestamp": "2026-10-05T23:21:06.090Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -14373,6 +14612,18 @@
       }
     },
     "mcr-alternate-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3996,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -15115,7 +15366,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:02.510Z",
+      "timestamp": "2026-10-05T23:21:22.199Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -15123,6 +15374,18 @@
       }
     },
     "mcr-alternate-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6111,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -15865,7 +16128,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:59.812Z",
+      "timestamp": "2026-10-05T23:21:16.533Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -15873,6 +16136,18 @@
       }
     },
     "mcr-compact-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 4061,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -16615,7 +16890,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:02.010Z",
+      "timestamp": "2026-10-05T23:21:20.949Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -16623,6 +16898,18 @@
       }
     },
     "mcr-compact-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6125,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -17365,7 +17652,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:59.279Z",
+      "timestamp": "2026-10-05T23:21:15.549Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -17373,6 +17660,18 @@
       }
     },
     "mcr-large-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 4072,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -18115,7 +18414,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:01.478Z",
+      "timestamp": "2026-10-05T23:21:19.666Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -18123,6 +18422,18 @@
       }
     },
     "mcr-large-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6135,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -18865,7 +19176,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:58.745Z",
+      "timestamp": "2026-10-05T23:21:14.566Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -18873,6 +19184,18 @@
       }
     },
     "mcr-no-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3396,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -19532,7 +19855,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:00.962Z",
+      "timestamp": "2026-10-05T23:21:18.599Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -19540,6 +19863,18 @@
       }
     },
     "mcr-no-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 5859,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -20199,7 +20534,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:58.245Z",
+      "timestamp": "2026-10-05T23:21:13.632Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -20207,6 +20542,18 @@
       }
     },
     "mcr-split-hero-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3395,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -20874,7 +21221,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:03.010Z",
+      "timestamp": "2026-10-05T23:21:23.626Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -20882,6 +21229,18 @@
       }
     },
     "mcr-split-hero-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 5932,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -21549,7 +21908,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:00.377Z",
+      "timestamp": "2026-10-05T23:21:17.533Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -21557,6 +21916,18 @@
       }
     },
     "preventionweb-alternate-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3996,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -22299,7 +22670,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:07.945Z",
+      "timestamp": "2026-10-05T23:21:40.099Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -22307,6 +22678,18 @@
       }
     },
     "preventionweb-alternate-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6099,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -23049,7 +23432,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:05.210Z",
+      "timestamp": "2026-10-05T23:21:32.833Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -23057,6 +23440,18 @@
       }
     },
     "preventionweb-compact-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 4061,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -23799,7 +24194,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:07.377Z",
+      "timestamp": "2026-10-05T23:21:38.883Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -23807,6 +24202,18 @@
       }
     },
     "preventionweb-compact-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6113,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -24549,7 +24956,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:04.693Z",
+      "timestamp": "2026-10-05T23:21:31.582Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -24557,6 +24964,18 @@
       }
     },
     "preventionweb-large-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 4072,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -25299,7 +25718,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:06.843Z",
+      "timestamp": "2026-10-05T23:21:37.484Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -25307,6 +25726,18 @@
       }
     },
     "preventionweb-large-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6123,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -26049,7 +26480,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:04.162Z",
+      "timestamp": "2026-10-05T23:21:29.533Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -26057,6 +26488,18 @@
       }
     },
     "preventionweb-no-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3396,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -26716,7 +27159,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:06.310Z",
+      "timestamp": "2026-10-05T23:21:36.081Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -26724,6 +27167,18 @@
       }
     },
     "preventionweb-no-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 5847,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -27383,7 +27838,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:03.593Z",
+      "timestamp": "2026-10-05T23:21:27.183Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -27391,6 +27846,18 @@
       }
     },
     "preventionweb-split-hero-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3395,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -28058,7 +28525,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:08.460Z",
+      "timestamp": "2026-10-05T23:21:41.382Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -28066,6 +28533,18 @@
       }
     },
     "preventionweb-split-hero-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 5920,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -28733,7 +29212,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:50:05.776Z",
+      "timestamp": "2026-10-05T23:21:34.615Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -28741,6 +29220,18 @@
       }
     },
     "undrr-alternate-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3996,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -29483,7 +29974,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:46.246Z",
+      "timestamp": "2026-10-05T23:20:51.485Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -29491,6 +29982,18 @@
       }
     },
     "undrr-alternate-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6312,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -30233,7 +30736,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:43.746Z",
+      "timestamp": "2026-10-05T23:20:46.635Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--alternate-hero-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -30241,6 +30744,18 @@
       }
     },
     "undrr-compact-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3996,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -30983,7 +31498,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:45.763Z",
+      "timestamp": "2026-10-05T23:20:50.768Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -30991,6 +31506,18 @@
       }
     },
     "undrr-compact-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6324,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -31733,7 +32260,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:43.263Z",
+      "timestamp": "2026-10-05T23:20:45.735Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--compact-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -31741,6 +32268,18 @@
       }
     },
     "undrr-large-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 4072,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -32483,7 +33022,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:45.229Z",
+      "timestamp": "2026-10-05T23:20:49.800Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -32491,6 +33030,18 @@
       }
     },
     "undrr-large-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6335,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -33233,15 +33784,26 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:53:03.488Z",
+      "timestamp": "2026-10-05T23:20:44.751Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--large-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
         "width": 390
-      },
-      "remeasuredAfterPendingImageDecode": true
+      }
     },
     "undrr-no-hero-image-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3396,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -33901,7 +34463,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:44.746Z",
+      "timestamp": "2026-10-05T23:20:48.641Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -33909,12 +34471,24 @@
       }
     },
     "undrr-no-hero-image-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6069,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
+        "https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/Regular/RobotoCondensed-Regular.woff2?v=2.137",
         "https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/Bold/RobotoCondensed-Bold.woff2?v=2.137",
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Bold/Roboto-Bold.woff2?v=2.137",
-        "https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/Regular/RobotoCondensed-Regular.woff2?v=2.137",
         "https://assets.undrr.org/fonts/roboto/v1.0.0/BoldItalic/Roboto-BoldItalic.woff2?v=2.137",
         "http://localhost:6121/static/media/stories/assets/fonts/mangrove-icon-set/font/mangrove-icon-set.woff2"
       ],
@@ -34568,7 +35142,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:42.112Z",
+      "timestamp": "2026-10-05T23:20:43.468Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -34576,6 +35150,18 @@
       }
     },
     "undrr-split-hero-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 3395,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -35243,7 +35829,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:46.745Z",
+      "timestamp": "2026-10-05T23:20:52.518Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -35251,6 +35837,18 @@
       }
     },
     "undrr-split-hero-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "documentHeight": 6076,
       "fontRequests": [
         "https://assets.undrr.org/fonts/roboto/v1.0.0/Regular/Roboto-Regular.woff2?v=2.137",
@@ -35918,7 +36516,7 @@
           }
         }
       ],
-      "timestamp": "2026-10-05T21:49:44.229Z",
+      "timestamp": "2026-10-05T23:20:47.568Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--split-hero&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish",
       "viewport": {
         "height": 900,
@@ -35938,6 +36536,18 @@
         "x": 586.40625,
         "y": 1682.59375
       },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fragments": [
         {
           "x": 81,
@@ -35998,7 +36608,7 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:51:00.293Z",
+      "timestamp": "2026-10-05T23:22:58.929Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish"
     },
     "delta-float-fragments-390": {
@@ -36012,6 +36622,18 @@
         "x": 20,
         "y": 2986.984375
       },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fragments": [
         {
           "x": 20,
@@ -36090,7 +36712,7 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:50:59.542Z",
+      "timestamp": "2026-10-05T23:22:58.312Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme%3Blocale%3Aenglish"
     },
     "irp-float-fragments-1164": {
@@ -36104,6 +36726,18 @@
         "x": 586.40625,
         "y": 1682.59375
       },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fragments": [
         {
           "x": 81,
@@ -36164,7 +36798,7 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:51:01.609Z",
+      "timestamp": "2026-10-05T23:23:00.144Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish"
     },
     "irp-float-fragments-390": {
@@ -36178,6 +36812,18 @@
         "x": 20,
         "y": 2986.984375
       },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fragments": [
         {
           "x": 20,
@@ -36256,7 +36902,7 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:51:00.991Z",
+      "timestamp": "2026-10-05T23:22:59.577Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AIRP%20Theme%3Blocale%3Aenglish"
     },
     "mcr-float-fragments-1164": {
@@ -36270,6 +36916,18 @@
         "x": 586.40625,
         "y": 1682.59375
       },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fragments": [
         {
           "x": 81,
@@ -36330,7 +36988,7 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:51:02.826Z",
+      "timestamp": "2026-10-05T23:23:01.679Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish"
     },
     "mcr-float-fragments-390": {
@@ -36344,6 +37002,18 @@
         "x": 20,
         "y": 2986.984375
       },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fragments": [
         {
           "x": 20,
@@ -36422,7 +37092,7 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:51:02.241Z",
+      "timestamp": "2026-10-05T23:23:00.761Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AMCR2030%20Theme%3Blocale%3Aenglish"
     },
     "preventionweb-float-fragments-1164": {
@@ -36436,6 +37106,18 @@
         "x": 586.40625,
         "y": 1682.59375
       },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fragments": [
         {
           "x": 81,
@@ -36496,7 +37178,7 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:51:04.109Z",
+      "timestamp": "2026-10-05T23:23:03.345Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish"
     },
     "preventionweb-float-fragments-390": {
@@ -36509,6 +37191,18 @@
         "width": 350,
         "x": 20,
         "y": 2986.984375
+      },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
       },
       "fragments": [
         {
@@ -36588,7 +37282,7 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:51:03.526Z",
+      "timestamp": "2026-10-05T23:23:02.611Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3APreventionWeb%20Theme%3Blocale%3Aenglish"
     },
     "undrr-float-fragments-1164": {
@@ -36601,6 +37295,18 @@
         "width": 216.59375,
         "x": 586.40625,
         "y": 1682.59375
+      },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
       },
       "fragments": [
         {
@@ -36662,7 +37368,7 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:50:58.892Z",
+      "timestamp": "2026-10-05T23:22:57.696Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish"
     },
     "undrr-float-fragments-390": {
@@ -36675,6 +37381,18 @@
         "width": 330,
         "x": 30,
         "y": 3148.984375
+      },
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
       },
       "fragments": [
         {
@@ -36754,8 +37472,9 @@
         "Share via Email",
         "Generate QR Code"
       ],
-      "timestamp": "2026-10-05T21:50:58.209Z",
+      "timestamp": "2026-10-05T23:22:57.178Z",
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme%3Blocale%3Aenglish"
     }
-  }
+  },
+  "recapture": "Committed current yarn scss CSS control aliases verified in every browser observation; original50 scenes/10 floats preserved externally and in05628a17."
 }

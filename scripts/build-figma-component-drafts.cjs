@@ -83,6 +83,11 @@ const recipes = [
     './figma-news-detail-recipes.cjs',
     'buildNewsDetailDependencyRecipes',
   ],
+  [
+    ['search-result-item', 'search-result-fields', 'search-result-state'],
+    './figma-search-result-recipes.cjs',
+    'buildSearchResultRecipes',
+  ],
 ];
 
 function validateDrafts(families, assets, dependencies = []) {

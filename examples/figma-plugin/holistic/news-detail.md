@@ -10,6 +10,25 @@ Fifty authored English source cases cover the five actual stories, five themes a
 
 Full receipts and one full-page screenshot are external at `/tmp/mangrove-news-detail-source-20261005`. [Source footprints](assets/news-detail/source-footprints.json) archives the relevant geometry and layout fields. [Provenance](assets/news-detail/provenance.json) pins the exact31-module transitive ArticleStory import graph plus source cascade, tokens, font dependencies and evidence. No Figma mutation or publication occurred. External image response bytes are not pinned for a native image family here. Live iframe pixels are not authored source assets or accepted native media.
 
+A clean committed `yarn scss` rebuild exposed a stale ignored generated CSS input
+in the original captures. The current build adds a comment and ten framework-neutral
+control aliases. The archived News source and dependency evidence was freshly
+recaptured after regeneration, rather than accepting a replacement hash alone.
+The rebuilt root stylesheet matches clean committed05628a17 byte for byte with
+SHA256 `1806dd1446f5df7252676c69ad2a0da168aa46343c3e668cf17fc06f2dd3fd60`.
+All ten new control roles are nonempty in each browser observation. The fifty
+scenes have3,380 recorded rectangles exactly equal to the earlier source;
+ten float boxes/line-fragment sets and twenty dependency trees/rectangles/styles
+also match exactly. This is recorded geometry and CSS evidence, without a raster
+or native font/render claim. The old captures and timestamps remain in their
+original external directories and commit05628a17. Fresh raw source observations
+are at `/tmp/mangrove-news-detail-source-rebuilt-20261006`, with dependency cases
+at `/tmp/mangrove-news-dependencies-rebuilt-source-20261006` and
+`/tmp/mangrove-news-without-share-rebuilt-source-20261006`. Provenance retains raw
+case and executed capture-script hashes; archived scripts use whitespace formatting.
+All three browser sessions were closed. The strict CSS and evidence drift guards
+remain enabled.
+
 | Source viewport | Article content width               | Rail placement                     | Share icon bar                          | Secondary callout                                                 | Related cards                               |
 | --------------- | ----------------------------------- | ---------------------------------- | --------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------- |
 | 390             | 330px UNDRR,350px other four themes | Before article, same content width | 40px tall with six actions              | Full content width, float none                                    | One column,350px UNDRR or370px other themes |

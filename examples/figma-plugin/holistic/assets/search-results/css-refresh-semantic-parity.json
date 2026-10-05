@@ -1,0 +1,115 @@
+{
+  "scope": "actual recorded source DOM geometry/computed style/DOM text ranges/image URL and natural dimensions; no native equivalence",
+  "currentCompiledCssSha256": "1806dd1446f5df7252676c69ad2a0da168aa46343c3e668cf17fc06f2dd3fd60",
+  "rows": [
+    {
+      "file": "delta-1164.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "308ce58057e3a44e5e8b7e8c740f912221ae686565d00d90b80213549eac2c50",
+      "afterSha256": "308ce58057e3a44e5e8b7e8c740f912221ae686565d00d90b80213549eac2c50"
+    },
+    {
+      "file": "delta-390.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "a9b007bb434d00ab3c5faa1204ad9eb5ee7181dc78f4dcbcfebbe2d74c7963fb",
+      "afterSha256": "a9b007bb434d00ab3c5faa1204ad9eb5ee7181dc78f4dcbcfebbe2d74c7963fb"
+    },
+    {
+      "file": "irp-1164.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "50eba14fc74043b2e64397da68ef84e8535f85bdfaee0ec2160b1bfb12e0d577",
+      "afterSha256": "50eba14fc74043b2e64397da68ef84e8535f85bdfaee0ec2160b1bfb12e0d577"
+    },
+    {
+      "file": "irp-390.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "9a82db827aa4c22fe931007f6aaaae3666ad39a109610e25b9ef2bb16d4bdb59",
+      "afterSha256": "9a82db827aa4c22fe931007f6aaaae3666ad39a109610e25b9ef2bb16d4bdb59"
+    },
+    {
+      "file": "mcr-1164.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "5a6758382b8c4daaed36b43f55013e613a0222c40d1b732779dc97cd8a0b0ce3",
+      "afterSha256": "5a6758382b8c4daaed36b43f55013e613a0222c40d1b732779dc97cd8a0b0ce3"
+    },
+    {
+      "file": "mcr-390.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "53c23c455b7a00d6f013f99d25d7c84e5a355395e03f5f12e62ab1eba5888995",
+      "afterSha256": "53c23c455b7a00d6f013f99d25d7c84e5a355395e03f5f12e62ab1eba5888995"
+    },
+    {
+      "file": "preventionweb-1164.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "34e8546f39a1e786f3e8bda289d68882b53198cb04a30f481a7004b6d875f5dc",
+      "afterSha256": "34e8546f39a1e786f3e8bda289d68882b53198cb04a30f481a7004b6d875f5dc"
+    },
+    {
+      "file": "preventionweb-390.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "ea56de25aa8adb244b64e69883f872d06ea58f7684e924383007639031812b4b",
+      "afterSha256": "ea56de25aa8adb244b64e69883f872d06ea58f7684e924383007639031812b4b"
+    },
+    {
+      "file": "undrr-1164.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "f3215d65c735f3c3f6d4b95ce5e6b29cd5c4795ada6e0b53f4718c07faf7d4e9",
+      "afterSha256": "f3215d65c735f3c3f6d4b95ce5e6b29cd5c4795ada6e0b53f4718c07faf7d4e9"
+    },
+    {
+      "file": "undrr-390.json",
+      "scenes": 38,
+      "recordedSceneGeometryStylesTextImagesExact": true,
+      "beforeSha256": "b09d730a144bf1791bc5557a55e6207c966ad5e73cc05c83a52f90d734f4fabd",
+      "afterSha256": "b09d730a144bf1791bc5557a55e6207c966ad5e73cc05c83a52f90d734f4fabd"
+    }
+  ],
+  "allExact": true,
+  "browserLoadCheckAfterRecapture": {
+    "alias": "rgb(0 79 145 / 0.06)",
+    "controlText": "rgb(26 26 26)",
+    "scope": "narrow actual results-source browser load check after semantic recapture",
+    "styles": [
+      {
+        "bytes": 904,
+        "hasControlAliases": false,
+        "sha256": "d32f57d292d7210082acb74bc0e2ac104814631dccc46521c018ba3fa9e89775"
+      },
+      {
+        "bytes": 9951,
+        "hasControlAliases": false,
+        "sha256": "f1f189b526e390696b6558a2a5a550146b23076f55ee0788b9c650045071e9ad"
+      },
+      {
+        "bytes": 943,
+        "hasControlAliases": false,
+        "sha256": "fe66e25c72954a004bcc43074298abb3deb157ce37631426a0abb42da8b81b88"
+      },
+      {
+        "bytes": 98,
+        "hasControlAliases": false,
+        "sha256": "70ca579b23c919aa134c0fa3b866ec34d380493798f40573bd9a59b6a3556c77"
+      },
+      {
+        "bytes": 2050902,
+        "hasControlAliases": true,
+        "sha256": "119c8c415a8dad6bc8ff4de5c95608051684d4642dae8679bc830644be0973ee"
+      },
+      {
+        "bytes": 3470,
+        "hasControlAliases": false,
+        "sha256": "acc6a4e85d3003507446bc48b9b68003d8838e89182e8f400c90af8a208880d8"
+      }
+    ],
+    "url": "http://localhost:6121/iframe.html?id=components-syndicated-search--default&globals=theme%3AGlobal%20UNDRR%20Theme&viewMode=story"
+  }
+}

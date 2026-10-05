@@ -35,10 +35,12 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 32 families and 133 bounded variants, deliberately
+- Separate source draft packet: 35 families and 209 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
-  Search controls add four families/15 variants. Page prose, closed chrome,
+  Search controls add four families/15 variants, and internal result families add
+  three families/76 variants with actual per-line source anatomy and meaningful
+  item, field-visibility and result-state branches. See [search results](search-results.md). Page prose, closed chrome,
   bulleted contents lists and quotes add five families/26 variants. These are
   bounded parts of the requested compositions. Three report families/six variants
   now provide the complete finite authored English closed-chrome report scene

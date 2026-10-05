@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **32 families / 133 bounded variants**.
+The current holistic packet contains **35 families / 209 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -9,7 +9,10 @@ The packet remains deliberately non-importable and the normal exporter remains
 32 families/383 variants. See [the holistic scope](holistic/README.md) and
 [authored card contracts](holistic/card-content.md).
 
-Search controls add four families/15 variants. Page prose adds two families/four
+Search controls add four families/15 variants. Three internal result families add
+76 bounded source variants: result items42, field visibility14 and result states20.
+They retain actual per-line content allocation and source fixtures. These are
+source dependencies, not a complete syndicated widget. See [search results](holistic/search-results.md). Page prose adds two families/four
 variants, closed chrome adds one family/six variants, and bulleted contents lists
 and quote patterns add two families/16 variants. See [search controls](holistic/search-controls.md),
 [page prose](holistic/page-patterns.md), [closed chrome](holistic/page-chrome.md)
@@ -115,9 +118,13 @@ outside this source-only contract.
 
 ## Generate and verify a packet
 
-From the repository root, choose a new output location outside the repository:
+From the repository root with dependencies installed, first regenerate the CSS
+prerequisites from committed source. Captured source guards refuse missing or
+changed generated stylesheets; a clean checkout needs this build. Then choose
+a new output location outside the repository:
 
 ```sh
+yarn scss
 node scripts/build-figma-component-drafts.cjs --output /tmp/mangrove-component-drafts.json
 node scripts/build-figma-component-drafts.cjs --check /tmp/mangrove-component-drafts.json
 node examples/figma-plugin/dev/mock-component-drafts.cjs
@@ -130,6 +137,8 @@ node examples/figma-plugin/dev/mock-highlight-box.cjs
 node examples/figma-plugin/dev/mock-accordion.cjs
 node examples/figma-plugin/dev/mock-pager.cjs
 node examples/figma-plugin/dev/mock-user-feedback.cjs
+node examples/figma-plugin/dev/mock-news-detail.cjs
+node examples/figma-plugin/dev/mock-search-results.cjs
 ```
 
 The exporter refuses to overwrite an existing packet. Its provenance records the

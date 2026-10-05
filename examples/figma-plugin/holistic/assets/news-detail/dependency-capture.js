@@ -76,7 +76,31 @@
     [...document.querySelectorAll('main>section')].find(
       n => n.querySelector('h2')?.textContent === name
     );
+  const controlAliases = Object.fromEntries(
+    [
+      'text',
+      'muted-text',
+      'accent',
+      'surface',
+      'surface-focus',
+      'border',
+      'border-focus',
+      'option-hover',
+      'option-selected',
+      'error',
+    ].map(n => [
+      '--mg-control-' + n,
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--mg-control-' + n)
+        .trim(),
+    ])
+  );
+  if (Object.values(controlAliases).some(v => !v))
+    throw Error(
+      'Current committed control aliases missing from active source stylesheet'
+    );
   return {
+    controlAliases,
     url: location.href,
     viewport: { width: innerWidth, height: innerHeight },
     nativeShare: typeof navigator.share === 'function',

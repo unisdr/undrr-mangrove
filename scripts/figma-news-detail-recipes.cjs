@@ -6,7 +6,7 @@ const fs = require('fs'),
 const PROVENANCE =
   'examples/figma-plugin/holistic/assets/news-detail/provenance.json';
 const PROVENANCE_HASH =
-  '0eaec2f3562697b782bc53b1e222fbd097b4f663a5ddb5816874a3f8a81ff4e4';
+  '62b6ec051903a5124b2f80625e1990c5c339fe4c0dc0c69ed2d34c34f3b3ccec';
 const DEPENDENCIES = [
   {
     id: 'page-chrome',
@@ -149,7 +149,7 @@ module.exports = { inspectNewsDetailPrerequisites, buildNewsDetailRecipes };
 const DEPENDENCY_PROVENANCE =
   'examples/figma-plugin/holistic/assets/news-detail/dependency-provenance.json';
 const DEPENDENCY_PROVENANCE_HASH =
-  'b5eca1c66375695962745b6ea61cf5d9d364e515d29da647b798b9a8fc4ea802';
+  '0b541b511cf3bce8e03dbd7a392ce8efa3a60b379e95e311aaa36ff197ae1fca';
 /** Finite source dependencies only, never a complete ArticleStory assembly. */
 function buildNewsDetailDependencyRecipes({ root, modes, variables, styles }) {
   const originalVariables = variables,

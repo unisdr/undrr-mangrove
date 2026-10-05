@@ -4,6 +4,18 @@
   "locale": "English",
   "primaryScenes": {
     "delta-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -5308,10 +5320,22 @@
         "height": 1000,
         "width": 1164
       },
-      "capturedAt": "2026-10-05T22:34:53.444813+00:00",
+      "capturedAt": "2026-10-05T23:21:34.351385+00:00",
       "brand": "delta"
     },
     "delta-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -10616,10 +10640,22 @@
         "height": 1000,
         "width": 390
       },
-      "capturedAt": "2026-10-05T22:34:52.159353+00:00",
+      "capturedAt": "2026-10-05T23:21:32.614327+00:00",
       "brand": "delta"
     },
     "irp-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -15924,10 +15960,22 @@
         "height": 1000,
         "width": 1164
       },
-      "capturedAt": "2026-10-05T22:34:55.537584+00:00",
+      "capturedAt": "2026-10-05T23:21:37.008367+00:00",
       "brand": "irp"
     },
     "irp-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -21232,10 +21280,22 @@
         "height": 1000,
         "width": 390
       },
-      "capturedAt": "2026-10-05T22:34:54.527200+00:00",
+      "capturedAt": "2026-10-05T23:21:35.722467+00:00",
       "brand": "irp"
     },
     "mcr-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -26540,10 +26600,22 @@
         "height": 1000,
         "width": 1164
       },
-      "capturedAt": "2026-10-05T22:34:57.388044+00:00",
+      "capturedAt": "2026-10-05T23:21:39.756772+00:00",
       "brand": "mcr"
     },
     "mcr-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -31848,10 +31920,22 @@
         "height": 1000,
         "width": 390
       },
-      "capturedAt": "2026-10-05T22:34:56.521124+00:00",
+      "capturedAt": "2026-10-05T23:21:38.511671+00:00",
       "brand": "mcr"
     },
     "preventionweb-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -37156,10 +37240,22 @@
         "height": 1000,
         "width": 1164
       },
-      "capturedAt": "2026-10-05T22:34:59.331518+00:00",
+      "capturedAt": "2026-10-05T23:21:42.457823+00:00",
       "brand": "preventionweb"
     },
     "preventionweb-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -42464,10 +42560,22 @@
         "height": 1000,
         "width": 390
       },
-      "capturedAt": "2026-10-05T22:34:58.373582+00:00",
+      "capturedAt": "2026-10-05T23:21:41.174417+00:00",
       "brand": "preventionweb"
     },
     "undrr-1164": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -47772,10 +47880,22 @@
         "height": 1000,
         "width": 1164
       },
-      "capturedAt": "2026-10-05T22:34:51.201466+00:00",
+      "capturedAt": "2026-10-05T23:21:31.218561+00:00",
       "brand": "undrr"
     },
     "undrr-390": {
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "fonts": [
         {
           "family": "Roboto",
@@ -53080,20 +53200,32 @@
         "height": 1000,
         "width": 390
       },
-      "capturedAt": "2026-10-05T22:34:50.209523+00:00",
+      "capturedAt": "2026-10-05T23:21:29.280739+00:00",
       "brand": "undrr"
     }
   },
   "noShareDiagnostics": {
     "delta-1164-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme",
-      "capturedAt": "2026-10-05T22:36:14.459503+00:00",
+      "capturedAt": "2026-10-05T23:21:48.390829+00:00",
       "brand": "delta",
       "viewport": {
         "height": 1000,
         "width": 1164
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -54391,13 +54523,25 @@
     },
     "delta-390-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3ADELTA%20Resilience%20Theme",
-      "capturedAt": "2026-10-05T22:36:13.459983+00:00",
+      "capturedAt": "2026-10-05T23:21:47.023330+00:00",
       "brand": "delta",
       "viewport": {
         "height": 1000,
         "width": 390
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -55695,13 +55839,25 @@
     },
     "irp-1164-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AIRP%20Theme",
-      "capturedAt": "2026-10-05T22:36:16.529306+00:00",
+      "capturedAt": "2026-10-05T23:21:50.841770+00:00",
       "brand": "irp",
       "viewport": {
         "height": 1000,
         "width": 1164
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -56999,13 +57155,25 @@
     },
     "irp-390-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AIRP%20Theme",
-      "capturedAt": "2026-10-05T22:36:15.561554+00:00",
+      "capturedAt": "2026-10-05T23:21:49.763393+00:00",
       "brand": "irp",
       "viewport": {
         "height": 1000,
         "width": 390
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -58303,13 +58471,25 @@
     },
     "mcr-1164-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AMCR2030%20Theme",
-      "capturedAt": "2026-10-05T22:36:18.568425+00:00",
+      "capturedAt": "2026-10-05T23:22:58.363772+00:00",
       "brand": "mcr",
       "viewport": {
         "height": 1000,
         "width": 1164
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -59607,13 +59787,25 @@
     },
     "mcr-390-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AMCR2030%20Theme",
-      "capturedAt": "2026-10-05T22:36:17.560482+00:00",
+      "capturedAt": "2026-10-05T23:21:51.843483+00:00",
       "brand": "mcr",
       "viewport": {
         "height": 1000,
         "width": 390
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -60911,13 +61103,25 @@
     },
     "preventionweb-1164-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3APreventionWeb%20Theme",
-      "capturedAt": "2026-10-05T22:36:20.699713+00:00",
+      "capturedAt": "2026-10-05T23:22:59.863037+00:00",
       "brand": "preventionweb",
       "viewport": {
         "height": 1000,
         "width": 1164
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -62215,13 +62419,25 @@
     },
     "preventionweb-390-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3APreventionWeb%20Theme",
-      "capturedAt": "2026-10-05T22:36:19.650522+00:00",
+      "capturedAt": "2026-10-05T23:22:59.146473+00:00",
       "brand": "preventionweb",
       "viewport": {
         "height": 1000,
         "width": 390
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -63519,13 +63735,25 @@
     },
     "undrr-1164-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme",
-      "capturedAt": "2026-10-05T22:36:12.502495+00:00",
+      "capturedAt": "2026-10-05T23:21:45.665491+00:00",
       "brand": "undrr",
       "viewport": {
         "height": 1000,
         "width": 1164
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -64823,13 +65051,25 @@
     },
     "undrr-390-no-share": {
       "url": "http://localhost:6121/iframe.html?id=patterns-article-story--no-hero-image&viewMode=story&globals=theme%3AGlobal%20UNDRR%20Theme",
-      "capturedAt": "2026-10-05T22:36:11.523104+00:00",
+      "capturedAt": "2026-10-05T23:21:44.438403+00:00",
       "brand": "undrr",
       "viewport": {
         "height": 1000,
         "width": 390
       },
       "nativeShare": false,
+      "controlAliases": {
+        "--mg-control-accent": "rgb(0 79 145)",
+        "--mg-control-border": "rgb(126 128 130)",
+        "--mg-control-border-focus": "rgb(0 79 145)",
+        "--mg-control-error": "rgb(193 9 32)",
+        "--mg-control-muted-text": "rgb(102 102 102)",
+        "--mg-control-option-hover": "rgb(0 79 145 / 0.06)",
+        "--mg-control-option-selected": "rgb(0 79 145 / 0.12)",
+        "--mg-control-surface": "rgb(240 243 246)",
+        "--mg-control-surface-focus": "rgb(255 255 255)",
+        "--mg-control-text": "rgb(26 26 26)"
+      },
       "share": {
         "ariaLabel": null,
         "children": [
@@ -66125,5 +66365,6 @@
         "text": "Share thismangrove.undrr.org/"
       }
     }
-  }
+  },
+  "captureRegeneration": "Fresh current generated CSS control aliases verified in all20 cases. Prior captures preserved externally and in05628a17; recorded trees/rectangles/styles exact."
 }

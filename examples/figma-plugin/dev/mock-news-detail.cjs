@@ -43,6 +43,9 @@ function auditTests() {
       'stories/Components/HighlightBox/highlight-box.scss',
       'stories/Components/Buttons/ShareButtons/share-buttons.scss',
       'examples/figma-plugin/holistic/assets/news-detail/source-footprints.json',
+      'examples/figma-plugin/holistic/assets/news-detail/source-capture.js',
+      'examples/figma-plugin/holistic/assets/news-detail/float-capture.js',
+      'stories/assets/css/style.css',
       'examples/figma-plugin/holistic/assets/page-reading/source-fonts/Roboto-BoldItalic.woff2',
     ]) {
       const target = path.join(tmp, file),
