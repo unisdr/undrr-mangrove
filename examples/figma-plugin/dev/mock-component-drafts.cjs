@@ -60,11 +60,14 @@ async function main() {
       ['range', 4],
       ['tag', 5],
       ['notice', 4],
+      ['breadcrumbs', 2],
+      ['skip-link', 1],
+      ['highlight-box', 3],
     ]
   );
   assert.strictEqual(
     packet.draftFamilies.reduce((n, f) => n + f.variants.length, 0),
-    13
+    19
   );
   for (const field of [
     'collection',
@@ -93,6 +96,22 @@ async function main() {
     /Missing variable color\/nonexistent-draft-test/
   );
   const cycle = copy(foundation);
+  const badSvg = copy(packet.draftFamilies);
+  const icon = badSvg.find(f => f.id === 'notice').variants[0].tree.children[0]
+    .children[0];
+  assert.strictEqual(icon.type, 'SVG');
+  icon.svg.monochrome = { strokes: 'color/missing-svg-role' };
+  assert.throws(
+    () => validateDrafts(badSvg, foundation),
+    /Missing variable color\/missing-svg-role/
+  );
+  const duplicateStyleName = copy(foundation);
+  duplicateStyleName.styles.text[1].name =
+    duplicateStyleName.styles.text[0].name;
+  assert.throws(
+    () => validateDrafts(packet.draftFamilies, duplicateStyleName),
+    /Duplicate name/
+  );
   const a = cycle.variables.find(v => v.name === 'color/tag');
   const b = cycle.variables.find(v => v.name === 'color/interactive');
   a.values.undrr = { alias: b.name };
@@ -109,7 +128,7 @@ async function main() {
     /Missing\/duplicate anatomy ID/
   );
   console.log(
-    'ok  isolated deterministic three-family/13-variant packet retains full DTO and rejects missing roles, alias cycles and duplicate anatomy'
+    'ok  isolated deterministic six-family/19-variant packet retains full DTO and rejects missing roles, alias cycles and duplicate anatomy'
   );
 
   // Use the actual importer entry, not a duplicated preflight. The packet must
@@ -168,6 +187,10 @@ async function main() {
     frame.appendChild(vector);
     return frame;
   };
+  require('./mock-breadcrumbs.cjs').installBreadcrumbSvgFixture(
+    env,
+    packet.draftFamilies.find(f => f.id === 'breadcrumbs')
+  );
   await importFoundation(env, doc);
   const selected = packet.draftFamilies.map(f => f.id);
   const first = await env.call(
@@ -177,10 +200,10 @@ async function main() {
     selected
   );
   assert.deepStrictEqual(copy(first.errors), []);
-  assert.strictEqual(first.families.length, 3);
+  assert.strictEqual(first.families.length, 6);
   assert.strictEqual(
     first.families.reduce((n, f) => n + f.variantIds.length, 0),
-    13
+    19
   );
   const consumer = [...env.state.nodes.values()].find(
     n =>
@@ -211,7 +234,7 @@ async function main() {
     'Combined build edited label'
   );
   console.log(
-    'ok  combined shared-identity builder constructs all13 variants and repeats without creation or lost Label overrides'
+    'ok  combined shared-identity builder constructs all19 variants and repeats without creation or lost Label overrides'
   );
 
   const temporary = fs.mkdtempSync(

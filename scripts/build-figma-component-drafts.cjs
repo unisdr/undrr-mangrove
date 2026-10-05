@@ -15,6 +15,13 @@ const recipes = [
   ['range', './figma-range-recipes.cjs', 'buildRangeRecipes'],
   ['tag', './figma-tag-recipes.cjs', 'buildTagRecipes'],
   ['notice', './figma-notice-recipes.cjs', 'buildNoticeRecipes'],
+  ['breadcrumbs', './figma-breadcrumb-recipes.cjs', 'buildBreadcrumbRecipes'],
+  ['skip-link', './figma-skip-link-recipes.cjs', 'buildSkipLinkRecipes'],
+  [
+    'highlight-box',
+    './figma-highlight-box-recipes.cjs',
+    'buildHighlightBoxRecipes',
+  ],
 ];
 
 function validateDrafts(families, assets) {
@@ -23,7 +30,9 @@ function validateDrafts(families, assets) {
     [assets.variables, 'id'],
     [assets.variables, 'name'],
     [assets.styles.text, 'id'],
+    [assets.styles.text, 'name'],
     [assets.styles.effect, 'id'],
+    [assets.styles.effect, 'name'],
   ]) {
     assert.strictEqual(
       new Set(list.map(entry => entry[key])).size,
@@ -92,6 +101,7 @@ function validateDrafts(families, assets) {
         for (const value of [
           node.fill,
           node.stroke,
+          ...Object.values(node.svg?.monochrome || {}),
           ...Object.values(node.bindings || {}),
           ...Object.values(node.appearance || {}),
           ...Object.values(node.layout || {}),
@@ -129,6 +139,7 @@ function buildDraftPacket() {
     return result;
   });
   // Experimental helpers may append; existing foundation records must stay exact.
+  assert.deepStrictEqual(assets.modes, base.modes);
   for (const [existing, expanded] of [
     [base.variables, assets.variables],
     [base.styles.text, assets.styles.text],
@@ -211,7 +222,7 @@ function main(args) {
       throw new Error('Use a new output path to preserve prior drafts.');
     fs.mkdirSync(path.dirname(output), { recursive: true });
     fs.writeFileSync(output, json, { flag: 'wx' });
-    console.log(`Prepared source-only Range, Tag and Notice packet: ${output}`);
+    console.log(`Prepared source-only component draft packet: ${output}`);
   }
 }
 if (require.main === module) {
