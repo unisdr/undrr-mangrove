@@ -41,7 +41,7 @@
         data-title="A shared language"
       >
         <div class="mg-guide__eyebrow">
-          UNDRR design system / Exploratory edition 03
+          UNDRR design system / Exploratory edition 04
         </div>
         <div class="mg-guide__cover-grid">
           <div>
@@ -611,16 +611,16 @@
         </p>
         <ol class="mg-guide__flow">
           <li>
-            <strong>Source</strong><code>tokens/*.yaml</code>
-            <p>Base + brand layers</p>
+            <strong>Source</strong><code>Tokens + components</code>
+            <p>Brand layers + source recipes</p>
           </li>
           <li>
-            <strong>Translate</strong><code>Token generator</code>
-            <p>CSS + token dictionary</p>
+            <strong>Translate</strong><code>Source exporter</code>
+            <p>CSS + Figma definitions</p>
           </li>
           <li>
-            <strong>Design</strong><code>Figma bridge</code>
-            <p>Variables and collections</p>
+            <strong>Design</strong><code>Native Figma kit</code>
+            <p>Variables, styles + components</p>
           </li>
           <li>
             <strong>Apply</strong><code>CSS / React / Drupal</code>
@@ -635,13 +635,42 @@
               <option value="html">HTML / Drupal markup</option>
               <option value="react">React component</option>
               <option value="css">Semantic CSS token</option>
+              <option value="figma">Figma design kit</option>
             </select>
-            <pre id="recipe"></pre>
-            <button id="copy-recipe" class="mg-guide__small-button">
-              Copy example
-            </button>
+            <div id="code-route">
+              <pre id="recipe"></pre>
+              <button id="copy-recipe" class="mg-guide__small-button">
+                Copy example
+              </button>
+            </div>
+            <div id="figma-route" hidden>
+              <h3>Make your first design</h3>
+              <ol class="mg-guide__kit-steps">
+                <li>Open <strong>Start here</strong> in the installed kit.</li>
+                <li>
+                  Draw a personal frame in <strong>Your workspace</strong>.
+                </li>
+                <li>
+                  Insert a fresh <strong>Mangrove/Button</strong> instance from
+                  the local file’s Assets and edit its Label.
+                </li>
+                <li>
+                  Use <strong>Browse component → Usage and states</strong> to
+                  find supported edits and presets.
+                </li>
+              </ol>
+              <p class="mg-guide__small">
+                Keep personal work outside generated boards. Fresh linked
+                instances preserve a clear ownership boundary.
+              </p>
+              <a
+                class="mg-guide__source"
+                href="https://github.com/unisdr/undrr-mangrove/blob/spike/figma-token-bridge/examples/figma-plugin/README.md"
+                >Open the kit guide ↗</a
+              >
+            </div>
           </div>
-          <div class="mg-guide__handoff-note">
+          <div id="code-handoff" class="mg-guide__handoff-note">
             <h2 class="mg-guide__subheading">Carry the contract with you</h2>
             <p>
               CSS colour tokens can be channel triplets or complete colour
@@ -661,10 +690,53 @@
               >AI and MCP integration ↗</a
             >
           </div>
+          <div id="figma-handoff" class="mg-guide__handoff-note" hidden>
+            <h2 class="mg-guide__subheading">Choose by readiness</h2>
+            <dl class="mg-guide__kit-scope">
+              <div>
+                <dt>Core controls / Bounded draft use</dt>
+                <dd>
+                  Use the declared states, widths and supported edits.
+                  <a
+                    href="https://github.com/unisdr/undrr-mangrove/blob/spike/figma-token-bridge/examples/figma-plugin/CORE-KIT-STATUS.md"
+                    >Core status ↗</a
+                  >
+                </dd>
+              </div>
+              <div>
+                <dt>Cards and Heroes / Draft components</dt>
+                <dd>
+                  Choose declared Page or Section and desktop or phone presets.
+                  Resizing alone does not switch layouts.
+                  <a
+                    href="https://github.com/unisdr/undrr-mangrove/blob/spike/figma-token-bridge/examples/figma-plugin/CARD-HERO-STATUS.md"
+                    >Preset limits ↗</a
+                  >
+                </dd>
+              </div>
+              <div>
+                <dt>Page templates / Planned</dt>
+                <dd>
+                  The source catalogue is documentation. Its entries are not
+                  accepted templates in Assets.
+                </dd>
+              </div>
+            </dl>
+            <p class="mg-guide__small">
+              Native evidence covers local UNDRR. Other brands, RTL, shared
+              publishing and novice handoff have separate checks.
+            </p>
+            <a
+              href="https://github.com/unisdr/undrr-mangrove/blob/spike/figma-token-bridge/examples/figma-plugin/MAINTAINING-KIT.md"
+              >Maintain and update the kit ↗</a
+            >
+          </div>
         </div>
         <p class="mg-guide__small">
-          The Figma bridge is part of this feature branch. This prototype reads
-          the YAML sources; it does not write to Figma or change any token.
+          The Figma route describes the parent branch’s exploratory kit. This
+          guide reads source tokens; its browser theme selector does not
+          establish native brand acceptance. Public Storybook examples may
+          differ from this branch.
         </p>
       </section>
       <section

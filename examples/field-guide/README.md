@@ -20,6 +20,11 @@ marginal notes and a simplified ownership panel. See
 [DESIGN-STUDIO-REVIEW.md](DESIGN-STUDIO-REVIEW.md) for all changes and current
 visual/interaction checks.
 
+Edition 04 brings in the parent through `ad2fbf26` and adds a practical Figma
+handoff route, including first-design instructions and native readiness levels.
+See [PARENT-KIT-REVIEW.md](PARENT-KIT-REVIEW.md) for the evidence and design
+decisions. In the handoff chapter, select **Figma design kit** under Integration.
+
 ## Run
 
 From the repository root, with the repository’s dependencies installed:
@@ -74,7 +79,7 @@ dialog. Escape dismisses the dialog. Copying requires a browser secure context
 copied manually.
 
 The print action uses the current property and includes all chapters, with the
-selected application format and its annotations. The
+selected application format and its annotations, plus the selected handoff route. The
 reference table follows its current search query. This is a browser print view,
 not a separately typeset publication.
 
@@ -116,6 +121,7 @@ The exploration is stacked on the Figma token branch in
 stacked on the React Aria work. Before opening the field-guide draft, its two
 commits were rebased onto parent revision `201cd8be`. Keep the PR base at
 `spike/figma-token-bridge` while that parent remains open.
+The latest sync merges the parent through `ad2fbf26`.
 
 For another agent taking over, start with this README and
 [BRAND-REVIEW.md](BRAND-REVIEW.md) and
@@ -125,6 +131,8 @@ above; approved documentary imagery and actual property artwork are the next
 brand refinements. Preserve the source/provenance distinctions and check mobile,
 keyboard and print behaviour after edits. The existing Storybook documentation
 and YAML tokens remain authoritative.
+Read [PARENT-KIT-REVIEW.md](PARENT-KIT-REVIEW.md) for the native kit handoff and
+the distinction between core controls, draft presets and planned templates.
 
 Generated `dist/` files and the local `node_modules` symlink are not committed.
 A fresh checkout needs repository dependencies installed. No deployment is
@@ -167,3 +175,12 @@ warning. The guide adds no suppression for that component.
   applications and voice/imagery pages, including image crops, ownership,
   concept labels and chapter footers. The unfiltered token appendix remains
   longer.
+
+## Edition 04 validation
+
+See [PARENT-KIT-REVIEW.md](PARENT-KIT-REVIEW.md) for the current parent review,
+field-guide checks and three inherited parent harness failures. The parent
+export is current; 44 of its 47 mock harnesses pass. The new Figma route has
+zero axe violations on desktop across all five properties and on UNDRR mobile.
+The selected Figma handoff prints on one complete page within the ten-chapter
+view when the token appendix is filtered.

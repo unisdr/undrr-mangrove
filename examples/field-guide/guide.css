@@ -477,6 +477,35 @@
   gap: 20px;
   margin: 0 0 35px;
 }
+.mg-guide__kit-steps {
+  padding-left: 22px;
+  font-size: 15px;
+  margin-block: 18px;
+}
+.mg-guide__kit-steps li {
+  padding-left: 6px;
+  margin-bottom: 16px;
+}
+.mg-guide__kit-scope {
+  margin: 0 0 18px;
+  font-size: 13px;
+}
+.mg-guide__kit-scope > div + div {
+  border-top: 1px solid var(--mg-guide-line);
+  margin-top: 14px;
+  padding-top: 14px;
+}
+.mg-guide__kit-scope dt {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.mg-guide__kit-scope dd {
+  margin: 0;
+}
+.mg-guide__kit-scope a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .mg-guide__flow li {
   border-top: 3px solid var(--mg-guide-brand);
   padding-top: 16px;
@@ -485,6 +514,9 @@
 .mg-guide__flow code {
   display: block;
   margin-bottom: 7px;
+}
+.mg-guide__flow code {
+  color: var(--mg-guide-ink);
 }
 .mg-guide__flow p {
   font-size: 13px;
@@ -498,6 +530,11 @@
 .mg-guide__handoff-note p {
   margin-bottom: 18px;
   font-size: 14px;
+}
+.mg-guide__handoff-note a {
+  color: var(--mg-guide-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .mg-guide pre {
   white-space: pre-wrap;
@@ -1639,6 +1676,21 @@
     font-size: 12px;
     margin-bottom: 12px;
   }
+  .mg-guide__kit-steps {
+    font-size: 12px;
+    margin-block: 12px;
+  }
+  .mg-guide__kit-steps li {
+    margin-bottom: 10px;
+  }
+  .mg-guide__kit-scope {
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+  .mg-guide__kit-scope > div + div {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
   .mg-guide pre {
     padding: 16px;
     font-size: 11px;
@@ -1646,6 +1698,41 @@
   }
   .mg-guide__flow {
     margin-bottom: 25px;
+  }
+  .mg-guide #handoff .mg-guide__flow {
+    margin-bottom: 16px;
+  }
+  .mg-guide #handoff .mg-guide__chapter-title,
+  .mg-guide #handoff .mg-guide__eyebrow {
+    margin-bottom: 12px;
+  }
+  .mg-guide #handoff .mg-guide__chapter-title {
+    font-size: 28px;
+  }
+  .mg-guide #handoff .mg-guide__lede {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 12px !important;
+  }
+  .mg-guide #handoff > .mg-guide__small {
+    margin-top: 12px;
+  }
+  .mg-guide #handoff #integration {
+    min-height: 0;
+    padding: 6px;
+    margin-bottom: 8px;
+    font-size: 11px;
+  }
+  .mg-guide #handoff h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .mg-guide #handoff .mg-guide__handoff-note {
+    padding: 14px;
+  }
+  .mg-guide #handoff::after {
+    margin-top: 10px;
+    padding-top: 8px;
   }
   .mg-guide__editorial {
     padding: 22px;

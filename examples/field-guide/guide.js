@@ -336,7 +336,13 @@ function paintRecipe() {
     react: `import { CtaButton } from\n  '@undrr/undrr-mangrove/components/CtaButton.js';\n\n// Load the matching Mangrove stylesheet.\n<CtaButton\n  label="Explore resources"\n  Type="Primary"\n  href="/resources"\n/>`,
     css: `.project-action {\n  /* A complete colour expression: no rgb() wrapper. */\n  background-color: var(--mg-color-button-background);\n  /* Channel triplet: wrap in rgb(). */\n  color: rgb(var(--mg-color-button));\n  font-family: var(--mg-font-family-text);\n  padding: var(--mg-padding-button);\n  border-radius: var(--mg-radius-button);\n}`,
   };
-  $('#recipe').textContent = recipes[$('#integration').value];
+  const route = $('#integration').value;
+  const figma = route === 'figma';
+  $('#recipe').textContent = recipes[route] || '';
+  $('#code-route').hidden = figma;
+  $('#code-handoff').hidden = figma;
+  $('#figma-route').hidden = !figma;
+  $('#figma-handoff').hidden = !figma;
 }
 function paintPreview() {
   $('#preview').src =
