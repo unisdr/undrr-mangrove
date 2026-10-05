@@ -37,6 +37,8 @@ const fields = [
   'fontName',
   'fontSize',
   'lineHeight',
+  'letterSpacing',
+  'textWrapStyle',
   'textStyleId',
   'effectStyleId',
   'textAutoResize',
@@ -156,6 +158,152 @@ async function fixture() {
   assert.deepStrictEqual(copy(built.errors), []);
   return env;
 }
+const heroKey =
+  'family/hero-background/variant/hero-background.primary.1280.background.page.default';
+const cardKey =
+  'family/card-vertical/variant/card-vertical.primary.300.unlinked.buttononly.default';
+function canonical(env, value) {
+  const matches = [...env.state.nodes.values()].filter(
+    node => node.type === 'COMPONENT' && key(node) === value
+  );
+  assert.strictEqual(matches.length, 1, `One canonical COMPONENT ${value}`);
+  return matches[0];
+}
+async function installLinkedMains(env) {
+  const built = await env.call('buildMangroveComponents', doc, 'undrr', [
+    'hero-background',
+    'card-vertical',
+  ]);
+  assert.deepStrictEqual(copy(built.errors), []);
+}
+function assertLinkedWelcome(env, receipt) {
+  assert.strictEqual(receipt.presentation, 'linked-mangrove-v3');
+  assert.strictEqual(receipt.linkedInstanceIds.length, 5);
+  const hero = owned(env, 'welcome/content/hero/instance');
+  assert.strictEqual(hero.type, 'INSTANCE');
+  assert.strictEqual(hero.main.id, canonical(env, heroKey).id);
+  assert.strictEqual(hero.width, 1280);
+  assert.strictEqual(key(owned(env, 'welcome'), 'mgWelcomeVersion'), '3');
+  const readProperty = (instance, name) => {
+    const matches = Object.entries(instance.componentProperties).filter(
+      ([property]) => property.replace(/#[^#]+$/, '') === name
+    );
+    assert.strictEqual(matches.length, 1, `One public ${name} property`);
+    return matches[0][1].value;
+  };
+  assert.strictEqual(readProperty(hero, 'Title'), 'Welcome to Mangrove');
+  assert.strictEqual(readProperty(hero, 'Show detail'), false);
+  assert.strictEqual(readProperty(hero, 'Show actions'), false);
+  const sourceHeading = canonical(env, heroKey).findAll(
+    node => node.name === 'mg-hero__title h1'
+  )[0];
+  const actualHeading = hero.findAll(
+    node => node.name === 'mg-hero__title h1'
+  )[0];
+  for (const field of [
+    'fontName',
+    'fontSize',
+    'lineHeight',
+    'letterSpacing',
+    'textStyleId',
+    'boundVariables',
+  ])
+    assert.deepStrictEqual(
+      copy(actualHeading[field]),
+      copy(sourceHeading[field]),
+      `Linked Welcome Hero preserves canonical ${field}`
+    );
+  const row = owned(env, 'welcome/content/use');
+  assert.strictEqual(row.layoutMode, 'HORIZONTAL');
+  assert.strictEqual(row.width, 1280);
+  assert.strictEqual(row.primaryAxisAlignItems, 'CENTER');
+  const spacing = env.state.variables.find(
+    variable => variable.name === 'spacing/200'
+  );
+  assert.strictEqual(row.itemSpacing, spacing.resolveForConsumer(row).value);
+  assert.strictEqual(row.boundVariables.itemSpacing.id, spacing.id);
+  const cardTitles = [
+    'Make your first design',
+    'Understand a component',
+    'Know what is available',
+    'Keep your work safe',
+  ];
+  const cardWrappers = ['use/0', 'use/1', 'maintain/0', 'maintain/1'];
+  const ids = [hero.id];
+  for (const [i, suffix] of cardWrappers.entries()) {
+    const base = `welcome/content/${suffix}`;
+    const wrapper = owned(env, base),
+      instance = owned(env, `${base}/instance`);
+    assert.strictEqual(wrapper.parent.id, row.id);
+    assert.strictEqual(wrapper.width, 300);
+    assert.strictEqual(instance.type, 'INSTANCE');
+    assert.strictEqual(instance.main.id, canonical(env, cardKey).id);
+    assert.strictEqual(readProperty(instance, 'Title'), cardTitles[i]);
+    for (const name of ['Show image', 'Show labels', 'Show CTA'])
+      assert.strictEqual(readProperty(instance, name), false);
+    assert.strictEqual(owned(env, `${base}/title`).visible, false);
+    assert.strictEqual(owned(env, `${base}/body`).visible, false);
+    ids.push(instance.id);
+  }
+  assert.deepStrictEqual(
+    row.children.map(node => key(node)),
+    cardWrappers.map(suffix => `welcome/content/${suffix}`)
+  );
+  assert.deepStrictEqual(copy(receipt.linkedInstanceIds), ids);
+  for (const suffix of ['label', 'title', 'body'])
+    assert.strictEqual(
+      owned(env, `welcome/content/hero/${suffix}`).visible,
+      false
+    );
+  const footer = owned(env, 'welcome/content/maintain');
+  assert.strictEqual(footer.parent.id, owned(env, 'welcome/content').id);
+  assert.deepStrictEqual(
+    footer.children.map(node => key(node)),
+    ['welcome/content/maintain/title', 'welcome/content/maintain/body']
+  );
+  const footerCopy = owned(env, 'welcome/content/maintain/body').characters;
+  for (const phrase of [
+    'On Free',
+    'view centre',
+    'pending page-pattern coverage',
+    'CORE-KIT-STATUS.md',
+  ])
+    assert(footerCopy.includes(phrase), `Footer explains ${phrase}`);
+  for (const node of env.state.nodes.values()) {
+    if (!key(node).startsWith('welcome/')) continue;
+    if (node.type === 'FRAME') {
+      for (const field of [
+        'paddingTop',
+        'paddingBottom',
+        'paddingLeft',
+        'paddingRight',
+        'itemSpacing',
+      ]) {
+        const alias = node.boundVariables[field];
+        assert.strictEqual(alias?.type, 'VARIABLE_ALIAS');
+        const variable = env.state.variables.find(item => item.id === alias.id);
+        assert.strictEqual(variable?.resolvedType, 'FLOAT');
+        assert.strictEqual(
+          node[field],
+          variable.resolveForConsumer(node).value,
+          `Welcome ${field} literal matches bound source role ${key(node)}`
+        );
+      }
+    }
+    if (node.type !== 'TEXT') continue;
+    const sourceId = key(node).endsWith('/title')
+      ? 'component.card.title'
+      : 'component.card.summary';
+    const style = env.state.styles.find(
+      value => key(value, 'mgStyleId') === sourceId
+    );
+    assert.strictEqual(node.textStyleId, style.id);
+    assert.deepStrictEqual(copy(node.fontName), copy(style.fontName));
+    assert.strictEqual(node.fontSize, style.fontSize);
+    assert.deepStrictEqual(copy(node.lineHeight), copy(style.lineHeight));
+  }
+  assertWelcomePaints(env);
+}
 function restart(env) {
   const context = vm.createContext({ figma: env.figma, __html__: '', console });
   for (const file of [
@@ -211,6 +359,16 @@ async function main() {
       styles = copy(env.state.styles);
     const created = await env.call('createMangroveWelcome', doc, 'undrr');
     assert.deepStrictEqual(copy(created.errors || []), []);
+    assert.strictEqual(created.presentation, 'token-only');
+    assert.deepStrictEqual(copy(created.linkedInstanceIds), []);
+    assert(
+      ![...env.state.nodes.values()].some(
+        node =>
+          key(node).startsWith('family/hero-background') ||
+          key(node).startsWith('family/card-vertical')
+      ),
+      'Fallback Welcome must not implicitly build canonical families'
+    );
     const welcome = owned(env, 'welcome');
     assert.strictEqual(welcome.type, 'FRAME');
     assert.strictEqual(welcome.parent, env.figma.currentPage);
@@ -349,6 +507,167 @@ async function main() {
       'ok full organisation reuses Welcome/manual notes; orientation distinguishes pending templates and v1 upgrade from installed v2'
     );
   }
+  {
+    const env = await fixture();
+    const fallback = await env.call('createMangroveWelcome', doc, 'undrr');
+    assert.strictEqual(fallback.presentation, 'token-only');
+    const oldWelcome = owned(env, 'welcome');
+    const oldIds = [
+      oldWelcome.id,
+      ...oldWelcome.findAll().map(node => node.id),
+    ];
+    const oldWrappers = ['maintain/0', 'maintain/1'].map(suffix => ({
+      id: owned(env, `welcome/content/${suffix}`).id,
+      parentId: owned(env, `welcome/content/${suffix}`).parent.id,
+    }));
+    const note = env.figma.createFrame();
+    oldWelcome.appendChild(note);
+    note.name = 'My Welcome note';
+    note.x = -38;
+    note.y = 235;
+    note.resize(211, 74);
+    const noteBefore = record(note);
+    await installLinkedMains(env);
+    // Native Assets-created roots copy their canonical identity. They must
+    // not be mistaken for an additional canonical dependency by the index.
+    const personal = owned(env, cardKey).createInstance();
+    assert.strictEqual(key(personal), cardKey);
+    const baseline = new Map(
+      [...all(env)].filter(([id]) => {
+        const node = env.state.nodes.get(id);
+        return key(node) !== 'welcome' && !key(node).startsWith('welcome/');
+      })
+    );
+    const foundations = copy({
+      variables: env.state.variables,
+      styles: env.state.styles,
+      collections: env.state.collections,
+    });
+    const linked = await env.call('createMangroveWelcome', doc, 'undrr');
+    assert.deepStrictEqual(copy(linked.errors), []);
+    assertLinkedWelcome(env, linked);
+    assert.strictEqual(owned(env, 'welcome').id, oldWelcome.id);
+    for (const id of oldIds) assert(env.state.nodes.has(id));
+    for (const wrapper of oldWrappers) {
+      const now = env.state.nodes.get(wrapper.id);
+      assert.notStrictEqual(now.parent.id, wrapper.parentId);
+      assert.strictEqual(now.parent.id, owned(env, 'welcome/content/use').id);
+    }
+    preserved(env, baseline);
+    assert.deepStrictEqual(record(note), noteBefore);
+    assert.deepStrictEqual(
+      copy({
+        variables: env.state.variables,
+        styles: env.state.styles,
+        collections: env.state.collections,
+      }),
+      foundations
+    );
+    const ids = [...env.state.nodes.keys()].sort();
+    const linkedIds = copy(linked.linkedInstanceIds);
+    for (const invoke of [env.call, restart(env)]) {
+      const repeated = await invoke('createMangroveWelcome', doc, 'undrr');
+      assert.deepStrictEqual(copy(repeated.errors), []);
+      assert.strictEqual(repeated.createdNodeIds.length, 0);
+      assert.deepStrictEqual([...env.state.nodes.keys()].sort(), ids);
+      assert.deepStrictEqual(copy(repeated.linkedInstanceIds), linkedIds);
+      assertLinkedWelcome(env, repeated);
+      preserved(env, baseline);
+      assert.deepStrictEqual(record(note), noteBefore);
+      assert.deepStrictEqual(
+        copy({
+          variables: env.state.variables,
+          styles: env.state.styles,
+          collections: env.state.collections,
+        }),
+        foundations
+      );
+    }
+    console.log(
+      'ok linked Welcome reuses one Page Hero and four Cards with public properties/styles/bound spacing; fallback IDs and manual notes survive the narrow parent migration and zero-create repeat/restart'
+    );
+  }
+  {
+    const env = await fixture();
+    await installLinkedMains(env);
+    const baseline = all(env),
+      foundations = copy({
+        variables: env.state.variables,
+        styles: env.state.styles,
+        collections: env.state.collections,
+      });
+    const created = await env.call('createMangroveWelcome', doc, 'undrr');
+    assert.deepStrictEqual(copy(created.errors), []);
+    assertLinkedWelcome(env, created);
+    preserved(env, baseline);
+    assert.deepStrictEqual(
+      copy({
+        variables: env.state.variables,
+        styles: env.state.styles,
+        collections: env.state.collections,
+      }),
+      foundations
+    );
+    console.log(
+      'ok a first linked Welcome creates only its owned presentation and instances, preserving every existing canonical/foundation record'
+    );
+  }
+  for (const fault of [
+    'missing-active-main',
+    'wrong-main-type',
+    'wrong-instance-main',
+    'wrong-instance-type',
+    'missing-main-property',
+    'wrong-main-property-type',
+    'missing-main-font',
+    'missing-linked-style',
+    'wrong-spacing-role',
+    'wrong-maintain-parent',
+  ]) {
+    const env = await fixture();
+    await installLinkedMains(env);
+    const linked = await env.call('createMangroveWelcome', doc, 'undrr');
+    assert.deepStrictEqual(copy(linked.errors), []);
+    const main = owned(env, heroKey);
+    if (fault === 'missing-active-main') main.remove();
+    if (fault === 'wrong-main-type') main.type = 'FRAME';
+    if (fault === 'wrong-instance-main')
+      owned(env, 'welcome/content/hero/instance').main = owned(env, cardKey);
+    if (fault === 'wrong-instance-type')
+      owned(env, 'welcome/content/hero/instance').type = 'FRAME';
+    if (['missing-main-property', 'wrong-main-property-type'].includes(fault)) {
+      const definitions = main.parent.componentPropertyDefinitions;
+      const property = Object.keys(definitions).find(
+        name => name.replace(/#[^#]+$/, '') === 'Title'
+      );
+      assert(property);
+      if (fault === 'missing-main-property') delete definitions[property];
+      else definitions[property].type = 'BOOLEAN';
+    }
+    if (fault === 'missing-main-font') {
+      env.state.rejectedFonts.add('Roboto Condensed Bold');
+      env.state.loadedFonts.delete('Roboto Condensed Bold');
+    }
+    if (fault === 'missing-linked-style')
+      env.state.styles.splice(
+        env.state.styles.findIndex(
+          style => key(style, 'mgStyleId') === 'component.card.title'
+        ),
+        1
+      );
+    if (fault === 'wrong-spacing-role')
+      env.state.variables.find(
+        variable => variable.name === 'spacing/200'
+      ).resolvedType = 'COLOR';
+    if (fault === 'wrong-maintain-parent')
+      owned(env, 'welcome/content/index').appendChild(
+        owned(env, 'welcome/content/maintain/0')
+      );
+    await refuse(env, `linked ${fault}`);
+  }
+  console.log(
+    'ok active linked Welcome refuses missing/wrong mains, types, public properties, exact fonts, styles, spacing roles and unrelated parent moves before writes'
+  );
   for (const fault of [
     'duplicate-root',
     'wrong-root',

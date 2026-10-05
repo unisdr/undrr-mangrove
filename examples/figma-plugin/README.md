@@ -519,3 +519,9 @@ The redesigned plugin separates Import, Core kit and Diagnostics; navigation, co
 Run `node scripts/build-figma-tokens.cjs --check` to check ignored JSON and runtime freshness without writing. Normal generation writes only changed bytes. Close the plugin before generating and reopen it before loading the new JSON. This reduces unnecessary reloads; it does not automate source propagation or consumer acceptance.
 
 The [native UX dogfood](UX-DOGFOOD.md) records observed designer tasks, applied presentation changes and the remaining novice handoff. Core kit keeps presets, search, selection and Build together. Less frequent guidance/organisation actions are in Diagnostics > **Kit maintenance**. Expanded result details use a scroll fallback instead of clipping Core controls.
+
+## A welcome board built from the kit
+
+When the exact local Card Vertical 300px and Primary Hero Background Page 1280px mains are installed, **Open Start here** composes the introduction from linked instances. Hero uses the sample photograph and source typography; its actions/detail are hidden. Four image-free Cards explain first design, component use, availability and ownership. The real contents remains plain text matching Layers, without simulated navigation controls.
+
+The generated composition reuses existing Welcome/frame/text IDs and keeps personal notes outside its content boundary. Earlier text is retained hidden while linked instances supply the presentation. Updates reconcile these five owned instances in place; they do not detach or implicitly build source components. Token-only files retain the simpler Welcome. An already linked Welcome refuses if its required mains, properties, styles or fonts disappear. See [architecture and evidence](KIT-ARCHITECTURE.md) for the native checkpoint.

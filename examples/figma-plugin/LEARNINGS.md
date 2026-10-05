@@ -735,3 +735,11 @@ Restart comparison preserves edited consumers, foundations and canonical local c
 ## Scoped connector compiler growth
 
 Optional Page letter spacing and richer guidance pushed older connector subsets toward the fixed 50,000-byte/character transport limit. Compilation removes spacing validation or focus rendering only when the exact retained source subset proves those paths absent. It retains zero-spacing resets and obsolete owned focus-outline cleanup. Source anchors fail closed when they change. Compiled Table and Editorial CTA fixtures measure 48,018 and 48,506 bytes; enabled focus bindings, retained IDs and explicit spacing validation pass the scoped mock. Native connector execution remains quota-blocked.
+
+## Use the kit on its own landing board
+
+User review found that the plain Welcome panels did not express Mangrove's design language. Reusing a source Hero and four actual Cards makes typography, media and spacing authentic while demonstrating linked composition. Hide unsupported navigation-looking actions rather than implying prototype behaviour. Keep the installed contents names literal and the personal-frame instructions explicit.
+
+An INSTANCE inherits canonical metadata. Assign each generated Welcome instance its own presentation identity and let indexers ignore inherited descendants; never change its main component identity. Preflight exact local mains, property types, required styles, numeric spacing and all source/existing fonts before writes. Seed resolved spacing literals before bindings. A token-only file can retain the simpler board; an active linked composition must refuse missing dependencies rather than silently downgrade or rebuild families.
+
+Version3 preserves the 23 earlier Welcome records, retaining hidden legacy copy and moving only known generated wrappers. Native construction adds 86 records with zero errors; the restart update adds none. All 9,384 unrelated scene records and foundations remain exact from baseline, and the full 9,493-record result remains exact on repeat. Saved fields and the visible composition establish this bounded update, not novice handoff, source font-file equivalence or library publication.

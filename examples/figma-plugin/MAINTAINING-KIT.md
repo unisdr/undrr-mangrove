@@ -628,3 +628,9 @@ Diagnostics > **Source previews in Storybook** provides source-derived public pr
 ### Consumer-facing presentation changes
 
 Use [UX-DOGFOOD.md](UX-DOGFOOD.md) when extending navigation or component guidance. Match actual section names, explain local Assets tile names and drag insertion into a personal frame, cap family body guidance at 720px, and fit usage boards to actual desktop specimens without changing component internals. Record retained presentation grid IDs before writes in layout receipts. Guidance and organization actions now live in Diagnostics > Kit maintenance; Core kit retains its preset/search/count/build flow. After UI changes, check the native 600×740 window, both collapsed and expanded results, and a contextual source-reference route.
+
+### Updating the linked Welcome composition
+
+Welcome presentation version3 depends on the exact Primary/Page/Desktop Hero Background and Primary/300px Card Vertical mains. Build these families explicitly when preparing a new file; **Open Start here** does not build missing families. Import the current brand without pruning, then use Open Start here to reconcile generated onboarding copy. Generated Welcome instances are maintainer-owned and may have their copy/optional visibility reset. Use Assets instances in Your workspace for personal design work.
+
+The earlier 23 Welcome records are retained. The migration hides their legacy Hero/Card copy, adds five linked instances and moves only the two known maintain-card wrappers into the four-card row. Direct manual notes on the free-positioned Welcome root stay outside generated content. Missing linked dependencies or conflicting ownership cause refusal before writes. Save the operation report and inspection; repeat after restarting the plugin, checking canonical assets, foundations, manual notes and instance links separately from rendered layout.

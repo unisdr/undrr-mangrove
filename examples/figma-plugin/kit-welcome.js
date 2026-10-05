@@ -116,7 +116,57 @@ async function createMangroveWelcome(
       schema.set(`${key}/body`, ['TEXT', key]);
     }
   }
+  // Reuse exact local mains; token-only imports keep the simpler entry point.
+  const instancePlans = new Map([
+    [
+      'welcome/content/hero/instance',
+      {
+        mainKey:
+          'family/hero-background/variant/hero-background.primary.1280.background.page.default',
+        properties: {
+          Label: `${brand.name} · Exploratory Figma kit`,
+          Title: 'Welcome to Mangrove',
+          Summary:
+            'Design resilient, accessible websites with shared foundations and reusable components.',
+          'Show detail': false,
+          'Show actions': false,
+        },
+      },
+    ],
+  ]);
+  for (const row of ['use', 'maintain'])
+    for (const i of [0, 1])
+      instancePlans.set(`welcome/content/${row}/${i}/instance`, {
+        mainKey:
+          'family/card-vertical/variant/card-vertical.primary.300.unlinked.buttononly.default',
+        properties: {
+          Title: '',
+          Summary: '',
+          'Show image': false,
+          'Show labels': false,
+          'Show CTA': false,
+        },
+      });
+  const linked = [...instancePlans.values()].every(plan =>
+    index.has(plan.mainKey)
+  );
   const existing = index.get('welcome');
+  const activeLinked =
+    mgReadIdentity(existing || page, 'mgWelcomeVersion') === '3';
+  if (activeLinked && !linked)
+    throw new Error(
+      'Welcome needs its installed Card and Hero mains. Restore them before updating.'
+    );
+  for (const key of instancePlans.keys())
+    schema.set(key, ['INSTANCE', key.replace(/\/instance$/, '')]);
+  schema.set('welcome/content/maintain/title', [
+    'TEXT',
+    'welcome/content/maintain',
+  ]);
+  schema.set('welcome/content/maintain/body', [
+    'TEXT',
+    'welcome/content/maintain',
+  ]);
   if (index.has('layout/start/intro'))
     throw new Error(
       'The older generated introduction needs an explicit migration before Welcome.'
@@ -138,10 +188,17 @@ async function createMangroveWelcome(
         );
       if (node.parent !== page && node.parent !== start)
         throw new Error('Welcome has an unexpected parent.');
-    } else if (node.parent !== index.get(expected[1]))
+    } else if (
+      node.parent !== index.get(expected[1]) &&
+      !(
+        /^welcome\/content\/maintain\/[01]$/.test(key) &&
+        node.parent === index.get('welcome/content/use')
+      )
+    )
       throw new Error(`Conflicting Welcome parent ${key}.`);
     if (
       key !== 'welcome' &&
+      node.type !== 'INSTANCE' &&
       node.children?.some(
         child => !schema.has(mgReadIdentity(child, 'mgKitId'))
       )
@@ -180,6 +237,49 @@ async function createMangroveWelcome(
   ])
     if (variables.get(name)?.resolvedType !== 'COLOR')
       throw new Error(`Missing colour role ${name}.`);
+  const localStyles = new Map();
+  if (linked) {
+    for (const style of await figma.getLocalTextStylesAsync()) {
+      const id = mgReadIdentity(style, 'mgStyleId');
+      if (!id) continue;
+      if (localStyles.has(id))
+        throw new Error(`Duplicate Welcome text style ${id}.`);
+      localStyles.set(id, style);
+    }
+    for (const id of ['component.card.title', 'component.card.summary'])
+      if (!localStyles.has(id))
+        throw new Error(`Welcome needs installed text style ${id}.`);
+    for (const [key, plan] of instancePlans) {
+      const main = index.get(plan.mainKey);
+      if (main?.type !== 'COMPONENT')
+        throw new Error(`Invalid Welcome main ${plan.mainKey}.`);
+      const definitions =
+        main.parent?.type === 'COMPONENT_SET'
+          ? main.parent.componentPropertyDefinitions
+          : main.componentPropertyDefinitions;
+      plan.keys = {};
+      for (const [name, value] of Object.entries(plan.properties)) {
+        const matches = Object.entries(definitions).filter(
+          ([property]) => property.replace(/#[^#]+$/, '') === name
+        );
+        if (
+          matches.length !== 1 ||
+          matches[0][1].type !==
+            (typeof value === 'boolean' ? 'BOOLEAN' : 'TEXT')
+        )
+          throw new Error(
+            `Welcome property ${name} is unavailable on ${plan.mainKey}.`
+          );
+        plan.keys[name] = matches[0][0];
+      }
+      const instance = index.get(key);
+      if (instance && (await instance.getMainComponentAsync())?.id !== main.id)
+        throw new Error(`Conflicting Welcome instance main ${key}.`);
+    }
+    for (const name of ['spacing/0', 'spacing/200', 'spacing/300'])
+      if (variables.get(name)?.resolvedType !== 'FLOAT')
+        throw new Error(`Missing Welcome spacing role ${name}.`);
+  }
   // Complete the exact font preflight before creating or moving anything.
   const fonts = new Map([[JSON.stringify(font), font]]);
   for (const [key, node] of index)
@@ -190,6 +290,25 @@ async function createMangroveWelcome(
     for (const node of existing.findAll(node => node.type === 'TEXT'))
       for (const run of node.getStyledTextSegments(['fontName']))
         fonts.set(JSON.stringify(run.fontName), run.fontName);
+  if (linked) {
+    for (const style of localStyles.values())
+      if (
+        ['component.card.title', 'component.card.summary'].includes(
+          mgReadIdentity(style, 'mgStyleId')
+        )
+      )
+        fonts.set(JSON.stringify(style.fontName), style.fontName);
+    for (const plan of instancePlans.values())
+      for (const node of index
+        .get(plan.mainKey)
+        .findAll(node => node.type === 'TEXT'))
+        for (const run of node.getStyledTextSegments(['fontName']))
+          fonts.set(JSON.stringify(run.fontName), run.fontName);
+    if (existing)
+      for (const node of existing.findAll(node => node.type === 'TEXT'))
+        for (const run of node.getStyledTextSegments(['fontName']))
+          fonts.set(JSON.stringify(run.fontName), run.fontName);
+  }
   for (const face of fonts.values()) await figma.loadFontAsync(face);
   if (destination === page && index.get('main') && index.get('review'))
     await mgWelcomeLegacySpacing(index.get('main'), index.get('review'), {
@@ -217,14 +336,22 @@ async function createMangroveWelcome(
     let node = index.get(key);
     if (!node) {
       node =
-        schema.get(key)[0] === 'TEXT'
-          ? figma.createText()
-          : figma.createFrame();
+        schema.get(key)[0] === 'INSTANCE'
+          ? index.get(instancePlans.get(key).mainKey).createInstance()
+          : schema.get(key)[0] === 'TEXT'
+            ? figma.createText()
+            : figma.createFrame();
+      if (node.type === 'INSTANCE')
+        for (const child of node.findAll(() => true)) created.add(child.id);
       if (node.type === 'TEXT') node.fontName = font;
       created.add(node.id);
       mgWriteIdentity(node, 'mgKitId', key);
       index.set(key, node);
-    } else updated.add(node.id);
+    } else {
+      updated.add(node.id);
+      if (node.type === 'INSTANCE')
+        for (const child of node.findAll(() => true)) updated.add(child.id);
+    }
     if (node.parent !== owner) owner.appendChild(node);
     return node;
   }
@@ -246,16 +373,41 @@ async function createMangroveWelcome(
       node.paddingRight =
         padding;
     node.itemSpacing = horizontal ? 24 : 16;
+    if (linked) {
+      for (const field of [
+        'paddingTop',
+        'paddingBottom',
+        'paddingLeft',
+        'paddingRight',
+      ]) {
+        const role = padding === 0 ? 'spacing/0' : 'spacing/300';
+        node[field] = variables.get(role).resolveForConsumer(node).value;
+        node.setBoundVariable(field, variables.get(role));
+      }
+      node.itemSpacing = variables
+        .get('spacing/200')
+        .resolveForConsumer(node).value;
+      node.setBoundVariable('itemSpacing', variables.get('spacing/200'));
+    }
     node.clipsContent = false;
     node.fills = fill ? [solid(fill, node)] : [];
     return node;
   }
-  function text(key, owner, content, size, width, colour = 'color/text') {
+  async function text(key, owner, content, size, width, colour = 'color/text') {
     const node = ensure(key, owner);
     node.name = content.split('\n')[0];
     node.fontName = font;
     node.fontSize = size;
     node.lineHeight = { unit: 'PIXELS', value: size * 1.5 };
+    if (linked)
+      await node.setTextStyleIdAsync(
+        localStyles.get(
+          key.endsWith('/title')
+            ? 'component.card.title'
+            : 'component.card.summary'
+        ).id
+      );
+    node.textDecoration = 'NONE';
     node.characters = content;
     node.textAutoResize = 'HEIGHT';
     node.resize(width, Math.max(1, node.height));
@@ -269,21 +421,24 @@ async function createMangroveWelcome(
     root.clipsContent = false;
     root.setExplicitVariableModeForCollection(collection, mode.modeId);
     root.fills = [solid('color/neutral-0', root)];
+    if (linked) mgWriteIdentity(root, 'mgWelcomeVersion', '3');
     if (destination === page && index.get('main') && index.get('review'))
       for (const id of (
         await mgWelcomeLegacySpacing(index.get('main'), index.get('review'))
       ).updatedNodeIds)
         updated.add(id);
-    const content = frame('welcome/content', root, 1328, {
+    const contentWidth = linked ? 1280 : 1328;
+    const content = frame('welcome/content', root, contentWidth, {
       padding: 0,
       fill: null,
     });
-    content.x = content.y = 56;
-    const hero = frame('welcome/content/hero', content, 1328, {
-      padding: 40,
-      fill: 'color/interactive',
+    content.x = linked ? 80 : 56;
+    content.y = linked ? 40 : 56;
+    const hero = frame('welcome/content/hero', content, contentWidth, {
+      padding: linked ? 0 : 40,
+      fill: linked ? null : 'color/interactive',
     });
-    text(
+    await text(
       'welcome/content/hero/label',
       hero,
       `${brand.name} · Exploratory core kit`,
@@ -291,7 +446,7 @@ async function createMangroveWelcome(
       1248,
       'color/neutral-0'
     );
-    text(
+    await text(
       'welcome/content/hero/title',
       hero,
       'Welcome to Mangrove',
@@ -299,7 +454,7 @@ async function createMangroveWelcome(
       1248,
       'color/neutral-0'
     );
-    text(
+    await text(
       'welcome/content/hero/body',
       hero,
       'A shared design language for resilient, accessible websites. Start with the foundations, then assemble a page from reusable components.',
@@ -307,15 +462,31 @@ async function createMangroveWelcome(
       1248,
       'color/neutral-0'
     );
-    const guide = frame('welcome/content/index', content, 1328);
-    text(
+    if (linked) {
+      for (const suffix of ['label', 'title', 'body'])
+        index.get(`welcome/content/hero/${suffix}`).visible = false;
+      const instance = ensure('welcome/content/hero/instance', hero);
+      instance.name = 'Welcome / Mangrove Hero';
+      instance.setProperties(
+        Object.fromEntries(
+          Object.entries(
+            instancePlans.get('welcome/content/hero/instance').properties
+          ).map(([name, value]) => [
+            instancePlans.get('welcome/content/hero/instance').keys[name],
+            value,
+          ])
+        )
+      );
+    }
+    const guide = frame('welcome/content/index', content, contentWidth);
+    await text(
       'welcome/content/index/title',
       guide,
       'Find your way around',
       28,
-      1264
+      linked ? 1220 : 1264
     );
-    text(
+    await text(
       'welcome/content/index/body',
       guide,
       'On this page, use the matching names in Layers:\n' +
@@ -338,7 +509,7 @@ async function createMangroveWelcome(
           .join('\n') +
         '\n\nFor foundations, open Variables in the left sidebar or use local text and effect styles in the right sidebar.',
       18,
-      1264
+      linked ? 1220 : 1264
     );
     const cards = [
       [
@@ -369,20 +540,97 @@ async function createMangroveWelcome(
         'Keep My design and your notes outside generated boards, or in Your workspace when available. Update linked instances using supported properties. Generated examples belong to the kit maintainer and may be refreshed. Source, limits and maintenance: github.com/unisdr/undrr-mangrove · examples/figma-plugin/CORE-KIT-STATUS.md',
       ],
     ];
-    for (const rowId of ['use', 'maintain']) {
-      const row = frame(`welcome/content/${rowId}`, content, 1328, {
+    if (linked) {
+      const row = frame('welcome/content/use', content, contentWidth, {
         horizontal: true,
         padding: 0,
         fill: null,
       });
-      cards
-        .filter(item => item[0] === rowId)
-        .forEach(([, title, body], i) => {
+      row.primaryAxisAlignItems = 'CENTER';
+      const copy = [
+        [
+          'use',
+          'Make your first design',
+          (start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
+            ? 'Open 04 Your workspace. Press F and draw a frame beside the guide'
+            : 'Press F and draw a frame outside the generated boards') +
+            '; name it My design. Drag Mangrove/Button from this file’s Assets into it. Select the instance and edit Label.',
+        ],
+        [
+          'use',
+          'Understand a component',
+          start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
+            ? 'Open 02 Components and choose a task group. Read the guidance and compare Usage and states beside Source components and advanced parts. Follow the documented presets and editing limits.'
+            : cards[1][2],
+        ],
+        [
+          'maintain',
+          'Know what is available',
+          'The core supports bounded draft use in UNDRR. Card and Hero are draft components. Tabs, Editorial CTA, page templates, other brands and right-to-left layouts still need review.',
+        ],
+        [
+          'maintain',
+          'Keep your work safe',
+          'Use linked instances and supported properties. Keep personal frames and notes beside the workspace guide, outside generated boards. Generated examples belong to the kit maintainer and may be refreshed.',
+        ],
+      ];
+      for (const rowId of ['use', 'maintain'])
+        for (const [i, [, title, body]] of copy
+          .filter(item => item[0] === rowId)
+          .entries()) {
+          const key = `welcome/content/${rowId}/${i}`;
+          const wrapper = frame(key, row, 300, { padding: 0, fill: null });
+          await text(`${key}/title`, wrapper, title, 24, 268);
+          await text(`${key}/body`, wrapper, body, 18, 268);
+          index.get(`${key}/title`).visible = index.get(`${key}/body`).visible =
+            false;
+          const instance = ensure(`${key}/instance`, wrapper);
+          instance.name = `Welcome / ${title}`;
+          const plan = instancePlans.get(`${key}/instance`);
+          instance.setProperties(
+            Object.fromEntries(
+              Object.entries({
+                ...plan.properties,
+                Title: title,
+                Summary: body,
+              }).map(([name, value]) => [plan.keys[name], value])
+            )
+          );
+        }
+      const footer = frame('welcome/content/maintain', content, contentWidth, {
+        padding: 0,
+        fill: null,
+      });
+      await text(
+        'welcome/content/maintain/title',
+        footer,
+        'Working with this kit',
+        24,
+        contentWidth
+      );
+      await text(
+        'welcome/content/maintain/body',
+        footer,
+        'On Free, use one brand at a time. Clicking an Assets tile inserts at the view centre; drag it into your frame instead. Examples and templates records pending page-pattern coverage. Source, status and maintenance: github.com/unisdr/undrr-mangrove · examples/figma-plugin/CORE-KIT-STATUS.md',
+        16,
+        contentWidth
+      );
+    } else {
+      for (const rowId of ['use', 'maintain']) {
+        const row = frame(`welcome/content/${rowId}`, content, 1328, {
+          horizontal: true,
+          padding: 0,
+          fill: null,
+        });
+        for (const [i, [, title, body]] of cards
+          .filter(item => item[0] === rowId)
+          .entries()) {
           const key = `welcome/content/${rowId}/${i}`;
           const card = frame(key, row, 652);
-          text(`${key}/title`, card, title, 24, 588);
-          text(`${key}/body`, card, body, 18, 588);
-        });
+          await text(`${key}/title`, card, title, 24, 588);
+          await text(`${key}/body`, card, body, 18, 588);
+        }
+      }
     }
     root.resizeWithoutConstraints(1440, content.y + content.height + 56);
     if (destination === page) {
@@ -410,6 +658,10 @@ async function createMangroveWelcome(
     return {
       operation: 'kit-welcome',
       rootId: root.id,
+      presentation: linked ? 'linked-mangrove-v3' : 'token-only',
+      linkedInstanceIds: linked
+        ? [...instancePlans.keys()].map(key => index.get(key).id)
+        : [],
       createdNodeIds: [...created],
       updatedNodeIds: [...updated].filter(id => !created.has(id)),
       errors: [],

@@ -43,3 +43,9 @@ Select the image frame, then open its Image fill and choose Upload from computer
 ## Follow-up
 
 Test with an unfamiliar designer before promoting this exploratory kit to a supported shared library. Observe orientation, choosing a local asset, inserting into a personal frame, editing nested actions, selecting declared Page/Section presets, interpreting planned entries and updating safely. The expert review establishes concrete usability findings and bounded editor behaviour; it does not substitute for that handoff.
+
+## Authentic Welcome follow-up, 5 October 2026
+
+The user's next review asked the landing board to use Mangrove components and styling. The update reuses a linked Primary/Page/Desktop Hero and four Primary/300px Cards. Actions and optional Card media/labels are hidden; the contents remains plain text using the actual six destination names. The board is 1,440 × 1,190.875px, with source Condensed headings, inherited photograph/veil and token-bound wrapper spacing. This introduces no new supported component scope or simulated navigation.
+
+The first native update preserves every unrelated scene/foundation record and all earlier Welcome IDs. A repeat after restart preserves the complete result exactly. An independent 119-check inspection confirms component links, fonts/styles, text, optional visibility, card gaps and containment. The final read-only expert review passes at 100%: the complete board fits, Hero copy is legible against its source image/veil, the contents matches Layers, and the four Cards and footer have no overlap or clipping. The Hero remains a local linked instance with detail/actions hidden. No actionable composition defect was found. The plugin is closed and Welcome is visible. Human novice acceptance remains open.
