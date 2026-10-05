@@ -26,12 +26,27 @@ Exclude Card/Vertical, Card/Horizontal, Hero/Background and Hero/Split while the
 
 Publish the required nested support families and core styles with the selected whole widgets. Review the nine selected foundation styles and exact required component templates; do not select all 54 native text styles blindly. Preserve the documented DIRECT typography exception. Private primitive variables remain hidden from publishing. The five brand modes are validated data; other-brand component use remains experimental.
 
+### Exact style selection
+
+The 5 October source-to-inspection comparison finds every required style in the existing file. The candidate selection is **36 text styles**: nine foundations plus 27 templates referenced by the 25 core families. Core nested-instance dependencies are entirely inside that allowlist. This is a proposed selection, not a published inventory.
+
+- Foundations: `Mangrove/text/{300,button,form-input}/Regular` and `Mangrove/heading/{400,500,600,900,1000,1100}/Regular`.
+- Templates under `Mangrove/component/`: `body`, `button`, `error`, `help`, `input`, `option-selected`; `chips/{dismiss-glyph,label}`; `details/{marker-glyph,paragraph-below-medium,paragraph-medium-up,summary-below-medium,summary-medium-up}`; `form-error-summary/{link,title}`; `segmented-control/segment`; `status-label/label`; `table/{body,header}/{large,small}`; `text-cta/heading/{desktop,mobile}`.
+- Templates with distinct native capitalisation: `Mangrove/Component/Empty state/Compact description` and `Mangrove/Component/Table of contents/{Link,Decimal marker,Title}`.
+- All eight existing effects: `Mangrove/shadow/{raised,raised-hover}`, `Mangrove/{focus-ring,focus-ring-inset}`, `Mangrove/component/radio/checked-inset`, `Mangrove/component/switch/thumb-shadow`, `Mangrove/component/switch/thumb-shadow/aria-disabled` and `Mangrove/component/details/hover-shadow`. Seven are directly referenced by core recipes; `shadow/raised-hover` is included as an effect foundation.
+
+Brace notation expands to individual names; it is not a Figma search expression. Exclude the remaining 18 native text styles from this initial release. Keep the DIRECT Table of contents Link template even though its mains deliberately copy and bind typography without a native style association. The variable inventory has 12 private and 508 visible variables; visibility does not establish component acceptance for draft helper roles.
+
+Independent review passes 622 checks with zero failures for this proposed family/style selection. Publishing the whole collection would also expose draft/pending helpers: 140 public variables are referenced exclusively by excluded recipe closures rather than core plus selected styles, including 115 dedicated Card/Hero, Editorial CTA and Tabs helpers. Some of the other roles are broad semantic tokens. Keep the five-mode token catalogue explicitly **experimental and wider than the component release**. Do not describe all 508 visible variables as an accepted core API, hide them automatically or split the collection without a reviewed migration.
+
+Use **Assets > Libraries > This file > Publish**, deselect **Changes**, then select the reviewed assets. Record the final selection and success notification. Figma documents selective publication and a Full seat with source edit access on paid plans. [Publication instructions](https://help.figma.com/hc/en-us/articles/360025508373-Publish-a-library).
+
 ## Consumer route after publication
 
-This route is prepared, not yet exercised:
+This route is prepared, not yet exercised. The [MVP consumer brief](MVP-CONSUMER-BRIEF.md) specifies the first page and update checks:
 
 1. Open a design file in the paid team and enable the published Mangrove library in **Assets > Libraries**.
-2. Insert a linked whole widget from Assets into your own frame. Change its exposed text, state and supported preset properties. Keep it linked.
+2. First insert one Primary/Filled/Default Button and edit its Label successfully. For each later widget, read its supported-edit limits before changing exposed text, state or preset properties. Keep it linked.
 3. Use UNDRR for the bounded MVP. Brand modes in Variables do not imply that every component has accepted brand geometry or responsive behaviour.
 4. When a library update arrives, review and accept it. Check your edited text, optional visibility, selected variants, modes, bindings and links afterward.
 
@@ -48,6 +63,10 @@ Consumers do not need the development importer. The maintainer updates the sourc
 - [ ] Prepare Anders's delivery package and receiving-team access. Transfer and destination update verification remain later handoff gates.
 
 Desktop automation stopped at library management with `cgWindowNotFound` before the publication selection opened. Cloud tools still work. Reopen the canonical desktop file, inspect the exact release selection, and continue at the first unchecked item. The publication is not inferred from reaching **Publish this file**.
+
+A later retry still times out on desktop discovery. Cloud access again reports Full/Professional/admin, and the separate consumer remains empty. Importing the existing default Button by key fails with `Component with key ... not found`, creating no nodes. This does not isolate whether publication, availability or a request failure caused the rejection; the Plugin API documents more than one rejection cause. [Import API](https://developers.figma.com/docs/plugins/api/figma/#importcomponentbykeyasync).
+
+The connector's Code Connect component-inventory tool separately rejects this Professional account with an Organization/Enterprise requirement. Do not use that tool as the Professional release gate or treat its text response as an empty inventory. Verify publication through the native selection/confirmation and actual consuming-file imports. This tool restriction does not contradict Professional's documented shared-library support.
 
 ## Inspection freshness
 
