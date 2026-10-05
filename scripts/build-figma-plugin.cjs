@@ -9,6 +9,7 @@ const SOURCES = [
   'importer.js',
   'code.js',
   'kit-inspection.js',
+  'kit-text-thickness.js',
   'kit-rich-text.js',
   'kit-font-defaults.js',
   'kit-svg-sizing.js',

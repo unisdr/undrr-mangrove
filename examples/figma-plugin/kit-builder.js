@@ -1,4 +1,4 @@
-/* global mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -364,6 +364,10 @@ const MG_SVG_SIZING_ENABLED =
   typeof MG_CONNECTOR_SVG_SIZING === 'undefined' || MG_CONNECTOR_SVG_SIZING;
 const MG_SVG_ENABLED =
   typeof MG_CONNECTOR_SVG === 'undefined' || MG_CONNECTOR_SVG;
+
+const MG_TEXT_THICKNESS_ENABLED =
+  typeof MG_CONNECTOR_TEXT_THICKNESS === 'undefined' ||
+  MG_CONNECTOR_TEXT_THICKNESS;
 
 const MG_ABSOLUTE_ENABLED =
   typeof MG_CONNECTOR_ABSOLUTE === 'undefined' || MG_CONNECTOR_ABSOLUTE;
@@ -1110,6 +1114,18 @@ async function buildMangroveComponents(
       );
     return value;
   }
+  const textThicknessPlans = MG_TEXT_THICKNESS_ENABLED ? new Map() : null;
+  const textThicknessScope =
+    MG_TEXT_THICKNESS_ENABLED &&
+    ordered.some(family =>
+      family.variants.some(variant => {
+        let found = false;
+        treeWalk(variant.tree, tree => {
+          if (tree.textDecorationThickness !== undefined) found = true;
+        });
+        return found;
+      })
+    );
   const richTextPlans = MG_RICH_TEXT_ENABLED ? new Map() : null;
   const richParagraphStyles = MG_RICH_TEXT_ENABLED ? new Set() : null;
   const richParagraphNodes = MG_RICH_TEXT_ENABLED ? [] : null;
@@ -1775,6 +1791,11 @@ async function buildMangroveComponents(
                 'Rich TEXT forbids whole-node bindings/effects/properties/appearance conflicts.'
               );
           }
+          if (
+            MG_TEXT_THICKNESS_ENABLED &&
+            tree.textDecorationThickness !== undefined
+          )
+            textThicknessPlans.set(tree, mgTextThicknessPlan(tree));
           if (tree.textDecorationOffset !== undefined) {
             const offset = tree.textDecorationOffset;
             if (
@@ -2264,13 +2285,42 @@ async function buildMangroveComponents(
     }
   }
   if (
-    ((MG_RICH_TEXT_ENABLED && richTextScope) ||
+    ((MG_TEXT_THICKNESS_ENABLED && textThicknessScope) ||
+      (MG_RICH_TEXT_ENABLED && richTextScope) ||
       (MG_SVG_SIZING_ENABLED && svgSizingScope) ||
       (MG_ABSOLUTE_START_ENABLED && absoluteStartScope)) &&
     result.errors.length
   )
     return result;
   if (!ready.length) return result;
+  if (MG_TEXT_THICKNESS_ENABLED && textThicknessScope) {
+    try {
+      async function inspectThickness(tree, key) {
+        if (textThicknessPlans.has(tree)) {
+          const node = owned.get(key);
+          if (node) {
+            await loadNodeFonts(node);
+            mgNativeTextThicknessPlan(node, textThicknessPlans.get(tree));
+          }
+        }
+        for (const child of tree.children || [])
+          await inspectThickness(child, `${key}/${child.id || child.key}`);
+      }
+      for (const family of ready)
+        for (const variant of family.variants)
+          await inspectThickness(
+            variant.tree,
+            `family/${family.id}/variant/${variant.id}`
+          );
+    } catch (error) {
+      result.errors.push(reportError(error));
+      result.audit.push({
+        status: 'blocked-text-thickness-preflight',
+        reason: reportError(error),
+      });
+      return result;
+    }
+  }
   if (MG_RICH_TEXT_ENABLED && richTextScope) {
     try {
       if (typeof mgRichText === 'undefined')
@@ -2497,6 +2547,14 @@ async function buildMangroveComponents(
     result.audit.push({
       status: 'blocked-svg-sizing-style-import',
       reason: 'Style import failed; sized SVG scene construction refused.',
+    });
+    return result;
+  }
+  if (MG_TEXT_THICKNESS_ENABLED && textThicknessScope && styles.errors.length) {
+    result.audit.push({
+      status: 'blocked-text-thickness-style-import',
+      reason:
+        'Style import failed; underlined TEXT scene construction refused.',
     });
     return result;
   }
@@ -3303,6 +3361,10 @@ async function buildMangroveComponents(
         node.textDecoration === 'UNDERLINE'
       )
         node.textDecorationOffset = { ...spec.textDecorationOffset };
+      if (MG_TEXT_THICKNESS_ENABLED && textThicknessPlans.has(spec))
+        mgApplyTextThickness(
+          mgNativeTextThicknessPlan(node, textThicknessPlans.get(spec))
+        );
       if (MG_DIRECT_TEXT_ENABLED && directText.has(spec)) {
         // Typed aliases follow all literals, property references and layout.
         // This ordering is proven only by the isolated native TOC diagnostic.
@@ -3761,15 +3823,31 @@ async function buildMangroveComponents(
         const surface =
           specimen.surface ??
           reviewOptions.variantSurfaces?.[specimen.variant.recipe.id];
+        // A preserved FIXED master can resolve a token width absent from numeric recipes.
         const row = await reviewFrame(
           key,
           specimen.name,
           grid,
-          (specimen.width
-            ? specimen.width + 2 * reviewPadding
-            : specimen.label
-              ? 704
-              : 344) + (surface ? 2 * reviewPadding : 0)
+          MG_INTRINSIC_REVIEW_ENABLED &&
+            preserveVariantSizing &&
+            specimen.variant.node.layoutSizingHorizontal === 'FIXED' &&
+            Number.isFinite(specimen.variant.node.width) &&
+            specimen.variant.node.width > 0
+            ? Math.max(
+                (specimen.width
+                  ? specimen.width + 2 * reviewPadding
+                  : specimen.label
+                    ? 704
+                    : 344) + (surface ? 2 * reviewPadding : 0),
+                specimen.variant.node.width +
+                  2 * reviewPadding +
+                  (surface ? 2 * reviewPadding : 0)
+              )
+            : (specimen.width
+                ? specimen.width + 2 * reviewPadding
+                : specimen.label
+                  ? 704
+                  : 344) + (surface ? 2 * reviewPadding : 0)
         );
         await reviewLabel(`${key}/caption`, specimen.name, row);
         let consumerParent = row;

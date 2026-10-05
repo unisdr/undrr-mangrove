@@ -1096,6 +1096,30 @@ async function buildConnector({
             specimen => specimen?.surface !== undefined
           ))
     );
+  function needsTextThickness(node) {
+    return (
+      node.textDecorationThickness !== undefined ||
+      (node.children || []).some(needsTextThickness)
+    );
+  }
+  const textThicknessEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsTextThickness(variant.tree))
+    );
+  if (textThicknessEnabled) {
+    const context = vm.createContext({ module: { exports: {} } });
+    vm.runInContext(
+      fs.readFileSync(path.join(PLUGIN, 'kit-text-thickness.js'), 'utf8'),
+      context
+    );
+    function validateThickness(tree) {
+      context.module.exports.mgTextThicknessPlan(tree);
+      for (const child of tree.children || []) validateThickness(child);
+    }
+    for (const family of subset.components.families)
+      for (const variant of family.variants) validateThickness(variant.tree);
+  }
   function needsTextOffset(node) {
     return (
       node.textDecorationOffset !== undefined ||
@@ -1297,6 +1321,10 @@ async function buildConnector({
   if (richTextEnabled)
     for (const module of ['kit-rich-text.js', 'kit-font-defaults.js'])
       source += fs.readFileSync(path.join(PLUGIN, module), 'utf8') + '\n;\n';
+  if (textThicknessEnabled)
+    source +=
+      fs.readFileSync(path.join(PLUGIN, 'kit-text-thickness.js'), 'utf8') +
+      '\n;\n';
   if (svgSizingEnabled)
     source +=
       fs.readFileSync(path.join(PLUGIN, 'kit-svg-sizing.js'), 'utf8') + '\n;\n';
@@ -1380,6 +1408,7 @@ async function buildConnector({
         MG_CONNECTOR_INTRINSIC_VALIDATION: intrinsicValidationEnabled,
         MG_CONNECTOR_REVIEW_SURFACES: reviewSurfacesEnabled,
         MG_CONNECTOR_TEXT_OFFSET: textOffsetEnabled,
+        MG_CONNECTOR_TEXT_THICKNESS: textThicknessEnabled,
         MG_CONNECTOR_REVIEW_NODES: reviewNodesEnabled,
         MG_CONNECTOR_RICH_DTO_VALIDATION: false,
         MG_CONNECTOR_RICH_SOURCE_VALIDATION: false,
