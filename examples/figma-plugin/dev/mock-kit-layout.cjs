@@ -248,6 +248,7 @@ function restart(env) {
   const context = vm.createContext({ figma: env.figma, __html__: '', console });
   for (const file of [
     'kit-identity.js',
+    'importer.js',
     'code.js',
     'kit-builder.js',
     'kit-layout.js',
@@ -279,6 +280,136 @@ async function refuseBuild(env, call = env.call) {
   );
 }
 async function main() {
+  {
+    const manual = await fixture();
+    await manual.call(
+      'setMangroveMaintenancePolicy',
+      doc,
+      ['button'],
+      'manual',
+      'Native designer owns this main.'
+    );
+    await refuse(manual, doc, 'Initial migration must preserve a manual main');
+    const installed = await fixture();
+    await installed.call('organizeMangroveKit', doc, 'undrr');
+    await installed.call(
+      'setMangroveMaintenancePolicy',
+      doc,
+      ['table'],
+      'manual',
+      'Native table layout is maintained manually.'
+    );
+    const set = owned(installed, 'family/table');
+    set.x += 17;
+    set.children[0].x += 23;
+    set.description = 'Keep my set documentation';
+    set.children[0].description = 'Keep my variant documentation';
+    const board = owned(installed, 'layout/family/table/main');
+    const review = owned(installed, 'review/table');
+    const baseline = {
+      board: subtree(board),
+      review: subtree(review),
+      setDescription: set.description,
+      variantDescription: set.children[0].description,
+    };
+    for (const node of [set, ...set.children]) {
+      node.resizeWithoutConstraints = () => {
+        throw new Error('Manual main cannot be resized by layout');
+      };
+    }
+    const organized = await installed.call('organizeMangroveKit', doc, 'undrr');
+    assert.deepStrictEqual(copy(organized.errors), []);
+    assert.deepStrictEqual(copy(organized.preservedManualFamilyIds), ['table']);
+    assert(!organized.updatedNodeIds.includes(set.id));
+    assert(
+      set.children.every(node => !organized.updatedNodeIds.includes(node.id))
+    );
+    const sourceOnly = await installed.call(
+      'buildMangroveComponents',
+      doc,
+      'undrr',
+      ['button']
+    );
+    assert.deepStrictEqual(copy(sourceOnly.errors), []);
+    assert.deepStrictEqual(
+      {
+        board: subtree(board),
+        review: subtree(review),
+        setDescription: set.description,
+        variantDescription: set.children[0].description,
+      },
+      baseline,
+      'Automatic organised reconciliation preserves nonselected manual mains and existing source/review fields'
+    );
+    // The ordinary organiser is allowed above; explicitly requesting a new
+    // flow cannot silently move a manually maintained presentation subtree.
+    const beforeCompact = complete(installed);
+    await assert.rejects(
+      installed.call('organizeMangroveKit', doc, 'undrr', { compact: true }),
+      /Manual mains/
+    );
+    assert.deepStrictEqual(complete(installed), beforeCompact);
+    const raw = JSON.stringify({ version: 1, owner: 'source', reason: '' });
+    set.children[0].setSharedPluginData(
+      'orgundrrmangrove',
+      'mgMaintenancePolicy',
+      raw
+    );
+    await refuse(
+      installed,
+      doc,
+      'Conflicting nonselected manual/source policy'
+    );
+    const beforeBuild = complete(installed);
+    await assert.rejects(
+      installed.call('buildMangroveComponents', doc, 'undrr', ['button']),
+      /Maintenance ownership refused|Conflicting maintenance policies/
+    );
+    assert.deepStrictEqual(
+      complete(installed),
+      beforeBuild,
+      'Conflicting nonselected maintenance metadata blocks source build before writes'
+    );
+    console.log(
+      'ok manual ownership blocks initial/flow migration, preserves installed mains/reviews through unrelated builds and refuses nonselected conflicts before writes'
+    );
+    const compact = await fixture();
+    await compact.call('organizeMangroveKit', doc, 'undrr', { compact: true });
+    await compact.call(
+      'setMangroveMaintenancePolicy',
+      doc,
+      ['button'],
+      'manual',
+      'Designer owns the published action.'
+    );
+    const compactBoard = owned(compact, 'layout/family/button/main');
+    const compactReview = owned(compact, 'review/button');
+    const compactBefore = {
+      board: subtree(compactBoard),
+      review: subtree(compactReview),
+    };
+    const compactRepeat = await compact.call(
+      'organizeMangroveKit',
+      doc,
+      'undrr'
+    );
+    assert.deepStrictEqual(copy(compactRepeat.errors), []);
+    assert.deepStrictEqual(copy(compactRepeat.preservedManualFamilyIds), [
+      'button',
+    ]);
+    const unrelated = await compact.call(
+      'buildMangroveComponents',
+      doc,
+      'undrr',
+      ['table']
+    );
+    assert.deepStrictEqual(copy(unrelated.errors), []);
+    assert.deepStrictEqual(
+      { board: subtree(compactBoard), review: subtree(compactReview) },
+      compactBefore,
+      'Installed compact reference flow preserves manual mains through explicit organisation and unrelated automatic reconciliation'
+    );
+  }
   // API support uses actual SECTION nodes, rather than a renamed FRAME fixture.
   {
     const env = environment(doc),

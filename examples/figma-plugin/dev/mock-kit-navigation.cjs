@@ -139,6 +139,66 @@ async function fixture() {
 }
 async function main() {
   {
+    const { env, sets, variants } = await fixture();
+    const policy = JSON.stringify({
+      version: 1,
+      owner: 'manual',
+      reason: 'Designer maintains the action.',
+    });
+    sets
+      .get('button')
+      .setSharedPluginData('orgundrrmangrove', 'mgMaintenancePolicy', policy);
+    variants
+      .get('button')
+      .setSharedPluginData('orgundrrmangrove', 'mgMaintenancePolicy', policy);
+    const before = snapshot(env);
+    const result = await env.call('refreshMangroveGuidance', doc);
+    assert.deepStrictEqual(copy(result.preservedManualFamilyIds), ['button']);
+    assert(!result.updatedNodeIds.includes(sets.get('button').id));
+    assert(!result.updatedNodeIds.includes(variants.get('button').id));
+    assert.strictEqual(
+      sets.get('button').description,
+      'Historical pending acceptance description'
+    );
+    assert.strictEqual(
+      variants.get('button').description,
+      'Historical pending acceptance description'
+    );
+    const after = snapshot(env);
+    const retained = new Set([
+      sets.get('button').id,
+      variants.get('button').id,
+    ]);
+    assert.deepStrictEqual(
+      after.nodes.filter(node => retained.has(node.id)),
+      before.nodes.filter(node => retained.has(node.id)),
+      'Manual main fields and metadata remain exact during guidance refresh'
+    );
+    assert.strictEqual(
+      result.updatedNodeIds.length,
+      (doc.components.families.length - 1) * 2
+    );
+    variants
+      .get('button')
+      .setPluginData(
+        'mgMaintenancePolicy',
+        JSON.stringify({ version: 1, owner: 'source', reason: '' })
+      );
+    const conflict = snapshot(env);
+    await assert.rejects(
+      env.call('refreshMangroveGuidance', doc),
+      /Maintenance ownership refused/
+    );
+    assert.deepStrictEqual(
+      snapshot(env),
+      conflict,
+      'Shared/private conflict refuses before any descriptions change'
+    );
+    console.log(
+      'ok guidance preserves manual set/variant descriptions and exact fields while source families refresh, with shared/private conflicts refused before writes'
+    );
+  }
+  {
     const { env, frame } = await fixture();
     // Fixture preparation may move text; navigation starts with no fonts loaded.
     env.state.loadedFonts.add('Inter Regular');

@@ -6,6 +6,7 @@ const path = require('path');
 const PLUGIN = path.resolve(__dirname, '../examples/figma-plugin');
 const SOURCES = [
   'kit-identity.js',
+  'importer.js',
   'code.js',
   'kit-inspection.js',
   'kit-builder.js',

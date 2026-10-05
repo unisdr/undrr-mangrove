@@ -177,6 +177,7 @@ function restart(env) {
   });
   for (const file of [
     'kit-identity.js',
+    'importer.js',
     'code.js',
     'kit-inspection.js',
     'kit-builder.js',

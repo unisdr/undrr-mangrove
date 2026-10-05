@@ -79,6 +79,17 @@ function mountUI() {
       context.fixtureDoc = doc;
       vm.runInContext('doc = fixtureDoc; refreshControls()', context);
     },
+    setSelectedFamilies(ids) {
+      context.fixtureFamilyInputs = ids.map(value => ({
+        value,
+        checked: true,
+      }));
+      elements.get('components').checkedInputs = context.fixtureFamilyInputs;
+      vm.runInContext(
+        'familyInputs = fixtureFamilyInputs; refreshControls()',
+        context
+      );
+    },
   };
 }
 
@@ -412,6 +423,108 @@ async function main() {
   );
   console.log(
     'ok  font diagnostics require a document/single brand, serialise controls, bound four loads/five errors and oversized names, preserve exact reports and recover from errors'
+  );
+
+  const ownershipUI = mountUI();
+  const ownedElement = id => ownershipUI.elements.get(id);
+  const deliverOwnership = async () => {
+    await env.state.handler(ownershipUI.messages.at(-1));
+    assert.strictEqual(env.state.lastMessage.type, 'operation');
+    const result = JSON.parse(JSON.stringify(env.state.lastMessage.result));
+    ownershipUI.window.onmessage({
+      data: { pluginMessage: { type: 'operation', result } },
+    });
+    return result;
+  };
+  ownershipUI.setDocument(doc);
+  assert(ownedElement('read-maintenance').disabled);
+  ownershipUI.setSelectedFamilies(['button']);
+  assert(!ownedElement('read-maintenance').disabled);
+  assert(ownedElement('manual-maintenance').disabled);
+  assert(ownedElement('source-maintenance').disabled);
+  ownedElement('read-maintenance').click();
+  assert.strictEqual(
+    ownershipUI.messages.at(-1).type,
+    'read-maintenance-policy'
+  );
+  const initialPolicy = await deliverOwnership();
+  assert.strictEqual(initialPolicy.phase, 'inspected');
+  assert.strictEqual(initialPolicy.families[0].policy.owner, 'source');
+  ownedElement('maintenance-reason').value =
+    '  Designer owns Button geometry.  ';
+  ownedElement('maintenance-reason').oninput();
+  ownedElement('manual-maintenance').click();
+  assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(ownershipUI.messages.at(-1))),
+    {
+      type: 'set-maintenance-policy',
+      doc,
+      families: ['button'],
+      owner: 'manual',
+      reason: 'Designer owns Button geometry.',
+    }
+  );
+  assert(ownedElement('maintenance-reason').disabled);
+  assert(ownedElement('read-maintenance').disabled);
+  const manualPolicy = await deliverOwnership();
+  assert.strictEqual(manualPolicy.phase, 'complete');
+  assert.strictEqual(manualPolicy.families[0].policy.owner, 'manual');
+  ownedElement('save-operation-report').click();
+  assert.strictEqual(
+    ownershipUI.downloads.at(-1).name,
+    'mangrove-set-maintenance-policy-report.json'
+  );
+  assert.deepStrictEqual(
+    JSON.parse(await ownershipUI.downloads.at(-1).blob.text()),
+    manualPolicy
+  );
+  ownershipUI.setSelectedFamilies(['text-cta']);
+  ownedElement('modes').checkedInputs = [{ value: 'undrr' }];
+  const beforeRefusal = JSON.parse(
+    JSON.stringify(await env.call('inspectMangroveKit'))
+  );
+  delete beforeRefusal.capturedAt;
+  ownedElement('build').click();
+  assert.strictEqual(ownershipUI.messages.at(-1).type, 'build-components');
+  const refusal = await deliverOwnership();
+  assert.strictEqual(refusal.phase, 'refused');
+  assert.deepStrictEqual(refusal.createdNodeIds, []);
+  assert.deepStrictEqual(refusal.updatedNodeIds, []);
+  assert.match(refusal.errors.join('\n'), /Manual maintenance.*button/);
+  const afterRefusal = JSON.parse(
+    JSON.stringify(await env.call('inspectMangroveKit'))
+  );
+  delete afterRefusal.capturedAt;
+  assert.deepStrictEqual(afterRefusal, beforeRefusal);
+  ownedElement('save-operation-report').click();
+  assert.strictEqual(
+    ownershipUI.downloads.at(-1).name,
+    'mangrove-component-build-report.json'
+  );
+  assert.deepStrictEqual(
+    JSON.parse(await ownershipUI.downloads.at(-1).blob.text()),
+    refusal
+  );
+  ownershipUI.setSelectedFamilies(['button']);
+  const messageCount = ownershipUI.messages.length;
+  ownedElement('source-maintenance').click();
+  assert.strictEqual(
+    ownershipUI.messages.length,
+    messageCount,
+    'Source handback needs explicit acknowledgement'
+  );
+  ownedElement('source-handback').checked = true;
+  ownedElement('source-handback').onchange();
+  ownedElement('source-maintenance').click();
+  assert.strictEqual(ownershipUI.messages.at(-1).owner, 'source');
+  assert.strictEqual(ownershipUI.messages.at(-1).reason, '');
+  const sourcePolicy = await deliverOwnership();
+  assert.strictEqual(sourcePolicy.phase, 'complete');
+  assert.strictEqual(sourcePolicy.families[0].policy.owner, 'source');
+  assert.strictEqual(ownedElement('source-handback').checked, false);
+  assert(ownedElement('source-maintenance').disabled);
+  console.log(
+    'ok  actual ownership controls dispatch inspected/manual/source policies, require handback acknowledgement and save full dependency-refusal receipts without canvas writes'
   );
 
   const exportsUI = mountUI();

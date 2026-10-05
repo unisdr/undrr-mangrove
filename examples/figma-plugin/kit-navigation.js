@@ -1,4 +1,4 @@
-/* global figma, mgLayoutIndex, MG_KIT_GUIDANCE */
+/* global figma, mgLayoutIndex, MG_KIT_GUIDANCE, readMangroveMaintenancePolicies */
 // Presentation navigation is read-only and never loads or substitutes fonts.
 function mgConsumerGuidance(doc) {
   const guidance =
@@ -180,6 +180,20 @@ async function refreshMangroveGuidance(doc) {
       'Guidance requires the complete current component inventory.'
     );
   const known = new Set(doc.components.families.map(item => item.id));
+  if (typeof readMangroveMaintenancePolicies !== 'function')
+    throw new Error(
+      'Rebuild the desktop plugin with maintenance ownership guards.'
+    );
+  const maintenance = await readMangroveMaintenancePolicies(doc);
+  if (maintenance.errors.length)
+    throw new Error(
+      `Maintenance ownership refused: ${maintenance.errors.join('; ')}`
+    );
+  const manualFamilyIds = new Set(
+    maintenance.families
+      .filter(family => family.setId && family.policy.owner === 'manual')
+      .map(family => family.familyId)
+  );
   const seen = new Set();
   const index = await mgLayoutIndex();
   const changes = [];
@@ -198,6 +212,7 @@ async function refreshMangroveGuidance(doc) {
     if (!set) continue;
     if (set.type !== 'COMPONENT_SET')
       throw new Error(`Source family ${item.id} changed type.`);
+    if (manualFamilyIds.has(item.id)) continue;
     const variants = set.children.filter(node => node.type === 'COMPONENT');
     for (const node of [set, ...variants])
       if (node.description !== item.description)
@@ -224,6 +239,7 @@ async function refreshMangroveGuidance(doc) {
     createdNodeIds: [],
     updatedNodeIds,
     scope: guidance.scope,
+    preservedManualFamilyIds: [...manualFamilyIds],
     errors: [],
   };
 }

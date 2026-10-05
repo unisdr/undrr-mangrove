@@ -310,6 +310,7 @@ function restart(env) {
   const context = vm.createContext({ figma: env.figma, __html__: '', console });
   for (const file of [
     'kit-identity.js',
+    'importer.js',
     'code.js',
     'kit-inspection.js',
     'kit-builder.js',

@@ -727,7 +727,7 @@ async function main() {
     ...[
       'if (value.letterSpacing !== undefined) {',
       'style.letterSpacing = value.letterSpacing || {',
-    ].map(anchor => ({ file: 'code.js', anchor })),
+    ].map(anchor => ({ file: 'importer.js', anchor })),
   ];
   for (const { file, anchor } of boundaries) {
     const read = fs.readFileSync;

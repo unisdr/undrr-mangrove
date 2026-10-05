@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font:
+          14px/1.5 Roboto,
+          Arial,
+          sans-serif;
+        color: var(--figma-color-text, #1a1a1a);
+        background: var(--figma-color-bg, #fff);
+      }
+      header {
+        padding: 20px 24px;
+        background: #234f85;
+        color: #fff;
+      }
+      h1 {
+        margin: 0;
+        font:
+          bold 26px/1.2 'Roboto Condensed',
+          Roboto,
+          Arial,
+          sans-serif;
+      }
+      h2 {
+        margin: 0 0 8px;
+        font-size: 16px;
+      }
+      p {
+        margin: 8px 0;
+      }
+      main {
+        padding: 20px 24px;
+      }
+      section {
+        margin-bottom: 20px;
+      }
+      fieldset {
+        margin: 0 0 16px;
+        padding: 12px;
+        border: 1px solid var(--figma-color-border, #c9cdd0);
+        border-radius: 4px;
+      }
+      legend {
+        padding: 0 4px;
+        font-weight: bold;
+      }
+      label {
+        display: block;
+        margin: 6px 0;
+      }
+      #brands {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+      }
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+      button {
+        min-height: 36px;
+        padding: 6px 14px;
+        border: 1px solid #234f85;
+        border-radius: 4px;
+        background: #234f85;
+        color: #fff;
+        cursor: pointer;
+      }
+      button.secondary {
+        background: var(--figma-color-bg, #fff);
+        color: var(--figma-color-text, #234f85);
+        border-color: var(--figma-color-border, #234f85);
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      :focus-visible {
+        outline: 3px solid #9a761e;
+        outline-offset: 3px;
+      }
+      input[type='search'],
+      textarea {
+        width: 100%;
+        padding: 8px;
+        color: inherit;
+        background: var(--figma-color-bg, #fff);
+        border: 1px solid var(--figma-color-border, #c9cdd0);
+        border-radius: 4px;
+      }
+      textarea {
+        min-height: 90px;
+        font-family: monospace;
+      }
+      input[type='checkbox'] {
+        accent-color: #234f85;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .hint {
+        color: var(--figma-color-text-secondary, #61666b);
+        font-size: 12px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 0;
+      }
+      #style-options {
+        max-height: 190px;
+        overflow: auto;
+        margin-top: 8px;
+      }
+      #report {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        margin: 0;
+        padding: 12px;
+        background: var(--figma-color-bg-secondary, #f1f3f5);
+        border-radius: 4px;
+        font: 12px/1.5 monospace;
+      }
+      footer {
+        position: sticky;
+        bottom: 0;
+        padding: 12px 24px;
+        background: var(--figma-color-bg, #fff);
+        border-top: 1px solid var(--figma-color-border, #c9cdd0);
+        display: flex;
+        gap: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Mangrove maintenance</h1>
+      <p>Update design variables and local styles at a meaningful release.</p>
+    </header>
+    <main>
+      <section aria-labelledby="source-title">
+        <h2 id="source-title">1. Load current tokens</h2>
+        <button id="bundled-source">Use bundled source</button>
+        <p class="hint">
+          The plugin build includes the matching maintenance data. Use this
+          after rebuilding the plugin, or choose a reviewed JSON export below.
+        </p>
+        <label for="file"
+          >Maintenance JSON <input id="file" type="file" accept=".json"
+        /></label>
+        <p id="source-state" class="hint">
+          Build with yarn build:figma-maintenance, then choose
+          mangrove-maintenance-tokens.json.
+        </p>
+        <details>
+          <summary>Paste JSON instead</summary>
+          <label for="json">Source JSON</label
+          ><textarea id="json" spellcheck="false"></textarea
+          ><button id="load-json" class="secondary">Load pasted JSON</button>
+        </details>
+      </section>
+      <section aria-labelledby="options-title">
+        <h2 id="options-title">2. Choose what to update</h2>
+        <fieldset>
+          <legend>Brands</legend>
+          <div id="brands">Load a token file to choose brands.</div>
+          <p class="hint">
+            In a one-mode file, selecting one brand switches that mode. In the
+            paid library, keep all five brands selected.
+          </p>
+        </fieldset>
+        <details>
+          <summary>Text styles <span id="style-count"></span></summary>
+          <p class="hint">
+            Installed styles are selected after inspection. In a new file, only
+            the nine core type roles start selected. Selecting additional roles
+            creates local styles; publishing is a separate review.
+          </p>
+          <div class="actions">
+            <button id="installed" class="secondary" disabled>
+              Select installed</button
+            ><button id="clear-styles" class="secondary" disabled>
+              Clear styles
+            </button>
+          </div>
+          <label for="style-search">Find a text style</label
+          ><input id="style-search" type="search" disabled />
+          <div id="style-options"></div>
+        </details>
+        <label
+          ><input id="effects" type="checkbox" checked /> Update all source
+          effect styles</label
+        >
+        <p class="hint">
+          Components and canvas boards are maintained separately. Token changes
+          can change their appearance through existing bindings. This importer
+          keeps omitted assets and does not publish.
+        </p>
+      </section>
+      <section aria-labelledby="report-title">
+        <h2 id="report-title">Results</h2>
+        <pre id="report" role="status" aria-live="polite">
+Ready to load current tokens.</pre>
+      </section>
+    </main>
+    <footer>
+      <button id="import" disabled>Update variables and styles</button
+      ><button id="inspect" class="secondary">Inspect</button
+      ><button id="save" class="secondary" disabled>Save report</button>
+    </footer>
+    <script>
+      const $ = id => document.getElementById(id);
+      const core = new Set([
+        'text.text.300.regular',
+        'text.text.button.regular',
+        'text.text.form-input.regular',
+        'text.heading.400.regular',
+        'text.heading.500.regular',
+        'text.heading.600.regular',
+        'text.heading.900.regular',
+        'text.heading.1000.regular',
+        'text.heading.1100.regular',
+      ]);
+      let doc = null;
+      let pending = null;
+      let nextRequest = 0;
+      let report = null;
+      let inspection = null;
+      let styleInputs = [];
+      let brandInputs = [];
+      function controls() {
+        const busy = pending !== null;
+        $('file').disabled = busy;
+        $('bundled-source').disabled = busy;
+        $('load-json').disabled = busy;
+        $('json').disabled = busy;
+        $('inspect').disabled = busy;
+        $('effects').disabled = busy;
+        $('style-search').disabled = busy || !doc;
+        $('installed').disabled = busy || !doc || !inspection;
+        $('clear-styles').disabled = busy || !doc;
+        $('import').disabled =
+          busy || !doc || !brandInputs.some(input => input.checked);
+        $('save').disabled = busy || !report;
+        for (const input of [...styleInputs, ...brandInputs])
+          input.disabled = busy;
+        $('style-count').textContent = doc
+          ? `(${styleInputs.filter(input => input.checked).length} selected)`
+          : '';
+      }
+      function send(type, payload = {}) {
+        if (pending !== null) return;
+        pending = { requestId: ++nextRequest, type };
+        if (type === 'import') inspection = null;
+        controls();
+        $('report').textContent = 'Working…';
+        try {
+          parent.postMessage(
+            {
+              pluginMessage: { type, requestId: pending.requestId, ...payload },
+            },
+            '*'
+          );
+        } catch (error) {
+          pending = null;
+          $('report').textContent = error.message || String(error);
+          controls();
+        }
+      }
+      function checkSource(value) {
+        if (
+          !value ||
+          typeof value.collection !== 'string' ||
+          !Array.isArray(value.variables) ||
+          !Array.isArray(value.modes) ||
+          !value.modes.length ||
+          !Array.isArray(value.styles?.text) ||
+          !Array.isArray(value.styles?.effect)
+        )
+          throw new Error('Choose a Mangrove variables/styles JSON file.');
+      }
+      function loadDocument(text) {
+        if (pending !== null) return;
+        try {
+          const value = JSON.parse(text);
+          checkSource(value);
+          doc = value;
+          inspection = null;
+          report = null;
+          $('brands').replaceChildren();
+          brandInputs = [];
+          for (const mode of doc.modes) {
+            const label = document.createElement('label');
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.value = mode.id;
+            input.checked = true;
+            input.onchange = controls;
+            label.append(input, ` ${mode.name}`);
+            $('brands').append(label);
+            brandInputs.push(input);
+          }
+          $('style-options').replaceChildren();
+          styleInputs = [];
+          for (const style of doc.styles.text) {
+            const label = document.createElement('label');
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.value = style.id;
+            input.checked = core.has(style.id);
+            input.onchange = controls;
+            label.append(input, ` ${style.name}`);
+            label.dataset.search = style.name.toLowerCase();
+            $('style-options').append(label);
+            styleInputs.push(input);
+          }
+          $('source-state').textContent =
+            `${doc.variables.length} variables, ${doc.modes.length} brands, ${doc.styles.text.length} text definitions, ${doc.styles.effect.length} effects.`;
+          $('style-search').value = '';
+          controls();
+          send('maintenance-inspect', { collection: doc.collection });
+        } catch (error) {
+          doc = null;
+          inspection = null;
+          report = null;
+          $('report').textContent = `Source error: ${error.message || error}`;
+          controls();
+        }
+      }
+      $('file').onchange = async event => {
+        const file = event.target.files[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          loadDocument(text);
+        } catch (error) {
+          $('report').textContent =
+            `Could not read source: ${error.message || error}`;
+        }
+      };
+      $('load-json').onclick = () => loadDocument($('json').value);
+      $('bundled-source').onclick = () => send('maintenance-source');
+      $('inspect').onclick = () =>
+        send('maintenance-inspect', {
+          collection: doc?.collection || 'Mangrove',
+        });
+      $('installed').onclick = () => {
+        const ids = new Set(inspection.styles.map(style => style.tokenId));
+        for (const input of styleInputs) input.checked = ids.has(input.value);
+        controls();
+      };
+      $('clear-styles').onclick = () => {
+        for (const input of styleInputs) input.checked = false;
+        controls();
+      };
+      $('style-search').oninput = () => {
+        const query = $('style-search').value.trim().toLowerCase();
+        for (const label of $('style-options').children)
+          label.hidden = !label.dataset.search.includes(query);
+      };
+      $('import').onclick = () =>
+        send('import', {
+          doc,
+          modes: brandInputs
+            .filter(input => input.checked)
+            .map(input => input.value),
+          textStyles: styleInputs
+            .filter(input => input.checked)
+            .map(input => input.value),
+          effects: $('effects').checked,
+          prune: false,
+        });
+      $('save').onclick = () => {
+        if (!report || pending !== null) return;
+        const bytes = JSON.stringify(report, null, 2);
+        const url = URL.createObjectURL(
+          new Blob([bytes], { type: 'application/json' })
+        );
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `mangrove-maintenance-${report.operation}-report.json`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      };
+      window.onmessage = event => {
+        const message = event.data?.pluginMessage;
+        if (
+          !message ||
+          !['result', 'error'].includes(message.type) ||
+          !pending ||
+          message.requestId !== pending.requestId ||
+          message.operation !== pending.type
+        )
+          return;
+        pending = null;
+        if (message.type === 'error') {
+          report = {
+            operation: message.operation,
+            errors: [message.message],
+            capturedAt: new Date().toISOString(),
+          };
+          $('report').textContent = `Update refused: ${message.message}`;
+        } else if (message.type === 'result') {
+          report = {
+            operation: message.operation,
+            capturedAt: new Date().toISOString(),
+            result: message.result,
+          };
+          const result = message.result;
+          if (message.operation === 'maintenance-source') {
+            loadDocument(JSON.stringify(result));
+            return;
+          } else if (message.operation === 'maintenance-inspect') {
+            inspection = result;
+            if (doc && result.styles.length) $('installed').onclick();
+            if (doc && result.collection?.modes.length === 1) {
+              const name = result.collection.modes[0].name;
+              const match =
+                doc.modes.find(mode => mode.name === name) ||
+                doc.modes.find(mode => mode.id === 'undrr') ||
+                doc.modes[0];
+              for (const input of brandInputs)
+                input.checked = input.value === match.id;
+            }
+            $('report').textContent =
+              `${result.collection ? result.collection.name : 'No local Mangrove collection'}: ${result.variables.length} variables, ${result.styles.length} owned styles.\n${(result.collection?.modes || []).map(mode => mode.name).join(', ')}`;
+          } else {
+            inspection = null;
+            $('report').textContent =
+              `Variables: ${result.counts.created} created, ${result.counts.updated} updated; ${result.counts.values} mode values.\nStyles: ${result.styles?.counts.text.created || 0} text and ${result.styles?.counts.effect.created || 0} effects created.\n${result.stale.length} retained stale variables; ${result.errors.length} errors.\n${result.errors.join('\n')}`;
+          }
+        }
+        controls();
+      };
+      controls();
+    </script>
+  </body>
+</html>

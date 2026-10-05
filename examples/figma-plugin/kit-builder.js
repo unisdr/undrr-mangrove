@@ -1,7 +1,269 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
+const MG_MAINTENANCE_POLICY_KEY = 'mgMaintenancePolicy';
+
+function mgMaintenanceParsePolicy(node) {
+  const raw = mgReadIdentity(node, MG_MAINTENANCE_POLICY_KEY);
+  if (!raw) return null;
+  let policy;
+  try {
+    policy = JSON.parse(raw);
+  } catch (_) {
+    throw new Error(`Invalid maintenance policy on ${node.id}: expected JSON.`);
+  }
+  if (
+    !policy ||
+    typeof policy !== 'object' ||
+    Array.isArray(policy) ||
+    Object.keys(policy).length !== 3 ||
+    Object.keys(policy).some(
+      key => !['version', 'owner', 'reason'].includes(key)
+    ) ||
+    policy.version !== 1 ||
+    !['source', 'manual'].includes(policy.owner) ||
+    typeof policy.reason !== 'string' ||
+    (policy.owner === 'manual'
+      ? !policy.reason.trim() || policy.reason.length > 2000
+      : policy.reason !== '')
+  )
+    throw new Error(`Invalid maintenance policy on ${node.id}.`);
+  return policy;
+}
+
+function mgMaintenanceInspectFamily(familyId, owned, collect) {
+  const prefix = `family/${familyId}`;
+  const set = owned.get(prefix);
+  let policy;
+  function inspect(node) {
+    const marker = mgMaintenanceParsePolicy(node);
+    if (marker) {
+      if (
+        policy &&
+        (marker.owner !== policy.owner || marker.reason !== policy.reason)
+      )
+        throw new Error(`Conflicting maintenance policies for ${familyId}.`);
+      policy = marker;
+    }
+    if (collect) collect(node, marker);
+  }
+  if (set) {
+    if (set.type !== 'COMPONENT_SET')
+      throw new Error(`Maintenance family ${familyId} has changed type.`);
+    inspect(set);
+  }
+  for (const [key, node] of owned) {
+    if (!key.startsWith(`${prefix}/variant/`)) continue;
+    // The builder indexes anatomy below a variant as well as the main itself.
+    if (key.slice(`${prefix}/variant/`.length).includes('/')) continue;
+    if (node.type !== 'COMPONENT' || !set || node.parent !== set)
+      throw new Error(`Maintenance variant ${node.id} has changed ownership.`);
+    inspect(node);
+  }
+  return (
+    policy || {
+      version: 1,
+      owner: 'source',
+      reason: '',
+    }
+  );
+}
+
+function mgMaintenanceFamilyPolicy(familyId, owned) {
+  const targets = [],
+    explicitNodeIds = [];
+  const policy = mgMaintenanceInspectFamily(familyId, owned, (node, marker) => {
+    targets.push(node);
+    if (marker) explicitNodeIds.push(node.id);
+  });
+  const set = owned.get(`family/${familyId}`);
+  return {
+    familyId,
+    setId: set?.id || null,
+    variantIds: targets.filter(node => node !== set).map(node => node.id),
+    policy,
+    explicitNodeIds,
+    targets,
+  };
+}
+
+function mgMaintenanceAssertSource(familyIds, owned) {
+  const policies = familyIds.map(familyId => ({
+    familyId,
+    policy: mgMaintenanceInspectFamily(familyId, owned),
+  }));
+  const manual = policies.filter(entry => entry.policy.owner === 'manual');
+  if (manual.length)
+    throw new Error(
+      `Manual maintenance blocks the complete component build: ${manual
+        .map(entry => `${entry.familyId} (${entry.policy.reason})`)
+        .join('; ')}. Record an explicit source handback before rebuilding.`
+    );
+  return policies;
+}
+
+function mgMaintenanceDependencyIds(recipes, selectedFamilyIds) {
+  const families = new Map(recipes.map(family => [family.id, family]));
+  const visiting = new Set();
+  const visited = new Set();
+  function visit(id) {
+    if (visited.has(id)) return;
+    if (visiting.has(id))
+      throw new Error(`Component dependency cycle at ${id}`);
+    const family = families.get(id);
+    if (!family) throw new Error(`Unknown component family ${id}`);
+    visiting.add(id);
+    function walk(tree) {
+      if (tree.type === 'INSTANCE') visit(tree.family);
+      for (const child of tree.children || []) walk(child);
+    }
+    for (const variant of family.variants) walk(variant.tree);
+    visiting.delete(id);
+    visited.add(id);
+  }
+  for (const id of selectedFamilyIds || families.keys()) visit(id);
+  return [...visited];
+}
+
+async function preflightMangroveMaintenance(doc, selectedFamilyIds) {
+  const recipes = doc?.components?.families;
+  if (doc?.components?.version !== 1 || !Array.isArray(recipes))
+    throw new Error('Maintenance policy needs the full component document.');
+  const ids = mgMaintenanceDependencyIds(recipes, selectedFamilyIds);
+  const entries = await mgMaintenancePolicyTargets(doc, ids);
+  const manual = entries.filter(entry => entry.policy.owner === 'manual');
+  if (manual.length)
+    throw new Error(
+      `Manual maintenance blocks the complete component build: ${manual
+        .map(entry => `${entry.familyId} (${entry.policy.reason})`)
+        .join('; ')}. Record an explicit source handback before rebuilding.`
+    );
+  return entries.map(mgMaintenancePolicyReceipt);
+}
+
+async function mgMaintenancePolicyTargets(doc, familyIds) {
+  const recipes = doc?.components?.families;
+  if (doc?.components?.version !== 1 || !Array.isArray(recipes))
+    throw new Error('Maintenance policy needs the full component document.');
+  const known = new Set(recipes.map(family => family.id));
+  const ids = familyIds === undefined ? [...known] : familyIds;
+  if (
+    !Array.isArray(ids) ||
+    !ids.length ||
+    new Set(ids).size !== ids.length ||
+    ids.some(id => !known.has(id))
+  )
+    throw new Error('Select known, unique maintenance family IDs.');
+  const owned = new Map();
+  for (const node of figma.currentPage.findAll(() => true)) {
+    if (node.type === 'INSTANCE') continue;
+    let insideInstance = false;
+    for (let parent = node.parent; parent; parent = parent.parent)
+      if (parent.type === 'INSTANCE') insideInstance = true;
+    if (insideInstance) continue;
+    const key = mgReadIdentity(node, MG_KIT_KEY);
+    if (
+      !ids.some(
+        id => key === `family/${id}` || key.startsWith(`family/${id}/variant/`)
+      )
+    )
+      continue;
+    if (owned.has(key))
+      throw new Error(`Duplicate Mangrove ownership key ${key}`);
+    owned.set(key, node);
+  }
+  return ids.map(id => mgMaintenanceFamilyPolicy(id, owned));
+}
+
+function mgMaintenancePolicyReceipt(entry) {
+  const { targets, ...receipt } = entry;
+  return receipt;
+}
+
+async function readMangroveMaintenancePolicies(doc, familyIds) {
+  const result = {
+    operation: 'maintenance-policy',
+    phase: 'inspected',
+    families: [],
+    createdNodeIds: [],
+    updatedNodeIds: [],
+    errors: [],
+  };
+  try {
+    result.families = (await mgMaintenancePolicyTargets(doc, familyIds)).map(
+      mgMaintenancePolicyReceipt
+    );
+  } catch (error) {
+    result.phase = 'refused';
+    result.errors.push(error.message || String(error));
+  }
+  return result;
+}
+
+async function setMangroveMaintenancePolicy(doc, familyIds, owner, reason) {
+  const result = {
+    operation: 'maintenance-policy',
+    phase: 'refused',
+    families: [],
+    createdNodeIds: [],
+    updatedNodeIds: [],
+    errors: [],
+  };
+  try {
+    if (
+      !['source', 'manual'].includes(owner) ||
+      typeof reason !== 'string' ||
+      (owner === 'manual'
+        ? !reason.trim() || reason.length > 2000
+        : reason !== '')
+    )
+      throw new Error(
+        'Manual maintenance needs a reason; source needs an empty reason.'
+      );
+    const entries = await mgMaintenancePolicyTargets(doc, familyIds);
+    for (const entry of entries)
+      if (!entry.setId)
+        throw new Error(
+          `Build ${entry.familyId} before assigning its maintenance policy.`
+        );
+    const policy = { version: 1, owner, reason };
+    const encoded = JSON.stringify(policy);
+    result.families = entries.map(entry => ({
+      ...mgMaintenancePolicyReceipt(entry),
+      previousPolicy: entry.policy,
+      policy,
+    }));
+    result.phase = 'updating';
+    for (const entry of entries) {
+      for (const node of entry.targets) {
+        const raw = mgReadIdentity(node, MG_MAINTENANCE_POLICY_KEY);
+        if (
+          raw === encoded &&
+          node.getSharedPluginData(
+            MG_IDENTITY_NAMESPACE,
+            MG_MAINTENANCE_POLICY_KEY
+          ) === encoded
+        )
+          continue;
+        result.updatedNodeIds.push(node.id);
+        // Retain a valid legacy private marker when moving it to shared data.
+        // Conflicting values have already refused before any writes.
+        if (
+          !(typeof MG_SHARED_ONLY !== 'undefined' && MG_SHARED_ONLY) &&
+          node.getPluginData(MG_MAINTENANCE_POLICY_KEY)
+        )
+          node.setPluginData(MG_MAINTENANCE_POLICY_KEY, encoded);
+        mgWriteIdentity(node, MG_MAINTENANCE_POLICY_KEY, encoded);
+      }
+    }
+    result.phase = 'complete';
+  } catch (error) {
+    result.phase = result.updatedNodeIds.length ? 'partial' : 'refused';
+    result.errors.push(error.message || String(error));
+  }
+  return result;
+}
 // Source-embedded raster media uses native image fills, never network fetches.
 // Keep the recipe a FRAME so existing geometry/visibility/property ownership
 // and normal instance image overrides follow the established update contract.
@@ -540,6 +802,12 @@ async function buildMangroveComponents(
       throw new Error(`Duplicate Mangrove ownership key ${key}`);
     owned.set(key, node);
   }
+  // Refuse the entire dependency closure before font, style or scene writes.
+  // An indirect manual dependency must not partly refresh a source library.
+  mgMaintenanceAssertSource(
+    mgMaintenanceDependencyIds(recipes, selectedFamilyIds),
+    owned
+  );
   const organized = owned.has('layout/start');
   if (organized) {
     if (typeof mgLayoutPreflight !== 'function')

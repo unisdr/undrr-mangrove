@@ -175,7 +175,7 @@ function buildFormActionCapability({ root, modes, variables, styles }) {
   if (selectArrowInset !== 6.25) fail('Measured Select arrow inset changed');
   const colorPrecision = Number(
     source(
-      'scripts/build-figma-tokens.cjs',
+      'scripts/figma-maintenance-foundations.cjs',
       /const round = n => Math\.round\(n \* (\d+)\) \/ \1;/
     )[1]
   );

@@ -1,6 +1,6 @@
-# Proposed maintenance split
+# Maintenance split
 
-Source dependency assessment, 5 October 2026. This proposes a reduced token/style maintenance path and a retained full builder for occasional use, following [the PR direction](https://github.com/unisdr/undrr-mangrove/pull/1319#issuecomment-5993683966). No split is implemented or accepted here. Native component publication and designer handoff remain separate gates.
+Source dependency assessment, 5 October 2026. This proposes a reduced token/style maintenance path and a retained full builder for occasional use, following [the PR direction](https://github.com/unisdr/undrr-mangrove/pull/1319#issuecomment-5993683966). The independent maintenance path is now implemented on the feature branch; the reduced PR selection is not yet accepted. The historical assessment below records the pre-extraction coupling. Native top-level Button publication passes; broader component publication, publication through the new maintenance entry and designer handoff remain separate gates.
 
 ## Baseline and method
 
@@ -28,7 +28,7 @@ Recipes currently supply 301 additional variables, 42 text templates and five ef
 
 These are logical boundaries to extract, not whole files that can already be removed safely. The retained checkpoint must include lockfile, exact source commit, setup instructions, required source/media assets and complete builder tests. A moving feature branch alone is insufficient for reproducibility.
 
-## Current coupling that blocks simple deletion
+## Coupling at the pre-extraction audit
 
 1. **Exporter construction is unconditional.** `buildFigmaVariables()` invokes component recipes, Segmented/Form Action probe builders, planned inventory and kit guidance. Writing output and `--check` also invoke `build-figma-plugin.cjs`. `--stdout` avoids bundling but still constructs the full DTO. There is no current foundations-only exporter entry.
 2. **Recipes also own maintenance data.** They mutate the supplied variables and style arrays, sometimes replacing an existing definition. Extract those computations before excluding anatomy, review specimens or media. Compare complete records, not just counts. Existing published helper aliases and literal measurements need an explicit owner and update policy.
@@ -56,6 +56,21 @@ A narrower 219-variable foundation export could be an explicit alternative scope
 - **Importer regression:** actual importer runtime tests retain repeat identity, one-mode brand switch, five-mode updates, alias ordering, font failures, style bindings and code-syntax removal guards. Update UI tests for complete receipts, busy states and inspection freshness.
 - **Native maintenance:** capture the existing kit, import without pruning, repeat and verify canonical variable/style identities, values, aliases and component/consumer retention. A mock pass does not establish native API behaviour.
 - **Published delivery:** publish only reviewed assets, accept a bounded token/style update and restoration in the consumer and verify edited properties, modes, links and rendered layout. Preserve the existing token evidence; validate any changed import implementation again.
-- **Ownership boundary:** record source-owned and manually maintained families. Ensure a future full builder cannot update manual mains through dependencies. Consumer override preservation does not establish arbitrary main-edit preservation. Published component recipe-rebuild acceptance remains open until actually exercised.
+- **Ownership boundary:** record source-owned and manually maintained families. Ensure a future full builder cannot update manual mains through dependencies. Consumer override preservation does not establish arbitrary main-edit preservation. The top-level Button recipe update/restoration is exercised; other families and composite update contracts need separate acceptance.
 
-Run the repository's required lint and touched-file formatting checks alongside focused tests. GitHub Actions are unavailable for this organisation. This assessment has not reduced the PR, implemented an exclusion registry or performed a new native update.
+Run the repository's required lint and touched-file formatting checks alongside focused tests. GitHub Actions are unavailable for this organisation. The feature PR still retains the full builder. The independent maintenance entry and ownership registry are implemented; native evidence and actual reduced-cohort checks are recorded in the implementation checkpoint below.
+
+## Implementation checkpoint, 5 October 2026
+
+- `build:figma-maintenance` generates and checks its own JSON and bundle independently. Its bundle contains identity helpers, the shared importer, local inspection and its own controller. Bundled source and pasted JSON avoid repeated native picker interactions.
+- Twenty shared asset modules retain source guards and complete variable/style records, order and alias closure. Both exporters use the same asset derivation, while recipes retain component anatomy. The Form Action precision guard points to the extracted foundation module.
+- Independent comparison against the captured pre-extraction baseline passes for all 520 variables, 102 text definitions, eight effects and five brands. All 32 family/383-variant component DTOs remain unchanged. The maintenance generation/check runs with construction, probes, inventory, guidance, Babel and Terser blocked.
+- The full builder has an explicit source/manual policy, selected dependency refusal and reviewed source handback. Installed v2 layout/guidance preserves manual grids, reviews and descriptions. Invalid metadata and unsafe migrations refuse before writes. Welcome's anatomy/font validation remains strict.
+- Standalone defaults have no full controller/exporter dependency; `--compare-full` adds full-spike comparisons deliberately. The file-level [merge manifest](maintenance-merge-scope.json) defines the reviewable cohort and package/ignore edits. The current draft PR is not automatically reduced by adding this entry.
+- An actual temporary checkout overlays only the 35 manifest files on the exact React Aria base, applies the listed package/ignore edits and retains the base lockfile. All 44 construction-related paths checked are absent before and after generation. Independent generation/check, both default mocks, 1,328 token tests and lint pass. Five generated CSS partials are byte-identical to the exact base. Dependencies were reused locally; a fresh lockfile installation is not established by this test.
+- The cohort totals 11,181 lines, including the retained 986-line base token engine; the net new content is 10,195 lines. The 20 source extraction modules carry guarded helper-role values rather than frozen generated data. This remains a substantial review, despite excluding construction and experiment tooling.
+- Native standalone imports and repeat pass against the existing library: 520 reused variables, 2,600 mode values, 54 installed text styles and eight effects, with zero new assets/errors. Repeat captures preserve all 79 recorded scene digests and four foundation fingerprints. The first import normalises zero letter spacing; historical font metadata differences remain separately qualified.
+- Native manual ownership refuses direct Button and dependent Text CTA builds before reported writes in an unpublished recovery copy. Source handback permits two zero-creation/error rebuilds. Exact geometry repeat does not pass: section receipts change by less than 0.002px and three geometry digests differ. A later read-only capture is stable; the first node causing the rebuild discrepancy remains to be identified.
+- The new entry's published token probe was not applied because desktop controls stopped accepting input. Source spacing remains 30px in all modes. Retained full-plugin token evidence and the successful 15px to 20px to 15px top-level Button rehearsal do not substitute for this new-entry publication gate.
+
+Read [the maintenance guide](MAINTENANCE.md) for supported operations and boundaries. The paid status and PR distinguish native evidence from local mocks and the human handoff gates.

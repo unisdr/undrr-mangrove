@@ -1,0 +1,12 @@
+{
+  "name": "Mangrove maintenance (exploratory)",
+  "id": "mangrove-maintenance-exploratory",
+  "api": "1.0.0",
+  "main": "build/main.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
+}

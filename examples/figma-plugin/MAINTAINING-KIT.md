@@ -1,5 +1,7 @@
 # Maintaining the Mangrove Figma kit
 
+**Ordinary foundation updates:** use the independent [maintenance entry](MAINTENANCE.md). This longer runbook describes the retained construction and native diagnostic tooling. Mark manual mains through its ownership controls before editing them; a source rebuild refuses those families and their dependants.
+
 Start with [core kit status](CORE-KIT-STATUS.md) for the next delivery scope, completed tasks, remaining gates and exact Starter import choices. The full catalogue remains follow-up work; the paid pilot now has a bounded published core and a verified published-token update route.
 
 This runbook covers source changes, local verification and updates to the canonical Figma kit. Start with [README.md](README.md) for installation and access, [LEARNINGS.md](LEARNINGS.md) for observed behaviour, and [FIGMA-KIT-BRIEF.md](FIGMA-KIT-BRIEF.md) for the component scope. This remains an exploratory kit.

@@ -210,7 +210,7 @@ function selectFamilies(doc, requested, variantIds) {
 function validateImportSource(doc, brandId) {
   // Share the plugin's pure preflight instead of maintaining a second schema.
   // This runs before compilation and has no Figma globals or write access.
-  const source = fs.readFileSync(path.join(PLUGIN, 'code.js'), 'utf8');
+  const source = fs.readFileSync(path.join(PLUGIN, 'importer.js'), 'utf8');
   const start = source.indexOf('function validateMangroveImport(');
   const end = source.indexOf('\nfunction mangroveAssetIndex(', start);
   if (start < 0 || end < 0)
@@ -486,22 +486,9 @@ function subsetDocument(
   return null;
 }
 function coreSource() {
-  const source = fs.readFileSync(path.join(PLUGIN, 'code.js'), 'utf8');
-  const boundary = source.indexOf('figma.ui.onmessage =');
-  if (boundary < 0)
-    throw new Error(
-      'Plugin UI handler boundary changed. Update connector build.'
-    );
-  const prefix = source.slice(0, boundary);
-  const start = prefix.indexOf('figma.showUI(');
-  if (start < 0)
-    throw new Error(
-      'Plugin UI startup boundary changed. Update connector build.'
-    );
-  const end = prefix.indexOf(';', start);
-  if (end < 0) throw new Error('Plugin UI startup terminator missing.');
-  return prefix.slice(0, start) + prefix.slice(end + 1);
+  return fs.readFileSync(path.join(PLUGIN, 'importer.js'), 'utf8');
 }
+
 function specializeCore(source) {
   // The connector embeds its immutable DTO. Omit only the absent optional
   // profile validation; every text style still resets old spacing to zero.
@@ -542,7 +529,49 @@ function retainedLetterSpacing(subset) {
     }
   return enabled;
 }
-function specializeBuilder(source) {
+function svgPlanSource(source) {
+  const before = 'function mgSvgPlan(tree) {',
+    after = '\nfunction mgSvgTopology(node) {';
+  const start = source.indexOf(before),
+    end = source.indexOf(after, start);
+  if (
+    start < 0 ||
+    end <= start ||
+    source.indexOf(before, start + 1) >= 0 ||
+    source.indexOf(after, end + 1) >= 0
+  )
+    throw new Error('Connector SVG plan specialization boundary changed.');
+  return { start, end, source: source.slice(start, end) };
+}
+function verifiedSvgPlans(doc, source) {
+  // Execute the desktop runtime's pure parser, not a second SVG schema. The
+  // resulting plans supplement the original lossless SVG DTO. This is safe
+  // only because connector input is embedded and immutable at execution time.
+  const context = vm.createContext({});
+  vm.runInContext(svgPlanSource(source).source, context, { timeout: 1000 });
+  const plans = Object.create(null);
+  function visit(tree) {
+    if (tree.type === 'SVG') {
+      context.tree = tree;
+      const plan = JSON.parse(
+        JSON.stringify(
+          vm.runInContext('mgSvgPlan(tree)', context, { timeout: 1000 })
+        )
+      );
+      if (plans[plan.assetId] && plans[plan.assetId].markup !== plan.markup)
+        throw new Error(
+          `SVG asset ${plan.assetId} has conflicting source markup. Use distinct asset IDs or an explicit SVG migration.`
+        );
+      plans[plan.assetId] = plan;
+    }
+    (tree.children || []).forEach(visit);
+  }
+  doc.components.families.forEach(family =>
+    family.variants.forEach(variant => visit(variant.tree))
+  );
+  return plans;
+}
+function specializeBuilder(source, subset) {
   // The exact subset is embedded losslessly in this connector. Gate only
   // declarations absent from that subset, allowing Terser to remove helpers
   // otherwise retained by unconditional schema checks. Every enabled branch
@@ -555,6 +584,37 @@ function specializeBuilder(source) {
     source =
       source.slice(0, start) + after + source.slice(start + before.length);
   };
+  // selectFamilies has already traversed the exact retained dependency closure
+  // with cycle/unknown-family guards. Keep every native maintenance-policy
+  // check, but avoid repeating that immutable source traversal in Figma.
+  replaceOnce(
+    'mgMaintenanceAssertSource(\n    mgMaintenanceDependencyIds(recipes, selectedFamilyIds),\n    owned\n  );',
+    `mgMaintenanceAssertSource(${JSON.stringify(subset.components.families.map(family => family.id))}, owned);`
+  );
+  const directFamilies = new Set();
+  function directProfile(tree, familyId) {
+    if (tree.textStyleApplication !== undefined) directFamilies.add(familyId);
+    (tree.children || []).forEach(child => directProfile(child, familyId));
+  }
+  subset.components.families.forEach(family =>
+    family.variants.forEach(variant => directProfile(variant.tree, family.id))
+  );
+  // Only the immutable family discriminator is specialized. Every applicable
+  // source-anatomy/template guard and every native alias check stays intact.
+  // An unknown or mixed DIRECT family retains both original profile branches.
+  replaceOnce(
+    "const editorial = family.id === 'editorial-cta';",
+    directFamilies.size === 1 && directFamilies.has('editorial-cta')
+      ? 'const editorial = true;'
+      : directFamilies.size === 1 && directFamilies.has('toc-link')
+        ? 'const editorial = false;'
+        : "const editorial = family.id === 'editorial-cta';"
+  );
+  const svg = svgPlanSource(source);
+  source =
+    source.slice(0, svg.start) +
+    'function mgSvgPlan(tree) { return {...doc.connectorSvgPlans[tree.svg.assetId]}; }\n' +
+    source.slice(svg.end);
   for (const condition of [
     'tree.image !== undefined',
     'tree.gradient !== undefined',
@@ -591,6 +651,18 @@ function specializeBuilder(source) {
   replaceOnce(
     'if (tree.absolute !== undefined) {',
     'if (MG_CONNECTOR_ABSOLUTE && tree.absolute !== undefined) {'
+  );
+  replaceOnce(
+    "if (tree.type === 'ELLIPSE') {",
+    "if (MG_CONNECTOR_ELLIPSE && tree.type === 'ELLIPSE') {"
+  );
+  replaceOnce(
+    "else if (spec.type === 'ELLIPSE') node = figma.createEllipse();",
+    "else if (MG_CONNECTOR_ELLIPSE && spec.type === 'ELLIPSE') node = figma.createEllipse();"
+  );
+  replaceOnce(
+    "if (spec.type === 'ELLIPSE')\n",
+    "if (MG_CONNECTOR_ELLIPSE && spec.type === 'ELLIPSE')\n"
   );
   replaceOnce(
     'if (family.review?.preserveVariantSizing !== undefined) {',
@@ -869,6 +941,14 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsSvg(variant.tree))
     );
+  function needsEllipse(node) {
+    return node.type === 'ELLIPSE' || (node.children || []).some(needsEllipse);
+  }
+  const ellipseEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsEllipse(variant.tree))
+    );
   function needsAbsolute(node) {
     return (
       node.absolute !== undefined || (node.children || []).some(needsAbsolute)
@@ -983,15 +1063,21 @@ async function buildConnector({
       : ['diagnostics', 'inspect'].includes(operation)
         ? 'kit-inspection.js'
         : null;
+  let packedDocument = subset;
   if (runtime) {
     const runtimeSource = fs.readFileSync(path.join(PLUGIN, runtime), 'utf8');
+    if (svgEnabled)
+      packedDocument = {
+        ...subset,
+        connectorSvgPlans: verifiedSvgPlans(subset, runtimeSource),
+      };
     source +=
       (operation === 'build'
-        ? specializeBuilder(runtimeSource)
+        ? specializeBuilder(runtimeSource, subset)
         : runtimeSource) + '\n;\n';
   }
   if (subset) {
-    source += `const doc = (${decompressJSON.toString()})(${JSON.stringify(compressJSON(subset))});\n`;
+    source += `const doc = (${decompressJSON.toString()})(${JSON.stringify(compressJSON(packedDocument))});\n`;
   }
   if (operation === 'build') {
     const invocation = `await buildMangroveComponents(doc, ${JSON.stringify(brandId)}, ${JSON.stringify(requested)})`;
@@ -1011,12 +1097,13 @@ async function buildConnector({
     source += `return (${connectorInspectionSummary.toString()})(await inspectMangroveKit({checkFonts:${Boolean(checkFonts)}}), ${JSON.stringify(nodeIds)});`;
   const minified = await minify(`async function mgRun(){${source}}`, {
     compress: {
-      passes: 2,
+      passes: 3,
       global_defs: {
         MG_CONNECTOR_FRAME_POSITION: framePositionEnabled,
         MG_CONNECTOR_LETTER_SPACING: letterSpacingEnabled,
         MG_CONNECTOR_MEDIA: mediaEnabled,
         MG_CONNECTOR_SVG: svgEnabled,
+        MG_CONNECTOR_ELLIPSE: ellipseEnabled,
         MG_CONNECTOR_ABSOLUTE: absoluteEnabled,
         MG_CONNECTOR_ARC: arcEnabled,
         MG_CONNECTOR_INTRINSIC_REVIEW: intrinsicReviewEnabled,
@@ -1056,6 +1143,7 @@ async function buildConnector({
     variantIds: variantIds || null,
     scope: importScope,
     svgEnabled,
+    ellipseEnabled,
     directTextEnabled,
     coincidentFocusEnabled,
     letterSpacingEnabled,

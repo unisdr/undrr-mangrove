@@ -1,4 +1,4 @@
-/* global figma, mgReadIdentity, mgWriteIdentity, createMangroveWelcome */
+/* global figma, mgReadIdentity, mgWriteIdentity, createMangroveWelcome, readMangroveMaintenancePolicies */
 /** Versioned presentation only. Canonical component anatomy remains source-owned. */
 const MG_LAYOUT_VERSION = '2';
 const MG_LAYOUT_DESTINATIONS = [
@@ -393,6 +393,15 @@ async function mgLayoutPreflight(
       'Organisation needs the complete supported token document.'
     );
   const guidance = mgLayoutGuidance(doc);
+  if (typeof readMangroveMaintenancePolicies !== 'function')
+    throw new Error(
+      'Rebuild the desktop plugin with maintenance ownership guards.'
+    );
+  const maintenance = await readMangroveMaintenancePolicies(doc);
+  if (maintenance.errors.length)
+    throw new Error(
+      `Maintenance ownership refused: ${maintenance.errors.join('; ')}`
+    );
   if (
     !allowProbes &&
     figma.currentPage.findAll(node =>
@@ -418,6 +427,35 @@ async function mgLayoutPreflight(
   const flowPartial =
     start && mgReadIdentity(start, 'mgLayoutFlowPhase') === 'migrating';
   const compactFlow = compact || flow === '1';
+  const manual = maintenance.families.filter(
+    family => family.setId && family.policy.owner === 'manual'
+  );
+  if (manual.length) {
+    if (
+      !start ||
+      mgReadIdentity(start, 'mgLayoutVersion') !== MG_LAYOUT_VERSION ||
+      mgReadIdentity(start, 'mgLayoutPhase') !== 'complete' ||
+      (compact && flow !== '1') ||
+      (flow && mgReadIdentity(start, 'mgLayoutFlowPhase') !== 'complete')
+    )
+      throw new Error(
+        'Manual mains require their existing completed presentation layout; explicit migration cannot preserve them safely.'
+      );
+    for (const { familyId } of manual)
+      for (const suffix of [
+        'main',
+        'overview',
+        'overview/title',
+        'overview/body',
+      ]) {
+        const node = index.get(`layout/family/${familyId}/${suffix}`);
+        const expected = suffix.includes('/') ? 'TEXT' : 'FRAME';
+        if (!node || node.type !== expected)
+          throw new Error(
+            `Manual family ${familyId} requires its unchanged owned ${suffix}.`
+          );
+      }
+  }
   if (
     flow === '1' &&
     !['migrating', 'complete'].includes(
@@ -934,6 +972,16 @@ async function organizeMangroveKit(
   const guidance = mgLayoutGuidance(doc);
   if (doc.kitGuidance.scope?.brandId !== brandId)
     throw new Error('Layout guidance is bounded to its documented brand.');
+  const maintenance = await readMangroveMaintenancePolicies(doc);
+  if (maintenance.errors.length)
+    throw new Error(
+      `Maintenance ownership refused: ${maintenance.errors.join('; ')}`
+    );
+  const manualFamilyIds = new Set(
+    maintenance.families
+      .filter(family => family.setId && family.policy.owner === 'manual')
+      .map(family => family.familyId)
+  );
   const previousVersion = index.has('layout/start')
     ? mgReadIdentity(index.get('layout/start'), 'mgLayoutVersion')
     : '';
@@ -1427,6 +1475,22 @@ async function organizeMangroveKit(
       const family = guidance.registry.get(meta.id);
       const set = index.get(`family/${meta.id}`);
       if (!set) return null;
+      if (manualFamilyIds.has(meta.id)) {
+        // Keep the entire existing family presentation subtree. Resizing an
+        // auto-layout source board could indirectly reposition a manual main.
+        const overview = index.get(`layout/family/${meta.id}/overview`);
+        if (overview.parent !== owner)
+          throw new Error(`Manual family ${meta.id} cannot be reparented.`);
+        familyBoards.set(meta.id, {
+          overview,
+          board: index.get(`layout/family/${meta.id}/main`),
+          review: index.get(`review/${meta.id}`),
+          title: index.get(`layout/family/${meta.id}/overview/title`),
+          body: index.get(`layout/family/${meta.id}/overview/body`),
+          manual: true,
+        });
+        return overview;
+      }
       updated.add(set.id);
       for (const node of set.children) updated.add(node.id);
       mgLayoutGrid(set, family);
@@ -1635,7 +1699,8 @@ async function organizeMangroveKit(
       node.primaryAxisSizingMode = 'AUTO';
       node.counterAxisSizingMode = 'FIXED';
     }
-    for (const { board, review } of familyBoards.values()) {
+    for (const { board, review, manual } of familyBoards.values()) {
+      if (manual) continue;
       fitFlow(board);
       if (review) {
         // Fit the generated presentation frame to its specimens. A desktop
@@ -1678,6 +1743,7 @@ async function organizeMangroveKit(
     const fitOverview = id => {
       const item = familyBoards.get(id);
       if (!item) return;
+      if (item.manual) return;
       const { overview, board, review, title, body } = item;
       const advanced = advancedBoards.get(id);
       if (advanced) {
@@ -1881,6 +1947,7 @@ async function organizeMangroveKit(
       preservedCanonicalIds: [...index]
         .filter(([key]) => /^family\//.test(key))
         .map(([, node]) => node.id),
+      preservedManualFamilyIds: [...manualFamilyIds],
       errors: [],
     };
   } catch (error) {

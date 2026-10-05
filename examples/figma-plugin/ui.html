@@ -739,7 +739,7 @@
             </p>
             <label class="stacked" for="file"
               ><span class="hint">Token file</span
-              ><input id="file" type="file" accept=".json,application/json"
+              ><input id="file" type="file" accept=".json"
             /></label>
             <details>
               <summary>How to update the file</summary>
@@ -845,6 +845,40 @@
               Build selected components
             </button>
           </div>
+          <details class="card plain">
+            <summary>Component maintenance ownership</summary>
+            <p>
+              Use the checked families above. Existing unmarked mains are
+              source-owned. Mark a family manually maintained before editing its
+              mains; builds will refuse it and any family that requires it.
+            </p>
+            <label for="maintenance-reason"
+              >Reason for manual maintenance</label
+            >
+            <input
+              id="maintenance-reason"
+              type="text"
+              maxlength="2000"
+              disabled=""
+            />
+            <button id="read-maintenance" disabled="">Inspect ownership</button>
+            <button id="manual-maintenance" disabled="">
+              Mark manually maintained
+            </button>
+            <label
+              ><input id="source-handback" type="checkbox" disabled="" />I have
+              reflected manual changes in the source recipe or saved a backup
+              for a reviewed source handback.</label
+            >
+            <button id="source-maintenance" disabled="">
+              Return to source maintenance
+            </button>
+            <p class="hint">
+              Ownership changes only metadata. Returning to source permits
+              future rebuilds to update the mains. Save the report for the
+              maintenance record.
+            </p>
+          </details>
         </section>
         <section
           id="panel-diagnostics"
@@ -1357,7 +1391,7 @@
           input.checked =
             preset === 'all' ||
             (preset === 'core' && CORE_FAMILIES.has(input.value));
-        updateContext();
+        refreshControls();
       }
       function filterFamilies() {
         const query = String($('family-search').value || '')
@@ -1393,13 +1427,49 @@
         lastBuildReport = null;
         refreshControls();
       };
-      $('components').onchange = updateContext;
+      $('components').onchange = refreshControls;
+      $('maintenance-reason').oninput = refreshControls;
+      $('source-handback').onchange = refreshControls;
+      const maintenanceFamilies = () =>
+        familyInputs.filter(input => input.checked).map(input => input.value);
+      $('read-maintenance').onclick = () =>
+        send('read-maintenance-policy', {
+          doc,
+          families: maintenanceFamilies(),
+        });
+      $('manual-maintenance').onclick = () =>
+        send('set-maintenance-policy', {
+          doc,
+          families: maintenanceFamilies(),
+          owner: 'manual',
+          reason: $('maintenance-reason').value.trim(),
+        });
+      $('source-maintenance').onclick = () => {
+        if ($('source-handback').checked)
+          send('set-maintenance-policy', {
+            doc,
+            families: maintenanceFamilies(),
+            owner: 'source',
+            reason: '',
+          });
+      };
       $('capability-scope').onchange = updateDiagnosticHint;
       $('select-core-text').onclick = selectCoreTextStyles;
 
       function refreshControls() {
         const busy = pendingOperation !== null;
         $('select-core-text').disabled = busy || !doc;
+        const hasMaintenanceFamilies =
+          !!doc?.components && maintenanceFamilies().length > 0;
+        $('maintenance-reason').disabled = busy || !hasMaintenanceFamilies;
+        $('source-handback').disabled = busy || !hasMaintenanceFamilies;
+        $('read-maintenance').disabled = busy || !hasMaintenanceFamilies;
+        $('manual-maintenance').disabled =
+          busy ||
+          !hasMaintenanceFamilies ||
+          !String($('maintenance-reason').value || '').trim();
+        $('source-maintenance').disabled =
+          busy || !hasMaintenanceFamilies || !$('source-handback').checked;
         $('modes').hidden = !doc;
         $('components').hidden = !doc?.components;
         for (const id of [
@@ -2065,6 +2135,27 @@
         }
         if (msg.type === 'operation') {
           requestNavigation();
+          if (
+            ['read-maintenance-policy', 'set-maintenance-policy'].includes(
+              completedOperation
+            )
+          ) {
+            rememberOperation(completedOperation, result);
+            if (completedOperation === 'set-maintenance-policy')
+              $('source-handback').checked = false;
+            refreshControls();
+            resultLog(
+              [
+                `Maintenance ownership ${result.phase}.`,
+                ...(result.families || []).map(
+                  family =>
+                    `${family.familyId}: ${family.policy.owner}${family.policy.reason ? ' (' + family.policy.reason + ')' : ''}`
+                ),
+                ...(result.errors || []),
+              ].join('\n')
+            );
+            return;
+          }
           if (completedOperation === 'refresh-kit-guidance') {
             rememberOperation(completedOperation, result);
             resultLog(

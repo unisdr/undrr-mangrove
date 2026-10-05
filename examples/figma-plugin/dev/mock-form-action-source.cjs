@@ -388,7 +388,7 @@ try {
     ],
     ['tokens/mangrove.yaml', "$value: '1.5em'", "$value: '1.6em'"],
     [
-      'scripts/build-figma-tokens.cjs',
+      'scripts/figma-maintenance-foundations.cjs',
       'Math.round(n * 10000) / 10000',
       'Math.round(n * 1000) / 1000',
     ],

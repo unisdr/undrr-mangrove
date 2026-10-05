@@ -37,7 +37,7 @@ function callSource(doc) {
 async function main() {
   const doc = buildFigmaVariables();
   const family = doc.components.families.find(value => value.id === familyId);
-  assert.strictEqual(doc.variables.length, 418);
+  assert.strictEqual(doc.variables.length, 520);
   assert.strictEqual(family.variants.length, 4);
   assert.deepStrictEqual(
     family.variants.map(value => value.properties.Selection),

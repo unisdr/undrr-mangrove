@@ -25,6 +25,8 @@ coverage/
 /examples/react-aria-consumer/dist/
 /examples/figma-plugin/mangrove-variables.json
 /examples/figma-plugin/build/
+/examples/figma-plugin/maintenance/build/
+/examples/figma-plugin/mangrove-maintenance-tokens.json
 /.yarn
 .cache
 CLAUDE.md
