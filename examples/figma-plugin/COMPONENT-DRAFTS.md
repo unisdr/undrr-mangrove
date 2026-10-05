@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **29 families / 110 bounded variants**.
+The current holistic packet contains **30 families / 127 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -14,8 +14,8 @@ variants, closed chrome adds one family/six variants, and bulleted contents list
 and quote patterns add two families/16 variants. See [search controls](holistic/search-controls.md),
 [page prose](holistic/page-patterns.md), [closed chrome](holistic/page-chrome.md)
 and [reading patterns](holistic/page-reading.md) for their source evidence and
-limits. The next accepted source cohort adds three report families/six variants
-and two open navigation families/seven variants. The report scene now composes
+limits. The packet also includes three report families/six variants
+and three open navigation families/24 variants. The report scene now composes
 actual reusable instances for its complete finite English closed-chrome authored
 anatomy at390/1164. Other landing templates, full news-detail pages and the
 syndicated widget remain under implementation. Native page acceptance is open.

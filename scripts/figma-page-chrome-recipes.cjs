@@ -490,6 +490,10 @@ module.exports = { buildPageChromeRecipes, SOURCE_HASHES, WIDTHS };
 
 // Separate factory. The accepted closed cohort above retains its return shape.
 const OPEN_HASHES = {
+  'stories/Components/Buttons/CtaButton/buttons.scss':
+    '1f7b664db2a3f6147b6e7571bd0ad52dbe41eda458bf4140ffcbe3fac65d3f3d',
+  'stories/Components/Buttons/CtaButton/cta-button.scss':
+    'f1534e70a4c4c1d60dea8356fdef4b4b476e49d93c3ed310557f898d3bc5a40b',
   'stories/assets/fonts/roboto/roboto.scss':
     'b881ae0ebeb56f49523c791faafc1a10299fc1d7a875fa91c028b06164b8197c',
   'stories/assets/fonts/roboto/sass/_variables.scss':
@@ -515,7 +519,7 @@ const OPEN_HASHES = {
   'stories/assets/fonts/roboto-condensed/sass/_Regular.scss':
     '83e36cfc43d952acf7e4e15f3f8068de84930b5412a433926fab097d44105ce7',
   [ASSETS + 'open-source-footprints.json']:
-    '5248e7b4f274748afbb69f87b9d51926c4e9e3fc9f48ba97810df84a75980406',
+    '6c69fd8e07ca8fd931d7da6b16dc6c4c9bcb5eb5312ba21ab894e87d3d80edff',
 };
 function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
   const fail = message => {
@@ -828,112 +832,254 @@ function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
     );
     return key;
   }
-  const desktop = [901, 1164, 1440].map(width => {
-    const key = 'desktop-about-' + width;
-    sceneKey = key;
-    const nodes = sets(key),
-      panel = one(nodes, n => n.tag === 'ARTICLE'),
-      left = one(nodes, n => n.cls === 'mg-mega-content__left'),
-      banner = one(nodes, n => n.cls === 'mg-mega-content__banner'),
-      right = one(nodes, n => n.cls === 'mg-mega-content__right'),
-      list = one(nodes, n => n.cls === 'mg-mega-content__menu--desktop'),
-      heading = one(nodes, n => n.tag === 'HEADER'),
-      paragraph = one(nodes, n => n.tag === 'P'),
-      cta = one(nodes, n => n.cls === 'mg-button mg-button-primary');
-    const children = [
-      textBox('desktop-heading', heading, banner, 'About UNDRR', 'Heading'),
-      textBox(
-        'desktop-summary',
-        paragraph,
-        banner,
-        'How the office is organized and where it works.',
-        'Summary'
-      ),
-    ];
-    children.push(
-      fixed('action-slot', cta, banner, [
-        {
-          id: 'action',
-          type: 'INSTANCE',
-          name: 'Exact source mg-button primary',
-          family: 'page-chrome-button',
-          variant: {
-            Emphasis: 'Primary',
-            Treatment: 'Filled',
-            State: 'Default',
-          },
-          overrides: { Label: 'About UNDRR' },
-          expose: true,
-          layout: { width: 'HUG', height: 'HUG' },
-        },
-      ])
+  const cappedActions = [901, 1164].map(width => {
+    sceneKey = 'desktop-sendai-' + width;
+    const cta = one(
+      sets(sceneKey),
+      n => n.cls === 'mg-button mg-button-primary'
     );
-    const bannerTree = fixed('banner', banner, left, children),
-      leftTree = fixed(
-        'left',
-        left,
-        panel,
-        [bannerTree],
-        color('left-background', left, 'bg')
-      );
-    leftTree.children.push({
-      id: 'left-border',
-      type: 'FRAME',
-      name: 'Source end border',
-      layout: { mode: 'NONE', width: 1, height: 350 },
-      position: { x: left.undrr.w - 1, y: 0 },
-      fill: role(
-        'left-border',
-        'COLOR',
-        m => ({ ...resolve('color/neutral-600', m, 'COLOR'), a: 0.24 }),
-        ['FRAME_FILL']
-      ),
-      children: [],
-    });
-    const links = matching(nodes, n => n.tag === 'A' && n.cls === '');
-    if (links.undrr.length !== 4) fail('Four authored About links required');
-    const linkTrees = links.undrr.map((n, i) => {
-      const all = Object.fromEntries(modes.map(m => [m.id, links[m.id][i]]));
-      return textBox(
-        'desktop-item-' + (i + 1),
-        all,
-        list,
-        n.text,
-        'Item ' + (i + 1),
-        { padding: { inline: 5, block: 5 } }
-      );
-    });
-    const rightTree = fixed('right', right, panel, [
-      fixed('items', list, right, linkTrees),
-    ]);
-    const tree = fixed(
-      'root',
-      panel,
-      null,
-      [leftTree, rightTree],
-      'color/neutral-0',
-      false
-    );
-    delete tree.position;
-    tree.effectStyle = shadow('desktop-panel', panel);
+    const w = float('action-slot', cta, 'w'),
+      h = float('action-slot', cta, 'h');
+    for (const m of modes) {
+      const n = cta[m.id],
+        template = styles.text.find(s => s.id === 'component.button')?.values[
+          m.id
+        ];
+      if (
+        !template ||
+        template.fontName.family !== 'Roboto' ||
+        template.fontName.style !== 'Bold' ||
+        template.fontSize !== parseFloat(n.size)
+      )
+        fail('Source capped action face changed');
+      const line =
+        template.lineHeight?.unit === 'PERCENT'
+          ? (template.fontSize * template.lineHeight.value) / 100
+          : template.lineHeight?.unit === 'PIXELS'
+            ? template.lineHeight.value
+            : NaN;
+      if (line !== parseFloat(n.line))
+        fail('Source capped action line height changed');
+      if (
+        resolve('padding/button/block', m, 'FLOAT') !== parseFloat(n.pad[0]) ||
+        resolve('padding/button/inline', m, 'FLOAT') !== parseFloat(n.pad[1]) ||
+        resolve('border-width/button', m, 'FLOAT') !== parseFloat(n.border[0])
+      )
+        fail('Source capped action box changed');
+      if (
+        n.textAlign !== 'start' ||
+        n.radius.some(
+          x => parseFloat(x) !== resolve('radius/button', m, 'FLOAT')
+        ) ||
+        parseFloat(n.gap) !== resolve('spacing/50', m, 'FLOAT')
+      )
+        fail('Source capped action radius/gap/alignment changed');
+      function samePaint(measured, token) {
+        return (
+          ['r', 'g', 'b'].every(
+            k => measured[k] === Math.round(token[k] * 255) / 255
+          ) && measured.a === token.a
+        );
+      }
+      if (
+        !samePaint(rgba(n.color), resolve('color/button', m, 'COLOR')) ||
+        n.borderColors.some(
+          x =>
+            !samePaint(
+              rgba(x),
+              resolve('border-color/button-primary', m, 'COLOR')
+            )
+        )
+      )
+        fail('Source capped action text/border paint changed');
+      const measured = rgba(n.bg),
+        paint = resolve('color/button-background', m, 'COLOR');
+      if (!samePaint(measured, paint))
+        fail('Source capped action paint changed');
+    }
     return {
-      id: 'page-chrome-desktop-panel.about-' + width,
-      name: 'Viewport=' + width + ', Section=About',
-      properties: { Viewport: String(width), Section: 'About' },
+      id: 'page-chrome-capped-action.sendai-' + width,
+      name: 'SourceViewport=' + width + ', Section=Sendai',
+      properties: { SourceViewport: String(width), Section: 'Sendai' },
       sourceGeometry: {
-        top: panel.undrr.y,
-        height: 350,
-        viewportHeight: 1000,
-        context:
-          'Overlay anchored after existing closed chrome flow, not an expanded header.',
+        sourceMaxWidth: true,
+        labelWidth: 'FILL',
+        capturedHeight:
+          'Finite source one/two-line allocation, native wrapping verification open',
       },
-      tree,
+      tree: {
+        id: 'root',
+        type: 'FRAME',
+        name: 'Source capped mg-button primary',
+        layout: {
+          mode: 'HORIZONTAL',
+          width: w,
+          height: h,
+          gap: 'spacing/50',
+          padding: {
+            block: 'padding/button/block',
+            inline: 'padding/button/inline',
+          },
+          align: 'CENTER',
+          justify: 'CENTER',
+        },
+        strokeAlign: 'INSIDE',
+        strokesIncludedInLayout: true,
+        bindings: {
+          cornerRadius: 'radius/button',
+          strokeWeight: 'border-width/button',
+        },
+        fill: 'color/button-background',
+        stroke: 'border-color/button-primary',
+        children: [
+          {
+            id: 'label',
+            type: 'TEXT',
+            name: 'Source capped mg-button label',
+            characters: cta.undrr.text,
+            textProperty: 'Label',
+            textStyle: 'component.button',
+            fill: 'color/button',
+            textWrap: 'AUTO',
+            textAlign: 'LEFT',
+            layout: { width: 'FILL', height: 'HUG' },
+          },
+        ],
+      },
     };
   });
+  const desktop = ['about', 'work', 'sendai', 'news'].flatMap(section =>
+    [901, 1164, 1440].map(width => {
+      const key = 'desktop-' + section + '-' + width;
+      sceneKey = key;
+      const nodes = sets(key),
+        panel = one(nodes, n => n.tag === 'ARTICLE'),
+        left = one(nodes, n => n.cls === 'mg-mega-content__left'),
+        banner = one(nodes, n => n.cls === 'mg-mega-content__banner'),
+        right = one(nodes, n => n.cls === 'mg-mega-content__right'),
+        list = one(nodes, n => n.cls === 'mg-mega-content__menu--desktop'),
+        heading = one(nodes, n => n.tag === 'HEADER'),
+        paragraph = one(nodes, n => n.tag === 'P'),
+        cta = one(nodes, n => n.cls === 'mg-button mg-button-primary');
+      const children = [
+        textBox(
+          'desktop-heading',
+          heading,
+          banner,
+          heading.undrr.text,
+          'Heading'
+        ),
+        textBox(
+          'desktop-summary',
+          paragraph,
+          banner,
+          paragraph.undrr.text,
+          'Summary'
+        ),
+      ];
+      children.push(
+        fixed('action-slot', cta, banner, [
+          {
+            id: 'action',
+            type: 'INSTANCE',
+            name: 'Exact source mg-button primary',
+            family:
+              section === 'sendai' && width !== 1440
+                ? 'page-chrome-capped-action'
+                : 'page-chrome-button',
+            variant:
+              section === 'sendai' && width !== 1440
+                ? { SourceViewport: String(width), Section: 'Sendai' }
+                : {
+                    Emphasis: 'Primary',
+                    Treatment: 'Filled',
+                    State: 'Default',
+                  },
+            overrides: { Label: cta.undrr.text },
+            expose: true,
+            layout:
+              section === 'sendai' && width !== 1440
+                ? {
+                    width: float('action-slot', cta, 'w'),
+                    height: float('action-slot', cta, 'h'),
+                  }
+                : { width: 'HUG', height: 'HUG' },
+          },
+        ])
+      );
+      const bannerTree = fixed('banner', banner, left, children),
+        leftTree = fixed(
+          'left',
+          left,
+          panel,
+          [bannerTree],
+          color('left-background', left, 'bg')
+        );
+      leftTree.children.push({
+        id: 'left-border',
+        type: 'FRAME',
+        name: 'Source end border',
+        layout: { mode: 'NONE', width: 1, height: 350 },
+        position: { x: left.undrr.w - 1, y: 0 },
+        fill: role(
+          'left-border',
+          'COLOR',
+          m => ({ ...resolve('color/neutral-600', m, 'COLOR'), a: 0.24 }),
+          ['FRAME_FILL']
+        ),
+        children: [],
+      });
+      const links = matching(nodes, n => n.tag === 'A' && n.cls === '');
+      if (links.undrr.length !== 4) fail('Four authored About links required');
+      const linkTrees = links.undrr.map((n, i) => {
+        const all = Object.fromEntries(modes.map(m => [m.id, links[m.id][i]]));
+        return textBox(
+          'desktop-item-' + (i + 1),
+          all,
+          list,
+          n.text,
+          'Item ' + (i + 1),
+          { padding: { inline: 5, block: 5 } }
+        );
+      });
+      const rightTree = fixed('right', right, panel, [
+        fixed('items', list, right, linkTrees),
+      ]);
+      const tree = fixed(
+        'root',
+        panel,
+        null,
+        [leftTree, rightTree],
+        'color/neutral-0',
+        false
+      );
+      delete tree.position;
+      tree.effectStyle = shadow('desktop-panel', panel);
+      return {
+        id: 'page-chrome-desktop-panel.' + section + '-' + width,
+        name: 'Viewport=' + width + ', Section=' + section,
+        properties: {
+          Viewport: String(width),
+          Section:
+            section === 'about'
+              ? 'About'
+              : section[0].toUpperCase() + section.slice(1),
+        },
+        sourceGeometry: {
+          top: panel.undrr.y,
+          height: 350,
+          viewportHeight: 1000,
+          context:
+            'Overlay anchored after existing closed chrome flow, not an expanded header.',
+        },
+        tree,
+      };
+    })
+  );
   const chevron =
     '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>';
   const mobile = [390, 899].flatMap(width =>
-    ['all', 'about'].map(level => {
+    ['all', 'about', 'work', 'sendai', 'news'].map(level => {
       const key = 'mobile-' + level + '-' + width;
       sceneKey = key;
       const nodes = sets(key),
@@ -986,7 +1132,7 @@ function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
       );
       headerTree.effectStyle = shadow('mobile-header', header);
       const pageChildren = [];
-      if (level === 'about') {
+      if (level !== 'all') {
         const back = one(nodes, n => n.cls === 'mg-mega-mobile-sidebar__back'),
           arrow = one(nodes, n => n.cls === 'mg-mega-mobile-sidebar__arrow');
         pageChildren.push(
@@ -1001,9 +1147,12 @@ function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
           'mobile-heading-' + level,
           title,
           page,
-          level === 'all' ? 'All sections' : 'About UNDRR',
+          level === 'all'
+            ? 'All sections'
+            : one(nodes, n => n.cls === 'mg-mega-mobile-sidebar__title-link')
+                .undrr.text,
           'Heading',
-          { underline: level === 'about' }
+          { underline: level !== 'all' }
         )
       );
       const entries = matching(
@@ -1016,7 +1165,7 @@ function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
         const all = Object.fromEntries(
           modes.map(m => [m.id, entries[m.id][i]])
         );
-        if (level === 'about')
+        if (level !== 'all')
           return textBox(
             'mobile-about-item-' + (i + 1),
             all,
@@ -1074,7 +1223,7 @@ function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
         return itemTree;
       });
       pageChildren.push(fixed('items', list, page, entriesTrees));
-      if (level === 'about') {
+      if (level !== 'all') {
         const intro = one(
             nodes,
             n => n.cls === 'mg-mega-mobile-sidebar__intro'
@@ -1118,19 +1267,31 @@ function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
     })
   );
   const limitations = [
-    'English authored UndrrChrome About desktop and AllSections/About mobile only, viewportheight1000. Other three authored selected panels and progressive levels are pending.',
-    'Finite measured source allocations with editable text and real normal Button dependency, not arbitrary nested MegaMenu or locale/RTL coverage.',
+    'English authored UndrrChrome all four desktop panels and AllSections plus all four mobile sections, viewportheight1000. General nested and custom caller content remain pending.',
+    'Finite measured source allocations with editable text, exact normal Button dependency where unwrapped and two capped source action presets where source wraps, not arbitrary nested MegaMenu or locale/RTL coverage.',
     'Desktop requested600 Button and mobile drill-in requested600 use bundled Bold700 as browser-face inference. Native font pixels and live mode acceptance remain open.',
     'Source fixed mobile backdrop and surface are independent overlay compositions. Do not include their height in normal header flow.',
     'No keyboard, focus trap, hover, click, URL navigation, sticky scrolling, safe-area environment, motion or publication acceptance is inferred.',
   ];
   return [
     {
+      id: 'page-chrome-capped-action',
+      kind: 'component-set',
+      name: 'Page chrome / Authored capped action',
+      description:
+        'Source capped Sendai CTA with FILL Label, exact mode-driven finite source box.',
+      sourceRef: ref,
+      review: { genericLabels: false, preserveVariantSizing: true },
+      defaultVariantId: 'page-chrome-capped-action.sendai-901',
+      limitations,
+      variants: cappedActions,
+    },
+    {
       id: 'page-chrome-desktop-panel',
       kind: 'component-set',
-      name: 'Page chrome / Authored About desktop panel',
+      name: 'Page chrome / Authored English desktop panels',
       description:
-        'Exact source About flyouts with complete four-link content and real source Button.',
+        'Exact source authored four-section flyouts with all sixteen links, summaries and real source actions.',
       sourceRef: ref,
       review: { genericLabels: false, preserveVariantSizing: true },
       defaultVariantId: 'page-chrome-desktop-panel.about-1164',
@@ -1142,7 +1303,7 @@ function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
       kind: 'component-set',
       name: 'Page chrome / Authored progressive mobile',
       description:
-        'Actual progressive first level and About level with close/back/list/intro/backdrop.',
+        'Actual progressive first level and all four authored section levels with close/back/list/intro/backdrop.',
       sourceRef: ref,
       review: { genericLabels: false, preserveVariantSizing: true },
       defaultVariantId: 'page-chrome-mobile.all-390',

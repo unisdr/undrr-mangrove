@@ -288,8 +288,9 @@ async function openMain() {
   assert.deepStrictEqual(
     families.map(f => [f.id, f.variants.length]),
     [
-      ['page-chrome-desktop-panel', 3],
-      ['page-chrome-mobile', 4],
+      ['page-chrome-capped-action', 2],
+      ['page-chrome-desktop-panel', 12],
+      ['page-chrome-mobile', 10],
     ]
   );
   assert.deepStrictEqual(copy(doc), copy(openDocument()));
@@ -371,9 +372,17 @@ async function openMain() {
           },
           key
         );
-        const width = Number(variant.properties.Viewport);
+        const width = Number(
+          variant.properties.Viewport ?? variant.properties.SourceViewport
+        );
         if (family.id === 'page-chrome-desktop-panel') {
-          const nodes = sceneNodes(mode.id, 'desktop-about-' + width),
+          const nodes = sceneNodes(
+              mode.id,
+              'desktop-' +
+                variant.properties.Section.toLowerCase() +
+                '-' +
+                width
+            ),
             panel = nodes.find(n => n.tag === 'ARTICLE'),
             banner = nodes.find(n => n.cls === 'mg-mega-content__banner'),
             cta = nodes.find(n => n.cls === 'mg-button mg-button-primary');
@@ -391,13 +400,28 @@ async function openMain() {
           const action = owned.get(key + '/left/banner/action-slot/action');
           assert.strictEqual(
             (await action.getMainComponentAsync()).name,
-            'Emphasis=Primary, Treatment=Filled, State=Default'
+            variant.properties.Section === 'Sendai' && width !== 1440
+              ? 'SourceViewport=' + width + ', Section=Sendai'
+              : 'Emphasis=Primary, Treatment=Filled, State=Default'
           );
           assert(
             Object.values(action.componentProperties).some(
-              p => p.value === 'About UNDRR'
+              p => p.value === cta.text
             )
           );
+        } else if (family.id === 'page-chrome-capped-action') {
+          const nodes = sceneNodes(mode.id, 'desktop-sendai-' + width),
+            cta = nodes.find(n => n.cls === 'mg-button mg-button-primary');
+          const action = owned.get(key),
+            label = owned.get(key + '/label');
+          assert.strictEqual(action.width, cta.w);
+          assert.strictEqual(action.height, cta.h);
+          assert.strictEqual(label.layoutSizingHorizontal, 'FILL');
+          assert.strictEqual(cta.textAlign, 'start');
+          assert.strictEqual(label.textAlignHorizontal, 'LEFT');
+          assert.strictEqual(action.paddingTop, parseFloat(cta.pad[0]));
+          assert.strictEqual(action.paddingLeft, parseFloat(cta.pad[1]));
+          assert.strictEqual(action.strokeWeight, parseFloat(cta.border[0]));
         } else {
           const nodes = sceneNodes(
               mode.id,
@@ -461,9 +485,9 @@ async function openMain() {
       );
     }
     const duplicate = copy(doc);
-    const bannerChildren =
-      duplicate.components.families[1].variants[0].tree.children[0].children[0]
-        .children;
+    const bannerChildren = duplicate.components.families.find(
+      f => f.id === 'page-chrome-desktop-panel'
+    ).variants[0].tree.children[0].children[0].children;
     bannerChildren[1].id = bannerChildren[0].id;
     const styleBefore = env.state.styles.length;
     const duplicateResult = await env.call(
@@ -480,7 +504,9 @@ async function openMain() {
     assert.strictEqual(env.state.styles.length, styleBefore);
     assert.deepStrictEqual(snapshot(), before);
     const unknown = copy(doc);
-    unknown.components.families[1].variants[0].tree.children[0].children[0].children[2].children[0].family =
+    unknown.components.families.find(
+      f => f.id === 'page-chrome-desktop-panel'
+    ).variants[0].tree.children[0].children[0].children[2].children[0].family =
       'missing-source-button';
     await assert.rejects(
       () => env.call('buildMangroveComponents', unknown, mode.id, requested),
@@ -516,8 +542,21 @@ async function openMain() {
   interactive.values.undrr = { r: 1, g: 0, b: 0, a: 1 };
   assert.throws(
     () => buildPageChromeOpenRecipes({ root, ...changedPaint }),
-    /paint requires remeasurement/
+    /paint requires remeasurement|capped action paint changed/
   );
+  for (const [name, invalid] of [
+    ['radius/button', 99],
+    ['spacing/50', 6],
+    ['color/button', { r: 1, g: 0, b: 0, a: 1 }],
+    ['border-color/button-primary', { r: 0, g: 0, b: 0, a: 1 }],
+  ]) {
+    const altered = copy(doc);
+    altered.variables.find(v => v.name === name).values.mcr = invalid;
+    assert.throws(
+      () => buildPageChromeOpenRecipes({ root, ...altered }),
+      /capped action/
+    );
+  }
   for (const file of Object.keys(OPEN_HASHES)) {
     const read = fs.readFileSync;
     fs.readFileSync = (target, ...args) => {
@@ -553,6 +592,6 @@ async function openMain() {
   assert.strictEqual(missing.state.nodes.size, nodeCount);
   assert.strictEqual(missing.state.styles.length, styleCount);
   console.log(
-    'Open Page chrome3 desktop +4 progressive mobile source allocations, exact normal Button dependency, all-five actual builder geometry/two zero-create repeats/edit retention/source and missing-font guards passed. Native pixels/modes/interactions remain open.'
+    'Open Page chrome12 desktop +10 progressive mobile +2 capped actions source allocations, exact normal Button dependency, all-five actual builder geometry/two zero-create repeats/edit retention/source and missing-font guards passed. Native pixels/modes/interactions remain open.'
   );
 }

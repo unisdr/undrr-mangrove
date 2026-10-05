@@ -61,7 +61,11 @@ const recipes = [
     'buildPageReadingRecipes',
   ],
   [
-    ['page-chrome-desktop-panel', 'page-chrome-mobile'],
+    [
+      'page-chrome-capped-action',
+      'page-chrome-desktop-panel',
+      'page-chrome-mobile',
+    ],
     './figma-page-chrome-recipes.cjs',
     'buildPageChromeOpenRecipes',
   ],

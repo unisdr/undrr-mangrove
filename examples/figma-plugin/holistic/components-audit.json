@@ -107,6 +107,7 @@
       "page-chrome",
       "page-bulleted-toc",
       "quote-highlight",
+      "page-chrome-capped-action",
       "page-chrome-desktop-panel",
       "page-chrome-mobile",
       "landing-report-breadcrumb",
@@ -13961,8 +13962,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 29,
-    "variants": 110,
+    "families": 30,
+    "variants": 127,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -13970,6 +13971,7 @@
       "page-chrome",
       "page-bulleted-toc",
       "quote-highlight",
+      "page-chrome-capped-action",
       "page-chrome-desktop-panel",
       "page-chrome-mobile",
       "landing-report-breadcrumb",
@@ -13985,7 +13987,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "0023e483bdbac735f99c2c6b66f4945e6e06f6646e0f4a9639b5e3c5909f773c",
+    "currentPacketScriptSha256": "c1b0a5eb3b44ffd257230217784f47088906e70ba8a28308bcce078a76255eb3",
     "dependencies": [
       {
         "id": "editorial-cta",
