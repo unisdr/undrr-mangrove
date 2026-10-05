@@ -63,11 +63,14 @@ async function main() {
       ['breadcrumbs', 2],
       ['skip-link', 1],
       ['highlight-box', 3],
+      ['accordion', 4],
+      ['pager', 3],
+      ['user-feedback', 2],
     ]
   );
   assert.strictEqual(
     packet.draftFamilies.reduce((n, f) => n + f.variants.length, 0),
-    19
+    28
   );
   for (const field of [
     'collection',
@@ -128,7 +131,7 @@ async function main() {
     /Missing\/duplicate anatomy ID/
   );
   console.log(
-    'ok  isolated deterministic six-family/19-variant packet retains full DTO and rejects missing roles, alias cycles and duplicate anatomy'
+    'ok  isolated deterministic nine-family/28-variant packet retains full DTO and rejects missing roles, alias cycles and duplicate anatomy'
   );
 
   // Use the actual importer entry, not a duplicated preflight. The packet must
@@ -191,6 +194,11 @@ async function main() {
     env,
     packet.draftFamilies.find(f => f.id === 'breadcrumbs')
   );
+  require('./mock-accordion.cjs').installAccordionSvgFixture(
+    env,
+    packet.draftFamilies.find(f => f.id === 'accordion')
+  );
+  require('./mock-pager.cjs').installPagerSvgFixture(env, packet.draftFamilies);
   await importFoundation(env, doc);
   const selected = packet.draftFamilies.map(f => f.id);
   const first = await env.call(
@@ -200,10 +208,10 @@ async function main() {
     selected
   );
   assert.deepStrictEqual(copy(first.errors), []);
-  assert.strictEqual(first.families.length, 6);
+  assert.strictEqual(first.families.length, 9);
   assert.strictEqual(
     first.families.reduce((n, f) => n + f.variantIds.length, 0),
-    19
+    28
   );
   const consumer = [...env.state.nodes.values()].find(
     n =>
@@ -234,7 +242,7 @@ async function main() {
     'Combined build edited label'
   );
   console.log(
-    'ok  combined shared-identity builder constructs all19 variants and repeats without creation or lost Label overrides'
+    'ok  combined shared-identity builder constructs all28 variants and repeats without creation or lost Label overrides'
   );
 
   const temporary = fs.mkdtempSync(

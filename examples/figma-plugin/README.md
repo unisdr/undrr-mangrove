@@ -532,8 +532,9 @@ The redesigned plugin separates Import, Core kit and Diagnostics; navigation, co
 
 ## Source references and build freshness
 
-The separately requested [source drafts](COMPONENT-DRAFTS.md) prepare 19 bounded
-variants across Range, Tag, Notice, Breadcrumbs, Skip Link and Highlight Box
+The separately requested [source drafts](COMPONENT-DRAFTS.md) prepare 28 bounded
+variants across Range, Tag, Notice, Breadcrumbs, Skip Link, Highlight Box,
+Accordion, Pager and User Feedback
 through recipes and mock tests. Their distinct review
 packet is not importer input. They remain outside the normal catalogue, core
 selection, published library and reduced maintenance merge cohort.

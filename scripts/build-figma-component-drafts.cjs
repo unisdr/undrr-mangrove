@@ -22,6 +22,13 @@ const recipes = [
     './figma-highlight-box-recipes.cjs',
     'buildHighlightBoxRecipes',
   ],
+  ['accordion', './figma-accordion-recipes.cjs', 'buildAccordionRecipes'],
+  ['pager', './figma-pager-recipes.cjs', 'buildPagerRecipes'],
+  [
+    'user-feedback',
+    './figma-user-feedback-recipes.cjs',
+    'buildUserFeedbackRecipes',
+  ],
 ];
 
 function validateDrafts(families, assets) {
