@@ -34,28 +34,23 @@ source drift and missing fonts before node/style mutations. The precise SVG
 fixture intercepts only the emitted bounded assets and delegates unmatched SVGs.
 It supplies no general fake SVG support or path rasterization evidence.
 
-SearchForm's three source candidates require the proposed square SVG sizing
+SearchForm's three source candidates use the square SVG sizing
 capability. Their actual search icon is 1em:14px in four brands,18px in MCR.
 `svg.sizing.size` aliases the button font-size role; the stroke role derives
 exactly `2 * size / 24`. The source mask viewBox is24 and uses uniform stroke2.
-A fixed14px SVG inside an18px wrapper is not admitted. These three candidates now pass the full builder API harness. Native SVG
-geometry, stroke response and live mode changes remain separate acceptance
-gates. The strict ownership ledger refuses existing managed SVG geometry,
+A fixed14px SVG inside an18px wrapper is not admitted. These three candidates now pass the full builder API harness. The complete SearchForm native scene, pixels and ordinary plugin recovery remain separate acceptance gates. The strict ownership ledger refuses existing managed SVG geometry,
 binding or constraint edits instead of silently erasing them.
 
 `kit-svg-sizing.js` provides pure source/native preflight and apply functions for
 uniform unfilled square SVGs. It binds frame width/height, assigns native SCALE
 constraints to descendants and binds source-derived stroke width. Mask, transform,
 non-square, mixed-width, nonblack or filled artwork are refused. Native
-preflight also refuses nonfinite geometry, masks/effects, frame backgrounds and
-any vector whose stroke differs from the source-derived current viewport width. Its dedicated mock tests
+preflight also refuses nonfinite geometry, masks/effects and visible frame backgrounds. Its only imported FRAME fill exception is the exact hidden native-default white SOLID paint, with opacity1, NORMAL blend and no binding. VECTOR fills remain refused. Source stroke formulas remain exact doubles; native FLOAT values and vector stroke weights accept only that exact result or its exact IEEE754 float32 representation, never a wider epsilon. Its dedicated mock tests
 source-derived all-five values and an explicitly modeled linked-mode transition;
-actual Figma path bounds, stroke response, constraints and two repeats across
-14/18 modes remain an isolated native acceptance gate. Rescale-on-build alone
-cannot prove live mode changes.
+the isolated native helper experiment now also passed two zero-create helper repeats and a live14 to18 to14 mode rehearsal. Raw projected geometry, width/height and stroke/color bindings, SCALE constraints and explicit modes repeated exactly, and the recorded projection restored exactly. In MCR the SVG was already18px with1.5px vector strokes before another helper apply, so the response came from native mode bindings. The19073-byte receipt is external `/tmp/mangrove-svg-native-repeat-20261006-v8-compact-receipt.json`. Repeated snapshots omit paint arrays and vectorPaths; they do not establish full path/pixel equality, full SearchForm, ordinary native plugin rebuilds or publication acceptance. Existing59-node geometry/mode equality is reported through empty difference rows rather than duplicated after snapshots.
 
 The scoped SearchForm connector compilation currently exceeds the unchanged
-50000-byte transport limit in all five brands, at50339 to50401 bytes after the
+50000-byte transport limit in all five brands, at50830 to50892 bytes after the
 necessary source and ownership guards. No cloud write or native acceptance is
 claimed. Ten normal unsized compiler comparisons remain byte-identical in the
 shared integration evidence; this is a regression check, not a transport waiver.

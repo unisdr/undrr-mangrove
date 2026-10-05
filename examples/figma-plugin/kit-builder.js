@@ -1,4 +1,4 @@
-/* global mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingSourceValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -1840,7 +1840,7 @@ async function buildMangroveComponents(
                 MG_CONNECTOR_SVG_SIZING_SOURCE
               )
                 mgSvgSizingDocumentValues(plan.sizing, doc);
-              mgSvgSizingSourceValues(
+              mgSvgSizingNativeValues(
                 plan.sizing,
                 collection.modes.map(item => ({ id: item.modeId })),
                 nativeSvgNumber

@@ -90,6 +90,33 @@ function mgSvgSizingSourceValues(plan, modes, resolve) {
   return result;
 }
 
+// Native FLOAT storage was observed as IEEE-754 float32. Accept only the exact
+// authored result or its exact float32 representation, never a wider epsilon.
+function mgSvgSizingNativeFloatMatches(value, expected) {
+  return value === expected || value === Math.fround(expected);
+}
+
+function mgSvgSizingNativeValues(plan, modes, resolve) {
+  if (!plan) return null;
+  const result = {};
+  for (const mode of modes) {
+    const size = resolve(plan.size, mode, 'FLOAT');
+    const strokeWidth = resolve(plan.strokeWidth, mode, 'FLOAT');
+    const expected = (plan.sourceStrokeWidth * size) / plan.viewBoxSize;
+    if (
+      !Number.isFinite(size) ||
+      size <= 0 ||
+      size > 128 ||
+      !Number.isFinite(strokeWidth) ||
+      strokeWidth <= 0 ||
+      !mgSvgSizingNativeFloatMatches(strokeWidth, expected)
+    )
+      throw new Error(`SVG sizing native values disagree in ${mode.id}.`);
+    result[mode.id] = { size, strokeWidth };
+  }
+  return result;
+}
+
 // Validate source aliases in every authored mode before any asset writes.
 function mgSvgSizingDocumentValues(plan, doc) {
   if (!plan) return null;
@@ -149,7 +176,7 @@ function mgSvgSizingNativePlan(node, plan, variable, managed = false) {
     size <= 0 ||
     size > 128 ||
     !Number.isFinite(strokeWidth) ||
-    Math.abs(strokeWidth - expected) > 1e-12
+    !mgSvgSizingNativeFloatMatches(strokeWidth, expected)
   )
     throw new Error('SVG sizing native variables disagree with source.');
   if (
@@ -162,6 +189,18 @@ function mgSvgSizingNativePlan(node, plan, variable, managed = false) {
   )
     throw new Error('SVG sizing needs an imported square native frame.');
   function checkGeometryAndAppearance(item) {
+    const hiddenImportFill =
+      item.type === 'FRAME' &&
+      Array.isArray(item.fills) &&
+      item.fills.length === 1 &&
+      item.fills[0].type === 'SOLID' &&
+      item.fills[0].visible === false &&
+      item.fills[0].opacity === 1 &&
+      item.fills[0].blendMode === 'NORMAL' &&
+      item.fills[0].color?.r === 1 &&
+      item.fills[0].color?.g === 1 &&
+      item.fills[0].color?.b === 1 &&
+      Object.keys(item.fills[0].boundVariables || {}).length === 0;
     if (
       !['x', 'y', 'width', 'height'].every(key => Number.isFinite(item[key])) ||
       item.width <= 0 ||
@@ -171,7 +210,7 @@ function mgSvgSizingNativePlan(node, plan, variable, managed = false) {
       item.effects.length ||
       (item.type !== 'GROUP' &&
         (!Array.isArray(item.fills) ||
-          item.fills.length ||
+          (item.fills.length && !hiddenImportFill) ||
           !Array.isArray(item.strokes) ||
           (item.type !== 'VECTOR' && item.strokes.length)))
     )
@@ -203,7 +242,7 @@ function mgSvgSizingNativePlan(node, plan, variable, managed = false) {
           child.strokes[0].type !== 'SOLID' ||
           child.strokeAlign !== 'CENTER' ||
           !Number.isFinite(child.strokeWeight) ||
-          Math.abs(child.strokeWeight - currentStrokeWidth) > 1e-12
+          !mgSvgSizingNativeFloatMatches(child.strokeWeight, currentStrokeWidth)
         )
           throw new Error(
             'SVG sizing requires unfilled uniform center-stroked native vectors.'

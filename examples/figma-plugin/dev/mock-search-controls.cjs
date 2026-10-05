@@ -133,7 +133,7 @@ async function main() {
     const env = environment(nativeDoc, { sharedOnly: true });
     await env.runCode(
       fs.readFileSync(path.join(__dirname, '../kit-svg-sizing.js'), 'utf8') +
-        '\nObject.assign(globalThis,{mgSvgSizingPlan,mgSvgSizingDocumentValues,mgSvgSizingSourceValues,mgSvgSizingNativePlan,mgApplySvgSizing});'
+        '\nObject.assign(globalThis,{mgSvgSizingPlan,mgSvgSizingDocumentValues,mgSvgSizingSourceValues,mgSvgSizingNativeValues,mgSvgSizingNativePlan,mgApplySvgSizing});'
     );
     installSearchControlSvgFixture(env, supported);
     await env.call('importVariables', nativeDoc, [mode.id], false, [], false);
@@ -222,7 +222,7 @@ async function main() {
   }
   const helperSource =
     fs.readFileSync(path.join(__dirname, '../kit-svg-sizing.js'), 'utf8') +
-    '\nObject.assign(globalThis,{mgSvgSizingPlan,mgSvgSizingDocumentValues,mgSvgSizingSourceValues,mgSvgSizingNativePlan,mgApplySvgSizing});';
+    '\nObject.assign(globalThis,{mgSvgSizingPlan,mgSvgSizingDocumentValues,mgSvgSizingSourceValues,mgSvgSizingNativeValues,mgSvgSizingNativePlan,mgApplySvgSizing});';
   const recordedState = env =>
     JSON.stringify({
       nodes: [...env.state.nodes.values()].map(n => [
@@ -351,7 +351,7 @@ async function main() {
   );
   assert(
     wrongModeReport.errors.some(error =>
-      error.includes('source values disagree')
+      error.includes('native values disagree')
     )
   );
   assert.strictEqual(

@@ -77,6 +77,33 @@ function main() {
   assert.strictEqual(values.mcr.size, 18);
   assert.strictEqual(values.undrr.strokeWidth, (2 * 14) / 24);
   assert.strictEqual(values.mcr.strokeWidth, 1.5);
+  const observedNative = Math.fround((2 * 14) / 24);
+  assert.strictEqual(observedNative, 1.1666666269302368);
+  assert.strictEqual(
+    api.mgSvgSizingNativeValues(plan, [{ id: 'undrr' }], name =>
+      name === plan.size ? 14 : observedNative
+    ).undrr.strokeWidth,
+    observedNative
+  );
+  for (const altered of [
+    observedNative + 2 ** -23,
+    observedNative - 2 ** -23,
+    1.167,
+  ])
+    assert.throws(
+      () =>
+        api.mgSvgSizingNativeValues(plan, [{ id: 'undrr' }], name =>
+          name === plan.size ? 14 : altered
+        ),
+      /disagree/
+    );
+  assert.throws(
+    () =>
+      api.mgSvgSizingSourceValues(plan, [{ id: 'undrr' }], name =>
+        name === plan.size ? 14 : observedNative
+      ),
+    /disagree/
+  );
   assert.throws(
     () =>
       api.mgSvgSizingSourceValues(plan, doc.modes, name =>
@@ -208,6 +235,42 @@ function main() {
   assert.strictEqual(frame.width, 14);
   assert.strictEqual(vector.strokeWeight, (2 * 14) / 24);
   assert.strictEqual(vector.constraints.horizontal, 'SCALE');
+  frame.fills = [
+    {
+      type: 'SOLID',
+      visible: false,
+      opacity: 1,
+      blendMode: 'NORMAL',
+      color: { r: 1, g: 1, b: 1 },
+      boundVariables: {},
+    },
+  ];
+  api.mgSvgSizingNativePlan(frame, plan, lookup);
+  frame.fills[0].visible = true;
+  assert.throws(
+    () => api.mgSvgSizingNativePlan(frame, plan, lookup),
+    /appearance/
+  );
+  frame.fills[0].visible = false;
+  frame.fills[0].color.r = 0.9;
+  assert.throws(
+    () => api.mgSvgSizingNativePlan(frame, plan, lookup),
+    /appearance/
+  );
+  frame.fills = [];
+  vector.strokeWeight = observedNative;
+  api.mgSvgSizingNativePlan(frame, plan, lookup);
+  for (const changed of [
+    observedNative + 2 ** -23,
+    observedNative - 2 ** -23,
+  ]) {
+    vector.strokeWeight = changed;
+    assert.throws(
+      () => api.mgSvgSizingNativePlan(frame, plan, lookup),
+      /center-stroked/
+    );
+  }
+  vector.strokeWeight = widths.undrr;
   const identities = [frame.id, vector.id];
   const repeat = build();
   assert.strictEqual(repeat.rescaled, false);
