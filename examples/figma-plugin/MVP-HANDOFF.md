@@ -59,6 +59,8 @@ The explicit connector token/style scopes are useful for bounded imports. Its co
 
 ## Acceptance still to run
 
+Use [the prepared rehearsal procedures and novice worksheet](acceptance/README.md) for the remaining gates. These are blank/prepared materials, not new native or human acceptance evidence.
+
 - Published rebuild checks beyond the accepted three top-level Button padding consumers: composite dependencies, other families and anatomy/property changes.
 - Verify deliberately changed text/effect-style publication and consumer uptake; the standalone entry's completed probe changed a token while retaining the existing style definitions.
 - Resolve recovery-copy source-handback geometry repeat differences; broader manual-main protection and optional/native dependency build verification remain separate checks.

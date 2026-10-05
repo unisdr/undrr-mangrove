@@ -76,3 +76,5 @@ Run the repository's required lint and touched-file formatting checks alongside 
 - The consumer restores all 40 captured field digests covering 5,237 field pairs across 169 records, with nine explicit instances and the user note unchanged. These non-cryptographic summaries exclude absolute render bounds and normalize remote variable caches. Figma's five-variable publication list includes `radius/button` via its unchanged MCR2030 alias; it does not imply an UNDRR radius change. Deliberately changed text/effect-style publication remains unverified because this fixture retains their source definitions. The token-specific gate passes without broadening geometry repeat or human/reduced-merge acceptance.
 
 Read [the maintenance guide](MAINTENANCE.md) for supported operations and boundaries. The paid status and PR distinguish native evidence from local mocks and the human handoff gates.
+
+For the reproducible exact-base patch and remaining acceptance procedures, see [maintenance acceptance preparation](acceptance/README.md). Those retained-spike materials prepare review and native/human rehearsals; they do not accept the reduced merge or expand the cohort.
