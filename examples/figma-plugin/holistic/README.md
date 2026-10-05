@@ -56,6 +56,10 @@ update/restoration are distinct from recipe and mock completion.
   fails `window_not_focused`, reporting no focused window. Both relevant
   permissions report granted. Unchanged retries are stopped.
 
+Bounded native evidence now includes [UNDRR SectionHeader](NATIVE-SECTION-HEADER-EXPERIMENT.md)
+and [gradient alpha semantics](GRADIENT-CAPABILITY.md), alongside the earlier
+Tag, SVG and named-font probes. None closes ordinary desktop or publication gates.
+
 ## Work coordination
 
 Initial audits are divided into reusable components, syndicated search and page

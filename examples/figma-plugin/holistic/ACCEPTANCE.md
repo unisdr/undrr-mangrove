@@ -20,17 +20,18 @@ its controls need a shared foundation, rather than a circular recipe dependency.
 
 ## Implementation order and ownership
 
-| Package                               | Current work                                                              | Owner             | Next acceptance                                                                                                     |
-| ------------------------------------- | ------------------------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Rich text and page layout             | Editable inline style/link capability in progress                         | notice_recipe     | Pre-mutation validation, exact run fonts, safe edited-copy ownership, builder integration and browser/native checks |
-| Search fixtures                       | Actual authored story/test data and configuration fixtures in progress    | tag_recipe        | Deterministic provenance and source-renderer tests, then search anatomy recipes                                     |
-| Editorial units                       | SectionHeader, Imagecaption and EmbedContainer source recipes in progress | range_scope       | Source guards, bound styles, repeat/edit tests, browser geometry and assets                                         |
-| Chrome and assets                     | Source inventory available                                                | root coordination | Exact PageHeader/MegaMenu/logo assets, faithful reusable identities and responsive source scenes                    |
-| Remaining reusable contracts          | Source inventory and existing partial scopes                              | root coordination | Expand each meaningful missing appearance through reviewed batches                                                  |
-| Search composition                    | Audit S2 through S6 pending                                               | root coordination | Custom facets/results/status/drawer and authored portal/book/card presets                                           |
-| Landing/news/hub pages                | Audit P4 through P8 pending                                               | root coordination | Actual linked reusable child instances and source page contracts                                                    |
-| Native integration                    | Isolated UNDRR Tag cloud cohort constructed; ordinary desktop gates open  | root              | Further cohorts, source parity, native mode checks and ordinary repeats                                             |
-| Publication and consumer verification | Pending                                                                   | root and reviewer | Selective publication, linked consumer update and restoration                                                       |
+| Package                           | Current work                                                                                                                   | Owner               | Next acceptance                                                                       |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------- | ------------------------------------------------------------------------------------- |
+| Rich text and layout capabilities | Source/mock integration and bounded native font preparation; plain indent/thickness and preserved fixed review widths reviewed | notice_recipe, root | Full native rich rendering, source typography parity and remaining layout contracts   |
+| Search results and composition    | Controls and actual source fixtures accepted; result/state recipes in progress                                                 | tag_recipe          | Genuine result anatomy, field configurations, full widget instances and native checks |
+| Editorial and cards               | Bounded source cohorts integrated; UNDRR SectionHeader cloud repeats accepted                                                  | root coordination   | Further native cohorts, all-brand source correspondence and publication               |
+| Chrome                            | Closed six presets and 24 open/capped presets integrated in source packet                                                      | tag_recipe, root    | Remaining shell/footer/locales and native scene acceptance                            |
+| Landing report                    | Full finite authored source composition at390/1164 integrated                                                                  | root coordination   | Native complete-scene rendering, ordinary repeats and publication                     |
+| News pages                        | Source prose and prerequisites audited; header/share/related/taxonomy dependencies in progress                                 | notice_recipe       | Full actual news anatomy, float/embed decisions, native composition                   |
+| ContentHub                        | 170 source cases captured; source header and page recipes in progress                                                          | range_scope         | Genuine nested route scenes and source-cascade fidelity, then native checks           |
+| Remaining reusable contracts      | Historical source inventory plus explicit packet follow-ups                                                                    | root coordination   | Implement remaining meaningful appearances through reviewed batches                   |
+| Native integration                | Isolated Tag and SectionHeader UNDRR cloud cohorts plus bounded SVG/font/gradient probes                                       | root                | All remaining native cohorts, source parity, modes and ordinary desktop repeats       |
+| Publication and consumers         | Full holistic acceptance pending                                                                                               | root and reviewer   | Selective publication, linked consumer update and restoration                         |
 
 Owners identify active subagent work, not permanent approvals or a completion
 estimate. Higher-order implementation follows its actual dependencies. Remote
@@ -49,8 +50,8 @@ not establish browser network, keyboard, portal or responsive runtime behaviour.
 7. Reviewed library integration, selective publication and actual linked consumer
    update/restoration.
 
-Each gate needs its own evidence. Nine current source drafts and the normal
-32-family catalogue remain bounded contracts. The recorded 25-family published
+Each gate needs its own evidence. The 30-family/127-variant source draft packet
+and normal 32-family catalogue remain bounded contracts. The recorded 25-family published
 checkpoint is historical evidence, not a fresh holistic validation.
 
 ## Isolated Figma target
@@ -64,7 +65,14 @@ This describes the initial empty checkpoint. The file now contains a separate
 UNDRR foundation collection, five Tag masters, review instances and one edited
 local consumer instance. It remains unpublished. The guarded Tag cloud build
 passed two zero-create repeats with exact recorded geometry after a reviewed
-review-scaffold sizing correction. See [the cloud evidence](CLOUD-DRAFT-EXPERIMENT.md).
+review-scaffold sizing correction. SectionHeader now has two masters, review
+instances and two edited local consumers; two further cloud repeats preserve its
+87-record geometry projection exactly. Separate SVG helper shapes also remain.
+Disposable font/gradient probes were removed with recorded verification. See
+[Tag cloud evidence](CLOUD-DRAFT-EXPERIMENT.md),
+[SectionHeader evidence](NATIVE-SECTION-HEADER-EXPERIMENT.md) and
+[gradient semantics](GRADIENT-CAPABILITY.md). These are bounded cloud scopes, not
+ordinary desktop rebuilding or full native source pixel acceptance.
 
 Cloud file-key availability does not establish desktop plugin availability.
 The independently reviewed exact target guard runs before controller evaluation
