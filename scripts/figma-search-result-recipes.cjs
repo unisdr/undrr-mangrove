@@ -9,6 +9,8 @@ const {
   guardSearchSources,
 } = require('./figma-search-fixtures.cjs');
 const SOURCE_HASHES = {
+  'examples/figma-plugin/holistic/assets/content-hub/source-fonts/LICENSE.txt':
+    'c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4',
   'stories/Components/Cards/Card/card.scss':
     'e5220ce8519237793fc7a1045ea38342a887ec02681309aa8667d1928f3d25a3',
   'stories/Atom/Tag/tag.scss':
