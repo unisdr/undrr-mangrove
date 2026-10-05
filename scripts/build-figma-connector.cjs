@@ -857,6 +857,7 @@ async function buildConnector({
   nodeIds = [],
   checkFonts = false,
   doc,
+  experimentFileKey,
 } = {}) {
   if (!['build', 'import', 'diagnostics', 'inspect'].includes(operation))
     throw new Error(
@@ -864,6 +865,13 @@ async function buildConnector({
         ? 'Use the Figma screenshot tool for images; connector JSON image bytes exceed its response limit.'
         : `Unknown connector operation ${operation}`
     );
+  if (experimentFileKey !== undefined) {
+    if (!['build', 'import'].includes(operation))
+      throw new Error('Experiment target guard supports import/build only.');
+    require('./figma-experiment-target.cjs').validateExperimentFileKey(
+      experimentFileKey
+    );
+  }
   if (
     !Array.isArray(nodeIds) ||
     nodeIds.length > 4 ||
@@ -1095,6 +1103,14 @@ async function buildConnector({
     source += `return await createMangroveFocusDiagnostics(doc, ${JSON.stringify(brandId)});`;
   else if (operation === 'inspect')
     source += `return (${connectorInspectionSummary.toString()})(await inspectMangroveKit({checkFonts:${Boolean(checkFonts)}}), ${JSON.stringify(nodeIds)});`;
+  if (experimentFileKey !== undefined)
+    source = require('./figma-experiment-target.cjs').guardExperimentSource(
+      source,
+      experimentFileKey,
+      operation === 'build'
+        ? ['importVariables', 'buildMangroveComponents']
+        : ['importVariables']
+    );
   const minified = await minify(`async function mgRun(){${source}}`, {
     compress: {
       passes: 3,
