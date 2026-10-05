@@ -574,6 +574,266 @@ function main() {
     'ok  organized v2 uses exact source-board/overview/section ownership and saved ancestry; wrong, duplicate, moved or unproven wrappers refuse'
   );
 
+  const reference = copy(organized);
+  reference.doc.kitGuidance = {
+    version: 1,
+    groups: [{ id: 'actions', familyIds: ['alpha'] }],
+    families: [
+      {
+        id: 'alpha',
+        kind: 'primary',
+        groupId: 'actions',
+        status: 'bounded-draft',
+      },
+      {
+        id: 'beta',
+        kind: 'support',
+        parentFamilyId: 'alpha',
+        groupId: 'actions',
+        status: 'bounded-draft',
+      },
+    ],
+  };
+  reference.inspection.currentPage = { id: 'synthetic-page' };
+  reference.inspection.nodes.push(
+    {
+      id: 'reference-section',
+      mgKitId: 'layout/reference',
+      name: 'Component reference catalogue',
+      type: 'SECTION',
+      parentId: 'synthetic-page',
+    },
+    {
+      id: 'reference-group',
+      mgKitId: 'layout/reference/group/actions',
+      name: 'Actions',
+      type: 'FRAME',
+      parentId: 'reference-section',
+    },
+    {
+      id: 'advanced:alpha',
+      mgKitId: 'layout/family/alpha/advanced',
+      name: 'Advanced parts',
+      type: 'FRAME',
+      parentId: 'overview:alpha',
+    }
+  );
+  reference.inspection.nodes.find(n => n.id === 'overview:alpha').parentId =
+    'reference-group';
+  reference.inspection.nodes.find(n => n.id === 'overview:beta').parentId =
+    'advanced:alpha';
+  const refreshAncestry = inspection => {
+    const nodes = new Map(inspection.nodes.map(node => [node.id, node]));
+    for (const node of inspection.nodes) {
+      node.ancestry = [];
+      let parentId = node.parentId,
+        parent = nodes.get(parentId);
+      while (parent) {
+        node.ancestry.push({
+          id: parent.id,
+          type: parent.type,
+          name: parent.name,
+        });
+        parentId = parent.parentId;
+        parent = nodes.get(parentId);
+      }
+      node.ancestry.push({ id: parentId, type: 'PAGE' });
+    }
+  };
+  refreshAncestry(reference.inspection);
+  const referenceBefore = JSON.stringify(reference);
+  const referenceAudit = auditNativeText(reference.inspection, reference.doc);
+  assert(
+    referenceAudit.passed,
+    'Declared primary and nested support source boards are accepted in the reference catalogue'
+  );
+  assert.strictEqual(referenceAudit.counts.expectedText, 3);
+  assert.strictEqual(
+    JSON.stringify(reference),
+    referenceBefore,
+    'Reference ancestry auditing does not mutate saved evidence or source'
+  );
+  const scaffoldReference = copy(reference);
+  for (const family of scaffoldReference.doc.kitGuidance.families)
+    family.status = 'source-scaffold';
+  const scaffoldAudit = auditNativeText(
+    scaffoldReference.inspection,
+    scaffoldReference.doc
+  );
+  assert(
+    scaffoldAudit.passed,
+    'Source-scaffold primary and support use the same exact reference anatomy'
+  );
+  assert.strictEqual(scaffoldAudit.counts.matchedText, 3);
+  assert.strictEqual(
+    scaffoldAudit.renderedAcceptance,
+    false,
+    'Saved ancestry does not promote scaffolds to native rendered acceptance'
+  );
+  for (const [label, mutate, refresh = true] of [
+    [
+      'wrong group ownership',
+      f => {
+        f.inspection.nodes.find(n => n.id === 'reference-group').mgKitId =
+          'layout/reference/group/other';
+      },
+    ],
+    [
+      'wrong declared group',
+      f => {
+        f.doc.kitGuidance.families[0].groupId = 'other';
+      },
+    ],
+    [
+      'wrong support group',
+      f => {
+        f.doc.kitGuidance.families[1].groupId = 'other';
+      },
+    ],
+    [
+      'undeclared group membership',
+      f => {
+        f.doc.kitGuidance.groups[0].familyIds = [];
+      },
+    ],
+    [
+      'name-only section',
+      f => {
+        delete f.inspection.nodes.find(n => n.id === 'reference-section')
+          .mgKitId;
+      },
+    ],
+    [
+      'wrong section type',
+      f => {
+        f.inspection.nodes.find(n => n.id === 'reference-section').type =
+          'FRAME';
+      },
+    ],
+    [
+      'detached group',
+      f => {
+        f.inspection.nodes.find(n => n.id === 'reference-group').parentId =
+          'synthetic-page';
+      },
+    ],
+    [
+      'foreign page',
+      f => {
+        f.inspection.nodes.find(n => n.id === 'reference-section').parentId =
+          'foreign-page';
+      },
+    ],
+    [
+      'support bypasses advanced',
+      f => {
+        f.inspection.nodes.find(n => n.id === 'overview:beta').parentId =
+          'reference-group';
+      },
+    ],
+    [
+      'advanced moved',
+      f => {
+        f.inspection.nodes.find(n => n.id === 'advanced:alpha').parentId =
+          'reference-group';
+      },
+    ],
+    [
+      'duplicate section',
+      f => {
+        f.inspection.nodes.push({
+          ...copy(f.inspection.nodes.find(n => n.id === 'reference-section')),
+          id: 'duplicate-section',
+        });
+      },
+    ],
+    [
+      'duplicate group',
+      f => {
+        f.inspection.nodes.push({
+          ...copy(f.inspection.nodes.find(n => n.id === 'reference-group')),
+          id: 'duplicate-group',
+        });
+      },
+    ],
+    [
+      'duplicate advanced board',
+      f => {
+        f.inspection.nodes.push({
+          ...copy(f.inspection.nodes.find(n => n.id === 'advanced:alpha')),
+          id: 'duplicate-advanced',
+        });
+      },
+    ],
+    [
+      'duplicate source declaration',
+      f => {
+        f.doc.kitGuidance.families.push(copy(f.doc.kitGuidance.families[0]));
+      },
+    ],
+    [
+      'outside core',
+      f => {
+        f.doc.kitGuidance.families[0].status = 'outside-core';
+      },
+    ],
+    [
+      'unknown status',
+      f => {
+        for (const family of f.doc.kitGuidance.families)
+          family.status = 'unverified';
+      },
+    ],
+    [
+      'support status mismatch',
+      f => {
+        f.doc.kitGuidance.families[1].status =
+          f.doc.kitGuidance.families[0].status === 'bounded-draft'
+            ? 'source-scaffold'
+            : 'bounded-draft';
+      },
+    ],
+    [
+      'missing page evidence',
+      f => {
+        delete f.inspection.currentPage;
+      },
+    ],
+    [
+      'forged saved ancestry',
+      f => {
+        f.inspection.nodes.find(
+          n => n.mgKitId === 'family/alpha'
+        ).ancestry[2].id = 'unrecorded-reference';
+      },
+      false,
+    ],
+  ]) {
+    for (const valid of [reference, scaffoldReference]) {
+      const invalid = copy(valid);
+      mutate(invalid);
+      if (refresh) refreshAncestry(invalid.inspection);
+      assert(
+        auditNativeText(invalid.inspection, invalid.doc).gaps.some(
+          g => g.code === 'wrong-main-family-parent'
+        ),
+        label
+      );
+    }
+  }
+  const referenceWrongFace = copy(reference);
+  referenceWrongFace.inspection.nodes.find(
+    n => n.mgKitId === 'family/alpha/variant/alpha.hover/label'
+  ).hasMissingFont = true;
+  assert(
+    !auditNativeText(referenceWrongFace.inspection, referenceWrongFace.doc)
+      .passed,
+    'Valid reference ancestry does not excuse incorrect source typography'
+  );
+  console.log(
+    'ok  reference catalogue accepts declared primary/support ancestry and rejects forged, detached, wrong-group or duplicate ownership without weakening source-face proof'
+  );
+
   const partial = copy(inspection);
   partial.nodes = partial.nodes.filter(
     n => !n.mgKitId.startsWith('family/beta')

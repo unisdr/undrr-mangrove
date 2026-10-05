@@ -714,7 +714,9 @@ figma.ui.onmessage = async msg => {
     if (msg.type === 'organize-kit') {
       let result;
       try {
-        result = await organizeMangroveKit(msg.doc, msg.brand);
+        result = await organizeMangroveKit(msg.doc, msg.brand, {
+          compact: true,
+        });
       } catch (error) {
         // The reconciler catches mutation failures itself. Thrown failures are
         // read-only preflight refusals and still need a downloadable receipt.

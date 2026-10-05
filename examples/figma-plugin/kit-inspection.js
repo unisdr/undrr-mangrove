@@ -154,6 +154,12 @@ async function mgInspectNode(node, variables, errors) {
   );
   result.identity = mgInspectionIdentity(node);
   result.mgKitId = mgReadIdentity(node, 'mgKitId');
+  if (result.mgKitId === 'layout/start') {
+    result.canvasFlow = {
+      version: mgReadIdentity(node, 'mgLayoutFlowVersion'),
+      phase: mgReadIdentity(node, 'mgLayoutFlowPhase'),
+    };
+  }
   const svgAsset = mgReadIdentity(node, 'mgSvgAsset');
   if (svgAsset) {
     try {

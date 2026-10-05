@@ -294,6 +294,8 @@ async function mgLayoutIndex() {
 }
 
 function mgLayoutExpectedType(key) {
+  if (key === 'layout/reference') return 'SECTION';
+  if (/^layout\/entry\/[^/]+\/instance$/.test(key)) return 'INSTANCE';
   if (MG_LAYOUT_DESTINATIONS.some(([id]) => key === `layout/${id}`))
     return 'SECTION';
   if (!key.startsWith('layout/')) return null;
@@ -384,7 +386,7 @@ function mgLayoutGuidance(doc) {
 
 async function mgLayoutPreflight(
   doc,
-  { allowProbes = false, allowVersion1Migration = false } = {}
+  { allowProbes = false, allowVersion1Migration = false, compact = false } = {}
 ) {
   if (doc?.components?.version !== 1 || !doc.components.families?.length)
     throw new Error(
@@ -411,6 +413,18 @@ async function mgLayoutPreflight(
       'Remove recorded temporary acceptance checks before reorganizing the kit.'
     );
   const start = index.get('layout/start');
+  const flow = start && mgReadIdentity(start, 'mgLayoutFlowVersion');
+  if (flow && flow !== '1') throw new Error('Unsupported canvas flow version.');
+  const flowPartial =
+    start && mgReadIdentity(start, 'mgLayoutFlowPhase') === 'migrating';
+  const compactFlow = compact || flow === '1';
+  if (
+    flow === '1' &&
+    !['migrating', 'complete'].includes(
+      mgReadIdentity(start, 'mgLayoutFlowPhase')
+    )
+  )
+    throw new Error('Unsupported canvas flow phase.');
   const version = start && mgReadIdentity(start, 'mgLayoutVersion');
   const partial =
     start && mgReadIdentity(start, 'mgLayoutPhase') === 'migrating';
@@ -574,8 +588,20 @@ async function mgLayoutPreflight(
           ? `layout/family/${meta.parentFamilyId}/advanced`
           : meta.status === 'outside-core'
             ? 'layout/pending/browse'
-            : `layout/group/${meta.groupId}`;
-      if (mgReadIdentity(node.parent, 'mgKitId') !== expected)
+            : flow === '1'
+              ? `layout/reference/group/${meta.groupId}`
+              : `layout/group/${meta.groupId}`;
+      const actualParent = mgReadIdentity(node.parent, 'mgKitId');
+      const movingPrimary =
+        meta.kind === 'primary' &&
+        meta.status !== 'outside-core' &&
+        compactFlow &&
+        (compact || flowPartial) &&
+        [
+          `layout/group/${meta.groupId}`,
+          `layout/reference/group/${meta.groupId}`,
+        ].includes(actualParent);
+      if (actualParent !== expected && !movingPrimary)
         throw new Error(`Family overview ${key} was moved.`);
       const allowed = new Set([
         `${key}/title`,
@@ -592,6 +618,104 @@ async function mgLayoutPreflight(
         )
       )
         throw new Error(`Manual content in generated overview ${key}.`);
+    }
+  }
+  // The compact flow has a closed presentation schema. Inherited instance
+  // descendants are excluded by mgLayoutIndex; canonical ownership is separate.
+  for (const [key, node] of index) {
+    if (!key.startsWith('layout/entry/') && !key.startsWith('layout/reference'))
+      continue;
+    if (!compactFlow)
+      throw new Error(`Canvas flow requires explicit Organize file: ${key}.`);
+    if (key === 'layout/reference') {
+      if (node.parent !== figma.currentPage)
+        throw new Error('Reference catalogue was moved.');
+      const allowed = new Set([
+        'layout/reference/title',
+        'layout/reference/body',
+        ...[...guidance.groups.keys()].map(
+          id => `layout/reference/group/${id}`
+        ),
+      ]);
+      if (
+        node.children.some(
+          child =>
+            !allowed.has(mgReadIdentity(child, 'mgKitId')) ||
+            index.get(mgReadIdentity(child, 'mgKitId')) !== child
+        )
+      )
+        throw new Error('Manual content in generated reference catalogue.');
+      continue;
+    }
+    const refGroup = /^layout\/reference\/group\/([^/]+)$/.exec(key);
+    if (refGroup) {
+      const group = guidance.groups.get(refGroup[1]);
+      if (!group || node.parent !== index.get('layout/reference'))
+        throw new Error(`Conflicting reference group ${key}.`);
+      const allowed = new Set([
+        `${key}/title`,
+        ...group.familyIds
+          .filter(id => families.get(id).status !== 'outside-core')
+          .map(id => `layout/family/${id}/overview`),
+      ]);
+      if (
+        node.children.some(
+          child =>
+            !allowed.has(mgReadIdentity(child, 'mgKitId')) ||
+            index.get(mgReadIdentity(child, 'mgKitId')) !== child
+        )
+      )
+        throw new Error(`Manual content in ${key}.`);
+      continue;
+    }
+    if (['layout/reference/title', 'layout/reference/body'].includes(key)) {
+      if (node.parent !== index.get('layout/reference'))
+        throw new Error(`Moved reference text ${key}.`);
+      continue;
+    }
+    const refTitle = /^layout\/reference\/group\/([^/]+)\/title$/.exec(key);
+    if (
+      refTitle &&
+      guidance.groups.has(refTitle[1]) &&
+      node.parent === index.get(key.replace(/\/title$/, ''))
+    )
+      continue;
+    const entry =
+      /^layout\/entry\/([^/]+)(?:\/(title|body|label|instance))?$/.exec(key);
+    const meta = entry && families.get(entry[1]);
+    if (!meta || meta.kind !== 'primary' || meta.status === 'outside-core')
+      throw new Error(`Unknown canvas flow ownership ${key}.`);
+    const ownerKey = `layout/entry/${meta.id}`;
+    if (
+      node.parent !==
+      index.get(entry[2] ? ownerKey : `layout/group/${meta.groupId}`)
+    )
+      throw new Error(`Moved compact entry ${key}.`);
+    if (!entry[2]) {
+      const allowed = new Set(
+        ['title', 'body', 'label', 'instance'].map(id => `${ownerKey}/${id}`)
+      );
+      if (
+        node.children.some(
+          child =>
+            !allowed.has(mgReadIdentity(child, 'mgKitId')) ||
+            index.get(mgReadIdentity(child, 'mgKitId')) !== child
+        )
+      )
+        throw new Error(`Manual content in compact entry ${key}.`);
+    } else if (entry[2] === 'instance') {
+      const main = await node.getMainComponentAsync();
+      const exemplar = index
+        .get(`review/${meta.id}`)
+        ?.findAll(child => child.type === 'INSTANCE')[0];
+      const expectedMain = exemplar && (await exemplar.getMainComponentAsync());
+      if (
+        !main ||
+        main.id !== expectedMain?.id ||
+        main.parent !== index.get(`family/${meta.id}`) ||
+        index.get(mgReadIdentity(main, 'mgKitId')) !== main
+      )
+        throw new Error(`Conflicting compact entry main ${key}.`);
     }
   }
   for (const key of ['main', 'review']) {
@@ -659,6 +783,11 @@ async function mgLayoutPreflight(
         ...group.familyIds
           .filter(id => families.get(id).status !== 'outside-core')
           .map(id => `layout/family/${id}/overview`),
+        ...(compactFlow
+          ? group.familyIds
+              .filter(id => families.get(id).status !== 'outside-core')
+              .map(id => `layout/entry/${id}`)
+          : []),
       ]);
       expectedParent = 'layout/components';
     } else if (advancedMatch) {
@@ -706,6 +835,27 @@ async function mgLayoutPreflight(
       )
         throw new Error(`Historical staging container ${key} was moved.`);
   }
+  if (compactFlow)
+    for (const meta of families.values()) {
+      if (meta.kind !== 'primary' || meta.status === 'outside-core') continue;
+      const exemplar = index
+        .get(`review/${meta.id}`)
+        ?.findAll(node => node.type === 'INSTANCE')[0];
+      if (!index.has(`family/${meta.id}`)) continue;
+      if (!exemplar)
+        throw new Error(
+          `Representative ${meta.id} needs its installed usage review.`
+        );
+      const main = await exemplar.getMainComponentAsync();
+      if (
+        !main ||
+        main.parent !== index.get(`family/${meta.id}`) ||
+        index.get(mgReadIdentity(main, 'mgKitId')) !== main
+      )
+        throw new Error(
+          `Representative ${meta.id} needs its exact canonical main.`
+        );
+    }
   return index;
 }
 
@@ -763,7 +913,7 @@ function mgLayoutReviewParent(key, fallback) {
 async function organizeMangroveKit(
   doc,
   brandId,
-  { zoom = true, allowProbes = false } = {}
+  { zoom = true, allowProbes = false, compact = false } = {}
 ) {
   // Complete read-only validation and font preparation precede migration writes.
   if (typeof createMangroveWelcome !== 'function')
@@ -773,7 +923,14 @@ async function organizeMangroveKit(
   const index = await mgLayoutPreflight(doc, {
     allowProbes,
     allowVersion1Migration: true,
+    compact,
   });
+  const compactFlow =
+    compact ||
+    mgReadIdentity(
+      index.get('layout/start') || figma.currentPage,
+      'mgLayoutFlowVersion'
+    ) === '1';
   const guidance = mgLayoutGuidance(doc);
   if (doc.kitGuidance.scope?.brandId !== brandId)
     throw new Error('Layout guidance is bounded to its documented brand.');
@@ -955,8 +1112,10 @@ async function organizeMangroveKit(
     node.characters = content;
     node.textAutoResize = 'HEIGHT';
     node.resize(width, Math.max(1, node.height));
-    node.layoutSizingHorizontal = 'FIXED';
-    if (parent.layoutMode !== 'NONE') node.layoutSizingVertical = 'HUG';
+    if (parent.type === 'FRAME' && parent.layoutMode !== 'NONE') {
+      node.layoutSizingHorizontal = 'FIXED';
+      node.layoutSizingVertical = 'HUG';
+    }
     node.fills = [solid('color/text')];
     return node;
   }
@@ -976,6 +1135,19 @@ async function organizeMangroveKit(
       // Generated FRAME ancestors carry the existing brand mode independently
       // of the section's presentation and manual additions.
       sections.set(id, section);
+    }
+    if (compactFlow) {
+      mgWriteIdentity(sections.get('start'), 'mgLayoutFlowVersion', '1');
+      mgWriteIdentity(sections.get('start'), 'mgLayoutFlowPhase', 'migrating');
+      sections.get('components').fills = [];
+      const reference = ensure(
+        'layout/reference',
+        'SECTION',
+        page,
+        'Component reference catalogue'
+      );
+      reference.fills = [];
+      sections.set('reference', reference);
     }
     // Store a public schema identifier, not workflow evidence or private file data.
     mgWriteIdentity(
@@ -1092,12 +1264,18 @@ async function organizeMangroveKit(
     const componentsIntro = await info(
       'components',
       'Find a component by task',
-      'Browse complete controls and content. Each family pairs its usage and states with source components. Advanced parts belong to their complete component. Bounded draft use applies only to the documented brand, content and sizing contracts.'
+      compactFlow
+        ? 'Choose a task group, then select one component introduction in Layers and use Zoom to selection. Each entry shows its purpose and a representative linked instance. The Component reference catalogue to the right retains full usage states, source components, supported presets, editing limits and advanced parts. Browse component in the plugin opens each view directly. Bounded draft use applies only to the documented brand, content and sizing contracts.'
+        : 'Browse complete controls and content. Each family pairs its usage and states with source components. Advanced parts belong to their complete component. Bounded draft use applies only to the documented brand, content and sizing contracts.'
     );
     const examplesIntro = await info(
       'compositions',
       'Examples and templates',
-      'Accepted page templates are not available yet. Component usage examples live beside their families in Components. The planned catalogue below records source components and examples still to implement or verify. Its entries are documentation, not usable Assets or accepted templates. To read an entry, select its row in Layers or on the canvas, then press Shift+2 to zoom to it.'
+      'Accepted page templates are not available yet. ' +
+        (compactFlow
+          ? 'Representative component entries live in Components; full usage examples live in the Component reference catalogue. '
+          : 'Component usage examples live beside their families in Components. ') +
+        'The planned catalogue below records source components and examples still to implement or verify. Its entries are documentation, not usable Assets or accepted templates. To read an entry, select its row in Layers or on the canvas, then press Shift+2 to zoom to it.'
     );
     let catalogue;
     if (doc.plannedInventory) {
@@ -1192,6 +1370,23 @@ async function organizeMangroveKit(
       staging.push(node);
     }
     const groupBoards = new Map();
+    const referenceBoards = new Map();
+    const entryBoards = new Map();
+    if (compactFlow) {
+      await text(
+        'layout/reference/title',
+        sections.get('reference'),
+        'Component reference catalogue',
+        32
+      );
+      await text(
+        'layout/reference/body',
+        sections.get('reference'),
+        'Full usage and states, canonical source components and advanced parts. Start with the compact entries in 02 Components. Select one family in Layers and use Zoom to selection to read it. These boards belong to the kit maintainer.',
+        16,
+        720
+      );
+    }
     for (const group of guidance.groups.values()) {
       const board = frame(
         `layout/group/${group.id}`,
@@ -1200,6 +1395,20 @@ async function organizeMangroveKit(
       );
       await text(`layout/group/${group.id}/title`, board, group.label, 28);
       groupBoards.set(group.id, board);
+      if (compactFlow) {
+        const reference = frame(
+          `layout/reference/group/${group.id}`,
+          sections.get('reference'),
+          `${group.label} / Full reference`
+        );
+        await text(
+          `layout/reference/group/${group.id}/title`,
+          reference,
+          `${group.label} / Full reference`,
+          28
+        );
+        referenceBoards.set(group.id, reference);
+      }
     }
     const pendingBrowse = frame(
       'layout/pending/browse',
@@ -1286,7 +1495,9 @@ async function organizeMangroveKit(
           meta,
           meta.status === 'outside-core'
             ? pendingBrowse
-            : groupBoards.get(group.id)
+            : compactFlow
+              ? referenceBoards.get(group.id)
+              : groupBoards.get(group.id)
         );
         if (!overview) continue;
         const supports = [...guidance.families.values()].filter(
@@ -1312,6 +1523,84 @@ async function organizeMangroveKit(
           advancedBoards.set(id, advanced);
           for (const support of supports)
             await buildOverview(support, advanced);
+        }
+        if (compactFlow && meta.status !== 'outside-core') {
+          const key = `layout/entry/${id}`;
+          const entry = ensure(
+            key,
+            'FRAME',
+            groupBoards.get(group.id),
+            meta.label
+          );
+          entry.layoutMode = 'NONE';
+          entry.clipsContent = false;
+          entry.fills = [solid('color/neutral-0')];
+          entry.setExplicitVariableModeForCollection(collection, mode.modeId);
+          const heading = await text(
+            `${key}/title`,
+            entry,
+            meta.label,
+            28,
+            720
+          );
+          const body = await text(
+            `${key}/body`,
+            entry,
+            `${meta.status === 'source-scaffold' ? 'Draft component, acceptance pending' : 'Bounded draft use'}\n${meta.purpose}\n${meta.usage}`,
+            16,
+            720
+          );
+          const label = await text(
+            `${key}/label`,
+            entry,
+            `Full reference: Component reference catalogue > ${group.label} / Full reference > ${meta.label}. Use Browse component for all usage states or source components. Supported presets and editing limits are documented there.`,
+            14,
+            720
+          );
+          heading.x = heading.y = 24;
+          body.x = 24;
+          body.y = heading.y + heading.height + 16;
+          const review = index.get(`review/${id}`);
+          const exemplar = review?.findAll(node => node.type === 'INSTANCE')[0];
+          let instance = index.get(`${key}/instance`);
+          if (!instance && exemplar) {
+            // Create from the exact exemplar's main without inserting into its
+            // review auto-layout; copy exposed overrides, never resize/detach.
+            const main = await exemplar.getMainComponentAsync();
+            instance = main.createInstance();
+            instance.setProperties(
+              Object.fromEntries(
+                Object.entries(exemplar.componentProperties).map(
+                  ([name, prop]) => [name, prop.value]
+                )
+              )
+            );
+            mark(instance, `${key}/instance`, true);
+            for (const child of instance.findAll(() => true))
+              created.add(child.id);
+            entry.appendChild(instance);
+          } else if (instance) {
+            updated.add(instance.id);
+          }
+          let bottom = body.y + body.height + 24;
+          let width = 900;
+          if (instance) {
+            // Match the existing demonstrated preset at the instance root.
+            // createInstance inherits the main's width, which can differ from
+            // the bounded review specimen (for example the 720px Table).
+            instance.resize(exemplar.width, exemplar.height);
+            const footprint = mgLayoutFootprint(instance);
+            instance.name = `${meta.label} / Representative instance`;
+            instance.x = 24 - footprint.left;
+            instance.y = bottom - footprint.top;
+            bottom += footprint.height + 24;
+            width = Math.max(width, footprint.width + 48);
+          }
+          label.x = 24;
+          label.y = bottom;
+          entry.resizeWithoutConstraints(width, bottom + label.height + 24);
+          mgLayoutLayerOrder(entry, [heading, body, instance, label]);
+          entryBoards.set(id, entry);
         }
       }
     const diagnostics = index.get('diagnostics.focus-ring');
@@ -1440,14 +1729,31 @@ async function organizeMangroveKit(
     for (const group of guidance.groups.values()) {
       const board = groupBoards.get(group.id);
       const items = group.familyIds
-        .map(id => familyBoards.get(id)?.overview)
+        .map(id =>
+          compactFlow ? entryBoards.get(id) : familyBoards.get(id)?.overview
+        )
         .filter(node => node?.parent === board);
       mgLayoutBrowseFlow(
         board,
         [index.get(`layout/group/${group.id}/title`)],
         items,
-        group.id === 'forms-selection' ? 2 : 1
+        group.id === 'forms-selection' ||
+          (compactFlow && group.id !== 'actions')
+          ? 2
+          : 1
       );
+      if (compactFlow) {
+        const reference = referenceBoards.get(group.id);
+        const items = group.familyIds
+          .map(id => familyBoards.get(id)?.overview)
+          .filter(node => node?.parent === reference);
+        mgLayoutBrowseFlow(
+          reference,
+          [index.get(`layout/reference/group/${group.id}/title`)],
+          items,
+          group.id === 'forms-selection' ? 2 : 1
+        );
+      }
     }
     const pendingItems = [...guidance.families.values()]
       .filter(meta => meta.kind === 'primary' && meta.status === 'outside-core')
@@ -1466,10 +1772,32 @@ async function organizeMangroveKit(
     let rowY = componentsIntro.y + componentsIntro.height + 48;
     for (let i = 0; i < groups.length; i += 2) {
       for (let j = 0; j < 2 && groups[i + j]; j++) {
-        groups[i + j].x = j ? 32 + leftWidth + 80 : 32;
+        groups[i + j].x = j
+          ? 32 + (compactFlow ? rightExtent(groups[i]) : leftWidth) + 80
+          : 32;
         groups[i + j].y = rowY;
       }
       rowY += Math.max(...groups.slice(i, i + 2).map(node => node.height)) + 80;
+    }
+    if (compactFlow) {
+      const reference = sections.get('reference');
+      const title = index.get('layout/reference/title');
+      const body = index.get('layout/reference/body');
+      title.x = title.y = 32;
+      body.x = 32;
+      body.y = title.y + title.height + 16;
+      const groups = [...referenceBoards.values()];
+      let y = body.y + body.height + 48;
+      for (let i = 0; i < groups.length; i += 2) {
+        groups[i].x = 32;
+        groups[i].y = y;
+        if (groups[i + 1]) {
+          groups[i + 1].x = 32 + rightExtent(groups[i]) + 80;
+          groups[i + 1].y = y;
+        }
+        y += Math.max(...groups.slice(i, i + 2).map(bottomExtent)) + 80;
+      }
+      mgLayoutLayerOrder(reference, [title, body, ...groups]);
     }
     pendingBrowse.x = 32;
     pendingBrowse.y = maintenanceIntro.y + maintenanceIntro.height + 48;
@@ -1491,9 +1819,11 @@ async function organizeMangroveKit(
     // Reading order: introduction/foundations, components, examples/workspace,
     // maintenance last. Manual section children keep their exact local positions.
     const rows = [
-      ['start', 'foundations'],
+      compactFlow
+        ? ['start', 'foundations', 'patterns']
+        : ['start', 'foundations'],
       ['components'],
-      ['compositions', 'patterns'],
+      compactFlow ? ['compositions'] : ['compositions', 'patterns'],
       ['pending'],
     ];
     let y = 160;
@@ -1507,6 +1837,11 @@ async function organizeMangroveKit(
       }
       y += Math.max(...row.map(id => sections.get(id).height)) + 160;
     }
+    if (compactFlow) {
+      sections.get('reference').x =
+        sections.get('components').x + sections.get('components').width + 240;
+      sections.get('reference').y = sections.get('components').y;
+    }
     mgLayoutLayerOrder(sections.get('components'), [
       componentsIntro,
       ...groups,
@@ -1517,15 +1852,18 @@ async function organizeMangroveKit(
       ...staging,
       diagnostics,
     ]);
-    mgLayoutLayerOrder(
-      page,
-      MG_LAYOUT_DESTINATIONS.map(([id]) => sections.get(id))
-    );
+    mgLayoutLayerOrder(page, [
+      ...MG_LAYOUT_DESTINATIONS.map(([id]) => sections.get(id)),
+      ...(compactFlow ? [sections.get('reference')] : []),
+    ]);
     mgWriteIdentity(sections.get('start'), 'mgLayoutPhase', 'complete');
+    if (compactFlow)
+      mgWriteIdentity(sections.get('start'), 'mgLayoutFlowPhase', 'complete');
     if (zoom) figma.viewport.scrollAndZoomIntoView([sections.get('start')]);
     return {
       operation: 'kit-layout',
       version: MG_LAYOUT_VERSION,
+      flowVersion: compactFlow ? '1' : null,
       migrated,
       previousVersion: previousVersion || null,
       phase: 'complete',

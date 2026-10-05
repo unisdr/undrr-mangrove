@@ -560,7 +560,9 @@ async function createMangroveWelcome(
           'use',
           'Understand a component',
           start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
-            ? 'Open 02 Components and choose a task group. Read the guidance and compare Usage and states beside Source components and advanced parts. Follow the documented presets and editing limits.'
+            ? mgReadIdentity(start, 'mgLayoutFlowVersion') === '1'
+              ? 'Open 02 Components and choose a task group. Start with its introduction and representative instance. Browse component opens the full usage states or source components in the reference catalogue. Follow the documented presets and editing limits.'
+              : 'Open 02 Components and choose a task group. Read the guidance and compare Usage and states beside Source components and advanced parts. Follow the documented presets and editing limits.'
             : cards[1][2],
         ],
         [

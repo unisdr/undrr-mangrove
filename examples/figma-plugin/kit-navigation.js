@@ -122,13 +122,20 @@ async function navigateMangroveInstalled(destination) {
   const state = await inspectMangroveNavigation();
   const index = await mgLayoutIndex();
   let key;
-  if (destination.startsWith('example:') || destination.startsWith('source:')) {
+  if (
+    destination.startsWith('example:') ||
+    destination.startsWith('source:') ||
+    destination.startsWith('reference:')
+  ) {
     const [view, id] = destination.split(':');
     if (!state.families.some(item => item.id === id))
       throw new Error(
         'This component is not an installed core browsing destination.'
       );
-    key = `${view === 'example' ? 'review' : 'family'}/${id}`;
+    key =
+      view === 'example' && index.has(`layout/entry/${id}`)
+        ? `layout/entry/${id}`
+        : `${view === 'source' ? 'family' : 'review'}/${id}`;
   } else {
     if (!state.destinations.some(item => item.id === destination))
       throw new Error(
@@ -148,7 +155,9 @@ async function navigateMangroveInstalled(destination) {
       'No installed example exists for this component. Choose Source components.'
     );
   const usageEntry =
-    destination.startsWith('example:') &&
+    (destination.startsWith('reference:') ||
+      (destination.startsWith('example:') &&
+        !key.startsWith('layout/entry/'))) &&
     mgNavigateUsageEntry(node, destination.split(':')[1], index);
   if (!usageEntry) figma.viewport.scrollAndZoomIntoView([node]);
   figma.currentPage.selection = [node];

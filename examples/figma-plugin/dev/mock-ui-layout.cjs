@@ -440,7 +440,7 @@ async function main() {
   assert.strictEqual(get('navigate-kit').disabled, true);
   ui.send('operation', layoutReceipt);
   assert(
-    get('status').textContent.includes('6 destinations; 0 created, 1 updated')
+    get('status').textContent.includes('6 sections; 0 created, 1 updated')
   );
   assert.deepStrictEqual(ui.selectedFamilies(), ['button']);
   await savedOperation(ui, layoutReceipt);

@@ -30,7 +30,7 @@ Current output contains 520 variables, 102 text definitions (60 Regular foundati
 - **3. Diagnostics:** inspect the file, export previews, or run temporary native checks. Native behaviour, edited-instance checks and Editorial CTA have separate navigation.
 - Brand, loaded-variable count, navigation and recent results stay visible. Save the complete results and inspection rather than relying on the bounded on-screen summary. Temporary checks have a separate saved record for restart recovery.
 
-**Kit destination > Go** lists and opens only installed destinations, using their actual names in the legacy file or the v2 sections. **Browse component** lists installed whole widgets by task; choose **Usage and states** or **Source components**, then **Open component**. Navigation and **Refresh navigation** are read-only and do not load fonts or change component selection. **Organize file** is the separate explicit migration to six v2 sections. See [the organisation workflow](#organize-and-navigate-the-file) before migrating.
+**Kit destination > Go** lists and opens only installed destinations, using their actual names in the legacy file or the v2 sections. **Browse component** lists installed whole widgets by task; choose **Component introduction**, **Full usage and states** or **Source components**, then **Open component**. Navigation and **Refresh navigation** are read-only and do not load fonts or change component selection. **Organize file** is the separate explicit migration to six v2 sections. See [the organisation workflow](#organize-and-navigate-the-file) before migrating.
 
 The panel uses Mangrove-inspired UNDRR blue, clear typography and a two-band keyboard focus indicator, while respecting Figma's theme colours. Panel styling does not import fonts or change component recipes. [Core status](CORE-KIT-STATUS.md) states what is accepted and what remains.
 
@@ -415,6 +415,7 @@ node examples/figma-plugin/dev/mock-ui.cjs
 node examples/figma-plugin/dev/mock-kit-welcome.cjs
 node examples/figma-plugin/dev/mock-kit-navigation.cjs
 node examples/figma-plugin/dev/mock-kit-layout.cjs
+node examples/figma-plugin/dev/mock-kit-canvas-flow.cjs
 node examples/figma-plugin/dev/mock-ui-layout.cjs
 ```
 
@@ -525,3 +526,11 @@ The [native UX dogfood](UX-DOGFOOD.md) records observed designer tasks, applied 
 When the exact local Card Vertical 300px and Primary Hero Background Page 1280px mains are installed, **Open Start here** composes the introduction from linked instances. Hero uses the sample photograph and source typography; its actions/detail are hidden. Four image-free Cards explain first design, component use, availability and ownership. The real contents remains plain text matching Layers, without simulated navigation controls.
 
 The generated composition reuses existing Welcome/frame/text IDs and keeps personal notes outside its content boundary. Earlier text is retained hidden while linked instances supply the presentation. Updates reconcile these five owned instances in place; they do not detach or implicitly build source components. Token-only files retain the simpler Welcome. An already linked Welcome refuses if its required mains, properties, styles or fonts disappear. See [architecture and evidence](KIT-ARCHITECTURE.md) for the native checkpoint.
+
+### Compact canvas flow
+
+The current **Organize file** action explicitly migrates the v2 presentation to compact canvas flow1. Welcome, Foundations and Your workspace share the opening band. Components contains task groups with a short entry and one representative linked instance per installed primary family. Its enclosing section has no white fill, and each task-group row uses its own measured width. Examples and templates follows this compact browsing area.
+
+The auxiliary **Component reference catalogue** sits to the right of Components. It retains each existing full family board, usage states, source set and nested advanced parts. It is a reference area, not a seventh step in the public six-destination sequence. **Browse component** opens the introduction, full usage states or canonical source set directly. In older files without compact flow, Introduction opens the existing usage view. No extra main components are built and no existing variants are resized or detached for presentation.
+
+Ordinary builds retain legacy flow until explicit organisation, then reconcile installed flow1. Save results after migration, including any partial failure, and retry **Organize file** with the complete document. See [maintenance](MAINTAINING-KIT.md) for ownership and recovery.

@@ -716,7 +716,8 @@
           <option value="">Inspecting components…</option>
         </select>
         <select id="browse-view" aria-label="Component view">
-          <option value="example">Usage and states</option>
+          <option value="example">Component introduction</option>
+          <option value="reference">Full usage and states</option>
           <option value="source">Source components</option>
         </select>
         <button id="browse-component" disabled="">Open component</button>
@@ -2075,7 +2076,7 @@
                 ? `Start here ${hasErrors ? 'needs review' : 'ready'}. ${result.createdNodeIds?.length || 0} created, ${result.updatedNodeIds?.length || 0} updated. Save results for the complete record.` +
                     (hasErrors ? '\n' + result.errors.join('\n') : '')
                 : completedOperation === 'organize-kit'
-                  ? `File organization ${hasErrors ? 'needs review' : 'finished'}. ${result.sections?.length || 0} destinations; ${result.createdNodeIds?.length || 0} created, ${result.updatedNodeIds?.length || 0} updated. Save results for the complete migration record.`
+                  ? `File organization ${hasErrors ? 'needs review' : 'finished'}. ${result.sections?.length || 0} sections; ${result.createdNodeIds?.length || 0} created, ${result.updatedNodeIds?.length || 0} updated. Save results for the complete migration record.`
                   : `Viewing ${result.destination || 'installed destination'}.`
             );
             return;

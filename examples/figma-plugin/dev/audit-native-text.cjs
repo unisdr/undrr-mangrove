@@ -203,10 +203,81 @@ function auditNativeText(inspection, doc, { familyIds } = {}) {
         ? 'layout/pending'
         : 'layout/components';
     const sections = mainNodes.get(expectedSection) || [];
-    return (
+    if (
       sections.length === 1 &&
       sections[0].type === 'SECTION' &&
       verifiedAncestors.has(sections[0].id)
+    )
+      return true;
+    // Compact browsing keeps canonical boards intact in an exact, separate
+    // reference catalogue. Only the declared primary group and its nested
+    // support ancestry can establish this alternative presentation parent.
+    const guidance = doc.kitGuidance;
+    if (
+      guidance?.version !== 1 ||
+      !Array.isArray(guidance.families) ||
+      !Array.isArray(guidance.groups)
+    )
+      return false;
+    const ownedFrame = key => {
+      const matches = mainNodes.get(key) || [];
+      return matches.length === 1 && matches[0].type === 'FRAME'
+        ? matches[0]
+        : null;
+    };
+    const declaredFamily = id => {
+      const matches = guidance.families.filter(item => item.id === id);
+      return matches.length === 1 && source.has(id) ? matches[0] : null;
+    };
+    let meta = declaredFamily(familyId),
+      overview = overviews[0];
+    const visited = new Set();
+    while (meta?.kind === 'support') {
+      if (visited.has(meta.id) || meta.status === 'outside-core') return false;
+      visited.add(meta.id);
+      const owner = declaredFamily(meta.parentFamilyId);
+      const ownerOverview =
+        owner && ownedFrame(`layout/family/${owner.id}/overview`);
+      const advanced =
+        owner && ownedFrame(`layout/family/${owner.id}/advanced`);
+      if (
+        !ownerOverview ||
+        !advanced ||
+        meta.groupId !== owner.groupId ||
+        meta.status !== owner.status ||
+        overview.parentId !== advanced.id ||
+        advanced.parentId !== ownerOverview.id ||
+        !verifiedAncestors.has(advanced.id) ||
+        !verifiedAncestors.has(ownerOverview.id)
+      )
+        return false;
+      meta = owner;
+      overview = ownerOverview;
+    }
+    // Source scaffolds share the same owned presentation anatomy. Their
+    // placement proves ancestry only, never core or rendered acceptance.
+    if (
+      !meta ||
+      meta.kind !== 'primary' ||
+      !['bounded-draft', 'source-scaffold'].includes(meta.status)
+    )
+      return false;
+    const groups = guidance.groups.filter(group => group.id === meta.groupId);
+    const group = ownedFrame(`layout/reference/group/${meta.groupId}`);
+    const reference = mainNodes.get('layout/reference') || [];
+    return (
+      groups.length === 1 &&
+      Array.isArray(groups[0].familyIds) &&
+      groups[0].familyIds.filter(id => id === meta.id).length === 1 &&
+      Boolean(group) &&
+      reference.length === 1 &&
+      reference[0].type === 'SECTION' &&
+      typeof inspection.currentPage?.id === 'string' &&
+      reference[0].parentId === inspection.currentPage.id &&
+      overview.parentId === group.id &&
+      group.parentId === reference[0].id &&
+      verifiedAncestors.has(group.id) &&
+      verifiedAncestors.has(reference[0].id)
     );
   };
   const directSourceFace = (node, sourceStyle, familyId, key, check) => {
