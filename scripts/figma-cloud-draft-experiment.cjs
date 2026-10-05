@@ -68,12 +68,35 @@ function buildCloudDraftDocument({ fileKey, familyIds } = {}) {
   // attach canonical guidance to a different experimental component cohort.
   const packet = buildDraftPacket();
   assert.strictEqual(packet.kind, 'mangrove-component-source-drafts');
-  const families = familyIds.map(id => {
+  const selected = familyIds.map(id => {
     const matches = packet.draftFamilies.filter(family => family.id === id);
     if (matches.length !== 1) throw new Error(`Unknown draft family ${id}`);
     return matches[0];
   });
-  validateDrafts(families, packet.foundationCatalogue);
+  const available = new Map(
+    [...packet.draftFamilies, ...packet.draftDependencies].map(f => [f.id, f])
+  );
+  const closure = new Map();
+  function include(family) {
+    if (closure.has(family.id)) return;
+    closure.set(family.id, family);
+    function walk(node) {
+      if (node.type === 'INSTANCE') {
+        const dependency = available.get(node.family);
+        assert(dependency, `Missing experiment dependency ${node.family}`);
+        include(dependency);
+      }
+      (node.children || []).forEach(walk);
+    }
+    family.variants.forEach(v => walk(v.tree));
+  }
+  selected.forEach(include);
+  const families = [...closure.values()];
+  validateDrafts(
+    selected,
+    packet.foundationCatalogue,
+    families.filter(f => !familyIds.includes(f.id))
+  );
   const foundation = packet.foundationCatalogue;
   const doc = copy({
     collection: COLLECTION,

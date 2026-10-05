@@ -66,11 +66,17 @@ async function main() {
       ['accordion', 4],
       ['pager', 3],
       ['user-feedback', 2],
+      ['section-header', 2],
+      ['image-caption', 3],
+      ['embed-container', 4],
+      ['book-card', 2],
+      ['horizontal-book-card', 8],
+      ['icon-card', 9],
     ]
   );
   assert.strictEqual(
     packet.draftFamilies.reduce((n, f) => n + f.variants.length, 0),
-    28
+    56
   );
   for (const field of [
     'collection',
@@ -91,11 +97,49 @@ async function main() {
         entry
       );
   const foundation = packet.foundationCatalogue;
-  validateDrafts(packet.draftFamilies, foundation);
+  const validate = (families, assets = foundation) =>
+    validateDrafts(families, assets, packet.draftDependencies);
+  validate(packet.draftFamilies);
+  assert.deepStrictEqual(
+    packet.draftDependencies.map(f => f.id),
+    ['editorial-cta']
+  );
+  assert.deepStrictEqual(
+    packet.draftDependencies[0],
+    original.components.families.find(f => f.id === 'editorial-cta')
+  );
+  assert.throws(
+    () => validateDrafts(packet.draftFamilies, foundation),
+    /Missing component dependency/
+  );
+  const missingRichPaint = copy(packet.draftFamilies);
+  function findRich(node) {
+    if (node.textRuns) return node;
+    return (node.children || []).map(findRich).find(Boolean);
+  }
+  const rich = missingRichPaint
+    .find(f => f.id === 'horizontal-book-card')
+    .variants.map(v => findRich(v.tree))
+    .find(Boolean);
+  assert(rich, 'Rich card fixture missing');
+  rich.textRuns[0].fill = 'color/missing-rich-paint';
+  assert.throws(() => validate(missingRichPaint), /Missing\/wrong rich paint/);
+  const missingVariant = copy(packet.draftFamilies);
+  function breakInstance(node) {
+    if (node.type === 'INSTANCE') node.variant.Context = 'UnknownDraftTest';
+    (node.children || []).forEach(breakInstance);
+  }
+  missingVariant
+    .find(f => f.id === 'horizontal-book-card')
+    .variants.forEach(v => breakInstance(v.tree));
+  assert.throws(
+    () => validate(missingVariant),
+    /Ambiguous\/missing dependency variant/
+  );
   const missing = copy(packet.draftFamilies);
   missing[0].variants[0].tree.fill = 'color/nonexistent-draft-test';
   assert.throws(
-    () => validateDrafts(missing, foundation),
+    () => validate(missing),
     /Missing variable color\/nonexistent-draft-test/
   );
   const cycle = copy(foundation);
@@ -105,33 +149,27 @@ async function main() {
   assert.strictEqual(icon.type, 'SVG');
   icon.svg.monochrome = { strokes: 'color/missing-svg-role' };
   assert.throws(
-    () => validateDrafts(badSvg, foundation),
+    () => validate(badSvg),
     /Missing variable color\/missing-svg-role/
   );
   const duplicateStyleName = copy(foundation);
   duplicateStyleName.styles.text[1].name =
     duplicateStyleName.styles.text[0].name;
   assert.throws(
-    () => validateDrafts(packet.draftFamilies, duplicateStyleName),
+    () => validate(packet.draftFamilies, duplicateStyleName),
     /Duplicate name/
   );
   const a = cycle.variables.find(v => v.name === 'color/tag');
   const b = cycle.variables.find(v => v.name === 'color/interactive');
   a.values.undrr = { alias: b.name };
   b.values.undrr = { alias: a.name };
-  assert.throws(
-    () => validateDrafts(packet.draftFamilies, cycle),
-    /Alias cycle/
-  );
+  assert.throws(() => validate(packet.draftFamilies, cycle), /Alias cycle/);
   const duplicate = copy(packet.draftFamilies);
   const tree = duplicate[0].variants[0].tree;
   tree.children[0].id = tree.id;
-  assert.throws(
-    () => validateDrafts(duplicate, foundation),
-    /Missing\/duplicate anatomy ID/
-  );
+  assert.throws(() => validate(duplicate), /Missing\/duplicate anatomy ID/);
   console.log(
-    'ok  isolated deterministic nine-family/28-variant packet retains full DTO and rejects missing roles, alias cycles and duplicate anatomy'
+    'ok  isolated deterministic 15-family/56-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
   );
 
   // Use the actual importer entry, not a duplicated preflight. The packet must
@@ -160,7 +198,22 @@ async function main() {
   const doc = copy(original);
   doc.variables = copy(foundation.variables);
   doc.styles = copy(foundation.styles);
-  doc.components.families = copy(packet.draftFamilies);
+  const originalDraftIds = [
+    'range',
+    'tag',
+    'notice',
+    'breadcrumbs',
+    'skip-link',
+    'highlight-box',
+    'accordion',
+    'pager',
+    'user-feedback',
+  ];
+  // This original nine-family lifecycle fixture retains its exact SVG model.
+  // Editorial and rich Card cohorts have independent actual-builder harnesses.
+  doc.components.families = copy(
+    packet.draftFamilies.filter(f => originalDraftIds.includes(f.id))
+  );
   const env = environment(doc, { sharedOnly: true });
   const expectedSvg = packet.draftFamilies
     .find(f => f.id === 'notice')
@@ -200,7 +253,7 @@ async function main() {
   );
   require('./mock-pager.cjs').installPagerSvgFixture(env, packet.draftFamilies);
   await importFoundation(env, doc);
-  const selected = packet.draftFamilies.map(f => f.id);
+  const selected = originalDraftIds;
   const first = await env.call(
     'buildMangroveComponents',
     doc,

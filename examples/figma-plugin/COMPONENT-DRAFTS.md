@@ -1,5 +1,27 @@
 # Source-only component drafts
 
+The current holistic packet contains **15 families / 56 bounded variants**.
+The original nine-family batches below are joined by SectionHeader (2),
+Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
+HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
+is cloned as a separate dependency (23 variants), not counted as a new draft.
+The packet remains deliberately non-importable and the normal exporter remains
+32 families/383 variants. See [the holistic scope](holistic/README.md) and
+[authored card contracts](holistic/card-content.md).
+
+Editorial source observations cover 90 Chromium cases and Card observations
+cover 95. Their dedicated actual-builder mocks exercise all five brands,
+supported edited copy and two zero-create repeats. These are bounded source/mock
+contracts; native visual parity, publication and library consumer uptake remain
+open. EmbedContainer represents its source ratio wrapper only, without an
+invented media player. Card rich bodies rely on the separately guarded
+[rich-text capability](holistic/RICH-TEXT-CAPABILITY.md).
+
+The unpublished UNDRR Tag cloud cohort now has its own
+[construction and repeat evidence](holistic/CLOUD-DRAFT-EXPERIMENT.md).
+It does not establish native acceptance for the other draft families or ordinary
+desktop plugin rebuilds.
+
 On 5 October 2026, a bounded Range, Tag and Notice batch was requested while
 desktop interaction was unavailable. These recipes and mock tests prepare later
 construction work. They do not add components to the published library, normal

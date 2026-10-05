@@ -35,8 +35,11 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: nine families and 28 variants, deliberately
-  non-importable. See [draft scope](../COMPONENT-DRAFTS.md) and
+- Separate source draft packet: 15 families and 56 bounded variants, deliberately
+  non-importable. The original nine families/28 variants are joined by
+  SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
+  A cloned existing Editorial CTA family is an explicit dependency, not a new
+  draft or publication claim. See [draft scope](../COMPONENT-DRAFTS.md) and
   [browser observations](../SOURCE-BROWSER-STATUS.md).
 - Desktop launch and screenshots work. The restored-window interaction probe
   fails `window_not_focused`, reporting no focused window. Both relevant

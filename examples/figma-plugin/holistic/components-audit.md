@@ -2,7 +2,9 @@
 
 Current source renderers, CSS patterns, curated AI metadata and package exports were reconciled with the normal recipes and isolated drafts. This audit does not use story totals as missing-component totals.
 
-The normal exporter contains **32 families / 383 variants**. Its documented published subset remains **25 families / 297 variants**. The isolated packet adds **9 source-only families / 28 variants**. Supporting Table cells/rows, ComboBox options and size splits are families within owning source units, not extra complete public widgets. Published status is documented pilot evidence; no fresh Figma publication verification was performed for this audit.
+The normal exporter contains **32 families / 383 variants**. Its documented published subset remains **25 families / 297 variants**. The isolated packet now adds **15 source-only families / 56 bounded variants**. Supporting Table cells/rows, ComboBox options and size splits are families within owning source units, not extra complete public widgets. Published status is documented pilot evidence; no fresh Figma publication verification was performed for this audit.
+
+SectionHeader, Imagecaption and EmbedContainer add three families/nine variants; BookCard, HorizontalBookCard and IconCard add three families/19 variants. They are wired into the non-importable draft packet with exact existing Editorial CTA as a cloned dependency (23 variants, counted separately). The normal exporter is unchanged. Bounded source Chromium observations and all-brand actual-builder mock checks exist; native and publication acceptance remain open. The original source audit revision remains recorded in JSON, with the explicit packet follow-up distinguished from a fresh native audit.
 
 Every mapped unit remains partial. A recipe or a passing mock does not establish native/source visual parity, publication or linked consumer uptake. The JSON contains source paths, package exports, authored story names and prop enums, recipe contracts, dependency evidence, missing scope and builder limits for each row.
 

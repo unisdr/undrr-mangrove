@@ -29,9 +29,27 @@ const recipes = [
     './figma-user-feedback-recipes.cjs',
     'buildUserFeedbackRecipes',
   ],
+  [
+    ['section-header', 'image-caption', 'embed-container'],
+    './figma-editorial-recipes.cjs',
+    'buildEditorialRecipes',
+  ],
+  [
+    ['book-card', 'horizontal-book-card', 'icon-card'],
+    './figma-card-content-recipes.cjs',
+    'buildCardContentRecipes',
+  ],
 ];
 
-function validateDrafts(families, assets) {
+function validateDrafts(families, assets, dependencies = []) {
+  const available = new Map(
+    [...families, ...dependencies].map(family => [family.id, family])
+  );
+  assert.strictEqual(
+    available.size,
+    families.length + dependencies.length,
+    'Duplicate family dependency identity'
+  );
   for (const [list, key] of [
     [families, 'id'],
     [assets.variables, 'id'],
@@ -102,13 +120,14 @@ function validateDrafts(families, assets) {
         );
         ids.add(node.id);
         assert(
-          ['FRAME', 'TEXT', 'ELLIPSE', 'SVG'].includes(node.type),
+          ['FRAME', 'TEXT', 'ELLIPSE', 'SVG', 'INSTANCE'].includes(node.type),
           `Unsupported draft node ${node.type}`
         );
         for (const value of [
           node.fill,
           node.stroke,
           ...Object.values(node.svg?.monochrome || {}),
+          ...Object.values(node.svg?.sizing || {}),
           ...Object.values(node.bindings || {}),
           ...Object.values(node.appearance || {}),
           ...Object.values(node.layout || {}),
@@ -125,6 +144,35 @@ function validateDrafts(families, assets) {
             styleIds.effect.has(node.effectStyle),
             `Missing effect style ${node.effectStyle}`
           );
+        if (node.textRuns !== undefined) {
+          assert(node.type === 'TEXT' && Array.isArray(node.textRuns));
+          for (const run of node.textRuns) {
+            assert(
+              styleIds.text.has(run.textStyle),
+              `Missing rich text style ${run.textStyle}`
+            );
+            assert.strictEqual(
+              variables.get(run.fill)?.type,
+              'COLOR',
+              `Missing/wrong rich paint ${run.fill}`
+            );
+            role(run.fill);
+          }
+        }
+        if (node.type === 'INSTANCE') {
+          const target = available.get(node.family);
+          assert(target, `Missing component dependency ${node.family}`);
+          const matches = target.variants.filter(v =>
+            Object.entries(node.variant || {}).every(
+              ([name, value]) => v.properties[name] === value
+            )
+          );
+          assert.strictEqual(
+            matches.length,
+            1,
+            `Ambiguous/missing dependency variant ${node.family}`
+          );
+        }
         for (const child of node.children || []) visit(child);
       }
       visit(variant.tree);
@@ -141,10 +189,40 @@ function buildDraftPacket() {
   });
   const families = recipes.flatMap(([id, modulePath, method]) => {
     const result = require(modulePath)[method]({ root: ROOT, ...assets });
-    assert.strictEqual(result.length, 1);
-    assert.strictEqual(result[0].id, id);
+    assert(Array.isArray(result), 'Recipe factory must be synchronous');
+    assert.deepStrictEqual(
+      result.map(f => f.id),
+      Array.isArray(id) ? id : [id]
+    );
     return result;
   });
+  // Existing exact source families are explicit dependencies, not new drafts or
+  // proof of publication. Clone only the transitive closure actually referenced.
+  const candidates = new Map(families.map(f => [f.id, f]));
+  const sourceFamilies = new Map(base.components.families.map(f => [f.id, f]));
+  const dependencies = new Map();
+  const seen = new Set();
+  const visiting = new Set();
+  function include(family) {
+    assert(!visiting.has(family.id), `Dependency cycle ${family.id}`);
+    if (seen.has(family.id)) return;
+    visiting.add(family.id);
+    function walk(node) {
+      if (node.type === 'INSTANCE') {
+        const target =
+          candidates.get(node.family) || sourceFamilies.get(node.family);
+        assert(target, `Missing component dependency ${node.family}`);
+        if (!candidates.has(target.id))
+          dependencies.set(target.id, copy(target));
+        include(target);
+      }
+      (node.children || []).forEach(walk);
+    }
+    family.variants.forEach(v => walk(v.tree));
+    visiting.delete(family.id);
+    seen.add(family.id);
+  }
+  families.forEach(include);
   // Experimental helpers may append; existing foundation records must stay exact.
   assert.deepStrictEqual(assets.modes, base.modes);
   for (const [existing, expanded] of [
@@ -157,7 +235,7 @@ function buildDraftPacket() {
         expanded.find(v => v.id === entry.id),
         entry
       );
-  validateDrafts(families, assets);
+  validateDrafts(families, assets, [...dependencies.values()]);
   const baseAssets = { variables: base.variables, styles: base.styles };
   return {
     kind: 'mangrove-component-source-drafts',
@@ -178,6 +256,7 @@ function buildDraftPacket() {
           'tokens',
           'scripts',
           'stories',
+          'examples/figma-plugin',
         ],
         { cwd: ROOT }
       ).toString(),
@@ -195,7 +274,8 @@ function buildDraftPacket() {
       ),
     },
     foundationCatalogue: { collectionName: base.collection, ...assets },
-    draftFamilies: families,
+    draftFamilies: copy(families),
+    draftDependencies: copy([...dependencies.values()]),
     limitations: [
       'This packet deliberately omits top-level collection, modes, variables, styles and components fields required by the importer. Do not adapt it into canonical import input without a reviewed native plan.',
       'No changes to the normal exporter, maintenance catalogue, core selection, existing Figma files or publication are made.',

@@ -18,7 +18,7 @@
     },
     {
       "file": "scripts/build-figma-component-drafts.cjs",
-      "sha256": "c67f301059d0d43b5c62f7b755f9e78b640dd5de88052a57b42262b3884b6727"
+      "sha256": "78f5572176fd61148ef3b72e92dc59e4fb94c6de48289d3fe3735789412edef7"
     }
   ],
   "sourceOfTruth": [
@@ -35,16 +35,16 @@
     "deprecatedRecords": 1,
     "normalRecipeFamilies": 32,
     "normalRecipeVariants": 383,
-    "sourceOnlyDraftFamilies": 9,
-    "sourceOnlyDraftVariants": 28,
+    "sourceOnlyDraftFamilies": 15,
+    "sourceOnlyDraftVariants": 56,
     "documentedPublishedFamilies": 25,
     "documentedPublishedVariants": 297,
     "byCoverageLevel": {
-      "absent": 43,
+      "partial": 38,
+      "absent": 37,
       "deprecated-unmapped": 1,
-      "internal-part-unmapped": 7,
-      "partial": 32,
-      "style-foundation-only": 15
+      "style-foundation-only": 15,
+      "internal-part-unmapped": 7
     }
   },
   "familyReconciliation": {
@@ -83,15 +83,21 @@
       "toc-link"
     ],
     "sourceOnlyFamilyIDs": [
-      "accordion",
-      "breadcrumbs",
-      "highlight-box",
-      "notice",
-      "pager",
       "range",
-      "skip-link",
       "tag",
-      "user-feedback"
+      "notice",
+      "breadcrumbs",
+      "skip-link",
+      "highlight-box",
+      "accordion",
+      "pager",
+      "user-feedback",
+      "section-header",
+      "image-caption",
+      "embed-container",
+      "book-card",
+      "horizontal-book-card",
+      "icon-card"
     ],
     "documentedPublishedFamilyIDs": [
       "button",
@@ -121,7 +127,8 @@
       "toc-link"
     ],
     "unassignedFamilyIDs": [],
-    "claim": "32 normal plus 9 draft families are mapped to owning source units; 25 normal families have documented bounded publication. Family counts are not component-completeness percentages."
+    "claim": "32 normal plus 9 draft families are mapped to owning source units; 25 normal families have documented bounded publication. Family counts are not component-completeness percentages.",
+    "sourceOnlyDependencyFamilyIDs": ["editorial-cta"]
   },
   "publicationEvidence": [
     "examples/figma-plugin/CORE-KIT-STATUS.md",
@@ -1558,7 +1565,7 @@
         }
       ],
       "curatedManifestKey": "components-forms-checkbox",
-      "curatedManifestDescription": "Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role=\"switch\"), including a pending state set with aria-busy=\"true\" on the input or .mg-switch--pending on the label. The switch has an error state, set the same way as on any other control: aria-invalid=\"true\" on the input (preferred, and the only form assistive technology sees), or mg-switch__input--error on the input, or mg-switch--error on the label, each giving the track a red boundary; put the message in a sibling p.mg-form-error with role=\"alert\" OUTSIDE the label (inside it would join the switch's accessible name) and join the two with aria-describedby, exactly as with a text input, so FormErrorSummary can link to the switch by id. The error state does not move the thumb: use it for \"the thing this switch controls failed\", and the pending helper when the save itself failed and the switch must revert. The switch is sized and coloured with the --mg-switch-* custom properties in this entry, set on the switch or any ancestor, and never by overriding the thumb transform, which also breaks RTL. The thumb travel, its RTL counterpart and the pending ring all derive from the size properties, so setting those is enough in both directions. .mg-switch--small sets --mg-switch-size: 1.125rem and a tighter row gap, and re-declares no length inside the switch; prefer it to a size of your own for a toolbar, table row or panel header. Do not paint a switch state with box-shadow or outline on the track: the focus ring owns both, and a consumer rule of equal specificity replaces its separator band. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces \"Saving\u2026\", \"Still saving\u2026\" and the outcome in a role=\"status\" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid=\"true\" instead (which also turns on the error state above, so supply the .mg-form-error message too), and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.",
+      "curatedManifestDescription": "Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role=\"switch\"), including a pending state set with aria-busy=\"true\" on the input or .mg-switch--pending on the label. The switch has an error state, set the same way as on any other control: aria-invalid=\"true\" on the input (preferred, and the only form assistive technology sees), or mg-switch__input--error on the input, or mg-switch--error on the label, each giving the track a red boundary; put the message in a sibling p.mg-form-error with role=\"alert\" OUTSIDE the label (inside it would join the switch's accessible name) and join the two with aria-describedby, exactly as with a text input, so FormErrorSummary can link to the switch by id. The error state does not move the thumb: use it for \"the thing this switch controls failed\", and the pending helper when the save itself failed and the switch must revert. The switch is sized and coloured with the --mg-switch-* custom properties in this entry, set on the switch or any ancestor, and never by overriding the thumb transform, which also breaks RTL. The thumb travel, its RTL counterpart and the pending ring all derive from the size properties, so setting those is enough in both directions. .mg-switch--small sets --mg-switch-size: 1.125rem and a tighter row gap, and re-declares no length inside the switch; prefer it to a size of your own for a toolbar, table row or panel header. Do not paint a switch state with box-shadow or outline on the track: the focus ring owns both, and a consumer rule of equal specificity replaces its separator band. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces \"Saving…\", \"Still saving…\" and the outcome in a role=\"status\" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid=\"true\" instead (which also turns on the error state above, so supply the .mg-form-error message too), and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [
@@ -1938,7 +1945,7 @@
         }
       ],
       "curatedManifestKey": "components-forms-checkbox",
-      "curatedManifestDescription": "Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role=\"switch\"), including a pending state set with aria-busy=\"true\" on the input or .mg-switch--pending on the label. The switch has an error state, set the same way as on any other control: aria-invalid=\"true\" on the input (preferred, and the only form assistive technology sees), or mg-switch__input--error on the input, or mg-switch--error on the label, each giving the track a red boundary; put the message in a sibling p.mg-form-error with role=\"alert\" OUTSIDE the label (inside it would join the switch's accessible name) and join the two with aria-describedby, exactly as with a text input, so FormErrorSummary can link to the switch by id. The error state does not move the thumb: use it for \"the thing this switch controls failed\", and the pending helper when the save itself failed and the switch must revert. The switch is sized and coloured with the --mg-switch-* custom properties in this entry, set on the switch or any ancestor, and never by overriding the thumb transform, which also breaks RTL. The thumb travel, its RTL counterpart and the pending ring all derive from the size properties, so setting those is enough in both directions. .mg-switch--small sets --mg-switch-size: 1.125rem and a tighter row gap, and re-declares no length inside the switch; prefer it to a size of your own for a toolbar, table row or panel header. Do not paint a switch state with box-shadow or outline on the track: the focus ring owns both, and a consumer rule of equal specificity replaces its separator band. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces \"Saving\u2026\", \"Still saving\u2026\" and the outcome in a role=\"status\" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid=\"true\" instead (which also turns on the error state above, so supply the .mg-form-error message too), and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.",
+      "curatedManifestDescription": "Styled checkbox with label. Error and disabled states available. Also documents the CSS-only .mg-switch toggle (role=\"switch\"), including a pending state set with aria-busy=\"true\" on the input or .mg-switch--pending on the label. The switch has an error state, set the same way as on any other control: aria-invalid=\"true\" on the input (preferred, and the only form assistive technology sees), or mg-switch__input--error on the input, or mg-switch--error on the label, each giving the track a red boundary; put the message in a sibling p.mg-form-error with role=\"alert\" OUTSIDE the label (inside it would join the switch's accessible name) and join the two with aria-describedby, exactly as with a text input, so FormErrorSummary can link to the switch by id. The error state does not move the thumb: use it for \"the thing this switch controls failed\", and the pending helper when the save itself failed and the switch must revert. The switch is sized and coloured with the --mg-switch-* custom properties in this entry, set on the switch or any ancestor, and never by overriding the thumb transform, which also breaks RTL. The thumb travel, its RTL counterpart and the pending ring all derive from the size properties, so setting those is enough in both directions. .mg-switch--small sets --mg-switch-size: 1.125rem and a tighter row gap, and re-declares no length inside the switch; prefer it to a size of your own for a toolbar, table row or panel header. Do not paint a switch state with box-shadow or outline on the track: the focus ring owns both, and a consumer rule of equal specificity replaces its separator band. For a switch that saves a setting, load the dependency-free js/switch-pending.js module (no React): it announces \"Saving…\", \"Still saving…\" and the outcome in a role=\"status\" region, ignores presses while saving, sets aria-busy a frame after the change, honours only the latest request, and times out (10s) and reverts on failure. Use mgSwitchPending(input, { save }) where save(checked, signal) returns a Promise, or mark switches with data-mg-switch-pending and answer one document-level mg-switch:save listener. Both defaults can be switched off: revert: false keeps the position the user asked for and sets aria-invalid=\"true\" instead (which also turns on the error state above, so supply the .mg-form-error message too), and timeout: 0 or Infinity removes the deadline. mgSwitchAnnouncer(element, { status, labels }) exports the announcements on their own, for apps that run their own save.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [],
@@ -2134,7 +2141,7 @@
         }
       ],
       "curatedManifestKey": "components-forms-segmented-control",
-      "curatedManifestDescription": "Compact segmented presentation of a radio group: a small, mutually exclusive choice drawn as one row of adjoining segments, for switching what a single view shows (a map data source, a chart unit, a list sort order). CSS only: no JavaScript and no ARIA. The markup is a fieldset, a legend and one input[type=radio] per segment, each followed immediately by its own label; the CSS clips the inputs out of sight and draws the labels. Keep every label as the immediate next sibling of its input, because the whole presentation hangs off that adjacency, and give every input the same name. Because it is a real radio group, arrow-key navigation, the checked state, the \"N of M\" announcement, form submission and RTL traversal are the browser's and need no code from the consuming app. Do not reach for role=\"tablist\" for this: the ARIA tabs pattern expects a tabpanel per tab, and a view switcher has none. The legend is the group's accessible name and is announced before the segment the user lands on; where the page has no room for a visible one, add mg-u-sr-only to the legend rather than replacing it with aria-label on the fieldset. Use Chips for filters that combine, Select for more than about five options or long labels, .mg-switch for on/off, and an ordinary Radio group in a FormGroup for a vertical list, options needing help text, or a choice that has to show a validation error \u2014 this control has no error or invalid state. Read the choice with one change listener on the fieldset. In React, pass value plus onChange for a controlled group, or defaultValue to leave the selection to the DOM. On the default layout the row wraps to a second line at narrow widths and keeps every label whole; mg-segmented-control--full-width always shares the width equally instead, so it shrinks rather than wrapping and breaks long labels mid-word \u2014 use it only with short ones.",
+      "curatedManifestDescription": "Compact segmented presentation of a radio group: a small, mutually exclusive choice drawn as one row of adjoining segments, for switching what a single view shows (a map data source, a chart unit, a list sort order). CSS only: no JavaScript and no ARIA. The markup is a fieldset, a legend and one input[type=radio] per segment, each followed immediately by its own label; the CSS clips the inputs out of sight and draws the labels. Keep every label as the immediate next sibling of its input, because the whole presentation hangs off that adjacency, and give every input the same name. Because it is a real radio group, arrow-key navigation, the checked state, the \"N of M\" announcement, form submission and RTL traversal are the browser's and need no code from the consuming app. Do not reach for role=\"tablist\" for this: the ARIA tabs pattern expects a tabpanel per tab, and a view switcher has none. The legend is the group's accessible name and is announced before the segment the user lands on; where the page has no room for a visible one, add mg-u-sr-only to the legend rather than replacing it with aria-label on the fieldset. Use Chips for filters that combine, Select for more than about five options or long labels, .mg-switch for on/off, and an ordinary Radio group in a FormGroup for a vertical list, options needing help text, or a choice that has to show a validation error — this control has no error or invalid state. Read the choice with one change listener on the fieldset. In React, pass value plus onChange for a controlled group, or defaultValue to leave the selection to the DOM. On the default layout the row wraps to a second line at narrow widths and keeps every label whole; mg-segmented-control--full-width always shares the width equally instead, so it shrinks rather than wrapping and breaks long labels mid-word — use it only with short ones.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [
@@ -2824,7 +2831,7 @@
         }
       ],
       "curatedManifestKey": "components-status-label",
-      "curatedManifestDescription": "Status of a record or event, as a coloured indicator plus the status name in text. Workflow variants: draft (rounded square), waiting-information (capsule), waiting-validation (rounded diamond), published (circle). Service health variants: warning/degraded (triangle) and negative/offline (octagon), also used by ServiceNotice. Without a modifier the indicator is a neutral circle. Each status has its own shape as well as its own colour, from CSS alone, so the markup is the same for every variant, and every mark carries the same uniform ring. The indicator is decorative: the status name is always present as text, so meaning never depends on colour. Wrap several in mg-status-label-group, which keeps list semantics without showing a bullet, so no role=\"list\" is needed on the ul. Theme it with the custom properties in this entry, set on the label or any ancestor, not by overriding rules. The shapes are built on those properties: the square, the capsule and the diamond are border-radius and transform overrides that keep a real CSS border, and the triangle and the octagon are clip-path shapes whose ring is the element background and whose fill is a ::before clipped to a matching inner polygon. Do not set background-color, border, border-radius, width, height or transform on mg-status-label__indicator directly \u2014 a border is cut through by the clip path, a fill on the element hides the ring, and a transform replaces the diamond.",
+      "curatedManifestDescription": "Status of a record or event, as a coloured indicator plus the status name in text. Workflow variants: draft (rounded square), waiting-information (capsule), waiting-validation (rounded diamond), published (circle). Service health variants: warning/degraded (triangle) and negative/offline (octagon), also used by ServiceNotice. Without a modifier the indicator is a neutral circle. Each status has its own shape as well as its own colour, from CSS alone, so the markup is the same for every variant, and every mark carries the same uniform ring. The indicator is decorative: the status name is always present as text, so meaning never depends on colour. Wrap several in mg-status-label-group, which keeps list semantics without showing a bullet, so no role=\"list\" is needed on the ul. Theme it with the custom properties in this entry, set on the label or any ancestor, not by overriding rules. The shapes are built on those properties: the square, the capsule and the diamond are border-radius and transform overrides that keep a real CSS border, and the triangle and the octagon are clip-path shapes whose ring is the element background and whose fill is a ::before clipped to a matching inner polygon. Do not set background-color, border, border-radius, width, height or transform on mg-status-label__indicator directly — a border is cut through by the clip path, a fill on the element hides the ring, and a transform replaces the diamond.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [],
@@ -3096,7 +3103,7 @@
         }
       ],
       "curatedManifestKey": "components-loader",
-      "curatedManifestDescription": "Animated loading spinner. 40px on mobile, 96px on desktop. The element is empty \u2014 there is no visible and no visually hidden label text. It carries role=\"status\", aria-live=\"polite\" and aria-busy=\"true\", and the label prop becomes its accessible name through aria-label, so the wait is not silent for a screen reader.",
+      "curatedManifestDescription": "Animated loading spinner. 40px on mobile, 96px on desktop. The element is empty — there is no visible and no visually hidden label text. It carries role=\"status\", aria-live=\"polite\" and aria-busy=\"true\", and the label prop becomes its accessible name through aria-label, so the wait is not silent for a screen reader.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [
@@ -4280,7 +4287,7 @@
         }
       ],
       "curatedManifestKey": "components-tabs",
-      "curatedManifestDescription": "Tabbed content with centred, softly filled horizontal tabs that scroll at every viewport width, or explicit stacked disclosures. Opt into disclosures below 480px with stackOnMobile (React) or the presence-based data-mg-js-tabs-stack-on-mobile attribute (HTML); horizontal scrolling remains the default. Only the horizontal rail scrolls; panels sit outside the tablist. Requires tabs.js as an ES module for ARIA semantics, keyboard navigation, selection and overflow indicators. Without JavaScript, panel content remains visible. Set labels.tabListLabel (React) or data-mg-js-tabs-label (HTML) to name the tablist. Existing interleaved HTML is enhanced at runtime. Before removing dynamically initialised markup, call mgTabsDestroy(scope), or pass { signal } as the third argument to mgTabs or mgTabsRuntime and abort it. A tab set removed without either is suspended, not destroyed: once a rail resize observer notification (horizontal sets, usually within a frame in Chromium), a window resize or hash change (the runtime keeps one listener for each while any set is initialised), an orientation change or font load, or a later mgTabs/mgTabsRuntime call finds it detached, its window, document.fonts and ResizeObserver registrations are released while markup, in-container listeners and selection stay intact. A re-attached set resumes on the next pointer press, focus, key press or click inside it, window resize or hash change, or mgTabs/mgTabsRuntime call; an interaction resume also resumes other re-attached sets, including nested ones. On resume, a URL hash changed while suspended selects its panel (also on React re-render or mgTabsDestroy(container, true) plus re-init), and a stackOnMobile breakpoint crossed while suspended switches layout; after an interaction both wait until it has been handled, so a tap acts on the visible layout and its selection wins. Until a removal is found its listeners stay registered. Security (React path only): a tab object's data string is injected as raw HTML and is NOT sanitised \u2014 unlike TextCta, Drawer and the card components, Tab does not run DOMPurify, because a panel legitimately carries tables, forms and embeds that a sanitiser would strip. Sanitise it where tabdata is built. The vanilla HTML path has no equivalent: the panel markup is already in the page and tabs.js only enhances it.",
+      "curatedManifestDescription": "Tabbed content with centred, softly filled horizontal tabs that scroll at every viewport width, or explicit stacked disclosures. Opt into disclosures below 480px with stackOnMobile (React) or the presence-based data-mg-js-tabs-stack-on-mobile attribute (HTML); horizontal scrolling remains the default. Only the horizontal rail scrolls; panels sit outside the tablist. Requires tabs.js as an ES module for ARIA semantics, keyboard navigation, selection and overflow indicators. Without JavaScript, panel content remains visible. Set labels.tabListLabel (React) or data-mg-js-tabs-label (HTML) to name the tablist. Existing interleaved HTML is enhanced at runtime. Before removing dynamically initialised markup, call mgTabsDestroy(scope), or pass { signal } as the third argument to mgTabs or mgTabsRuntime and abort it. A tab set removed without either is suspended, not destroyed: once a rail resize observer notification (horizontal sets, usually within a frame in Chromium), a window resize or hash change (the runtime keeps one listener for each while any set is initialised), an orientation change or font load, or a later mgTabs/mgTabsRuntime call finds it detached, its window, document.fonts and ResizeObserver registrations are released while markup, in-container listeners and selection stay intact. A re-attached set resumes on the next pointer press, focus, key press or click inside it, window resize or hash change, or mgTabs/mgTabsRuntime call; an interaction resume also resumes other re-attached sets, including nested ones. On resume, a URL hash changed while suspended selects its panel (also on React re-render or mgTabsDestroy(container, true) plus re-init), and a stackOnMobile breakpoint crossed while suspended switches layout; after an interaction both wait until it has been handled, so a tap acts on the visible layout and its selection wins. Until a removal is found its listeners stay registered. Security (React path only): a tab object's data string is injected as raw HTML and is NOT sanitised — unlike TextCta, Drawer and the card components, Tab does not run DOMPurify, because a panel legitimately carries tables, forms and embeds that a sanitiser would strip. Sanitise it where tabdata is built. The vanilla HTML path has no equivalent: the panel markup is already in the page and tabs.js only enhances it.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [
@@ -5351,7 +5358,7 @@
         }
       ],
       "curatedManifestKey": "components-navigation-on-this-page-nav",
-      "curatedManifestDescription": "Sticky horizontal \"On this page\" navigation bar with IntersectionObserver scroll-spy. Two modes: auto-detect (scans h2/h3/h4 headings) or explicit (author-provided links). Optional CTA button. Vanilla JS \u2014 requires on-this-page-nav.js. The React export renders the markup and calls mgOnThisPageNav() for Storybook; it is not meant as a production React component.",
+      "curatedManifestDescription": "Sticky horizontal \"On this page\" navigation bar with IntersectionObserver scroll-spy. Two modes: auto-detect (scans h2/h3/h4 headings) or explicit (author-provided links). Optional CTA button. Vanilla JS — requires on-this-page-nav.js. The React export renders the markup and calls mgOnThisPageNav() for Storybook; it is not meant as a production React component.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [
@@ -6688,10 +6695,30 @@
           "line": 55
         }
       ],
-      "coverageLevel": "absent",
-      "libraryStatus": "no-family",
-      "recipeFamilyIDs": [],
-      "recipeCoverage": [],
+      "coverageLevel": "partial",
+      "libraryStatus": "source-only-unpublished",
+      "recipeFamilyIDs": ["book-card"],
+      "recipeCoverage": [
+        {
+          "id": "book-card",
+          "catalogue": "source-only-drafts",
+          "variants": 2,
+          "variantProperties": {
+            "Link": ["Linked", "NoLink"],
+            "Tone": ["Primary"],
+            "Width": ["200"]
+          },
+          "publicationStatus": "unpublished",
+          "acceptedScopeEvidence": [
+            "Latin English finite source content only. Native/otherengine pixels, arbitrary edits/wrapping, brand/script and publication acceptance pending.",
+            "Root height depicts card box only; source external10px margin-bottom belongs to composition flow.",
+            "Linked title caret only supports declared single-line fixture titles. Native baseline/underline offset and arbitrary edited-title wrapping are not accepted.",
+            "Exact source JPEG720x960. Native crop/radius and combined1px border/outside outline remain candidate.",
+            "Other authored tones, mixed title-length grid, cover/no-image swaps and400px desktop maximum are outside this first family."
+          ],
+          "coverageCaution": "Source/browser/mocks establish bounded contracts only; native integration, source visual parity and publication remain open."
+        }
+      ],
       "dependencies": [
         {
           "unitId": "image",
@@ -6773,10 +6800,32 @@
           "line": 84
         }
       ],
-      "coverageLevel": "absent",
-      "libraryStatus": "no-family",
-      "recipeFamilyIDs": [],
-      "recipeCoverage": [],
+      "coverageLevel": "partial",
+      "libraryStatus": "source-only-unpublished",
+      "recipeFamilyIDs": ["horizontal-book-card"],
+      "recipeCoverage": [
+        {
+          "id": "horizontal-book-card",
+          "catalogue": "source-only-drafts",
+          "variants": 8,
+          "variantProperties": {
+            "Preset": ["ButtonOnly", "Default", "NoImage", "NoLink"],
+            "Width": ["390", "640"],
+            "Tone": ["Primary"]
+          },
+          "publicationStatus": "unpublished",
+          "acceptedScopeEvidence": [
+            "Latin English finite source content only. Native/otherengine pixels, arbitrary edits/wrapping, brand/script and publication acceptance pending.",
+            "Root height depicts card box only; source external10px margin-bottom belongs to composition flow.",
+            "Linked title caret only supports declared single-line fixture titles. Native baseline/underline offset and arbitrary edited-title wrapping are not accepted.",
+            "Body uses three contiguous authored inline runs, no whole-string component property. Direct formatted-run edit recovery relies on isolated rich TEXT capability.",
+            "Source summary anchor href=\"#\" is preserved in metadata and visibly styled; native HTTPS hyperlink omitted, no invented destination.",
+            "Actual CtaButton VariantCTA reuses unpublished editorial-cta Base child, not filled Button. Nested consumer edits require native acceptance.",
+            "Fixed widths/cover grid project source desktop160px versus mobile200px-max visual. Responsive resizing and other tones remain open."
+          ],
+          "coverageCaution": "Source/browser/mocks establish bounded contracts only; native integration, source visual parity and publication remain open."
+        }
+      ],
       "dependencies": [
         {
           "unitId": "book-card",
@@ -6973,10 +7022,41 @@
           "line": 247
         }
       ],
-      "coverageLevel": "absent",
-      "libraryStatus": "no-family",
-      "recipeFamilyIDs": [],
-      "recipeCoverage": [],
+      "coverageLevel": "partial",
+      "libraryStatus": "source-only-unpublished",
+      "recipeFamilyIDs": ["icon-card"],
+      "recipeCoverage": [
+        {
+          "id": "icon-card",
+          "catalogue": "source-only-drafts",
+          "variants": 9,
+          "variantProperties": {
+            "Preset": [
+              "Analytics",
+              "Archiving",
+              "Centered",
+              "Default",
+              "Explore",
+              "Negative",
+              "Report",
+              "Understand",
+              "WithLabel"
+            ],
+            "Width": ["300", "640"]
+          },
+          "publicationStatus": "unpublished",
+          "acceptedScopeEvidence": [
+            "Latin English finite source content only. Native/otherengine pixels, arbitrary edits/wrapping, brand/script and publication acceptance pending.",
+            "Root height depicts card box only; source external10px margin-bottom belongs to composition flow.",
+            "Linked title caret only supports declared single-line fixture titles. Native baseline/underline offset and arbitrary edited-title wrapping are not accepted.",
+            "Medium/small pseudo-inline mask lineboxes derive scoped Chromium155/67px at guarded135/58px glyph sizes. Colored32px and horizontal48px masks have37/55px lineboxes. Native baseline/ink acceptance pending.",
+            "Horizontal640px fixture keeps source short titles on one line. Narrow horizontal, responsive maxwidths, automatic collection equal-height stretching, arbitrary title lengths excluded.",
+            "Colored badges use exact source literals and guarded theme20%/15% of72px source radius. Host overrides, visualLabel/borderColor/foreground hooks, other feature cards and logo/image/media stories remain unmapped.",
+            "Negative depicts source card against caller-provided dark context; source decorator background is not silently built into the reusable card."
+          ],
+          "coverageCaution": "Source/browser/mocks establish bounded contracts only; native integration, source visual parity and publication remain open."
+        }
+      ],
       "dependencies": [
         {
           "unitId": "icons",
@@ -7770,7 +7850,7 @@
         }
       ],
       "curatedManifestKey": "components-hero-hero",
-      "curatedManifestDescription": "Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1\u2013h3), and three media types: `image` (default), `video` (iframe embed \u2014 provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).",
+      "curatedManifestDescription": "Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [
@@ -8048,7 +8128,7 @@
         }
       ],
       "curatedManifestKey": "components-hero-hero-child",
-      "curatedManifestDescription": "DEPRECATED \u2014 planned for removal by end of 2026. Never adopted in production across UNDRR sites; do not use in new work. Migrate to the main Hero component (`headingLevel=\"h2\"`/`\"h3\"` or `layout=\"split\"`), which covers the same use cases. Kept available for reference only. Smaller hero banner for child/section pages. Single CTA button, linked label.",
+      "curatedManifestDescription": "DEPRECATED — planned for removal by end of 2026. Never adopted in production across UNDRR sites; do not use in new work. Migrate to the main Hero component (`headingLevel=\"h2\"`/`\"h3\"` or `layout=\"split\"`), which covers the same use cases. Kept available for reference only. Smaller hero banner for child/section pages. Single CTA button, linked label.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [
@@ -8549,7 +8629,7 @@
         }
       ],
       "curatedManifestKey": "components-codeblock",
-      "curatedManifestDescription": "Formatted source code display. Two rendering paths share the same CSS:\n\nVANILLA HTML (Drupal pages): Use `<pre><code>` directly. Prism.js (loaded globally) tokenises the code and emits `.token.*` span elements \u2014 Mangrove's `code.scss` styles those classes. Add a `data-language=\"Bash\"` attribute on `<pre>` for a language badge. Wrap in `<figure class=\"mg-code-block\"><figcaption>filename</figcaption>\u2026</figure>` for a filename header bar.\n\nREACT (Storybook / JS apps): Use the `CodeBlock` component. Props: `code` (required string), `language` (\"bash\" | \"javascript\" | \"jsx\" \u2014 enables react-syntax-highlighter/PrismLight which emits the same `.token.*` classes), `filename` (string \u2014 adds the figure/figcaption wrapper), `lineNumbers` (boolean \u2014 gutter line numbers, requires `language`).\n\nIMPORTANT \u2014 token classes: `.token.keyword`, `.token.string`, `.token.tag` etc. are NOT Mangrove BEM classes. They are emitted by Prism.js (and react-syntax-highlighter under the hood). Mangrove owns the `code.scss` rules that colour them; the class names themselves are Prism's API. Do not rename or prefix them with `mg-`.\n\nFor inline `<code>` snippets in prose, use the bare HTML element \u2014 the global `code.scss` styles it automatically. The CodeBlock component is only for block-level code display.",
+      "curatedManifestDescription": "Formatted source code display. Two rendering paths share the same CSS:\n\nVANILLA HTML (Drupal pages): Use `<pre><code>` directly. Prism.js (loaded globally) tokenises the code and emits `.token.*` span elements — Mangrove's `code.scss` styles those classes. Add a `data-language=\"Bash\"` attribute on `<pre>` for a language badge. Wrap in `<figure class=\"mg-code-block\"><figcaption>filename</figcaption>…</figure>` for a filename header bar.\n\nREACT (Storybook / JS apps): Use the `CodeBlock` component. Props: `code` (required string), `language` (\"bash\" | \"javascript\" | \"jsx\" — enables react-syntax-highlighter/PrismLight which emits the same `.token.*` classes), `filename` (string — adds the figure/figcaption wrapper), `lineNumbers` (boolean — gutter line numbers, requires `language`).\n\nIMPORTANT — token classes: `.token.keyword`, `.token.string`, `.token.tag` etc. are NOT Mangrove BEM classes. They are emitted by Prism.js (and react-syntax-highlighter under the hood). Mangrove owns the `code.scss` rules that colour them; the class names themselves are Prism's API. Do not rename or prefix them with `mg-`.\n\nFor inline `<code>` snippets in prose, use the bare HTML element — the global `code.scss` styles it automatically. The CodeBlock component is only for block-level code display.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [
         {
@@ -9881,10 +9961,26 @@
           "line": 48
         }
       ],
-      "coverageLevel": "absent",
-      "libraryStatus": "no-family",
-      "recipeFamilyIDs": [],
-      "recipeCoverage": [],
+      "coverageLevel": "partial",
+      "libraryStatus": "source-only-unpublished",
+      "recipeFamilyIDs": ["embed-container"],
+      "recipeCoverage": [
+        {
+          "id": "embed-container",
+          "catalogue": "source-only-drafts",
+          "variants": 4,
+          "variantProperties": {
+            "AspectRatio": ["16x9", "1x1", "21x9", "4x3"]
+          },
+          "publicationStatus": "unpublished",
+          "acceptedScopeEvidence": [
+            "336px candidate width. Actual browser responsive aspect-ratio is projected to fixed height, not a live resize/aspect engine.",
+            "Blank wrapper only. No iframe/video/map controls, brand media, loading, fallback rendering or editable media content acceptance.",
+            "Modern aspect-ratio branch depicted. Legacy percent-padding fallback and intrinsic embed allocation require separate source/native checks."
+          ],
+          "coverageCaution": "Source/browser/mocks establish bounded contracts only; native integration, source visual parity and publication remain open."
+        }
+      ],
       "dependencies": [],
       "sourceImportEvidence": [
         {
@@ -10235,7 +10331,7 @@
         }
       ],
       "curatedManifestKey": "components-reading-column",
-      "curatedManifestDescription": "Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 48rem up, stacking it above the article below that. The sidebar split itself is mg-grid's --article variant (see design-decisions-grid-layout) \u2014 pair mg-reading--with-contents with mg-grid mg-grid--article in markup.",
+      "curatedManifestDescription": "Reading column for a long page: constrains the article to a readable measure, and with mg-reading--with-contents places a table of contents in a sticky sidebar from 48rem up, stacking it above the article below that. The sidebar split itself is mg-grid's --article variant (see design-decisions-grid-layout) — pair mg-reading--with-contents with mg-grid mg-grid--article in markup.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [
@@ -10475,7 +10571,7 @@
         }
       ],
       "curatedManifestKey": "components-logos",
-      "curatedManifestDescription": "Logo images for UNDRR, PreventionWeb, IRP, and partner organizations. The crop=\"autocrop\" variant crops to a fixed box on mobile and tablet instead of shrinking the whole image, so the logo stays legible at small sizes \u2014 the page header (\"black bar\") uses it. It is tuned to the proportions of the default English horizontal wordmark only: on the translated assets (assets.undrr.org/logos/undrr/) it cuts the bottom off the subtitle line, since those are roughly square (~2.3-2.9:1) rather than the ~6.6:1 the crop box assumes. Do not pair crop=\"autocrop\" with a translated or otherwise differently proportioned asset.",
+      "curatedManifestDescription": "Logo images for UNDRR, PreventionWeb, IRP, and partner organizations. The crop=\"autocrop\" variant crops to a fixed box on mobile and tablet instead of shrinking the whole image, so the logo stays legible at small sizes — the page header (\"black bar\") uses it. It is tuned to the proportions of the default English horizontal wordmark only: on the translated assets (assets.undrr.org/logos/undrr/) it cuts the bottom off the subtitle line, since those are roughly square (~2.3-2.9:1) rather than the ~6.6:1 the crop box assumes. Do not pair crop=\"autocrop\" with a translated or otherwise differently proportioned asset.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [
@@ -11261,7 +11357,7 @@
         }
       ],
       "curatedManifestKey": "components-preview-access",
-      "curatedManifestDescription": "Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only \u2014 not a security mechanism, since the PIN sits in the DOM. The React export renders a static preview of the modal for docs; pass `live` to run the real body-level gate, which appends the overlay to document.body and restores the body siblings on unmount.",
+      "curatedManifestDescription": "Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM. The React export renders a static preview of the modal for docs; pass `live` to run the real body-level gate, which appends the overlay to document.body and restores the body siblings on unmount.",
       "manifestNote": "Curated source metadata consulted; source remains authoritative.",
       "packageExports": [],
       "sourceExportDeclarations": [],
@@ -11976,10 +12072,27 @@
       ],
       "authoredStoryExamples": [],
       "authoredPropEnums": [],
-      "coverageLevel": "absent",
-      "libraryStatus": "no-family",
-      "recipeFamilyIDs": [],
-      "recipeCoverage": [],
+      "coverageLevel": "partial",
+      "libraryStatus": "source-only-unpublished",
+      "recipeFamilyIDs": ["section-header"],
+      "recipeCoverage": [
+        {
+          "id": "section-header",
+          "catalogue": "source-only-drafts",
+          "variants": 2,
+          "variantProperties": {
+            "Content": ["HeadingOnly", "WithDescription"]
+          },
+          "publicationStatus": "unpublished",
+          "acceptedScopeEvidence": [
+            "600px width is a candidate fixture width, not an authored fixed width.",
+            "Required nonempty h2 plain text. WithDescription requires nonempty h4; HeadingOnly omits the authored empty h4 node because the native builder requires positive frame dimensions; its zero visual height and collapsed margins are represented by heading-only flow allocation. No semantic HTML equivalence is claimed. Arbitrary rich text, wrapping and scripts excluded.",
+            "Source block margins are depicted by explicit10px top/bottom allocation and10px collapsed internal margin. CSS parent margin-collapse boundaries remain candidate.",
+            "Scoped Chromium source observed at1164/390 viewports in all5themes. Roboto600 description request loads bundled700. Native/otherengine geometry and font comparison pending."
+          ],
+          "coverageCaution": "Source/browser/mocks establish bounded contracts only; native integration, source visual parity and publication remain open."
+        }
+      ],
       "dependencies": [
         {
           "unitId": "heading",
@@ -12056,10 +12169,27 @@
       ],
       "authoredStoryExamples": [],
       "authoredPropEnums": [],
-      "coverageLevel": "absent",
-      "libraryStatus": "no-family",
-      "recipeFamilyIDs": [],
-      "recipeCoverage": [],
+      "coverageLevel": "partial",
+      "libraryStatus": "source-only-unpublished",
+      "recipeFamilyIDs": ["image-caption"],
+      "recipeCoverage": [
+        {
+          "id": "image-caption",
+          "catalogue": "source-only-drafts",
+          "variants": 3,
+          "variantProperties": {
+            "Content": ["Both", "CaptionOnly", "CreditOnly"]
+          },
+          "publicationStatus": "unpublished",
+          "acceptedScopeEvidence": [
+            "600px desktop fixture width is candidate; responsive breakpoint switching, mobile and RTL excluded.",
+            "Required nonempty plain caption/credit strings where present. Strong/link rich-credit anatomy and null no-content state excluded.",
+            "Desktop source space-between is depicted by FILL caption and HUG credit. Browser intrinsic text widths and wrapping remain pending.",
+            "Bottom2px border,15px padding and conditional1px credit divider derive authored CSS; scoped Chromium source observed; native/otherengine geometry pending."
+          ],
+          "coverageCaution": "Source/browser/mocks establish bounded contracts only; native integration, source visual parity and publication remain open."
+        }
+      ],
       "dependencies": [
         {
           "unitId": "type-paragraph",
@@ -13753,7 +13883,7 @@
     },
     {
       "key": "patterns-content-hub",
-      "description": "A named group of pages inside the parent site \u2014 a programme, a monitor, a guidance collection \u2014 carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components."
+      "description": "A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components."
     },
     {
       "key": "patterns-article-story",
@@ -13805,5 +13935,22 @@
     "Human novice handoff",
     "Reduced maintenance merge reviewer acceptance"
   ],
-  "scopeCaution": "The holistic audit does not change the normal exporter, maintenance DTO, core allowlist, Figma library or publication. Broad source integration remains separate from maintenance merge acceptance."
+  "scopeCaution": "The holistic audit does not change the normal exporter, maintenance DTO, core allowlist, Figma library or publication. Broad source integration remains separate from maintenance merge acceptance.",
+  "isolatedEditorialCandidates": {
+    "module": "scripts/figma-editorial-recipes.cjs",
+    "test": "examples/figma-plugin/dev/mock-editorial.cjs",
+    "familyIDs": ["section-header", "image-caption", "embed-container"],
+    "variants": 9,
+    "counting": "Now wired into the explicitly non-importable source packet. Normal32 source and historical published25 remain unchanged; native coverage remains unverified.",
+    "evidence": "Actual sourceChromium90cases all5brands two viewport widths; mockall5 plus2zero-create repeats and editedtext retention. Native/publication pending."
+  },
+  "draftPacketFollowup": {
+    "baseRevision": "5209cdc2c54e56b41832dd39278b3dd7958563a5",
+    "workingInputsRecorded": true,
+    "families": 15,
+    "variants": 56,
+    "dependencyFamily": "editorial-cta",
+    "dependencyVariants": 23,
+    "nativeAcceptance": false
+  }
 }
