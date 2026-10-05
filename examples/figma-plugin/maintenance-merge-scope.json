@@ -51,7 +51,23 @@
     "/examples/figma-plugin/mangrove-maintenance-tokens.json",
     "/examples/figma-plugin/maintenance/build/"
   ],
+  "lockfileEdits": {
+    "retainBaseDependencyResolutions": true,
+    "workspaceEntry": "@undrr/undrr-mangrove@workspace:.",
+    "peerDependencies": {
+      "react": ">=18.0.0",
+      "react-aria-components": "^1.20.0",
+      "react-dom": ">=18.0.0"
+    },
+    "peerDependenciesMeta": {
+      "react": { "optional": true },
+      "react-aria-components": { "optional": true },
+      "react-dom": { "optional": true }
+    },
+    "reason": "The exact React Aria base package already declares these peers, but its lockfile workspace metadata is stale. Synchronize that metadata without copying spike-only dependency changes."
+  },
   "verification": [
+    "yarn install --immutable",
     "yarn build:figma-maintenance",
     "yarn build:figma-maintenance --check",
     "node examples/figma-plugin/dev/mock-maintenance-export.cjs",
@@ -61,6 +77,7 @@
   ],
   "notes": [
     "Apply only listed package/ignore changes to the base files; do not copy the full spike package manifest.",
+    "Apply the listed workspace peer metadata to the base lockfile; keep all resolved package records unchanged. The full feature lockfile includes spike-only Terser changes and is not the reduced-cohort lockfile.",
     "Full comparison flags are for the retained feature checkout only; reduced defaults require no construction files.",
     "Concise maintenance documentation is self-contained; its links to full handoff/evidence refer to the retained source checkpoint.",
     "The checkpoint retains full construction and native evidence; this manifest does not change the PR base or branch history."
