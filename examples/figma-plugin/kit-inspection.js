@@ -99,6 +99,8 @@ async function mgInspectNode(node, variables, errors) {
       'absoluteRenderBounds',
       'opacity',
       'layoutMode',
+      'layoutPositioning',
+      'constraints',
       'layoutSizingHorizontal',
       'layoutSizingVertical',
       'primaryAxisSizingMode',
@@ -122,6 +124,10 @@ async function mgInspectNode(node, variables, errors) {
       'bottomRightRadius',
       'strokeWeight',
       'strokeAlign',
+      'strokeCap',
+      'strokeJoin',
+      'vectorPaths',
+      'arcData',
       'fills',
       'strokes',
       'effects',
@@ -137,6 +143,10 @@ async function mgInspectNode(node, variables, errors) {
       'lineHeight',
       'letterSpacing',
       'textAutoResize',
+      'textAlignHorizontal',
+      'textDecoration',
+      'textDecorationOffset',
+      'textWrapStyle',
       'hasMissingFont',
       'componentPropertyReferences',
     ],
@@ -144,6 +154,14 @@ async function mgInspectNode(node, variables, errors) {
   );
   result.identity = mgInspectionIdentity(node);
   result.mgKitId = mgReadIdentity(node, 'mgKitId');
+  const svgAsset = mgReadIdentity(node, 'mgSvgAsset');
+  if (svgAsset) {
+    try {
+      result.svgAsset = JSON.parse(svgAsset);
+    } catch (error) {
+      errors.push(`${node.id} SVG metadata: ${errorMessage(error)}`);
+    }
+  }
   result.parentId = node.parent && node.parent.id;
   result.childIds =
     'children' in node ? node.children.map(child => child.id) : [];
@@ -205,6 +223,15 @@ async function mgInspectNode(node, variables, errors) {
     variables,
     errors
   );
+  if (node.type === 'TEXT' && node.characters.length) {
+    try {
+      result.textRangeFills = mgInspectionJSON(
+        node.getRangeFills(0, node.characters.length)
+      );
+    } catch (error) {
+      errors.push(`${node.id} textRangeFills: ${errorMessage(error)}`);
+    }
+  }
   return result;
 }
 
@@ -297,6 +324,8 @@ async function inspectMangroveKit({ checkFonts = false } = {}) {
         'lineHeight',
         'letterSpacing',
         'paragraphSpacing',
+        'textDecoration',
+        'textWrapStyle',
         'boundVariables',
       ],
     ],
@@ -607,16 +636,76 @@ async function createMangroveFocusDiagnostics(doc, brandId) {
   };
 }
 
-async function exportMangroveReview(name, { scale = 2 } = {}) {
+async function exportMangroveReview(name, { scale = 2, familyId } = {}) {
   if (!Number.isFinite(scale) || scale <= 0 || scale > 4)
     throw new Error('Review export scale must be greater than 0 and at most 4');
-  const nodes = figma.currentPage.children.filter(
-    node => node.name === name && Object.keys(mgInspectionIdentity(node)).length
+  const rootKey =
+    name === 'Mangrove / Review'
+      ? 'review'
+      : name === 'Mangrove diagnostics / focus ring'
+        ? MG_FOCUS_DIAGNOSTIC_ID
+        : null;
+  if (!rootKey) throw new Error('Unknown Mangrove review export target.');
+  if (
+    familyId !== undefined &&
+    (rootKey !== 'review' ||
+      typeof familyId !== 'string' ||
+      !/^[a-z0-9][a-z0-9.-]*$/.test(familyId))
+  )
+    throw new Error(
+      'Family export needs one valid family ID and the review root.'
+    );
+  const page = figma.currentPage;
+  function sectionParent(key) {
+    const matches = page.findAll(
+      node => mgReadIdentity(node, 'mgKitId') === key
+    );
+    if (
+      matches.length !== 1 ||
+      matches[0].type !== 'SECTION' ||
+      matches[0].parent !== page
+    )
+      throw new Error(`Expected one top-level kit section ${key}.`);
+    return matches[0];
+  }
+  function ownedFrame(key, parent) {
+    const nodes = page.findAll(node => mgReadIdentity(node, 'mgKitId') === key);
+    if (nodes.length !== 1)
+      throw new Error(`Expected one owned review frame with identity ${key}`);
+    const node = nodes[0];
+    if (node.type !== 'FRAME')
+      throw new Error(`Owned review ${key} is not a frame.`);
+    if (node.parent !== parent)
+      throw new Error(`Owned review ${key} is outside its expected parent.`);
+    return node;
+  }
+  const organized =
+    page.findAll(node => mgReadIdentity(node, 'mgKitId') === 'layout/start')
+      .length > 0;
+  const root = ownedFrame(
+    rootKey,
+    organized
+      ? sectionParent(
+          rootKey === 'review' ? 'layout/components' : 'layout/pending'
+        )
+      : page
   );
-  if (nodes.length !== 1)
-    throw new Error(`Expected one owned review frame named ${name}`);
-  const node = nodes[0];
-  if (node.type !== 'FRAME') throw new Error(`${name} is not a review frame`);
+  let familyParent = root;
+  if (organized && familyId !== undefined) {
+    const area =
+      typeof mgLayoutDestination === 'function'
+        ? mgLayoutDestination(familyId)
+        : 'components';
+    if (area !== 'components')
+      familyParent = ownedFrame(
+        `layout/${area}/review`,
+        sectionParent(`layout/${area}`)
+      );
+  }
+  const node =
+    familyId === undefined
+      ? root
+      : ownedFrame(`review/${familyId}`, familyParent);
   const bytes = await node.exportAsync({
     format: 'PNG',
     constraint: { type: 'SCALE', value: scale },
@@ -627,6 +716,14 @@ async function exportMangroveReview(name, { scale = 2 } = {}) {
     width: node.width,
     height: node.height,
     scale,
+    scope:
+      familyId !== undefined
+        ? 'family'
+        : rootKey === 'review'
+          ? 'review'
+          : 'diagnostics',
+    familyId: familyId ?? null,
+    rootId: root.id,
     bytes: Array.from(bytes),
   };
 }

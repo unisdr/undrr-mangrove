@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview */
+/* global mgReadIdentity, mgWriteIdentity, figma, __html__, inspectMangroveKit, createMangroveFocusDiagnostics, buildMangroveComponents, exportMangroveReview, prepareMangroveOverrideProbes, compareMangroveOverrideProbes, removeMangroveOverrideProbes, mgDiagnoseFontLoading, runMangroveCapabilityProbes, removeMangroveCapabilityProbes, refreshMangroveCapabilityProbeLedger, inspectMangroveCapabilityProbeLedger, prepareMangroveEditorialProbes, compareMangroveEditorialProbes, removeMangroveEditorialProbes, advanceMangroveSegmentedCanonicalProbes, advanceMangroveSegmentedLeavesProbes, advanceMangroveSegmentedWrapperProbes, advanceMangroveCoreContentProbes, organizeMangroveKit, navigateMangroveKit, createMangroveWelcome, inspectMangroveNavigation, navigateMangroveInstalled, refreshMangroveGuidance */
 /**
  * EXPLORATORY: imports mangrove-variables.json (written by
  * scripts/build-figma-tokens.cjs) into local Figma variables and styles.
@@ -10,7 +10,7 @@
 const ID_KEY = 'mgId';
 const STYLE_ID_KEY = 'mgStyleId';
 
-figma.showUI(__html__, { width: 440, height: 680, themeColors: true });
+figma.showUI(__html__, { width: 600, height: 740, themeColors: true });
 
 // Figma API rejections can be strings rather than Error instances.
 function errorMessage(error) {
@@ -151,6 +151,40 @@ function validateMangroveImport(doc, selectedModeIds, selectedTextIds) {
         value.fontSize <= 0
       )
         fail(`${spec.name} [${mode}]: invalid text style value`);
+      if (
+        value.textDecoration !== undefined &&
+        !['NONE', 'UNDERLINE'].includes(value.textDecoration)
+      )
+        fail(`${spec.name} [${mode}]: invalid text style decoration`);
+      if (
+        value.textWrapStyle !== undefined &&
+        !['AUTO', 'BALANCE', 'PRETTY'].includes(value.textWrapStyle)
+      )
+        fail(`${spec.name} [${mode}]: invalid text style wrapping`);
+      if (value.letterSpacing !== undefined) {
+        const spacing = value.letterSpacing;
+        if (
+          !spacing ||
+          !['PIXELS', 'PERCENT'].includes(spacing.unit) ||
+          !Number.isFinite(spacing.value) ||
+          Object.keys(spacing).some(key => !['unit', 'value'].includes(key))
+        )
+          fail(`${spec.name} [${mode}]: invalid text style letter spacing`);
+      }
+      // Source metadata only: native TextStyle has no decoration offset API.
+      // Component TextNodes apply this value after their shared style.
+      if (value.textDecorationOffset !== undefined) {
+        const offset = value.textDecorationOffset;
+        if (
+          !offset ||
+          !['AUTO', 'PIXELS', 'PERCENT'].includes(offset.unit) ||
+          (offset.unit === 'AUTO'
+            ? Object.keys(offset).some(key => key !== 'unit')
+            : !Number.isFinite(offset.value) ||
+              Object.keys(offset).some(key => !['unit', 'value'].includes(key)))
+        )
+          fail(`${spec.name} [${mode}]: invalid decoration offset metadata`);
+      }
     }
   }
   for (const spec of effects) {
@@ -457,8 +491,14 @@ async function importStyles(
           style.fontName = value.fontName;
           style.fontSize = value.fontSize;
           style.lineHeight = value.lineHeight;
+          style.letterSpacing = value.letterSpacing || {
+            unit: 'PIXELS',
+            value: 0,
+          };
           style.setBoundVariable('fontFamily', family);
           style.setBoundVariable('fontSize', size);
+          style.textDecoration = value.textDecoration || 'NONE';
+          style.textWrapStyle = value.textWrapStyle || 'AUTO';
         } else {
           style.effects = effects;
         }
@@ -628,6 +668,24 @@ figma.ui.onmessage = async msg => {
     return;
   }
   try {
+    if (msg.type === 'kit-navigation-state') {
+      let result;
+      try {
+        result = await inspectMangroveNavigation(msg.doc);
+      } catch (error) {
+        result = {
+          destinations: [],
+          families: [],
+          errors: [errorMessage(error)],
+        };
+      }
+      post('kit-navigation-state', { result });
+      return;
+    }
+    if (msg.type === 'refresh-kit-guidance') {
+      post('operation', { result: await refreshMangroveGuidance(msg.doc) });
+      return;
+    }
     if (msg.type === 'inspect') {
       post('inspection', {
         result: await inspectMangroveKit({
@@ -653,9 +711,158 @@ figma.ui.onmessage = async msg => {
       });
       return;
     }
+    if (msg.type === 'organize-kit') {
+      let result;
+      try {
+        result = await organizeMangroveKit(msg.doc, msg.brand);
+      } catch (error) {
+        // The reconciler catches mutation failures itself. Thrown failures are
+        // read-only preflight refusals and still need a downloadable receipt.
+        result = {
+          operation: 'kit-layout',
+          version: '2',
+          phase: 'refused',
+          createdNodeIds: [],
+          updatedNodeIds: [],
+          errors: [error.message || String(error)],
+        };
+      }
+      post('operation', { result });
+      return;
+    }
+    if (msg.type === 'navigate-kit') {
+      post('operation', {
+        result: await navigateMangroveInstalled(msg.destination),
+      });
+      return;
+    }
+    if (msg.type === 'create-welcome') {
+      let result;
+      try {
+        result = await createMangroveWelcome(msg.doc, msg.brand);
+      } catch (error) {
+        result = {
+          operation: 'kit-welcome',
+          phase: 'refused',
+          createdNodeIds: [],
+          updatedNodeIds: [],
+          errors: [error.message || String(error)],
+        };
+      }
+      post('operation', { result });
+      return;
+    }
+    if (msg.type === 'prepare-override-probes') {
+      post('operation', {
+        result: await prepareMangroveOverrideProbes(
+          msg.doc,
+          msg.brand,
+          msg.groupId
+        ),
+      });
+      return;
+    }
+    if (msg.type === 'prepare-editorial-probes') {
+      post('operation', {
+        result: await prepareMangroveEditorialProbes(msg.doc, msg.brand),
+      });
+      return;
+    }
+    if (msg.type === 'compare-editorial-probes') {
+      post('operation', {
+        result: await compareMangroveEditorialProbes(
+          msg.rootId,
+          msg.buildResult
+        ),
+      });
+      return;
+    }
+    if (msg.type === 'remove-editorial-probes') {
+      post('operation', {
+        result: await removeMangroveEditorialProbes(msg.rootId),
+      });
+      return;
+    }
+    if (msg.type === 'font-diagnostics') {
+      const availableFonts = await figma.listAvailableFontsAsync();
+      post('operation', {
+        result: await mgDiagnoseFontLoading(msg.doc, {
+          brandId: msg.brand,
+          availableFonts,
+        }),
+      });
+      return;
+    }
+    if (msg.type === 'capability-probes') {
+      post('operation', {
+        result: await runMangroveCapabilityProbes(
+          msg.doc,
+          msg.brand,
+          msg.scope
+        ),
+      });
+      return;
+    }
+    if (msg.type === 'advance-segmented-capability-probes') {
+      post('operation', {
+        result: await (
+          msg.report?.scope === 'core-content'
+            ? advanceMangroveCoreContentProbes
+            : msg.report?.scope === 'segmented-wrapper'
+              ? advanceMangroveSegmentedWrapperProbes
+              : msg.report?.scope?.startsWith('segmented-leaves-')
+                ? advanceMangroveSegmentedLeavesProbes
+                : advanceMangroveSegmentedCanonicalProbes
+        )(msg.doc, msg.brand, msg.report, msg.buildResult),
+      });
+      return;
+    }
+    if (msg.type === 'remove-capability-probes') {
+      post('operation', {
+        result: await removeMangroveCapabilityProbes(msg.report),
+      });
+      return;
+    }
+    if (msg.type === 'audit-capability-probes') {
+      const reconciliation = await refreshMangroveCapabilityProbeLedger(
+        msg.report
+      );
+      post('operation', {
+        result: {
+          ...msg.report,
+          reconciliation,
+          errors: reconciliation.errors,
+        },
+      });
+      return;
+    }
+    if (msg.type === 'inspect-capability-probes') {
+      post('operation', {
+        result: await inspectMangroveCapabilityProbeLedger(msg.report),
+      });
+      return;
+    }
+    if (msg.type === 'compare-override-probes') {
+      post('operation', {
+        result: await compareMangroveOverrideProbes(
+          msg.rootId,
+          msg.buildResult
+        ),
+      });
+      return;
+    }
+    if (msg.type === 'remove-override-probes') {
+      post('operation', {
+        result: await removeMangroveOverrideProbes(msg.rootId),
+      });
+      return;
+    }
     if (msg.type === 'export-review') {
       post('export', {
-        result: await exportMangroveReview(msg.name, { scale: 2 }),
+        result: await exportMangroveReview(msg.name, {
+          scale: 2,
+          familyId: msg.familyId,
+        }),
       });
       return;
     }

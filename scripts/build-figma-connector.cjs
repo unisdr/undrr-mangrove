@@ -3,12 +3,15 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 const { minify } = require('terser');
 const PLUGIN = path.resolve(__dirname, '../examples/figma-plugin');
 const LIMIT = 50000;
 
-// Fixed-width LZW codes over UTF-8 bytes. The decoder uses only JavaScript,
-// keeping the payload independent of Figma-specific base64 helpers.
+// LZW codes over UTF-8 bytes, packed at the smallest fixed code width needed
+// by this payload. The decoder uses only JavaScript, keeping the payload
+// independent of Figma-specific base64 helpers. Width and count precede base64
+// so padding bits cannot be mistaken for another dictionary code.
 function compressJSON(value) {
   const input = Buffer.from(JSON.stringify(value), 'utf8').toString('latin1');
   const dictionary = new Map();
@@ -27,17 +30,43 @@ function compressJSON(value) {
   }
   if (word)
     codes.push(word.length === 1 ? word.charCodeAt(0) : dictionary.get(word));
-  const bytes = Buffer.alloc(codes.length * 2);
-  codes.forEach((code, index) => bytes.writeUInt16BE(code, index * 2));
-  return bytes.toString('base64');
+  const largest = codes.reduce((maximum, code) => Math.max(maximum, code), 0);
+  const width = Math.max(8, Math.ceil(Math.log2(largest + 1)));
+  const bytes = Buffer.alloc(Math.ceil((codes.length * width) / 8));
+  let buffer = 0;
+  let bits = 0;
+  let index = 0;
+  for (const code of codes) {
+    buffer = (buffer << width) | code;
+    bits += width;
+    while (bits >= 8) {
+      bits -= 8;
+      bytes[index++] = (buffer >>> bits) & 255;
+    }
+    buffer &= (1 << bits) - 1;
+  }
+  if (bits) bytes[index] = (buffer << (8 - bits)) & 255;
+  return `${width}:${codes.length}:${bytes.toString('base64')}`;
 }
 function decompressJSON(encoded) {
+  const header = /^(\d+):(\d+):/.exec(encoded);
+  if (!header) throw new Error('Invalid connector data header');
+  const width = Number(header[1]);
+  const count = Number(header[2]);
+  if (
+    !Number.isInteger(width) ||
+    width < 8 ||
+    width > 16 ||
+    !Number.isSafeInteger(count) ||
+    count < 1
+  )
+    throw new Error('Invalid connector code width or count');
   const alphabet =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
   const bytes = [];
   let bits = 0;
   let buffer = 0;
-  for (const character of encoded) {
+  for (const character of encoded.slice(header[0].length)) {
     if (character === '=') break;
     const index = alphabet.indexOf(character);
     if (index < 0) throw new Error('Invalid connector data encoding');
@@ -48,9 +77,22 @@ function decompressJSON(encoded) {
       bytes.push((buffer >> bits) & 255);
     }
   }
+  if (bytes.length !== Math.ceil((count * width) / 8))
+    throw new Error('Invalid connector data length');
   const codes = [];
-  for (let i = 0; i < bytes.length; i += 2)
-    codes.push((bytes[i] << 8) | bytes[i + 1]);
+  bits = 0;
+  buffer = 0;
+  const mask = (1 << width) - 1;
+  for (const byte of bytes) {
+    buffer = (buffer << 8) | byte;
+    bits += 8;
+    while (bits >= width && codes.length < count) {
+      bits -= width;
+      codes.push((buffer >>> bits) & mask);
+    }
+    buffer &= (1 << bits) - 1;
+  }
+  if (buffer !== 0) throw new Error('Invalid connector padding');
   const dictionary = Array.from({ length: 256 }, (_, index) =>
     String.fromCharCode(index)
   );
@@ -74,12 +116,80 @@ function decompressJSON(encoded) {
   return JSON.parse(decodeURIComponent(utf8));
 }
 
-function selectFamilies(doc, requested) {
+function selectFamilies(doc, requested, variantIds) {
   const families = new Map(
     doc.components.families.map(family => [family.id, family])
   );
   const selected = new Set();
   const visiting = new Set();
+  if (variantIds) {
+    const selectedVariants = new Map();
+    const root = families.get(requested[0]);
+    if (!root) throw new Error(`Unknown component family ${requested[0]}`);
+    for (const id of variantIds)
+      if (!root.variants.some(variant => variant.id === id))
+        throw new Error(`Unknown ${root.id} variant ${id}`);
+    const matches = (variant, selector) =>
+      Object.entries(selector).every(
+        ([key, value]) => variant.properties?.[key] === value
+      );
+    function variantVisit(family, variant) {
+      const key = `${family.id}/${variant.id}`;
+      if (selectedVariants.get(family.id)?.has(variant.id)) return;
+      if (visiting.has(family.id))
+        throw new Error(`Recipe dependency cycle at ${key}`);
+      visiting.add(family.id);
+      function tree(node) {
+        if (node.type === 'INSTANCE') {
+          const dependency = families.get(node.family);
+          if (!dependency)
+            throw new Error(`Unknown component family ${node.family}`);
+          const variants = dependency.variants.filter(item =>
+            matches(item, node.variant || {})
+          );
+          if (variants.length !== 1)
+            throw new Error(
+              `Dependency ${node.family} needs one exact variant`
+            );
+          variantVisit(dependency, variants[0]);
+        }
+        (node.children || []).forEach(tree);
+      }
+      tree(variant.tree);
+      visiting.delete(family.id);
+      if (!selectedVariants.has(family.id))
+        selectedVariants.set(family.id, new Set());
+      selectedVariants.get(family.id).add(variant.id);
+    }
+    for (const variant of root.variants)
+      if (variantIds.includes(variant.id)) variantVisit(root, variant);
+    return [...selectedVariants].map(([id, ids]) => {
+      const family = families.get(id);
+      const variants = family.variants.filter(variant => ids.has(variant.id));
+      return {
+        ...family,
+        variants,
+        ...(family.review && {
+          review: {
+            ...family.review,
+            // A scoped batch cannot validate specimens for omitted variants.
+            specimens: (family.review.specimens || []).filter(specimen =>
+              variants.some(variant => matches(variant, specimen.variant))
+            ),
+            ...(family.review.variantSurfaces &&
+              typeof family.review.variantSurfaces === 'object' &&
+              !Array.isArray(family.review.variantSurfaces) && {
+                variantSurfaces: Object.fromEntries(
+                  Object.entries(family.review.variantSurfaces).filter(([id]) =>
+                    ids.has(id)
+                  )
+                ),
+              }),
+          },
+        }),
+      };
+    });
+  }
   function visit(id) {
     if (selected.has(id)) return;
     if (visiting.has(id)) throw new Error(`Recipe dependency cycle at ${id}`);
@@ -97,7 +207,71 @@ function selectFamilies(doc, requested) {
   requested.forEach(visit);
   return [...selected].map(id => families.get(id));
 }
-function subsetDocument(doc, operation, brandId, requested) {
+function validateImportSource(doc, brandId) {
+  // Share the plugin's pure preflight instead of maintaining a second schema.
+  // This runs before compilation and has no Figma globals or write access.
+  const source = fs.readFileSync(path.join(PLUGIN, 'code.js'), 'utf8');
+  const start = source.indexOf('function validateMangroveImport(');
+  const end = source.indexOf('\nfunction mangroveAssetIndex(', start);
+  if (start < 0 || end < 0)
+    throw new Error(
+      'Import preflight boundary changed. Update connector build.'
+    );
+  const validate = vm.runInNewContext(`(${source.slice(start, end)})`);
+  validate(doc, [brandId]);
+}
+function importSelection(doc, brandId, selection) {
+  validateImportSource(doc, brandId);
+  const byId = new Map(doc.variables.map(spec => [spec.id, spec]));
+  const byName = new Map(doc.variables.map(spec => [spec.name, spec]));
+  const styles = [...doc.styles.text, ...doc.styles.effect];
+  const styleById = new Map(styles.map(spec => [spec.id, spec]));
+  const variableIds = new Set();
+  const styleIds = new Set(
+    selection
+      ? selection.styleIds || []
+      : styles
+          .filter(spec => spec.recommended || doc.styles.effect.includes(spec))
+          .map(spec => spec.id)
+  );
+  function visit(spec) {
+    if (variableIds.has(spec.id)) return;
+    if (spec.values[brandId] === undefined)
+      throw new Error(`Import preflight: ${spec.name} has no ${brandId} value`);
+    variableIds.add(spec.id);
+    const value = spec.values[brandId];
+    if (value && typeof value === 'object' && 'alias' in value)
+      visit(byName.get(value.alias));
+  }
+  for (const id of selection ? selection.variableIds || [] : byId.keys()) {
+    const spec = byId.get(id);
+    if (!spec) throw new Error(`Unknown import variable ID ${id}`);
+    visit(spec);
+  }
+  for (const id of styleIds) {
+    const style = styleById.get(id);
+    if (!style) throw new Error(`Unknown import style ID ${id}`);
+    if (style.values[brandId] === undefined)
+      throw new Error(
+        `Import preflight: ${style.name} has no ${brandId} value`
+      );
+    const bindings = style.bindings
+      ? Object.values(style.bindings)
+      : style.values[brandId].flatMap(entry =>
+          Object.values(entry.bindings || {})
+        );
+    bindings.forEach(name => visit(byName.get(name)));
+  }
+  return { variableIds, styleIds };
+}
+function subsetDocument(
+  doc,
+  operation,
+  brandId,
+  requested,
+  variantIds,
+  importScope
+) {
   const mode = doc.modes.find(item => item.id === brandId);
   if (!mode) throw new Error(`Unknown brand ${brandId}`);
   const oneBrand = spec => ({
@@ -111,32 +285,164 @@ function subsetDocument(doc, operation, brandId, requested) {
     styles: { text: [], effect: [] },
   };
   if (operation === 'build') {
-    const families = selectFamilies(doc, requested);
+    const families = selectFamilies(doc, requested, variantIds);
     const textIds = new Set();
     const effectIds = new Set();
-    function tree(node) {
+    const directTemplateIds = new Set();
+    const coincidentRings = [];
+    function tree(node, family, variant) {
+      if (node.type === 'INSTANCE' && node.properties !== undefined)
+        throw new Error(
+          'Nested instance property values must use overrides, not properties.'
+        );
+      const ring = node.focusRing;
+      const focusedSegment =
+        family.id === 'segmented-control.segment' &&
+        node === variant.tree &&
+        ['Focus', 'HoverFocus'].includes(variant.properties?.State);
+      const extension =
+        ring &&
+        ['renderer', 'outerStroke', 'cornerBindings'].some(
+          field => ring[field] !== undefined
+        );
+      if (
+        (focusedSegment || extension) &&
+        ring?.renderer !== 'COINCIDENT_SCALE'
+      )
+        throw new Error(
+          'Connector preflight: unknown or missing COINCIDENT_SCALE source focus extension.'
+        );
       if (node.textStyle) textIds.add(node.textStyle);
+      if ('textStyleApplication' in node && node.textStyle)
+        directTemplateIds.add(node.textStyle);
       if (node.effectStyle) effectIds.add(node.effectStyle);
-      (node.children || []).forEach(tree);
+      if (node.focusRing?.renderer === 'COINCIDENT_SCALE')
+        coincidentRings.push(node.focusRing);
+      (node.children || []).forEach(child => tree(child, family, variant));
     }
     families.forEach(family =>
-      family.variants.forEach(variant => tree(variant.tree))
+      family.variants.forEach(variant => tree(variant.tree, family, variant))
     );
     base.components = { version: doc.components.version, families };
+    // The bounded DTO carries consumer guidance as the existing description
+    // field. Avoid a second registry and duplicate construction prose in packets.
+    if (doc.kitGuidance) {
+      const descriptions = new Map(
+        doc.kitGuidance.families.map(item => [
+          item.id,
+          item.connectorDescription || item.description,
+        ])
+      );
+      base.components.families = families.map(family => ({
+        ...family,
+        description: descriptions.get(family.id) || family.description,
+      }));
+    }
     base.styles.text = doc.styles.text
       .filter(style => textIds.has(style.id))
       .map(oneBrand);
     base.styles.effect = doc.styles.effect
       .filter(style => effectIds.has(style.id))
       .map(oneBrand);
+    // DIRECT validation retains the exact source binding definitions and their
+    // alias dependency closure. Native variables remain read-only in builds.
+    const directVariables = new Set();
+    function includeDirectVariable(name) {
+      const matches = doc.variables.filter(variable => variable.name === name);
+      if (matches.length !== 1)
+        throw new Error(`Missing or ambiguous DIRECT source variable ${name}`);
+      const variable = matches[0];
+      if (directVariables.has(variable.id)) return;
+      directVariables.add(variable.id);
+      const value = variable.values?.[brandId];
+      if (value?.alias) includeDirectVariable(value.alias);
+    }
+    for (const style of base.styles.text)
+      if (directTemplateIds.has(style.id))
+        for (const name of Object.values(style.bindings || {}))
+          includeDirectVariable(name);
+    // Preserve exact source definitions needed by the source-family focus
+    // renderer. Traverse every source mode, while the DTO remains one brand.
+    // Alias edges are typed and cycle-checked independently for each mode.
+    const focusVariables = new Set();
+    function includeFocusVariable(name, type, modeId, visiting = new Set()) {
+      const matches = doc.variables.filter(variable => variable.name === name);
+      const variable = matches[0];
+      if (
+        matches.length !== 1 ||
+        variable.id !== name.replaceAll('/', '.') ||
+        doc.variables.filter(value => value.id === variable.id).length !== 1 ||
+        variable.type !== type ||
+        visiting.has(variable.id)
+      )
+        throw new Error(
+          `Missing, ambiguous, wrong-typed or cyclic COINCIDENT_SCALE source role ${name}`
+        );
+      visiting.add(variable.id);
+      const value = variable.values?.[modeId];
+      if (value && typeof value === 'object' && 'alias' in value) {
+        if (Object.keys(value).length !== 1 || typeof value.alias !== 'string')
+          throw new Error(
+            `Malformed COINCIDENT_SCALE alias ${name} / ${modeId}`
+          );
+        focusVariables.add(variable.id);
+        return includeFocusVariable(value.alias, type, modeId, visiting);
+      }
+      if (
+        type === 'FLOAT'
+          ? !Number.isFinite(value) || value < 0
+          : !value ||
+            Object.keys(value).length !== 4 ||
+            !['r', 'g', 'b', 'a'].every(
+              field =>
+                Number.isFinite(value[field]) &&
+                value[field] >= 0 &&
+                value[field] <= 1
+            )
+      )
+        throw new Error(
+          `Invalid COINCIDENT_SCALE source value ${name} / ${modeId}`
+        );
+      focusVariables.add(variable.id);
+      return value;
+    }
+    for (const ring of coincidentRings)
+      for (const sourceMode of doc.modes) {
+        includeFocusVariable(ring.color, 'COLOR', sourceMode.id);
+        includeFocusVariable(ring.separatorColor, 'COLOR', sourceMode.id);
+        const offset = includeFocusVariable(
+            ring.offset,
+            'FLOAT',
+            sourceMode.id
+          ),
+          width = includeFocusVariable(ring.width, 'FLOAT', sourceMode.id),
+          sum = includeFocusVariable(ring.outerStroke, 'FLOAT', sourceMode.id);
+        if (!(offset > 0 && width > 0) || sum !== offset + width)
+          throw new Error(
+            `COINCIDENT_SCALE source outerStroke must equal offset+width for ${sourceMode.id}`
+          );
+        for (const name of Object.values(ring.cornerBindings || {}))
+          includeFocusVariable(name, 'FLOAT', sourceMode.id);
+      }
+    base.variables = doc.variables
+      .filter(
+        variable =>
+          directVariables.has(variable.id) || focusVariables.has(variable.id)
+      )
+      .map(oneBrand);
     return base;
   }
   if (operation === 'import') {
-    base.variables = doc.variables.map(oneBrand);
-    base.styles.text = doc.styles.text
-      .filter(style => style.recommended)
+    const selected = importSelection(doc, brandId, importScope);
+    base.variables = doc.variables
+      .filter(spec => selected.variableIds.has(spec.id))
       .map(oneBrand);
-    base.styles.effect = doc.styles.effect.map(oneBrand);
+    base.styles.text = doc.styles.text
+      .filter(style => selected.styleIds.has(style.id))
+      .map(oneBrand);
+    base.styles.effect = doc.styles.effect
+      .filter(style => selected.styleIds.has(style.id))
+      .map(oneBrand);
     return base;
   }
   if (operation === 'diagnostics') {
@@ -195,6 +501,175 @@ function coreSource() {
   const end = prefix.indexOf(';', start);
   if (end < 0) throw new Error('Plugin UI startup terminator missing.');
   return prefix.slice(0, start) + prefix.slice(end + 1);
+}
+function specializeCore(source) {
+  // The connector embeds its immutable DTO. Omit only the absent optional
+  // profile validation; every text style still resets old spacing to zero.
+  for (const [before, after] of [
+    [
+      'if (value.letterSpacing !== undefined) {',
+      'if (MG_CONNECTOR_LETTER_SPACING && value.letterSpacing !== undefined) {',
+    ],
+    [
+      'style.letterSpacing = value.letterSpacing || {',
+      'style.letterSpacing = (MG_CONNECTOR_LETTER_SPACING && value.letterSpacing) || {',
+    ],
+  ]) {
+    const start = source.indexOf(before);
+    if (start < 0 || source.indexOf(before, start + before.length) >= 0)
+      throw new Error(`Connector specialization boundary changed: ${before}`);
+    source =
+      source.slice(0, start) + after + source.slice(start + before.length);
+  }
+  return source;
+}
+function retainedLetterSpacing(subset) {
+  let enabled = false;
+  for (const spec of subset?.styles.text || [])
+    for (const [mode, value] of Object.entries(spec.values || {})) {
+      if (value?.letterSpacing === undefined) continue;
+      enabled = true;
+      const spacing = value.letterSpacing;
+      if (
+        !spacing ||
+        !['PIXELS', 'PERCENT'].includes(spacing.unit) ||
+        !Number.isFinite(spacing.value) ||
+        Object.keys(spacing).some(key => !['unit', 'value'].includes(key))
+      )
+        throw new Error(
+          `Connector preflight: ${spec.name} [${mode}]: invalid text style letter spacing`
+        );
+    }
+  return enabled;
+}
+function specializeBuilder(source) {
+  // The exact subset is embedded losslessly in this connector. Gate only
+  // declarations absent from that subset, allowing Terser to remove helpers
+  // otherwise retained by unconditional schema checks. Every enabled branch
+  // keeps the desktop runtime's original validation. A changed source boundary
+  // fails closed rather than silently omitting a guard.
+  const replaceOnce = (before, after) => {
+    const start = source.indexOf(before);
+    if (start < 0 || source.indexOf(before, start + before.length) >= 0)
+      throw new Error(`Connector specialization boundary changed: ${before}`);
+    source =
+      source.slice(0, start) + after + source.slice(start + before.length);
+  };
+  for (const condition of [
+    'tree.image !== undefined',
+    'tree.gradient !== undefined',
+    'imagePlans.has(spec)',
+    'gradientPlans.has(spec)',
+  ])
+    replaceOnce(
+      `if (${condition}) {`,
+      `if (MG_CONNECTOR_MEDIA && ${condition}) {`
+    );
+  replaceOnce(
+    "tree.type === 'FRAME' &&\n            tree.position !== undefined &&",
+    "MG_CONNECTOR_FRAME_POSITION && tree.type === 'FRAME' &&\n            tree.position !== undefined &&"
+  );
+  replaceOnce(
+    "spec.type === 'FRAME' &&\n      spec.position &&",
+    "MG_CONNECTOR_FRAME_POSITION && spec.type === 'FRAME' &&\n      spec.position &&"
+  );
+  // The immutable embedded DTO has already passed this exact guard above.
+  replaceOnce(
+    "if (tree.type === 'INSTANCE' && tree.properties !== undefined)",
+    'if (false)'
+  );
+  for (const name of [
+    'imagePlans',
+    'imageAssetSources',
+    'imageHashes',
+    'gradientPlans',
+  ])
+    replaceOnce(
+      `const ${name} = new Map();`,
+      `const ${name} = MG_CONNECTOR_MEDIA ? new Map() : null;`
+    );
+  replaceOnce(
+    'if (tree.absolute !== undefined) {',
+    'if (MG_CONNECTOR_ABSOLUTE && tree.absolute !== undefined) {'
+  );
+  replaceOnce(
+    'if (family.review?.preserveVariantSizing !== undefined) {',
+    'if (MG_CONNECTOR_INTRINSIC_VALIDATION && family.review?.preserveVariantSizing !== undefined) {'
+  );
+  replaceOnce(
+    'if (family.review?.variantSurfaces !== undefined) {',
+    'if (MG_CONNECTOR_REVIEW_SURFACES && family.review?.variantSurfaces !== undefined) {'
+  );
+  replaceOnce(
+    'if (specimen.surface !== undefined)',
+    'if (MG_CONNECTOR_REVIEW_SURFACES && specimen.surface !== undefined)'
+  );
+  replaceOnce(
+    'if (tree.textDecorationOffset !== undefined) {',
+    'if (MG_CONNECTOR_TEXT_OFFSET && tree.textDecorationOffset !== undefined) {'
+  );
+  replaceOnce(
+    'spec.textDecorationOffset !== undefined &&\n        node.textDecoration ===',
+    'MG_CONNECTOR_TEXT_OFFSET && spec.textDecorationOffset !== undefined &&\n        node.textDecoration ==='
+  );
+  replaceOnce(
+    'if (specimen.nodes !== undefined) {',
+    'if (MG_CONNECTOR_REVIEW_NODES && specimen.nodes !== undefined) {'
+  );
+  replaceOnce(
+    'if (specimen.nodes?.length && (fresh || refreshNarrowReview)) {',
+    'if (MG_CONNECTOR_REVIEW_NODES && specimen.nodes?.length && (fresh || refreshNarrowReview)) {'
+  );
+  replaceOnce(
+    'const surface =\n          specimen.surface ??\n          reviewOptions.variantSurfaces?.[specimen.variant.recipe.id];',
+    'const surface = MG_CONNECTOR_REVIEW_SURFACES && (specimen.surface ?? reviewOptions.variantSurfaces?.[specimen.variant.recipe.id]);'
+  );
+  replaceOnce(
+    'if (MG_DIRECT_TEXT_ENABLED) {',
+    'if (MG_CONNECTOR_DIRECT_TEXT) {'
+  );
+  replaceOnce(
+    'if (tree.focusRing) {',
+    'if (MG_CONNECTOR_FOCUS && tree.focusRing) {'
+  );
+  // Keep the existing obsolete-outline cleanup even for an extension-free
+  // embedded scope. Only the absent outline renderer is unreachable.
+  replaceOnce(
+    'if (!spec.focusRing) {',
+    'if (!MG_CONNECTOR_FOCUS || !spec.focusRing) {'
+  );
+  // The source DTO is embedded self-contained, not supplied at execution time.
+  // subsetDocument refuses unknown/missing source focus extensions before
+  // compilation. Only that source-proven extension-free scope may omit this
+  // additional desktop preflight; the enabled branch keeps every native guard.
+  const focusStart =
+    '  const coincidentFocus = MG_COINCIDENT_FOCUS_ENABLED ? new Map() : null;';
+  const focusEnd = '  const svgPlans = new Map();';
+  const start = source.indexOf(focusStart),
+    end = source.indexOf(focusEnd);
+  if (
+    start < 0 ||
+    end <= start ||
+    source.indexOf(focusStart, start + 1) >= 0 ||
+    source.indexOf(focusEnd, end + 1) >= 0
+  )
+    throw new Error(
+      'Connector COINCIDENT_SCALE specialization boundary changed.'
+    );
+  const section = source.slice(start, end),
+    tryStart = section.indexOf('  try {');
+  if (tryStart < 0 || !section.endsWith('    return result;\n  }\n'))
+    throw new Error('Connector COINCIDENT_SCALE preflight shape changed.');
+  source =
+    source.slice(0, start) +
+    section.slice(0, tryStart) +
+    '  if (MG_CONNECTOR_COINCIDENT_FOCUS) {\n' +
+    section.slice(tryStart) +
+    '  }\n' +
+    source.slice(end);
+  // When surfaces are absent, the existing else branch still clears/hides an
+  // obsolete owned surface. Only new surface construction becomes unreachable.
+  return source;
 }
 function connectorInspectionSummary(report, nodeIds) {
   const nodes = report.nodes;
@@ -304,6 +779,9 @@ async function buildConnector({
   operation = 'build',
   brandId = 'undrr',
   familyIds,
+  variantIds,
+  variableIds,
+  styleIds,
   nodeIds = [],
   checkFonts = false,
   doc,
@@ -332,36 +810,225 @@ async function buildConnector({
       : []);
   if (operation === 'build' && !requested.length)
     throw new Error('No component recipes. Rebuild the token JSON.');
-  const subset = subsetDocument(doc, operation, brandId, requested);
+  if (
+    variantIds !== undefined &&
+    (operation !== 'build' ||
+      requested.length !== 1 ||
+      !Array.isArray(variantIds) ||
+      !variantIds.length ||
+      new Set(variantIds).size !== variantIds.length ||
+      variantIds.some(id => typeof id !== 'string' || !id))
+  )
+    throw new Error(
+      'Variant batches require one family and unique variant IDs.'
+    );
+  const scopedImport = variableIds !== undefined || styleIds !== undefined;
+  if (
+    scopedImport &&
+    (operation !== 'import' ||
+      [variableIds, styleIds].some(
+        ids =>
+          ids !== undefined &&
+          (!Array.isArray(ids) ||
+            new Set(ids).size !== ids.length ||
+            ids.some(id => typeof id !== 'string' || !id.trim()))
+      ) ||
+      !(variableIds?.length || styleIds?.length))
+  )
+    throw new Error(
+      'Import batches require unique variableIds/styleIds and at least one selected ID.'
+    );
+  const subset = subsetDocument(
+    doc,
+    operation,
+    brandId,
+    requested,
+    variantIds,
+    scopedImport ? { variableIds, styleIds } : undefined
+  );
+  const importScope = scopedImport
+    ? {
+        brandId,
+        requestedVariableIds: variableIds || [],
+        requestedStyleIds: styleIds || [],
+        variableIds: subset.variables.map(spec => spec.id),
+        styleIds: [...subset.styles.text, ...subset.styles.effect].map(
+          spec => spec.id
+        ),
+        prune: false,
+      }
+    : null;
+  const letterSpacingEnabled = retainedLetterSpacing(subset);
+  // Compile the native SVG importer only when the exact dependency/variant
+  // subset needs it. The desktop plugin keeps every capability available.
+  function needsSvg(node) {
+    return node.type === 'SVG' || (node.children || []).some(needsSvg);
+  }
+  const svgEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsSvg(variant.tree))
+    );
+  function needsAbsolute(node) {
+    return (
+      node.absolute !== undefined || (node.children || []).some(needsAbsolute)
+    );
+  }
+  const absoluteEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsAbsolute(variant.tree))
+    );
+  function needsArc(node) {
+    return 'arcData' in node || (node.children || []).some(needsArc);
+  }
+  const arcEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsArc(variant.tree))
+    );
+  const intrinsicReviewEnabled =
+    operation === 'build' &&
+    subset.components.families.some(
+      family => family.review?.preserveVariantSizing
+    );
+  const intrinsicValidationEnabled =
+    operation === 'build' &&
+    subset.components.families.some(
+      family => family.review?.preserveVariantSizing !== undefined
+    );
+  const reviewSurfacesEnabled =
+    operation === 'build' &&
+    subset.components.families.some(
+      family =>
+        family.review?.variantSurfaces !== undefined ||
+        (Array.isArray(family.review?.specimens) &&
+          family.review.specimens.some(
+            specimen => specimen?.surface !== undefined
+          ))
+    );
+  function needsTextOffset(node) {
+    return (
+      node.textDecorationOffset !== undefined ||
+      (node.children || []).some(needsTextOffset)
+    );
+  }
+  const textOffsetEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsTextOffset(variant.tree))
+    );
+  function needsDirectText(node) {
+    return (
+      'textStyleApplication' in node ||
+      (node.children || []).some(needsDirectText)
+    );
+  }
+  const directTextEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsDirectText(variant.tree))
+    );
+  function needsFocus(node) {
+    return (
+      node.focusRing !== undefined || (node.children || []).some(needsFocus)
+    );
+  }
+  const focusEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsFocus(variant.tree))
+    );
+  function needsCoincidentFocus(node) {
+    return (
+      node.focusRing?.renderer === 'COINCIDENT_SCALE' ||
+      (node.children || []).some(needsCoincidentFocus)
+    );
+  }
+  const coincidentFocusEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsCoincidentFocus(variant.tree))
+    );
+  const reviewNodesEnabled =
+    operation === 'build' &&
+    subset.components.families.some(
+      family =>
+        Array.isArray(family.review?.specimens) &&
+        family.review.specimens.some(specimen => specimen?.nodes !== undefined)
+    );
+  const needsMedia = tree =>
+    tree.image !== undefined ||
+    tree.gradient !== undefined ||
+    (tree.children || []).some(needsMedia);
+  const mediaEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsMedia(variant.tree))
+    );
+  const needsFramePosition = tree =>
+    (tree.type === 'FRAME' && tree.position !== undefined) ||
+    (tree.children || []).some(needsFramePosition);
+  const framePositionEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsFramePosition(variant.tree))
+    );
   let source = 'const MG_SHARED_ONLY = true;\n';
   source += fs.readFileSync(path.join(PLUGIN, 'kit-identity.js'), 'utf8');
-  source += `\n;\n${coreSource()}\n;\n`;
+  source += `\n;\n${specializeCore(coreSource())}\n;\n`;
   const runtime =
     operation === 'build'
       ? 'kit-builder.js'
       : ['diagnostics', 'inspect'].includes(operation)
         ? 'kit-inspection.js'
         : null;
-  if (runtime)
-    source += fs.readFileSync(path.join(PLUGIN, runtime), 'utf8') + '\n;\n';
+  if (runtime) {
+    const runtimeSource = fs.readFileSync(path.join(PLUGIN, runtime), 'utf8');
+    source +=
+      (operation === 'build'
+        ? specializeBuilder(runtimeSource)
+        : runtimeSource) + '\n;\n';
+  }
   if (subset) {
     source += `const doc = (${decompressJSON.toString()})(${JSON.stringify(compressJSON(subset))});\n`;
   }
-  if (operation === 'build')
-    source += `return await buildMangroveComponents(doc, ${JSON.stringify(brandId)}, ${JSON.stringify(requested)});`;
-  else if (operation === 'import')
+  if (operation === 'build') {
+    const invocation = `await buildMangroveComponents(doc, ${JSON.stringify(brandId)}, ${JSON.stringify(requested)})`;
+    source += variantIds
+      ? `const result = ${invocation}; return {...result, scope: ${JSON.stringify({ familyIds: requested, variantIds })}};`
+      : `return ${invocation};`;
+  } else if (operation === 'import')
     source += `
-      const {createdVariableIds, updatedVariableIds, removedVariableIds, styles, ...result} = await importVariables(doc, [${JSON.stringify(brandId)}], false, undefined, true);
+      const {createdVariableIds, updatedVariableIds, removedVariableIds, styles, ...result} = await importVariables(doc, [${JSON.stringify(brandId)}], false, ${JSON.stringify(subset.styles.text.map(spec => spec.id))}, true);
       const {createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds, ...styleReport} = styles;
       result.styles = styleReport;
-      return {result, createdVariableIds, updatedVariableIds, removedVariableIds, createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds};
+      return {result, createdVariableIds, updatedVariableIds, removedVariableIds, createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds${importScope ? `, scope: ${JSON.stringify(importScope)}` : ''}};
     `;
   else if (operation === 'diagnostics')
     source += `return await createMangroveFocusDiagnostics(doc, ${JSON.stringify(brandId)});`;
   else if (operation === 'inspect')
     source += `return (${connectorInspectionSummary.toString()})(await inspectMangroveKit({checkFonts:${Boolean(checkFonts)}}), ${JSON.stringify(nodeIds)});`;
   const minified = await minify(`async function mgRun(){${source}}`, {
-    compress: true,
+    compress: {
+      passes: 2,
+      global_defs: {
+        MG_CONNECTOR_FRAME_POSITION: framePositionEnabled,
+        MG_CONNECTOR_LETTER_SPACING: letterSpacingEnabled,
+        MG_CONNECTOR_MEDIA: mediaEnabled,
+        MG_CONNECTOR_SVG: svgEnabled,
+        MG_CONNECTOR_ABSOLUTE: absoluteEnabled,
+        MG_CONNECTOR_ARC: arcEnabled,
+        MG_CONNECTOR_INTRINSIC_REVIEW: intrinsicReviewEnabled,
+        MG_CONNECTOR_INTRINSIC_VALIDATION: intrinsicValidationEnabled,
+        MG_CONNECTOR_REVIEW_SURFACES: reviewSurfacesEnabled,
+        MG_CONNECTOR_TEXT_OFFSET: textOffsetEnabled,
+        MG_CONNECTOR_REVIEW_NODES: reviewNodesEnabled,
+        MG_CONNECTOR_DIRECT_TEXT: directTextEnabled,
+        MG_CONNECTOR_FOCUS: focusEnabled,
+        MG_CONNECTOR_COINCIDENT_FOCUS: coincidentFocusEnabled,
+      },
+    },
     mangle: true,
     format: { comments: false },
   });
@@ -373,30 +1040,60 @@ async function buildConnector({
   const bytes = Buffer.byteLength(code, 'utf8');
   if (code.length > LIMIT || bytes > LIMIT)
     throw new Error(
-      `Connector payload exceeds ${LIMIT}: ${code.length} characters / ${bytes} bytes. Select fewer component families.`
+      `Connector payload exceeds ${LIMIT}: ${code.length} characters / ${bytes} bytes. ${
+        operation === 'build'
+          ? 'Select fewer families, or batch one family with explicit variantIds (CLI fourth argument: comma-separated recipe variant IDs).'
+          : operation === 'import'
+            ? 'Import explicit variableIds/styleIds batches (CLI --variables=id,id --styles=id,id). Each batch includes alias and style-binding dependencies with pruning off; reduce the requested IDs if needed. No metadata was truncated.'
+            : 'Use the desktop plugin for this operation; no metadata was truncated.'
+      }`
     );
   return {
     code,
     operation,
     brandId,
     families: operation === 'build' ? requested : [],
+    variantIds: variantIds || null,
+    scope: importScope,
+    svgEnabled,
+    directTextEnabled,
+    coincidentFocusEnabled,
+    letterSpacingEnabled,
+    focusEnabled,
     characters: code.length,
     bytes,
   };
 }
 if (require.main === module) {
-  const [operation = 'build', brandId = 'undrr', familyList] =
-    process.argv.slice(2);
-  buildConnector({
-    operation,
-    brandId,
-    familyIds: familyList ? familyList.split(',') : undefined,
-    nodeIds: operation === 'inspect' && familyList ? familyList.split(',') : [],
-  })
+  const args = process.argv.slice(2);
+  const positional = args.filter(arg => !arg.startsWith('--'));
+  const [operation = 'build', brandId = 'undrr', familyList, variantList] =
+    positional;
+  const flags = {};
+  let cliError;
+  for (const arg of args.filter(arg => arg.startsWith('--'))) {
+    const match = /^--(variables|styles)=(.*)$/.exec(arg);
+    if (!match || flags[match[1]] !== undefined)
+      cliError = `Unknown or duplicate connector option ${arg}`;
+    else flags[match[1]] = match[2] ? match[2].split(',') : [];
+  }
+  (cliError
+    ? Promise.reject(new Error(cliError))
+    : buildConnector({
+        operation,
+        brandId,
+        familyIds: familyList ? familyList.split(',') : undefined,
+        variantIds: variantList ? variantList.split(',') : undefined,
+        variableIds: flags.variables,
+        styleIds: flags.styles,
+        nodeIds:
+          operation === 'inspect' && familyList ? familyList.split(',') : [],
+      })
+  )
     .then(result => {
       process.stdout.write(`${result.code}\n`);
       process.stderr.write(
-        `build-figma-connector: ${result.operation} / ${result.brandId}, ${result.characters} characters / ${result.bytes} bytes\n`
+        `build-figma-connector: ${result.operation} / ${result.brandId}, ${result.characters} characters / ${result.bytes} bytes${result.variantIds ? `, variants: ${result.variantIds.join(',')}` : ''}${result.scope ? `, requested: ${result.scope.requestedVariableIds.length} variables / ${result.scope.requestedStyleIds.length} styles, dependency closure: ${result.scope.variableIds.length} variables / ${result.scope.styleIds.length} styles, pruning off` : ''}\n`
       );
     })
     .catch(error => {

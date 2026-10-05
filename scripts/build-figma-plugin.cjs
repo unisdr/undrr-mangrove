@@ -9,20 +9,45 @@ const SOURCES = [
   'code.js',
   'kit-inspection.js',
   'kit-builder.js',
+  'kit-layout.js',
+  'kit-navigation.js',
+  'kit-welcome.js',
+  'kit-acceptance.js',
+  'kit-editorial-acceptance.js',
+  'font-diagnostics.js',
+  'kit-segmented-capabilities.js',
+  'kit-segmented-canonical-capabilities.js',
+  'kit-segmented-focus-capabilities.js',
+  'kit-segmented-leaves-capabilities.js',
+  'kit-segmented-wrapper-capabilities.js',
+  'kit-form-action-capabilities.js',
+  'kit-form-action-optional-capabilities.js',
+  'kit-core-content-capabilities.js',
+  'kit-capabilities.js',
 ];
+
+function renderPlugin() {
+  const { buildDefaultKitGuidance } = require('./figma-kit-guidance.cjs');
+  const guidance = `const MG_KIT_GUIDANCE = ${JSON.stringify(buildDefaultKitGuidance())};\n`;
+  const source =
+    guidance +
+    SOURCES.map(
+      file =>
+        `// Source: ${file}\n${fs.readFileSync(path.join(PLUGIN, file), 'utf8')}`
+    ).join('\n;\n');
+  return `${source}\n`;
+}
 
 function buildPlugin() {
   const output = path.join(PLUGIN, 'build/main.js');
-  const source = SOURCES.map(
-    file =>
-      `// Source: ${file}\n${fs.readFileSync(path.join(PLUGIN, file), 'utf8')}`
-  ).join('\n;\n');
   fs.mkdirSync(path.dirname(output), { recursive: true });
-  fs.writeFileSync(output, `${source}\n`);
+  const source = renderPlugin();
+  if (!fs.existsSync(output) || fs.readFileSync(output, 'utf8') !== source)
+    fs.writeFileSync(output, source);
   return output;
 }
 
 if (require.main === module) {
   process.stdout.write(`build-figma-plugin: wrote ${buildPlugin()}\n`);
 }
-module.exports = { buildPlugin };
+module.exports = { buildPlugin, renderPlugin };

@@ -43,8 +43,20 @@ function environment(doc, options = {}) {
     rejectedFonts: new Set(options.rejectedFonts || []),
     nodes: new Map(),
     viewportCalls: 0,
+    textRangeFillWrites: [],
+    staleTextRangeFillWrites: 0,
   };
   const figma = factoryModule.exports(state);
+  state.images = new Map();
+  figma.base64Decode = value => new Uint8Array(Buffer.from(value, 'base64'));
+  figma.createImage = bytes => {
+    const hash = require('crypto')
+      .createHash('sha256')
+      .update(bytes)
+      .digest('hex');
+    state.images.set(hash, Buffer.from(bytes));
+    return { hash };
+  };
   const rejectPrivate = () => {
     throw new Error('Private plugin data is unsupported in this runtime');
   };
@@ -116,6 +128,12 @@ function environment(doc, options = {}) {
       this.width = this.height = 100;
       this.fills = [];
       this.strokes = [];
+      if (type === 'ELLIPSE')
+        this.arcData = {
+          startingAngle: 0,
+          endingAngle: 2 * Math.PI,
+          innerRadius: 0,
+        };
       this.effects = [];
       this.boundVariables = {};
       this._opacity = 1;
@@ -185,7 +203,7 @@ function environment(doc, options = {}) {
     }
     insertChild(index, node) {
       assert(
-        !['TEXT', 'RECTANGLE'].includes(this.type),
+        !['TEXT', 'RECTANGLE', 'ELLIPSE'].includes(this.type),
         'Cannot parent in a leaf'
       );
       if (node.type === 'TEXT') node.requireFont();
@@ -205,6 +223,12 @@ function environment(doc, options = {}) {
     findAllWithCriteria({ types }) {
       return this.findAll(node => types.includes(node.type));
     }
+    isNestedInstance() {
+      if (this.type !== 'INSTANCE') return false;
+      for (let parent = this.parent; parent; parent = parent.parent)
+        if (parent.type === 'INSTANCE') return true;
+      return false;
+    }
     resize(width, height) {
       assert(
         Number.isFinite(width) &&
@@ -212,8 +236,13 @@ function environment(doc, options = {}) {
           Number.isFinite(height) &&
           height > 0
       );
+      // Observed in desktop Figma: nested instance dimensions can silently
+      // retain the main component value while the Plugin API reports success.
+      if (this.isNestedInstance()) return;
       this.width = width;
       this.height = height;
+      this._horizontal = 'FIXED';
+      this._vertical = 'FIXED';
     }
     resizeWithoutConstraints(width, height) {
       this.resize(width, height);
@@ -230,6 +259,13 @@ function environment(doc, options = {}) {
       return this._horizontal;
     }
     set layoutSizingVertical(value) {
+      if (value === 'HUG')
+        assert(
+          (this.type === 'TEXT' && this.parent?.layoutMode !== 'NONE') ||
+            (['FRAME', 'COMPONENT', 'INSTANCE'].includes(this.type) &&
+              this.layoutMode !== 'NONE'),
+          'HUG needs an auto-layout frame or text child of auto-layout'
+        );
       if (value === 'FILL')
         assert(
           this.parent && this.parent.layoutMode !== 'NONE',
@@ -258,6 +294,48 @@ function environment(doc, options = {}) {
         `Text mutation with unloaded ${this._fontName.family} ${this._fontName.style}`
       );
     }
+    set textWrapStyle(value) {
+      this.requireFont();
+      assert(
+        ['AUTO', 'BALANCE', 'PRETTY'].includes(value),
+        'Invalid native textWrapStyle enum'
+      );
+      this._textWrapStyle = value;
+    }
+    get textWrapStyle() {
+      return this._textWrapStyle || 'AUTO';
+    }
+    set textDecorationOffset(value) {
+      this.requireFont();
+      assert(value && typeof value === 'object' && !Array.isArray(value));
+      assert(
+        value.unit === 'AUTO'
+          ? Object.keys(value).length === 1
+          : ['PIXELS', 'PERCENT'].includes(value.unit) &&
+              Number.isFinite(value.value) &&
+              Object.keys(value).length === 2 &&
+              Object.keys(value).every(key => ['unit', 'value'].includes(key)),
+        'Invalid native text decoration offset'
+      );
+      this._textDecorationOffset = copy(value);
+    }
+    get textDecorationOffset() {
+      if (this.type !== 'TEXT') return undefined;
+      return this.textDecoration === 'UNDERLINE'
+        ? this._textDecorationOffset || { unit: 'AUTO' }
+        : null;
+    }
+    set layoutPositioning(value) {
+      assert(['AUTO', 'ABSOLUTE'].includes(value), 'Invalid positioning enum');
+      assert(
+        this.parent && this.parent.layoutMode !== 'NONE',
+        'Positioning needs an auto-layout parent'
+      );
+      this._layoutPositioning = value;
+    }
+    get layoutPositioning() {
+      return this._layoutPositioning || 'AUTO';
+    }
     set fontName(value) {
       assert(
         state.loadedFonts.has(`${value.family} ${value.style}`),
@@ -268,12 +346,56 @@ function environment(doc, options = {}) {
     get fontName() {
       return this.type === 'TEXT' ? this._fontName : undefined;
     }
+    set fontSize(value) {
+      this.requireFont();
+      assert(Number.isFinite(value) && value >= 1, 'Invalid native font size');
+      this._fontSize = value;
+      delete this.boundVariables.fontSize;
+    }
+    get fontSize() {
+      const binding = this.boundVariables.fontSize;
+      return binding
+        ? resolve(
+            state.variables.find(variable => variable.id === binding.id),
+            this
+          )
+        : this._fontSize;
+    }
     set characters(value) {
       this.requireFont();
       this._characters = value;
     }
     get characters() {
       return this.type === 'TEXT' ? this._characters : undefined;
+    }
+    checkTextRange(start, end) {
+      assert.strictEqual(this.type, 'TEXT', 'Text range API requires TEXT');
+      assert(
+        start === 0 && end === this.characters.length,
+        'Mock supports the complete text range only'
+      );
+    }
+    getRangeFills(start, end) {
+      this.checkTextRange(start, end);
+      if (this._textRangeSource && !this._textRangeFillOverride)
+        return this._textRangeSource.getRangeFills(
+          0,
+          this._textRangeSource.characters.length
+        );
+      return copy(this._textRangeFills ?? this.fills);
+    }
+    setRangeFills(start, end, fills) {
+      this.checkTextRange(start, end);
+      this.requireFont();
+      assert(Array.isArray(fills), 'Range fills must be paints');
+      this._textRangeFills = copy(fills);
+      this._textRangeFillOverride = true;
+      const aliases = fills.flatMap(paint =>
+        paint.boundVariables?.color ? [copy(paint.boundVariables.color)] : []
+      );
+      if (aliases.length) this.boundVariables.textRangeFills = aliases;
+      else delete this.boundVariables.textRangeFills;
+      state.textRangeFillWrites.push({ nodeId: this.id, start, end });
     }
     getStyledTextSegments() {
       return [{ fontName: this.fontName }];
@@ -282,6 +404,8 @@ function environment(doc, options = {}) {
       return [this.fontName];
     }
     setBoundVariable(field, variable) {
+      if (['width', 'height'].includes(field) && this.isNestedInstance())
+        return;
       if (!variable) {
         delete this.boundVariables[field];
         return;
@@ -317,6 +441,10 @@ function environment(doc, options = {}) {
     }
     async setTextStyleIdAsync(id) {
       this.requireFont();
+      if (id === '') {
+        this.textStyleId = '';
+        return;
+      }
       const style = state.styles.find(
         item => item.id === id && item.type === 'TEXT'
       );
@@ -324,7 +452,23 @@ function environment(doc, options = {}) {
       this.fontName = style.fontName;
       this.fontSize = style.fontSize;
       this.lineHeight = copy(style.lineHeight);
+      this.letterSpacing = copy(
+        style.letterSpacing || { unit: 'PIXELS', value: 0 }
+      );
+      this.textDecoration = style.textDecoration || 'NONE';
+      this.textWrapStyle = style.textWrapStyle || 'AUTO';
       this.textStyleId = id;
+      // Native style reattachment may retain stale range colour independently
+      // of node.fills. This opt-in reproduces the observed TOC repeat defect.
+      const stale = options.staleTextRangeFillsAfterStyle?.(this, style);
+      if (stale) {
+        this._textRangeFills = copy(stale);
+        this._textRangeFillOverride = true;
+        this.boundVariables.textRangeFills = stale.flatMap(paint =>
+          paint.boundVariables?.color ? [copy(paint.boundVariables.color)] : []
+        );
+        state.staleTextRangeFillWrites += 1;
+      }
     }
     async setEffectStyleIdAsync(id) {
       this.effectStyleId = id;
@@ -418,6 +562,15 @@ function environment(doc, options = {}) {
           'clipsContent',
           'fills',
           'strokes',
+          'strokeWeight',
+          'strokeCap',
+          'strokeJoin',
+          'strokeAlign',
+          'vectorPaths',
+          'arcData',
+          'textDecoration',
+          '_textDecorationOffset',
+          '_layoutPositioning',
           'effects',
           'boundVariables',
           '_opacity',
@@ -444,10 +597,15 @@ function environment(doc, options = {}) {
           'fontSize',
           'textAutoResize',
           'textAlignHorizontal',
+          '_textWrapStyle',
+          'letterSpacing',
           '_horizontal',
           '_vertical',
         ])
           if (source[field] !== undefined) node[field] = copy(source[field]);
+        // Unedited instance text inherits master range paints. Direct consumer
+        // range overrides remain distinct from that inheritance.
+        if (node.type === 'TEXT') node._textRangeSource = source;
         if (root) node.main = source;
         else if (source.type === 'INSTANCE') {
           node.main = source.main;
@@ -484,6 +642,9 @@ function environment(doc, options = {}) {
   figma.mixed = Symbol('mixed');
   for (const [name, type] of [
     ['createFrame', 'FRAME'],
+    ['createSection', 'SECTION'],
+    ['createEllipse', 'ELLIPSE'],
+    ['createVector', 'VECTOR'],
     ['createText', 'TEXT'],
     ['createComponent', 'COMPONENT'],
     ['createRectangle', 'RECTANGLE'],
@@ -496,6 +657,35 @@ function environment(doc, options = {}) {
       return node;
     };
   }
+  const statusFixtures = new Map();
+  if (doc.components?.families?.some(family => family.id === 'status-label')) {
+    // Compare the caller's asset IDs and raw markup with a fresh guarded source
+    // recipe. A modified document cannot register itself as an exact fixture.
+    const source = JSON.parse(
+      fs.readFileSync(path.join(DIR, 'mangrove-variables.json'), 'utf8')
+    );
+    const status =
+      require('../../../scripts/figma-status-label-recipes.cjs').buildStatusLabelRecipes(
+        { root: path.resolve(DIR, '../..'), ...source }
+      )[0];
+    const expected = new Map();
+    const visit = (tree, map) => {
+      if (tree.type === 'SVG') map.set(tree.svg.assetId, tree.svg.markup);
+      for (const child of tree.children || []) visit(child, map);
+    };
+    for (const variant of status.variants) visit(variant.tree, expected);
+    const actual = new Map();
+    for (const family of doc.components.families.filter(
+      family => family.id === 'status-label'
+    ))
+      for (const variant of family.variants) visit(variant.tree, actual);
+    for (const [assetId, markup] of actual)
+      if (expected.get(assetId) === markup) statusFixtures.set(assetId, markup);
+  }
+  require('./mock-svg.cjs').installSvgMock(figma, state, {
+    createVector: () => figma.createVector(),
+    sourceFixtures: statusFixtures,
+  });
   figma.combineAsVariants = (components, parent) => {
     assert(
       components.length > 0 &&
@@ -515,7 +705,11 @@ function environment(doc, options = {}) {
       state.viewportCalls += 1;
     },
   };
+  const {
+    buildDefaultKitGuidance,
+  } = require('../../../scripts/figma-kit-guidance.cjs');
   const context = vm.createContext({
+    MG_KIT_GUIDANCE: buildDefaultKitGuidance(),
     figma,
     __html__: '',
     console,
@@ -528,6 +722,14 @@ function environment(doc, options = {}) {
     'kit-builder.js',
   ])
     vm.runInContext(fs.readFileSync(path.join(DIR, file), 'utf8'), context);
+  const layoutFile = path.join(DIR, 'kit-layout.js');
+  if (fs.existsSync(layoutFile))
+    vm.runInContext(fs.readFileSync(layoutFile, 'utf8'), context);
+  const navigationFile = path.join(DIR, 'kit-navigation.js');
+  vm.runInContext(fs.readFileSync(navigationFile, 'utf8'), context);
+  const welcomeFile = path.join(DIR, 'kit-welcome.js');
+  if (fs.existsSync(welcomeFile))
+    vm.runInContext(fs.readFileSync(welcomeFile, 'utf8'), context);
   const call = (name, ...args) => {
     context.mockArgs = args;
     return vm.runInContext(`${name}(...mockArgs)`, context);
@@ -560,6 +762,84 @@ async function main() {
     fs.readFileSync(path.join(DIR, 'mangrove-variables.json'), 'utf8')
   );
   assert(doc.components?.families.length, 'Build updated token JSON first');
+  {
+    const env = environment(doc);
+    await importFoundation(env, doc);
+    const imported = await env.call(
+      'importVariables',
+      doc,
+      ['undrr'],
+      false,
+      ['text.text.300.regular'],
+      false
+    );
+    assert.strictEqual(imported.errors.length, 0, imported.errors.join('\n'));
+    await env.figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+    const text = env.figma.createText();
+    const style = env.state.styles.find(
+      asset => identity(asset, 'mgStyleId') === 'text.text.300.regular'
+    );
+    assert(style, 'Imported source Regular text style is missing');
+    text.fontName = style.fontName;
+    await text.setTextStyleIdAsync(style.id);
+    text.characters = 'Keep edited label and current source typography';
+    const family = env.state.variables.find(
+      variable => variable.name === 'font-family/text'
+    );
+    const size = env.state.variables.find(
+      variable => variable.name === 'font-size/300'
+    );
+    text.setBoundVariable('fontFamily', family);
+    text.setBoundVariable('fontSize', size);
+    const snapshot = () =>
+      JSON.stringify({
+        id: text.id,
+        type: text.type,
+        fontName: text.fontName,
+        fontSize: text.fontSize,
+        lineHeight: text.lineHeight,
+        characters: text.characters,
+        boundVariables: text.boundVariables,
+        textDecoration: text.textDecoration,
+        textWrapStyle: text.textWrapStyle,
+        width: text.width,
+        height: text.height,
+      });
+    const before = snapshot();
+    env.state.loadedFonts.delete(
+      `${text.fontName.family} ${text.fontName.style}`
+    );
+    await assert.rejects(text.setTextStyleIdAsync(''), /unloaded/);
+    assert.strictEqual(text.textStyleId, style.id);
+    assert.strictEqual(snapshot(), before);
+    await env.figma.loadFontAsync(style.fontName);
+    await text.setTextStyleIdAsync('');
+    assert.strictEqual(text.textStyleId, '');
+    assert.strictEqual(
+      snapshot(),
+      before,
+      'Empty association setter changed source typography, identity, content or current aliases'
+    );
+    text.fontSize = 16;
+    assert.strictEqual(
+      text.boundVariables.fontSize,
+      undefined,
+      'Literal size write must clear its previous variable alias'
+    );
+    assert(
+      text.boundVariables.fontFamily,
+      'Literal size write must preserve the unrelated family alias'
+    );
+    text.setBoundVariable('fontSize', size);
+    assert.strictEqual(
+      snapshot(),
+      before,
+      'Explicit direct size binding did not restore the exact source record'
+    );
+  }
+  console.log(
+    'ok  empty text-style association requires loaded font and preserves type, typography, identity and aliases; literal font-size clears only its alias before explicit rebind'
+  );
   {
     const {
       buildFigmaVariables,
@@ -823,6 +1103,98 @@ async function main() {
     );
   }
   {
+    const composed = copy(doc);
+    const family = composed.components.families.find(
+      item => item.id === 'tabs'
+    );
+    family.review = {
+      genericLabels: false,
+      width: 720,
+      specimens: [
+        {
+          id: 'coordinated-columns',
+          name: 'Nested content and measured geometry',
+          variant: { Layout: 'Horizontal' },
+          width: 240,
+          instanceWidth: 293,
+          properties: {},
+          nodes: [
+            {
+              path: ['mg-tabs__item-1'],
+              properties: { Label: 'Nested edited seed' },
+            },
+          ],
+        },
+      ],
+    };
+    const env = environment(composed);
+    await importFoundation(env, composed);
+    const first = await env.call('buildMangroveComponents', composed, 'undrr', [
+      'tabs',
+    ]);
+    assert.strictEqual(first.errors.length, 0, first.errors.join('\n'));
+    const instance = [...env.state.nodes.values()].find(
+      node =>
+        identity(node, 'mgKitId') ===
+        'review/tabs/specimen/coordinated-columns/instance'
+    );
+    assert.strictEqual(instance.width, 293);
+    assert.strictEqual(instance.layoutSizingHorizontal, 'FIXED');
+    const nested = instance.children.find(
+      node => node.name === 'mg-tabs__item-1'
+    );
+    const property = Object.keys(nested.componentProperties).find(key =>
+      key.startsWith('Label#')
+    );
+    assert.strictEqual(
+      nested.componentProperties[property].value,
+      'Nested edited seed'
+    );
+    assert(
+      ![...env.state.nodes.values()].some(
+        node =>
+          identity(node, 'mgKitId') ===
+          'review/tabs/specimen/long-label/instance'
+      )
+    );
+    nested.setProperties({ [property]: 'Keep the nested designer edit' });
+    instance.resize(311, instance.height);
+    const ids = ownership(env.state);
+    const second = await env.call(
+      'buildMangroveComponents',
+      composed,
+      'undrr',
+      ['tabs']
+    );
+    assert.strictEqual(second.errors.length, 0, second.errors.join('\n'));
+    assert.strictEqual(second.createdNodeIds.length, 0);
+    assert.deepStrictEqual(ownership(env.state), ids);
+    assert.strictEqual(
+      nested.componentProperties[property].value,
+      'Keep the nested designer edit'
+    );
+    assert.strictEqual(instance.width, 311);
+    for (const invalid of [
+      { path: ['Missing'], width: 100 },
+      { path: ['mg-tabs__item-1'], properties: { Label: false } },
+      { path: ['mg-tabs__item-1'], width: -1 },
+    ]) {
+      const bad = copy(composed);
+      bad.components.families.find(
+        item => item.id === 'tabs'
+      ).review.specimens[0].nodes = [invalid];
+      const rejected = await env.call('buildMangroveComponents', bad, 'undrr', [
+        'tabs',
+      ]);
+      assert(!rejected.families.some(item => item.id === 'tabs'));
+      assert(rejected.errors.length);
+      assert(!rejected.updatedNodeIds.includes(instance.id));
+    }
+    console.log(
+      'ok  composed review seeds nested properties and shared geometry only on fresh instances, preserving edits and rejecting malformed paths/types/sizes'
+    );
+  }
+  {
     for (const properties of [
       { Required: 'true' },
       { Missing: 'value' },
@@ -860,6 +1232,287 @@ async function main() {
     }
     console.log(
       'ok  review specimen preflight rejects unknown properties and wrong TEXT/BOOLEAN values before canvas or style writes'
+    );
+  }
+  {
+    const env = environment(doc, {
+      rejectedFonts: ['RobotoCondensed Regular', 'RobotoCondensed Bold'],
+    });
+    await importFoundation(env, doc);
+    const first = await env.call('buildMangroveComponents', doc, 'undrr', [
+      'table',
+    ]);
+    assert.strictEqual(first.errors.length, 0, first.errors.join('\n'));
+    assert.deepStrictEqual(
+      copy(first.families.map(family => [family.id, family.variantIds.length])),
+      [
+        ['table-header-cell', 4],
+        ['table-body-cell', 4],
+        ['table-row', 24],
+        ['table', 8],
+      ]
+    );
+    const variables = new Map(
+      env.state.variables.map(variable => [variable.name, variable])
+    );
+    const tableBuilt = first.families.find(family => family.id === 'table');
+    const rowsBuilt = first.families.find(family => family.id === 'table-row');
+    for (const [preset, columns, height] of [
+      ['story', [131.78125, 131.78125, 456.4375], 65.78125],
+      ['narrowstory', [86.125, 86.125, 120.453125], 222.515625],
+    ]) {
+      const row = env.state.nodes.get(
+        rowsBuilt.variantIds.find(
+          variant => variant.id === `table-row.large.default.odd.${preset}`
+        ).nodeId
+      );
+      assert.strictEqual(row.layoutSizingVertical, 'HUG');
+      assert.strictEqual(row.minHeight, height);
+      assert(
+        !row.boundVariables.height,
+        'Hugging rows must clear inherited fixed-height bindings'
+      );
+      assert(
+        row.boundVariables.minHeight,
+        'Measured row minimum belongs on its master'
+      );
+      for (let index = 0; index < 3; index++) {
+        const cell = row.children[index];
+        assert.strictEqual(cell.width, columns[index]);
+        assert(
+          cell.boundVariables.width,
+          'Shared column width belongs on the primary cell instance inside a Row master'
+        );
+        assert.strictEqual(cell.layoutSizingHorizontal, 'FIXED');
+        assert.strictEqual(cell.layoutSizingVertical, 'HUG');
+        assert(
+          !cell.boundVariables.height,
+          'Hugging story cells must clear inherited fixed-height bindings'
+        );
+      }
+    }
+    const tableRecipe = doc.components.families.find(
+      family => family.id === 'table'
+    );
+    for (const specimen of tableRecipe.review.specimens) {
+      assert(['Story', 'NarrowStory'].includes(specimen.variant.Content));
+      assert(
+        specimen.nodes.every(
+          node => node.width === undefined && node.height === undefined
+        ),
+        'Nested Table review nodes seed content only; real Figma ignored descendant geometry overrides'
+      );
+    }
+    const tableDefault = env.state.nodes.get(
+      tableBuilt.variantIds.find(
+        variant => variant.id === 'table.large.default'
+      ).nodeId
+    );
+    assert.strictEqual(tableDefault.children.length, 5);
+    for (const row of tableDefault.children) {
+      assert.strictEqual(
+        row.children.filter(child => child.type === 'INSTANCE').length,
+        3
+      );
+      assert.strictEqual(row.layoutSizingHorizontal, 'FILL');
+      assert(row.isExposedInstance);
+      for (const cell of row.children.filter(
+        child => child.type === 'INSTANCE'
+      )) {
+        assert.strictEqual(cell.layoutSizingHorizontal, 'FILL');
+        assert.strictEqual(cell.layoutSizingVertical, 'FILL');
+        assert(cell.isExposedInstance);
+        assert.strictEqual(cell.clipsContent, false);
+        const value = cell.findAll(child => child.type === 'TEXT')[0];
+        assert.strictEqual(value.textAutoResize, 'HEIGHT');
+        assert.strictEqual(value.lineHeight.value, 140);
+      }
+    }
+    const firstBody = tableDefault.children.find(
+      row => row.name === 'mg-table__body-row-1'
+    );
+    assert.strictEqual(firstBody.paddingTop, 0);
+    assert.strictEqual(
+      firstBody.boundVariables.paddingTop.id,
+      variables.get('component/geometry/zero').id
+    );
+    assert.strictEqual(firstBody.height, 42.890625);
+    const laterBody = tableDefault.children.find(
+      row => row.name === 'mg-table__body-row-3'
+    );
+    assert.strictEqual(laterBody.height, 43.390625);
+    assert.strictEqual(laterBody.paddingTop, 0.5);
+    assert.strictEqual(tableDefault.paddingBottom, 0.5);
+    const grid = env.state.nodes.get(
+      tableBuilt.variantIds.find(variant => variant.id === 'table.large.border')
+        .nodeId
+    );
+    assert.strictEqual(grid.strokeWeight, 0.5);
+    assert.strictEqual(grid.strokesIncludedInLayout, true);
+    const half = variables.get('component/table/half-border-width');
+    const halfValue = half.resolveForConsumer(grid).value;
+    assert.strictEqual(
+      halfValue + halfValue,
+      1,
+      'Adjacent half strokes must form one source grid seam'
+    );
+    const stripe = env.state.nodes.get(
+      tableBuilt.variantIds.find(
+        variant => variant.id === 'table.large.striped'
+      ).nodeId
+    );
+    assert.strictEqual(stripe.children[1].fills.length, 0);
+    assert.strictEqual(
+      stripe.children[2].fills[0].boundVariables.color.id,
+      variables.get('color/neutral-25').id
+    );
+    assert.strictEqual(stripe.children[2].strokes.length, 0);
+    assert.strictEqual(
+      stripe.children[4].fills[0].boundVariables.color.id,
+      variables.get('color/neutral-25').id
+    );
+    const findReview = id =>
+      [...env.state.nodes.values()].find(
+        node =>
+          identity(node, 'mgKitId') === `review/table/specimen/${id}/instance`
+      );
+    const wide = findReview('long-content'),
+      narrow = findReview('narrow-content');
+    assert(
+      wide && narrow,
+      'Source long and narrow Table review specimens missing'
+    );
+    const find = (node, path) =>
+      path.reduce(
+        (parent, name) => parent.children.find(child => child.name === name),
+        node
+      );
+    const labelProperty = node =>
+      Object.keys(node.componentProperties).find(name =>
+        name.startsWith('Label#')
+      );
+    for (const instance of [wide, narrow]) {
+      for (let row = 0; row < 5; row++) {
+        const parent = find(instance, [
+          row === 0 ? 'mg-table__head' : `mg-table__body-row-${row}`,
+        ]);
+        for (let col = 0; col < 3; col++) {
+          const cell = parent.children.find(
+            child => child.name === `mg-table__cell-${col + 1}`
+          );
+          assert.strictEqual(
+            cell.width,
+            instance === wide
+              ? [131.78125, 131.78125, 456.4375][col]
+              : [86.125, 86.125, 120.453125][col]
+          );
+          assert.strictEqual(
+            cell.boundVariables.width.id,
+            variables.get(
+              `component/table/specimen/${instance === wide ? 'long-content' : 'narrow-content'}/column-${col + 1}`
+            ).id
+          );
+          assert.strictEqual(
+            cell.componentProperties[labelProperty(cell)].value,
+            row === 0
+              ? 'Table header'
+              : col < 2
+                ? 'Content Goes Here'
+                : 'In publishing and graphic design, dummy is a placeholder text commonly used to demonstrate'
+          );
+        }
+      }
+    }
+    assert.strictEqual(narrow.width, 292.703125);
+    assert.strictEqual(
+      narrow.parent.width -
+        narrow.parent.paddingLeft -
+        narrow.parent.paddingRight,
+      240
+    );
+    assert.strictEqual(narrow.layoutSizingHorizontal, 'FIXED');
+    assert.strictEqual(
+      find(narrow, ['mg-table__body-row-1']).minHeight,
+      222.015625
+    );
+    assert.strictEqual(
+      find(narrow, ['mg-table__body-row-2']).minHeight,
+      222.515625
+    );
+    assert.strictEqual(
+      find(narrow, ['mg-table__body-row-1']).layoutSizingVertical,
+      'HUG'
+    );
+    assert(!find(narrow, ['mg-table__body-row-1']).boundVariables.height);
+    assert(find(narrow, ['mg-table__body-row-1']).boundVariables.minHeight);
+    assert(
+      !findReview('long-label') && !findReview('narrow'),
+      'Composed Table must not seed a nonexistent root Label'
+    );
+    const edited = find(wide, ['mg-table__body-row-1', 'mg-table__cell-3']);
+    const label = labelProperty(edited);
+    edited.setProperties({
+      [label]: 'Designer table content\nPreserve this second line',
+    });
+    const owned = ownership(env.state);
+    const second = await env.call('buildMangroveComponents', doc, 'undrr', [
+      'table',
+    ]);
+    assert.strictEqual(second.errors.length, 0, second.errors.join('\n'));
+    assert.strictEqual(second.createdNodeIds.length, 0);
+    assert.deepStrictEqual(ownership(env.state), owned);
+    assert.strictEqual(
+      edited.componentProperties[label].value,
+      'Designer table content\nPreserve this second line'
+    );
+    assert.strictEqual(
+      edited.width,
+      456.4375,
+      'Geometry remains linked to the measured Row master, not a nested resize override'
+    );
+    const {
+      buildFigmaVariables,
+    } = require('../../../scripts/build-figma-tokens.cjs');
+    const read = fs.readFileSync;
+    for (const [file, before, after] of [
+      [
+        '/stories/Atom/Table/table.scss',
+        'line-height: 1.4;',
+        'line-height: 1.5;',
+      ],
+      [
+        '/stories/Atom/Table/table.scss',
+        'font-weight: 600;',
+        'font-weight: 700;',
+      ],
+      [
+        '/stories/Atom/Table/table.scss',
+        'var(--mg-color-neutral-25)',
+        'var(--mg-color-neutral-50)',
+      ],
+      [
+        '/stories/Atom/Table/Table.jsx',
+        '<td>{details}</td>',
+        '<td>{tdtext}</td>',
+      ],
+    ]) {
+      fs.readFileSync = function (filename, ...args) {
+        const source = read.call(this, filename, ...args);
+        return typeof filename === 'string' && filename.endsWith(file)
+          ? source.replace(before, after)
+          : source;
+      };
+      try {
+        assert.throws(
+          () => buildFigmaVariables(),
+          /no longer matches|inventory changed/
+        );
+      } finally {
+        fs.readFileSync = read;
+      }
+    }
+    console.log(
+      'ok  Table composes40 bounded variants with source columns on Row masters, hugging Story cells/rows above browser minimum heights, collapsed seams and editable text; review never resizes nested geometry and reimport preserves text edits'
     );
   }
   {
@@ -1590,10 +2243,373 @@ async function main() {
       connector.decompressJSON(connector.compressJSON(doc)),
       doc
     );
+    // Exercise both the local codec and its dependency-free emitted decoder.
+    const isolatedDecoder = vm.runInNewContext(
+      `(${connector.decompressJSON.toString()})`
+    );
+    const fixtures = [
+      null,
+      '',
+      [],
+      {},
+      false,
+      'Latin café, العربية, 中文, 🦀\nSecond line',
+      'Repeated Unicode 災 🦀'.repeat(2000),
+    ];
+    let seed = 573;
+    let saturated = '';
+    for (let i = 0; i < 400000; i += 1) {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      saturated += String.fromCharCode(32 + (seed % 95));
+    }
+    fixtures.push(saturated);
+    for (const fixture of fixtures) {
+      const packed = connector.compressJSON(fixture);
+      assert.deepStrictEqual(connector.decompressJSON(packed), fixture);
+      assert.strictEqual(
+        JSON.stringify(isolatedDecoder(packed)),
+        JSON.stringify(fixture)
+      );
+    }
+    const saturatedHeader = connector.compressJSON(saturated).split(':');
+    assert.strictEqual(Number(saturatedHeader[0]), 16);
+    assert(
+      Number(saturatedHeader[1]) > 65536,
+      'Dictionary cap was not exercised'
+    );
+    for (const malformed of [
+      '',
+      '7:1:AA==',
+      '17:1:AA==',
+      '8:0:',
+      '8:2:AA==',
+      '9:1:AP8=',
+    ])
+      assert.throws(() => connector.decompressJSON(malformed));
     const env = environment(doc, { sharedOnly: true });
+    const allStyles = [...doc.styles.text, ...doc.styles.effect];
+    const chunks = (ids, size) =>
+      Array.from({ length: Math.ceil(ids.length / size) }, (_, index) =>
+        ids.slice(index * size, (index + 1) * size)
+      );
+    // Explicit caller batches cover every exported asset, including optional
+    // text styles. The compiler may add dependencies, never omit requested IDs.
+    const importBatches = [
+      ...chunks(
+        doc.variables.map(spec => spec.id),
+        70
+      ).map(variableIds => ({ variableIds })),
+      ...chunks(
+        allStyles.map(spec => spec.id),
+        20
+      ).map(styleIds => ({ styleIds })),
+    ];
+    const nativeVariableIds = new Map();
+    const nativeStyleIds = new Map();
+    const importSizes = [];
+    const aliasSpec = doc.variables.find(spec => spec.values.undrr?.alias);
+    const expectedClosure = new Set();
+    function aliasClosure(spec) {
+      expectedClosure.add(spec.id);
+      const target = spec.values.undrr?.alias;
+      if (target)
+        aliasClosure(doc.variables.find(item => item.name === target));
+    }
+    aliasClosure(aliasSpec);
+    const aliasSubset = connector.subsetDocument(
+      doc,
+      'import',
+      'undrr',
+      [],
+      undefined,
+      { variableIds: [aliasSpec.id] }
+    );
+    assert.deepStrictEqual(
+      aliasSubset.variables.map(spec => spec.id).sort(),
+      [...expectedClosure].sort()
+    );
+    assert.strictEqual(
+      aliasSubset.styles.text.length + aliasSubset.styles.effect.length,
+      0
+    );
+    expectedClosure.clear();
+    const oneStyle = doc.styles.text[0];
+    Object.values(oneStyle.bindings).forEach(name =>
+      aliasClosure(doc.variables.find(spec => spec.name === name))
+    );
+    const styleSubset = connector.subsetDocument(
+      doc,
+      'import',
+      'undrr',
+      [],
+      undefined,
+      { styleIds: [oneStyle.id] }
+    );
+    assert.deepStrictEqual(
+      styleSubset.variables.map(spec => spec.id).sort(),
+      [...expectedClosure].sort()
+    );
+    assert.deepStrictEqual(
+      styleSubset.styles.text.map(style => style.id),
+      [oneStyle.id]
+    );
+    assert.strictEqual(styleSubset.styles.effect.length, 0);
+    for (const [iteration, mode] of [...doc.modes, doc.modes[0]].entries()) {
+      const coveredVariables = new Set();
+      const coveredStyles = new Set();
+      for (const selection of importBatches) {
+        const payload = await connector.buildConnector({
+          operation: 'import',
+          brandId: mode.id,
+          doc,
+          ...selection,
+        });
+        assert(payload.characters <= 50000 && payload.bytes <= 50000);
+        importSizes.push(payload.bytes);
+        const subset = connector.subsetDocument(
+          doc,
+          'import',
+          mode.id,
+          [],
+          undefined,
+          selection
+        );
+        const byName = new Map(subset.variables.map(spec => [spec.name, spec]));
+        for (const spec of subset.variables) {
+          const value = spec.values[mode.id];
+          if (value && typeof value === 'object' && 'alias' in value)
+            assert(
+              byName.has(value.alias),
+              'Batch omitted an alias dependency'
+            );
+        }
+        for (const style of [...subset.styles.text, ...subset.styles.effect]) {
+          const bindingNames = style.bindings
+            ? Object.values(style.bindings)
+            : style.values[mode.id].flatMap(entry =>
+                Object.values(entry.bindings || {})
+              );
+          for (const name of bindingNames)
+            assert(
+              byName.has(name),
+              'Batch omitted a style binding dependency'
+            );
+        }
+        assert.deepStrictEqual(
+          connector.decompressJSON(connector.compressJSON(subset)),
+          subset
+        );
+        for (const [specs, originals, covered] of [
+          [subset.variables, doc.variables, coveredVariables],
+          [
+            [...subset.styles.text, ...subset.styles.effect],
+            allStyles,
+            coveredStyles,
+          ],
+        ]) {
+          for (const spec of specs) {
+            covered.add(spec.id);
+            const original = originals.find(item => item.id === spec.id);
+            assert.deepStrictEqual(
+              spec,
+              { ...original, values: { [mode.id]: original.values[mode.id] } },
+              'Import batching discarded metadata'
+            );
+          }
+        }
+        const imported = await env.runCode(payload.code);
+        assert.strictEqual(
+          imported.result.errors.length,
+          0,
+          imported.result.errors.join('\n')
+        );
+        assert.strictEqual(
+          imported.result.styles.errors.length,
+          0,
+          imported.result.styles.errors.join('\n')
+        );
+        assert.deepStrictEqual(copy(imported.scope), payload.scope);
+        assert.strictEqual(imported.scope.prune, false);
+        assert.strictEqual(
+          imported.removedVariableIds.length + imported.removedStyleIds.length,
+          0
+        );
+        assert.strictEqual(
+          imported.createdStyleIds.length,
+          imported.result.styles.counts.text.created +
+            imported.result.styles.counts.effect.created
+        );
+        for (const [assets, key, nativeIds] of [
+          [env.state.variables, 'mgId', nativeVariableIds],
+          [env.state.styles, 'mgStyleId', nativeStyleIds],
+        ]) {
+          for (const asset of assets) {
+            const id = identity(asset, key);
+            if (nativeIds.has(id))
+              assert.strictEqual(asset.id, nativeIds.get(id));
+            else nativeIds.set(id, asset.id);
+          }
+        }
+        if (iteration > 0) {
+          // Subsequent brands and the final repeat must reuse every native ID.
+          assert.strictEqual(
+            imported.createdVariableIds.length +
+              imported.createdStyleIds.length,
+            0
+          );
+        }
+      }
+      assert.deepStrictEqual(
+        [...coveredVariables].sort(),
+        doc.variables.map(spec => spec.id).sort()
+      );
+      assert.deepStrictEqual(
+        [...coveredStyles].sort(),
+        allStyles.map(spec => spec.id).sort()
+      );
+      const physicalMode = env.state.collections[0].modes[0].modeId;
+      for (const spec of doc.variables) {
+        const variable = env.state.variables.find(
+          asset => identity(asset, 'mgId') === spec.id
+        );
+        const value = spec.values[mode.id];
+        const expected =
+          value && typeof value === 'object' && 'alias' in value
+            ? {
+                type: 'VARIABLE_ALIAS',
+                id: nativeVariableIds.get(
+                  doc.variables.find(target => target.name === value.alias).id
+                ),
+              }
+            : value;
+        assert.deepStrictEqual(
+          copy(variable.valuesByMode[physicalMode]),
+          expected
+        );
+        assert.strictEqual(variable.description, spec.description);
+        assert.deepStrictEqual(copy(variable.scopes), spec.scopes);
+        assert.deepStrictEqual(copy(variable.codeSyntax), spec.codeSyntax);
+        assert.strictEqual(
+          variable.hiddenFromPublishing,
+          spec.hiddenFromPublishing
+        );
+      }
+      for (const spec of allStyles) {
+        const style = env.state.styles.find(
+          asset => identity(asset, 'mgStyleId') === spec.id
+        );
+        assert.strictEqual(style.name, spec.name);
+        assert.strictEqual(style.description, spec.description || '');
+        const expectedAlias = name => ({
+          type: 'VARIABLE_ALIAS',
+          id: nativeVariableIds.get(
+            doc.variables.find(variable => variable.name === name).id
+          ),
+        });
+        if (spec.bindings) {
+          assert.deepStrictEqual(
+            copy(style.fontName),
+            spec.values[mode.id].fontName
+          );
+          assert.strictEqual(style.fontSize, spec.values[mode.id].fontSize);
+          assert.deepStrictEqual(
+            copy(style.lineHeight),
+            spec.values[mode.id].lineHeight
+          );
+          for (const [field, name] of Object.entries(spec.bindings))
+            assert.deepStrictEqual(
+              copy(style.boundVariables[field]),
+              expectedAlias(name)
+            );
+        } else {
+          assert.deepStrictEqual(
+            copy(style.effects),
+            spec.values[mode.id].map(entry => ({
+              ...entry.effect,
+              boundVariables: Object.fromEntries(
+                Object.entries(entry.bindings || {}).map(([field, name]) => [
+                  field,
+                  expectedAlias(name),
+                ])
+              ),
+            }))
+          );
+        }
+      }
+    }
+    assert.strictEqual(nativeVariableIds.size, doc.variables.length);
+    assert.strictEqual(nativeStyleIds.size, allStyles.length);
+    await assert.rejects(
+      connector.buildConnector({ operation: 'import', doc }),
+      /exceeds 50000.*variableIds\/styleIds batches/
+    );
+    // Validation happens in the compiler before any script or native writes.
+    const untouched = JSON.stringify({
+      variables: [...nativeVariableIds],
+      styles: [...nativeStyleIds],
+    });
+    for (const options of [
+      { variableIds: [] },
+      { variableIds: ['missing'] },
+      { styleIds: ['missing'] },
+      { variableIds: [doc.variables[0].id, doc.variables[0].id] },
+      { styleIds: [allStyles[0].id, allStyles[0].id] },
+      { variableIds: [null] },
+      { styleIds: 'invalid' },
+    ])
+      await assert.rejects(
+        connector.buildConnector({ operation: 'import', doc, ...options })
+      );
+    for (const mutate of [
+      bad => bad.variables.push(copy(bad.variables[0])),
+      bad => bad.styles.effect.push(copy(bad.styles.effect[0])),
+      bad => {
+        bad.variables[0].values.undrr = { alias: 'missing' };
+      },
+      bad => {
+        bad.variables[0].values.undrr = { alias: 'font-size/100' };
+      },
+      bad => {
+        bad.styles.text[0].bindings.fontFamily = 'font-size/100';
+      },
+      bad => {
+        bad.styles.effect[0].values.undrr[0].bindings.color = 'font-size/100';
+      },
+      bad => {
+        bad.variables[0].values.undrr = { alias: bad.variables[0].name };
+      },
+      bad => {
+        bad.variables[0].values.undrr = { r: NaN };
+      },
+    ]) {
+      const bad = copy(doc);
+      mutate(bad);
+      await assert.rejects(
+        connector.buildConnector({
+          operation: 'import',
+          doc: bad,
+          variableIds: [doc.variables[0].id],
+        }),
+        /Import preflight/
+      );
+    }
+    assert.strictEqual(
+      JSON.stringify({
+        variables: [...nativeVariableIds],
+        styles: [...nativeStyleIds],
+      }),
+      untouched
+    );
+    console.log(
+      `ok  lossless import batches: ${doc.modes.length} brands, ${doc.variables.length} variables / ${allStyles.length} styles, ${Math.min(...importSizes)}-${Math.max(...importSizes)} bytes`
+    );
     const importScript = await connector.buildConnector({
       operation: 'import',
       doc,
+      styleIds: [
+        ...doc.styles.text.filter(style => style.recommended),
+        ...doc.styles.effect,
+      ].map(style => style.id),
     });
     const imported = await env.runCode(importScript.code);
     assert.strictEqual(
@@ -1601,10 +2617,7 @@ async function main() {
       0,
       imported.result.errors.join('\n')
     );
-    assert.strictEqual(
-      imported.createdVariableIds.length,
-      doc.variables.length
-    );
+    assert.strictEqual(imported.createdVariableIds.length, 0);
     assert.strictEqual(
       imported.createdStyleIds.length,
       imported.result.styles.counts.text.created +
@@ -1663,8 +2676,171 @@ async function main() {
       failedImport.result.styles.counts.text.updated +
         failedImport.result.styles.counts.effect.updated
     );
+    const table = doc.components.families.find(family => family.id === 'table');
+    assert(table, 'Table connector batching fixture missing');
+    const setIds = new Map();
+    const variantNodeIds = new Map();
+    function stableBatch(report) {
+      assert.strictEqual(report.errors.length, 0, report.errors.join('\n'));
+      for (const family of report.families) {
+        const guidance = doc.kitGuidance.families.find(
+          item => item.id === family.id
+        );
+        assert.strictEqual(
+          env.state.nodes.get(family.setId).description,
+          guidance.connectorDescription,
+          'Scoped connector builds must retain current consumer guidance'
+        );
+        if (setIds.has(family.id))
+          assert.strictEqual(family.setId, setIds.get(family.id));
+        else setIds.set(family.id, family.setId);
+        for (const variant of family.variantIds) {
+          const key = `${family.id}/${variant.id}`;
+          if (variantNodeIds.has(key))
+            assert.strictEqual(variant.nodeId, variantNodeIds.get(key));
+          else variantNodeIds.set(key, variant.nodeId);
+        }
+      }
+      for (const setId of setIds.values()) {
+        const variants = env.state.nodes
+          .get(setId)
+          .children.filter(node => node.type === 'COMPONENT');
+        for (let i = 0; i < variants.length; i += 1)
+          for (let j = i + 1; j < variants.length; j += 1) {
+            const a = variants[i];
+            const b = variants[j];
+            assert(
+              a.x + a.width <= b.x ||
+                b.x + b.width <= a.x ||
+                a.y + a.height <= b.y ||
+                b.y + b.height <= a.y,
+              'Retained variants overlap after a scoped connector batch'
+            );
+          }
+      }
+      for (const nodeId of variantNodeIds.values())
+        assert(!env.state.nodes.get(nodeId).removed);
+    }
+    stableBatch(built);
+    for (const variant of table.variants) {
+      const subset = connector.subsetDocument(
+        doc,
+        'build',
+        'undrr',
+        ['table'],
+        [variant.id]
+      );
+      assert.strictEqual(
+        subset.components.families.find(family => family.id === 'table')
+          .variants.length,
+        1
+      );
+      for (const family of subset.components.families)
+        for (const specimen of family.review?.specimens || [])
+          assert(
+            family.variants.some(item =>
+              Object.entries(specimen.variant).every(
+                ([key, value]) => item.properties[key] === value
+              )
+            ),
+            'A scoped batch retained a review selector for an omitted variant'
+          );
+      const payload = await connector.buildConnector({
+        operation: 'build',
+        familyIds: ['table'],
+        variantIds: [variant.id],
+        doc,
+      });
+      assert(payload.characters <= 50000 && payload.bytes <= 50000);
+      const report = await env.runCode(payload.code);
+      assert.deepStrictEqual(copy(report.scope), {
+        familyIds: ['table'],
+        variantIds: [variant.id],
+      });
+      stableBatch(report);
+    }
+    assert.strictEqual(
+      env.state.nodes.get(setIds.get('table')).children.length,
+      table.variants.length
+    );
+    const repeatBatch = await connector.buildConnector({
+      operation: 'build',
+      familyIds: ['table'],
+      variantIds: [table.variants[0].id],
+      doc,
+    });
+    const repeated = await env.runCode(repeatBatch.code);
+    stableBatch(repeated);
+    assert.strictEqual(repeated.createdNodeIds.length, 0);
+    await assert.rejects(
+      connector.buildConnector({
+        operation: 'build',
+        familyIds: ['table'],
+        variantIds: ['unknown-variant'],
+        doc,
+      }),
+      /Unknown table variant/
+    );
+    await assert.rejects(
+      connector.buildConnector({
+        operation: 'build',
+        familyIds: ['button', 'table'],
+        variantIds: [table.variants[0].id],
+        doc,
+      }),
+      /Variant batches require one family/
+    );
+    await assert.rejects(
+      connector.buildConnector({
+        operation: 'build',
+        familyIds: ['table'],
+        doc,
+      }),
+      /batch one family with explicit variantIds/
+    );
+    await assert.rejects(
+      connector.buildConnector({
+        operation: 'build',
+        familyIds: ['text-cta'],
+        doc,
+      }),
+      /batch one family with explicit variantIds/
+    );
+    const cta = doc.components.families.find(
+      family => family.id === 'text-cta'
+    );
+    assert(cta, 'Text CTA connector batching fixture missing');
+    env.state.rejectedFonts.delete('Roboto Condensed Regular');
+    for (const variant of cta.variants) {
+      const payload = await connector.buildConnector({
+        operation: 'build',
+        familyIds: ['text-cta'],
+        variantIds: [variant.id],
+        doc,
+      });
+      assert(payload.characters <= 50000 && payload.bytes <= 50000);
+      const report = await env.runCode(payload.code);
+      assert.deepStrictEqual(copy(report.scope), {
+        familyIds: ['text-cta'],
+        variantIds: [variant.id],
+      });
+      stableBatch(report);
+    }
+    assert.strictEqual(
+      env.state.nodes.get(setIds.get('text-cta')).children.length,
+      cta.variants.length
+    );
+    const ctaRepeatPayload = await connector.buildConnector({
+      operation: 'build',
+      familyIds: ['text-cta'],
+      variantIds: [cta.variants[0].id],
+      doc,
+    });
+    const ctaRepeated = await env.runCode(ctaRepeatPayload.code);
+    stableBatch(ctaRepeated);
+    assert.strictEqual(ctaRepeated.createdNodeIds.length, 0);
     console.log(
-      'ok  connector codec, canonical import IDs and font failures, minified remote build, bounded Unicode summary and selected node inspection'
+      'ok  packed connector codec, all-brand import bounds, canonical IDs/font failures, scoped Table/CTA batch identities/nonoverlapping grids and bounded inspection'
     );
   }
 }
