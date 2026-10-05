@@ -49,3 +49,18 @@ Test with an unfamiliar designer before promoting this exploratory kit to a supp
 The user's next review asked the landing board to use Mangrove components and styling. The update reuses a linked Primary/Page/Desktop Hero and four Primary/300px Cards. Actions and optional Card media/labels are hidden; the contents remains plain text using the actual six destination names. The board is 1,440 × 1,190.875px, with source Condensed headings, inherited photograph/veil and token-bound wrapper spacing. This introduces no new supported component scope or simulated navigation.
 
 The first native update preserves every unrelated scene/foundation record and all earlier Welcome IDs. A repeat after restart preserves the complete result exactly. An independent 119-check inspection confirms component links, fonts/styles, text, optional visibility, card gaps and containment. The final read-only expert review passes at 100%: the complete board fits, Hero copy is legible against its source image/veil, the contents matches Layers, and the four Cards and footer have no overlap or clipping. The Hero remains a local linked instance with detail/actions hidden. No actionable composition defect was found. The plugin is closed and Welcome is visible. Human novice acceptance remains open.
+
+## Overall canvas flow review, 5 October 2026
+
+The next user review examined the whole canvas at 11%. Native fit-to-selection confirms Components falls to 2%; Actions alone fits at 19%. The settled inspection measures Components at 10,302 x 57,828.996px. The six destination names agree with the installed structure, but physical browsing remains a pending acceptance issue. This review does not change the generated layout or accepted component scope.
+
+The placement code takes a shared left-column width across both task-group rows. Content and data is 5,664px wide, while Actions is 2,912px; Forms therefore begins 2,864px beyond Actions instead of the intended 80px gap. Shared row heights also leave roughly 7,500px below Actions and 37,500px below Navigation unused. Full Card/Hero source, state and advanced catalogues dominate the vertical extent. Examples and Your workspace sit below that entire section.
+
+The read-only UX agent recommends the following presentation work, in order:
+
+1. Position each row from its own measured child bounds; remove the inherited horizontal corridor.
+2. Reduce the enclosing white Components surface so unused structural space reads as canvas, while retaining readable family boards.
+3. Place Your workspace near Welcome and Foundations, retaining its actual destination name and manual ownership boundary.
+4. Give each family a compact entry with guidance and representative usage; clearly distinguish exhaustive states, canonical sources and advanced parts nearby. Do not hide or discard acceptance evidence to shorten the overview.
+
+Overview acceptance should establish recognizable destinations and task groups, useful proximity and an obvious first-design route. Normal-scale acceptance should establish readable guidance and discoverable full reference coverage. Any implementation must preserve main/variant/property/instance IDs and manual local placement, reconcile after ordinary builds and restart, and use an explicit migration for hierarchy changes. No component variant should be resized to improve canvas packing. These are pending recommendations, not implemented or novice-accepted behaviour.
