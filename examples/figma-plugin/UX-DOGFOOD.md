@@ -94,3 +94,31 @@ Both expert copy corrections are applied. Explicit organisation creates zero nod
 The root agent checks the actual Components overview at 21%: the four task groups and representative widgets are recognizable, with readable family boards separated by canvas, and full references visibly alongside. At a 31% Foundations fit, Welcome and Workspace share the same opening band without section overlap. The Workspace board fits at 109%, with complete first-design, local Assets and ownership instructions. Welcome is left visible at 69%, the plugin closed and all Layers roots collapsed. These are bounded visual observations; the source-view menu route was not independently accepted in this pass. Native menu focus/activation made that extra automation check inconclusive.
 
 Complete operation and inspection JSON checkpoints are saved locally. A new Save Local Copy request did not produce a save dialog or a new verified .fig backup in this final pass; the earlier linked-Welcome backup is retained. Cloud sync and persistent opening view remain unconfirmed. Human novice acceptance remains open.
+
+## Paid handoff surrogate review, 5 October 2026
+
+The user requested subagents to stand in for pending reviews. A UX designer agent performed a read-only expert walkthrough of the current cloud kit, published consumer example and handoff documentation. This review did not insert or edit instances, measure novice task times, exercise publication acceptance or simulate an unfamiliar human. The six novice targets remain human acceptance criteria, rather than measured results.
+
+The initial walkthrough identified a mismatch between Free-era source-file onboarding and the new paid consumer route. Welcome and Workspace directed designers to local Assets, including unpublished Card/Hero drafts. Welcome also relied on the development plugin's Browse component action, although published consumers do not need that plugin. Examples and templates did not point to the separately delivered consumer example. Tabs guidance retained an obsolete font-loading blocker.
+
+The source copy now distinguishes paid library consumption from local/Free experiments, names unpublished families explicitly and provides Layers/Shift+2 navigation without the plugin. Welcome and Examples include the current consumer URL. Tabs remains outside core scope, with font-file/raster equivalence and broader native state acceptance pending rather than font loading. These are onboarding corrections, not expanded component acceptance.
+
+### Post-application visual check
+
+After the root agent applied the actual reconciler and rebuilt Button without creating nodes, the reviewer inspected fresh cloud screenshots of Welcome `29:8463`, Workspace `30:2770` and Examples `30:2767`.
+
+| Reviewed surface | Observed result                                                                                                                                                                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Welcome          | The 1,440 × 1,215px board retains the linked Mangrove Hero and four Cards. Paid and local/Free routes, plugin-free reference navigation, unpublished scope and the consumer URL are readable. No overlapping cards or clipped text were observed. |
+| Workspace        | The 900 × 216px guide explains local experiments, separate paid consumer files and the boundary around generated boards. All copy fits.                                                                                                           |
+| Examples         | The 900 × 264px guide points to the desktop/mobile pilot while explicitly retaining the responsive-template and interaction limitations. The URL wraps within the board without clipping.                                                         |
+
+The URLs are visible text, not newly implemented native hyperlinks. Opening them was not tested in this review. Screenshots establish the observed rendering; they do not establish a persistent opening view or successful novice navigation.
+
+The six-task walkthrough finds clear evidence routes: Welcome identifies UNDRR and exploratory status; Actions introduces Button; Content and data introduces complete Table before its supporting parts; the Text input reference exposes its six State choices; Foundations labels semantic colours and text styles; Maintenance distinguishes diagnostics and excluded families. The revised copy makes these routes understandable without installing the importer. Actual novice insertion, property editing, task times, wrong turns and assistance remain unmeasured.
+
+### Maintenance scope
+
+This review follows the [occasional-maintenance direction recorded on the PR](https://github.com/unisdr/undrr-mangrove/pull/1319#issuecomment-5993683966): retain the construction investment and review meaningful design-contract changes, rather than promise continuous synchronisation. The proposed reduced token/style merge path and retained full maintenance checkpoint still require their separate dependency audit and focused validation. The onboarding work does not implement that split. Arbitrary edits to generated mains also need an explicit source-recipe or manually maintained-family policy before rebuilding; consumer override preservation does not prove preservation of those main edits.
+
+No further actionable visual defect was found in these three revised onboarding surfaces. An unfamiliar designer should still complete the six tasks before human handoff acceptance.

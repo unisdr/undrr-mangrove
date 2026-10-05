@@ -26,7 +26,7 @@ const GROUPS = [
   { id: 'navigation', label: 'Navigation and disclosure' },
 ];
 const SCOPE =
-  'Local UNDRR source presets with bounded native evidence. This exploratory kit is not a published library. Other brands/scripts, arbitrary content or widths, browser behaviour and font-file/pixel equivalence need separate acceptance. File organisation and novice handoff remain open.';
+  'Local UNDRR source presets with bounded native evidence. A reviewed 25-family core is published for the Professional pilot; Card, Hero, Tabs and Editorial CTA remain local and unpublished. Maintain design changes at meaningful releases. Other brands/scripts, arbitrary content or widths, browser behaviour, font-file/pixel equivalence and uncoached novice handoff need separate acceptance.';
 
 // Status follows CORE-KIT-STATUS.md, not older construction descriptions.
 // Geometry and font details remain in source recipes; this is usage guidance.
@@ -521,7 +521,7 @@ const ENTRIES = [
       'A bounded horizontal three-trigger native rail exists as a source specimen.',
     ],
     limitations: [
-      'Exact Condensed font loading remains blocked.',
+      'Condensed font loading recovered; source font-file/raster equivalence and broader native state acceptance remain pending.',
       'Panels, scrolling/overflow, responsive disclosures and interaction are not accepted.',
     ],
   },

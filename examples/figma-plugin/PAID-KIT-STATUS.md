@@ -16,7 +16,7 @@ Updated 5 October 2026. Professional migration and repeat import are verified. T
 
 The review demonstrates bounded mode inheritance and visible samples. It does not establish complete source pixel equality, every component/state/width, long-content wrapping, RTL or font-file equivalence. Geometry computed during construction still needs family-specific review when a brand differs. Keep the canonical UNDRR mains and existing review boards intact.
 
-Full receipts, inspection captures, screenshots, affected IDs and independent verdicts belong in the local evidence ledger. The pre-migration local `.fig` exists; a new paid checkpoint `.fig` is saved and verified at 1,272,543 bytes. Backup restoration testing remains open.
+Full receipts, inspection captures, screenshots, affected IDs and independent verdicts belong in the local evidence ledger. The pre-migration local `.fig` exists; a new paid checkpoint `.fig` is saved and verified at 1,272,543 bytes. The later restoration checkpoint below verifies scoped content recovery; library reconnection remains separate.
 
 ## Release boundary
 
@@ -60,7 +60,7 @@ Consumers do not need the development importer. The maintainer updates the sourc
 - [ ] Verify a published component recipe-rebuild update separately; the token probe does not exercise component anatomy/default changes.
 - [x] Restart the native plugin and verify Save inspection disables during a fresh pending read, retains the prior capture time and reenables only with the newer inspection. The saved report matches the displayed time, has all five modes and reports no errors.
 - [x] Save a fresh paid `.fig` checkpoint and verify its existence and size.
-- [ ] Test backup restoration separately; a saved file is not a successful restore.
+- [x] Import both paid backups into separate unpublished recovery files and compare scoped content, foundations and consumer rendering. New library identities and consumer reconnection remain separate.
 - [x] Complete bounded expert visual review and independent captured-field comparison of the published consumer.
 - [ ] Complete the uncoached novice handoff tasks and broader interactive usability checks. Expert review is not a novice test.
 - [x] Prepare [Anders's handoff instructions](MVP-HANDOFF.md), source/limits and current delivery artefacts.
@@ -87,3 +87,21 @@ The UI now disables inspection downloads during any pending operation, guards th
 ## Local verification
 
 `npx jest tokens` passes three suites and 1,328 tests. `yarn lint:check` reports zero errors and 22 existing warnings. Touched-file Prettier, `git diff --check`, generation and all 10 importer scenarios pass. The actual UI-script harness passes, including the new stale-download/failed-read regression; actual DOM layout and navigation harnesses also pass. The native restart now verifies the pending/completed download state and timestamp. GitHub Actions are unavailable for this organisation. These local checks do not substitute for native publication or consuming-file acceptance.
+
+## Backup recovery and surrogate handoff review, 5 October 2026
+
+Both paid `.fig` checkpoints were imported as separate unpublished recovery files in the paid folder, preserving the original cloud files. The scoped semantic comparison matches 79 field digests across 9,480 owned canonical-page records, 71 digests across 130 brand-page records and 40 digests across 169 consumer records. Four foundation fingerprints match, covering the 520 variables, their values/aliases/metadata, 54 text styles and eight effects. All five required font faces load. Independent review reports zero failures; the recovered consumer preview is byte-identical to the saved baseline preview.
+
+These are matching non-cryptographic field digests, not independent assertions for every field or whole-file byte equivalence. Published keys, normalized style identities, absolute render bounds and unowned canvas nodes are excluded. The imported library receives new published keys. The recovered consumer retains its 56 remote instances linked to the original published library; importing both files does not reconnect them to one another. A rebuild in the recovery copy, republishing that copy and deliberate consumer reconnection remain untested.
+
+A UX designer subagent reviewed the six handoff routes and the rendered Welcome, Workspace and Examples boards. The copy now distinguishes the paid published-library route from local/Free experimentation, labels excluded families as local/unpublished, gives plugin-free Layers paths and identifies the actual consumer example. The source reconciler and ordinary Button build retain existing linked Welcome instances and create no new nodes. Normal-scale expert review finds no overlap or clipping. This is expert surrogate review; uncoached human task timing, wrong turns, interaction testing and Anders's receipt remain open.
+
+The [agreed occasional-maintenance direction](https://github.com/unisdr/undrr-mangrove/pull/1319#issuecomment-5993683966) freezes broad expansion after the bounded kit. The reduced token/style merge path is planned and requires its own dependency audit and validation. Current native evidence belongs to the retained full spike, and does not establish an extracted implementation.
+
+## Component rebuild rehearsal outcome, 5 October 2026
+
+A temporary Button recipe changed inline padding from the source role (15px in UNDRR) to `spacing/200` (20px). The ordinary layout-aware desktop build creates zero nodes, updates 1,285 including generated presentation, retains the existing set, all 16 variant IDs and public property IDs, and reports zero errors. Only Button was selected for native publication; pending draft additions stayed excluded.
+
+The consumer initially offered no update. The native picker then failed to enable the paired source fixture, so the exact original padding role was restored with a guarded cloud write to the 16 existing mains. This recovery preserves their IDs/keys and restores 15px. The restored Button was published selectively and its revision accepted natively in the consumer once the update became available. All 169 consumer records retain topology, properties, content, geometry, modes and bindings across 38 matching field digests. All 56 remote main keys and all 76 text-style keys match the captured baseline; three Button main cache IDs and three associated text-style cache IDs change legitimately.
+
+The consumer was not observed at the changed 20px recipe before restoration. This is a successful restored-revision acceptance and preservation check, **not** a passing changed-recipe propagation test. Keep that gate open and repeat with responsive native picker controls, capturing the changed revision before publishing restoration. Do not broaden arbitrary main-edit or nested-dependency acceptance from this rehearsal. Source JSON retains its original recipe; temporary fixtures remain outside the repository.

@@ -799,3 +799,11 @@ A fresh paid `.fig` checkpoint is saved and verified at 1,272,543 bytes. This es
 Native restart also verifies the inspection download correction: with a completed capture present, starting another inspection disables Save inspection and retains the preceding timestamp. Completion reenables it with a later capture; the downloaded JSON has that exact time, all five modes and no errors. Failure recovery remains covered by the actual UI-script harness rather than a deliberately induced native failure.
 
 The fresh native Page 1 inspection retains all 9,802 scene identities and exact collections/variables/styles/local fields. Compared with the preceding repeat inspection, 104 TEXT records differ only in absolute render bounds, including draft Hero text. Preserve those differences in the evidence rather than treating local-field identity as raster equality. The consumer restoration comparison is a separate, smaller captured scope.
+
+## Paid backup recovery and onboarding, 5 October 2026
+
+The canonical and consumer paid `.fig` backups import into separate unpublished recovery files and pass scoped scene/foundation digest comparisons. The restored consumer render matches the saved baseline. This verifies content recovery for that checkpoint, not preservation of published library identity. Imported library keys change; restored consumer instances still target the original published mains. Keep transfer, replacement publication and consumer reconnection as separate decisions and tests.
+
+Expert surrogate review exposed stale Free/local onboarding after Professional publication. Welcome now distinguishes enabled-library consumption from source-file experimentation, identifies local unpublished families and provides Layers paths that do not depend on the development plugin. Workspace and Examples point to the actual published consumer. Expert rendering review passes, while human novice acceptance remains open.
+
+Optional chaining is not a capability guard in the cloud Plugin API: reading `node.children?.some(...)` on TEXT can throw before the optional operation. The Welcome source now checks `'children' in node` first. Desktop input can also become stale while cloud reads continue to work. Keep native publication/update acceptance separate from successful source writes, and verify file chooser focus and filenames before opening or saving.

@@ -199,9 +199,8 @@ async function createMangroveWelcome(
     if (
       key !== 'welcome' &&
       node.type !== 'INSTANCE' &&
-      node.children?.some(
-        child => !schema.has(mgReadIdentity(child, 'mgKitId'))
-      )
+      'children' in node &&
+      node.children.some(child => !schema.has(mgReadIdentity(child, 'mgKitId')))
     )
       throw new Error(
         'Keep manual notes outside the generated Welcome content.'
@@ -518,21 +517,21 @@ async function createMangroveWelcome(
         (start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
           ? '1. Open Your workspace, press F and draw a frame beside the guide. '
           : '1. Press F and draw a frame outside the generated boards. ') +
-          'Name it My design. 2. Open Assets, find Mangrove/Button under this file and drag it into My design. Clicking an asset inserts at the current view centre and can cover a guide. 3. Select your instance and edit Label in the right sidebar. Keep it linked.',
+          'Name it My design for local/Free experiments. Drag this file’s Mangrove/Button from Assets into it and edit Label. For paid library use, create My design in a separate file, enable Mangrove kit in Assets > Libraries and insert its published Button. Keep it linked.',
       ],
       [
         'use',
         'Understand the canvas',
         start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
-          ? 'Browse complete widgets in Components. Usage and states sit beside their Source components and advanced parts. Examples and templates records pending page-pattern coverage. Your workspace is for your designs; Maintenance is for kit upkeep.'
+          ? 'Browse complete widgets in Components. Select a family in Layers and press Shift+2 to read usage, states, Source components and advanced parts. Follow its documented limits. Examples and templates records pending page-pattern coverage. Your workspace is for local experiments; Maintenance is for kit upkeep. Consumers do not need the plugin.'
           : start
             ? 'This file still uses the earlier section layout. The maintainer must apply Organize file before grouped component browsing and Your workspace are available. Use the actual destinations above and keep My design outside generated boards.'
-            : 'Use Browse component in the plugin to open an installed example. Review contains linked usage examples; Main components supplies their source assets. The contents above match this page. Foundations are in Variables and local styles. The grouped layout is still pending.',
+            : 'Select a family in Review using Layers and press Shift+2 to read its linked examples. Main components supplies source assets. Foundations are in Variables and local styles. The grouped layout is still pending. Maintainers can also use Browse component in the plugin.',
       ],
       [
         'maintain',
         'What is ready, what is next',
-        'The core set supports bounded draft use in UNDRR. Read each component description for supported presets, edits and limits. Card and Hero are new draft components with limited tested presets. Tabs and Editorial CTA remain outside core scope. Page templates, other brands and right-to-left layouts still need review. On Free, work in one brand at a time.',
+        'The published core supports bounded draft use in UNDRR. Read each component’s presets, edits and limits. Card, Hero, Tabs and Editorial CTA remain local and unpublished. Page templates, other-brand geometry and right-to-left layouts need review. On Free, work locally in one brand at a time.',
       ],
       [
         'maintain',
@@ -551,24 +550,24 @@ async function createMangroveWelcome(
         [
           'use',
           'Make your first design',
-          (start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
-            ? 'Open 04 Your workspace. Press F and draw a frame beside the guide'
-            : 'Press F and draw a frame outside the generated boards') +
-            '; name it My design. Drag Mangrove/Button from this file’s Assets into it. Select the instance and edit Label.',
+          'Paid: enable Mangrove kit in Assets > Libraries in your own file. Draw My design (F), drag Button into it and edit Label. Local/Free: ' +
+            (start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
+              ? 'use 04 Your workspace beside its guide.'
+              : 'draw My design outside generated boards.'),
         ],
         [
           'use',
           'Understand a component',
           start && mgReadIdentity(start, 'mgLayoutVersion') === '2'
             ? mgReadIdentity(start, 'mgLayoutFlowVersion') === '1'
-              ? 'Open 02 Components and choose a task group. Start with its introduction and representative instance. Browse component opens the full usage states or source components in the reference catalogue. Follow the documented presets and editing limits.'
+              ? 'Open 02 Components and choose a task group. For states and limits, expand Component reference catalogue > matching group > family in Layers and press Shift+2. No plugin is needed.'
               : 'Open 02 Components and choose a task group. Read the guidance and compare Usage and states beside Source components and advanced parts. Follow the documented presets and editing limits.'
             : cards[1][2],
         ],
         [
           'maintain',
           'Know what is available',
-          'The core supports bounded draft use in UNDRR. Card and Hero are draft components. Tabs, Editorial CTA, page templates, other brands and right-to-left layouts still need review.',
+          'The published core supports bounded draft use in UNDRR. Card, Hero, Tabs and Editorial CTA are local and unpublished. Page templates, other-brand geometry and right-to-left layouts need review.',
         ],
         [
           'maintain',
@@ -613,7 +612,7 @@ async function createMangroveWelcome(
       await text(
         'welcome/content/maintain/body',
         footer,
-        'On Free, use one brand at a time. Clicking an Assets tile inserts at the view centre; drag it into your frame instead. Examples and templates records pending page-pattern coverage. Source, status and maintenance: github.com/unisdr/undrr-mangrove · examples/figma-plugin/CORE-KIT-STATUS.md',
+        'Published pilot example: https://www.figma.com/design/wOTLILmiXUI3uzG2BdPUxB?node-id=7-16\nOn Free, work locally in one brand at a time. Assets tiles insert at the view centre; drag them into your frame. The example uses declared presets, not accepted responsive templates or interactions. Source and status: github.com/unisdr/undrr-mangrove · examples/figma-plugin/CORE-KIT-STATUS.md',
         16,
         contentWidth
       );

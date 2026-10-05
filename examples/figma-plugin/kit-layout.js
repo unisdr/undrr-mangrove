@@ -1265,7 +1265,7 @@ async function organizeMangroveKit(
       'components',
       'Find a component by task',
       compactFlow
-        ? 'Choose a task group, then select one component introduction in Layers and use Zoom to selection. Each entry shows its purpose and a representative linked instance. The Component reference catalogue to the right retains full usage states, source components, supported presets, editing limits and advanced parts. Browse component in the plugin opens each view directly. Bounded draft use applies only to the documented brand, content and sizing contracts.'
+        ? 'Choose a task group, select a component introduction in Layers and press Shift+2. Each entry shows its purpose and a linked instance. For states and limits, expand Component reference catalogue > matching group > family in Layers and press Shift+2. No plugin is needed; maintainers can also use Browse component. Bounded draft use applies only to documented brand, content and sizing contracts.'
         : 'Browse complete controls and content. Each family pairs its usage and states with source components. Advanced parts belong to their complete component. Bounded draft use applies only to the documented brand, content and sizing contracts.'
     );
     const examplesIntro = await info(
@@ -1275,7 +1275,7 @@ async function organizeMangroveKit(
         (compactFlow
           ? 'Representative component entries live in Components; full usage examples live in the Component reference catalogue. '
           : 'Component usage examples live beside their families in Components. ') +
-        'The planned catalogue below records source components and examples still to implement or verify. Its entries are documentation, not usable Assets or accepted templates. To read an entry, select its row in Layers or on the canvas, then press Shift+2 to zoom to it.'
+        'Published desktop/mobile pilot: https://www.figma.com/design/wOTLILmiXUI3uzG2BdPUxB?node-id=7-16\nThe pilot uses declared presets, not accepted responsive templates or interactions. The planned catalogue below records remaining source coverage. Entries are documentation, not usable Assets. Select a row in Layers and press Shift+2 to read it.'
     );
     let catalogue;
     if (doc.plannedInventory) {
@@ -1340,7 +1340,7 @@ async function organizeMangroveKit(
     await info(
       'patterns',
       'Your workspace',
-      'Press F and draw your own frame beside this guide; name it My design. Select the frame, then drag a local Mangrove component from Assets into it. Assets may show only the last name: Vertical/Horizontal for Card and Background/Split for Hero. Check that the asset comes from this file. Edit its exposed properties in the right sidebar. Frames and notes you add beside this generated guide are designer-owned and remain unchanged through ordinary updates. Do not put personal content inside generated family or foundation boards.'
+      'For local/Free experiments, draw My design beside this guide (F). Drag this file’s Mangrove/Button from Assets into it and edit Label. Card/Hero are local unpublished drafts. For paid library use, create your design in a separate file and enable Mangrove kit in Assets > Libraries. Keep personal frames and notes outside generated boards; ordinary importer updates preserve these areas. Review published updates in consuming files.'
     );
     const maintenanceIntro = await info(
       'pending',
@@ -1553,7 +1553,7 @@ async function organizeMangroveKit(
           const label = await text(
             `${key}/label`,
             entry,
-            `Full reference: Component reference catalogue > ${group.label} / Full reference > ${meta.label}. Use Browse component for all usage states or source components. Supported presets and editing limits are documented there.`,
+            `Full reference: Component reference catalogue > ${group.label} / Full reference > ${meta.label}. Select that family in Layers and press Shift+2 for states and limits. Maintainers can also use Browse component in the plugin.`,
             14,
             720
           );

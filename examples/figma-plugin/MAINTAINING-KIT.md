@@ -682,3 +682,13 @@ Figma reselects pending draft additions when reopening Publish library. Deselect
 Compare canonical local identities exactly. For consumer remote variable bindings, resolve the imported variable's stable key rather than assuming its cached native ID survives publication; the successful token update and restoration both changed that ID's remote-version suffix. Preserve node IDs, main keys, exposed properties, modes, styles, page-owned text and geometry checks. Do not broadly ignore binding changes or normalize local canonical IDs.
 
 The connector compiler supports explicit token/style import scopes with pruning off. Its component-build path omits the layout module and refuses organised files; use the desktop plugin for those rebuilds. Reversible probes belong in separate local fixtures with paired restoration receipts, not the committed generated JSON. Restore, republish and accept the source baseline before handing off.
+
+## Recover a paid checkpoint without replacing the live library
+
+Keep the canonical file and its consumers in place. Import each `.fig` into a separate recovery file, label it as recovery and leave it unpublished. Verify owned scene topology and supported content, variables/modes/aliases, styles, exact required font loading and a consumer render against the recorded checkpoint. Compare stable keys separately from normalized backup content. The 5 October recovery rehearsal passes these scoped comparisons; it does not establish whole-file byte equivalence.
+
+A `.fig` import creates a new file and new published library keys. Importing the library and consumer backups together does not relink their remote instances: the recovered consumer can still point to the original published mains. Choose an explicit recovery/reconnection plan before publishing a replacement. An identity-preserving receiving-team transfer remains a different operation. Native rebuild in the recovered library and destination publication/reconnection still require their own rehearsal.
+
+For native chooser automation, verify the selected filename and an enabled Open/Save action before submission. Stop if the picker or editor ceases responding. Accessibility state can report a disabled action while a screenshot shows an active control; confirm the actual result after the action. Do not issue blind keys or clicks across a new chooser. Save operation receipts before closing the development plugin or rebuilding watched runtime files.
+
+The [maintenance split proposal](MAINTENANCE-SPLIT.md) identifies exporter, helper-role, controller, bundle and connector dependencies. Preserve all native catalogue roles before excluding construction code; a foundation-only export is a different scope. The proposed split is not implemented.

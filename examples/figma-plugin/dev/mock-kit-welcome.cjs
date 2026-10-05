@@ -265,7 +265,9 @@ function assertLinkedWelcome(env, receipt) {
   for (const phrase of [
     'On Free',
     'view centre',
-    'pending page-pattern coverage',
+    'Published pilot example',
+    'https://www.figma.com/design/wOTLILmiXUI3uzG2BdPUxB?node-id=7-16',
+    'not accepted responsive templates or interactions',
     'CORE-KIT-STATUS.md',
   ])
     assert(footerCopy.includes(phrase), `Footer explains ${phrase}`);

@@ -37,3 +37,9 @@ Professional enables the planned multi-brand and shared-library workflow. It doe
 ### Public reference check, 4 October 2026
 
 The published Storybook index contains 598 entries. Of 391 generated reference URLs, 385 match the public story ID, source path and story type. Six new ComboBox examples are absent from that deployment. All 27 Card/Hero references are present. Another 23 source examples deliberately omit a URL because their source forms cannot be verified by this parser. These findings establish dated link presence, not branch, brand, native appearance or ongoing availability. [Published index](https://mangrove.undrr.org/index.json)
+
+## Occasional-maintenance assessment, 5 October 2026
+
+The [PR research comment](https://github.com/unisdr/undrr-mangrove/pull/1319#issuecomment-5993683966) adds `story.to.design` to the alternatives assessment. Its documented story-defined variants, reviewed updates, CSS-variable modes/aliases and nested components overlap the custom builder. This is a candidate for a bounded evaluation, not a validated replacement or a subscription decision. Test Mangrove source metadata, effect-style limitations, existing library/main/property identity and edited-consumer preservation before choosing it. The comment also identifies rendered capture tools and the MIT-licensed `storysync`; their suitability remains untested here.
+
+Keep linking/embedding integrations such as Storybook Connect and addon-designs separate from native-library generation and capture tools. For the current kit, use meaningful release-time drift review rather than promise continuous synchronisation. Retain the full source builder for occasional construction work; the smaller token/style maintenance merge path needs a separate dependency audit and validation. Manually maintained mains need documented ownership and exclusion from automatic dependency rebuilds.

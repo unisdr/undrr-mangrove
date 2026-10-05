@@ -4,7 +4,7 @@ Prepared 5 October 2026 for Anders, the UX lead. Start with [paid status](PAID-K
 
 ## Open and use the pilot
 
-1. In the paid Mangrove MVP folder, open **Mangrove kit (exploratory)** for foundations, supported component contracts and source references. Open **Mangrove MVP consumer (validation)** for the desktop/mobile resource-page example and its edited-instance appendix.
+1. In the paid [Mangrove MVP folder](https://www.figma.com/files/team/1303995769935690826/project/665594212), open [Mangrove kit (exploratory)](https://www.figma.com/design/Zgjq8pQ0FMT8d6dhw9M5bt) for foundations, supported component contracts and source references. Open [Mangrove MVP consumer (validation)](https://www.figma.com/design/wOTLILmiXUI3uzG2BdPUxB?node-id=7-16) for the desktop/mobile resource-page example and its edited-instance appendix.
 2. Enable the kit in **Assets > Libraries** in a consuming design file. Insert a fresh Button from Assets into your own working frame and change its Label. Keep instances linked. Library consumers do not need the development plugin.
 3. Read a family's supported presets and edits before changing its width, text or variant. Supporting Table cells/rows, ComboBox options and other parts supply whole widgets; they are not all independent product choices.
 4. Use UNDRR for the bounded MVP. Five modes are present, but broader component rendering and geometry under other brands remain experimental.
@@ -12,23 +12,46 @@ Prepared 5 October 2026 for Anders, the UX lead. Start with [paid status](PAID-K
 
 ## What is delivered
 
-| Item                   | Current evidence                                                                                                                                                           |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Canonical source kit   | Original cloud file identity retained through paid-folder migration and five-mode import/repeat.                                                                           |
-| Published core         | 25 construction families, 297 variants, 36 text styles and eight effects. Seven families are supporting parts.                                                             |
-| Variable catalogue     | 508 published variables, with 12 private variables hidden. The catalogue includes experimental draft helpers beyond the core component release.                            |
-| Consumer example       | Editable desktop/mobile resource pages and an appendix; 56 remote linked instances, 169 captured scene records.                                                            |
-| Update route           | One scoped UNDRR spacing-token change, native publication/acceptance and restoration. Both independent comparisons pass 5,237 field checks.                                |
-| Source and maintenance | Draft PR #1319 on spike/figma-token-bridge, stacked on spike/react-aria-surface. Follow [the runbook](MAINTAINING-KIT.md); regenerate rather than committing build output. |
-| Backup                 | Fresh paid canonical and consumer `.fig` checkpoints are saved and their sizes verified. Restoration is not yet tested. Local inspections are evidence, not backups.       |
+| Item                   | Current evidence                                                                                                                                                                                                                            |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Canonical source kit   | Original cloud file identity retained through paid-folder migration and five-mode import/repeat.                                                                                                                                            |
+| Published core         | 25 construction families, 297 variants, 36 text styles and eight effects. Seven families are supporting parts.                                                                                                                              |
+| Variable catalogue     | 508 published variables, with 12 private variables hidden. The catalogue includes experimental draft helpers beyond the core component release.                                                                                             |
+| Consumer example       | Editable desktop/mobile resource pages and an appendix; 56 remote linked instances, 169 captured scene records.                                                                                                                             |
+| Update route           | One scoped UNDRR spacing-token change, native publication/acceptance and restoration. Both independent comparisons pass 5,237 field checks.                                                                                                 |
+| Source and maintenance | Draft PR #1319 on spike/figma-token-bridge, stacked on spike/react-aria-surface. Follow [the runbook](MAINTAINING-KIT.md); regenerate rather than committing build output.                                                                  |
+| Backup                 | Fresh paid canonical and consumer `.fig` checkpoints are saved and their sizes verified. Both backups pass scoped recovery comparisons in separate unpublished files. Imported library keys change; consumer reconnection remains separate. |
 
 Card, Hero, Tabs, Editorial CTA and historical diagnostics remain local and unpublished. Planned catalogue stubs are documentation rather than Assets. The example is not an accepted responsive page template or working interaction prototype.
 
+## Maintenance ownership and cadence
+
+The [agreed PR direction](https://github.com/unisdr/undrr-mangrove/pull/1319#issuecomment-5993683966) treats initial component construction as a largely one-off investment. Review design drift at meaningful releases. Broad token or brand changes, substantial new families and major visual redesigns may need the retained builder. Small visual changes may be maintained manually; code-only behavioural or internal changes need no Figma update when the design contract is unchanged. The workflow does not continuously synchronise Storybook and Figma.
+
+Before editing a generated main component, choose and record its maintenance owner. For a source-owned family, reflect the change in its source recipe and validate the rebuild. For a manually maintained family, record that status and exclude it from later rebuilds, including automatic dependency updates. An unchecked build selection alone does not establish that exclusion. Consumer instance overrides and page-owned notes remain separate from main-component edits; their tested preservation does not establish preservation of arbitrary manual changes to mains.
+
+The intended merge target is a reduced token/style maintenance path with concise supported-scope and ownership guidance, subject to a dependency audit and focused validation. Preserve the complete builder, recipes, diagnostics, mocks and experimental history on the feature branch and an immutable reproducible checkpoint for occasional maintenance. The current pinned pilot revision below contains the full tooling. This is a planned split: the current full diff has not been reduced or accepted for merge. Preserve native evidence and canonical identities through any later split. Reusing an older builder checkpoint against newer JSX or SCSS may require recipe and extraction-guard updates before it can safely rebuild a family.
+
 ## Maintainer setup
 
-Use the feature branch and its recorded source revision. Run `yarn install` and `yarn build:figma-tokens`, then import the development manifest in the desktop app. The maintainer needs the exact Roboto and Roboto Condensed faces used by the kit. Consuming designers use the published library rather than installing the importer.
+Use `spike/figma-token-bridge` and the source revision recorded in the delivery package's `release-manifest.json` and `SHA256SUMS.json`. The following reproduces the 5 October published pilot checkpoint at [revision dbd7ce10](https://github.com/unisdr/undrr-mangrove/tree/dbd7ce100c06f618549346305f5648998a53c7be); use the package's newer revision when it records a later checkpoint.
 
-Import source JSON without pruning. For affected components, use the layout-aware desktop plugin, inspect changes, check rendering and preserve stable main/property identities. Deselect pending **Changes** in the publication dialog and choose only the reviewed release assets on every update; Figma reselects unpublished drafts. Publish, then review and accept the update in the consumer and verify its edits.
+```sh
+git clone --branch spike/figma-token-bridge https://github.com/unisdr/undrr-mangrove.git undrr-mangrove-pilot
+cd undrr-mangrove-pilot
+git checkout dbd7ce100c06f618549346305f5648998a53c7be
+yarn install --immutable
+yarn build:figma-tokens
+node scripts/build-figma-tokens.cjs --check
+```
+
+The repository requires Node.js **22 or later** (`package.json`); `.nvmrc` selects Node.js **24**. This checkpoint was verified with Node.js **24.18.0** and Yarn **4.17.0**, the version pinned by `packageManager`. Configure those tools before running the commands. The final check reports whether generated JSON and the plugin runtime are current without changing them.
+
+Import `examples/figma-plugin/manifest.json` in the Figma desktop app, then explicitly load `examples/figma-plugin/mangrove-variables.json` in the plugin. The delivery ZIP also includes a ready-built `plugin/manifest.json`, runtime, interface and source JSON for its recorded checkpoint. It does not contain the complete source checkout or dependency installation. Relative documentation links to source files outside the packaged `docs` directory need the matching repository checkout; read those documents under `examples/figma-plugin` there. Consuming designers use the published library rather than installing the importer.
+
+The current native kit uses five exact face names: **Roboto Regular**, **Roboto Medium**, **Roboto Bold**, **Roboto Condensed Regular** and **Roboto Condensed Bold**. Set up those faces separately, restart Figma after installation when necessary and verify exact loading before rebuilding. The [runbook](MAINTAINING-KIT.md#organize-the-file-before-expanding-the-catalogue) records the installed static Condensed version and pinned upstream source. Matching face names and successful loading do not establish exact font-file, source-browser or raster equivalence; these remain unverified. The delivery ZIP contains no font binaries.
+
+For an occasional source-backed update, import source JSON without pruning. For affected source-owned components, use the layout-aware desktop plugin, inspect changes, check rendering and preserve stable main/property identities. Confirm that the selected families and their automatic dependencies exclude manually maintained mains before building. Deselect pending **Changes** in the publication dialog and choose only the reviewed release assets on every update; Figma reselects unpublished drafts. Publish, then review and accept the update in the consumer and verify its edits. Apply the same reviewed publication and consumer checks to a deliberate manual visual update.
 
 The explicit connector token/style scopes are useful for bounded imports. Its component-build path refuses organised files; it cannot replace the layout-aware desktop builder. Remote variable cache IDs can change after publication. Compare their stable keys and values while preserving exact local canonical identities.
 
@@ -36,12 +59,12 @@ The explicit connector token/style scopes are useful for bounded imports. Its co
 
 - A published component recipe-rebuild update, including edited consumer preservation.
 - The six uncoached novice tasks in [kit architecture](KIT-ARCHITECTURE.md), recording time, wrong turns and help needed.
-- Backup restoration, broader brand rendering, RTL/scripts and source font/raster equivalence.
+- Recovery-copy rebuild and deliberate replacement-library reconnection; broader brand rendering, RTL/scripts and source font/raster equivalence.
 - Longer fixed-row Table content, arbitrary resizing and deferred family contracts. The Short-cell probe uses Ready because Preparedness collided with the fixed row divider.
 - Accepted page templates, interactions and the remaining source catalogue; see [component inventory](COMPONENT-INVENTORY.md).
 
 ## Transfer into the receiving team
 
-Obtain the receiving paid-team destination and admin acceptance. Transfer the folder containing both the library and its consumers together. Confirm file access, fonts, mode/alias values, identities and a published consumer update after transfer. Private plugins and shared fonts need separate maintainer setup. Keep the sending subscription until destination receipt and update flow work; its billing term has not been inspected.
+Obtain the receiving paid-team destination and admin acceptance. Transfer the folder containing both the library and its consumers together. Confirm file access, fonts, mode/alias values, identities and a published consumer update after transfer. Verify that the receiving maintainer has a **Full seat**, edit access to the canonical library and actual publication access in the destination. Keeping existing collaborators in a transfer gives them View seats; it does not carry over the sending maintainer's Full entitlement. [Figma's transfer guidance](https://help.figma.com/hc/en-us/articles/10250387712407-Transfer-a-folder-or-team-to-a-different-account) describes this access boundary. Private plugins and shared fonts need separate maintainer setup. Keep the sending subscription until destination receipt and update flow work; its billing term has not been inspected.
 
 Do not substitute a `.fig` import for an identity-preserving folder transfer without an explicit recovery decision. Imported local copies create new file/main identities and need new library connections. Destination transfer, Anders's receipt and novice acceptance are later human handoff gates, not completed by this package.
