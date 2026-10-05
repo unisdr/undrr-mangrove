@@ -91,13 +91,11 @@ function guardSearchSources(root = ROOT) {
       throw new Error(`Search fixture source contract needs updating: ${file}`);
   }
 }
-async function createSearchSourceLoader({ root = ROOT } = {}) {
+function createSearchSourceLoaderSync({ root = ROOT } = {}) {
   guardSearchSources(root);
-  const [babel, modules, reactPreset] = await Promise.all([
-    import('@babel/core'),
-    import('@babel/plugin-transform-modules-commonjs'),
-    import('@babel/preset-react'),
-  ]);
+  const babel = require('@babel/core');
+  const modules = require('@babel/plugin-transform-modules-commonjs');
+  const reactPreset = require('@babel/preset-react');
   const options = {
     configFile: false,
     babelrc: false,
@@ -176,8 +174,8 @@ async function createSearchSourceLoader({ root = ROOT } = {}) {
   }
   return { load, declarations };
 }
-async function buildSearchFixtures({ root = ROOT } = {}) {
-  const source = await createSearchSourceLoader({ root });
+function buildSearchFixturesSync({ root = ROOT } = {}) {
+  const source = createSearchSourceLoaderSync({ root });
   const constants = source.load(BASE + 'utils/constants.js');
   const context = source.load(BASE + 'context/SearchContext.jsx');
   const authored = source.declarations(BASE + '__tests__/ResultItem.test.jsx', [
@@ -329,7 +327,16 @@ async function buildSearchFixtures({ root = ROOT } = {}) {
     responsiveBoundaries: [480, 481, 768, 769, 800, 801, 899, 900, 1163, 1164],
   };
 }
+// Existing asynchronous consumers retain their promise/error contract.
+async function createSearchSourceLoader(options) {
+  return createSearchSourceLoaderSync(options);
+}
+async function buildSearchFixtures(options) {
+  return buildSearchFixturesSync(options);
+}
 module.exports = {
+  buildSearchFixturesSync,
+  createSearchSourceLoaderSync,
   buildSearchFixtures,
   createSearchSourceLoader,
   guardSearchSources,

@@ -290,7 +290,8 @@ function subsetDocument(
     const effectIds = new Set();
     const directTemplateIds = new Set();
     const richStyles = new Set(),
-      richPaints = new Set();
+      richPaints = new Set(),
+      sizingRoles = new Set();
     const coincidentRings = [];
     function tree(node, family, variant) {
       if (node.type === 'INSTANCE' && node.properties !== undefined)
@@ -329,6 +330,11 @@ function subsetDocument(
           richPaints.add(run.fill);
         }
       }
+      if (node.svg?.sizing !== undefined && node.type !== 'SVG')
+        throw new Error('SVG sizing is only supported on SVG leaves.');
+      if (node.svg?.sizing !== undefined)
+        for (const role of Object.values(node.svg.sizing || {}))
+          sizingRoles.add(role);
       if (node.textStyle) textIds.add(node.textStyle);
       if ('textStyleApplication' in node && node.textStyle)
         directTemplateIds.add(node.textStyle);
@@ -379,6 +385,7 @@ function subsetDocument(
         for (const name of Object.values(style.bindings || {}))
           includeDirectVariable(name);
     for (const name of richPaints) includeDirectVariable(name);
+    for (const name of sizingRoles) includeDirectVariable(name);
     // Preserve exact source definitions needed by the source-family focus
     // renderer. Traverse every source mode, while the DTO remains one brand.
     // Alias edges are typed and cycle-checked independently for each mode.
@@ -561,11 +568,16 @@ function svgPlanSource(source) {
     throw new Error('Connector SVG plan specialization boundary changed.');
   return { start, end, source: source.slice(start, end) };
 }
-function verifiedSvgPlans(doc, source) {
+function verifiedSvgPlans(doc, source, sourceDoc = doc) {
   // Execute the desktop runtime's pure parser, not a second SVG schema. The
   // resulting plans supplement the original lossless SVG DTO. This is safe
   // only because connector input is embedded and immutable at execution time.
   const context = vm.createContext({});
+  vm.runInContext(
+    fs.readFileSync(path.join(PLUGIN, 'kit-svg-sizing.js'), 'utf8'),
+    context,
+    { timeout: 1000 }
+  );
   vm.runInContext(svgPlanSource(source).source, context, { timeout: 1000 });
   const plans = Object.create(null);
   function visit(tree) {
@@ -576,9 +588,26 @@ function verifiedSvgPlans(doc, source) {
           vm.runInContext('mgSvgPlan(tree)', context, { timeout: 1000 })
         )
       );
+      if (plan.sizing) {
+        context.sizing = plan.sizing;
+        context.sourceDoc = sourceDoc;
+        vm.runInContext(
+          'mgSvgSizingDocumentValues(sizing, sourceDoc)',
+          context,
+          { timeout: 1000 }
+        );
+      }
       if (plans[plan.assetId] && plans[plan.assetId].markup !== plan.markup)
         throw new Error(
           `SVG asset ${plan.assetId} has conflicting source markup. Use distinct asset IDs or an explicit SVG migration.`
+        );
+      if (
+        plans[plan.assetId] &&
+        JSON.stringify(plans[plan.assetId].sizing ?? null) !==
+          JSON.stringify(plan.sizing ?? null)
+      )
+        throw new Error(
+          'SVG asset sizing policies conflict. Use distinct asset IDs.'
         );
       plans[plan.assetId] = plan;
     }
@@ -967,6 +996,17 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsSvg(variant.tree))
     );
+  function needsSvgSizing(node) {
+    return (
+      node.svg?.sizing !== undefined ||
+      (node.children || []).some(needsSvgSizing)
+    );
+  }
+  const svgSizingEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsSvgSizing(variant.tree))
+    );
   function needsEllipse(node) {
     return node.type === 'ELLIPSE' || (node.children || []).some(needsEllipse);
   }
@@ -1214,13 +1254,16 @@ async function buildConnector({
   if (richTextEnabled)
     source +=
       fs.readFileSync(path.join(PLUGIN, 'kit-rich-text.js'), 'utf8') + '\n;\n';
+  if (svgSizingEnabled)
+    source +=
+      fs.readFileSync(path.join(PLUGIN, 'kit-svg-sizing.js'), 'utf8') + '\n;\n';
   let packedDocument = subset;
   if (runtime) {
     const runtimeSource = fs.readFileSync(path.join(PLUGIN, runtime), 'utf8');
     if (svgEnabled)
       packedDocument = {
         ...subset,
-        connectorSvgPlans: verifiedSvgPlans(subset, runtimeSource),
+        connectorSvgPlans: verifiedSvgPlans(subset, runtimeSource, doc),
       };
     source +=
       (operation === 'build'
@@ -1262,6 +1305,8 @@ async function buildConnector({
         MG_CONNECTOR_LETTER_SPACING: letterSpacingEnabled,
         MG_CONNECTOR_MEDIA: mediaEnabled,
         MG_CONNECTOR_SVG: svgEnabled,
+        MG_CONNECTOR_SVG_SIZING: svgSizingEnabled,
+        MG_CONNECTOR_SVG_SIZING_SOURCE: false,
         MG_CONNECTOR_ELLIPSE: ellipseEnabled,
         MG_CONNECTOR_ABSOLUTE: absoluteEnabled,
         MG_CONNECTOR_ARC: arcEnabled,

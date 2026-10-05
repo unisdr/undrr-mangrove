@@ -10,6 +10,7 @@ const { renderToStaticMarkup } = require('react-dom/server');
 const { JSDOM } = require('jsdom');
 const {
   buildSearchFixtures,
+  buildSearchFixturesSync,
   createSearchSourceLoader,
   guardSearchSources,
   SOURCE_HASHES,
@@ -31,6 +32,9 @@ async function main() {
       JSON.stringify(packet),
       JSON.stringify(await buildSearchFixtures({ root }))
     );
+    const syncPacket = buildSearchFixturesSync({ root });
+    assert.strictEqual(typeof syncPacket.then, 'undefined');
+    assert.strictEqual(JSON.stringify(packet), JSON.stringify(syncPacket));
     assert.strictEqual(packet.provenance.remoteResponseCaptured, false);
     assert.strictEqual(packet.provenance.imageAssetsVerified, false);
     assert.strictEqual(Object.keys(packet.presets).length, 20);

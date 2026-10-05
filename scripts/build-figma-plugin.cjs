@@ -10,6 +10,7 @@ const SOURCES = [
   'code.js',
   'kit-inspection.js',
   'kit-rich-text.js',
+  'kit-svg-sizing.js',
   'kit-builder.js',
   'kit-layout.js',
   'kit-navigation.js',

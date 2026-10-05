@@ -1,4 +1,4 @@
-/* global mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingSourceValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -360,6 +360,8 @@ function mgGradientPlan(tree) {
   return gradient;
 }
 const MG_SVG_KEY = 'mgSvgAsset';
+const MG_SVG_SIZING_ENABLED =
+  typeof MG_CONNECTOR_SVG_SIZING === 'undefined' || MG_CONNECTOR_SVG_SIZING;
 const MG_SVG_ENABLED =
   typeof MG_CONNECTOR_SVG === 'undefined' || MG_CONNECTOR_SVG;
 
@@ -469,7 +471,7 @@ function mgSvgPlan(tree) {
   if (
     !object(svg) ||
     Object.keys(svg).some(
-      field => !['assetId', 'markup', 'monochrome'].includes(field)
+      field => !['assetId', 'markup', 'monochrome', 'sizing'].includes(field)
     ) ||
     typeof svg.assetId !== 'string' ||
     !/^[a-z0-9][a-z0-9._-]*$/.test(svg.assetId) ||
@@ -665,6 +667,7 @@ function mgSvgPlan(tree) {
   for (let i = 0; i < svg.markup.length; i += 1)
     hash = Math.imul(hash ^ svg.markup.charCodeAt(i), 16777619) >>> 0;
   const identity = {
+    ...(svg.sizing === undefined ? {} : { sizing: mgSvgSizingPlan(tree) }),
     assetId: svg.assetId,
     hash: `fnv1a32-utf16:${hash.toString(16).padStart(8, '0')}`,
     markup: svg.markup,
@@ -1070,6 +1073,32 @@ async function buildMangroveComponents(
         return found;
       })
     );
+  const svgSizingScope =
+    MG_SVG_SIZING_ENABLED &&
+    ordered.some(family =>
+      family.variants.some(variant => {
+        let found = false;
+        treeWalk(variant.tree, tree => {
+          if (tree.svg?.sizing !== undefined) found = true;
+        });
+        return found;
+      })
+    );
+  function nativeSvgNumber(name, nativeMode, type, seen = new Set()) {
+    const entry = variable(name, type);
+    if (seen.has(entry.id))
+      throw new Error('SVG sizing native alias is cyclic.');
+    seen.add(entry.id);
+    const value = entry.valuesByMode[nativeMode.id];
+    if (value?.type === 'VARIABLE_ALIAS') {
+      const alias = [...variables.values()].find(item => item.id === value.id);
+      if (!alias) throw new Error('SVG sizing native alias is missing.');
+      return nativeSvgNumber(alias.name, nativeMode, type, seen);
+    }
+    if (!Number.isFinite(value))
+      throw new Error('SVG sizing native FLOAT is unresolved.');
+    return value;
+  }
   let richContext;
   const ready = [];
   const blocked = new Set();
@@ -1704,6 +1733,12 @@ async function buildMangroveComponents(
             !['FRAME', 'TEXT', 'INSTANCE', 'ELLIPSE', 'SVG'].includes(tree.type)
           )
             throw new Error(`Unsupported recipe node ${tree.type}`);
+          if (
+            MG_SVG_SIZING_ENABLED &&
+            tree.svg?.sizing !== undefined &&
+            tree.type !== 'SVG'
+          )
+            throw new Error('SVG sizing is only supported on SVG leaves.');
           if (tree.type === 'SVG' && !MG_SVG_ENABLED)
             throw new Error(
               'SVG recipes are disabled in this connector scope. Compile the selected SVG family before building it.'
@@ -1718,6 +1753,20 @@ async function buildMangroveComponents(
                 `SVG asset ${plan.assetId} has conflicting source markup. Use distinct asset IDs or an explicit SVG migration.`
               );
             svgAssetSources.set(plan.assetId, plan.markup);
+            if (tree.svg.sizing !== undefined) {
+              if (!MG_SVG_SIZING_ENABLED)
+                throw new Error('SVG sizing capability is not compiled.');
+              if (
+                typeof MG_CONNECTOR_SVG_SIZING_SOURCE === 'undefined' ||
+                MG_CONNECTOR_SVG_SIZING_SOURCE
+              )
+                mgSvgSizingDocumentValues(plan.sizing, doc);
+              mgSvgSizingSourceValues(
+                plan.sizing,
+                collection.modes.map(item => ({ id: item.modeId })),
+                nativeSvgNumber
+              );
+            }
             svgPlans.set(tree, plan);
             for (const name of Object.values(tree.svg.monochrome || {}))
               variable(name, 'COLOR');
@@ -1937,6 +1986,9 @@ async function buildMangroveComponents(
                 previous.assetId !== plan.assetId ||
                 previous.hash !== plan.hash ||
                 previous.markup !== plan.markup ||
+                (MG_SVG_SIZING_ENABLED &&
+                  JSON.stringify(previous.sizing ?? null) !==
+                    JSON.stringify(plan.sizing ?? null)) ||
                 !Number.isFinite(previous.sourceOpacity) ||
                 previous.sourceOpacity < 0 ||
                 previous.sourceOpacity > 1 ||
@@ -1962,6 +2014,8 @@ async function buildMangroveComponents(
                 );
               for (const field of Object.keys(tree.svg.monochrome || {}))
                 mgSvgMonochrome(node, field);
+              if (MG_SVG_SIZING_ENABLED && plan.sizing)
+                mgSvgSizingNativePlan(node, plan.sizing, variable, true);
               plan.sourceOpacity = previous.sourceOpacity;
             }
           }
@@ -2128,7 +2182,11 @@ async function buildMangroveComponents(
       });
     }
   }
-  if (MG_RICH_TEXT_ENABLED && richTextScope && result.errors.length)
+  if (
+    ((MG_RICH_TEXT_ENABLED && richTextScope) ||
+      (MG_SVG_SIZING_ENABLED && svgSizingScope)) &&
+    result.errors.length
+  )
     return result;
   if (!ready.length) return result;
   if (MG_RICH_TEXT_ENABLED && richTextScope) {
@@ -2266,6 +2324,13 @@ async function buildMangroveComponents(
   );
   result.styles = styles;
   result.errors.push(...styles.errors);
+  if (MG_SVG_SIZING_ENABLED && svgSizingScope && styles.errors.length) {
+    result.audit.push({
+      status: 'blocked-svg-sizing-style-import',
+      reason: 'Style import failed; sized SVG scene construction refused.',
+    });
+    return result;
+  }
   const localText = new Map(
     (await figma.getLocalTextStylesAsync()).map(style => [
       mgReadIdentity(style, 'mgStyleId'),
@@ -2775,6 +2840,8 @@ async function buildMangroveComponents(
             );
           for (const field of Object.keys(spec.svg.monochrome || {}))
             mgSvgMonochrome(node, field);
+          if (MG_SVG_SIZING_ENABLED && plan.sizing)
+            mgSvgSizingNativePlan(node, plan.sizing, variable);
           plan.sourceOpacity = node.opacity;
         } catch (error) {
           if (node && !node.removed) node.remove();
@@ -2792,13 +2859,24 @@ async function buildMangroveComponents(
       applyVisibility(spec, node, component);
       // resize only changes a frame viewport. rescale also scales source paths,
       // stroke widths and positions. Equal-size repeats perform no rescale.
-      let scale = spec.layout.width / node.width;
-      while (scale < 0.01) {
-        node.rescale(0.01);
-        scale /= 0.01;
+      if (MG_SVG_SIZING_ENABLED && plan.sizing) {
+        const sizingResult = mgApplySvgSizing(
+          mgSvgSizingNativePlan(node, plan.sizing, variable)
+        );
+        result.audit.push({
+          nodeId: node.id,
+          status: 'source-svg-sizing',
+          ...sizingResult,
+        });
+      } else {
+        let scale = spec.layout.width / node.width;
+        while (scale < 0.01) {
+          node.rescale(0.01);
+          scale /= 0.01;
+        }
+        if (Math.abs(scale - 1) > 1e-12) node.rescale(scale);
+        node.layoutSizingHorizontal = node.layoutSizingVertical = 'FIXED';
       }
-      if (Math.abs(scale - 1) > 1e-12) node.rescale(scale);
-      node.layoutSizingHorizontal = node.layoutSizingVertical = 'FIXED';
       if (spec.position) {
         if (parent.layoutMode !== 'NONE') node.layoutPositioning = 'ABSOLUTE';
         node.x = spec.position.x;
@@ -2826,6 +2904,9 @@ async function buildMangroveComponents(
         node,
         MG_SVG_KEY,
         JSON.stringify({
+          ...(MG_SVG_SIZING_ENABLED && plan.sizing
+            ? { sizing: plan.sizing }
+            : {}),
           assetId: plan.assetId,
           hash: plan.hash,
           markup: plan.markup,
