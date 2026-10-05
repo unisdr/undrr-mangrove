@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **15 families / 56 bounded variants**.
+The current holistic packet contains **24 families / 97 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -8,6 +8,14 @@ is cloned as a separate dependency (23 variants), not counted as a new draft.
 The packet remains deliberately non-importable and the normal exporter remains
 32 families/383 variants. See [the holistic scope](holistic/README.md) and
 [authored card contracts](holistic/card-content.md).
+
+Search controls add four families/15 variants. Page prose adds two families/four
+variants, closed chrome adds one family/six variants, and bulleted contents lists
+and quote patterns add two families/16 variants. See [search controls](holistic/search-controls.md),
+[page prose](holistic/page-patterns.md), [closed chrome](holistic/page-chrome.md)
+and [reading patterns](holistic/page-reading.md) for their source evidence and
+limits. These prepare reusable page and search dependencies. They do not yet
+represent complete landing pages, news-detail pages or the syndicated widget.
 
 Editorial source observations cover 90 Chromium cases and Card observations
 cover 95. Their dedicated actual-builder mocks exercise all five brands,
@@ -87,10 +95,10 @@ lifecycle, not native path bounds or raster rendering.
 User Feedback's Yes/No actions use the source 40px minimum. The two presets
 represent fixed modern-grid arrangements; changing width does not trigger browser
 breakpoints. Confirmation contains an inline link among editable text fragments.
-The current builder applies whole-text styles and cannot retain that source
-link's separate formatting and inline word flow during arbitrary edits. Splitting
-the paragraph into native text nodes would produce different wrapping, so
-confirmation remains excluded. Runtime responses and keyboard focus are also
+The original confirmation recipe was excluded because the builder could not
+retain its inline link and formatting. The guarded rich-text capability now
+supports bounded editable runs, but confirmation has not yet been implemented
+and verified through that path. Runtime responses and keyboard focus are also
 outside this source-only contract.
 
 ## Generate and verify a packet

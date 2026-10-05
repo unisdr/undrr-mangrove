@@ -35,9 +35,15 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 15 families and 56 bounded variants, deliberately
+- Separate source draft packet: 24 families and 97 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
+  Search controls add four families/15 variants. Page prose, closed chrome,
+  bulleted contents lists and quotes add five families/26 variants. These are
+  bounded parts of the requested compositions; complete pages and the syndicated
+  search widget remain under implementation. See [search controls](search-controls.md),
+  [page prose](page-patterns.md), [closed chrome](page-chrome.md) and
+  [reading patterns](page-reading.md).
   A cloned existing Editorial CTA family is an explicit dependency, not a new
   draft or publication claim. See [draft scope](../COMPONENT-DRAFTS.md) and
   [browser observations](../SOURCE-BROWSER-STATUS.md).

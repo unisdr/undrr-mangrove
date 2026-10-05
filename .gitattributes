@@ -6,3 +6,6 @@
 # neither branch and that nobody is prompted to regenerate. Force a conflict
 # instead; see the $comment in the file for how to resolve one.
 tokens/output-baseline.json -merge
+
+# Preserve exact source bytes pinned by the Figma draft asset guard.
+examples/figma-plugin/holistic/assets/page-chrome/undrr-logo-horizontal.svg -text

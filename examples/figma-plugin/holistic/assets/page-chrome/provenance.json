@@ -1,0 +1,21 @@
+{
+  "kind": "source-page-chrome-assets",
+  "capturedDate": "2026-10-05",
+  "assets": [
+    {
+      "file": "undrr-logo-horizontal.svg",
+      "sourceUrl": "https://assets.undrr.org/logos/undrr/undrr-logo-horizontal.svg",
+      "referencedBy": "stories/Components/PageHeader/PageHeader.jsx",
+      "sha256": "c48d269fc01cf87c8e89356f6bd404ba1d1df6f6c48a73ccdecc7dc2f7f92e80",
+      "bytes": 26830
+    },
+    {
+      "file": "toolbar-background.png",
+      "sourceUrl": "https://www.undrr.org/themes/custom/undrr_common/images/toolbar-background.png",
+      "referencedBy": "stories/Components/PageHeader/page-header.scss",
+      "sha256": "ac3941b2f9647c6d037b7eefa1ed80fc77b5f194f3d718d2f4b2902f55303c81",
+      "bytes": 2938
+    }
+  ],
+  "nativeAcceptance": false
+}

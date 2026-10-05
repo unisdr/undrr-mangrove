@@ -39,6 +39,27 @@ const recipes = [
     './figma-card-content-recipes.cjs',
     'buildCardContentRecipes',
   ],
+  [
+    [
+      'search-form',
+      'search-select',
+      'search-active-filters',
+      'search-facet-operator',
+    ],
+    './figma-search-control-recipes.cjs',
+    'buildSearchControlRecipes',
+  ],
+  [
+    ['landing-report-article-column', 'news-detail-article-column'],
+    './figma-page-pattern-recipes.cjs',
+    'buildPagePatternRecipes',
+  ],
+  ['page-chrome', './figma-page-chrome-recipes.cjs', 'buildPageChromeRecipes'],
+  [
+    ['page-bulleted-toc', 'quote-highlight'],
+    './figma-page-reading-recipes.cjs',
+    'buildPageReadingRecipes',
+  ],
 ];
 
 function validateDrafts(families, assets, dependencies = []) {
@@ -104,7 +125,10 @@ function validateDrafts(families, assets, dependencies = []) {
     }
   for (const family of families) {
     assert(
-      family.variants.length && family.limitations.length,
+      Array.isArray(family.variants) &&
+        family.variants.length &&
+        Array.isArray(family.limitations) &&
+        family.limitations.length,
       'Bounded draft contract required'
     );
     assert.strictEqual(
@@ -132,6 +156,7 @@ function validateDrafts(families, assets, dependencies = []) {
           ...Object.values(node.appearance || {}),
           ...Object.values(node.layout || {}),
           ...Object.values(node.layout?.padding || {}),
+          ...Object.values(node.absolute || {}),
         ])
           role(value);
         if (node.textStyle)
