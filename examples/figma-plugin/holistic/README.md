@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 30 families and 127 bounded variants, deliberately
+- Separate source draft packet: 32 families and 133 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants. Page prose, closed chrome,
@@ -45,7 +45,9 @@ update/restoration are distinct from recipe and mock completion.
   at390/1164, and three open navigation families/24 variants preserve actual
   desktop About/OurWork/Sendai/News, mobile All/section surfaces and capped CTA wrapping. Other page templates and the
   syndicated search widget remain under implementation; native page gates remain
-  open. See [report composition](landing-report.md). See [search controls](search-controls.md),
+  open. Two news dependency families/six variants now preserve the actual no-image
+  header and device-share available/unavailable branches. Full article assembly
+  remains open. See [news dependencies](news-detail.md). See [report composition](landing-report.md). See [search controls](search-controls.md),
   [page prose](page-patterns.md), [closed chrome](page-chrome.md) and
   [reading patterns](page-reading.md).
   Cloned existing Editorial CTA (23 variants) and source Button as

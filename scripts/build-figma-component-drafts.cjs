@@ -78,6 +78,11 @@ const recipes = [
     './figma-landing-report-recipes.cjs',
     'buildLandingReportRecipes',
   ],
+  [
+    ['article-header', 'share-buttons'],
+    './figma-news-detail-recipes.cjs',
+    'buildNewsDetailDependencyRecipes',
+  ],
 ];
 
 function validateDrafts(families, assets, dependencies = []) {

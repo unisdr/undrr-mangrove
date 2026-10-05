@@ -27,7 +27,7 @@ its controls need a shared foundation, rather than a circular recipe dependency.
 | Editorial and cards               | Bounded source cohorts integrated; UNDRR SectionHeader cloud repeats accepted                                                  | root coordination   | Further native cohorts, all-brand source correspondence and publication               |
 | Chrome                            | Closed six presets and 24 open/capped presets integrated in source packet                                                      | tag_recipe, root    | Remaining shell/footer/locales and native scene acceptance                            |
 | Landing report                    | Full finite authored source composition at390/1164 integrated                                                                  | root coordination   | Native complete-scene rendering, ordinary repeats and publication                     |
-| News pages                        | Source prose and prerequisites audited; header/share/related/taxonomy dependencies in progress                                 | notice_recipe       | Full actual news anatomy, float/embed decisions, native composition                   |
+| News pages                        | No-image header and share source dependencies integrated; related/taxonomy and full assembly in progress                       | notice_recipe       | Full actual news anatomy, float/embed decisions, native composition                   |
 | ContentHub                        | 170 source cases captured; source header and page recipes in progress                                                          | range_scope         | Genuine nested route scenes and source-cascade fidelity, then native checks           |
 | Remaining reusable contracts      | Historical source inventory plus explicit packet follow-ups                                                                    | root coordination   | Implement remaining meaningful appearances through reviewed batches                   |
 | Native integration                | Isolated Tag and SectionHeader UNDRR cloud cohorts plus bounded SVG/font/gradient probes                                       | root                | All remaining native cohorts, source parity, modes and ordinary desktop repeats       |
@@ -50,7 +50,7 @@ not establish browser network, keyboard, portal or responsive runtime behaviour.
 7. Reviewed library integration, selective publication and actual linked consumer
    update/restoration.
 
-Each gate needs its own evidence. The 30-family/127-variant source draft packet
+Each gate needs its own evidence. The 32-family/133-variant source draft packet
 and normal 32-family catalogue remain bounded contracts. The recorded 25-family published
 checkpoint is historical evidence, not a fresh holistic validation.
 
