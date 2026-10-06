@@ -1,0 +1,9 @@
+{
+  "scope": "Additional photo-source pins only; prior ShowMore/Hydrated source provenance remains unchanged.",
+  "sourceHashes": {
+    "scripts/figma-editorial-cta-recipes.cjs": "b98bc4d1878bb4280f64705e631dc4299992cf60ea9401b698dfdc2fc1ee6707",
+    "examples/figma-plugin/holistic/assets/scroll-show-more/photo-source/outline-capture.py": "3d83f2c2ea1ec84b5c686c2dca44d0553c4bb1dd18d6e6ef84f696dcefc4296c",
+    "examples/figma-plugin/holistic/assets/scroll-show-more/photo-source/outline-source.json": "f77926413216e22d9b023db565a2890838c375b6b183ad9ca289c2be607a6066",
+    "examples/figma-plugin/holistic/assets/scroll-show-more/photo-source/raised-style-contract.json": "dad863bf4c037932cf00c0c1364f40a9608fb500225f52e94f8d78bc90046f47"
+  }
+}

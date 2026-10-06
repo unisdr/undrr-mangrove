@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **82 families / 1085 bounded variants**.
+The current holistic packet contains **93 families / 1184 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -204,3 +204,7 @@ raster remain open; Tree guide dash cadence is an explicit projection candidate.
 See [StatsCard](holistic/stats-card.md) and [Tree](holistic/tree.md).
 
 Gallery adds44 genuine image contexts, eight HTML appearances and four real mixed-media image states in three families. Real image responses are pinned; contained image extents and actual scaled HTML thumbnails retain source allocations. CodeBlock adds16 source presets with whole logical rich syntax TEXT, genuine language/filename/gutter/overflow branches and source font candidates. Their all-five dedicated actual-builder edit/two-repeat checks and independent source reviews pass. Gallery video/embed remain references, with remote loading failures recorded; native media/runtime, arbitrary HTML reflow, Menlo availability, font/glyph/raster and publication gates remain open. See [Gallery](holistic/gallery.md), [Gallery HTML](holistic/gallery-html.md) and [CodeBlock](holistic/code-block.md).
+
+ShowMore and Scroll add five source families with63 presets, including real photo card identities and actual settled carousel positions. ErrorPage adds four families with26 presets and genuine search/challenge/request-details anatomy. Preview Access adds two families with10 actual static/live overlay states. Independent all-five actual-builder tests cover source fields, edited text and two zero-create repeats. Native mask fading, dashed outline raster, Menlo/source font equivalence, runtime behaviour, native integration and publication remain open. See [Scroll and ShowMore](holistic/scroll-show-more.md), [ErrorPage](holistic/error-page.md) and [Preview Access](holistic/preview-access.md).
+
+Native capacity is a separate integration gate. The immutable source78 catalogue contains25,466 variables, exceeding Figma’s documented5,000-per-collection limit. Passing source tests do not establish a full native import. Source-proven helper reuse/allocation specialisation and deliberate collection partitioning are under independent review; no bindings or canonical assets have been changed. See [native capacity](holistic/NATIVE-CAPACITY.md).

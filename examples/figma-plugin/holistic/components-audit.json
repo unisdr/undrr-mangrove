@@ -14016,8 +14016,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 82,
-    "variants": 1085,
+    "families": 93,
+    "variants": 1184,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -14068,7 +14068,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "98e36755fd81614e59549608fd00a613ebf6e6bed6669ab3bb3af913d4e35b2b",
+    "currentPacketScriptSha256": "cda187e2af0aae8ecfdd07a3e4a3f6896f249b710b7723ae184cf0cececd8edf",
     "dependencies": [
       {
         "id": "editorial-cta",
@@ -14293,6 +14293,29 @@
       "independentReview": "Range accepted",
       "nativeAcceptance": false,
       "scope": "Whole logical syntax TEXT, actual gutter/filename/overflow contexts; no invented copy action. Menlo/native font/glyph/raster and publication gates open."
+    },
+    "boundedScrollShowMore": {
+      "families": 5,
+      "variants": 63,
+      "independentReview": "accepted",
+      "nativeAcceptance": false,
+      "scope": "Whole logical rich ShowMore copy, real hydrated/photo identities and source clipping/navigation states. Native subtree fade failed in bounded probes; no accepted native fade or live arbitrary reflow."
+    },
+    "boundedErrorPage": {
+      "families": 4,
+      "variants": 26,
+      "independentReview": "accepted",
+      "nativeAcceptance": false,
+      "scope": "Actual React error/challenge/search source; literal challenge placeholder retained. Server HTML, real security challenge, Menlo/font/dash/raster/runtime/native publication remain separate gates.",
+      "sourceCases": 100
+    },
+    "boundedPreviewAccess": {
+      "families": 2,
+      "variants": 10,
+      "independentReview": "accepted",
+      "nativeAcceptance": false,
+      "scope": "Actual no-op static and activated/wrong-entry live source states; ten unarmed references are not drawn. No successful unlock or security/runtime/native publication acceptance.",
+      "sourceCases": 60
     }
   }
 }

@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 82 families and 1085 bounded variants, deliberately
+- Separate source draft packet: 93 families and 1184 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -121,3 +121,7 @@ raster remain open; Tree guide dash cadence is an explicit projection candidate.
 See [StatsCard](stats-card.md) and [Tree](tree.md).
 
 Gallery adds44 genuine image contexts, eight HTML appearances and four real mixed-media image states in three families. Real image responses are pinned; contained image extents and actual scaled HTML thumbnails retain source allocations. CodeBlock adds16 source presets with whole logical rich syntax TEXT, genuine language/filename/gutter/overflow branches and source font candidates. Their all-five dedicated actual-builder edit/two-repeat checks and independent source reviews pass. Gallery video/embed remain references, with remote loading failures recorded; native media/runtime, arbitrary HTML reflow, Menlo availability, font/glyph/raster and publication gates remain open. See [Gallery](gallery.md), [Gallery HTML](gallery-html.md) and [CodeBlock](code-block.md).
+
+ShowMore and Scroll add five source families with63 presets, including real photo card identities and actual settled carousel positions. ErrorPage adds four families with26 presets and genuine search/challenge/request-details anatomy. Preview Access adds two families with10 actual static/live overlay states. Independent all-five actual-builder tests cover source fields, edited text and two zero-create repeats. Native mask fading, dashed outline raster, Menlo/source font equivalence, runtime behaviour, native integration and publication remain open. See [Scroll and ShowMore](scroll-show-more.md), [ErrorPage](error-page.md) and [Preview Access](preview-access.md).
+
+Native capacity is a separate integration gate. The immutable source78 catalogue contains25,466 variables, exceeding Figma’s documented5,000-per-collection limit. Passing source tests do not establish a full native import. Source-proven helper reuse/allocation specialisation and deliberate collection partitioning are under independent review; no bindings or canonical assets have been changed. See [native capacity](NATIVE-CAPACITY.md).

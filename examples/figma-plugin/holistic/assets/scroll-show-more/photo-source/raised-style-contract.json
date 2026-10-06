@@ -1,0 +1,127 @@
+{
+  "id": "shadow.raised",
+  "name": "Mangrove/shadow/raised",
+  "description": "CSS: var(--mg-shadow-raised). Inset border, represented as an inner shadow.",
+  "values": {
+    "undrr": [
+      {
+        "effect": {
+          "type": "INNER_SHADOW",
+          "color": {
+            "r": 0.302,
+            "g": 0.302,
+            "b": 0.302,
+            "a": 0.24
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "radius": 0,
+          "spread": 1,
+          "visible": true,
+          "blendMode": "NORMAL"
+        },
+        "bindings": {
+          "color": "effect-color/shadow/raised"
+        }
+      }
+    ],
+    "delta": [
+      {
+        "effect": {
+          "type": "INNER_SHADOW",
+          "color": {
+            "r": 0.302,
+            "g": 0.302,
+            "b": 0.302,
+            "a": 0.24
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "radius": 0,
+          "spread": 1,
+          "visible": true,
+          "blendMode": "NORMAL"
+        },
+        "bindings": {
+          "color": "effect-color/shadow/raised"
+        }
+      }
+    ],
+    "irp": [
+      {
+        "effect": {
+          "type": "INNER_SHADOW",
+          "color": {
+            "r": 0.302,
+            "g": 0.302,
+            "b": 0.302,
+            "a": 0.24
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "radius": 0,
+          "spread": 1,
+          "visible": true,
+          "blendMode": "NORMAL"
+        },
+        "bindings": {
+          "color": "effect-color/shadow/raised"
+        }
+      }
+    ],
+    "mcr": [
+      {
+        "effect": {
+          "type": "INNER_SHADOW",
+          "color": {
+            "r": 0.302,
+            "g": 0.302,
+            "b": 0.302,
+            "a": 0.24
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "radius": 0,
+          "spread": 1,
+          "visible": true,
+          "blendMode": "NORMAL"
+        },
+        "bindings": {
+          "color": "effect-color/shadow/raised"
+        }
+      }
+    ],
+    "preventionweb": [
+      {
+        "effect": {
+          "type": "INNER_SHADOW",
+          "color": {
+            "r": 0.302,
+            "g": 0.302,
+            "b": 0.302,
+            "a": 0.24
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "radius": 0,
+          "spread": 1,
+          "visible": true,
+          "blendMode": "NORMAL"
+        },
+        "bindings": {
+          "color": "effect-color/shadow/raised"
+        }
+      }
+    ]
+  }
+}

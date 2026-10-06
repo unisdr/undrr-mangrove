@@ -170,6 +170,31 @@ const recipes = [
   ['gallery-image', './figma-gallery-recipes.cjs', 'buildGalleryImageRecipes'],
   ['code-block', './figma-code-block-recipes.cjs', 'buildCodeBlockRecipes'],
   [
+    ['show-more', 'scroll-hydrated-card', 'scroll-container-hydrated'],
+    './figma-scroll-show-more-recipes.cjs',
+    'buildScrollShowMoreRecipes',
+  ],
+  [
+    ['scroll-source-photo-card', 'scroll-container-photo'],
+    './figma-scroll-show-more-recipes.cjs',
+    'buildScrollPhotoRecipes',
+  ],
+  [
+    [
+      'error-page-search-input',
+      'error-page-search-action',
+      'error-page-search-form',
+      'error-page',
+    ],
+    './figma-error-page-recipes.cjs',
+    'buildErrorPageRecipes',
+  ],
+  [
+    ['preview-access-static', 'preview-access-live'],
+    './figma-preview-access-recipes.cjs',
+    'buildPreviewAccessRecipes',
+  ],
+  [
     'gallery-html',
     './figma-gallery-html-recipes.cjs',
     'buildGalleryHtmlRecipes',

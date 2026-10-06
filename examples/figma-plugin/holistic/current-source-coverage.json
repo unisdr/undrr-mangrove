@@ -1,0 +1,1080 @@
+{
+  "status": "Current registry crosswalk; bounded source associations, no complete catalogue/native acceptance inferred",
+  "auditedAtUTC": "2026-10-06T04:39:16.411306+00:00",
+  "committedRevision": "d618327227df09b70b2b9d63893bf6ed7b568e4f",
+  "committedSourceFamilies": 82,
+  "committedSourceVariants": 1085,
+  "stagedSourceFamilies": 93,
+  "stagedSourceVariants": 1184,
+  "stagedCombinedVerification": "running in isolated source93 snapshot",
+  "normalFamilies": 32,
+  "normalVariants": 383,
+  "historicalPublishedFamilies": 25,
+  "historicalPublishedVariants": 297,
+  "sourceFingerprintChecks": 391,
+  "sourceFingerprintDrifts": 0,
+  "method": "Original98 source-unit identity rows retained; exact current source fingerprints checked. Original normal mapping and explicit named bounded recipe associations cross-referenced against committed/staged registry. Association does not mean every authored appearance is implemented. Contextual wrappers do not replace standalone public contracts. Story counts are not missing-component totals.",
+  "rows": [
+    {
+      "sourceUnitId": "button",
+      "label": "CTA Button",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["button"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "chips",
+      "label": "Chips",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["chips"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "copy-button",
+      "label": "Copy Button",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["copy-button"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "share-buttons",
+      "label": "Share Buttons",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["share-buttons"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "cite-this",
+      "label": "Cite This",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [
+        "cite-dialog",
+        "cite-fallback",
+        "cite-trigger"
+      ],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "text-input",
+      "label": "Text Input",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["text-input"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "textarea",
+      "label": "Textarea",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["textarea"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "select",
+      "label": "Select",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["select"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "combobox",
+      "label": "ComboBox",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["combobox", "combobox-option"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "checkbox",
+      "label": "Checkbox",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["checkbox"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "radio",
+      "label": "Radio",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["radio"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "switch",
+      "label": "Switch CSS pattern",
+      "sourceUnitKind": "css-pattern",
+      "normalFamilyIds": ["switch", "switch-small"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "segmented-control",
+      "label": "Segmented Control",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [
+        "segmented-control.full-width-below-medium",
+        "segmented-control.segment"
+      ],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "form-error-summary",
+      "label": "Form Error Summary",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["form-error-summary"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "form-group",
+      "label": "Form Group",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["form-group"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "form-action",
+      "label": "Form Action",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["form-action", "form-action-newsletter"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "range",
+      "label": "Range",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["range"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "status-label",
+      "label": "Status Label",
+      "sourceUnitKind": "css-pattern",
+      "normalFamilyIds": ["status-label"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "empty-state",
+      "label": "Empty State",
+      "sourceUnitKind": "css-pattern",
+      "normalFamilyIds": ["empty-state-compact"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "loader",
+      "label": "Loader",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["loader"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "notice",
+      "label": "Notice",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["notice"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "service-notice",
+      "label": "Service Notice",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["service-notice"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "snackbar",
+      "label": "Snackbar",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["snackbar"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "user-feedback",
+      "label": "User Feedback",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [
+        "user-feedback",
+        "user-feedback-confirmation"
+      ],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "tag",
+      "label": "Tag",
+      "sourceUnitKind": "css-pattern",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["tag"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "table",
+      "label": "Table",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [
+        "table",
+        "table-body-cell",
+        "table-header-cell",
+        "table-row"
+      ],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "tabs",
+      "label": "Tabs",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["tabs", "tabs-trigger"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "details",
+      "label": "Styled Details",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["details"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "accordion",
+      "label": "Accordion CSS pattern",
+      "sourceUnitKind": "css-pattern",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["accordion"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "breadcrumbs",
+      "label": "Breadcrumbs",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["breadcrumbs"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "skip-link",
+      "label": "Skip Link",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["skip-link"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "pager",
+      "label": "Pager",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["pager"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "table-of-contents",
+      "label": "Table of Contents",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["table-of-contents", "toc-link"],
+      "committedSourceFamilyIds": ["content-hub-toc", "page-bulleted-toc"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "on-this-page-nav",
+      "label": "On This Page Nav",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "mega-menu",
+      "label": "Mega Menu",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [
+        "page-chrome-capped-action",
+        "page-chrome-desktop-panel",
+        "page-chrome-mobile"
+      ],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "drawer",
+      "label": "Drawer",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "tree",
+      "label": "Tree",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["tree"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "vertical-card",
+      "label": "Vertical Card",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["card-vertical"],
+      "committedSourceFamilyIds": [
+        "content-hub-route-card",
+        "news-related-card"
+      ],
+      "stagedAdditionalFamilyIds": [
+        "scroll-hydrated-card",
+        "scroll-source-photo-card"
+      ],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "horizontal-card",
+      "label": "Horizontal Card",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["card-horizontal"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "book-card",
+      "label": "Book Card",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["book-card"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "horizontal-book-card",
+      "label": "Horizontal Book Card",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["horizontal-book-card"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "icon-card",
+      "label": "Icon Card",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["icon-card"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "stats-card",
+      "label": "Stats Card",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["stats-card", "stats-card-item"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "text-cta",
+      "label": "Text CTA",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["text-cta"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "editorial-cta",
+      "label": "Editorial CTA support patterns",
+      "sourceUnitKind": "shared-support-pattern",
+      "normalFamilyIds": ["editorial-cta"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "hero",
+      "label": "Hero",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": ["hero-background", "hero-split"],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "child-hero",
+      "label": "Child Hero (deprecated)",
+      "sourceUnitKind": "deprecated-source",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "highlight-box",
+      "label": "Highlight Box",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["highlight-box"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "quote-highlight",
+      "label": "Quote Highlight",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["quote-highlight"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "code-block",
+      "label": "Code Block",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["code-block"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "legend",
+      "label": "DataViz Legend",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["legend"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "gallery",
+      "label": "Gallery",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [
+        "gallery-html",
+        "gallery-image",
+        "gallery-mixed-media-image"
+      ],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "scroll-container",
+      "label": "Scroll Container",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [
+        "scroll-container-hydrated",
+        "scroll-container-photo",
+        "scroll-hydrated-card",
+        "scroll-source-photo-card"
+      ],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "show-more",
+      "label": "Show More",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": ["show-more"],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "image",
+      "label": "Image primitive",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "author-image",
+      "label": "Author Image",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "image-caption-credit",
+      "label": "Image Caption and Credit",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "image-credit",
+      "label": "Image Credit primitive",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "video",
+      "label": "Video primitive",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "embed-container",
+      "label": "Embed Container",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["embed-container"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "full-width",
+      "label": "Full Width breakout",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "container",
+      "label": "Container",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "grid",
+      "label": "Grid",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "reading-column",
+      "label": "Reading column/Page Patterns",
+      "sourceUnitKind": "css-pattern",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [
+        "content-hub-reading-column",
+        "landing-report-article-column",
+        "news-detail-article-column"
+      ],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "icons",
+      "label": "Icons system",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "logo",
+      "label": "Logo system",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "links",
+      "label": "Links",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "typography-foundations",
+      "label": "Typography foundations",
+      "sourceUnitKind": "foundation-system",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "page-header",
+      "label": "Page Header",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["page-chrome"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "footer",
+      "label": "Footer",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "cookie-consent",
+      "label": "Cookie Consent Banner",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "preview-access",
+      "label": "Preview Access",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [
+        "preview-access-live",
+        "preview-access-static"
+      ],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "error-page",
+      "label": "Error Page",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [
+        "error-page",
+        "error-page-search-action",
+        "error-page-search-form",
+        "error-page-search-input"
+      ],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "syndication-search",
+      "label": "Syndication Search Widget",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [
+        "search-active-filters",
+        "search-facet-operator",
+        "search-form",
+        "search-result-fields",
+        "search-result-item",
+        "search-result-state",
+        "search-select",
+        "search-widget",
+        "search-widget-drawer-context",
+        "search-widget-facets-context",
+        "search-widget-form-context",
+        "search-widget-pager-context",
+        "search-widget-result-context",
+        "search-widget-select-context"
+      ],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "menu-items",
+      "label": "Menu Items source primitive",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "section-header",
+      "label": "Section Header",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["section-header"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "image-caption",
+      "label": "Imagecaption molecule",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["image-caption"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "body-column",
+      "label": "Body Column example molecules",
+      "sourceUnitKind": "legacy-source",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "hub-header",
+      "label": "Hub Header",
+      "sourceUnitKind": "reusable-component",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": ["content-hub-header"],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "type-abbr",
+      "label": "Abbreviation",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "type-blockquote",
+      "label": "Blockquote",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "type-cite",
+      "label": "Citation",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "type-code",
+      "label": "Inline Code",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "type-hr",
+      "label": "Horizontal Rule",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "type-mark",
+      "label": "Mark",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "type-paragraph",
+      "label": "Paragraph",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "type-quotation",
+      "label": "Inline Quotation",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "type-small",
+      "label": "Small text",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "heading",
+      "label": "Heading primitive",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "lists",
+      "label": "List primitives",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "figcaption",
+      "label": "Figcaption primitive",
+      "sourceUnitKind": "foundation-primitive",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "part-megamenu-topbar",
+      "label": "MegaMenu TopBar",
+      "sourceUnitKind": "internal-part",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "part-megamenu-section",
+      "label": "MegaMenu Section",
+      "sourceUnitKind": "internal-part",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "part-footer-lists",
+      "label": "Footer Lists",
+      "sourceUnitKind": "internal-part",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "part-footer-conditions",
+      "label": "Footer Conditions",
+      "sourceUnitKind": "internal-part",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "part-footer-conditions-alternative",
+      "label": "Footer Conditions alternative",
+      "sourceUnitKind": "internal-part",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "part-footer-icons",
+      "label": "Footer Icons",
+      "sourceUnitKind": "internal-part",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    },
+    {
+      "sourceUnitId": "part-footer-logo",
+      "label": "Footer Logo",
+      "sourceUnitKind": "internal-part",
+      "normalFamilyIds": [],
+      "committedSourceFamilyIds": [],
+      "stagedAdditionalFamilyIds": [],
+      "sourceFingerprintsMatchHistoricalAudit": true,
+      "complete": false
+    }
+  ],
+  "remainingSourcePriority": [
+    "Public Drawer active",
+    "Topic/Index landing scenes active",
+    "Cookie Consent active",
+    "Footer local/complementary and genuine fetched syndication",
+    "Standalone PageHeader branches and authored locale/RTL",
+    "OnThisPageNav actual authored appearances",
+    "Standalone image/author/credit/figure primitives",
+    "Foundational layout/container/grid/semantic text and source icon/logo contracts",
+    "Gallery actual video/embed native representation"
+  ],
+  "nativeGates": [
+    "Full source foundation capacity: immutable78 has25466 variables versus5000percollection; reviewed reuse/partition/specialisation required",
+    "Actual full native builders/ordinary repeats for new cohorts",
+    "Source font/glyph/raster/live mode fidelity",
+    "Recovery drift diagnosis with guarded actual full path",
+    "Changed text/effect style publication",
+    "Composite publication and linked consumer restoration",
+    "Human novice handoff and reduced maintenance merge acceptance"
+  ]
+}

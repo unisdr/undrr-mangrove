@@ -2,7 +2,7 @@
 
 Current source renderers, CSS patterns, curated AI metadata and package exports were reconciled with the normal recipes and isolated drafts. This audit does not use story totals as missing-component totals.
 
-The normal exporter contains **32 families / 383 variants**. Its documented published subset remains **25 families / 297 variants**. The isolated packet now adds **71 source-only families / 883 bounded variants**. Supporting Table cells/rows, ComboBox options and size splits are families within owning source units, not extra complete public widgets. Published status is documented pilot evidence; no fresh Figma publication verification was performed for this audit.
+The normal exporter contains **32 families / 383 variants**. Its documented published subset remains **25 families / 297 variants**. The isolated packet now adds **82 committed source-only families / 1085 bounded variants** (with93/1184 staged for isolated verification). Supporting Table cells/rows, ComboBox options and size splits are families within owning source units, not extra complete public widgets. Published status is documented pilot evidence; no fresh Figma publication verification was performed for this audit.
 
 SectionHeader, Imagecaption and EmbedContainer add three families/nine variants; BookCard, HorizontalBookCard and IconCard add three families/19 variants. They are wired into the non-importable draft packet with exact existing Editorial CTA as a cloned dependency (23 variants, counted separately). The normal exporter is unchanged. Bounded source Chromium observations and all-brand actual-builder mock checks exist; native and publication acceptance remain open. The original source audit revision remains recorded in JSON, with the explicit packet follow-up distinguished from a fresh native audit.
 
@@ -24,7 +24,7 @@ dependency; neither clone is counted as a new draft family.
 
 Every mapped unit remains partial. A recipe or a passing mock does not establish native/source visual parity, publication or linked consumer uptake. The JSON contains source paths, package exports, authored story names and prop enums, recipe contracts, dependency evidence, missing scope and builder limits for each row.
 
-## Remaining reusable work
+## Historical remaining-work classification
 
 | Area               | Current coverage                                                                                                       | Next bounded work                                                                                                 |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -36,7 +36,7 @@ Every mapped unit remains partial. A recipe or a passing mock does not establish
 | Media/structure    | Image/video/figure/embed/scroll/gallery helpers and site shells have no integrated reusable family                     | Establish media primitives first, then Gallery/Scroll Container, Page Header/Footer, consent/access/error layouts |
 | Search/pages       | Separate holistic audits own widget internals and composed pages                                                       | Reuse verified Pager/FormAction/cards; preserve bespoke search dropdown/chip/drawer source contracts              |
 
-## Source-unit matrix
+## Historical source-unit matrix
 
 Rows count source-unit identities. Internal support parts and deprecated sources are listed separately below; they are not additional missing public-widget counts.
 
@@ -184,3 +184,9 @@ raster remain open; Tree guide dash cadence is an explicit projection candidate.
 See [StatsCard](stats-card.md) and [Tree](tree.md).
 
 Gallery adds44 genuine image contexts, eight HTML appearances and four real mixed-media image states in three families. Real image responses are pinned; contained image extents and actual scaled HTML thumbnails retain source allocations. CodeBlock adds16 source presets with whole logical rich syntax TEXT, genuine language/filename/gutter/overflow branches and source font candidates. Their all-five dedicated actual-builder edit/two-repeat checks and independent source reviews pass. Gallery video/embed remain references, with remote loading failures recorded; native media/runtime, arbitrary HTML reflow, Menlo availability, font/glyph/raster and publication gates remain open. See [Gallery](gallery.md), [Gallery HTML](gallery-html.md) and [CodeBlock](code-block.md).
+
+ShowMore and Scroll add five source families with63 presets, including real photo card identities and actual settled carousel positions. ErrorPage adds four families with26 presets and genuine search/challenge/request-details anatomy. Preview Access adds two families with10 actual static/live overlay states. Independent all-five actual-builder tests cover source fields, edited text and two zero-create repeats. Native mask fading, dashed outline raster, Menlo/source font equivalence, runtime behaviour, native integration and publication remain open. See [Scroll and ShowMore](scroll-show-more.md), [ErrorPage](error-page.md) and [Preview Access](preview-access.md).
+
+## Current registry crosswalk
+
+[current-source-coverage.json](current-source-coverage.json) reconciles the original98 source identities with the committed82-family and staged93-family registries. All391 recorded source fingerprints still match; no source drift was found. The historical tables above retain their original classification and are not the current implementation queue. Named source associations cover bounded contexts only, including page chrome and contextual media; they do not establish standalone public coverage or native acceptance. The current work queue includes public Drawer, Topic/Index landing scenes and Cookie Consent, followed by Footer, standalone PageHeader/locale and OnThisPageNav, then remaining media and foundational patterns. All native, publication, recovery and human handoff gates stay explicit.
