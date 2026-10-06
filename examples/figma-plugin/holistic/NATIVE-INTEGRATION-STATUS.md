@@ -52,11 +52,25 @@ absent. The raw residual flags remain in the evidence; they have not been
 rewritten into passes.
 
 The [archived receipts and payloads](assets/native-list-diagnostics/provenance.json)
-retain exact original bytes and SHA256 hashes. The two lossless decoders restore
-the full tool packets into their recorded reports. The original twelve-profile
-acceptance gate remains open. The next diagnostic compares committed operation
-states, using exact recorded ownership and fields without geometry tolerance or
-more speculative await loops.
+retain exact original bytes and SHA256 hashes. The lossless decoders restore
+complete tool packets into their recorded reports; the truncated creation receipt
+is excluded. The original twelve-profile
+acceptance gate remains open. A fourth diagnostic now retains forty-eight
+owned nodes, twenty-four roots and twelve genuine instances in the isolated file.
+Its creation receipt was truncated at the tool UTF8 byte boundary and is excluded
+from complete acceptance. A separate complete ownership read recovered the exact
+actual IDs without recreating the fixtures.
+
+Three subsequently committed read partitions independently verify all twelve
+original logical source copies, bounded edited consumer copies, genuine links
+and full recorded TEXT fields, while every partition checks all forty-eight
+owned IDs and empty local assets. Complete receipt sizes are 13912, 12880 and
+15042 UTF8 bytes. These are sequential observations, not an atomic snapshot or a
+layout-settlement promise. The guarded reapply, committed after-read comparison
+and exact-owned cleanup remain pending. The current file contains the retained
+fixtures; the earlier empty-page evidence applies only to the first three runs.
+No geometry tolerance, speculative await loop, native source equivalence or
+full twelve-profile rebuild acceptance is claimed.
 
 ## Remaining native gates
 

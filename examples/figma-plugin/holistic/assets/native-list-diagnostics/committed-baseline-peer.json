@@ -1,0 +1,18 @@
+{
+  "acceptedScope": "Complete original12 guarded sequential committed native field baseline only",
+  "nativeSourceOrPrimitiveAccepted": false,
+  "threePacketsIndependentDecodeExact": true,
+  "originalSourceCopiesAndBoundedConsumerCopiesExact": true,
+  "all48OwnershipObservationsExactEachPart": true,
+  "all12MainLinksExact": true,
+  "allSelectedFieldKeysRetained": true,
+  "actualRawUtf8Bytes": [
+    13912,
+    12880,
+    15042
+  ],
+  "all3AssetsEmptyAndTraversalRestored": true,
+  "assembledBaselineExact": true,
+  "atomicOrLayoutSettled": false,
+  "baselineSHA256": "5d6db138eca652b0608e292037849c4d41c55f0231cabe2eab36225b423b76de"
+}
