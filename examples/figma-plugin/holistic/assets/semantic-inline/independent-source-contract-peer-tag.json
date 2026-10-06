@@ -1,0 +1,162 @@
+{
+  "sourceContractCheckpointAccepted": true,
+  "nativeAccepted": false,
+  "implementedFamilies": 0,
+  "recipeReady": false,
+  "requiredFiniteContracts": 36,
+  "actualSourceContexts": 180,
+  "independentLogicalOwnersCompared": 300,
+  "independentChildRangesCompared": 330,
+  "emptyArabicCodeRangesAt21": 10,
+  "frozenRepoPinsVerified": 29,
+  "independentMockExitCode": 0,
+  "sourceReplay": "Independent archive restoration and exact owner copy/rect/child parent/UTF16 slice comparison across all180 context keys. Existing production rich helper unsupported-profile refusals run by dedicated harness.",
+  "scope": "Required source contracts and drift/refusal evidence only. No registration, builder/zero-create/native marker/italic/inline-box/render/edit-reflow/publication acceptance. Actual90 AX plus90 source geometry archive references preserve generated-token observations and their visual flow limitations.",
+  "files": [
+    {
+      "path": "scripts/figma-semantic-inline-recipes.cjs",
+      "bytes": 9305,
+      "sha256": "1588fa594298f6ccab41657c2af6af170eede2548404f1e86a112dfb8149ce09"
+    },
+    {
+      "path": "examples/figma-plugin/dev/mock-semantic-inline.cjs",
+      "bytes": 4075,
+      "sha256": "9c896224f10d7617a2c84e105bbe9c79cbfff15cf8fc644d6b2a4efb740f3da5"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/semantic-inline.md",
+      "bytes": 8338,
+      "sha256": "136c05d249653023380f64187373369a1058306800daf6f2a2c77347a6794dd0"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/capability-request.json",
+      "bytes": 3312,
+      "sha256": "38c2f47d36532247cd4feb22fb5a33196f4cf3a06d66d4b0ce936ba810a5655a"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/capture.js",
+      "bytes": 2207,
+      "sha256": "1bd1165689399922b961dfcc629debdb871cdf0dd94dd8d5efcbc1a417f4b37c"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/dom-range-refresh-proof.json",
+      "bytes": 8737,
+      "sha256": "4fc81e27023067d8ba8f44277f79963053a70d0c5ae941bbea0d2dc09726c692"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/LICENSE-Roboto.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/OFL-NotoKufiArabic.txt",
+      "bytes": 4382,
+      "sha256": "07fc70bfeb985cc1a87a8587d0a0c80bab11c86c9dc3fd95b6f0cb332f983e96"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/OFL-NotoSansArabic.txt",
+      "bytes": 4382,
+      "sha256": "07fc70bfeb985cc1a87a8587d0a0c80bab11c86c9dc3fd95b6f0cb332f983e96"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/Roboto-Bold.woff2",
+      "bytes": 64740,
+      "sha256": "8e44376b735dcc9027acbcc8a0df64c3f886a23529eff27b022f344d719e90f2"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/Roboto-Italic.woff2",
+      "bytes": 70280,
+      "sha256": "884e654cef00224110fc62cdf8f1561ff08dcaa1f359e5c5f49dab62abfe79e8"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/Roboto-Regular.woff2",
+      "bytes": 64632,
+      "sha256": "47107401d0adb375ab9aa167f9d62489a849d510e740a307b5a4db60e5db3562"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-kufi-arabic-arabic-400-normal.woff2",
+      "bytes": 43940,
+      "sha256": "d287128ffedd6cab026665c63e580d6fa397fbc47286fa47edd446482cffc5e5"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-kufi-arabic-arabic-700-normal.woff2",
+      "bytes": 43872,
+      "sha256": "c964525ff0ef5e1005c41f68fcb8937da8bad92cffc51a6464c20cf470b532a5"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-kufi-arabic-latin-400-normal.woff2",
+      "bytes": 10448,
+      "sha256": "fc19e68a1020e106099eb6d53a5adcee74329043b42c755c0d1c0f78a96a21a1"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-kufi-arabic-latin-700-normal.woff2",
+      "bytes": 10384,
+      "sha256": "d096450fc5f521ae97ce715d616bbfe6a29b65f09fdac114ff2a967477592fac"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-kufi-arabic-latin-ext-400-normal.woff2",
+      "bytes": 6408,
+      "sha256": "a26cc4e694b96c020a78108454aa29003069d5af34b41e175e5aff34675e41dd"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-kufi-arabic-latin-ext-700-normal.woff2",
+      "bytes": 6448,
+      "sha256": "5005a7b01262542cb65b261fa4e7e5637d5e52edaa43625afedfdfd77679e7e9"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-sans-arabic-arabic-400-normal.woff2",
+      "bytes": 48840,
+      "sha256": "4e2ca0745c908761dc5c5db951662873887c59366fa1a5693ad22c0864abf1bd"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-sans-arabic-arabic-700-normal.woff2",
+      "bytes": 50228,
+      "sha256": "d2bf5ac762d07f769e4e644a1f919649317cb5b62e20ab9ae02918862627b723"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-sans-arabic-latin-400-normal.woff2",
+      "bytes": 10748,
+      "sha256": "290bdad021425e6ba6263c27d38652403f9b1a9ee74f5bbd2c62905b13f71b8c"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-sans-arabic-latin-700-normal.woff2",
+      "bytes": 10620,
+      "sha256": "8d2a9b284d6ade487ab8835d9adaa760f1073cbb7a3ba2f8716ff7e7d159b8f8"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-sans-arabic-latin-ext-400-normal.woff2",
+      "bytes": 6528,
+      "sha256": "6957180cd07de446ce5828b65cf949e9e4ad8b05456332331b63af2088d8f110"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-bodies/noto-sans-arabic-latin-ext-700-normal.woff2",
+      "bytes": 6528,
+      "sha256": "e2141540a2fd53a132a57655b0f17b71167da56eadb2a9d3326e7eec90afe0ec"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/font-http-responses.json",
+      "bytes": 9825,
+      "sha256": "9c2a5e8d03d1ee9a959f8ee189431ac28801d802b81ec02d7e6d706392be5319"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/provenance.json",
+      "bytes": 12408,
+      "sha256": "178b2a469ad943362b0264ea1293da18591134f837aabd4395fd94c1254a9e29"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/run.py",
+      "bytes": 3305,
+      "sha256": "f4ccbb60ff647c819c40704a27849eadbb0046b6772c5163688909aa6d3fdcc1"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/source-font-cmap-probes.json",
+      "bytes": 5014,
+      "sha256": "fc2a9538ae1c00fa898fc2ce93d2919548c49d16216ace5b8eadb3b45e944db9"
+    },
+    {
+      "path": "examples/figma-plugin/holistic/assets/semantic-inline/source-footprints.json.gz",
+      "bytes": 689251,
+      "sha256": "f55ed4e2714bf3fc662c692e4f633440d999a9718729707c139b3595f3de1f8b"
+    }
+  ]
+}
