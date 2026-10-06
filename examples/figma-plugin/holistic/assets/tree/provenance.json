@@ -1,0 +1,38 @@
+{
+  "scope": "Tree authored English initial stories and actual source toggled/hovered states; finite native source projection, not runtime/native acceptance",
+  "captureCount": 70,
+  "assets": {
+    "source-capture.js": "0d9f96a96c3c27ae72e00fa987a252159b60b16fdf3bd50584d79098b697d62a",
+    "source-capture-driver.py": "098b6470802535aa813877bf42a0a61194290f9767d0b720c15985abfd253a8c",
+    "source-footprints.json": "bff07f01a0c8297a9ef28c85da382bec44c13ecc3365cb2c6527379d7298822b",
+    "foundation-contract.json": "daacc6eb38f34c0b09f72f1cc21d82618439f8c6cfdb68e20c0177cbf32de0c2"
+  },
+  "sourceHashes": {
+    "stories/Components/Navigation/Tree/Tree.jsx": "c7f9b6b11fff729b7a0ee35e26e51e49155a5b4baeef6405f2627360b2e50095",
+    "stories/Components/Navigation/Tree/Tree.stories.jsx": "db44862e1aba081a15da3d485f0e216d0bcf0f3af9f0a47bc64c7c6b1ce1e5c3",
+    "stories/Components/Navigation/Tree/tree.scss": "4da9e756de87b5138ea42ae84e3bd602011873469b813a03d3c9790aae374b96",
+    "stories/Components/Navigation/Tree/Tree.fromElement.js": "31fa399dd6535952ebacaef9168473fcec4e211e5443435e1c27e41d1c74a577",
+    "stories/Components/Navigation/Tree/HydratedTree.jsx": "7ab7f82bc96ab9f3fd3b405e1306d725f853e2be297fd76d66ab579ca404e6ac",
+    "stories/Components/Navigation/Tree/Tree.hydrate.js": "7faf4442ee8b6186ad1cd28f41c1968096613df5ce1936e23903c9e7ebf13707",
+    ".storybook/preview.js": "e19af50151293071b3f87910cded15f2cb7835dbffd125085f3708a257221814",
+    "stories/assets/css/style.css": "1806dd1446f5df7252676c69ad2a0da168aa46343c3e668cf17fc06f2dd3fd60",
+    "stories/Atom/Icons/icons.scss": "e15a7a74a319eac6b2d5f48d18b3a5cdb908e50756b7fe638e52cd41a23459bb",
+    "stories/Atom/Icons/_icon-definitions.scss": "ce483a74e800148a703ef73d85f7bb11c3982cbbd07f477cc52db8a1ece8138e",
+    "scripts/icon-map.cjs": "16ca6505f776753cd86b62ade535519ac6efc5476781b4ea64213d08fdd2e410",
+    "stories/assets/fonts/mangrove-icon-set/font/mangrove-icon-set.woff2": "5f102ffd936946a73846e63385d4b4074981a619b972d43bbf242e4137a71a1e",
+    "stories/assets/fonts/mangrove-icon-set/LICENSE.txt": "752e00703659a5be42b00cf45e6932e18725cb2a907e57d9bda76b9ef7d033f0",
+    "examples/figma-plugin/holistic/assets/content-hub/source-fonts/RobotoCondensed-Regular.woff2": "0cdd3d13492236edd2bc1c3d48f7d7f7270b2d52214d2a3d114d6fcb0c6f04d2",
+    "examples/figma-plugin/holistic/assets/news-detail/source-fonts/RobotoCondensed-Bold.woff2": "bd6d419bb130520905ba3ba1525d9e3936b3335cabc9070eeabdfe7e1102d758",
+    "stories/assets/scss/_fonts.scss": "1c28869b687c358c8c5d28bf5ea563e078b07ee8ae6b3ad5df1244f06fb9d754",
+    "stories/assets/scss/_variables.scss": "2c9ce7c4b18d63243e45ad2eaed07c9a6284c0e57ef79a3dc3d37f8521cccdfa",
+    "tokens/mcr.yaml": "4696b9b72028ed4d62e2c69b51a41df8e24f855d138269a84a93530cc10d9188",
+    "tokens/preventionweb.yaml": "587b72ff245843ec229609c55cda03aa1a2146c35d7bc90c6163f946cd7f08d5",
+    "tokens/delta.yaml": "aa04fedf9b32bfd4b84ac1d755216824d9c589234ac2fbf67c11388ef55dd3b1",
+    "tokens/irp.yaml": "b2063159f014824ccfe3edbbbc696ed494fd3dc9113aeddeda089f1828c0ca27",
+    "tokens/undrr.yaml": "7514567babda3ea49f3af6f0f5fbb194b8fbfcab8bdde7bb061cdd6542959669",
+    "tokens/mangrove.yaml": "02449d0cf3aa7e011f767e638637d5dd6427c489d985f36627401db6bf164ec8"
+  },
+  "pseudoMirror": "Exact computed ::before declarations transplanted into matching source-span geometry; original and mirror dimensions required equal. Rotated mask viewport offset measured rather than generic toggle centering.",
+  "priorCaptures": "/tmp/mangrove-tree-source-before-toggle-hover-fix-20261006",
+  "guideProjection": "1px dashed source border semantic/extent retained; SVG 3/3 dash cadence is candidate, not authored CSS lengths or browser raster acceptance."
+}

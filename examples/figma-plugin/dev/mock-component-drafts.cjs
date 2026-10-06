@@ -125,6 +125,9 @@ async function main() {
       ['news-article-initial-media', 10],
       ['news-article-scene', 10],
       ['legend', 10],
+      ['stats-card-item', 44],
+      ['stats-card', 14],
+      ['tree', 14],
       ['news-image-article-scene', 40],
       ['service-notice', 6],
       ['snackbar', 8],
@@ -136,7 +139,7 @@ async function main() {
   );
   assert.strictEqual(
     packet.draftFamilies.reduce((n, f) => n + f.variants.length, 0),
-    941
+    1013
   );
   for (const field of [
     'collection',
@@ -266,7 +269,7 @@ async function main() {
   tree.children[0].id = tree.id;
   assert.throws(() => validate(duplicate), /Missing\/duplicate anatomy ID/);
   console.log(
-    'ok  isolated deterministic 75-family/941-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
+    'ok  isolated deterministic 78-family/1013-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
   );
 
   // Use the actual importer entry, not a duplicated preflight. The packet must
@@ -295,6 +298,12 @@ async function main() {
   const doc = copy(original);
   doc.variables = copy(foundation.variables);
   doc.styles = copy(foundation.styles);
+  for (const variable of doc.variables)
+    assert(
+      Array.isArray(variable.scopes),
+      `Expanded source foundation must declare native variable scopes: ${variable.name}`
+    );
+
   const originalDraftIds = [
     'range',
     'tag',
@@ -315,6 +324,7 @@ async function main() {
   // Import the complete expanded foundation using the separately reviewed
   // exact background-blur API fixture. The combined scene cohort remains9/28.
   require('./mock-notification-states.cjs').installBackgroundBlurFixture(env);
+  require('./mock-text-case.cjs').installTextCaseFixture(env);
   const expectedSvg = packet.draftFamilies
     .find(f => f.id === 'notice')
     .variants.map(v => v.tree.children[0].children[0].svg.markup);

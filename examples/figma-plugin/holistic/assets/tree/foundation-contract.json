@@ -1,0 +1,261 @@
+[
+  {
+    "id": "color.neutral-300",
+    "name": "color/neutral-300",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-300",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-300))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.interactive",
+    "name": "color/interactive",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-interactive",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-interactive))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-900"
+      },
+      "delta": {
+        "alias": "brand/primary"
+      },
+      "irp": {
+        "alias": "brand/primary"
+      },
+      "mcr": {
+        "alias": "brand/purple"
+      },
+      "preventionweb": {
+        "alias": "brand/primary"
+      }
+    }
+  },
+  {
+    "id": "color.text",
+    "name": "color/text",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-text",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-text))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-800"
+      },
+      "delta": {
+        "alias": "color/neutral-800"
+      },
+      "irp": {
+        "alias": "color/neutral-800"
+      },
+      "mcr": {
+        "alias": "color/neutral-800"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-800"
+      }
+    }
+  },
+  {
+    "id": "spacing.50",
+    "name": "spacing/50",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-50",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-50)"
+    },
+    "values": {
+      "undrr": 5,
+      "delta": 5,
+      "irp": 5,
+      "mcr": 5,
+      "preventionweb": 5
+    }
+  },
+  {
+    "id": "spacing.100",
+    "name": "spacing/100",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-100",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-100)"
+    },
+    "values": {
+      "undrr": 10,
+      "delta": 10,
+      "irp": 10,
+      "mcr": 10,
+      "preventionweb": 10
+    }
+  },
+  {
+    "id": "spacing.200",
+    "name": "spacing/200",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-200",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-200)"
+    },
+    "values": {
+      "undrr": 20,
+      "delta": 20,
+      "irp": 20,
+      "mcr": 20,
+      "preventionweb": 20
+    }
+  },
+  {
+    "id": "spacing.300",
+    "name": "spacing/300",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-300",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-300)"
+    },
+    "values": {
+      "undrr": 30,
+      "delta": 30,
+      "irp": 30,
+      "mcr": 30,
+      "preventionweb": 30
+    }
+  },
+  {
+    "id": "font-size.300",
+    "name": "font-size/300",
+    "type": "FLOAT",
+    "description": "Regular body text.\n\nCSS: --mg-font-size-300",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-300)"
+    },
+    "values": {
+      "undrr": 16,
+      "delta": 16,
+      "irp": 16,
+      "mcr": 16,
+      "preventionweb": 16
+    }
+  },
+  {
+    "id": "radius.button",
+    "name": "radius/button",
+    "type": "FLOAT",
+    "description": "CSS: --mg-radius-button",
+    "scopes": [
+      "CORNER_RADIUS"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-radius-button)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "spacing/50"
+      },
+      "delta": {
+        "alias": "spacing/50"
+      },
+      "irp": {
+        "alias": "spacing/50"
+      },
+      "mcr": {
+        "alias": "spacing/300"
+      },
+      "preventionweb": {
+        "alias": "spacing/50"
+      }
+    }
+  },
+  {
+    "id": "font-family.ui",
+    "name": "font-family/ui",
+    "type": "STRING",
+    "description": "Font-family role. Latin-script face only; Arabic and other scripts map this role to other faces in _fonts.scss.\n\nCSS: --mg-font-family-ui",
+    "scopes": [
+      "FONT_FAMILY"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-family-ui)"
+    },
+    "values": {
+      "undrr": "Roboto Condensed",
+      "delta": "Roboto Condensed",
+      "irp": "Roboto Condensed",
+      "mcr": "Roboto Condensed",
+      "preventionweb": "Roboto Condensed"
+    }
+  }
+]

@@ -162,6 +162,12 @@ const recipes = [
   ],
   ['legend', './figma-legend-recipes.cjs', 'buildLegendRecipes'],
   [
+    ['stats-card-item', 'stats-card'],
+    './figma-stats-card-recipes.cjs',
+    'buildStatsCardRecipes',
+  ],
+  ['tree', './figma-tree-recipes.cjs', 'buildTreeRecipes'],
+  [
     ['news-image-article-scene'],
     './figma-news-image-article-scene-recipes.cjs',
     'buildNewsImageArticleSceneRecipes',

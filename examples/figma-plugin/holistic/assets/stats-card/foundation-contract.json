@@ -1,0 +1,4735 @@
+[
+  {
+    "id": "color.neutral-0",
+    "name": "color/neutral-0",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-0",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-0))"
+    },
+    "values": {
+      "undrr": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "delta": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "irp": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "mcr": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-25",
+    "name": "color/neutral-25",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-25",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-25))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9412,
+        "g": 0.9529,
+        "b": 0.9647,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9412,
+        "g": 0.9529,
+        "b": 0.9647,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9412,
+        "g": 0.9529,
+        "b": 0.9647,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9412,
+        "g": 0.9529,
+        "b": 0.9647,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9412,
+        "g": 0.9529,
+        "b": 0.9647,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-50",
+    "name": "color/neutral-50",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-50",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-50))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.8941,
+        "g": 0.9059,
+        "b": 0.9176,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.8941,
+        "g": 0.9059,
+        "b": 0.9176,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.8941,
+        "g": 0.9059,
+        "b": 0.9176,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.8941,
+        "g": 0.9059,
+        "b": 0.9176,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.8941,
+        "g": 0.9059,
+        "b": 0.9176,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-100",
+    "name": "color/neutral-100",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-100",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-100))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-200",
+    "name": "color/neutral-200",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-200",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-200))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-300",
+    "name": "color/neutral-300",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-300",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-300))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-400",
+    "name": "color/neutral-400",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-400",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-400))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.4941,
+        "g": 0.502,
+        "b": 0.5098,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.4941,
+        "g": 0.502,
+        "b": 0.5098,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.4941,
+        "g": 0.502,
+        "b": 0.5098,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.4941,
+        "g": 0.502,
+        "b": 0.5098,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.4941,
+        "g": 0.502,
+        "b": 0.5098,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-500",
+    "name": "color/neutral-500",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-500",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-500))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.4,
+        "g": 0.4,
+        "b": 0.4,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.4,
+        "g": 0.4,
+        "b": 0.4,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.4,
+        "g": 0.4,
+        "b": 0.4,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.4,
+        "g": 0.4,
+        "b": 0.4,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.4,
+        "g": 0.4,
+        "b": 0.4,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-600",
+    "name": "color/neutral-600",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-600",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-600))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-700",
+    "name": "color/neutral-700",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-700",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-700))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-800",
+    "name": "color/neutral-800",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-800",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-800))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-900",
+    "name": "color/neutral-900",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-900",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-900))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 1
+      },
+      "delta": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 1
+      },
+      "irp": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-50",
+    "name": "color/red-50",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-50",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-50))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9765,
+        "g": 0.902,
+        "b": 0.9137,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9765,
+        "g": 0.902,
+        "b": 0.9137,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9765,
+        "g": 0.902,
+        "b": 0.9137,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9765,
+        "g": 0.902,
+        "b": 0.9137,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9765,
+        "g": 0.902,
+        "b": 0.9137,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-100",
+    "name": "color/red-100",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-100",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-100))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9529,
+        "g": 0.8078,
+        "b": 0.8235,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9529,
+        "g": 0.8078,
+        "b": 0.8235,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9529,
+        "g": 0.8078,
+        "b": 0.8235,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9529,
+        "g": 0.8078,
+        "b": 0.8235,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9529,
+        "g": 0.8078,
+        "b": 0.8235,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-200",
+    "name": "color/red-200",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-200",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-200))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9255,
+        "g": 0.7098,
+        "b": 0.7373,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9255,
+        "g": 0.7098,
+        "b": 0.7373,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9255,
+        "g": 0.7098,
+        "b": 0.7373,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9255,
+        "g": 0.7098,
+        "b": 0.7373,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9255,
+        "g": 0.7098,
+        "b": 0.7373,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-300",
+    "name": "color/red-300",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-300",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-300))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.902,
+        "g": 0.6157,
+        "b": 0.651,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.902,
+        "g": 0.6157,
+        "b": 0.651,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.902,
+        "g": 0.6157,
+        "b": 0.651,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.902,
+        "g": 0.6157,
+        "b": 0.651,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.902,
+        "g": 0.6157,
+        "b": 0.651,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-400",
+    "name": "color/red-400",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-400",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-400))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.8784,
+        "g": 0.5176,
+        "b": 0.5647,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.8784,
+        "g": 0.5176,
+        "b": 0.5647,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.8784,
+        "g": 0.5176,
+        "b": 0.5647,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.8784,
+        "g": 0.5176,
+        "b": 0.5647,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.8784,
+        "g": 0.5176,
+        "b": 0.5647,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-500",
+    "name": "color/red-500",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-500",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-500))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.8549,
+        "g": 0.4196,
+        "b": 0.4745,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.8549,
+        "g": 0.4196,
+        "b": 0.4745,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.8549,
+        "g": 0.4196,
+        "b": 0.4745,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.8549,
+        "g": 0.4196,
+        "b": 0.4745,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.8549,
+        "g": 0.4196,
+        "b": 0.4745,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-600",
+    "name": "color/red-600",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-600",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-600))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.8314,
+        "g": 0.3255,
+        "b": 0.3882,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.8314,
+        "g": 0.3255,
+        "b": 0.3882,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.8314,
+        "g": 0.3255,
+        "b": 0.3882,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.8314,
+        "g": 0.3255,
+        "b": 0.3882,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.8314,
+        "g": 0.3255,
+        "b": 0.3882,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-700",
+    "name": "color/red-700",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-700",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-700))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.8039,
+        "g": 0.2275,
+        "b": 0.302,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.8039,
+        "g": 0.2275,
+        "b": 0.302,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.8039,
+        "g": 0.2275,
+        "b": 0.302,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.8039,
+        "g": 0.2275,
+        "b": 0.302,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.8039,
+        "g": 0.2275,
+        "b": 0.302,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-800",
+    "name": "color/red-800",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-800",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-800))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.7804,
+        "g": 0.1333,
+        "b": 0.2118,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.7804,
+        "g": 0.1333,
+        "b": 0.2118,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.7804,
+        "g": 0.1333,
+        "b": 0.2118,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.7804,
+        "g": 0.1333,
+        "b": 0.2118,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.7804,
+        "g": 0.1333,
+        "b": 0.2118,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.red-900",
+    "name": "color/red-900",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-red-900",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-red-900))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.7569,
+        "g": 0.0353,
+        "b": 0.1255,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.7569,
+        "g": 0.0353,
+        "b": 0.1255,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.7569,
+        "g": 0.0353,
+        "b": 0.1255,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.7569,
+        "g": 0.0353,
+        "b": 0.1255,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.7569,
+        "g": 0.0353,
+        "b": 0.1255,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.gold-800",
+    "name": "color/gold-800",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-gold-800",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-gold-800))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.5255,
+        "g": 0.3843,
+        "b": 0,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.5255,
+        "g": 0.3843,
+        "b": 0,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.5255,
+        "g": 0.3843,
+        "b": 0,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.5255,
+        "g": 0.3843,
+        "b": 0,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.5255,
+        "g": 0.3843,
+        "b": 0,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.accent-100",
+    "name": "color/accent-100",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-accent-100",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-accent-100))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9569,
+        "g": 0.8941,
+        "b": 0.5882,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9569,
+        "g": 0.8941,
+        "b": 0.5882,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9569,
+        "g": 0.8941,
+        "b": 0.5882,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9569,
+        "g": 0.8941,
+        "b": 0.5882,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9569,
+        "g": 0.8941,
+        "b": 0.5882,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.accent-200",
+    "name": "color/accent-200",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-accent-200",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-accent-200))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.8275,
+        "g": 0.8078,
+        "b": 0.6627,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.8275,
+        "g": 0.8078,
+        "b": 0.6627,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.8275,
+        "g": 0.8078,
+        "b": 0.6627,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.8275,
+        "g": 0.8078,
+        "b": 0.6627,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.8275,
+        "g": 0.8078,
+        "b": 0.6627,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.accent-300",
+    "name": "color/accent-300",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-accent-300",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-accent-300))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9922,
+        "g": 0.9647,
+        "b": 0.851,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9922,
+        "g": 0.9647,
+        "b": 0.851,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9922,
+        "g": 0.9647,
+        "b": 0.851,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9922,
+        "g": 0.9647,
+        "b": 0.851,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9922,
+        "g": 0.9647,
+        "b": 0.851,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.accent-400",
+    "name": "color/accent-400",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-accent-400",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-accent-400))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.0392,
+        "g": 0.4118,
+        "b": 0.4118,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.0392,
+        "g": 0.4118,
+        "b": 0.4118,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.0392,
+        "g": 0.4118,
+        "b": 0.4118,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.0392,
+        "g": 0.4118,
+        "b": 0.4118,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.0392,
+        "g": 0.4118,
+        "b": 0.4118,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.accent-500",
+    "name": "color/accent-500",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-accent-500",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-accent-500))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9961,
+        "g": 0.7569,
+        "b": 0.1412,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9961,
+        "g": 0.7569,
+        "b": 0.1412,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9961,
+        "g": 0.7569,
+        "b": 0.1412,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9961,
+        "g": 0.7569,
+        "b": 0.1412,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9961,
+        "g": 0.7569,
+        "b": 0.1412,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.accent-600",
+    "name": "color/accent-600",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-accent-600",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-accent-600))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.7373,
+        "g": 0.6824,
+        "b": 0.4039,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.7373,
+        "g": 0.6824,
+        "b": 0.4039,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.7373,
+        "g": 0.6824,
+        "b": 0.4039,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.7373,
+        "g": 0.6824,
+        "b": 0.4039,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.7373,
+        "g": 0.6824,
+        "b": 0.4039,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.blue-900",
+    "name": "color/blue-900",
+    "type": "COLOR",
+    "description": "UNDRR corporate blue. Also DELTA's brand blue: DELTA's own design file labels this swatch \"UNDRR Blue - Corporate blue\" and marks it Brand.\n\nCSS: --mg-color-blue-900",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-900))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0,
+        "g": 0.3098,
+        "b": 0.5686,
+        "a": 1
+      },
+      "delta": {
+        "r": 0,
+        "g": 0.3098,
+        "b": 0.5686,
+        "a": 1
+      },
+      "irp": {
+        "r": 0,
+        "g": 0.3098,
+        "b": 0.5686,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0,
+        "g": 0.3098,
+        "b": 0.5686,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0,
+        "g": 0.3098,
+        "b": 0.5686,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.interactive",
+    "name": "color/interactive",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-interactive",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-interactive))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-900"
+      },
+      "delta": {
+        "alias": "brand/primary"
+      },
+      "irp": {
+        "alias": "brand/primary"
+      },
+      "mcr": {
+        "alias": "brand/purple"
+      },
+      "preventionweb": {
+        "alias": "brand/primary"
+      }
+    }
+  },
+  {
+    "id": "color.blue-700",
+    "name": "color/blue-700",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-700",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-700))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.2,
+        "g": 0.4471,
+        "b": 0.6549,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.2,
+        "g": 0.4471,
+        "b": 0.6549,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.2,
+        "g": 0.4471,
+        "b": 0.6549,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.2,
+        "g": 0.4471,
+        "b": 0.6549,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.2,
+        "g": 0.4471,
+        "b": 0.6549,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.interactive-active",
+    "name": "color/interactive-active",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-interactive-active",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-interactive-active))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-700"
+      },
+      "delta": {
+        "alias": "brand/primary-800"
+      },
+      "irp": {
+        "alias": "brand/primary"
+      },
+      "mcr": {
+        "alias": "brand/purple"
+      },
+      "preventionweb": {
+        "alias": "brand/primary"
+      }
+    }
+  },
+  {
+    "id": "color.text",
+    "name": "color/text",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-text",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-text))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-800"
+      },
+      "delta": {
+        "alias": "color/neutral-800"
+      },
+      "irp": {
+        "alias": "color/neutral-800"
+      },
+      "mcr": {
+        "alias": "color/neutral-800"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-800"
+      }
+    }
+  },
+  {
+    "id": "color.black",
+    "name": "color/black",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-black",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-black))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-800"
+      },
+      "delta": {
+        "alias": "color/neutral-800"
+      },
+      "irp": {
+        "alias": "color/neutral-800"
+      },
+      "mcr": {
+        "alias": "color/neutral-800"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-800"
+      }
+    }
+  },
+  {
+    "id": "color.white",
+    "name": "color/white",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-white",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-white))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-0"
+      },
+      "delta": {
+        "alias": "color/neutral-0"
+      },
+      "irp": {
+        "alias": "color/neutral-0"
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-0"
+      }
+    }
+  },
+  {
+    "id": "color.orange-800",
+    "name": "color/orange-800",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-800",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-800))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9294,
+        "g": 0.5137,
+        "b": 0.2471,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9294,
+        "g": 0.5137,
+        "b": 0.2471,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9294,
+        "g": 0.5137,
+        "b": 0.2471,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9294,
+        "g": 0.5137,
+        "b": 0.2471,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9294,
+        "g": 0.5137,
+        "b": 0.2471,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.secondary",
+    "name": "color/secondary",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-secondary",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-secondary))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/orange-800"
+      },
+      "delta": {
+        "alias": "color/orange-800"
+      },
+      "irp": {
+        "alias": "color/orange-800"
+      },
+      "mcr": {
+        "alias": "color/orange-800"
+      },
+      "preventionweb": {
+        "alias": "color/orange-800"
+      }
+    }
+  },
+  {
+    "id": "color.tertiary",
+    "name": "color/tertiary",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tertiary",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-tertiary))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-900"
+      },
+      "delta": {
+        "alias": "color/neutral-900"
+      },
+      "irp": {
+        "alias": "color/neutral-900"
+      },
+      "mcr": {
+        "alias": "color/neutral-900"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-900"
+      }
+    }
+  },
+  {
+    "id": "color.quaternary",
+    "name": "color/quaternary",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-quaternary",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-quaternary))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/red-800"
+      },
+      "delta": {
+        "alias": "color/red-800"
+      },
+      "irp": {
+        "alias": "color/red-800"
+      },
+      "mcr": {
+        "alias": "color/red-800"
+      },
+      "preventionweb": {
+        "alias": "color/red-800"
+      }
+    }
+  },
+  {
+    "id": "color.tag",
+    "name": "color/tag",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tag",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-tag))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive"
+      },
+      "delta": {
+        "alias": "color/interactive"
+      },
+      "irp": {
+        "alias": "color/interactive"
+      },
+      "mcr": {
+        "alias": "color/interactive"
+      },
+      "preventionweb": {
+        "alias": "color/interactive"
+      }
+    }
+  },
+  {
+    "id": "color.tag--hover",
+    "name": "color/tag--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tag--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-tag--hover))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive-active"
+      },
+      "delta": {
+        "alias": "color/interactive-active"
+      },
+      "irp": {
+        "alias": "color/interactive-active"
+      },
+      "mcr": {
+        "alias": "color/interactive-active"
+      },
+      "preventionweb": {
+        "alias": "color/interactive-active"
+      }
+    }
+  },
+  {
+    "id": "color.tag-secondary",
+    "name": "color/tag-secondary",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tag-secondary",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-tag-secondary))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-500"
+      },
+      "delta": {
+        "alias": "color/neutral-500"
+      },
+      "irp": {
+        "alias": "color/neutral-500"
+      },
+      "mcr": {
+        "alias": "color/neutral-500"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-500"
+      }
+    }
+  },
+  {
+    "id": "color.tag-secondary--hover",
+    "name": "color/tag-secondary--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tag-secondary--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-tag-secondary--hover))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-600"
+      },
+      "delta": {
+        "alias": "color/neutral-600"
+      },
+      "irp": {
+        "alias": "color/neutral-600"
+      },
+      "mcr": {
+        "alias": "color/neutral-600"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-600"
+      }
+    }
+  },
+  {
+    "id": "color.orange-900",
+    "name": "color/orange-900",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-900",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-900))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9216,
+        "g": 0.4588,
+        "b": 0.1647,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9216,
+        "g": 0.4588,
+        "b": 0.1647,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9216,
+        "g": 0.4588,
+        "b": 0.1647,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9216,
+        "g": 0.4588,
+        "b": 0.1647,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9216,
+        "g": 0.4588,
+        "b": 0.1647,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.tag-accent",
+    "name": "color/tag-accent",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tag-accent",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-tag-accent))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/orange-900"
+      },
+      "delta": {
+        "alias": "color/orange-900"
+      },
+      "irp": {
+        "alias": "color/orange-900"
+      },
+      "mcr": {
+        "alias": "color/orange-900"
+      },
+      "preventionweb": {
+        "alias": "color/orange-900"
+      }
+    }
+  },
+  {
+    "id": "color.tag-accent--hover",
+    "name": "color/tag-accent--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tag-accent--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-tag-accent--hover))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/orange-800"
+      },
+      "delta": {
+        "alias": "color/orange-800"
+      },
+      "irp": {
+        "alias": "color/orange-800"
+      },
+      "mcr": {
+        "alias": "color/orange-800"
+      },
+      "preventionweb": {
+        "alias": "color/orange-800"
+      }
+    }
+  },
+  {
+    "id": "color.button",
+    "name": "color/button",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-button",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-button))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-0"
+      },
+      "delta": {
+        "alias": "color/neutral-0"
+      },
+      "irp": {
+        "alias": "color/neutral-0"
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-0"
+      }
+    }
+  },
+  {
+    "id": "color.button--hover",
+    "name": "color/button--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-button--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-button--hover))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-0"
+      },
+      "delta": {
+        "alias": "color/neutral-0"
+      },
+      "irp": {
+        "alias": "color/neutral-0"
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-0"
+      }
+    }
+  },
+  {
+    "id": "color.button-background",
+    "name": "color/button-background",
+    "type": "COLOR",
+    "description": "Colour-valued, not a channel triplet: DELTA needs `transparent` here and a triplet cannot express it. Consumers must not wrap this in rgb().\n\nCSS: --mg-color-button-background",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-button-background)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive"
+      },
+      "delta": {
+        "alias": "brand/primary"
+      },
+      "irp": {
+        "alias": "color/interactive"
+      },
+      "mcr": {
+        "alias": "color/interactive"
+      },
+      "preventionweb": {
+        "alias": "color/interactive"
+      }
+    }
+  },
+  {
+    "id": "color.button-background--hover",
+    "name": "color/button-background--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-button-background--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-button-background--hover)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive-active"
+      },
+      "delta": {
+        "alias": "brand/primary-800"
+      },
+      "irp": {
+        "alias": "brand/blue-800"
+      },
+      "mcr": {
+        "alias": "brand/purple-800"
+      },
+      "preventionweb": {
+        "alias": "brand/teal-800"
+      }
+    }
+  },
+  {
+    "id": "color.blue-800",
+    "name": "color/blue-800",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-800",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-800))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.102,
+        "g": 0.3804,
+        "b": 0.6118,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.102,
+        "g": 0.3804,
+        "b": 0.6118,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.102,
+        "g": 0.3804,
+        "b": 0.6118,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.102,
+        "g": 0.3804,
+        "b": 0.6118,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.102,
+        "g": 0.3804,
+        "b": 0.6118,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.button-secondary-background",
+    "name": "color/button-secondary-background",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-button-secondary-background",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-button-secondary-background))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-800"
+      },
+      "delta": {
+        "alias": "brand/secondary"
+      },
+      "irp": {
+        "alias": "brand/blue-800"
+      },
+      "mcr": {
+        "alias": "brand/purple-800"
+      },
+      "preventionweb": {
+        "alias": "brand/teal-800"
+      }
+    }
+  },
+  {
+    "id": "color.button-secondary-background--hover",
+    "name": "color/button-secondary-background--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-button-secondary-background--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-button-secondary-background--hover))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-700"
+      },
+      "delta": {
+        "alias": "brand/secondary-800"
+      },
+      "irp": {
+        "alias": "brand/primary"
+      },
+      "mcr": {
+        "alias": "brand/purple"
+      },
+      "preventionweb": {
+        "alias": "brand/primary"
+      }
+    }
+  },
+  {
+    "id": "color.button-outline-primary",
+    "name": "color/button-outline-primary",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-button-outline-primary",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-button-outline-primary))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive"
+      },
+      "delta": {
+        "alias": "brand/primary"
+      },
+      "irp": {
+        "alias": "color/interactive"
+      },
+      "mcr": {
+        "alias": "color/interactive"
+      },
+      "preventionweb": {
+        "alias": "color/interactive"
+      }
+    }
+  },
+  {
+    "id": "color.button-outline-primary--hover",
+    "name": "color/button-outline-primary--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-button-outline-primary--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-button-outline-primary--hover))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive-active"
+      },
+      "delta": {
+        "alias": "brand/primary-800"
+      },
+      "irp": {
+        "alias": "brand/blue-800"
+      },
+      "mcr": {
+        "alias": "brand/purple-800"
+      },
+      "preventionweb": {
+        "alias": "brand/teal-800"
+      }
+    }
+  },
+  {
+    "id": "color.button-outline-secondary",
+    "name": "color/button-outline-secondary",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-button-outline-secondary",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-button-outline-secondary))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/button-secondary-background"
+      },
+      "delta": {
+        "alias": "brand/secondary"
+      },
+      "irp": {
+        "alias": "color/button-secondary-background"
+      },
+      "mcr": {
+        "alias": "color/button-secondary-background"
+      },
+      "preventionweb": {
+        "alias": "color/button-secondary-background"
+      }
+    }
+  },
+  {
+    "id": "color.button-outline-secondary--hover",
+    "name": "color/button-outline-secondary--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-button-outline-secondary--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-button-outline-secondary--hover))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/button-secondary-background--hover"
+      },
+      "delta": {
+        "alias": "brand/secondary-800"
+      },
+      "irp": {
+        "alias": "color/button-secondary-background--hover"
+      },
+      "mcr": {
+        "alias": "color/button-secondary-background--hover"
+      },
+      "preventionweb": {
+        "alias": "color/button-secondary-background--hover"
+      }
+    }
+  },
+  {
+    "id": "color.text-button",
+    "name": "color/text-button",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-text-button",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-text-button))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-0"
+      },
+      "delta": {
+        "alias": "color/neutral-0"
+      },
+      "irp": {
+        "alias": "color/neutral-0"
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-0"
+      }
+    }
+  },
+  {
+    "id": "color.form-check",
+    "name": "color/form-check",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-form-check",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-form-check))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive"
+      },
+      "delta": {
+        "alias": "color/interactive"
+      },
+      "irp": {
+        "alias": "color/interactive"
+      },
+      "mcr": {
+        "alias": "color/interactive"
+      },
+      "preventionweb": {
+        "alias": "color/interactive"
+      }
+    }
+  },
+  {
+    "id": "color.form-check--hover",
+    "name": "color/form-check--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-form-check--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-form-check--hover))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive-active"
+      },
+      "delta": {
+        "alias": "color/interactive-active"
+      },
+      "irp": {
+        "alias": "color/interactive-active"
+      },
+      "mcr": {
+        "alias": "color/interactive-active"
+      },
+      "preventionweb": {
+        "alias": "color/interactive-active"
+      }
+    }
+  },
+  {
+    "id": "color.form-check--checked",
+    "name": "color/form-check--checked",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-form-check--checked",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-form-check--checked))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive"
+      },
+      "delta": {
+        "alias": "color/interactive"
+      },
+      "irp": {
+        "alias": "color/interactive"
+      },
+      "mcr": {
+        "alias": "color/interactive"
+      },
+      "preventionweb": {
+        "alias": "color/interactive"
+      }
+    }
+  },
+  {
+    "id": "color.form-focus",
+    "name": "color/form-focus",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-form-focus",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-form-focus))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive"
+      },
+      "delta": {
+        "alias": "color/interactive"
+      },
+      "irp": {
+        "alias": "color/interactive"
+      },
+      "mcr": {
+        "alias": "color/interactive"
+      },
+      "preventionweb": {
+        "alias": "color/interactive"
+      }
+    }
+  },
+  {
+    "id": "color.focus-ring",
+    "name": "color/focus-ring",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-focus-ring",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-focus-ring))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/gold-800"
+      },
+      "delta": {
+        "alias": "color/gold-800"
+      },
+      "irp": {
+        "alias": "color/gold-800"
+      },
+      "mcr": {
+        "alias": "color/gold-800"
+      },
+      "preventionweb": {
+        "alias": "color/gold-800"
+      }
+    }
+  },
+  {
+    "id": "color.focus-ring-inverse",
+    "name": "color/focus-ring-inverse",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-focus-ring-inverse",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-focus-ring-inverse))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-0"
+      },
+      "delta": {
+        "alias": "color/neutral-0"
+      },
+      "irp": {
+        "alias": "color/neutral-0"
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-0"
+      }
+    }
+  },
+  {
+    "id": "color.hero",
+    "name": "color/hero",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-hero",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-hero))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/interactive"
+      },
+      "delta": {
+        "alias": "brand/primary"
+      },
+      "irp": {
+        "alias": "color/interactive"
+      },
+      "mcr": {
+        "alias": "color/interactive"
+      },
+      "preventionweb": {
+        "alias": "color/interactive"
+      }
+    }
+  },
+  {
+    "id": "color.hero--secondary",
+    "name": "color/hero--secondary",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-hero--secondary",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-hero--secondary))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/secondary"
+      },
+      "delta": {
+        "alias": "color/secondary"
+      },
+      "irp": {
+        "alias": "color/secondary"
+      },
+      "mcr": {
+        "alias": "color/secondary"
+      },
+      "preventionweb": {
+        "alias": "color/secondary"
+      }
+    }
+  },
+  {
+    "id": "color.hero--tertiary",
+    "name": "color/hero--tertiary",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-hero--tertiary",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-hero--tertiary))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/tertiary"
+      },
+      "delta": {
+        "alias": "brand/ink"
+      },
+      "irp": {
+        "alias": "color/tertiary"
+      },
+      "mcr": {
+        "alias": "color/tertiary"
+      },
+      "preventionweb": {
+        "alias": "color/tertiary"
+      }
+    }
+  },
+  {
+    "id": "color.hero--quaternary",
+    "name": "color/hero--quaternary",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-hero--quaternary",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-hero--quaternary))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/quaternary"
+      },
+      "delta": {
+        "alias": "color/quaternary"
+      },
+      "irp": {
+        "alias": "color/quaternary"
+      },
+      "mcr": {
+        "alias": "color/quaternary"
+      },
+      "preventionweb": {
+        "alias": "color/quaternary"
+      }
+    }
+  },
+  {
+    "id": "color.hero-title",
+    "name": "color/hero-title",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-hero-title",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-hero-title))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-0"
+      },
+      "delta": {
+        "r": 0,
+        "g": 0.6498,
+        "b": 0.9571,
+        "a": 1
+      },
+      "irp": {
+        "alias": "color/neutral-0"
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-0"
+      }
+    }
+  },
+  {
+    "id": "color.hero-button-secondary-background",
+    "name": "color/hero-button-secondary-background",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-hero-button-secondary-background",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-hero-button-secondary-background)"
+    },
+    "values": {
+      "undrr": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.9
+      },
+      "delta": {
+        "alias": "brand/primary"
+      },
+      "irp": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.9
+      },
+      "mcr": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.9
+      },
+      "preventionweb": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 0.9
+      }
+    }
+  },
+  {
+    "id": "color.hero-button-secondary-color",
+    "name": "color/hero-button-secondary-color",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-hero-button-secondary-color",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-hero-button-secondary-color))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/hero"
+      },
+      "delta": {
+        "alias": "color/white"
+      },
+      "irp": {
+        "alias": "color/hero"
+      },
+      "mcr": {
+        "alias": "color/hero"
+      },
+      "preventionweb": {
+        "alias": "color/hero"
+      }
+    }
+  },
+  {
+    "id": "color.mega-content-bg",
+    "name": "color/mega-content-bg",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-mega-content-bg",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-mega-content-bg))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/button"
+      },
+      "delta": {
+        "alias": "color/white"
+      },
+      "irp": {
+        "alias": "color/button"
+      },
+      "mcr": {
+        "alias": "color/button"
+      },
+      "preventionweb": {
+        "alias": "color/button"
+      }
+    }
+  },
+  {
+    "id": "color.modal-scrim",
+    "name": "color/modal-scrim",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-modal-scrim",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-modal-scrim)"
+    },
+    "values": {
+      "undrr": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0.85
+      },
+      "delta": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0.85
+      },
+      "irp": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0.85
+      },
+      "mcr": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0.85
+      },
+      "preventionweb": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 0.85
+      }
+    }
+  },
+  {
+    "id": "color.blue-50",
+    "name": "color/blue-50",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-50",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-50))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.902,
+        "g": 0.9294,
+        "b": 0.9569,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.902,
+        "g": 0.9294,
+        "b": 0.9569,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.902,
+        "g": 0.9294,
+        "b": 0.9569,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.902,
+        "g": 0.9294,
+        "b": 0.9569,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.902,
+        "g": 0.9294,
+        "b": 0.9569,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.blue-200",
+    "name": "color/blue-200",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-200",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-200))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.tab-background",
+    "name": "color/tab-background",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tab-background",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-tab-background)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-200"
+      },
+      "delta": {
+        "alias": "brand/primary"
+      },
+      "irp": {
+        "r": 0.549,
+        "g": 0.7765,
+        "b": 0.2471,
+        "a": 0.3
+      },
+      "mcr": {
+        "alias": "brand/purple-800"
+      },
+      "preventionweb": {
+        "r": 0.0392,
+        "g": 0.4118,
+        "b": 0.4118,
+        "a": 0.1
+      }
+    }
+  },
+  {
+    "id": "color.tab-background--inactive",
+    "name": "color/tab-background--inactive",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tab-background--inactive",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-tab-background--inactive)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-50"
+      },
+      "delta": {
+        "alias": "color/white"
+      },
+      "irp": {
+        "r": 0.549,
+        "g": 0.7765,
+        "b": 0.2471,
+        "a": 0.1
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "r": 0.0392,
+        "g": 0.4118,
+        "b": 0.4118,
+        "a": 0.1
+      }
+    }
+  },
+  {
+    "id": "color.tab-background--hover",
+    "name": "color/tab-background--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tab-background--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-tab-background--hover)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-800"
+      },
+      "delta": {
+        "r": 0,
+        "g": 0.3098,
+        "b": 0.5686,
+        "a": 0.7
+      },
+      "irp": {
+        "alias": "brand/green"
+      },
+      "mcr": {
+        "r": 0.4314,
+        "g": 0.149,
+        "b": 0.4667,
+        "a": 0.6
+      },
+      "preventionweb": {
+        "r": 0.0392,
+        "g": 0.4118,
+        "b": 0.4118,
+        "a": 0.2
+      }
+    }
+  },
+  {
+    "id": "color.tab-border",
+    "name": "color/tab-border",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tab-border",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-tab-border)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-700"
+      },
+      "delta": {
+        "alias": "color/blue-200"
+      },
+      "irp": {
+        "alias": "color/neutral-300"
+      },
+      "mcr": {
+        "alias": "brand/purple-200"
+      },
+      "preventionweb": {
+        "alias": "color/interactive"
+      }
+    }
+  },
+  {
+    "id": "color.tab-border--hover",
+    "name": "color/tab-border--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tab-border--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-tab-border--hover)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-900"
+      },
+      "delta": {
+        "alias": "brand/primary-800"
+      },
+      "irp": {
+        "r": 0.549,
+        "g": 0.7765,
+        "b": 0.2471,
+        "a": 0.1
+      },
+      "mcr": {
+        "alias": "brand/purple-800"
+      },
+      "preventionweb": {
+        "alias": "color/interactive"
+      }
+    }
+  },
+  {
+    "id": "color.tab-border--active",
+    "name": "color/tab-border--active",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tab-border--active",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-tab-border--active)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-800"
+      },
+      "delta": {
+        "alias": "color/blue-200"
+      },
+      "irp": {
+        "r": 0.549,
+        "g": 0.7765,
+        "b": 0.2471,
+        "a": 0.1
+      },
+      "mcr": {
+        "alias": "brand/purple-200"
+      },
+      "preventionweb": {
+        "alias": "color/tab-background"
+      }
+    }
+  },
+  {
+    "id": "color.text-tab",
+    "name": "color/text-tab",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-text-tab",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-text-tab)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-700"
+      },
+      "delta": {
+        "alias": "color/neutral-700"
+      },
+      "irp": {
+        "alias": "color/neutral-500"
+      },
+      "mcr": {
+        "alias": "color/neutral-700"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-700"
+      }
+    }
+  },
+  {
+    "id": "color.text-tab--hover",
+    "name": "color/text-tab--hover",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-text-tab--hover",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-text-tab--hover)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-0"
+      },
+      "delta": {
+        "alias": "color/white"
+      },
+      "irp": {
+        "alias": "color/neutral-0"
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-700"
+      }
+    }
+  },
+  {
+    "id": "color.text-tab-active",
+    "name": "color/text-tab-active",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-text-tab-active",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-text-tab-active)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-700"
+      },
+      "delta": {
+        "alias": "color/white"
+      },
+      "irp": {
+        "alias": "color/neutral-700"
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-900"
+      }
+    }
+  },
+  {
+    "id": "color.text-tab-no-results",
+    "name": "color/text-tab-no-results",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-text-tab-no-results",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-text-tab-no-results)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-500"
+      },
+      "delta": {
+        "alias": "color/neutral-500"
+      },
+      "irp": {
+        "alias": "color/neutral-500"
+      },
+      "mcr": {
+        "alias": "color/neutral-500"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-500"
+      }
+    }
+  },
+  {
+    "id": "color.tab-section-background",
+    "name": "color/tab-section-background",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-tab-section-background",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-color-tab-section-background)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/neutral-0"
+      },
+      "delta": {
+        "alias": "color/neutral-0"
+      },
+      "irp": {
+        "alias": "color/neutral-0"
+      },
+      "mcr": {
+        "alias": "color/neutral-0"
+      },
+      "preventionweb": {
+        "alias": "color/neutral-0"
+      }
+    }
+  },
+  {
+    "id": "spacing.0",
+    "name": "spacing/0",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-0",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-0)"
+    },
+    "values": {
+      "undrr": 0,
+      "delta": 0,
+      "irp": 0,
+      "mcr": 0,
+      "preventionweb": 0
+    }
+  },
+  {
+    "id": "spacing.25",
+    "name": "spacing/25",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-25",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-25)"
+    },
+    "values": {
+      "undrr": 2.5,
+      "delta": 2.5,
+      "irp": 2.5,
+      "mcr": 2.5,
+      "preventionweb": 2.5
+    }
+  },
+  {
+    "id": "spacing.50",
+    "name": "spacing/50",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-50",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-50)"
+    },
+    "values": {
+      "undrr": 5,
+      "delta": 5,
+      "irp": 5,
+      "mcr": 5,
+      "preventionweb": 5
+    }
+  },
+  {
+    "id": "spacing.75",
+    "name": "spacing/75",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-75",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-75)"
+    },
+    "values": {
+      "undrr": 7.5,
+      "delta": 7.5,
+      "irp": 7.5,
+      "mcr": 7.5,
+      "preventionweb": 7.5
+    }
+  },
+  {
+    "id": "spacing.100",
+    "name": "spacing/100",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-100",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-100)"
+    },
+    "values": {
+      "undrr": 10,
+      "delta": 10,
+      "irp": 10,
+      "mcr": 10,
+      "preventionweb": 10
+    }
+  },
+  {
+    "id": "spacing.150",
+    "name": "spacing/150",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-150",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-150)"
+    },
+    "values": {
+      "undrr": 15,
+      "delta": 15,
+      "irp": 15,
+      "mcr": 15,
+      "preventionweb": 15
+    }
+  },
+  {
+    "id": "spacing.175",
+    "name": "spacing/175",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-175",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-175)"
+    },
+    "values": {
+      "undrr": 18,
+      "delta": 18,
+      "irp": 18,
+      "mcr": 18,
+      "preventionweb": 18
+    }
+  },
+  {
+    "id": "spacing.200",
+    "name": "spacing/200",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-200",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-200)"
+    },
+    "values": {
+      "undrr": 20,
+      "delta": 20,
+      "irp": 20,
+      "mcr": 20,
+      "preventionweb": 20
+    }
+  },
+  {
+    "id": "spacing.250",
+    "name": "spacing/250",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-250",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-250)"
+    },
+    "values": {
+      "undrr": 24,
+      "delta": 24,
+      "irp": 24,
+      "mcr": 24,
+      "preventionweb": 24
+    }
+  },
+  {
+    "id": "spacing.300",
+    "name": "spacing/300",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-300",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-300)"
+    },
+    "values": {
+      "undrr": 30,
+      "delta": 30,
+      "irp": 30,
+      "mcr": 30,
+      "preventionweb": 30
+    }
+  },
+  {
+    "id": "spacing.350",
+    "name": "spacing/350",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-350",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-350)"
+    },
+    "values": {
+      "undrr": 35,
+      "delta": 35,
+      "irp": 35,
+      "mcr": 35,
+      "preventionweb": 35
+    }
+  },
+  {
+    "id": "spacing.400",
+    "name": "spacing/400",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-400",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-400)"
+    },
+    "values": {
+      "undrr": 50,
+      "delta": 50,
+      "irp": 50,
+      "mcr": 50,
+      "preventionweb": 50
+    }
+  },
+  {
+    "id": "spacing.500",
+    "name": "spacing/500",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-500",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-500)"
+    },
+    "values": {
+      "undrr": 60,
+      "delta": 60,
+      "irp": 60,
+      "mcr": 60,
+      "preventionweb": 60
+    }
+  },
+  {
+    "id": "spacing.600",
+    "name": "spacing/600",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-600",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-600)"
+    },
+    "values": {
+      "undrr": 80,
+      "delta": 80,
+      "irp": 80,
+      "mcr": 80,
+      "preventionweb": 80
+    }
+  },
+  {
+    "id": "spacing.800",
+    "name": "spacing/800",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-800",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-800)"
+    },
+    "values": {
+      "undrr": 100,
+      "delta": 100,
+      "irp": 100,
+      "mcr": 100,
+      "preventionweb": 100
+    }
+  },
+  {
+    "id": "spacing.1000",
+    "name": "spacing/1000",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-1000",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-1000)"
+    },
+    "values": {
+      "undrr": 400,
+      "delta": 400,
+      "irp": 400,
+      "mcr": 400,
+      "preventionweb": 400
+    }
+  },
+  {
+    "id": "spacing.hero-overlay.block",
+    "name": "spacing/hero-overlay/block",
+    "type": "FLOAT",
+    "description": "CSS: block part of --mg-spacing-hero-overlay",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {},
+    "values": {
+      "undrr": 0,
+      "delta": 20,
+      "irp": 20,
+      "mcr": 20,
+      "preventionweb": 20
+    }
+  },
+  {
+    "id": "spacing.hero-overlay.inline",
+    "name": "spacing/hero-overlay/inline",
+    "type": "FLOAT",
+    "description": "CSS: inline part of --mg-spacing-hero-overlay",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {},
+    "values": {
+      "undrr": 0,
+      "delta": 0,
+      "irp": 0,
+      "mcr": 0,
+      "preventionweb": 0
+    }
+  },
+  {
+    "id": "font-size.100",
+    "name": "font-size/100",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-100",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-100)"
+    },
+    "values": {
+      "undrr": 10,
+      "delta": 10,
+      "irp": 10,
+      "mcr": 10,
+      "preventionweb": 10
+    }
+  },
+  {
+    "id": "font-size.150",
+    "name": "font-size/150",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-150",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-150)"
+    },
+    "values": {
+      "undrr": 11.25,
+      "delta": 11.25,
+      "irp": 11.25,
+      "mcr": 11.25,
+      "preventionweb": 11.25
+    }
+  },
+  {
+    "id": "font-size.200",
+    "name": "font-size/200",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-200",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-200)"
+    },
+    "values": {
+      "undrr": 12.5,
+      "delta": 12.5,
+      "irp": 12.5,
+      "mcr": 12.5,
+      "preventionweb": 12.5
+    }
+  },
+  {
+    "id": "font-size.250",
+    "name": "font-size/250",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-250",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-250)"
+    },
+    "values": {
+      "undrr": 14,
+      "delta": 14,
+      "irp": 14,
+      "mcr": 14,
+      "preventionweb": 14
+    }
+  },
+  {
+    "id": "font-size.300",
+    "name": "font-size/300",
+    "type": "FLOAT",
+    "description": "Regular body text.\n\nCSS: --mg-font-size-300",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-300)"
+    },
+    "values": {
+      "undrr": 16,
+      "delta": 16,
+      "irp": 16,
+      "mcr": 16,
+      "preventionweb": 16
+    }
+  },
+  {
+    "id": "font-size.400",
+    "name": "font-size/400",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-400",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-400)"
+    },
+    "values": {
+      "undrr": 18,
+      "delta": 18,
+      "irp": 18,
+      "mcr": 18,
+      "preventionweb": 18
+    }
+  },
+  {
+    "id": "font-size.500",
+    "name": "font-size/500",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-500",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-500)"
+    },
+    "values": {
+      "undrr": 23,
+      "delta": 23,
+      "irp": 23,
+      "mcr": 23,
+      "preventionweb": 23
+    }
+  },
+  {
+    "id": "font-size.600",
+    "name": "font-size/600",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-600",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-600)"
+    },
+    "values": {
+      "undrr": 32,
+      "delta": 32,
+      "irp": 32,
+      "mcr": 32,
+      "preventionweb": 32
+    }
+  },
+  {
+    "id": "font-size.800",
+    "name": "font-size/800",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-800",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-800)"
+    },
+    "values": {
+      "undrr": 36,
+      "delta": 36,
+      "irp": 36,
+      "mcr": 36,
+      "preventionweb": 36
+    }
+  },
+  {
+    "id": "font-size.900",
+    "name": "font-size/900",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-900",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-900)"
+    },
+    "values": {
+      "undrr": 40,
+      "delta": 40,
+      "irp": 40,
+      "mcr": 40,
+      "preventionweb": 40
+    }
+  },
+  {
+    "id": "font-size.1000",
+    "name": "font-size/1000",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-1000",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-1000)"
+    },
+    "values": {
+      "undrr": 48,
+      "delta": 48,
+      "irp": 48,
+      "mcr": 48,
+      "preventionweb": 48
+    }
+  },
+  {
+    "id": "font-size.1100",
+    "name": "font-size/1100",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-1100",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-1100)"
+    },
+    "values": {
+      "undrr": 64,
+      "delta": 64,
+      "irp": 64,
+      "mcr": 64,
+      "preventionweb": 64
+    }
+  },
+  {
+    "id": "font-size.button",
+    "name": "font-size/button",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-button",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-button)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "font-size/250"
+      },
+      "delta": {
+        "alias": "font-size/250"
+      },
+      "irp": {
+        "alias": "font-size/250"
+      },
+      "mcr": {
+        "alias": "font-size/400"
+      },
+      "preventionweb": {
+        "alias": "font-size/250"
+      }
+    }
+  },
+  {
+    "id": "font-size.tab",
+    "name": "font-size/tab",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-tab",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-tab)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "font-size/400"
+      },
+      "delta": {
+        "alias": "font-size/400"
+      },
+      "irp": {
+        "alias": "font-size/400"
+      },
+      "mcr": {
+        "alias": "font-size/400"
+      },
+      "preventionweb": {
+        "alias": "font-size/400"
+      }
+    }
+  },
+  {
+    "id": "font-size.form-input",
+    "name": "font-size/form-input",
+    "type": "FLOAT",
+    "description": "Regular body text.\n\nCSS: --mg-font-size-form-input",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-form-input)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "font-size/300"
+      },
+      "delta": {
+        "alias": "font-size/300"
+      },
+      "irp": {
+        "alias": "font-size/300"
+      },
+      "mcr": {
+        "alias": "font-size/300"
+      },
+      "preventionweb": {
+        "alias": "font-size/300"
+      }
+    }
+  },
+  {
+    "id": "radius.tag",
+    "name": "radius/tag",
+    "type": "FLOAT",
+    "description": "CSS: --mg-radius-tag",
+    "scopes": [
+      "CORNER_RADIUS"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-radius-tag)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "spacing/50"
+      },
+      "delta": {
+        "alias": "spacing/50"
+      },
+      "irp": {
+        "alias": "spacing/50"
+      },
+      "mcr": {
+        "alias": "spacing/100"
+      },
+      "preventionweb": {
+        "alias": "spacing/50"
+      }
+    }
+  },
+  {
+    "id": "radius.button",
+    "name": "radius/button",
+    "type": "FLOAT",
+    "description": "CSS: --mg-radius-button",
+    "scopes": [
+      "CORNER_RADIUS"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-radius-button)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "spacing/50"
+      },
+      "delta": {
+        "alias": "spacing/50"
+      },
+      "irp": {
+        "alias": "spacing/50"
+      },
+      "mcr": {
+        "alias": "spacing/300"
+      },
+      "preventionweb": {
+        "alias": "spacing/50"
+      }
+    }
+  },
+  {
+    "id": "radius.form-input",
+    "name": "radius/form-input",
+    "type": "FLOAT",
+    "description": "CSS: --mg-radius-form-input",
+    "scopes": [
+      "CORNER_RADIUS"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-radius-form-input)"
+    },
+    "values": {
+      "undrr": {
+        "alias": "spacing/50"
+      },
+      "delta": {
+        "alias": "spacing/50"
+      },
+      "irp": {
+        "alias": "spacing/50"
+      },
+      "mcr": {
+        "alias": "spacing/100"
+      },
+      "preventionweb": {
+        "alias": "spacing/50"
+      }
+    }
+  },
+  {
+    "id": "radius.tab-section",
+    "name": "radius/tab-section",
+    "type": "FLOAT",
+    "description": "CSS: --mg-radius-tab-section",
+    "scopes": [
+      "CORNER_RADIUS"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-radius-tab-section)"
+    },
+    "values": {
+      "undrr": 0,
+      "delta": {
+        "alias": "spacing/50"
+      },
+      "irp": 0,
+      "mcr": {
+        "alias": "spacing/200"
+      },
+      "preventionweb": 0
+    }
+  },
+  {
+    "id": "color.blue-100",
+    "name": "color/blue-100",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-100",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-100))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.blue-300",
+    "name": "color/blue-300",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-300",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-300))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.blue-400",
+    "name": "color/blue-400",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-400",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-400))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.502,
+        "g": 0.6549,
+        "b": 0.7843,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.502,
+        "g": 0.6549,
+        "b": 0.7843,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.502,
+        "g": 0.6549,
+        "b": 0.7843,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.502,
+        "g": 0.6549,
+        "b": 0.7843,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.502,
+        "g": 0.6549,
+        "b": 0.7843,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.blue-500",
+    "name": "color/blue-500",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-500",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-500))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.4,
+        "g": 0.5843,
+        "b": 0.7412,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.4,
+        "g": 0.5843,
+        "b": 0.7412,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.4,
+        "g": 0.5843,
+        "b": 0.7412,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.4,
+        "g": 0.5843,
+        "b": 0.7412,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.4,
+        "g": 0.5843,
+        "b": 0.7412,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.blue-600",
+    "name": "color/blue-600",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-600",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-600))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.302,
+        "g": 0.5176,
+        "b": 0.698,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.302,
+        "g": 0.5176,
+        "b": 0.698,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.302,
+        "g": 0.5176,
+        "b": 0.698,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.302,
+        "g": 0.5176,
+        "b": 0.698,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.302,
+        "g": 0.5176,
+        "b": 0.698,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.orange-50",
+    "name": "color/orange-50",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-50",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-50))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9922,
+        "g": 0.9451,
+        "b": 0.9176,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9922,
+        "g": 0.9451,
+        "b": 0.9176,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9922,
+        "g": 0.9451,
+        "b": 0.9176,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9922,
+        "g": 0.9451,
+        "b": 0.9176,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9922,
+        "g": 0.9451,
+        "b": 0.9176,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.orange-100",
+    "name": "color/orange-100",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-100",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-100))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9843,
+        "g": 0.8902,
+        "b": 0.8314,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9843,
+        "g": 0.8902,
+        "b": 0.8314,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9843,
+        "g": 0.8902,
+        "b": 0.8314,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9843,
+        "g": 0.8902,
+        "b": 0.8314,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9843,
+        "g": 0.8902,
+        "b": 0.8314,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.orange-200",
+    "name": "color/orange-200",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-200",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-200))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9765,
+        "g": 0.8392,
+        "b": 0.749,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9765,
+        "g": 0.8392,
+        "b": 0.749,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9765,
+        "g": 0.8392,
+        "b": 0.749,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9765,
+        "g": 0.8392,
+        "b": 0.749,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9765,
+        "g": 0.8392,
+        "b": 0.749,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.orange-300",
+    "name": "color/orange-300",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-300",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-300))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9686,
+        "g": 0.7843,
+        "b": 0.6667,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9686,
+        "g": 0.7843,
+        "b": 0.6667,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9686,
+        "g": 0.7843,
+        "b": 0.6667,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9686,
+        "g": 0.7843,
+        "b": 0.6667,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9686,
+        "g": 0.7843,
+        "b": 0.6667,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.orange-400",
+    "name": "color/orange-400",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-400",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-400))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9608,
+        "g": 0.7294,
+        "b": 0.5843,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9608,
+        "g": 0.7294,
+        "b": 0.5843,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9608,
+        "g": 0.7294,
+        "b": 0.5843,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9608,
+        "g": 0.7294,
+        "b": 0.5843,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9608,
+        "g": 0.7294,
+        "b": 0.5843,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.orange-500",
+    "name": "color/orange-500",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-500",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-500))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9529,
+        "g": 0.6745,
+        "b": 0.498,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9529,
+        "g": 0.6745,
+        "b": 0.498,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9529,
+        "g": 0.6745,
+        "b": 0.498,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9529,
+        "g": 0.6745,
+        "b": 0.498,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9529,
+        "g": 0.6745,
+        "b": 0.498,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.orange-600",
+    "name": "color/orange-600",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-600",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-600))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9451,
+        "g": 0.6196,
+        "b": 0.4157,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9451,
+        "g": 0.6196,
+        "b": 0.4157,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9451,
+        "g": 0.6196,
+        "b": 0.4157,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9451,
+        "g": 0.6196,
+        "b": 0.4157,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9451,
+        "g": 0.6196,
+        "b": 0.4157,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.orange-700",
+    "name": "color/orange-700",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-orange-700",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-orange-700))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.9373,
+        "g": 0.5686,
+        "b": 0.3333,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.9373,
+        "g": 0.5686,
+        "b": 0.3333,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.9373,
+        "g": 0.5686,
+        "b": 0.3333,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.9373,
+        "g": 0.5686,
+        "b": 0.3333,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.9373,
+        "g": 0.5686,
+        "b": 0.3333,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "font-family.text",
+    "name": "font-family/text",
+    "type": "STRING",
+    "description": "Font-family role. Latin-script face only; Arabic and other scripts map this role to other faces in _fonts.scss.\n\nCSS: --mg-font-family-text",
+    "scopes": [
+      "FONT_FAMILY"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-family-text)"
+    },
+    "values": {
+      "undrr": "Roboto",
+      "delta": "Roboto",
+      "irp": "Roboto",
+      "mcr": "Roboto",
+      "preventionweb": "Roboto"
+    }
+  },
+  {
+    "id": "font-family.heading",
+    "name": "font-family/heading",
+    "type": "STRING",
+    "description": "Font-family role. Latin-script face only; Arabic and other scripts map this role to other faces in _fonts.scss.\n\nCSS: --mg-font-family-heading",
+    "scopes": [
+      "FONT_FAMILY"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-family-heading)"
+    },
+    "values": {
+      "undrr": "Roboto",
+      "delta": "Roboto",
+      "irp": "Roboto",
+      "mcr": "Roboto",
+      "preventionweb": "Roboto"
+    }
+  },
+  {
+    "id": "font-family.display",
+    "name": "font-family/display",
+    "type": "STRING",
+    "description": "Font-family role. Latin-script face only; Arabic and other scripts map this role to other faces in _fonts.scss.\n\nCSS: --mg-font-family-display",
+    "scopes": [
+      "FONT_FAMILY"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-family-display)"
+    },
+    "values": {
+      "undrr": "Roboto Condensed",
+      "delta": "Roboto Condensed",
+      "irp": "Roboto Condensed",
+      "mcr": "Roboto Condensed",
+      "preventionweb": "Roboto Condensed"
+    }
+  },
+  {
+    "id": "font-family.ui",
+    "name": "font-family/ui",
+    "type": "STRING",
+    "description": "Font-family role. Latin-script face only; Arabic and other scripts map this role to other faces in _fonts.scss.\n\nCSS: --mg-font-family-ui",
+    "scopes": [
+      "FONT_FAMILY"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-family-ui)"
+    },
+    "values": {
+      "undrr": "Roboto Condensed",
+      "delta": "Roboto Condensed",
+      "irp": "Roboto Condensed",
+      "mcr": "Roboto Condensed",
+      "preventionweb": "Roboto Condensed"
+    }
+  },
+  {
+    "id": "effect-color.shadow.raised",
+    "name": "effect-color/shadow/raised",
+    "type": "COLOR",
+    "description": "Colour extracted from --mg-shadow-raised, including its alpha cast.",
+    "scopes": [
+      "EFFECT_COLOR"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {},
+    "values": {
+      "undrr": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 0.24
+      },
+      "delta": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 0.24
+      },
+      "irp": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 0.24
+      },
+      "mcr": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 0.24
+      },
+      "preventionweb": {
+        "r": 0.302,
+        "g": 0.302,
+        "b": 0.302,
+        "a": 0.24
+      }
+    }
+  }
+]

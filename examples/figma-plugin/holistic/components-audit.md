@@ -173,3 +173,12 @@ actions, countdown and rich links. Dedicated all-five source-builder reviews
 pass; native pixels/reflow/focus/blur, timers/playback, publication and consumer
 integration remain open. See [image article scenes](news-image-article-scene.md)
 and [notification states](notification-states.md).
+
+StatsCard adds two source families/58 presets, with44 genuine item contexts and
+14 nested scenes across seven authored configurations at390/1164. Tree adds
+one family/14 finite source appearances, with real nested rows, links, selected
+and toggle states. Their all-five dedicated builder, edit and exact-repeat
+checks and independent reviews pass. Stats uppercase labels and translucent
+linked summaries use reviewed shared capabilities. Numeric glyphs and native
+raster remain open; Tree guide dash cadence is an explicit projection candidate.
+See [StatsCard](stats-card.md) and [Tree](tree.md).

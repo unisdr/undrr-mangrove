@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 75 families and 941 bounded variants, deliberately
+- Separate source draft packet: 78 families and 1013 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -109,4 +109,13 @@ provide40 genuine source scenes, with10 additional NoHeroImage scenes. Three
 notification families provide18 source presets; their seven-variant status
 clone is a separate dependency. Their source and dedicated all-five actual
 builder reviews pass, while native rendering, runtime and publication gates
-remain open. Gallery, Tree and StatsCard are separate unregistered work.
+remain open. Gallery and CodeBlock remain separate unregistered work.
+
+StatsCard adds two source families/58 presets, with44 genuine item contexts and
+14 nested scenes across seven authored configurations at390/1164. Tree adds
+one family/14 finite source appearances, with real nested rows, links, selected
+and toggle states. Their all-five dedicated builder, edit and exact-repeat
+checks and independent reviews pass. Stats uppercase labels and translucent
+linked summaries use reviewed shared capabilities. Numeric glyphs and native
+raster remain open; Tree guide dash cadence is an explicit projection candidate.
+See [StatsCard](stats-card.md) and [Tree](tree.md).

@@ -1,0 +1,19 @@
+(async()=>{
+await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+const root=document.querySelector('.mg-tree');if(!root)throw Error('Source tree absent');
+const props=['display','position','fontFamily','fontSize','fontWeight','lineHeight','color','backgroundColor','borderRadius','marginTop','marginBottom','marginLeft','marginRight','paddingTop','paddingBottom','paddingLeft','paddingRight','gap','borderLeftWidth','borderLeftStyle','borderLeftColor','textDecorationLine','textDecorationThickness','textUnderlineOffset','transform','width','height','opacity'];
+const rec=n=>({tag:n.tagName,className:n.className,text:n.textContent,rect:n.getBoundingClientRect().toJSON(),style:Object.fromEntries(props.map(p=>[p,getComputedStyle(n)[p]]))});
+const icons=[...root.querySelectorAll('.mg-tree__icon')];const pseudoMirrors={};
+for(const icon of icons){
+ const before=getComputedStyle(icon,'::before'),style=getComputedStyle(icon),original=icon.getBoundingClientRect().toJSON();
+ const mirror=document.createElement('span'),pseudo=document.createElement('span'),sheet=document.createElement('style');
+ mirror.dataset.treePseudoMirror='true';for(const p of style)mirror.style.setProperty(p,style.getPropertyValue(p));
+ mirror.style.position='fixed';mirror.style.left='-2000px';mirror.style.top='0px';
+ for(const p of before)pseudo.style.setProperty(p,before.getPropertyValue(p));
+ sheet.textContent='[data-tree-pseudo-mirror]::before{display:none!important;content:none!important}';document.head.appendChild(sheet);mirror.appendChild(pseudo);document.body.appendChild(mirror);
+ const m=mirror.getBoundingClientRect().toJSON(),g=pseudo.getBoundingClientRect().toJSON();
+ if(Math.abs(m.width-original.width)>.001||Math.abs(m.height-original.height)>.001)throw Error('Pseudo mirror span geometry differs');
+ pseudoMirrors[icon.closest('[data-mg-treeitem-id]').dataset.mgTreeitemId]={original,mirror:m,pseudo:g,offset:{x:g.x-m.x,y:g.y-m.y},sourceBefore:Object.fromEntries(['display','verticalAlign','width','height','lineHeight','maskImage','transform','backgroundColor'].map(p=>[p,before[p]]))};mirror.remove();sheet.remove();
+}
+return {pseudoMirrors,timestamp:new Date().toISOString(),url:location.href,viewport:{width:innerWidth,height:innerHeight},root:rec(root),items:[...root.querySelectorAll('.mg-tree__item')].map(n=>({id:n.dataset.mgTreeitemId,expanded:n.getAttribute('aria-expanded'),selected:n.getAttribute('aria-selected'),parentItem:n.parentElement.closest('.mg-tree__item')?.dataset.mgTreeitemId||null,item:rec(n),container:rec(n.querySelector(':scope > .mg-tree__label-container')),label:rec(n.querySelector(':scope > .mg-tree__label-container > .mg-tree__label')),href:n.querySelector(':scope > .mg-tree__label-container > a')?.getAttribute('href')||null,toggle:n.querySelector(':scope > .mg-tree__label-container > .mg-tree__toggle')?rec(n.querySelector(':scope > .mg-tree__label-container > .mg-tree__toggle')):null,icon:n.querySelector(':scope > .mg-tree__label-container .mg-tree__icon')?{...rec(n.querySelector(':scope > .mg-tree__label-container .mg-tree__icon')),pseudo:Object.fromEntries(['maskImage','webkitMaskImage','transform','width','height','backgroundColor'].map(p=>[p,getComputedStyle(n.querySelector(':scope > .mg-tree__label-container .mg-tree__icon'),'::before')[p]]))}:null,group:n.querySelector(':scope > .mg-tree__group')?rec(n.querySelector(':scope > .mg-tree__group')):null})),fontRequests:performance.getEntriesByType('resource').map(e=>e.name).filter(n=>/woff|ttf|otf/.test(n)),fontFaces:[...document.fonts].filter(f=>f.status==='loaded').map(f=>({family:f.family,weight:f.weight,style:f.style})),aliases:Object.fromEntries(['text','accent','border'].map(n=>['--mg-control-'+n,getComputedStyle(document.documentElement).getPropertyValue('--mg-control-'+n).trim()]))};
+})()

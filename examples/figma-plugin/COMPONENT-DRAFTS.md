@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **75 families / 941 bounded variants**.
+The current holistic packet contains **78 families / 1013 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -193,3 +193,12 @@ source presets with genuine status, action, countdown and rich URL anatomy.
 Their exact normal status-label clone is a separate dependency with seven
 variants. Behavior, native focus/blur/raster, live timers and publication stay
 open. See [notification states](holistic/notification-states.md).
+
+StatsCard adds two source families/58 presets, with44 genuine item contexts and
+14 nested scenes across seven authored configurations at390/1164. Tree adds
+one family/14 finite source appearances, with real nested rows, links, selected
+and toggle states. Their all-five dedicated builder, edit and exact-repeat
+checks and independent reviews pass. Stats uppercase labels and translucent
+linked summaries use reviewed shared capabilities. Numeric glyphs and native
+raster remain open; Tree guide dash cadence is an explicit projection candidate.
+See [StatsCard](holistic/stats-card.md) and [Tree](holistic/tree.md).

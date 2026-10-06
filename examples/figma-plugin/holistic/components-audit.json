@@ -151,6 +151,9 @@
       "news-article-initial-media",
       "news-article-scene",
       "legend",
+      "stats-card-item",
+      "stats-card",
+      "tree",
       "news-image-article-scene",
       "service-notice",
       "snackbar",
@@ -14013,8 +14016,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 75,
-    "variants": 941,
+    "families": 78,
+    "variants": 1013,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -14065,7 +14068,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "a10986a6adc5afdedac2dc786599da0eae0737a33e5268a6a6edb9824a85e595",
+    "currentPacketScriptSha256": "4f367c10acb6fbe3301ec10d919d085a38eb611428a383e299e52ab2e3630898",
     "dependencies": [
       {
         "id": "editorial-cta",
@@ -14127,6 +14130,14 @@
         "variants": 863,
         "nativeAcceptance": false,
         "delivery": "source-15394956",
+        "preserved": true
+      },
+      {
+        "revision": "237efb41",
+        "families": 75,
+        "variants": 941,
+        "nativeAcceptance": false,
+        "delivery": "not separately packaged",
         "preserved": true
       }
     ],
@@ -14242,6 +14253,22 @@
       "independentReview": "Range accepted",
       "nativeAcceptance": false,
       "scope": "Actual ServiceNotice, Snackbar severity and pointer/keyboard UserFeedback confirmation states, rich source links and separate exact status dependency. Native blur/focus/pixels, timers/actions/interaction and publication open."
+    },
+    "boundedStatsCard": {
+      "families": 2,
+      "variants": 58,
+      "sourceCases": 70,
+      "independentReview": "Notice accepted",
+      "nativeAcceptance": false,
+      "scope": "Seven authored source scenes with44 genuine item contexts, source negative decorator, exact uppercase/spacing and rich translucent link runs. Numeric TNUM/LNUM, source font/glyph/pixels, live reflow and publication open."
+    },
+    "boundedTree": {
+      "families": 1,
+      "variants": 14,
+      "sourceCases": 70,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Actual four authored stories and recorded selected/toggle/hover appearances, genuine nested editable item rows and measured pseudo masks. Guide dash projection candidate, native fonts/pixels, controller/keyboard/RTL/publication open."
     }
   }
 }
