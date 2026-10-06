@@ -1,0 +1,78 @@
+{
+  "scope": "Actual guarded ordinary full-plugin recovery Button inline section-fit diagnostic, not two untraced repeat acceptance",
+  "fileKey": "JF29fJWi9LzUHeOObGL3nB",
+  "collectionKey": "a5e74aec4da308285010a5113c4648463a5cdf5f",
+  "unpublished": true,
+  "createdNodes": 0,
+  "updatedNodes": 1285,
+  "errors": [],
+  "reviewRefresh": false,
+  "brand": "undrr",
+  "family": "button",
+  "pristineGeneratedBuildSha256": "d4831cb8e19d71c041dd4f2549a5961a56e5f3a4de271bc67a0d1477d066e5ea",
+  "traceSha256": "92c7c7180438e495c950f0e572ac1be9452282beb05dbaf8caf5f880e260c383",
+  "runtimeRestored": true,
+  "evaluatedMaxWidth": 2848,
+  "evaluatedMaxHeight": 6052,
+  "renderOverhangObserved": 0,
+  "observationCaveat": "Getter expressions observed next to original resize, not captured internal setter arguments. Captured before/after fit records are exact within this operation.",
+  "historicalSurplusOriginProven": false,
+  "productionFixApplied": false,
+  "twoUntracedOrdinaryRepeatsAccepted": false,
+  "files": [
+    {
+      "file": "actual-native-operation-report.json",
+      "source": "/tmp/mangrove-recovery-section-fit-trace-current-20261006/actual-native-operation-report.json",
+      "bytes": 394654,
+      "sha256": "9162ae1e858afbcdd189aac248fcdaa661cb5003b462abb9a04de8332bbb8685"
+    },
+    {
+      "file": "independent-actual-section-fit-verdict-tag-20261006.json",
+      "source": "/tmp/mangrove-recovery-section-fit-trace-current-20261006/independent-actual-section-fit-verdict-tag-20261006.json",
+      "bytes": 1671,
+      "sha256": "43463d4420f03c4e4b7f76526e58fc9d204842689ed6071628c72c45b3b80139"
+    },
+    {
+      "file": "independent-actual-section-fit-verdict-notice-20261006.json",
+      "source": "/tmp/mangrove-recovery-section-fit-trace-current-20261006/independent-actual-section-fit-verdict-notice-20261006.json",
+      "bytes": 1993,
+      "sha256": "8b9edd4150dbb88bead2d51aa23c68052f6d9ea000a3abfd1a45298f7edc58f1"
+    },
+    {
+      "file": "independent-prewrite-verdict-tag-20261006.json",
+      "source": "/tmp/mangrove-recovery-section-fit-trace-current-20261006/independent-prewrite-verdict-tag-20261006.json",
+      "bytes": 1459,
+      "sha256": "f9e4edbac295d4914ad7005a31f6b030acf5194e75f1d272bebf6aaa3d72c2c4"
+    },
+    {
+      "file": "root-restoration-receipt.json",
+      "source": "/tmp/mangrove-recovery-section-fit-trace-current-20261006/root-restoration-receipt.json",
+      "bytes": 293,
+      "sha256": "fadba2d4faedfcb06f1320b753bc5c1e51e5e09d407dd03fd0bda374d9ecdc4c"
+    },
+    {
+      "file": "root-install-receipt.json",
+      "source": "/tmp/mangrove-recovery-section-fit-trace-current-20261006/root-install-receipt.json",
+      "bytes": 228,
+      "sha256": "08b9e5cc96a09587c19c96919bb16372efa2871ac3c17dc9fecc0b87f4333611"
+    },
+    {
+      "file": "preparation.json",
+      "source": "/tmp/mangrove-recovery-section-fit-trace-current-20261006/preparation.json",
+      "bytes": 1179,
+      "sha256": "396191341ad6279668ce862fd1d236c819a590ab2c47a8a9202da74e31bad298"
+    },
+    {
+      "file": "prewrite-hashes.json",
+      "source": "/tmp/mangrove-recovery-section-fit-trace-current-20261006/prewrite-hashes.json",
+      "bytes": 553,
+      "sha256": "ba06de7cfe08807a39447e5102dc68b777bebd434c3a5816a4e7c5071780baf6"
+    },
+    {
+      "file": "guarded-section-fit-insertion-only.patch",
+      "source": "/tmp/mangrove-recovery-section-fit-trace-current-20261006/guarded-section-fit-insertion-only.patch",
+      "bytes": 60682,
+      "sha256": "19491b14a60779ebe67fbe50bd92647a5254c5c4e2a1908c309f426c44387d13"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "pristine-full-plugin.js": {
+    "sha256": "d4831cb8e19d71c041dd4f2549a5961a56e5f3a4de271bc67a0d1477d066e5ea",
+    "bytes": 1050741
+  },
+  "full-plugin-with-final-section-trace.js": {
+    "sha256": "92c7c7180438e495c950f0e572ac1be9452282beb05dbaf8caf5f880e260c383",
+    "bytes": 1056200
+  },
+  "mock-trace.cjs": {
+    "sha256": "4c9942d84dded07430ee8bfeab7b13072241d9ac4789b2701f8167d825499763",
+    "bytes": 5963
+  },
+  "preparation.json": {
+    "sha256": "396191341ad6279668ce862fd1d236c819a590ab2c47a8a9202da74e31bad298",
+    "bytes": 1179
+  }
+}

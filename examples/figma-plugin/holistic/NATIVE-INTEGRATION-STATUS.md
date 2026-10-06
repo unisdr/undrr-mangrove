@@ -111,7 +111,14 @@ Maintenance y `13842.4296875` to `13842.427734375`. Fresh cloud geometry matches
 the final trace. Experts independently verified the exact native float32
 propagation from the changed Examples height to Maintenance placement. This
 operation removes the old surplus; it does not demonstrate its origin. A tighter
-inline-fit trace and two ordinary exact-geometry zero-create repeats remain open.
+inline-fit trace then measured both direct-child candidates exactly: the catalogue
+produces `344 + 5676 + 32 = 6052`, while the introduction produces `328`.
+Before/after section fit records match exactly at `2848` by `6052`, with no
+observed render overhang. That second traced run also created zero nodes and
+reported zero errors; its report and independent reviews are preserved under
+[`section-fit`](assets/native-recovery-layout-trace/section-fit/provenance.json).
+Historical surplus origin and two ordinary untraced full-geometry repeats remain
+open.
 The exact pristine generated build was restored. No production fix was applied.
 The accessibility sync warning persists; general connection health remains
 unconfirmed. Recovery remains unpublished.

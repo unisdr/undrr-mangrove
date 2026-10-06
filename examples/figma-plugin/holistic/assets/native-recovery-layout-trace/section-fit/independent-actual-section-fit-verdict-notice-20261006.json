@@ -1,0 +1,69 @@
+{
+  "scope": "Read-only actual native inlinefit receipt expert analysis. No Figma calls or source edits.",
+  "reportSHA256": "9162ae1e858afbcdd189aac248fcdaa661cb5003b462abb9a04de8332bbb8685",
+  "created": 0,
+  "updated": 1285,
+  "errors": [],
+  "fit": [
+    {
+      "stage": "before-examples-section-fit",
+      "section": {
+        "id": "30:2704",
+        "type": "SECTION",
+        "x": 5956,
+        "y": 7630.42822265625,
+        "width": 2848,
+        "height": 6052
+      },
+      "evaluatedMaxWidth": 2848,
+      "evaluatedMaxHeight": 6052,
+      "allRawInputsRecomputedExact": true,
+      "childCandidates": [
+        {
+          "id": "30:5336",
+          "width": 2848,
+          "height": 6052,
+          "paintEqualsBox": true
+        },
+        {
+          "id": "30:2767",
+          "width": 964,
+          "height": 328,
+          "paintEqualsBox": true
+        }
+      ]
+    },
+    {
+      "stage": "after-examples-section-fit",
+      "section": {
+        "id": "30:2704",
+        "type": "SECTION",
+        "x": 5956,
+        "y": 7630.42822265625,
+        "width": 2848,
+        "height": 6052
+      },
+      "evaluatedMaxWidth": 2848,
+      "evaluatedMaxHeight": 6052,
+      "allRawInputsRecomputedExact": true,
+      "childCandidates": [
+        {
+          "id": "30:5336",
+          "width": 2848,
+          "height": 6052,
+          "paintEqualsBox": true
+        },
+        {
+          "id": "30:2767",
+          "width": 964,
+          "height": 328,
+          "paintEqualsBox": true
+        }
+      ]
+    }
+  ],
+  "beforeAndAfterFitIdentical": true,
+  "historicalSurplusCauseProven": false,
+  "productionFixJustified": false,
+  "interpretation": "Actual direct child bounds and exact source candidates produce2848x6052, unchanged before fit/after fit/final. Transient reversed catalogue reconciliation does recur, but this operation restores exact layout without surplus. Two pristine ordinary zero-create repeats with exact raw recorded fields remain separate."
+}
