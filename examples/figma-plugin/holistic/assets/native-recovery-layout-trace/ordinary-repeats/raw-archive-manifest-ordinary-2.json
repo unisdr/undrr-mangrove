@@ -1,0 +1,25 @@
+{
+  "scope": "Lossless external gzip archives only. Original JSON bytes retained, no JSON parsing/reserialization or source/package change. Not native repeat acceptance.",
+  "codec": {
+    "format": "gzip",
+    "level": 9,
+    "mtime": 0,
+    "headerFilename": "",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "zlibRuntime": "1.2.12",
+    "determinism": "Exact replay within recordedruntime. Differentzlib versions can produce different compressed bytes while preserving rawSHA."
+  },
+  "reports": [
+    {
+      "phase": "ordinary-2",
+      "rawPath": "/private/tmp/mangrove-recovery-ordinary-repeat-proof-20261006/ordinary-2-raw-inspection.json",
+      "rawBytes": 65065309,
+      "rawSHA256": "39c7ef5757f8dad1f180984c8d43ab91eae12a09f0c34e3391c87ef4066246d2",
+      "gzipPath": "/private/tmp/mangrove-recovery-ordinary-repeat-proof-20261006/ordinary-2-raw-inspection.json.gz",
+      "gzipBytes": 2764774,
+      "gzipSHA256": "880018a7f92742215e450ce0c087c9c989a8e977fe6a23d628a90e457b48b65c",
+      "exactDecompressedBytesVerified": true,
+      "rawOriginalRetained": true
+    }
+  ]
+}

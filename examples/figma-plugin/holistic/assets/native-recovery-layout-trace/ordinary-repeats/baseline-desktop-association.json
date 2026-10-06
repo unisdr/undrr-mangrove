@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "type": "desktop-recovery-inspection-association",
+  "nativeFileKey": null,
+  "inspectionSHA256": "76de03ee1e4bcb6455402751911363dfeb61497c9cc44d2298b58eea14d7cf1c",
+  "currentPageId": "0:1",
+  "recoveryCollectionKey": "a5e74aec4da308285010a5113c4648463a5cdf5f",
+  "recoveryCollectionId": "VariableCollectionId:3:2",
+  "visibleURL": "figma.com/design/JF29fJWi9LzUHeOObGL3nB/Mangrove-kit--Professional-checkpoint-2026-10-05-?node-id=30-2701&viewport=-11398%2C-3760%2C1&t=BabcbzIC8YVqp63y-0",
+  "beforeEvidence": {
+    "method": "documented-cua-visible-url",
+    "observedURL": "figma.com/design/JF29fJWi9LzUHeOObGL3nB/Mangrove-kit--Professional-checkpoint-2026-10-05-?node-id=30-2701&viewport=-11398%2C-3760%2C1&t=BabcbzIC8YVqp63y-0",
+    "path": "/tmp/mangrove-recovery-ordinary-repeat-proof-20261006/baseline-cua-before-save.json",
+    "sha256": "35b231e6cba52d318e0044652f8e36ffecb52661bd77d87c9a9ebb7676030a53"
+  },
+  "afterEvidence": {
+    "method": "documented-cua-visible-url",
+    "observedURL": "figma.com/design/JF29fJWi9LzUHeOObGL3nB/Mangrove-kit--Professional-checkpoint-2026-10-05-?node-id=30-2701&viewport=-11398%2C-3760%2C1&t=BabcbzIC8YVqp63y-0",
+    "path": "/tmp/mangrove-recovery-ordinary-repeat-proof-20261006/baseline-cua-after-save.json",
+    "sha256": "831a73cc35ecb33cfca2c2fdee8977bd3597aa2a7dcbc00ff58da6be400400b2"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "acceptedArchiveProposal": true,
+  "outerPinsSHA256": "48c75fc3a4ab0b81eb33ad985b9f410a1cce88c7ed2eb87bd00bb6d74ec3f11c",
+  "files": 36,
+  "bytes": 8616924,
+  "independentReplayExitCode": 0,
+  "threeRawPairsExact": true,
+  "allReportFieldsExceptTopCapturedAtExact": true,
+  "recordedNodes": 9802,
+  "historicalDigestFields": 79,
+  "historicalProjectionNodes": 9480,
+  "all195195927DecompressedBytesHashesVerified": true,
+  "readRelocationScope": "Exactly six hash-pinned documented AX receipt reads and one original digest source read. No report/association bytes replaced; native null file key remains null. Per-process readFileSync mapping only, no writes remapped.",
+  "replayDirectory": "/var/folders/3v/r1x7bt4j57n8mgdd17m1h7gc0000gn/T/mangrove-recovery-ordinary-replay-iNk2Ib",
+  "limitations": "Native source/glyph/pixel, whole-catalogue and publication gates remain open. Save URL observations associate saved reports rather than atomic capture. Old surplus cause remains unproven.",
+  "provenance35PinsExact": true
+}

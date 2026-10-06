@@ -1,0 +1,11 @@
+{
+  "kind": "documented-native-ax-excerpt",
+  "api": "cua.getApp(\"Figma\").getAXState",
+  "windowLine": "Window: \"Mangrove kit (Professional checkpoint 2026-10-05)\", App: Figma.",
+  "htmlContentUrlLines": [
+    "\t\t\t13 HTML content Mangrove kit (Professional checkpoint 2026-10-05) \u2013 Figma, URL: figma.com/design/JF29fJWi9LzUHeOObGL3nB/Mangrove-kit--Professional-checkpoint-2026-10-05-?node-id=30-2701&viewport=-11398%2C-3760%2C1&t=BabcbzIC8YVqp63y-0"
+  ],
+  "associationEligible": true,
+  "captureBoundary": "baseline-before-save",
+  "observedAt": "2026-10-06T11:29:11.379Z"
+}

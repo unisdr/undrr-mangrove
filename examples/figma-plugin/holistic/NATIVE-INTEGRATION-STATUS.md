@@ -1,7 +1,7 @@
 # Native integration status
 
-Observed on 6 October 2026. The saved source checkpoint at `7a8875c5`
-contains 109 recipe families and 1460 bounded variants. Source registration,
+Observed on 6 October 2026. The saved source checkpoint at `7ae4a12f`
+contains 118 recipe families and 1584 bounded variants. Source registration,
 browser captures and mock builds do not establish native library acceptance.
 Recipe counts are not counts of fully implemented public components.
 
@@ -94,8 +94,8 @@ remain open. No geometry tolerance or layout-settlement guarantee is claimed.
   compositions, with supported source fonts, modes, media, effects and reflow.
 - Verify ordinary rebuilds, stable identities and supported edited consumers at
   the full scope claimed, then selectively publish and restore linked consumers.
-- Diagnose ordinary recovery Button layout drift through the guarded native
-  full-plugin path. No production rounding correction is justified yet.
+- Preserve the verified ordinary recovery Button repeat evidence. The historical
+  surplus origin remains unproven; no production rounding correction is justified.
 - Verify changed text/effect-style and composite publication, human novice
   handoff and reduced maintenance merge acceptance separately.
 
@@ -117,8 +117,51 @@ Before/after section fit records match exactly at `2848` by `6052`, with no
 observed render overhang. That second traced run also created zero nodes and
 reported zero errors; its report and independent reviews are preserved under
 [`section-fit`](assets/native-recovery-layout-trace/section-fit/provenance.json).
-Historical surplus origin and two ordinary untraced full-geometry repeats remain
-open.
+Two subsequent ordinary untraced UNDRR Button-only builds used the byte-exact
+pristine plugin with review refresh off. Both created zero nodes, updated 1285
+nodes and reported zero errors. Three full saved inspections, before and after
+each build, contain 9802 unique owned nodes. Every recorded node field and the
+foundations match exactly across all three comparisons; the complete reports
+differ only in their capture timestamps. Secondary original 79-field digests
+also match, including the explicit historical invisible-instance projection.
+The raw reports preserve unavailable native file keys. Actual documented desktop
+URL observations around each save, exact collection identity and known topology
+establish the separate bounded file association. These are sequential captures,
+not atomic snapshots or proof of every possible native property. Reports,
+lossless archives and independent reviews are preserved under
+[`ordinary-repeats`](assets/native-recovery-layout-trace/ordinary-repeats/provenance.json).
+Historical surplus origin remains unproven.
 The exact pristine generated build was restored. No production fix was applied.
 The accessibility sync warning persists; general connection health remains
 unconfirmed. Recovery remains unpublished.
+
+## BookCard native application issue
+
+The isolated unpublished BookCard file has both original source variants, their
+genuine review instances, 33 roles in all five modes, two text styles and one
+effect style. Complete readonly native title and range fields show a real
+application mismatch: the unlinked title uses the linked title style, while
+the linked title has no underline despite its shared style declaring one.
+The ordinary TEXT builder unconditionally resets absent tree decoration to
+`NONE` after style application, explaining the lost underline. A narrow
+style-derived correction is under review. The plain title style identity
+mismatch remains a separate attribution gate. All-mode, edited-consumer repeat,
+render fidelity, canonical integration and publication acceptance remain open.
+A diagnostic output overflow is preserved; subsequent reads establish current
+host declarations and genuine links, not acceptance of its discarded fields.
+
+A subsequent disposable native TEXT probe applied each actual Book title style
+to a fresh node. Plain and linked style IDs remained correct after style
+application, character assignment and a microtask; the linked underline remained
+until the deliberate explicit `NONE` assignment. Both temporary nodes were
+removed, and a separate committed read found their actual IDs absent with the
+original 43-node scene retained. The recorded original scene and foundation
+SHA256 digests matched before and after. This narrows the incorrect plain title
+identity to the full-build application path rather than establishing a general
+style API failure. It does not explain that path or repair existing Book nodes.
+The exact diagnostic payloads, raw native results and independent reviews are
+preserved in the [title-style diagnostic archive](assets/native-book-title-style-diagnostic/provenance.json).
+
+The [native acceptance process](NATIVE-ACCEPTANCE-PROCESS.md) now requires applied
+source contracts before lifecycle comparisons and preserves transport failures
+as failures with complete operation journals.

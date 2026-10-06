@@ -1,0 +1,26 @@
+{
+  "acceptedFirstOrdinaryRecordedRepeat": true,
+  "scope": "Pristine full desktop Button-only operation followed by current-page full raw identity-aware inspection, not two-repeat or publication acceptance",
+  "rawSHA256": "c1ae6d165c8da4e08d2f1b7d641df00c36b06ae0b15338c26333a23dba1cbfd9",
+  "rawBytes": 65065309,
+  "recordedNodeCount": 9802,
+  "allRawNodeRecordsExactInOrder": true,
+  "allRawReportFieldsExceptCapturedAtExact": true,
+  "operation": {
+    "created": 0,
+    "updated": 1285,
+    "errors": 0,
+    "family": "button",
+    "variants": 16,
+    "reportSHA256": "d9ba63ad7771ec20fcdf184a268170a3465db7c5f09dcbc308a04f4e93e2e4d6"
+  },
+  "comparatorIndependentExitCode": 0,
+  "actualAXSaveAssociationVerified": true,
+  "nativeFileKey": null,
+  "limitations": [
+    "Native capture11:46:23 precedes AXbefore-save11:46:40/after11:47:02; actual observed URL/nativeuniqueCOL/topology associate the saved report, not atomic nativefileKey proof.",
+    "Inspection visits recorded identity-owned/inherited current-page nodes; no unowned/otherpage/fullnativeproperty claim.",
+    "First ordinary repeat only; second ordinary report/capture andsecondary79normalizeddigests still needed.",
+    "No source/nativepixels/fontbyte/canonicalpublication or historical surplus cause acceptance."
+  ]
+}

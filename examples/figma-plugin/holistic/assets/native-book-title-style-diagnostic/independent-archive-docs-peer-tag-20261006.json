@@ -1,0 +1,19 @@
+{
+  "acceptedDocsAndArchive": true,
+  "nineRawFilesExactSourceAndDestination": true,
+  "bookProvenanceSHA256": "a3e5fe46e408432311f1e98ae9f356166137cec37444a17c55487a25433bafea",
+  "docs": {
+    "examples/figma-plugin/holistic/NATIVE-ACCEPTANCE-PROCESS.md": "1fd9969c38eb07df8e4fb6d573831ace048d2ab4ded4494c530faaf3e4d42365",
+    "examples/figma-plugin/holistic/NATIVE-INTEGRATION-STATUS.md": "a0295c080d576e64573f1c63660828a2d9c74fbb9a0c1556da7b22e479c167ec"
+  },
+  "acceptedClaims": [
+    "saved118/1584 source-only separate from native acceptance",
+    "applied source contracts before lifecycle with plain/rich distinctions",
+    "all-entry font alias arrays/current-call fonts/await fences",
+    "losslessUTF8 output and complete fallback journals",
+    "explicit null nativekey desktopassociation",
+    "recovery2ordinary9802fullfields exceptcapturedAt exact, causeopen",
+    "Book4node/range style mismatch plus disposable8sampleprimitive/fresh2IDsabsent and43recordedscope only"
+  ],
+  "scope": "Doc fidelity and exact raw evidence archive; no broad native/publication/sourcepixel acceptance."
+}

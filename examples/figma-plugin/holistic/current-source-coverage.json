@@ -1,8 +1,8 @@
 {
   "status": "Current registry crosswalk; bounded source associations, no complete catalogue/native acceptance inferred",
   "auditedAtUTC": "2026-10-06T04:39:16.411306+00:00",
-  "committedSourceFamilies": 109,
-  "committedSourceVariants": 1460,
+  "committedSourceFamilies": 118,
+  "committedSourceVariants": 1584,
   "normalFamilies": 32,
   "normalVariants": 383,
   "historicalPublishedFamilies": 25,
@@ -659,8 +659,8 @@
       "label": "Full Width breakout",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["full-width-background"],
+      "committedSourceFamilyIds": ["full-width-background"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -669,8 +669,8 @@
       "label": "Container",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["layout-container"],
+      "committedSourceFamilyIds": ["layout-container"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -679,8 +679,8 @@
       "label": "Grid",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["layout-grid-specimen"],
+      "committedSourceFamilyIds": ["layout-grid-specimen"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -733,8 +733,7 @@
       "label": "Typography foundations",
       "sourceUnitKind": "foundation-system",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [
+      "committedSourceFamilyIds": [
         "semantic-heading-specimen",
         "semantic-paragraph",
         "semantic-copy-separators",
@@ -742,6 +741,7 @@
         "semantic-figcaption",
         "semantic-inline-emphasis"
       ],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -928,8 +928,8 @@
       "label": "Horizontal Rule",
       "sourceUnitKind": "foundation-primitive",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["semantic-copy-separators"],
+      "committedSourceFamilyIds": ["semantic-copy-separators"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -938,8 +938,8 @@
       "label": "Mark",
       "sourceUnitKind": "foundation-primitive",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["semantic-inline-emphasis"],
+      "committedSourceFamilyIds": ["semantic-inline-emphasis"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -948,8 +948,8 @@
       "label": "Paragraph",
       "sourceUnitKind": "foundation-primitive",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["semantic-paragraph"],
+      "committedSourceFamilyIds": ["semantic-paragraph"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -968,8 +968,8 @@
       "label": "Small text",
       "sourceUnitKind": "foundation-primitive",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["semantic-copy-separators"],
+      "committedSourceFamilyIds": ["semantic-copy-separators"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -978,8 +978,8 @@
       "label": "Heading primitive",
       "sourceUnitKind": "foundation-primitive",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["semantic-heading-specimen"],
+      "committedSourceFamilyIds": ["semantic-heading-specimen"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -988,8 +988,8 @@
       "label": "List primitives",
       "sourceUnitKind": "foundation-primitive",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["semantic-description-list"],
+      "committedSourceFamilyIds": ["semantic-description-list"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false,
       "boundedAssociationScope": "DescriptionList only; original ordered/unordered list specimens remain unsupported. Native list diagnostic is separate field evidence."
@@ -999,8 +999,8 @@
       "label": "Figcaption primitive",
       "sourceUnitKind": "foundation-primitive",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["semantic-figcaption"],
+      "committedSourceFamilyIds": ["semantic-figcaption"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -1076,7 +1076,7 @@
     }
   ],
   "remainingSourcePriority": [
-    "Saved109 bounded contexts plus staged Layout3/28 and semantic6/96 retain additional callers/native gates; staged118 combined verification terminal0; root checkpoint pending",
+    "Saved118 bounded contexts including Layout3/28 and semantic6/96 retain additional caller/native gates; combined source118 verification terminal0 and registry committed7ae4a12f",
     "Footer genuine resolved remote syndication",
     "OnThisPageNav CaptureTheme rethemeability and native masks",
     "AuthorImage native blend capability and orphan Image source disposition",
@@ -1109,11 +1109,9 @@
       "registryStaged": true
     }
   },
-  "previousCommittedRevision": "b7111336ebe69f146822943bca29824bab1804f1",
-  "registryRevisionScope": "source109 checkpoint containing this file; use Git history for its exact revision. previousCommittedRevision identifies the historical source106 registry.",
-  "registrationVerification": "Complete immutable source109 combined harness terminal exit0: deterministic109/1460 packet/full foundation and dependency preservation/actual importer premutation refusal/CLI guards. Combined scene lifecycle remains original9/28; new threecohorts have separate all-five peer-reviewed source lifecycles. Source-only, not full native catalogue accepted.",
+  "previousCommittedRevision": "7a8875c587c4d1ceb58a711f7df9a075305ec178",
+  "registryRevisionScope": "Source118 registered recipe checkpoint. previousCommittedRevision identifies the separately preserved source109 registry/delivery; this later doc correction does not regenerate either immutable artifact.",
+  "registrationVerification": "Immutable source118 complete combined harness terminal exit0: deterministic118/1584 DTO/dependency preservation, actual importer premutation refusal, original9/28 scene lifecycle and CLI output/check/overwrite/source guards. Layout3/28 and semantic6/96 dedicated all-five source peers remain separate. Required36 semantic follow-ons unsupported; no full native catalogue acceptance.",
   "registryUpdatedAtUTC": "2026-10-06",
-  "stagedSourceFamilies": 118,
-  "stagedSourceVariants": 1584,
-  "stagedRegistrationVerification": "Immutable source118 combined packet/CLI checks passed with terminal exit0; staged registration awaits root checkpoint. Dedicated Layout3/28 and semantic6/96 all-five source peers accepted. The combined scene lifecycle remains original9/28. Required36 additional semantic specimens remain unsupported."
+  "registryRevision": "7ae4a12f781640d5cef592a167f29b732313d465"
 }

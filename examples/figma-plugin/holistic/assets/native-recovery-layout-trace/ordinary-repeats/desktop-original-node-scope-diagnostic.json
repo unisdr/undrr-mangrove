@@ -1,0 +1,11 @@
+{
+  "scope": "Read-only projection diagnostic, not evidence of native skipInvisibleInstanceChildren value.",
+  "desktopOwnedNodes": 9802,
+  "nodesExcludedByInvisibleWithinInstanceAncestry": 322,
+  "projectedNodes": 9480,
+  "projectedNodeIdsHash": 3549588936,
+  "historicalSharedOnlyNodeCount": 9480,
+  "historicalNodeIdsHash": 3549588936,
+  "exactNodeIdentityDigestMatch": true,
+  "interpretation": "Full desktop capture includes322 nodes in invisible instance subtrees; projecting out exactly those records yields original9480 identity digest. This establishes recorded node-set equivalence under that projection. Runtime flag/cause is not directly recorded; source counts alone are not new nodes."
+}

@@ -1,0 +1,32 @@
+{
+  "acceptedSaveAssociation": true,
+  "rawBytes": 65065309,
+  "rawSHA256": "76de03ee1e4bcb6455402751911363dfeb61497c9cc44d2298b58eea14d7cf1c",
+  "nativeFileKey": null,
+  "nodes": 9802,
+  "association": {
+    "inspectionSHA256": "76de03ee1e4bcb6455402751911363dfeb61497c9cc44d2298b58eea14d7cf1c",
+    "associationPath": "/tmp/mangrove-recovery-ordinary-repeat-proof-20261006/baseline-desktop-association.json",
+    "visibleURL": "figma.com/design/JF29fJWi9LzUHeOObGL3nB/Mangrove-kit--Professional-checkpoint-2026-10-05-?node-id=30-2701&viewport=-11398%2C-3760%2C1&t=BabcbzIC8YVqp63y-0",
+    "beforeEvidence": {
+      "method": "documented-cua-visible-url",
+      "observedURL": "figma.com/design/JF29fJWi9LzUHeOObGL3nB/Mangrove-kit--Professional-checkpoint-2026-10-05-?node-id=30-2701&viewport=-11398%2C-3760%2C1&t=BabcbzIC8YVqp63y-0",
+      "path": "/tmp/mangrove-recovery-ordinary-repeat-proof-20261006/baseline-cua-before-save.json",
+      "sha256": "35b231e6cba52d318e0044652f8e36ffecb52661bd77d87c9a9ebb7676030a53"
+    },
+    "afterEvidence": {
+      "method": "documented-cua-visible-url",
+      "observedURL": "figma.com/design/JF29fJWi9LzUHeOObGL3nB/Mangrove-kit--Professional-checkpoint-2026-10-05-?node-id=30-2701&viewport=-11398%2C-3760%2C1&t=BabcbzIC8YVqp63y-0",
+      "path": "/tmp/mangrove-recovery-ordinary-repeat-proof-20261006/baseline-cua-after-save.json",
+      "sha256": "831a73cc35ecb33cfca2c2fdee8977bd3597aa2a7dcbc00ff58da6be400400b2"
+    },
+    "scope": "Explicit external CUA URL plus exact collection/native-ID/topology association. Native fileKey unavailable; no native fileKey guard claim."
+  },
+  "captureTimestamp": "2026-10-06T11:27:18.774Z",
+  "limitations": [
+    "AX receipts bracket save at11:29-11:30; native capturedAt11:27 is earlier. Association identifies saved report/file via exact nativeuniqueCOL/topology and observed saveURL; it is not an available nativefileKey check or atomic capture proof.",
+    "Parent asserts AX excerpt lines are verbatim actual documented tool output; no Figma call by reviewer.",
+    "Original cloud summary shared-only identity versus full desktop shared/private and traversal contexts differ. Counts9802vs9480 are distinct scopes, not demonstrated creation/deletion; exact322-ID cause requires actual membership comparison.",
+    "Self-comparison only checks loader/report schema; no ordinary repeat acceptance."
+  ]
+}

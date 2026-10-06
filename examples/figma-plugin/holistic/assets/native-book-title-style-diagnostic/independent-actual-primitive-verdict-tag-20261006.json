@@ -1,0 +1,27 @@
+{
+  "acceptedPrimitiveFieldEvidence": true,
+  "payloadBytes": 17027,
+  "payloadSHA256": "c145661831acc79e84a21c690b6b10f7f90f4b672befd33ad3159a3dab2ce47e",
+  "sampleCount": 8,
+  "plainStyleRetainedAcrossAllFourStages": true,
+  "linkedUnderlineRetainedUntilExplicitNONESetter": true,
+  "nodeAndRangeStyleDecorationChecksExact": true,
+  "sourceConcreteFontAxes": {
+    "family": "Roboto Condensed",
+    "style": "Bold",
+    "variationSettings": {
+      "wght": 700
+    }
+  },
+  "createdRemovedAndFreshAbsentIds": [
+    "17:16",
+    "17:17"
+  ],
+  "originalRecordedSceneAndFoundationDigestsEqual": true,
+  "freshSceneCount": 43,
+  "files": {
+    "actual-native-style-probe-tool.json": "d85b1e5af0a129081d21e97a1c25b29cc9aa3e5aece5be7574f31078301287ea",
+    "actual-fresh-cleanup-tool.json": "d8aa836f4b2b6093778df8f15f87ccc61b4c7b9f132854aaacefa2c15f2c6332"
+  },
+  "scope": "Disposable native setTextStyle/characters/microtask/explicitNONE primitive only. Does not explain existing Book plain style-ID mismatch or establish production source/lifecycle/pixels/publication acceptance."
+}

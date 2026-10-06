@@ -1,0 +1,12 @@
+{
+  "acceptedPrewrite": true,
+  "target": "2Q22kppvaeByI4l5lnq4pH",
+  "pageId": "0:1",
+  "payloadBytes": 17027,
+  "payloadSHA256": "c145661831acc79e84a21c690b6b10f7f90f4b672befd33ad3159a3dab2ce47e",
+  "independentMockExitCode": 0,
+  "allFiveCurrentNativeUIFamilyAliasesTypedQualifiedAndResolved": true,
+  "exactStylesBoldAndFamilyBindingValidatedBeforeFonts": true,
+  "nonselectedMCRWrongFamilyZeroCreates": true,
+  "scope": "Two disposable standalone TEXT boundary reads; no existing Book mutation/repair. Fresh committed temporary-ID absence remains required; prior15340 preparation superseded."
+}

@@ -1,0 +1,48 @@
+{
+  "acceptedTwoOrdinaryRecordedRepeats": true,
+  "scope": "Actual pristine desktop full-plugin Button16/UNDRR/review-off current-page recorded fields, assets and identity/link/mode consistency; no wholecatalogue/sourcepixel/publication acceptance",
+  "rawReports": [
+    {
+      "phase": "baseline",
+      "bytes": 65065309,
+      "sha256": "76de03ee1e4bcb6455402751911363dfeb61497c9cc44d2298b58eea14d7cf1c",
+      "capturedAt": "2026-10-06T11:27:18.774Z"
+    },
+    {
+      "phase": "ordinary-1",
+      "bytes": 65065309,
+      "sha256": "c1ae6d165c8da4e08d2f1b7d641df00c36b06ae0b15338c26333a23dba1cbfd9",
+      "capturedAt": "2026-10-06T11:46:23.137Z"
+    },
+    {
+      "phase": "ordinary-2",
+      "bytes": 65065309,
+      "sha256": "39c7ef5757f8dad1f180984c8d43ab91eae12a09f0c34e3391c87ef4066246d2",
+      "capturedAt": "2026-10-06T11:49:27.631Z"
+    }
+  ],
+  "allThreePairsAll9802FullNodeRecordsExactInOrder": true,
+  "allThreePairsEntireRawReportExceptCapturedAtExact": true,
+  "twoOrdinaryOperationReportsByteIdenticalSHA256": "d9ba63ad7771ec20fcdf184a268170a3465db7c5f09dcbc308a04f4e93e2e4d6",
+  "eachOperation": {
+    "created": 0,
+    "updated": 1285,
+    "errors": 0,
+    "buttonVariants": 16
+  },
+  "threeActualAXSaveAssociations": "Parsed exact documented Window/API/HTMLcontent recoveryURL,rawSHA/uniqueCOL UUID and known topology; nativefileKey remainsnull",
+  "secondaryOriginal79DigestPairsExact": true,
+  "secondaryProjection": {
+    "fullRecordedNodes": 9802,
+    "invisibleInstanceDescendantProjection": 9480,
+    "excludedRecordedIds": 322,
+    "causeOfHistoricalCloudScopeDifferenceNotEstablished": true
+  },
+  "allThreeGzipManifestAndDecompressedRawBytesExact": true,
+  "limitations": [
+    "SavedAXreceipts bracket saves,not atomicnativeinspection; currentreported capturedAt precedes eachsaveassociation.",
+    "Full comparison covers allrecorded identity-owned/inherited currentpage fields; unowned/otherpages/unsupportedunrecordedfields remain outside.",
+    "Original79FNV style normalization and key/renderboundsexclusions retained only as secondary check; rawfullfields primaryproof.",
+    "Historical fractional surplus cause remains unproved; no productionrounding/placementfix,canonicalreconnect/publication,sourcefontbytes/glyphpixels or maintenancehumanacceptance inferred."
+  ]
+}

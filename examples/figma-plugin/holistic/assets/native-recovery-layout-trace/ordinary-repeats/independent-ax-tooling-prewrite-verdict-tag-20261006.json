@@ -1,0 +1,22 @@
+{
+  "acceptedPreparedTooling": true,
+  "all11PinsExact": true,
+  "independentFourMocksExitCode": 0,
+  "comparator": {
+    "sha256": "77ed5241a8dc74b1f44d80f6033dae2d9c0ff31ef7b4e13df7852c13184e958b",
+    "bytes": 8298
+  },
+  "actualReferenceParserValidated": true,
+  "scope": "Prepared strict AX association and exact raw recorded-field comparator only; actual three captures/two ordinary operations pending",
+  "findings": [
+    "Adapter consumes exact documented Figma getAXState Window +single numeric HTML content URL line; note-only/otherAPI/window/key/multiplelines refuse.",
+    "Historical actual AX reference has no associationEligible flag and cannot link future inspections.",
+    "Fresh parentprovided before/after eligible AX excerpt hashes must be attached to each rawreportSHA; native fileKey remains null and no report modification occurs.",
+    "Required nonempty known topology/oneCOL UUID/foundations and precise no-tolerance geometry comparison remain."
+  ],
+  "conditions": [
+    "Each actual eligible AX excerpt must be independently checked byte-for-byte against parent documented original tool output and correct save boundary; excerpt schema alone does not prove timing/origin.",
+    "No actual association evidence has yet been accepted.",
+    "Need3actualfresh captures and2zero-create/error-free ordinary builds plus exact adjacent/baseline-repeat2 rawfields and secondary original79digests."
+  ]
+}
