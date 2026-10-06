@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "native": false,
+  "records": [
+    {
+      "kind": "equal",
+      "errors": [],
+      "differenceCount": 0,
+      "fieldExceptionCount": 0,
+      "createdNodeIds": [],
+      "mutatedNodeIds": [],
+      "fontLoads": []
+    },
+    {
+      "kind": "raw-entity-description",
+      "errors": [],
+      "differenceCount": 1,
+      "fieldExceptionCount": 0,
+      "createdNodeIds": [],
+      "mutatedNodeIds": [],
+      "fontLoads": []
+    },
+    {
+      "kind": "field-exception",
+      "errors": [],
+      "differenceCount": 1,
+      "fieldExceptionCount": 1,
+      "createdNodeIds": [],
+      "mutatedNodeIds": [],
+      "fontLoads": []
+    },
+    {
+      "kind": "nonfinite-value",
+      "errors": [],
+      "differenceCount": 5,
+      "fieldExceptionCount": 0,
+      "createdNodeIds": [],
+      "mutatedNodeIds": [],
+      "fontLoads": []
+    },
+    {
+      "kind": "late-page-object",
+      "errors": [
+        "Error: Exact captured page object changed"
+      ],
+      "differenceCount": null,
+      "fieldExceptionCount": null,
+      "createdNodeIds": [],
+      "mutatedNodeIds": [],
+      "fontLoads": []
+    },
+    {
+      "kind": "late-owner-filter",
+      "errors": [
+        "Error: Exact source staging owner fields differ"
+      ],
+      "differenceCount": null,
+      "fieldExceptionCount": null,
+      "createdNodeIds": [],
+      "mutatedNodeIds": [],
+      "fontLoads": []
+    },
+    {
+      "kind": "late-role-key",
+      "errors": [
+        "Error: Exact native variable identity differs v7"
+      ],
+      "differenceCount": null,
+      "fieldExceptionCount": null,
+      "createdNodeIds": [],
+      "mutatedNodeIds": [],
+      "fontLoads": []
+    }
+  ],
+  "scope": "Readonly fixture mechanics; actual local getter differences remain uncaptured until coordinator operation."
+}

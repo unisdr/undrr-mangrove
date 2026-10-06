@@ -1,0 +1,51 @@
+{
+  "preparedOnly": true,
+  "readonly": true,
+  "native": false,
+  "fontLoads": false,
+  "mutationMethods": false,
+  "scope": "Standalone local-UI diagnostic of complete70/350/8TEXT/1EFFECT getters with raw expected and actual fields, explicit undefined/nonfinite/symbol values and getter exceptions, exact ownership/PAGE guards. No raw value/style equality admission or baseline adoption. Initial refused native candidate stays preserved.",
+  "tests": {
+    "readonlyRawExactEntityDifference": 0,
+    "nativeGetterExceptionCapture": 0,
+    "nonfiniteLosslessDiagnosticMarker": 0,
+    "latePageOwnerRoleIdentity": 0
+  },
+  "files": [
+    {
+      "path": "manifest.json",
+      "bytes": 341,
+      "sha256": "1a9b70a425597479742c3d8e0ba72f7bf468232ecedf8e762d6f5e3a233c8f05"
+    },
+    {
+      "path": "code.js",
+      "bytes": 63917,
+      "sha256": "0ec07bb3805bf511934a4cb9e1b626a35da7787c9d73c308801a73d885aa3eda"
+    },
+    {
+      "path": "ui.html",
+      "bytes": 1369,
+      "sha256": "0c9da903de403c48a371692250841c0c5f933dee234a2fbfe3dd2cfd4ce0e9ec"
+    },
+    {
+      "path": "target-config-pinned.json",
+      "bytes": 88118,
+      "sha256": "b766005d7e7c3a65d9a5eb72eb770797cac7feb20835ee3b8054d7b321ed438b"
+    },
+    {
+      "path": "diagnostic-runtime.js",
+      "bytes": 8216,
+      "sha256": "3c6a29095f586d81af3f61d78e25d4ec7c230a1670578a9b38d87665bdec4f65"
+    },
+    {
+      "path": "mock-diagnostic.cjs",
+      "bytes": 4401,
+      "sha256": "24d403ac9046f3d7cf5ee9c73a675f6cd48b39f1d1c69cb6aa685c6e71a8f3a3"
+    },
+    {
+      "path": "offline-verdict.json",
+      "bytes": 1814,
+      "sha256": "ee07fba7c71acfc305629e8d29126c1c7bbedb711fb11f3ed32f45557a082bcc"
+    }
+  ]
+}

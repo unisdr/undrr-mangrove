@@ -1,0 +1,122 @@
+{
+  "scope": "First full native Horizontal attempt refused before construction, followed by complete readonly local/cloud raw getter diagnostic. No baseline adoption or native component acceptance.",
+  "fileKey": "uEoniqMXfDJ0vcGrnPKWp3",
+  "nativeFileKey": null,
+  "readonlyReportBytes": 79363,
+  "readonlyReportSHA256": "1b9b880c85a7ad488669ce46520cb353cfb94f051ba60182eb79551cfa989af1",
+  "sourceDocument": "../native-horizontal-foundations/foundation-import/source-document.json",
+  "sourceDocumentSHA256": "6685f5dcb969745ed60824651f4be6cdc5b8cd9c0f1f0ef61de127305ccc8251",
+  "firstAttemptNoFontsOrMutationAttempts": true,
+  "readonlyActualCounts": {
+    "variables": 70,
+    "modeValues": 350,
+    "textStyles": 8,
+    "effectStyles": 1
+  },
+  "rawDifferences": {
+    "decodedDescriptions": 3,
+    "undefinedLocalFontVariationSettings": 3
+  },
+  "allOtherRecordedFieldsExact": true,
+  "atomicSnapshot": false,
+  "sourceFontEquivalence": false,
+  "baselineAdopted": false,
+  "publication": false,
+  "files": [
+    {
+      "path": "first-production-attempt/actual-first-refusal-report.json",
+      "bytes": 717,
+      "sha256": "6ae910470090a0c68f2c54550af421286e2cff9742c36173e17674197352e07a"
+    },
+    {
+      "path": "first-production-attempt/code.js",
+      "bytes": 305305,
+      "sha256": "1a5cc3a12ad72623ff0abbcbfb7fd8b0a4ad9e56884b0355daa739a2b41a0a94"
+    },
+    {
+      "path": "first-production-attempt/configuration-receipt.json",
+      "bytes": 1492,
+      "sha256": "500e8eed559793878ca19fa2c829586154804b7585e6b5ef98754cac6ebf44d4"
+    },
+    {
+      "path": "first-production-attempt/manifest.json",
+      "bytes": 314,
+      "sha256": "fa1b82d13887cb658193d3121a6f52defe68c99e0c523e23b0229cb63a07c883"
+    },
+    {
+      "path": "first-production-attempt/target-config.json",
+      "bytes": 88117,
+      "sha256": "17dabf3a55c425b1c706e83426d496de60325baf0a8404cbc0c8b4036e07dded"
+    },
+    {
+      "path": "first-production-attempt/ui.html",
+      "bytes": 2337,
+      "sha256": "c9b4ef1b3096a611ec53155eb4eaf5c84a5adaf580c45d21ea82a27d81cf8b89"
+    },
+    {
+      "path": "readonly/actual-native-readonly-report.json",
+      "bytes": 79363,
+      "sha256": "1b9b880c85a7ad488669ce46520cb353cfb94f051ba60182eb79551cfa989af1"
+    },
+    {
+      "path": "readonly/code.js",
+      "bytes": 63917,
+      "sha256": "0ec07bb3805bf511934a4cb9e1b626a35da7787c9d73c308801a73d885aa3eda"
+    },
+    {
+      "path": "readonly/diagnostic-runtime.js",
+      "bytes": 8216,
+      "sha256": "3c6a29095f586d81af3f61d78e25d4ec7c230a1670578a9b38d87665bdec4f65"
+    },
+    {
+      "path": "readonly/independent-actual-compare-tag.py",
+      "bytes": 6208,
+      "sha256": "7b206e602e1a8d1a1b6dc08cbb21a6cf29f9cb636ff4ecfcf607dccd23962d47"
+    },
+    {
+      "path": "readonly/independent-actual-verdict-tag-20261006.json",
+      "bytes": 27788,
+      "sha256": "1fe4a8d60b1ac067e289c639dd1b387e07e31e93dfb49189298fd5c1af24a977"
+    },
+    {
+      "path": "readonly/independent-prewrite-verdict-tag-20261006.json",
+      "bytes": 1089,
+      "sha256": "603584dfc87b490a8c046a6635eaf199c4637ccf4c79f9368da7daab3d1657ae"
+    },
+    {
+      "path": "readonly/manifest.json",
+      "bytes": 341,
+      "sha256": "1a9b70a425597479742c3d8e0ba72f7bf468232ecedf8e762d6f5e3a233c8f05"
+    },
+    {
+      "path": "readonly/offline-verdict.json",
+      "bytes": 1814,
+      "sha256": "ee07fba7c71acfc305629e8d29126c1c7bbedb711fb11f3ed32f45557a082bcc"
+    },
+    {
+      "path": "readonly/prewrite-manifest.json",
+      "bytes": 1697,
+      "sha256": "b36310d21a3174b3256db9e96820a15637bfa693bfa05b39bff132e6e929094d"
+    },
+    {
+      "path": "readonly/root-desktop-association-20261006.json",
+      "bytes": 1674,
+      "sha256": "0e5114763d6bc8b9792302a0fbbe7257993e576ed54fd8b33cd3bb54626f486d"
+    },
+    {
+      "path": "readonly/target-config-pinned.json",
+      "bytes": 88118,
+      "sha256": "b766005d7e7c3a65d9a5eb72eb770797cac7feb20835ee3b8054d7b321ed438b"
+    },
+    {
+      "path": "readonly/ui.html",
+      "bytes": 1369,
+      "sha256": "0c9da903de403c48a371692250841c0c5f933dee234a2fbfe3dd2cfd4ce0e9ec"
+    }
+  ],
+  "rootVerifierHistoricalFailure": {
+    "status": "corrected-before-acceptance",
+    "failure": "Initial Python diff recursed into a synthetic missing-key marker, so exact difference equality assertion refused. Missing-key direct difference handling corrected; raw reports and payloads unchanged.",
+    "finalReplayExitCode": 0
+  }
+}

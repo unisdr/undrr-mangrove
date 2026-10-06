@@ -1,0 +1,36 @@
+{
+  "preparedOnly": true,
+  "nativeExecution": false,
+  "solePayloadChange": "Replace one failclosed MG_LOCAL_CONFIG constant with exact reviewed actual target pins and configured:true; all renderer/adapter source unchanged.",
+  "parentManifestSHA256": "9715a9335b1023fe7c08bcf6ea9bf36d2942dec4b1e0a51f707f5a65546b7e68",
+  "parentCodeSHA256": "e9a88e987a0b186f383ad13119c4d126f6de01a404b32c72529a77777b694227",
+  "observedDesktopAssociation": {
+    "observedAtUTC": "2026-10-06T13:58:43.904864+00:00",
+    "windowTitle": "Mangrove Horizontal Card native experiment (unpublished 2026-10-06)",
+    "observedURL": "figma.com/design/uEoniqMXfDJ0vcGrnPKWp3/Mangrove-Horizontal-Card-native-experiment--unpublished-2026-10-06-?node-id=0-1&p=f&viewport=-3705%2C-101%2C0.79&t=mOAYgLU7jqAyA4aT-0",
+    "source": "Documented cua_repl getAXState before configuration",
+    "pageName": "Page 1"
+  },
+  "files": [
+    {
+      "path": "code.js",
+      "bytes": 305305,
+      "sha256": "1a5cc3a12ad72623ff0abbcbfb7fd8b0a4ad9e56884b0355daa739a2b41a0a94"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 314,
+      "sha256": "fa1b82d13887cb658193d3121a6f52defe68c99e0c523e23b0229cb63a07c883"
+    },
+    {
+      "path": "target-config.json",
+      "bytes": 88117,
+      "sha256": "17dabf3a55c425b1c706e83426d496de60325baf0a8404cbc0c8b4036e07dded"
+    },
+    {
+      "path": "ui.html",
+      "bytes": 2337,
+      "sha256": "c9b4ef1b3096a611ec53155eb4eaf5c84a5adaf580c45d21ea82a27d81cf8b89"
+    }
+  ]
+}

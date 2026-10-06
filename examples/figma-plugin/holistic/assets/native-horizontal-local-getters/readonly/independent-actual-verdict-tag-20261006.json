@@ -1,0 +1,1058 @@
+{
+  "actualReadonlyDiagnosticAccepted": true,
+  "rawBytes": 79363,
+  "rawSHA256": "1b9b880c85a7ad488669ce46520cb353cfb94f051ba60182eb79551cfa989af1",
+  "sourceDocumentSHA256": "6685f5dcb969745ed60824651f4be6cdc5b8cd9c0f1f0ef61de127305ccc8251",
+  "cloudExpectedEqualsPinnedSnapshot": true,
+  "allRawLeafDifferencesRecomputedExactly": [
+    {
+      "path": "$.variables[5][8]",
+      "expected": "UNDRR corporate blue. Also DELTA&#39;s brand blue: DELTA&#39;s own design file labels this swatch &quot;UNDRR Blue - Corporate blue&quot; and marks it Brand.\n\nCSS: --mg-color-blue-900",
+      "actual": "UNDRR corporate blue. Also DELTA's brand blue: DELTA's own design file labels this swatch \"UNDRR Blue - Corporate blue\" and marks it Brand.\n\nCSS: --mg-color-blue-900"
+    },
+    {
+      "path": "$.variables[33][8]",
+      "expected": "UNDRR Blue. DELTA&#39;s own design system labels this swatch &quot;UNDRR Blue - Corporate blue&quot; and marks it Brand. 54 uses in DELTA&#39;s code, 1551 fills and 1645 strokes in its Figma file. It is rgb(0 79 145), identical to Mangrove&#39;s --mg-color-blue-900: DELTA&#39;s brand blue is UNDRR&#39;s.\n\nOnly defined by: delta, irp, preventionweb.",
+      "actual": "UNDRR Blue. DELTA's own design system labels this swatch \"UNDRR Blue - Corporate blue\" and marks it Brand. 54 uses in DELTA's code, 1551 fills and 1645 strokes in its Figma file. It is rgb(0 79 145), identical to Mangrove's --mg-color-blue-900: DELTA's brand blue is UNDRR's.\n\nOnly defined by: delta, irp, preventionweb."
+    },
+    {
+      "path": "$.variables[34][8]",
+      "expected": "Hover/active partner of the brand blue, 9 uses in DELTA. Note it is LIGHTER than the base colour, unlike Mangrove&#39;s convention of darkening on hover. That is DELTA&#39;s actual behaviour, not an error.\n\nOnly defined by: delta.",
+      "actual": "Hover/active partner of the brand blue, 9 uses in DELTA. Note it is LIGHTER than the base colour, unlike Mangrove's convention of darkening on hover. That is DELTA's actual behaviour, not an error.\n\nOnly defined by: delta."
+    },
+    {
+      "path": "$.textStyles[4][4].variationSettings",
+      "expected": {
+        "wght": 700
+      },
+      "actual": {
+        "diagnosticFieldUndefined": true
+      }
+    },
+    {
+      "path": "$.textStyles[5][4].variationSettings",
+      "expected": {
+        "wght": 700
+      },
+      "actual": {
+        "diagnosticFieldUndefined": true
+      }
+    },
+    {
+      "path": "$.textStyles[7][4].variationSettings",
+      "expected": {
+        "wght": 700
+      },
+      "actual": {
+        "diagnosticFieldUndefined": true
+      }
+    }
+  ],
+  "allOtherCapturedCloudLocalFieldsExact": true,
+  "sourceRoleCount": 70,
+  "sourceAllModeValueCount": 350,
+  "exactLiteralProfiles": 205,
+  "exactFloat32Profiles": 80,
+  "exactAliasTargetUUIDProfiles": 65,
+  "declaredSourceStyleFieldsCompared": {
+    "text": 8,
+    "effect": 1
+  },
+  "sourceDescriptionsAll70ExactLocally": true,
+  "sourceOwnTEXTMetadataNotAcceptedByStyleRead": [
+    {
+      "sourceStyleId": "component.editorial-cta.label",
+      "field": "textDecorationOffset",
+      "source": {
+        "unit": "AUTO"
+      },
+      "scope": "Own TEXT/range metadata; no native TextStyle offset getter claimed."
+    },
+    {
+      "sourceStyleId": "component.editorial-cta.label-hover",
+      "field": "textDecorationOffset",
+      "source": {
+        "unit": "PERCENT",
+        "value": 20
+      },
+      "scope": "Own TEXT/range metadata; no native TextStyle offset getter claimed."
+    },
+    {
+      "sourceStyleId": "component.editorial-cta.label-focus",
+      "field": "textDecorationOffset",
+      "source": {
+        "unit": "AUTO"
+      },
+      "scope": "Own TEXT/range metadata; no native TextStyle offset getter claimed."
+    },
+    {
+      "sourceStyleId": "component.editorial-cta.badge",
+      "field": "textDecorationOffset",
+      "source": {
+        "unit": "AUTO"
+      },
+      "scope": "Own TEXT/range metadata; no native TextStyle offset getter claimed."
+    }
+  ],
+  "numericFloat32Observations": [
+    {
+      "path": "color.neutral-800/undrr.r",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/undrr.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/undrr.b",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/delta.r",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/delta.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/delta.b",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/irp.r",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/irp.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/irp.b",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/mcr.r",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/mcr.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/mcr.b",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/preventionweb.r",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/preventionweb.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.neutral-800/preventionweb.b",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "color.red-800/undrr.r",
+      "source": 0.7804,
+      "actual": 0.7803999781608582
+    },
+    {
+      "path": "color.red-800/undrr.g",
+      "source": 0.1333,
+      "actual": 0.13330000638961792
+    },
+    {
+      "path": "color.red-800/undrr.b",
+      "source": 0.2118,
+      "actual": 0.2117999941110611
+    },
+    {
+      "path": "color.red-800/delta.r",
+      "source": 0.7804,
+      "actual": 0.7803999781608582
+    },
+    {
+      "path": "color.red-800/delta.g",
+      "source": 0.1333,
+      "actual": 0.13330000638961792
+    },
+    {
+      "path": "color.red-800/delta.b",
+      "source": 0.2118,
+      "actual": 0.2117999941110611
+    },
+    {
+      "path": "color.red-800/irp.r",
+      "source": 0.7804,
+      "actual": 0.7803999781608582
+    },
+    {
+      "path": "color.red-800/irp.g",
+      "source": 0.1333,
+      "actual": 0.13330000638961792
+    },
+    {
+      "path": "color.red-800/irp.b",
+      "source": 0.2118,
+      "actual": 0.2117999941110611
+    },
+    {
+      "path": "color.red-800/mcr.r",
+      "source": 0.7804,
+      "actual": 0.7803999781608582
+    },
+    {
+      "path": "color.red-800/mcr.g",
+      "source": 0.1333,
+      "actual": 0.13330000638961792
+    },
+    {
+      "path": "color.red-800/mcr.b",
+      "source": 0.2118,
+      "actual": 0.2117999941110611
+    },
+    {
+      "path": "color.red-800/preventionweb.r",
+      "source": 0.7804,
+      "actual": 0.7803999781608582
+    },
+    {
+      "path": "color.red-800/preventionweb.g",
+      "source": 0.1333,
+      "actual": 0.13330000638961792
+    },
+    {
+      "path": "color.red-800/preventionweb.b",
+      "source": 0.2118,
+      "actual": 0.2117999941110611
+    },
+    {
+      "path": "color.gold-800/undrr.r",
+      "source": 0.5255,
+      "actual": 0.5254999995231628
+    },
+    {
+      "path": "color.gold-800/undrr.g",
+      "source": 0.3843,
+      "actual": 0.38429999351501465
+    },
+    {
+      "path": "color.gold-800/delta.r",
+      "source": 0.5255,
+      "actual": 0.5254999995231628
+    },
+    {
+      "path": "color.gold-800/delta.g",
+      "source": 0.3843,
+      "actual": 0.38429999351501465
+    },
+    {
+      "path": "color.gold-800/irp.r",
+      "source": 0.5255,
+      "actual": 0.5254999995231628
+    },
+    {
+      "path": "color.gold-800/irp.g",
+      "source": 0.3843,
+      "actual": 0.38429999351501465
+    },
+    {
+      "path": "color.gold-800/mcr.r",
+      "source": 0.5255,
+      "actual": 0.5254999995231628
+    },
+    {
+      "path": "color.gold-800/mcr.g",
+      "source": 0.3843,
+      "actual": 0.38429999351501465
+    },
+    {
+      "path": "color.gold-800/preventionweb.r",
+      "source": 0.5255,
+      "actual": 0.5254999995231628
+    },
+    {
+      "path": "color.gold-800/preventionweb.g",
+      "source": 0.3843,
+      "actual": 0.38429999351501465
+    },
+    {
+      "path": "color.blue-900/undrr.g",
+      "source": 0.3098,
+      "actual": 0.30979999899864197
+    },
+    {
+      "path": "color.blue-900/undrr.b",
+      "source": 0.5686,
+      "actual": 0.5685999989509583
+    },
+    {
+      "path": "color.blue-900/delta.g",
+      "source": 0.3098,
+      "actual": 0.30979999899864197
+    },
+    {
+      "path": "color.blue-900/delta.b",
+      "source": 0.5686,
+      "actual": 0.5685999989509583
+    },
+    {
+      "path": "color.blue-900/irp.g",
+      "source": 0.3098,
+      "actual": 0.30979999899864197
+    },
+    {
+      "path": "color.blue-900/irp.b",
+      "source": 0.5686,
+      "actual": 0.5685999989509583
+    },
+    {
+      "path": "color.blue-900/mcr.g",
+      "source": 0.3098,
+      "actual": 0.30979999899864197
+    },
+    {
+      "path": "color.blue-900/mcr.b",
+      "source": 0.5686,
+      "actual": 0.5685999989509583
+    },
+    {
+      "path": "color.blue-900/preventionweb.g",
+      "source": 0.3098,
+      "actual": 0.30979999899864197
+    },
+    {
+      "path": "color.blue-900/preventionweb.b",
+      "source": 0.5686,
+      "actual": 0.5685999989509583
+    },
+    {
+      "path": "color.blue-700/undrr.r",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "color.blue-700/undrr.g",
+      "source": 0.4471,
+      "actual": 0.4471000134944916
+    },
+    {
+      "path": "color.blue-700/undrr.b",
+      "source": 0.6549,
+      "actual": 0.6549000144004822
+    },
+    {
+      "path": "color.blue-700/delta.r",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "color.blue-700/delta.g",
+      "source": 0.4471,
+      "actual": 0.4471000134944916
+    },
+    {
+      "path": "color.blue-700/delta.b",
+      "source": 0.6549,
+      "actual": 0.6549000144004822
+    },
+    {
+      "path": "color.blue-700/irp.r",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "color.blue-700/irp.g",
+      "source": 0.4471,
+      "actual": 0.4471000134944916
+    },
+    {
+      "path": "color.blue-700/irp.b",
+      "source": 0.6549,
+      "actual": 0.6549000144004822
+    },
+    {
+      "path": "color.blue-700/mcr.r",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "color.blue-700/mcr.g",
+      "source": 0.4471,
+      "actual": 0.4471000134944916
+    },
+    {
+      "path": "color.blue-700/mcr.b",
+      "source": 0.6549,
+      "actual": 0.6549000144004822
+    },
+    {
+      "path": "color.blue-700/preventionweb.r",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "color.blue-700/preventionweb.g",
+      "source": 0.4471,
+      "actual": 0.4471000134944916
+    },
+    {
+      "path": "color.blue-700/preventionweb.b",
+      "source": 0.6549,
+      "actual": 0.6549000144004822
+    },
+    {
+      "path": "brand.primary/undrr.g",
+      "source": 0.3098,
+      "actual": 0.30979999899864197
+    },
+    {
+      "path": "brand.primary/undrr.b",
+      "source": 0.5686,
+      "actual": 0.5685999989509583
+    },
+    {
+      "path": "brand.primary/delta.g",
+      "source": 0.3098,
+      "actual": 0.30979999899864197
+    },
+    {
+      "path": "brand.primary/delta.b",
+      "source": 0.5686,
+      "actual": 0.5685999989509583
+    },
+    {
+      "path": "brand.primary/irp.r",
+      "source": 0.0588,
+      "actual": 0.058800000697374344
+    },
+    {
+      "path": "brand.primary/irp.g",
+      "source": 0.4706,
+      "actual": 0.4706000089645386
+    },
+    {
+      "path": "brand.primary/irp.b",
+      "source": 0.749,
+      "actual": 0.7490000128746033
+    },
+    {
+      "path": "brand.primary/mcr.g",
+      "source": 0.3098,
+      "actual": 0.30979999899864197
+    },
+    {
+      "path": "brand.primary/mcr.b",
+      "source": 0.5686,
+      "actual": 0.5685999989509583
+    },
+    {
+      "path": "brand.primary/preventionweb.r",
+      "source": 0.0392,
+      "actual": 0.03920000046491623
+    },
+    {
+      "path": "brand.primary/preventionweb.g",
+      "source": 0.4118,
+      "actual": 0.41179999709129333
+    },
+    {
+      "path": "brand.primary/preventionweb.b",
+      "source": 0.4118,
+      "actual": 0.41179999709129333
+    },
+    {
+      "path": "brand.primary-800/undrr.r",
+      "source": 0.0627,
+      "actual": 0.06270000338554382
+    },
+    {
+      "path": "brand.primary-800/undrr.g",
+      "source": 0.4235,
+      "actual": 0.4235000014305115
+    },
+    {
+      "path": "brand.primary-800/undrr.b",
+      "source": 0.7216,
+      "actual": 0.7215999960899353
+    },
+    {
+      "path": "brand.primary-800/delta.r",
+      "source": 0.0627,
+      "actual": 0.06270000338554382
+    },
+    {
+      "path": "brand.primary-800/delta.g",
+      "source": 0.4235,
+      "actual": 0.4235000014305115
+    },
+    {
+      "path": "brand.primary-800/delta.b",
+      "source": 0.7216,
+      "actual": 0.7215999960899353
+    },
+    {
+      "path": "brand.primary-800/irp.r",
+      "source": 0.0627,
+      "actual": 0.06270000338554382
+    },
+    {
+      "path": "brand.primary-800/irp.g",
+      "source": 0.4235,
+      "actual": 0.4235000014305115
+    },
+    {
+      "path": "brand.primary-800/irp.b",
+      "source": 0.7216,
+      "actual": 0.7215999960899353
+    },
+    {
+      "path": "brand.primary-800/mcr.r",
+      "source": 0.0627,
+      "actual": 0.06270000338554382
+    },
+    {
+      "path": "brand.primary-800/mcr.g",
+      "source": 0.4235,
+      "actual": 0.4235000014305115
+    },
+    {
+      "path": "brand.primary-800/mcr.b",
+      "source": 0.7216,
+      "actual": 0.7215999960899353
+    },
+    {
+      "path": "brand.primary-800/preventionweb.r",
+      "source": 0.0627,
+      "actual": 0.06270000338554382
+    },
+    {
+      "path": "brand.primary-800/preventionweb.g",
+      "source": 0.4235,
+      "actual": 0.4235000014305115
+    },
+    {
+      "path": "brand.primary-800/preventionweb.b",
+      "source": 0.7216,
+      "actual": 0.7215999960899353
+    },
+    {
+      "path": "brand.card-surface/undrr.r",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/undrr.g",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/undrr.b",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/delta.r",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/delta.g",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/delta.b",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/irp.r",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/irp.g",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/irp.b",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/mcr.r",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/mcr.g",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/mcr.b",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/preventionweb.r",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/preventionweb.g",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.card-surface/preventionweb.b",
+      "source": 0.949,
+      "actual": 0.9490000009536743
+    },
+    {
+      "path": "brand.purple/undrr.r",
+      "source": 0.349,
+      "actual": 0.3490000069141388
+    },
+    {
+      "path": "brand.purple/undrr.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "brand.purple/undrr.b",
+      "source": 0.3804,
+      "actual": 0.38040000200271606
+    },
+    {
+      "path": "brand.purple/delta.r",
+      "source": 0.349,
+      "actual": 0.3490000069141388
+    },
+    {
+      "path": "brand.purple/delta.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "brand.purple/delta.b",
+      "source": 0.3804,
+      "actual": 0.38040000200271606
+    },
+    {
+      "path": "brand.purple/irp.r",
+      "source": 0.349,
+      "actual": 0.3490000069141388
+    },
+    {
+      "path": "brand.purple/irp.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "brand.purple/irp.b",
+      "source": 0.3804,
+      "actual": 0.38040000200271606
+    },
+    {
+      "path": "brand.purple/mcr.r",
+      "source": 0.349,
+      "actual": 0.3490000069141388
+    },
+    {
+      "path": "brand.purple/mcr.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "brand.purple/mcr.b",
+      "source": 0.3804,
+      "actual": 0.38040000200271606
+    },
+    {
+      "path": "brand.purple/preventionweb.r",
+      "source": 0.349,
+      "actual": 0.3490000069141388
+    },
+    {
+      "path": "brand.purple/preventionweb.g",
+      "source": 0.102,
+      "actual": 0.10199999809265137
+    },
+    {
+      "path": "brand.purple/preventionweb.b",
+      "source": 0.3804,
+      "actual": 0.38040000200271606
+    },
+    {
+      "path": "effect-color.shadow.raised/undrr.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/undrr.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/undrr.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/undrr.a",
+      "source": 0.24,
+      "actual": 0.23999999463558197
+    },
+    {
+      "path": "effect-color.shadow.raised/delta.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/delta.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/delta.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/delta.a",
+      "source": 0.24,
+      "actual": 0.23999999463558197
+    },
+    {
+      "path": "effect-color.shadow.raised/irp.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/irp.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/irp.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/irp.a",
+      "source": 0.24,
+      "actual": 0.23999999463558197
+    },
+    {
+      "path": "effect-color.shadow.raised/mcr.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/mcr.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/mcr.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/mcr.a",
+      "source": 0.24,
+      "actual": 0.23999999463558197
+    },
+    {
+      "path": "effect-color.shadow.raised/preventionweb.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/preventionweb.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/preventionweb.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "effect-color.shadow.raised/preventionweb.a",
+      "source": 0.24,
+      "actual": 0.23999999463558197
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-inline-start/undrr",
+      "source": 0.54,
+      "actual": 0.5400000214576721
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-inline-start/delta",
+      "source": 0.54,
+      "actual": 0.5400000214576721
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-inline-start/irp",
+      "source": 0.54,
+      "actual": 0.5400000214576721
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-inline-start/mcr",
+      "source": 0.54,
+      "actual": 0.5400000214576721
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-inline-start/preventionweb",
+      "source": 0.54,
+      "actual": 0.5400000214576721
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-block-end/undrr",
+      "source": 1.08,
+      "actual": 1.0800000429153442
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-block-end/delta",
+      "source": 1.08,
+      "actual": 1.0800000429153442
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-block-end/irp",
+      "source": 1.08,
+      "actual": 1.0800000429153442
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-block-end/mcr",
+      "source": 1.08,
+      "actual": 1.0800000429153442
+    },
+    {
+      "path": "component.editorial-cta.badge-optical-block-end/preventionweb",
+      "source": 1.08,
+      "actual": 1.0800000429153442
+    },
+    {
+      "path": "component.card-content.book-border/undrr.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/undrr.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/undrr.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/undrr.a",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "component.card-content.book-border/delta.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/delta.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/delta.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/delta.a",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "component.card-content.book-border/irp.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/irp.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/irp.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/irp.a",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "component.card-content.book-border/mcr.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/mcr.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/mcr.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/mcr.a",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "component.card-content.book-border/preventionweb.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/preventionweb.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/preventionweb.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "component.card-content.book-border/preventionweb.a",
+      "source": 0.2,
+      "actual": 0.20000000298023224
+    },
+    {
+      "path": "component.card-content.caret-slot-23/undrr",
+      "source": 13.799999999999999,
+      "actual": 13.800000190734863
+    },
+    {
+      "path": "component.card-content.caret-slot-23/delta",
+      "source": 13.799999999999999,
+      "actual": 13.800000190734863
+    },
+    {
+      "path": "component.card-content.caret-slot-23/irp",
+      "source": 13.799999999999999,
+      "actual": 13.800000190734863
+    },
+    {
+      "path": "component.card-content.caret-slot-23/mcr",
+      "source": 13.799999999999999,
+      "actual": 13.800000190734863
+    },
+    {
+      "path": "component.card-content.caret-slot-23/preventionweb",
+      "source": 13.799999999999999,
+      "actual": 13.800000190734863
+    },
+    {
+      "path": "component.card-content.cover-box-height-160-false/undrr",
+      "source": 212.66666666666666,
+      "actual": 212.6666717529297
+    },
+    {
+      "path": "component.card-content.cover-box-height-160-false/delta",
+      "source": 212.66666666666666,
+      "actual": 212.6666717529297
+    },
+    {
+      "path": "component.card-content.cover-box-height-160-false/irp",
+      "source": 212.66666666666666,
+      "actual": 212.6666717529297
+    },
+    {
+      "path": "component.card-content.cover-box-height-160-false/mcr",
+      "source": 212.66666666666666,
+      "actual": 212.6666717529297
+    },
+    {
+      "path": "component.card-content.cover-box-height-160-false/preventionweb",
+      "source": 212.66666666666666,
+      "actual": 212.6666717529297
+    },
+    {
+      "path": "component.card-content.cover-ink-height-160/undrr",
+      "source": 210.66666666666666,
+      "actual": 210.6666717529297
+    },
+    {
+      "path": "component.card-content.cover-ink-height-160/delta",
+      "source": 210.66666666666666,
+      "actual": 210.6666717529297
+    },
+    {
+      "path": "component.card-content.cover-ink-height-160/irp",
+      "source": 210.66666666666666,
+      "actual": 210.6666717529297
+    },
+    {
+      "path": "component.card-content.cover-ink-height-160/mcr",
+      "source": 210.66666666666666,
+      "actual": 210.6666717529297
+    },
+    {
+      "path": "component.card-content.cover-ink-height-160/preventionweb",
+      "source": 210.66666666666666,
+      "actual": 210.6666717529297
+    },
+    {
+      "path": "shadow.raised/effect.color.r",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "shadow.raised/effect.color.g",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "shadow.raised/effect.color.b",
+      "source": 0.302,
+      "actual": 0.3019999861717224
+    },
+    {
+      "path": "shadow.raised/effect.color.a",
+      "source": 0.24,
+      "actual": 0.23999999463558197
+    }
+  ],
+  "writes": [],
+  "fontsLoaded": [],
+  "nativeFileKey": null,
+  "scope": "Readonly local getter fields and source declared foundations only. Three local descriptions equal original source while cloud snapshot escaped entities; three local fontName getters omit cloud-observed wght700 variationSettings, while exact original source family/style remain unchanged. No automatic baseline adoption, axes/font-byte equivalence, applied78TEXT, component scene, geometry, render, lifecycle or publication acceptance. Desktop external CUA association remains separately supplied by root."
+}

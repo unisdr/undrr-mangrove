@@ -1,0 +1,20 @@
+{
+  "accepted": true,
+  "freezeSHA256": "2c110f277c4363c743058d07e178dbff450067b8365093293f0851a70231b2b6",
+  "verifiedExactPaths": 23,
+  "portableReplayExitCode": 0,
+  "archiveBytesUnchangedAfterReplay": true,
+  "actualBuildReportSHA256": "4ceea233c5af4817b5a49eacff4f96a4c3ba2cb568716ea56200bb80eabc013c",
+  "actualProductionCreatedIds": 373,
+  "actualInventoryAfterIds": 374,
+  "recomputedPostFoundationDifferences": [
+    [
+      "/effectStyles/0/4/0/spread",
+      1,
+      0
+    ]
+  ],
+  "baselineAdopted": false,
+  "nativeSourceAccepted": false,
+  "scope": "Initial refusal and exact six getter differences preserved. Later actual whole31 build noerrors is accurately bounded construction evidence; only recorded postfoundation spread1to0 mismatch; applied-source/render/edits/repeats/publication remain open."
+}

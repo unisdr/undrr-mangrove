@@ -1,7 +1,8 @@
 # Native integration status
 
-Observed on 6 October 2026. The saved source checkpoint at `7ae4a12f`
-contains 118 recipe families and 1584 bounded variants. Source registration,
+Observed on 6 October 2026. The saved source checkpoint at `0980da33`
+contains 119 recipe families and 1794 bounded variants. The prior source118
+delivery at `7ae4a12f` remains preserved. Source registration,
 browser captures and mock builds do not establish native library acceptance.
 Recipe counts are not counts of fully implemented public components.
 
@@ -140,7 +141,7 @@ unconfirmed. Recovery remains unpublished.
 The separate unpublished Horizontal Card experiment imported the complete
 foundation for all eight Horizontal variants and their genuine 23-variant
 EditorialCTA dependency: 70 roles, 350 values across five modes, eight TEXT
-styles and one EFFECT style. No scene components have been built there yet.
+styles and one EFFECT style. The subsequent complete native build is recorded below.
 A corrected identity read verifies all `mgId` roles, unique native keys and
 `mgStyleId` styles. The earlier reader used the wrong `mgVariableId` key; its raw
 result is preserved as a diagnostic mistake, not a missing importer identity.
@@ -159,8 +160,56 @@ The [complete foundation archive](assets/native-horizontal-foundations/provenanc
 retains original source, payloads and receipts. Its offline replay verifies every
 pin, runs comparison negatives and recomputes the verdict in a retained temporary
 directory without changing archive bytes. This is sequential foundation evidence.
-The 78 actual applied TEXT contracts, full scene construction, all-brand rendering,
+The 78 actual applied TEXT contracts, full source scene validation, all-brand rendering,
 consumer edit/repeat lifecycle, crop fidelity and publication remain open.
+
+The complete reviewed local plugin was installed for all eight Horizontal
+variants and all 23 EditorialCTA variants. Its first attempt refused the initial
+raw foundation equality guard before production, font loads or recorded
+mutation/create attempts. The complete report retains unavailable before/after
+inventories; it is not a full unchanged-state proof by itself.
+
+A separate reviewed read-only local diagnostic captured all 70 roles, 350 mode
+values, eight TEXT styles and one EFFECT style with exact ownership checks and
+no errors, font loads or writes. Its six differences from the cloud baseline are
+three decoded descriptions and three absent local font variation settings.
+The descriptions equal the original source strings. Local Roboto Condensed Bold
+family/style values match all five source declarations, which declare no axes.
+This does not establish font, glyph or axis equivalence. Every other recorded
+foundation field matches. Original cloud evidence and the first refusal remain
+preserved in the [local getter archive](assets/native-horizontal-local-getters/README.md).
+A separately reviewed candidate used the exact actual local snapshot without
+broad decoding, axis normalization or automatic adoption. Its first complete
+native build created all eight Horizontal variants and all 23 EditorialCTA
+dependency variants, reporting 373 created IDs and no production or boundary
+errors. The recorded scene inventory contains 374 IDs including the original
+image owner. Construction alone does not establish applied source fidelity.
+The post-production foundation differs at exactly one recorded field: effect
+spread changed from 1 to 0. The original baseline remains retained; no repeat
+build or baseline adoption is accepted until this application issue is reviewed.
+Full readonly scene validation, all-brand rendering, edited consumers and exact
+repeat geometry remain open. The complete native operation report is retained
+externally with SHA256
+`4ceea233c5af4817b5a49eacff4f96a4c3ba2cb568716ea56200bb80eabc013c`.
+The native file key remains null, with documented desktop URL observations
+recorded separately. The sync warning was present and no publication occurred.
+
+## Canonical style publication preparation
+
+Fresh bounded read-only discovery records the actual Button TEXT and Raised
+EFFECT identities, 54 local TEXT styles and eight local EFFECT styles on Page0:1.
+A second guarded read records complete target fields and all five explicitly
+requested named source faces as available. Button line height is 100%, with its
+actual concrete font axes and family/size aliases retained. Raised radius is 0,
+with its exact colour alias. These reads load no fonts and change no assets.
+
+The current canonical Raised effect has spread 0, whereas the pinned source
+declares spread 1. The isolated Book foundation has recorded spread 1, and the
+current and historical importer pass the source effect through the binding API.
+An importer-wide spread-loss cause is not demonstrated. This baseline mismatch
+must be resolved separately before claiming a radius-only native change and
+restoration. Current bound-user/font closure and genuine consumer TEXT/EFFECT
+usage remain unverified; no changed-style publication is claimed.
 
 ## BookCard native application issue
 
