@@ -97,3 +97,5 @@ deliveries, backups, History and `RC2-DECISIONS.md`. GitHub organisation listing
 endpoints are suppressed; exact-number PR requests are used for review state.
 
 The historical committed source46/334 checkpoint and its immutable delivery remain preserved. The original98-row reusable-unit classification is unchanged; these current packet counts do not constitute a fresh whole-catalogue or native acceptance audit.
+
+The current registered source106 checkpoint contains106 families/1298 bounded variants. It adds independently reviewed Topic/Index8/50, Drawer1/20, Cookie3/34 and Footer1/10, with a separate source-contextual Checkbox2 dependency. Combined packet/CLI checks pass; their dedicated all-five scene lifecycles remain separate from the combined original9/28 fixture. PageHeader44, OnThisPageNav46, ImageFigure72 and Layout3/28 remain unregistered. The non-importable packet and unresolved full native capacity, font/rendering, responsive/runtime, publication and maintenance gates are unchanged.

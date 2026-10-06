@@ -1,12 +1,8 @@
 {
   "status": "Current registry crosswalk; bounded source associations, no complete catalogue/native acceptance inferred",
   "auditedAtUTC": "2026-10-06T04:39:16.411306+00:00",
-  "committedRevision": "8a99893652a177b6235e448bdcb056df61577004",
-  "committedSourceFamilies": 93,
-  "committedSourceVariants": 1184,
-  "stagedSourceFamilies": 106,
-  "stagedSourceVariants": 1298,
-  "stagedCombinedVerification": "Topic/Index8/50, Drawer1/20 with contextual Checkbox2 dependency, Cookie3/34 and Footer1/10 independently source-reviewed. Combined immutable106 harness running; not committed/native accepted.",
+  "committedSourceFamilies": 106,
+  "committedSourceVariants": 1298,
   "normalFamilies": 32,
   "normalVariants": 383,
   "historicalPublishedFamilies": 25,
@@ -390,8 +386,8 @@
       "label": "Drawer",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["drawer"],
+      "committedSourceFamilyIds": ["drawer"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -414,9 +410,10 @@
         "content-hub-route-card",
         "news-related-card",
         "scroll-hydrated-card",
-        "scroll-source-photo-card"
+        "scroll-source-photo-card",
+        "landing-topic-related-card"
       ],
-      "stagedAdditionalFamilyIds": ["landing-topic-related-card"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -435,8 +432,8 @@
       "label": "Book Card",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": ["book-card"],
-      "stagedAdditionalFamilyIds": ["landing-index-book-card"],
+      "committedSourceFamilyIds": ["book-card", "landing-index-book-card"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -455,8 +452,8 @@
       "label": "Icon Card",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": ["icon-card"],
-      "stagedAdditionalFamilyIds": ["landing-topic-icon-card"],
+      "committedSourceFamilyIds": ["icon-card", "landing-topic-icon-card"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -475,8 +472,8 @@
       "label": "Text CTA",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": ["text-cta"],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["landing-topic-soft-cta"],
+      "committedSourceFamilyIds": ["landing-topic-soft-cta"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -495,8 +492,8 @@
       "label": "Hero",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": ["hero-background", "hero-split"],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["landing-topic-hero"],
+      "committedSourceFamilyIds": ["landing-topic-hero"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -760,8 +757,8 @@
       "label": "Footer",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["footer"],
+      "committedSourceFamilyIds": ["footer"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -770,12 +767,12 @@
       "label": "Cookie Consent Banner",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [
+      "committedSourceFamilyIds": [
         "cookie-consent-toggle",
         "cookie-consent-banner",
         "cookie-consent-preferences"
       ],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -1076,7 +1073,7 @@
     }
   ],
   "remainingSourcePriority": [
-    "Combined registration verification for held Topic/Index, Drawer, Cookie and Footer source cohorts",
+    "Registered Topic/Index, Drawer, Cookie and Footer additional caller and native acceptance gates; reviewed PageHeader/OnNav/Figure/Layout registration remains separate",
     "Footer genuine resolved remote syndication",
     "Combined registration of peer-accepted PageHeader44, OnThisPageNav46 and ImageFigure72",
     "OnThisPageNav46 peer-accepted source candidate registration and CaptureTheme rethemeability",
@@ -1111,6 +1108,16 @@
       "variants": 72,
       "sourcePeerAccepted": true,
       "nativeAccepted": false
+    },
+    "layout-foundations": {
+      "families": 3,
+      "variants": 28,
+      "sourcePeerAccepted": true,
+      "nativeAccepted": false
     }
-  }
+  },
+  "previousCommittedRevision": "8a99893652a177b6235e448bdcb056df61577004",
+  "registryRevisionScope": "source106 checkpoint containing this file; use Git history for its exact revision. previousCommittedRevision identifies the historical source93 registry.",
+  "registrationVerification": "Complete immutable source106 combined harness passed: deterministic packet/full foundation and dependency preservation/importer premutation refusal/CLI guards. Combined scene lifecycle remains original9/28; new cohorts have separate all-five reviews. Source-only, not native accepted.",
+  "registryUpdatedAtUTC": "2026-10-06"
 }

@@ -12,3 +12,6 @@ examples/figma-plugin/holistic/assets/page-chrome/undrr-logo-horizontal.svg -tex
 
 # Raw unified diff evidence uses a required context marker on blank lines.
 examples/figma-plugin/holistic/assets/content-hub/generated-css-additions.diff -text whitespace=-blank-at-eol
+
+# Preserve exact HTTP status, CRLF and header terminator bytes of this evidence.
+examples/figma-plugin/holistic/assets/footer/widget-body-direct-http.headers -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol

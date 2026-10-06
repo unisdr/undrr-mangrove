@@ -1,0 +1,18 @@
+[
+  {
+    "url": "https://assets.undrr.org/cookie-banner/v1/cookieconsent.css",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "url": "https://assets.undrr.org/cookie-banner/v1/cookieconsent.umd.js",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "url": "https://assets.undrr.org/cookie-banner/v1/cookieconsent-undrr.js",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "url": "https://assets.undrr.org/cookie-banner/v1/config.json",
+    "error": "HTTP Error 403: Forbidden"
+  }
+]

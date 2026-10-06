@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 93 families and 1184 bounded variants, deliberately
+- Separate source draft packet: 106 families and 1298 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -126,7 +126,7 @@ ShowMore and Scroll add five source families with63 presets, including real phot
 
 Native capacity is a separate integration gate. The immutable source78 catalogue contains25,466 variables, exceeding Figma’s documented5,000-per-collection limit. Passing source tests do not establish a full native import. Source-proven helper reuse/allocation specialisation and deliberate collection partitioning are under independent review; no bindings or canonical assets have been changed. See [native capacity](NATIVE-CAPACITY.md).
 
-Topic/Index8/50, Drawer1/20 with an exact contextual Checkbox2 dependency, Cookie3/34 and Footer1/10 are independently source-reviewed. Their registered candidate contains106 families/1298 bounded variants; complete combined verification is running, so the committed93-family checkpoint above remains authoritative. PageHeader44 and OnThisPageNav46 are separate candidates. See [Topic/Index](landing-topic-index.md), [Drawer](drawer.md), [Cookie consent](cookie-consent.md) and [Footer](footer.md).
+Topic/Index adds eight families/50 variants, Drawer one/20, Cookie consent three/34 and Footer one/10. These independently reviewed cohorts are registered in the current source106 checkpoint, with1298 bounded variants. Drawer uses a separate two-variant contextual Checkbox dependency: the exact normal Checked/Unchecked anatomy with the source-proven neutral-900 Label paint. The normal Checkbox remains unchanged. Complete combined packet verification passes deterministic generation, exact normal foundations and dependencies, actual importer refusal before writes and CLI guards. The combined scene lifecycle remains the original nine families/28 variants; the new cohorts have separate all-five builder, supported-edit and two-repeat evidence. PageHeader44, OnThisPageNav46, ImageFigure72 and Layout3/28 remain unregistered. See [Topic/Index](landing-topic-index.md), [Drawer](drawer.md), [Cookie consent](cookie-consent.md) and [Footer](footer.md).
 
 The immutable source93 packet contains55,171 variables. A read-only fixed producer/story/category ownership proposal preserves all records across59 requested collections, each below5000 source variables. Actual stale occupancy and native collection-count feasibility remain unverified. The committed opt-in font-free native collection profile passes its separate bounded production rehearsal; advanced full-catalogue support and canonical migration remain open.
 

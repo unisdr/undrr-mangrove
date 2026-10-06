@@ -195,6 +195,31 @@ const recipes = [
     'buildPreviewAccessRecipes',
   ],
   [
+    [
+      'landing-topic-index-breadcrumb',
+      'landing-topic-hero',
+      'landing-topic-icon-card',
+      'landing-topic-related-card',
+      'landing-topic-soft-cta',
+      'landing-index-book-card',
+      'landing-topic-page',
+      'landing-index-page',
+    ],
+    './figma-landing-topic-index-recipes.cjs',
+    'buildLandingTopicIndexRecipes',
+  ],
+  ['drawer', './figma-drawer-recipes.cjs', 'buildDrawerRecipes'],
+  [
+    [
+      'cookie-consent-toggle',
+      'cookie-consent-banner',
+      'cookie-consent-preferences',
+    ],
+    './figma-cookie-consent-recipes.cjs',
+    'buildCookieConsentRecipes',
+  ],
+  ['footer', './figma-footer-recipes.cjs', 'buildFooterRecipes'],
+  [
     'gallery-html',
     './figma-gallery-html-recipes.cjs',
     'buildGalleryHtmlRecipes',
@@ -415,6 +440,25 @@ function buildDraftPacket() {
     v.id = v.id.replace(/^status-label\./, 'notification-status-label.');
   });
   sourceFamilies.set(notificationStatus.id, notificationStatus);
+  const drawerDonor = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        ROOT,
+        'examples/figma-plugin/holistic/assets/drawer/dependency-contract.json'
+      ),
+      'utf8'
+    )
+  );
+  assert.deepStrictEqual(
+    sourceFamilies.get('checkbox'),
+    drawerDonor.checkbox,
+    'Exact normal Checkbox donor required for Drawer context'
+  );
+  const drawerCheckbox =
+    require('./figma-drawer-recipes.cjs').buildDrawerCheckboxDependency({
+      root: ROOT,
+    });
+  sourceFamilies.set(drawerCheckbox.id, drawerCheckbox);
   const dependencies = new Map();
   const seen = new Set();
   const visiting = new Set();

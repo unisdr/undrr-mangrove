@@ -1,0 +1,5255 @@
+{
+  "button": {
+    "id": "button",
+    "name": "Mangrove/Button",
+    "kind": "component-set",
+    "source": {
+      "file": "stories/Components/Buttons/CtaButton/cta-button.scss",
+      "line": 24
+    },
+    "variants": [
+      {
+        "id": "button.primary.filled.default",
+        "name": "Emphasis=Primary, Treatment=Filled, State=Default",
+        "properties": {
+          "Emphasis": "Primary",
+          "Treatment": "Filled",
+          "State": "Default"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/button-background",
+          "stroke": "border-color/button-primary",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.primary.filled.hover",
+        "name": "Emphasis=Primary, Treatment=Filled, State=Hover",
+        "properties": {
+          "Emphasis": "Primary",
+          "Treatment": "Filled",
+          "State": "Hover"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/button-background--hover",
+          "stroke": "border-color/button-primary",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.primary.filled.focus",
+        "name": "Emphasis=Primary, Treatment=Filled, State=Focus",
+        "properties": {
+          "Emphasis": "Primary",
+          "Treatment": "Filled",
+          "State": "Focus"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/button-background",
+          "stroke": "border-color/button-primary",
+          "effectStyle": "focus-ring",
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.primary.filled.disabled",
+        "name": "Emphasis=Primary, Treatment=Filled, State=Disabled",
+        "properties": {
+          "Emphasis": "Primary",
+          "Treatment": "Filled",
+          "State": "Disabled"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/neutral-0",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/neutral-500",
+          "stroke": "component/color/transparent",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.primary.outline.default",
+        "name": "Emphasis=Primary, Treatment=Outline, State=Default",
+        "properties": {
+          "Emphasis": "Primary",
+          "Treatment": "Outline",
+          "State": "Default"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button-outline-primary",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": null,
+          "stroke": "color/button-outline-primary",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.primary.outline.hover",
+        "name": "Emphasis=Primary, Treatment=Outline, State=Hover",
+        "properties": {
+          "Emphasis": "Primary",
+          "Treatment": "Outline",
+          "State": "Hover"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/button-outline-primary--hover",
+          "stroke": "color/button-outline-primary",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.primary.outline.focus",
+        "name": "Emphasis=Primary, Treatment=Outline, State=Focus",
+        "properties": {
+          "Emphasis": "Primary",
+          "Treatment": "Outline",
+          "State": "Focus"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button-outline-primary",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": null,
+          "stroke": "color/button-outline-primary",
+          "effectStyle": null,
+          "focusRing": {
+            "color": "color/focus-ring",
+            "separatorColor": "color/neutral-0",
+            "offset": "focus-ring/offset",
+            "width": "focus-ring/width",
+            "radius": "radius/button",
+            "outerRadius": "focus-ring/outer-radius-button"
+          },
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.primary.outline.disabled",
+        "name": "Emphasis=Primary, Treatment=Outline, State=Disabled",
+        "properties": {
+          "Emphasis": "Primary",
+          "Treatment": "Outline",
+          "State": "Disabled"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/neutral-0",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/neutral-500",
+          "stroke": "component/color/transparent",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.secondary.filled.default",
+        "name": "Emphasis=Secondary, Treatment=Filled, State=Default",
+        "properties": {
+          "Emphasis": "Secondary",
+          "Treatment": "Filled",
+          "State": "Default"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/button-secondary-background",
+          "stroke": "border-color/button-secondary",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.secondary.filled.hover",
+        "name": "Emphasis=Secondary, Treatment=Filled, State=Hover",
+        "properties": {
+          "Emphasis": "Secondary",
+          "Treatment": "Filled",
+          "State": "Hover"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/button-secondary-background--hover",
+          "stroke": "border-color/button-secondary",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.secondary.filled.focus",
+        "name": "Emphasis=Secondary, Treatment=Filled, State=Focus",
+        "properties": {
+          "Emphasis": "Secondary",
+          "Treatment": "Filled",
+          "State": "Focus"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/button-secondary-background",
+          "stroke": "border-color/button-secondary",
+          "effectStyle": "focus-ring",
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.secondary.filled.disabled",
+        "name": "Emphasis=Secondary, Treatment=Filled, State=Disabled",
+        "properties": {
+          "Emphasis": "Secondary",
+          "Treatment": "Filled",
+          "State": "Disabled"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/neutral-0",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/neutral-500",
+          "stroke": "component/color/transparent",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.secondary.outline.default",
+        "name": "Emphasis=Secondary, Treatment=Outline, State=Default",
+        "properties": {
+          "Emphasis": "Secondary",
+          "Treatment": "Outline",
+          "State": "Default"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button-outline-secondary",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": null,
+          "stroke": "color/button-outline-secondary",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.secondary.outline.hover",
+        "name": "Emphasis=Secondary, Treatment=Outline, State=Hover",
+        "properties": {
+          "Emphasis": "Secondary",
+          "Treatment": "Outline",
+          "State": "Hover"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/button-outline-secondary--hover",
+          "stroke": "color/button-outline-secondary",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.secondary.outline.focus",
+        "name": "Emphasis=Secondary, Treatment=Outline, State=Focus",
+        "properties": {
+          "Emphasis": "Secondary",
+          "Treatment": "Outline",
+          "State": "Focus"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/button-outline-secondary",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": null,
+          "stroke": "color/button-outline-secondary",
+          "effectStyle": null,
+          "focusRing": {
+            "color": "color/focus-ring",
+            "separatorColor": "color/neutral-0",
+            "offset": "focus-ring/offset",
+            "width": "focus-ring/width",
+            "radius": "radius/button",
+            "outerRadius": "focus-ring/outer-radius-button"
+          },
+          "id": "mg-button"
+        }
+      },
+      {
+        "id": "button.secondary.outline.disabled",
+        "name": "Emphasis=Secondary, Treatment=Outline, State=Disabled",
+        "properties": {
+          "Emphasis": "Secondary",
+          "Treatment": "Outline",
+          "State": "Disabled"
+        },
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-button",
+          "layout": {
+            "mode": "HORIZONTAL",
+            "width": "HUG",
+            "height": "HUG",
+            "gap": "spacing/50",
+            "padding": {
+              "block": "padding/button/block",
+              "inline": "padding/button/inline"
+            },
+            "align": "CENTER",
+            "justify": "CENTER"
+          },
+          "strokeAlign": "INSIDE",
+          "strokesIncludedInLayout": true,
+          "children": [
+            {
+              "type": "TEXT",
+              "name": "mg-button__label",
+              "characters": "Button",
+              "textStyle": "component.button",
+              "fill": "color/neutral-0",
+              "textProperty": "Label",
+              "layout": {
+                "width": "HUG",
+                "height": "HUG"
+              },
+              "id": "mg-button/mg-button__label"
+            }
+          ],
+          "bindings": {
+            "cornerRadius": "radius/button",
+            "strokeWeight": "border-width/button"
+          },
+          "fill": "color/neutral-500",
+          "stroke": "component/color/transparent",
+          "effectStyle": null,
+          "id": "mg-button"
+        }
+      }
+    ],
+    "review": {
+      "responsiveLabel": true
+    }
+  },
+  "checkbox": {
+    "id": "checkbox",
+    "name": "Mangrove/Checkbox",
+    "kind": "component-set",
+    "source": {
+      "file": "stories/Components/Forms/Checkbox/Checkbox.jsx",
+      "line": 28
+    },
+    "description": "Source Checkbox with editable Label/Error, source checked SVG tiles and bounded English narrow presets. Checked overrides both fill and border, including invalid/disabled. Inline error follows source markup. Native visual states do not implement form semantics.",
+    "limitations": [
+      "Source block-level flex fills its container; native short presets hug occupied content. Two 240px English presets record source shrink widths, not general CSS resizing.",
+      "Source SVG tiling, clipped rounded corners and focus rings require native rendering acceptance. Browser measured exact Roboto Regular; Figma font-file equivalence, other brands and Arabic remain unverified.",
+      "No source indeterminate skin was found. Focused/Before narrow combinations, arbitrary content and group compositions remain separate work."
+    ],
+    "variants": [
+      {
+        "id": "checkbox.false.default.after.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Default",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Default, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/form-check",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.default.before.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Default",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Default, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/form-check",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.hover.after.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Hover",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Hover, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/form-check--hover",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.hover.before.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Hover",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Hover, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/form-check--hover",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.focus.after.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Focus",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Focus, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "focusRing": {
+                "color": "color/focus-ring",
+                "separatorColor": "color/neutral-0",
+                "offset": "focus-ring/offset",
+                "width": "focus-ring/width",
+                "radius": "radius/form-input",
+                "outerRadius": "component/checkbox/focus-outer-radius"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/form-check",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.focus.before.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Focus",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Focus, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "focusRing": {
+                "color": "color/focus-ring",
+                "separatorColor": "color/neutral-0",
+                "offset": "focus-ring/offset",
+                "width": "focus-ring/width",
+                "radius": "radius/form-input",
+                "outerRadius": "component/checkbox/focus-outer-radius"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/form-check",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.disabled.after.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Disabled",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Disabled, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/neutral-400",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.disabled.before.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Disabled",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Disabled, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/neutral-400",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.invalid.after.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Invalid",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Invalid, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/red-900",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.invalid.before.short",
+        "properties": {
+          "Checked": "False",
+          "State": "Invalid",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=Invalid, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/red-900",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.invalidfocus.after.short",
+        "properties": {
+          "Checked": "False",
+          "State": "InvalidFocus",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=InvalidFocus, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "focusRing": {
+                "color": "color/focus-ring",
+                "separatorColor": "color/neutral-0",
+                "offset": "focus-ring/offset",
+                "width": "focus-ring/width",
+                "radius": "radius/form-input",
+                "outerRadius": "component/checkbox/focus-outer-radius"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/red-900",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.invalidfocus.before.short",
+        "properties": {
+          "Checked": "False",
+          "State": "InvalidFocus",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=InvalidFocus, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "focusRing": {
+                "color": "color/focus-ring",
+                "separatorColor": "color/neutral-0",
+                "offset": "focus-ring/offset",
+                "width": "focus-ring/width",
+                "radius": "radius/form-input",
+                "outerRadius": "component/checkbox/focus-outer-radius"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/red-900",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.invaliddisabled.after.short",
+        "properties": {
+          "Checked": "False",
+          "State": "InvalidDisabled",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=InvalidDisabled, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/red-900",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.false.invaliddisabled.before.short",
+        "properties": {
+          "Checked": "False",
+          "State": "InvalidDisabled",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=False, State=InvalidDisabled, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": null,
+                  "stroke": "color/red-900",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.default.after.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Default",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Default, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.default.before.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Default",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Default, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.hover.after.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Hover",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Hover, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.hover.before.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Hover",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Hover, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.focus.after.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Focus",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Focus, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "focusRing": {
+                "color": "color/focus-ring",
+                "separatorColor": "color/neutral-0",
+                "offset": "focus-ring/offset",
+                "width": "focus-ring/width",
+                "radius": "radius/form-input",
+                "outerRadius": "component/checkbox/focus-outer-radius"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.focus.before.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Focus",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Focus, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "focusRing": {
+                "color": "color/focus-ring",
+                "separatorColor": "color/neutral-0",
+                "offset": "focus-ring/offset",
+                "width": "focus-ring/width",
+                "radius": "radius/form-input",
+                "outerRadius": "component/checkbox/focus-outer-radius"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.disabled.after.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Disabled",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Disabled, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.disabled.before.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Disabled",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Disabled, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.invalid.after.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Invalid",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Invalid, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.invalid.before.short",
+        "properties": {
+          "Checked": "True",
+          "State": "Invalid",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=Invalid, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.invalidfocus.after.short",
+        "properties": {
+          "Checked": "True",
+          "State": "InvalidFocus",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=InvalidFocus, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "focusRing": {
+                "color": "color/focus-ring",
+                "separatorColor": "color/neutral-0",
+                "offset": "focus-ring/offset",
+                "width": "focus-ring/width",
+                "radius": "radius/form-input",
+                "outerRadius": "component/checkbox/focus-outer-radius"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.invalidfocus.before.short",
+        "properties": {
+          "Checked": "True",
+          "State": "InvalidFocus",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=InvalidFocus, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "focusRing": {
+                "color": "color/focus-ring",
+                "separatorColor": "color/neutral-0",
+                "offset": "focus-ring/offset",
+                "width": "focus-ring/width",
+                "radius": "radius/form-input",
+                "outerRadius": "component/checkbox/focus-outer-radius"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.invaliddisabled.after.short",
+        "properties": {
+          "Checked": "True",
+          "State": "InvalidDisabled",
+          "LabelPosition": "After",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=InvalidDisabled, LabelPosition=After, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.invaliddisabled.before.short",
+        "properties": {
+          "Checked": "True",
+          "State": "InvalidDisabled",
+          "LabelPosition": "Before",
+          "Content": "Short"
+        },
+        "name": "Checked=True, State=InvalidDisabled, LabelPosition=Before, Content=Short",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": "FILL",
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/control-size",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/control-size",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 20,
+                        "height": 20
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "HUG",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.default.after.longnarrow",
+        "properties": {
+          "Checked": "True",
+          "State": "Default",
+          "LabelPosition": "After",
+          "Content": "LongNarrow"
+        },
+        "name": "Checked=True, State=Default, LabelPosition=After, Content=LongNarrow",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": 240,
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/source-narrow-default-control-width",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/source-narrow-default-control-width",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 7.140625,
+                        "height": 7.140625
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    },
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 2",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 7.140625,
+                        "height": 7.140625
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 9.140625
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 2"
+                    },
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 3",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 7.140625,
+                        "height": 7.140625
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 16.28125
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 3"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "component/checkbox/source-narrow-default-label-width",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "FILL",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": false,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "HUG",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "FILL",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      },
+      {
+        "id": "checkbox.true.invalid.after.longnarrow",
+        "properties": {
+          "Checked": "True",
+          "State": "Invalid",
+          "LabelPosition": "After",
+          "Content": "LongNarrow"
+        },
+        "name": "Checked=True, State=Invalid, LabelPosition=After, Content=LongNarrow",
+        "tree": {
+          "type": "FRAME",
+          "name": "mg-form-check",
+          "fill": null,
+          "layout": {
+            "mode": "HORIZONTAL",
+            "align": "CENTER",
+            "justify": "MIN",
+            "width": 240,
+            "height": "HUG",
+            "minHeight": "component/checkbox/minimum-row-height",
+            "gap": "spacing/0"
+          },
+          "children": [
+            {
+              "type": "FRAME",
+              "name": "Checkbox control",
+              "fill": null,
+              "layout": {
+                "mode": "VERTICAL",
+                "align": "CENTER",
+                "justify": "CENTER",
+                "width": "component/checkbox/source-narrow-invalid-control-width",
+                "height": "component/checkbox/control-size",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "cornerRadius": "radius/form-input"
+              },
+              "children": [
+                {
+                  "type": "FRAME",
+                  "name": "mg-form-check__input--checkbox",
+                  "fill": "color/form-check--checked",
+                  "stroke": "color/form-check--checked",
+                  "strokeAlign": "INSIDE",
+                  "bindings": {
+                    "strokeWeight": "component/checkbox/border-width",
+                    "cornerRadius": "radius/form-input"
+                  },
+                  "layout": {
+                    "mode": "VERTICAL",
+                    "width": "component/checkbox/source-narrow-invalid-control-width",
+                    "height": "component/checkbox/control-size",
+                    "clipsContent": true,
+                    "gap": "spacing/0"
+                  },
+                  "children": [
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 1",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 4.484375,
+                        "height": 4.484375
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 2
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 1"
+                    },
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 2",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 4.484375,
+                        "height": 4.484375
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 6.484375
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 2"
+                    },
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 3",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 4.484375,
+                        "height": 4.484375
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 10.96875
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 3"
+                    },
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 4",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 4.484375,
+                        "height": 4.484375
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 15.453125
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 4"
+                    },
+                    {
+                      "type": "SVG",
+                      "name": "Source checkmark tile 5",
+                      "svg": {
+                        "assetId": "form-check-checkbox-checkmark",
+                        "markup": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8l3 3 6-6'/></svg>"
+                      },
+                      "layout": {
+                        "width": 4.484375,
+                        "height": 4.484375
+                      },
+                      "position": {
+                        "x": 2,
+                        "y": 19.9375
+                      },
+                      "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox/Source checkmark tile 5"
+                    }
+                  ],
+                  "id": "mg-form-check/Checkbox control/mg-form-check__input--checkbox"
+                }
+              ],
+              "id": "mg-form-check/Checkbox control"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-check__label",
+              "fill": null,
+              "visibilityProperty": "Show label",
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "component/checkbox/source-narrow-invalid-label-width",
+                "height": "HUG",
+                "padding": {
+                  "block": "spacing/0",
+                  "inline": "component/checkbox/label-inline-padding"
+                },
+                "gap": "spacing/0"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Label",
+                  "textProperty": "Label",
+                  "characters": "Option A",
+                  "textStyle": "component.body",
+                  "fill": "color/text",
+                  "layout": {
+                    "width": "FILL",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-check__label/Label"
+                }
+              ],
+              "id": "mg-form-check/mg-form-check__label"
+            },
+            {
+              "type": "FRAME",
+              "name": "mg-form-error",
+              "fill": null,
+              "visible": true,
+              "layout": {
+                "mode": "VERTICAL",
+                "width": "component/checkbox/source-narrow-invalid-error-width",
+                "height": "HUG",
+                "gap": "spacing/0"
+              },
+              "bindings": {
+                "paddingTop": "spacing/25"
+              },
+              "children": [
+                {
+                  "type": "TEXT",
+                  "name": "Error",
+                  "textProperty": "Error",
+                  "characters": "Choose an option",
+                  "textStyle": "component.error",
+                  "fill": "color/red-900",
+                  "visibilityProperty": "Show error",
+                  "layout": {
+                    "width": "FILL",
+                    "height": "HUG"
+                  },
+                  "id": "mg-form-check/mg-form-error/Error"
+                }
+              ],
+              "id": "mg-form-check/mg-form-error"
+            }
+          ],
+          "id": "mg-form-check"
+        }
+      }
+    ],
+    "review": {
+      "genericLabels": false,
+      "specimens": [
+        {
+          "id": "source-long-narrow-default",
+          "name": "Source long default Checkbox in 240px",
+          "variant": {
+            "Checked": "True",
+            "State": "Default",
+            "LabelPosition": "After",
+            "Content": "LongNarrow"
+          },
+          "width": 240,
+          "instanceWidth": 240,
+          "properties": {
+            "Label": "Receive early warnings and detailed disaster risk information for my local community",
+            "Error": "Select one preferred information service"
+          }
+        },
+        {
+          "id": "source-long-narrow-invalid",
+          "name": "Source long invalid Checkbox in 240px",
+          "variant": {
+            "Checked": "True",
+            "State": "Invalid",
+            "LabelPosition": "After",
+            "Content": "LongNarrow"
+          },
+          "width": 240,
+          "instanceWidth": 240,
+          "properties": {
+            "Label": "Receive early warnings and detailed disaster risk information for my local community",
+            "Error": "Select one preferred information service"
+          }
+        },
+        {
+          "id": "optional-label-and-error",
+          "name": "Invalid Checkbox without visible label or error",
+          "variant": {
+            "Checked": "False",
+            "State": "Invalid",
+            "LabelPosition": "After",
+            "Content": "Short"
+          },
+          "width": 320,
+          "properties": {
+            "Show label": false,
+            "Show error": false
+          }
+        }
+      ]
+    }
+  }
+}

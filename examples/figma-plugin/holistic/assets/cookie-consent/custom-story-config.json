@@ -1,0 +1,33 @@
+{
+  "guiOptions": {
+    "consentModal": {
+      "layout": "bar inline",
+      "position": "bottom"
+    },
+    "preferencesModal": {
+      "layout": "box",
+      "position": "left"
+    }
+  },
+  "categories": {
+    "necessary": {
+      "readOnly": true
+    },
+    "analytics": {},
+    "marketing": {}
+  },
+  "language": {
+    "default": "en",
+    "translations": {
+      "en": {
+        "consentModal": {
+          "title": "Demo – Custom cookie banner",
+          "description": "This banner uses a custom configuration passed via props.",
+          "acceptAllBtn": "Accept everything",
+          "acceptNecessaryBtn": "Reject non-essential",
+          "showPreferencesBtn": "Preferences"
+        }
+      }
+    }
+  }
+}
