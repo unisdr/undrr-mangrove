@@ -3649,6 +3649,31 @@ async function buildMangroveComponents(
     if (node.type === 'TEXT') {
       const wraps = layout.width === 'FILL' || fixedWidth;
       node.textAutoResize = wraps ? 'HEIGHT' : 'WIDTH_AND_HEIGHT';
+      // An initially empty wrapping TEXT can retain zero width despite FILL.
+      // Initialize its actual owning cross-axis allocation, then restore FILL.
+      const owner = node.parent;
+      if (
+        layout.width === 'FILL' &&
+        node.width === 0 &&
+        (!layout.height || layout.height === 'HUG') &&
+        node.layoutPositioning !== 'ABSOLUTE' &&
+        node.minWidth == null &&
+        node.maxWidth == null &&
+        ['FRAME', 'COMPONENT'].includes(owner?.type) &&
+        owner.layoutMode === 'VERTICAL' &&
+        owner.layoutWrap !== 'WRAP' &&
+        owner.counterAxisSizingMode === 'FIXED'
+      ) {
+        const owningWidth =
+          owner.width - owner.paddingLeft - owner.paddingRight;
+        if (
+          Number.isFinite(owningWidth) &&
+          owningWidth > 0 &&
+          Number.isFinite(node.height) &&
+          node.height > 0
+        )
+          node.resize(owningWidth, node.height);
+      }
       if (wraps)
         node.layoutSizingHorizontal =
           layout.width === 'FILL' ? 'FILL' : 'FIXED';

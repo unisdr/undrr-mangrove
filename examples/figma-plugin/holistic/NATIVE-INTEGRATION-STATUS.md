@@ -251,11 +251,34 @@ records unchanged original fields and foundations; a separate fresh read again
 verifies all 156 returned temporary IDs absent and original 374 membership.
 Independent review accepts the bounded positive-width result. It does not prove
 the complete production helper, edited-content preservation, live responsive
-reflow, source glyphs or whole component fidelity. A copied-builder correction
-and its source/edit/repeat checks are being prepared; production and native
-library integration remain pending. The complete decoded report is retained
+reflow, source glyphs or whole component fidelity. The reviewed source correction
+now seeds only zero-width FILL/HUG TEXT in the demonstrated non-wrapping
+VERTICAL parent with a fixed cross-axis and no absolute positioning or width
+constraints. Already-positive text and other layouts keep their previous
+behaviour. All-five whole31 actual-builder mocks, supported owning plain/rich
+edits and two zero-create repeats pass; four measured allocation cases and
+18 other-context parity cases pass. Normal regressions, lint, touched-file
+Prettier and normal plugin compilation also pass. These fixtures verify the
+source guard and arithmetic; they do not simulate native reflow. Applying the
+complete corrected native builder and library integration remain pending.
+The complete decoded report is retained
 externally with SHA256
 `e1d230d99d360fa535710de46b0b7e341f72cfb21b5ca2e9a132eaeeb68fa253`.
+
+A complete cloud effect baseline is independently reconstructed from 51 exact
+parts: 411,564 bytes, with no getter exceptions or unsupported recorded fields.
+The declared projection covers original 374-node topology, 70 variables and
+350 mode values, eight TEXT styles, one EFFECT style and 20 genuine main links.
+It preserves Raised spread 0 without adopting it as source. A reviewed
+standalone disposable test then preserves spread 1 through the source binding
+helper, unbound and bound style assignments, and applications to a rectangle
+and empty clipped/unclipped frames. All 23 recorded spread fields remain 1.
+This does not reproduce the ordinary build's loss or establish shadow pixels.
+A separate fresh read finds all three temporary nodes and the style absent,
+with the complete original cloud baseline exact before and after. The actual
+setter and cleanup reports and independent verdict remain external. The next
+causal test uses the production importer body on scoped disposable styles;
+ordinary full-renderer tracing and style publication remain open.
 
 ## Canonical style publication preparation
 
