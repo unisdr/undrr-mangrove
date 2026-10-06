@@ -1,0 +1,148 @@
+{
+  "kind": "actual-gallery-source-scope-audit",
+  "sourceComponent": "Gallery",
+  "componentCount": 1,
+  "authoredConfigurations": 14,
+  "sourceLightboxImplemented": false,
+  "sourcePins": {
+    "stories/Components/Gallery/Gallery.jsx": "fd7daae1274280f630b5e04a3818d4a4df015681099d94dc2f7889026a9744a5",
+    "stories/Components/Gallery/Gallery.stories.jsx": "3dfb3262904796b3100c2a2216f9ffe7f514866c970afdd0d91cdc0d7ed7794b",
+    "stories/Components/Gallery/gallery.scss": "dd0e22709d28572c34076e58ce6ba1bfdb8da5a7fd66d614fa5863ef8d5d6552",
+    "stories/Components/Gallery/_labels.js": "a88d1a0c87eb3f19b49bd98ae862068b03ca6a9fdae07bc632c53be2fd87c539",
+    "stories/Components/Gallery/Gallery.fromElement.js": "055f183b802cac64af062a92ac41e9e9e25e3debf00e02a98a9cbf6bbdbc0092",
+    "stories/Components/Gallery/Gallery.hydrate.js": "7103a35820f3fdcbe2472938d2fa6b2b63628214f0964f0aee3bd40a1b13c71d",
+    "stories/Components/Gallery/__tests__/Gallery.test.jsx": "d744be7adab26fa64fc94151799116ae98679e77ffbfe9a3cbb89e144568acce",
+    "stories/Components/Gallery/__tests__/Gallery.fromElement.test.js": "0c54476432a6f508b24415487851b5d3763b838eb7cccbefb85d88554849fcd7",
+    "stories/assets/scss/_mixins.scss": "0028b614bb410bd03e6bc6a81e2b42b0daea54a5f6193eca6b7a1130617b9a35",
+    "stories/assets/scss/_variables.scss": "2c9ce7c4b18d63243e45ad2eaed07c9a6284c0e57ef79a3dc3d37f8521cccdfa",
+    "stories/assets/css/style.css": "1806dd1446f5df7252676c69ad2a0da168aa46343c3e668cf17fc06f2dd3fd60",
+    "stories/assets/scss/_breakpoints.scss": "dfe36ec45c98e2e89b8d72a6d0d41af48783b64a7441667ce02eb6b3d5f16bc0",
+    "stories/assets/fonts/roboto/roboto.scss": "b881ae0ebeb56f49523c791faafc1a10299fc1d7a875fa91c028b06164b8197c",
+    "stories/assets/fonts/roboto/sass/_Regular.scss": "cb27bc0dd02ba21b4dda3249a59e352e0a42c5ea45b83d7cba0a1a2cb79f5845",
+    "stories/assets/fonts/roboto/sass/_Bold.scss": "9f24cf0a077b2087c47c55bbb665a4086a38818680eee9ca0dfac4c0ce0d273e",
+    "stories/assets/fonts/roboto/sass/_mixins.scss": "da42b1344b5a5ca7c059c96374b92286381a0a36e2d0ffadefe30683c2e916a7",
+    "stories/assets/fonts/roboto/sass/_variables.scss": "ce141aa75263b9b51a301463ddc4ac755458baf84c6636f854852394a6190ea6",
+    "stories/assets/fonts/roboto-condensed/roboto-condensed.scss": "206a320cb9cefbabb300a7bd233a2950267ebdf087cf026e5c3d8279a41ada02",
+    "stories/assets/fonts/roboto-condensed/sass/_Regular.scss": "83e36cfc43d952acf7e4e15f3f8068de84930b5412a433926fab097d44105ce7",
+    "stories/assets/fonts/roboto-condensed/sass/_Bold.scss": "efc8c49d945c5d2cd940ed51f2cf1fc16d6011cc5f4ac85bbaaca1868bccb70b",
+    "stories/assets/fonts/roboto-condensed/sass/_mixins.scss": "a53206df9ff982de438f1472ccb571acb7c923d2fdcc8c72f2ce5ece96a1f6d4",
+    "stories/assets/fonts/roboto-condensed/sass/_variables.scss": "af157df7df4276d396e7a636039dd353e9e9849163564b30dbbb299aafc34940",
+    "examples/figma-plugin/holistic/assets/content-hub/source-fonts/RobotoCondensed-Regular.woff2": "0cdd3d13492236edd2bc1c3d48f7d7f7270b2d52214d2a3d114d6fcb0c6f04d2",
+    "examples/figma-plugin/holistic/assets/content-hub/source-fonts/RobotoCondensed-Bold.woff2": "bd6d419bb130520905ba3ba1525d9e3936b3335cabc9070eeabdfe7e1102d758",
+    "examples/figma-plugin/holistic/assets/content-hub/source-fonts/LICENSE.txt": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "examples/figma-plugin/holistic/assets/page-reading/source-fonts/Roboto-Regular.woff2": "47107401d0adb375ab9aa167f9d62489a849d510e740a307b5a4db60e5db3562",
+    "examples/figma-plugin/holistic/assets/page-reading/source-fonts/Roboto-Bold.woff2": "8e44376b735dcc9027acbcc8a0df64c3f886a23529eff27b022f344d719e90f2",
+    "stories/assets/fonts/roboto/sass/_ThinItalic.scss": "7ed1ce2b3c874ee702a9403be9662effadd71e3fa915ffc7f9931ffbf23796db",
+    "stories/assets/fonts/roboto/sass/_LightItalic.scss": "8dd3fdcbffe81a565626b704042d2f78da559929f35ea7fbff46b1af573665ce",
+    "stories/assets/fonts/roboto/sass/_BoldItalic.scss": "94f40e36a612417be36294f5f8fb084c73ccce4d63cc5456fdaa80b738ad1355",
+    "stories/assets/fonts/roboto/sass/_Light.scss": "6bf61d8ef2335ffd7b24ae23a8a57b365e9b34c5903ea522302af70dd8157c79",
+    "stories/assets/fonts/roboto/sass/_Italic.scss": "bbf29ea2da948bbd1827da7c8f1c7c95e3e8e74584445663670ded67fcbf8696",
+    "stories/assets/fonts/roboto/sass/_Thin.scss": "facf43a4cf07c2d0c10599ce30c8cea4bd548dc2093b5efbf101bff4be715f10",
+    "stories/assets/fonts/roboto/sass/_MediumItalic.scss": "2222a82fffa39f7d206e5c65f328c071953b87ff1017b879ba5cec4dad4496c9",
+    "stories/assets/fonts/roboto/sass/roboto.scss": "75c8844d28fcac10876344d0690fe21b9d99c28e486c824d00f6262aaf595919",
+    "stories/assets/fonts/roboto/sass/_Medium.scss": "a4604935605d15b5eeb12d7f8700e91f637ef5b545dd757ac232953ffdece828",
+    "stories/assets/fonts/roboto/sass/_BlackItalic.scss": "32fd04227e1267b18d512cee32b4ac07fb527c0d9c3d9f0514f3e12b5ee2ca26",
+    "stories/assets/fonts/roboto/sass/_Black.scss": "1d6ef057178c2e90eb539ccfa3b491121465388c86df9396a23e61ce672306ba",
+    "stories/assets/fonts/roboto-condensed/sass/_LightItalic.scss": "a85a38ce32eb4a750a452309123e9b382321867d34e8ed0c4b8d201162f81380",
+    "stories/assets/fonts/roboto-condensed/sass/_BoldItalic.scss": "0a140e560d1ac75b0e8ff0ed70612c8904d6c08e1a2d661a396f21787eb99644",
+    "stories/assets/fonts/roboto-condensed/sass/_Light.scss": "35dbd2fd493e40cc17c8192c6610719cfad55708e689332c3514586948ed1b8a",
+    "stories/assets/fonts/roboto-condensed/sass/_Italic.scss": "2710a5af4a38f484c1d53c2d3c440a7d4d94239f0bbfb41806a7634bd1ed1eeb",
+    "examples/figma-plugin/holistic/assets/page-reading/source-fonts/LICENSE-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  "initialImageContracts": {
+    "selectedPresets": [
+      "BasicGallery first/interior/last",
+      "ManyImages first/last",
+      "ThumbnailsBottom first/interior/last",
+      "WithoutThumbnails",
+      "WithoutArrows",
+      "WithoutDescriptions",
+      "Minimal",
+      "MixedAspectRatios landscape/portrait/square/panorama",
+      "StartAtSecondImage",
+      "InfiniteLoop endpoint",
+      "CornerNavigation first/interior/last"
+    ],
+    "responsiveViewports": [
+      390,
+      1164
+    ],
+    "brands": [
+      "undrr",
+      "delta",
+      "irp",
+      "mcr",
+      "preventionweb"
+    ],
+    "behaviorOnlyAuthoredConfig": [
+      "WithCallback"
+    ],
+    "genuineComposition": [
+      "real selected authored photo bytes, containment and thumbnail cover",
+      "real caption/title content and owning capacities",
+      "source selected-border plus after overlay",
+      "source overlay/corner text arrows and disabled opacity",
+      "actual horizontal/vertical scroll allocations"
+    ]
+  },
+  "separateSourceContracts": [
+    "MixedMedia image/video/embed/image and loading/UA media controls",
+    "WithHtmlContent two real authored HTML branches and .12 scaled inert thumbnail previews",
+    "focus-visible, hover, scroll positions, loop and keyboard selection",
+    "Gallery.fromElement SSR/hydration inputs, locale/RTL caller contexts"
+  ],
+  "imageBoundary": "Authored Picsum URLs return nondeterministic redirects. Pin actual response JPEG bytes and original/resolved request provenance for a deterministic explicitly identified media-response fixture, not universal remote response fidelity. No unrelated replacement pictures.",
+  "nativeAcceptance": false,
+  "sourceRecipeImplementedAtAudit": false,
+  "responsiveBoundary": {
+    "source": "stories/assets/scss/_breakpoints.scss",
+    "mediumMinWidthPx": 768,
+    "smallMaxWidthPx": 767,
+    "meaningfulAdditionalCapturesPlanned": [
+      767,
+      768
+    ]
+  },
+  "fixtureMediaOverrides": [
+    "IMG src remapped to pinned genuine response bytes",
+    "IMG loading=eager to settle all media before source measurement"
+  ],
+  "imageCaptureCount": 220,
+  "imageVariantCount": 44,
+  "sourceCaptureExternalDirectories": [
+    "/tmp/mangrove-gallery-image-source-20261006",
+    "/tmp/mangrove-gallery-boundary-source-20261006"
+  ],
+  "evidencePins": {
+    "picsum-809-800x600-19ff867a.jpg": "19ff867ace6afed121257b7322526a0eac322db10b63b968bd499ab055632db2",
+    "picsum-1005-800x600-0014a01e.jpg": "0014a01e7f4884c1eff0449a5d1d54112552a8108e05254755078ec4afa3c0f2",
+    "picsum-965-600x800-420df51e.jpg": "420df51ec3ab5775162f2b71888c6784c6441957c85c69a3e2d328bd2ab568dc",
+    "picsum-570-800x600-f1cf462a.jpg": "f1cf462ae359d1e045b7b61177b28330c91aa64fb2acc2da965f9f72c99c557a",
+    "picsum-134-800x600-4264b7ea.jpg": "4264b7ea44f4e946e2204b962917bfc28594b443a9bf7a26b3626d4e13ceea3c",
+    "picsum-295-800x600-2c080ca1.jpg": "2c080ca136288281024fd55e8a2aeefc36b3bb2687b7ae685dcd4bb79f656a9c",
+    "picsum-161-800x600-f6743b7f.jpg": "f6743b7f1ec502f15dbeed012a96c1f62c361f279717a4b3442dbd0007378efd",
+    "image-response-provenance.json": "db1a7fa4a7e6ffa123084832a7e666c091a3d39f0f21ae7fb050c2ac3f95aa27",
+    "picsum-693-800x600-db5a1c8b.jpg": "db5a1c8b3fe91557816b4ee9b17866e0d539a7f5b88c9b4c94fb53d43fb95134",
+    "picsum-927-600x800-f5838fba.jpg": "f5838fbae9de3c22b4044698a388ef8429b1c0ca61a39d5dc086fa439b7b3c84",
+    "picsum-147-800x600-5cfde46e.jpg": "5cfde46e69a977855a896a73498be998a44db69690734daffea9924e62443ad1",
+    "picsum-249-1200x400-03ba83f4.jpg": "03ba83f4f54d327c280781ed9e67b1353f4fbb4aee39746f74524e3d7d0e0d20",
+    "picsum-972-800x600-269fd29b.jpg": "269fd29b7bc63febcf4fd3e26a02e7d5d2df3527f989ecb653fe82515e6bacd1",
+    "source-footprints.json": "8c6eb7100620f7fdd6e3f74657415c5e4cc6b44623cd732bd9ac0cba452e6492",
+    "picsum-649-800x600-ab4d2c45.jpg": "ab4d2c450d6c63fdb2704b6b714769e14f8e0c73d327fd74f016ec2f93929041",
+    "picsum-576-800x600-8bc24d98.jpg": "8bc24d980e576780cf89df516138027eb39c9844096082e8ba532017460f27fc",
+    "media-fixture-comparison.json": "ea50e2ab7d4b099dbafe57b74ca6a4d7323785ebfc8a250398660abe1b06f52c",
+    "picsum-933-800x600-7acc6499.jpg": "7acc649981436eaf23ab84b3ccc2548fc4dcea44feb00875d2ff9ff7b019a283",
+    "picsum-273-800x600-16b504c9.jpg": "16b504c9616ac95fa4b857902fcae5fddc34a0a6c3237b8ee571c87e27fc3ab6",
+    "picsum-930-800x600-ed290189.jpg": "ed290189e7f8a8ef6bdc43996ffa54096f8031bc320a053a5c1aec4e68a07bdd",
+    "picsum-802-800x800-ab05c763.jpg": "ab05c76346f183cd90261ee22adafaf06d051801d7cdbe7a7060194c6a67100d",
+    "picsum-345-800x600-3395b604.jpg": "3395b604496e8f02acde21af09f34be4acdd019fd4c1b295ba84ca2192c37540",
+    "picsum-459-800x600-ca89e014.jpg": "ca89e01467cf90825af617672f60a152ebcb2805f22d798e82fab0c27dfe898a",
+    "replay-images.js": "4191f9fc87b116b63964f460fe4e51b5c9339d962f09910187461c9c5924ca28",
+    "picsum-924-800x600-01de7c91.jpg": "01de7c91148d03c4d80183c90e514417d08e9fb78c2079415a85cffc9a9fbcdb",
+    "picsum-512-800x600-e72e6c61.jpg": "e72e6c618527f189cbbd4208e88221a0b85ff383cd1d14f73be40cc1b3a6f457",
+    "picsum-883-800x600-d77c26ee.jpg": "d77c26ee734c2f92c7843eb0c33eb13852bc3c709a10ab7d9473fe3d9d2053a4",
+    "measured-foundations.json": "2f7b6e11d1ded9e99fda3c051e3a5683a6e0cf77ec011eab9cc104cb536370f4",
+    "picsum-486-800x600-cb241091.jpg": "cb241091900d0707609cb0e6a250ea8467a7690feef754b0419e9119264cb2f7",
+    "source-capture.js": "a211e1e8464270852cb8d3618876406d9b778c5ef6eb2a3a25aedc3f3a129877"
+  }
+}

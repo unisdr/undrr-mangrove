@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "sourceComponent": "stories/Components/Gallery/Gallery.jsx",
+  "sourceStory": "WithHtmlContent and MixedMedia actual owning exports",
+  "captureCases": 60,
+  "sourceComponentCodeUnmodified": true,
+  "mediaFixture": [
+    "IMG src pinned actual authored-response bytes",
+    "IMG loading eager"
+  ],
+  "sourceEnvironment": {
+    "url": "http://localhost:6121",
+    "viewportWidths": [
+      390,
+      1164
+    ],
+    "brands": [
+      "undrr",
+      "delta",
+      "irp",
+      "mcr2030",
+      "preventionweb"
+    ]
+  },
+  "scope": [
+    "40 WithHtmlContent actual source scenes",
+    "20 MixedMedia image selections only",
+    "No video or iframe implementation"
+  ],
+  "evidencePins": {
+    "source-footprints.json": "09a36361f4761207dc18c0bd46e73daebc1e632404e5413da852173ce826f641",
+    "replay-images.js": "4191f9fc87b116b63964f460fe4e51b5c9339d962f09910187461c9c5924ca28",
+    "source-capture.js": "a211e1e8464270852cb8d3618876406d9b778c5ef6eb2a3a25aedc3f3a129877",
+    "font600-browser-evidence.json": "32bf260bae2cd8fcea3f558f9b66e79c63528dfc3bab18cf99340c82b0c5817a"
+  }
+}

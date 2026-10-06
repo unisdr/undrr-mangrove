@@ -167,6 +167,18 @@ const recipes = [
     'buildStatsCardRecipes',
   ],
   ['tree', './figma-tree-recipes.cjs', 'buildTreeRecipes'],
+  ['gallery-image', './figma-gallery-recipes.cjs', 'buildGalleryImageRecipes'],
+  ['code-block', './figma-code-block-recipes.cjs', 'buildCodeBlockRecipes'],
+  [
+    'gallery-html',
+    './figma-gallery-html-recipes.cjs',
+    'buildGalleryHtmlRecipes',
+  ],
+  [
+    'gallery-mixed-media-image',
+    './figma-gallery-html-recipes.cjs',
+    'buildGalleryMixedImageRecipes',
+  ],
   [
     ['news-image-article-scene'],
     './figma-news-image-article-scene-recipes.cjs',

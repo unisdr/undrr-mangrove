@@ -14016,8 +14016,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 78,
-    "variants": 1013,
+    "families": 82,
+    "variants": 1085,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -14068,7 +14068,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "4f367c10acb6fbe3301ec10d919d085a38eb611428a383e299e52ab2e3630898",
+    "currentPacketScriptSha256": "98e36755fd81614e59549608fd00a613ebf6e6bed6669ab3bb3af913d4e35b2b",
     "dependencies": [
       {
         "id": "editorial-cta",
@@ -14269,6 +14269,30 @@
       "independentReview": "Range accepted",
       "nativeAcceptance": false,
       "scope": "Actual four authored stories and recorded selected/toggle/hover appearances, genuine nested editable item rows and measured pseudo masks. Guide dash projection candidate, native fonts/pixels, controller/keyboard/RTL/publication open."
+    },
+    "boundedGalleryImages": {
+      "families": 1,
+      "variants": 44,
+      "sourceCases": 220,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Pinned real images, source contain/cover and finite source contexts only; native image/font/raster/runtime/publication open."
+    },
+    "boundedGalleryHtmlAndMixedImage": {
+      "families": 2,
+      "variants": 12,
+      "sourceCases": 60,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Actual eight HTML and four mixed-media image appearances with genuine scaled thumbnails; real video/embed references remain separate and unimplemented. Native reflow/fonts/pixels/runtime/publication open."
+    },
+    "boundedCodeBlock": {
+      "families": 1,
+      "variants": 16,
+      "sourceCases": 80,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Whole logical syntax TEXT, actual gutter/filename/overflow contexts; no invented copy action. Menlo/native font/glyph/raster and publication gates open."
     }
   }
 }

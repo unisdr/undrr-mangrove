@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **78 families / 1013 bounded variants**.
+The current holistic packet contains **82 families / 1085 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -202,3 +202,5 @@ checks and independent reviews pass. Stats uppercase labels and translucent
 linked summaries use reviewed shared capabilities. Numeric glyphs and native
 raster remain open; Tree guide dash cadence is an explicit projection candidate.
 See [StatsCard](holistic/stats-card.md) and [Tree](holistic/tree.md).
+
+Gallery adds44 genuine image contexts, eight HTML appearances and four real mixed-media image states in three families. Real image responses are pinned; contained image extents and actual scaled HTML thumbnails retain source allocations. CodeBlock adds16 source presets with whole logical rich syntax TEXT, genuine language/filename/gutter/overflow branches and source font candidates. Their all-five dedicated actual-builder edit/two-repeat checks and independent source reviews pass. Gallery video/embed remain references, with remote loading failures recorded; native media/runtime, arbitrary HTML reflow, Menlo availability, font/glyph/raster and publication gates remain open. See [Gallery](holistic/gallery.md), [Gallery HTML](holistic/gallery-html.md) and [CodeBlock](holistic/code-block.md).

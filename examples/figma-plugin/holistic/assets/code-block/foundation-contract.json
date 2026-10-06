@@ -1,0 +1,622 @@
+[
+  {
+    "id": "color.neutral-0",
+    "name": "color/neutral-0",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-0",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-0))"
+    },
+    "values": {
+      "undrr": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "delta": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "irp": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "mcr": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-100",
+    "name": "color/neutral-100",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-100",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-100))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.7922,
+        "g": 0.8039,
+        "b": 0.8157,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-200",
+    "name": "color/neutral-200",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-200",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-200))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.6941,
+        "g": 0.7059,
+        "b": 0.7176,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-300",
+    "name": "color/neutral-300",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-300",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-300))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.5882,
+        "g": 0.6,
+        "b": 0.6118,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-700",
+    "name": "color/neutral-700",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-700",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-700))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.2,
+        "g": 0.2,
+        "b": 0.2,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.neutral-800",
+    "name": "color/neutral-800",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-neutral-800",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-neutral-800))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.102,
+        "g": 0.102,
+        "b": 0.102,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.interactive",
+    "name": "color/interactive",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-interactive",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-interactive))"
+    },
+    "values": {
+      "undrr": {
+        "alias": "color/blue-900"
+      },
+      "delta": {
+        "alias": "brand/primary"
+      },
+      "irp": {
+        "alias": "brand/primary"
+      },
+      "mcr": {
+        "alias": "brand/purple"
+      },
+      "preventionweb": {
+        "alias": "brand/primary"
+      }
+    }
+  },
+  {
+    "id": "color.blue-200",
+    "name": "color/blue-200",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-200",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-200))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.702,
+        "g": 0.7922,
+        "b": 0.8706,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "spacing.50",
+    "name": "spacing/50",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-50",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-50)"
+    },
+    "values": {
+      "undrr": 5,
+      "delta": 5,
+      "irp": 5,
+      "mcr": 5,
+      "preventionweb": 5
+    }
+  },
+  {
+    "id": "spacing.75",
+    "name": "spacing/75",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-75",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-75)"
+    },
+    "values": {
+      "undrr": 7.5,
+      "delta": 7.5,
+      "irp": 7.5,
+      "mcr": 7.5,
+      "preventionweb": 7.5
+    }
+  },
+  {
+    "id": "spacing.100",
+    "name": "spacing/100",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-100",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-100)"
+    },
+    "values": {
+      "undrr": 10,
+      "delta": 10,
+      "irp": 10,
+      "mcr": 10,
+      "preventionweb": 10
+    }
+  },
+  {
+    "id": "spacing.150",
+    "name": "spacing/150",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-150",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-150)"
+    },
+    "values": {
+      "undrr": 15,
+      "delta": 15,
+      "irp": 15,
+      "mcr": 15,
+      "preventionweb": 15
+    }
+  },
+  {
+    "id": "spacing.250",
+    "name": "spacing/250",
+    "type": "FLOAT",
+    "description": "CSS: --mg-spacing-250",
+    "scopes": [
+      "GAP",
+      "WIDTH_HEIGHT"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-spacing-250)"
+    },
+    "values": {
+      "undrr": 24,
+      "delta": 24,
+      "irp": 24,
+      "mcr": 24,
+      "preventionweb": 24
+    }
+  },
+  {
+    "id": "font-size.100",
+    "name": "font-size/100",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-100",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-100)"
+    },
+    "values": {
+      "undrr": 10,
+      "delta": 10,
+      "irp": 10,
+      "mcr": 10,
+      "preventionweb": 10
+    }
+  },
+  {
+    "id": "font-size.200",
+    "name": "font-size/200",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-200",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-200)"
+    },
+    "values": {
+      "undrr": 12.5,
+      "delta": 12.5,
+      "irp": 12.5,
+      "mcr": 12.5,
+      "preventionweb": 12.5
+    }
+  },
+  {
+    "id": "font-size.250",
+    "name": "font-size/250",
+    "type": "FLOAT",
+    "description": "CSS: --mg-font-size-250",
+    "scopes": [
+      "FONT_SIZE"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-size-250)"
+    },
+    "values": {
+      "undrr": 14,
+      "delta": 14,
+      "irp": 14,
+      "mcr": 14,
+      "preventionweb": 14
+    }
+  },
+  {
+    "id": "color.blue-100",
+    "name": "color/blue-100",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-100",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-100))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.8,
+        "g": 0.8627,
+        "b": 0.9137,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "color.blue-300",
+    "name": "color/blue-300",
+    "type": "COLOR",
+    "description": "CSS: --mg-color-blue-300",
+    "scopes": [
+      "ALL_SCOPES"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "rgb(var(--mg-color-blue-300))"
+    },
+    "values": {
+      "undrr": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      },
+      "delta": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      },
+      "irp": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      },
+      "mcr": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      },
+      "preventionweb": {
+        "r": 0.6,
+        "g": 0.7255,
+        "b": 0.8275,
+        "a": 1
+      }
+    }
+  },
+  {
+    "id": "font-family.text",
+    "name": "font-family/text",
+    "type": "STRING",
+    "description": "Font-family role. Latin-script face only; Arabic and other scripts map this role to other faces in _fonts.scss.\n\nCSS: --mg-font-family-text",
+    "scopes": [
+      "FONT_FAMILY"
+    ],
+    "hiddenFromPublishing": false,
+    "codeSyntax": {
+      "WEB": "var(--mg-font-family-text)"
+    },
+    "values": {
+      "undrr": "Roboto",
+      "delta": "Roboto",
+      "irp": "Roboto",
+      "mcr": "Roboto",
+      "preventionweb": "Roboto"
+    }
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "scope": "Six authored CodeBlock stories plus actual overflowing narrow scroll-end states, no invented copy button",
+  "captureCount": 80,
+  "assets": {
+    "source-capture.js": "604466a42f139a4dc8ce00bc505282cc4f89a10b4d7b5d387ba8c24689907b43",
+    "source-capture-driver.py": "550f5cd4fc294438b365e422ad53c018a86b4f6e02c2dbc81e6e284dd6b0aa71",
+    "source-footprints.json": "98edfaf39ae3b5583f76ef92e594cd859f1d7be1acf20d0c751cf4dcc479ff51",
+    "foundation-contract.json": "bdfd209cb457daaf317fb6ad14f730b5c3e3d56bc00628cd07a3b7c93ed7656e"
+  },
+  "sourceHashes": {
+    "src/index.js": "7ca4c72a0f7f83e17dd11aa17bd0a78d35a9881dcbf79fd59b275a4f04b97794",
+    "stories/Components/CodeBlock/CodeBlock.jsx": "e719d5f980e9f0b05632fba40bfd04082f671c68f667b95ac23b718ff15f0d44",
+    "stories/Components/CodeBlock/CodeBlock.stories.jsx": "721d052864300c184f6de6565b78a0aaa4dd642d9c974556f142cf4a623f09a5",
+    "stories/Atom/BaseTypography/Code/code.scss": "8e45bc111d32db25654989c794fb8615b1bd00f8400d3191a5423b525d79929b",
+    "stories/assets/css/style.css": "1806dd1446f5df7252676c69ad2a0da168aa46343c3e668cf17fc06f2dd3fd60",
+    "stories/assets/scss/_fonts.scss": "1c28869b687c358c8c5d28bf5ea563e078b07ee8ae6b3ad5df1244f06fb9d754",
+    "stories/assets/scss/_variables.scss": "2c9ce7c4b18d63243e45ad2eaed07c9a6284c0e57ef79a3dc3d37f8521cccdfa",
+    ".storybook/preview.js": "e19af50151293071b3f87910cded15f2cb7835dbffd125085f3708a257221814",
+    "examples/figma-plugin/holistic/assets/page-patterns/source-fonts/Roboto-Regular.woff2": "47107401d0adb375ab9aa167f9d62489a849d510e740a307b5a4db60e5db3562",
+    "examples/figma-plugin/holistic/assets/page-patterns/source-fonts/Roboto-Bold.woff2": "8e44376b735dcc9027acbcc8a0df64c3f886a23529eff27b022f344d719e90f2",
+    "examples/figma-plugin/holistic/assets/page-patterns/source-fonts/LICENSE-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "tokens/mcr.yaml": "4696b9b72028ed4d62e2c69b51a41df8e24f855d138269a84a93530cc10d9188",
+    "tokens/preventionweb.yaml": "587b72ff245843ec229609c55cda03aa1a2146c35d7bc90c6163f946cd7f08d5",
+    "tokens/delta.yaml": "aa04fedf9b32bfd4b84ac1d755216824d9c589234ac2fbf67c11388ef55dd3b1",
+    "tokens/irp.yaml": "b2063159f014824ccfe3edbbbc696ed494fd3dc9113aeddeda089f1828c0ca27",
+    "tokens/undrr.yaml": "7514567babda3ea49f3af6f0f5fbb194b8fbfcab8bdde7bb061cdd6542959669",
+    "tokens/mangrove.yaml": "02449d0cf3aa7e011f767e638637d5dd6427c489d985f36627401db6bf164ec8",
+    "package.json": "d68bf61e5d78334ec5ec069cf80c757eb2e292afeda686e6cef63ade20352519",
+    "yarn.lock": "e1a0d72b1ea55b1534031eeb7f503a3249ceac567814785caabf9755feb919f9"
+  },
+  "fontContract": "Actual system mono stack;400 finite canvas probes match Menlo advances only. Native Menlo currently absent, no font substitute or glyph/ligature equivalence claimed.",
+  "badgeMirror": "Computed after CSS captured before diagnostic suppression. Actual source badge mirror removed and root/pre/scroll geometry required restored exactly.",
+  "dependencyContract": {
+    "library": "react-syntax-highlighter",
+    "version": "16.1.1",
+    "source": "JSX PrismLight uses registered bash/javascript/jsx with useInlineStyles false. Authored finite presets include Bash and JSX only. Package manifest and lockfile are guarded; this does not prove future installed package byte identity."
+  }
+}

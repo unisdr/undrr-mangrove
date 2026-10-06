@@ -182,3 +182,5 @@ checks and independent reviews pass. Stats uppercase labels and translucent
 linked summaries use reviewed shared capabilities. Numeric glyphs and native
 raster remain open; Tree guide dash cadence is an explicit projection candidate.
 See [StatsCard](stats-card.md) and [Tree](tree.md).
+
+Gallery adds44 genuine image contexts, eight HTML appearances and four real mixed-media image states in three families. Real image responses are pinned; contained image extents and actual scaled HTML thumbnails retain source allocations. CodeBlock adds16 source presets with whole logical rich syntax TEXT, genuine language/filename/gutter/overflow branches and source font candidates. Their all-five dedicated actual-builder edit/two-repeat checks and independent source reviews pass. Gallery video/embed remain references, with remote loading failures recorded; native media/runtime, arbitrary HTML reflow, Menlo availability, font/glyph/raster and publication gates remain open. See [Gallery](gallery.md), [Gallery HTML](gallery-html.md) and [CodeBlock](code-block.md).
