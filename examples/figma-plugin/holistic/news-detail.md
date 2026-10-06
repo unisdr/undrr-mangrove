@@ -167,8 +167,11 @@ sessions were closed. [Related footprints](assets/news-detail/related-card-footp
 and [provenance](assets/news-detail/related-card-provenance.json) pin those
 observations, scripts, source font/image bytes and current source base.
 
-Summary is the exposed editable plain property, with supported short edits
-inside the finite allocation. Title remains an editable TEXT anatomy node with
+Summary uses a stable `Story N VIEWPORT Summary` plain property for each
+authored story and viewport, with supported short edits inside the finite allocation.
+This prevents native component-set default updates from replacing other source summaries.
+Anatomy and variant identities remain unchanged; existing generic Summary properties
+are not pruned or claimed migrated. Title remains an editable TEXT anatomy node with
 its authored initial copy, but has no exposed property. Edited-title inline
 caret reflow and native title hyperlink are unsupported in this tranche.
 Exact destinations remain `sourceHref` metadata so the3px offset is preserved
@@ -179,7 +182,10 @@ arbitrary wrapping/overflow, RTL and prototype behavior also remain open.
 The dedicated actual-builder tests cover all five brands, six nonempty master
 allocations, initial caret placement/constraints and underline offset, one
 shared image cache entry, supported short Summary consumer edits/links/positions,
-and two zero-create repeats with exact recorded mock geometry/assets. Missing
+and two zero-create repeats with exact recorded mock geometry/assets. The observed
+native TEXT default propagation fixture checks every authored master summary and
+its referenced property default after both repeats; restoring the old generic
+Summary name deliberately reproduces source-copy drift. Missing
 Condensed Bold or Roboto Regular, source/font/image/evidence drift, theme or
 effect paint drift and foreign helper/style identities refuse before build
 mutation or source-factory caller-array changes, as applicable. SVG fixtures

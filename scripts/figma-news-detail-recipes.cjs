@@ -1170,7 +1170,8 @@ function buildNewsRelatedCardRecipes({ root, modes, variables, styles }) {
                       type: 'TEXT',
                       name: 'Editable authored summary',
                       characters: summary.text,
-                      textProperty: 'Summary',
+                      textProperty:
+                        'Story ' + (index + 1) + ' ' + width + ' Summary',
                       textStyle: summaryStyle,
                       fill: 'color/text',
                       textWrap: 'PRETTY',

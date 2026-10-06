@@ -12,6 +12,9 @@ const {
   buildNewsRelatedCardRecipes,
   buildNewsEditorialRecipes,
 } = require('../../../scripts/figma-news-detail-recipes.cjs');
+const {
+  installNativeTextPropertyDefaultFixture,
+} = require('./mock-search-results.cjs');
 const root = path.resolve(__dirname, '../../..');
 function auditTests() {
   const report = inspectNewsDetailPrerequisites({ root });
@@ -432,8 +435,8 @@ async function relatedTests() {
   );
   assert.deepStrictEqual({ variables: doc.variables, styles: doc.styles }, old);
   for (const mode of doc.modes) {
-    const env =
-      await require('./mock-rich-text-integration.cjs').rangeEnvironment(doc);
+    const env = environment(doc, { sharedOnly: true });
+    installNativeTextPropertyDefaultFixture(env);
     await installNewsDetailSvgFixture(env);
     await env.call('importVariables', doc, [mode.id], false, [], true);
     const build = () =>
@@ -494,33 +497,130 @@ async function relatedTests() {
       env.figma.currentPage.appendChild(consumer);
       consumer.x = 901;
       consumer.y = 702;
-      const key = Object.keys(consumer.componentProperties).find(k =>
-        k.startsWith('Summary#')
+      const summaryText = master
+        .findAllWithCriteria({ types: ['TEXT'] })
+        .find(n => identity(n).endsWith('/summary'));
+      const key = summaryText.componentPropertyReferences.characters;
+      assert(
+        key.startsWith(
+          'Story ' +
+            variant.properties.Story +
+            ' ' +
+            variant.properties.SourceViewport +
+            ' Summary#'
+        )
       );
       assert(key);
+      const linkedSummary = consumer
+        .findAllWithCriteria({ types: ['TEXT'] })
+        .find(n => n.componentPropertyReferences?.characters === key);
+      assert(linkedSummary);
+      const descriptor = Object.getOwnPropertyDescriptor(
+        Object.getPrototypeOf(linkedSummary),
+        'characters'
+      );
+      // Model the observed instance property linkage; mock-kit has no native inheritance engine.
+      Object.defineProperty(linkedSummary, 'characters', {
+        configurable: true,
+        get() {
+          return consumer.componentProperties[key].value;
+        },
+        set(value) {
+          descriptor.set.call(this, value);
+        },
+      });
       const edited = 'Reviewed ' + mode.id + ' summary';
       consumer.setProperties({ [key]: edited });
-      properties.push({ consumer, key, edited, main: consumer.main.id });
+      assert.strictEqual(linkedSummary.characters, edited);
+      properties.push({
+        consumer,
+        key,
+        linkedSummary,
+        edited,
+        main: consumer.main.id,
+      });
     }
     assert.strictEqual(env.state.images.size, 1);
+    const assertAuthoredSummaries = () => {
+      const familySet = [...env.state.nodes.values()].find(
+        n =>
+          n.type === 'COMPONENT_SET' &&
+          n.children.some(
+            c =>
+              identity(c) ===
+              'family/news-related-card/variant/' + family.variants[0].id
+          )
+      );
+      for (const variant of family.variants) {
+        const master = [...env.state.nodes.values()].find(
+          n => identity(n) === 'family/news-related-card/variant/' + variant.id
+        );
+        const summary = master
+          .findAllWithCriteria({ types: ['TEXT'] })
+          .find(n => identity(n).endsWith('/summary'));
+        const expected =
+          variant.tree.children[1].children[1].children[0].characters;
+        assert.strictEqual(summary.characters, expected);
+        const reference = summary.componentPropertyReferences.characters;
+        assert.strictEqual(
+          familySet.componentPropertyDefinitions[reference].defaultValue,
+          expected
+        );
+      }
+    };
+    assertAuthoredSummaries();
     const before = snapshot(env);
     for (let i = 0; i < 2; i++) {
       const repeat = await build();
       assert.deepStrictEqual(copy(repeat.errors), []);
       assert.strictEqual(repeat.createdNodeIds.length, 0);
       assert.strictEqual(snapshot(env), before);
+      assertAuthoredSummaries();
       for (const p of properties) {
         assert.strictEqual(p.consumer.main.id, p.main);
         assert.strictEqual(
           p.consumer.componentProperties[p.key].value,
           p.edited
         );
+        assert.strictEqual(p.linkedSummary.characters, p.edited);
         assert.strictEqual(p.consumer.x, 901);
         assert.strictEqual(p.consumer.y, 702);
       }
       assert.strictEqual(env.state.images.size, 1);
     }
   }
+  // Deliberately restoring the old shared property reproduces observed native default drift.
+  const legacy = copy(doc);
+  for (const variant of legacy.components.families[0].variants)
+    variant.tree.children[1].children[1].children[0].textProperty = 'Summary';
+  const legacyEnv = environment(legacy, { sharedOnly: true });
+  installNativeTextPropertyDefaultFixture(legacyEnv);
+  await installNewsDetailSvgFixture(legacyEnv);
+  await legacyEnv.call('importVariables', legacy, ['undrr'], false, [], true);
+  for (let i = 0; i < 2; i++)
+    assert.deepStrictEqual(
+      copy(
+        (
+          await legacyEnv.call('buildMangroveComponents', legacy, 'undrr', [
+            'news-related-card',
+          ])
+        ).errors
+      ),
+      []
+    );
+  const legacyFirst = legacyEnv.state.nodes.values();
+  const legacyMaster = [...legacyFirst].find(
+    n =>
+      identity(n) ===
+      'family/news-related-card/variant/' + family.variants[0].id
+  );
+  const legacySummary = legacyMaster
+    .findAllWithCriteria({ types: ['TEXT'] })
+    .find(n => identity(n).endsWith('/summary'));
+  assert.notStrictEqual(
+    legacySummary.characters,
+    family.variants[0].tree.children[1].children[1].children[0].characters
+  );
   for (const font of ['Roboto Condensed Bold', 'Roboto Regular']) {
     const env =
       await require('./mock-rich-text-integration.cjs').rangeEnvironment(doc, {

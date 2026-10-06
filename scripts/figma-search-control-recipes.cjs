@@ -378,7 +378,48 @@ function buildSearchControlRecipes({ root, modes, variables, styles }) {
       file: familyFile,
       line: familyText.slice(0, familyIndex).split('\n').length,
     };
-    for (const [, tree] of variants) {
+    const scopedProperties = new Set(
+      {
+        'search-form': ['Query'],
+        'search-select': [
+          'Selection label',
+          'Option 0',
+          'Option 1',
+          'Option 2',
+          'Search query',
+        ],
+        'search-active-filters': ['Filter 0', 'Filter 1'],
+        'search-facet-operator': ['Hint'],
+      }[id]
+    );
+    const defaults = new Map();
+    function checkDefaults(node) {
+      if (node.textProperty && !scopedProperties.has(node.textProperty)) {
+        if (
+          defaults.has(node.textProperty) &&
+          defaults.get(node.textProperty) !== node.characters
+        )
+          fail(
+            'Unscoped differing source text default ' +
+              id +
+              '/' +
+              node.textProperty
+          );
+        defaults.set(node.textProperty, node.characters);
+      }
+      for (const child of node.children || []) checkDefaults(child);
+    }
+    for (const [, tree] of variants) checkDefaults(tree);
+    for (const [state, tree] of variants) {
+      // TEXT defaults are owned by the whole native set, so authored states
+      // with different presentation copy need distinct stable property names.
+      function propertyContext(node) {
+        if (scopedProperties.has(node.textProperty))
+          node.textProperty =
+            id + '.' + state.toLowerCase() + ' ' + node.textProperty;
+        for (const child of node.children || []) propertyContext(child);
+      }
+      propertyContext(tree);
       function identify(node, prefix) {
         const segment = node.id;
         node.id = prefix ? prefix + '.' + segment : segment;

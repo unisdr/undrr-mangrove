@@ -86,3 +86,9 @@ catalogue visual footprint/overlap handling, scrolling, portals/backdrop, focus,
 keyboard, network/filter/sort dispatch, localization/RTL and arbitrary responsive
 geometry are separate acceptance work. These source candidates do not complete
 the full widget, page compositions, library integration or publication.
+
+## Source default contexts
+
+The catalogue scan found differing defaults under shared property names in these source families. This is a structural risk informed by the observed native Search result master setter behavior, not a claim that all15 controls were executed natively. The source contracts now give stable authored-state context to the nine differing presentation fields: Form Query; Select Selection label, Option0/1/2 and Search query; ActiveFilters Filter0/1; and FacetOperator Hint. Other same-default properties keep their existing shared names. An unscoped field with differing defaults refuses recipe generation so a new context decision is explicit. Names use authored state IDs, never text-content hashes; anatomy, SVG, variant and token identities are unchanged.
+
+The dedicated test uses the exported local observed-native default setter fixture. It checks each master's source characters and actual referenced set default across all five brands, exact property snapshots on two zero-create repeats, and edited instance fields selected from that actual instance's references. Linked displayed TEXT is modeled through those references. A deliberate legacy Empty/Query fixture reproduces the default corruption after a repeat. This establishes the corrected source contract and regression coverage. Native control execution, existing unused property cleanup, published consumer migration, state-switch copy retention and actual source font/pixel/reflow behavior remain separate gates. Full widget composition must consume the context names from the actual dependency tree rather than assume generic property names.

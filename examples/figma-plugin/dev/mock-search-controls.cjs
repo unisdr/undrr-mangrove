@@ -6,6 +6,47 @@ const fs = require('fs');
 const path = require('path');
 const { environment } = require('./mock-kit.cjs');
 const {
+  installNativeTextPropertyDefaultFixture,
+} = require('./mock-search-results.cjs');
+const walk = n => [n, ...(n.children || []).flatMap(walk)];
+function propertyState(env) {
+  return JSON.stringify(
+    [...env.state.nodes.values()]
+      .filter(n => n.type === 'TEXT' || n.type === 'COMPONENT_SET')
+      .map(n => [
+        n.id,
+        n.type,
+        n.characters,
+        n.componentPropertyReferences,
+        n.type === 'COMPONENT_SET' ? n.componentPropertyDefinitions : null,
+      ])
+  );
+}
+function assertMasterSourceCopy(env, families) {
+  for (const family of families)
+    for (const variant of family.variants)
+      for (const spec of walk(variant.tree))
+        if (spec.textProperty) {
+          const node = [...env.state.nodes.values()].find(
+            n =>
+              mainNode(n) &&
+              n.type === 'TEXT' &&
+              identity(n).includes('/variant/' + variant.id + '/') &&
+              identity(n).endsWith('/' + spec.id)
+          );
+          assert(node, spec.id);
+          assert.strictEqual(node.characters, spec.characters);
+          let owner = node.parent;
+          while (owner.type !== 'COMPONENT_SET') owner = owner.parent;
+          assert.strictEqual(
+            owner.componentPropertyDefinitions[
+              node.componentPropertyReferences.characters
+            ].defaultValue,
+            spec.characters
+          );
+        }
+}
+const {
   buildSearchControlRecipes,
 } = require('../../../scripts/figma-search-control-recipes.cjs');
 const root = path.resolve(__dirname, '../../..');
@@ -94,6 +135,11 @@ async function main() {
       function visit(t) {
         assert(t.id && !ids.has(t.id), 'Unique explicit anatomy IDs');
         ids.add(t.id);
+        if (t.textProperty && t.textProperty.startsWith(f.id + '.'))
+          assert(
+            t.textProperty.startsWith(v.id + ' '),
+            'Stable authored-state property context'
+          );
         if (t.type === 'TEXT')
           assert(
             typeof t.characters === 'string' && t.characters.length,
@@ -131,6 +177,7 @@ async function main() {
   };
   for (const mode of doc.modes) {
     const env = environment(nativeDoc, { sharedOnly: true });
+    installNativeTextPropertyDefaultFixture(env);
     await env.runCode(
       fs.readFileSync(path.join(__dirname, '../kit-svg-sizing.js'), 'utf8') +
         '\nObject.assign(globalThis,{mgSvgSizingPlan,mgSvgSizingDocumentValues,mgSvgSizingSourceValues,mgSvgSizingNativeValues,mgSvgSizingNativePlan,mgApplySvgSizing});'
@@ -149,6 +196,7 @@ async function main() {
       firstBuild.errors.join('\n')
     );
     assert(firstBuild.createdNodeIds.length > 0);
+    assertMasterSourceCopy(env, supported);
     const sizedIcons = [...env.state.nodes.values()].filter(
       n => identity(n)?.endsWith('.search-icon') && mainNode(n)
     );
@@ -172,22 +220,44 @@ async function main() {
     );
     assert(component);
     const consumer = component.createInstance();
-    const property = Object.keys(consumer.componentProperties).find(
-      k => k.replace(/#.*$/, '') === 'Selection label'
-    );
-    assert(property);
+    const sourceLabel = component
+      .findAllWithCriteria({ types: ['TEXT'] })
+      .find(n =>
+        n.componentPropertyReferences?.characters
+          ?.replace(/#.*$/, '')
+          .endsWith(' Selection label')
+      );
+    assert(sourceLabel);
+    const property = sourceLabel.componentPropertyReferences.characters;
+    assert(property in consumer.componentProperties);
     consumer.setProperties({ [property]: 'Edited source label' });
     const editedConsumers = [...env.state.nodes.values()]
       .filter(n => n.type === 'COMPONENT' && mainNode(n))
       .map(main => {
         const instance = main.createInstance();
-        const fields = Object.keys(instance.componentProperties).filter(
-          key => instance.componentProperties[key].type === 'TEXT'
-        );
+        const fields = [
+          ...new Set(
+            instance
+              .findAllWithCriteria({ types: ['TEXT'] })
+              .map(n => n.componentPropertyReferences?.characters)
+              .filter(Boolean)
+          ),
+        ];
+        for (const node of instance.findAllWithCriteria({ types: ['TEXT'] })) {
+          const key = node.componentPropertyReferences?.characters;
+          if (!key) continue;
+          Object.defineProperty(node, 'characters', {
+            configurable: true,
+            get() {
+              return instance.componentProperties[key].value;
+            },
+          });
+        }
         for (const key of fields) instance.setProperties({ [key]: 'Edited' });
         return { instance, fields };
       });
     assert(editedConsumers.some(item => item.fields.length));
+    const propertiesBefore = propertyState(env);
     const recorded = [...env.state.nodes.values()]
       .filter(identity)
       .map(n => [identity(n), n.id])
@@ -201,6 +271,8 @@ async function main() {
       );
       assert.strictEqual(result.errors.length, 0, result.errors.join('\n'));
       assert.strictEqual(result.createdNodeIds.length, 0);
+      assertMasterSourceCopy(env, supported);
+      assert.strictEqual(propertyState(env), propertiesBefore);
       assert.deepStrictEqual(
         [...env.state.nodes.values()]
           .filter(identity)
@@ -208,12 +280,19 @@ async function main() {
           .sort(),
         recorded
       );
-      for (const { instance, fields } of editedConsumers)
+      for (const { instance, fields } of editedConsumers) {
+        assert(
+          instance
+            .findAllWithCriteria({ types: ['TEXT'] })
+            .filter(n => n.componentPropertyReferences?.characters)
+            .every(n => n.characters === 'Edited')
+        );
         assert(
           fields.every(
             key => instance.componentProperties[key].value === 'Edited'
           )
         );
+      }
       assert.strictEqual(
         consumer.componentProperties[property].value,
         'Edited source label'
@@ -223,6 +302,38 @@ async function main() {
   const helperSource =
     fs.readFileSync(path.join(__dirname, '../kit-svg-sizing.js'), 'utf8') +
     '\nObject.assign(globalThis,{mgSvgSizingPlan,mgSvgSizingDocumentValues,mgSvgSizingSourceValues,mgSvgSizingNativeValues,mgSvgSizingNativePlan,mgApplySvgSizing});';
+  // Structural scan is not a native acceptance claim: the observed-native fixture
+  // demonstrates why the legacy Empty/Query property default cannot be shared.
+  const legacy = copy(nativeDoc);
+  legacy.components.families = legacy.components.families.filter(
+    f => f.id === 'search-form'
+  );
+  legacy.components.families[0].variants =
+    legacy.components.families[0].variants.filter(v =>
+      ['search-form.empty', 'search-form.query'].includes(v.id)
+    );
+  for (const variant of legacy.components.families[0].variants)
+    for (const spec of walk(variant.tree))
+      if (spec.textProperty)
+        spec.textProperty = spec.textProperty.slice(variant.id.length + 1);
+  const legacyEnv = environment(legacy, { sharedOnly: true });
+  installNativeTextPropertyDefaultFixture(legacyEnv);
+  await legacyEnv.runCode(helperSource);
+  installSearchControlSvgFixture(legacyEnv, legacy.components.families);
+  await legacyEnv.call('importVariables', legacy, ['undrr'], false, [], false);
+  for (let i = 0; i < 2; i++) {
+    const result = await legacyEnv.call(
+      'buildMangroveComponents',
+      legacy,
+      'undrr',
+      ['search-form']
+    );
+    assert.deepStrictEqual(copy(result.errors), []);
+  }
+  assert.throws(
+    () => assertMasterSourceCopy(legacyEnv, legacy.components.families),
+    /strictly equal/
+  );
   const recordedState = env =>
     JSON.stringify({
       nodes: [...env.state.nodes.values()].map(n => [
