@@ -53,7 +53,7 @@ const SOURCE_HASHES = {
     '0f8801b5292a562a5f92060d258bfb75c2ebbe6b6b23c812bc7a37e374953cdb',
 
   'scripts/figma-page-reading-recipes.cjs':
-    '27a6e05d2b67ca8a7f69aa6a956d5779aeb0f99c443bff6407b20c2cfafcc270',
+    'a850c4e680dc7bca3171d0e890141844133a580b76725ed36143bf77eb7f31e0',
   '.storybook/preview.js':
     'e19af50151293071b3f87910cded15f2cb7835dbffd125085f3708a257221814',
   'stories/Atom/Icons/Icon.jsx':
@@ -1466,7 +1466,13 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
                   );
           n.characters = observed.undrr.text;
           if (n.textProperty)
-            n.textProperty = 'TOC ' + page + '/' + w + ' ' + n.textProperty;
+            n.textProperty =
+              'TOC ' +
+              page +
+              '/' +
+              w +
+              ' ' +
+              (index === null ? 'Title' : 'Link' + (index + 1));
           n.textStyle = style(key + '/' + w + '/toc-' + n.id, observed);
           n.fill = paint(
             key + '/' + w + '/toc-' + n.id + '/ink',

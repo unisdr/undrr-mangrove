@@ -937,6 +937,34 @@ function buildCardContentRecipes({ root, modes, variables, styles }) {
       'Negative depicts source card against caller-provided dark context; source decorator background is not silently built into the reusable card.',
     ]
   );
+  const scoped = new Set(['Title', 'Summary']),
+    defaults = new Map();
+  for (const variant of icon.variants) {
+    const context =
+      variant.properties.Preset === 'Negative'
+        ? 'default'
+        : variant.properties.Preset.toLowerCase();
+    function visit(node) {
+      if (scoped.has(node.textProperty))
+        node.textProperty = 'icon-card/' + context + ' ' + node.textProperty;
+      if (node.textProperty) {
+        if (
+          defaults.has(node.textProperty) &&
+          defaults.get(node.textProperty) !== node.characters
+        )
+          fail(
+            'Unscoped differing authored IconCard text default ' +
+              node.textProperty
+          );
+        defaults.set(node.textProperty, node.characters);
+      }
+      for (const child of node.children || []) visit(child);
+    }
+    visit(variant.tree);
+  }
+  icon.limitations.push(
+    'Different authored card content uses stable source preset property contexts; Default and Negative share identical source copy. Native state-switch/default migration and arbitrary reflow remain separate gates.'
+  );
   return [book, hbook, icon];
 }
 module.exports = { buildCardContentRecipes };

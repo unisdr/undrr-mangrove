@@ -774,6 +774,42 @@ function buildPageReadingRecipes({ root, modes, variables, styles }) {
         ),
       });
     }
+  function scopedDefaults(family, fields, context) {
+    const allowed = new Set(fields),
+      defaults = new Map();
+    for (const variant of family.variants) {
+      function visit(node) {
+        if (allowed.has(node.textProperty))
+          node.textProperty =
+            family.id + '/' + context(variant) + ' ' + node.textProperty;
+        if (node.textProperty) {
+          if (
+            defaults.has(node.textProperty) &&
+            defaults.get(node.textProperty) !== node.characters
+          )
+            fail(
+              'Unscoped differing authored text default ' +
+                family.id +
+                '/' +
+                node.textProperty
+            );
+          defaults.set(node.textProperty, node.characters);
+        }
+        for (const child of node.children || []) visit(child);
+      }
+      visit(variant.tree);
+    }
+  }
+  scopedDefaults(toc, ['Link1', 'Link2', 'Link3'], v => v.properties.Page);
+  scopedDefaults(quote, ['Quote', 'Attribution', 'AttributionTitle'], v =>
+    v.properties.Preset.startsWith('line-') ? 'line' : v.properties.Preset
+  );
+  toc.limitations.push(
+    'Different report/article link defaults use stable authored context identities. Same source copy across viewport variants shares its default; native state-switch/legacy-property migration and pixels remain separate gates.'
+  );
+  quote.limitations.push(
+    'Plain quote/attribution defaults use stable authored content contexts. Light/Dark/Bright share the same actual source content; article and without-attribution content remain independent. Rich runs remain unexposed and retain their separate formatting contract.'
+  );
   return [toc, quote];
 }
 module.exports = { buildPageReadingRecipes, SOURCE_HASHES };

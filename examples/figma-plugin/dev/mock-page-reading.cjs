@@ -19,6 +19,95 @@ function document() {
   return d;
 }
 const walk = n => [n, ...(n.children || []).flatMap(walk)];
+
+// Native-observed setter propagation is modeled separately from rich formatting.
+const {
+  installNativeTextPropertyDefaultFixture,
+} = require('./mock-search-results.cjs');
+const sourceWalk = n => [n, ...(n.children || []).flatMap(sourceWalk)];
+function assertSourceDefaults(env, families) {
+  for (const family of families)
+    for (const variant of family.variants)
+      for (const spec of sourceWalk(variant.tree).filter(n => n.textProperty)) {
+        const matches = [...env.state.nodes.values()].filter(n => {
+          if (
+            n.type !== 'TEXT' ||
+            !identity(n).includes('/variant/' + variant.id + '/') ||
+            !identity(n).endsWith('/' + spec.id)
+          )
+            return false;
+          for (let p = n.parent; p; p = p.parent)
+            if (p.type === 'INSTANCE') return false;
+          return true;
+        });
+        assert.strictEqual(matches.length, 1, variant.id + '/' + spec.id);
+        const node = matches[0],
+          reference = node.componentPropertyReferences.characters;
+        assert.strictEqual(
+          node.characters,
+          spec.characters,
+          variant.id + '/' + spec.id + ' source copy'
+        );
+        let owner = node.parent;
+        while (owner && owner.type !== 'COMPONENT_SET') owner = owner.parent;
+        assert(owner && reference);
+        assert.strictEqual(
+          owner.componentPropertyDefinitions[reference].defaultValue,
+          spec.characters,
+          variant.id + '/' + spec.id + ' default'
+        );
+      }
+}
+function editReferencedText(instance) {
+  const fields = sourceWalk(instance).filter(
+      n =>
+        n.type === 'TEXT' &&
+        n.componentPropertyReferences?.characters &&
+        Object.hasOwn(
+          instance.componentProperties,
+          n.componentPropertyReferences.characters
+        )
+    ),
+    keys = [
+      ...new Set(fields.map(n => n.componentPropertyReferences.characters)),
+    ];
+  for (const node of fields) {
+    const original = Object.getOwnPropertyDescriptor(node, 'characters'),
+      reference = node.componentPropertyReferences.characters;
+    Object.defineProperty(node, 'characters', {
+      configurable: true,
+      get() {
+        return (
+          instance.componentProperties[reference]?.value ??
+          original.get.call(this)
+        );
+      },
+      set(value) {
+        original.set.call(this, value);
+      },
+    });
+  }
+  for (const key of keys)
+    instance.setProperties({ [key]: `Edited ${key.replace(/#[^#]+$/, '')}` });
+  return keys;
+}
+function assertDisplayedEdits(instance, keys) {
+  for (const node of sourceWalk(instance).filter(
+    n =>
+      n.type === 'TEXT' &&
+      keys.includes(n.componentPropertyReferences?.characters)
+  ))
+    assert.strictEqual(
+      node.characters,
+      `Edited ${node.componentPropertyReferences.characters.replace(/#[^#]+$/, '')}`
+    );
+}
+function defaultSnapshot(env) {
+  return [...env.state.nodes.values()]
+    .filter(n => n.type === 'COMPONENT_SET')
+    .map(n => [n.id, copy(n.componentPropertyDefinitions)]);
+}
+
 async function main() {
   const d = document(),
     ids = d.components.families.map(f => f.id),
@@ -37,6 +126,7 @@ async function main() {
   );
   for (const m of d.modes) {
     const env = await rangeEnvironment(d);
+    installNativeTextPropertyDefaultFixture(env);
     assert.deepStrictEqual(
       copy(
         (await env.call('importVariables', d, [m.id], false, [], true)).errors
@@ -45,6 +135,7 @@ async function main() {
     );
     const first = await env.call('buildMangroveComponents', d, m.id, ids);
     assert.deepStrictEqual(copy(first.errors), []);
+    assertSourceDefaults(env, d.components.families);
     const instances = [],
       rich = [];
     for (const report of first.families)
@@ -104,13 +195,7 @@ async function main() {
         const instance = master.createInstance();
         instance.x = 181;
         instance.y = 307;
-        const keys = Object.keys(instance.componentProperties).filter(
-          k => instance.componentProperties[k].type === 'TEXT'
-        );
-        for (const key of keys)
-          instance.setProperties({
-            [key]: `Edited ${key.replace(/#[^#]+$/, '')}`,
-          });
+        const keys = editReferencedText(instance);
         instances.push({ instance, keys });
         if (spec.properties.Preset === 'source-tested-rich-bright') {
           const all = walk(master).filter(
@@ -176,14 +261,18 @@ async function main() {
           ])
         ),
       beforeRich = rs();
+    const beforeDefaults = defaultSnapshot(env);
     for (let i = 0; i < 2; i++) {
       const again = await env.call('buildMangroveComponents', d, m.id, ids);
       assert.deepStrictEqual(copy(again.errors), []);
       assert.strictEqual(again.createdNodeIds.length, 0);
+      assertSourceDefaults(env, d.components.families);
+      assert.deepStrictEqual(defaultSnapshot(env), beforeDefaults);
       assert.deepStrictEqual(owned(), before);
       assert.strictEqual(rs(), beforeRich);
       for (const { instance, keys } of instances) {
         assert(!instance.removed);
+        assertDisplayedEdits(instance, keys);
         assert.strictEqual(instance.x, 181);
         assert.strictEqual(instance.y, 307);
         for (const key of keys)
@@ -193,6 +282,55 @@ async function main() {
           );
       }
     }
+  }
+  // Restore the old component-set names deliberately: the observed setter model
+  // must reproduce authored-copy corruption, rather than merely inspect names.
+  for (const familyId of ['page-bulleted-toc', 'quote-highlight']) {
+    const legacy = document();
+    const family = legacy.components.families.find(f => f.id === familyId);
+    legacy.components.families = legacy.components.families.filter(
+      f => f.id === familyId || f.id === 'editorial-cta'
+    );
+    for (const variant of family.variants)
+      for (const node of sourceWalk(variant.tree))
+        if (node.textProperty?.startsWith(familyId + '/'))
+          node.textProperty = node.textProperty.split(' ').at(-1);
+    const legacyEnv = await rangeEnvironment(legacy);
+    installNativeTextPropertyDefaultFixture(legacyEnv);
+
+    assert.deepStrictEqual(
+      copy(
+        (
+          await legacyEnv.call(
+            'importVariables',
+            legacy,
+            ['undrr'],
+            false,
+            [],
+            true
+          )
+        ).errors
+      ),
+      []
+    );
+    for (let i = 0; i < 2; i++)
+      assert.deepStrictEqual(
+        copy(
+          (
+            await legacyEnv.call(
+              'buildMangroveComponents',
+              legacy,
+              'undrr',
+              legacy.components.families.map(f => f.id)
+            )
+          ).errors
+        ),
+        []
+      );
+    assert.throws(
+      () => assertSourceDefaults(legacyEnv, [family]),
+      /source copy|default/
+    );
   }
   const read = fs.readFileSync;
   for (const [suffix, from, to] of [
