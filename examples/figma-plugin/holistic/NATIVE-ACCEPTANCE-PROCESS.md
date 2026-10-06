@@ -45,6 +45,23 @@ wrong style ID or erased underline must fail even if two rebuilds reproduce it
 exactly. Rich text requires its own full run comparison; a plain-text helper
 cannot accept rich ranges by omitting unsupported fields.
 
+For wrapping rich TEXT, compare actual width with its owning source allocation
+and record both parent and child sizing modes. A nonempty `FILL` paragraph with
+zero width fails, even when copy, fonts and every run are correct. Record the
+native setter sequence when investigating sizing: empty creation, parenting,
+layout, characters, range styles and wrapping. A passing mock that does not
+model native reflow cannot accept this sequence. Preserve genuine `FILL` and
+`HUG` intent; do not repair a zero-width paragraph with a fixture-specific hard
+coded width or a fabricated fixed height.
+
+Compare explicit source clipping after effects, layout and child construction.
+An effect workaround must not overwrite a declared `clipsContent: false`.
+Capture the complete effect before and after binding, style assignment and final
+scene application, including spread, radius, colour aliases and other fields.
+An isolated setter result narrows attribution; it does not accept the ordinary
+full-builder path. Preserve getter exceptions and original operation outcomes
+in diagnostic instrumentation, rather than letting a trace change the result.
+
 Keep semantic identity, recorded numeric geometry and rendered source evidence
 separate. Document explicit native Float32 storage where demonstrated. Do not
 introduce epsilon rounding or infer glyph, image-crop or gradient fidelity from
