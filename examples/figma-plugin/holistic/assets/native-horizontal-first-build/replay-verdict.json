@@ -1,0 +1,228 @@
+{
+  "archiveIntegrity": true,
+  "rawFiles": 36,
+  "sourceAnatomyKeys": 190,
+  "allModeTextContracts": [
+    {
+      "brand": "undrr",
+      "entries": 78
+    },
+    {
+      "brand": "delta",
+      "entries": 78
+    },
+    {
+      "brand": "irp",
+      "entries": 78
+    },
+    {
+      "brand": "mcr",
+      "entries": 78
+    },
+    {
+      "brand": "preventionweb",
+      "entries": 78
+    }
+  ],
+  "nativeNodeCount": 374,
+  "instanceMainLinks": 20,
+  "plainSubgate": {
+    "checked": 70,
+    "passed": 70,
+    "failures": []
+  },
+  "richWidthFailures": [
+    {
+      "id": "13:126",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.default.640/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "13:125",
+      "parentWidth": 440
+    },
+    {
+      "id": "I13:241;13:126",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.default.640/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "I13:241;13:125",
+      "parentWidth": 440
+    },
+    {
+      "id": "13:143",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.noimage.640/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "13:142",
+      "parentWidth": 610
+    },
+    {
+      "id": "I13:262;13:143",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.noimage.640/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "I13:262;13:142",
+      "parentWidth": 610
+    },
+    {
+      "id": "13:158",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.nolink.640/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "13:157",
+      "parentWidth": 440
+    },
+    {
+      "id": "I13:281;13:158",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.nolink.640/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "I13:281;13:157",
+      "parentWidth": 440
+    },
+    {
+      "id": "13:169",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.buttononly.640/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "13:168",
+      "parentWidth": 440
+    },
+    {
+      "id": "I13:294;13:169",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.buttononly.640/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "I13:294;13:168",
+      "parentWidth": 440
+    },
+    {
+      "id": "13:188",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.default.390/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "13:187",
+      "parentWidth": 360
+    },
+    {
+      "id": "I13:311;13:188",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.default.390/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "I13:311;13:187",
+      "parentWidth": 360
+    },
+    {
+      "id": "13:205",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.noimage.390/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "13:204",
+      "parentWidth": 360
+    },
+    {
+      "id": "I13:332;13:205",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.noimage.390/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "I13:332;13:204",
+      "parentWidth": 360
+    },
+    {
+      "id": "13:220",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.nolink.390/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "13:219",
+      "parentWidth": 360
+    },
+    {
+      "id": "I13:351;13:220",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.nolink.390/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "I13:351;13:219",
+      "parentWidth": 360
+    },
+    {
+      "id": "13:231",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.buttononly.390/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "13:230",
+      "parentWidth": 360
+    },
+    {
+      "id": "I13:364;13:231",
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.buttononly.390/content/summary-box/summary",
+      "width": 0,
+      "height": 4536,
+      "parentId": "I13:364;13:230",
+      "parentWidth": 360
+    }
+  ],
+  "effectSpreadMismatch": {
+    "source": 1,
+    "actual": 0
+  },
+  "clippingFailures": [
+    {
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.default.640",
+      "ids": ["13:111", "13:241"],
+      "source": false,
+      "actual": true
+    },
+    {
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.noimage.640",
+      "ids": ["13:131", "13:262"],
+      "source": false,
+      "actual": true
+    },
+    {
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.nolink.640",
+      "ids": ["13:148", "13:281"],
+      "source": false,
+      "actual": true
+    },
+    {
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.buttononly.640",
+      "ids": ["13:159", "13:294"],
+      "source": false,
+      "actual": true
+    },
+    {
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.default.390",
+      "ids": ["13:174", "13:311"],
+      "source": false,
+      "actual": true
+    },
+    {
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.noimage.390",
+      "ids": ["13:193", "13:332"],
+      "source": false,
+      "actual": true
+    },
+    {
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.nolink.390",
+      "ids": ["13:210", "13:351"],
+      "source": false,
+      "actual": true
+    },
+    {
+      "key": "family/horizontal-book-card/variant/horizontal-book-card.buttononly.390",
+      "ids": ["13:221", "13:364"],
+      "source": false,
+      "actual": true
+    }
+  ],
+  "cloudMembershipVisible": true,
+  "nativeSourceAccepted": false,
+  "baselineAdoption": false,
+  "scope": "Exact raw first-run/readonly integrity and reproducible bounded source mismatch audit. No production execution, rich full-style/paint acceptance, live-mode/repeat/render/publication acceptance or current target authority.",
+  "fullAuthoredSourceAudit": {
+    "checks": 3844,
+    "passedChecks": 3796,
+    "mismatches": 56,
+    "allOriginalAuditFieldsExact": true
+  }
+}
