@@ -1,0 +1,126 @@
+{
+  "operation": "executed-rich-zero-width-chronology-and-fresh-cleanup",
+  "files": [
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/probe.js",
+      "path": "probe.js",
+      "bytes": 48418,
+      "sha256": "5b24d9a30cd93b0daa9e39a744988af531847b81a5c9e0710fe86203b2048c61"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/runtime.js",
+      "path": "runtime.js",
+      "bytes": 14946,
+      "sha256": "fd6053104ae9d6fecafcced13cd30f63da35f028dec915b1982677a9ac8cab43"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/source-contract.json",
+      "path": "source-contract.json",
+      "bytes": 55008,
+      "sha256": "f67201c3be5f3884b14a348769c43ec4c479d43bf45d64fc2b21d432ef5f1f14"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/source-pins.json",
+      "path": "source-pins.json",
+      "bytes": 1557,
+      "sha256": "f88cac026860d673f87f05234b3f866f1a5b23ddd78239c71b3f81f2abaa99fd"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/manifest.json",
+      "path": "manifest.json",
+      "bytes": 1853,
+      "sha256": "6ff58fe88d689bcad22a462c912d74964373c602c27d340f855954ac50752e97"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/decode.cjs",
+      "path": "decode.cjs",
+      "bytes": 1886,
+      "sha256": "98f5bcfa63018a9913b36775baccada560a9c8406d616ab0ebc92b578335ea0f"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/actual-native-tool.json",
+      "path": "actual-native-tool.json",
+      "bytes": 15338,
+      "sha256": "5555853f8ad0369fa472e16cdb72a5dba74081a6301e2e6d863ae899b227d93f"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/actual-native-packet.json",
+      "path": "actual-native-packet.json",
+      "bytes": 13069,
+      "sha256": "f510e039c24d6a3dc09948dc6c815e4c55a623cef55a608538c637caa350cff6"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/actual-decoded.json",
+      "path": "actual-decoded.json",
+      "bytes": 69506,
+      "sha256": "51225fb52c17e2efc7617f5079af358c0037753f8000c8d56bfba77f87573105"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/actual-cleanup-native-tool.json",
+      "path": "actual-cleanup-native-tool.json",
+      "bytes": 5132,
+      "sha256": "e71da03a4816466fdd8508515ecf9cb95410bc875ce6aaef850901427d351ea4"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/actual-cleanup-decoded.json",
+      "path": "actual-cleanup-decoded.json",
+      "bytes": 4413,
+      "sha256": "2cc08ad07564d5f59290d075879e52f4ce6feb775fc8d0726a39664df03266f6"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/cleanup-read.js",
+      "path": "cleanup-read.js",
+      "bytes": 16637,
+      "sha256": "ccb219652de97f186f8ba80bbac377c7cf8db8552c2b30a45704b98ff6dbc133"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/cleanup-read-manifest.json",
+      "path": "cleanup-read-manifest.json",
+      "bytes": 402,
+      "sha256": "e56d3a43052f36fa144f982f08de931ba8a62f9eb7c3eea7e69a9a570fe6ab21"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/independent-actual-verdict-tag-20261006.json",
+      "path": "independent-actual-verdict-tag-20261006.json",
+      "bytes": 2209,
+      "sha256": "fcb34ebb22e949d92d517b96d9f7277d42d611c6fc8b609103b9f42b42e94bb0"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/independent-prewrite-verdict-range-20261006.json",
+      "path": "independent-prewrite-verdict-range-20261006.json",
+      "bytes": 2172,
+      "sha256": "952a98ccc36b78b4bd0657939b64d46d9b963c000b6023dda4ad674bed7fcb9d"
+    },
+    {
+      "source": "/tmp/mangrove-horizontal-rich-chronology-20261006/README.md",
+      "path": "preparation-README.md",
+      "bytes": 3123,
+      "sha256": "ccbf9640840b46734740ea82b05b78ffeae2e234e49db36dde74d516d5ecd109"
+    }
+  ],
+  "reusedWholeSource": {
+    "relativeArchivePath": "../native-horizontal-foundations/foundation-import/source-document.json",
+    "bytes": 1239699,
+    "sha256": "6685f5dcb969745ed60824651f4be6cdc5b8cd9c0f1f0ef61de127305ccc8251"
+  },
+  "observations": {
+    "fixtures": 4,
+    "originalWidths": [
+      640,
+      390
+    ],
+    "temporaryCreatedIDs": 156,
+    "freshAll156Absent": true,
+    "original374MembershipExact": true,
+    "sameCallOriginalFieldAndFoundationObservationsExact": true,
+    "width0Height4536AllFour": true,
+    "source3RunsExact": true,
+    "sameLayoutReapplyInsufficient": true
+  },
+  "limits": [
+    "No production fix, source-glyph/raster/fontbyte/live-edit/publication acceptance.",
+    "Fresh cleanup proves all returned IDs absent plus original membership/16 summaries; fullfield/foundation equality belongs to original same operation.",
+    "Historical source-pins/manifest contain original absolute paths; portable replay verifies archived bytes and referenced existing whole source, not rerunning native code or preparation."
+  ],
+  "preparedFollowonNotIncluded": "Separate dynamic owning-width diagnostic is unexecuted and deliberately excluded."
+}

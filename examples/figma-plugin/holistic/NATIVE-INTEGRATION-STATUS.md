@@ -236,8 +236,26 @@ bindings remain in the saved report. The operation records unchanged original
 374-node fields and foundations; a separate fresh read finds all 156 returned
 temporary IDs absent and verifies the original scene membership. No shared
 rich-text fix, source fidelity acceptance or publication follows from this
-failed correction. The next diagnostic must initialise width from the actual
-source owning allocation, retaining responsive FILL and source HUG height.
+failed correction. The [executed chronology archive](assets/native-horizontal-rich-chronology/README.md)
+retains the complete raw tool packets, decoded report, source contracts and
+separate cleanup read with an offline replay.
+
+The subsequent reviewed dynamic-width diagnostic initialised each disposable
+TEXT from its actual VERTICAL parent's width minus actual inline padding, then
+restored HEIGHT/FILL/HUG. Both before-rich and after-rich initialization
+produced width 440 and height 96 for Default640, and width 360 and height 120
+for Default390. Those allocations were measured, not hardcoded; no fixed HUG
+height or grow1 policy was introduced. All three source runs and the complete
+222-character copy remain exact at the declared field scope. The same call
+records unchanged original fields and foundations; a separate fresh read again
+verifies all 156 returned temporary IDs absent and original 374 membership.
+Independent review accepts the bounded positive-width result. It does not prove
+the complete production helper, edited-content preservation, live responsive
+reflow, source glyphs or whole component fidelity. A copied-builder correction
+and its source/edit/repeat checks are being prepared; production and native
+library integration remain pending. The complete decoded report is retained
+externally with SHA256
+`e1d230d99d360fa535710de46b0b7e341f72cfb21b5ca2e9a132eaeeb68fa253`.
 
 ## Canonical style publication preparation
 
