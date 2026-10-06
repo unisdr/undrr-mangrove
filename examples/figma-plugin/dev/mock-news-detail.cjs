@@ -11,6 +11,7 @@ const {
   buildNewsDetailDependencyRecipes,
   buildNewsRelatedCardRecipes,
   buildNewsEditorialRecipes,
+  buildNewsImageHeaderRecipes,
 } = require('../../../scripts/figma-news-detail-recipes.cjs');
 const {
   installNativeTextPropertyDefaultFixture,
@@ -711,6 +712,7 @@ if (require.main === module)
     await dependencyTests();
     await relatedTests();
     await editorialTests();
+    await imageHeaderTests();
   })().catch(e => {
     console.error(e);
     process.exitCode = 1;
@@ -982,5 +984,348 @@ async function editorialTests() {
   }
   console.log(
     'News taxonomy2/recommendations2 allfive actual builder/two nonempty zero-create geometry repeats, native Tag dependencies and short plain/rich consumer edits pass. UA raster candidate, arbitrary edit reflow, native fonts/pixels/publication remain open.'
+  );
+}
+
+function imageHeaderDocument() {
+  const d = dependencyDocument();
+  const header = d.components.families.find(f => f.id === 'article-header'),
+    tag = d.components.families.find(f => f.id === 'tag');
+  d.components.families = [
+    tag,
+    header,
+    ...buildNewsImageHeaderRecipes({ root, ...d }),
+  ];
+  return d;
+}
+async function imageHeaderTests() {
+  const d = imageHeaderDocument(),
+    family = d.components.families.find(f => f.id === 'article-image-header'),
+    walk = n => [n, ...(n.children || []).flatMap(walk)];
+  assert.strictEqual(family.variants.length, 8);
+  const beforeFactory = copy({ variables: d.variables, styles: d.styles });
+  assert.deepStrictEqual(copy(buildNewsImageHeaderRecipes({ root, ...d })), [
+    copy(family),
+  ]);
+  assert.deepStrictEqual(
+    { variables: d.variables, styles: d.styles },
+    beforeFactory
+  );
+  for (const mode of d.modes) {
+    const env =
+      await require('./mock-rich-text-integration.cjs').rangeEnvironment(d);
+    installNativeTextPropertyDefaultFixture(env);
+    await env.call('importVariables', d, [mode.id], false, [], true);
+    const build = () =>
+      env.call('buildMangroveComponents', d, mode.id, ['article-image-header']);
+    const first = await build();
+    assert.deepStrictEqual(copy(first.errors), []);
+    const resolve = (name, seen = new Set()) => {
+      assert(!seen.has(name));
+      seen.add(name);
+      const variable = d.variables.find(v => v.name === name);
+      assert(variable, name);
+      const x = variable.values[mode.id];
+      return x.alias ? resolve(x.alias, seen) : x;
+    };
+    const consumers = [];
+    const check = () => {
+      for (const variant of family.variants) {
+        const prefix = 'family/article-image-header/variant/' + variant.id;
+        const master = [...env.state.nodes.values()].find(
+          n => identity(n) === prefix
+        );
+        assert(master);
+        assert.strictEqual(master.width, +variant.properties.SourceViewport);
+        const visit = (spec, key) => {
+          const node = [...env.state.nodes.values()].find(
+            n => identity(n) === key
+          );
+          assert(node, key);
+          assert.strictEqual(node.opacity, 1, key + '/opacity');
+          if (spec.absolute) {
+            assert.strictEqual(node.x, resolve(spec.absolute.offsetX));
+            assert.strictEqual(node.y, resolve(spec.absolute.offsetY));
+          }
+          if (spec.type === 'FRAME')
+            for (const field of ['width', 'height'])
+              if (
+                typeof spec.layout[field] === 'string' &&
+                !['FILL', 'HUG'].includes(spec.layout[field])
+              )
+                assert.strictEqual(
+                  node[field],
+                  resolve(spec.layout[field]),
+                  key + '/' + field
+                );
+          if (spec.type === 'TEXT') {
+            assert.strictEqual(node.textWrapStyle, spec.textWrap);
+            assert.strictEqual(node.characters, spec.characters, key);
+            let owner = node.parent;
+            while (owner.type !== 'COMPONENT_SET') owner = owner.parent;
+            assert.strictEqual(
+              owner.componentPropertyDefinitions[
+                node.componentPropertyReferences.characters
+              ].defaultValue,
+              spec.characters
+            );
+            assert(
+              spec.textProperty.startsWith(
+                variant.properties.Treatment +
+                  ' ' +
+                  variant.properties.SourceViewport +
+                  ' '
+              )
+            );
+          }
+          if (spec.fill) {
+            const paint = node.fills[0];
+            assert(paint?.boundVariables?.color, key + '/bound paint');
+            assert.strictEqual(
+              env.state.variables.find(
+                v => v.id === paint.boundVariables.color.id
+              ).name,
+              spec.fill
+            );
+          }
+          if (spec.image) {
+            assert.strictEqual(node.fills[0].type, 'IMAGE');
+            assert.strictEqual(node.fills[0].scaleMode, 'FILL');
+            assert.strictEqual(
+              node.fills[0].imageHash,
+              require('crypto')
+                .createHash('sha256')
+                .update(Buffer.from(spec.image.base64, 'base64'))
+                .digest('hex')
+            );
+          }
+          for (const child of spec.children || [])
+            visit(child, key + '/' + child.id);
+        };
+        visit(variant.tree, prefix);
+      }
+    };
+    check();
+    assert.strictEqual(env.state.images.size, 2);
+    for (const variant of family.variants) {
+      const master = [...env.state.nodes.values()].find(
+          n =>
+            identity(n) === 'family/article-image-header/variant/' + variant.id
+        ),
+        consumer = master.createInstance();
+      env.figma.currentPage.appendChild(consumer);
+      consumer.x = 1600;
+      consumer.y = 1700;
+      const own = consumer
+        .findAllWithCriteria({ types: ['TEXT'] })
+        .filter(
+          n =>
+            n.componentPropertyReferences?.characters &&
+            Object.hasOwn(
+              consumer.componentProperties,
+              n.componentPropertyReferences.characters
+            )
+        );
+      const edits = [];
+      for (const n of own) {
+        const key = n.componentPropertyReferences.characters,
+          desc =
+            Object.getOwnPropertyDescriptor(n, 'characters') ||
+            Object.getOwnPropertyDescriptor(
+              Object.getPrototypeOf(n),
+              'characters'
+            );
+        Object.defineProperty(n, 'characters', {
+          configurable: true,
+          get() {
+            return consumer.componentProperties[key].value;
+          },
+          set(value) {
+            desc.set.call(this, value);
+          },
+        });
+        const value = 'Edited ' + key.replace(/#[^#]+$/, '');
+        consumer.setProperties({ [key]: value });
+        edits.push({ n, key, value });
+      }
+      assert(edits.length, variant.id);
+      const nested = consumer
+        .findAllWithCriteria({ types: ['INSTANCE'] })
+        .find(n =>
+          identity(n.main).startsWith('family/article-header/variant/')
+        );
+      let rich;
+      if (nested) {
+        for (const n of nested.findAllWithCriteria({ types: ['TEXT'] })) {
+          const key = n.componentPropertyReferences?.characters;
+          if (!key || !Object.hasOwn(nested.componentProperties, key)) continue;
+          const desc =
+            Object.getOwnPropertyDescriptor(n, 'characters') ||
+            Object.getOwnPropertyDescriptor(
+              Object.getPrototypeOf(n),
+              'characters'
+            );
+          Object.defineProperty(n, 'characters', {
+            configurable: true,
+            get() {
+              return nested.componentProperties[key].value;
+            },
+            set(value) {
+              desc.set.call(this, value);
+            },
+          });
+          const value = 'Short nested edit';
+          nested.setProperties({ [key]: value });
+          edits.push({ n, key, value, owner: nested });
+        }
+        const source = nested.main
+          .findAllWithCriteria({ types: ['TEXT'] })
+          .find(n => identity(n).endsWith('/metadata'));
+        const clone = nested
+          .findAllWithCriteria({ types: ['TEXT'] })
+          .find(n => identity(n).endsWith('/metadata'));
+        assert(source && clone);
+        const text = env.attachRichText(clone, source);
+        const link = text
+          .getStyledTextSegments(['hyperlink'])
+          .find(r => r.hyperlink?.type === 'URL');
+        assert(link);
+        text.editRich(link.start, link.end, 'Linked consumer');
+        rich = {
+          text,
+          characters: text.characters,
+          runs: copy(
+            text.getStyledTextSegments([
+              'textStyleId',
+              'fills',
+              'hyperlink',
+              'textDecoration',
+            ])
+          ),
+        };
+      }
+      consumers.push({ consumer, edits, rich, main: consumer.main.id });
+    }
+    const baseline = snapshot(env);
+    assert(env.state.nodes.size > family.variants.length);
+    for (let i = 0; i < 2; i++) {
+      const r = await build();
+      assert.deepStrictEqual(copy(r.errors), []);
+      assert.strictEqual(r.createdNodeIds.length, 0);
+      check();
+      assert.strictEqual(snapshot(env), baseline);
+      assert.strictEqual(env.state.images.size, 2);
+      for (const c of consumers) {
+        assert.strictEqual(c.consumer.main.id, c.main);
+        assert.strictEqual(c.consumer.x, 1600);
+        assert.strictEqual(c.consumer.y, 1700);
+        if (c.rich) {
+          assert.strictEqual(c.rich.text.characters, c.rich.characters);
+          assert.deepStrictEqual(
+            copy(
+              c.rich.text.getStyledTextSegments([
+                'textStyleId',
+                'fills',
+                'hyperlink',
+                'textDecoration',
+              ])
+            ),
+            c.rich.runs
+          );
+        }
+        for (const e of c.edits) {
+          assert.strictEqual(
+            (e.owner || c.consumer).componentProperties[e.key].value,
+            e.value
+          );
+          assert.strictEqual(e.n.characters, e.value);
+        }
+      }
+    }
+  }
+  for (const font of [
+    'Roboto Regular',
+    'Roboto Condensed Regular',
+    'Roboto Condensed Bold',
+  ]) {
+    const env =
+      await require('./mock-rich-text-integration.cjs').rangeEnvironment(d, {
+        rejectedFonts: [font],
+      });
+    await env.call('importVariables', d, ['undrr'], false, [], true);
+    const before = snapshot(env),
+      r = await env.call('buildMangroveComponents', d, 'undrr', [
+        'article-image-header',
+      ]);
+    assert(r.errors.length);
+    assert.strictEqual(r.createdNodeIds.length, 0);
+    assert.strictEqual(snapshot(env), before);
+  }
+  for (const mutate of [
+    x =>
+      (x.variables.find(v => v.name === 'color/neutral-600').values.mcr = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 1,
+      }),
+    x => (x.variables.find(v => v.name === 'font-size/200').values.mcr = 16),
+    x =>
+      (x.variables.find(v => v.name === 'font-family/display').values.irp =
+        'Foreign'),
+    x =>
+      x.variables.push({
+        id: 'foreign',
+        name: 'component/news-image-header/large-image/390/header-height',
+        type: 'FLOAT',
+        values: {},
+      }),
+    x =>
+      x.styles.text.push({
+        id: 'foreign',
+        name: 'Mangrove/source/news-image-header/large-image/390/caption',
+        type: 'TEXT',
+        values: {},
+      }),
+  ]) {
+    const bad = copy(d);
+    mutate(bad);
+    const before = copy({ variables: bad.variables, styles: bad.styles });
+    assert.throws(
+      () => buildNewsImageHeaderRecipes({ root, ...bad }),
+      /source changed/
+    );
+    assert.deepStrictEqual(
+      { variables: bad.variables, styles: bad.styles },
+      before
+    );
+  }
+  const read = fs.readFileSync;
+  for (const name of [
+    'image-header-provenance.json',
+    'image-header-footprints.json',
+    'header-main-source-photo.jpg',
+    'header-alternate-source-photo.jpg',
+    'RobotoCondensed-Bold.woff2',
+    'RobotoCondensed-Regular.woff2',
+    'roboto-condensed/sass/_Regular.scss',
+    'content-hub/source-fonts/LICENSE.txt',
+  ]) {
+    fs.readFileSync = function (file, ...args) {
+      const value = read.call(this, file, ...args);
+      return typeof file === 'string' && file.endsWith(name)
+        ? Buffer.isBuffer(value)
+          ? Buffer.concat([value, Buffer.from('source drift')])
+          : value + 'source drift'
+        : value;
+    };
+    try {
+      assert.throws(imageHeaderDocument, /source changed/);
+    } finally {
+      fs.readFileSync = read;
+    }
+  }
+  console.log(
+    'Article image headers8: allfive rich/default fixtures, genuine source JPEG cache, source paint/geometry/defaults, consumer plain edits and two zero-create repeats pass. Native crop/font/raster/fullarticle remain open.'
   );
 }

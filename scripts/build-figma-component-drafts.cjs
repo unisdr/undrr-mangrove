@@ -94,6 +94,11 @@ const recipes = [
     'buildNewsEditorialRecipes',
   ],
   [
+    ['article-image-header'],
+    './figma-news-detail-recipes.cjs',
+    'buildNewsImageHeaderRecipes',
+  ],
+  [
     [
       'content-hub-tertiary-cta',
       'content-hub-header',

@@ -13984,8 +13984,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 51,
-    "variants": 370,
+    "families": 52,
+    "variants": 378,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -14016,7 +14016,8 @@
       "content-hub-fact-band",
       "content-hub-reporting-grid",
       "content-hub-soft-cta",
-      "content-hub-page"
+      "content-hub-page",
+      "article-image-header"
     ],
     "addedSearchControlFamilies": [
       "search-form",
@@ -14030,7 +14031,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "70a0364edb8afa82ff2d076bfdf379490fe7d3001e87a5b08bfb90ca4f65dff8",
+    "currentPacketScriptSha256": "e1b65d5b20b9d42e7bfe8e3b415cbd4b997d28eaeaf5af77a59fd1667a12b56e",
     "dependencies": [
       {
         "id": "editorial-cta",
@@ -14057,6 +14058,14 @@
         "nativeAcceptance": false,
         "delivery": "source-320f60c3",
         "preserved": true
+      },
+      {
+        "revision": "eda76155",
+        "families": 51,
+        "variants": 370,
+        "nativeAcceptance": false,
+        "delivery": "source-eda76155",
+        "preserved": true
       }
     ],
     "boundedContentHubSourceScenes": {
@@ -14082,6 +14091,15 @@
         "families": 14,
         "status": "potential source collisions, not blanket native defect proof"
       }
+    },
+    "boundedArticleImageHeaders": {
+      "families": 1,
+      "variants": 8,
+      "sourceCases": 40,
+      "viewports": [390, 1164],
+      "independentReview": "accepted",
+      "nativeAcceptance": false,
+      "scope": "Source Large/Compact/Alternate/Split with genuine None header instances where authored; full article composition and native image/font/pixel gates open."
     }
   }
 }

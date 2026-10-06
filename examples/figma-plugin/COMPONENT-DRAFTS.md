@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **51 families / 370 bounded variants**.
+The current holistic packet contains **52 families / 378 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -165,3 +165,5 @@ composite publication, human novice handoff and reduced merge acceptance remain
 separate open gates. This batch closes none of them.
 
 The historical committed source46/334 checkpoint and its immutable delivery remain preserved. The original98-row reusable-unit classification is unchanged; these current packet counts do not constitute a fresh whole-catalogue or native acceptance audit.
+
+The current source packet also registers eight image-bearing article-header presets, with genuine reusable no-image header dependencies where the source uses them. All five brand-mode source/mock checks and an independent expert review pass for this finite cohort. Header images, fonts, native cropping/pixels and full article composition remain open. See [the header contract](holistic/news-detail.md).

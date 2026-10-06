@@ -250,3 +250,64 @@ Recommendations73,936-74,177 bytes. Exact scope/brand/variant receipts are in
 `/tmp/mangrove-news-editorial-transport-20261006.json`; reproduction driver is
 `/tmp/mangrove-news-editorial-transport.cjs`. No overlimit payload was executed,
 no source/native guard was removed, and no native family acceptance is claimed.
+
+## Image-bearing article header source dependencies
+
+`buildNewsImageHeaderRecipes({root, modes, variables, styles})` prepares
+`article-image-header` with eight authored English presets: Large, Compact,
+Alternate and Split at390/1164. These are header dependencies, without the
+article body, chrome, sharing, feedback or a complete news-page acceptance.
+Forty fresh source cases cover all five themes. Their header/figure geometry
+matches the previously accepted current-CSS observations, with all ten current
+control aliases loaded and both source images decoded.
+
+The non-split presets reuse the genuine `article-header` None native instance,
+including its rich linked date/source metadata and transitive default Tag.
+Their source intro copy, typography and relative allocations must match that
+dependency exactly. Photographs, captions and credits are separate source
+allocations. The IMG border box includes8.75px bottom padding; the photograph
+occupies only its natural-aspect content box. Source object-fit is `fill` here,
+while the Split media is authored `cover` within its clipped source allocation.
+The native bounded FILL image projection still requires crop/raster acceptance.
+
+Captions and credits retain this article context's12.5/17.5px narrow and16/22.4px
+wide source typography, caption spacing,2px bottom border and1px credit divider.
+They do not substitute the standalone editorial caption profile. Divider ink
+uses the guarded SCSS neutral-500 declaration and each theme's measured narrow
+top-divider color; the original capture does not include a separate computed
+wide left-divider color. Actual source padding and border allocations remain
+separate from the editable text. The mock records those native inputs without
+simulating padded native text baselines.
+
+The Split preset retains its real full-viewport surface, source grid/content
+allocation, plain label, H1, summary, detail sentence and source image. It has
+no invented caption, credit, Tag or linked metadata. DELTA's current nested
+`rgb()` title token is invalid in CSS, so its title inherits neutral-0; that
+observed fallback is preserved. Other themes use the actual hero-title alias.
+The source display-font alias is retained. Named Bold700 projection for source
+requested600 remains provisional until native font/pixel comparison.
+
+The two photographs are genuine JPEG representations fetched from the exact
+authored HTTPS URLs with `Accept: image/jpeg`:3388×1810 and889×416. The initial
+browser-style request returned WebP despite the .jpg paths; those prior bytes
+are preserved externally. No conversion, invented photograph or licensing
+credit was used. [Image provenance](assets/news-detail/image-header-provenance.json)
+pins the negotiation, JPEG bytes, actual source alt/caption/credit, forty raw
+captures, source graph, active Condensed Regular/Bold bytes and licences, and
+font foundation evidence.
+The browser/CDN representation raster difference and source photograph licence
+grant remain open. Raw evidence is external at
+`/tmp/mangrove-news-image-headers-source-20261006`; the source browser was closed.
+
+Own plain properties use stable Treatment/viewport namespaces. Short edited
+copy is supported inside initial fixed allocations; arbitrary wrapping and
+credit/image-caption reflow are open. Source opacity1 is retained as native
+opacity1 without a percent-opacity binding. The actual builder tests use the
+combined rich/default fixture, asserting every own master copy/property default,
+source fixed/absolute allocations, paint/image bindings, two image cache entries
+and supported consumer edits after two nonempty zero-create repeats across all
+five brands. Source/font/image/provenance drift, required-font absence and
+foreign helper identities refuse before the relevant mutation boundary.
+Native fonts, crop/raster, baselines, linked consumers, ordinary plugin rebuilds
+and publication remain separate gates. Float/media and complete news assembly
+are still required.

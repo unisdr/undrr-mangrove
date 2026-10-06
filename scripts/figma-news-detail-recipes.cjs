@@ -1666,3 +1666,617 @@ function buildNewsEditorialRecipes({ root, modes, variables, styles }) {
   return families;
 }
 module.exports.buildNewsEditorialRecipes = buildNewsEditorialRecipes;
+
+/** Actual source image headers, not complete article scenes. */
+function buildNewsImageHeaderRecipes({ root, modes, variables, styles }) {
+  const targetVariables = variables,
+    targetStyles = styles;
+  variables = structuredClone(variables);
+  styles = { ...styles, text: structuredClone(styles.text) };
+  const originalHeader = buildNewsDetailDependencyRecipes({
+    root,
+    modes,
+    variables,
+    styles,
+  }).find(f => f.id === 'article-header');
+  const fail = s => {
+    throw Error('News image header source changed: ' + s);
+  };
+  const read = f => fs.readFileSync(path.join(root, f)),
+    hash = f => crypto.createHash('sha256').update(read(f)).digest('hex');
+  const provFile =
+    'examples/figma-plugin/holistic/assets/news-detail/image-header-provenance.json';
+  if (
+    hash(provFile) !==
+    '13ac7f1474a1c0464536b5938962e18b95cb364c1c1d1f096d45eee061088df6'
+  )
+    fail('image header provenance');
+  const prov = JSON.parse(read(provFile));
+  for (const [f, h] of Object.entries({
+    ...prov.sourceHashes,
+    ...prov.evidenceHashes,
+  }))
+    if (hash(f) !== h) fail(f);
+  const cases = JSON.parse(
+    read(
+      'examples/figma-plugin/holistic/assets/news-detail/image-header-footprints.json'
+    )
+  ).cases;
+  const existing = JSON.parse(
+    read(
+      'examples/figma-plugin/holistic/assets/news-detail/dependency-footprints.json'
+    )
+  ).primaryScenes;
+  const byName = new Map(variables.map(v => [v.name, v]));
+  const per = fn => Object.fromEntries(modes.map(m => [m.id, fn(m)]));
+  const value = (name, m, type, seen = new Set()) => {
+    const v = byName.get(name);
+    if (!v || v.type !== type || seen.has(name))
+      fail('missing/wrong/cyclic ' + name);
+    seen.add(name);
+    const x = v.values[m.id];
+    if (x == null) fail(name + '/' + m.id);
+    return x.alias ? value(x.alias, m, type, seen) : x;
+  };
+  const upsert = (list, e) => {
+    const hits = list.filter(v => v.id === e.id || v.name === e.name);
+    if (
+      hits.length > 1 ||
+      hits.some(v => v.id !== e.id || v.name !== e.name || v.type !== e.type)
+    )
+      fail('foreign identity ' + e.id);
+    if (hits.length) Object.assign(hits[0], e);
+    else list.push(e);
+    return hits[0] || e;
+  };
+  const ref = {
+    file: 'stories/Patterns/ArticleStory/ArticleStory.jsx',
+    line: 408,
+  };
+  const number = (slug, fn, scopes = ['WIDTH_HEIGHT']) => {
+    const name = 'component/news-image-header/' + slug;
+    const e = {
+      id: name.replaceAll('/', '.'),
+      name,
+      type: 'FLOAT',
+      scopes,
+      values: per(m => {
+        const x = fn(m);
+        if (typeof x !== 'number' || !Number.isFinite(x))
+          fail('finite ' + slug);
+        return x;
+      }),
+      sourceRef: ref,
+    };
+    byName.set(name, upsert(variables, e));
+    return name;
+  };
+  const color = s => {
+    const n = s
+      .match(/^rgba?\(([^)]+)\)$/)?.[1]
+      .split(',')
+      .map(Number);
+    if (!n || n.length < 3 || n.some(x => !Number.isFinite(x)))
+      fail('source color');
+    return { r: n[0] / 255, g: n[1] / 255, b: n[2] / 255, a: n[3] ?? 1 };
+  };
+  const sameColor = (a, b) =>
+    ['r', 'g', 'b'].every(
+      k => Math.round(a[k] * 255) === Math.round(b[k] * 255)
+    ) && (a.a ?? 1) === (b.a ?? 1);
+  const frame = (id, width, height, children = [], extra = {}) => ({
+    id,
+    type: 'FRAME',
+    fill: null,
+    layout: { mode: 'VERTICAL', width, height, clipsContent: false },
+    children,
+    ...extra,
+  });
+  const allocation = (slug, ns, origins, children, extra = {}) => {
+    for (const m of modes)
+      if (
+        !(ns[m.id].rect.width > 0 && ns[m.id].rect.height > 0) ||
+        ns[m.id].style.opacity !== '1'
+      )
+        fail('positive allocation/default opacity ' + slug);
+    return frame(
+      slug,
+      number(slug + '/width', m => ns[m.id].rect.width),
+      number(slug + '/height', m => ns[m.id].rect.height),
+      children,
+      {
+        absolute: {
+          horizontal: 'START',
+          vertical: 'START',
+          offsetX: number(
+            slug + '/x',
+            m => ns[m.id].rect.x - origins[m.id].rect.x
+          ),
+          offsetY: number(
+            slug + '/y',
+            m => ns[m.id].rect.y - origins[m.id].rect.y
+          ),
+        },
+        ...extra,
+      }
+    );
+  };
+  const textStyle = (slug, ns) => {
+    const size = number(
+      slug + '/font-size',
+      m => parseFloat(ns[m.id].style.fontSize),
+      ['FONT_SIZE']
+    );
+    const sourceSizeRole = slug.startsWith('split-hero/')
+      ? slug.endsWith('/title')
+        ? slug.split('/')[1] === '390'
+          ? 'font-size/600'
+          : 'font-size/800'
+        : slug.endsWith('/summary')
+          ? 'font-size/400'
+          : 'font-size/250'
+      : slug.split('/')[1] === '390'
+        ? 'font-size/200'
+        : 'font-size/300';
+    for (const m of modes)
+      if (
+        value(sourceSizeRole, m, 'FLOAT') !==
+        parseFloat(ns[m.id].style.fontSize)
+      )
+        fail('source font-size alias ' + sourceSizeRole);
+    byName.get(size).values = per(() => ({ alias: sourceSizeRole }));
+    const id = 'component.news-image-header.' + slug;
+    const family =
+      slug.startsWith('split-hero/') && slug.endsWith('/title')
+        ? 'display'
+        : ns.undrr.style.fontFamily.includes('Roboto Condensed')
+          ? 'ui'
+          : 'text';
+    const e = {
+      id,
+      name: 'Mangrove/source/news-image-header/' + slug,
+      type: 'TEXT',
+      recommended: false,
+      sourceRef: ref,
+      bindings: { fontFamily: 'font-family/' + family, fontSize: size },
+      typography: {
+        verification:
+          'Actual source typography and font requests captured; requested600 maps guarded source Bold700 candidate. Native named face bytes/pixels remain open.',
+      },
+      values: per(m => {
+        const s = ns[m.id].style,
+          f = value('font-family/' + family, m, 'STRING');
+        if (
+          !['Roboto', 'Roboto Condensed'].includes(f) ||
+          s.fontFamily !==
+            (f === 'Roboto Condensed'
+              ? '"Roboto Condensed", sans-serif'
+              : 'Roboto, sans-serif') ||
+          s.fontStyle !== 'normal' ||
+          !['400', '600', '700'].includes(s.fontWeight)
+        )
+          fail('source Latin face');
+        for (const k of ['fontSize', 'lineHeight'])
+          if (!(parseFloat(s[k]) > 0)) fail('source metrics');
+        return {
+          fontName: {
+            family: f,
+            style: +s.fontWeight >= 600 ? 'Bold' : 'Regular',
+          },
+          fontSize: parseFloat(s.fontSize),
+          lineHeight: { unit: 'PIXELS', value: parseFloat(s.lineHeight) },
+          letterSpacing: {
+            unit: 'PIXELS',
+            value:
+              s.letterSpacing === 'normal' ? 0 : parseFloat(s.letterSpacing),
+          },
+          textDecoration: 'NONE',
+        };
+      }),
+    };
+    upsert(styles.text, e);
+    return id;
+  };
+  const sourceInk = (slug, ns, selector) => {
+    const name = 'component/news-image-header/' + slug + '/ink';
+    const e = {
+      id: name.replaceAll('/', '.'),
+      name,
+      type: 'COLOR',
+      scopes: ['TEXT_FILL'],
+      sourceRef: ref,
+      values: per(m => {
+        const role = typeof selector === 'function' ? selector(m) : selector;
+        if (!sameColor(value(role, m, 'COLOR'), color(ns[m.id].style.color)))
+          fail('source ink alias ' + role);
+        return { alias: role };
+      }),
+    };
+    byName.set(name, upsert(variables, e));
+    return name;
+  };
+  const textSlot = (slug, ns, origins, property, inkRole) => {
+    if (modes.some(m => ns[m.id].text !== ns.undrr.text)) fail('theme copy');
+    const ink = sourceInk(slug, ns, inkRole);
+    const children = [
+      {
+        id: slug + '/text',
+        type: 'TEXT',
+        name: property,
+        characters: ns.undrr.text,
+        textProperty: property,
+        textStyle: textStyle(slug, ns),
+        fill: ink,
+        textWrap:
+          ns.undrr.style.textWrapStyle === 'balance'
+            ? 'BALANCE'
+            : ns.undrr.style.textWrapStyle === 'pretty'
+              ? 'PRETTY'
+              : 'AUTO',
+        layout: { width: 'FILL', height: 'FILL' },
+      },
+    ];
+    const slot = allocation(slug, ns, origins, children);
+    slot.bindings = {};
+    for (const edge of ['Top', 'Bottom', 'Left', 'Right'])
+      slot.bindings['padding' + edge] = number(
+        slug + '/padding-' + edge.toLowerCase(),
+        m => parseFloat(ns[m.id].style['padding' + edge]),
+        ['GAP']
+      );
+    return slot;
+  };
+  const photos = Object.fromEntries(
+    prov.assets.map(a => [
+      a.name,
+      {
+        assetId: 'news-detail-header-' + a.name + '-source-photo',
+        base64: read(a.file).toString('base64'),
+        scaleMode: 'FILL',
+      },
+    ])
+  );
+  const variants = [];
+  for (const treatment of [
+    'large-image',
+    'compact-image',
+    'alternate-hero-image',
+    'split-hero',
+  ])
+    for (const w of [390, 1164]) {
+      const key = treatment + '/' + w,
+        roots = per(m => cases[m.id + '-' + treatment + '-' + w].header),
+        origin = per(m => ({ rect: { x: 0, y: roots[m.id].rect.y } })),
+        body = [];
+      const sample = roots.undrr;
+      const sourceImages = per(
+        m => cases[m.id + '-' + treatment + '-' + w].images
+      );
+      const photoName =
+        treatment === 'alternate-hero-image' ? 'alternate' : 'main';
+      const photo = prov.assets.find(a => a.name === photoName);
+      for (const m of modes) {
+        if (
+          roots[m.id].tag !== 'HEADER' ||
+          sourceImages[m.id].length !== 1 ||
+          sourceImages[m.id][0].src !== photo.sourceURL ||
+          sourceImages[m.id][0].naturalWidth !== photo.nativeSize[0] ||
+          sourceImages[m.id][0].naturalHeight !== photo.nativeSize[1]
+        )
+          fail('actual source image identity/dimensions');
+      }
+      if (treatment === 'split-hero') {
+        const sections = per(m => roots[m.id].children[0]),
+          grids = per(m => sections[m.id].children[0]),
+          contents = per(m => grids[m.id].children[0]),
+          media = per(m => grids[m.id].children[1]),
+          img = per(m => media[m.id].children[0]);
+        if (
+          modes.some(
+            m =>
+              sections[m.id].classes !==
+                'mg-hero mg-hero--split mg-hero--split-2-3' ||
+              media[m.id].classes !== 'mg-hero__media' ||
+              img[m.id].style.objectFit !== 'cover' ||
+              img[m.id].style.objectPosition !== '50% 50%' ||
+              !sameColor(
+                color(sections[m.id].style.backgroundColor),
+                value('color/hero', m, 'COLOR')
+              )
+          )
+        )
+          fail('actual split surface/media');
+        const nodes = [];
+        for (const [i, label, leaf] of [
+          [0, 'Label', true],
+          [1, 'Title', false],
+          [2, 'Summary', false],
+          [3, 'Detail', true],
+        ]) {
+          const ns = per(m =>
+            leaf
+              ? contents[m.id].children[i].children[0]
+              : contents[m.id].children[i]
+          );
+          nodes.push(
+            textSlot(
+              key + '/' + label.toLowerCase(),
+              ns,
+              sections,
+              treatment + ' ' + w + ' ' + label,
+              label === 'Title'
+                ? m =>
+                    m.id === 'delta' ? 'color/neutral-0' : 'color/hero-title'
+                : 'color/neutral-0'
+            )
+          );
+        }
+        nodes.push(
+          allocation(key + '/media', media, sections, [], {
+            layout: {
+              mode: 'NONE',
+              width: number(key + '/media-width', m => media[m.id].rect.width),
+              height: number(
+                key + '/media-height',
+                m => media[m.id].rect.height
+              ),
+              clipsContent: true,
+            },
+            image: photos.main,
+          })
+        );
+        body.push(
+          allocation(key + '/split-surface', sections, origin, nodes, {
+            fill: 'color/hero',
+          })
+        );
+      } else {
+        const intros = per(m => roots[m.id].children[0]),
+          figures = per(m => roots[m.id].children[1]),
+          imgs = per(m => figures[m.id].children[0]),
+          captions = per(m => figures[m.id].children[1]);
+        for (const m of modes) {
+          const intro = intros[m.id],
+            existingIntro = existing[m.id + '-' + w].intro;
+          if (
+            intro.classes !== 'mg-demo-intro | mg-container' ||
+            intro.children.length !== 4 ||
+            intro.rect.width !== existingIntro.rect.width ||
+            intro.rect.height !== existingIntro.rect.height
+          )
+            fail('exact existing intro allocation');
+          for (let i = 0; i < 4; i++) {
+            const a = intro.children[i],
+              b = existingIntro.children[i];
+            if (
+              a.text !== b.text ||
+              a.rect.width !== b.rect.width ||
+              a.rect.height !== b.rect.height ||
+              a.rect.x - intro.rect.x !== b.rect.x - existingIntro.rect.x ||
+              a.rect.y - intro.rect.y !== b.rect.y - existingIntro.rect.y
+            )
+              fail('exact existing intro content/flow');
+            for (const f of [
+              'fontFamily',
+              'fontSize',
+              'fontWeight',
+              'lineHeight',
+              'letterSpacing',
+              'color',
+            ])
+              if (a.style[f] !== b.style[f])
+                fail('exact existing intro typography');
+          }
+          if (
+            imgs[m.id].tag !== 'IMG' ||
+            imgs[m.id].style.objectFit !== 'fill' ||
+            imgs[m.id].style.objectPosition !== '50% 50%' ||
+            captions[m.id].tag !== 'FIGCAPTION' ||
+            captions[m.id].children.length !== 2 ||
+            captions[m.id].style.borderBottomWidth !== '2px'
+          )
+            fail('actual figure/caption');
+        }
+        if (
+          !originalHeader.variants.some(
+            v =>
+              v.properties.Image === 'None' &&
+              v.properties.SourceViewport === String(w)
+          )
+        )
+          fail('exact native header dependency');
+        body.push(
+          allocation(key + '/intro', intros, origin, [
+            {
+              id: key + '/intro-instance',
+              type: 'INSTANCE',
+              name: 'Exact source no-image intro',
+              family: 'article-header',
+              variant: { Image: 'None', SourceViewport: String(w) },
+              expose: true,
+              layout: {
+                width: number(
+                  key + '/intro-native-width',
+                  m => intros[m.id].rect.width
+                ),
+                height: number(
+                  key + '/intro-native-height',
+                  m => intros[m.id].rect.height
+                ),
+              },
+            },
+          ])
+        );
+        for (const m of modes)
+          for (const edge of ['paddingTop', 'paddingLeft', 'paddingRight'])
+            if (parseFloat(imgs[m.id].style[edge]) !== 0)
+              fail('source image content edge');
+        const imageContent = per(m => ({
+          ...imgs[m.id],
+          rect: {
+            ...imgs[m.id].rect,
+            height:
+              imgs[m.id].rect.height -
+              parseFloat(imgs[m.id].style.paddingBottom),
+          },
+        }));
+        const imageContentFrame = allocation(
+          key + '/photo-content',
+          imageContent,
+          imgs,
+          [],
+          {
+            layout: {
+              mode: 'NONE',
+              width: number(
+                key + '/photo-content-width',
+                m => imageContent[m.id].rect.width
+              ),
+              height: number(
+                key + '/photo-content-height',
+                m => imageContent[m.id].rect.height
+              ),
+              clipsContent: true,
+            },
+            image: photos[photoName],
+          }
+        );
+        const figureChildren = [
+          allocation(key + '/photo-source-border-box', imgs, figures, [
+            imageContentFrame,
+          ]),
+        ];
+        const paragraphs = per(m => captions[m.id].children[0]),
+          credits = per(m => captions[m.id].children[1]);
+        const captionChildren = [
+          textSlot(
+            key + '/caption',
+            paragraphs,
+            captions,
+            treatment + ' ' + w + ' Caption',
+            'color/neutral-600'
+          ),
+          textSlot(
+            key + '/credit',
+            credits,
+            captions,
+            treatment + ' ' + w + ' Credit',
+            'color/text'
+          ),
+        ];
+        for (const m of modes) {
+          const c = credits[m.id].style;
+          if (
+            !sameColor(
+              value('color/neutral-500', m, 'COLOR'),
+              color(
+                cases[m.id + '-' + treatment + '-390'].header.children[1]
+                  .children[1].children[1].style.borderTopColor
+              )
+            )
+          )
+            fail('source credit divider ink');
+          if (
+            (w === 390 &&
+              (c.borderTopWidth !== '1px' || c.borderLeftWidth !== '0px')) ||
+            (w === 1164 &&
+              (c.borderLeftWidth !== '1px' || c.borderTopWidth !== '0px'))
+          )
+            fail('source credit divider');
+        }
+        const dividerBoxes = per(m => ({
+          ...credits[m.id],
+          rect: {
+            ...credits[m.id].rect,
+            ...(w === 390 ? { height: 1 } : { width: 1 }),
+          },
+        }));
+        captionChildren.push(
+          allocation(key + '/credit-divider', dividerBoxes, captions, [], {
+            fill: 'color/neutral-500',
+          })
+        );
+        const bottoms = per(m => ({
+          ...captions[m.id],
+          rect: {
+            x: captions[m.id].rect.x,
+            y: captions[m.id].rect.y + captions[m.id].rect.height - 2,
+            width: captions[m.id].rect.width,
+            height: 2,
+          },
+        }));
+        captionChildren.push(
+          allocation(key + '/caption-bottom-border', bottoms, captions, [], {
+            fill: 'color/black',
+          })
+        );
+        // Allocate border separately and reserve its source pixel from the editable credit text.
+        const creditSlot = captionChildren[1];
+        const edge = w === 390 ? 'paddingTop' : 'paddingLeft';
+        creditSlot.bindings[edge] = number(
+          key + '/credit-border-aware-' + edge,
+          m => parseFloat(credits[m.id].style[edge]) + 1,
+          ['GAP']
+        );
+        figureChildren.push(
+          allocation(key + '/caption-root', captions, figures, captionChildren)
+        );
+        body.push(allocation(key + '/figure', figures, origin, figureChildren));
+      }
+      variants.push({
+        id: 'article-image-header.' + treatment + '.' + w,
+        name: 'Treatment=' + treatment + ', SourceViewport=' + w,
+        properties: {
+          Treatment: treatment,
+          SourceViewport: String(w),
+          Locale: 'English',
+        },
+        sourceImages: per(m => sourceImages[m.id]),
+        sourceGeometry: {
+          sourceHeader: per(m => roots[m.id].rect),
+          masterWidth:
+            'Full source viewport includes actual split full-bleed extent; inner source body/header allocations retain their measured x.',
+          splitTitlePaint:
+            treatment === 'split-hero'
+              ? 'Actual current CSS title is inherited neutral-0 in DELTA because nested rgb(--mg-color-hero-title) is invalid; captured fallback is retained, not corrected to intended blue.'
+              : null,
+          sourceMetadata:
+            treatment === 'split-hero'
+              ? 'Actual Hero plain detail sentence; no invented links or credit/caption.'
+              : 'Original linked article-header None dependency; exact source figure/caption context below.',
+          nativeAccepted: false,
+        },
+        tree: frame(
+          'root',
+          w,
+          number(key + '/header-height', m => roots[m.id].rect.height),
+          body
+        ),
+      });
+    }
+  targetVariables.splice(0, targetVariables.length, ...variables);
+  targetStyles.text.splice(0, targetStyles.text.length, ...styles.text);
+  return [
+    {
+      id: 'article-image-header',
+      name: 'Mangrove/Page patterns/ArticleStory image headers',
+      kind: 'component-set',
+      sourceRef: ref,
+      review: { genericLabels: false, preserveVariantSizing: true },
+      dependencyContracts: [390, 1164].map(w => ({
+        family: 'article-header',
+        variant: { Image: 'None', SourceViewport: String(w) },
+        scope:
+          'Non-split exact source intro; genuine Tag dependency is transitive.',
+      })),
+      limitations: [
+        'Eight actual authored image-bearing English header presets390/1164, full viewport wrapper with finite inner body/split allocations. Main3388x1810 and alternate889x416 exact source bytes/alt/caption/credit retained; no source photograph redistribution licence grant established.',
+        'Non-split genuine article-header None dependency carries exact source linked metadata; split actual Hero detail is plain text. Caption and credit use context source typography/dividers, not standalone editorial substitutions.',
+        'Stable treatment/viewport-namespaced own plain properties avoid differing shared defaultcopy names; supported short edits within recorded initial allocations only. Native fonts, image crop/raster, paragraph/credit/divider baselines, arbitrary text/viewport reflow, consumers/publication/full assembly remain open.',
+        'Source opacity1 is never copied into node percent-opacity bindings. Source/default native opacity1 retained.',
+      ],
+      variants,
+    },
+  ];
+}
+module.exports.buildNewsImageHeaderRecipes = buildNewsImageHeaderRecipes;
