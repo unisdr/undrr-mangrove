@@ -4,9 +4,9 @@
   "committedRevision": "8a99893652a177b6235e448bdcb056df61577004",
   "committedSourceFamilies": 93,
   "committedSourceVariants": 1184,
-  "stagedSourceFamilies": 93,
-  "stagedSourceVariants": 1184,
-  "stagedCombinedVerification": "Complete immutable source93 harness passed, including full CLI guards. No further source cohort registered in this checkpoint.",
+  "stagedSourceFamilies": 106,
+  "stagedSourceVariants": 1298,
+  "stagedCombinedVerification": "Topic/Index8/50, Drawer1/20 with contextual Checkbox2 dependency, Cookie3/34 and Footer1/10 independently source-reviewed. Combined immutable106 harness running; not committed/native accepted.",
   "normalFamilies": 32,
   "normalVariants": 383,
   "historicalPublishedFamilies": 25,
@@ -368,7 +368,8 @@
       "committedSourceFamilyIds": [],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
-      "complete": false
+      "complete": false,
+      "reviewedUnregisteredFamilyIds": ["on-this-page-nav"]
     },
     {
       "sourceUnitId": "mega-menu",
@@ -390,7 +391,7 @@
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
       "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [],
+      "stagedAdditionalFamilyIds": ["drawer"],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -415,7 +416,7 @@
         "scroll-hydrated-card",
         "scroll-source-photo-card"
       ],
-      "stagedAdditionalFamilyIds": [],
+      "stagedAdditionalFamilyIds": ["landing-topic-related-card"],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -435,7 +436,7 @@
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
       "committedSourceFamilyIds": ["book-card"],
-      "stagedAdditionalFamilyIds": [],
+      "stagedAdditionalFamilyIds": ["landing-index-book-card"],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -455,7 +456,7 @@
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
       "committedSourceFamilyIds": ["icon-card"],
-      "stagedAdditionalFamilyIds": [],
+      "stagedAdditionalFamilyIds": ["landing-topic-icon-card"],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -475,7 +476,7 @@
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": ["text-cta"],
       "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [],
+      "stagedAdditionalFamilyIds": ["landing-topic-soft-cta"],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -495,7 +496,7 @@
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": ["hero-background", "hero-split"],
       "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [],
+      "stagedAdditionalFamilyIds": ["landing-topic-hero"],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -596,7 +597,14 @@
       "committedSourceFamilyIds": [],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
-      "complete": false
+      "complete": false,
+      "sourceDisposition": {
+        "status": "orphan module with unresolved imports, no current active story/caller/package entry export",
+        "assetDeletionCommit": "eca8ef98c14711e3e5629dc434fc7420c666bba5",
+        "assetDeletionDate": "2023-01-06",
+        "historicalAssetsRestoredToRepository": false,
+        "boundary": "Historical assets are preserved externally for diagnosis. Their recovery does not establish current renderable source or justify reviving intentionally removed assets."
+      }
     },
     {
       "sourceUnitId": "author-image",
@@ -616,7 +624,9 @@
       "committedSourceFamilyIds": [],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
-      "complete": false
+      "complete": false,
+      "reviewedUnregisteredFamilyIds": ["image-figure"],
+      "reviewedCandidateBoundary": "ImageFigure72 covers the actual composed figure/caption/credit source contracts, including mobile BR/Strong ownership. This is not standalone primitive or native acceptance."
     },
     {
       "sourceUnitId": "image-credit",
@@ -626,7 +636,9 @@
       "committedSourceFamilyIds": [],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
-      "complete": false
+      "complete": false,
+      "reviewedUnregisteredFamilyIds": ["image-figure"],
+      "reviewedCandidateBoundary": "ImageFigure72 covers the actual composed figure/caption/credit source contracts, including mobile BR/Strong ownership. This is not standalone primitive or native acceptance."
     },
     {
       "sourceUnitId": "video",
@@ -740,7 +752,8 @@
       "committedSourceFamilyIds": ["page-chrome"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
-      "complete": false
+      "complete": false,
+      "reviewedUnregisteredFamilyIds": ["page-header"]
     },
     {
       "sourceUnitId": "footer",
@@ -748,7 +761,7 @@
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
       "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [],
+      "stagedAdditionalFamilyIds": ["footer"],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -758,7 +771,11 @@
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
       "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [],
+      "stagedAdditionalFamilyIds": [
+        "cookie-consent-toggle",
+        "cookie-consent-banner",
+        "cookie-consent-preferences"
+      ],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -843,7 +860,9 @@
       "committedSourceFamilyIds": ["image-caption"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
-      "complete": false
+      "complete": false,
+      "reviewedUnregisteredFamilyIds": ["image-figure"],
+      "reviewedCandidateBoundary": "ImageFigure72 covers the actual composed figure/caption/credit source contracts, including mobile BR/Strong ownership. This is not standalone primitive or native acceptance."
     },
     {
       "sourceUnitId": "body-column",
@@ -1057,23 +1076,41 @@
     }
   ],
   "remainingSourcePriority": [
-    "Public Drawer active",
-    "Topic/Index landing scenes active",
-    "Cookie Consent active",
-    "Footer local/complementary and genuine fetched syndication",
-    "Standalone PageHeader branches and authored locale/RTL",
-    "OnThisPageNav actual authored appearances",
-    "Standalone image/author/credit/figure primitives",
+    "Combined registration verification for held Topic/Index, Drawer, Cookie and Footer source cohorts",
+    "Footer genuine resolved remote syndication",
+    "Combined registration of peer-accepted PageHeader44, OnThisPageNav46 and ImageFigure72",
+    "OnThisPageNav46 peer-accepted source candidate registration and CaptureTheme rethemeability",
+    "AuthorImage native blend capability, composed ImageFigure registration, and orphan Image source disposition",
     "Foundational layout/container/grid/semantic text and source icon/logo contracts",
     "Gallery actual video/embed native representation"
   ],
   "nativeGates": [
-    "Full source foundation capacity: immutable78 has25466 variables versus5000percollection; reviewed reuse/partition/specialisation required",
+    "Full source foundation capacity: immutable93 has55171 variables versus5000percollection; fixed59-owner read-only planner committed1bdab3ca, actual occupancy/collection-count and advanced native support unverified",
     "Actual full native builders/ordinary repeats for new cohorts",
     "Source font/glyph/raster/live mode fidelity",
     "Recovery drift diagnosis with guarded actual full path",
     "Changed text/effect style publication",
     "Composite publication and linked consumer restoration",
     "Human novice handoff and reduced maintenance merge acceptance"
-  ]
+  ],
+  "reviewedUnregisteredCandidates": {
+    "page-header": {
+      "families": 1,
+      "variants": 44,
+      "sourcePeerAccepted": true,
+      "nativeAccepted": false
+    },
+    "on-this-page-nav": {
+      "families": 1,
+      "variants": 46,
+      "sourcePeerAccepted": true,
+      "nativeAccepted": false
+    },
+    "image-figure": {
+      "families": 1,
+      "variants": 72,
+      "sourcePeerAccepted": true,
+      "nativeAccepted": false
+    }
+  }
 }
