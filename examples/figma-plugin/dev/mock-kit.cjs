@@ -721,6 +721,7 @@ function environment(doc, options = {}) {
     'code.js',
     'kit-inspection.js',
     'kit-gradient-transform.js',
+    'kit-alpha-mask.js',
     'kit-frozen-source-line.js',
     'kit-builder.js',
   ])

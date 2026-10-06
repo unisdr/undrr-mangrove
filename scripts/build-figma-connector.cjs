@@ -9,6 +9,18 @@ const PLUGIN = path.resolve(__dirname, '../examples/figma-plugin');
 const LIMIT = 50000;
 let gradientTransform;
 let frozenSourceLine;
+let alphaMask;
+function alphaMaskHelper() {
+  if (!alphaMask) {
+    const context = { module: { exports: {} } };
+    vm.runInNewContext(
+      fs.readFileSync(path.join(PLUGIN, 'kit-alpha-mask.js'), 'utf8'),
+      context
+    );
+    alphaMask = context.module.exports;
+  }
+  return alphaMask;
+}
 function frozenHelper() {
   if (!frozenSourceLine)
     frozenSourceLine = vm.runInNewContext(
@@ -1031,7 +1043,7 @@ async function buildConnector({
     variantIds,
     scopedImport ? { variableIds, styleIds } : undefined
   );
-  const textCaseEnabled = subset.styles.text.some(spec =>
+  const textCaseEnabled = (subset?.styles?.text || []).some(spec =>
     Object.values(spec.values || {}).some(
       value => value?.textCase !== undefined
     )
@@ -1225,6 +1237,30 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsFrozenLine(variant.tree))
     );
+  const needsAlphaMask = tree =>
+    tree.alphaMask !== undefined || (tree.children || []).some(needsAlphaMask);
+  const alphaMaskEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsAlphaMask(variant.tree))
+    );
+  if (alphaMaskEnabled) {
+    const helper = alphaMaskHelper();
+    function validateMaskTree(tree, parent, index, ownerIsVariantRoot = false) {
+      const plan = helper.mgAlphaMaskPlan(tree, parent, index);
+      if (plan && ownerIsVariantRoot)
+        throw new Error(
+          'ALPHA mask owner must be a nested FRAME, not the native variant COMPONENT.'
+        );
+      if (plan) helper.mgAlphaMaskDocumentValues(plan, doc);
+      (tree.children || []).forEach((child, childIndex) =>
+        validateMaskTree(child, tree, childIndex, parent === null)
+      );
+    }
+    for (const family of subset.components.families)
+      for (const variant of family.variants)
+        validateMaskTree(variant.tree, null, 0);
+  }
   let frozenSourcePlans = [];
   if (frozenSourceLineEnabled) {
     const records = [];
@@ -1433,6 +1469,9 @@ async function buildConnector({
     source +=
       fs.readFileSync(path.join(PLUGIN, 'kit-frozen-source-line.js'), 'utf8') +
       '\n;\n';
+  if (alphaMaskEnabled)
+    source +=
+      fs.readFileSync(path.join(PLUGIN, 'kit-alpha-mask.js'), 'utf8') + '\n;\n';
   if (gradientRolesEnabled)
     source +=
       fs.readFileSync(path.join(PLUGIN, 'kit-gradient-transform.js'), 'utf8') +
@@ -1512,6 +1551,7 @@ async function buildConnector({
     compress: {
       passes: 3,
       global_defs: {
+        MG_CONNECTOR_ALPHA_MASK: alphaMaskEnabled,
         MG_CONNECTOR_TEXT_CASE: textCaseEnabled,
         MG_CONNECTOR_FRAME_POSITION: framePositionEnabled,
         MG_CONNECTOR_LETTER_SPACING: letterSpacingEnabled,
@@ -1573,6 +1613,7 @@ async function buildConnector({
     richTextEnabled,
     richAlphaEnabled,
     gradientRolesEnabled,
+    alphaMaskEnabled,
     frozenSourceLineEnabled,
     textCaseEnabled,
     coincidentFocusEnabled,

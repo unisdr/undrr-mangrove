@@ -558,3 +558,7 @@ The current **Organize file** action explicitly migrates the v2 presentation to 
 The auxiliary **Component reference catalogue** sits to the right of Components. It retains each existing full family board, usage states, source set and nested advanced parts. It is a reference area, not a seventh step in the public six-destination sequence. **Browse component** opens the introduction, full usage states or canonical source set directly. In older files without compact flow, Introduction opens the existing usage view. No extra main components are built and no existing variants are resized or detached for presentation.
 
 Ordinary builds retain legacy flow until explicit organisation, then reconcile installed flow1. Save results after migration, including any partial failure, and retry **Organize file** with the complete document. See [maintenance](MAINTAINING-KIT.md) for ownership and recovery.
+
+### Subtree mask source candidate
+
+The holistic source work includes a guarded [subtree ALPHA mask candidate](holistic/ALPHA-MASK-CAPABILITY.md) for actual ShowMore clipping. Full-builder ownership checks, explicit clearing and repeat fields are separate from rendered acceptance. Three isolated native exports failed to show the intended fade, with cause unconfirmed. The complete connector fixture also exceeds the unchanged transport limit. Keep this capability in unpublished experiments until ordinary native rendering and the remaining integration gates pass.

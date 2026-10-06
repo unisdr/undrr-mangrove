@@ -1,7 +1,10 @@
-/* global mgFrozenSourceLine, MG_CONNECTOR_FROZEN_SOURCE_LINE, mgGradientTransform, MG_CONNECTOR_GRADIENT_ROLES, mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgAlphaMaskPlan, mgAlphaMaskDocumentValues, mgAlphaMaskNativeValues, mgNativeAlphaMaskPlan, mgApplyAlphaMask, MG_CONNECTOR_ALPHA_MASK, mgFrozenSourceLine, MG_CONNECTOR_FROZEN_SOURCE_LINE, mgGradientTransform, MG_CONNECTOR_GRADIENT_ROLES, mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
+const MG_ALPHA_MASK_ENABLED =
+  typeof MG_CONNECTOR_ALPHA_MASK === 'undefined' || MG_CONNECTOR_ALPHA_MASK;
+const MG_ALPHA_MASK_KEY = 'mgAlphaMaskV1';
 const MG_FROZEN_SOURCE_LINE_ENABLED =
   typeof MG_CONNECTOR_FROZEN_SOURCE_LINE === 'undefined' ||
   MG_CONNECTOR_FROZEN_SOURCE_LINE;
@@ -1001,6 +1004,31 @@ async function buildMangroveComponents(
   }
   const organized = owned.has('layout/start');
   if (organized) {
+    if (MG_ALPHA_MASK_ENABLED) {
+      const selected = new Set(
+        mgMaintenanceDependencyIds(recipes, selectedFamilyIds)
+      );
+      const hasMask = tree =>
+        tree.alphaMask !== undefined || (tree.children || []).some(hasMask);
+      if (
+        recipes.some(
+          family =>
+            selected.has(family.id) &&
+            (family.variants.some(variant => hasMask(variant.tree)) ||
+              allOwned.some(
+                node =>
+                  mgReadIdentity(node, MG_KIT_KEY).startsWith(
+                    `family/${family.id}/`
+                  ) && mgReadIdentity(node, MG_ALPHA_MASK_KEY)
+              ))
+        )
+      ) {
+        result.errors.push(
+          'ALPHA mask source candidates require an unorganized experiment file.'
+        );
+        return result;
+      }
+    }
     if (typeof mgLayoutPreflight !== 'function')
       throw new Error(
         'Organized kit updates require the layout-aware desktop runtime.'
@@ -1106,6 +1134,146 @@ async function buildMangroveComponents(
     if (!value || value.resolvedType !== type)
       throw new Error(`Missing ${type} variable ${name}`);
     return value;
+  }
+  const alphaMaskOwners = MG_ALPHA_MASK_ENABLED ? new Map() : null;
+  const alphaMaskRecords = MG_ALPHA_MASK_ENABLED ? [] : null;
+  function alphaMaskIdentity(record) {
+    return {
+      get: node => mgReadIdentity(node, MG_KIT_KEY),
+      expected: record.keys,
+      readState: node => mgReadIdentity(node, MG_ALPHA_MASK_KEY),
+      writeState: (node, value) =>
+        mgWriteIdentity(node, MG_ALPHA_MASK_KEY, value),
+    };
+  }
+  function alphaMaskResolve(name, nativeModeId, type, seen = new Set()) {
+    const entry = variable(name, type);
+    if (entry.variableCollectionId !== collection.id || seen.has(entry.id))
+      throw new Error('ALPHA mask native alias ownership or cycle disagrees.');
+    seen.add(entry.id);
+    const value = entry.valuesByMode[nativeModeId];
+    if (value && value.type === 'VARIABLE_ALIAS') {
+      const alias = nativeVariables.find(item => item.id === value.id);
+      if (
+        !alias ||
+        alias.variableCollectionId !== collection.id ||
+        alias.resolvedType !== type ||
+        variable(alias.name, type).id !== alias.id
+      )
+        throw new Error(
+          'ALPHA mask native alias is missing or its exact identity disagrees.'
+        );
+      return alphaMaskResolve(alias.name, nativeModeId, type, seen);
+    }
+    return value;
+  }
+  function checkAlphaMasks(phase) {
+    if (!MG_ALPHA_MASK_ENABLED || !alphaMaskRecords.length) return true;
+    try {
+      // Recollect actual construction nodes after awaits. Inherited consumer
+      // ledgers are not an ownership or consumer-mask override guarantee.
+      const current = new Map();
+      const required = new Set(
+        alphaMaskRecords.flatMap(record => Object.values(record.keys))
+      );
+      for (const node of page.findAll(node =>
+        Boolean(mgReadIdentity(node, MG_KIT_KEY))
+      )) {
+        let inside = node.type === 'INSTANCE';
+        for (
+          let parent = node.parent;
+          parent && parent !== page;
+          parent = parent.parent
+        )
+          if (parent.type === 'INSTANCE') inside = true;
+        if (inside) continue;
+        const key = mgReadIdentity(node, MG_KIT_KEY);
+        if (!required.has(key)) continue;
+        if (current.has(key))
+          throw new Error('Duplicate ALPHA mask construction identity.');
+        current.set(key, node);
+      }
+      for (const record of alphaMaskRecords) {
+        if (record.plan) {
+          mgAlphaMaskDocumentValues(record.plan, doc);
+          mgAlphaMaskNativeValues(
+            record.plan,
+            collection.modes.map(item => item.modeId),
+            alphaMaskResolve
+          );
+        }
+        mgNativeAlphaMaskPlan(
+          current.get(record.keys.mask),
+          current.get(record.keys.owner),
+          current.get(record.keys.content),
+          record.plan,
+          alphaMaskIdentity(record)
+        );
+      }
+      return true;
+    } catch (error) {
+      const reason = reportError(error);
+      result.errors.push(reason);
+      result.audit.push({
+        status: 'blocked-alpha-mask-preflight',
+        phase,
+        reason,
+      });
+      return false;
+    }
+  }
+  if (MG_ALPHA_MASK_ENABLED) {
+    try {
+      function maskTree(tree, key, parent, parentKey, index) {
+        const plan = mgAlphaMaskPlan(tree, parent, index);
+        if (plan && /^family\/[^/]+\/variant\/[^/]+$/.test(parentKey))
+          throw new Error(
+            'ALPHA mask owner must be a nested FRAME, not the native variant COMPONENT.'
+          );
+        const existing = owned.get(key);
+        if (plan || (existing && mgReadIdentity(existing, MG_ALPHA_MASK_KEY))) {
+          const record = {
+            plan,
+            keys: {
+              mask: key,
+              owner: parentKey,
+              content:
+                parent &&
+                `${parentKey}/${parent.children?.[1]?.id || parent.children?.[1]?.key}`,
+            },
+          };
+          alphaMaskRecords.push(record);
+          if (plan) alphaMaskOwners.set(parent, record);
+        }
+        (tree.children || []).forEach((child, childIndex) =>
+          maskTree(
+            child,
+            `${key}/${child.id || child.key}`,
+            tree,
+            key,
+            childIndex
+          )
+        );
+      }
+      for (const family of ordered)
+        for (const variant of family.variants)
+          maskTree(
+            variant.tree,
+            `family/${family.id}/variant/${variant.id}`,
+            null,
+            null,
+            0
+          );
+    } catch (error) {
+      result.errors.push(reportError(error));
+      result.audit.push({
+        status: 'blocked-alpha-mask-preflight',
+        phase: 'source',
+        reason: reportError(error),
+      });
+      return result;
+    }
+    if (!checkAlphaMasks('before-font-preparation')) return result;
   }
   const available = await figma.listAvailableFontsAsync();
   const fontPromises = new Map();
@@ -2729,6 +2897,8 @@ async function buildMangroveComponents(
     !(await checkFrozenSourceLines('before-style-import'))
   )
     return result;
+  if (MG_ALPHA_MASK_ENABLED && !checkAlphaMasks('before-style-import'))
+    return result;
   // Restrict effects to the recipes being prepared, avoiding unrelated updates.
   const styleDoc = {
     ...doc,
@@ -3621,6 +3791,24 @@ async function buildMangroveComponents(
               node
             );
         }
+      if (MG_ALPHA_MASK_ENABLED && alphaMaskOwners.has(spec)) {
+        const record = alphaMaskOwners.get(spec);
+        mgAlphaMaskDocumentValues(record.plan, doc);
+        mgAlphaMaskNativeValues(
+          record.plan,
+          collection.modes.map(item => item.modeId),
+          alphaMaskResolve
+        );
+        mgApplyAlphaMask(
+          mgNativeAlphaMaskPlan(
+            owned.get(record.keys.mask),
+            node,
+            owned.get(record.keys.content),
+            record.plan,
+            alphaMaskIdentity(record)
+          )
+        );
+      }
       // Retain user-owned additions. Report obsolete importer-owned children for review.
       for (const child of node.children) {
         if (mgReadIdentity(child, MG_KIT_KEY) && !expected.includes(child))
