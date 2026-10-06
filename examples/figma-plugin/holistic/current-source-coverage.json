@@ -1,12 +1,12 @@
 {
   "status": "Current registry crosswalk; bounded source associations, no complete catalogue/native acceptance inferred",
   "auditedAtUTC": "2026-10-06T04:39:16.411306+00:00",
-  "committedRevision": "d618327227df09b70b2b9d63893bf6ed7b568e4f",
-  "committedSourceFamilies": 82,
-  "committedSourceVariants": 1085,
+  "committedRevision": "8a99893652a177b6235e448bdcb056df61577004",
+  "committedSourceFamilies": 93,
+  "committedSourceVariants": 1184,
   "stagedSourceFamilies": 93,
   "stagedSourceVariants": 1184,
-  "stagedCombinedVerification": "running in isolated source93 snapshot",
+  "stagedCombinedVerification": "Complete immutable source93 harness passed, including full CLI guards. No further source cohort registered in this checkpoint.",
   "normalFamilies": 32,
   "normalVariants": 383,
   "historicalPublishedFamilies": 25,
@@ -411,12 +411,11 @@
       "normalFamilyIds": ["card-vertical"],
       "committedSourceFamilyIds": [
         "content-hub-route-card",
-        "news-related-card"
-      ],
-      "stagedAdditionalFamilyIds": [
+        "news-related-card",
         "scroll-hydrated-card",
         "scroll-source-photo-card"
       ],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -569,13 +568,13 @@
       "label": "Scroll Container",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [
+      "committedSourceFamilyIds": [
         "scroll-container-hydrated",
         "scroll-container-photo",
         "scroll-hydrated-card",
         "scroll-source-photo-card"
       ],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -584,8 +583,8 @@
       "label": "Show More",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["show-more"],
+      "committedSourceFamilyIds": ["show-more"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -768,11 +767,11 @@
       "label": "Preview Access",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [
+      "committedSourceFamilyIds": [
         "preview-access-live",
         "preview-access-static"
       ],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -781,13 +780,13 @@
       "label": "Error Page",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [
+      "committedSourceFamilyIds": [
         "error-page",
         "error-page-search-action",
         "error-page-search-form",
         "error-page-search-input"
       ],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
