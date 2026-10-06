@@ -1,0 +1,52 @@
+{
+  "acceptedBoundedFiniteSourceCandidate": true,
+  "registered": false,
+  "nativeSourceFidelityAccepted": false,
+  "requiredSemanticFollowonsComplete": false,
+  "independentActualBuilderMockSession": 66052,
+  "independentActualBuilderMockExitCode": 0,
+  "allSevenFrozenPinsExact": true,
+  "independent30RawCapturePinsExact": true,
+  "independentProfileReproductionByteExact": true,
+  "sourcePresets": 6,
+  "sourceContexts": 30,
+  "contiguousUTF16Fragments": 60,
+  "sourceLogicalParagraphsExact": true,
+  "scope": "Frozen finite source fragment-layout candidate only: source box/background/inset/copy/whole UTF16 ownership faithfully captured with explicit construction minima. All five actual-builder imports, two zero-create repeats and owning edited-copy refusal pass. Menlo Regular remains an unresolved named-face candidate for authored monospace weight500; this does not accept native face/weight/glyph/bidi/baseline/capacity/reflow/effect raster. No whole paragraph flowing edit contract, native calls or registration.",
+  "importantLimits": [
+    "Collapsed/zero-width whitespace and multi-rect boundary spaces retain raw observations; one-pixel/first-capacity construction does not establish source ink or bidi placement.",
+    "Source clipsContent false is asserted against committed width/clipping corrected builder; native effect spread1 and full frame fidelity still require actual verification.",
+    "Only current-page managed frozen-copy ownership is enforced; arbitrary sentence edits require fresh source layout and refuse rebuild."
+  ],
+  "pins": {
+    "mock.cjs": {
+      "bytes": 5994,
+      "sha256": "f1cd8dfe9b8e9a90947bb1b4eb0b11d694f8d21c9fb4a8af5c5b734d37511680"
+    },
+    "prepare-profiles.py": {
+      "bytes": 3215,
+      "sha256": "f39a810e6c9034087bf63ba60ce17dc2fde531d62b74e6eec2917111227a7bbf"
+    },
+    "mock.log": {
+      "bytes": 645,
+      "sha256": "6bdb927cf0562f53a5a8f3b3c26a9be6681ce83a424fa6273f42844710280eba"
+    },
+    "source-guards.json": {
+      "bytes": 15117,
+      "sha256": "a194e04d09dc4a52c952fb1d7bd844b6324e547e38a231de94307086d41a60ba"
+    },
+    "profiles.json": {
+      "bytes": 268258,
+      "sha256": "abe30ea72c2d78f3d2a62098da5157dcd798d611f8e1ae9defe4984924d0391e"
+    },
+    "README.md": {
+      "bytes": 4398,
+      "sha256": "dda9b733a70491541f5cbf9549a318451275e6c039823ef29998a638588c4acf"
+    },
+    "recipes.cjs": {
+      "bytes": 9639,
+      "sha256": "2f15917d6389aff6d22c0ac3c261ff619ee409e6ac2bd5201e75b862f2d0e5c9"
+    }
+  },
+  "readyReceiptSHA256": "abf212fde3b954898ccd23aa56d346a46afbe234ffb3f9e107079b03092463f9"
+}

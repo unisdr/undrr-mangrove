@@ -1,9 +1,11 @@
 # Native integration status
 
-Observed on 6 October 2026. The saved source checkpoint at `0980da33`
-contains 119 recipe families and 1794 bounded variants. The prior source118
-delivery at `7ae4a12f` remains preserved. Source registration,
-browser captures and mock builds do not establish native library acceptance.
+Observed on 6 October 2026. The current source registry contains120 recipe
+families and1800 bounded variants, including six finite inline Code presets.
+The saved source119 checkpoint at `0980da33` and prior source118 delivery at
+`7ae4a12f` remain preserved. Code passed its dedicated all-five mock lifecycle
+and the combined source/CLI registration checks, with terminal exit0. Source
+registration, browser captures and mock builds do not establish native library acceptance.
 Recipe counts are not counts of fully implemented public components.
 
 ## Verified scope

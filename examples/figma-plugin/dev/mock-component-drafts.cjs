@@ -163,6 +163,7 @@ async function main() {
       ['semantic-description-list', 6],
       ['semantic-figcaption', 6],
       ['semantic-inline-emphasis', 6],
+      ['semantic-code-finite', 6],
       ['logo', 210],
       ['page-header', 44],
       ['on-this-page-nav', 46],
@@ -180,7 +181,7 @@ async function main() {
   );
   assert.strictEqual(
     packet.draftFamilies.reduce((n, f) => n + f.variants.length, 0),
-    1794
+    1800
   );
   for (const field of [
     'collection',
@@ -311,7 +312,7 @@ async function main() {
   tree.children[0].id = tree.id;
   assert.throws(() => validate(duplicate), /Missing\/duplicate anatomy ID/);
   console.log(
-    'ok  isolated deterministic 119-family/1794-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
+    'ok  isolated deterministic 120-family/1800-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
   );
 
   // Use the actual importer entry, not a duplicated preflight. The packet must

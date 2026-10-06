@@ -1,0 +1,43 @@
+{
+  "sourceCandidateOnly": true,
+  "registered": false,
+  "nativeCalls": false,
+  "familyCount": 1,
+  "presets": 6,
+  "actualSourceContexts": 30,
+  "fragments": 60,
+  "builderSHA256": "89c35a87558afd69c9e9c27f750b30ce7a26078597e96b658d95772f0cad6e98",
+  "sourceClipsFalseActualMockAsserted": true,
+  "requiredSemanticFollowonsComplete": false,
+  "testExitCode": 0,
+  "pins": {
+    "mock.cjs": {
+      "bytes": 5994,
+      "sha256": "f1cd8dfe9b8e9a90947bb1b4eb0b11d694f8d21c9fb4a8af5c5b734d37511680"
+    },
+    "prepare-profiles.py": {
+      "bytes": 3215,
+      "sha256": "f39a810e6c9034087bf63ba60ce17dc2fde531d62b74e6eec2917111227a7bbf"
+    },
+    "mock.log": {
+      "bytes": 645,
+      "sha256": "6bdb927cf0562f53a5a8f3b3c26a9be6681ce83a424fa6273f42844710280eba"
+    },
+    "source-guards.json": {
+      "bytes": 15117,
+      "sha256": "a194e04d09dc4a52c952fb1d7bd844b6324e547e38a231de94307086d41a60ba"
+    },
+    "profiles.json": {
+      "bytes": 268258,
+      "sha256": "abe30ea72c2d78f3d2a62098da5157dcd798d611f8e1ae9defe4984924d0391e"
+    },
+    "README.md": {
+      "bytes": 4398,
+      "sha256": "dda9b733a70491541f5cbf9549a318451275e6c039823ef29998a638588c4acf"
+    },
+    "recipes.cjs": {
+      "bytes": 9639,
+      "sha256": "2f15917d6389aff6d22c0ac3c261ff619ee409e6ac2bd5201e75b862f2d0e5c9"
+    }
+  }
+}

@@ -1,0 +1,376 @@
+{
+  "kind": "portable-lossless-source-code-candidate",
+  "sourceCandidateOnly": true,
+  "nativeCalls": false,
+  "family": "semantic-code-finite",
+  "presets": 6,
+  "actualSourceContexts": 30,
+  "fragments": 60,
+  "archiveMappings": [
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/undrr-english-code-390-diagnostic.json",
+      "archive": "undrr-english-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1639983,
+        "sha256": "82c9e8b34047456704659474ced678227380f376379a6c01923764c6a1234761"
+      },
+      "compressed": {
+        "bytes": 38911,
+        "sha256": "ef903bdf4d47e4aa71d2a76046733e00e52a9af19780c8e2afbcbf1fd128da07"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/delta-english-code-390-diagnostic.json",
+      "archive": "delta-english-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1644469,
+        "sha256": "4fb7cf196cc0522bb1ae995c1f162031d06e0f51c9c0814eb635c7d9826ab646"
+      },
+      "compressed": {
+        "bytes": 39144,
+        "sha256": "51cdd357d9814e7f4efc163492fe9c25dc51e82a60e8b06da4fa979c505f0519"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/irp-english-code-390-diagnostic.json",
+      "archive": "irp-english-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1647785,
+        "sha256": "547e6ff1d4e3d71f6d28d339451ad22ec731189e4c430a980cccf87452b989d4"
+      },
+      "compressed": {
+        "bytes": 39141,
+        "sha256": "18e8373ef2904f6ca613aaecc8097274129e90bdc532ff9b2d99037f48fc1d59"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/mcr-english-code-390-diagnostic.json",
+      "archive": "mcr-english-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1644973,
+        "sha256": "cf8e50fd3646ca87294be93596ace54ef092ea0079457e045fad01a304315d60"
+      },
+      "compressed": {
+        "bytes": 39054,
+        "sha256": "ab2f2ac15c73169f5aacbdeacfde8b4cb8301c9fe6242c7423c82579bb05e737"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/preventionweb-english-code-390-diagnostic.json",
+      "archive": "preventionweb-english-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1648679,
+        "sha256": "dc62ff6a7f2b976dd03e3dcecdcd9bb2fc39cecb944d0552f26f10e5da73e556"
+      },
+      "compressed": {
+        "bytes": 39114,
+        "sha256": "113f617f7ac45ce4e1858b76cad6d2853727328f2f5256b39cd9367a35788b0e"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/undrr-english-code-1164-diagnostic.json",
+      "archive": "undrr-english-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1639447,
+        "sha256": "b34c658d5e5ac63d11a7f7079d2a98172a38f5303ece3c5c8257e9a530163087"
+      },
+      "compressed": {
+        "bytes": 38646,
+        "sha256": "f952283cb7b97ace32123f39fa6657ab84b72c9f6cf0785348bfc6fe54fb7b65"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/delta-english-code-1164-diagnostic.json",
+      "archive": "delta-english-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1643933,
+        "sha256": "1835c2cd0ae802b85c891d2366a22ecadc003e9fb7880d44994aa5dd08d8c3e8"
+      },
+      "compressed": {
+        "bytes": 38883,
+        "sha256": "2c3e0624316869361961fbb28960848747f3904c76c78c4cca2cd22c8b04f0de"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/irp-english-code-1164-diagnostic.json",
+      "archive": "irp-english-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1647249,
+        "sha256": "aa3223ad2d2396a690b830f4c29098cc64623967f15d329074a214b56a7d9fea"
+      },
+      "compressed": {
+        "bytes": 38865,
+        "sha256": "f813dc3062a6ff4c25839d32b4f1df7fc086bd4268538bd3fc152efb00af0637"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/mcr-english-code-1164-diagnostic.json",
+      "archive": "mcr-english-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1644437,
+        "sha256": "e3591aee7e415d1b88732eada1a641fc71eb486b1ab232485b2b3ac2328efceb"
+      },
+      "compressed": {
+        "bytes": 38774,
+        "sha256": "9e9bfc4d9392a858971bf0ba8a252b45ef9b776b4dae9456f90a99f379d7bb0a"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/preventionweb-english-code-1164-diagnostic.json",
+      "archive": "preventionweb-english-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1648143,
+        "sha256": "33f083c46e3e33786c1b739d9b8e5555102c83b9b9c9e444be6af3ba899e0fad"
+      },
+      "compressed": {
+        "bytes": 38844,
+        "sha256": "8067675535bb5355404b6dcd8dc0375e58ad2186cb1fa246245041680a9bfd79"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/undrr-arabic-code-390-diagnostic.json",
+      "archive": "undrr-arabic-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1548288,
+        "sha256": "937b9212422ec6d17d3ecff280dd84de8e8fe242652655e44fb27b354c13f833"
+      },
+      "compressed": {
+        "bytes": 36437,
+        "sha256": "822d06b51ade683291b77df2d675506c99f45624bd8da549db1b96b031becbaa"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/delta-arabic-code-390-diagnostic.json",
+      "archive": "delta-arabic-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1551881,
+        "sha256": "1209bd57add18c19070f6287a08bb1d66c6c3e5f049f5f8af14bf8917cdd3907"
+      },
+      "compressed": {
+        "bytes": 36669,
+        "sha256": "fc4d01cc973e864460f12a23f294f748af744d2a976c590a7ecdbaafc67d57f0"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/irp-arabic-code-390-diagnostic.json",
+      "archive": "irp-arabic-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1554945,
+        "sha256": "0a4011be46fb6668891518fcd50994e0684202ac56368e68aec33984de5539fb"
+      },
+      "compressed": {
+        "bytes": 36627,
+        "sha256": "10945ee764f643cb582333a2d520261e1efbfbd19b6c5d9cfd0db86b90398671"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/mcr-arabic-code-390-diagnostic.json",
+      "archive": "mcr-arabic-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1552337,
+        "sha256": "2685316cc67b3bfbc8f4a9e7e9b910481640ddd31ad6abe34f278c9c41c6b095"
+      },
+      "compressed": {
+        "bytes": 36580,
+        "sha256": "44036d3ff13435360afc33e57a2d173b70f80cebdaf8b48dba89eaf6b311b754"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/preventionweb-arabic-code-390-diagnostic.json",
+      "archive": "preventionweb-arabic-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1555791,
+        "sha256": "6d13394e162a0ec9d1abd0a04adbbcad76020100a2489b72a2724c959a78b60d"
+      },
+      "compressed": {
+        "bytes": 36607,
+        "sha256": "54204faac85cc44450d5a281cafa0f556f0855f2266af10ddfc523cc50f94984"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/undrr-arabic-code-1164-diagnostic.json",
+      "archive": "undrr-arabic-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1548113,
+        "sha256": "86eab0bb17cec7225543f665d54c53cf9eb3e4e7bcdec0dbb08be07aca40df7a"
+      },
+      "compressed": {
+        "bytes": 36334,
+        "sha256": "8b3fbe167399bc1138294a15079efac17be9db2e149160a2eed6385dc59594eb"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/delta-arabic-code-1164-diagnostic.json",
+      "archive": "delta-arabic-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1551706,
+        "sha256": "fe6833fa5d4afa0aea0698433961a15e41147a98ef3dbd7b7c42cdffa46309b3"
+      },
+      "compressed": {
+        "bytes": 36573,
+        "sha256": "4dec5791e7e4fdf2710be49cf1363ed997c748d1593b4f5e978641bc92bf7daa"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/irp-arabic-code-1164-diagnostic.json",
+      "archive": "irp-arabic-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1554770,
+        "sha256": "d04475bf0108e906c0851c484ca8f2d066d7ab326f068c85e430a26fdd127fcf"
+      },
+      "compressed": {
+        "bytes": 36527,
+        "sha256": "93b29a16148d5e1738be4f41e2a6c8d18d35408cd90f2bd15d1ddb74510f919d"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/mcr-arabic-code-1164-diagnostic.json",
+      "archive": "mcr-arabic-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1552162,
+        "sha256": "8a784632dc76b6bee06fd810859e6e5211e03a3e4e56fd24652f7fcf3418325f"
+      },
+      "compressed": {
+        "bytes": 36467,
+        "sha256": "a512a02f33206b1c4d8d173750097bf9cd72111e7681bbfc9bf1676321b5bcdb"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/preventionweb-arabic-code-1164-diagnostic.json",
+      "archive": "preventionweb-arabic-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1555616,
+        "sha256": "e6c104caf3cb6ef218bed465e38683523cb558cbeae49182ae88b6fdd499a4ac"
+      },
+      "compressed": {
+        "bytes": 36502,
+        "sha256": "110466ce6aa1405bcab7c60bf01956d56d8c39c22239ddc7aa35fec8adc78660"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/undrr-japanese-code-390-diagnostic.json",
+      "archive": "undrr-japanese-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1632679,
+        "sha256": "eda230dc6bcdf6eedec3feb23a7840eb5d1f18354af1b781e4d2485a0db8dd09"
+      },
+      "compressed": {
+        "bytes": 38232,
+        "sha256": "04ff9c5a21523ba2de14dd5e2fe2012a9341abaf25bd4552f89b4bd7c742777b"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/delta-japanese-code-390-diagnostic.json",
+      "archive": "delta-japanese-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1636479,
+        "sha256": "77a43bfd2a1bfdf600cd9e6cae27908b9cd56a290cc1dd789746f74ab051f9de"
+      },
+      "compressed": {
+        "bytes": 38452,
+        "sha256": "26416c7d715f834c5b79185cd5ce5572542b0931665b94e9f569eb6509bd98cc"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/irp-japanese-code-390-diagnostic.json",
+      "archive": "irp-japanese-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1639795,
+        "sha256": "a78094d1568c03b667f9e40b4a51dad09573d78a2b9d02386e3cb6a7bef2ce95"
+      },
+      "compressed": {
+        "bytes": 38452,
+        "sha256": "0d1c0a3be49fd3ea06037280f2f55b0c763882e45dc4ede4ae81578d325c6a3f"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/mcr-japanese-code-390-diagnostic.json",
+      "archive": "mcr-japanese-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1636983,
+        "sha256": "824ed6e5b6f16d82b18b586e34c762d685285a0cd5f0c252f283c42ef4627eb1"
+      },
+      "compressed": {
+        "bytes": 38361,
+        "sha256": "6e9a0dc5177dcd9191ca625df4f900a1f0f0b51aaeaf2f09b5a57ea1f5c701ef"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/preventionweb-japanese-code-390-diagnostic.json",
+      "archive": "preventionweb-japanese-code-390-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1640689,
+        "sha256": "868ae9e6836c82a1817017b85d9c4982c53f143ff008061f1cb47011edbe474c"
+      },
+      "compressed": {
+        "bytes": 38428,
+        "sha256": "7e7976cf222af0f750b1fcb01be41dd1c1d577531044bd0556269fcb189a621c"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/undrr-japanese-code-1164-diagnostic.json",
+      "archive": "undrr-japanese-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1632580,
+        "sha256": "248a0b63ea1fdad35dcd64fa82e617fb17186a1a29d77e06cbffa39471c0cc05"
+      },
+      "compressed": {
+        "bytes": 38094,
+        "sha256": "01e377860e8197b80e421a400c328d145bc120014796a1b4135f3d5b5e5e7cc5"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/delta-japanese-code-1164-diagnostic.json",
+      "archive": "delta-japanese-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1636380,
+        "sha256": "e503492c8ba164d6d797669a9bf2c332c2c01487f8cc6a586ead6c85cd779c0d"
+      },
+      "compressed": {
+        "bytes": 38297,
+        "sha256": "96abe971895ea9e44f7ffc2cfe64204bc93b9d4f034bbc3f4c6ed47dd2c3ff25"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/irp-japanese-code-1164-diagnostic.json",
+      "archive": "irp-japanese-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1639696,
+        "sha256": "9954af0a48070cd13516b67487ecd5fedaad797031053fd4042af4159ece4698"
+      },
+      "compressed": {
+        "bytes": 38288,
+        "sha256": "378ce59cafab9b7619c8d463d19710a8d0d8a5e2b40a41e6057f50da6fc98339"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/mcr-japanese-code-1164-diagnostic.json",
+      "archive": "mcr-japanese-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1636884,
+        "sha256": "19dd6731bb4b03285facc243ba262df2c191772ba6c89e39c3c6a4db909da87a"
+      },
+      "compressed": {
+        "bytes": 38201,
+        "sha256": "f717c085201116e5f1e6c37afc57084e8a56cde954750a7dd3c0b478c74c338b"
+      }
+    },
+    {
+      "originalPath": "/tmp/mangrove-semantic-inline-fragment-geometry-20261006/preventionweb-japanese-code-1164-diagnostic.json",
+      "archive": "preventionweb-japanese-code-1164-diagnostic.json.gz",
+      "raw": {
+        "bytes": 1640590,
+        "sha256": "ab4f96ed2628395e5d48bf422a47db08ecb5e290c2ddcbe7978069cfa72cd56a"
+      },
+      "compressed": {
+        "bytes": 38268,
+        "sha256": "d24419d16d2a2f981d56a359276f90fcf5f9c9db6cabe8265f044567726e3bdf"
+      }
+    }
+  ],
+  "originalExternalFolder": "/tmp/mangrove-semantic-code-finite-candidate-20261006",
+  "relocationScope": "Paths made repository-relative; gzip losslessly stores unchanged raw captures. Profile geometry/copy/anatomy unchanged.",
+  "nativeAcceptance": false,
+  "requiredSemanticFollowonsComplete": false,
+  "registeredAtPorting": false
+}
