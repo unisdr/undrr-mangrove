@@ -66,6 +66,10 @@ Bounded native evidence now includes [UNDRR SectionHeader](NATIVE-SECTION-HEADER
 and [gradient alpha semantics](GRADIENT-CAPABILITY.md), alongside the earlier
 Tag, SVG and named-font probes. None closes ordinary desktop or publication gates.
 
+See [native integration status](NATIVE-INTEGRATION-STATUS.md) for the current
+source-to-native boundary, complete archived list failures and the remaining
+integration/publication gates.
+
 ## Work coordination
 
 Initial audits are divided into reusable components, syndicated search and page
@@ -126,7 +130,7 @@ ShowMore and Scroll add five source families with63 presets, including real phot
 
 Native capacity is a separate integration gate. The immutable source78 catalogue contains25,466 variables, exceeding Figma’s documented5,000-per-collection limit. Passing source tests do not establish a full native import. Source-proven helper reuse/allocation specialisation and deliberate collection partitioning are under independent review; no bindings or canonical assets have been changed. See [native capacity](NATIVE-CAPACITY.md).
 
-Topic/Index adds eight families/50 variants, Drawer one/20, Cookie consent three/34 and Footer one/10. These independently reviewed cohorts are registered in the current source106 checkpoint, with1298 bounded variants. Drawer uses a separate two-variant contextual Checkbox dependency: the exact normal Checked/Unchecked anatomy with the source-proven neutral-900 Label paint. The normal Checkbox remains unchanged. Complete combined packet verification passes deterministic generation, exact normal foundations and dependencies, actual importer refusal before writes and CLI guards. The combined scene lifecycle remains the original nine families/28 variants; the new cohorts have separate all-five builder, supported-edit and two-repeat evidence. PageHeader44, OnThisPageNav46, ImageFigure72 and Layout3/28 remain unregistered. See [Topic/Index](landing-topic-index.md), [Drawer](drawer.md), [Cookie consent](cookie-consent.md) and [Footer](footer.md).
+Topic/Index adds eight families/50 variants, Drawer one/20, Cookie consent three/34 and Footer one/10. These independently reviewed cohorts were registered at the historical source106 checkpoint, with1298 bounded variants. Drawer uses a separate two-variant contextual Checkbox dependency: the exact normal Checked/Unchecked anatomy with the source-proven neutral-900 Label paint. The normal Checkbox remains unchanged. Complete combined packet verification passes deterministic generation, exact normal foundations and dependencies, actual importer refusal before writes and CLI guards. The combined scene lifecycle remains the original nine families/28 variants; the new cohorts have separate all-five builder, supported-edit and two-repeat evidence. At that checkpoint, PageHeader44, OnThisPageNav46, ImageFigure72 and Layout3/28 remained unregistered. The first three are now registered at source109; Layout remains a separate candidate. See [Topic/Index](landing-topic-index.md), [Drawer](drawer.md), [Cookie consent](cookie-consent.md) and [Footer](footer.md).
 
 The immutable source93 packet contains55,171 variables. A read-only fixed producer/story/category ownership proposal preserves all records across59 requested collections, each below5000 source variables. Actual stale occupancy and native collection-count feasibility remain unverified. The committed opt-in font-free native collection profile passes its separate bounded production rehearsal; advanced full-catalogue support and canonical migration remain open.
 

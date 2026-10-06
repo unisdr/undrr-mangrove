@@ -1,0 +1,475 @@
+{
+  "scope": "Single failing Japanese ordered 1164 source profile diagnostic only, not full12 acceptance",
+  "diagnosticOnly": true,
+  "fullTwelveProfileAcceptance": false,
+  "consumerChecks": [
+    {
+      "id": "semantic-inline-list-ordered-japanese-1164",
+      "componentId": "4:2",
+      "mainTextId": "4:3",
+      "instanceId": "4:4",
+      "consumerTextId": "I4:4;4:3",
+      "linkedMainId": "4:2",
+      "expectedMainId": "4:2",
+      "editedCharacters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+      "consumerInitial": {
+        "characters": "国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 72,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "国連開発計画",
+            "start": 0,
+            "end": 6,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n",
+            "start": 6,
+            "end": 110,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "国連開発計画",
+            "start": 110,
+            "end": 116,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n",
+            "start": 116,
+            "end": 220,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "国連開発計画",
+            "start": 220,
+            "end": 226,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+            "start": 226,
+            "end": 329,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "editedBefore": {
+        "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 72,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+            "start": 0,
+            "end": 329,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterMainReapply": {
+        "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 72,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+            "start": 0,
+            "end": 329,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterAwaitedMainLink": {
+        "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 144,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+            "start": 0,
+            "end": 329,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "differingAfterMainReapply": [],
+      "differingAfterAwaitedMainLink": [
+        {
+          "key": "height",
+          "before": 72,
+          "after": 144
+        }
+      ],
+      "linkRetained": true,
+      "charactersRetained": true,
+      "exactFieldsRetained": false
+    }
+  ],
+  "profiles": [],
+  "createdNodeIds": [
+    "4:2",
+    "4:3",
+    "4:4",
+    "I4:4;4:3"
+  ],
+  "removedNodeIds": [
+    "4:4",
+    "I4:4;4:3"
+  ],
+  "residualNodeIds": [
+    "4:2",
+    "4:3"
+  ],
+  "unverifiedRemovalNodeIds": [],
+  "errors": [
+    "Bounded same-length consumer edit not retained semantic-inline-list-ordered-japanese-1164"
+  ],
+  "assetWriteAPIsInvoked": false,
+  "publication": false,
+  "fontLoadJournal": [
+    {
+      "font": {
+        "family": "Inter",
+        "style": "Regular"
+      },
+      "resolved": true
+    },
+    {
+      "font": {
+        "family": "Roboto",
+        "style": "Regular"
+      },
+      "resolved": true
+    },
+    {
+      "font": {
+        "family": "Roboto",
+        "style": "Bold"
+      },
+      "resolved": true
+    },
+    {
+      "font": {
+        "family": "Noto Sans Arabic",
+        "style": "Regular"
+      },
+      "resolved": true
+    },
+    {
+      "font": {
+        "family": "Noto Sans Arabic",
+        "style": "Bold"
+      },
+      "resolved": true
+    }
+  ],
+  "loadedFonts": [
+    {
+      "family": "Inter",
+      "style": "Regular"
+    },
+    {
+      "family": "Roboto",
+      "style": "Regular"
+    },
+    {
+      "family": "Roboto",
+      "style": "Bold"
+    },
+    {
+      "family": "Noto Sans Arabic",
+      "style": "Regular"
+    },
+    {
+      "family": "Noto Sans Arabic",
+      "style": "Bold"
+    }
+  ],
+  "recordedSceneBefore": [],
+  "recordedSceneAfter": [],
+  "recordedSceneExact": true,
+  "recordedAssetsBefore": {
+    "styles": [],
+    "effects": [],
+    "variables": [],
+    "collections": []
+  },
+  "recordedAssetsAfter": {
+    "styles": [],
+    "effects": [],
+    "variables": [],
+    "collections": []
+  },
+  "recordedAssetsExact": true,
+  "verificationScope": "Current-page IDs, parent, type, raw geometry, visible/opacity, TEXT copy/font/size/lineHeight/styleID and instance properties; local text/effect styles and variable/collection projections. Not entire scene/file property equality.",
+  "probePrimitivePassed": false,
+  "targetedPredicatePassed": false
+}

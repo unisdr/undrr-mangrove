@@ -1,0 +1,24 @@
+{
+  "executionPrewriteAccepted": true,
+  "payloadBytes": 48480,
+  "payloadSha256": "9cf4b962059b549ebb47011d8824652e6e18e586956df5607a73bb3dd494c64f",
+  "targetFileKey": "yQERTnAg95ysOZoSyPXr0j",
+  "pageId": "0:1",
+  "originalFullTwelveSourceProfilesExactlyPreserved": true,
+  "independentMockExitCode": 0,
+  "completeWorstCaseOfflineReceiptCharacters": 16607,
+  "v2ShapeCodecLosslessRawRoundtrip": true,
+  "invalidShapeAndCyclicRefRefusalReviewed": true,
+  "continuedHeightChangeCopyLossWrongMainStillRefuse": true,
+  "requiredFiveFacesAndExactAwaitBarriersPreserved": true,
+  "symmetricAwaitBoundary": "Empirical before/after async boundary, not documented layout flush guarantee",
+  "consumerStrongRangeFontRetentionAccepted": false,
+  "scope": "Complete12 native list-field/paragraph candidate probe only; no actual result yet or source raster/indent/fonts/bidi/production/publication proof.",
+  "files": {
+    "probe.js": "9cf4b962059b549ebb47011d8824652e6e18e586956df5607a73bb3dd494c64f",
+    "runtime.js": "810077c3192599772cbf846b3eb045b06aa3e7f6c81c951f1f25e463760eb536",
+    "decode.cjs": "23511a1f2cf5f9db4c57b4243825f3d6d825d9cf52a597b50be24a1c23444cb9",
+    "mock-probe.cjs": "eade7039317502a06169671419b2b357bab6f7557bd8f914de25d44cdfb33012",
+    "independent-offline-check.log": "9b2d81b9cb495214d30b42e8a14976e198523e48c00bab807e76af600a8e445a"
+  }
+}

@@ -1,0 +1,3519 @@
+{
+  "scope": "Full original12 native list profiles with symmetric awaited consumer baseline; field primitive only",
+  "consumerChecks": [
+    {
+      "id": "semantic-inline-list-ordered-english-390",
+      "componentId": "6:2",
+      "mainTextId": "6:3",
+      "instanceId": "6:4",
+      "consumerTextId": "I6:4;6:3",
+      "expectedMainId": "6:2",
+      "baselineMainId": "6:2",
+      "linkedMainId": "6:2",
+      "editedCharacters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+      "consumerInitial": {
+        "characters": "United Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 360,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 0,
+            "end": 49,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\n",
+            "start": 49,
+            "end": 190,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 190,
+            "end": 239,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\n",
+            "start": 239,
+            "end": 380,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 380,
+            "end": 429,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 429,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "immediateEdited": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 360,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "awaitedBaseline": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 360,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterMainReapply": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 360,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterAwaitedMainLink": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 360,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "initialAwaitDifferences": [],
+      "mainUpdateDifferences": [],
+      "baselineLinkRetained": true,
+      "baselineCharactersRetained": true,
+      "linkRetained": true,
+      "charactersRetained": true,
+      "exactFieldsRetained": true
+    },
+    {
+      "id": "semantic-inline-list-ordered-english-1164",
+      "componentId": "6:6",
+      "mainTextId": "6:7",
+      "instanceId": "6:8",
+      "consumerTextId": "I6:8;6:7",
+      "expectedMainId": "6:6",
+      "baselineMainId": "6:6",
+      "linkedMainId": "6:6",
+      "editedCharacters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+      "consumerInitial": {
+        "characters": "United Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 144,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 0,
+            "end": 49,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\n",
+            "start": 49,
+            "end": 190,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 190,
+            "end": 239,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\n",
+            "start": 239,
+            "end": 380,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 380,
+            "end": 429,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 429,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "immediateEdited": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 144,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "awaitedBaseline": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 144,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterMainReapply": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 144,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterAwaitedMainLink": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 144,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "initialAwaitDifferences": [],
+      "mainUpdateDifferences": [],
+      "baselineLinkRetained": true,
+      "baselineCharactersRetained": true,
+      "linkRetained": true,
+      "charactersRetained": true,
+      "exactFieldsRetained": true
+    },
+    {
+      "id": "semantic-inline-list-ordered-arabic-390",
+      "componentId": "6:10",
+      "mainTextId": "6:11",
+      "instanceId": "6:12",
+      "consumerTextId": "I6:12;6:11",
+      "expectedMainId": "6:10",
+      "baselineMainId": "6:10",
+      "linkedMainId": "6:10",
+      "editedCharacters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+      "consumerInitial": {
+        "characters": "برنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 347,
+        "height": 360,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 0,
+            "end": 29,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\n",
+            "start": 29,
+            "end": 243,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 243,
+            "end": 272,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\n",
+            "start": 272,
+            "end": 486,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 486,
+            "end": 515,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 515,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "immediateEdited": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 347,
+        "height": 432,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "awaitedBaseline": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 347,
+        "height": 432,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterMainReapply": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 347,
+        "height": 432,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterAwaitedMainLink": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 347,
+        "height": 432,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "initialAwaitDifferences": [],
+      "mainUpdateDifferences": [],
+      "baselineLinkRetained": true,
+      "baselineCharactersRetained": true,
+      "linkRetained": true,
+      "charactersRetained": true,
+      "exactFieldsRetained": true
+    },
+    {
+      "id": "semantic-inline-list-ordered-arabic-1164",
+      "componentId": "6:14",
+      "mainTextId": "6:15",
+      "instanceId": "6:16",
+      "consumerTextId": "I6:16;6:15",
+      "expectedMainId": "6:14",
+      "baselineMainId": "6:14",
+      "linkedMainId": "6:14",
+      "editedCharacters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+      "consumerInitial": {
+        "characters": "برنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1119,
+        "height": 144,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 0,
+            "end": 29,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\n",
+            "start": 29,
+            "end": 243,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 243,
+            "end": 272,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\n",
+            "start": 272,
+            "end": 486,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 486,
+            "end": 515,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 515,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "immediateEdited": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1119,
+        "height": 144,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "awaitedBaseline": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1119,
+        "height": 144,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterMainReapply": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1119,
+        "height": 144,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterAwaitedMainLink": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1119,
+        "height": 144,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "initialAwaitDifferences": [],
+      "mainUpdateDifferences": [],
+      "baselineLinkRetained": true,
+      "baselineCharactersRetained": true,
+      "linkRetained": true,
+      "charactersRetained": true,
+      "exactFieldsRetained": true
+    },
+    {
+      "id": "semantic-inline-list-ordered-japanese-390",
+      "componentId": "6:18",
+      "mainTextId": "6:19",
+      "instanceId": "6:20",
+      "consumerTextId": "I6:20;6:19",
+      "expectedMainId": "6:18",
+      "baselineMainId": "6:18",
+      "linkedMainId": "6:18",
+      "editedCharacters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+      "consumerInitial": {
+        "characters": "国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 216,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "国連開発計画",
+            "start": 0,
+            "end": 6,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n",
+            "start": 6,
+            "end": 110,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "国連開発計画",
+            "start": 110,
+            "end": 116,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n",
+            "start": 116,
+            "end": 220,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "国連開発計画",
+            "start": 220,
+            "end": 226,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+            "start": 226,
+            "end": 329,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "immediateEdited": {
+        "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 216,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+            "start": 0,
+            "end": 329,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "awaitedBaseline": {
+        "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 216,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+            "start": 0,
+            "end": 329,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterMainReapply": {
+        "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 216,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+            "start": 0,
+            "end": 329,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "afterAwaitedMainLink": {
+        "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 432,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "X連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。\n国連開発計画: 国連開発計画は、国連のグローバルな開発ネットワークです。 それは、国家間の技術的および投資協力を促進し、変化を提唱し、人々がより良い生活を築くのを助けるために、国家を知識、経験および資源に結び付けます。",
+            "start": 0,
+            "end": 329,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "initialAwaitDifferences": [],
+      "mainUpdateDifferences": [
+        {
+          "key": "height",
+          "before": 216,
+          "after": 432
+        }
+      ],
+      "baselineLinkRetained": true,
+      "baselineCharactersRetained": true,
+      "linkRetained": true,
+      "charactersRetained": true,
+      "exactFieldsRetained": false
+    }
+  ],
+  "profiles": [
+    {
+      "id": "semantic-inline-list-ordered-english-390",
+      "sourceKeys": [
+        "undrr-english-list-ordered-390",
+        "delta-english-list-ordered-390",
+        "irp-english-list-ordered-390",
+        "mcr-english-list-ordered-390",
+        "preventionweb-english-list-ordered-390"
+      ],
+      "sourceMarker": {
+        "type": "decimal",
+        "position": "outside"
+      },
+      "sourceFirstItemBox": {
+        "bottom": 136,
+        "height": 120,
+        "left": 36,
+        "right": 374,
+        "top": 16,
+        "width": 338,
+        "x": 36,
+        "y": 16
+      },
+      "initial": {
+        "characters": "United Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 360,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 0,
+            "end": 49,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\n",
+            "start": 49,
+            "end": 190,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 190,
+            "end": 239,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\n",
+            "start": 239,
+            "end": 380,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 380,
+            "end": 429,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 429,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "repeatsExact": true,
+      "consumerSameLengthEditRetained": true,
+      "consumerBefore": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 360,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "consumerAfter": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 338,
+        "height": 360,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "nativeRenderedEquivalence": false
+    },
+    {
+      "id": "semantic-inline-list-ordered-english-1164",
+      "sourceKeys": [
+        "undrr-english-list-ordered-1164",
+        "delta-english-list-ordered-1164",
+        "irp-english-list-ordered-1164",
+        "mcr-english-list-ordered-1164",
+        "preventionweb-english-list-ordered-1164"
+      ],
+      "sourceMarker": {
+        "type": "decimal",
+        "position": "outside"
+      },
+      "sourceFirstItemBox": {
+        "bottom": 64,
+        "height": 48,
+        "left": 36,
+        "right": 1148,
+        "top": 16,
+        "width": 1112,
+        "x": 36,
+        "y": 16
+      },
+      "initial": {
+        "characters": "United Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 144,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 0,
+            "end": 49,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\n",
+            "start": 49,
+            "end": 190,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 190,
+            "end": 239,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\n",
+            "start": 239,
+            "end": 380,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "United Nations Office for Disaster Risk Reduction",
+            "start": 380,
+            "end": 429,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 429,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "repeatsExact": true,
+      "consumerSameLengthEditRetained": true,
+      "consumerBefore": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 144,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "consumerAfter": {
+        "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1112,
+        "height": 144,
+        "textAlignHorizontal": "LEFT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.\nUnited Nations Office for Disaster Risk Reduction: UNDRR brings governments, partners and communities together to reduce disaster risk and losses to ensure a safer, more sustainable future.",
+            "start": 0,
+            "end": 569,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Roboto",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "nativeRenderedEquivalence": false
+    },
+    {
+      "id": "semantic-inline-list-ordered-arabic-390",
+      "sourceKeys": [
+        "undrr-arabic-list-ordered-390",
+        "delta-arabic-list-ordered-390",
+        "irp-arabic-list-ordered-390",
+        "mcr-arabic-list-ordered-390",
+        "preventionweb-arabic-list-ordered-390"
+      ],
+      "sourceMarker": {
+        "type": "decimal",
+        "position": "outside"
+      },
+      "sourceFirstItemBox": {
+        "bottom": 136,
+        "height": 120,
+        "left": 16,
+        "right": 363,
+        "top": 16,
+        "width": 347,
+        "x": 16,
+        "y": 16
+      },
+      "initial": {
+        "characters": "برنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 347,
+        "height": 360,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 0,
+            "end": 29,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\n",
+            "start": 29,
+            "end": 243,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 243,
+            "end": 272,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\n",
+            "start": 272,
+            "end": 486,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 486,
+            "end": 515,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 515,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "repeatsExact": true,
+      "consumerSameLengthEditRetained": true,
+      "consumerBefore": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 347,
+        "height": 432,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "consumerAfter": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 347,
+        "height": 432,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "nativeRenderedEquivalence": false
+    },
+    {
+      "id": "semantic-inline-list-ordered-arabic-1164",
+      "sourceKeys": [
+        "undrr-arabic-list-ordered-1164",
+        "delta-arabic-list-ordered-1164",
+        "irp-arabic-list-ordered-1164",
+        "mcr-arabic-list-ordered-1164",
+        "preventionweb-arabic-list-ordered-1164"
+      ],
+      "sourceMarker": {
+        "type": "decimal",
+        "position": "outside"
+      },
+      "sourceFirstItemBox": {
+        "bottom": 64,
+        "height": 48,
+        "left": 16,
+        "right": 1135,
+        "top": 16,
+        "width": 1119,
+        "x": 16,
+        "y": 16
+      },
+      "initial": {
+        "characters": "برنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1119,
+        "height": 144,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 0,
+            "end": 29,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\n",
+            "start": 29,
+            "end": 243,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 243,
+            "end": 272,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\n",
+            "start": 272,
+            "end": 486,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": "برنامج الأمم المتحدة الإنمائي",
+            "start": 486,
+            "end": 515,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          },
+          {
+            "characters": ": برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 515,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "repeatsExact": true,
+      "consumerSameLengthEditRetained": true,
+      "consumerBefore": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1119,
+        "height": 144,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "consumerAfter": {
+        "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+        "options": {
+          "type": "ORDERED"
+        },
+        "hangingList": true,
+        "listSpacing": 0,
+        "indentation": 1,
+        "width": 1119,
+        "height": 144,
+        "textAlignHorizontal": "RIGHT",
+        "textAutoResize": "HEIGHT",
+        "segments": [
+          {
+            "characters": "Xرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.\nبرنامج الأمم المتحدة الإنمائي: برنامج الأمم المتحدة الإنمائي هو شبكة التنمية العالمية للأمم المتحدة. وهي تعزز التعاون التقني والاستثماري بين الدول وتدعو للتغيير وتربط البلدان بالمعرفة والخبرة والموارد لمساعدة الناس على بناء حياة أفضل لأنفسهم.",
+            "start": 0,
+            "end": 728,
+            "fontSize": 16,
+            "fontName": {
+              "family": "Noto Sans Arabic",
+              "style": "Bold",
+              "variationSettings": {
+                "wght": 700,
+                "wdth": 100
+              }
+            },
+            "lineHeight": {
+              "unit": "PIXELS",
+              "value": 24
+            },
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": {
+                  "r": 0.10196078568696976,
+                  "g": 0.10196078568696976,
+                  "b": 0.10196078568696976
+                },
+                "boundVariables": {}
+              }
+            ]
+          }
+        ]
+      },
+      "nativeRenderedEquivalence": false
+    }
+  ],
+  "createdNodeIds": [
+    "6:2",
+    "6:3",
+    "6:4",
+    "I6:4;6:3",
+    "6:6",
+    "6:7",
+    "6:8",
+    "I6:8;6:7",
+    "6:10",
+    "6:11",
+    "6:12",
+    "I6:12;6:11",
+    "6:14",
+    "6:15",
+    "6:16",
+    "I6:16;6:15",
+    "6:18",
+    "6:19",
+    "6:20",
+    "I6:20;6:19"
+  ],
+  "removedNodeIds": [
+    "6:4",
+    "I6:4;6:3",
+    "6:8",
+    "I6:8;6:7",
+    "6:12",
+    "I6:12;6:11",
+    "6:16",
+    "I6:16;6:15",
+    "6:20",
+    "I6:20;6:19"
+  ],
+  "residualNodeIds": [
+    "6:2",
+    "6:3",
+    "6:6",
+    "6:7",
+    "6:10",
+    "6:11",
+    "6:14",
+    "6:15",
+    "6:18",
+    "6:19"
+  ],
+  "unverifiedRemovalNodeIds": [],
+  "errors": [
+    "Bounded same-length consumer edit not retained semantic-inline-list-ordered-japanese-390"
+  ],
+  "assetWriteAPIsInvoked": false,
+  "publication": false,
+  "fontLoadJournal": [
+    {
+      "font": {
+        "family": "Inter",
+        "style": "Regular"
+      },
+      "resolved": true
+    },
+    {
+      "font": {
+        "family": "Roboto",
+        "style": "Regular"
+      },
+      "resolved": true
+    },
+    {
+      "font": {
+        "family": "Roboto",
+        "style": "Bold"
+      },
+      "resolved": true
+    },
+    {
+      "font": {
+        "family": "Noto Sans Arabic",
+        "style": "Regular"
+      },
+      "resolved": true
+    },
+    {
+      "font": {
+        "family": "Noto Sans Arabic",
+        "style": "Bold"
+      },
+      "resolved": true
+    }
+  ],
+  "loadedFonts": [
+    {
+      "family": "Inter",
+      "style": "Regular"
+    },
+    {
+      "family": "Roboto",
+      "style": "Regular"
+    },
+    {
+      "family": "Roboto",
+      "style": "Bold"
+    },
+    {
+      "family": "Noto Sans Arabic",
+      "style": "Regular"
+    },
+    {
+      "family": "Noto Sans Arabic",
+      "style": "Bold"
+    }
+  ],
+  "recordedSceneBefore": [],
+  "recordedSceneAfter": [],
+  "recordedSceneExact": true,
+  "recordedAssetsBefore": {
+    "styles": [],
+    "effects": [],
+    "variables": [],
+    "collections": []
+  },
+  "recordedAssetsAfter": {
+    "styles": [],
+    "effects": [],
+    "variables": [],
+    "collections": []
+  },
+  "recordedAssetsExact": true,
+  "verificationScope": "Current-page IDs, parent, type, raw geometry, visible/opacity, TEXT copy/font/size/lineHeight/styleID and instance properties; local text/effect styles and variable/collection projections. Not entire scene/file property equality.",
+  "probePrimitivePassed": false
+}

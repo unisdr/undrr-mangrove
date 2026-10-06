@@ -1,0 +1,17 @@
+{
+  "scope": "Targeted observed field transition, not full12 native acceptance",
+  "profile": "semantic-inline-list-ordered-japanese-1164",
+  "copyAndLinkRetained": true,
+  "differences": [
+    {
+      "key": "height",
+      "before": 72,
+      "after": 144
+    }
+  ],
+  "sameOperationAfterMainReapplyDifferences": [],
+  "full12Accepted": false,
+  "fontOrSourceCauseEstablished": false,
+  "probeSHA256": "dc1793ca4b9747f08d114b933313f5e0397c120c28ad98b2571e855e336e75c5",
+  "freshCommittedCreatedIdsAbsent": true
+}
