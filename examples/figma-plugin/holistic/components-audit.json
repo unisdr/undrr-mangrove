@@ -13984,8 +13984,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 56,
-    "variants": 438,
+    "families": 57,
+    "variants": 440,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -14021,7 +14021,8 @@
       "copy-button",
       "cite-trigger",
       "cite-dialog",
-      "cite-fallback"
+      "cite-fallback",
+      "news-contextual-highlight"
     ],
     "addedSearchControlFamilies": [
       "search-form",
@@ -14035,7 +14036,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "28e3ecfd1c21932678307b17d5ef0594905e5b616c02d654862d8d8109472922",
+    "currentPacketScriptSha256": "dd347ae5c894cd732a0babfcf04949cb40631e37da928ca23c7b6e54a066e74e",
     "dependencies": [
       {
         "id": "editorial-cta",
@@ -14115,6 +14116,14 @@
       "nativeAcceptance": false,
       "nativeFontGate": "Menlo absent from cloud available-font inventory",
       "scope": "Actual idle/copied/failed source feedback, genuine cite trigger,18 dialogs and4 details fallback states; clipboard/dialog runtime, font pixels/reflow/native integration/publication open."
+    },
+    "boundedArticleFloatComponent": {
+      "families": 1,
+      "variants": 2,
+      "sourceCases": 10,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Titleless contextual rich HighlightBox and source allocation only; following desktop paragraph exclusion flow and full article/native pixels remain open."
     }
   }
 }

@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 56 families and 438 bounded variants, deliberately
+- Separate source draft packet: 57 families and 440 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -94,3 +94,5 @@ The historical committed source46/334 checkpoint and its immutable delivery rema
 The current source packet also registers eight image-bearing article-header presets, with genuine reusable no-image header dependencies where the source uses them. All five brand-mode source/mock checks and an independent expert review pass for this finite cohort. Header images, fonts, native cropping/pixels and full article composition remain open. See [the header contract](news-detail.md).
 
 Copy/Cite adds four source families/60 finite presets with350 actual source captures. Source copies, supported edits, all-five rebuilds and expert review pass. The current source owns idle/copied/failed feedback, a genuine citation trigger,18 dialog states and four authored fallback details states. Historical copying/download assumptions are corrected in a separate source reconciliation. Native Menlo availability, glyph pixels, reflow, dialog/clipboard behaviour and publication remain open. See [Copy/Cite](copy-cite.md).
+
+The contextual article HighlightBox adds one family/two source presets, preserving its titleless rich paragraph, source inset shadow and finite float allocation. All-five source/mock rebuilds, rich consumer edits and an independent review pass. The following desktop paragraph's varying line widths and native inset-shadow pixels remain composition gates. See [the float contract](news-float.md).
