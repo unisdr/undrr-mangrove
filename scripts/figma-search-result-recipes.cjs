@@ -480,7 +480,8 @@ function buildSearchResultRecipes({ root, modes, variables, styles }) {
           ),
           opacity: number(
             'opacity',
-            values(m => Number(source.styles[all[m.id].styles].opacity))
+            // Figma FLOAT opacity bindings are percentages; CSS computed opacity is 0..1.
+            values(m => Number(source.styles[all[m.id].styles].opacity) * 100)
           ),
         };
         for (const [field, css] of [

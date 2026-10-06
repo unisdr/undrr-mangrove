@@ -57,6 +57,7 @@ const snapshot = env =>
         : null,
       n.explicitVariableModes,
       n.boundVariables,
+      n.opacity,
       n.type === 'INSTANCE' ? n.componentProperties : null,
     ]),
     styles: env.state.styles,
@@ -143,6 +144,19 @@ async function main() {
       assert(variant, scene.id);
       for (const index of scene.nodes) {
         const owner = footprints.nodes[index];
+        const ownerSpec = walk(variant.tree).find(
+          n => n.id === owner.id.replaceAll('/', '-')
+        );
+        assert(ownerSpec, owner.id);
+        const cssOpacity = Number(footprints.styles[owner.styles].opacity);
+        assert(
+          Number.isFinite(cssOpacity) && cssOpacity >= 0 && cssOpacity <= 1
+        );
+        assert.strictEqual(
+          resolve(doc, ownerSpec.bindings.opacity, capture.brand),
+          cssOpacity * 100,
+          'CSS opacity must become a percentage variable'
+        );
         for (const text of owner.texts) {
           if (text.lines.length > 1) wrappedSegments++;
           assert.strictEqual(text.lines.map(l => l.text).join(''), text.text);
@@ -198,6 +212,34 @@ async function main() {
           );
           assert(n, key);
           if (spec.type === 'FRAME') {
+            if (spec.bindings?.opacity) {
+              const value = resolve(doc, spec.bindings.opacity, mode.id);
+              const capture = footprints.captures.find(
+                c =>
+                  c.brand === mode.id &&
+                  c.viewport === Number(variant.properties.Viewport)
+              );
+              const scene = capture.scenes.find(s =>
+                variant.id.endsWith(s.id + '.' + capture.viewport)
+              );
+              const record = scene.nodes
+                .map(i => footprints.nodes[i])
+                .find(n => n.id.replaceAll('/', '-') === spec.id);
+              assert(record, spec.id);
+              const sourceOpacity = Number(
+                footprints.styles[record.styles].opacity
+              );
+              assert.strictEqual(
+                value,
+                sourceOpacity * 100,
+                'Source CSS alpha must use percentage binding units'
+              );
+              assert.strictEqual(
+                n.opacity,
+                sourceOpacity,
+                'Actual builder plus native-percentage mock must preserve source opacity'
+              );
+            }
             for (const field of ['width', 'height']) {
               const v = spec.layout[field];
               assert.strictEqual(
