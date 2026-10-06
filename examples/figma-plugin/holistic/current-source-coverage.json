@@ -1,8 +1,8 @@
 {
   "status": "Current registry crosswalk; bounded source associations, no complete catalogue/native acceptance inferred",
   "auditedAtUTC": "2026-10-06T04:39:16.411306+00:00",
-  "committedSourceFamilies": 118,
-  "committedSourceVariants": 1584,
+  "committedSourceFamilies": 119,
+  "committedSourceVariants": 1794,
   "normalFamilies": 32,
   "normalVariants": 383,
   "historicalPublishedFamilies": 25,
@@ -713,8 +713,8 @@
       "label": "Logo system",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": ["logo"],
+      "committedSourceFamilyIds": ["logo"],
+      "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -1092,22 +1092,11 @@
     "Composite publication and linked consumer restoration",
     "Human novice handoff and reduced maintenance merge acceptance"
   ],
-  "previousCommittedRevision": "7a8875c587c4d1ceb58a711f7df9a075305ec178",
-  "registryRevisionScope": "Source118 registered recipe checkpoint. previousCommittedRevision identifies the separately preserved source109 registry/delivery; this later doc correction does not regenerate either immutable artifact.",
-  "registrationVerification": "Immutable source118 complete combined harness terminal exit0: deterministic118/1584 DTO/dependency preservation, actual importer premutation refusal, original9/28 scene lifecycle and CLI output/check/overwrite/source guards. Layout3/28 and semantic6/96 dedicated all-five source peers remain separate. Required36 semantic follow-ons unsupported; no full native catalogue acceptance.",
+  "previousCommittedRevision": "7ae4a12f781640d5cef592a167f29b732313d465",
+  "registryRevisionScope": "Source119 registered recipe checkpoint. Previous source118 and source109 clean versioned artifacts remain separately preserved; this docs-only correction does not regenerate them.",
+  "registrationVerification": "Immutable source119 all combined source/DTO/dependency/importer-refusal/original9/28 scene lifecycle and CLI assertions completed, demonstrated by the preserved final success log after all assertions. Original tool handle expired; shell exit code unobserved. Independent379 snapshot pins exact. Registry saved0980da33; no full native catalogue acceptance.",
   "registryUpdatedAtUTC": "2026-10-06",
-  "registryRevision": "7ae4a12f781640d5cef592a167f29b732313d465",
-  "stagedSourceFamilies": 119,
-  "stagedSourceVariants": 1794,
-  "pendingSource119Registration": {
-    "familyIds": ["logo"],
-    "families": 1,
-    "variants": 210,
-    "sourcePeerAccepted": true,
-    "combinedVerification": "All checks completed and final success log observed; final shell exit code unobserved after tool handle expired. Immutable379 file pins exact; checkpoint pending.",
-    "nativeAccepted": false,
-    "savedSource118Revision": "7ae4a12f781640d5cef592a167f29b732313d465"
-  },
+  "registryRevision": "0980da3366cc2738c5ec5949d91f8900959a22a9",
   "reviewedRegisteredSource118Additions": {
     "layout-foundations": {
       "families": 3,
@@ -1124,5 +1113,24 @@
       "requiredUnimplementedFiniteSpecimens": 36,
       "registryCommittedSource118": true
     }
+  },
+  "registeredSource119Addition": {
+    "familyIds": ["logo"],
+    "families": 1,
+    "variants": 210,
+    "sourcePeerAccepted": true,
+    "combinedVerification": "Immutable source119 all combined source/DTO/dependency/importer-refusal/original9/28 scene lifecycle and CLI assertions completed, demonstrated by the preserved final success log after all assertions. Original tool handle expired; shell exit code unobserved. Independent379 snapshot pins exact. Registry saved0980da33; no full native catalogue acceptance.",
+    "nativeAccepted": false,
+    "savedSource118Revision": "7ae4a12f781640d5cef592a167f29b732313d465",
+    "registryCommitted": true,
+    "registryRevision": "0980da3366cc2738c5ec5949d91f8900959a22a9"
+  },
+  "requiredSemanticSourceContractCheckpoint": {
+    "revision": "cda3a3385b57c94da69dfe5f841e6f2add4110ed",
+    "requiredContracts": 36,
+    "sourceCases": 180,
+    "registeredFamiliesAdded": 0,
+    "sourceRecipeReady": false,
+    "nativeAccepted": false
   }
 }
