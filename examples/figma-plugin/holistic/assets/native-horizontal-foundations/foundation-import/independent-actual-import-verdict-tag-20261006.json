@@ -1,0 +1,16 @@
+{
+  "acceptedImportOperationReceipt": true,
+  "receiptSHA256": "f7bfe9f1b0478b5ea74d1c1c34c364441732e38f024405a10294668b8b605b52",
+  "payloadSHA256": "45e5970ae7a13973b9e1a18cd0fe20b03406669053b684cdd1462a37a5645f48",
+  "target": "uEoniqMXfDJ0vcGrnPKWp3",
+  "pageId": "0:1",
+  "collectionId": "VariableCollectionId:4:2",
+  "createdVariables": 70,
+  "reportedValues": 350,
+  "createdTextStyles": 8,
+  "createdEffectStyles": 1,
+  "operationErrors": [],
+  "completeUntruncatedJSON": true,
+  "sourceAndScaffoldFourFontsLoadedBeforeWrites": true,
+  "scope": "Actual whole foundation import counts, explicit selection and complete affected asset journals only. Native readback of all350 values/aliases/styles and source applied scene contracts remain separate before lifecycle acceptance."
+}

@@ -1,0 +1,42 @@
+{
+  "scope": "Root raw transport and partition union checks only. Sequential readonly captures, source-value/style comparison pending independent review.",
+  "variables": 70,
+  "modeValues": 350,
+  "textStyles": 8,
+  "effectStyles": 1,
+  "allRecordedCollectionOwnerIdentitiesEqual": true,
+  "zeroMutations": true,
+  "sourceComparisonPending": true,
+  "rawPins": [
+    {
+      "part": 1,
+      "bytes": 18790,
+      "sha256": "446e7e02decacc15f0d8ed7cc165fd8a763a2cb04613cc03e838783c4fa24d1b"
+    },
+    {
+      "part": 2,
+      "bytes": 14940,
+      "sha256": "736d071f571d59a8f8f8254bd4ca50cc42804e884b6a54ab6dbcbf1be85af41c"
+    },
+    {
+      "part": 3,
+      "bytes": 18864,
+      "sha256": "911944b0b6e98eeee134fa98cb1b136df3c6ce805db940527a73853f70853e5e"
+    },
+    {
+      "part": 4,
+      "bytes": 16141,
+      "sha256": "6b208e455319730ef78989ad141446ca3562cd28fc9770d18d8d58b9f4dc1466"
+    },
+    {
+      "part": 5,
+      "bytes": 16157,
+      "sha256": "67438a78a728100891bc265aa9ebfdf2dd1c806290621cd796d0fdf05d7d098e"
+    },
+    {
+      "part": 6,
+      "bytes": 16759,
+      "sha256": "2704c50ab504d9043e937ade951dd1b44eb1902391c31e8f629fa47c1b6582db"
+    }
+  ]
+}

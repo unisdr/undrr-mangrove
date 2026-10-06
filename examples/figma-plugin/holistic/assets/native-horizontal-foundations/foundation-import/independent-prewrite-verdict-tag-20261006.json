@@ -1,0 +1,18 @@
+{
+  "acceptedPrewrite": true,
+  "target": "uEoniqMXfDJ0vcGrnPKWp3",
+  "pageId": "0:1",
+  "payloadBytes": 46532,
+  "payloadSHA256": "45e5970ae7a13973b9e1a18cd0fe20b03406669053b684cdd1462a37a5645f48",
+  "actualOwnerReceiptSHA256": "c537b8288b533e0c62f6ab6c802e25d7115327af4024a554eab700d81f0bec42",
+  "actualOwnerExact": true,
+  "fullSourceDocumentSHA256": "6685f5dcb969745ed60824651f4be6cdc5b8cd9c0f1f0ef61de127305ccc8251",
+  "completeRoles": 70,
+  "sourceModes": 5,
+  "textStyles": 8,
+  "effectStyles": 1,
+  "independentMockExitCode": 0,
+  "all350SourceValuesCheckedByRerun": true,
+  "twoZeroCreateAssetRepeats": true,
+  "scope": "Guarded whole foundation import only. Earlier shorthand-name preparations superseded. No native execution, scene construction, source glyph/pixel or publication acceptance."
+}

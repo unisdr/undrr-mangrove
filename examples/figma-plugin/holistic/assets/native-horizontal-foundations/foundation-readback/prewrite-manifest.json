@@ -1,0 +1,69 @@
+{
+  "native": false,
+  "sourceSHA256": "6685f5dcb969745ed60824651f4be6cdc5b8cd9c0f1f0ef61de127305ccc8251",
+  "pinsSHA256": "a6cd69167475a26a2c5784ce900d0038e6ed5ce6431244039e47c0c26736f2b5",
+  "parts": [
+    [
+      0,
+      14,
+      false
+    ],
+    [
+      14,
+      28,
+      false
+    ],
+    [
+      28,
+      42,
+      false
+    ],
+    [
+      42,
+      56,
+      false
+    ],
+    [
+      56,
+      70,
+      false
+    ],
+    [
+      70,
+      70,
+      true
+    ]
+  ],
+  "files": [
+    {
+      "name": "read-foundations-part1.js",
+      "bytes": 24081,
+      "sha256": "47742e1233777b2e2c74abc8ab0a25d353aed8a199aca8cc2b0974e2eaada089"
+    },
+    {
+      "name": "read-foundations-part2.js",
+      "bytes": 24082,
+      "sha256": "e74086f7b6a5743ef8c5523ea1aec1397fa7cb92cd8af8bd90af959d20a6b8f6"
+    },
+    {
+      "name": "read-foundations-part3.js",
+      "bytes": 24082,
+      "sha256": "a51bb8f5110cc6253cf6eff419760f667c6867600118d27cfe817a90d1712c9c"
+    },
+    {
+      "name": "read-foundations-part4.js",
+      "bytes": 24082,
+      "sha256": "47e36a772186179eb8ffd4d34267458cfe0f51ee81fff6d875da442d5d76d2ee"
+    },
+    {
+      "name": "read-foundations-part5.js",
+      "bytes": 24082,
+      "sha256": "09db633cb1fba335a3520f7cd680cb148d4f4a7f0bbd0bcdda601b7c6de9c734"
+    },
+    {
+      "name": "read-foundations-part6.js",
+      "bytes": 24081,
+      "sha256": "00a2f48e5d2c87bae923debc4a41ec35fd9c127395a2ee9fe29051fd328819e1"
+    }
+  ]
+}

@@ -135,6 +135,33 @@ The exact pristine generated build was restored. No production fix was applied.
 The accessibility sync warning persists; general connection health remains
 unconfirmed. Recovery remains unpublished.
 
+## Horizontal Card foundation readback
+
+The separate unpublished Horizontal Card experiment imported the complete
+foundation for all eight Horizontal variants and their genuine 23-variant
+EditorialCTA dependency: 70 roles, 350 values across five modes, eight TEXT
+styles and one EFFECT style. No scene components have been built there yet.
+A corrected identity read verifies all `mgId` roles, unique native keys and
+`mgStyleId` styles. The earlier reader used the wrong `mgVariableId` key; its raw
+result is preserved as a diagnostic mistake, not a missing importer identity.
+
+Six actual readonly partitions preserve every mode value, alias and recorded
+style field with exact file, page-object and complete image-owner guards.
+Independent source comparison accepts 205 exact literal profiles, 80 exact
+Float32 profiles and 65 exact native alias targets. It also checks exact style
+binding key sets and the declared effect description. Five deliberately changed
+description/binding fixtures refuse. The 21 scope-order and three raw description
+entity differences remain recorded; literal metadata equality is not claimed.
+Concrete native font axes are observations, not font-byte or glyph evidence.
+Source decoration-offset metadata needs separate owning TEXT/range application.
+
+The [complete foundation archive](assets/native-horizontal-foundations/provenance.json)
+retains original source, payloads and receipts. Its offline replay verifies every
+pin, runs comparison negatives and recomputes the verdict in a retained temporary
+directory without changing archive bytes. This is sequential foundation evidence.
+The 78 actual applied TEXT contracts, full scene construction, all-brand rendering,
+consumer edit/repeat lifecycle, crop fidelity and publication remain open.
+
 ## BookCard native application issue
 
 The isolated unpublished BookCard file has both original source variants, their
