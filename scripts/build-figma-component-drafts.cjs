@@ -94,6 +94,11 @@ const recipes = [
     'buildNewsEditorialRecipes',
   ],
   [
+    ['copy-button', 'cite-trigger', 'cite-dialog', 'cite-fallback'],
+    './figma-copy-cite-recipes.cjs',
+    'buildCopyCiteRecipes',
+  ],
+  [
     ['article-image-header'],
     './figma-news-detail-recipes.cjs',
     'buildNewsImageHeaderRecipes',

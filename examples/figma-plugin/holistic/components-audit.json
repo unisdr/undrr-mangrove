@@ -13984,8 +13984,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 52,
-    "variants": 378,
+    "families": 56,
+    "variants": 438,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -14017,7 +14017,11 @@
       "content-hub-reporting-grid",
       "content-hub-soft-cta",
       "content-hub-page",
-      "article-image-header"
+      "article-image-header",
+      "copy-button",
+      "cite-trigger",
+      "cite-dialog",
+      "cite-fallback"
     ],
     "addedSearchControlFamilies": [
       "search-form",
@@ -14031,7 +14035,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "e1b65d5b20b9d42e7bfe8e3b415cbd4b997d28eaeaf5af77a59fd1667a12b56e",
+    "currentPacketScriptSha256": "28e3ecfd1c21932678307b17d5ef0594905e5b616c02d654862d8d8109472922",
     "dependencies": [
       {
         "id": "editorial-cta",
@@ -14100,6 +14104,17 @@
       "independentReview": "accepted",
       "nativeAcceptance": false,
       "scope": "Source Large/Compact/Alternate/Split with genuine None header instances where authored; full article composition and native image/font/pixel gates open."
+    },
+    "boundedCopyCite": {
+      "families": 4,
+      "variants": 60,
+      "sourceCases": 350,
+      "viewports": [390, 1164],
+      "independentReview": "accepted by Notice",
+      "currentSourceReconciliation": "examples/figma-plugin/holistic/assets/copy-cite/current-source-reconciliation.json",
+      "nativeAcceptance": false,
+      "nativeFontGate": "Menlo absent from cloud available-font inventory",
+      "scope": "Actual idle/copied/failed source feedback, genuine cite trigger,18 dialogs and4 details fallback states; clipboard/dialog runtime, font pixels/reflow/native integration/publication open."
     }
   }
 }
