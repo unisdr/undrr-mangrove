@@ -1,4 +1,4 @@
-/* global mgNativeCollectionsValidateValues, nativeCollectionImportSnapshot, mgNativeCollectionsSourceCapability, MG_CONNECTOR_NATIVE_COLLECTIONS, mgNativeCollectionsSourcePlan, mgNativeCollectionsPreflight, mgNativeCollectionsApplyModes, mgAlphaMaskPlan, mgAlphaMaskDocumentValues, mgAlphaMaskNativeValues, mgNativeAlphaMaskPlan, mgApplyAlphaMask, MG_CONNECTOR_ALPHA_MASK, mgFrozenSourceLine, MG_CONNECTOR_FROZEN_SOURCE_LINE, mgGradientTransform, MG_CONNECTOR_GRADIENT_ROLES, mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global MG_CONNECTOR_NATIVE_TEXT_INSTANCES, mgNativeCollectionsFontPlan, mgNativeCollectionsSceneLedger, mgNativeCollectionsValidateValues, nativeCollectionImportSnapshot, mgNativeCollectionsSourceCapability, MG_CONNECTOR_NATIVE_COLLECTIONS, mgNativeCollectionsSourcePlan, mgNativeCollectionsPreflight, mgNativeCollectionsApplyModes, mgAlphaMaskPlan, mgAlphaMaskDocumentValues, mgAlphaMaskNativeValues, mgNativeAlphaMaskPlan, mgApplyAlphaMask, MG_CONNECTOR_ALPHA_MASK, mgFrozenSourceLine, MG_CONNECTOR_FROZEN_SOURCE_LINE, mgGradientTransform, MG_CONNECTOR_GRADIENT_ROLES, mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -848,6 +848,9 @@ function mgRichSourceStylePreflight(doc) {
     }
 }
 
+const MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED =
+  typeof MG_CONNECTOR_NATIVE_TEXT_INSTANCES === 'undefined' ||
+  MG_CONNECTOR_NATIVE_TEXT_INSTANCES;
 const MG_NATIVE_COLLECTIONS_ENABLED =
   typeof MG_CONNECTOR_NATIVE_COLLECTIONS === 'undefined' ||
   MG_CONNECTOR_NATIVE_COLLECTIONS;
@@ -897,6 +900,16 @@ async function buildMangroveComponents(
   const nativeCollectionPlan = MG_NATIVE_COLLECTIONS_ENABLED
     ? mgNativeCollectionsBuilderPlan(doc)
     : null;
+  if (
+    MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+    nativeCollectionPlan?.version === 2 &&
+    selectedFamilyIds !== undefined &&
+    (!Array.isArray(selectedFamilyIds) ||
+      selectedFamilyIds.length !== recipes.length ||
+      new Set(selectedFamilyIds).size !== recipes.length ||
+      recipes.some(f => !selectedFamilyIds.includes(f.id)))
+  )
+    throw new Error('Partition v2 requires the complete family document.');
   const page = figma.currentPage;
   const nativePageId =
     MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan ? page.id : null;
@@ -922,7 +935,12 @@ async function buildMangroveComponents(
       const ledger = mgReadIdentity(node, 'mgNativeScenePlan');
       if (
         ledger !==
-        JSON.stringify({ version: 1, planId: nativeCollectionPlan.planId })
+        JSON.stringify(
+          MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+            nativeCollectionPlan.version === 2
+            ? mgNativeCollectionsSceneLedger(nativeCollectionPlan)
+            : { version: 1, planId: nativeCollectionPlan.planId }
+        )
       )
         throw new Error(
           'Partition scene ownership conflicts with an existing normal or foreign scene.'
@@ -937,6 +955,25 @@ async function buildMangroveComponents(
           parentId: node.parent?.id || null,
           key: mgReadIdentity(node, MG_KIT_KEY),
           ledger: mgReadIdentity(node, 'mgNativeScenePlan'),
+          ...(MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+          nativeCollectionPlan.version === 2
+            ? {
+                characters: node.type === 'TEXT' ? node.characters : undefined,
+                fontName: node.type === 'TEXT' ? node.fontName : undefined,
+                textStyleId:
+                  node.type === 'TEXT' ? node.textStyleId : undefined,
+                references: node.componentPropertyReferences,
+                definitions:
+                  node.type === 'COMPONENT_SET'
+                    ? node.componentPropertyDefinitions
+                    : undefined,
+                properties:
+                  node.type === 'INSTANCE'
+                    ? node.componentProperties
+                    : undefined,
+                modes: node.explicitVariableModes,
+              }
+            : {}),
         }))
         .sort((a, b) => a.id.localeCompare(b.id))
     );
@@ -1423,6 +1460,196 @@ async function buildMangroveComponents(
           await load(segment.fontName);
     }
   }
+  function nativeTextAssetSignature(state) {
+    return JSON.stringify({
+      collections: [...state.collectionsBySourceId].map(([source, c]) => [
+        source,
+        c.id,
+        c.name,
+        [...state.modeIdsByCollectionId.get(source)],
+      ]),
+      variables: [...state.variablesBySourceId].map(([source, v]) => [
+        source,
+        v.id,
+        v.variableCollectionId,
+        v.name,
+        v.resolvedType,
+      ]),
+    });
+  }
+  const nativeTextAssetBefore =
+    MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+    nativeCollectionPlan?.version === 2
+      ? nativeTextAssetSignature(nativeCollectionState)
+      : null;
+  let nativeTextInstanceBefore = null;
+  async function nativeTextInstanceSignature() {
+    const rows = [];
+    for (const node of page.findAll(
+      node =>
+        Boolean(mgReadIdentity(node, MG_KIT_KEY)) && node.type === 'INSTANCE'
+    )) {
+      const main = await node.getMainComponentAsync();
+      assertNativeCollectionTarget();
+      const key = main && mgReadIdentity(main, MG_KIT_KEY);
+      const sourceKey = mgReadIdentity(node, MG_KIT_KEY),
+        expectedMain =
+          nativeCollectionPlan.instanceMasterKeys.get(sourceKey) ||
+          (/^family\/[^/]+\/variant\/[^/]+$/.test(sourceKey)
+            ? sourceKey
+            : null);
+      if (
+        !expectedMain ||
+        key !== expectedMain ||
+        !main ||
+        main.type !== 'COMPONENT' ||
+        owned.get(key)?.id !== main.id ||
+        mgReadIdentity(main, 'mgNativeScenePlan') !==
+          JSON.stringify(mgNativeCollectionsSceneLedger(nativeCollectionPlan))
+      )
+        throw new Error(
+          'Partition instance main ownership conflicts with source masters.'
+        );
+      rows.push({ id: node.id, mainId: main.id });
+    }
+    return JSON.stringify(rows.sort((a, b) => a.id.localeCompare(b.id)));
+  }
+  let nativeTextStyleBefore = null;
+  function nativeTextStyleSignature(styles) {
+    return JSON.stringify(
+      styles
+        .map(style => ({
+          id: style.id,
+          name: style.name,
+          key: mgReadIdentity(style, 'mgStyleId'),
+          type: style.type,
+          fontName: style.fontName,
+          fontSize: style.fontSize,
+          lineHeight: style.lineHeight,
+          letterSpacing: style.letterSpacing,
+          decoration: style.textDecoration,
+          wrap: style.textWrapStyle,
+          indent: style.paragraphIndent,
+          bound: style.boundVariables,
+        }))
+        .sort((a, b) => a.id.localeCompare(b.id))
+    );
+  }
+  async function nativeTextStyles() {
+    const text = await figma.getLocalTextStylesAsync();
+    assertNativeCollectionTarget();
+    const effects = await figma.getLocalEffectStylesAsync();
+    assertNativeCollectionTarget();
+    const chosen = [];
+    for (const spec of nativeCollectionPlan.textStylesById.values()) {
+      const hits = [...text, ...effects].filter(
+        style =>
+          mgReadIdentity(style, 'mgStyleId') === spec.id ||
+          style.name === spec.name
+      );
+      if (
+        hits.length > 1 ||
+        (hits.length &&
+          (hits[0].type !== 'TEXT' ||
+            mgReadIdentity(hits[0], 'mgStyleId') !== spec.id ||
+            hits[0].name !== spec.name))
+      )
+        throw new Error('Partition plain style identity/kind conflict.');
+      if (hits.length) chosen.push(hits[0]);
+    }
+    return chosen;
+  }
+  async function checkNativeTextBeforeStyles() {
+    nativeCollectionState = mgNativeCollectionsPreflight(
+      nativeCollectionPlan,
+      await nativeCollectionImportSnapshot(assertNativeCollectionTarget),
+      {
+        readCollection: asset => {
+          const value = mgReadIdentity(asset, 'mgNativeCollectionPlan');
+          return value ? JSON.parse(value) : null;
+        },
+        readVariable: asset => mgReadIdentity(asset, 'mgId'),
+      }
+    );
+    if (
+      nativeTextAssetSignature(nativeCollectionState) !== nativeTextAssetBefore
+    )
+      throw new Error(
+        'Partition asset identities changed across font preparation.'
+      );
+    const required = mgNativeCollectionsFontPlan(
+      nativeCollectionPlan,
+      nativeCollectionState
+    );
+    for (const font of required)
+      if (!fontPromises.has(JSON.stringify(font)))
+        throw new Error(
+          'Partition native font changed after font preparation.'
+        );
+    const current = await nativeTextStyles();
+    if ((await nativeTextInstanceSignature()) !== nativeTextInstanceBefore)
+      throw new Error(
+        'Partition instance main changed across font preparation.'
+      );
+    if (nativeTextStyleSignature(current) !== nativeTextStyleBefore)
+      throw new Error('Partition plain style changed across font preparation.');
+    if (
+      nativeSceneSignature(
+        page.findAll(node => Boolean(mgReadIdentity(node, MG_KIT_KEY)))
+      ) !== nativeSceneBefore
+    )
+      throw new Error(
+        'Partition text/property ownership changed across font preparation.'
+      );
+    assertNativeCollectionTarget();
+  }
+  if (
+    MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+    nativeCollectionPlan?.version === 2
+  ) {
+    nativeTextInstanceBefore = await nativeTextInstanceSignature();
+    const styleAssets = await nativeTextStyles();
+    nativeTextStyleBefore = nativeTextStyleSignature(styleAssets);
+    const fonts = [
+      ...nativeCollectionPlan.sourceFonts,
+      ...mgNativeCollectionsFontPlan(
+        nativeCollectionPlan,
+        nativeCollectionState
+      ),
+      { family: 'Inter', style: 'Regular' },
+    ];
+    for (const style of styleAssets) fonts.push(style.fontName);
+    if (typeof figma.getFontFamilyVariationAxes !== 'function')
+      throw new Error(
+        'Partition plain text requires native font-axis discovery.'
+      );
+    for (const font of fonts) {
+      const axes = figma.getFontFamilyVariationAxes(font.family);
+      if (
+        !Array.isArray(axes) ||
+        (axes.length &&
+          !available.some(
+            entry =>
+              entry.fontName.family === font.family &&
+              entry.fontName.style === font.style &&
+              entry.fontName.variationSettings &&
+              axes.every(axis =>
+                Number.isFinite(entry.fontName.variationSettings[axis])
+              )
+          ))
+      )
+        throw new Error(
+          'Partition plain native named font axes are unresolved; separately journaled default preparation is required.'
+        );
+    }
+    for (const font of fonts) {
+      await load(font);
+      assertNativeCollectionTarget();
+    }
+    // Plain native named fonts are loaded through the documented API. Explicit
+    // source axes are refused by this first profile; no rich default probe runs.
+    await checkNativeTextBeforeStyles();
+  }
   // Changing a container's mode can change text across every descendant family.
   // Prepare that whole subtree only for a real transition, before any writes.
   for (const key of ['main', 'review']) {
@@ -1431,7 +1658,18 @@ async function buildMangroveComponents(
     try {
       if (frame.type !== 'FRAME')
         throw new Error(`Owned ${key} container has changed type.`);
-      if (frame.explicitVariableModes[collection.id] !== mode.modeId)
+      if (
+        MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+        nativeCollectionPlan?.version === 2
+          ? [...nativeCollectionPlan.collectionById.keys()].some(
+              id =>
+                frame.explicitVariableModes[
+                  nativeCollectionState.collectionsBySourceId.get(id).id
+                ] !==
+                nativeCollectionState.modeIdsByCollectionId.get(id).get(brandId)
+            )
+          : frame.explicitVariableModes[collection.id] !== mode.modeId
+      )
         await loadNodeFonts(frame);
     } catch (error) {
       const reason = reportError(error);
@@ -2722,7 +2960,11 @@ async function buildMangroveComponents(
         await loadNodeFonts(existingSet);
       }
       // Creating a text node starts with Inter before the source style is applied.
-      if (!(MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan))
+      if (
+        !(MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan) ||
+        (MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+          nativeCollectionPlan.version === 2)
+      )
         await load({ family: 'Inter', style: 'Regular' });
       ready.push(family);
       familyText.forEach(id => usedText.add(id));
@@ -3010,6 +3252,11 @@ async function buildMangroveComponents(
     return result;
   if (MG_ALPHA_MASK_ENABLED && !checkAlphaMasks('before-style-import'))
     return result;
+  if (
+    MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+    nativeCollectionPlan?.version === 2
+  )
+    await checkNativeTextBeforeStyles();
   // Restrict effects to the recipes being prepared, avoiding unrelated updates.
   const styleDoc = {
     ...doc,
@@ -3027,6 +3274,12 @@ async function buildMangroveComponents(
   );
   result.styles = styles;
   result.errors.push(...styles.errors);
+  if (
+    MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+    nativeCollectionPlan?.version === 2 &&
+    styles.errors.length
+  )
+    return result;
   if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan) {
     nativeCollectionState = mgNativeCollectionsPreflight(
       nativeCollectionPlan,
@@ -3040,6 +3293,22 @@ async function buildMangroveComponents(
       }
     );
     assertNativeCollectionTarget();
+    if (
+      MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+      nativeCollectionPlan.version === 2 &&
+      nativeTextAssetSignature(nativeCollectionState) !== nativeTextAssetBefore
+    )
+      throw new Error(
+        'Partition asset identities changed before scene construction.'
+      );
+    if (
+      MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+      nativeCollectionPlan.version === 2 &&
+      (await nativeTextInstanceSignature()) !== nativeTextInstanceBefore
+    )
+      throw new Error(
+        'Partition instance main changed before scene construction.'
+      );
     const currentOwned = page.findAll(node =>
       Boolean(mgReadIdentity(node, MG_KIT_KEY))
     );
@@ -3061,6 +3330,10 @@ async function buildMangroveComponents(
     );
     result.nativeCollections = {
       version: 1,
+      ...(MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+      nativeCollectionPlan.version === 2
+        ? { version: 2, profile: nativeCollectionPlan.profile }
+        : {}),
       planId: nativeCollectionPlan.planId,
       collectionIds: Object.fromEntries(
         [...nativeCollectionState.collectionsBySourceId].map(([id, asset]) => [
@@ -3076,7 +3349,11 @@ async function buildMangroveComponents(
       ),
       capacity: Object.fromEntries(nativeCollectionState.occupancy),
       reviewSpecimensDisabled: true,
-      capability: 'font-free FRAME v1 only',
+      capability:
+        MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+        nativeCollectionPlan.version === 2
+          ? 'plain-text-instances-v1'
+          : 'font-free FRAME v1 only',
     };
   }
   if (MG_SVG_SIZING_ENABLED && svgSizingScope && styles.errors.length) {
@@ -3171,7 +3448,12 @@ async function buildMangroveComponents(
       mgWriteIdentity(
         node,
         'mgNativeScenePlan',
-        JSON.stringify({ version: 1, planId: nativeCollectionPlan.planId })
+        JSON.stringify(
+          MG_NATIVE_COLLECTIONS_TEXT_BUILDER_ENABLED &&
+            nativeCollectionPlan.version === 2
+            ? mgNativeCollectionsSceneLedger(nativeCollectionPlan)
+            : { version: 1, planId: nativeCollectionPlan.planId }
+        )
       );
     return node;
   }

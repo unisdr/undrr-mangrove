@@ -33,16 +33,44 @@ function mgNativeCollectionsLiteral(value, type) {
         value.a <= 1))
   );
 }
+/* global MG_CONNECTOR_NATIVE_TEXT_INSTANCES */
+const MG_NATIVE_COLLECTIONS_TEXT_ENABLED =
+  typeof MG_CONNECTOR_NATIVE_TEXT_INSTANCES === 'undefined' ||
+  MG_CONNECTOR_NATIVE_TEXT_INSTANCES;
+function mgNativeCollectionsCollectionLedger(plan, collectionId) {
+  return MG_NATIVE_COLLECTIONS_TEXT_ENABLED && plan.version === 2
+    ? { version: 2, profile: plan.profile, planId: plan.planId, collectionId }
+    : { version: 1, planId: plan.planId, collectionId };
+}
+function mgNativeCollectionsSceneLedger(plan) {
+  return MG_NATIVE_COLLECTIONS_TEXT_ENABLED && plan.version === 2
+    ? { version: 2, profile: plan.profile, planId: plan.planId }
+    : { version: 1, planId: plan.planId };
+}
 function mgNativeCollectionsSourcePlan(doc, selectedClosure) {
   const fail = mgNativeCollectionsFail,
     spec = doc?.nativeCollections;
   if (
     !spec ||
-    spec.version !== 1 ||
+    (spec.version !== 1 &&
+      !(
+        MG_NATIVE_COLLECTIONS_TEXT_ENABLED &&
+        spec.version === 2 &&
+        spec.profile === 'plain-text-instances-v1'
+      )) ||
     !mgNativeCollectionsString(spec.planId) ||
     !mgNativeCollectionsString(spec.primary) ||
     Object.keys(spec).some(
-      k => !['version', 'planId', 'primary', 'collections'].includes(k)
+      k =>
+        ![
+          'version',
+          'planId',
+          'primary',
+          'collections',
+          ...(MG_NATIVE_COLLECTIONS_TEXT_ENABLED && spec.version === 2
+            ? ['profile']
+            : []),
+        ].includes(k)
     ) ||
     !Array.isArray(spec.collections) ||
     !spec.collections.length
@@ -146,8 +174,19 @@ function mgNativeCollectionsSourcePlan(doc, selectedClosure) {
   }
   for (const v of sourceById.values())
     for (const m of modeById.keys()) resolveSource(v, m);
-  return {
+  if (MG_NATIVE_COLLECTIONS_TEXT_ENABLED && spec.version === 2)
+    for (const v of sourceById.values()) {
+      const topology = [...modeById.keys()].map(
+        m => v.values[m]?.alias ?? null
+      );
+      if (topology.some(target => target !== topology[0]))
+        fail('v2 requires mode-invariant alias topology ' + v.id);
+    }
+  const result = {
     version: 1,
+    ...(MG_NATIVE_COLLECTIONS_TEXT_ENABLED && spec.version === 2
+      ? { version: 2, profile: spec.profile }
+      : {}),
     planId: spec.planId,
     primary: spec.primary,
     sourceById,
@@ -158,8 +197,28 @@ function mgNativeCollectionsSourcePlan(doc, selectedClosure) {
     modeById,
     resolveSource,
   };
+  if (MG_NATIVE_COLLECTIONS_TEXT_ENABLED && spec.version === 2) {
+    Object.defineProperty(result, 'version', {
+      value: 2,
+      writable: false,
+      enumerable: true,
+      configurable: false,
+    });
+    Object.defineProperty(result, 'profile', {
+      value: spec.profile,
+      writable: false,
+      enumerable: true,
+      configurable: false,
+    });
+  }
+  return result;
 }
 function mgNativeCollectionsSourceCapability(doc) {
+  if (
+    MG_NATIVE_COLLECTIONS_TEXT_ENABLED &&
+    doc?.nativeCollections?.version === 2
+  )
+    return mgNativeCollectionsTextSourceCapability(doc);
   const fail = mgNativeCollectionsFail,
     plan = mgNativeCollectionsSourcePlan(doc);
   if (
@@ -376,6 +435,323 @@ function mgNativeCollectionsSourceCapability(doc) {
   }
   return plan;
 }
+function mgNativeCollectionsTextSourceCapability(doc) {
+  const fail = mgNativeCollectionsFail,
+    plan = mgNativeCollectionsSourcePlan(doc);
+  if (
+    !doc.styles ||
+    !Array.isArray(doc.styles.text) ||
+    !Array.isArray(doc.styles.effect) ||
+    doc.styles.effect.length
+  )
+    fail('v2 requires plain text styles and no effects');
+  const styles = new Map(),
+    names = new Set(),
+    sourceFonts = new Map();
+  const object = x => x && typeof x === 'object' && !Array.isArray(x);
+  const exact = (x, keys) =>
+    object(x) && Object.keys(x).every(k => keys.includes(k));
+  const size = x => Number.isFinite(x) && x > 0;
+  const normalized = x =>
+    Object.fromEntries(
+      Object.entries(x).sort(([a], [b]) => a.localeCompare(b))
+    );
+  for (const spec of doc.styles.text) {
+    if (
+      !object(spec) ||
+      !mgNativeCollectionsString(spec.id) ||
+      !mgNativeCollectionsString(spec.name) ||
+      styles.has(spec.id) ||
+      names.has(spec.name) ||
+      (spec.type !== undefined && spec.type !== 'TEXT')
+    )
+      fail('v2 invalid style identity/kind');
+    if (
+      !exact(spec.bindings, ['fontFamily', 'fontSize']) ||
+      Object.keys(spec.bindings).length !== 2
+    )
+      fail('v2 strict font bindings required');
+    const family = plan.sourceByName.get(spec.bindings.fontFamily),
+      fontSize = plan.sourceByName.get(spec.bindings.fontSize);
+    if (family?.type !== 'STRING' || fontSize?.type !== 'FLOAT')
+      fail('v2 missing/wrong font aliases');
+    if (
+      !object(spec.values) ||
+      Object.keys(spec.values).length !== plan.modeById.size ||
+      Object.keys(spec.values).some(m => !plan.modeById.has(m))
+    )
+      fail('v2 exact style modes required');
+    let template;
+    for (const mode of plan.modeById.keys()) {
+      const v = spec.values[mode];
+      if (
+        !exact(v, [
+          'fontName',
+          'fontSize',
+          'lineHeight',
+          'letterSpacing',
+          'textDecoration',
+          'textWrapStyle',
+        ]) ||
+        !exact(v.fontName, ['family', 'style']) ||
+        Object.keys(v.fontName).length !== 2 ||
+        !mgNativeCollectionsString(v.fontName.family) ||
+        !mgNativeCollectionsString(v.fontName.style) ||
+        !size(v.fontSize)
+      )
+        fail('v2 invalid plain font template');
+      if (
+        plan.resolveSource(family, mode) !== v.fontName.family ||
+        plan.resolveSource(fontSize, mode) !== v.fontSize
+      )
+        fail('v2 source font template disagrees with aliases');
+      if (
+        !exact(v.lineHeight, ['unit', 'value']) ||
+        !['PIXELS', 'PERCENT'].includes(v.lineHeight.unit) ||
+        !size(v.lineHeight.value)
+      )
+        fail('v2 invalid line height');
+      if (
+        v.letterSpacing !== undefined &&
+        (!exact(v.letterSpacing, ['unit', 'value']) ||
+          !['PIXELS', 'PERCENT'].includes(v.letterSpacing.unit) ||
+          !Number.isFinite(v.letterSpacing.value))
+      )
+        fail('v2 invalid letter spacing');
+      if (
+        (v.textDecoration !== undefined && v.textDecoration !== 'NONE') ||
+        (v.textWrapStyle !== undefined && v.textWrapStyle !== 'AUTO')
+      )
+        fail('v2 decoration/wrap profile refused');
+      const current = JSON.stringify(
+        normalized({
+          style: v.fontName.style,
+          lineHeight: normalized(v.lineHeight),
+          letterSpacing: normalized(
+            v.letterSpacing || { unit: 'PIXELS', value: 0 }
+          ),
+          textDecoration: v.textDecoration || 'NONE',
+          textWrapStyle: v.textWrapStyle || 'AUTO',
+        })
+      );
+      if (template !== undefined && template !== current)
+        fail('v2 unbound style template differs across modes');
+      template = current;
+      sourceFonts.set(JSON.stringify(normalized(v.fontName)), {
+        ...v.fontName,
+      });
+    }
+    styles.set(spec.id, spec);
+    names.add(spec.name);
+  }
+  if (
+    !Array.isArray(doc.components?.families) ||
+    !doc.components.families.length
+  )
+    fail('v2 components required');
+  const families = new Map(),
+    dependencies = new Map(),
+    properties = new Map(),
+    usedStyles = new Set();
+  for (const f of doc.components.families) {
+    if (!mgNativeCollectionsString(f?.id) || families.has(f.id))
+      fail('v2 duplicate/missing family');
+    families.set(f.id, f);
+    dependencies.set(f.id, new Set());
+    properties.set(f.id, new Map());
+  }
+  function project(n, familyId, root = false) {
+    if (!object(n)) fail('v2 invalid anatomy');
+    if (n.type === 'FRAME') {
+      if (n.children !== undefined && !Array.isArray(n.children))
+        fail('v2 children array required');
+      return {
+        ...n,
+        ...(n.children !== undefined
+          ? { children: n.children.map(c => project(c, familyId)) }
+          : {}),
+      };
+    }
+    if (root) fail('v2 variant root must be FRAME');
+    const common = ['id', 'type', 'name', 'layout'];
+    if (n.type === 'TEXT') {
+      if (
+        !exact(n, [
+          ...common,
+          'characters',
+          'textStyle',
+          'textProperty',
+          'textAlign',
+          'fill',
+        ]) ||
+        typeof n.characters !== 'string' ||
+        !styles.has(n.textStyle) ||
+        (n.textAlign !== undefined &&
+          !['LEFT', 'CENTER', 'RIGHT'].includes(n.textAlign))
+      )
+        fail('v2 invalid plain TEXT');
+      if (n.textProperty !== undefined) {
+        if (!mgNativeCollectionsString(n.textProperty))
+          fail('v2 invalid text property');
+        const old = properties.get(familyId).get(n.textProperty);
+        if (old !== undefined && old !== n.characters)
+          fail('v2 differing text property defaults');
+        properties.get(familyId).set(n.textProperty, n.characters);
+      }
+      if (
+        n.layout &&
+        Object.keys(n.layout).some(k => !['width', 'height'].includes(k))
+      )
+        fail('v2 unsupported TEXT layout');
+      if (n.layout?.height !== undefined && n.layout.height !== 'HUG')
+        fail('v2 TEXT height must be HUG');
+      usedStyles.add(n.textStyle);
+      const { characters, textStyle, textProperty, textAlign, ...plain } = n;
+      return { ...plain, type: 'FRAME' };
+    }
+    if (n.type === 'INSTANCE') {
+      if (
+        !exact(n, [...common, 'family', 'variant', 'overrides', 'expose']) ||
+        !families.has(n.family) ||
+        !object(n.variant) ||
+        !Object.keys(n.variant).length ||
+        Object.entries(n.variant).some(
+          ([k, v]) =>
+            !mgNativeCollectionsString(k) || !mgNativeCollectionsString(v)
+        ) ||
+        (n.expose !== undefined && typeof n.expose !== 'boolean')
+      )
+        fail('v2 invalid INSTANCE contract');
+      const matches = families
+        .get(n.family)
+        .variants?.filter(v =>
+          Object.entries(n.variant).every(([k, x]) => v.properties?.[k] === x)
+        );
+      if (matches?.length !== 1) fail('v2 missing/ambiguous INSTANCE selector');
+      if (
+        n.overrides !== undefined &&
+        (!object(n.overrides) ||
+          Object.entries(n.overrides).some(
+            ([k, v]) => !mgNativeCollectionsString(k) || typeof v !== 'string'
+          ))
+      )
+        fail('v2 invalid INSTANCE overrides');
+      dependencies.get(familyId).add(n.family);
+      const { family, variant, overrides, expose, ...plain } = n;
+      return { ...plain, type: 'FRAME' };
+    }
+    fail('v2 supports FRAME/plain TEXT/INSTANCE only');
+  }
+  const projected = JSON.parse(JSON.stringify(doc));
+  projected.nativeCollections = { ...projected.nativeCollections, version: 1 };
+  delete projected.nativeCollections.profile;
+  projected.styles = { text: [], effect: [] };
+  projected.components.families = doc.components.families.map(f => ({
+    ...f,
+    variants: f.variants?.map(v => ({
+      ...v,
+      tree: project(v.tree, f.id, true),
+    })),
+  }));
+  // Reuse the original strict FRAME layout and metadata validator without changing its v1 path.
+  const framePlan = mgNativeCollectionsSourceCapability(projected);
+  plan.runtimeRoles = framePlan.runtimeRoles;
+  plan.runtimeConstraints = framePlan.runtimeConstraints;
+  function verifyInstances(n) {
+    if (n.type === 'INSTANCE') {
+      const selected = families
+        .get(n.family)
+        .variants.find(v =>
+          Object.entries(n.variant).every(([k, x]) => v.properties[k] === x)
+        );
+      const selectedProperties = new Set();
+      function collect(t) {
+        if (t.type === 'TEXT' && t.textProperty)
+          selectedProperties.add(t.textProperty);
+        (t.children || []).forEach(collect);
+      }
+      collect(selected.tree);
+      for (const key of Object.keys(n.overrides || {}))
+        if (!selectedProperties.has(key))
+          fail('v2 override absent from selected master');
+    }
+    (n.children || []).forEach(verifyInstances);
+  }
+  const done = new Set(),
+    visiting = new Set(),
+    order = [];
+  function visit(id) {
+    if (done.has(id)) return;
+    if (visiting.has(id)) fail('v2 dependency cycle');
+    visiting.add(id);
+    for (const dep of dependencies.get(id)) visit(dep);
+    visiting.delete(id);
+    done.add(id);
+    order.push(id);
+  }
+  for (const [id, f] of families) {
+    visit(id);
+    for (const v of f.variants) verifyInstances(v.tree);
+  }
+  for (const spec of styles.values()) {
+    plan.runtimeRoles.set(spec.bindings.fontFamily, 'STRING');
+    plan.runtimeRoles.set(spec.bindings.fontSize, 'FLOAT');
+    const old = plan.runtimeConstraints.get(spec.bindings.fontSize) || {};
+    plan.runtimeConstraints.set(spec.bindings.fontSize, {
+      ...old,
+      min: Math.max(old.min ?? 0, 0),
+      exclusiveMin: true,
+    });
+  }
+  plan.instanceMasterKeys = new Map();
+  function instanceKeys(n, key) {
+    if (n.type === 'INSTANCE') {
+      const target = families
+        .get(n.family)
+        .variants.find(v =>
+          Object.entries(n.variant).every(([k, x]) => v.properties[k] === x)
+        );
+      plan.instanceMasterKeys.set(
+        key,
+        `family/${n.family}/variant/${target.id}`
+      );
+    }
+    for (const child of n.children || [])
+      instanceKeys(child, `${key}/${child.id}`);
+  }
+  for (const f of families.values())
+    for (const v of f.variants)
+      instanceKeys(v.tree, `family/${f.id}/variant/${v.id}`);
+  plan.textStylesById = styles;
+  plan.usedTextStyleIds = usedStyles;
+  plan.sourceFonts = [...sourceFonts.values()];
+  plan.familyOrder = order;
+  return plan;
+}
+function mgNativeCollectionsFontPlan(plan, state) {
+  if (
+    !MG_NATIVE_COLLECTIONS_TEXT_ENABLED ||
+    plan.version !== 2 ||
+    !(plan.textStylesById instanceof Map)
+  )
+    mgNativeCollectionsFail('v2 text style plan required');
+  mgNativeCollectionsValidateValues(plan, state);
+  const fonts = new Map();
+  for (const spec of plan.textStylesById.values())
+    for (const mode of plan.modeById.keys()) {
+      const family = mgNativeCollectionsResolve(
+        plan,
+        state,
+        spec.bindings.fontFamily,
+        mode
+      );
+      if (!mgNativeCollectionsString(family))
+        mgNativeCollectionsFail('invalid native font family');
+      const font = { family, style: spec.values[mode].fontName.style };
+      fonts.set(JSON.stringify(font), font);
+    }
+  return [...fonts.values()];
+}
 function mgNativeCollectionsPreflight(plan, snapshot, identity) {
   const fail = mgNativeCollectionsFail;
   if (
@@ -405,11 +781,19 @@ function mgNativeCollectionsPreflight(plan, snapshot, identity) {
       if (c.remote === true || c.isExtension === true)
         fail('local owned collection required');
       if (
-        ledger.version !== 1 ||
+        (MG_NATIVE_COLLECTIONS_TEXT_ENABLED && plan.version === 2
+          ? JSON.stringify(Object.entries(ledger).sort()) !==
+            JSON.stringify(
+              Object.entries(
+                mgNativeCollectionsCollectionLedger(plan, ledger.collectionId)
+              ).sort()
+            )
+          : ledger.version !== 1) ||
         !plan.collectionById.has(ledger.collectionId) ||
-        Object.keys(ledger).some(
-          k => !['version', 'planId', 'collectionId'].includes(k)
-        )
+        (!(MG_NATIVE_COLLECTIONS_TEXT_ENABLED && plan.version === 2) &&
+          Object.keys(ledger).some(
+            k => !['version', 'planId', 'collectionId'].includes(k)
+          ))
       )
         fail('invalid collection ownership ledger');
       if (collectionsBySourceId.has(ledger.collectionId))
@@ -665,6 +1049,13 @@ function mgNativeCollectionsApplyModes(
 }
 if (typeof module !== 'undefined')
   module.exports = {
+    ...(MG_NATIVE_COLLECTIONS_TEXT_ENABLED
+      ? {
+          mgNativeCollectionsCollectionLedger,
+          mgNativeCollectionsSceneLedger,
+          mgNativeCollectionsFontPlan,
+        }
+      : {}),
     mgNativeCollectionsSourcePlan,
     mgNativeCollectionsSourceCapability,
     mgNativeCollectionsPreflight,

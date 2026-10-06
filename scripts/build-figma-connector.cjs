@@ -1077,6 +1077,10 @@ async function buildConnector({
   );
   validateCase(doc);
   const nativeCollectionsEnabled = doc.nativeCollections !== undefined;
+  const nativeTextInstancesEnabled =
+    nativeCollectionsEnabled &&
+    doc.nativeCollections.version === 2 &&
+    doc.nativeCollections.profile === 'plain-text-instances-v1';
   if (nativeCollectionsEnabled) {
     if (
       !experimentFileKey ||
@@ -1085,9 +1089,14 @@ async function buildConnector({
       scopedImport
     )
       throw new Error(
-        'Partition v1 needs an exact experiment and complete unbatched import/build.'
+        nativeTextInstancesEnabled
+          ? 'Partition text profile needs an exact experiment and complete unbatched import/build.'
+          : 'Partition v1 needs an exact experiment and complete unbatched import/build.'
       );
-    const collectionContext = vm.createContext({ module: { exports: {} } });
+    const collectionContext = vm.createContext({
+      module: { exports: {} },
+      MG_CONNECTOR_NATIVE_TEXT_INSTANCES: nativeTextInstancesEnabled,
+    });
     vm.runInContext(
       fs.readFileSync(path.join(PLUGIN, 'kit-native-collections.js'), 'utf8'),
       collectionContext
@@ -1100,7 +1109,9 @@ async function buildConnector({
       selectFamilies(doc, requested).length !== doc.components.families.length
     )
       throw new Error(
-        'Partition v1 requires the complete selected component document.'
+        nativeTextInstancesEnabled
+          ? 'Partition text profile requires the complete selected component document.'
+          : 'Partition v1 requires the complete selected component document.'
       );
   }
   const subset = nativeCollectionsEnabled
@@ -1642,6 +1653,7 @@ async function buildConnector({
       passes: 3,
       global_defs: {
         MG_CONNECTOR_NATIVE_COLLECTIONS: nativeCollectionsEnabled,
+        MG_CONNECTOR_NATIVE_TEXT_INSTANCES: nativeTextInstancesEnabled,
         MG_CONNECTOR_ALPHA_MASK: alphaMaskEnabled,
         MG_CONNECTOR_TEXT_CASE: textCaseEnabled,
         MG_CONNECTOR_FRAME_POSITION: framePositionEnabled,

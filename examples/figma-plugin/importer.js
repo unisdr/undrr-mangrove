@@ -1,4 +1,4 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, MG_CONNECTOR_TEXT_CASE, MG_CONNECTOR_NATIVE_COLLECTIONS, mgAssertExperimentOperationTarget, mgNativeCollectionsSourceCapability, mgNativeCollectionsPreflight */
+/* global mgReadIdentity, mgWriteIdentity, figma, MG_CONNECTOR_TEXT_CASE, MG_CONNECTOR_NATIVE_COLLECTIONS, mgAssertExperimentOperationTarget, mgNativeCollectionsSourceCapability, mgNativeCollectionsPreflight, MG_CONNECTOR_NATIVE_TEXT_INSTANCES, mgNativeCollectionsCollectionLedger */
 /** Shared variable/style importer for maintenance and occasional construction. */
 const ID_KEY = 'mgId';
 const STYLE_ID_KEY = 'mgStyleId';
@@ -8,6 +8,10 @@ const MG_TEXT_CASE_ENABLED =
 const MG_NATIVE_COLLECTION_IMPORT_ENABLED =
   typeof MG_CONNECTOR_NATIVE_COLLECTIONS === 'undefined' ||
   MG_CONNECTOR_NATIVE_COLLECTIONS;
+
+const MG_NATIVE_TEXT_IMPORT_ENABLED =
+  typeof MG_CONNECTOR_NATIVE_TEXT_INSTANCES === 'undefined' ||
+  MG_CONNECTOR_NATIVE_TEXT_INSTANCES;
 
 async function nativeCollectionImportSnapshot(fence) {
   fence();
@@ -29,7 +33,16 @@ async function importNativeCollections(
     throw new Error(
       'Native collections require a trusted experiment target guard'
     );
-  const fence = mgAssertExperimentOperationTarget;
+  const textProfile =
+    MG_NATIVE_TEXT_IMPORT_ENABLED && doc.nativeCollections?.version === 2;
+  const operationPageId = textProfile ? figma.currentPage.id : null;
+  const fence = textProfile
+    ? () => {
+        mgAssertExperimentOperationTarget();
+        if (figma.currentPage.id !== operationPageId)
+          throw new Error('Native text collection import page changed');
+      }
+    : mgAssertExperimentOperationTarget;
   fence();
   if (
     prune ||
@@ -65,6 +78,17 @@ async function importNativeCollections(
     await nativeCollectionImportSnapshot(fence),
     identity
   );
+  // The v2 variable phase checks declared source fonts before any COL/VAR write.
+  // Invalid old native font literals remain repairable; builder checks actual native fonts later.
+  const sourceFontsLoaded = [];
+  if (MG_NATIVE_TEXT_IMPORT_ENABLED && textProfile) {
+    for (const font of plan.sourceFonts) {
+      fence();
+      await figma.loadFontAsync(font);
+      fence();
+      sourceFontsLoaded.push(font);
+    }
+  }
   // Refresh the complete inventory immediately before the first permanent write.
   state = mgNativeCollectionsPreflight(
     plan,
@@ -92,11 +116,11 @@ async function importNativeCollections(
         mgWriteIdentity(
           collection,
           'mgNativeCollectionPlan',
-          JSON.stringify({
-            version: 1,
-            planId: plan.planId,
-            collectionId: spec.id,
-          })
+          JSON.stringify(
+            MG_NATIVE_TEXT_IMPORT_ENABLED && textProfile
+              ? mgNativeCollectionsCollectionLedger(plan, spec.id)
+              : { version: 1, planId: plan.planId, collectionId: spec.id }
+          )
         );
         const first = source.modes[0];
         fence();
@@ -193,7 +217,10 @@ async function importNativeCollections(
     skipped: source.skipped || [],
     errors,
     nativeCollections: {
-      version: 1,
+      version: MG_NATIVE_TEXT_IMPORT_ENABLED && textProfile ? 2 : 1,
+      ...(MG_NATIVE_TEXT_IMPORT_ENABLED && textProfile
+        ? { profile: plan.profile, sourceFontsLoaded }
+        : {}),
       planId: plan.planId,
       completed,
       createdCollectionIds,
