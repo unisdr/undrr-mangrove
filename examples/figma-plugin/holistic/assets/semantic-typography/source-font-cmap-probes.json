@@ -1,0 +1,242 @@
+[
+  {
+    "bodyFile": "font-bodies/noto-kufi-arabic-arabic-400-normal.woff2",
+    "cmapGlyphs": 1224,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": true,
+      "\u0645": true,
+      "A": false
+    },
+    "namedFamilyStyle": [
+      "Noto Kufi Arabic",
+      "Regular"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/Roboto-Regular.woff2",
+    "cmapGlyphs": 896,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": true
+    },
+    "namedFamilyStyle": [
+      "Regular",
+      "Roboto"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-kufi-arabic-latin-700-normal.woff2",
+    "cmapGlyphs": 210,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": true
+    },
+    "namedFamilyStyle": [
+      "Bold",
+      "Noto Kufi Arabic"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-kufi-arabic-latin-ext-700-normal.woff2",
+    "cmapGlyphs": 121,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": false
+    },
+    "namedFamilyStyle": [
+      "Bold",
+      "Noto Kufi Arabic"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-sans-arabic-latin-700-normal.woff2",
+    "cmapGlyphs": 210,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": true
+    },
+    "namedFamilyStyle": [
+      "Bold",
+      "Noto Sans Arabic"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-kufi-arabic-arabic-700-normal.woff2",
+    "cmapGlyphs": 1224,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": true,
+      "\u0645": true,
+      "A": false
+    },
+    "namedFamilyStyle": [
+      "Bold",
+      "Noto Kufi Arabic"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-kufi-arabic-latin-400-normal.woff2",
+    "cmapGlyphs": 210,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": true
+    },
+    "namedFamilyStyle": [
+      "Noto Kufi Arabic",
+      "Regular"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-sans-arabic-latin-400-normal.woff2",
+    "cmapGlyphs": 210,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": true
+    },
+    "namedFamilyStyle": [
+      "Noto Sans Arabic",
+      "Regular"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/Roboto-Bold.woff2",
+    "cmapGlyphs": 896,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": true
+    },
+    "namedFamilyStyle": [
+      "Bold",
+      "Roboto"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-kufi-arabic-latin-ext-400-normal.woff2",
+    "cmapGlyphs": 121,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": false
+    },
+    "namedFamilyStyle": [
+      "Noto Kufi Arabic",
+      "Regular"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-sans-arabic-latin-ext-700-normal.woff2",
+    "cmapGlyphs": 121,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": false
+    },
+    "namedFamilyStyle": [
+      "Bold",
+      "Noto Sans Arabic"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/Roboto-Italic.woff2",
+    "cmapGlyphs": 896,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": true
+    },
+    "namedFamilyStyle": [
+      "Italic",
+      "Roboto"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-sans-arabic-arabic-700-normal.woff2",
+    "cmapGlyphs": 1226,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": true,
+      "\u0645": true,
+      "A": false
+    },
+    "namedFamilyStyle": [
+      "Bold",
+      "Noto Sans Arabic"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-sans-arabic-latin-ext-400-normal.woff2",
+    "cmapGlyphs": 121,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": false,
+      "\u0645": false,
+      "A": false
+    },
+    "namedFamilyStyle": [
+      "Noto Sans Arabic",
+      "Regular"
+    ]
+  },
+  {
+    "bodyFile": "font-bodies/noto-sans-arabic-arabic-400-normal.woff2",
+    "cmapGlyphs": 1226,
+    "probeCharacters": {
+      "\u898b": false,
+      "\u51fa": false,
+      "\u56fd": false,
+      "\u0627": true,
+      "\u0645": true,
+      "A": false
+    },
+    "namedFamilyStyle": [
+      "Noto Sans Arabic",
+      "Regular"
+    ]
+  }
+]

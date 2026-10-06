@@ -22,3 +22,9 @@ examples/figma-plugin/holistic/assets/page-header/http-bodies/undrr-logo-horizon
 # Preserve authored whitespace in exact downloaded Noto licence evidence.
 examples/figma-plugin/holistic/assets/image-figure/source-fonts/OFL-NotoSansArabic.txt whitespace=-blank-at-eol
 examples/figma-plugin/holistic/assets/page-header/http-bodies/OFL-NotoSansArabic.txt whitespace=-blank-at-eol
+
+# Preserve authored whitespace in exact Layout and semantic Noto licence evidence.
+examples/figma-plugin/holistic/assets/layout-foundations/source-fonts/OFL-NotoKufiArabic.txt whitespace=-blank-at-eol
+examples/figma-plugin/holistic/assets/layout-foundations/source-fonts/OFL-NotoSansArabic.txt whitespace=-blank-at-eol
+examples/figma-plugin/holistic/assets/semantic-typography/font-bodies/OFL-NotoKufiArabic.txt whitespace=-blank-at-eol
+examples/figma-plugin/holistic/assets/semantic-typography/font-bodies/OFL-NotoSansArabic.txt whitespace=-blank-at-eol

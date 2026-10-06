@@ -219,6 +219,23 @@ const recipes = [
     'buildCookieConsentRecipes',
   ],
   ['footer', './figma-footer-recipes.cjs', 'buildFooterRecipes'],
+  [
+    ['layout-container', 'layout-grid-specimen', 'full-width-background'],
+    './figma-layout-foundations-recipes.cjs',
+    'buildLayoutFoundationsRecipes',
+  ],
+  [
+    [
+      'semantic-heading-specimen',
+      'semantic-paragraph',
+      'semantic-copy-separators',
+      'semantic-description-list',
+      'semantic-figcaption',
+      'semantic-inline-emphasis',
+    ],
+    './figma-semantic-typography-recipes.cjs',
+    'buildSemanticTypographyRecipes',
+  ],
   ['page-header', './figma-page-header-recipes.cjs', 'buildPageHeaderRecipes'],
   [
     'on-this-page-nav',

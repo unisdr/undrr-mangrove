@@ -1,0 +1,2366 @@
+{
+  "sourceOnly": true,
+  "rows": [
+    {
+      "key": "undrr-english-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "undrr-english-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "undrr-english-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "undrr-english-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    },
+    {
+      "key": "undrr-arabic-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "undrr-arabic-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "undrr-arabic-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "undrr-arabic-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    },
+    {
+      "key": "delta-english-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "delta-english-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "delta-english-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "delta-english-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    },
+    {
+      "key": "delta-arabic-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "delta-arabic-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "delta-arabic-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "delta-arabic-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    },
+    {
+      "key": "irp-english-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "irp-english-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "irp-english-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "irp-english-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    },
+    {
+      "key": "irp-arabic-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "irp-arabic-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "irp-arabic-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "irp-arabic-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    },
+    {
+      "key": "mcr-english-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "mcr-english-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "mcr-english-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "mcr-english-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    },
+    {
+      "key": "mcr-arabic-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "mcr-arabic-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "mcr-arabic-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "mcr-arabic-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    },
+    {
+      "key": "preventionweb-english-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "preventionweb-english-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-25px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "preventionweb-english-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "preventionweb-english-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-412px",
+            "margin-right": "0px",
+            "left": "16px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 16,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 16,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    },
+    {
+      "key": "preventionweb-arabic-components-fullwidth--blocked-by-ancestor-background-390",
+      "sourceDOMGeometryExact": true,
+      "png": "preventionweb-arabic-components-fullwidth--blocked-by-ancestor-background-390-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 36.796875,
+            "width": 340,
+            "x": 25,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 25,
+          "greenMaxX": 364,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 25,
+          "expectedVisibleGreenMaxX": 364
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 129.59375,
+            "width": 340,
+            "x": 25,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 25,
+            "right": 365,
+            "top": 222.390625,
+            "width": 340,
+            "x": 25,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "390px",
+            "height": "48px",
+            "margin-left": "-195px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 389,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 389
+        }
+      ]
+    },
+    {
+      "key": "preventionweb-arabic-components-fullwidth--blocked-by-ancestor-background-1164",
+      "sourceDOMGeometryExact": true,
+      "png": "preventionweb-arabic-components-fullwidth--blocked-by-ancestor-background-1164-source.png",
+      "checks": [
+        {
+          "sourceIndex": 5,
+          "sourceOwner": {
+            "bottom": 84.796875,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 36.796875,
+            "width": 340,
+            "x": 412,
+            "y": 36.796875
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 60,
+          "greenMinX": 412,
+          "greenMaxX": 751,
+          "outerLeftPixel": [
+            255,
+            255,
+            255
+          ],
+          "outerRightPixel": [
+            255,
+            255,
+            255
+          ],
+          "expectedVisibleGreenMinX": 412,
+          "expectedVisibleGreenMaxX": 751
+        },
+        {
+          "sourceIndex": 9,
+          "sourceOwner": {
+            "bottom": 177.59375,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 129.59375,
+            "width": 340,
+            "x": 412,
+            "y": 129.59375
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 153,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        },
+        {
+          "sourceIndex": 14,
+          "sourceOwner": {
+            "bottom": 270.390625,
+            "height": 48,
+            "left": 412,
+            "right": 752,
+            "top": 222.390625,
+            "width": 340,
+            "x": 412,
+            "y": 222.390625
+          },
+          "sourcePseudo": {
+            "width": "1164px",
+            "height": "48px",
+            "margin-left": "-582px",
+            "margin-right": "0px",
+            "left": "170px",
+            "z-index": "-1",
+            "background-color": "rgb(46, 125, 50)"
+          },
+          "scanY": 246,
+          "greenMinX": 0,
+          "greenMaxX": 1163,
+          "outerLeftPixel": [
+            46,
+            125,
+            50
+          ],
+          "outerRightPixel": [
+            46,
+            125,
+            50
+          ],
+          "expectedVisibleGreenMinX": 0,
+          "expectedVisibleGreenMaxX": 1163
+        }
+      ]
+    }
+  ],
+  "nativeAccepted": false
+}
