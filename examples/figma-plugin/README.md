@@ -562,3 +562,9 @@ Ordinary builds retain legacy flow until explicit organisation, then reconcile i
 ### Subtree mask source candidate
 
 The holistic source work includes a guarded [subtree ALPHA mask candidate](holistic/ALPHA-MASK-CAPABILITY.md) for actual ShowMore clipping. Full-builder ownership checks, explicit clearing and repeat fields are separate from rendered acceptance. Three isolated native exports failed to show the intended fade, with cause unconfirmed. The complete connector fixture also exceeds the unchanged transport limit. Keep this capability in unpublished experiments until ordinary native rendering and the remaining integration gates pass.
+
+The optional whole logical rich TEXT capability now preserves explicit per-run
+underline offsets with source/native ownership guards. All-five builder mocks
+and a bounded native shared-helper rehearsal with edited linked copy pass. Full
+component rendering, live modes, ordinary recovery and publication remain open.
+See [ranged underline offsets](holistic/RICH-TEXT-OFFSET.md).

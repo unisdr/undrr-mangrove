@@ -143,6 +143,7 @@ async function rangeEnvironment(doc, options = {}) {
         'fills',
         'hyperlink',
         'textDecoration',
+        ...(options.richDecorationOffsets ? ['textDecorationOffset'] : []),
       ])) {
         for (let i = segment.start; i < segment.end; i++)
           cells[i] = copy(segment);
@@ -151,6 +152,14 @@ async function rangeEnvironment(doc, options = {}) {
       const style = env.state.styles.find(item => item.id === cell.textStyleId);
       return {
         ...copy(cell),
+        ...(options.richDecorationOffsets
+          ? {
+              textDecorationOffset:
+                cell.textDecoration === 'UNDERLINE'
+                  ? (cell.textDecorationOffset ?? { unit: 'AUTO' })
+                  : null,
+            }
+          : {}),
         fontName: style ? copy(style.fontName) : cell.fontName,
       };
     };
@@ -206,11 +215,54 @@ async function rangeEnvironment(doc, options = {}) {
       ['setRangeFills', 'fills'],
       ['setRangeHyperlink', 'hyperlink'],
       ['setRangeTextDecoration', 'textDecoration'],
+      ...(options.richDecorationOffsets
+        ? [['setRangeTextDecorationOffset', 'textDecorationOffset']]
+        : []),
     ])
       node[method] = (start, end, value) => {
         assert(start >= 0 && end <= node.characters.length && start < end);
         for (let i = start; i < end; i++) cells[i][key] = copy(value);
       };
+    if (options.richDecorationOffsets) {
+      const setOffset = node.setRangeTextDecorationOffset;
+      node.setRangeTextDecorationOffset = (start, end, value) => {
+        assert(
+          value &&
+            (value.unit === 'AUTO' ||
+              (['PIXELS', 'PERCENT'].includes(value.unit) &&
+                Number.isFinite(value.value)))
+        );
+        for (let i = start; i < end; i++) {
+          const current = view(cells[i]);
+          assert(current.textDecoration === 'UNDERLINE');
+          assert(
+            env.state.loadedFonts.has(
+              `${current.fontName.family} ${current.fontName.style}`
+            )
+          );
+        }
+        setOffset(
+          start,
+          end,
+          value.unit === 'AUTO'
+            ? value
+            : { ...value, value: Math.fround(value.value) }
+        );
+      };
+      node.getRangeTextDecorationOffset = (start, end) => {
+        assert(start >= 0 && start < end && end <= node.characters.length);
+        const value = view(cells[start]).textDecorationOffset;
+        return cells
+          .slice(start, end)
+          .every(
+            cell =>
+              JSON.stringify(view(cell).textDecorationOffset) ===
+              JSON.stringify(value)
+          )
+          ? copy(value)
+          : env.figma.mixed;
+      };
+    }
     node.editRich = (start, end, value) => {
       const retained = copy(cells[start] || cells[start - 1]);
       node._characters =

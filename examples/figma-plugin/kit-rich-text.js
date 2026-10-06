@@ -1,5 +1,5 @@
 /** Rich TEXT capability with transaction preflight and native ownership guards. */
-/* global module, MG_CONNECTOR_RICH_DTO_VALIDATION, MG_CONNECTOR_RICH_ALPHA */
+/* global module, MG_CONNECTOR_RICH_DTO_VALIDATION, MG_CONNECTOR_RICH_ALPHA, MG_CONNECTOR_RICH_DECORATION_OFFSET */
 'use strict';
 const mgRichText = (() => {
   const checkDTO =
@@ -7,6 +7,30 @@ const mgRichText = (() => {
     MG_CONNECTOR_RICH_DTO_VALIDATION;
   const alphaEnabled =
     typeof MG_CONNECTOR_RICH_ALPHA === 'undefined' || MG_CONNECTOR_RICH_ALPHA;
+  const offsetEnabled =
+    typeof MG_CONNECTOR_RICH_DECORATION_OFFSET === 'undefined' ||
+    MG_CONNECTOR_RICH_DECORATION_OFFSET;
+  const offsetValid = value =>
+    value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    (value.unit === 'AUTO'
+      ? Object.keys(value).length === 1
+      : ['PIXELS', 'PERCENT'].includes(value.unit) &&
+        Object.keys(value).sort().join(',') === 'unit,value' &&
+        Number.isFinite(value.value) &&
+        Number.isFinite(Math.fround(value.value)));
+  const normalizedOffset = value =>
+    value.unit === 'AUTO'
+      ? { unit: 'AUTO' }
+      : { unit: value.unit, value: Math.fround(value.value) };
+  const nativeOffsetValid = value =>
+    offsetValid(value) &&
+    (value.unit === 'AUTO' || value.value === Math.fround(value.value));
+  const offsetMatches = (actual, expected) =>
+    nativeOffsetValid(actual) &&
+    actual.unit === expected.unit &&
+    (actual.unit === 'AUTO' || actual.value === Math.fround(expected.value));
   const alphaValid = value =>
     Number.isFinite(value) && value >= 0 && value <= 1;
   const alphaMatches = (actual, expected) =>
@@ -130,7 +154,7 @@ const mgRichText = (() => {
       })
     );
   }
-  function signature(segment) {
+  function signature(segment, captureOffsets = false) {
     const fills = segment.fills;
     if (
       !Array.isArray(fills) ||
@@ -163,11 +187,26 @@ const mgRichText = (() => {
     // Preserve legacy opaque ownership stamps exactly.
     if (alphaEnabled && Math.fround(fills[0].opacity) !== 1)
       result.push(Math.fround(fills[0].opacity));
+    if (
+      offsetEnabled &&
+      captureOffsets &&
+      segment.textDecoration === 'UNDERLINE'
+    ) {
+      if (!offsetValid(segment.textDecorationOffset))
+        fail('unsupported native run underline offset.');
+      result.push({
+        textDecorationOffset: normalizedOffset(segment.textDecorationOffset),
+      });
+    }
     return JSON.stringify(result);
   }
-  function segments(node) {
+  function segments(node, captureOffsets = false) {
     if (!node.characters.length) return [];
-    const source = node.getStyledTextSegments(fields);
+    const source = node.getStyledTextSegments(
+      offsetEnabled && captureOffsets
+        ? [...fields, 'textDecorationOffset']
+        : fields
+    );
     const result = [];
     let end = 0;
     for (const item of source) {
@@ -180,7 +219,14 @@ const mgRichText = (() => {
         !boundary(node.characters, item.end)
       )
         fail('native segment boundaries are invalid.');
-      const sig = signature(item);
+      if (
+        offsetEnabled &&
+        captureOffsets &&
+        item.textDecoration === 'UNDERLINE' &&
+        !nativeOffsetValid(item.textDecorationOffset)
+      )
+        fail('unsupported native run underline-offset precision.');
+      const sig = signature(item, captureOffsets);
       const previous = result[result.length - 1];
       if (previous?.signature === sig) previous.end = item.end;
       else
@@ -196,7 +242,7 @@ const mgRichText = (() => {
       fail('native segments must cover all current characters.');
     return result;
   }
-  function snapshot(node, ctx) {
+  function snapshot(node, ctx, captureOffsets = false) {
     if (!node) return null;
     if (node.type !== 'TEXT' || node.removed || node.hasMissingFont)
       fail('existing target must be a live TEXT with available fonts.');
@@ -206,7 +252,7 @@ const mgRichText = (() => {
       id: node.id,
       characters: node.characters,
       ledger: ctx.readState(node),
-      segments: segments(node),
+      segments: segments(node, captureOffsets),
     };
   }
   function decodeLedger(value) {
@@ -287,6 +333,9 @@ const mgRichText = (() => {
       fail(
         'requires bounded TEXT characters, stable id and textRuns without whole-node style/property overrides.'
       );
+    const captureOffsets =
+      offsetEnabled &&
+      spec.textRuns.some(run => run.textDecorationOffset !== undefined);
     const ids = new Set();
     const prepared = [];
     let end = 0;
@@ -304,6 +353,7 @@ const mgRichText = (() => {
                 'fill',
                 'hyperlink',
                 'textDecoration',
+                ...(offsetEnabled ? ['textDecorationOffset'] : []),
               ].includes(key)
           ) ||
           typeof run.id !== 'string' ||
@@ -329,6 +379,17 @@ const mgRichText = (() => {
       const decoration = run.textDecoration ?? 'NONE';
       if (checkDTO && !['NONE', 'UNDERLINE'].includes(decoration))
         fail('unsupported run decoration.');
+      if (
+        offsetEnabled &&
+        captureOffsets &&
+        ((decoration === 'UNDERLINE' &&
+          !offsetValid(run.textDecorationOffset)) ||
+          (decoration !== 'UNDERLINE' &&
+            run.textDecorationOffset !== undefined))
+      )
+        fail(
+          'offset-scoped text requires an explicit valid offset on every UNDERLINE run only.'
+        );
       const link = run.hyperlink ?? null;
       if (
         checkDTO &&
@@ -408,10 +469,12 @@ const mgRichText = (() => {
         hyperlink: copy(link),
         textDecoration: decoration,
       };
+      if (offsetEnabled && captureOffsets && decoration === 'UNDERLINE')
+        item.textDecorationOffset = copy(run.textDecorationOffset);
       item.styleKey = run.textStyle;
       item.colorKey = run.fill;
       item.signature = item.textStyleId
-        ? signature(item)
+        ? signature(item, captureOffsets)
         : JSON.stringify(
             alphaEnabled && Math.fround(paint.opacity) !== 1
               ? [
@@ -432,13 +495,52 @@ const mgRichText = (() => {
                   link,
                 ]
           );
+      if (
+        offsetEnabled &&
+        captureOffsets &&
+        decoration === 'UNDERLINE' &&
+        !item.textStyleId
+      )
+        item.signature = JSON.stringify([
+          ...JSON.parse(item.signature),
+          { textDecorationOffset: normalizedOffset(item.textDecorationOffset) },
+        ]);
       if (prepared[prepared.length - 1]?.signature === item.signature)
         fail('adjacent indistinguishable runs must be one authored run.');
       prepared.push(item);
     }
     if (checkDTO && end !== spec.characters.length)
       fail('runs must cover all characters.');
-    const before = snapshot(node, ctx);
+    if (
+      offsetEnabled &&
+      captureOffsets &&
+      node &&
+      !['setRangeTextDecorationOffset', 'getRangeTextDecorationOffset'].every(
+        name => typeof node[name] === 'function'
+      )
+    )
+      fail('native ranged underline-offset API is unavailable.');
+    const before = snapshot(node, ctx, captureOffsets);
+    if (
+      offsetEnabled &&
+      !captureOffsets &&
+      before?.ledger &&
+      decodeLedger(before.ledger).runs.some(run => {
+        let values;
+        try {
+          values = JSON.parse(run.signature);
+        } catch {
+          fail('invalid ownership signature.');
+        }
+        if (!Array.isArray(values)) fail('invalid ownership signature.');
+        return values.some(
+          value => object(value) && value.textDecorationOffset !== undefined
+        );
+      })
+    )
+      fail(
+        'owned ranged underline offsets require explicit source declaration.'
+      );
     let ranges = prepared.map(item => ({ start: item.start, end: item.end }));
     let preserve = false;
     if (before) {
@@ -477,7 +579,10 @@ const mgRichText = (() => {
     for (const font of fonts.values()) await ctx.figma.loadFontAsync(font);
     if (currentDependencies() !== dependencies)
       fail('dependencies changed during font preflight.');
-    if (JSON.stringify(snapshot(node, ctx)) !== JSON.stringify(before))
+    if (
+      JSON.stringify(snapshot(node, ctx, captureOffsets)) !==
+      JSON.stringify(before)
+    )
       fail('target changed during preflight.');
     const handle = Object.freeze({
       identity: spec.id,
@@ -495,6 +600,7 @@ const mgRichText = (() => {
       identity: spec.id,
       dependencyStamp: currentDependencies,
       dependencies,
+      captureOffsets,
       finalized: ctx.deferredStyles !== true,
     });
     return handle;
@@ -502,8 +608,16 @@ const mgRichText = (() => {
   async function apply(handle, node) {
     const plan = plans.get(handle);
     if (!plan) fail('unknown or consumed preflight plan.');
-    const { ctx, before, prepared, ranges, preserve, characters, identity } =
-      plan;
+    const {
+      ctx,
+      before,
+      prepared,
+      ranges,
+      preserve,
+      characters,
+      identity,
+      captureOffsets,
+    } = plan;
     if (!plan.finalized)
       fail('deferred style plan must be finalized after import.');
     if (plan.dependencyStamp() !== plan.dependencies)
@@ -521,10 +635,19 @@ const mgRichText = (() => {
       ].every(name => typeof node[name] === 'function')
     )
       fail('invalid target or unsafe component property.');
+    if (
+      offsetEnabled &&
+      captureOffsets &&
+      !['setRangeTextDecorationOffset', 'getRangeTextDecorationOffset'].every(
+        name => typeof node[name] === 'function'
+      )
+    )
+      fail('native ranged underline-offset API is unavailable.');
     if (before) {
       if (
         node !== plan.node ||
-        JSON.stringify(snapshot(node, ctx)) !== JSON.stringify(before)
+        JSON.stringify(snapshot(node, ctx, captureOffsets)) !==
+          JSON.stringify(before)
       )
         fail('target changed after preflight.');
     } else if (
@@ -551,6 +674,23 @@ const mgRichText = (() => {
       node.setRangeFills(range.start, range.end, item.fills);
       node.setRangeTextDecoration(range.start, range.end, item.textDecoration);
       node.setRangeHyperlink(range.start, range.end, item.hyperlink);
+      if (
+        offsetEnabled &&
+        captureOffsets &&
+        item.textDecoration === 'UNDERLINE'
+      ) {
+        node.setRangeTextDecorationOffset(
+          range.start,
+          range.end,
+          item.textDecorationOffset
+        );
+        const observed = node.getRangeTextDecorationOffset(
+          range.start,
+          range.end
+        );
+        if (!offsetMatches(observed, item.textDecorationOffset))
+          fail('ranged underline-offset native readback disagrees.');
+      }
     }
     ctx.writeState(
       node,
@@ -589,7 +729,7 @@ const mgRichText = (() => {
         JSON.stringify(normalizedFont(plan.ctx.creationFont))
     )
       fail('finalization context changed.');
-    const current = snapshot(plan.node, ctx);
+    const current = snapshot(plan.node, ctx, plan.captureOffsets);
     if (plan.before) {
       const before = plan.before;
       if (
@@ -641,7 +781,7 @@ const mgRichText = (() => {
       )
         fail('paint dependency changed during import.');
       const result = { ...item, textStyleId: style.style.id };
-      result.signature = signature(result);
+      result.signature = signature(result, plan.captureOffsets);
       return result;
     });
     plan.ctx = ctx;

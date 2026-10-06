@@ -21,6 +21,40 @@ function alphaMaskHelper() {
   }
   return alphaMask;
 }
+function specializeRichOffsets(source, enabled) {
+  if (enabled) return source;
+  // Remove only the optional internal capture plumbing when the source feature
+  // is absent. The full source DTO was validated before this specialization.
+  for (const fragment of [
+    'function signature(segment, captureOffsets = false)',
+    'function segments(node, captureOffsets = false)',
+    'function snapshot(node, ctx, captureOffsets = false)',
+  ])
+    if (!source.includes(fragment))
+      throw new Error('Rich offset specialization boundary changed.');
+  const signatureOffsetStart = source.indexOf(
+    "    if (\n      offsetEnabled &&\n      captureOffsets &&\n      segment.textDecoration === 'UNDERLINE'"
+  );
+  const signatureOffsetEnd = source.indexOf(
+    '    return JSON.stringify(result);',
+    signatureOffsetStart
+  );
+  if (signatureOffsetStart < 0 || signatureOffsetEnd <= signatureOffsetStart)
+    throw new Error('Rich offset signature specialization boundary changed.');
+  source =
+    source.slice(0, signatureOffsetStart) + source.slice(signatureOffsetEnd);
+  const enabledStart = source.indexOf('  const offsetEnabled =');
+  const enabledEnd = source.indexOf('  const alphaValid =', enabledStart);
+  if (enabledStart < 0 || enabledEnd <= enabledStart)
+    throw new Error('Rich offset enabled specialization boundary changed.');
+  source = source.slice(0, enabledStart) + source.slice(enabledEnd);
+  return source
+    .replaceAll('offsetEnabled', 'false')
+    .replaceAll(', captureOffsets = false', '')
+    .replaceAll(', captureOffsets)', ')')
+    .replaceAll(', plan.captureOffsets)', ')')
+    .replaceAll('      captureOffsets,\n', '');
+}
 function frozenHelper() {
   if (!frozenSourceLine)
     frozenSourceLine = vm.runInNewContext(
@@ -1207,6 +1241,14 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsRichText(variant.tree))
     );
+  const needsRichDecorationOffset = tree =>
+    (tree.textRuns || []).some(run => run.textDecorationOffset !== undefined) ||
+    (tree.children || []).some(needsRichDecorationOffset);
+  const richDecorationOffsetEnabled =
+    richTextEnabled &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsRichDecorationOffset(variant.tree))
+    );
   const richAlphaVariables = new Map(doc.variables.map(v => [v.name, v]));
   function richAlphaValue(name, mode, seen = new Set()) {
     if (seen.has(name)) throw new Error('Rich alpha alias cycle');
@@ -1478,7 +1520,13 @@ async function buildConnector({
       '\n;\n';
   if (richTextEnabled)
     for (const module of ['kit-rich-text.js', 'kit-font-defaults.js'])
-      source += fs.readFileSync(path.join(PLUGIN, module), 'utf8') + '\n;\n';
+      source +=
+        (module === 'kit-rich-text.js'
+          ? specializeRichOffsets(
+              fs.readFileSync(path.join(PLUGIN, module), 'utf8'),
+              richDecorationOffsetEnabled
+            )
+          : fs.readFileSync(path.join(PLUGIN, module), 'utf8')) + '\n;\n';
   if (textThicknessEnabled)
     source +=
       fs.readFileSync(path.join(PLUGIN, 'kit-text-thickness.js'), 'utf8') +
@@ -1576,6 +1624,7 @@ async function buildConnector({
         MG_CONNECTOR_RICH_SOURCE_VALIDATION: false,
         MG_CONNECTOR_RICH_TEXT: richTextEnabled,
         MG_CONNECTOR_RICH_ALPHA: richAlphaEnabled,
+        MG_CONNECTOR_RICH_DECORATION_OFFSET: richDecorationOffsetEnabled,
         MG_CONNECTOR_DIRECT_TEXT: directTextEnabled,
         MG_CONNECTOR_FOCUS: focusEnabled,
         MG_CONNECTOR_COINCIDENT_FOCUS: coincidentFocusEnabled,
@@ -1612,6 +1661,7 @@ async function buildConnector({
     directTextEnabled,
     richTextEnabled,
     richAlphaEnabled,
+    richDecorationOffsetEnabled,
     gradientRolesEnabled,
     alphaMaskEnabled,
     frozenSourceLineEnabled,
