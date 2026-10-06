@@ -1,0 +1,53 @@
+{
+  "acceptedScope": "Actual guarded trace operation and observed stage-local geometry changes; no repeat/recovery/full-library acceptance",
+  "reportSHA256": "63237959b94751e0437639d19d30d38747d23ecb35c8044eb00413ac9a9c7db8",
+  "counts": {
+    "created": 0,
+    "updated": 1285,
+    "errors": 0
+  },
+  "traceFileKeyAvailable": false,
+  "freshCloudFileKey": "JF29fJWi9LzUHeOObGL3nB",
+  "pristineBuildRestoredExact": true,
+  "catalogueChildLocalRecordsEqualAfterFlowToFinal": 70,
+  "freshCloudFiveTrackedGeometriesEqualFinal": true,
+  "afterFlowToFinalChanges": {
+    "30:2706": [
+      {
+        "field": "y",
+        "before": 13842.4296875,
+        "after": 13842.427734375
+      }
+    ],
+    "30:2704": [
+      {
+        "field": "height",
+        "before": 6052.001953125,
+        "after": 6052
+      }
+    ],
+    "30:5336": [
+      {
+        "field": "y",
+        "before": 343.57177734375,
+        "after": 344
+      }
+    ],
+    "30:5348": [],
+    "30:5339": []
+  },
+  "sourceGroundedMechanism": {
+    "cataloguePlacement": "kit-layout.js sets catalogue.y from examplesIntro.y + height + 48 after mgLayoutBrowseFlow",
+    "sectionResize": "Section resize uses visible child y + bottomExtent + 32; observed catalogue 344 + 5676 + 32 = 6052",
+    "maintenanceRowAdvance": "Rows advance by preceding maximum section.height + 160; exact Float32 projection reproduces old and new Maintenance Y",
+    "oldFloat32": 13842.4296875,
+    "newFloat32": 13842.427734375
+  },
+  "limitations": [
+    "The three captures isolate changes between flow completion and final section placement, not the exact individual setter timing.",
+    "Float32 arithmetic reproduces propagation but does not prove the original source of old fractional section height or parent-local offset.",
+    "Fresh cloud confirms committed values despite reported synchronization warning.",
+    "No arbitrary rounding change is proposed. Original 79-record ordinary repeated-build gate remains open.",
+    "Trace had unavailable fileKey; authorization relied on exact recovery collection and pinned page/catalogue ancestry as reviewed."
+  ]
+}

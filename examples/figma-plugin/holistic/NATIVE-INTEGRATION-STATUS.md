@@ -101,7 +101,17 @@ remain open. No geometry tolerance or layout-settlement guarantee is claimed.
 
 Desktop input now works through the documented native control tool: Figma was
 raised, menus opened and both development plugin manifest paths verified in the
-recovery file on 2026-10-06. No recovery rebuild has run in this retry. The
-accessibility tree still reports a sync warning; current connection status is
-unconfirmed. The prepared trace must be reconciled with the current pristine
-build before installation. Recovery remains unpublished.
+recovery file on 2026-10-06. The reviewed current-build guarded trace then ran
+the actual ordinary full-plugin UNDRR Button-only path, with review refresh off:
+zero created nodes, 1285 updated nodes and zero errors. The full operation report
+and diagnostic patch are preserved in
+[`assets/native-recovery-layout-trace`](assets/native-recovery-layout-trace/provenance.json).
+The final section phase records Examples height `6052.001953125` to `6052` and
+Maintenance y `13842.4296875` to `13842.427734375`. Fresh cloud geometry matches
+the final trace. Experts independently verified the exact native float32
+propagation from the changed Examples height to Maintenance placement. This
+operation removes the old surplus; it does not demonstrate its origin. A tighter
+inline-fit trace and two ordinary exact-geometry zero-create repeats remain open.
+The exact pristine generated build was restored. No production fix was applied.
+The accessibility sync warning persists; general connection health remains
+unconfirmed. Recovery remains unpublished.
