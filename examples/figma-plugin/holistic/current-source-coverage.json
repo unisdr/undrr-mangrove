@@ -1,8 +1,8 @@
 {
   "status": "Current registry crosswalk; bounded source associations, no complete catalogue/native acceptance inferred",
   "auditedAtUTC": "2026-10-06T04:39:16.411306+00:00",
-  "committedSourceFamilies": 106,
-  "committedSourceVariants": 1298,
+  "committedSourceFamilies": 109,
+  "committedSourceVariants": 1460,
   "normalFamilies": 32,
   "normalVariants": 383,
   "historicalPublishedFamilies": 25,
@@ -361,11 +361,10 @@
       "label": "On This Page Nav",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
+      "committedSourceFamilyIds": ["on-this-page-nav"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
-      "complete": false,
-      "reviewedUnregisteredFamilyIds": ["on-this-page-nav"]
+      "complete": false
     },
     {
       "sourceUnitId": "mega-menu",
@@ -618,11 +617,10 @@
       "label": "Image Caption and Credit",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
+      "committedSourceFamilyIds": ["image-figure"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false,
-      "reviewedUnregisteredFamilyIds": ["image-figure"],
       "reviewedCandidateBoundary": "ImageFigure72 covers the actual composed figure/caption/credit source contracts, including mobile BR/Strong ownership. This is not standalone primitive or native acceptance."
     },
     {
@@ -630,11 +628,10 @@
       "label": "Image Credit primitive",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
+      "committedSourceFamilyIds": ["image-figure"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false,
-      "reviewedUnregisteredFamilyIds": ["image-figure"],
       "reviewedCandidateBoundary": "ImageFigure72 covers the actual composed figure/caption/credit source contracts, including mobile BR/Strong ownership. This is not standalone primitive or native acceptance."
     },
     {
@@ -746,11 +743,10 @@
       "label": "Page Header",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": ["page-chrome"],
+      "committedSourceFamilyIds": ["page-chrome", "page-header"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
-      "complete": false,
-      "reviewedUnregisteredFamilyIds": ["page-header"]
+      "complete": false
     },
     {
       "sourceUnitId": "footer",
@@ -854,11 +850,10 @@
       "label": "Imagecaption molecule",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": ["image-caption"],
+      "committedSourceFamilyIds": ["image-caption", "image-figure"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false,
-      "reviewedUnregisteredFamilyIds": ["image-figure"],
       "reviewedCandidateBoundary": "ImageFigure72 covers the actual composed figure/caption/credit source contracts, including mobile BR/Strong ownership. This is not standalone primitive or native acceptance."
     },
     {
@@ -1073,12 +1068,11 @@
     }
   ],
   "remainingSourcePriority": [
-    "Registered Topic/Index, Drawer, Cookie and Footer additional caller and native acceptance gates; reviewed PageHeader/OnNav/Figure/Layout registration remains separate",
+    "Registered109 bounded contexts retain additional callers/native gates; Layout3/28 and semantic6/96 remain reviewed unregistered candidates",
     "Footer genuine resolved remote syndication",
-    "Combined registration of peer-accepted PageHeader44, OnThisPageNav46 and ImageFigure72",
-    "OnThisPageNav46 peer-accepted source candidate registration and CaptureTheme rethemeability",
-    "AuthorImage native blend capability, composed ImageFigure registration, and orphan Image source disposition",
-    "Foundational layout/container/grid/semantic text and source icon/logo contracts",
+    "OnThisPageNav CaptureTheme rethemeability and native masks",
+    "AuthorImage native blend capability and orphan Image source disposition",
+    "Required36 semantic Cite/Quotation/OL/UL/mixed Code/Abbr specimens",
     "Gallery actual video/embed native representation"
   ],
   "nativeGates": [
@@ -1091,33 +1085,22 @@
     "Human novice handoff and reduced maintenance merge acceptance"
   ],
   "reviewedUnregisteredCandidates": {
-    "page-header": {
-      "families": 1,
-      "variants": 44,
-      "sourcePeerAccepted": true,
-      "nativeAccepted": false
-    },
-    "on-this-page-nav": {
-      "families": 1,
-      "variants": 46,
-      "sourcePeerAccepted": true,
-      "nativeAccepted": false
-    },
-    "image-figure": {
-      "families": 1,
-      "variants": 72,
-      "sourcePeerAccepted": true,
-      "nativeAccepted": false
-    },
     "layout-foundations": {
       "families": 3,
       "variants": 28,
       "sourcePeerAccepted": true,
       "nativeAccepted": false
+    },
+    "semantic-typography": {
+      "families": 6,
+      "variants": 96,
+      "sourcePeerAccepted": true,
+      "nativeAccepted": false,
+      "requiredUnimplementedFiniteSpecimens": 36
     }
   },
-  "previousCommittedRevision": "8a99893652a177b6235e448bdcb056df61577004",
-  "registryRevisionScope": "source106 checkpoint containing this file; use Git history for its exact revision. previousCommittedRevision identifies the historical source93 registry.",
-  "registrationVerification": "Complete immutable source106 combined harness passed: deterministic packet/full foundation and dependency preservation/importer premutation refusal/CLI guards. Combined scene lifecycle remains original9/28; new cohorts have separate all-five reviews. Source-only, not native accepted.",
+  "previousCommittedRevision": "b7111336ebe69f146822943bca29824bab1804f1",
+  "registryRevisionScope": "source109 checkpoint containing this file; use Git history for its exact revision. previousCommittedRevision identifies the historical source106 registry.",
+  "registrationVerification": "Complete immutable source109 combined harness terminal exit0: deterministic109/1460 packet/full foundation and dependency preservation/actual importer premutation refusal/CLI guards. Combined scene lifecycle remains original9/28; new threecohorts have separate all-five peer-reviewed source lifecycles. Source-only, not full native catalogue accepted.",
   "registryUpdatedAtUTC": "2026-10-06"
 }

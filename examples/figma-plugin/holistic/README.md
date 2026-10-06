@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 106 families and 1298 bounded variants, deliberately
+- Separate source draft packet: 109 families and 1460 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -130,6 +130,8 @@ Topic/Index adds eight families/50 variants, Drawer one/20, Cookie consent three
 
 The immutable source93 packet contains55,171 variables. A read-only fixed producer/story/category ownership proposal preserves all records across59 requested collections, each below5000 source variables. Actual stale occupancy and native collection-count feasibility remain unverified. The committed opt-in font-free native collection profile passes its separate bounded production rehearsal; advanced full-catalogue support and canonical migration remain open.
 
-PageHeader44, OnThisPageNav46 and ImageFigure72 have independent source/lifecycle acceptance and remain unregistered. Adding these three bounded source families after the106-family checkpoint would produce109 families/1460 variants. ImageFigure is a bounded composition of the actual Images, Imagecaption, P and Imagecredit modules; it does not establish standalone primitive or native acceptance.
+PageHeader44, OnThisPageNav46 and ImageFigure72 have independent source/lifecycle acceptance and are now registered in the109-family/1460-variant source-only packet. ImageFigure is a bounded composition of the actual Images, Imagecaption, P and Imagecredit modules; it does not establish standalone primitive or native acceptance.
 
 The orphan Image atom still imports three assets intentionally removed in the2023-01-06 cleanup (`eca8ef98`). Historical bytes are preserved externally for diagnosis. They have not been restored to the repository or substituted into the source catalogue. The current module has no active story/caller or package entry export; its disposition remains open.
+
+Source109 registers the independently reviewed standalone PageHeader44, OnThisPageNav46 and ImageFigure72 source cohorts. Complete immutable packet and CLI terminal checks pass, preserving exact normal foundations and dependencies and actual importer refusal before mutation. Their dedicated all-five supported-edit/two-repeat lifecycles remain separate from the combined original9/28 scene fixture. CaptureTheme allocations, source fonts/masks/media and native/publication limits remain explicit. Layout3/28 and semantic typography6/96 remain unregistered;36 semantic followon specimens remain unsupported.

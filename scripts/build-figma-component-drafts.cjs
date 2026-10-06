@@ -219,6 +219,17 @@ const recipes = [
     'buildCookieConsentRecipes',
   ],
   ['footer', './figma-footer-recipes.cjs', 'buildFooterRecipes'],
+  ['page-header', './figma-page-header-recipes.cjs', 'buildPageHeaderRecipes'],
+  [
+    'on-this-page-nav',
+    './figma-on-this-page-nav-recipes.cjs',
+    'buildOnThisPageNavRecipes',
+  ],
+  [
+    'image-figure',
+    './figma-image-figure-recipes.cjs',
+    'buildImageFigureRecipes',
+  ],
   [
     'gallery-html',
     './figma-gallery-html-recipes.cjs',
@@ -555,6 +566,8 @@ function main(args) {
   const output = path.resolve(args[1]);
   if (output === ROOT || output.startsWith(`${ROOT}${path.sep}`))
     throw new Error('Draft packet must stay outside source.');
+  if (args[0] === '--output' && fs.existsSync(output))
+    throw new Error('Use a new output path to preserve prior drafts.');
   const json = `${JSON.stringify(buildDraftPacket(), null, 2)}\n`;
   if (args[0] === '--check') {
     assert.strictEqual(

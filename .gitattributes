@@ -15,3 +15,10 @@ examples/figma-plugin/holistic/assets/content-hub/generated-css-additions.diff -
 
 # Preserve exact HTTP status, CRLF and header terminator bytes of this evidence.
 examples/figma-plugin/holistic/assets/footer/widget-body-direct-http.headers -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+# Preserve the exact downloaded PageHeader logo response bytes, including CRLF.
+examples/figma-plugin/holistic/assets/page-header/http-bodies/undrr-logo-horizontal.svg -text whitespace=cr-at-eol
+
+# Preserve authored whitespace in exact downloaded Noto licence evidence.
+examples/figma-plugin/holistic/assets/image-figure/source-fonts/OFL-NotoSansArabic.txt whitespace=-blank-at-eol
+examples/figma-plugin/holistic/assets/page-header/http-bodies/OFL-NotoSansArabic.txt whitespace=-blank-at-eol

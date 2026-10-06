@@ -1,0 +1,95 @@
+{
+  "sourceOnly": true,
+  "comparison": [
+    {
+      "case": "undrr-rtl-390-initial",
+      "originalCount": 17,
+      "repeatCount": 17,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 190.1875,
+      "repeatListWidth": 190.1875
+    },
+    {
+      "case": "undrr-rtl-1164-initial",
+      "originalCount": 11,
+      "repeatCount": 11,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 1046.1875,
+      "repeatListWidth": 1046.1875
+    },
+    {
+      "case": "delta-rtl-390-initial",
+      "originalCount": 14,
+      "repeatCount": 14,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 236.1875,
+      "repeatListWidth": 236.1875
+    },
+    {
+      "case": "delta-rtl-1164-initial",
+      "originalCount": 11,
+      "repeatCount": 11,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 1046.1875,
+      "repeatListWidth": 1046.1875
+    },
+    {
+      "case": "irp-rtl-390-initial",
+      "originalCount": 14,
+      "repeatCount": 14,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 236.1875,
+      "repeatListWidth": 236.1875
+    },
+    {
+      "case": "irp-rtl-1164-initial",
+      "originalCount": 11,
+      "repeatCount": 11,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 1046.1875,
+      "repeatListWidth": 1046.1875
+    },
+    {
+      "case": "mcr-rtl-390-initial",
+      "originalCount": 14,
+      "repeatCount": 14,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 236.1875,
+      "repeatListWidth": 236.1875
+    },
+    {
+      "case": "mcr-rtl-1164-initial",
+      "originalCount": 11,
+      "repeatCount": 11,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 1046.1875,
+      "repeatListWidth": 1046.1875
+    },
+    {
+      "case": "preventionweb-rtl-390-initial",
+      "originalCount": 14,
+      "repeatCount": 14,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 236.1875,
+      "repeatListWidth": 236.1875
+    },
+    {
+      "case": "preventionweb-rtl-1164-initial",
+      "originalCount": 11,
+      "repeatCount": 11,
+      "exactRecordedTrees": true,
+      "differentIndices": [],
+      "originalListWidth": 1046.1875,
+      "repeatListWidth": 1046.1875
+    }
+  ]
+}

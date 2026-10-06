@@ -1,0 +1,9 @@
+{
+  "retrievedAt": "2026-10-06T06:03:38.655787+00:00",
+  "sourceFontUrl": "https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0/Bold/noto-sans-arabic-arabic-700-normal.woff2",
+  "fontSha256": "d2bf5ac762d07f769e4e644a1f919649317cb5b62e20ab9ae02918862627b723",
+  "sourceRequestEvidence": "source-footprints.json actual RTL resources and loaded Noto Sans Arabic700 descriptor",
+  "licenseUrl": "https://unpkg.com/@fontsource/noto-sans-arabic@5.3.0/LICENSE",
+  "licenseSha256": "91053c23e8a0fe5fc9b5fdbe5ff74ceffd66f6f996c123f1a6ca4c23487c1fff",
+  "licenseBasis": "Source Sass names @fontsource/noto-sans-arabic5.3.0 and OFL1.1; retrieved exact package LICENSE. Native file/font/glyph matching remains open."
+}

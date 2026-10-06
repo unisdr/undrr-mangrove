@@ -1,0 +1,52 @@
+{
+  "readOnlyRecovery": true,
+  "currentSourceRenderable": false,
+  "deletedCommit": "eca8ef98c14711e3e5629dc434fc7420c666bba5",
+  "deletedDate": "2023-01-06",
+  "deletedTitle": "Component library initial clean up (#1)",
+  "deletedBody": "Runs JS and Sass linting; Removes most components that UNDRR will not use as a base",
+  "currentJSXStillImportsDeletedAssets": true,
+  "restoredToRepository": false,
+  "sourceRepairAuthorizationRequiredFromParent": true,
+  "assets": [
+    {
+      "currentImportedPath": "stories/assets/images/Mongolia-cashmere-goats.jpg",
+      "currentExists": false,
+      "historicalObject": "8a5f92891c60a3bd3937d4d502164772b46e8f2a",
+      "historicalCommitParent": "c666e50289cdf28feefb7bb694c884e1944fcb11",
+      "sha256": "26a7296636542a191249cb7b914cd4c09d65f693ba9778d8485633d8d43ec452",
+      "bytes": 428346,
+      "dimensions": [
+        1920,
+        1280
+      ],
+      "externalSavedPath": "/tmp/mangrove-image-atom-historical-assets-20261006/Mongolia-cashmere-goats.jpg"
+    },
+    {
+      "currentImportedPath": "stories/assets/images/Mongolia-cashmere-goats-md.jpg",
+      "currentExists": false,
+      "historicalObject": "33617f5d7c865fcaae21d6aaf1679f8129a131b3",
+      "historicalCommitParent": "c666e50289cdf28feefb7bb694c884e1944fcb11",
+      "sha256": "6e18c7d36570782e16b93f1bfe5a639b0c55405dafdf161b8dc1be286c3ddddb",
+      "bytes": 150063,
+      "dimensions": [
+        802,
+        615
+      ],
+      "externalSavedPath": "/tmp/mangrove-image-atom-historical-assets-20261006/Mongolia-cashmere-goats-md.jpg"
+    },
+    {
+      "currentImportedPath": "stories/assets/images/Mongolia-cashmere-goats-sm.jpg",
+      "currentExists": false,
+      "historicalObject": "efcf99e3c37414d5a66e277f0d41f84c201540ac",
+      "historicalCommitParent": "c666e50289cdf28feefb7bb694c884e1944fcb11",
+      "sha256": "c3ec84fa671ac4d7d27988bc1c4c606798951104fe33563a4dc4ff46c0795526",
+      "bytes": 87439,
+      "dimensions": [
+        450,
+        615
+      ],
+      "externalSavedPath": "/tmp/mangrove-image-atom-historical-assets-20261006/Mongolia-cashmere-goats-sm.jpg"
+    }
+  ]
+}

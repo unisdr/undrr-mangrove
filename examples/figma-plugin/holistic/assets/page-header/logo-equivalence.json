@@ -1,0 +1,5946 @@
+{
+  "cases": [
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-default-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-default-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-with-custom-languages-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-with-custom-languages-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-with-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-with-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-with-many-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-with-many-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-with-custom-class-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-with-custom-class-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "undrr-locale-driven-logo-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "undrr-locale-driven-logo-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "undrr-default-spanish-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "undrr-default-spanish-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "undrr-default-arabic-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 254,
+        "right": 380,
+        "top": 17,
+        "width": 126,
+        "x": 254,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "undrr-default-arabic-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 1028,
+        "right": 1154,
+        "top": 17,
+        "width": 126,
+        "x": 1028,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "undrr-default-french-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "undrr-default-french-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "undrr-default-russian-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "undrr-default-russian-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "undrr-default-chinese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "undrr-default-chinese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-default-japanese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-default-japanese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-no-account-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-no-account-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-no-language-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-no-language-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-logo-only-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-logo-only-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-with-language-links-899",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "undrr-with-language-links-900",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "undrr-with-language-links-901",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10.5,
+        "right": 190.5,
+        "top": 17,
+        "width": 180,
+        "x": 10.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "undrr-default-1199",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 27.5,
+        "right": 351.5,
+        "top": 17,
+        "width": 324,
+        "x": 27.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "undrr-default-1200",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28,
+        "right": 352,
+        "top": 17,
+        "width": 324,
+        "x": 28,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "undrr-default-1201",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28.5,
+        "right": 352.5,
+        "top": 17,
+        "width": 324,
+        "x": 28.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-default-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-default-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-with-custom-languages-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-with-custom-languages-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-with-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-with-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-with-many-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-with-many-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-with-custom-class-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-with-custom-class-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "delta-locale-driven-logo-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "delta-locale-driven-logo-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "delta-default-spanish-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "delta-default-spanish-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "delta-default-arabic-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 254,
+        "right": 380,
+        "top": 17,
+        "width": 126,
+        "x": 254,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "delta-default-arabic-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 1028,
+        "right": 1154,
+        "top": 17,
+        "width": 126,
+        "x": 1028,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "delta-default-french-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "delta-default-french-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "delta-default-russian-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "delta-default-russian-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "delta-default-chinese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "delta-default-chinese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-default-japanese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-default-japanese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-no-account-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-no-account-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-no-language-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-no-language-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-logo-only-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-logo-only-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-with-language-links-899",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "delta-with-language-links-900",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "delta-with-language-links-901",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10.5,
+        "right": 190.5,
+        "top": 17,
+        "width": 180,
+        "x": 10.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "delta-default-1199",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 27.5,
+        "right": 351.5,
+        "top": 17,
+        "width": 324,
+        "x": 27.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "delta-default-1200",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28,
+        "right": 352,
+        "top": 17,
+        "width": 324,
+        "x": 28,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "delta-default-1201",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28.5,
+        "right": 352.5,
+        "top": 17,
+        "width": 324,
+        "x": 28.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-default-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-default-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-with-custom-languages-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-with-custom-languages-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-with-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-with-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-with-many-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-with-many-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-with-custom-class-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-with-custom-class-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "irp-locale-driven-logo-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "irp-locale-driven-logo-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "irp-default-spanish-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "irp-default-spanish-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "irp-default-arabic-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 254,
+        "right": 380,
+        "top": 17,
+        "width": 126,
+        "x": 254,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "irp-default-arabic-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 1028,
+        "right": 1154,
+        "top": 17,
+        "width": 126,
+        "x": 1028,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "irp-default-french-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "irp-default-french-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "irp-default-russian-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "irp-default-russian-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "irp-default-chinese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "irp-default-chinese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-default-japanese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-default-japanese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-no-account-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-no-account-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-no-language-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-no-language-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-logo-only-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-logo-only-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-with-language-links-899",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "irp-with-language-links-900",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "irp-with-language-links-901",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10.5,
+        "right": 190.5,
+        "top": 17,
+        "width": 180,
+        "x": 10.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "irp-default-1199",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 27.5,
+        "right": 351.5,
+        "top": 17,
+        "width": 324,
+        "x": 27.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "irp-default-1200",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28,
+        "right": 352,
+        "top": 17,
+        "width": 324,
+        "x": 28,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "irp-default-1201",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28.5,
+        "right": 352.5,
+        "top": 17,
+        "width": 324,
+        "x": 28.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-default-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-default-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-with-custom-languages-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-with-custom-languages-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-with-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-with-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-with-many-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-with-many-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-with-custom-class-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-with-custom-class-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "mcr-locale-driven-logo-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "mcr-locale-driven-logo-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "mcr-default-spanish-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "mcr-default-spanish-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "mcr-default-arabic-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 254,
+        "right": 380,
+        "top": 17,
+        "width": 126,
+        "x": 254,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "mcr-default-arabic-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 1028,
+        "right": 1154,
+        "top": 17,
+        "width": 126,
+        "x": 1028,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "mcr-default-french-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "mcr-default-french-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "mcr-default-russian-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "mcr-default-russian-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "mcr-default-chinese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "mcr-default-chinese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-default-japanese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-default-japanese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-no-account-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-no-account-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-no-language-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-no-language-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-logo-only-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-logo-only-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-with-language-links-899",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "mcr-with-language-links-900",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "mcr-with-language-links-901",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10.5,
+        "right": 190.5,
+        "top": 17,
+        "width": 180,
+        "x": 10.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "mcr-default-1199",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 27.5,
+        "right": 351.5,
+        "top": 17,
+        "width": 324,
+        "x": 27.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "mcr-default-1200",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28,
+        "right": 352,
+        "top": 17,
+        "width": 324,
+        "x": 28,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "mcr-default-1201",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28.5,
+        "right": 352.5,
+        "top": 17,
+        "width": 324,
+        "x": 28.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-custom-languages-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-custom-languages-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-many-language-links-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-many-language-links-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-custom-class-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-custom-class-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "preventionweb-locale-driven-logo-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "preventionweb-locale-driven-logo-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "preventionweb-default-spanish-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.09207646755922,
+        "width": 117.8515625,
+        "x": 0.07421875,
+        "y": 0.02427426622039164
+      },
+      "canvas": {
+        "height": 48,
+        "width": 118
+      },
+      "chunks": 2,
+      "key": "preventionweb-default-spanish-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 364,
+      "sourceNatural": {
+        "height": 120,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.140625,
+        "height": 47.140625,
+        "left": 10,
+        "right": 128,
+        "top": 17,
+        "width": 118,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-es-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "preventionweb-default-arabic-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 254,
+        "right": 380,
+        "top": 17,
+        "width": 126,
+        "x": 254,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.62,
+        "width": 125.69211498973304,
+        "x": 0.15394250513347885,
+        "y": 0.04937500000000128
+      },
+      "canvas": {
+        "height": 47,
+        "width": 126
+      },
+      "chunks": 2,
+      "key": "preventionweb-default-arabic-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 716,
+      "sourceNatural": {
+        "height": 111,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.71875,
+        "height": 46.71875,
+        "left": 1028,
+        "right": 1154,
+        "top": 17,
+        "width": 126,
+        "x": 1028,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ar-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "preventionweb-default-french-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.07758069077244,
+        "width": 109.73837209302324,
+        "x": 0.13081395348837788,
+        "y": 0.0549596546137785
+      },
+      "canvas": {
+        "height": 48,
+        "width": 110
+      },
+      "chunks": 2,
+      "key": "preventionweb-default-french-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 314,
+      "sourceNatural": {
+        "height": 129,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.1875,
+        "height": 47.1875,
+        "left": 10,
+        "right": 120,
+        "top": 17,
+        "width": 110,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-fr-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-russian-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.8,
+        "width": 134.44615384615386,
+        "x": 0.27692307692306883,
+        "y": 0.09218749999999788
+      },
+      "canvas": {
+        "height": 47,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-russian-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 1011,
+      "sourceNatural": {
+        "height": 104,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.984375,
+        "height": 46.984375,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-ru-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-chinese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 47.00713550095631,
+        "width": 134.64285714285714,
+        "x": 0.1785714285714306,
+        "y": 0.05893224952184539
+      },
+      "canvas": {
+        "height": 48,
+        "width": 135
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-chinese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 439,
+      "sourceNatural": {
+        "height": 105,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 64.125,
+        "height": 47.125,
+        "left": 10,
+        "right": 145,
+        "top": 17,
+        "width": 135,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-zh-white.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-japanese-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-japanese-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-no-account-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-no-account-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-no-language-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-no-language-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-logo-only-390",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-logo-only-1164",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10,
+        "right": 190,
+        "top": 17,
+        "width": 180,
+        "x": 10,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-language-links-899",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 30,
+        "width": 207.5117370892019,
+        "x": 0.8952942460967392,
+        "y": 0
+      },
+      "canvas": {
+        "height": 30,
+        "width": 112
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-language-links-900",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 987,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 52,
+        "height": 30,
+        "left": 10,
+        "right": 122,
+        "top": 22,
+        "width": 112,
+        "x": 10,
+        "y": 22
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 48,
+        "width": 332.018779342723,
+        "x": 1.43247079375476,
+        "y": 0
+      },
+      "canvas": {
+        "height": 48,
+        "width": 180
+      },
+      "chunks": 1,
+      "key": "preventionweb-with-language-links-901",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 2246,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "cover",
+      "sourceObjectPosition": "0% 50%",
+      "sourceOwner": {
+        "bottom": 65,
+        "height": 48,
+        "left": 10.5,
+        "right": 190.5,
+        "top": 17,
+        "width": 180,
+        "x": 10.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-1199",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 27.5,
+        "right": 351.5,
+        "top": 17,
+        "width": 324,
+        "x": 27.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-1200",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28,
+        "right": 352,
+        "top": 17,
+        "width": 324,
+        "x": 28,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    },
+    {
+      "artwork": {
+        "height": 46.440000000000005,
+        "width": 321.2281690140846,
+        "x": 1.385915492957707,
+        "y": 0.1940624999999976
+      },
+      "canvas": {
+        "height": 47,
+        "width": 324
+      },
+      "chunks": 1,
+      "key": "preventionweb-default-1201",
+      "maxChannelDifference": 255,
+      "pixelDifferences": 3396,
+      "sourceNatural": {
+        "height": 43,
+        "width": 300
+      },
+      "sourceObjectFit": "contain",
+      "sourceObjectPosition": "50% 50%",
+      "sourceOwner": {
+        "bottom": 63.828125,
+        "height": 46.828125,
+        "left": 28.5,
+        "right": 352.5,
+        "top": 17,
+        "width": 324,
+        "x": 28.5,
+        "y": 17
+      },
+      "sourceSVG": "undrr-logo-horizontal.svg"
+    }
+  ],
+  "method": "Canvas draws exact original decoded HTTP SVG versus whole-path chunk overlay with actual IMG natural-size/object-fit/object-position allocations; source-equivalence diagnostic, not native Figma pixels.",
+  "sourceOnly": true
+}

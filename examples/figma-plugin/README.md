@@ -12,7 +12,7 @@ See the [architecture review](ARCHITECTURE-REVIEW.md) for the acceptance gates w
 
 The expanded source catalogue also needs a capacity adapter before native import. The opt-in [native collection plan v1](holistic/NATIVE-COLLECTIONS-CAPABILITY.md) has an isolated production rehearsal for font-free FRAME mechanics, collection-specific modes and cross-collection aliases. It does not make the full source packet importable. The maintenance entry refuses this experimental profile; full catalogue integration and publication remain separate gates.
 
-The separate [source-only catalogue](COMPONENT-DRAFTS.md) now registers106 families/1298 bounded variants, including the reviewed Topic/Index, Drawer, Cookie consent and Footer cohorts. The packet remains deliberately non-importable. Its combined verification preserves the normal foundation DTO and checks the original nine-family/28-variant scene lifecycle; individual new cohorts have their own all-brand evidence. Native integration, typography, publication and the reduced maintenance merge remain separate gates.
+The separate [source-only catalogue](COMPONENT-DRAFTS.md) now registers109 families/1460 bounded variants, including the reviewed PageHeader44, OnThisPageNav46 and ImageFigure72 cohorts. The packet remains deliberately non-importable. Its combined verification preserves the normal foundation DTO and checks the original nine-family/28-variant scene lifecycle; individual new cohorts have their own all-brand evidence. Native integration, typography, publication and the reduced maintenance merge remain separate gates.
 
 ## How it fits together
 
