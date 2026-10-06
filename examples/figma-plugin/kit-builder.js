@@ -4186,7 +4186,10 @@ async function buildMangroveComponents(
       });
     } else if (spec.type === 'TEXT') {
       if (spec.textWrap !== undefined) node.textWrapStyle = spec.textWrap;
-      node.textDecoration = spec.textDecoration || 'NONE';
+      node.textDecoration =
+        spec.textDecoration !== undefined
+          ? spec.textDecoration
+          : localText.get(spec.textStyle)?.textDecoration || 'NONE';
       if (
         spec.textDecorationOffset !== undefined &&
         node.textDecoration === 'UNDERLINE'
