@@ -116,6 +116,16 @@
       "article-header",
       "share-buttons",
       "news-related-card",
+      "news-taxonomy",
+      "news-recommendations",
+      "content-hub-tertiary-cta",
+      "content-hub-header",
+      "content-hub-reading-column",
+      "content-hub-intro",
+      "content-hub-resources",
+      "content-hub-toc",
+      "content-hub-route-card",
+      "content-hub-page",
       "search-result-item",
       "search-result-fields",
       "search-result-state"
@@ -13968,8 +13978,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 36,
-    "variants": 215,
+    "families": 46,
+    "variants": 334,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -13985,7 +13995,17 @@
       "landing-report",
       "article-header",
       "share-buttons",
-      "news-related-card"
+      "news-related-card",
+      "news-taxonomy",
+      "news-recommendations",
+      "content-hub-tertiary-cta",
+      "content-hub-header",
+      "content-hub-reading-column",
+      "content-hub-intro",
+      "content-hub-resources",
+      "content-hub-toc",
+      "content-hub-route-card",
+      "content-hub-page"
     ],
     "addedSearchControlFamilies": [
       "search-form",
@@ -13999,7 +14019,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "0fe0ffdefde4bde86604151e347c6c33b3a97b21a9d13fa54c2b2107089a11cd",
+    "currentPacketScriptSha256": "29edfd25c38413f9401fd4064aa6e2430ef1e454658cd2d3da177c93f40177d4",
     "dependencies": [
       {
         "id": "editorial-cta",

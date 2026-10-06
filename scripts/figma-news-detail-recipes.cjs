@@ -34,15 +34,15 @@ const DEPENDENCIES = [
   },
   {
     id: 'article-header',
-    status: 'missing-source-specific-composition',
+    status: 'requires-image-bearing-header-treatments',
     contract:
-      'Tag Update, actual title/summary/date and two linked source names. Five actual image treatments including source Hero split; source image/caption bytes and overrides must be pinned.',
+      'No-image article-header390/1164 source presets exist with genuine Tag and linked metadata. Four actual image-bearing treatments including split Hero still require exact source image/caption assets and composition.',
   },
   {
     id: 'share-buttons',
-    status: 'missing-family',
+    status: 'bounded-source-contract',
     contract:
-      'Source native-share capability branch plus LinkedIn/Facebook/X/email/QR actions and own copy button. Actual6-action bar wraps at256 rail; QR/copy/clipboard runtime are separate.',
+      'Four share-buttons390/1164 source presets cover actual native-share capability branch, LinkedIn/Facebook/X/email/QR actions and own copy button. Exact SVG paths/modes/native raster and sharing/QR/copy/clipboard runtime remain separate.',
   },
   {
     id: 'article-float-highlight',
@@ -58,21 +58,21 @@ const DEPENDENCIES = [
   },
   {
     id: 'article-related-cards',
-    status: 'missing-source-specific-data-and-assets',
+    status: 'bounded-source-contract',
     contract:
-      'Three actual VerticalCards with source title/summary, shared exact relatedImage URL and authored related-story destinations, stacked390/grid368px each at1164.',
+      'Six news-related-card source presets retain actual three titles/summaries, pinned2160x1440 photograph and source destinations. Initial finite caret is a measured source mirror; native title link/edited-caret reflow, source image licence grant and native raster remain open.',
   },
   {
     id: 'article-recommendations',
-    status: 'missing-list-composition',
+    status: 'bounded-source-contract',
     contract:
-      'Three authored editors recommendation links as actual UL/LI, no numbered or generic list substitute. Multiline marker baseline must be measured.',
+      'Two news-recommendations source presets preserve three authored HTTPS links as editable rich TEXT, actual multiline LI/UL allocations and measured UA-disc vector candidate. Candidate source raster differs11-22 crop pixels/up to1px narrow y; native/source marker pixels and arbitrary edited reflow remain open.',
   },
   {
     id: 'article-taxonomy',
-    status: 'missing-wrapping-composition',
+    status: 'bounded-source-contract',
     contract:
-      'Actual Hazards/Themes/Country labels and6 native Tag-compatible links. Narrow Themes group wraps into61px container; requires faithful finite row composition and editable-content bounds.',
+      'Two news-taxonomy source presets retain actual Hazards/Themes/Country labels and six genuine native Default Tag instances with recorded initial wrap rows, source paint and5px/10px brand radius. Exact taxonomy URLs remain metadata; native links/arbitrary edited row reflow remain open.',
   },
   {
     id: 'user-feedback',
@@ -1230,3 +1230,438 @@ function buildNewsRelatedCardRecipes({ root, modes, variables, styles }) {
   ];
 }
 module.exports.buildNewsRelatedCardRecipes = buildNewsRelatedCardRecipes;
+
+/** Actual taxonomy and recommendation finite allocations, not full article assembly. */
+function buildNewsEditorialRecipes({ root, modes, variables, styles }) {
+  const targetVariables = variables,
+    targetStyles = styles;
+  variables = structuredClone(variables);
+  styles = { ...styles, text: structuredClone(styles.text) };
+  // Existing dependency factory validates source/provenance/foundations in isolation.
+  buildNewsDetailDependencyRecipes({
+    root,
+    modes,
+    variables: structuredClone(variables),
+    styles: structuredClone(styles),
+  });
+  const fail = s => {
+    throw Error('News editorial source changed: ' + s);
+  };
+  const markerFile =
+    'examples/figma-plugin/holistic/assets/news-detail/editorial-marker-provenance.json';
+  const bytes = fs.readFileSync(path.join(root, markerFile));
+  if (
+    crypto.createHash('sha256').update(bytes).digest('hex') !==
+    '9eb2419a233f917da6daff8bf75566fab604c522a001c0e5104296ff1dd05c14'
+  )
+    fail('marker provenance');
+  const marker = JSON.parse(bytes).candidate;
+  const captures = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        root,
+        'examples/figma-plugin/holistic/assets/news-detail/dependency-footprints.json'
+      )
+    )
+  ).primaryScenes;
+  const { buildTagRecipes } = require('./figma-tag-recipes.cjs');
+  const tags = buildTagRecipes({ root, modes, variables, styles });
+  if (!tags[0].variants.some(v => v.properties.Tone === 'Default'))
+    fail('Tag Default source dependency');
+  const byName = new Map(variables.map(v => [v.name, v]));
+  const value = (name, m, type, seen = new Set()) => {
+    const v = byName.get(name);
+    if (!v || v.type !== type || seen.has(name))
+      fail('missing/wrong/cyclic ' + name);
+    seen.add(name);
+    const x = v.values[m.id];
+    if (x == null) fail(name + '/' + m.id);
+    return x.alias ? value(x.alias, m, type, seen) : x;
+  };
+  const upsert = (list, e) => {
+    const hits = list.filter(v => v.id === e.id || v.name === e.name);
+    if (hits.length > 1 || hits.some(v => v.id !== e.id || v.name !== e.name))
+      fail('foreign identity ' + e.id);
+    if (hits.length) Object.assign(hits[0], e);
+    else list.push(e);
+  };
+  const per = fn => Object.fromEntries(modes.map(m => [m.id, fn(m)]));
+  const ref = {
+    file: 'stories/Patterns/ArticleStory/ArticleStory.jsx',
+    line: 1,
+  };
+  const number = (slug, fn, scope = ['WIDTH_HEIGHT']) => {
+    const name = 'component/news-editorial/' + slug;
+    const values = per(m => {
+      const x = fn(m);
+      if (typeof x !== 'number' || !Number.isFinite(x)) fail('finite ' + slug);
+      return x;
+    });
+    const e = {
+      id: name.replaceAll('/', '.'),
+      name,
+      type: 'FLOAT',
+      values,
+      scopes: scope,
+      sourceRef: ref,
+      description:
+        'Finite actual ArticleStory source allocation. Native edit reflow/pixels remain open.',
+    };
+    upsert(variables, e);
+    byName.set(name, e);
+    return name;
+  };
+  const rgb = s => {
+    const n = s
+      .match(/^rgba?\(([^)]+)\)$/)?.[1]
+      .split(',')
+      .map(Number);
+    if (!n || n.length < 3 || n.some(x => !Number.isFinite(x)))
+      fail('source color');
+    return { r: n[0] / 255, g: n[1] / 255, b: n[2] / 255, a: n[3] ?? 1 };
+  };
+  const paint = (slug, fn) => {
+    const name = 'component/news-editorial/' + slug;
+    const e = {
+      id: name.replaceAll('/', '.'),
+      name,
+      type: 'COLOR',
+      values: per(m => rgb(fn(m))),
+      scopes: ['TEXT_FILL', 'SHAPE_FILL'],
+      sourceRef: ref,
+    };
+    upsert(variables, e);
+    byName.set(name, e);
+    return name;
+  };
+  const textStyle = (slug, nodes) => {
+    const size = number(
+      slug + '/font-size',
+      m => parseFloat(nodes[m.id].style.fontSize),
+      ['FONT_SIZE']
+    );
+    const id = 'component.news-editorial.' + slug;
+    const e = {
+      id,
+      name: 'Mangrove/source/news-editorial/' + slug,
+      type: 'TEXT',
+      recommended: false,
+      sourceRef: ref,
+      bindings: { fontFamily: 'font-family/text', fontSize: size },
+      values: per(m => {
+        const s = nodes[m.id].style;
+        if (
+          s.fontFamily !== 'Roboto, sans-serif' ||
+          !['400', '700'].includes(s.fontWeight) ||
+          s.fontStyle !== 'normal'
+        )
+          fail('actual source font ' + slug);
+        if (value('font-family/text', m, 'STRING') !== 'Roboto')
+          fail('Latin text family');
+        for (const f of ['fontSize', 'lineHeight'])
+          if (!(parseFloat(s[f]) > 0)) fail('source font metrics');
+        return {
+          fontName: {
+            family: 'Roboto',
+            style: s.fontWeight === '700' ? 'Bold' : 'Regular',
+          },
+          fontSize: parseFloat(s.fontSize),
+          lineHeight: { unit: 'PIXELS', value: parseFloat(s.lineHeight) },
+          letterSpacing: {
+            unit: 'PIXELS',
+            value:
+              s.letterSpacing === 'normal' ? 0 : parseFloat(s.letterSpacing),
+          },
+        };
+      }),
+    };
+    upsert(styles.text, e);
+    return id;
+  };
+  const frame = (id, w, h, children, extra = {}) => ({
+    id,
+    type: 'FRAME',
+    fill: null,
+    layout: { mode: 'VERTICAL', width: w, height: h, clipsContent: false },
+    children,
+    ...extra,
+  });
+  const slot = (id, nodes, bases, children) =>
+    frame(
+      id,
+      number(id + '/width', m => nodes[m.id].rect.width),
+      number(id + '/height', m => nodes[m.id].rect.height),
+      children,
+      {
+        absolute: {
+          horizontal: 'START',
+          vertical: 'START',
+          offsetX: number(
+            id + '/x',
+            m => nodes[m.id].rect.x - bases[m.id].rect.x
+          ),
+          offsetY: number(
+            id + '/y',
+            m => nodes[m.id].rect.y - bases[m.id].rect.y
+          ),
+        },
+      }
+    );
+  const text = (id, nodes, prop, extra = {}) => {
+    const first = nodes.undrr;
+    if (modes.some(m => nodes[m.id].text !== first.text))
+      fail('theme copy ' + id);
+    return {
+      id,
+      type: 'TEXT',
+      name: id,
+      characters: first.text,
+      ...(prop ? { textProperty: prop } : {}),
+      textStyle: textStyle(id, nodes),
+      fill: paint(id + '/ink', m => nodes[m.id].style.color),
+      textWrap: first.style.textWrapStyle === 'balance' ? 'BALANCE' : 'AUTO',
+      layout: { width: 'FILL', height: 'FILL' },
+      ...extra,
+    };
+  };
+  const families = [];
+  for (const kind of ['taxonomy', 'recommendations']) {
+    const variants = [];
+    for (const w of [390, 1164]) {
+      const key = kind + '/' + w;
+      const roots = per(m => captures[m.id + '-' + w][kind]);
+      const headings = per(m => roots[m.id].children[0]);
+      if (
+        modes.some(
+          m => roots[m.id].tag !== 'SECTION' || headings[m.id].tag !== 'H2'
+        )
+      )
+        fail('source section anatomy');
+      const children = [
+        slot(key + '/heading', headings, roots, [
+          text(key + '/heading-text', headings, 'Heading'),
+        ]),
+      ];
+      if (kind === 'taxonomy') {
+        const labels = ['Hazards', 'Themes', 'Country and region'];
+        const tagTexts = [
+          ['Cyclone, Hurricane and Typhoon', 'Sea level rise'],
+          [
+            'Climate change',
+            'Community-based DRR',
+            'Traditional and Indigenous knowledges',
+          ],
+          ['Fiji'],
+        ];
+        for (let i = 0; i < 3; i++) {
+          const groups = per(m => roots[m.id].children[i + 1]);
+          const labelsSource = per(m => groups[m.id].children[0]);
+          const tagsSource = per(m => groups[m.id].children[1]);
+          if (
+            modes.some(
+              m =>
+                groups[m.id].tag !== 'P' ||
+                labelsSource[m.id].tag !== 'STRONG' ||
+                labelsSource[m.id].text !== labels[i] ||
+                tagsSource[m.id].children.length !== tagTexts[i].length
+            )
+          )
+            fail('taxonomy group');
+          // STRONG ink rect is19px but its inherited line box is24px.
+          const labelBoxes = per(m => ({
+            ...labelsSource[m.id],
+            rect: {
+              ...labelsSource[m.id].rect,
+              x: groups[m.id].rect.x,
+              y: groups[m.id].rect.y,
+              width: groups[m.id].rect.width,
+              height: 24,
+            },
+          }));
+          const own = [
+            slot(key + '/group-' + i + '/label', labelBoxes, groups, [
+              text(
+                key + '/group-' + i + '/label-text',
+                labelsSource,
+                'Group ' + (i + 1)
+              ),
+            ]),
+          ];
+          for (let j = 0; j < tagTexts[i].length; j++) {
+            const anchors = per(m => tagsSource[m.id].children[j]);
+            for (const m of modes) {
+              const a = anchors[m.id],
+                s = a.style;
+              if (
+                a.tag !== 'A' ||
+                a.text !== tagTexts[i][j] ||
+                a.href !== 'https://www.undrr.org/taxonomy' ||
+                s.fontFamily !== '"Roboto Condensed", sans-serif' ||
+                s.fontWeight !== '500' ||
+                s.fontSize !== '14px' ||
+                s.lineHeight !== '21px' ||
+                s.paddingTop !== '2.5px' ||
+                s.paddingBottom !== '2.5px' ||
+                s.paddingLeft !== '10px' ||
+                s.paddingRight !== '10px' ||
+                a.rect.height !== 28
+              )
+                fail('actual taxonomy Tag anchor');
+              const bg = value('color/tag', m, 'COLOR'),
+                fg = value('color/neutral-0', m, 'COLOR');
+              const same = (a, b) =>
+                ['r', 'g', 'b'].every(
+                  k => Math.round(a[k] * 255) === Math.round(b[k] * 255)
+                ) && (a.a ?? 1) === (b.a ?? 1);
+              if (
+                !same(rgb(s.backgroundColor), bg) ||
+                !same(rgb(s.color), fg) ||
+                parseFloat(s.borderRadius) !==
+                  value('radius/tag', m, 'FLOAT') ||
+                s.borderTopColor !== 'rgba(0, 0, 0, 0)' ||
+                s.borderTopWidth !== '1px' ||
+                s.textDecorationLine !== 'none'
+              )
+                fail('actual taxonomy Tag paint/radius');
+            }
+            own.push(
+              slot(key + '/group-' + i + '/tag-' + j, anchors, groups, [
+                {
+                  id: key + '/group-' + i + '/tag-' + j + '/instance',
+                  type: 'INSTANCE',
+                  family: 'tag',
+                  variant: { Tone: 'Default' },
+                  overrides: { Label: tagTexts[i][j] },
+                  expose: true,
+                  layout: {
+                    width: number(
+                      key + '/group-' + i + '/tag-' + j + '/instance-width',
+                      m => anchors[m.id].rect.width
+                    ),
+                    height: 28,
+                  },
+                },
+              ])
+            );
+          }
+          children.push(slot(key + '/group-' + i, groups, roots, own));
+        }
+      } else {
+        const lists = per(m => roots[m.id].children[1]);
+        if (
+          modes.some(
+            m =>
+              lists[m.id].tag !== 'UL' ||
+              lists[m.id].style.paddingLeft !== '20px' ||
+              lists[m.id].children.length !== 3
+          )
+        )
+          fail('recommendation UL');
+        const rows = [];
+        for (let i = 0; i < 3; i++) {
+          const items = per(m => lists[m.id].children[i]),
+            links = per(m => items[m.id].children[0]);
+          for (const m of modes) {
+            const li = items[m.id],
+              a = links[m.id];
+            if (
+              li.tag !== 'LI' ||
+              li.style.paddingTop !== '0px' ||
+              li.style.paddingBottom !== '0px' ||
+              li.style.lineHeight !== '24px' ||
+              li.style.listStyleType !== 'disc' ||
+              a.tag !== 'A' ||
+              !/^https:\/\/www\.undrr\.org\//.test(a.href) ||
+              a.style.textDecorationLine !== 'none' ||
+              a.style.textUnderlineOffset !== 'auto' ||
+              a.href !== links.undrr.href
+            )
+              fail('recommendation link/list source');
+          }
+          // Native TEXT represents the authored LI content line box, not the multiline inline anchor union.
+          const textNode = text(key + '/link-' + i, links, null, {
+            layout: { width: 'FILL', height: 'FILL' },
+          });
+          const runStyle = textNode.textStyle,
+            runFill = textNode.fill;
+          delete textNode.textStyle;
+          delete textNode.fill;
+          textNode.textRuns = [
+            {
+              id: 'source-link',
+              start: 0,
+              end: textNode.characters.length,
+              textStyle: runStyle,
+              fill: runFill,
+              textDecoration: 'NONE',
+              hyperlink: { type: 'URL', value: links.undrr.href },
+            },
+          ];
+          const row = slot(key + '/item-' + i, items, lists, [
+            textNode,
+            {
+              id: key + '/item-' + i + '/ua-marker',
+              type: 'ELLIPSE',
+              fill: paint(key + '/marker-ink', m => items[m.id].style.color),
+              layout: {
+                width: number(key + '/marker-diameter', () => marker.diameter),
+                height: number(key + '/marker-diameter', () => marker.diameter),
+              },
+              absolute: {
+                horizontal: 'START',
+                vertical: 'START',
+                offsetX: number(key + '/marker-x', () => marker.offsetX),
+                offsetY: number(key + '/marker-y', () => marker.offsetY),
+              },
+            },
+          ]);
+          rows.push(row);
+        }
+        children.push(slot(key + '/list', lists, roots, rows));
+      }
+      const tree = frame(
+        'root',
+        number(key + '/section-width', m => roots[m.id].rect.width),
+        number(key + '/section-height', m => roots[m.id].rect.height),
+        children
+      );
+      variants.push({
+        id: 'news-' + kind + '.' + w,
+        name: 'SourceViewport=' + w + ', Locale=English',
+        properties: { SourceViewport: String(w), Locale: 'English' },
+        sourceHref:
+          kind === 'taxonomy' ? 'https://www.undrr.org/taxonomy' : null,
+        sourceGeometry: {
+          sourceSection: per(m => roots[m.id].rect),
+          finiteInitialFlow: true,
+          markerProjection: kind === 'recommendations' ? marker : null,
+        },
+        tree,
+      });
+    }
+    families.push({
+      id: 'news-' + kind,
+      name: 'Mangrove/Page patterns/ArticleStory ' + kind,
+      kind: 'component-set',
+      sourceRef: ref,
+      review: { genericLabels: false, preserveVariantSizing: true },
+      ...(kind === 'taxonomy' ? { dependencies: ['tag'] } : {}),
+      limitations:
+        kind === 'taxonomy'
+          ? [
+              'Actual English Explore further three groups/six native Tag Default instances at390/1164. Editable Heading/group labels and exposed Tag Labels within recorded finite initial allocations.',
+              'Source taxonomy HTTPS destinations are metadata; native Tag link/prototype interaction and arbitrary changed-label row/wrapping reflow remain open. Source Tag500 requests guarded Condensed Regular400 candidate; native fonts/pixels/publication separate.',
+            ]
+          : [
+              'Actual English three authored recommendation links preserve HTTPS targets as one editable rich TEXT per LI. Heading is a plain property; text ownership/formatting contract uses rich ledger rather than whole-string properties.',
+              'UA-disc ELLIPSE is a freshly measured finite vector candidate, not authored CSS geometry. Ten actual source cases/30 marker crops show11-22 differing candidate pixels per360px crop and up to1px narrow y shift. Native/source marker raster gate remains open.',
+              'Fixed source initial section/LI allocations do not claim arbitrary edited wrapping/reflow, responsive runtime, native font pixels or publication.',
+            ],
+      variants,
+    });
+  }
+  targetVariables.splice(0, targetVariables.length, ...variables);
+  targetStyles.text.splice(0, targetStyles.text.length, ...styles.text);
+  return families;
+}
+module.exports.buildNewsEditorialRecipes = buildNewsEditorialRecipes;

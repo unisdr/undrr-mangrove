@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 36 families and 215 bounded variants, deliberately
+- Separate source draft packet: 46 families and 334 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -86,3 +86,5 @@ Preserve canonical identities, consumers, recovery isolation, all deliveries,
 `.fig` backups, History and `RC2-DECISIONS.md`. No source/browser result closes the
 native recovery, deliberately changed styles, human handoff or reduced merge
 acceptance gates.
+
+The source packet also includes news taxonomy/recommendations (four presets) and ContentHub (eight families/115 presets), including20 genuinely nested detail/resource scenes. These are finite source contracts, with full news/image-header and remaining Hub overview/landing/validate scenes still in progress. Native fonts, UA markers, linked-title/caret reflow and complete-scene publication remain separate gates. See [news](news-detail.md) and [ContentHub](content-hub.md).

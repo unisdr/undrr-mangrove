@@ -1,0 +1,67 @@
+{
+  "method": "Fresh actual hydrated source replay under regenerated style-all.css after fonts.ready, image decode and two animation frames. Original170 files and source-footprints metadata preserved.",
+  "sourceGeneratedCssSha256": "acb6f838389dcee95261125304bce6f30377acc140c71d7dffbd7548a405e841",
+  "oldCapturedCssSha256": "9b7d0009d6c067974d127aa9f87c7fd1ec00ba840fc576ed4d23903386771858",
+  "sceneCount": 170,
+  "exactRecordedArrays": 169,
+  "recordCountsAndDocumentHeightsAllExact": true,
+  "changedCases": [
+    {
+      "brand": "undrr",
+      "case": "hub-home",
+      "viewport": 390,
+      "differences": [
+        {
+          "index": 37,
+          "tag": "A",
+          "cls": "",
+          "fields": {
+            "height": [
+              30,
+              27
+            ],
+            "y": [
+              976.703125,
+              977.703125
+            ]
+          }
+        },
+        {
+          "index": 45,
+          "tag": "A",
+          "cls": "",
+          "fields": {
+            "height": [
+              30,
+              27
+            ],
+            "y": [
+              1141.953125,
+              1142.953125
+            ]
+          }
+        },
+        {
+          "index": 53,
+          "tag": "A",
+          "cls": "",
+          "fields": {
+            "height": [
+              30,
+              27
+            ],
+            "y": [
+              1307.203125,
+              1308.203125
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "rawCaptures": "/tmp/mangrove-content-hub-current-css-source-20261006",
+  "activeControlAccentObserved": "rgb(0 79 145)",
+  "activeCssAliasesObserved": true,
+  "nativeAcceptance": false,
+  "scope": "One initial UNDRR overview narrow case has three inline linked card title anchor ink rectangles height30->27,y+1; all styles/fonts/widths/ancestor allocations unchanged. Cause unconfirmed. Do not infer broad text-raster equivalence or correct source geometry by rounding. Source dependency/page cohort uses none of changed anchor allocations; new route-card title slots use source header allocation with native ink/baseline gate."
+}

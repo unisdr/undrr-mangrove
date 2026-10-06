@@ -1,0 +1,99 @@
+--- captured-style-all.css
++++ current-generated-style-all.css
+@@ -27,6 +27,11 @@
+  *                                                                 ██╔═══╝
+  *                                                                 ███████╗
+  *                                                                 ╚══════╝
++ */
++/*
++ * Framework-neutral roles for interactive controls. These aliases are
++ * additive to the Mangrove 2 token contract and resolve inside each runtime
++ * theme. React Aria is one possible consumer, not their owner.
+  */
+ /**
+  * Data-visualisation tokens.
+@@ -530,6 +535,16 @@
+   --mg-tab-background--hover: rgb(var(--mg-color-interactive) / 0.06);
+   --mg-tab-indicator--hover: rgb(var(--mg-color-interactive) / 0.45);
+   --mg-tab-indicator--active: rgb(var(--mg-color-interactive));
++  --mg-control-text: rgb(var(--mg-color-text));
++  --mg-control-muted-text: rgb(var(--mg-color-neutral-500));
++  --mg-control-accent: rgb(var(--mg-color-interactive));
++  --mg-control-surface: var(--mg-form-input-background);
++  --mg-control-surface-focus: var(--mg-form-input-background--focus);
++  --mg-control-border: var(--mg-form-input-border-color);
++  --mg-control-border-focus: rgb(var(--mg-color-form-focus));
++  --mg-control-option-hover: rgb(var(--mg-color-interactive) / 0.06);
++  --mg-control-option-selected: rgb(var(--mg-color-interactive) / 0.12);
++  --mg-control-error: rgb(var(--mg-color-red-900));
+ }
+ 
+ :root {
+@@ -682,6 +697,16 @@
+   --mg-radius-button: var(--mg-spacing-50);
+   --mg-radius-tab: var(--mg-spacing-50) var(--mg-spacing-50) 0 0;
+   --mg-spacing-hero-overlay: 1.25rem 0;
++  --mg-control-text: rgb(var(--mg-color-text));
++  --mg-control-muted-text: rgb(var(--mg-color-neutral-500));
++  --mg-control-accent: rgb(var(--mg-color-interactive));
++  --mg-control-surface: var(--mg-form-input-background);
++  --mg-control-surface-focus: var(--mg-form-input-background--focus);
++  --mg-control-border: var(--mg-form-input-border-color);
++  --mg-control-border-focus: rgb(var(--mg-color-form-focus));
++  --mg-control-option-hover: rgb(var(--mg-color-interactive) / 0.06);
++  --mg-control-option-selected: rgb(var(--mg-color-interactive) / 0.12);
++  --mg-control-error: rgb(var(--mg-color-red-900));
+ }
+ 
+ .mg-theme-irp {
+@@ -735,6 +760,16 @@
+   --mg-radius-form-input: var(--mg-spacing-50);
+   --mg-radius-tab: var(--mg-spacing-0) var(--mg-spacing-0) 0 0;
+   --mg-spacing-hero-overlay: 1.25rem 0;
++  --mg-control-text: rgb(var(--mg-color-text));
++  --mg-control-muted-text: rgb(var(--mg-color-neutral-500));
++  --mg-control-accent: rgb(var(--mg-color-interactive));
++  --mg-control-surface: var(--mg-form-input-background);
++  --mg-control-surface-focus: var(--mg-form-input-background--focus);
++  --mg-control-border: var(--mg-form-input-border-color);
++  --mg-control-border-focus: rgb(var(--mg-color-form-focus));
++  --mg-control-option-hover: rgb(var(--mg-color-interactive) / 0.06);
++  --mg-control-option-selected: rgb(var(--mg-color-interactive) / 0.12);
++  --mg-control-error: rgb(var(--mg-color-red-900));
+ }
+ 
+ .mg-theme-mcr {
+@@ -796,6 +831,16 @@
+   --mg-font-size-button: 1.125rem;
+   --mg-box-shadow-tab-section: rgb(var(--mg-color-neutral-900) / 0.24) 0 6px 5px 0;
+   --mg-spacing-hero-overlay: 1.25rem 0;
++  --mg-control-text: rgb(var(--mg-color-text));
++  --mg-control-muted-text: rgb(var(--mg-color-neutral-500));
++  --mg-control-accent: rgb(var(--mg-color-interactive));
++  --mg-control-surface: var(--mg-form-input-background);
++  --mg-control-surface-focus: var(--mg-form-input-background--focus);
++  --mg-control-border: var(--mg-form-input-border-color);
++  --mg-control-border-focus: rgb(var(--mg-color-form-focus));
++  --mg-control-option-hover: rgb(var(--mg-color-interactive) / 0.06);
++  --mg-control-option-selected: rgb(var(--mg-color-interactive) / 0.12);
++  --mg-control-error: rgb(var(--mg-color-red-900));
+ }
+ 
+ .mg-theme-delta {
+@@ -874,6 +919,16 @@
+   --mg-hero-overlay-max-width: var(--mg-width-600);
+   --mg-hero-overlay-padding: var(--mg-spacing-400);
+   --mg-spacing-hero-overlay: 1.25rem 0;
++  --mg-control-text: rgb(var(--mg-color-text));
++  --mg-control-muted-text: rgb(var(--mg-color-neutral-500));
++  --mg-control-accent: rgb(var(--mg-color-interactive));
++  --mg-control-surface: var(--mg-form-input-background);
++  --mg-control-surface-focus: var(--mg-form-input-background--focus);
++  --mg-control-border: var(--mg-form-input-border-color);
++  --mg-control-border-focus: rgb(var(--mg-color-form-focus));
++  --mg-control-option-hover: rgb(var(--mg-color-interactive) / 0.06);
++  --mg-control-option-selected: rgb(var(--mg-color-interactive) / 0.12);
++  --mg-control-error: rgb(var(--mg-color-red-900));
+ }
+ 
+ /* Roboto */

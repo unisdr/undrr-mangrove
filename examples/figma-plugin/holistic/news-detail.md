@@ -193,3 +193,54 @@ One guarded UNDRR390 Story1 related-card scope is refused by the unchanged
 50,000-byte cloud compiler ceiling at890,136 bytes. The source photograph remains
 intact; no overlimit code was executed and no asset/validation was removed to
 make it fit. This is a transport gate, without native component acceptance.
+
+## Taxonomy and editors recommendations
+
+`buildNewsEditorialRecipes({root,modes,variables,styles})` separately emits
+`news-taxonomy` and `news-recommendations`, each with English390/1164 presets.
+It preserves the established dependency and related-card factory APIs. These
+families are source dependencies, not complete ArticleStory pages.
+
+Taxonomy uses the actual Explore further heading and three groups with six
+native Default Tag instances. The finite initial source allocation preserves
+actual source wrap rows, label widths and28px height. MCR's source Tag radius is
+10px; the other four are5px. The source foreground/background/radius match the
+shared Tag token roles. Heading, group labels and each owning Tag Label support
+short plain edits. Exact `https://www.undrr.org/taxonomy` destinations remain
+source metadata. Native Tag title links, changed-label row reflow and arbitrary
+long edited wrapping remain separate gates.
+
+Recommendations retains the actual three authored HTTPS links as one editable
+rich TEXT per LI, with their source Roboto16/24 and unadorned link paint. It has
+no whole-string component property that could reset rich ownership. Heading is
+an exposed plain property. Source initial LI heights are96/72/72px narrow and
+48/24/24px desktop; their actual UL has20px start padding and zero LI padding.
+Fixed source allocations preserve initial geometry; arbitrary rich copy reflow
+requires separate native verification.
+
+The ELLIPSE marker is an explicitly bounded vector candidate. Fresh current-CSS
+Chromium captures cover ten source cases and thirty real UA-disc crops. All
+section text/document rectangles match the previously guarded dependency
+footprints exactly. Each source marker occupies five raster pixels. The
+reviewed same-font5.333px diameter/x projection, with y reduced2.5px for absent
+LI padding, differs from the actual UA marker by11-22 pixels in a360px crop and
+up to1px vertical position narrow. Wide bounds match with antialias differences.
+The archived `editorial-marker-provenance.json` records these differences and
+source/candidate hashes. This neither defines authored CSS marker geometry nor
+passes native/source raster parity. External raw captures and screenshots are
+retained at `/tmp/mangrove-news-recommendations-source-20261006`.
+
+The dedicated harness checks all five modes, four source masters, genuine Tag
+main identities, two nonempty zero-create geometry repeats, edited outer/plain
+and owning nested Tag properties, source/consumer rich link edits, missing font
+refusal before asset/scene writes, source paint/radius/identity mutations and
+marker evidence drift. Native auto-layout font ink, pixel alignment, live URLs,
+all-brand native rendering, consumers/publication and full article assembly
+remain open.
+
+Twenty actual guarded compiler checks across all five brands preserve the source
+and fail the unchanged50,000-byte transport ceiling: Taxonomy55,855-56,142 bytes,
+Recommendations73,936-74,177 bytes. Exact scope/brand/variant receipts are in
+`/tmp/mangrove-news-editorial-transport-20261006.json`; reproduction driver is
+`/tmp/mangrove-news-editorial-transport.cjs`. No overlimit payload was executed,
+no source/native guard was removed, and no native family acceptance is claimed.

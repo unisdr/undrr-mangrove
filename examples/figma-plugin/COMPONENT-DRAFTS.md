@@ -1,10 +1,11 @@
 # Source-only component drafts
 
-The current holistic packet contains **36 families / 215 bounded variants**.
+The current holistic packet contains **46 families / 334 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
 is cloned as a separate dependency (23 variants), and the exact normal Button is cloned as `page-chrome-button` (16 variants). Neither dependency is counted as a new draft.
+News taxonomy and recommendations add two source families/four presets, with genuine Tag instances and authored rich HTTPS links. The UA marker remains a measured candidate with an explicit raster gap. ContentHub adds eight source families/115 presets, including 20 genuinely nested detail/resource scenes, measured headers, reading, intro, resources, TOC, tertiary CTA and route/fact/reporting cards. Remaining overview/landing/validate scenes and native title-link, typography, marker and caret gates remain open. See [news contracts](holistic/news-detail.md) and [ContentHub contracts](holistic/content-hub.md).
 The packet remains deliberately non-importable and the normal exporter remains
 32 families/383 variants. See [the holistic scope](holistic/README.md) and
 [authored card contracts](holistic/card-content.md).
@@ -141,6 +142,7 @@ node examples/figma-plugin/dev/mock-accordion.cjs
 node examples/figma-plugin/dev/mock-pager.cjs
 node examples/figma-plugin/dev/mock-user-feedback.cjs
 node examples/figma-plugin/dev/mock-news-detail.cjs
+node examples/figma-plugin/dev/mock-content-hub.cjs
 node examples/figma-plugin/dev/mock-search-results.cjs
 ```
 

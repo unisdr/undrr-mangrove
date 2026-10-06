@@ -89,6 +89,25 @@ const recipes = [
     'buildNewsRelatedCardRecipes',
   ],
   [
+    ['news-taxonomy', 'news-recommendations'],
+    './figma-news-detail-recipes.cjs',
+    'buildNewsEditorialRecipes',
+  ],
+  [
+    [
+      'content-hub-tertiary-cta',
+      'content-hub-header',
+      'content-hub-reading-column',
+      'content-hub-intro',
+      'content-hub-resources',
+      'content-hub-toc',
+      'content-hub-route-card',
+      'content-hub-page',
+    ],
+    './figma-content-hub-recipes.cjs',
+    'buildContentHubRecipes',
+  ],
+  [
     ['search-result-item', 'search-result-fields', 'search-result-state'],
     './figma-search-result-recipes.cjs',
     'buildSearchResultRecipes',

@@ -10,6 +10,7 @@ const {
   buildNewsDetailRecipes,
   buildNewsDetailDependencyRecipes,
   buildNewsRelatedCardRecipes,
+  buildNewsEditorialRecipes,
 } = require('../../../scripts/figma-news-detail-recipes.cjs');
 const root = path.resolve(__dirname, '../../..');
 function auditTests() {
@@ -609,8 +610,277 @@ if (require.main === module)
     auditTests();
     await dependencyTests();
     await relatedTests();
+    await editorialTests();
   })().catch(e => {
     console.error(e);
     process.exitCode = 1;
   });
 module.exports = { installNewsDetailSvgFixture };
+
+function editorialDocument() {
+  const doc = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '../mangrove-variables.json'))
+  );
+  const tag = require('../../../scripts/figma-tag-recipes.cjs').buildTagRecipes(
+    { root, ...doc }
+  );
+  doc.components.families = [
+    ...tag,
+    ...buildNewsEditorialRecipes({ root, ...doc }),
+  ];
+  return doc;
+}
+async function editorialTests() {
+  const source = editorialDocument();
+  assert.deepStrictEqual(
+    source.components.families.map(f => [f.id, f.variants.length]),
+    [
+      ['tag', 5],
+      ['news-taxonomy', 2],
+      ['news-recommendations', 2],
+    ]
+  );
+  const initial = copy({ variables: source.variables, styles: source.styles });
+  buildNewsEditorialRecipes({ root, ...source });
+  assert.deepStrictEqual(
+    { variables: source.variables, styles: source.styles },
+    initial
+  );
+  const captures = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        root,
+        'examples/figma-plugin/holistic/assets/news-detail/dependency-footprints.json'
+      )
+    )
+  ).primaryScenes;
+  for (const mode of source.modes) {
+    const doc = editorialDocument(),
+      env = await require('./mock-rich-text-integration.cjs').rangeEnvironment(
+        doc
+      );
+    await env.call('importVariables', doc, [mode.id], false, [], true);
+    const ids = ['news-taxonomy', 'news-recommendations'],
+      build = () => env.call('buildMangroveComponents', doc, mode.id, ids);
+    const first = await build();
+    assert.deepStrictEqual(copy(first.errors), []);
+    const consumers = [],
+      rich = [];
+    for (const kind of ['taxonomy', 'recommendations'])
+      for (const width of [390, 1164]) {
+        const master = [...env.state.nodes.values()].find(
+          n =>
+            identity(n) ===
+            'family/news-' + kind + '/variant/news-' + kind + '.' + width
+        );
+        assert(master);
+        const captured = captures[mode.id + '-' + width][kind];
+        assert.strictEqual(master.width, captured.rect.width);
+        assert.strictEqual(master.height, captured.rect.height);
+        const consumer = master.createInstance();
+        env.figma.currentPage.appendChild(consumer);
+        consumer.x = 911;
+        consumer.y = 713;
+        for (const name of kind === 'taxonomy'
+          ? ['Heading', 'Group 1', 'Group 2', 'Group 3']
+          : ['Heading']) {
+          const key = Object.keys(consumer.componentProperties).find(k =>
+            k.startsWith(name + '#')
+          );
+          assert(key, name);
+          consumer.setProperties({ [key]: 'Edited ' + name });
+          consumers.push({ owner: consumer, key, value: 'Edited ' + name });
+        }
+        if (kind === 'taxonomy') {
+          const nodes = master.findAllWithCriteria({ types: ['INSTANCE'] });
+          assert.strictEqual(nodes.length, 6);
+          const original = nodes.map(n => n.main.id);
+          const nested = consumer.findAllWithCriteria({ types: ['INSTANCE'] });
+          assert.strictEqual(nested.length, 6);
+          for (const [i, node] of nested.entries()) {
+            assert(node.main.id === original[i]);
+            assert(identity(node.main).includes('variant/tag.default'));
+            assert.strictEqual(node.height, 28);
+            const key = Object.keys(node.componentProperties).find(k =>
+              k.startsWith('Label#')
+            );
+            assert(key);
+            node.setProperties({ [key]: 'Short ' + i });
+            consumers.push({
+              owner: node,
+              key,
+              value: 'Short ' + i,
+              link: node.main.id,
+            });
+          }
+        } else {
+          const sourceText = master
+            .findAllWithCriteria({ types: ['TEXT'] })
+            .filter(n => n.characters !== "Editors' recommendations");
+          assert.strictEqual(sourceText.length, 3);
+          const consumerText = consumer
+            .findAllWithCriteria({ types: ['TEXT'] })
+            .filter(n => !n.componentPropertyReferences?.characters);
+          for (const [i, node] of sourceText.entries()) {
+            const target = env.attachRichText(consumerText[i], node);
+            for (const t of [node, target]) {
+              const segments = t.getStyledTextSegments([
+                'hyperlink',
+                'textDecoration',
+              ]);
+              assert.strictEqual(segments.length, 1);
+              assert(
+                segments[0].hyperlink.value.startsWith('https://www.undrr.org/')
+              );
+              assert.strictEqual(segments[0].textDecoration, 'NONE');
+              t.editRich(0, t.characters.length, 'Reviewed link ' + i);
+              rich.push(t);
+            }
+          }
+          const markers = master.findAllWithCriteria({ types: ['ELLIPSE'] });
+          assert.strictEqual(markers.length, 3);
+          for (const marker of markers) {
+            assert.strictEqual(marker.width, 16 / 3);
+            assert.strictEqual(marker.height, 16 / 3);
+            assert.strictEqual(marker.x, -52 / 3);
+            assert.strictEqual(marker.y, 25 / 3);
+            assert.strictEqual(marker.layoutPositioning, 'ABSOLUTE');
+          }
+        }
+        consumers.push({
+          owner: consumer,
+          link: consumer.main.id,
+          position: [911, 713],
+        });
+      }
+    const richSnapshot = () =>
+      JSON.stringify(
+        rich.map(n => [
+          n.characters,
+          n
+            .getStyledTextSegments([
+              'textStyleId',
+              'fontName',
+              'fills',
+              'hyperlink',
+              'textDecoration',
+            ])
+            .map(r => [
+              r.start,
+              r.end,
+              r.textStyleId,
+              r.fontName,
+              r.fills,
+              r.hyperlink,
+              r.textDecoration,
+            ]),
+        ])
+      );
+    const geometry = () =>
+      JSON.stringify(
+        [...env.state.nodes.values()].map(n => [
+          n.id,
+          n.parent?.id,
+          n.type,
+          n.type === 'INSTANCE' ? n.main.id : null,
+          n.x,
+          n.y,
+          n.width,
+          n.height,
+        ])
+      );
+    const before = snapshot(env),
+      geometryBefore = geometry(),
+      richBefore = richSnapshot();
+    assert(env.state.nodes.size > 30);
+    for (let i = 0; i < 2; i++) {
+      const repeat = await build();
+      assert.deepStrictEqual(copy(repeat.errors), []);
+      assert.strictEqual(repeat.createdNodeIds.length, 0);
+      assert.strictEqual(snapshot(env), before);
+      assert.strictEqual(geometry(), geometryBefore);
+      assert.strictEqual(richSnapshot(), richBefore);
+      for (const c of consumers) {
+        if (c.key)
+          assert.strictEqual(c.owner.componentProperties[c.key].value, c.value);
+        if (c.link) {
+          assert.strictEqual(c.owner.main.id, c.link);
+          if (c.position) {
+            assert.strictEqual(c.owner.x, c.position[0]);
+            assert.strictEqual(c.owner.y, c.position[1]);
+          }
+        }
+      }
+    }
+  }
+  for (const font of [
+    'Roboto Regular',
+    'Roboto Bold',
+    'Roboto Condensed Regular',
+  ]) {
+    const doc = editorialDocument(),
+      env = await require('./mock-rich-text-integration.cjs').rangeEnvironment(
+        doc,
+        { rejectedFonts: [font] }
+      );
+    await env.call('importVariables', doc, ['undrr'], false, [], true);
+    const before = snapshot(env),
+      r = await env.call('buildMangroveComponents', doc, 'undrr', [
+        'news-taxonomy',
+        'news-recommendations',
+      ]);
+    assert(r.errors.length);
+    assert.strictEqual(snapshot(env), before);
+  }
+  for (const mutate of [
+    d => (d.variables.find(v => v.name === 'radius/tag').values.mcr = 5),
+    d =>
+      (d.variables.find(v => v.name === 'color/tag').values.irp = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 1,
+      }),
+    d =>
+      (d.variables.find(v => v.name === 'font-family/text').values.delta =
+        'Foreign'),
+    d =>
+      d.variables.push({
+        id: 'component.news-editorial.taxonomy.390.section-width',
+        name: 'Foreign',
+        type: 'FLOAT',
+        values: {},
+      }),
+  ]) {
+    const doc = editorialDocument();
+    mutate(doc);
+    const before = copy({ variables: doc.variables, styles: doc.styles });
+    assert.throws(
+      () => buildNewsEditorialRecipes({ root, ...doc }),
+      /source changed/
+    );
+    assert.deepStrictEqual(
+      { variables: doc.variables, styles: doc.styles },
+      before
+    );
+  }
+  const read = fs.readFileSync;
+  fs.readFileSync = function (f, ...args) {
+    const x = read.call(this, f, ...args);
+    return typeof f === 'string' &&
+      f.endsWith('editorial-marker-provenance.json')
+      ? Buffer.concat([
+          Buffer.isBuffer(x) ? x : Buffer.from(x),
+          Buffer.from('drift'),
+        ])
+      : x;
+  };
+  try {
+    assert.throws(editorialDocument, /marker provenance/);
+  } finally {
+    fs.readFileSync = read;
+  }
+  console.log(
+    'News taxonomy2/recommendations2 allfive actual builder/two nonempty zero-create geometry repeats, native Tag dependencies and short plain/rich consumer edits pass. UA raster candidate, arbitrary edit reflow, native fonts/pixels/publication remain open.'
+  );
+}
