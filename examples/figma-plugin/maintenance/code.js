@@ -18,6 +18,10 @@ figma.ui.onmessage = async msg => {
         );
       result = MG_MAINTENANCE_SOURCE;
     } else if (msg.type === 'import') {
+      if (msg.doc?.nativeCollections !== undefined)
+        throw new Error(
+          'Partition profiles require the isolated construction runtime.'
+        );
       if (msg.prune)
         throw new Error('Retirement requires a reviewed migration.');
       if (typeof msg.effects !== 'boolean')

@@ -1,9 +1,219 @@
-/* global mgReadIdentity, mgWriteIdentity, figma, MG_CONNECTOR_TEXT_CASE */
+/* global mgReadIdentity, mgWriteIdentity, figma, MG_CONNECTOR_TEXT_CASE, MG_CONNECTOR_NATIVE_COLLECTIONS, mgAssertExperimentOperationTarget, mgNativeCollectionsSourceCapability, mgNativeCollectionsPreflight */
 /** Shared variable/style importer for maintenance and occasional construction. */
 const ID_KEY = 'mgId';
 const STYLE_ID_KEY = 'mgStyleId';
 const MG_TEXT_CASE_ENABLED =
   typeof MG_CONNECTOR_TEXT_CASE === 'undefined' || MG_CONNECTOR_TEXT_CASE;
+
+const MG_NATIVE_COLLECTION_IMPORT_ENABLED =
+  typeof MG_CONNECTOR_NATIVE_COLLECTIONS === 'undefined' ||
+  MG_CONNECTOR_NATIVE_COLLECTIONS;
+
+async function nativeCollectionImportSnapshot(fence) {
+  fence();
+  const collections = await figma.variables.getLocalVariableCollectionsAsync();
+  fence();
+  const variables = await figma.variables.getLocalVariablesAsync();
+  fence();
+  return { collections, variables };
+}
+
+async function importNativeCollections(
+  doc,
+  selectedModeIds,
+  prune,
+  textStyles,
+  effects
+) {
+  if (typeof mgAssertExperimentOperationTarget !== 'function')
+    throw new Error(
+      'Native collections require a trusted experiment target guard'
+    );
+  const fence = mgAssertExperimentOperationTarget;
+  fence();
+  if (
+    prune ||
+    textStyles !== undefined ||
+    effects === false ||
+    !Array.isArray(selectedModeIds) ||
+    selectedModeIds.length !== doc.modes?.length ||
+    new Set(selectedModeIds).size !== selectedModeIds.length ||
+    doc.modes.some(mode => !selectedModeIds.includes(mode.id))
+  )
+    throw new Error(
+      'Native collections require the whole document, all modes and prune off'
+    );
+  validateMangroveImport(doc, selectedModeIds);
+  mgNativeCollectionsSourceCapability(doc);
+  // Private operation copy freezes the validated source across awaited inventory reads.
+  const source = JSON.parse(JSON.stringify(doc));
+  const plan = mgNativeCollectionsSourceCapability(source);
+  const identity = {
+    readCollection: asset => {
+      const raw = mgReadIdentity(asset, 'mgNativeCollectionPlan');
+      if (!raw) return null;
+      try {
+        return JSON.parse(raw);
+      } catch {
+        throw new Error('Invalid native collection ownership JSON');
+      }
+    },
+    readVariable: asset => mgReadIdentity(asset, ID_KEY),
+  };
+  let state = mgNativeCollectionsPreflight(
+    plan,
+    await nativeCollectionImportSnapshot(fence),
+    identity
+  );
+  // Refresh the complete inventory immediately before the first permanent write.
+  state = mgNativeCollectionsPreflight(
+    plan,
+    await nativeCollectionImportSnapshot(fence),
+    identity
+  );
+  const counts = { created: 0, updated: 0, removed: 0, values: 0 };
+  const createdCollectionIds = [],
+    updatedCollectionIds = [],
+    createdModeIds = [],
+    createdVariableIds = [],
+    updatedVariableIds = [],
+    errors = [];
+  let completed = false;
+  try {
+    for (const spec of plan.collectionById.values()) {
+      fence();
+      let collection = state.collectionsBySourceId.get(spec.id);
+      const modeMap = state.modeIdsByCollectionId.get(spec.id);
+      if (!collection) {
+        collection = figma.variables.createVariableCollection(spec.name);
+        createdCollectionIds.push(collection.id);
+        state.collectionsBySourceId.set(spec.id, collection);
+        fence();
+        mgWriteIdentity(
+          collection,
+          'mgNativeCollectionPlan',
+          JSON.stringify({
+            version: 1,
+            planId: plan.planId,
+            collectionId: spec.id,
+          })
+        );
+        const first = source.modes[0];
+        fence();
+        collection.renameMode(collection.defaultModeId, first.name);
+        modeMap.set(first.id, collection.defaultModeId);
+        createdModeIds.push({
+          collectionId: collection.id,
+          sourceModeId: first.id,
+          modeId: collection.defaultModeId,
+        });
+      } else updatedCollectionIds.push(collection.id);
+      for (const mode of source.modes) {
+        if (modeMap.has(mode.id)) continue;
+        fence();
+        const modeId = collection.addMode(mode.name);
+        modeMap.set(mode.id, modeId);
+        createdModeIds.push({
+          collectionId: collection.id,
+          sourceModeId: mode.id,
+          modeId,
+        });
+      }
+    }
+    // All native UUIDs exist before any cross-collection alias is assigned.
+    for (const spec of source.variables) {
+      fence();
+      let variable = state.variablesBySourceId.get(spec.id);
+      if (!variable) {
+        variable = figma.variables.createVariable(
+          spec.name,
+          state.collectionsBySourceId.get(plan.ownerBySourceId.get(spec.id)),
+          spec.type
+        );
+        createdVariableIds.push(variable.id);
+        counts.created++;
+        state.variablesBySourceId.set(spec.id, variable);
+      } else {
+        updatedVariableIds.push(variable.id);
+        counts.updated++;
+      }
+      fence();
+      mgWriteIdentity(variable, ID_KEY, spec.id);
+      variable.description = spec.description || '';
+      variable.hiddenFromPublishing = Boolean(spec.hiddenFromPublishing);
+      if (spec.scopes !== undefined) variable.scopes = spec.scopes;
+      if (spec.codeSyntax?.WEB)
+        variable.setVariableCodeSyntax('WEB', spec.codeSyntax.WEB);
+      else if (variable.codeSyntax?.WEB)
+        variable.removeVariableCodeSyntax('WEB');
+    }
+    for (const spec of source.variables) {
+      const variable = state.variablesBySourceId.get(spec.id);
+      const modeMap = state.modeIdsByCollectionId.get(
+        plan.ownerBySourceId.get(spec.id)
+      );
+      for (const mode of source.modes) {
+        fence();
+        const value = spec.values[mode.id];
+        variable.setValueForMode(
+          modeMap.get(mode.id),
+          value && typeof value === 'object' && 'alias' in value
+            ? figma.variables.createVariableAlias(
+                state.variablesBySourceId.get(
+                  plan.sourceByName.get(value.alias).id
+                )
+              )
+            : value
+        );
+        counts.values++;
+      }
+    }
+    state = mgNativeCollectionsPreflight(
+      plan,
+      await nativeCollectionImportSnapshot(fence),
+      identity
+    );
+    completed = true;
+  } catch (error) {
+    errors.push(errorMessage(error));
+  }
+  const primary = state.collectionsBySourceId.get(plan.primary);
+  return {
+    collection: primary?.name || source.collection,
+    collectionId: primary?.id || null,
+    modeIds: Object.fromEntries(state.modeIdsByCollectionId.get(plan.primary)),
+    modes: completed ? source.modes.map(mode => mode.name) : [],
+    requestedModes: source.modes.map(mode => mode.name),
+    counts,
+    createdVariableIds,
+    updatedVariableIds,
+    removedVariableIds: [],
+    styles: null,
+    stale: [],
+    skipped: source.skipped || [],
+    errors,
+    nativeCollections: {
+      version: 1,
+      planId: plan.planId,
+      completed,
+      createdCollectionIds,
+      updatedCollectionIds,
+      createdModeIds,
+      collectionIds: Object.fromEntries(
+        [...state.collectionsBySourceId].map(([id, c]) => [id, c.id])
+      ),
+      modeIdsByCollectionId: Object.fromEntries(
+        [...state.modeIdsByCollectionId].map(([id, modes]) => [
+          id,
+          Object.fromEntries(modes),
+        ])
+      ),
+      partialAssetIds: completed
+        ? []
+        : [...createdCollectionIds, ...createdVariableIds],
+    },
+  };
+}
 
 // Figma API rejections can be strings rather than Error instances.
 function errorMessage(error) {
@@ -616,6 +826,17 @@ async function importVariables(
   textStyles,
   effects
 ) {
+  if (
+    MG_NATIVE_COLLECTION_IMPORT_ENABLED &&
+    doc?.nativeCollections !== undefined
+  )
+    return importNativeCollections(
+      doc,
+      selectedModeIds,
+      prune,
+      textStyles,
+      effects
+    );
   validateMangroveImport(doc, selectedModeIds, textStyles);
   await preflightMangroveAssets(doc, textStyles, effects !== false);
   const modes = doc.modes.filter(m => selectedModeIds.includes(m.id));

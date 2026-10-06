@@ -727,6 +727,13 @@ function specializeBuilder(source, subset) {
     'mgMaintenanceAssertSource(\n    mgMaintenanceDependencyIds(recipes, selectedFamilyIds),\n    owned\n  );',
     `mgMaintenanceAssertSource(${JSON.stringify(subset.components.families.map(family => family.id))}, owned);`
   );
+  // The exact profile rejects all review declarations before any writes.
+  // Specialize only that immutable profile discriminator; keep its source guards.
+  if (subset.nativeCollections !== undefined)
+    replaceOnce(
+      'if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan) continue;',
+      'if (MG_CONNECTOR_NATIVE_COLLECTIONS) continue;'
+    );
   const directFamilies = new Set();
   function directProfile(tree, familyId) {
     if (tree.textStyleApplication !== undefined) directFamilies.add(familyId);
@@ -1069,14 +1076,43 @@ async function buildConnector({
     `(()=>{const MG_TEXT_CASE_ENABLED=true;${caseSource.slice(caseStart, caseEnd)};return validateMangroveTextCase;})()`
   );
   validateCase(doc);
-  const subset = subsetDocument(
-    doc,
-    operation,
-    brandId,
-    requested,
-    variantIds,
-    scopedImport ? { variableIds, styleIds } : undefined
-  );
+  const nativeCollectionsEnabled = doc.nativeCollections !== undefined;
+  if (nativeCollectionsEnabled) {
+    if (
+      !experimentFileKey ||
+      !['build', 'import'].includes(operation) ||
+      variantIds !== undefined ||
+      scopedImport
+    )
+      throw new Error(
+        'Partition v1 needs an exact experiment and complete unbatched import/build.'
+      );
+    const collectionContext = vm.createContext({ module: { exports: {} } });
+    vm.runInContext(
+      fs.readFileSync(path.join(PLUGIN, 'kit-native-collections.js'), 'utf8'),
+      collectionContext
+    );
+    const helper = collectionContext.module.exports;
+    helper.mgNativeCollectionsSourceCapability(doc);
+    helper.mgNativeCollectionsSourcePlan(doc);
+    if (
+      operation === 'build' &&
+      selectFamilies(doc, requested).length !== doc.components.families.length
+    )
+      throw new Error(
+        'Partition v1 requires the complete selected component document.'
+      );
+  }
+  const subset = nativeCollectionsEnabled
+    ? doc
+    : subsetDocument(
+        doc,
+        operation,
+        brandId,
+        requested,
+        variantIds,
+        scopedImport ? { variableIds, styleIds } : undefined
+      );
   const textCaseEnabled = (subset?.styles?.text || []).some(spec =>
     Object.values(spec.values || {}).some(
       value => value?.textCase !== undefined
@@ -1500,6 +1536,10 @@ async function buildConnector({
     );
   let source = 'const MG_SHARED_ONLY = true;\n';
   source += fs.readFileSync(path.join(PLUGIN, 'kit-identity.js'), 'utf8');
+  if (nativeCollectionsEnabled)
+    source +=
+      fs.readFileSync(path.join(PLUGIN, 'kit-native-collections.js'), 'utf8') +
+      '\n;\n';
   source += `\n;\n${specializeCore(coreSource())}\n;\n`;
   const runtime =
     operation === 'build'
@@ -1576,9 +1616,11 @@ async function buildConnector({
     source += variantIds
       ? `const result = ${invocation}; return {...result, scope: ${JSON.stringify({ familyIds: requested, variantIds })}};`
       : `return ${invocation};`;
-  } else if (operation === 'import')
+  } else if (operation === 'import' && nativeCollectionsEnabled)
+    source += `return await importVariables(doc, ${JSON.stringify(doc.modes.map(mode => mode.id))}, false, undefined, true);`;
+  else if (operation === 'import')
     source += `
-      const {createdVariableIds, updatedVariableIds, removedVariableIds, styles, ...result} = await importVariables(doc, [${JSON.stringify(brandId)}], false, ${JSON.stringify(subset.styles.text.map(spec => spec.id))}, true);
+      const {createdVariableIds, updatedVariableIds, removedVariableIds, styles, ...result} = await importVariables(doc, ${nativeCollectionsEnabled ? JSON.stringify(doc.modes.map(mode => mode.id)) : `[${JSON.stringify(brandId)}]`}, false, ${JSON.stringify(subset.styles.text.map(spec => spec.id))}, true);
       const {createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds, ...styleReport} = styles;
       result.styles = styleReport;
       return {result, createdVariableIds, updatedVariableIds, removedVariableIds, createdStyleIds, updatedStyleIds, touchedStyleIds, removedStyleIds, retainedPartialStyleIds${importScope ? `, scope: ${JSON.stringify(importScope)}` : ''}};
@@ -1599,6 +1641,7 @@ async function buildConnector({
     compress: {
       passes: 3,
       global_defs: {
+        MG_CONNECTOR_NATIVE_COLLECTIONS: nativeCollectionsEnabled,
         MG_CONNECTOR_ALPHA_MASK: alphaMaskEnabled,
         MG_CONNECTOR_TEXT_CASE: textCaseEnabled,
         MG_CONNECTOR_FRAME_POSITION: framePositionEnabled,

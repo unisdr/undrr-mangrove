@@ -17,6 +17,7 @@ function renderMaintenancePlugin() {
     buildFigmaMaintenance,
   } = require('./build-figma-maintenance-tokens.cjs');
   return (
+    'const MG_CONNECTOR_NATIVE_COLLECTIONS = false;\n' +
     `const MG_MAINTENANCE_SOURCE = ${JSON.stringify(buildFigmaMaintenance())};\n` +
     SOURCES.map(
       file =>

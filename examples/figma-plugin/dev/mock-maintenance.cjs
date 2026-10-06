@@ -259,6 +259,10 @@ async function main() {
     const env = standalone(doc);
     const before = assets(env.state);
     for (const message of [
+      {
+        ...importMessage(doc, 12),
+        doc: { ...copy(doc), nativeCollections: { version: 1 } },
+      },
       { ...importMessage(doc), prune: true },
       { ...importMessage(doc), effects: undefined },
       { type: 'build', requestId: 5, doc },

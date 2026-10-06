@@ -714,9 +714,13 @@ function environment(doc, options = {}) {
     __html__: '',
     console,
     MG_SHARED_ONLY: Boolean(options.sharedOnly),
+    ...(options.nativeCollections && {
+      mgAssertExperimentOperationTarget: options.experimentTargetGuard,
+    }),
   });
   for (const file of [
     'kit-identity.js',
+    ...(options.nativeCollections ? ['kit-native-collections.js'] : []),
     'importer.js',
     'code.js',
     'kit-inspection.js',

@@ -10,6 +10,8 @@ Recovery-copy ownership refusals pass with zero writes. Both source-handback But
 
 See the [architecture review](ARCHITECTURE-REVIEW.md) for the acceptance gates when composing and maintaining the kit. The [core kit](CORE-KIT-STATUS.md) records bounded component evidence and deferred catalogue work. Native task-based browsing, usage/source pairing, readable grids and bounded ordinary updates pass [the organisation gate](KIT-ARCHITECTURE.md). Remaining handoff gates include uncoached novice tasks and published rebuild checks beyond the tested Button padding change.
 
+The expanded source catalogue also needs a capacity adapter before native import. The opt-in [native collection plan v1](holistic/NATIVE-COLLECTIONS-CAPABILITY.md) has an isolated production rehearsal for font-free FRAME mechanics, collection-specific modes and cross-collection aliases. It does not make the full source packet importable. The maintenance entry refuses this experimental profile; full catalogue integration and publication remain separate gates.
+
 ## How it fits together
 
 ```

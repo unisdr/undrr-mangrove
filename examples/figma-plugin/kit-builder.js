@@ -1,4 +1,4 @@
-/* global mgAlphaMaskPlan, mgAlphaMaskDocumentValues, mgAlphaMaskNativeValues, mgNativeAlphaMaskPlan, mgApplyAlphaMask, MG_CONNECTOR_ALPHA_MASK, mgFrozenSourceLine, MG_CONNECTOR_FROZEN_SOURCE_LINE, mgGradientTransform, MG_CONNECTOR_GRADIENT_ROLES, mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgNativeCollectionsValidateValues, nativeCollectionImportSnapshot, mgNativeCollectionsSourceCapability, MG_CONNECTOR_NATIVE_COLLECTIONS, mgNativeCollectionsSourcePlan, mgNativeCollectionsPreflight, mgNativeCollectionsApplyModes, mgAlphaMaskPlan, mgAlphaMaskDocumentValues, mgAlphaMaskNativeValues, mgNativeAlphaMaskPlan, mgApplyAlphaMask, MG_CONNECTOR_ALPHA_MASK, mgFrozenSourceLine, MG_CONNECTOR_FROZEN_SOURCE_LINE, mgGradientTransform, MG_CONNECTOR_GRADIENT_ROLES, mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -848,6 +848,21 @@ function mgRichSourceStylePreflight(doc) {
     }
 }
 
+const MG_NATIVE_COLLECTIONS_ENABLED =
+  typeof MG_CONNECTOR_NATIVE_COLLECTIONS === 'undefined' ||
+  MG_CONNECTOR_NATIVE_COLLECTIONS;
+
+function mgNativeCollectionsBuilderPlan(doc) {
+  if (!MG_NATIVE_COLLECTIONS_ENABLED || doc.nativeCollections === undefined)
+    return null;
+  if (typeof mgAssertExperimentOperationTarget !== 'function')
+    throw new Error(
+      'Partition components require an exact guarded experiment target.'
+    );
+  mgAssertExperimentOperationTarget();
+  return mgNativeCollectionsSourceCapability(doc);
+}
+
 async function buildMangroveComponents(
   doc,
   brandId,
@@ -868,6 +883,8 @@ async function buildMangroveComponents(
   const updated = new Set();
   const reportError = error =>
     typeof errorMessage === 'function' ? errorMessage(error) : String(error);
+  if (MG_NATIVE_COLLECTIONS_ENABLED && doc.nativeCollections !== undefined)
+    doc = JSON.parse(JSON.stringify(doc));
   const recipes = doc.components?.families || [];
   if (doc.components?.version !== 1 || !recipes.length) {
     result.errors.push(
@@ -877,11 +894,56 @@ async function buildMangroveComponents(
   }
   const brand = doc.modes.find(mode => mode.id === brandId);
   if (!brand) throw new Error(`Unknown brand ${brandId}`);
+  const nativeCollectionPlan = MG_NATIVE_COLLECTIONS_ENABLED
+    ? mgNativeCollectionsBuilderPlan(doc)
+    : null;
   const page = figma.currentPage;
+  const nativePageId =
+    MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan ? page.id : null;
+  function assertNativeCollectionTarget() {
+    if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan) {
+      mgAssertExperimentOperationTarget();
+      if (
+        figma.currentPage.id !== nativePageId ||
+        figma.currentPage.type !== 'PAGE'
+      )
+        throw new Error(
+          'Partition current page changed across operation awaits.'
+        );
+    }
+  }
+  assertNativeCollectionTarget();
   const allOwned = page.findAll(node =>
     Boolean(mgReadIdentity(node, MG_KIT_KEY))
   );
   const owned = new Map();
+  if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan)
+    for (const node of allOwned) {
+      const ledger = mgReadIdentity(node, 'mgNativeScenePlan');
+      if (
+        ledger !==
+        JSON.stringify({ version: 1, planId: nativeCollectionPlan.planId })
+      )
+        throw new Error(
+          'Partition scene ownership conflicts with an existing normal or foreign scene.'
+        );
+    }
+  const nativeSceneSignature = nodes =>
+    JSON.stringify(
+      nodes
+        .map(node => ({
+          id: node.id,
+          type: node.type,
+          parentId: node.parent?.id || null,
+          key: mgReadIdentity(node, MG_KIT_KEY),
+          ledger: mgReadIdentity(node, 'mgNativeScenePlan'),
+        }))
+        .sort((a, b) => a.id.localeCompare(b.id))
+    );
+  const nativeSceneBefore =
+    MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan
+      ? nativeSceneSignature(allOwned)
+      : null;
   for (const node of allOwned) {
     // Instance descendants inherit source plugin data. Only index construction nodes.
     let ancestor = node.parent;
@@ -1042,16 +1104,64 @@ async function buildMangroveComponents(
       );
     await mgLayoutLoadExistingFonts();
   }
-  const collections = await figma.variables.getLocalVariableCollectionsAsync();
-  const collection = collections.find(item => item.name === doc.collection);
+  if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan && organized)
+    throw new Error('Partition v1 requires an unorganized experiment.');
+  const nativeSnapshot =
+    MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan
+      ? await nativeCollectionImportSnapshot(assertNativeCollectionTarget)
+      : null;
+  const collections =
+    MG_NATIVE_COLLECTIONS_ENABLED && nativeSnapshot
+      ? nativeSnapshot.collections
+      : await figma.variables.getLocalVariableCollectionsAsync();
+  let nativeCollectionState = null;
+  if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan) {
+    const local = nativeSnapshot.variables;
+    assertNativeCollectionTarget();
+    nativeCollectionState = mgNativeCollectionsPreflight(
+      nativeCollectionPlan,
+      { collections, variables: local },
+      {
+        readCollection: asset => {
+          const value = mgReadIdentity(asset, 'mgNativeCollectionPlan');
+          return value ? JSON.parse(value) : null;
+        },
+        readVariable: asset => mgReadIdentity(asset, 'mgId'),
+      }
+    );
+    if (
+      nativeCollectionState.neededCollections.length ||
+      nativeCollectionState.neededVariables.length ||
+      [...nativeCollectionState.neededModes.values()].some(
+        modes => modes.length
+      )
+    )
+      throw new Error(
+        'Import the complete partition foundation and modes before building.'
+      );
+  }
+  if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionState)
+    mgNativeCollectionsValidateValues(
+      nativeCollectionPlan,
+      nativeCollectionState
+    );
+  const collection =
+    MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionState
+      ? nativeCollectionState.collectionsBySourceId.get(
+          nativeCollectionPlan.primary
+        )
+      : collections.find(item => item.name === doc.collection);
   if (!collection)
     throw new Error('Import Mangrove variables before components.');
   const mode = collection.modes.find(item => item.name === brand.name);
   if (!mode)
     throw new Error(`Import the ${brand.name} brand before components.`);
-  const nativeVariables = (
-    await figma.variables.getLocalVariablesAsync()
-  ).filter(variable => variable.variableCollectionId === collection.id);
+  const nativeVariables =
+    MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionState
+      ? [...nativeCollectionState.variablesBySourceId.values()]
+      : (await figma.variables.getLocalVariablesAsync()).filter(
+          variable => variable.variableCollectionId === collection.id
+        );
   const variables = new Map(
     nativeVariables.map(variable => [variable.name, variable])
   );
@@ -2612,7 +2722,8 @@ async function buildMangroveComponents(
         await loadNodeFonts(existingSet);
       }
       // Creating a text node starts with Inter before the source style is applied.
-      await load({ family: 'Inter', style: 'Regular' });
+      if (!(MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan))
+        await load({ family: 'Inter', style: 'Regular' });
       ready.push(family);
       familyText.forEach(id => usedText.add(id));
       familyEffects.forEach(id => usedEffects.add(id));
@@ -2916,6 +3027,58 @@ async function buildMangroveComponents(
   );
   result.styles = styles;
   result.errors.push(...styles.errors);
+  if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan) {
+    nativeCollectionState = mgNativeCollectionsPreflight(
+      nativeCollectionPlan,
+      await nativeCollectionImportSnapshot(assertNativeCollectionTarget),
+      {
+        readCollection: asset => {
+          const value = mgReadIdentity(asset, 'mgNativeCollectionPlan');
+          return value ? JSON.parse(value) : null;
+        },
+        readVariable: asset => mgReadIdentity(asset, 'mgId'),
+      }
+    );
+    assertNativeCollectionTarget();
+    const currentOwned = page.findAll(node =>
+      Boolean(mgReadIdentity(node, MG_KIT_KEY))
+    );
+    if (nativeSceneSignature(currentOwned) !== nativeSceneBefore)
+      throw new Error(
+        'Partition scene ownership or topology changed across preflight awaits.'
+      );
+    if (
+      nativeCollectionState.neededCollections.length ||
+      nativeCollectionState.neededVariables.length ||
+      [...nativeCollectionState.neededModes.values()].some(
+        modes => modes.length
+      )
+    )
+      throw new Error('Partition assets changed before scene construction.');
+    mgNativeCollectionsValidateValues(
+      nativeCollectionPlan,
+      nativeCollectionState
+    );
+    result.nativeCollections = {
+      version: 1,
+      planId: nativeCollectionPlan.planId,
+      collectionIds: Object.fromEntries(
+        [...nativeCollectionState.collectionsBySourceId].map(([id, asset]) => [
+          id,
+          asset.id,
+        ])
+      ),
+      modeIdsByCollectionId: Object.fromEntries(
+        [...nativeCollectionState.modeIdsByCollectionId].map(([id, modes]) => [
+          id,
+          Object.fromEntries(modes),
+        ])
+      ),
+      capacity: Object.fromEntries(nativeCollectionState.occupancy),
+      reviewSpecimensDisabled: true,
+      capability: 'font-free FRAME v1 only',
+    };
+  }
   if (MG_SVG_SIZING_ENABLED && svgSizingScope && styles.errors.length) {
     result.audit.push({
       status: 'blocked-svg-sizing-style-import',
@@ -2996,6 +3159,7 @@ async function buildMangroveComponents(
   }
 
   function mark(node, key, isNew) {
+    assertNativeCollectionTarget();
     if (isNew) {
       mgWriteIdentity(node, MG_KIT_KEY, key);
       owned.set(key, node);
@@ -3003,6 +3167,12 @@ async function buildMangroveComponents(
       if (node.type === 'INSTANCE')
         node.findAll(() => true).forEach(child => created.add(child.id));
     } else if (!created.has(node.id)) updated.add(node.id);
+    if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan)
+      mgWriteIdentity(
+        node,
+        'mgNativeScenePlan',
+        JSON.stringify({ version: 1, planId: nativeCollectionPlan.planId })
+      );
     return node;
   }
   function matches(values, requested) {
@@ -3903,7 +4073,11 @@ async function buildMangroveComponents(
       frame.x = right + 160;
       frame.y = 160;
     }
-    if (frame.explicitVariableModes[collection.id] !== mode.modeId)
+    if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionState)
+      mgNativeCollectionsApplyModes(frame, nativeCollectionState, brandId, [
+        ...nativeCollectionPlan.collectionById.keys(),
+      ]);
+    else if (frame.explicitVariableModes[collection.id] !== mode.modeId)
       frame.setExplicitVariableModeForCollection(collection, mode.modeId);
     return frame;
   }
@@ -4147,6 +4321,7 @@ async function buildMangroveComponents(
       );
   }
   for (const [id, family] of built) {
+    if (MG_NATIVE_COLLECTIONS_ENABLED && nativeCollectionPlan) continue;
     if (!chosen.has(id)) continue;
     try {
       const reviewOptions = families.get(id)?.review || {};
