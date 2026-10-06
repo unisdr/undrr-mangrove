@@ -1,0 +1,36 @@
+{
+  "actualUnchangedVerifier": true,
+  "archiveWrites": false,
+  "isolatedSyntheticFixtures": true,
+  "results": [
+    {
+      "case": "foreign",
+      "refusedAtExtractionGuard": true,
+      "exit": 1
+    },
+    {
+      "case": "duplicate",
+      "refusedAtExtractionGuard": true,
+      "exit": 1
+    },
+    {
+      "case": "symlink",
+      "refusedAtExtractionGuard": true,
+      "exit": 1
+    },
+    {
+      "case": "nested-path",
+      "refusedAtExtractionGuard": true,
+      "exit": 1
+    },
+    {
+      "case": "traversal",
+      "refusedAtExtractionGuard": true,
+      "exit": 1
+    },
+    {
+      "case": "changed-file-pin",
+      "refusedBeforeExtraction": true
+    }
+  ]
+}

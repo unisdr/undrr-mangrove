@@ -1,0 +1,3 @@
+{"cases": 90, "allSourceFieldsExact": true, "generatedQuoteCases": 30, "generatedListCases": 60, "nativeAccepted": false}
+{"cases": 90, "QExtraFragmentCounts": {"2": 30}, "native": false}
+{"sourceOnly": true, "nativeAccepted": false, "diagnostics": 180, "rawFiles": 290, "rawHashesExact": true, "sourceBeforeAfterBaselineExact": true, "UTF16CharacterSlicesExact": true, "frozenProofsReproducedByteExact": true, "retainedReplayDirectory": "/var/folders/3v/r1x7bt4j57n8mgdd17m1h7gc0000gn/T/mangrove-generated-source-replay-mn_x7pmr", "archiveWrites": false}

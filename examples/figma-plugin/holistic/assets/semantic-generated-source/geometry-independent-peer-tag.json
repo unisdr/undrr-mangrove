@@ -1,0 +1,13 @@
+{
+  "acceptedRecordedSourceGeometryScope": true,
+  "frozenFilesExact": 98,
+  "cases": 90,
+  "sourceBeforeAfterAndPriorRecordedFieldsExact": true,
+  "exactUTF16Segments": 570,
+  "exactUTF16Characters": 35020,
+  "QResidualOwnerBoxes": 30,
+  "outsideMarkerPlacementAccepted": false,
+  "residualBoxesProvenPseudoInk": false,
+  "nativeAccepted": false,
+  "scope": "Recorded DOM owner/Range layout and detached token capacity only. No visual bidi placement from AX order, original marker/pseudo ink, source font bytes or edited/native reflow acceptance."
+}
