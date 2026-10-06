@@ -45,3 +45,22 @@ unresolved. Figma's documented `openTypeFeatures` and range getters are
 read-only, and the pinned source font has genuine feature substitutions.
 Text-case support does not prove numeric glyph equivalence or provide an
 OpenType setter.
+
+An isolated native rehearsal on 2026-10-06 changed the existing UNDRR text
+style from `ORIGINAL` to `UPPER`, repeated the scoped import twice, then
+explicitly restored `ORIGINAL` and repeated that import twice. Each import
+created and removed zero assets, updated the two existing font-role variables
+and the same existing style, and retained unrelated variables with pruning off.
+The three recorded snapshots within each state were exact. All three restored
+snapshots matched the complete original 47-node baseline, including concrete
+Roboto Regular axes, raw characters, identities, links, modes, geometry and the
+ordinary consumer's property edit. The unpublished experiment is
+[available in Figma](https://www.figma.com/design/3PbB1KO6fY7vdYLvHsQdXP).
+
+Complete operation reports and field-preserving compact snapshots are in
+`/tmp/mangrove-native-frozen-lines-20261006/case-*-tool.json`. This proves the
+native case field and recorded restoration in this bounded fixture. It does
+not establish source glyph or pixel matching, locale behavior, StatsCard's
+numeric features, ordinary desktop plugin operation or style publication.
+Independent receipt review accepted all six complete import reports and
+snapshots in `case-independent-receipt-verdict.json`.
