@@ -1195,6 +1195,28 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsRichText(variant.tree))
     );
+  const richAlphaVariables = new Map(doc.variables.map(v => [v.name, v]));
+  function richAlphaValue(name, mode, seen = new Set()) {
+    if (seen.has(name)) throw new Error('Rich alpha alias cycle');
+    seen.add(name);
+    const value = richAlphaVariables.get(name)?.values[mode];
+    return value?.alias ? richAlphaValue(value.alias, mode, seen) : value;
+  }
+  function needsRichAlpha(tree) {
+    return (
+      (tree.textRuns || []).some(run =>
+        doc.modes.some(mode => {
+          const value = richAlphaValue(run.fill, mode.id);
+          return value && value.a !== undefined && value.a !== 1;
+        })
+      ) || (tree.children || []).some(needsRichAlpha)
+    );
+  }
+  const richAlphaEnabled =
+    richTextEnabled &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsRichAlpha(variant.tree))
+    );
   const needsFrozenLine = tree =>
     Object.prototype.hasOwnProperty.call(tree, 'sourceLine') ||
     (tree.children || []).some(needsFrozenLine);
@@ -1241,7 +1263,7 @@ async function buildConnector({
     )
       throw new Error('Rich source validator specialization boundary changed.');
     const context = vm.createContext({
-      richSourceDoc: subset,
+      richSourceDoc: doc,
       module: { exports: {} },
     });
     vm.runInContext(coreSource() + '\n' + builder.slice(start, end), context, {
@@ -1255,19 +1277,15 @@ async function buildConnector({
       context,
       { timeout: 1000 }
     );
-    const variables = new Map(
-      subset.variables.map(entry => [entry.name, entry])
-    );
-    const styleSpecs = new Map(
-      subset.styles.text.map(entry => [entry.id, entry])
-    );
+    const variables = new Map(doc.variables.map(entry => [entry.name, entry]));
+    const styleSpecs = new Map(doc.styles.text.map(entry => [entry.id, entry]));
     const sourceValue = (entry, modeId) =>
       entry.values[modeId]?.alias
         ? sourceValue(variables.get(entry.values[modeId].alias), modeId)
         : entry.values[modeId];
     context.richSourceContext = {
       deferredStyles: true,
-      modeIds: subset.modes.map(mode => mode.id),
+      modeIds: doc.modes.map(mode => mode.id),
       creationFont: { family: 'Inter', style: 'Regular' },
       readState: () => '',
       writeState: () => {
@@ -1294,7 +1312,7 @@ async function buildConnector({
               key,
               variable: { id: spec.id, resolvedType: spec.type },
               values: Object.fromEntries(
-                subset.modes.map(mode => [mode.id, sourceValue(spec, mode.id)])
+                doc.modes.map(mode => [mode.id, sourceValue(spec, mode.id)])
               ),
             }
           : undefined;
@@ -1517,6 +1535,7 @@ async function buildConnector({
         MG_CONNECTOR_RICH_DTO_VALIDATION: false,
         MG_CONNECTOR_RICH_SOURCE_VALIDATION: false,
         MG_CONNECTOR_RICH_TEXT: richTextEnabled,
+        MG_CONNECTOR_RICH_ALPHA: richAlphaEnabled,
         MG_CONNECTOR_DIRECT_TEXT: directTextEnabled,
         MG_CONNECTOR_FOCUS: focusEnabled,
         MG_CONNECTOR_COINCIDENT_FOCUS: coincidentFocusEnabled,
@@ -1552,6 +1571,7 @@ async function buildConnector({
     ellipseEnabled,
     directTextEnabled,
     richTextEnabled,
+    richAlphaEnabled,
     gradientRolesEnabled,
     frozenSourceLineEnabled,
     textCaseEnabled,

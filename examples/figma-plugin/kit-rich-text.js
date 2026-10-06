@@ -1,10 +1,16 @@
 /** Rich TEXT capability with transaction preflight and native ownership guards. */
-/* global module, MG_CONNECTOR_RICH_DTO_VALIDATION */
+/* global module, MG_CONNECTOR_RICH_DTO_VALIDATION, MG_CONNECTOR_RICH_ALPHA */
 'use strict';
 const mgRichText = (() => {
   const checkDTO =
     typeof MG_CONNECTOR_RICH_DTO_VALIDATION === 'undefined' ||
     MG_CONNECTOR_RICH_DTO_VALIDATION;
+  const alphaEnabled =
+    typeof MG_CONNECTOR_RICH_ALPHA === 'undefined' || MG_CONNECTOR_RICH_ALPHA;
+  const alphaValid = value =>
+    Number.isFinite(value) && value >= 0 && value <= 1;
+  const alphaMatches = (actual, expected) =>
+    actual === expected || actual === Math.fround(expected);
   const plans = new WeakMap();
   const fields = [
     'textStyleId',
@@ -130,7 +136,7 @@ const mgRichText = (() => {
       !Array.isArray(fills) ||
       fills.length !== 1 ||
       fills[0].type !== 'SOLID' ||
-      fills[0].opacity !== 1 ||
+      (alphaEnabled ? !alphaValid(fills[0].opacity) : fills[0].opacity !== 1) ||
       fills[0].visible === false ||
       fills[0].boundVariables?.color?.type !== 'VARIABLE_ALIAS' ||
       typeof fills[0].boundVariables.color.id !== 'string'
@@ -145,7 +151,7 @@ const mgRichText = (() => {
       (!object(link) || link.type !== 'URL' || typeof link.value !== 'string')
     )
       fail('unsupported native hyperlink.');
-    return JSON.stringify([
+    const result = [
       segment.textStyleId,
       segment.fontName.family,
       segment.fontName.style,
@@ -153,7 +159,11 @@ const mgRichText = (() => {
       segment.textDecoration,
       link?.value ?? null,
       normalizedFont(segment.fontName).variationSettings ?? null,
-    ]);
+    ];
+    // Preserve legacy opaque ownership stamps exactly.
+    if (alphaEnabled && Math.fround(fills[0].opacity) !== 1)
+      result.push(Math.fround(fills[0].opacity));
+    return JSON.stringify(result);
   }
   function segments(node) {
     if (!node.characters.length) return [];
@@ -362,7 +372,9 @@ const mgRichText = (() => {
             key =>
               Number.isFinite(value[key]) && value[key] >= 0 && value[key] <= 1
           ) ||
-          (value.a !== undefined && value.a !== 1)
+          (alphaEnabled
+            ? value.a !== undefined && !alphaValid(value.a)
+            : value.a !== undefined && value.a !== 1)
         )
           fail(`unresolved or invalid COLOR ${run.fill} in mode ${mode}.`);
       }
@@ -371,12 +383,21 @@ const mgRichText = (() => {
         {
           type: 'SOLID',
           color: { r: value.r, g: value.g, b: value.b },
-          opacity: 1,
+          opacity: alphaEnabled ? (value.a ?? 1) : 1,
           visible: true,
         },
         'color',
         color.variable
       );
+      if (
+        alphaEnabled &&
+        (paint?.type !== 'SOLID' ||
+          !alphaValid(paint.opacity) ||
+          !alphaMatches(paint.opacity, value.a ?? 1) ||
+          paint.boundVariables?.color?.type !== 'VARIABLE_ALIAS' ||
+          paint.boundVariables.color.id !== color.variable.id)
+      )
+        fail('unsupported native bound alpha paint result.');
       const item = {
         id: run.id,
         start: run.start,
@@ -391,14 +412,26 @@ const mgRichText = (() => {
       item.colorKey = run.fill;
       item.signature = item.textStyleId
         ? signature(item)
-        : JSON.stringify([
-            'pending-source-style',
-            run.textStyle,
-            item.fontName,
-            run.fill,
-            decoration,
-            link,
-          ]);
+        : JSON.stringify(
+            alphaEnabled && Math.fround(paint.opacity) !== 1
+              ? [
+                  'pending-source-style',
+                  run.textStyle,
+                  item.fontName,
+                  run.fill,
+                  decoration,
+                  link,
+                  Math.fround(paint.opacity),
+                ]
+              : [
+                  'pending-source-style',
+                  run.textStyle,
+                  item.fontName,
+                  run.fill,
+                  decoration,
+                  link,
+                ]
+          );
       if (prepared[prepared.length - 1]?.signature === item.signature)
         fail('adjacent indistinguishable runs must be one authored run.');
       prepared.push(item);
