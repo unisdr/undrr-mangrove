@@ -1,0 +1,3108 @@
+{
+  "kind": "source-authored-search-widget-frontend-inputs",
+  "presets": {
+    "Default": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "DefaultQuery": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "climate change",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "Minimal": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": false,
+      "showSearchTimer": false,
+      "showFacets": false,
+      "showActiveFilters": false,
+      "showSearchMetrics": false,
+      "showPager": false,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "ExternalFacetsRegion": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": [],
+      "facets": "sidebar",
+      "facetsTarget": "#mg-story-external-facets"
+    },
+    "ExternalSearchRegion": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": [],
+      "searchTarget": "#mg-story-hero-search"
+    },
+    "HiddenFacets": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": [],
+      "facets": false
+    },
+    "HorizontalFacets": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": [],
+      "facets": "horizontal"
+    },
+    "CardBookDisplay": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 4,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "card-book",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "CardDisplay": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 3,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "card",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "HiddenTeaserFields": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "newest",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": {
+        "image": true,
+        "contentType": false,
+        "publicationType": false,
+        "date": true,
+        "summary": true,
+        "siteName": false,
+        "organization": false
+      },
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "AllowedTypes": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": {
+        "types": [
+          "news",
+          "publication",
+          "event"
+        ],
+        "newsTypes": [
+          "751",
+          "752"
+        ]
+      },
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "CustomFacets": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [
+        {
+          "id": "region",
+          "title": "Region",
+          "weight": 10,
+          "multiSelect": false,
+          "options": [
+            {
+              "label": "Africa",
+              "query": "field_country_region:69"
+            },
+            {
+              "label": "Americas",
+              "query": "field_country_region:70"
+            },
+            {
+              "label": "Asia-Pacific",
+              "query": "field_country_region:71"
+            },
+            {
+              "label": "Europe",
+              "query": "field_country_region:72"
+            },
+            {
+              "label": "Arab States",
+              "query": "field_country_region:73"
+            }
+          ]
+        },
+        {
+          "id": "hazard_type",
+          "title": "Hazard Type",
+          "weight": 20,
+          "multiSelect": true,
+          "options": [
+            {
+              "label": "Flood",
+              "query": "field_hazard:347"
+            },
+            {
+              "label": "Drought",
+              "query": "field_hazard:344"
+            },
+            {
+              "label": "Earthquake",
+              "query": "field_hazard:345"
+            },
+            {
+              "label": "Cyclone/Hurricane",
+              "query": "field_hazard:343"
+            },
+            {
+              "label": "Wildfire",
+              "query": "field_hazard:346"
+            }
+          ]
+        }
+      ],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "CustomFilters": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [
+        "type:(news OR publication)",
+        "published_at:[2023-01-01 TO *]"
+      ],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "CustomFiltersAndFacets": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": {
+        "type": false,
+        "year": false,
+        "field_domain_access": false
+      },
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [
+        "type:publication",
+        "field_domain_access:www_preventionweb_net"
+      ],
+      "customFacets": [
+        {
+          "id": "publication_year",
+          "title": "Publication Year",
+          "weight": 5,
+          "multiSelect": false,
+          "options": [
+            {
+              "label": "2024",
+              "query": "published_at:[2024-01-01 TO 2024-12-31]"
+            },
+            {
+              "label": "2023",
+              "query": "published_at:[2023-01-01 TO 2023-12-31]"
+            },
+            {
+              "label": "2022",
+              "query": "published_at:[2022-01-01 TO 2022-12-31]"
+            },
+            {
+              "label": "2021 and earlier",
+              "query": "published_at:[* TO 2021-12-31]"
+            }
+          ]
+        },
+        {
+          "id": "document_type",
+          "title": "Document Type",
+          "weight": 10,
+          "multiSelect": false,
+          "options": [
+            {
+              "label": "Policy Brief",
+              "query": "field_publication_type:601"
+            },
+            {
+              "label": "Technical Report",
+              "query": "field_publication_type:602"
+            },
+            {
+              "label": "Case Study",
+              "query": "field_publication_type:603"
+            },
+            {
+              "label": "Guidelines",
+              "query": "field_publication_type:604"
+            }
+          ]
+        }
+      ],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "CustomEndpoint": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": true,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "SyndicatedCards": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 4,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "early warning systems",
+      "defaultSort": "newest",
+      "showSearchBox": false,
+      "showResultsCount": false,
+      "showSearchTimer": false,
+      "showFacets": false,
+      "showActiveFilters": false,
+      "showSearchMetrics": false,
+      "showPager": false,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "card",
+      "gridColumns": 4,
+      "visibleTeaserFields": {
+        "image": true,
+        "contentType": false,
+        "publicationType": false,
+        "date": true,
+        "summary": false,
+        "siteName": false,
+        "organization": false
+      },
+      "requireImage": true,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "SyndicatedPublicationBooks": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 4,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "newest",
+      "showSearchBox": false,
+      "showResultsCount": false,
+      "showSearchTimer": false,
+      "showFacets": false,
+      "showActiveFilters": false,
+      "showSearchMetrics": false,
+      "showPager": false,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [
+        "type:publication"
+      ],
+      "customFacets": [],
+      "displayMode": "card-book",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "TaxonomyTermResults": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "flood",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": true,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "DebugMetrics": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": true,
+      "showPager": true,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    },
+    "NoPager": {
+      "searchEndpoint": "https://www.undrr.org/search-endpoint",
+      "resultsPerPage": 5,
+      "facetCountToShow": 500,
+      "debounceDelay": 500,
+      "minSearchLength": 3,
+      "enableHashSync": "auto",
+      "defaultQuery": "",
+      "defaultSort": "relevance",
+      "showSearchBox": true,
+      "showResultsCount": true,
+      "showSearchTimer": true,
+      "showFacets": true,
+      "showActiveFilters": true,
+      "showSearchMetrics": false,
+      "showPager": false,
+      "defaultFilters": [
+        {
+          "key": "_language",
+          "value": "en"
+        }
+      ],
+      "visibleFilters": null,
+      "allowedTypes": null,
+      "queryAppend": "",
+      "customFilters": [],
+      "customFacets": [],
+      "displayMode": "list",
+      "gridColumns": null,
+      "visibleTeaserFields": null,
+      "requireImage": false,
+      "interestingnessTiers": [],
+      "longevityTiers": []
+    }
+  },
+  "responses": {
+    "Default": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "DefaultQuery": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "Minimal": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "ExternalFacetsRegion": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "ExternalSearchRegion": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "HiddenFacets": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "HorizontalFacets": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "CardBookDisplay": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "CardDisplay": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "HiddenTeaserFields": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "AllowedTypes": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-authored-news-1",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Santiago Network expands support for loss and damage in the Pacific",
+              "url": "https://www.undrr.org/news/related-story-1",
+              "type": "news",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"https://www.undrr.org/news/related-story-1\"><img src=\"https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg\" alt=\"\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"https://www.undrr.org/news/related-story-1\">Santiago Network expands support for loss and damage in the Pacific</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">New technical assistance helps Pacific communities document and respond to non-economic losses.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-authored-news-2",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "How traditional knowledge strengthens community-based DRR",
+              "url": "https://www.undrr.org/news/related-story-2",
+              "type": "news",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"https://www.undrr.org/news/related-story-2\"><img src=\"https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg\" alt=\"\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"https://www.undrr.org/news/related-story-2\">How traditional knowledge strengthens community-based DRR</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">Local and Indigenous knowledge systems are shaping how Pacific communities plan for disaster risk.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-authored-news-3",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Upcoming: LCIPP Pacific Regional Gathering follow-up",
+              "url": "https://www.undrr.org/news/related-story-3",
+              "type": "news",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"https://www.undrr.org/news/related-story-3\"><img src=\"https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg\" alt=\"\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"https://www.undrr.org/news/related-story-3\">Upcoming: LCIPP Pacific Regional Gathering follow-up</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">Indigenous leaders and technical partners meet to carry the Nadi consultation’s findings forward.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "CustomFacets": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "CustomFilters": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "CustomFiltersAndFacets": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "CustomEndpoint": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "SyndicatedCards": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-authored-news-1",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Santiago Network expands support for loss and damage in the Pacific",
+              "url": "https://www.undrr.org/news/related-story-1",
+              "type": "news",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"https://www.undrr.org/news/related-story-1\"><img src=\"https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg\" alt=\"\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"https://www.undrr.org/news/related-story-1\">Santiago Network expands support for loss and damage in the Pacific</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">New technical assistance helps Pacific communities document and respond to non-economic losses.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-authored-news-2",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "How traditional knowledge strengthens community-based DRR",
+              "url": "https://www.undrr.org/news/related-story-2",
+              "type": "news",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"https://www.undrr.org/news/related-story-2\"><img src=\"https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg\" alt=\"\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"https://www.undrr.org/news/related-story-2\">How traditional knowledge strengthens community-based DRR</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">Local and Indigenous knowledge systems are shaping how Pacific communities plan for disaster risk.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-authored-news-3",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Upcoming: LCIPP Pacific Regional Gathering follow-up",
+              "url": "https://www.undrr.org/news/related-story-3",
+              "type": "news",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"https://www.undrr.org/news/related-story-3\"><img src=\"https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg\" alt=\"\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"https://www.undrr.org/news/related-story-3\">Upcoming: LCIPP Pacific Regional Gathering follow-up</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">Indigenous leaders and technical partners meet to carry the Nadi consultation’s findings forward.</div></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "SyndicatedPublicationBooks": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "TaxonomyTermResults": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-authored-flood-term",
+            "_score": 8.5,
+            "_source": {
+              "title": "Flood",
+              "url": "/taxonomy/term/347",
+              "type": "publication",
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null,
+              "vid": "hazard",
+              "tid": "347"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "DebugMetrics": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    },
+    "NoPager": {
+      "took": 10,
+      "hits": {
+        "total": {
+          "value": 40,
+          "relation": "eq"
+        },
+        "hits": [
+          {
+            "_id": "fixture-publication-image",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Financing resilient cities",
+              "url": "#scroll-example-2",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc mg-card-book__hc\"><div class=\"mg-card__visual\"><a href=\"#scroll-example-2\"><img src=\"https://www.undrr.org/sites/default/files/styles/por/public/2022-08/Bali.JPG.jpg\" alt=\"People working together outdoors in Bali\" /></a></div><div class=\"mg-card__content\"><div class=\"field field--name-node-title\"><a href=\"#scroll-example-2\">Financing resilient cities</a></div><div class=\"mg-card__date\">15 Jun 2024</div><div class=\"mg-card__description\">A practical look at how local authorities can align public investment, infrastructure planning and climate adaptation.</div></div></div>"
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-publication-fallback",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "publication",
+              "field_domain_access": [
+                "www_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": null
+            },
+            "highlight": {}
+          },
+          {
+            "_id": "fixture-organization",
+            "_score": 8.5,
+            "_source": {
+              "nid": "123",
+              "title": "Climate Change Report",
+              "url": "/node/123",
+              "type": "organization",
+              "field_domain_access": [
+                "afrp_undrr_org"
+              ],
+              "published_at": "2024-06-15T10:00:00Z",
+              "teaser": "<div class=\"mg-card mg-card__hc\"><div class=\"field field--name-node-title\"><a href=\"/node/456\">Org</a></div></div>"
+            },
+            "highlight": {}
+          }
+        ]
+      },
+      "aggregations": {
+        "type": {
+          "buckets": [
+            {
+              "key": "news",
+              "doc_count": 100
+            },
+            {
+              "key": "event",
+              "doc_count": 50
+            }
+          ]
+        },
+        "field_news_type": {
+          "buckets": [
+            {
+              "key": "751",
+              "doc_count": 40
+            },
+            {
+              "key": "752",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_hazard": {
+          "buckets": [
+            {
+              "key": "347",
+              "doc_count": 40
+            },
+            {
+              "key": "344",
+              "doc_count": 20
+            }
+          ]
+        },
+        "field_country_region": {
+          "buckets": [
+            {
+              "key": "69",
+              "doc_count": 40
+            },
+            {
+              "key": "70",
+              "doc_count": 20
+            }
+          ]
+        }
+      }
+    }
+  },
+  "taxonomyResponse": {
+    "results": [
+      {
+        "id": "69",
+        "name": "Africa"
+      },
+      {
+        "id": "70",
+        "name": "Americas"
+      },
+      {
+        "id": "71",
+        "name": "Asia-Pacific"
+      },
+      {
+        "id": "72",
+        "name": "Europe"
+      },
+      {
+        "id": "73",
+        "name": "Arab States"
+      },
+      {
+        "id": "347",
+        "name": "Flood"
+      },
+      {
+        "id": "344",
+        "name": "Drought"
+      },
+      {
+        "id": "345",
+        "name": "Earthquake"
+      },
+      {
+        "id": "343",
+        "name": "Cyclone/Hurricane"
+      },
+      {
+        "id": "346",
+        "name": "Wildfire"
+      }
+    ]
+  },
+  "operatorProbe": {
+    "field": "field_hazard",
+    "selectedValues": [
+      "347",
+      "344"
+    ],
+    "operators": [
+      "OR",
+      "AND"
+    ]
+  },
+  "provenance": {
+    "remoteResponseCaptured": false,
+    "serverQueryFilteringVerified": false,
+    "newsMetadata": "stories/Patterns/ArticleStory/ArticleStory.jsx words.english.relatedCards / relatedImage / authored mapped destinations",
+    "publicationMetadata": {
+      "input": "Existing authored ResultItem test teaser anatomy",
+      "metadata": "Exact ScrollContainerExamples[1] title, summary, alt and image",
+      "destination": "Existing authored ScrollExampleCard index1 anchor #scroll-example-2",
+      "date": "Existing ResultItem test date, not a publication date claim",
+      "responseCaptured": false,
+      "portraitAsset": "examples/figma-plugin/holistic/assets/card-content/bali-publication-cover.jpg",
+      "landscapeAsset": "examples/figma-plugin/holistic/assets/search-results/bali-landscape.jpg",
+      "landscapeUrl": "https://www.undrr.org/sites/default/files/styles/landscape_16_9/public/2022-08/Bali.JPG.jpg"
+    },
+    "taxonomyLabels": "Exact CustomFacets authored label/query pairs; structural API projection, not a verified live taxonomy response",
+    "counts": "Type/subtype buckets copied from authored taxonomyHelpers fixture; hazard/region counts reuse those numbers as explicit structural probes",
+    "resultDate": "Existing ResultItem authored test date retained in derived news teaser; not actual publication metadata",
+    "identities": "Unique fixture envelope IDs preserve original test fixtures without duplicate React keys",
+    "newsImage": "https://www.undrr.org/sites/default/files/2020-01/Home---about-us_0.jpg",
+    "sourceHashes": {
+      "stories/Patterns/ArticleStory/ArticleStory.jsx": "9ca2a8be73cec051545220f89b88847bda104de21bdac2aacf0265ea3a0b4327"
+    }
+  }
+}

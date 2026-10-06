@@ -72,7 +72,9 @@ Both native component sets were exported at scale1. Original PNG sizes are
 2384×192 and2384×198. Tight leaf images are lossless crops of those exports at
 recorded component-set coordinates, not additional screenshot calls. They
 provide direction/raster observations for the two finite native fixture widths;
-an independent comparison with actual source browser gradient interiors remains
-pending. These are isolated compiled-builder checks. They do not establish
+an independent comparison with four actual source browser gradient interiors
+accepted matching direction and width/height progression. Alpha matched exactly;
+maximum RGB differences were1/3/3 levels. The cause remains unconfirmed, and this
+bounded comparison does not establish exact raster equivalence. These are isolated compiled-builder checks. They do not establish
 full widget rendering, live mode repaint, all-five native construction, ordinary
 desktop plugin rebuilds, published components or consumer uptake.

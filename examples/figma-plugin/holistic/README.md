@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 57 families and 440 bounded variants, deliberately
+- Separate source draft packet: 69 families and 863 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -96,3 +96,7 @@ The current source packet also registers eight image-bearing article-header pres
 Copy/Cite adds four source families/60 finite presets with350 actual source captures. Source copies, supported edits, all-five rebuilds and expert review pass. The current source owns idle/copied/failed feedback, a genuine citation trigger,18 dialog states and four authored fallback details states. Historical copying/download assumptions are corrected in a separate source reconciliation. Native Menlo availability, glyph pixels, reflow, dialog/clipboard behaviour and publication remain open. See [Copy/Cite](copy-cite.md).
 
 The contextual article HighlightBox adds one family/two source presets, preserving its titleless rich paragraph, source inset shadow and finite float allocation. All-five source/mock rebuilds, rich consumer edits and an independent review pass. The following desktop paragraph's varying line widths and native inset-shadow pixels remain composition gates. See [the float contract](news-float.md).
+
+The reviewed syndicated widget adds seven source families/383 presets, preserving actual contextual dependencies and finite authored result/filter/drawer/pager surfaces. FormGroup, joined FormAction and Newsletter add three families/28 presets, with exact normal Checkbox/Radio dependencies kept separate. Initial article media adds one family/10 immutable brand/viewport player captures. All-five dedicated source-builder repeats and independent reviews pass. Native pixels, arbitrary content reflow, live search/submission/playback, library integration and publication remain open. See [the widget contract](search-widget.md), [forms](form-compositions.md) and [article media](news-article.md).
+
+The source article exclusion adds one family/two presets: a normal editable narrow rich paragraph and the exact four desktop rich source lines around the highlight. The current-page frozen-copy guard refuses edited desktop copy before permanent writes. All-five actual builder tests and an independent review pass; native font/line pixels and changed-content reflow remain open. See [the exclusion contract](news-exclusion.md).

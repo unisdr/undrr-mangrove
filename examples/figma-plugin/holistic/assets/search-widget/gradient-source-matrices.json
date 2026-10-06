@@ -1,0 +1,261 @@
+{
+  "kind": "source-css-linear-gradient-matrix-candidate",
+  "sourceFootprintsSha256": "55feff7892be39b1d3206b506995104a61b92c9e61a9ab7a236176cdf98439f6",
+  "sourceSpecification": "https://www.w3.org/TR/css-images-3/#linear-gradients",
+  "formula": "CSS135deg normalized progress=(W*x+H*y)/(W+H); inverse candidate matrix [[a,b,0],[-b,a,b]], a=W/(W+H), b=H/(W+H)",
+  "nativeInverseDirectionVerified": false,
+  "nativeRasterAcceptance": false,
+  "liveModeRepaintSupported": false,
+  "cases": [
+    {
+      "brand": "undrr",
+      "viewport": 390,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 120,
+        "width": 358,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.7489539748953975,
+          0.2510460251046025,
+          0
+        ],
+        [
+          -0.2510460251046025,
+          0.7489539748953975,
+          0.2510460251046025
+        ]
+      ]
+    },
+    {
+      "brand": "undrr",
+      "viewport": 1164,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 120,
+        "width": 1132,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.9041533546325878,
+          0.09584664536741214,
+          0
+        ],
+        [
+          -0.09584664536741214,
+          0.9041533546325878,
+          0.09584664536741214
+        ]
+      ]
+    },
+    {
+      "brand": "delta",
+      "viewport": 390,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 120,
+        "width": 358,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.7489539748953975,
+          0.2510460251046025,
+          0
+        ],
+        [
+          -0.2510460251046025,
+          0.7489539748953975,
+          0.2510460251046025
+        ]
+      ]
+    },
+    {
+      "brand": "delta",
+      "viewport": 1164,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 120,
+        "width": 1132,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.9041533546325878,
+          0.09584664536741214,
+          0
+        ],
+        [
+          -0.09584664536741214,
+          0.9041533546325878,
+          0.09584664536741214
+        ]
+      ]
+    },
+    {
+      "brand": "irp",
+      "viewport": 390,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 120,
+        "width": 358,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.7489539748953975,
+          0.2510460251046025,
+          0
+        ],
+        [
+          -0.2510460251046025,
+          0.7489539748953975,
+          0.2510460251046025
+        ]
+      ]
+    },
+    {
+      "brand": "irp",
+      "viewport": 1164,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 120,
+        "width": 1132,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.9041533546325878,
+          0.09584664536741214,
+          0
+        ],
+        [
+          -0.09584664536741214,
+          0.9041533546325878,
+          0.09584664536741214
+        ]
+      ]
+    },
+    {
+      "brand": "mcr",
+      "viewport": 390,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 126,
+        "width": 358,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.7396694214876033,
+          0.2603305785123967,
+          0
+        ],
+        [
+          -0.2603305785123967,
+          0.7396694214876033,
+          0.2603305785123967
+        ]
+      ]
+    },
+    {
+      "brand": "mcr",
+      "viewport": 1164,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 126,
+        "width": 1132,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.8998410174880763,
+          0.10015898251192369,
+          0
+        ],
+        [
+          -0.10015898251192369,
+          0.8998410174880763,
+          0.10015898251192369
+        ]
+      ]
+    },
+    {
+      "brand": "preventionweb",
+      "viewport": 390,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 120,
+        "width": 358,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.7489539748953975,
+          0.2510460251046025,
+          0
+        ],
+        [
+          -0.2510460251046025,
+          0.7489539748953975,
+          0.2510460251046025
+        ]
+      ]
+    },
+    {
+      "brand": "preventionweb",
+      "viewport": 1164,
+      "scene": "ExternalSearchRegion",
+      "node": "root/node-0/node-0",
+      "rect": {
+        "height": 120,
+        "width": 1132,
+        "x": 0,
+        "y": 0
+      },
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 51, 102), rgb(0, 85, 138))",
+      "transform": [
+        [
+          0.9041533546325878,
+          0.09584664536741214,
+          0
+        ],
+        [
+          -0.09584664536741214,
+          0.9041533546325878,
+          0.09584664536741214
+        ]
+      ]
+    }
+  ]
+}

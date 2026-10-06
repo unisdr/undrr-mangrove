@@ -1,0 +1,649 @@
+{
+  "variables": [
+    {
+      "id": "color.neutral-500",
+      "name": "color/neutral-500",
+      "type": "COLOR",
+      "values": {
+        "undrr": {
+          "r": 0.4,
+          "g": 0.4,
+          "b": 0.4,
+          "a": 1
+        },
+        "delta": {
+          "r": 0.4,
+          "g": 0.4,
+          "b": 0.4,
+          "a": 1
+        },
+        "irp": {
+          "r": 0.4,
+          "g": 0.4,
+          "b": 0.4,
+          "a": 1
+        },
+        "mcr": {
+          "r": 0.4,
+          "g": 0.4,
+          "b": 0.4,
+          "a": 1
+        },
+        "preventionweb": {
+          "r": 0.4,
+          "g": 0.4,
+          "b": 0.4,
+          "a": 1
+        }
+      }
+    },
+    {
+      "id": "color.text",
+      "name": "color/text",
+      "type": "COLOR",
+      "values": {
+        "undrr": {
+          "alias": "color/neutral-800"
+        },
+        "delta": {
+          "alias": "color/neutral-800"
+        },
+        "irp": {
+          "alias": "color/neutral-800"
+        },
+        "mcr": {
+          "alias": "color/neutral-800"
+        },
+        "preventionweb": {
+          "alias": "color/neutral-800"
+        }
+      }
+    },
+    {
+      "id": "color.button",
+      "name": "color/button",
+      "type": "COLOR",
+      "values": {
+        "undrr": {
+          "alias": "color/neutral-0"
+        },
+        "delta": {
+          "alias": "color/neutral-0"
+        },
+        "irp": {
+          "alias": "color/neutral-0"
+        },
+        "mcr": {
+          "alias": "color/neutral-0"
+        },
+        "preventionweb": {
+          "alias": "color/neutral-0"
+        }
+      }
+    },
+    {
+      "id": "color.button-background",
+      "name": "color/button-background",
+      "type": "COLOR",
+      "values": {
+        "undrr": {
+          "alias": "color/interactive"
+        },
+        "delta": {
+          "alias": "brand/primary"
+        },
+        "irp": {
+          "alias": "color/interactive"
+        },
+        "mcr": {
+          "alias": "color/interactive"
+        },
+        "preventionweb": {
+          "alias": "color/interactive"
+        }
+      }
+    },
+    {
+      "id": "color.form-check",
+      "name": "color/form-check",
+      "type": "COLOR",
+      "values": {
+        "undrr": {
+          "alias": "color/interactive"
+        },
+        "delta": {
+          "alias": "color/interactive"
+        },
+        "irp": {
+          "alias": "color/interactive"
+        },
+        "mcr": {
+          "alias": "color/interactive"
+        },
+        "preventionweb": {
+          "alias": "color/interactive"
+        }
+      }
+    },
+    {
+      "id": "border-color.button-primary",
+      "name": "border-color/button-primary",
+      "type": "COLOR",
+      "values": {
+        "undrr": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "delta": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "irp": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "mcr": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "preventionweb": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        }
+      }
+    },
+    {
+      "id": "font-size.300",
+      "name": "font-size/300",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 16,
+        "delta": 16,
+        "irp": 16,
+        "mcr": 16,
+        "preventionweb": 16
+      }
+    },
+    {
+      "id": "font-size.form-input",
+      "name": "font-size/form-input",
+      "type": "FLOAT",
+      "values": {
+        "undrr": {
+          "alias": "font-size/300"
+        },
+        "delta": {
+          "alias": "font-size/300"
+        },
+        "irp": {
+          "alias": "font-size/300"
+        },
+        "mcr": {
+          "alias": "font-size/300"
+        },
+        "preventionweb": {
+          "alias": "font-size/300"
+        }
+      }
+    },
+    {
+      "id": "radius.button",
+      "name": "radius/button",
+      "type": "FLOAT",
+      "values": {
+        "undrr": {
+          "alias": "spacing/50"
+        },
+        "delta": {
+          "alias": "spacing/50"
+        },
+        "irp": {
+          "alias": "spacing/50"
+        },
+        "mcr": {
+          "alias": "spacing/300"
+        },
+        "preventionweb": {
+          "alias": "spacing/50"
+        }
+      }
+    },
+    {
+      "id": "radius.form-input",
+      "name": "radius/form-input",
+      "type": "FLOAT",
+      "values": {
+        "undrr": {
+          "alias": "spacing/50"
+        },
+        "delta": {
+          "alias": "spacing/50"
+        },
+        "irp": {
+          "alias": "spacing/50"
+        },
+        "mcr": {
+          "alias": "spacing/100"
+        },
+        "preventionweb": {
+          "alias": "spacing/50"
+        }
+      }
+    },
+    {
+      "id": "padding.button.block",
+      "name": "padding/button/block",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 10,
+        "delta": 10,
+        "irp": 10,
+        "mcr": 15,
+        "preventionweb": 10
+      }
+    },
+    {
+      "id": "padding.button.inline",
+      "name": "padding/button/inline",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 15,
+        "delta": 20,
+        "irp": 15,
+        "mcr": 30,
+        "preventionweb": 15
+      }
+    },
+    {
+      "id": "border-width.button",
+      "name": "border-width/button",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 1,
+        "delta": 1,
+        "irp": 1,
+        "mcr": 2,
+        "preventionweb": 1
+      }
+    },
+    {
+      "id": "font-family.text",
+      "name": "font-family/text",
+      "type": "STRING",
+      "values": {
+        "undrr": "Roboto",
+        "delta": "Roboto",
+        "irp": "Roboto",
+        "mcr": "Roboto",
+        "preventionweb": "Roboto"
+      }
+    },
+    {
+      "id": "component.radio.control-size",
+      "name": "component/radio/control-size",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 24,
+        "delta": 24,
+        "irp": 24,
+        "mcr": 24,
+        "preventionweb": 24
+      }
+    },
+    {
+      "id": "component.radio.minimum-row-height",
+      "name": "component/radio/minimum-row-height",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 40,
+        "delta": 40,
+        "irp": 40,
+        "mcr": 40,
+        "preventionweb": 40
+      }
+    },
+    {
+      "id": "component.radio.border-width",
+      "name": "component/radio/border-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 2,
+        "delta": 2,
+        "irp": 2,
+        "mcr": 2,
+        "preventionweb": 2
+      }
+    },
+    {
+      "id": "component.radio.checked-inset",
+      "name": "component/radio/checked-inset",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 3,
+        "delta": 3,
+        "irp": 3,
+        "mcr": 3,
+        "preventionweb": 3
+      }
+    },
+    {
+      "id": "component.radio.native-checked-inset-spread",
+      "name": "component/radio/native-checked-inset-spread",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 5,
+        "delta": 5,
+        "irp": 5,
+        "mcr": 5,
+        "preventionweb": 5
+      }
+    },
+    {
+      "id": "component.radio.label-inline-padding",
+      "name": "component/radio/label-inline-padding",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 7,
+        "delta": 7,
+        "irp": 7,
+        "mcr": 7,
+        "preventionweb": 7
+      }
+    },
+    {
+      "id": "component.radio.focus-radius",
+      "name": "component/radio/focus-radius",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 12,
+        "delta": 12,
+        "irp": 12,
+        "mcr": 12,
+        "preventionweb": 12
+      }
+    },
+    {
+      "id": "component.radio.focus-outer-radius",
+      "name": "component/radio/focus-outer-radius",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 14,
+        "delta": 14,
+        "irp": 14,
+        "mcr": 14,
+        "preventionweb": 14
+      }
+    },
+    {
+      "id": "component.radio.source-narrow-default-control-width",
+      "name": "component/radio/source-narrow-default-control-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 11.140625,
+        "delta": 11.140625,
+        "irp": 11.140625,
+        "mcr": 11.140625,
+        "preventionweb": 11.140625
+      }
+    },
+    {
+      "id": "component.radio.source-narrow-default-label-width",
+      "name": "component/radio/source-narrow-default-label-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 228.859375,
+        "delta": 228.859375,
+        "irp": 228.859375,
+        "mcr": 228.859375,
+        "preventionweb": 228.859375
+      }
+    },
+    {
+      "id": "component.radio.source-narrow-invalid-control-width",
+      "name": "component/radio/source-narrow-invalid-control-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 8.484375,
+        "delta": 8.484375,
+        "irp": 8.484375,
+        "mcr": 8.484375,
+        "preventionweb": 8.484375
+      }
+    },
+    {
+      "id": "component.radio.source-narrow-invalid-label-width",
+      "name": "component/radio/source-narrow-invalid-label-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 148.921875,
+        "delta": 148.921875,
+        "irp": 148.921875,
+        "mcr": 148.921875,
+        "preventionweb": 148.921875
+      }
+    },
+    {
+      "id": "component.radio.source-narrow-invalid-error-width",
+      "name": "component/radio/source-narrow-invalid-error-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 82.59375,
+        "delta": 82.59375,
+        "irp": 82.59375,
+        "mcr": 82.59375,
+        "preventionweb": 82.59375
+      }
+    },
+    {
+      "id": "component.checkbox.control-size",
+      "name": "component/checkbox/control-size",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 24,
+        "delta": 24,
+        "irp": 24,
+        "mcr": 24,
+        "preventionweb": 24
+      }
+    },
+    {
+      "id": "component.checkbox.border-width",
+      "name": "component/checkbox/border-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 2,
+        "delta": 2,
+        "irp": 2,
+        "mcr": 2,
+        "preventionweb": 2
+      }
+    },
+    {
+      "id": "component.checkbox.minimum-row-height",
+      "name": "component/checkbox/minimum-row-height",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 40,
+        "delta": 40,
+        "irp": 40,
+        "mcr": 40,
+        "preventionweb": 40
+      }
+    },
+    {
+      "id": "component.checkbox.label-inline-padding",
+      "name": "component/checkbox/label-inline-padding",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 7,
+        "delta": 7,
+        "irp": 7,
+        "mcr": 7,
+        "preventionweb": 7
+      }
+    },
+    {
+      "id": "component.checkbox.focus-outer-radius",
+      "name": "component/checkbox/focus-outer-radius",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 7,
+        "delta": 7,
+        "irp": 7,
+        "mcr": 12,
+        "preventionweb": 7
+      }
+    },
+    {
+      "id": "component.checkbox.source-narrow-default-control-width",
+      "name": "component/checkbox/source-narrow-default-control-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 11.140625,
+        "delta": 11.140625,
+        "irp": 11.140625,
+        "mcr": 11.140625,
+        "preventionweb": 11.140625
+      }
+    },
+    {
+      "id": "component.checkbox.source-narrow-default-label-width",
+      "name": "component/checkbox/source-narrow-default-label-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 228.859375,
+        "delta": 228.859375,
+        "irp": 228.859375,
+        "mcr": 228.859375,
+        "preventionweb": 228.859375
+      }
+    },
+    {
+      "id": "component.checkbox.source-narrow-invalid-control-width",
+      "name": "component/checkbox/source-narrow-invalid-control-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 8.484375,
+        "delta": 8.484375,
+        "irp": 8.484375,
+        "mcr": 8.484375,
+        "preventionweb": 8.484375
+      }
+    },
+    {
+      "id": "component.checkbox.source-narrow-invalid-label-width",
+      "name": "component/checkbox/source-narrow-invalid-label-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 148.921875,
+        "delta": 148.921875,
+        "irp": 148.921875,
+        "mcr": 148.921875,
+        "preventionweb": 148.921875
+      }
+    },
+    {
+      "id": "component.checkbox.source-narrow-invalid-error-width",
+      "name": "component/checkbox/source-narrow-invalid-error-width",
+      "type": "FLOAT",
+      "values": {
+        "undrr": 82.59375,
+        "delta": 82.59375,
+        "irp": 82.59375,
+        "mcr": 82.59375,
+        "preventionweb": 82.59375
+      }
+    }
+  ],
+  "styles": [
+    {
+      "id": "component.body",
+      "name": "Mangrove/component/body",
+      "recommended": false,
+      "component": true,
+      "source": {
+        "file": "stories/assets/scss/_foundational.scss",
+        "line": 17
+      },
+      "description": "Component typography. CSS requests weight 400; Regular 400. Line height is the computed body length (body font-size 300 times its em ratio), inherited without rescaling small text. Latin script only.",
+      "typography": {
+        "requestedWeight": 400,
+        "bundledWeight": 400,
+        "lineHeightRatio": 1.5,
+        "lineHeightBasis": "computed-body-length",
+        "verification": "Explicit source role and body line-height default."
+      },
+      "bindings": {
+        "fontFamily": "font-family/text",
+        "fontSize": "font-size/300"
+      },
+      "values": {
+        "undrr": {
+          "fontName": {
+            "family": "Roboto",
+            "style": "Regular"
+          },
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PIXELS",
+            "value": 24
+          }
+        },
+        "delta": {
+          "fontName": {
+            "family": "Roboto",
+            "style": "Regular"
+          },
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PIXELS",
+            "value": 24
+          }
+        },
+        "irp": {
+          "fontName": {
+            "family": "Roboto",
+            "style": "Regular"
+          },
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PIXELS",
+            "value": 24
+          }
+        },
+        "mcr": {
+          "fontName": {
+            "family": "Roboto",
+            "style": "Regular"
+          },
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PIXELS",
+            "value": 24
+          }
+        },
+        "preventionweb": {
+          "fontName": {
+            "family": "Roboto",
+            "style": "Regular"
+          },
+          "fontSize": 16,
+          "lineHeight": {
+            "unit": "PIXELS",
+            "value": 24
+          }
+        }
+      }
+    }
+  ]
+}

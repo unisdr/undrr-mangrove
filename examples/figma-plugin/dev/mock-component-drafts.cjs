@@ -111,6 +111,18 @@ async function main() {
       ['content-hub-reporting-grid', 2],
       ['content-hub-soft-cta', 2],
       ['content-hub-page', 34],
+      ['search-widget-form-context', 40],
+      ['search-widget-result-context', 134],
+      ['search-widget-select-context', 104],
+      ['search-widget-facets-context', 21],
+      ['search-widget-pager-context', 36],
+      ['search-widget-drawer-context', 4],
+      ['search-widget', 44],
+      ['form-group', 12],
+      ['form-action', 8],
+      ['form-action-newsletter', 8],
+      ['news-source-exclusion', 2],
+      ['news-article-initial-media', 10],
       ['search-result-item', 42],
       ['search-result-fields', 14],
       ['search-result-state', 20],
@@ -118,7 +130,7 @@ async function main() {
   );
   assert.strictEqual(
     packet.draftFamilies.reduce((n, f) => n + f.variants.length, 0),
-    440
+    863
   );
   for (const field of [
     'collection',
@@ -162,7 +174,7 @@ async function main() {
   validate(packet.draftFamilies);
   assert.deepStrictEqual(
     packet.draftDependencies.map(f => f.id),
-    ['editorial-cta', 'page-chrome-button']
+    ['editorial-cta', 'page-chrome-button', 'checkbox', 'radio']
   );
   assert.deepStrictEqual(
     packet.draftDependencies[0],
@@ -229,7 +241,7 @@ async function main() {
   tree.children[0].id = tree.id;
   assert.throws(() => validate(duplicate), /Missing\/duplicate anatomy ID/);
   console.log(
-    'ok  isolated deterministic 57-family/440-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
+    'ok  isolated deterministic 69-family/863-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
   );
 
   // Use the actual importer entry, not a duplicated preflight. The packet must

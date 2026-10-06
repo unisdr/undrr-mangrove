@@ -128,6 +128,34 @@ const recipes = [
     'buildContentHubRecipes',
   ],
   [
+    [
+      'search-widget-form-context',
+      'search-widget-result-context',
+      'search-widget-select-context',
+      'search-widget-facets-context',
+      'search-widget-pager-context',
+      'search-widget-drawer-context',
+      'search-widget',
+    ],
+    './figma-search-widget-recipes.cjs',
+    'buildSearchWidgetRecipes',
+  ],
+  [
+    ['form-group', 'form-action', 'form-action-newsletter'],
+    './figma-form-composition-recipes.cjs',
+    'buildFormCompositionRecipes',
+  ],
+  [
+    ['news-source-exclusion'],
+    './figma-news-exclusion-recipes.cjs',
+    'buildNewsExclusionParagraphRecipes',
+  ],
+  [
+    ['news-article-initial-media'],
+    './figma-news-article-recipes.cjs',
+    'buildNewsArticleMediaRecipes',
+  ],
+  [
     ['search-result-item', 'search-result-fields', 'search-result-state'],
     './figma-search-result-recipes.cjs',
     'buildSearchResultRecipes',

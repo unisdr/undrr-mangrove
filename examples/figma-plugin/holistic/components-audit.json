@@ -118,6 +118,12 @@
       "news-related-card",
       "news-taxonomy",
       "news-recommendations",
+      "news-contextual-highlight",
+      "copy-button",
+      "cite-trigger",
+      "cite-dialog",
+      "cite-fallback",
+      "article-image-header",
       "content-hub-tertiary-cta",
       "content-hub-header",
       "content-hub-reading-column",
@@ -131,6 +137,18 @@
       "content-hub-reporting-grid",
       "content-hub-soft-cta",
       "content-hub-page",
+      "search-widget-form-context",
+      "search-widget-result-context",
+      "search-widget-select-context",
+      "search-widget-facets-context",
+      "search-widget-pager-context",
+      "search-widget-drawer-context",
+      "search-widget",
+      "form-group",
+      "form-action",
+      "form-action-newsletter",
+      "news-source-exclusion",
+      "news-article-initial-media",
       "search-result-item",
       "search-result-fields",
       "search-result-state"
@@ -164,7 +182,12 @@
     ],
     "unassignedFamilyIDs": [],
     "claim": "32 normal plus 9 draft families are mapped to owning source units; 25 normal families have documented bounded publication. Family counts are not component-completeness percentages.",
-    "sourceOnlyDependencyFamilyIDs": ["editorial-cta", "page-chrome-button"],
+    "sourceOnlyDependencyFamilyIDs": [
+      "editorial-cta",
+      "page-chrome-button",
+      "checkbox",
+      "radio"
+    ],
     "familyListScope": "Source-only family IDs follow the current packet. Historical counts/98 source-unit classifications retain their original audit evidence; current packet totals are in draftPacketFollowup."
   },
   "publicationEvidence": [
@@ -13984,8 +14007,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 57,
-    "variants": 440,
+    "families": 69,
+    "variants": 863,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -14036,7 +14059,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "dd347ae5c894cd732a0babfcf04949cb40631e37da928ca23c7b6e54a066e74e",
+    "currentPacketScriptSha256": "f21c151020891aa0c1ba588d56f1fb4f4b9b541de04548ceb0537a8ded2c58d0",
     "dependencies": [
       {
         "id": "editorial-cta",
@@ -14045,6 +14068,14 @@
       {
         "id": "page-chrome-button",
         "variants": 16
+      },
+      {
+        "id": "checkbox",
+        "variants": 30
+      },
+      {
+        "id": "radio",
+        "variants": 30
       }
     ],
     "boundedCompleteSourceScene": {
@@ -14070,6 +14101,14 @@
         "variants": 370,
         "nativeAcceptance": false,
         "delivery": "source-eda76155",
+        "preserved": true
+      },
+      {
+        "revision": "ad07d259",
+        "families": 57,
+        "variants": 440,
+        "nativeAcceptance": false,
+        "delivery": "source-ad07d259",
         "preserved": true
       }
     ],
@@ -14124,6 +14163,34 @@
       "independentReview": "Range accepted",
       "nativeAcceptance": false,
       "scope": "Titleless contextual rich HighlightBox and source allocation only; following desktop paragraph exclusion flow and full article/native pixels remain open."
+    },
+    "boundedSearchWidget": {
+      "families": 7,
+      "variants": 383,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Finite authored contextual source configurations; runtime filtering, native raster/reflow, publication and consumer uptake remain open."
+    },
+    "boundedFormCompositions": {
+      "families": 3,
+      "variants": 28,
+      "sourceCases": 140,
+      "independentReview": "Notice accepted",
+      "nativeAcceptance": false
+    },
+    "boundedArticleInitialMedia": {
+      "families": 1,
+      "variants": 10,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Opaque initial external-player source captures; explicit CaptureTheme presets, native crop and playback gates open."
+    },
+    "boundedArticleExclusion": {
+      "families": 1,
+      "variants": 2,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Exact desktop294-character/four-rich-line source profile, ordinary editable narrow paragraph; loaded current-page copy freeze, native font/line pixels and arbitrary reflow open."
     }
   }
 }

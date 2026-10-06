@@ -1,0 +1,26 @@
+{
+  "kind": "genuine-source-widget-photograph-representation",
+  "sourceUrl": "https://www.undrr.org/sites/default/files/styles/landscape_16_9/public/2022-08/Bali.JPG.jpg",
+  "requestHeaders": {
+    "Accept": "image/jpeg"
+  },
+  "requestMethod": "GET",
+  "fetchedDate": "2026-10-06",
+  "file": "bali-landscape-source-photo.jpg",
+  "sha256": "7f864aee8880fb303d0b8f3a28b19761142a123fb90226b326895ab7fc6778a7",
+  "bytes": 92005,
+  "format": "JFIF JPEG",
+  "width": 2400,
+  "height": 1350,
+  "capturedSourceNaturalWidth": 2400,
+  "capturedSourceNaturalHeight": 1350,
+  "previousStandaloneAssetPreserved": {
+    "file": "../search-results/bali-landscape.jpg",
+    "sha256": "5aef058e2b3e9d08cb8605406f4fc6bc31cd9424113a31594bb01fd1d309a5ea",
+    "width": 2048,
+    "height": 1152
+  },
+  "browserNegotiatedRepresentationByteEqualityVerified": false,
+  "nativeRasterAcceptance": false,
+  "photographRedistributionLicenseGrantVerified": false
+}
