@@ -125,6 +125,11 @@
       "content-hub-resources",
       "content-hub-toc",
       "content-hub-route-card",
+      "content-hub-breadcrumb",
+      "content-hub-route-band",
+      "content-hub-fact-band",
+      "content-hub-reporting-grid",
+      "content-hub-soft-cta",
       "content-hub-page",
       "search-result-item",
       "search-result-fields",
@@ -159,7 +164,8 @@
     ],
     "unassignedFamilyIDs": [],
     "claim": "32 normal plus 9 draft families are mapped to owning source units; 25 normal families have documented bounded publication. Family counts are not component-completeness percentages.",
-    "sourceOnlyDependencyFamilyIDs": ["editorial-cta", "page-chrome-button"]
+    "sourceOnlyDependencyFamilyIDs": ["editorial-cta", "page-chrome-button"],
+    "familyListScope": "Source-only family IDs follow the current packet. Historical counts/98 source-unit classifications retain their original audit evidence; current packet totals are in draftPacketFollowup."
   },
   "publicationEvidence": [
     "examples/figma-plugin/CORE-KIT-STATUS.md",
@@ -13978,8 +13984,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 46,
-    "variants": 334,
+    "families": 51,
+    "variants": 370,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -14005,6 +14011,11 @@
       "content-hub-resources",
       "content-hub-toc",
       "content-hub-route-card",
+      "content-hub-breadcrumb",
+      "content-hub-route-band",
+      "content-hub-fact-band",
+      "content-hub-reporting-grid",
+      "content-hub-soft-cta",
       "content-hub-page"
     ],
     "addedSearchControlFamilies": [
@@ -14019,7 +14030,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "29edfd25c38413f9401fd4064aa6e2430ef1e454658cd2d3da177c93f40177d4",
+    "currentPacketScriptSha256": "70a0364edb8afa82ff2d076bfdf379490fe7d3001e87a5b08bfb90ca4f65dff8",
     "dependencies": [
       {
         "id": "editorial-cta",
@@ -14037,6 +14048,24 @@
       "chrome": "Closed",
       "scope": "Complete authored finite source anatomy only; native fonts/layout/recovery/publication open."
     },
-    "completePagesScope": "The full requested page catalogue and native composite gates remain incomplete."
+    "completePagesScope": "The full requested page catalogue and native composite gates remain incomplete.",
+    "historicalPacketCheckpoints": [
+      {
+        "revision": "320f60c3",
+        "families": 46,
+        "variants": 334,
+        "nativeAcceptance": false,
+        "delivery": "source-320f60c3",
+        "preserved": true
+      }
+    ],
+    "boundedContentHubSourceScenes": {
+      "families": 13,
+      "variants": 151,
+      "sceneVariants": 34,
+      "recordedContexts": 17,
+      "viewports": [390, 1164],
+      "scope": "All observed finite initial source contexts, genuine nested dependencies and source text-default checks. Additional callers/native fonts/pixels/runtime/recovery/publication open."
+    }
   }
 }

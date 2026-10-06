@@ -6,6 +6,9 @@ const fs = require('fs');
 const path = require('path');
 const { environment } = require('./mock-kit.cjs');
 const {
+  installNativeTextPropertyDefaultFixture,
+} = require('./mock-search-results.cjs');
+const {
   buildFigmaVariables,
 } = require('../../../scripts/build-figma-tokens.cjs');
 const {
@@ -320,8 +323,46 @@ async function openMain() {
         'root'
       );
     }
+  function assertMasterDefaults(env, recipes = families) {
+    const owned = new Map(
+      [...env.state.nodes.values()]
+        .filter(n => {
+          for (let parent = n; parent; parent = parent.parent)
+            if (parent.type === 'INSTANCE') return false;
+          return true;
+        })
+        .map(n => [n.getSharedPluginData('orgundrrmangrove', 'mgKitId'), n])
+    );
+    for (const family of recipes)
+      for (const variant of family.variants) {
+        walk(
+          variant.tree,
+          (spec, key) => {
+            if (!spec.textProperty) return;
+            const node = owned.get(key);
+            assert.strictEqual(
+              node.characters,
+              spec.characters,
+              key + ' source copy'
+            );
+            const reference = node.componentPropertyReferences.characters;
+            assert(reference && reference.startsWith(spec.textProperty + '#'));
+            let owner = node.parent;
+            while (owner && owner.type !== 'COMPONENT_SET')
+              owner = owner.parent;
+            assert.strictEqual(
+              owner.componentPropertyDefinitions[reference].defaultValue,
+              spec.characters,
+              key + ' set default'
+            );
+          },
+          'family/' + family.id + '/variant/' + variant.id
+        );
+      }
+  }
   for (const mode of doc.modes) {
     const env = environment(doc, { sharedOnly: true });
+    installNativeTextPropertyDefaultFixture(env);
     installPageChromeSvgFixture(env, families);
     await env.call('importVariables', doc, [mode.id], false, [], false);
     const requested = families.map(f => f.id);
@@ -333,6 +374,7 @@ async function openMain() {
     );
     assert.strictEqual(first.errors.length, 0, first.errors.join('\n'));
     assert(first.createdNodeIds.length);
+    assertMasterDefaults(env);
     const owned = new Map(
       [...env.state.nodes.values()].map(n => [
         n.getSharedPluginData('orgundrrmangrove', 'mgKitId'),
@@ -445,11 +487,37 @@ async function openMain() {
       ),
       consumer = component.createInstance();
     env.state.nodes.get(first.reviewRootId).appendChild(consumer);
-    const heading = Object.keys(consumer.componentProperties).find(k =>
-      k.startsWith('Heading#')
+    const textNodes = n => [n, ...(n.children || []).flatMap(textNodes)];
+    const masterHeading = textNodes(component).find(
+      n =>
+        n.type === 'TEXT' &&
+        n.componentPropertyReferences?.characters
+          ?.split('#')[0]
+          .endsWith(' Heading')
     );
-    assert(heading);
+    const heading = masterHeading.componentPropertyReferences.characters;
+    assert(heading && consumer.componentProperties[heading]);
+    const linkedHeading = textNodes(consumer).find(
+      n =>
+        n.type === 'TEXT' &&
+        n.componentPropertyReferences?.characters === heading
+    );
+    // Explicit offline projection of observed property-linked consumer copy.
+    Object.defineProperty(linkedHeading, 'characters', {
+      configurable: true,
+      get() {
+        return consumer.componentProperties[heading].value;
+      },
+      set(value) {
+        const descriptor = Object.getOwnPropertyDescriptor(
+          Object.getPrototypeOf(this),
+          'characters'
+        );
+        descriptor.set.call(this, value);
+      },
+    });
     consumer.setProperties({ [heading]: 'Edited mobile heading' });
+    assert.strictEqual(linkedHeading.characters, 'Edited mobile heading');
     const snapshot = () =>
       [...env.state.nodes.values()]
         .filter(n => !n.removed)
@@ -463,6 +531,10 @@ async function openMain() {
           n.layoutMode,
           n.layoutSizingHorizontal,
           n.layoutSizingVertical,
+          n.type === 'TEXT'
+            ? [n.characters, n.componentPropertyReferences]
+            : null,
+          n.type === 'COMPONENT_SET' ? n.componentPropertyDefinitions : null,
         ]);
     const before = snapshot();
     for (let i = 0; i < 2; i++) {
@@ -475,6 +547,8 @@ async function openMain() {
       assert.deepStrictEqual(copy(report.errors), []);
       assert.deepStrictEqual(copy(report.createdNodeIds), []);
       assert.deepStrictEqual(snapshot(), before);
+      assertMasterDefaults(env);
+      assert.strictEqual(linkedHeading.characters, 'Edited mobile heading');
       assert.strictEqual(
         (await consumer.getMainComponentAsync()).id,
         component.id
@@ -514,6 +588,34 @@ async function openMain() {
     );
     assert.deepStrictEqual(snapshot(), before);
   }
+  const legacy = copy(doc);
+  for (const family of legacy.components.families.slice(1))
+    for (const variant of family.variants)
+      walk(
+        variant.tree,
+        node => {
+          if (node.textProperty?.startsWith(variant.id + ' '))
+            node.textProperty = node.textProperty.slice(variant.id.length + 1);
+        },
+        'root'
+      );
+  const legacyEnv = environment(legacy, { sharedOnly: true });
+  installNativeTextPropertyDefaultFixture(legacyEnv);
+  installPageChromeSvgFixture(legacyEnv, legacy.components.families);
+  await legacyEnv.call('importVariables', legacy, ['undrr'], false, [], false);
+  for (let i = 0; i < 2; i++) {
+    const result = await legacyEnv.call(
+      'buildMangroveComponents',
+      legacy,
+      'undrr',
+      legacy.components.families.slice(1).map(f => f.id)
+    );
+    assert.deepStrictEqual(copy(result.errors), []);
+  }
+  assert.throws(
+    () => assertMasterDefaults(legacyEnv, legacy.components.families.slice(1)),
+    /source copy|set default/
+  );
   const collision = copy(doc);
   collision.styles.text.find(
     s => s.id === 'component/page-chrome-open/mobile-heading-all'

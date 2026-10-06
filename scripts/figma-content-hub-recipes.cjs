@@ -5,6 +5,12 @@ const fs = require('fs'),
   crypto = require('crypto');
 const ASSET = 'examples/figma-plugin/holistic/assets/content-hub/';
 const SOURCE_HASHES = {
+  'stories/Components/Cards/Card/card.scss':
+    'e5220ce8519237793fc7a1045ea38342a887ec02681309aa8667d1928f3d25a3',
+  'stories/Components/TextCta/text-cta.scss':
+    '578ce5ac580d71f88c2efb4271263f4ac8bab3b7c0ea4d4fe34c2de143c88271',
+  'examples/figma-plugin/holistic/assets/content-hub/band-source-diagnostics.json':
+    'd0fa39c95486700fb80d4600aeff0cc3e6a8f4e9a7442a3b19c48a094263cae8',
   'stories/Components/Breadcrumbs/breadcrumbs.scss':
     '10da218994e22c2b70f6b397af6bea20dd78bbadd7e66eb1f78262b15db8df24',
   'examples/figma-plugin/holistic/assets/content-hub/card-caret-source.json':
@@ -1459,6 +1465,8 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
                     modes.map(m => [m.id, links[m.id][index]])
                   );
           n.characters = observed.undrr.text;
+          if (n.textProperty)
+            n.textProperty = 'TOC ' + page + '/' + w + ' ' + n.textProperty;
           n.textStyle = style(key + '/' + w + '/toc-' + n.id, observed);
           n.fill = paint(
             key + '/' + w + '/toc-' + n.id + '/ink',
@@ -1764,6 +1772,449 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
       }
     }
 
+  const breadcrumbs = makeFamily(
+    'content-hub-breadcrumb',
+    'ContentHub authored inline breadcrumbs'
+  );
+  const chevronSide = 5.6,
+    chevronBorder = 2,
+    viewport = chevronSide * Math.SQRT2;
+  const rotated = ([x, y]) => [
+    (x - chevronSide / 2) / Math.SQRT2 -
+      (y - chevronSide / 2) / Math.SQRT2 +
+      viewport / 2,
+    (x - chevronSide / 2) / Math.SQRT2 +
+      (y - chevronSide / 2) / Math.SQRT2 +
+      viewport / 2,
+  ];
+  const poly = points =>
+    '<path d="' +
+    points
+      .map(
+        (p, i) =>
+          (i ? 'L' : 'M') +
+          rotated(p)
+            .map(n => n.toFixed(6))
+            .join(' ')
+      )
+      .join(' ') +
+    ' Z"/>';
+  const chevronMarkup =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' +
+    viewport +
+    ' ' +
+    viewport +
+    '">' +
+    poly([
+      [0, 0],
+      [chevronSide, 0],
+      [chevronSide, chevronBorder],
+      [0, chevronBorder],
+    ]) +
+    poly([
+      [chevronSide - chevronBorder, chevronBorder],
+      [chevronSide, chevronBorder],
+      [chevronSide, chevronSide],
+      [chevronSide - chevronBorder, chevronSide],
+    ]) +
+    '</svg>';
+  for (const page of ['landing', 'validate-data'])
+    for (const w of [390, 1164]) {
+      const key = 'route-' + page,
+        sets = scene(key, w),
+        nav = one(
+          sets,
+          n => n.tag === 'NAV' && n.cls.startsWith('mg-breadcrumb')
+        );
+      const groups = perMode(m =>
+        sets[m.id].records.filter(
+          n =>
+            n.tag === 'LI' &&
+            n.y >= nav[m.id].y &&
+            n.y < nav[m.id].y + nav[m.id].height
+        )
+      );
+      const count = page === 'landing' ? 2 : 5;
+      if (modes.some(m => groups[m.id].length !== count))
+        fail('Actual breadcrumb count changed');
+      const tree = frame(
+        'breadcrumb',
+        number(page + '/' + w + '/breadcrumb-width', m => nav[m.id].width),
+        number(page + '/' + w + '/breadcrumb-height', m => nav[m.id].height)
+      );
+      const sourceHrefs = [];
+      for (let i = 0; i < count; i++) {
+        const li = perMode(m => groups[m.id][i]);
+        const ns = perMode(m => {
+          const n = li[m.id];
+          const a = sets[m.id].records.find(
+            r =>
+              r.tag === 'A' &&
+              r.text === n.text &&
+              r.y >= n.y &&
+              r.y < n.y + n.height &&
+              r.x >= n.x &&
+              r.x < n.x + n.width
+          );
+          return a
+            ? { ...a, x: a.x, y: n.y, width: a.width, height: n.height }
+            : { ...n };
+        });
+        const slot = textSlot(
+          page + '/' + w + '/breadcrumb-item-' + (i + 1),
+          ns,
+          nav
+        );
+        slot.id = 'item-' + (i + 1);
+        if (i === count - 1) {
+          const st = styles.text.find(s => s.id === slot.children[0].textStyle);
+          for (const m of modes) st.values[m.id].paragraphIndent = 28;
+        } else {
+          slot.children[0].textDecoration = 'UNDERLINE';
+          slot.children[0].textDecorationOffset = {
+            unit: 'PIXELS',
+            value: 2.4,
+          };
+          sourceHrefs.push(ns.undrr.href);
+        }
+        tree.children.push(slot);
+        if (i > 0) {
+          const inkBox = perMode(m => ({
+            x: li[m.id].x + 10.4 + (chevronSide - viewport) / 2,
+            y: li[m.id].y + 8,
+            width: viewport,
+            height: viewport,
+          }));
+          const host = allocated(
+            page + '/' + w + '/breadcrumb-chevron-' + (i + 1),
+            inkBox,
+            nav,
+            [
+              {
+                id: 'breadcrumb-chevron-ink-' + (i + 1),
+                type: 'SVG',
+                name: 'Authored rotated CSS border projection',
+                layout: { width: viewport, height: viewport },
+                svg: {
+                  assetId: 'content-hub-breadcrumb-chevron',
+                  markup: chevronMarkup,
+                  monochrome: {
+                    fills: paint(
+                      page + '/' + w + '/breadcrumb-chevron-ink',
+                      m => li[m.id].color
+                    ),
+                  },
+                },
+              },
+            ]
+          );
+          host.id = 'separator-' + (i + 1);
+          tree.children.push(host);
+        }
+      }
+      breadcrumbs.variants.push({
+        id: 'content-hub-breadcrumb.' + page + '.' + w,
+        name: 'Page=' + page + ', SourceViewport=' + w,
+        properties: { Page: page, SourceViewport: String(w) },
+        sourceHref: sourceHrefs,
+        sourceGeometry: {
+          sourceCount: count,
+          currentRequestedWeight600: true,
+          currentMatchedBundledFace: 'Bold700',
+          sourceCssSide: chevronSide,
+          sourceCssBorder: chevronBorder,
+          firstLineIndent: 28,
+          separatorBaseline:
+            'Finite8px ink-y candidate from reviewed identical16px/24px source breadcrumb profile, not a fresh pseudo baseline/raster measurement.',
+          ink: 'Ideal CSS rotated border projection shares reviewed source math; quantized browser pseudo dimensions/native SVG contour and underline baseline remain comparison gates.',
+          semantic:
+            'Static visible source anatomy and real source hash metadata; native route navigation/HTML list semantics not implemented.',
+        },
+        tree,
+      });
+    }
+
+  const routeBands = makeFamily(
+    'content-hub-route-band',
+    'ContentHub authored route card bands'
+  );
+  const factBands = makeFamily(
+    'content-hub-fact-band',
+    'ContentHub authored full-bleed fact bands'
+  );
+  const reportingGrids = makeFamily(
+    'content-hub-reporting-grid',
+    'ContentHub authored reporting card grids'
+  );
+  for (const key of [
+    'hub-home',
+    'route-overview',
+    'routes-vertical',
+    'route-landing',
+    'route-reporting',
+  ])
+    for (const w of [390, 1164]) {
+      const sets = scene(key, w);
+      for (const kind of key === 'route-reporting'
+        ? ['reporting']
+        : key === 'route-landing'
+          ? ['route']
+          : ['route', 'fact']) {
+        const fact = kind === 'fact',
+          report = kind === 'reporting',
+          all = sourceCards(sets, kind),
+          start = fact ? 3 : 0,
+          count = fact ? 6 : report ? 2 : 3;
+        const cardsByMode = perMode(m =>
+          all[m.id].slice(start, start + count).map(group => group[0])
+        );
+        const ns = report
+          ? one(
+              sets,
+              n => n.tag === 'DIV' && n.cls === 'mg-grid mg-grid__col-2'
+            )
+          : one(
+              sets,
+              n =>
+                n.tag === 'SECTION' &&
+                (fact
+                  ? n.cls.startsWith('mg-demo-band ')
+                  : !n.cls && n.text.startsWith('What would you like to do?'))
+            );
+        const base = fact
+          ? perMode(m => ({ ...ns[m.id], x: 0, width: w }))
+          : ns;
+        const tree = frame(
+          'band',
+          number(
+            key + '/' + w + '/' + kind + '/band-width',
+            m => base[m.id].width
+          ),
+          number(
+            key + '/' + w + '/' + kind + '/band-height',
+            m => base[m.id].height
+          ),
+          [],
+          fact
+            ? {
+                fill: paint(
+                  key + '/' + w + '/band-source-fill',
+                  m => ns[m.id].background.split(' none ')[0]
+                ),
+              }
+            : {}
+        );
+        if (!report) {
+          const heading = one(
+            sets,
+            n =>
+              n.tag === 'H2' &&
+              n.text ===
+                (fact
+                  ? 'What is the Sendai Framework Monitor?'
+                  : 'What would you like to do?')
+          );
+          const lede = one(
+            sets,
+            n =>
+              n.tag === 'P' &&
+              n.cls === 'mg-demo-lede | mg-u-font-size-500' &&
+              n.text.startsWith(
+                fact
+                  ? 'The Sendai Framework Monitor is'
+                  : 'Three routes into the Monitor'
+              )
+          );
+          for (const [id, observed] of [
+            ['heading', heading],
+            ['lede', lede],
+          ]) {
+            const slot = textSlot(
+              key + '/' + w + '/' + kind + '/' + id,
+              observed,
+              base
+            );
+            slot.id = id;
+            tree.children.push(slot);
+          }
+        }
+        for (let i = 0; i < count; i++) {
+          const rootBox = perMode(m => cardsByMode[m.id][i]);
+          const templateKind = report
+            ? 'reporting'
+            : fact
+              ? 'fact'
+              : key === 'routes-vertical'
+                ? 'vertical'
+                : 'route';
+          const template = cards.variants.find(
+            v =>
+              v.properties.Kind === templateKind &&
+              v.properties.Item === String(i + 1) &&
+              v.properties.SourceViewport === String(w)
+          );
+          if (!template) fail('Exact authored card dependency missing');
+          for (const m of modes)
+            for (const field of ['width', 'height'])
+              if (
+                value(template.tree.layout[field], m, 'FLOAT') !==
+                rootBox[m.id][field]
+              )
+                fail(
+                  'Source context card ' +
+                    field +
+                    ' differs from exact dependency'
+                );
+          const slot = allocated(
+            key + '/' + w + '/' + kind + '/card-' + (i + 1),
+            rootBox,
+            base,
+            [
+              {
+                id: 'card-instance-' + (i + 1),
+                type: 'INSTANCE',
+                name: 'Exact source context card',
+                family: 'content-hub-route-card',
+                variant: template.properties,
+                expose: true,
+                layout: { width: 'FILL', height: 'FILL' },
+              },
+            ]
+          );
+          slot.id = 'card-' + (i + 1);
+          tree.children.push(slot);
+        }
+        const family = report ? reportingGrids : fact ? factBands : routeBands;
+        family.variants.push({
+          id: family.id + '.' + key + '.' + w,
+          name: 'SourceCase=' + key + ', SourceViewport=' + w,
+          properties: { SourceCase: key, SourceViewport: String(w) },
+          sourceDependencies: ['content-hub-route-card'],
+          sourceGeometry: {
+            sourceRoot: base,
+            fullBleed: fact
+              ? 'Actual source inherited100vw pseudo background behind container-aligned content; native fixed viewport paint projection, no dynamic CSS semantics.'
+              : false,
+            finiteInitialAnatomy: true,
+            nativeTypographyAndPixelsAccepted: false,
+          },
+          tree,
+        });
+      }
+    }
+  const softCta = makeFamily(
+    'content-hub-soft-cta',
+    'ContentHub authored left-aligned soft CTA'
+  );
+  for (const w of [390, 1164]) {
+    const key = 'route-landing',
+      sets = scene(key, w),
+      ns = one(
+        sets,
+        n =>
+          n.tag === 'SECTION' && n.cls === 'mg-cta mg-cta--primary mg-cta--soft'
+      );
+    const tree = frame(
+      'soft-cta',
+      number(key + '/' + w + '/soft-cta-width', m => ns[m.id].width),
+      number(key + '/' + w + '/soft-cta-height', m => ns[m.id].height)
+    );
+    const wash = paint(key + '/' + w + '/soft-cta-wash', m => {
+      const found = /linear-gradient\((rgba\([^)]+\)), \1\)/.exec(
+        ns[m.id].background
+      );
+      if (!found) fail('Source soft CTA wash changed');
+      return found[1];
+    });
+    const white = paint(
+      key + '/' + w + '/soft-cta-white',
+      m => ns[m.id].background.split(' linear-gradient')[0]
+    );
+    tree.children.push(
+      frame('soft-source-paint', tree.layout.width, tree.layout.height, [], {
+        gradient: {
+          layers: [
+            {
+              stops: [
+                { position: 0, color: wash },
+                { position: 1, color: wash },
+              ],
+              transform: [
+                [1, 0, 0],
+                [0, 1, 0],
+              ],
+            },
+            {
+              stops: [
+                { position: 0, color: white },
+                { position: 1, color: white },
+              ],
+              transform: [
+                [1, 0, 0],
+                [0, 1, 0],
+              ],
+            },
+          ],
+        },
+        absolute: {
+          horizontal: 'START',
+          vertical: 'START',
+          offsetX: zero,
+          offsetY: zero,
+        },
+      })
+    );
+    for (const [id, cls] of [
+      ['headline', 'mg-cta__headline mg-u-font-size-600'],
+      ['body', 'mg-cta__text'],
+    ]) {
+      const observed = one(sets, n => n.cls === cls),
+        slot = textSlot(key + '/' + w + '/soft-cta-' + id, observed, ns);
+      slot.id = id;
+      tree.children.push(slot);
+    }
+    const link = one(sets, n => n.tag === 'A' && n.text === 'Open the Monitor'),
+      template = originalCta.variants.find(
+        v =>
+          v.properties.Context === 'Base' &&
+          v.properties.State === 'Default' &&
+          v.properties.Content === 'Short' &&
+          v.properties.Motion === 'NoPreference'
+      );
+    if (!template) fail('Exact source Base CTA dependency missing');
+    // The finite source host constrains the instance with its actual literal label. Native inheritance and reflow remain open.
+    const slot = allocated(key + '/' + w + '/soft-cta-action', link, ns, [
+      {
+        id: 'open-monitor-instance',
+        type: 'INSTANCE',
+        name: 'Source Open the Monitor action',
+        family: 'editorial-cta',
+        variant: template.properties,
+        overrides: { Label: 'Open the Monitor' },
+        expose: true,
+        layout: { width: 'FILL', height: 'FILL' },
+      },
+    ]);
+    slot.id = 'action';
+    tree.children.push(slot);
+    softCta.variants.push({
+      id: 'content-hub-soft-cta.' + w,
+      name: 'SourceViewport=' + w,
+      properties: { SourceViewport: String(w) },
+      sourceDependencies: ['editorial-cta'],
+      sourceHref: link.undrr.href,
+      sourceGeometry: {
+        sourceRoot: ns,
+        sourceTone: 'soft',
+        sourceCentered: false,
+        sourceLayerOrder:
+          '8percent source accent wash above source neutral0 base; no node percent-opacity binding.',
+        nativeFontPixelReflowAccepted: false,
+      },
+      tree,
+    });
+  }
+
   const pages = makeFamily(
     'content-hub-page',
     'ContentHub authored finite page scenes'
@@ -1779,6 +2230,13 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
     'route-indicators',
     'route-reports',
     'route-data',
+    'hub-home',
+    'deeper-page',
+    'route-landing',
+    'route-overview',
+    'route-reporting',
+    'route-validate-data',
+    'routes-vertical',
   ];
   for (const key of pageKeys)
     for (const w of [390, 1164]) {
@@ -1824,34 +2282,36 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
           }
         )
       );
-      const header = one(sets, n =>
-          n.cls.startsWith('mg-hub-header mg-hub-header--')
-        ),
-        bar = one(sets, n => n.cls === 'mg-hub-header__bar'),
-        headerBox = perMode(m => ({
-          x: 0,
-          y: bar[m.id].y,
-          width: w,
-          height: header[m.id].height,
-        }));
-      const host = allocated(
-        key + '/' + w + '/page-header',
-        headerBox,
-        origin,
-        [
-          {
-            id: 'header-instance',
-            type: 'INSTANCE',
-            name: 'Authored ContentHub header',
-            family: 'content-hub-header',
-            variant: { SourceCase: key, SourceViewport: String(w) },
-            expose: true,
-            layout: { width: 'FILL', height: 'FILL' },
-          },
-        ]
-      );
-      host.id = 'hub-header';
-      tree.children.push(host);
+      if (key !== 'route-landing') {
+        const header = one(sets, n =>
+            n.cls.startsWith('mg-hub-header mg-hub-header--')
+          ),
+          bar = one(sets, n => n.cls === 'mg-hub-header__bar'),
+          headerBox = perMode(m => ({
+            x: 0,
+            y: bar[m.id].y,
+            width: w,
+            height: header[m.id].height,
+          }));
+        const host = allocated(
+          key + '/' + w + '/page-header',
+          headerBox,
+          origin,
+          [
+            {
+              id: 'header-instance',
+              type: 'INSTANCE',
+              name: 'Authored ContentHub header',
+              family: 'content-hub-header',
+              variant: { SourceCase: key, SourceViewport: String(w) },
+              expose: true,
+              layout: { width: 'FILL', height: 'FILL' },
+            },
+          ]
+        );
+        host.id = 'hub-header';
+        tree.children.push(host);
+      }
       const introNodes = sets.undrr.records.filter(
         n => n.cls === 'mg-demo-intro'
       );
@@ -1871,12 +2331,23 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
         slot.id = 'intro';
         tree.children.push(slot);
       }
-      const detail = ![
-        'route-about',
-        'route-indicators',
-        'route-reports',
-        'route-data',
-      ].includes(key);
+      const overview = [
+          'hub-home',
+          'route-overview',
+          'routes-vertical',
+        ].includes(key),
+        landing = key === 'route-landing',
+        reporting = key === 'route-reporting';
+      const detail =
+        !overview &&
+        !landing &&
+        !reporting &&
+        ![
+          'route-about',
+          'route-indicators',
+          'route-reports',
+          'route-data',
+        ].includes(key);
       if (detail) {
         for (const [id, family, selector] of [
           [
@@ -1893,7 +2364,12 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
                 type: 'INSTANCE',
                 name: 'Exact authored source ' + id,
                 family,
-                variant: { Page: 'how-to-report', SourceViewport: String(w) },
+                variant: {
+                  Page: ['deeper-page', 'route-validate-data'].includes(key)
+                    ? 'validate-data'
+                    : 'how-to-report',
+                  SourceViewport: String(w),
+                },
                 expose: true,
                 layout: { width: 'FILL', height: 'FILL' },
               },
@@ -1901,7 +2377,7 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
           slot.id = id;
           tree.children.push(slot);
         }
-      } else {
+      } else if (!overview && !landing && !reporting) {
         const heading = one(
             sets,
             n => n.tag === 'H2' && n.text === 'Resources and guidance'
@@ -1931,6 +2407,96 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
         slot.id = 'resources';
         tree.children.push(slot);
       }
+      if (overview || landing || reporting) {
+        for (const [id, family, selector] of [
+          ...(landing
+            ? [
+                [
+                  'soft-cta',
+                  'content-hub-soft-cta',
+                  n =>
+                    n.tag === 'SECTION' &&
+                    n.cls === 'mg-cta mg-cta--primary mg-cta--soft',
+                ],
+              ]
+            : []),
+          ...(reporting
+            ? [
+                [
+                  'reporting-grid',
+                  'content-hub-reporting-grid',
+                  n => n.tag === 'DIV' && n.cls === 'mg-grid mg-grid__col-2',
+                ],
+              ]
+            : [
+                [
+                  'routes',
+                  'content-hub-route-band',
+                  n =>
+                    n.tag === 'SECTION' &&
+                    !n.cls &&
+                    n.text.startsWith('What would you like to do?'),
+                ],
+              ]),
+          ...(overview
+            ? [
+                [
+                  'facts',
+                  'content-hub-fact-band',
+                  n => n.tag === 'SECTION' && n.cls.startsWith('mg-demo-band '),
+                ],
+              ]
+            : []),
+        ]) {
+          const ns = one(sets, selector),
+            box =
+              id === 'facts'
+                ? perMode(m => ({ ...ns[m.id], x: 0, width: w }))
+                : ns;
+          const selectorProps = {
+            SourceViewport: String(w),
+            ...(id === 'soft-cta' ? {} : { SourceCase: key }),
+          };
+          const slot = allocated(key + '/' + w + '/page-' + id, box, origin, [
+            {
+              id: id + '-instance',
+              type: 'INSTANCE',
+              name: 'Exact authored ' + id + ' source body',
+              family,
+              variant: selectorProps,
+              expose: true,
+              layout: { width: 'FILL', height: 'FILL' },
+            },
+          ]);
+          slot.id = id;
+          tree.children.push(slot);
+        }
+      }
+      const breadcrumbRecords = sets.undrr.records.filter(
+        n => n.tag === 'NAV' && n.cls.startsWith('mg-breadcrumb')
+      );
+      if (breadcrumbRecords.length) {
+        const ns = one(
+            sets,
+            n => n.tag === 'NAV' && n.cls.startsWith('mg-breadcrumb')
+          ),
+          slot = allocated(key + '/' + w + '/page-breadcrumb', ns, origin, [
+            {
+              id: 'breadcrumb-instance',
+              type: 'INSTANCE',
+              name: 'Actual source inline breadcrumb',
+              family: 'content-hub-breadcrumb',
+              variant: {
+                Page: landing ? 'landing' : 'validate-data',
+                SourceViewport: String(w),
+              },
+              expose: true,
+              layout: { width: 'FILL', height: 'FILL' },
+            },
+          ]);
+        slot.id = 'breadcrumb';
+        tree.children.push(slot);
+      }
       pages.variants.push({
         id: 'content-hub-page.' + key + '.' + w,
         name: 'SourceCase=' + key + ', SourceViewport=' + w,
@@ -1953,14 +2519,40 @@ function buildContentHubRecipes({ root, modes, variables, styles }) {
           .map(n => ({ text: n.text, href: n.href })),
         sourceDependencies: [
           'page-chrome',
-          'content-hub-header',
+          ...(!landing ? ['content-hub-header'] : []),
+          ...(overview
+            ? ['content-hub-route-band', 'content-hub-fact-band']
+            : landing
+              ? ['content-hub-soft-cta', 'content-hub-route-band']
+              : reporting
+                ? ['content-hub-reporting-grid']
+                : []),
           ...(introNodes.length ? ['content-hub-intro'] : []),
-          detail ? 'content-hub-reading-column' : 'content-hub-resources',
+          ...(detail
+            ? ['content-hub-reading-column']
+            : !overview && !landing && !reporting
+              ? ['content-hub-resources']
+              : []),
           ...(detail ? ['content-hub-toc'] : []),
+          ...(breadcrumbRecords.length ? ['content-hub-breadcrumb'] : []),
         ],
         tree,
       });
     }
-  return [tertiaryCta, headers, reading, intro, resources, toc, cards, pages];
+  return [
+    tertiaryCta,
+    headers,
+    reading,
+    intro,
+    resources,
+    toc,
+    cards,
+    breadcrumbs,
+    routeBands,
+    factBands,
+    reportingGrids,
+    softCta,
+    pages,
+  ];
 }
 module.exports = { buildContentHubRecipes, SOURCE_HASHES };

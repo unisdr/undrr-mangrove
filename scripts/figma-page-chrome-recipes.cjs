@@ -1273,6 +1273,35 @@ function buildPageChromeOpenRecipes({ root, modes, variables, styles }) {
     'Source fixed mobile backdrop and surface are independent overlay compositions. Do not include their height in normal header flow.',
     'No keyboard, focus trap, hover, click, URL navigation, sticky scrolling, safe-area environment, motion or publication acceptance is inferred.',
   ];
+  const scopedProperties = new Set([
+    'Heading',
+    'Summary',
+    'Item 1',
+    'Item 2',
+    'Item 3',
+    'Item 4',
+  ]);
+  for (const variants of [desktop, mobile]) {
+    const sharedDefaults = new Map();
+    for (const variant of variants) {
+      function scope(node) {
+        if (scopedProperties.has(node.textProperty)) {
+          // Native TEXT defaults belong to the whole set. Keep distinct
+          // authored presentation contexts stable when their copy changes.
+          node.textProperty = variant.id + ' ' + node.textProperty;
+        } else if (node.textProperty) {
+          if (
+            sharedDefaults.has(node.textProperty) &&
+            sharedDefaults.get(node.textProperty) !== node.characters
+          )
+            fail('Unscoped differing source text default ' + node.textProperty);
+          sharedDefaults.set(node.textProperty, node.characters);
+        }
+        for (const child of node.children || []) scope(child);
+      }
+      scope(variant.tree);
+    }
+  }
   return [
     {
       id: 'page-chrome-capped-action',

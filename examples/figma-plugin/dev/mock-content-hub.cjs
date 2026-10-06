@@ -4,7 +4,11 @@
 const assert = require('assert'),
   fs = require('fs'),
   path = require('path');
-const { rangeEnvironment } = require('./mock-rich-text-integration.cjs');
+const { environment } = require('./mock-kit.cjs');
+const sourceEnvironment = doc => environment(doc, { sharedOnly: true }); // This cohort has only plain TEXT, not rich text ranges.
+const {
+  installNativeTextPropertyDefaultFixture,
+} = require('./mock-search-results.cjs');
 const { installPageChromeSvgFixture } = require('./mock-page-chrome.cjs');
 const {
   buildPageChromeRecipes,
@@ -34,7 +38,9 @@ function document() {
 function installContentHubSvgFixture(env, families) {
   installCardContentSvgFixture(
     env,
-    families.filter(f => f.id === 'content-hub-route-card')
+    families.filter(f =>
+      ['content-hub-route-card', 'content-hub-breadcrumb'].includes(f.id)
+    )
   );
 }
 function walk(n) {
@@ -58,9 +64,30 @@ async function main() {
       ['content-hub-resources', 2],
       ['content-hub-toc', 4],
       ['content-hub-route-card', 28],
-      ['content-hub-page', 20],
+      ['content-hub-breadcrumb', 4],
+      ['content-hub-route-band', 8],
+      ['content-hub-fact-band', 6],
+      ['content-hub-reporting-grid', 2],
+      ['content-hub-soft-cta', 2],
+      ['content-hub-page', 34],
     ]
   );
+  for (const family of d.components.families.filter(f =>
+    f.id.startsWith('content-hub-')
+  )) {
+    const defaults = new Map();
+    for (const variant of family.variants)
+      for (const node of walk(variant.tree))
+        if (node.textProperty) {
+          if (defaults.has(node.textProperty))
+            assert.strictEqual(
+              defaults.get(node.textProperty),
+              node.characters,
+              'Set-wide defaults must not collide across contexts'
+            );
+          defaults.set(node.textProperty, node.characters);
+        }
+  }
   const stable = copy({ variables: d.variables, styles: d.styles });
   assert.deepStrictEqual(
     buildContentHubRecipes({ root, ...d }),
@@ -79,8 +106,9 @@ async function main() {
       assert(v !== undefined, n);
       return v.alias ? resolve(v.alias, seen) : v;
     };
-    const env = await rangeEnvironment(d);
+    const env = await sourceEnvironment(d);
     await installTextThicknessFixture(env);
+    installNativeTextPropertyDefaultFixture(env);
     installPageChromeSvgFixture(env, d.components.families);
     installContentHubSvgFixture(env, d.components.families);
     assert.deepStrictEqual(
@@ -92,8 +120,20 @@ async function main() {
     const ids = d.components.families.map(f => f.id),
       first = await env.call('buildMangroveComponents', d, m.id, ids);
     assert.deepStrictEqual(copy(first.errors), []);
+    for (const style of d.styles.text.filter(s =>
+      Object.values(s.values).some(v => v.paragraphIndent === 28)
+    )) {
+      const actual = env.state.styles.find(s => s.name === style.name);
+      assert(actual);
+      assert.strictEqual(
+        actual.paragraphIndent,
+        28,
+        'Source current breadcrumb first-line indent'
+      );
+    }
     const consumers = [];
     const check = (node, spec) => {
+      assert.strictEqual(node.opacity, 1, spec.id + '/source owner opacity');
       for (const field of ['width', 'height']) {
         const x = spec.layout?.[field];
         if (
@@ -140,6 +180,17 @@ async function main() {
       }
       if (spec.type === 'TEXT') {
         assert.strictEqual(node.characters, spec.characters);
+        if (spec.textProperty) {
+          let owner = node.parent;
+          while (owner && owner.type !== 'COMPONENT_SET') owner = owner.parent;
+          assert(owner);
+          const reference = node.componentPropertyReferences.characters;
+          assert.strictEqual(
+            owner.componentPropertyDefinitions[reference].defaultValue,
+            spec.characters,
+            'Native set-wide source default'
+          );
+        }
         if (spec.textDecoration)
           assert.strictEqual(node.textDecoration, spec.textDecoration);
         if (spec.textDecorationOffset?.unit === 'PIXELS')
@@ -222,12 +273,14 @@ async function main() {
             .flatMap(host => host.children)
             .filter(n => n.type === 'INSTANCE');
           assert.deepStrictEqual(
-            instances.map(n => n.family),
-            spec.sourceDependencies.filter(
-              f =>
-                f !== 'content-hub-intro' ||
-                spec.tree.children.some(c => c.id === 'intro')
-            )
+            instances.map(n => n.family).sort(),
+            spec.sourceDependencies
+              .filter(
+                f =>
+                  f !== 'content-hub-intro' ||
+                  spec.tree.children.some(c => c.id === 'intro')
+              )
+              .sort()
           );
           assert(spec.sourceGeometry.completeCapturedVisibleAnatomy);
           assert.strictEqual(
@@ -286,6 +339,8 @@ async function main() {
           n.width,
           n.height,
           n.type === 'INSTANCE' ? n.main.id : null,
+          n.opacity,
+          n.effectStyleId,
         ]);
     const before = geometry();
     assert(
@@ -301,6 +356,16 @@ async function main() {
       assert.deepStrictEqual(copy(repeat.errors), []);
       assert.strictEqual(repeat.createdNodeIds.length, 0);
       assert.deepStrictEqual(geometry(), before);
+      for (const report of first.families.filter(r =>
+        r.id.startsWith('content-hub-')
+      )) {
+        const family = d.components.families.find(f => f.id === report.id);
+        for (const entry of report.variantIds)
+          check(
+            env.state.nodes.get(entry.nodeId),
+            family.variants.find(v => v.id === entry.id).tree
+          );
+      }
       for (const c of consumers) {
         assert.strictEqual(c.owner.componentProperties[c.key].value, c.edited);
         assert.strictEqual(c.consumer.x, 203);
@@ -312,7 +377,44 @@ async function main() {
         ' bounded source header/body allocated geometry, two zero-create repeats and supported consumer edits passed. Native pixels/reflow remain open.'
     );
   }
-  const missing = await rangeEnvironment(d);
+  const collided = copy(d);
+  collided.components.families = collided.components.families.filter(
+    f => f.id === 'content-hub-toc'
+  );
+  collided.components.families[0].variants =
+    collided.components.families[0].variants.filter(
+      v => v.properties.SourceViewport === '390'
+    );
+  for (const variant of collided.components.families[0].variants)
+    for (const node of walk(variant.tree))
+      if (node.textProperty)
+        node.textProperty = node.textProperty.replace(/^TOC [^ ]+ /, '');
+  const old = sourceEnvironment(collided);
+  installNativeTextPropertyDefaultFixture(old);
+  await old.call('importVariables', collided, ['undrr'], false, [], true);
+  for (let i = 0; i < 2; i++)
+    assert.deepStrictEqual(
+      copy(
+        (
+          await old.call('buildMangroveComponents', collided, 'undrr', [
+            'content-hub-toc',
+          ])
+        ).errors
+      ),
+      []
+    );
+  const corrupted = [...old.state.nodes.values()].find(
+    n =>
+      identity(n).includes('/variant/content-hub-toc.how-to-report.390/') &&
+      identity(n).endsWith('/label-1')
+  );
+  assert(corrupted);
+  assert.strictEqual(
+    corrupted.characters,
+    'Check definitions',
+    'Old generic TOC names must reproduce the observed set-wide native default collision'
+  );
+  const missing = await sourceEnvironment(d);
   await installTextThicknessFixture(missing);
   installPageChromeSvgFixture(missing, d.components.families);
   installContentHubSvgFixture(missing, d.components.families);

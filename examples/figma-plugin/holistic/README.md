@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 46 families and 334 bounded variants, deliberately
+- Separate source draft packet: 51 families and 370 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -87,4 +87,6 @@ Preserve canonical identities, consumers, recovery isolation, all deliveries,
 native recovery, deliberately changed styles, human handoff or reduced merge
 acceptance gates.
 
-The source packet also includes news taxonomy/recommendations (four presets) and ContentHub (eight families/115 presets), including20 genuinely nested detail/resource scenes. These are finite source contracts, with full news/image-header and remaining Hub overview/landing/validate scenes still in progress. Native fonts, UA markers, linked-title/caret reflow and complete-scene publication remain separate gates. See [news](news-detail.md) and [ContentHub](content-hub.md).
+The source packet also includes news taxonomy/recommendations (four presets) and ContentHub (thirteen families/151 presets), including34 genuinely nested scenes covering all17 recorded source contexts at390/1164. These are finite source contracts; additional Hub callers and full news/image-header composition remain in progress. Native fonts, UA markers, linked-title/caret reflow and complete-scene publication remain separate gates. See [news](news-detail.md) and [ContentHub](content-hub.md).
+
+The historical committed source46/334 checkpoint and its immutable delivery remain preserved. The original98-row reusable-unit classification is unchanged; these current packet counts do not constitute a fresh whole-catalogue or native acceptance audit.

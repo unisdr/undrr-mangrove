@@ -1,11 +1,11 @@
 # Source-only component drafts
 
-The current holistic packet contains **46 families / 334 bounded variants**.
+The current holistic packet contains **51 families / 370 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
 is cloned as a separate dependency (23 variants), and the exact normal Button is cloned as `page-chrome-button` (16 variants). Neither dependency is counted as a new draft.
-News taxonomy and recommendations add two source families/four presets, with genuine Tag instances and authored rich HTTPS links. The UA marker remains a measured candidate with an explicit raster gap. ContentHub adds eight source families/115 presets, including 20 genuinely nested detail/resource scenes, measured headers, reading, intro, resources, TOC, tertiary CTA and route/fact/reporting cards. Remaining overview/landing/validate scenes and native title-link, typography, marker and caret gates remain open. See [news contracts](holistic/news-detail.md) and [ContentHub contracts](holistic/content-hub.md).
+News taxonomy and recommendations add two source families/four presets, with genuine Tag instances and authored rich HTTPS links. The UA marker remains a measured candidate with an explicit raster gap. ContentHub adds thirteen source families/151 presets, including 34 genuinely nested finite scenes covering all 17 recorded contexts at390/1164. Its additional inline breadcrumbs, related route and full-bleed fact bands, reporting grids and left-aligned soft CTA retain exact authored source dependencies. Source TOC defaults have stable page/viewport identities. Additional callers, native title-link, typography, marker, caret and runtime gates remain open. See [news contracts](holistic/news-detail.md) and [ContentHub contracts](holistic/content-hub.md).
 The packet remains deliberately non-importable and the normal exporter remains
 32 families/383 variants. See [the holistic scope](holistic/README.md) and
 [authored card contracts](holistic/card-content.md).
@@ -163,3 +163,5 @@ or selective publication. Preserve canonical identities and existing deliveries.
 The maintenance recovery trace, deliberately changed text/effect publication,
 composite publication, human novice handoff and reduced merge acceptance remain
 separate open gates. This batch closes none of them.
+
+The historical committed source46/334 checkpoint and its immutable delivery remain preserved. The original98-row reusable-unit classification is unchanged; these current packet counts do not constitute a fresh whole-catalogue or native acceptance audit.

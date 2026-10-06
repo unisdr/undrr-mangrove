@@ -28,7 +28,7 @@ its controls need a shared foundation, rather than a circular recipe dependency.
 | Chrome                            | Closed six presets and 24 open/capped presets integrated in source packet                                                                   | tag_recipe, root    | Remaining shell/footer/locales and native scene acceptance                            |
 | Landing report                    | Full finite authored source composition at390/1164 integrated                                                                               | root coordination   | Native complete-scene rendering, ordinary repeats and publication                     |
 | News pages                        | No-image header, share, related-card and taxonomy/recommendation source dependencies integrated; image-header and full assembly in progress | notice_recipe       | Full actual news anatomy, float/embed decisions, native composition                   |
-| ContentHub                        | Eight source families/115 presets reviewed, with20 nested detail/resource scenes; remaining routes in progress                              | range_scope         | Genuine nested route scenes and source-cascade fidelity, then native checks           |
+| ContentHub                        | Thirteen source families/151 presets reviewed, with34 nested scenes covering all17 finite recorded contexts                                 | range_scope         | Additional source callers and viewports, then native integration and comparison       |
 | Remaining reusable contracts      | Historical source inventory plus explicit packet follow-ups                                                                                 | root coordination   | Implement remaining meaningful appearances through reviewed batches                   |
 | Native integration                | Isolated Tag and SectionHeader UNDRR cloud cohorts plus bounded SVG/font/gradient probes                                                    | root                | All remaining native cohorts, source parity, modes and ordinary desktop repeats       |
 | Publication and consumers         | Full holistic acceptance pending                                                                                                            | root and reviewer   | Selective publication, linked consumer update and restoration                         |
@@ -50,7 +50,7 @@ not establish browser network, keyboard, portal or responsive runtime behaviour.
 7. Reviewed library integration, selective publication and actual linked consumer
    update/restoration.
 
-Each gate needs its own evidence. The 46-family/334-variant source draft packet
+Each gate needs its own evidence. The 51-family/370-variant source draft packet
 and normal 32-family catalogue remain bounded contracts. The recorded 25-family published
 checkpoint is historical evidence, not a fresh holistic validation.
 
@@ -95,3 +95,5 @@ composite publication, novice handoff and reduced maintenance merge acceptance
 remain open. Token publication does not pass these gates. Preserve existing
 deliveries, backups, History and `RC2-DECISIONS.md`. GitHub organisation listing
 endpoints are suppressed; exact-number PR requests are used for review state.
+
+The historical committed source46/334 checkpoint and its immutable delivery remain preserved. The original98-row reusable-unit classification is unchanged; these current packet counts do not constitute a fresh whole-catalogue or native acceptance audit.

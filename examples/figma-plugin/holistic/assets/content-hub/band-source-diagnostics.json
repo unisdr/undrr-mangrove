@@ -1,0 +1,2366 @@
+{
+  "scope": "Actual regenerated-CSS computed source bands; pseudo getBoundingClientRect fields refer to owning element, while usedWidth/usedHeight/offsets describe the pseudo. No native raster equivalence.",
+  "rawSource": "/tmp/mangrove-content-hub-band-source-20261006",
+  "cases": [
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3ADELTA%20Resilience%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "delta",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "390px",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3ADELTA%20Resilience%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "delta",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "linear-gradient(rgba(0, 79, 145, 0.08), rgba(0, 79, 145, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "235px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3ADELTA%20Resilience%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "delta",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "linear-gradient(rgba(0, 79, 145, 0.08), rgba(0, 79, 145, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "324.5px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3ADELTA%20Resilience%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "delta",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3ADELTA%20Resilience%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "delta",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "390px",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3ADELTA%20Resilience%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "delta",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AIRP%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "irp",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "390px",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AIRP%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "irp",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "linear-gradient(rgba(15, 120, 191, 0.08), rgba(15, 120, 191, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "235px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3AIRP%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "irp",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "linear-gradient(rgba(15, 120, 191, 0.08), rgba(15, 120, 191, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "324.5px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3AIRP%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "irp",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AIRP%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "irp",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "390px",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AIRP%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "irp",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AMCR2030%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "mcr",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "390px",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AMCR2030%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "mcr",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 251,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 251,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 251,
+            "image": "linear-gradient(rgba(89, 26, 97, 0.08), rgba(89, 26, 97, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "251px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3AMCR2030%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "mcr",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 340.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 340.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 340.5,
+            "image": "linear-gradient(rgba(89, 26, 97, 0.08), rgba(89, 26, 97, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "340.5px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3AMCR2030%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "mcr",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AMCR2030%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "mcr",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "390px",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AMCR2030%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "mcr",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3APreventionWeb%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "preventionweb",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "390px",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3APreventionWeb%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "preventionweb",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "linear-gradient(rgba(10, 105, 105, 0.08), rgba(10, 105, 105, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "235px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3APreventionWeb%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "preventionweb",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "linear-gradient(rgba(10, 105, 105, 0.08), rgba(10, 105, 105, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "324.5px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 253.09375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3APreventionWeb%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "preventionweb",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3APreventionWeb%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "preventionweb",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "390px",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1042.34375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1042.34px",
+            "usedWidth": "370px",
+            "width": 370,
+            "x": 10,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3APreventionWeb%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "preventionweb",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 892.046875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AGlobal%20UNDRR%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "undrr",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1071.09375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 350,
+            "x": 20,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1071.09375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-20px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1071.09px",
+            "usedWidth": "390px",
+            "width": 350,
+            "x": 20,
+            "y": 1453.453125,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1071.09375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1071.09px",
+            "usedWidth": "350px",
+            "width": 350,
+            "x": 20,
+            "y": 1453.453125,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AGlobal%20UNDRR%20Theme",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "undrr",
+      "case": {
+        "kind": "authored-story",
+        "key": "hub-home",
+        "story": "hub-home"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 235,
+            "image": "linear-gradient(rgba(0, 79, 145, 0.08), rgba(0, 79, 145, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "235px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 264.546875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3AGlobal%20UNDRR%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "undrr",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 350,
+            "x": 20,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 350,
+            "x": 20,
+            "y": 253.09375,
+            "zIndex": "auto"
+          },
+          "element": {
+            "background": "rgb(255, 255, 255)",
+            "cls": "mg-cta mg-cta--primary mg-cta--soft",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 324.5,
+            "image": "linear-gradient(rgba(0, 79, 145, 0.08), rgba(0, 79, 145, 0.08))",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "Sendai Framework MonitorUnderstand disaster risk, follow progress and find guidance for reporting against the Sendai Framework.Open the Monitor",
+            "top": "auto",
+            "usedHeight": "324.5px",
+            "usedWidth": "350px",
+            "width": 350,
+            "x": 20,
+            "y": 253.09375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-detail&viewMode=story&globals=locale%3Aenglish%3Btheme%3AGlobal%20UNDRR%20Theme#patterns-content-hub--hub-detail/landing",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "undrr",
+      "case": {
+        "kind": "authored-route-branch",
+        "key": "route-landing",
+        "story": "hub-detail",
+        "route": "landing"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-10px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1164px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 502.046875,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "502.047px",
+            "usedWidth": "1144px",
+            "width": 1144,
+            "x": 10,
+            "y": 580.59375,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AGlobal%20UNDRR%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 1164
+      },
+      "brand": "undrr",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    },
+    {
+      "bands": [
+        {
+          "after": {
+            "background": "rgba(0, 0, 0, 0)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "none",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1071.09375,
+            "image": "none",
+            "left": "auto",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "static",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "auto",
+            "usedHeight": "auto",
+            "usedWidth": "auto",
+            "width": 350,
+            "x": 20,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          },
+          "before": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "\"\"",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1071.09375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "-20px",
+            "opacity": "1",
+            "position": "absolute",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1071.09px",
+            "usedWidth": "390px",
+            "width": 350,
+            "x": 20,
+            "y": 1116.6875,
+            "zIndex": "-1"
+          },
+          "element": {
+            "background": "rgb(228, 231, 234)",
+            "cls": "mg-demo-band | mg-container-full-width mg-u-background-color--neutral-50",
+            "content": "normal",
+            "font": "16px / 24px Roboto, sans-serif",
+            "height": 1071.09375,
+            "image": "none",
+            "left": "0px",
+            "marginLeft": "0px",
+            "opacity": "1",
+            "position": "relative",
+            "text": "What is the Sendai Framework Monitor?The Sendai Framework Monitor is the official reporting system for disaster risk reduction. Member States use it to record progress against the seven global targets of the Sendai Framework, using a set of 38 internationally agreed indicators.The official monitoring system for the Sendai FrameworkTracking progress in disaster risk reductionBased on internationally agreed indicatorsConnected to the Sustainable Development GoalsCountry-owned and country-reported dataOpen, transparent and publicly accessible",
+            "top": "0px",
+            "usedHeight": "1071.09px",
+            "usedWidth": "350px",
+            "width": 350,
+            "x": 20,
+            "y": 1116.6875,
+            "zIndex": "auto"
+          }
+        }
+      ],
+      "controlAccent": "rgb(0 79 145)",
+      "url": "http://localhost:6121/iframe.html?id=patterns-content-hub--hub-home&viewMode=story&globals=locale%3Aenglish%3Btheme%3AGlobal%20UNDRR%20Theme&args=routeCards%3Avertical%3BwithHero%3Afalse",
+      "viewport": {
+        "height": 1000,
+        "width": 390
+      },
+      "brand": "undrr",
+      "case": {
+        "kind": "source-prop-fixture",
+        "key": "routes-vertical",
+        "story": "hub-home",
+        "args": "routeCards:vertical;withHero:false"
+      }
+    }
+  ]
+}
