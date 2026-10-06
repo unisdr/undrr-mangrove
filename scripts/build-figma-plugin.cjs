@@ -14,6 +14,7 @@ const SOURCES = [
   'kit-font-defaults.js',
   'kit-svg-sizing.js',
   'kit-gradient-transform.js',
+  'kit-frozen-source-line.js',
   'kit-builder.js',
   'kit-layout.js',
   'kit-navigation.js',

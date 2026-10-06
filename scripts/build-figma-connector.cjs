@@ -8,6 +8,16 @@ const { minify } = require('terser');
 const PLUGIN = path.resolve(__dirname, '../examples/figma-plugin');
 const LIMIT = 50000;
 let gradientTransform;
+let frozenSourceLine;
+function frozenHelper() {
+  if (!frozenSourceLine)
+    frozenSourceLine = vm.runInNewContext(
+      fs.readFileSync(path.join(PLUGIN, 'kit-frozen-source-line.js'), 'utf8') +
+        '\nmgFrozenSourceLine',
+      {}
+    );
+  return frozenSourceLine;
+}
 function gradientHelper() {
   if (!gradientTransform)
     gradientTransform = vm.runInNewContext(
@@ -1165,6 +1175,30 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsRichText(variant.tree))
     );
+  const needsFrozenLine = tree =>
+    Object.prototype.hasOwnProperty.call(tree, 'sourceLine') ||
+    (tree.children || []).some(needsFrozenLine);
+  const frozenSourceLineEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsFrozenLine(variant.tree))
+    );
+  let frozenSourcePlans = [];
+  if (frozenSourceLineEnabled) {
+    const records = [];
+    function sourceLineTree(tree, key, ownerKey) {
+      if (Object.prototype.hasOwnProperty.call(tree, 'sourceLine'))
+        records.push({ key, ownerKey, spec: tree });
+      for (const child of tree.children || [])
+        sourceLineTree(child, `${key}/${child.id || child.key}`, ownerKey);
+    }
+    for (const family of subset.components.families)
+      for (const variant of family.variants) {
+        const key = `family/${family.id}/variant/${variant.id}`;
+        sourceLineTree(variant.tree, key, key);
+      }
+    frozenSourcePlans = frozenHelper().sourcePlans(records);
+  }
   if (richTextEnabled) {
     // The DTO is immutable at execution time. Validate using the exact full-runtime
     // source/style and rich DTO validators before allowing their pure checks to prune.
@@ -1261,6 +1295,18 @@ async function buildConnector({
     async function validateRichTree(tree, key) {
       if (tree.textRuns !== undefined) {
         context.richSourceTree = { ...tree, id: key };
+        if (Object.hasOwn(tree, 'sourceLine')) {
+          if (
+            !frozenSourceLineEnabled ||
+            !frozenSourcePlans.some(
+              plan => plan.key === key && plan.characters === tree.characters
+            )
+          )
+            throw new Error(
+              'Frozen rich source requires exact validated plans'
+            );
+          delete context.richSourceTree.sourceLine;
+        }
         await vm.runInContext(
           'mgRichText.prepare(richSourceTree, richSourceContext)',
           context,
@@ -1345,6 +1391,10 @@ async function buildConnector({
       : ['diagnostics', 'inspect'].includes(operation)
         ? 'kit-inspection.js'
         : null;
+  if (frozenSourceLineEnabled)
+    source +=
+      fs.readFileSync(path.join(PLUGIN, 'kit-frozen-source-line.js'), 'utf8') +
+      '\n;\n';
   if (gradientRolesEnabled)
     source +=
       fs.readFileSync(path.join(PLUGIN, 'kit-gradient-transform.js'), 'utf8') +
@@ -1429,6 +1479,7 @@ async function buildConnector({
         MG_CONNECTOR_PARAGRAPH_INDENT: paragraphIndentEnabled,
         MG_CONNECTOR_MEDIA: mediaEnabled,
         MG_CONNECTOR_GRADIENT_ROLES: gradientRolesEnabled,
+        MG_CONNECTOR_FROZEN_SOURCE_LINE: frozenSourceLineEnabled,
         MG_CONNECTOR_SVG: svgEnabled,
         MG_CONNECTOR_SVG_SIZING: svgSizingEnabled,
         MG_CONNECTOR_SVG_SIZING_SOURCE: false,
@@ -1481,6 +1532,7 @@ async function buildConnector({
     directTextEnabled,
     richTextEnabled,
     gradientRolesEnabled,
+    frozenSourceLineEnabled,
     coincidentFocusEnabled,
     letterSpacingEnabled,
     focusEnabled,

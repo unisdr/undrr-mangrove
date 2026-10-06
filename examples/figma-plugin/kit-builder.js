@@ -1,7 +1,10 @@
-/* global mgGradientTransform, MG_CONNECTOR_GRADIENT_ROLES, mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgFrozenSourceLine, MG_CONNECTOR_FROZEN_SOURCE_LINE, mgGradientTransform, MG_CONNECTOR_GRADIENT_ROLES, mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
+const MG_FROZEN_SOURCE_LINE_ENABLED =
+  typeof MG_CONNECTOR_FROZEN_SOURCE_LINE === 'undefined' ||
+  MG_CONNECTOR_FROZEN_SOURCE_LINE;
 const MG_MAINTENANCE_POLICY_KEY = 'mgMaintenancePolicy';
 
 function mgMaintenanceParsePolicy(node) {
@@ -913,6 +916,89 @@ async function buildMangroveComponents(
     mgMaintenanceDependencyIds(recipes, selectedFamilyIds),
     owned
   );
+  let frozenSourcePlans = null;
+  async function checkFrozenSourceLines(phase) {
+    if (!frozenSourcePlans?.length) return true;
+    try {
+      // Recollect current-page construction owners and linked copies at every
+      // boundary. Do not collapse duplicate identities or adopt inherited ones.
+      const candidates = page.findAll(node => {
+        if (!mgReadIdentity(node, MG_KIT_KEY) || node.type === 'INSTANCE')
+          return false;
+        for (
+          let parent = node.parent;
+          parent && parent !== page;
+          parent = parent.parent
+        )
+          if (parent.type === 'INSTANCE') return false;
+        return true;
+      });
+      for (const plan of frozenSourcePlans)
+        if (
+          !candidates.some(
+            node => mgReadIdentity(node, MG_KIT_KEY) === plan.ownerKey
+          ) &&
+          candidates.some(node => mgReadIdentity(node, MG_KIT_KEY) === plan.key)
+        )
+          throw new Error(
+            'Frozen source line reflow-needed: orphan managed line ' + plan.key
+          );
+      const receipt = await mgFrozenSourceLine.preflight(frozenSourcePlans, {
+        mainByKey: key =>
+          candidates.filter(node => mgReadIdentity(node, MG_KIT_KEY) === key),
+        instances: page.findAllWithCriteria({ types: ['INSTANCE'] }),
+        identity: node => mgReadIdentity(node, MG_KIT_KEY),
+        mainForInstance: instance => instance.getMainComponentAsync(),
+      });
+      result.audit.push({
+        status: 'frozen-source-line-preflight',
+        phase,
+        scope: 'loaded current page',
+        ...receipt,
+      });
+      return true;
+    } catch (error) {
+      const reason = reportError(error);
+      result.errors.push(reason);
+      result.audit.push({
+        status: 'blocked-frozen-source-line-preflight',
+        phase,
+        reason,
+      });
+      return false;
+    }
+  }
+  if (MG_FROZEN_SOURCE_LINE_ENABLED) {
+    try {
+      const selected = new Set(
+        mgMaintenanceDependencyIds(recipes, selectedFamilyIds)
+      );
+      const records = [];
+      function frozenTree(tree, key, ownerKey) {
+        if (Object.prototype.hasOwnProperty.call(tree, 'sourceLine'))
+          records.push({ key, ownerKey, spec: tree });
+        for (const child of tree.children || [])
+          frozenTree(child, `${key}/${child.id || child.key}`, ownerKey);
+      }
+      for (const family of recipes.filter(family => selected.has(family.id)))
+        for (const variant of family.variants) {
+          const key = `family/${family.id}/variant/${variant.id}`;
+          frozenTree(variant.tree, key, key);
+        }
+      frozenSourcePlans = mgFrozenSourceLine.sourcePlans(records);
+    } catch (error) {
+      const reason = reportError(error);
+      result.errors.push(reason);
+      result.audit.push({
+        status: 'blocked-frozen-source-line-preflight',
+        phase: 'source',
+        reason,
+      });
+      return result;
+    }
+    if (!(await checkFrozenSourceLines('before-font-preparation')))
+      return result;
+  }
   const organized = owned.has('layout/start');
   if (organized) {
     if (typeof mgLayoutPreflight !== 'function')
@@ -2373,7 +2459,8 @@ async function buildMangroveComponents(
     }
   }
   if (
-    ((MG_GRADIENT_ROLES_ENABLED && gradientRolesScope) ||
+    ((MG_FROZEN_SOURCE_LINE_ENABLED && frozenSourcePlans?.length) ||
+      (MG_GRADIENT_ROLES_ENABLED && gradientRolesScope) ||
       (MG_TEXT_THICKNESS_ENABLED && textThicknessScope) ||
       (MG_RICH_TEXT_ENABLED && richTextScope) ||
       (MG_SVG_SIZING_ENABLED && svgSizingScope) ||
@@ -2588,15 +2675,34 @@ async function buildMangroveComponents(
         },
       };
       async function prepareTree(tree, key) {
-        if (tree.textRuns !== undefined)
+        if (tree.textRuns !== undefined) {
+          const richSpec = { ...tree, id: key };
+          // The complete source-line group has already passed the separate guard.
+          // Its metadata is not a rich-text style or a node property.
+          if (
+            MG_FROZEN_SOURCE_LINE_ENABLED &&
+            Object.hasOwn(richSpec, 'sourceLine')
+          ) {
+            if (
+              !frozenSourcePlans?.some(
+                plan =>
+                  plan.key === key && plan.characters === richSpec.characters
+              )
+            )
+              throw new Error(
+                'Frozen source lines require exact guarded source plans.'
+              );
+            delete richSpec.sourceLine;
+          }
           richTextPlans.set(
             tree,
             await mgRichText.prepare(
-              { ...tree, id: key },
+              richSpec,
               richContext,
               owned.get(key) || null
             )
           );
+        }
         for (const child of tree.children || [])
           await prepareTree(child, `${key}/${child.id || child.key}`);
       }
@@ -2615,6 +2721,14 @@ async function buildMangroveComponents(
       return result;
     }
   }
+  // Named-font and pure source preparation may await. Refuse newly edited
+  // frozen copies before the first permanent style/image/scene phase. This
+  // does not promise a transaction against edits after this last guard.
+  if (
+    MG_FROZEN_SOURCE_LINE_ENABLED &&
+    !(await checkFrozenSourceLines('before-style-import'))
+  )
+    return result;
   // Restrict effects to the recipes being prepared, avoiding unrelated updates.
   const styleDoc = {
     ...doc,

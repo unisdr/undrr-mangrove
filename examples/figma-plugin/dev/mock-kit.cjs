@@ -721,6 +721,7 @@ function environment(doc, options = {}) {
     'code.js',
     'kit-inspection.js',
     'kit-gradient-transform.js',
+    'kit-frozen-source-line.js',
     'kit-builder.js',
   ])
     vm.runInContext(fs.readFileSync(path.join(DIR, file), 'utf8'), context);
