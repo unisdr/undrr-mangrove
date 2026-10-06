@@ -276,9 +276,21 @@ and empty clipped/unclipped frames. All 23 recorded spread fields remain 1.
 This does not reproduce the ordinary build's loss or establish shadow pixels.
 A separate fresh read finds all three temporary nodes and the style absent,
 with the complete original cloud baseline exact before and after. The actual
-setter and cleanup reports and independent verdict remain external. The next
-causal test uses the production importer body on scoped disposable styles;
-ordinary full-renderer tracing and style publication remain open.
+setter and cleanup reports and independent verdict remain external.
+
+The subsequent production-importer diagnostic creates one disposable source
+Raised style, then discovers and updates that same style through its shared
+identity. A scoped adapter exposes only this temporary style to the preserved
+production importer; it does not reproduce normal global inventory or the
+ordinary full renderer. All 16 recorded INNER_SHADOW observations retain
+spread 1 and radius 0, with the actual colour alias retained after binding.
+The complete production reports show one creation followed by one update,
+with no errors or trace capture errors. A separate fresh readonly lookup finds
+the temporary style absent; the complete recorded cloud baseline remains
+exact before and after. The full decoded report is 18,108 bytes, SHA256
+`4e910b72aba7973d81db70ad3e941f9511f4380cf8aa4ce8a93063d823905aec`.
+This does not reproduce the ordinary build's spread loss or establish shadow
+pixels. Ordinary full-renderer tracing and style publication remain open.
 
 ## Canonical style publication preparation
 
@@ -288,6 +300,17 @@ A second guarded read records complete target fields and all five explicitly
 requested named source faces as available. Button line height is 100%, with its
 actual concrete font axes and family/size aliases retained. Raised radius is 0,
 with its exact colour alias. These reads load no fonts and change no assets.
+
+A subsequent complete guarded alias/effect observation is reconstructed from
+three exact partitions: 22,792 bytes, SHA256
+`df23a318e2640ddac033fc5af5b8d0986d1d3b87427315dcc7234bab1f9bbe67`.
+Independent review recomputes all 35 selected root/mode chains across eight
+closure variables and confirms Roboto and Roboto Condensed as the font-family
+terminals. All eight current EFFECT styles are recorded. The local inventory
+counts are 520 variables and 54 TEXT styles; unrelated variable values and
+current bound-user fonts are outside this selected closure. Each part repeats
+the guarded reader and matches the same whole hash. This is a stable sequential
+observation, with no writes, font loads or publication acceptance.
 
 The current canonical Raised effect has spread 0, whereas the pinned source
 declares spread 1. The isolated Book foundation has recorded spread 1, and the
