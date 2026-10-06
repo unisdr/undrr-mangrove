@@ -105,3 +105,20 @@ negative fixtures. They do not claim that every native catalogue contract or
 rich-text adapter is already implemented. See [native integration
 status](NATIVE-INTEGRATION-STATUS.md) for the current bounded evidence and open
 gates.
+
+## Full starting-state preservation rehearsal
+
+The isolated unpublished Horizontal experiment passed two complete sequential
+checks against the frozen 374-node native report on 6 October 2026. The reviewed
+helper checked recorded scene fields and UTF16 ranges, ownership, genuine main
+links, raw variable/style identities and mode values, and original image bytes
+and dimensions. Its complete returned journal records no errors, scene or asset
+writes, or font loads, and confirms traversal restoration. The native file key
+was unavailable and remains null; the root operator verified the exact desktop
+file URL before the run.
+
+The [preserved report and provenance](assets/native-horizontal-readonly-preflight/provenance.json)
+record the independently reviewed helper, baseline and executable hashes. This
+is starting-state preservation evidence, not a new atomic snapshot, applied
+source acceptance, a corrected ordinary rebuild or publication acceptance. The
+ordinary rebuild must still pass source comparison and its own repeat checks.

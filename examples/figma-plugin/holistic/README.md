@@ -155,3 +155,25 @@ The separate required semantic source-contract checkpoint `cda3a3385b57c94da69df
 The independently reviewed finite inline Code family adds six English, Arabic and Japanese presets at390/1164, giving120 source families/1800 bounded variants. Thirty actual browser contexts cover all five brands. The portable producer verifies30 deterministic raw capture archives and retains60 contiguous source-copy fragments, measured line capacities, real Code padding/background/effect allocations and the ten genuinely empty Arabic Code boxes. Its dedicated all-five actual-builder mock checks source dependencies, two zero-create repeats with nonempty recorded geometry, genuine linked edited-copy refusal before permanent writes and preserves the edited copy when rebuild is refused. This is a fixed source-fragment layout contract; arbitrary paragraph editing and cross-brand reflow require fresh source layout.
 
 The combined registration check completed with terminal exit0: deterministic full packet and dependency validation, source-only importer refusal, original nine-family/28-variant scene lifecycle and CLI output/check/overwrite/staleness/source-path/argument guards passed. The dedicated all-five Code lifecycle remains separate; the combined scene fixture does not exercise all1800 variants. Native Menlo availability, authored weight500 correspondence, bidi/CJK glyphs, baselines, capacities, inset appearance, full ordinary native rebuilds, publication and consumer acceptance remain open. The required36 semantic source contracts retain their full scope: Code advances six finite specimens, while Cite, Quotation, ordered/unordered lists and Abbr retain30 separate required specimens. The source packet remains non-importable; the original119 and118 deliveries remain preserved.
+
+## Reviewed Link and Arabic landing registration
+
+This source registration adds standalone Link 1/18 and the actual Arabic
+landing cohort 15/72 to the preserved source120 checkpoint, giving 136 families
+and 1890 finite variants. Independent source and final repository path reviews
+accepted both complete outputs and source capture corruption guards. Link
+retains whole logical labels, genuine two-band focus and edited-label reflow
+refusal. Arabic Topic, Report and Index pages retain their actual caller copy,
+RTL layout, reusable INSTANCE dependencies and five-brand 390/1164 captures.
+See [standalone Link](standalone-link.md) and [Arabic landing](arabic-landing.md).
+
+The all-five dedicated mock lifecycle evidence remains separate from the
+combined registration check, which completed with terminal exit0. Deterministic
+136/1890 DTO and exact dependencies, source-only importer refusal before mutation,
+the original nine-family/28-variant lifecycle and all CLI guards passed. Native
+fonts, bidi/glyphs, rendered source equivalence, ordinary rebuilds, publication
+and consumer acceptance remain open. The Arabic cohort includes 7219 variables
+in one collection, exceeding the current importer collection
+limit of 5000; its source Noto weight 600 to Bold 700 mapping remains provisional. No
+smaller substitute replaces those required compositions. The reproducible
+source120 delivery at c91aaa39 and earlier deliveries remain preserved.

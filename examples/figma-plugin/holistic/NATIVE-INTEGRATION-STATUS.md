@@ -1,7 +1,10 @@
 # Native integration status
 
-Observed on 6 October 2026. The current source registry contains120 recipe
-families and1800 bounded variants, including six finite inline Code presets.
+Observed on 6 October 2026. The source registry contains136 recipe
+families and1890 bounded variants, including standalone Link and actual Arabic
+landing compositions. Combined registration verification completed with terminal exit0. Full packet
+and dependency checks, source-only importer refusal, the bounded original9/28
+scene lifecycle and all CLI guards passed.
 The saved source119 checkpoint at `0980da33` and prior source118 delivery at
 `7ae4a12f` remain preserved. Code passed its dedicated all-five mock lifecycle
 and the combined source/CLI registration checks, with terminal exit0. Source
@@ -355,3 +358,16 @@ preserved in the [title-style diagnostic archive](assets/native-book-title-style
 The [native acceptance process](NATIVE-ACCEPTANCE-PROCESS.md) now requires applied
 source contracts before lifecycle comparisons and preserves transport failures
 as failures with complete operation journals.
+
+## Reviewed original-scene preservation preflight
+
+The isolated Horizontal file passed both complete sequential preservation
+checks against its frozen 374-node starting state, with no errors, scene/asset
+writes or font loads and traversal restored. The downloaded success journal
+and independent review are preserved in the
+[preflight provenance](assets/native-horizontal-readonly-preflight/provenance.json).
+Its unavailable native file key remains null; the root operator verified the
+exact desktop URL. This accepts the observed starting state only. The guarded
+ordinary corrected 31-variant rebuild is running in that unpublished file;
+applied source fields, effects, geometry and repeat stability are unaccepted
+until the operation report and fresh inspection are reviewed.

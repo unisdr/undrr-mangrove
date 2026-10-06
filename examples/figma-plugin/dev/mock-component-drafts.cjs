@@ -62,6 +62,7 @@ async function main() {
       ['notice', 4],
       ['breadcrumbs', 2],
       ['skip-link', 1],
+      ['standalone-link', 18],
       ['highlight-box', 3],
       ['accordion', 4],
       ['pager', 3],
@@ -149,6 +150,21 @@ async function main() {
       ['landing-index-book-card', 18],
       ['landing-topic-page', 2],
       ['landing-index-page', 2],
+      ['arabic-landing-header', 2],
+      ['arabic-landing-navigation', 2],
+      ['arabic-landing-breadcrumb', 6],
+      ['arabic-landing-topic-hero', 2],
+      ['arabic-landing-topic-icon-card', 14],
+      ['arabic-landing-topic-related-card', 6],
+      ['arabic-landing-topic-soft-cta', 2],
+      ['arabic-landing-topic-button', 2],
+      ['arabic-landing-topic-page', 2],
+      ['arabic-landing-report-feature', 2],
+      ['arabic-landing-report-toc', 2],
+      ['arabic-landing-report-section', 8],
+      ['arabic-landing-report-page', 2],
+      ['arabic-landing-index-book-card', 18],
+      ['arabic-landing-index-page', 2],
       ['drawer', 20],
       ['cookie-consent-toggle', 12],
       ['cookie-consent-banner', 6],
@@ -181,7 +197,7 @@ async function main() {
   );
   assert.strictEqual(
     packet.draftFamilies.reduce((n, f) => n + f.variants.length, 0),
-    1800
+    1890
   );
   for (const field of [
     'collection',
@@ -312,7 +328,7 @@ async function main() {
   tree.children[0].id = tree.id;
   assert.throws(() => validate(duplicate), /Missing\/duplicate anatomy ID/);
   console.log(
-    'ok  isolated deterministic 120-family/1800-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
+    'ok  isolated deterministic 136-family/1890-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
   );
 
   // Use the actual importer entry, not a duplicated preflight. The packet must
