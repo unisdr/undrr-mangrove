@@ -2,6 +2,36 @@
 const fs = require('fs'),
   path = require('path'),
   crypto = require('crypto');
+function styleShape(style, kind, modes) {
+  if (
+    style.type !== undefined &&
+    style.type !== (kind === 'text' ? 'TEXT' : 'EFFECT')
+  )
+    return false;
+  if (
+    !style.values ||
+    Object.keys(style.values).sort().join(',') !==
+      modes
+        .map(m => m.id)
+        .sort()
+        .join(',')
+  )
+    return false;
+  return modes.every(m => {
+    const v = style.values[m.id];
+    return kind === 'effect'
+      ? Array.isArray(v)
+      : v &&
+          typeof v === 'object' &&
+          !Array.isArray(v) &&
+          v.fontName &&
+          typeof v.fontName === 'object' &&
+          typeof v.fontName.family === 'string' &&
+          v.fontName.family.length > 0 &&
+          typeof v.fontName.style === 'string' &&
+          v.fontName.style.length > 0;
+  });
+}
 /** Finite source paragraph lines adjacent to the actual ArticleStory float. */
 function buildNewsExclusionParagraphRecipes({
   root,
@@ -56,10 +86,12 @@ function buildNewsExclusionParagraphRecipes({
       );
       if (
         hits.length > 1 ||
+        !styleShape(e, kind, modes) ||
         hits.some(
           x =>
             x.id !== e.id ||
             x.name !== e.name ||
+            !styleShape(x, kind, modes) ||
             modes.some(
               m =>
                 !x.values?.[m.id] ||

@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **69 families / 863 bounded variants**.
+The current holistic packet contains **71 families / 883 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -175,3 +175,5 @@ The contextual article HighlightBox adds one family/two source presets, preservi
 The reviewed syndicated widget adds seven source families/383 presets, preserving actual contextual dependencies and finite authored result/filter/drawer/pager surfaces. FormGroup, joined FormAction and Newsletter add three families/28 presets, with exact normal Checkbox/Radio dependencies kept separate. Initial article media adds one family/10 immutable brand/viewport player captures. All-five dedicated source-builder repeats and independent reviews pass. Native pixels, arbitrary content reflow, live search/submission/playback, library integration and publication remain open. See [the widget contract](holistic/search-widget.md), [forms](holistic/form-compositions.md) and [article media](holistic/news-article.md).
 
 The source article exclusion adds one family/two presets: a normal editable narrow rich paragraph and the exact four desktop rich source lines around the highlight. The current-page frozen-copy guard refuses edited desktop copy before permanent writes. All-five actual builder tests and an independent review pass; native font/line pixels and changed-content reflow remain open. See [the exclusion contract](holistic/news-exclusion.md).
+
+The complete finite NoHeroImage article adds one family/10 captured brand/viewport scenes with genuine nested prose, quotes, float/exclusion, player appearance, chrome, sharing, related cards, taxonomy, recommendations and initial feedback. Legend adds one family/10 authored continuous, categorical, stepped, vertical and grid presets. Dedicated all-five builder repeats and independent source reviews pass; source capture allocations, numeric/native font shapes, pixel equivalence, runtime states, library integration and publication remain open. See [article scenes](holistic/news-article-scene.md) and [Legend](holistic/legend.md).

@@ -143,6 +143,64 @@ const id = n => n.getSharedPluginData('orgundrrmangrove', 'mgKitId');
       untouched
     );
   }
+  for (const mutate of [
+    x => {
+      x.styles.text.find(v => v.id === 'component.page-pattern.body').type =
+        'EFFECT';
+    },
+    x => {
+      delete x.styles.text.find(v => v.id === 'component.page-pattern.body')
+        .values.mcr.fontName;
+    },
+    x => {
+      x.styles.effect[0].type = 'TEXT';
+    },
+  ]) {
+    const bad = clone(d);
+    mutate(bad);
+    const before = clone({ variables: bad.variables, styles: bad.styles });
+    assert.throws(
+      () => buildNewsExclusionParagraphRecipes({ root, ...bad }),
+      /foreign/
+    );
+    assert.deepStrictEqual(
+      { variables: bad.variables, styles: bad.styles },
+      before
+    );
+    if (
+      bad.styles.text.find(v => v.id === 'component.page-pattern.body').values
+        .mcr.fontName
+    )
+      continue;
+    const env = await rangeEnvironment(d);
+    await env.call('importVariables', d, ['undrr'], false, [], true);
+    const permanent = clone({
+      nodes: [...env.state.nodes.keys()],
+      styles: env.state.styles,
+      images: [...env.state.images],
+      variables: [...env.state.variables],
+    });
+    const r = await env.call('buildMangroveComponents', bad, 'undrr', [
+      'news-source-exclusion',
+    ]);
+    // The recipe producer owns this explicit input boundary. The runtime does not consume unknown style .type metadata as a source kind; malformed required style values remain its validated boundary.
+    if (
+      !bad.styles.text.find(v => v.id === 'component.page-pattern.body').values
+        .mcr.fontName
+    ) {
+      assert(r.errors.length);
+      assert.equal(r.createdNodeIds.length, 0);
+      assert.deepStrictEqual(
+        clone({
+          nodes: [...env.state.nodes.keys()],
+          styles: env.state.styles,
+          images: [...env.state.images],
+          variables: [...env.state.variables],
+        }),
+        permanent
+      );
+    }
+  }
   console.log(
     'News exclusion: actual source294/4 desktop rich line profiles, narrow ordinary paragraph, allfive two zero-create repeats and current-page consumer edited-copy premutation refusal pass. No native font/line pixels/arbitrary CSS reflow claim.'
   );

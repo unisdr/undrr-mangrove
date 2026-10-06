@@ -156,6 +156,12 @@ const recipes = [
     'buildNewsArticleMediaRecipes',
   ],
   [
+    ['news-article-scene'],
+    './figma-news-article-scene-recipes.cjs',
+    'buildNewsArticleSceneRecipes',
+  ],
+  ['legend', './figma-legend-recipes.cjs', 'buildLegendRecipes'],
+  [
     ['search-result-item', 'search-result-fields', 'search-result-state'],
     './figma-search-result-recipes.cjs',
     'buildSearchResultRecipes',
