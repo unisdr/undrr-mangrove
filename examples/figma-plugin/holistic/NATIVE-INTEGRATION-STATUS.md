@@ -55,7 +55,7 @@ The [archived receipts and payloads](assets/native-list-diagnostics/provenance.j
 retain exact original bytes and SHA256 hashes. The lossless decoders restore
 complete tool packets into their recorded reports; the truncated creation receipt
 is excluded. The original twelve-profile
-acceptance gate remains open. A fourth diagnostic now retains forty-eight
+acceptance gate remains open. A fourth diagnostic created and retained forty-eight
 owned nodes, twenty-four roots and twelve genuine instances in the isolated file.
 Its creation receipt was truncated at the tool UTF8 byte boundary and is excluded
 from complete acceptance. A separate complete ownership read recovered the exact
@@ -66,11 +66,27 @@ original logical source copies, bounded edited consumer copies, genuine links
 and full recorded TEXT fields, while every partition checks all forty-eight
 owned IDs and empty local assets. Complete receipt sizes are 13912, 12880 and
 15042 UTF8 bytes. These are sequential observations, not an atomic snapshot or a
-layout-settlement promise. The guarded reapply, committed after-read comparison
-and exact-owned cleanup remain pending. The current file contains the retained
-fixtures; the earlier empty-page evidence applies only to the first three runs.
-No geometry tolerance, speculative await loop, native source equivalence or
-full twelve-profile rebuild acceptance is claimed.
+layout-settlement promise. Two subsequent original-instruction replays each
+completed forty-eight setters across twelve mains, loaded concrete current fonts
+and axes, and created zero nodes. Separately committed full-field reads after
+each replay exactly match all twelve recorded baseline profiles, including edited
+copy, genuine main links and component/instance geometry. The original input
+indentation of zero still reads back as one; no normalization or source
+indentation equivalence is claimed.
+
+Cleanup removed the twenty-four recorded roots. Page enumeration was empty, but
+the first committed cleanup read still resolved twelve parentless COMPONENT
+handles and their twelve TEXT children. Those actual residual reports are
+preserved. A later readonly ownership/reference diagnostic found all forty-eight
+known IDs absent. The unchanged fresh cleanup verifier then independently
+confirmed all forty-eight null lookups and empty page/assets. Current cleanup is
+verified; the cause and timing of the transition remain unconfirmed. No repeated
+deletion or reattachment occurred.
+
+This is bounded original-instruction list API and recorded consumer-field
+stability, not ordinary production plugin integration. Source glyphs, list-marker
+geometry, all-brand rendering, arbitrary rich-format preservation and publication
+remain open. No geometry tolerance or layout-settlement guarantee is claimed.
 
 ## Remaining native gates
 
@@ -83,6 +99,9 @@ full twelve-profile rebuild acceptance is claimed.
 - Verify changed text/effect-style and composite publication, human novice
   handoff and reduced maintenance merge acceptance separately.
 
-Desktop interaction still fails with `window_not_focused` or no focused window;
-the cause is unconfirmed. Cloud Figma operations work in isolated files. Do not
-repeat unchanged desktop retries or bypass the documented tools.
+Desktop input now works through the documented native control tool: Figma was
+raised, menus opened and both development plugin manifest paths verified in the
+recovery file on 2026-10-06. No recovery rebuild has run in this retry. The
+accessibility tree still reports a sync warning; current connection status is
+unconfirmed. The prepared trace must be reconciled with the current pristine
+build before installation. Recovery remains unpublished.

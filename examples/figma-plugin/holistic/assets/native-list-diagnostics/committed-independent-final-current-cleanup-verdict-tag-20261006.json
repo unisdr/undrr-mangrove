@@ -1,0 +1,10 @@
+{
+  "acceptedCurrentCommittedCleanup": true,
+  "knownIdsNull": 48,
+  "pageAndAssetsEmpty": true,
+  "sameReadonlyVerifierAsEarlierFailure": true,
+  "earlier24ResidualFailurePreserved": true,
+  "causeConfirmed": false,
+  "deletionTimingGuarantee": false,
+  "scope": "Later unchanged readonly cleanup verifier confirms original48 null and empty page/assets. Supports current restoration after later residual diagnostic; does not repair earlier fresh residual observation or establish cause."
+}

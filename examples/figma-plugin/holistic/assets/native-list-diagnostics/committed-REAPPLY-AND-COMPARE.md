@@ -1,0 +1,13 @@
+# Committed original-instruction repeat diagnostic
+
+The retained isolated file is `yQERTnAg95ysOZoSyPXr0j`, page `0:1`. Only the exact 48 authoritative IDs in the ownership recovery receipt are in scope. No production file or publication is involved.
+
+The actual complete committed baseline records native indentation 1 for all twelve mains and consumers. Original creation instructions called `setRangeIndentation(..., 0)`. The reapply operation intentionally repeats original instructions, including 0. It does not normalize instructions to the observed value, and it does not assert source/native indentation equivalence.
+
+Run the frozen `reapply.js` only after its executable prewrite peer acceptance. It checks every baseline field, component/instance geometry, current copy, name/type/parent identity, genuine main link and empty local assets before font preparation and again afterward. It loads every deduplicated current main segment font including concrete variation axes, alongside the original five required named faces. It records each attempted main ID before its first list setter. A partial setter failure remains an explicit partial diagnostic write, with no rollback claim.
+
+After the write operation commits, run the unchanged accepted `read-part-0.js`, `read-part-1.js` and `read-part-2.js` as three separate readonly operations. Preserve complete raw tool responses and decode each packet. Use `assemble-read.cjs` with the three complete packets to produce a distinct after receipt. Use `compare-committed.cjs` with the original `committed-baseline-native.json` and that after receipt. Comparison checks every retained field and uses no tolerance or normalization. These sequential observations do not constitute an atomic snapshot or a layout settlement guarantee.
+
+Cleanup requires independent review of `cleanup.js`, and starts only after evidence is preserved. The cleanup preflight requires exact original role names, parents, copy, genuine main links, complete 48-node inventory and empty assets. It removes only the twelve owned INSTANCE roots followed by twelve owned COMPONENT roots. It never removes immutable INSTANCE text descendants directly. Renamed, reparented, missing or foreign ownership requires a separately reviewed recovery operation. Its partial journal must be retained if any root removal fails.
+
+Run separately committed `cleanup-read.js` after cleanup. Same-operation deletion handles have already proved stale in this experiment. Cleanup is verified only when a fresh operation sees an empty page, empty local assets and all 48 known IDs absent. No list source pixel, glyph, font-byte, format preservation, production recipe, library or publication acceptance follows from this diagnostic.

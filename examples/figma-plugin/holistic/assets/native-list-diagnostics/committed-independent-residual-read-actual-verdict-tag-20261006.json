@@ -1,0 +1,12 @@
+{
+  "acceptedReadonlyObservation": true,
+  "all48KnownIDsAbsent": true,
+  "pageEmpty": true,
+  "assetsEmpty": true,
+  "currentInstanceReferences": 0,
+  "errors": [],
+  "priorFreshCleanup24ResidualObservationPreserved": true,
+  "causeConfirmed": false,
+  "timingBoundaryConfirmed": false,
+  "scope": "Later readonly operation independently finds original48 lookup IDs null and original single page/asset state empty. Earlier operation residual disagreement is not repaired or reclassified. This new observation supports current restoration, not a deletion timing guarantee or source equivalence."
+}
