@@ -236,6 +236,7 @@ const recipes = [
     './figma-semantic-typography-recipes.cjs',
     'buildSemanticTypographyRecipes',
   ],
+  ['logo', './figma-logo-recipes.cjs', 'buildLogoRecipes'],
   ['page-header', './figma-page-header-recipes.cjs', 'buildPageHeaderRecipes'],
   [
     'on-this-page-nav',

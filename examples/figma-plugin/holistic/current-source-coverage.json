@@ -714,7 +714,7 @@
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
       "committedSourceFamilyIds": [],
-      "stagedAdditionalFamilyIds": [],
+      "stagedAdditionalFamilyIds": ["logo"],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
     },
@@ -1084,21 +1084,37 @@
     "Gallery actual video/embed native representation"
   ],
   "nativeGates": [
-    "Full source foundation capacity: immutable93 has55171 variables versus5000percollection; fixed59-owner read-only planner committed1bdab3ca, actual occupancy/collection-count and advanced native support unverified",
+    "Historical immutable93 foundation has55171 variables and its fixed59-owner read-only planner is committed1bdab3ca. Current immutable118 has71539 variables; a separate76-owner capacity proposal remains peer-pending. Actual occupancy, native collection-count feasibility and advanced native profile support remain unverified; no full catalogue import path is accepted.",
     "Actual full native builders/ordinary repeats for new cohorts",
     "Source font/glyph/raster/live mode fidelity",
-    "Recovery drift diagnosis with guarded actual full path",
+    "Recovery two ordinary pristine desktop rebuilds preserve all9802 raw node records and foundations exactly, including the original79-record/9480 projection. The earlier drift origin remains unknown; no rounding fix or publication acceptance follows.",
     "Changed text/effect style publication",
     "Composite publication and linked consumer restoration",
     "Human novice handoff and reduced maintenance merge acceptance"
   ],
-  "reviewedUnregisteredCandidates": {
+  "previousCommittedRevision": "7a8875c587c4d1ceb58a711f7df9a075305ec178",
+  "registryRevisionScope": "Source118 registered recipe checkpoint. previousCommittedRevision identifies the separately preserved source109 registry/delivery; this later doc correction does not regenerate either immutable artifact.",
+  "registrationVerification": "Immutable source118 complete combined harness terminal exit0: deterministic118/1584 DTO/dependency preservation, actual importer premutation refusal, original9/28 scene lifecycle and CLI output/check/overwrite/source guards. Layout3/28 and semantic6/96 dedicated all-five source peers remain separate. Required36 semantic follow-ons unsupported; no full native catalogue acceptance.",
+  "registryUpdatedAtUTC": "2026-10-06",
+  "registryRevision": "7ae4a12f781640d5cef592a167f29b732313d465",
+  "stagedSourceFamilies": 119,
+  "stagedSourceVariants": 1794,
+  "pendingSource119Registration": {
+    "familyIds": ["logo"],
+    "families": 1,
+    "variants": 210,
+    "sourcePeerAccepted": true,
+    "combinedVerification": "All checks completed and final success log observed; final shell exit code unobserved after tool handle expired. Immutable379 file pins exact; checkpoint pending.",
+    "nativeAccepted": false,
+    "savedSource118Revision": "7ae4a12f781640d5cef592a167f29b732313d465"
+  },
+  "reviewedRegisteredSource118Additions": {
     "layout-foundations": {
       "families": 3,
       "variants": 28,
       "sourcePeerAccepted": true,
       "nativeAccepted": false,
-      "registryStaged": true
+      "registryCommittedSource118": true
     },
     "semantic-typography": {
       "families": 6,
@@ -1106,12 +1122,7 @@
       "sourcePeerAccepted": true,
       "nativeAccepted": false,
       "requiredUnimplementedFiniteSpecimens": 36,
-      "registryStaged": true
+      "registryCommittedSource118": true
     }
-  },
-  "previousCommittedRevision": "7a8875c587c4d1ceb58a711f7df9a075305ec178",
-  "registryRevisionScope": "Source118 registered recipe checkpoint. previousCommittedRevision identifies the separately preserved source109 registry/delivery; this later doc correction does not regenerate either immutable artifact.",
-  "registrationVerification": "Immutable source118 complete combined harness terminal exit0: deterministic118/1584 DTO/dependency preservation, actual importer premutation refusal, original9/28 scene lifecycle and CLI output/check/overwrite/source guards. Layout3/28 and semantic6/96 dedicated all-five source peers remain separate. Required36 semantic follow-ons unsupported; no full native catalogue acceptance.",
-  "registryUpdatedAtUTC": "2026-10-06",
-  "registryRevision": "7ae4a12f781640d5cef592a167f29b732313d465"
+  }
 }
