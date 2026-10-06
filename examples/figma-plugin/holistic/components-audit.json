@@ -14066,6 +14066,22 @@
       "recordedContexts": 17,
       "viewports": [390, 1164],
       "scope": "All observed finite initial source contexts, genuine nested dependencies and source text-default checks. Additional callers/native fonts/pixels/runtime/recovery/publication open."
+    },
+    "sourceTextDefaultScan": {
+      "sourceRevision": "5693c581b2d607376267116a98adedc3a3094ab9",
+      "families": 51,
+      "variants": 370,
+      "separateDependencies": ["editorial-cta", "page-chrome-button"],
+      "referencedTextRecords": 1170,
+      "differingFamilyLocalDefaults": 0,
+      "independentReview": "accepted",
+      "scope": "Direct TEXT.textProperty defaults grouped by owning source family. Child trees only; nested instance expansion, native effective defaults and published state not inspected.",
+      "historicalSource46Finding": {
+        "revision": "320f60c3",
+        "differingDefaults": 50,
+        "families": 14,
+        "status": "potential source collisions, not blanket native defect proof"
+      }
     }
   }
 }
