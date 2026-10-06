@@ -219,6 +219,25 @@ externally with SHA256
 `4ceea233c5af4817b5a49eacff4f96a4c3ba2cb568716ea56200bb80eabc013c`.
 The native file key remains null, with documented desktop URL observations
 recorded separately. The sync warning was present and no publication occurred.
+The [first-build archive](assets/native-horizontal-first-build/README.md)
+preserves 36 original raw artifacts, the installed payload and the complete
+374-node inspection. Its portable audit reproduces 3,844 checks, 3,796 passed
+checks, 56 mismatch records and ten open gates. Replay does not execute the
+archived production JavaScript or establish native acceptance.
+
+A reviewed cloud setter-sequence diagnostic created four disposable whole-owner
+copies from the genuine Default640 and Default390 masters. Both the original
+empty-TEXT layout sequence and reapplying HEIGHT/FILL/HUG after the three source
+rich runs produced width 0 and height 4536. Reapplication alone therefore does
+not repair these tested cases. This is a bounded source setter projection with
+additional guard awaits, not the complete uninstrumented production helper or
+proof of the underlying cause. Full source copy, run styles, paints and
+bindings remain in the saved report. The operation records unchanged original
+374-node fields and foundations; a separate fresh read finds all 156 returned
+temporary IDs absent and verifies the original scene membership. No shared
+rich-text fix, source fidelity acceptance or publication follows from this
+failed correction. The next diagnostic must initialise width from the actual
+source owning allocation, retaining responsive FILL and source HUG height.
 
 ## Canonical style publication preparation
 
