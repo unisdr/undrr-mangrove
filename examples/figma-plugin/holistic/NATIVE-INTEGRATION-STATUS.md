@@ -187,8 +187,34 @@ image owner. Construction alone does not establish applied source fidelity.
 The post-production foundation differs at exactly one recorded field: effect
 spread changed from 1 to 0. The original baseline remains retained; no repeat
 build or baseline adoption is accepted until this application issue is reviewed.
-Full readonly scene validation, all-brand rendering, edited consumers and exact
-repeat geometry remain open. The complete native operation report is retained
+A complete readonly local inspection then saved all 374 scene nodes with no
+errors or unavailable fields. A source audit checks 190 uniquely owned master
+anatomy records, all 70 plain TEXT style/decoration contracts, eight rich TEXT
+run contracts and six genuine dependency instances. Copy, UTF16 ranges,
+family/style names, paints and source instance selectors pass their bounded
+checks. Native source acceptance fails: eight rich masters and their eight
+review clones have zero width and height 4536, despite correctly sized parents.
+Default640's source body allocation is 440px; the resulting main and review
+card heights are 4701.5. No fixed source HUG height is invented. Eight roots also
+have clipping enabled despite the explicit source declaration of false. Two
+unconditional effect-handling setters override that declaration in the captured
+builder. The reviewed source correction now honours explicit boolean clipping
+declarations while preserving the old default when none is declared. All-five
+whole31 build, owning Title edit and two zero-create repeat checks pass, with
+only the declared clipping fields changed. Native reapplication is pending;
+rich width and shadow spread remain unresolved.
+The audit retains 32 inactive underline-offset getter differences separately
+from these application failures. Font bytes, glyphs, SVG contour/crop fidelity,
+all-brand rendering, edited consumers and exact repeats remain open.
+
+A separate cloud readonly read resolves every recorded scene ID with its exact
+type and parent, and reproduces all 16 zero-width summaries. This establishes
+bounded cloud visibility of the recorded scene, not general sync health or full
+field equality. Desktop input later became inconsistent during a readonly Book
+plugin import: the file chooser path setter updates its field, while submission
+resets it or makes no progress. Unchanged retries stopped. No Book plugin
+installation, diagnostic execution or scene write occurred in that attempt.
+Bounded cloud diagnostics and independent source work can continue. The complete native operation report is retained
 externally with SHA256
 `4ceea233c5af4817b5a49eacff4f96a4c3ba2cb568716ea56200bb80eabc013c`.
 The native file key remains null, with documented desktop URL observations

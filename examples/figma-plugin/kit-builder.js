@@ -4106,7 +4106,10 @@ async function buildMangroveComponents(
           throw new Error(`Effect style ${spec.effectStyle} did not import.`);
         await node.setEffectStyleIdAsync(style.id);
         // Spread on frames/components requires a visible fill and clipping.
-        if (['FRAME', 'COMPONENT'].includes(node.type))
+        if (
+          ['FRAME', 'COMPONENT'].includes(node.type) &&
+          typeof spec.layout?.clipsContent !== 'boolean'
+        )
           node.clipsContent = true;
       } else {
         await node.setEffectStyleIdAsync('');
@@ -4227,7 +4230,11 @@ async function buildMangroveComponents(
       labels[0].layoutSizingVertical = 'HUG';
       labels[0].textAlignHorizontal = 'CENTER';
     }
-    if (spec.effectStyle && ['FRAME', 'COMPONENT'].includes(node.type))
+    if (
+      spec.effectStyle &&
+      ['FRAME', 'COMPONENT'].includes(node.type) &&
+      typeof spec.layout?.clipsContent !== 'boolean'
+    )
       node.clipsContent = true;
     if (spec.type === 'FRAME') {
       const expected = [];
