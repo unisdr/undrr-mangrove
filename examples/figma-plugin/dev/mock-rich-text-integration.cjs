@@ -155,6 +155,7 @@ async function rangeEnvironment(doc, options = {}) {
       };
     };
     Object.defineProperty(node, 'characters', {
+      configurable: true,
       get: () => descriptor.get.call(node),
       set: value => {
         descriptor.set.call(node, value);

@@ -21,13 +21,40 @@ const identity = n => n.getSharedPluginData('orgundrrmangrove', 'mgKitId');
 const walk = n => [n, ...(n.children || []).flatMap(walk)];
 /** Models the observed native master TEXT setter's set-wide property default propagation. */
 function installNativeTextPropertyDefaultFixture(env) {
-  const create = env.figma.createText.bind(env.figma);
+  const create = env.figma.createText.bind(env.figma),
+    originals = new WeakMap();
+  const original = node => {
+    if (originals.has(node)) return originals.get(node);
+    let object = node,
+      descriptor;
+    while (object && !descriptor) {
+      descriptor = Object.getOwnPropertyDescriptor(object, 'characters');
+      object = Object.getPrototypeOf(object);
+    }
+    if (!descriptor?.get || !descriptor?.set)
+      throw Error('Native default fixture requires a TEXT accessor');
+    originals.set(node, descriptor);
+    return descriptor;
+  };
+  const owner = node => {
+    const seen = new Set();
+    while (node && !seen.has(node)) {
+      seen.add(node);
+      if (node.type === 'COMPONENT_SET') return node;
+      if (node.type === 'INSTANCE') {
+        const main = node.mainComponent || node.main;
+        if (main) {
+          node = main;
+          continue;
+        }
+      }
+      node = node.parent;
+    }
+    return null;
+  };
   env.figma.createText = () => {
-    const node = create();
-    const descriptor = Object.getOwnPropertyDescriptor(
-      Object.getPrototypeOf(node),
-      'characters'
-    );
+    const node = create(),
+      descriptor = original(node);
     Object.defineProperty(node, 'characters', {
       configurable: true,
       get() {
@@ -35,17 +62,19 @@ function installNativeTextPropertyDefaultFixture(env) {
       },
       set(value) {
         descriptor.set.call(this, value);
-        const reference = this.componentPropertyReferences?.characters;
-        if (!reference) return;
-        let owner = this.parent;
-        while (owner && owner.type !== 'COMPONENT_SET') owner = owner.parent;
-        if (!owner || !owner._definitions[reference]) return;
-        owner._definitions[reference].defaultValue = value;
+        // Editing instance TEXT must not change the master's shared default.
+        for (let ancestor = this.parent; ancestor; ancestor = ancestor.parent)
+          if (ancestor.type === 'INSTANCE') return;
+        const reference = this.componentPropertyReferences?.characters,
+          set = owner(this);
+        if (!reference || !set?._definitions[reference]) return;
+        set._definitions[reference].defaultValue = value;
         for (const target of env.state.nodes.values()) {
           if (
             target === this ||
             target.type !== 'TEXT' ||
-            target.componentPropertyReferences?.characters !== reference
+            target.componentPropertyReferences?.characters !== reference ||
+            owner(target) !== set
           )
             continue;
           let parent = target.parent,
@@ -58,7 +87,9 @@ function installNativeTextPropertyDefaultFixture(env) {
               overridden = true;
             parent = parent.parent;
           }
-          if (!overridden) descriptor.set.call(target, value);
+          // Each rich accessor may close over its own node and formatting cells.
+          // Never apply the originating node's descriptor to a different target.
+          if (!overridden) original(target).set.call(target, value);
         }
       },
     });
