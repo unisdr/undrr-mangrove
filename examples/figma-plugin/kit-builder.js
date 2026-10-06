@@ -1,4 +1,4 @@
-/* global mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
+/* global mgGradientTransform, MG_CONNECTOR_GRADIENT_ROLES, mgTextThicknessPlan, mgNativeTextThicknessPlan, mgApplyTextThickness, MG_CONNECTOR_TEXT_THICKNESS, mgResolveNamedFontDefaults, mgAssertExperimentOperationTarget, mgSvgSizingPlan, mgSvgSizingDocumentValues, mgSvgSizingNativeValues, mgSvgSizingNativePlan, mgApplySvgSizing, MG_CONNECTOR_SVG_SIZING, MG_CONNECTOR_SVG_SIZING_SOURCE, mgRichText, MG_CONNECTOR_RICH_SOURCE_VALIDATION, MG_CONNECTOR_RICH_TEXT, validateMangroveImport, preflightMangroveAssets, mgReadIdentity, mgWriteIdentity, figma, importStyles, errorMessage, MG_SHARED_ONLY, MG_IDENTITY_NAMESPACE, MG_CONNECTOR_SVG, MG_CONNECTOR_ABSOLUTE, MG_CONNECTOR_ABSOLUTE_START, MG_CONNECTOR_INTRINSIC_REVIEW, MG_CONNECTOR_ARC, MG_CONNECTOR_DIRECT_TEXT, MG_CONNECTOR_COINCIDENT_FOCUS, mgLayoutPreflight, mgLayoutLoadExistingFonts, mgLayoutContainerParent, mgLayoutReviewParent, mgLayoutGrid, mgLayoutLegacySpacing, organizeMangroveKit, mgWelcomeLegacySpacing */
 // Native component construction from exporter-owned recipes. Bundled at build time.
 const MG_KIT_KEY = 'mgKitId';
 const MG_KIT_PROPERTY_KEY = 'mgKitProperties';
@@ -306,6 +306,9 @@ function mgImagePlan(tree) {
     throw new Error(`Image ${image.assetId} is not PNG or JPEG.`);
   return { ...image, bytes };
 }
+const MG_GRADIENT_ROLES_ENABLED =
+  typeof MG_CONNECTOR_GRADIENT_ROLES === 'undefined' ||
+  MG_CONNECTOR_GRADIENT_ROLES;
 function mgGradientPlan(tree) {
   const gradient = tree.gradient;
   if (
@@ -325,7 +328,11 @@ function mgGradientPlan(tree) {
   for (const layer of gradient.layers) {
     if (
       !layer ||
-      Object.keys(layer).some(k => !['stops', 'transform'].includes(k)) ||
+      Object.keys(layer).some(k =>
+        MG_GRADIENT_ROLES_ENABLED
+          ? !['stops', 'transform', 'transformVariables'].includes(k)
+          : !['stops', 'transform'].includes(k)
+      ) ||
       !Array.isArray(layer.stops) ||
       layer.stops.length < 2 ||
       layer.stops.length > 5 ||
@@ -339,6 +346,8 @@ function mgGradientPlan(tree) {
       )
     )
       throw new Error('Invalid source gradient geometry.');
+    if (MG_GRADIENT_ROLES_ENABLED && layer.transformVariables !== undefined)
+      mgGradientTransform.validate(layer);
     let previous = -1;
     for (const stop of layer.stops) {
       if (
@@ -1114,6 +1123,22 @@ async function buildMangroveComponents(
       );
     return value;
   }
+  const gradientRolesScope =
+    MG_GRADIENT_ROLES_ENABLED &&
+    ordered.some(family =>
+      family.variants.some(variant => {
+        let found = false;
+        treeWalk(variant.tree, tree => {
+          if (
+            tree.gradient?.layers?.some(
+              layer => layer?.transformVariables !== undefined
+            )
+          )
+            found = true;
+        });
+        return found;
+      })
+    );
   const textThicknessPlans = MG_TEXT_THICKNESS_ENABLED ? new Map() : null;
   const textThicknessScope =
     MG_TEXT_THICKNESS_ENABLED &&
@@ -1928,7 +1953,70 @@ async function buildMangroveComponents(
             const plan = mgGradientPlan(tree);
             for (const layer of plan.layers)
               for (const stop of layer.stops) variable(stop.color, 'COLOR');
-            gradientPlans.set(tree, plan);
+            if (
+              MG_GRADIENT_ROLES_ENABLED &&
+              plan.layers.some(layer => layer.transformVariables !== undefined)
+            ) {
+              const sourceSpecs = new Map(
+                doc.variables.map(entry => [entry.name, entry])
+              );
+              function gradientNumber(name, modeId, seen = new Set()) {
+                const source = sourceSpecs.get(name),
+                  matches = nativeVariables.filter(
+                    entry => entry.name === name
+                  ),
+                  entry = matches[0];
+                if (
+                  !source ||
+                  source.type !== 'FLOAT' ||
+                  matches.length !== 1 ||
+                  entry.resolvedType !== 'FLOAT' ||
+                  mgReadIdentity(entry, 'mgId') !== source.id ||
+                  seen.has(entry.id)
+                )
+                  throw new Error(
+                    'Gradient transform needs its imported owned FLOAT role: ' +
+                      name
+                  );
+                seen.add(entry.id);
+                const value = entry.valuesByMode[modeId];
+                if (
+                  value &&
+                  typeof value === 'object' &&
+                  value.type === 'VARIABLE_ALIAS'
+                ) {
+                  const alias = nativeVariables.find(
+                    variable => variable.id === value.id
+                  );
+                  if (!alias)
+                    throw new Error(
+                      'Gradient transform alias must stay in its imported collection.'
+                    );
+                  return gradientNumber(alias.name, modeId, seen);
+                }
+                if (!Number.isFinite(value))
+                  throw new Error(
+                    'Gradient transform FLOAT must be finite in every imported mode.'
+                  );
+                return value;
+              }
+              gradientPlans.set(tree, {
+                layers: plan.layers.map(layer => {
+                  if (layer.transformVariables === undefined) return layer;
+                  mgGradientTransform.source(doc, layer);
+                  for (const nativeMode of collection.modes)
+                    mgGradientTransform.resolve(layer, name =>
+                      gradientNumber(name, nativeMode.modeId)
+                    );
+                  return {
+                    ...layer,
+                    transform: mgGradientTransform.resolve(layer, name =>
+                      gradientNumber(name, mode.modeId)
+                    ),
+                  };
+                }),
+              });
+            } else gradientPlans.set(tree, plan);
           }
           if (
             tree.expose !== undefined &&
@@ -2285,7 +2373,8 @@ async function buildMangroveComponents(
     }
   }
   if (
-    ((MG_TEXT_THICKNESS_ENABLED && textThicknessScope) ||
+    ((MG_GRADIENT_ROLES_ENABLED && gradientRolesScope) ||
+      (MG_TEXT_THICKNESS_ENABLED && textThicknessScope) ||
       (MG_RICH_TEXT_ENABLED && richTextScope) ||
       (MG_SVG_SIZING_ENABLED && svgSizingScope) ||
       (MG_ABSOLUTE_START_ENABLED && absoluteStartScope)) &&

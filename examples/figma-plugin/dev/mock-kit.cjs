@@ -720,6 +720,7 @@ function environment(doc, options = {}) {
     'importer.js',
     'code.js',
     'kit-inspection.js',
+    'kit-gradient-transform.js',
     'kit-builder.js',
   ])
     vm.runInContext(fs.readFileSync(path.join(DIR, file), 'utf8'), context);

@@ -13,6 +13,7 @@ const SOURCES = [
   'kit-rich-text.js',
   'kit-font-defaults.js',
   'kit-svg-sizing.js',
+  'kit-gradient-transform.js',
   'kit-builder.js',
   'kit-layout.js',
   'kit-navigation.js',

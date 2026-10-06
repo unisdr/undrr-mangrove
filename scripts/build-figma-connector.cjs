@@ -7,6 +7,16 @@ const vm = require('vm');
 const { minify } = require('terser');
 const PLUGIN = path.resolve(__dirname, '../examples/figma-plugin');
 const LIMIT = 50000;
+let gradientTransform;
+function gradientHelper() {
+  if (!gradientTransform)
+    gradientTransform = vm.runInNewContext(
+      fs.readFileSync(path.join(PLUGIN, 'kit-gradient-transform.js'), 'utf8') +
+        '\nmgGradientTransform',
+      {}
+    );
+  return gradientTransform;
+}
 
 // LZW codes over UTF-8 bytes, packed at the smallest fixed code width needed
 // by this payload. The decoder uses only JavaScript, keeping the payload
@@ -294,7 +304,8 @@ function subsetDocument(
     const richStyles = new Set(),
       richPaints = new Set(),
       sizingRoles = new Set(),
-      absoluteRoles = new Set();
+      absoluteRoles = new Set(),
+      gradientRoleIds = new Set();
     const coincidentRings = [];
     function tree(node, family, variant) {
       if (node.type === 'INSTANCE' && node.properties !== undefined)
@@ -345,6 +356,11 @@ function subsetDocument(
       if (node.svg?.sizing !== undefined)
         for (const role of Object.values(node.svg.sizing || {}))
           sizingRoles.add(role);
+      if (node.gradient?.layers)
+        for (const layer of node.gradient.layers)
+          if (layer.transformVariables !== undefined)
+            for (const id of gradientHelper().source(doc, layer))
+              gradientRoleIds.add(id);
       if (node.textStyle) textIds.add(node.textStyle);
       if ('textStyleApplication' in node && node.textStyle)
         directTemplateIds.add(node.textStyle);
@@ -463,7 +479,9 @@ function subsetDocument(
     base.variables = doc.variables
       .filter(
         variable =>
-          directVariables.has(variable.id) || focusVariables.has(variable.id)
+          directVariables.has(variable.id) ||
+          focusVariables.has(variable.id) ||
+          gradientRoleIds.has(variable.id)
       )
       .map(oneBrand);
     return base;
@@ -1301,6 +1319,15 @@ async function buildConnector({
     subset.components.families.some(family =>
       family.variants.some(variant => needsMedia(variant.tree))
     );
+  const needsGradientRoles = tree =>
+    tree.gradient?.layers?.some(
+      layer => layer.transformVariables !== undefined
+    ) || (tree.children || []).some(needsGradientRoles);
+  const gradientRolesEnabled =
+    operation === 'build' &&
+    subset.components.families.some(family =>
+      family.variants.some(variant => needsGradientRoles(variant.tree))
+    );
   const needsFramePosition = tree =>
     (tree.type === 'FRAME' && tree.position !== undefined) ||
     (tree.children || []).some(needsFramePosition);
@@ -1318,6 +1345,10 @@ async function buildConnector({
       : ['diagnostics', 'inspect'].includes(operation)
         ? 'kit-inspection.js'
         : null;
+  if (gradientRolesEnabled)
+    source +=
+      fs.readFileSync(path.join(PLUGIN, 'kit-gradient-transform.js'), 'utf8') +
+      '\n;\n';
   if (richTextEnabled)
     for (const module of ['kit-rich-text.js', 'kit-font-defaults.js'])
       source += fs.readFileSync(path.join(PLUGIN, module), 'utf8') + '\n;\n';
@@ -1397,6 +1428,7 @@ async function buildConnector({
         MG_CONNECTOR_LETTER_SPACING: letterSpacingEnabled,
         MG_CONNECTOR_PARAGRAPH_INDENT: paragraphIndentEnabled,
         MG_CONNECTOR_MEDIA: mediaEnabled,
+        MG_CONNECTOR_GRADIENT_ROLES: gradientRolesEnabled,
         MG_CONNECTOR_SVG: svgEnabled,
         MG_CONNECTOR_SVG_SIZING: svgSizingEnabled,
         MG_CONNECTOR_SVG_SIZING_SOURCE: false,
@@ -1448,6 +1480,7 @@ async function buildConnector({
     ellipseEnabled,
     directTextEnabled,
     richTextEnabled,
+    gradientRolesEnabled,
     coincidentFocusEnabled,
     letterSpacingEnabled,
     focusEnabled,
