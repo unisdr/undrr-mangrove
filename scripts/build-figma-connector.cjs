@@ -238,7 +238,7 @@ function validateImportSource(doc, brandId) {
       'Import preflight boundary changed. Update connector build.'
     );
   const validate = vm.runInNewContext(
-    `(()=>{${source.slice(start, end)};return validateMangroveImport;})()`
+    `(()=>{const MG_TEXT_CASE_ENABLED=true;${source.slice(start, end)};return validateMangroveImport;})()`
   );
   validate(doc, [brandId]);
 }
@@ -1008,6 +1008,21 @@ async function buildConnector({
     throw new Error(
       'Import batches require unique variableIds/styleIds and at least one selected ID.'
     );
+  // Use the importer source contract before narrowing away other brand values.
+  const caseSource = fs.readFileSync(path.join(PLUGIN, 'importer.js'), 'utf8');
+  const caseStart = caseSource.indexOf('function validateMangroveTextCase(');
+  const caseEnd = caseSource.indexOf(
+    'function validateMangroveNativeTextCase(',
+    caseStart
+  );
+  if (caseStart < 0 || caseEnd <= caseStart)
+    throw new Error(
+      'Text case source validator specialization boundary changed.'
+    );
+  const validateCase = vm.runInNewContext(
+    `(()=>{const MG_TEXT_CASE_ENABLED=true;${caseSource.slice(caseStart, caseEnd)};return validateMangroveTextCase;})()`
+  );
+  validateCase(doc);
   const subset = subsetDocument(
     doc,
     operation,
@@ -1015,6 +1030,11 @@ async function buildConnector({
     requested,
     variantIds,
     scopedImport ? { variableIds, styleIds } : undefined
+  );
+  const textCaseEnabled = subset.styles.text.some(spec =>
+    Object.values(spec.values || {}).some(
+      value => value?.textCase !== undefined
+    )
   );
   const importScope = scopedImport
     ? {
@@ -1474,6 +1494,7 @@ async function buildConnector({
     compress: {
       passes: 3,
       global_defs: {
+        MG_CONNECTOR_TEXT_CASE: textCaseEnabled,
         MG_CONNECTOR_FRAME_POSITION: framePositionEnabled,
         MG_CONNECTOR_LETTER_SPACING: letterSpacingEnabled,
         MG_CONNECTOR_PARAGRAPH_INDENT: paragraphIndentEnabled,
@@ -1533,6 +1554,7 @@ async function buildConnector({
     richTextEnabled,
     gradientRolesEnabled,
     frozenSourceLineEnabled,
+    textCaseEnabled,
     coincidentFocusEnabled,
     letterSpacingEnabled,
     focusEnabled,

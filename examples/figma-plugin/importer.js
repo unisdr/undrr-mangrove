@@ -1,7 +1,9 @@
-/* global mgReadIdentity, mgWriteIdentity, figma */
+/* global mgReadIdentity, mgWriteIdentity, figma, MG_CONNECTOR_TEXT_CASE */
 /** Shared variable/style importer for maintenance and occasional construction. */
 const ID_KEY = 'mgId';
 const STYLE_ID_KEY = 'mgStyleId';
+const MG_TEXT_CASE_ENABLED =
+  typeof MG_CONNECTOR_TEXT_CASE === 'undefined' || MG_CONNECTOR_TEXT_CASE;
 
 // Figma API rejections can be strings rather than Error instances.
 function errorMessage(error) {
@@ -21,6 +23,51 @@ function validateMangroveParagraphIndent(doc, selectedTextIds) {
         );
     }
   }
+}
+
+function validateMangroveTextCase(doc, selectedTextIds) {
+  if (!MG_TEXT_CASE_ENABLED) return;
+  const modes = (doc.modes || []).map(mode => mode.id).sort();
+  for (const spec of doc.styles?.text || []) {
+    if (selectedTextIds && !selectedTextIds.includes(spec.id)) continue;
+    const values = Object.values(spec.values || {});
+    if (!values.some(value => value?.textCase !== undefined)) continue;
+    if (
+      !modes.length ||
+      Object.keys(spec.values || {})
+        .sort()
+        .join(',') !== modes.join(',') ||
+      values.some(value => !['ORIGINAL', 'UPPER'].includes(value?.textCase)) ||
+      new Set(values.map(value => value.textCase)).size !== 1
+    )
+      throw new Error(
+        `Import preflight: ${spec.name}: text case needs identical ORIGINAL or UPPER values in every source mode`
+      );
+  }
+}
+
+function validateMangroveNativeTextCase(style, spec) {
+  if (!MG_TEXT_CASE_ENABLED) return;
+  if (
+    !style ||
+    !Object.values(spec.values || {}).some(
+      value => value?.textCase !== undefined
+    )
+  )
+    return;
+  if (
+    ![
+      'ORIGINAL',
+      'UPPER',
+      'LOWER',
+      'TITLE',
+      'SMALL_CAPS',
+      'SMALL_CAPS_FORCED',
+    ].includes(style.textCase)
+  )
+    throw new Error(
+      `Import preflight: ${spec.name}: native text case field is unavailable or malformed`
+    );
 }
 
 function validateMangroveImport(doc, selectedModeIds, selectedTextIds) {
@@ -126,6 +173,7 @@ function validateMangroveImport(doc, selectedModeIds, selectedTextIds) {
     fail('Style definitions must be arrays');
   unique([...text, ...effects], 'style');
   validateMangroveParagraphIndent(doc);
+  if (MG_TEXT_CASE_ENABLED) validateMangroveTextCase(doc);
   if (selectedTextIds !== undefined) {
     if (
       !Array.isArray(selectedTextIds) ||
@@ -294,7 +342,11 @@ async function preflightMangroveAssets(doc, textStyles, importEffects) {
     ['text style', selectedText, 'TEXT'],
     ['effect style', selectedEffects, 'EFFECT'],
   ]) {
-    for (const spec of specs) findMangroveAsset(styles, spec, kind, type);
+    for (const spec of specs) {
+      const style = findMangroveAsset(styles, spec, kind, type);
+      if (MG_TEXT_CASE_ENABLED && type === 'TEXT')
+        validateMangroveNativeTextCase(style, spec);
+    }
   }
 }
 
@@ -361,6 +413,7 @@ async function importStyles(
   // Direct component builds call importStyles without importVariables.
   // Validate every selected authored mode before any style is created or updated.
   validateMangroveParagraphIndent(doc, selectedTextIds);
+  if (MG_TEXT_CASE_ENABLED) validateMangroveTextCase(doc, selectedTextIds);
   const counts = {
     text: { created: 0, updated: 0, failed: 0 },
     effect: { created: 0, updated: 0, failed: 0 },
@@ -384,6 +437,23 @@ async function importStyles(
     selectedTextIds ? selectedTextIds.includes(spec.id) : spec.recommended
   );
   const effectSpecs = importEffects ? doc.styles.effect || [] : [];
+  // TextStyle.textCase is a documented writable field. Check every existing
+  // opted-in style before any style write, including a later selected style.
+  if (MG_TEXT_CASE_ENABLED) {
+    const caseSpecs = textSpecs.filter(spec =>
+      Object.values(spec.values).some(value => value.textCase !== undefined)
+    );
+    if (caseSpecs.length) {
+      const caseIndex = mangroveAssetIndex(
+        await figma.getLocalTextStylesAsync(),
+        STYLE_ID_KEY
+      );
+      for (const spec of caseSpecs) {
+        const style = findMangroveAsset(caseIndex, spec, 'text style', 'TEXT');
+        validateMangroveNativeTextCase(style, spec);
+      }
+    }
+  }
   const fontLoads = new Map();
   let fonts = [];
   if (textSpecs.length) {
@@ -506,6 +576,8 @@ async function importStyles(
           style.textDecoration = value.textDecoration || 'NONE';
           style.textWrapStyle = value.textWrapStyle || 'AUTO';
           style.paragraphIndent = value.paragraphIndent ?? 0;
+          if (MG_TEXT_CASE_ENABLED && value.textCase !== undefined)
+            style.textCase = value.textCase;
         } else {
           style.effects = effects;
         }
