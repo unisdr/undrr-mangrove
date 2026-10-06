@@ -19,6 +19,52 @@ const root = path.resolve(__dirname, '../../..'),
   copy = x => JSON.parse(JSON.stringify(x));
 const identity = n => n.getSharedPluginData('orgundrrmangrove', 'mgKitId');
 const walk = n => [n, ...(n.children || []).flatMap(walk)];
+/** Models the observed native master TEXT setter's set-wide property default propagation. */
+function installNativeTextPropertyDefaultFixture(env) {
+  const create = env.figma.createText.bind(env.figma);
+  env.figma.createText = () => {
+    const node = create();
+    const descriptor = Object.getOwnPropertyDescriptor(
+      Object.getPrototypeOf(node),
+      'characters'
+    );
+    Object.defineProperty(node, 'characters', {
+      configurable: true,
+      get() {
+        return descriptor.get.call(this);
+      },
+      set(value) {
+        descriptor.set.call(this, value);
+        const reference = this.componentPropertyReferences?.characters;
+        if (!reference) return;
+        let owner = this.parent;
+        while (owner && owner.type !== 'COMPONENT_SET') owner = owner.parent;
+        if (!owner || !owner._definitions[reference]) return;
+        owner._definitions[reference].defaultValue = value;
+        for (const target of env.state.nodes.values()) {
+          if (
+            target === this ||
+            target.type !== 'TEXT' ||
+            target.componentPropertyReferences?.characters !== reference
+          )
+            continue;
+          let parent = target.parent,
+            overridden = false;
+          while (parent) {
+            if (
+              parent.type === 'INSTANCE' &&
+              Object.hasOwn(parent.overrides, reference)
+            )
+              overridden = true;
+            parent = parent.parent;
+          }
+          if (!overridden) descriptor.set.call(target, value);
+        }
+      },
+    });
+    return node;
+  };
+}
 function document() {
   const doc = buildFigmaVariables();
   doc.components.families = buildSearchResultRecipes({ root, ...doc });
@@ -59,6 +105,7 @@ const snapshot = env =>
       n.boundVariables,
       n.opacity,
       n.type === 'INSTANCE' ? n.componentProperties : null,
+      n.type === 'COMPONENT_SET' ? n.componentPropertyDefinitions : null,
     ]),
     styles: env.state.styles,
     images: [...env.state.images].map(([hash, bytes]) => [hash, bytes.length]),
@@ -97,6 +144,29 @@ async function main() {
     )
   );
   assert.strictEqual(fixture.provenance.responseCaptured, false);
+  for (const family of doc.components.families) {
+    const properties = new Map();
+    for (const variant of family.variants)
+      for (const spec of walk(variant.tree))
+        if (spec.textProperty) {
+          assert(
+            spec.textProperty.startsWith(
+              'Text ' +
+                variant.id
+                  .slice(family.id.length + 1)
+                  .replace(/\.(390|1164)$/, '/$1') +
+                ' '
+            )
+          );
+          if (properties.has(spec.textProperty))
+            assert.strictEqual(
+              properties.get(spec.textProperty),
+              spec.characters,
+              'Different fragments cannot share a set-wide default'
+            );
+          properties.set(spec.textProperty, spec.characters);
+        }
+  }
   for (const family of doc.components.families)
     for (const variant of family.variants) {
       const ids = walk(variant.tree).map(n => n.id);
@@ -191,6 +261,7 @@ async function main() {
   const ids = doc.components.families.map(f => f.id);
   for (const mode of doc.modes) {
     const env = environment(doc, { sharedOnly: true });
+    installNativeTextPropertyDefaultFixture(env);
     env.state.modeLimit = 5;
     const imported = await env.call(
       'importVariables',
@@ -211,6 +282,21 @@ async function main() {
             n => identity(n) === key
           );
           assert(n, key);
+          if (spec.textProperty) {
+            assert.strictEqual(
+              n.characters,
+              spec.characters,
+              'Each master fragment retains source copy'
+            );
+            let owner = n.parent;
+            while (owner.type !== 'COMPONENT_SET') owner = owner.parent;
+            const reference = n.componentPropertyReferences.characters;
+            assert.strictEqual(
+              owner.componentPropertyDefinitions[reference].defaultValue,
+              spec.characters,
+              'Native set-wide default matches the fragment context'
+            );
+          }
           if (spec.type === 'FRAME') {
             if (spec.bindings?.opacity) {
               const value = resolve(doc, spec.bindings.opacity, mode.id);
@@ -275,13 +361,42 @@ async function main() {
     env.figma.currentPage.appendChild(consumer);
     consumer.x = 1980;
     consumer.y = 1730;
-    const property = Object.keys(consumer.componentProperties).find(
-      k =>
-        consumer.componentProperties[k].type === 'TEXT' &&
-        consumer.componentProperties[k].value === 'Climate Change Report'
+    const titleNode = master
+      .findAllWithCriteria({ types: ['TEXT'] })
+      .find(
+        n =>
+          n.characters === 'Climate Change Report' &&
+          n.componentPropertyReferences?.characters
+      );
+    assert(
+      titleNode,
+      'Edited property must belong to this actual source variant'
     );
-    assert(property);
+    const property = titleNode.componentPropertyReferences.characters;
+    assert.strictEqual(
+      consumer.componentProperties[property].value,
+      'Climate Change Report'
+    );
+    const linkedTitle = consumer
+      .findAllWithCriteria({ types: ['TEXT'] })
+      .find(n => n.componentPropertyReferences?.characters === property);
+    assert(linkedTitle);
+    // Model instance TEXT inheritance through its actual referenced property, not an unrelated set property.
+    const descriptor = Object.getOwnPropertyDescriptor(
+      Object.getPrototypeOf(linkedTitle),
+      'characters'
+    );
+    Object.defineProperty(linkedTitle, 'characters', {
+      configurable: true,
+      get() {
+        return consumer.componentProperties[property].value;
+      },
+      set(value) {
+        descriptor.set.call(this, value);
+      },
+    });
     consumer.setProperties({ [property]: 'Edited source result title' });
+    assert.strictEqual(linkedTitle.characters, 'Edited source result title');
     const main = consumer.main.id,
       before = snapshot(env);
     for (let i = 0; i < 2; i++) {
@@ -290,6 +405,7 @@ async function main() {
       assert.strictEqual(repeat.createdNodeIds.length, 0);
       assert.strictEqual(snapshot(env), before);
       assert.strictEqual(consumer.main.id, main);
+      assert.strictEqual(linkedTitle.characters, 'Edited source result title');
       assert.strictEqual(
         consumer.componentProperties[property].value,
         'Edited source result title'
@@ -331,6 +447,65 @@ async function main() {
       before
     );
   }
+  // The old generic DOM-path property name reproduces the demonstrated native repeat collision.
+  const collided = copy(doc);
+  collided.components.families = collided.components.families.filter(
+    f => f.id === 'search-result-state'
+  );
+  const state = collided.components.families[0];
+  state.variants = state.variants.filter(v =>
+    ['state-queryEmpty-list.390', 'state-error-list.390'].some(id =>
+      v.id.endsWith(id)
+    )
+  );
+  for (const variant of state.variants)
+    for (const spec of walk(variant.tree))
+      if (spec.textProperty)
+        spec.textProperty = spec.textProperty.replace(/^Text [^ ]+ /, 'Text ');
+  const collisionEnv = environment(collided, { sharedOnly: true });
+  installNativeTextPropertyDefaultFixture(collisionEnv);
+  collisionEnv.state.modeLimit = 5;
+  await collisionEnv.call(
+    'importVariables',
+    collided,
+    ['undrr'],
+    false,
+    [],
+    false
+  );
+  for (let i = 0; i < 2; i++)
+    assert.deepStrictEqual(
+      copy(
+        (
+          await collisionEnv.call(
+            'buildMangroveComponents',
+            collided,
+            'undrr',
+            ['search-result-state']
+          )
+        ).errors
+      ),
+      []
+    );
+  const query = state.variants.find(v => v.id.includes('queryEmpty'));
+  const querySpec = walk(query.tree).find(n =>
+    n.characters?.startsWith('Try different search terms')
+  );
+  const queryNative = [...collisionEnv.state.nodes.values()].find(
+    n =>
+      identity(n).includes('/variant/' + query.id + '/') &&
+      identity(n).endsWith('/' + querySpec.id)
+  );
+  assert(queryNative);
+  assert.notStrictEqual(
+    queryNative.characters,
+    querySpec.characters,
+    'Old names must reproduce native property propagation drift'
+  );
+  assert.strictEqual(
+    queryNative.characters,
+    'Please try again or use different search terms.'
+  );
   const collision = document(),
     v = collision.variables.find(v =>
       v.name.startsWith('component/search-result/')
@@ -406,4 +581,4 @@ if (require.main === module)
     console.error(error);
     process.exitCode = 1;
   });
-module.exports = { document };
+module.exports = { document, installNativeTextPropertyDefaultFixture };

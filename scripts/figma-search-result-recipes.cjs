@@ -580,7 +580,17 @@ function buildSearchResultRecipes({ root, modes, variables, styles }) {
             name: 'Editable ' + text.id,
             type: 'TEXT',
             characters: text.text,
-            textProperty: 'Text ' + n.id + ' ' + text.id,
+            // Property defaults belong to the entire native component set.
+            // Source fixture/viewport identity keeps different fragments independent.
+            textProperty:
+              'Text ' +
+              contract.id +
+              '/' +
+              viewport +
+              ' ' +
+              n.id +
+              ' ' +
+              text.id,
             textStyle: textStyle(all),
             fill: color(
               'text',
