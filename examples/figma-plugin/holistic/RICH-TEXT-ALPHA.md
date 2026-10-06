@@ -11,3 +11,21 @@ The dedicated harness checks opaque ledger parity against the false profile, omi
 These offline API fixtures do not render compositing, prove actual native alias alpha across live mode changes, or establish consumer pixels. The separate isolated native readback probe proves the numerical representation for four alpha values, not full rich builder or consumer acceptance. Existing mode-dependent alpha changes can alter observed ownership signatures and need a separate native mode-switch/migration rehearsal. Unexpected native range setter failures after writing starts retain the existing partial-write behavior; no rollback guarantee is introduced. StatsCard's alpha0.8 linked negative summary depends on this capability. Its fonts, numeric OpenType features, native pixels and full component acceptance remain separate gates.
 
 Compiler source validation and opt-in pruning have separate root-owned tests. No compiled rich build is accepted merely because a source fixture passed: the unchanged50,000-character transport ceiling still applies. Normal DTOs, published libraries and canonical scene identities are unaffected by this capability task.
+
+A bounded native shared-helper rehearsal on2026-10-06 uses the existing
+unpublished [source-line experiment](https://www.figma.com/design/3PbB1KO6fY7vdYLvHsQdXP).
+Three actual aliased rich ranges have alpha0,0.8 and1, an HTTPS link and the
+existing Roboto Regular style with concrete400/100 axes. Two applications to
+the same main TEXT preserve its complete recorded text/range/geometry/ledger
+snapshot. A true linked instance receives an actual inserted text edit; two
+applications report preserved edits and retain its complete recorded snapshot,
+including shifted range boundaries, link, underline and alpha.
+
+The temporary component, TEXT, linked instance and linked TEXT, three variables
+and one collection were removed by their exact returned IDs. A fresh complete
+47-node/assets snapshot equals the original experiment baseline. Independent
+receipt review accepted the helper-field, copy and recorded repeat proof in
+`/tmp/mangrove-native-frozen-lines-20261006/native-rich-alpha-independent-verdict.json`.
+This does not run the full component builder, verify live mode changes, accept
+StatsCard or source pixels, or establish ordinary desktop operation or
+publication. The oversized compiled rich scope remains refused.
