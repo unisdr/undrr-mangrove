@@ -162,6 +162,26 @@ const recipes = [
   ],
   ['legend', './figma-legend-recipes.cjs', 'buildLegendRecipes'],
   [
+    ['news-image-article-scene'],
+    './figma-news-image-article-scene-recipes.cjs',
+    'buildNewsImageArticleSceneRecipes',
+  ],
+  [
+    ['service-notice'],
+    './figma-notification-state-recipes.cjs',
+    'buildServiceNoticeRecipes',
+  ],
+  [
+    ['snackbar'],
+    './figma-notification-state-recipes.cjs',
+    'buildSnackbarRecipes',
+  ],
+  [
+    ['user-feedback-confirmation'],
+    './figma-notification-state-recipes.cjs',
+    'buildUserFeedbackConfirmationRecipes',
+  ],
+  [
     ['search-result-item', 'search-result-fields', 'search-result-state'],
     './figma-search-result-recipes.cjs',
     'buildSearchResultRecipes',
@@ -344,6 +364,14 @@ function buildDraftPacket() {
       'page-chrome-button.'
     );
   sourceFamilies.set(sourceButton.id, sourceButton);
+  const notificationStatus = copy(sourceFamilies.get('status-label'));
+  assert(notificationStatus, 'Exact source StatusLabel required');
+  notificationStatus.id = 'notification-status-label';
+  notificationStatus.name = 'Mangrove draft / Notification status';
+  notificationStatus.variants.forEach(v => {
+    v.id = v.id.replace(/^status-label\./, 'notification-status-label.');
+  });
+  sourceFamilies.set(notificationStatus.id, notificationStatus);
   const dependencies = new Map();
   const seen = new Set();
   const visiting = new Set();

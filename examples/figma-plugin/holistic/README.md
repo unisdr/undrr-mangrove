@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 71 families and 883 bounded variants, deliberately
+- Separate source draft packet: 75 families and 941 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -45,13 +45,13 @@ update/restoration are distinct from recipe and mock completion.
   bounded parts of the requested compositions. Three report families/six variants
   now provide the complete finite authored English closed-chrome report scene
   at390/1164, and three open navigation families/24 variants preserve actual
-  desktop About/OurWork/Sendai/News, mobile All/section surfaces and capped CTA wrapping. Other page templates and the
-  syndicated search widget remain under implementation; native page gates remain
+  desktop About/OurWork/Sendai/News, mobile All/section surfaces and capped CTA wrapping. Additional page templates and live
+  syndicated search behavior remain under implementation; native page gates remain
   open. Two news dependency families/six variants now preserve the actual no-image
   header and device-share available/unavailable branches. A further six related
   news-card presets retain their exact source photograph, finite title caret
-  layout and supported Summary edits. Full article assembly
-  remains open. See [news dependencies](news-detail.md). See [report composition](landing-report.md). See [search controls](search-controls.md),
+  layout and supported Summary edits. Finite full article source scenes are now registered; native assembly
+  acceptance remains open. See [news dependencies](news-detail.md). See [report composition](landing-report.md). See [search controls](search-controls.md),
   [page prose](page-patterns.md), [closed chrome](page-chrome.md) and
   [reading patterns](page-reading.md).
   Cloned existing Editorial CTA (23 variants) and source Button as
@@ -102,3 +102,11 @@ The reviewed syndicated widget adds seven source families/383 presets, preservin
 The source article exclusion adds one family/two presets: a normal editable narrow rich paragraph and the exact four desktop rich source lines around the highlight. The current-page frozen-copy guard refuses edited desktop copy before permanent writes. All-five actual builder tests and an independent review pass; native font/line pixels and changed-content reflow remain open. See [the exclusion contract](news-exclusion.md).
 
 The complete finite NoHeroImage article adds one family/10 captured brand/viewport scenes with genuine nested prose, quotes, float/exclusion, player appearance, chrome, sharing, related cards, taxonomy, recommendations and initial feedback. Legend adds one family/10 authored continuous, categorical, stepped, vertical and grid presets. Dedicated all-five builder repeats and independent source reviews pass; source capture allocations, numeric/native font shapes, pixel equivalence, runtime states, library integration and publication remain open. See [article scenes](news-article-scene.md) and [Legend](legend.md).
+
+The current packet also registers [full finite image article scenes](news-image-article-scene.md)
+and [notification states](notification-states.md). Four image-bearing stories
+provide40 genuine source scenes, with10 additional NoHeroImage scenes. Three
+notification families provide18 source presets; their seven-variant status
+clone is a separate dependency. Their source and dedicated all-five actual
+builder reviews pass, while native rendering, runtime and publication gates
+remain open. Gallery, Tree and StatsCard are separate unregistered work.

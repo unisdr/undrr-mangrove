@@ -163,3 +163,13 @@ The reviewed syndicated widget adds seven source families/383 presets, preservin
 The source article exclusion adds one family/two presets: a normal editable narrow rich paragraph and the exact four desktop rich source lines around the highlight. The current-page frozen-copy guard refuses edited desktop copy before permanent writes. All-five actual builder tests and an independent review pass; native font/line pixels and changed-content reflow remain open. See [the exclusion contract](news-exclusion.md).
 
 The complete finite NoHeroImage article adds one family/10 captured brand/viewport scenes with genuine nested prose, quotes, float/exclusion, player appearance, chrome, sharing, related cards, taxonomy, recommendations and initial feedback. Legend adds one family/10 authored continuous, categorical, stepped, vertical and grid presets. Dedicated all-five builder repeats and independent source reviews pass; source capture allocations, numeric/native font shapes, pixel equivalence, runtime states, library integration and publication remain open. See [article scenes](news-article-scene.md) and [Legend](legend.md).
+
+The current packet follow-up reaches75 families/941 bounded variants with
+one further image-bearing article-scene family/40 presets and three notification
+families/18 presets. The seven-variant exact normal status-label clone is a
+separate dependency. Actual image scenes use individual full-viewport source
+header slots; source ServiceNotice/Snackbar/confirmation retain authored status,
+actions, countdown and rich links. Dedicated all-five source-builder reviews
+pass; native pixels/reflow/focus/blur, timers/playback, publication and consumer
+integration remain open. See [image article scenes](news-image-article-scene.md)
+and [notification states](notification-states.md).

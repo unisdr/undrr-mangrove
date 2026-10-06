@@ -151,6 +151,10 @@
       "news-article-initial-media",
       "news-article-scene",
       "legend",
+      "news-image-article-scene",
+      "service-notice",
+      "snackbar",
+      "user-feedback-confirmation",
       "search-result-item",
       "search-result-fields",
       "search-result-state"
@@ -14009,8 +14013,8 @@
   "draftPacketFollowup": {
     "baseRevision": "0ff080d5",
     "workingInputsRecorded": true,
-    "families": 71,
-    "variants": 883,
+    "families": 75,
+    "variants": 941,
     "nativeAcceptance": false,
     "addedPageDependencyFamilies": [
       "landing-report-article-column",
@@ -14061,7 +14065,7 @@
     "completePages": false,
     "completeSearchWidget": false,
     "sourceClassification": "Original 98-row audit retained. Packet follow-up adds bounded source contracts, not a fresh whole-catalogue or native audit.",
-    "currentPacketScriptSha256": "07c17e5e0cedbe4aba07c99780736e004e854d171b73ae1b003043a0d6e87130",
+    "currentPacketScriptSha256": "a10986a6adc5afdedac2dc786599da0eae0737a33e5268a6a6edb9824a85e595",
     "dependencies": [
       {
         "id": "editorial-cta",
@@ -14078,6 +14082,10 @@
       {
         "id": "radio",
         "variants": 30
+      },
+      {
+        "id": "notification-status-label",
+        "variants": 7
       }
     ],
     "boundedCompleteSourceScene": {
@@ -14208,7 +14216,7 @@
       "sourceCases": 10,
       "independentReview": "Range accepted",
       "nativeAcceptance": false,
-      "scope": "Finite NoHeroImage closed/initial source contexts, genuine reusable dependency closure, CaptureTheme allocation/media snapshots; remaining image-bearing stories and native raster/runtime/publication open.",
+      "scope": "Finite NoHeroImage closed/initial source contexts, genuine reusable dependency closure, CaptureTheme allocation/media snapshots. Additional image-bearing source scenes registered separately; native raster/runtime/publication open.",
       "sourceCorrection": "Fresh measured inner intro1022/x71 replaces outer wrapper1144/x10. Independent matching-theme header-width/slot assertions accepted; cross-theme live-bound width and native auto-layout/raster gates remain open."
     },
     "boundedLegend": {
@@ -14218,6 +14226,22 @@
       "independentReview": "Notice accepted",
       "nativeAcceptance": false,
       "scope": "Actual continuous/categorical/stepped/vertical/grid source, overflow retained; native fonts/gradients/raster/edited anchors open."
+    },
+    "boundedImageArticleScenes": {
+      "families": 1,
+      "variants": 40,
+      "sourceCases": 40,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Actual Large/Compact/Alternate/Split source scenes, full viewport header slots, captured individual dimensions and genuine reusable dependencies. CaptureTheme source media/allocations; cross-theme reflow, fonts, pixels, playback, runtime and publication open."
+    },
+    "boundedNotificationStates": {
+      "families": 3,
+      "variants": 18,
+      "sourceCases": 90,
+      "independentReview": "Range accepted",
+      "nativeAcceptance": false,
+      "scope": "Actual ServiceNotice, Snackbar severity and pointer/keyboard UserFeedback confirmation states, rich source links and separate exact status dependency. Native blur/focus/pixels, timers/actions/interaction and publication open."
     }
   }
 }

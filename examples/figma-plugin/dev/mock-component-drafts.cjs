@@ -125,6 +125,10 @@ async function main() {
       ['news-article-initial-media', 10],
       ['news-article-scene', 10],
       ['legend', 10],
+      ['news-image-article-scene', 40],
+      ['service-notice', 6],
+      ['snackbar', 8],
+      ['user-feedback-confirmation', 4],
       ['search-result-item', 42],
       ['search-result-fields', 14],
       ['search-result-state', 20],
@@ -132,7 +136,7 @@ async function main() {
   );
   assert.strictEqual(
     packet.draftFamilies.reduce((n, f) => n + f.variants.length, 0),
-    883
+    941
   );
   for (const field of [
     'collection',
@@ -170,13 +174,32 @@ async function main() {
     packet.draftDependencies.find(f => f.id === 'page-chrome-button'),
     expectedButton
   );
+  const expectedNotificationStatus = copy(
+    original.components.families.find(f => f.id === 'status-label')
+  );
+  expectedNotificationStatus.id = 'notification-status-label';
+  expectedNotificationStatus.name = 'Mangrove draft / Notification status';
+  expectedNotificationStatus.variants.forEach(v => {
+    v.id = v.id.replace(/^status-label\./, 'notification-status-label.');
+  });
+  assert.strictEqual(expectedNotificationStatus.variants.length, 7);
+  assert.deepStrictEqual(
+    packet.draftDependencies.find(f => f.id === 'notification-status-label'),
+    expectedNotificationStatus
+  );
   const foundation = packet.foundationCatalogue;
   const validate = (families, assets = foundation) =>
     validateDrafts(families, assets, packet.draftDependencies);
   validate(packet.draftFamilies);
   assert.deepStrictEqual(
     packet.draftDependencies.map(f => f.id),
-    ['editorial-cta', 'page-chrome-button', 'checkbox', 'radio']
+    [
+      'editorial-cta',
+      'page-chrome-button',
+      'checkbox',
+      'radio',
+      'notification-status-label',
+    ]
   );
   assert.deepStrictEqual(
     packet.draftDependencies[0],
@@ -243,7 +266,7 @@ async function main() {
   tree.children[0].id = tree.id;
   assert.throws(() => validate(duplicate), /Missing\/duplicate anatomy ID/);
   console.log(
-    'ok  isolated deterministic 71-family/883-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
+    'ok  isolated deterministic 75-family/941-variant packet retains full DTO and exact dependencies, rejecting missing roles, alias cycles and duplicate anatomy'
   );
 
   // Use the actual importer entry, not a duplicated preflight. The packet must
@@ -289,6 +312,9 @@ async function main() {
     packet.draftFamilies.filter(f => originalDraftIds.includes(f.id))
   );
   const env = environment(doc, { sharedOnly: true });
+  // Import the complete expanded foundation using the separately reviewed
+  // exact background-blur API fixture. The combined scene cohort remains9/28.
+  require('./mock-notification-states.cjs').installBackgroundBlurFixture(env);
   const expectedSvg = packet.draftFamilies
     .find(f => f.id === 'notice')
     .variants.map(v => v.tree.children[0].children[0].svg.markup);

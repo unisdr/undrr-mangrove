@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **71 families / 883 bounded variants**.
+The current holistic packet contains **75 families / 941 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
@@ -21,8 +21,9 @@ and [reading patterns](holistic/page-reading.md) for their source evidence and
 limits. The packet also includes three report families/six variants
 and three open navigation families/24 variants. The report scene now composes
 actual reusable instances for its complete finite English closed-chrome authored
-anatomy at390/1164. Other landing templates, full news-detail pages and the
-syndicated widget remain under implementation. Native page acceptance is open.
+anatomy at390/1164. Additional landing templates and live page/search behavior remain under
+implementation. Finite source article scenes and contextual Widget presets are
+now registered; native page acceptance is open.
 See [report composition](holistic/landing-report.md) and the authored open
 navigation section in [page chrome](holistic/page-chrome.md).
 
@@ -177,3 +178,18 @@ The reviewed syndicated widget adds seven source families/383 presets, preservin
 The source article exclusion adds one family/two presets: a normal editable narrow rich paragraph and the exact four desktop rich source lines around the highlight. The current-page frozen-copy guard refuses edited desktop copy before permanent writes. All-five actual builder tests and an independent review pass; native font/line pixels and changed-content reflow remain open. See [the exclusion contract](holistic/news-exclusion.md).
 
 The complete finite NoHeroImage article adds one family/10 captured brand/viewport scenes with genuine nested prose, quotes, float/exclusion, player appearance, chrome, sharing, related cards, taxonomy, recommendations and initial feedback. Legend adds one family/10 authored continuous, categorical, stepped, vertical and grid presets. Dedicated all-five builder repeats and independent source reviews pass; source capture allocations, numeric/native font shapes, pixel equivalence, runtime states, library integration and publication remain open. See [article scenes](holistic/news-article-scene.md) and [Legend](holistic/legend.md).
+
+The full finite image-bearing article source scenes add one family/40 presets
+covering Large, Compact, Alternate and Split at both recorded viewports across
+five CaptureTheme profiles. Their genuinely nested source headers retain the
+measured full-viewport slots and individual source heights. NoHeroImage adds
+one family/10 presets using the corrected inner intro slot. These are finite
+source scenes with native cross-theme reflow, fonts, pixels and publication
+gates. See [article scenes](holistic/news-article-scene.md) and
+[image article scenes](holistic/news-image-article-scene.md).
+
+ServiceNotice, Snackbar and UserFeedback confirmation add three families/18
+source presets with genuine status, action, countdown and rich URL anatomy.
+Their exact normal status-label clone is a separate dependency with seven
+variants. Behavior, native focus/blur/raster, live timers and publication stay
+open. See [notification states](holistic/notification-states.md).
