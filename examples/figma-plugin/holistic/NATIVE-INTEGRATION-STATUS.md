@@ -143,8 +143,11 @@ effect style. Complete readonly native title and range fields show a real
 application mismatch: the unlinked title uses the linked title style, while
 the linked title has no underline despite its shared style declaring one.
 The ordinary TEXT builder unconditionally resets absent tree decoration to
-`NONE` after style application, explaining the lost underline. A narrow
-style-derived correction is under review. The plain title style identity
+`NONE` after style application, explaining the lost underline. The narrow
+[style-derived correction](TEXT-DECORATION-INHERITANCE.md) is committed at
+`4530c602`. Independent all-five-brand regression checks preserve explicit
+overrides, owning consumer edits and two zero-create repeats. Its native Book
+application rerun remains pending. The plain title style identity
 mismatch remains a separate attribution gate. All-mode, edited-consumer repeat,
 render fidelity, canonical integration and publication acceptance remain open.
 A diagnostic output overflow is preserved; subsequent reads establish current
