@@ -194,9 +194,9 @@ function mgAlphaMaskValues(plan, modeIds, resolve) {
           );
         return { ...color, a: color.a ?? 1 };
       });
-      if (colors[0].a !== 1 || colors.at(-1).a !== 0)
+      if (!colors.some(color => color.a === 1) || colors.at(-1).a !== 0)
         throw Error(
-          'ALPHA mask needs opaque first and transparent final source roles.'
+          'ALPHA mask needs an opaque stop and transparent final source role.'
         );
       result[mode] = {
         width,

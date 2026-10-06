@@ -437,6 +437,118 @@ function main() {
   mgApplyAlphaMask(
     mgNativeAlphaMaskPlan(p.node, proxy, p.content, plan, p.identity)
   );
+  // Actual two-edge source mask topology. This fixture validates fields only.
+  const two = document(200);
+  two.tree.gradient.layers[0].transform = [
+    [1, 0, 0],
+    [0, 1, 0],
+  ];
+  two.tree.gradient.layers[0].stops = [
+    { position: 0, color: 'transparent' },
+    { position: 0.3, color: 'opaque' },
+    { position: 0.7, color: 'opaque' },
+    { position: 1, color: 'transparent' },
+  ];
+  const twoBefore = copy(two),
+    twoPlan = mgAlphaMaskPlan(two.tree, two.owner, 0);
+  const values = mgAlphaMaskDocumentValues(twoPlan, two);
+  for (const mode of ids)
+    assert.deepStrictEqual(
+      copy(values[mode].colors.map(c => c.a)),
+      [0, 1, 1, 0]
+    );
+  assert.deepStrictEqual(
+    copy(
+      mgAlphaMaskNativeValues(twoPlan, ids, (name, mode, type) => {
+        const variable = two.variables.find(v => v.name === name);
+        assert.equal(variable.type, type);
+        return variable.values[mode];
+      })
+    ),
+    copy(values)
+  );
+  const owned = nativeClosure(),
+    text = {
+      id: 'native-content-text',
+      type: 'TEXT',
+      characters: 'Edited actual owning content',
+    };
+  owned.content.children = [text];
+  for (let repeat = 0; repeat < 2; repeat++) {
+    mgApplyAlphaMask(
+      mgNativeAlphaMaskPlan(
+        owned.node,
+        owned.owner,
+        owned.content,
+        twoPlan,
+        owned.identity
+      )
+    );
+    assert.equal(owned.node.isMask, true);
+    assert.equal(owned.content.children[0], text);
+    assert.equal(text.characters, 'Edited actual owning content');
+  }
+  assert.deepStrictEqual(two, twoBefore);
+  for (const mutate of [
+    d => {
+      d.variables.find(v => v.name === 'opaque').values.mcr = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 0.5,
+      };
+    },
+    d => {
+      d.variables.find(v => v.name === 'transparent').values.mcr = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 0.2,
+      };
+    },
+    d => {
+      d.variables.find(v => v.name === 'transparent').values.mcr = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: NaN,
+      };
+    },
+    d => {
+      d.variables.find(v => v.name === 'transparent').values.mcr = {
+        alias: 'transparent',
+      };
+    },
+  ]) {
+    const bad = copy(two);
+    mutate(bad);
+    const p = mgAlphaMaskPlan(bad.tree, bad.owner, 0);
+    assert.throws(() => mgAlphaMaskDocumentValues(p, bad), /ALPHA mask/);
+  }
+  const beforeFields = {
+    isMask: owned.node.isMask,
+    maskType: owned.node.maskType,
+    ledger: owned.identity.readState(owned.node),
+  };
+  assert.throws(
+    () =>
+      mgAlphaMaskNativeValues(twoPlan, ids, (name, mode, type) => {
+        const v = two.variables.find(v => v.name === name);
+        assert.equal(v.type, type);
+        return mode === 'mcr' && name === 'transparent'
+          ? { r: 0, g: 0, b: 0, a: 1.1 }
+          : v.values[mode];
+      }),
+    /ALPHA mask/
+  );
+  assert.deepStrictEqual(
+    {
+      isMask: owned.node.isMask,
+      maskType: owned.node.maskType,
+      ledger: owned.identity.readState(owned.node),
+    },
+    beforeFields
+  );
   assert.equal(mgAlphaMaskPlan({ type: 'FRAME' }, null, 0), null);
   console.log(
     'ALPHA mask source/native-field contract: all five modes, stable field repeats, explicit NONE reset and premutation refusals pass. Rendered native masks remain unproved.'
