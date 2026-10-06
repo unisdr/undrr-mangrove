@@ -3897,8 +3897,14 @@ async function buildMangroveComponents(
           node = figma.createNodeFromSvg(plan.importedMarkup);
           if (
             node.type !== 'FRAME' ||
-            Math.abs(node.width - plan.width) > 1e-6 ||
-            Math.abs(node.height - plan.height) > 1e-6
+            !Number.isFinite(node.width) ||
+            node.width <= 0 ||
+            !Number.isFinite(node.height) ||
+            node.height <= 0 ||
+            (node.width !== plan.width &&
+              node.width !== Math.fround(plan.width)) ||
+            (node.height !== plan.height &&
+              node.height !== Math.fround(plan.height))
           )
             throw new Error(
               'native SVG importer did not preserve the explicit viewBox viewport. Verify native SVG acceptance before using this asset; path-bound scaling is unsupported.'

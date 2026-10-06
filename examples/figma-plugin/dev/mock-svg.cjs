@@ -174,6 +174,11 @@ function installSvgMock(
       frame.appendChild(vector);
     }
     if (state.svgTrimViewport) frame.resizeWithoutConstraints(9, 6);
+    if (state.svgViewportReadback) {
+      // Explicit viewport field fixture, not a simulation of native path/raster
+      // import. Permit malformed fields only to exercise the production guard.
+      Object.assign(frame, state.svgViewportReadback);
+    }
     return frame;
   };
 }
@@ -441,6 +446,155 @@ async function main() {
   }
   console.log(
     'ok  native SVG importer string failures and trimmed viewports are reported without accepting a broken family'
+  );
+
+  // Native 442x63.9 source logo evidence reads the height as exact Float32.
+  // This bounded path fixture exercises viewport acceptance only, not that
+  // logo's paths, source crop or native pixel fidelity.
+  const decimalMarkup =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 442 63.9"><path d="M0 0L16 16" fill="none" stroke="black"/></svg>';
+  const decimalDoc = fixtureDocument(source, decimalMarkup);
+  decimalDoc.components.families[0].variants = [
+    decimalDoc.components.families[0].variants[0],
+  ];
+  const decimalTree = decimalDoc.components.families[0].variants[0].tree;
+  decimalTree.layout.width = 446;
+  decimalTree.layout.height = 68;
+  decimalTree.children[0].layout = { width: 442, height: 63.9 };
+  for (const mode of decimalDoc.modes) {
+    for (const height of [63.9, Math.fround(63.9)]) {
+      const fractionalEnv = svgEnvironment(decimalDoc);
+      fractionalEnv.state.modeLimit = 5;
+      const foundation = await fractionalEnv.call(
+        'importVariables',
+        decimalDoc,
+        decimalDoc.modes.map(m => m.id),
+        false,
+        [],
+        true
+      );
+      assert.equal(foundation.errors.length, 0, foundation.errors.join('\n'));
+      fractionalEnv.state.svgViewportReadback = { width: 442, height };
+      const fractionalBuild = () =>
+        fractionalEnv.call('buildMangroveComponents', decimalDoc, mode.id, [
+          'svg-fixture',
+        ]);
+      const imported = await fractionalBuild();
+      assert.equal(imported.errors.length, 0, imported.errors.join('\n'));
+      const wrapper = [...fractionalEnv.state.nodes.values()].find(n =>
+        identity(n, 'mgSvgAsset')
+      );
+      assert(wrapper);
+      const before = JSON.stringify({
+        ids: [wrapper.id, ...wrapper.children.map(n => n.id)],
+        geometry: [wrapper.width, wrapper.height, wrapper.x, wrapper.y],
+        paths: wrapper.children.map(n => n.vectorPaths),
+        asset: identity(wrapper, 'mgSvgAsset'),
+      });
+      for (let repeat = 0; repeat < 2; repeat++) {
+        const rebuilt = await fractionalBuild();
+        assert.equal(rebuilt.errors.length, 0, rebuilt.errors.join('\n'));
+        assert.equal(rebuilt.createdNodeIds.length, 0);
+        assert.equal(
+          JSON.stringify({
+            ids: [wrapper.id, ...wrapper.children.map(n => n.id)],
+            geometry: [wrapper.width, wrapper.height, wrapper.x, wrapper.y],
+            paths: wrapper.children.map(n => n.vectorPaths),
+            asset: identity(wrapper, 'mgSvgAsset'),
+          }),
+          before
+        );
+      }
+      assert.equal(fractionalEnv.state.svgImportCalls.length, 1);
+      assert.equal(fractionalEnv.state.svgScaleCalls.length, 0);
+      assert.equal(wrapper.height, height);
+    }
+  }
+  const f32 = Math.fround(63.9);
+  const f32Buffer = new ArrayBuffer(4);
+  const f32View = new DataView(f32Buffer);
+  f32View.setFloat32(0, f32);
+  const bits = f32View.getUint32(0);
+  const adjacent = step => {
+    f32View.setUint32(0, bits + step);
+    return f32View.getFloat32(0);
+  };
+  for (const readback of [
+    { height: adjacent(-1) },
+    { height: adjacent(1) },
+    { height: 63.9 + 0.0000005 },
+    { width: 442 + 0.0000005 },
+    { height: '63.9' },
+    { height: NaN },
+    { width: Infinity },
+    { type: 'GROUP' },
+  ]) {
+    const refusedEnv = svgEnvironment(decimalDoc);
+    await require('./mock-kit.cjs').importFoundation(refusedEnv, decimalDoc);
+    refusedEnv.state.svgViewportReadback = {
+      width: 442,
+      height: 63.9,
+      ...readback,
+    };
+    const refused = await refusedEnv.call(
+      'buildMangroveComponents',
+      decimalDoc,
+      'undrr',
+      ['svg-fixture']
+    );
+    assert(
+      refused.errors.some(e =>
+        e.includes('did not preserve the explicit viewBox viewport')
+      )
+    );
+    assert(!refused.families.length);
+    assert(
+      ![...refusedEnv.state.nodes.values()].some(
+        n => !n.removed && identity(n, 'mgSvgAsset')
+      )
+    );
+  }
+  for (const dimension of [1e40, 1e-46]) {
+    assert(Number.isFinite(dimension) && dimension > 0);
+    const boundaryDoc = copy(decimalDoc);
+    const svg = boundaryDoc.components.families[0].variants[0].tree.children[0];
+    svg.svg.markup = decimalMarkup.replace(
+      '442 63.9',
+      `${dimension} ${dimension}`
+    );
+    svg.layout = { width: dimension, height: dimension };
+    const boundaryEnv = svgEnvironment(boundaryDoc);
+    await require('./mock-kit.cjs').importFoundation(boundaryEnv, boundaryDoc);
+    boundaryEnv.state.svgViewportReadback = {
+      width: Math.fround(dimension),
+      height: Math.fround(dimension),
+    };
+    const boundary = await boundaryEnv.call(
+      'buildMangroveComponents',
+      boundaryDoc,
+      'undrr',
+      ['svg-fixture']
+    );
+    assert.equal(
+      boundaryEnv.state.svgImportCalls.length,
+      1,
+      'Finite positive source boundary must reach the actual import guard'
+    );
+    assert(
+      boundary.errors.some(e =>
+        e.includes('did not preserve the explicit viewBox viewport')
+      )
+    );
+    assert(!boundary.families.length);
+    assert(
+      ![...boundaryEnv.state.nodes.values()].some(
+        n => !n.removed && identity(n, 'mgSvgAsset')
+      )
+    );
+    assert.equal(boundaryEnv.state.svgScaleCalls.length, 0);
+  }
+  console.log(
+    'ok  exact double/Float32 442x63.9 viewport fields across five brands and two no-rescale repeats; adjacent Float32, sub-old-epsilon, malformed, F32 overflow/underflow and non-FRAME imports refuse'
   );
 
   const translucent = markup
