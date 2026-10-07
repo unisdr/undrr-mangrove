@@ -158,6 +158,30 @@ function assertDisplayedEdits(instance, keys) {
       `Edited ${node.componentPropertyReferences.characters.replace(/#[^#]+$/, '')}`
     );
 }
+function assertHorizontalActionSizing(env, families) {
+  const horizontal = families.find(f => f.id === 'horizontal-book-card');
+  for (const variant of horizontal.variants) {
+    if (variant.properties.Preset === 'NoLink') continue;
+    const matches = [...env.state.nodes.values()].filter(node => {
+      if (
+        node.type !== 'INSTANCE' ||
+        !identity(node).includes('/variant/' + variant.id + '/') ||
+        !identity(node).endsWith('/cta')
+      )
+        return false;
+      for (let parent = node.parent; parent; parent = parent.parent)
+        if (parent.type === 'INSTANCE') return false;
+      return true;
+    });
+    assert.strictEqual(matches.length, 1, 'Unique owning CTA ' + variant.id);
+    // Actual source mobile callers span their content allocation; desktop is inline.
+    assert.strictEqual(
+      matches[0].layoutSizingHorizontal,
+      variant.properties.Width === '390' ? 'FILL' : 'HUG',
+      'Owning CTA source allocation ' + variant.id
+    );
+  }
+}
 function defaultSnapshot(env) {
   return [...env.state.nodes.values()]
     .filter(n => n.type === 'COMPONENT_SET')
@@ -194,6 +218,7 @@ async function main() {
     const first = await env.call('buildMangroveComponents', doc, m.id, ids);
     assert.deepStrictEqual(copy(first.errors), []);
     assertSourceDefaults(env, doc.components.families);
+    assertHorizontalActionSizing(env, families);
     const instances = [],
       richTargets = [];
     for (const report of first.families) {
@@ -305,6 +330,7 @@ async function main() {
       assert.deepStrictEqual(copy(repeat.errors), []);
       assert.strictEqual(repeat.createdNodeIds.length, 0);
       assertSourceDefaults(env, doc.components.families);
+      assertHorizontalActionSizing(env, families);
       assert.deepStrictEqual(defaultSnapshot(env), beforeDefaults);
       assert.deepStrictEqual(owned(), before);
       assert.strictEqual(env.state.cardSvgCalls.length, svgCount);

@@ -414,7 +414,7 @@ function buildCardContentRecipes({ root, modes, variables, styles }) {
       }
     );
   }
-  const action = text => ({
+  const action = (text, width = 'HUG') => ({
     type: 'INSTANCE',
     id: 'cta',
     name: 'Authored CTA action',
@@ -427,7 +427,7 @@ function buildCardContentRecipes({ root, modes, variables, styles }) {
     },
     overrides: { Label: text },
     expose: true,
-    layout: { width: 'HUG', height: 'HUG' },
+    layout: { width, height: 'HUG' },
   });
   const bookStory = read(
     'stories/Components/Cards/Card/BookCard.stories.jsx'
@@ -585,7 +585,9 @@ function buildCardContentRecipes({ root, modes, variables, styles }) {
           ),
           heading('Title in large size', linked),
           summary(),
-          ...(hasCTA ? [action('Primary action')] : []),
+          ...(hasCTA
+            ? [action('Primary action', Width === 390 ? 'FILL' : 'HUG')]
+            : []),
         ]);
       const children = hasCover
         ? [visual(Width === 640 ? 160 : 200, false), content]

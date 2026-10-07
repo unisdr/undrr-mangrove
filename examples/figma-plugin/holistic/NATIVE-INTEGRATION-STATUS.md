@@ -397,3 +397,22 @@ PNG collection and committed cleanup, not source pixel equivalence. Six Long
 CTA masters retain default copy; edited French review specimens require their
 own source comparisons. Source font/crop/rendering, edited reflow, all-five
 native mode rendering, cloud persistence and publication remain open.
+
+## Mobile Horizontal Card CTA allocation, 7 October 2026
+
+All fifteen browser records (five brands, three mobile presets) show the actual
+CTA spanning the 360px content allocation. The existing native instances hug to
+122px and place the right-anchored badge beside the label. The source recipe now
+sets the owning CTA instance width to FILL for Default, NoImage and ButtonOnly
+at 390px. Wide callers and all 23 Editorial CTA dependency masters are unchanged;
+NoLink has no CTA. Family and variant counts stay at 139 and 2,269.
+
+Independent source review confirms exactly three changed layout fields, with
+complete reversal restoring every other source value. The existing all-five
+19-preset Card mock lifecycle passes, including owning edits and two zero-create
+repeats; additional assertions check the actual owning instance sizing. This is
+a source/model correction. No native master was changed by it. The original
+391-node native checkpoint and earlier versioned deliveries are preserved.
+Native corrected-layout execution, source font/crop/raster, edited reflow,
+all-five rendered modes and publication remain open. The separately measured
+0.25px title allocation difference has no rounding or fixed-height patch.
