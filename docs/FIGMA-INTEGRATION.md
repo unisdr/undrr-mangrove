@@ -6,7 +6,7 @@ Mangrove owns the token engine, token definitions, component implementations, st
 
 ## Designer changes to Storybook
 
-For selected designer changes, use the toolkit's [design-to-code runbook](https://github.com/PreventionWeb/undrr-mangrove-figma/blob/spike/mangrove-tooling-migration/docs/DESIGN-TO-CODE.md) and [change-request template](https://github.com/PreventionWeb/undrr-mangrove-figma/blob/spike/mangrove-tooling-migration/docs/templates/DESIGN-CHANGE-REQUEST.md). Implement component, token and style changes manually in Mangrove and review the affected Storybook stories. Record toolkit recipe impact separately. Native reconstruction, bulk export and library publication are separate workflows with their own acceptance; they are not required for every design change.
+For selected designer changes, use the toolkit's [design-to-code runbook](https://github.com/PreventionWeb/undrr-mangrove-figma/blob/e7f5dfa5461e31c57bf5d867575905ef0b9908cc/docs/DESIGN-TO-CODE.md) and [change-request template](https://github.com/PreventionWeb/undrr-mangrove-figma/blob/e7f5dfa5461e31c57bf5d867575905ef0b9908cc/docs/templates/DESIGN-CHANGE-REQUEST.md). Implement component, token and style changes manually in Mangrove and review the affected Storybook stories. Record toolkit recipe impact separately. Native reconstruction, bulk export and library publication are separate workflows with their own acceptance; they are not required for every design change.
 
 ## Token-engine bridge contract
 
