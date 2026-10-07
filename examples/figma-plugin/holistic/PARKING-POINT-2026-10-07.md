@@ -1,5 +1,9 @@
 # Mangrove Figma spike parking point, 7 October 2026
 
+This is the historical parking snapshot. The user subsequently resumed a bounded
+[Card/CTA release goal](CARD-CTA-RELEASE-2026-10-07.md); follow that document for
+current execution and newly reviewed evidence.
+
 The holistic implementation is **unfinished and parked at the user's request**.
 Source recipes, browser evidence, model checks, native rebuilds and published
 consumer acceptance are separate gates. The reduced token/style maintenance

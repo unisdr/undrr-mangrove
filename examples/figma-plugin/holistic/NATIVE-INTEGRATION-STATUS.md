@@ -435,8 +435,10 @@ cloud check confirms all three owning mobile CTAs at FILL/360px with badges at
 X337 in the [online rehearsal](https://www.figma.com/design/VCwJs8fTYXU8007BYYqqwp?node-id=2-258).
 This accepts the measured source correction and that narrow online geometry,
 not full native/cloud equality or source pixel equivalence. The corrected
-checkpoint is now explicitly adopted after a separate full read, and the first
-corrected ordinary repeat passed independent review. The second repeat and fresh
-probe cleanup remain pending. Canonical integration and publication are separate
-gates. See the [7 October parking point](PARKING-POINT-2026-10-07.md)
+checkpoint is now explicitly adopted after a separate full read. Two corrected
+ordinary repeats pass independent review, and a fresh read verifies the first
+eight actual probes absent locally. The second repeat's four probes still need
+a fresh absence check. Rendering, edited flow, full persistence, canonical
+integration and publication remain separate gates. Follow the [resumed Card/CTA
+release work](CARD-CTA-RELEASE-2026-10-07.md) for current execution. See the [7 October parking point](PARKING-POINT-2026-10-07.md)
 for the current source delivery, full remaining scope and acceptance checklist.
