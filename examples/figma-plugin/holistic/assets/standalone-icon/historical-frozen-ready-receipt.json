@@ -1,0 +1,96 @@
+{
+  "status": "Held external candidate; independent source/placement-boundary review pending",
+  "scope": "Finite standalone Icon1/131 modeled source contract, no repo/native acceptance",
+  "pins": {
+    "prepare.cjs": {
+      "bytes": 1435,
+      "sha256": "f1da0e20814fb04c0b8be0c259efb7dbcef174c182e0b349d22848cfdd704023"
+    },
+    "recipes.cjs": {
+      "bytes": 10479,
+      "sha256": "8c8518f0cc0dbae9d92f2cc9a118a924818ae6b00bdca115a844f37b6c98d1ae"
+    },
+    "svg-fixture.cjs": {
+      "bytes": 2902,
+      "sha256": "d0a6f37a8974fcf3c663658d22c025a43da333b5ed5f762ae221bcac1d5a2d17"
+    },
+    "mock-builder.cjs": {
+      "bytes": 5037,
+      "sha256": "48a7d80eef378235580eadf78a6a42f942802435a61e2774f7e5a6241595d913"
+    },
+    "mock-source-negatives.cjs": {
+      "bytes": 2535,
+      "sha256": "7c96790dd91967126a7ce30d4d1c4c02ae6c08e1917db3585c64d722f69109b4"
+    },
+    "mock-native-refusals.cjs": {
+      "bytes": 2807,
+      "sha256": "77e547f9f402c1b0dad6c4cf99a037bd3d7b855b1dec6163540efe38f11df05f"
+    },
+    "input-manifest.json": {
+      "bytes": 3090,
+      "sha256": "2c55687d128738b4e95432fbcd0247f398168e88fb253ff1f12022b077a3510d"
+    },
+    "document.json": {
+      "bytes": 4916115,
+      "sha256": "a808209f35d91ae14202abc5a5be5bef23caf72c949bac52d30e57fb9a375ee3"
+    },
+    "PROPOSAL.md": {
+      "bytes": 4978,
+      "sha256": "d21b2c55d7d2f7003848cafb8193443123ca93bcee8aed101dc8736d730d1a9f"
+    },
+    "census.json": {
+      "bytes": 359,
+      "sha256": "90c5a00f57ce3e9b222ca1f17849c6acaf3c00a5c80746035794bfdd96e09514"
+    },
+    "builder-strengthened-final.log": {
+      "bytes": 659,
+      "sha256": "568952dbf2216eed07f9f0df7575154a354e4ab4073854f5c3b728b5ba0c7568"
+    },
+    "source-negatives-final.log": {
+      "bytes": 69,
+      "sha256": "18af979fac69f1353e48b1ae0ad281b780656787f5b1ad197be2de0cce330053"
+    },
+    "native-refusals-final.log": {
+      "bytes": 101,
+      "sha256": "ccf64063644394962d51beca3a7ee275d45fea5dac4381e4475598021188ca5c"
+    },
+    "format.log": {
+      "bytes": 166,
+      "sha256": "e65ca15b66f455d4e663bd9a4957e4651b14177a3083014c6bb47589cbee2212"
+    }
+  },
+  "sourceCases": 90,
+  "sourceOwners": 3750,
+  "families": 1,
+  "variants": 131,
+  "allFiveProductionBuilder": {
+    "session": 56393,
+    "exitCode": 0,
+    "initialAndTwoZeroCreateRepeats": true,
+    "genuineLinkedConsumers": 131,
+    "ownConsumerNameAndOpacityPreserved": true,
+    "modeledNodes": 1899
+  },
+  "sourceNegatives": {
+    "session": 2122,
+    "exitCode": 0,
+    "count": 9
+  },
+  "builderNegatives": {
+    "session": 72659,
+    "exitCode": 0,
+    "count": 4
+  },
+  "formattingOnlyAstAndWholeDocumentEquality": true,
+  "rawSourceFingerprintScope": "Existing90 raw capture pins recomputed on every producer call",
+  "sourceSvgAlphaProofInherited": "Independent v2 source normalizer212 SVG-image alpha comparisons, not native CSS-mask placement",
+  "requiredOpen": [
+    "Measured pseudo clientRect/inline-baseline placement within differing span boxes",
+    "Native SVG import topology/shape bounds/paint resolution/raster",
+    "Arbitrary inherited em sizing and mutable parent size policy",
+    "sm controlled source, legacy FontAwesome glyph font branch, print and forced colours",
+    "Native transport/capacity existing inventory/publication"
+  ],
+  "nativeAccepted": false,
+  "repositoryChanged": false
+}

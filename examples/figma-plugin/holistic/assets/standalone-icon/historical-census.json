@@ -1,0 +1,15 @@
+{
+  "families": 1,
+  "variants": 131,
+  "observedContracts": 131,
+  "sourceObservations": 3750,
+  "sourceCases": 90,
+  "newVariables": 4,
+  "newStyles": 0,
+  "documentVariables": 524,
+  "documentTextStyles": 102,
+  "documentEffectStyles": 8,
+  "paintOnlyRequiredAllModeRoleClosure": 17,
+  "reviewScaffoldClosureNotIncluded": true,
+  "nativeAccepted": false
+}

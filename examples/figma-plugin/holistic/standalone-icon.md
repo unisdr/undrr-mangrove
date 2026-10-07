@@ -1,0 +1,31 @@
+# Standalone Icon finite source candidate
+
+This prepared repository candidate preserves the 131 observed class/parent/pseudo-geometry contracts from 3,750 owners in 90 real DefaultIcons, SingleIcon and ColoredIcons browser captures. It creates one component family with 131 finite variants. No repository registration, Figma operation or native acceptance has occurred.
+
+The 106 independently reviewed v2 SVG mask bodies are used only for the monochrome branch. Their original shape order, coordinates, stroke widths, opacity and winding rules remain. Fills and/or strokes bind the source-declared COLOR role. The genuine multicolour SDG wheel restores every original paint after the same documented metadata/style flattening; it has no monochrome binding. Seventeen distinct visible paint layers are checked. Six actual RTL directional contracts insert the source scaleX(-1) around the original viewport centre using an equivalent SVG group transform. The native rendering and layer geometry remain unaccepted; the bounded mock records complete source shape attributes and API dimensions, not path bounds, rasterisation or browser mask rendering.
+
+Utilities bind their authored colour roles from _utility.scss. Real inherited Tag foreground binds neutral-0, real link/CTA inherits the foundational interactive role, and ordinary body/table icons bind foundational color/text. The four authored social inline colours retain separate literal all-mode roles. No role is chosen merely because RGBA matches another token. Every referenced role is typed and resolved through all five source modes and checked against the actual captured integer RGB. There are four new COLOR records, no new styles, and 524 variables in the standalone document with its complete ordinary foundation. This count is below one-collection capacity but establishes no native inventory, transport or construction feasibility.
+
+Recorded pseudo-element widths/heights are 14,16,24 or32px. Actual inline owner allocations are preserved separately: inherited lg can be24×28, Tag14×21 and link16×24. Captures do not provide the pseudo-element clientRect or its actual vertical position within the inline span. The recipe uses a source viewport START placement candidate within the real owner allocation; it does not equate span and glyph boxes, invent vertical centring, or claim exact baseline placement. Contain scaling centres the SVG within its actual square glyph viewport only. Arbitrary insertion into a differently sized parent, live em sizing and per-mode viewport scale are not supported by this finite contract. Source SVG planner fixed width/height and scale remain the existing renderer constraint.
+
+The component contains vectors, not editable glyph TEXT. Genuine linked consumers retain their own name and opacity changes through two unchanged builds in the model. There is no invented label/content property. Default review sizing is preserved and generic long-label review controls are disabled. Unknown sm, legacy FontAwesome glyph/font-file, forced-colours, print, arbitrary inherited sizing, native CSS-mask placement, native SVG import topology/paint resolution/pixels, inline baseline, publishing and full component completion remain explicit gaps.
+
+The archived original `mock-builder.cjs` records the all-five production importer/builder lifecycle with 131 masters and131 genuine consumers, nonempty full node/variable/style snapshots, exact intended paint binding IDs, unchanged original multicolour paint, consumer name/opacity edits, and two zero-create repeats. The custom SVG fixture records source element attributes/paint order plus imported/rescaled viewport API calls; it does not simulate browser or native vector bounds.
+
+The archived original `mock-source-negatives.cjs` records nine caller-preserving malformed mode/role/alias/unused-mode colour/style-font/kind/identity/raw-capture refusals. The archived original `mock-native-refusals.cjs` records production-builder geometry drift, actual native COLOR kind drift, unsupported XML and attempted multicolour collapse refusals before permanent node/style/variable changes. Producer validation and native foundation validation are distinct: changing only a source variable type after a valid import does not invalidate the already imported native COLOR in the ordinary builder. The producer rejects that malformed caller before publishing; the generic builder is not claimed to independently validate every unused source variable field. The failed exploratory assertion is preserved.
+
+Input manifest pins all active source files, all ninety raw captures via their existing projection, the v2 source normaliser result/peer, and the current production SVG planner. The historical preparation referenced the preserved external raw archive. The portable repository cohort now reads its pinned restored archives as described below. Original span/pseudo assertion, variant-name validation, generic review-control refusal, and typed snapshot fixture failures are retained as preparation history. None is relabelled native execution.
+
+## Portable source candidate
+
+All 90 original raw JSON captures are deterministically gzip archived with both compressed and restored byte hashes, and all 90 original PNGs are preserved. The four source profile/SVG proof inputs are byte-exact restored archives; 13 active source files and the reviewed SVG planner remain pinned. Full factory output is compared with the accepted original external candidate. Historical all-five builder/refusal evidence is inherited; this path-only preparation does not repeat or extend native lifecycle evidence. No native SVG placement, CSS mask, glyph, pixel or publication acceptance is inferred.
+
+The repository-focused source check passed all131 contracts, complete reviewed
+output equality and three caller-preserving source/archive refusals. Run
+`node examples/figma-plugin/dev/mock-standalone-icon-source.cjs` for this focused
+check. The prepared all-five modeled lifecycle entry point is
+`node examples/figma-plugin/dev/mock-standalone-icon.cjs`; its custom SVG fixture
+has the finite source-model limits described above. Active JavaScript formatting
+preserves its AST. Registration is prepared, with combined verification and
+final registration review pending. The normal exporter and native library are
+unchanged.

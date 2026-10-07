@@ -1,0 +1,90 @@
+{
+  "scope": "Separate corrected matching-preview-context MenuItems32 finite external candidate, independent changed-context source peer pending",
+  "files": {
+    "README.md": {
+      "bytes": 5022,
+      "sha256": "1d80c8d0f0e59596afba608b03a1651ca09356925a54b7d3e4cc19f2d75c67ce"
+    },
+    "builder-verdict.json": {
+      "bytes": 2232,
+      "sha256": "a66cf74dd1bbb32be2983671715a329c99fe36528bf8f81f67d680a93e27fdf4"
+    },
+    "document.json": {
+      "bytes": 2022317,
+      "sha256": "c4f9dccee593ceef2b03f178941501f45a6bc31a39cade23e70658e003a8bd87"
+    },
+    "mock-builder.cjs": {
+      "bytes": 7291,
+      "sha256": "b93da3234f5b98c12b62e9ee798edd75836d0c648900c2242885ab709be2576d"
+    },
+    "mock-builder.cjs.log": {
+      "bytes": 594,
+      "sha256": "ff0c2d183df2d416dd0f6ef97f1688a705605f50ab9940f79d855b6160043e55"
+    },
+    "mock-native-refusals.cjs": {
+      "bytes": 2213,
+      "sha256": "407365e68dd6bddb2e2e9cbff762190340e085dd3f2d43e3759e879cfe0f318e"
+    },
+    "mock-native-refusals.cjs.log": {
+      "bytes": 130,
+      "sha256": "67149824a51d983c019d64376bdeb18b498d10a84e621d62ca79eecef01157f7"
+    },
+    "mock-source-refusals.cjs": {
+      "bytes": 2624,
+      "sha256": "fa2ccc1404eb2ac5b177e0ab3bae6905fdd53faed58a3226c46061261d611b00"
+    },
+    "mock-source-refusals.cjs.log": {
+      "bytes": 100,
+      "sha256": "2c894480ab1c89bb0483769431ea105baaf2df3eacc1bc7cfd7751723bd463dc"
+    },
+    "native-refusal-verdict.json": {
+      "bytes": 512,
+      "sha256": "a943d2591e7d00537839e7f710030fde66e0e6a1dde029b9c71295f61c3f589a"
+    },
+    "recipes.cjs": {
+      "bytes": 11198,
+      "sha256": "8aeca1c34e1fc71be4fb152cb0f003d4514ce90c848f634cd45e863e5c90b5c7"
+    },
+    "source-plan.cjs": {
+      "bytes": 7661,
+      "sha256": "a6aa32a142864c77e8420740865e5349e5e9f98b3e47a6f04cab0c3a6b74cf95"
+    },
+    "source-plan.json": {
+      "bytes": 380734,
+      "sha256": "e73767ea399a258b9f5d38deed1cab33c262166e9e5dc2dc987abad54d8a8212"
+    },
+    "source-refusal-verdict.json": {
+      "bytes": 804,
+      "sha256": "ac28a751614ed45f50c0905cd3c2377a348cb2f4b81649c8bb21fcbbe20b8fb1"
+    }
+  },
+  "sourceReadyReceipt": {
+    "path": "/tmp/mangrove-retained-menu-items-preview-context-source-20261006/ready-receipt.json",
+    "bytes": 46846,
+    "sha256": "a804d0ce6f88cedb6fefc755dc4aed3502cde6cc08614f6f88df931458567bed"
+  },
+  "originalCandidatePreserved": "/tmp/mangrove-menu-items-source-recipes-20261006",
+  "candidateCounts": {
+    "families": 1,
+    "variants": 32,
+    "variables": 944,
+    "textStyles": 134,
+    "effectStyles": 8
+  },
+  "observedChecks": {
+    "source32ProjectionExitCode": 0,
+    "allFiveBuilderExitCode": 0,
+    "twoUnchangedAndTwoOwningPropertyEditedZeroCreateEachMode": true,
+    "nineSourceDriftRefusalsExitCode": 0,
+    "twoNamedFontRefusalsExitCode": 0
+  },
+  "sourceActual120Owners240": true,
+  "matchingBodyThemeAndActualI18nHtmlCanvasContext": true,
+  "nativeAccepted": false,
+  "repositoryWrites": false,
+  "limitations": [
+    "External controlled UL.menu/LI +suppliedcopy, not authored MenuItems story/public package caller.",
+    "Property preservation only; visible edited glyph/fragment reflow unaccepted.",
+    "Native font/bytes/bidi/glyph/baseline/focus raster/pixels remain open."
+  ]
+}

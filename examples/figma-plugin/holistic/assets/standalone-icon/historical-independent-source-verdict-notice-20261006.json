@@ -1,0 +1,46 @@
+{
+  "reviewer": "notice_recipe",
+  "status": "Accepted bounded external source candidate",
+  "readyReceiptSHA256": "afc48ce759b02c12f1dd9634eca07f785390127216f44960aa203ce8c4729e06",
+  "verifiedFrozenFiles": 14,
+  "verifiedInputAndAuthoredSourcePins": 17,
+  "rawSourceCases": 90,
+  "rawBeforeAfterExactlyEqual": true,
+  "sourceObservationsIndependentlyMatched": 3750,
+  "uniqueObservedContracts": 131,
+  "regeneratedFamilyVariablesStylesExactlyEqual": true,
+  "independentlyExecuted": {
+    "mock-source-negatives.cjs": {
+      "exitCode": 0,
+      "cases": 9
+    },
+    "mock-native-refusals.cjs": {
+      "exitCode": 0,
+      "cases": 4
+    },
+    "review-icon-candidate-notice.cjs": {
+      "exitCode": 0
+    }
+  },
+  "allFiveLifecycleEvidence": "Read exact pinned author terminal0 log; not redundantly re-executed",
+  "sourceMappingsReviewed": [
+    "Authored utility, body text, real Tag and CTA color relationships; four explicit inline literals, no equal-RGB alias inference",
+    "Original multicolour paint restoration and separate fills/strokes planning",
+    "Six actual RTL viewport-centre transforms",
+    "Separate captured inline owner height and pseudo glyph viewport dimensions"
+  ],
+  "modelLimitations": [
+    "SVG fixture records shape attributes and API dimensions, not true native path bounds or raster",
+    "Current generic builder malformed source DTO validation is not represented as stronger native metadata validation",
+    "Owner name and opacity edits remain genuine linked consumer edits; no invented TEXT property"
+  ],
+  "requiredOpen": [
+    "Pseudo clientRect and inline baseline placement: START is explicitly a candidate",
+    "Native SVG import topology, geometry, paint resolution and pixels",
+    "Arbitrary inherited em sizing, sm, legacy FontAwesome, forced-colours and print",
+    "Native inventory, transport, publication and full Icon completion"
+  ],
+  "nativeAccepted": false,
+  "repositoryRegistrationAccepted": false,
+  "repositoryOrFigmaWrites": false
+}

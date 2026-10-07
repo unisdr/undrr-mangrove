@@ -1,0 +1,2108 @@
+{
+  "version": 1,
+  "inputPins": {
+    "source-recipe-projection/actual-source-contract-profiles.json": {
+      "bytes": 5083464,
+      "sha256": "bf6875c3fa1f002a27408dd806e73429d2eb0bf960da048442472e1f0b813295"
+    },
+    "v2-style-flattening/normalized-icon-masks.json": {
+      "bytes": 210482,
+      "sha256": "c023619c815822de989dcd5d72ba1f3e11c9a44cb8eb2cd869dd4081beaec063"
+    },
+    "v2-style-flattening/icon-svg-plan-verdict.json": {
+      "bytes": 53413,
+      "sha256": "f7efd6da84d09781f19665cf0c32124bcf3cc38a2cf157cca9681d770d1c78f0"
+    },
+    "v2-style-flattening/independent-v2-source-verdict-tag.json": {
+      "bytes": 3265,
+      "sha256": "7b22b088abc36fc322077da8573de5100faaeedf4eac196bfc38016854818437"
+    }
+  },
+  "sourcePins": {
+    "stories/Atom/Typography/Links/Links.jsx": {
+      "bytes": 410,
+      "sha256": "f6086e5bd7977a90e57b2ec788cd77f8e37c514141b4fc4c60cde6ddc06c726b"
+    },
+    "stories/Atom/Typography/Links/Links.stories.jsx": {
+      "bytes": 812,
+      "sha256": "5404cb6dfb844368ee7a884038bfd0741fe3cd21b733a2c55c501fd3b84b3665"
+    },
+    "stories/Atom/Navigation/MenuItems/MenuItems.jsx": {
+      "bytes": 204,
+      "sha256": "af92de23f8051c8565b0c3c356e148f74943b8a1ef5c33f1a804cb620aff0324"
+    },
+    "stories/Atom/Navigation/MenuItems/menu-items.scss": {
+      "bytes": 781,
+      "sha256": "8612a7bb3e77ba658993614db04129ef57b3cc919167f370af1b24282d7b827f"
+    },
+    "stories/Atom/Icons/Icon.jsx": {
+      "bytes": 2181,
+      "sha256": "b3c0653cc27ac62ac5cf282da063179277fcdc80f71919120eb13b8849527347"
+    },
+    "stories/Atom/Icons/Icons.stories.jsx": {
+      "bytes": 10319,
+      "sha256": "ca0a182466bac99ab6a8aacfa0f9725cd090aea187bd5d479539a037aab2f3db"
+    },
+    "stories/Atom/Icons/Icons.json": {
+      "bytes": 12081,
+      "sha256": "842ec2638b53e0de3a4dee3ab4ab026842d5c43957e89b5c4f096132520da059"
+    },
+    "stories/Atom/Icons/icons.scss": {
+      "bytes": 7746,
+      "sha256": "e15a7a74a319eac6b2d5f48d18b3a5cdb908e50756b7fe638e52cd41a23459bb"
+    },
+    "stories/Atom/Icons/_icon-definitions.scss": {
+      "bytes": 57969,
+      "sha256": "ce483a74e800148a703ef73d85f7bb11c3982cbbd07f477cc52db8a1ece8138e"
+    },
+    "stories/assets/scss/_foundational.scss": {
+      "bytes": 6110,
+      "sha256": "89f40e9172074d84f101aa6a9d6a048aa6177a67781b8fb672cb4a4c44adbcdf"
+    },
+    "scripts/icon-build.cjs": {
+      "bytes": 5995,
+      "sha256": "d09e3311d0e6f7cc96e691d25697706919007ee7f698c3b713c21d33c6afe87e"
+    },
+    "stories/assets/scss/_utility.scss": {
+      "bytes": 12487,
+      "sha256": "cc5524e9040f469fa18fb95d7a6612fefa0e0b18b5a2574c6c96ed6f232ba608"
+    },
+    "stories/Atom/Tag/Tag.scss": {
+      "bytes": 5284,
+      "sha256": "d3541ba05d7186b5c0f8d18d12b08f46375e686916c37f587f88c2bd1f7c97f1"
+    }
+  },
+  "builder": {
+    "bytes": 186793,
+    "sha256": "89c35a87558afd69c9e9c27f750b30ce7a26078597e96b658d95772f0cad6e98"
+  },
+  "archives": {
+    "source-recipe-projection/actual-source-contract-profiles.json": {
+      "raw": {
+        "bytes": 5083464,
+        "sha256": "bf6875c3fa1f002a27408dd806e73429d2eb0bf960da048442472e1f0b813295"
+      },
+      "archive": {
+        "bytes": 98440,
+        "sha256": "843118c33c93a1759900751d7b620a32d4f927e688e0decef20afeb19fb162db"
+      },
+      "path": "source-recipe-projection/actual-source-contract-profiles.json.gz"
+    },
+    "v2-style-flattening/normalized-icon-masks.json": {
+      "raw": {
+        "bytes": 210482,
+        "sha256": "c023619c815822de989dcd5d72ba1f3e11c9a44cb8eb2cd869dd4081beaec063"
+      },
+      "archive": {
+        "bytes": 24075,
+        "sha256": "6d8ddc9a6142a28e1487783bddb3c8cca074d3da2758c6eabd931a5e3e4eaaed"
+      },
+      "path": "v2-style-flattening/normalized-icon-masks.json.gz"
+    },
+    "v2-style-flattening/icon-svg-plan-verdict.json": {
+      "raw": {
+        "bytes": 53413,
+        "sha256": "f7efd6da84d09781f19665cf0c32124bcf3cc38a2cf157cca9681d770d1c78f0"
+      },
+      "archive": {
+        "bytes": 9635,
+        "sha256": "ac55ce3a1c9c2dea16a6ce2c1d7485095da13c0b90715fe965d1441e33f7226a"
+      },
+      "path": "v2-style-flattening/icon-svg-plan-verdict.json.gz"
+    },
+    "v2-style-flattening/independent-v2-source-verdict-tag.json": {
+      "raw": {
+        "bytes": 3265,
+        "sha256": "7b22b088abc36fc322077da8573de5100faaeedf4eac196bfc38016854818437"
+      },
+      "archive": {
+        "bytes": 1518,
+        "sha256": "44a2762881be56795693f142e2805e41481ad49a6bbe6d1a335d981b6d149cb5"
+      },
+      "path": "v2-style-flattening/independent-v2-source-verdict-tag.json.gz"
+    },
+    "icons-browser/colored-icons-delta-arabic-1164.json": {
+      "raw": {
+        "bytes": 2951147,
+        "sha256": "2b494e17513ccdb2f1f74c8fd596069fbb7e64d681612a73f6f29ef629056228"
+      },
+      "archive": {
+        "bytes": 97584,
+        "sha256": "9173592351c685a3cb0cd74db6ab362176bfc5f7a8133401629f2cd553f90223"
+      },
+      "path": "icons-browser/colored-icons-delta-arabic-1164.json.gz"
+    },
+    "icons-browser/colored-icons-delta-arabic-390.json": {
+      "raw": {
+        "bytes": 2950956,
+        "sha256": "4d7b89d3db844f96072173167f0263bea3b491d2948600b98ca5066a1a3ee370"
+      },
+      "archive": {
+        "bytes": 97408,
+        "sha256": "2cd9ac790bb3bd1a1af08d25704ec86366199fac5fa13ce396454f61cea1c9a1"
+      },
+      "path": "icons-browser/colored-icons-delta-arabic-390.json.gz"
+    },
+    "icons-browser/colored-icons-delta-english-1164.json": {
+      "raw": {
+        "bytes": 2948686,
+        "sha256": "fe84d3afdc757bb65e3c074303e400cceae467fd6d68eec81193340f317cd2fb"
+      },
+      "archive": {
+        "bytes": 97410,
+        "sha256": "0af394b2e51998e3db2d4b7dcb61983606ec793ea90cf7ed726d700c1a9b8a35"
+      },
+      "path": "icons-browser/colored-icons-delta-english-1164.json.gz"
+    },
+    "icons-browser/colored-icons-delta-english-390.json": {
+      "raw": {
+        "bytes": 2948487,
+        "sha256": "5fb2ac826f15dc43144d6f6b33c6a7295b13a6e1647350622435b52042ea2544"
+      },
+      "archive": {
+        "bytes": 97241,
+        "sha256": "551e737c26f38293f3a95aa6f82f38a8ffd07d730a95a4ac349ed692f0a616d3"
+      },
+      "path": "icons-browser/colored-icons-delta-english-390.json.gz"
+    },
+    "icons-browser/colored-icons-delta-japanese-1164.json": {
+      "raw": {
+        "bytes": 2948727,
+        "sha256": "49c6f013fb1d9b59e1f4ecc6f178dffe030424ead0da5ba6b36966912b0f9c6f"
+      },
+      "archive": {
+        "bytes": 97436,
+        "sha256": "c5cfae99be58a5a34a13c19adc28af21d7f9bbf10030aa9a90971357059c69ec"
+      },
+      "path": "icons-browser/colored-icons-delta-japanese-1164.json.gz"
+    },
+    "icons-browser/colored-icons-delta-japanese-390.json": {
+      "raw": {
+        "bytes": 2948528,
+        "sha256": "18486aace0d19576b6ebb6437f8267b505a5adf16823fd757ebe012f280bec53"
+      },
+      "archive": {
+        "bytes": 97265,
+        "sha256": "c5622620e5941b8f635ef598875b32f10300bce78cbcfc5c8d96da26d7eac36e"
+      },
+      "path": "icons-browser/colored-icons-delta-japanese-390.json.gz"
+    },
+    "icons-browser/colored-icons-irp-arabic-1164.json": {
+      "raw": {
+        "bytes": 2956531,
+        "sha256": "a40b3d380086fa90440c26023cb67924183bbc208aebcbbc0b50bcef2bb43820"
+      },
+      "archive": {
+        "bytes": 97407,
+        "sha256": "7c46bc97057667cd7f18d216cff588ef2bc85a399c267d3485b2311e2cc71e7c"
+      },
+      "path": "icons-browser/colored-icons-irp-arabic-1164.json.gz"
+    },
+    "icons-browser/colored-icons-irp-arabic-390.json": {
+      "raw": {
+        "bytes": 2956340,
+        "sha256": "1ca688f94fa5dbf247458ad4f5034b473aed80856cb03229959cdcb9a08ae8e8"
+      },
+      "archive": {
+        "bytes": 97239,
+        "sha256": "e9df32eeaaeda83ce470575c733786b45df98905be0ef14c0b5be6800629b293"
+      },
+      "path": "icons-browser/colored-icons-irp-arabic-390.json.gz"
+    },
+    "icons-browser/colored-icons-irp-english-1164.json": {
+      "raw": {
+        "bytes": 2954070,
+        "sha256": "5b5bb6d97d9161578221cf18b76d5328b1c00aca74a0c0e95413401ae37c7beb"
+      },
+      "archive": {
+        "bytes": 97282,
+        "sha256": "cf6a1a52f364a2e1c98b70adb44ec00341325ffe878293b2f900c454b2dd4d3b"
+      },
+      "path": "icons-browser/colored-icons-irp-english-1164.json.gz"
+    },
+    "icons-browser/colored-icons-irp-english-390.json": {
+      "raw": {
+        "bytes": 2953871,
+        "sha256": "6935a84b16e6081e8bc1cd048fff72e984f2da5b8eb729f2152c633060c34ae7"
+      },
+      "archive": {
+        "bytes": 97119,
+        "sha256": "27dba2c129bddba44a973e39a89ad50c43a0cd5b572115bb80b37ea5e83e732c"
+      },
+      "path": "icons-browser/colored-icons-irp-english-390.json.gz"
+    },
+    "icons-browser/colored-icons-irp-japanese-1164.json": {
+      "raw": {
+        "bytes": 2954111,
+        "sha256": "69de2cfdcf268ed42dc59e1031330bc63c7cf1909ca9c4748c162c3af01abb1e"
+      },
+      "archive": {
+        "bytes": 97307,
+        "sha256": "cc1bfc08424047a5f423fd794dc897c32057e5403119dd8669441d085341b4e9"
+      },
+      "path": "icons-browser/colored-icons-irp-japanese-1164.json.gz"
+    },
+    "icons-browser/colored-icons-irp-japanese-390.json": {
+      "raw": {
+        "bytes": 2953912,
+        "sha256": "e7c495dc82efe7e41411ff4d2e191c60286e56dc95cb81d2f672adb3adc1693e"
+      },
+      "archive": {
+        "bytes": 97145,
+        "sha256": "5d1eec31ea178483b307cd9b214a2459b1fa45fdf63fabcb1cb3ee2171b1e81f"
+      },
+      "path": "icons-browser/colored-icons-irp-japanese-390.json.gz"
+    },
+    "icons-browser/colored-icons-mcr-arabic-1164.json": {
+      "raw": {
+        "bytes": 2951755,
+        "sha256": "abe16ee718a592cbbc95dcc0fe43d328ecbd2f188dc4a863abaaa9f7432142df"
+      },
+      "archive": {
+        "bytes": 97395,
+        "sha256": "4eb16638e9b1cfc9c87dc5dcfc72f6229a4762302f745f81e7975d786498bb80"
+      },
+      "path": "icons-browser/colored-icons-mcr-arabic-1164.json.gz"
+    },
+    "icons-browser/colored-icons-mcr-arabic-390.json": {
+      "raw": {
+        "bytes": 2951564,
+        "sha256": "3de0914651948d829a6c157a01ecad364c0eea4ee7a7639b44ba8da9539e6252"
+      },
+      "archive": {
+        "bytes": 97186,
+        "sha256": "60afc2e3ad12c3d0318387a0f3285f17f9b8b6c9d692d152b89d1f6fb110421a"
+      },
+      "path": "icons-browser/colored-icons-mcr-arabic-390.json.gz"
+    },
+    "icons-browser/colored-icons-mcr-english-1164.json": {
+      "raw": {
+        "bytes": 2949294,
+        "sha256": "5f0b1da6ae97516930bed74f23f807c1b85405d23c477ee22f6f4d53b7a15689"
+      },
+      "archive": {
+        "bytes": 97208,
+        "sha256": "fc1051d13417ff8ab1bc196202b30153e59669d50edaa9059bea1b6809c3b4ea"
+      },
+      "path": "icons-browser/colored-icons-mcr-english-1164.json.gz"
+    },
+    "icons-browser/colored-icons-mcr-english-390.json": {
+      "raw": {
+        "bytes": 2949095,
+        "sha256": "4807db99a9f78b226ef026626ad1fe5c4a15078d19afabbf9cad573b076be00f"
+      },
+      "archive": {
+        "bytes": 97015,
+        "sha256": "86d44e755ef5613c5bdee96049b600f681459bbd9e885d0eb3f801acb9c923dc"
+      },
+      "path": "icons-browser/colored-icons-mcr-english-390.json.gz"
+    },
+    "icons-browser/colored-icons-mcr-japanese-1164.json": {
+      "raw": {
+        "bytes": 2949335,
+        "sha256": "b2d2ba2ecb3c27f30b02043395b6e04a048e6e3f6c40d75a3114518e3a455cef"
+      },
+      "archive": {
+        "bytes": 97236,
+        "sha256": "c432a2ca7d1f4bbcc77d61540c23acfcc11a49ae8df8f8e4cb4704f102cfce4e"
+      },
+      "path": "icons-browser/colored-icons-mcr-japanese-1164.json.gz"
+    },
+    "icons-browser/colored-icons-mcr-japanese-390.json": {
+      "raw": {
+        "bytes": 2949136,
+        "sha256": "8d2eecd8d4ae61520bc29380a4282dad2773bedccd1573272886ba05accc6062"
+      },
+      "archive": {
+        "bytes": 97040,
+        "sha256": "b4c0777615247bbf5aabe2a33e7c527287909b6653bceff8162f9408c67fa10e"
+      },
+      "path": "icons-browser/colored-icons-mcr-japanese-390.json.gz"
+    },
+    "icons-browser/colored-icons-preventionweb-arabic-1164.json": {
+      "raw": {
+        "bytes": 2958097,
+        "sha256": "f8d36f2d0fae2d2d166b919d767ba4131b1a557fbe181461789a0f012f2d5181"
+      },
+      "archive": {
+        "bytes": 97371,
+        "sha256": "7571e489b21bed4fcaf4ea09c7edfed15c0742fba4ec7e8fd4104da61108ef59"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-arabic-1164.json.gz"
+    },
+    "icons-browser/colored-icons-preventionweb-arabic-390.json": {
+      "raw": {
+        "bytes": 2957906,
+        "sha256": "2b59e5b178db44ac4ca841f3b7fbe8c4dea3559046ec40f617d9508434a96b42"
+      },
+      "archive": {
+        "bytes": 97209,
+        "sha256": "1a22be2ef900d8f416897b614e402f529b4c6c8e3af2e48ee2fa6fa63fa8d697"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-arabic-390.json.gz"
+    },
+    "icons-browser/colored-icons-preventionweb-english-1164.json": {
+      "raw": {
+        "bytes": 2955636,
+        "sha256": "75cb6e31a4724b34b3d74e1bf6c28377fe38e4ee20f07530ea436f41421ddf1b"
+      },
+      "archive": {
+        "bytes": 97240,
+        "sha256": "61b4e95e4ae994977a59c7103b04eca3de8ae0099655d177814ab6ac7f2bd7f8"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-english-1164.json.gz"
+    },
+    "icons-browser/colored-icons-preventionweb-english-390.json": {
+      "raw": {
+        "bytes": 2955437,
+        "sha256": "fc001ed96d59bec39a92bd12357c5b7ba42f4bd95152e35119f6b7e0abc87b55"
+      },
+      "archive": {
+        "bytes": 97062,
+        "sha256": "fcb938017e16f299f68f81799c30df774fa2a082e8be0d4974182c6b72ca0457"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-english-390.json.gz"
+    },
+    "icons-browser/colored-icons-preventionweb-japanese-1164.json": {
+      "raw": {
+        "bytes": 2955677,
+        "sha256": "010024e0cc6fb68423a8534d0cbb0f3339429129c1dfffc4db91fc49ae78cb0f"
+      },
+      "archive": {
+        "bytes": 97266,
+        "sha256": "16a51edf81b3b0cf2084f836840218607c4c41ce599193f970cf02ec59bd9d8c"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-japanese-1164.json.gz"
+    },
+    "icons-browser/colored-icons-preventionweb-japanese-390.json": {
+      "raw": {
+        "bytes": 2955478,
+        "sha256": "daeb2c030505059cdeb897a917d39f4be373f7541582b6f91864be76f7c8eb15"
+      },
+      "archive": {
+        "bytes": 97091,
+        "sha256": "500310d44f4d71b5e16cea6b5ff72cef72d2fc5094ffb58ac4dc2ff472b9d3c7"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-japanese-390.json.gz"
+    },
+    "icons-browser/colored-icons-undrr-arabic-1164.json": {
+      "raw": {
+        "bytes": 2944449,
+        "sha256": "5b884eb14f81f26768b075b7f3085fab13ea4e9521b8989461696ef017970d88"
+      },
+      "archive": {
+        "bytes": 97193,
+        "sha256": "f83dabd80b90e2ef5468937d3f5ed0c6a79b56877bc4ddb8c6a95bde5350e143"
+      },
+      "path": "icons-browser/colored-icons-undrr-arabic-1164.json.gz"
+    },
+    "icons-browser/colored-icons-undrr-arabic-390.json": {
+      "raw": {
+        "bytes": 2944258,
+        "sha256": "9f52f296d088ad3960cd32e68ca5f7512e7e49ce2915bf1ef8ca56ccda81fa2c"
+      },
+      "archive": {
+        "bytes": 97023,
+        "sha256": "76400766f5950865170e3aea99b58e56cb222d2c52e0920d8e7d6c99b8210b48"
+      },
+      "path": "icons-browser/colored-icons-undrr-arabic-390.json.gz"
+    },
+    "icons-browser/colored-icons-undrr-english-1164.json": {
+      "raw": {
+        "bytes": 2942092,
+        "sha256": "8ab025e88105f121235d738e47dff9f4eb84221ecf6dccf4eb7c5eede839233b"
+      },
+      "archive": {
+        "bytes": 97048,
+        "sha256": "c612a074cccc2f25782ea8f14c16bc04b908c6e551223d65b19ed89efa0ae6df"
+      },
+      "path": "icons-browser/colored-icons-undrr-english-1164.json.gz"
+    },
+    "icons-browser/colored-icons-undrr-english-390.json": {
+      "raw": {
+        "bytes": 2941893,
+        "sha256": "a41af4ea974dfdfd59f4d6073dd547ad4862752e6346ab7352049319cbaa5a2f"
+      },
+      "archive": {
+        "bytes": 96881,
+        "sha256": "f7f14a92b9afb6f93e53663d74abe1d30f324b001f24a4647fd4b6c15bfceaca"
+      },
+      "path": "icons-browser/colored-icons-undrr-english-390.json.gz"
+    },
+    "icons-browser/colored-icons-undrr-japanese-1164.json": {
+      "raw": {
+        "bytes": 2942029,
+        "sha256": "72a23b083394ce90e48f07250076a233ba8a36febcac969d5e013084110bb957"
+      },
+      "archive": {
+        "bytes": 97012,
+        "sha256": "b544cead879753e1de551fb35e011f4093a56866f44f8decf6b54768a7bdc9c1"
+      },
+      "path": "icons-browser/colored-icons-undrr-japanese-1164.json.gz"
+    },
+    "icons-browser/colored-icons-undrr-japanese-390.json": {
+      "raw": {
+        "bytes": 2941830,
+        "sha256": "af839420f116139f6f8b66d536a0ea808dd16191472024d6ccc9c0d0656e6fc1"
+      },
+      "archive": {
+        "bytes": 96847,
+        "sha256": "e55e848e8bb8fc98c18476b5a23cac5e864bb07d2d2c7297521f210fdb532b72"
+      },
+      "path": "icons-browser/colored-icons-undrr-japanese-390.json.gz"
+    },
+    "icons-browser/default-icons-delta-arabic-1164.json": {
+      "raw": {
+        "bytes": 19490481,
+        "sha256": "baf4c53b53f16ff7d09a0f2704fa7ee2d2d56723099d648a1e1477848d139a5e"
+      },
+      "archive": {
+        "bytes": 408661,
+        "sha256": "0b086b03734bab2a3144d92c7bca658190214c256c0ce091a1f0d380eb45030f"
+      },
+      "path": "icons-browser/default-icons-delta-arabic-1164.json.gz"
+    },
+    "icons-browser/default-icons-delta-arabic-390.json": {
+      "raw": {
+        "bytes": 19486712,
+        "sha256": "8769d0ea14607a24eca87c9156acddd3f40f56aad15fc4ce986df0785a7b0a42"
+      },
+      "archive": {
+        "bytes": 407328,
+        "sha256": "3a6a764e1058b0edad9cbbf0211da89fbad7c213b2f6354d90ad0bdc6f74260a"
+      },
+      "path": "icons-browser/default-icons-delta-arabic-390.json.gz"
+    },
+    "icons-browser/default-icons-delta-english-1164.json": {
+      "raw": {
+        "bytes": 19468922,
+        "sha256": "fe8ba7ca66c86dfae8041edc27198533f562f317714ea4332b9c5829bfb58c98"
+      },
+      "archive": {
+        "bytes": 401180,
+        "sha256": "625b5ecc23c3cdaf39e235af8d117221dd9b1ba10c0fa9465577691c5d37d97c"
+      },
+      "path": "icons-browser/default-icons-delta-english-1164.json.gz"
+    },
+    "icons-browser/default-icons-delta-english-390.json": {
+      "raw": {
+        "bytes": 19467697,
+        "sha256": "36e0730cc43fef7dcbedb2d723fc64c505362bfb88e0e10b9798d47c8e8b93d8"
+      },
+      "archive": {
+        "bytes": 401693,
+        "sha256": "e3f7391e4ce09ba10c85234a35f46e7bdb31b5aaff84490b81596bed3fdf378c"
+      },
+      "path": "icons-browser/default-icons-delta-english-390.json.gz"
+    },
+    "icons-browser/default-icons-delta-japanese-1164.json": {
+      "raw": {
+        "bytes": 19468963,
+        "sha256": "9e57f8c097170d063ebd63c70d1d4e7005b22579b5722f9ca5df4782d4a725da"
+      },
+      "archive": {
+        "bytes": 401214,
+        "sha256": "19ddec6517d952b69c9ea5ed771cbf160a65bc5fe7dfc8871183a5252c6ddd24"
+      },
+      "path": "icons-browser/default-icons-delta-japanese-1164.json.gz"
+    },
+    "icons-browser/default-icons-delta-japanese-390.json": {
+      "raw": {
+        "bytes": 19467738,
+        "sha256": "f9b866d3b886cefb9e0e5ae240a4f69389efdea0e32d8fdd2578b49557b36907"
+      },
+      "archive": {
+        "bytes": 401726,
+        "sha256": "7edf90e10f40905066c1c4fb87641b3b2ff42caa451c15313f4f0cf04bc47456"
+      },
+      "path": "icons-browser/default-icons-delta-japanese-390.json.gz"
+    },
+    "icons-browser/default-icons-irp-arabic-1164.json": {
+      "raw": {
+        "bytes": 19519705,
+        "sha256": "dc107e131c51ef52ee28984797186077411ad0a4323971bff5f24e78538c6ea8"
+      },
+      "archive": {
+        "bytes": 413000,
+        "sha256": "d0e7a7b61ee84b063876167cd77d87a074959069a7600f2d39fa7e5433ea7c6b"
+      },
+      "path": "icons-browser/default-icons-irp-arabic-1164.json.gz"
+    },
+    "icons-browser/default-icons-irp-arabic-390.json": {
+      "raw": {
+        "bytes": 19515936,
+        "sha256": "a960c6d567d77d266b20511d9098cd536294b21bd6d1ac0615c576793aaa3ec4"
+      },
+      "archive": {
+        "bytes": 407413,
+        "sha256": "d2876a4d8b9b6eeed98eccb4569f51f40863e4fd4ff95e1acd5b89f9daded43a"
+      },
+      "path": "icons-browser/default-icons-irp-arabic-390.json.gz"
+    },
+    "icons-browser/default-icons-irp-english-1164.json": {
+      "raw": {
+        "bytes": 19498146,
+        "sha256": "73e8f16ae77c76915f966c6822f57e3a0c84c32bcd09bacf2d9694f69aeb6877"
+      },
+      "archive": {
+        "bytes": 405618,
+        "sha256": "b02d433c9552b427498b9a6bb331040d52f91a4a4637cc674b63279af4a6bf1a"
+      },
+      "path": "icons-browser/default-icons-irp-english-1164.json.gz"
+    },
+    "icons-browser/default-icons-irp-english-390.json": {
+      "raw": {
+        "bytes": 19496921,
+        "sha256": "fd80aa68f9f82aaf05d7c2af1118e616a7cfb212276f26429707b8c6e00767e4"
+      },
+      "archive": {
+        "bytes": 406148,
+        "sha256": "91d4f417e0b30c9b7b57ee3f2531c8b82690e08954e590884d99e739983162e5"
+      },
+      "path": "icons-browser/default-icons-irp-english-390.json.gz"
+    },
+    "icons-browser/default-icons-irp-japanese-1164.json": {
+      "raw": {
+        "bytes": 19498187,
+        "sha256": "417b312cfbaddedb522273c07aedc93941e2579b50882b37c3652265fed65d4b"
+      },
+      "archive": {
+        "bytes": 405653,
+        "sha256": "26a3e8a5d31b9d54781fa8f59f9131b848817203fc1c65bb73c8c93650ee5c71"
+      },
+      "path": "icons-browser/default-icons-irp-japanese-1164.json.gz"
+    },
+    "icons-browser/default-icons-irp-japanese-390.json": {
+      "raw": {
+        "bytes": 19496962,
+        "sha256": "ca97752706ba0fd0bbf59343c16a6375c96b6a3bd52e4000d02c12e2d7dd3c5f"
+      },
+      "archive": {
+        "bytes": 406181,
+        "sha256": "231108dd4cac90241c0da5aa6b6358981c6958e4598737c7713cc66e3d726f62"
+      },
+      "path": "icons-browser/default-icons-irp-japanese-390.json.gz"
+    },
+    "icons-browser/default-icons-mcr-arabic-1164.json": {
+      "raw": {
+        "bytes": 19495545,
+        "sha256": "583fb82f5d476032b0f5d8c929b5142d27b09bc367cd6b69829776ee8d471272"
+      },
+      "archive": {
+        "bytes": 408489,
+        "sha256": "c4bf1fdd0491d4e522d94bf9e9d7a17f43beb1e0d038381916c45277a4b48b94"
+      },
+      "path": "icons-browser/default-icons-mcr-arabic-1164.json.gz"
+    },
+    "icons-browser/default-icons-mcr-arabic-390.json": {
+      "raw": {
+        "bytes": 19491776,
+        "sha256": "f93b339cd4f2f2b7201f1c24225b6d35363a96508278ac4783a3aadbb418f510"
+      },
+      "archive": {
+        "bytes": 407143,
+        "sha256": "cfccf4e5fad0b4b4172608b8f3597ddb800baf6a488b6a102010a2b2d1273ccf"
+      },
+      "path": "icons-browser/default-icons-mcr-arabic-390.json.gz"
+    },
+    "icons-browser/default-icons-mcr-english-1164.json": {
+      "raw": {
+        "bytes": 19473986,
+        "sha256": "f1b62001bb7cd6929a0fc5a08d302790fd2b435ae6285c52a4c33cd6d5649184"
+      },
+      "archive": {
+        "bytes": 400943,
+        "sha256": "6daae51c7d3016363a1913ad933a06817a4d335ddc4fa9b1279487c49936a23a"
+      },
+      "path": "icons-browser/default-icons-mcr-english-1164.json.gz"
+    },
+    "icons-browser/default-icons-mcr-english-390.json": {
+      "raw": {
+        "bytes": 19472761,
+        "sha256": "66edb9a1e375baef440452136698aecce3620644dad1d051ef093450c6cfa0e9"
+      },
+      "archive": {
+        "bytes": 401460,
+        "sha256": "017d5cbc168359ea355f3e37e96e8fbe1669ebc526a6f15b870665865130b1e2"
+      },
+      "path": "icons-browser/default-icons-mcr-english-390.json.gz"
+    },
+    "icons-browser/default-icons-mcr-japanese-1164.json": {
+      "raw": {
+        "bytes": 19474027,
+        "sha256": "52246c22df26bc6216513e907f3e1f51d609724c7ea64a0ff7d4cf70a30d62e7"
+      },
+      "archive": {
+        "bytes": 400976,
+        "sha256": "46cda5760ef2f31002fd248fac366d976e77e79ceac7f2c3a6f57ed098cec478"
+      },
+      "path": "icons-browser/default-icons-mcr-japanese-1164.json.gz"
+    },
+    "icons-browser/default-icons-mcr-japanese-390.json": {
+      "raw": {
+        "bytes": 19472802,
+        "sha256": "70f461598f5a128d7d89b130d35a1ebbdf1c380dd417bec151217ccafe244e53"
+      },
+      "archive": {
+        "bytes": 401493,
+        "sha256": "036265b7672e0bb0f53dbb7ce2c5ebbcf0cd8e6ef15520f3748d18498400fd54"
+      },
+      "path": "icons-browser/default-icons-mcr-japanese-390.json.gz"
+    },
+    "icons-browser/default-icons-preventionweb-arabic-1164.json": {
+      "raw": {
+        "bytes": 19529911,
+        "sha256": "c73f1a88d4be6f7cebfcbf0ea36481422a22e28a8a9deabcba0ec7ec3a915413"
+      },
+      "archive": {
+        "bytes": 412888,
+        "sha256": "a19b81cbfb0b8bb30cca24e491850b62ca95ec62d57cb76924420a1ca50028e7"
+      },
+      "path": "icons-browser/default-icons-preventionweb-arabic-1164.json.gz"
+    },
+    "icons-browser/default-icons-preventionweb-arabic-390.json": {
+      "raw": {
+        "bytes": 19526142,
+        "sha256": "0a537ac2b6c8ae523ce152ecf42b211c26910808c6a4697bcc41c58269a5d82e"
+      },
+      "archive": {
+        "bytes": 411823,
+        "sha256": "681ccb4ee26aa9af7449c9f713665436a3c6ac8185e95eae3a3421dfc58bc0c0"
+      },
+      "path": "icons-browser/default-icons-preventionweb-arabic-390.json.gz"
+    },
+    "icons-browser/default-icons-preventionweb-english-1164.json": {
+      "raw": {
+        "bytes": 19508352,
+        "sha256": "74d59fe1799f4f800c8e501052976194721d7048d89dcd0b70e0fb3b645b02a5"
+      },
+      "archive": {
+        "bytes": 405550,
+        "sha256": "da0f44c16f86c4c257bd5226b73ef8ccd0ee22337a727824bdff2fbf429282c4"
+      },
+      "path": "icons-browser/default-icons-preventionweb-english-1164.json.gz"
+    },
+    "icons-browser/default-icons-preventionweb-english-390.json": {
+      "raw": {
+        "bytes": 19507127,
+        "sha256": "467e7b79819897bb9ee4737cc5d8d6975da2d8bef7dda2d2323f9ed5fda0bd1d"
+      },
+      "archive": {
+        "bytes": 406069,
+        "sha256": "d39e91c3d92471411e2de63c0265601d313ef0d6df663675f535b24ce65103f5"
+      },
+      "path": "icons-browser/default-icons-preventionweb-english-390.json.gz"
+    },
+    "icons-browser/default-icons-preventionweb-japanese-1164.json": {
+      "raw": {
+        "bytes": 19508393,
+        "sha256": "8751c8f9bb40685e52eb18c1cd238f4747c8619d60d2c02fc63f61ff8edb727a"
+      },
+      "archive": {
+        "bytes": 405584,
+        "sha256": "8ddf9319c621dffcf5235b8a876afbd867285f61850c26be337d7fa7264c492b"
+      },
+      "path": "icons-browser/default-icons-preventionweb-japanese-1164.json.gz"
+    },
+    "icons-browser/default-icons-preventionweb-japanese-390.json": {
+      "raw": {
+        "bytes": 19507168,
+        "sha256": "b2583696a18678c4865a7fa697f82242103032a576886b90889ba4d987fd0321"
+      },
+      "archive": {
+        "bytes": 406101,
+        "sha256": "04da291e6243ffbdce69357e02b0fbd32fa02c076c5cccd8f020b4eecc6eb9da"
+      },
+      "path": "icons-browser/default-icons-preventionweb-japanese-390.json.gz"
+    },
+    "icons-browser/default-icons-undrr-arabic-1164.json": {
+      "raw": {
+        "bytes": 19446523,
+        "sha256": "801fa6b0bdcdd8f089d006861615580ca89b5b60dddfb80861a2560d28416209"
+      },
+      "archive": {
+        "bytes": 400906,
+        "sha256": "f815c326e3172a5a150582c1462aa5d6a0e4094578492886d5403c06437c6fcb"
+      },
+      "path": "icons-browser/default-icons-undrr-arabic-1164.json.gz"
+    },
+    "icons-browser/default-icons-undrr-arabic-390.json": {
+      "raw": {
+        "bytes": 19442754,
+        "sha256": "4b19e7c447014a60212edcef15feeb60ceb0113d50a4e9c009a7599b86849afb"
+      },
+      "archive": {
+        "bytes": 399393,
+        "sha256": "2fa2e7848c8b9f516ddd7d2deb7177b198cd9317cf946962e244934de09c8ccd"
+      },
+      "path": "icons-browser/default-icons-undrr-arabic-390.json.gz"
+    },
+    "icons-browser/default-icons-undrr-english-1164.json": {
+      "raw": {
+        "bytes": 19425068,
+        "sha256": "73766a31ef5d29ea9d871b837cfc756300954981755720d3e3e9ff958f998bb0"
+      },
+      "archive": {
+        "bytes": 393251,
+        "sha256": "b0fecbea1d4888de7841985fdba13d1eb529e16e8e2da43ff3f11277b29582c0"
+      },
+      "path": "icons-browser/default-icons-undrr-english-1164.json.gz"
+    },
+    "icons-browser/default-icons-undrr-english-390.json": {
+      "raw": {
+        "bytes": 19423843,
+        "sha256": "0815438190a422dcb090a8c057318272f5efad87e67b71a293d40901cced1342"
+      },
+      "archive": {
+        "bytes": 393386,
+        "sha256": "c12dbf600eec2353009fa0caa7b1858554e82b1f4af0938eae242c9c99309db6"
+      },
+      "path": "icons-browser/default-icons-undrr-english-390.json.gz"
+    },
+    "icons-browser/default-icons-undrr-japanese-1164.json": {
+      "raw": {
+        "bytes": 19425005,
+        "sha256": "3a534b58b1e2b98032bfd4ad27810bf02362754eb0a7d0b94d9f96f200adae09"
+      },
+      "archive": {
+        "bytes": 393197,
+        "sha256": "a33af303234931f90277fc9754910048aa91ba3a268b19664453c992b4a6b5d4"
+      },
+      "path": "icons-browser/default-icons-undrr-japanese-1164.json.gz"
+    },
+    "icons-browser/default-icons-undrr-japanese-390.json": {
+      "raw": {
+        "bytes": 19423780,
+        "sha256": "d05e973692193c76212fd056261d242632c808ef5b473641a3d7fa6de79310a8"
+      },
+      "archive": {
+        "bytes": 393334,
+        "sha256": "39182e0331ee87526c0bd7af8f33fea7719126a808a2eb7943f7d3e2ce8d8084"
+      },
+      "path": "icons-browser/default-icons-undrr-japanese-390.json.gz"
+    },
+    "icons-browser/single-icon-delta-arabic-1164.json": {
+      "raw": {
+        "bytes": 548681,
+        "sha256": "db1e8a1d18c9327fd275a9b333a9a98ccbeef83f9fb7e8c8545e1c0ab75001b0"
+      },
+      "archive": {
+        "bytes": 16646,
+        "sha256": "294d356b95c21716fdbf425618b8f0a728e5ed51b3fc82769b67704f17a24657"
+      },
+      "path": "icons-browser/single-icon-delta-arabic-1164.json.gz"
+    },
+    "icons-browser/single-icon-delta-arabic-390.json": {
+      "raw": {
+        "bytes": 548656,
+        "sha256": "19b0bb72b1288cd73e6f2b3ed321e4287b377fc1774bc55bde731bdba3561268"
+      },
+      "archive": {
+        "bytes": 16617,
+        "sha256": "7e4510db1e52f553de8fe65f6f6470858c24eb90e0f4346446c8bf0eac081f8c"
+      },
+      "path": "icons-browser/single-icon-delta-arabic-390.json.gz"
+    },
+    "icons-browser/single-icon-delta-english-1164.json": {
+      "raw": {
+        "bytes": 548162,
+        "sha256": "02513050ab05d6057e87ace304b3fb70f46841782111e80936bf37b35af26eab"
+      },
+      "archive": {
+        "bytes": 16578,
+        "sha256": "ace312b3e0b24a7550826d10c19b53846a8c69ac65ab1f6bdc95df434bed7f33"
+      },
+      "path": "icons-browser/single-icon-delta-english-1164.json.gz"
+    },
+    "icons-browser/single-icon-delta-english-390.json": {
+      "raw": {
+        "bytes": 548071,
+        "sha256": "7758202c7d8fd6907b63361d463e2ddd03f0424adcb331f0a3286ce005baf3a4"
+      },
+      "archive": {
+        "bytes": 16531,
+        "sha256": "f424793eecf466bae61d70bd4c1d1ae00fad46cadb1b3dce84e54d3fee55c608"
+      },
+      "path": "icons-browser/single-icon-delta-english-390.json.gz"
+    },
+    "icons-browser/single-icon-delta-japanese-1164.json": {
+      "raw": {
+        "bytes": 548203,
+        "sha256": "5be0bd6b20f2a0d0b6fe5f13df2ca3eacae8b81cb2630b5a9e7323abc46390fa"
+      },
+      "archive": {
+        "bytes": 16607,
+        "sha256": "4e14e3b55fb2b8a73054203550069e4dde92edf4c6451551cd7d286c47a0ca10"
+      },
+      "path": "icons-browser/single-icon-delta-japanese-1164.json.gz"
+    },
+    "icons-browser/single-icon-delta-japanese-390.json": {
+      "raw": {
+        "bytes": 548112,
+        "sha256": "622ac1fb5e95463a25207933697f84c82c2c44ecd839a06ce48bb8b5b48f0534"
+      },
+      "archive": {
+        "bytes": 16560,
+        "sha256": "0e3d09c8c7f9ff233f82534f1b13336f8255f9ad00c2bb7b6758f5f5bc27e3e8"
+      },
+      "path": "icons-browser/single-icon-delta-japanese-390.json.gz"
+    },
+    "icons-browser/single-icon-irp-arabic-1164.json": {
+      "raw": {
+        "bytes": 549477,
+        "sha256": "12c824d61370b83ff90ab65261955257bad9b4eec1de777caef1baba9488a275"
+      },
+      "archive": {
+        "bytes": 16597,
+        "sha256": "752515fbe437350a8dd2ac84da3fb7f299576807144a3f03bf9b83813cd6f86b"
+      },
+      "path": "icons-browser/single-icon-irp-arabic-1164.json.gz"
+    },
+    "icons-browser/single-icon-irp-arabic-390.json": {
+      "raw": {
+        "bytes": 549452,
+        "sha256": "71d52d33b55dca46cb314978b10bbbbd2b96b4383b86d492f94cd39b5c47c87a"
+      },
+      "archive": {
+        "bytes": 16571,
+        "sha256": "f7559cfb3a62e196218ee34507b3aa0b16bc0335e77d5c8fb41841816f03003e"
+      },
+      "path": "icons-browser/single-icon-irp-arabic-390.json.gz"
+    },
+    "icons-browser/single-icon-irp-english-1164.json": {
+      "raw": {
+        "bytes": 548958,
+        "sha256": "f400ecd03fcd0b6ab9562d2de6ecea028cd27dc945f9308d340d166761b7e895"
+      },
+      "archive": {
+        "bytes": 16533,
+        "sha256": "5cf125bd9a118d45f1336e919219bc1cd77b35f3ecd8062221978ec6d920b407"
+      },
+      "path": "icons-browser/single-icon-irp-english-1164.json.gz"
+    },
+    "icons-browser/single-icon-irp-english-390.json": {
+      "raw": {
+        "bytes": 548867,
+        "sha256": "8243721a17aded8900d3f65d092f840dd7ea92ba0741c410407b5c127c85eb41"
+      },
+      "archive": {
+        "bytes": 16489,
+        "sha256": "40f30254a041a5e4ed3facf9d4534baf1f68a393878962b5760255f770b9057a"
+      },
+      "path": "icons-browser/single-icon-irp-english-390.json.gz"
+    },
+    "icons-browser/single-icon-irp-japanese-1164.json": {
+      "raw": {
+        "bytes": 548999,
+        "sha256": "8b8e5b69a07a4b44cbea44758bacafbf5ed2fa03c3774a3118e6d7c8732d3b96"
+      },
+      "archive": {
+        "bytes": 16563,
+        "sha256": "74aa8abc37d2723ecc383eaab09804ba7709a52081cb81e67c4562531eae2ef5"
+      },
+      "path": "icons-browser/single-icon-irp-japanese-1164.json.gz"
+    },
+    "icons-browser/single-icon-irp-japanese-390.json": {
+      "raw": {
+        "bytes": 548908,
+        "sha256": "ab3608ec8302cbb3d65c8d74f192d8c10a2529a2f6fe7d4069c439281fafefd1"
+      },
+      "archive": {
+        "bytes": 16518,
+        "sha256": "300919e29282f9587df9314451f87b57a093b39e840f19589599ed38938ecc83"
+      },
+      "path": "icons-browser/single-icon-irp-japanese-390.json.gz"
+    },
+    "icons-browser/single-icon-mcr-arabic-1164.json": {
+      "raw": {
+        "bytes": 548801,
+        "sha256": "07a87b4b4b78e5b12e0546edb65052ad6869c00eb976837ce67ecd5c0f9b0d10"
+      },
+      "archive": {
+        "bytes": 16599,
+        "sha256": "3396b05855464c5b451a46ec13b9b820bdc39306f16b5b84cefa4a4e96bc75b9"
+      },
+      "path": "icons-browser/single-icon-mcr-arabic-1164.json.gz"
+    },
+    "icons-browser/single-icon-mcr-arabic-390.json": {
+      "raw": {
+        "bytes": 548776,
+        "sha256": "bb4b98df7814f4b4fa9aa6c9cb2d1a93ad380ec4a2e3a13d2725aff3d5b2dd49"
+      },
+      "archive": {
+        "bytes": 16576,
+        "sha256": "dec8145448ba5725b261a56732b31f801f1435470a65350f4ed76676c97f06a6"
+      },
+      "path": "icons-browser/single-icon-mcr-arabic-390.json.gz"
+    },
+    "icons-browser/single-icon-mcr-english-1164.json": {
+      "raw": {
+        "bytes": 548282,
+        "sha256": "5b03684d4f6fe6560075dacd7865203d97fe9cdb516642d48c51cf57a6e99f79"
+      },
+      "archive": {
+        "bytes": 16533,
+        "sha256": "c23bc2747288d7e05a9dd674843b8713793ee925cd4bdc37f9f0bd0431aea772"
+      },
+      "path": "icons-browser/single-icon-mcr-english-1164.json.gz"
+    },
+    "icons-browser/single-icon-mcr-english-390.json": {
+      "raw": {
+        "bytes": 548191,
+        "sha256": "a130f670563015405c2b482633c17e4e7e94c5109f8a854caa00a25193e5aa65"
+      },
+      "archive": {
+        "bytes": 16492,
+        "sha256": "7187bdadef6fa6ebd6b9c30dcdd1e0ffd647d8d54312b3ab7da7986e8117ee27"
+      },
+      "path": "icons-browser/single-icon-mcr-english-390.json.gz"
+    },
+    "icons-browser/single-icon-mcr-japanese-1164.json": {
+      "raw": {
+        "bytes": 548323,
+        "sha256": "4dfacae6d9967d2bc9739e0b6d8e9f710e78e9bc874e8d3e7f9b9c07d97f078d"
+      },
+      "archive": {
+        "bytes": 16563,
+        "sha256": "5a707edabca9f5424c328ebe91261cf7c9321bac60ccd0535ce280e03fe1c90d"
+      },
+      "path": "icons-browser/single-icon-mcr-japanese-1164.json.gz"
+    },
+    "icons-browser/single-icon-mcr-japanese-390.json": {
+      "raw": {
+        "bytes": 548232,
+        "sha256": "cad04e559865f6fa6a0f1513874c871ed84dfe9fecc7c0ade62d1f95becfb431"
+      },
+      "archive": {
+        "bytes": 16522,
+        "sha256": "092684b55b1810ecdcd2d6471ba5e5e7f20b3b18207848f38e913fff268af398"
+      },
+      "path": "icons-browser/single-icon-mcr-japanese-390.json.gz"
+    },
+    "icons-browser/single-icon-preventionweb-arabic-1164.json": {
+      "raw": {
+        "bytes": 549795,
+        "sha256": "b878fa37b34be9c0d2506494b6c6328671e87449f91d0c1875bd60a0b3d84eb5"
+      },
+      "archive": {
+        "bytes": 16586,
+        "sha256": "4727a56a425c7c284701b2d3de450ebd60ce04ccdd3bae663db2f689f4da50e4"
+      },
+      "path": "icons-browser/single-icon-preventionweb-arabic-1164.json.gz"
+    },
+    "icons-browser/single-icon-preventionweb-arabic-390.json": {
+      "raw": {
+        "bytes": 549770,
+        "sha256": "abbad1033ba65de6eb20ff22ac4c2081d7bfd68ed36e2b4b7c327bcf314f1d87"
+      },
+      "archive": {
+        "bytes": 16560,
+        "sha256": "e745e045fe48b9e5e1444856789410c875dbaae5cfbbd8bfde8d1f5a14601f01"
+      },
+      "path": "icons-browser/single-icon-preventionweb-arabic-390.json.gz"
+    },
+    "icons-browser/single-icon-preventionweb-english-1164.json": {
+      "raw": {
+        "bytes": 549276,
+        "sha256": "e847af065388d38ef9d90f6c376d2b9b15cc6c024ccd3d7bd284d6fb4d24f80c"
+      },
+      "archive": {
+        "bytes": 16525,
+        "sha256": "60e4fb783a799dfa0bd1d3fdb7ad5532109b9b0e0d7b8714b74d53c0430ed357"
+      },
+      "path": "icons-browser/single-icon-preventionweb-english-1164.json.gz"
+    },
+    "icons-browser/single-icon-preventionweb-english-390.json": {
+      "raw": {
+        "bytes": 549185,
+        "sha256": "fc325c2bc470e9e6d74a9ff9f248bf25ae36167b25109ace12f78f9557b43830"
+      },
+      "archive": {
+        "bytes": 16478,
+        "sha256": "e7019801f86160f939ad1fbf32a1b4a09ef56b31f26ed62d65987b1f7a9093b2"
+      },
+      "path": "icons-browser/single-icon-preventionweb-english-390.json.gz"
+    },
+    "icons-browser/single-icon-preventionweb-japanese-1164.json": {
+      "raw": {
+        "bytes": 549317,
+        "sha256": "e91f3842db329fbbade4de0e1cecc012031d768c857a3d14c86cdcf748f814a3"
+      },
+      "archive": {
+        "bytes": 16555,
+        "sha256": "b5869abbfafc3843b107f38079c3541872c41bb533ae8d11d3f70f5ec19533b6"
+      },
+      "path": "icons-browser/single-icon-preventionweb-japanese-1164.json.gz"
+    },
+    "icons-browser/single-icon-preventionweb-japanese-390.json": {
+      "raw": {
+        "bytes": 549226,
+        "sha256": "025a2ea69dbdbd149c4803d6af1439f405f76a51dd9d36300732016c44cd1d6c"
+      },
+      "archive": {
+        "bytes": 16508,
+        "sha256": "b3066dae933320115b59184a16532a5a5e930b2eb069e26c27a049173fb68995"
+      },
+      "path": "icons-browser/single-icon-preventionweb-japanese-390.json.gz"
+    },
+    "icons-browser/single-icon-undrr-arabic-1164.json": {
+      "raw": {
+        "bytes": 547365,
+        "sha256": "e89d77d851da410d248f617d922aed562a0a74d03163d122f3e6e894ab0630a6"
+      },
+      "archive": {
+        "bytes": 16517,
+        "sha256": "e94a66c4bf815c8cb9c82d333a7e300efd0498bc5986898900342e390f2c1610"
+      },
+      "path": "icons-browser/single-icon-undrr-arabic-1164.json.gz"
+    },
+    "icons-browser/single-icon-undrr-arabic-390.json": {
+      "raw": {
+        "bytes": 547340,
+        "sha256": "7104c1be47e670e3b7f675a104cc9329737dbef50016fa9fd544a685e5cab283"
+      },
+      "archive": {
+        "bytes": 16491,
+        "sha256": "b2a293f60c248c34b7e8838de60bd71869e931a85f55ca027f1c84784c508d31"
+      },
+      "path": "icons-browser/single-icon-undrr-arabic-390.json.gz"
+    },
+    "icons-browser/single-icon-undrr-english-1164.json": {
+      "raw": {
+        "bytes": 546950,
+        "sha256": "0d6be5deb50b88c2ed32ef3e8170994efa7626e02b1db60e0c4c5428a6154393"
+      },
+      "archive": {
+        "bytes": 16532,
+        "sha256": "abe5da16723b58f65b89914752e3a378c747099cc6cd63ef91c965fba56d69a3"
+      },
+      "path": "icons-browser/single-icon-undrr-english-1164.json.gz"
+    },
+    "icons-browser/single-icon-undrr-english-390.json": {
+      "raw": {
+        "bytes": 546859,
+        "sha256": "629f43d91dd1370cad79df9ffc15a026b5e6c55c134f18435d60b636f91b0443"
+      },
+      "archive": {
+        "bytes": 16486,
+        "sha256": "beabc7413d001d9a4c796a59dd13e5a9c60330dab1d624201e929498a96b43fb"
+      },
+      "path": "icons-browser/single-icon-undrr-english-390.json.gz"
+    },
+    "icons-browser/single-icon-undrr-japanese-1164.json": {
+      "raw": {
+        "bytes": 546887,
+        "sha256": "70cbd2c21f27d000d29450f3d31141b796c348faefe8a1737636fba986e519c3"
+      },
+      "archive": {
+        "bytes": 16488,
+        "sha256": "b64fb2980c94617c1729dd8a58b728efd142f08c26e268c48b80b5f5ad809bc7"
+      },
+      "path": "icons-browser/single-icon-undrr-japanese-1164.json.gz"
+    },
+    "icons-browser/single-icon-undrr-japanese-390.json": {
+      "raw": {
+        "bytes": 546796,
+        "sha256": "86b3a2bfdcf97167466c6046ad20f085cfe4e4a9ecae41d462be0cd028aeed81"
+      },
+      "archive": {
+        "bytes": 16441,
+        "sha256": "123eae13820fe8031416de68a51c21aa32a0329dd7178708f21be3407e98154f"
+      },
+      "path": "icons-browser/single-icon-undrr-japanese-390.json.gz"
+    },
+    "icons-browser/colored-icons-delta-arabic-1164.png": {
+      "raw": {
+        "bytes": 188567,
+        "sha256": "a7df9577b284c43f43e3c78e3e77536b821c5cd0494bb3ef316b09e0dcab7ced"
+      },
+      "archive": {
+        "bytes": 188567,
+        "sha256": "a7df9577b284c43f43e3c78e3e77536b821c5cd0494bb3ef316b09e0dcab7ced"
+      },
+      "path": "icons-browser/colored-icons-delta-arabic-1164.png"
+    },
+    "icons-browser/colored-icons-delta-arabic-390.png": {
+      "raw": {
+        "bytes": 180340,
+        "sha256": "eb5e03592f73d872b36107ee109d2ad8ff02a6badab6b2466ddc4b4fd0f9b219"
+      },
+      "archive": {
+        "bytes": 180340,
+        "sha256": "eb5e03592f73d872b36107ee109d2ad8ff02a6badab6b2466ddc4b4fd0f9b219"
+      },
+      "path": "icons-browser/colored-icons-delta-arabic-390.png"
+    },
+    "icons-browser/colored-icons-delta-english-1164.png": {
+      "raw": {
+        "bytes": 187287,
+        "sha256": "7a455165a5b815d25d35b085337159088471db1df0bfa65fa9498e136ac12105"
+      },
+      "archive": {
+        "bytes": 187287,
+        "sha256": "7a455165a5b815d25d35b085337159088471db1df0bfa65fa9498e136ac12105"
+      },
+      "path": "icons-browser/colored-icons-delta-english-1164.png"
+    },
+    "icons-browser/colored-icons-delta-english-390.png": {
+      "raw": {
+        "bytes": 178912,
+        "sha256": "b80f1c705343051d8548dc310adbee0a922bdf6d96df82d6a8dc03dfaca17c42"
+      },
+      "archive": {
+        "bytes": 178912,
+        "sha256": "b80f1c705343051d8548dc310adbee0a922bdf6d96df82d6a8dc03dfaca17c42"
+      },
+      "path": "icons-browser/colored-icons-delta-english-390.png"
+    },
+    "icons-browser/colored-icons-delta-japanese-1164.png": {
+      "raw": {
+        "bytes": 187563,
+        "sha256": "e9b363d22868ab5cbf873733a332c164338816988c874dc3cad1991d6fd761e5"
+      },
+      "archive": {
+        "bytes": 187563,
+        "sha256": "e9b363d22868ab5cbf873733a332c164338816988c874dc3cad1991d6fd761e5"
+      },
+      "path": "icons-browser/colored-icons-delta-japanese-1164.png"
+    },
+    "icons-browser/colored-icons-delta-japanese-390.png": {
+      "raw": {
+        "bytes": 179196,
+        "sha256": "d2b248b3ab0d6af73d6a39a28d5c4e44656618226e27aa0e2bbd3c69b8133ddf"
+      },
+      "archive": {
+        "bytes": 179196,
+        "sha256": "d2b248b3ab0d6af73d6a39a28d5c4e44656618226e27aa0e2bbd3c69b8133ddf"
+      },
+      "path": "icons-browser/colored-icons-delta-japanese-390.png"
+    },
+    "icons-browser/colored-icons-irp-arabic-1164.png": {
+      "raw": {
+        "bytes": 187294,
+        "sha256": "bccde42a9afee12a54afa26b592aaf4a02f79e0e74cac4ec77edf6a906074df4"
+      },
+      "archive": {
+        "bytes": 187294,
+        "sha256": "bccde42a9afee12a54afa26b592aaf4a02f79e0e74cac4ec77edf6a906074df4"
+      },
+      "path": "icons-browser/colored-icons-irp-arabic-1164.png"
+    },
+    "icons-browser/colored-icons-irp-arabic-390.png": {
+      "raw": {
+        "bytes": 179229,
+        "sha256": "e3c8c08504e44898c4c7f0f945e2fe188575a855a2c5277a1be4cfcbf5d4fa94"
+      },
+      "archive": {
+        "bytes": 179229,
+        "sha256": "e3c8c08504e44898c4c7f0f945e2fe188575a855a2c5277a1be4cfcbf5d4fa94"
+      },
+      "path": "icons-browser/colored-icons-irp-arabic-390.png"
+    },
+    "icons-browser/colored-icons-irp-english-1164.png": {
+      "raw": {
+        "bytes": 185721,
+        "sha256": "1f6a6ccc521158f42b89de29221ad2b3ff2db6aa97d819533a539fd900ce6059"
+      },
+      "archive": {
+        "bytes": 185721,
+        "sha256": "1f6a6ccc521158f42b89de29221ad2b3ff2db6aa97d819533a539fd900ce6059"
+      },
+      "path": "icons-browser/colored-icons-irp-english-1164.png"
+    },
+    "icons-browser/colored-icons-irp-english-390.png": {
+      "raw": {
+        "bytes": 177608,
+        "sha256": "30f5589cd0ef38a6e537d644b1b3e38e67e6e1abd3c46513eef425e3a031fc60"
+      },
+      "archive": {
+        "bytes": 177608,
+        "sha256": "30f5589cd0ef38a6e537d644b1b3e38e67e6e1abd3c46513eef425e3a031fc60"
+      },
+      "path": "icons-browser/colored-icons-irp-english-390.png"
+    },
+    "icons-browser/colored-icons-irp-japanese-1164.png": {
+      "raw": {
+        "bytes": 186034,
+        "sha256": "9feffc4030e438e11b1d8d6cf0566459bd9f9a9cb5abf8919a8e31032a77bde0"
+      },
+      "archive": {
+        "bytes": 186034,
+        "sha256": "9feffc4030e438e11b1d8d6cf0566459bd9f9a9cb5abf8919a8e31032a77bde0"
+      },
+      "path": "icons-browser/colored-icons-irp-japanese-1164.png"
+    },
+    "icons-browser/colored-icons-irp-japanese-390.png": {
+      "raw": {
+        "bytes": 177908,
+        "sha256": "9d34afe6eb58f8d6b033bc9ddb1861a5a5310ff624286d715bb25f9f683d8e7c"
+      },
+      "archive": {
+        "bytes": 177908,
+        "sha256": "9d34afe6eb58f8d6b033bc9ddb1861a5a5310ff624286d715bb25f9f683d8e7c"
+      },
+      "path": "icons-browser/colored-icons-irp-japanese-390.png"
+    },
+    "icons-browser/colored-icons-mcr-arabic-1164.png": {
+      "raw": {
+        "bytes": 190199,
+        "sha256": "57128912f011e3b0b58e0586d565e0548a4a67b30900bc377742b331c300fb25"
+      },
+      "archive": {
+        "bytes": 190199,
+        "sha256": "57128912f011e3b0b58e0586d565e0548a4a67b30900bc377742b331c300fb25"
+      },
+      "path": "icons-browser/colored-icons-mcr-arabic-1164.png"
+    },
+    "icons-browser/colored-icons-mcr-arabic-390.png": {
+      "raw": {
+        "bytes": 183842,
+        "sha256": "db3fa7a42de8da569bc886cd195543dffbfedd23f5c07bb7099fbe81d6f54c35"
+      },
+      "archive": {
+        "bytes": 183842,
+        "sha256": "db3fa7a42de8da569bc886cd195543dffbfedd23f5c07bb7099fbe81d6f54c35"
+      },
+      "path": "icons-browser/colored-icons-mcr-arabic-390.png"
+    },
+    "icons-browser/colored-icons-mcr-english-1164.png": {
+      "raw": {
+        "bytes": 188881,
+        "sha256": "147b9fd59d733026f8ac4b65723cfe28237d00309a68b2c705620d6875bbcc12"
+      },
+      "archive": {
+        "bytes": 188881,
+        "sha256": "147b9fd59d733026f8ac4b65723cfe28237d00309a68b2c705620d6875bbcc12"
+      },
+      "path": "icons-browser/colored-icons-mcr-english-1164.png"
+    },
+    "icons-browser/colored-icons-mcr-english-390.png": {
+      "raw": {
+        "bytes": 182829,
+        "sha256": "f86fb1804a3e938195ee3a1d9a020ecb83a3130bd3008f772dffd8a2bf9f48f3"
+      },
+      "archive": {
+        "bytes": 182829,
+        "sha256": "f86fb1804a3e938195ee3a1d9a020ecb83a3130bd3008f772dffd8a2bf9f48f3"
+      },
+      "path": "icons-browser/colored-icons-mcr-english-390.png"
+    },
+    "icons-browser/colored-icons-mcr-japanese-1164.png": {
+      "raw": {
+        "bytes": 189108,
+        "sha256": "316f31832757ef0e1a21b4fd06996d06cbbbe8b42e956ff1b0308c05f63d27d2"
+      },
+      "archive": {
+        "bytes": 189108,
+        "sha256": "316f31832757ef0e1a21b4fd06996d06cbbbe8b42e956ff1b0308c05f63d27d2"
+      },
+      "path": "icons-browser/colored-icons-mcr-japanese-1164.png"
+    },
+    "icons-browser/colored-icons-mcr-japanese-390.png": {
+      "raw": {
+        "bytes": 183013,
+        "sha256": "eea070626f7994451b59cce7eff61b1c5895c03611c6cd7936da4baf934d096a"
+      },
+      "archive": {
+        "bytes": 183013,
+        "sha256": "eea070626f7994451b59cce7eff61b1c5895c03611c6cd7936da4baf934d096a"
+      },
+      "path": "icons-browser/colored-icons-mcr-japanese-390.png"
+    },
+    "icons-browser/colored-icons-preventionweb-arabic-1164.png": {
+      "raw": {
+        "bytes": 187783,
+        "sha256": "477f6f923304053a9c852dc2272937cbd316e201a71f97102517d3cecc3e02b6"
+      },
+      "archive": {
+        "bytes": 187783,
+        "sha256": "477f6f923304053a9c852dc2272937cbd316e201a71f97102517d3cecc3e02b6"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-arabic-1164.png"
+    },
+    "icons-browser/colored-icons-preventionweb-arabic-390.png": {
+      "raw": {
+        "bytes": 179669,
+        "sha256": "ed28bcdd61d951c507e209e748572c6ba6436a87d69cda0a81cef466592b0b4b"
+      },
+      "archive": {
+        "bytes": 179669,
+        "sha256": "ed28bcdd61d951c507e209e748572c6ba6436a87d69cda0a81cef466592b0b4b"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-arabic-390.png"
+    },
+    "icons-browser/colored-icons-preventionweb-english-1164.png": {
+      "raw": {
+        "bytes": 186236,
+        "sha256": "0f8d34484ceb158566e9ac25eb080857fab3d6558a7f49bfec55f45afb1e1eb4"
+      },
+      "archive": {
+        "bytes": 186236,
+        "sha256": "0f8d34484ceb158566e9ac25eb080857fab3d6558a7f49bfec55f45afb1e1eb4"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-english-1164.png"
+    },
+    "icons-browser/colored-icons-preventionweb-english-390.png": {
+      "raw": {
+        "bytes": 178223,
+        "sha256": "804734e943528ad1ff71dc0e7a3cc2c04a73f2e486817c1c5054049f22023b13"
+      },
+      "archive": {
+        "bytes": 178223,
+        "sha256": "804734e943528ad1ff71dc0e7a3cc2c04a73f2e486817c1c5054049f22023b13"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-english-390.png"
+    },
+    "icons-browser/colored-icons-preventionweb-japanese-1164.png": {
+      "raw": {
+        "bytes": 186535,
+        "sha256": "9ab0378403adb74aef182d482051334bd6b324bba9c3d2a2062afb1af67edbc1"
+      },
+      "archive": {
+        "bytes": 186535,
+        "sha256": "9ab0378403adb74aef182d482051334bd6b324bba9c3d2a2062afb1af67edbc1"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-japanese-1164.png"
+    },
+    "icons-browser/colored-icons-preventionweb-japanese-390.png": {
+      "raw": {
+        "bytes": 178492,
+        "sha256": "d393d3991a8a04a4a77dd4a1194d19a9ef603aa2f4feb6482dfce6a294fd6f1e"
+      },
+      "archive": {
+        "bytes": 178492,
+        "sha256": "d393d3991a8a04a4a77dd4a1194d19a9ef603aa2f4feb6482dfce6a294fd6f1e"
+      },
+      "path": "icons-browser/colored-icons-preventionweb-japanese-390.png"
+    },
+    "icons-browser/colored-icons-undrr-arabic-1164.png": {
+      "raw": {
+        "bytes": 188635,
+        "sha256": "e6fb56fdc1379cd2ba798adfc13e224986ff54daa5aadc933c24fe8027c92b3b"
+      },
+      "archive": {
+        "bytes": 188635,
+        "sha256": "e6fb56fdc1379cd2ba798adfc13e224986ff54daa5aadc933c24fe8027c92b3b"
+      },
+      "path": "icons-browser/colored-icons-undrr-arabic-1164.png"
+    },
+    "icons-browser/colored-icons-undrr-arabic-390.png": {
+      "raw": {
+        "bytes": 180411,
+        "sha256": "84743a8fe08abf150deda96a1f79cbed162a488c4244f823ce85b3279d571df7"
+      },
+      "archive": {
+        "bytes": 180411,
+        "sha256": "84743a8fe08abf150deda96a1f79cbed162a488c4244f823ce85b3279d571df7"
+      },
+      "path": "icons-browser/colored-icons-undrr-arabic-390.png"
+    },
+    "icons-browser/colored-icons-undrr-english-1164.png": {
+      "raw": {
+        "bytes": 187243,
+        "sha256": "00e071762f4f418dd273862aa184f6de73998771cf0376edfa7b4231cdc9d0a2"
+      },
+      "archive": {
+        "bytes": 187243,
+        "sha256": "00e071762f4f418dd273862aa184f6de73998771cf0376edfa7b4231cdc9d0a2"
+      },
+      "path": "icons-browser/colored-icons-undrr-english-1164.png"
+    },
+    "icons-browser/colored-icons-undrr-english-390.png": {
+      "raw": {
+        "bytes": 178878,
+        "sha256": "2a41a97c099b3054fe4b1aae33f417a6f603dfe079af3ee9ac931b3b1ee8a692"
+      },
+      "archive": {
+        "bytes": 178878,
+        "sha256": "2a41a97c099b3054fe4b1aae33f417a6f603dfe079af3ee9ac931b3b1ee8a692"
+      },
+      "path": "icons-browser/colored-icons-undrr-english-390.png"
+    },
+    "icons-browser/colored-icons-undrr-japanese-1164.png": {
+      "raw": {
+        "bytes": 187321,
+        "sha256": "637153ca82cb3c4bb883be7848257dd02f499cf42091e541bf3d68949430a434"
+      },
+      "archive": {
+        "bytes": 187321,
+        "sha256": "637153ca82cb3c4bb883be7848257dd02f499cf42091e541bf3d68949430a434"
+      },
+      "path": "icons-browser/colored-icons-undrr-japanese-1164.png"
+    },
+    "icons-browser/colored-icons-undrr-japanese-390.png": {
+      "raw": {
+        "bytes": 178947,
+        "sha256": "4858158d538a266d5de71f8ddefa37a7da8bc80fa2264b1049c927e2e4de23d2"
+      },
+      "archive": {
+        "bytes": 178947,
+        "sha256": "4858158d538a266d5de71f8ddefa37a7da8bc80fa2264b1049c927e2e4de23d2"
+      },
+      "path": "icons-browser/colored-icons-undrr-japanese-390.png"
+    },
+    "icons-browser/default-icons-delta-arabic-1164.png": {
+      "raw": {
+        "bytes": 268534,
+        "sha256": "8953410699f760d2b69c3b86c8e297b1d7eb1a1b810ea4f8511987998bed8dfb"
+      },
+      "archive": {
+        "bytes": 268534,
+        "sha256": "8953410699f760d2b69c3b86c8e297b1d7eb1a1b810ea4f8511987998bed8dfb"
+      },
+      "path": "icons-browser/default-icons-delta-arabic-1164.png"
+    },
+    "icons-browser/default-icons-delta-arabic-390.png": {
+      "raw": {
+        "bytes": 153111,
+        "sha256": "3ca7062ccaa387efaf2d42081009edf66e6152c885a923bc47b43221c4c714e9"
+      },
+      "archive": {
+        "bytes": 153111,
+        "sha256": "3ca7062ccaa387efaf2d42081009edf66e6152c885a923bc47b43221c4c714e9"
+      },
+      "path": "icons-browser/default-icons-delta-arabic-390.png"
+    },
+    "icons-browser/default-icons-delta-english-1164.png": {
+      "raw": {
+        "bytes": 265439,
+        "sha256": "0a7973434e1072aa94b690124ed384e0dc1e164209364173e94ad54df4bc5c33"
+      },
+      "archive": {
+        "bytes": 265439,
+        "sha256": "0a7973434e1072aa94b690124ed384e0dc1e164209364173e94ad54df4bc5c33"
+      },
+      "path": "icons-browser/default-icons-delta-english-1164.png"
+    },
+    "icons-browser/default-icons-delta-english-390.png": {
+      "raw": {
+        "bytes": 152764,
+        "sha256": "9ad6bae40ed5e277fbac585b729e40b8244605c29d68263a6547d4319ad4d479"
+      },
+      "archive": {
+        "bytes": 152764,
+        "sha256": "9ad6bae40ed5e277fbac585b729e40b8244605c29d68263a6547d4319ad4d479"
+      },
+      "path": "icons-browser/default-icons-delta-english-390.png"
+    },
+    "icons-browser/default-icons-delta-japanese-1164.png": {
+      "raw": {
+        "bytes": 265737,
+        "sha256": "2b9402eb09a521c32760223b4e4119d5565d47477b282cbdce807f2243bc8caf"
+      },
+      "archive": {
+        "bytes": 265737,
+        "sha256": "2b9402eb09a521c32760223b4e4119d5565d47477b282cbdce807f2243bc8caf"
+      },
+      "path": "icons-browser/default-icons-delta-japanese-1164.png"
+    },
+    "icons-browser/default-icons-delta-japanese-390.png": {
+      "raw": {
+        "bytes": 153055,
+        "sha256": "8ce0660fff462375d5904cbe6d213daa5df9925fee1a8f6e91a40c513b9ec59c"
+      },
+      "archive": {
+        "bytes": 153055,
+        "sha256": "8ce0660fff462375d5904cbe6d213daa5df9925fee1a8f6e91a40c513b9ec59c"
+      },
+      "path": "icons-browser/default-icons-delta-japanese-390.png"
+    },
+    "icons-browser/default-icons-irp-arabic-1164.png": {
+      "raw": {
+        "bytes": 267915,
+        "sha256": "8cd5f645f23d7c3ec3ade369fccdbd2579b9b8f34a7113491c32520eefb9f362"
+      },
+      "archive": {
+        "bytes": 267915,
+        "sha256": "8cd5f645f23d7c3ec3ade369fccdbd2579b9b8f34a7113491c32520eefb9f362"
+      },
+      "path": "icons-browser/default-icons-irp-arabic-1164.png"
+    },
+    "icons-browser/default-icons-irp-arabic-390.png": {
+      "raw": {
+        "bytes": 152645,
+        "sha256": "390c8caed898c8021f187ee0b01b23191ca58b0cd163c3d27a2bd0a381843390"
+      },
+      "archive": {
+        "bytes": 152645,
+        "sha256": "390c8caed898c8021f187ee0b01b23191ca58b0cd163c3d27a2bd0a381843390"
+      },
+      "path": "icons-browser/default-icons-irp-arabic-390.png"
+    },
+    "icons-browser/default-icons-irp-english-1164.png": {
+      "raw": {
+        "bytes": 264508,
+        "sha256": "21fc5d44273135c7a643483b1be2b8f9fc669d120b66d2cce7840830821ec8c3"
+      },
+      "archive": {
+        "bytes": 264508,
+        "sha256": "21fc5d44273135c7a643483b1be2b8f9fc669d120b66d2cce7840830821ec8c3"
+      },
+      "path": "icons-browser/default-icons-irp-english-1164.png"
+    },
+    "icons-browser/default-icons-irp-english-390.png": {
+      "raw": {
+        "bytes": 152079,
+        "sha256": "bb09fd7b4fce888d3690f36b2b02a1dcc1b5fd6a8aaef0dea407a1e356719a3f"
+      },
+      "archive": {
+        "bytes": 152079,
+        "sha256": "bb09fd7b4fce888d3690f36b2b02a1dcc1b5fd6a8aaef0dea407a1e356719a3f"
+      },
+      "path": "icons-browser/default-icons-irp-english-390.png"
+    },
+    "icons-browser/default-icons-irp-japanese-1164.png": {
+      "raw": {
+        "bytes": 264798,
+        "sha256": "1377e760199bf629b9f0549b42782acdcb3ceef00ca72aa2793de541dab5bf35"
+      },
+      "archive": {
+        "bytes": 264798,
+        "sha256": "1377e760199bf629b9f0549b42782acdcb3ceef00ca72aa2793de541dab5bf35"
+      },
+      "path": "icons-browser/default-icons-irp-japanese-1164.png"
+    },
+    "icons-browser/default-icons-irp-japanese-390.png": {
+      "raw": {
+        "bytes": 152369,
+        "sha256": "801a7549c9416002a51bd6c8a2cb1ba2306d0421cd511665fe0f4a2926f27a84"
+      },
+      "archive": {
+        "bytes": 152369,
+        "sha256": "801a7549c9416002a51bd6c8a2cb1ba2306d0421cd511665fe0f4a2926f27a84"
+      },
+      "path": "icons-browser/default-icons-irp-japanese-390.png"
+    },
+    "icons-browser/default-icons-mcr-arabic-1164.png": {
+      "raw": {
+        "bytes": 274146,
+        "sha256": "7a29bed55e1d80e6c075d0e93dddc7d2a5ad60234b6887251466f29e62263bcd"
+      },
+      "archive": {
+        "bytes": 274146,
+        "sha256": "7a29bed55e1d80e6c075d0e93dddc7d2a5ad60234b6887251466f29e62263bcd"
+      },
+      "path": "icons-browser/default-icons-mcr-arabic-1164.png"
+    },
+    "icons-browser/default-icons-mcr-arabic-390.png": {
+      "raw": {
+        "bytes": 160240,
+        "sha256": "1a475fff394ecc4752d1e0634669942d40dd8b6c058c7ccce08703cfb16badc7"
+      },
+      "archive": {
+        "bytes": 160240,
+        "sha256": "1a475fff394ecc4752d1e0634669942d40dd8b6c058c7ccce08703cfb16badc7"
+      },
+      "path": "icons-browser/default-icons-mcr-arabic-390.png"
+    },
+    "icons-browser/default-icons-mcr-english-1164.png": {
+      "raw": {
+        "bytes": 270969,
+        "sha256": "d0c1cd6a8f26bad4e7215a427d3a82406e9ed77a34b1fe9cc85251fa9742e76d"
+      },
+      "archive": {
+        "bytes": 270969,
+        "sha256": "d0c1cd6a8f26bad4e7215a427d3a82406e9ed77a34b1fe9cc85251fa9742e76d"
+      },
+      "path": "icons-browser/default-icons-mcr-english-1164.png"
+    },
+    "icons-browser/default-icons-mcr-english-390.png": {
+      "raw": {
+        "bytes": 159882,
+        "sha256": "31d4a852a0ecf2df7a1d435c1c80f777b8c89392a08fc22805488ba14e535a3c"
+      },
+      "archive": {
+        "bytes": 159882,
+        "sha256": "31d4a852a0ecf2df7a1d435c1c80f777b8c89392a08fc22805488ba14e535a3c"
+      },
+      "path": "icons-browser/default-icons-mcr-english-390.png"
+    },
+    "icons-browser/default-icons-mcr-japanese-1164.png": {
+      "raw": {
+        "bytes": 271206,
+        "sha256": "e01bbc8e7dd89d2319b33ac82437aeb1fd1f58e71499ffc2d978981df05e1e1c"
+      },
+      "archive": {
+        "bytes": 271206,
+        "sha256": "e01bbc8e7dd89d2319b33ac82437aeb1fd1f58e71499ffc2d978981df05e1e1c"
+      },
+      "path": "icons-browser/default-icons-mcr-japanese-1164.png"
+    },
+    "icons-browser/default-icons-mcr-japanese-390.png": {
+      "raw": {
+        "bytes": 160097,
+        "sha256": "ef2ef0bb057261b5324d841fef9186072fde40114a138af146b9e250e5c5d5e7"
+      },
+      "archive": {
+        "bytes": 160097,
+        "sha256": "ef2ef0bb057261b5324d841fef9186072fde40114a138af146b9e250e5c5d5e7"
+      },
+      "path": "icons-browser/default-icons-mcr-japanese-390.png"
+    },
+    "icons-browser/default-icons-preventionweb-arabic-1164.png": {
+      "raw": {
+        "bytes": 267824,
+        "sha256": "91fb3aa3b877d1b4367fdc44fcebc6c77e70d11534727ba38e3b9944f4e99ca3"
+      },
+      "archive": {
+        "bytes": 267824,
+        "sha256": "91fb3aa3b877d1b4367fdc44fcebc6c77e70d11534727ba38e3b9944f4e99ca3"
+      },
+      "path": "icons-browser/default-icons-preventionweb-arabic-1164.png"
+    },
+    "icons-browser/default-icons-preventionweb-arabic-390.png": {
+      "raw": {
+        "bytes": 153137,
+        "sha256": "e6ff8801345d9447a6cbeb6c4731a7a993615fccf74275d4756e118e1ed2523e"
+      },
+      "archive": {
+        "bytes": 153137,
+        "sha256": "e6ff8801345d9447a6cbeb6c4731a7a993615fccf74275d4756e118e1ed2523e"
+      },
+      "path": "icons-browser/default-icons-preventionweb-arabic-390.png"
+    },
+    "icons-browser/default-icons-preventionweb-english-1164.png": {
+      "raw": {
+        "bytes": 265014,
+        "sha256": "5b87d517bef86253e772c18e127259e019a5ab48c6b189dcab343914cc3286f5"
+      },
+      "archive": {
+        "bytes": 265014,
+        "sha256": "5b87d517bef86253e772c18e127259e019a5ab48c6b189dcab343914cc3286f5"
+      },
+      "path": "icons-browser/default-icons-preventionweb-english-1164.png"
+    },
+    "icons-browser/default-icons-preventionweb-english-390.png": {
+      "raw": {
+        "bytes": 152794,
+        "sha256": "a963903a2b8701eb7e93d9d20dad01961bb2786ee44de036cf2f0327f6fddd4d"
+      },
+      "archive": {
+        "bytes": 152794,
+        "sha256": "a963903a2b8701eb7e93d9d20dad01961bb2786ee44de036cf2f0327f6fddd4d"
+      },
+      "path": "icons-browser/default-icons-preventionweb-english-390.png"
+    },
+    "icons-browser/default-icons-preventionweb-japanese-1164.png": {
+      "raw": {
+        "bytes": 265290,
+        "sha256": "e51572c65d244ed71075146967f101d47cd946e29bf104fa65b9c0614e518169"
+      },
+      "archive": {
+        "bytes": 265290,
+        "sha256": "e51572c65d244ed71075146967f101d47cd946e29bf104fa65b9c0614e518169"
+      },
+      "path": "icons-browser/default-icons-preventionweb-japanese-1164.png"
+    },
+    "icons-browser/default-icons-preventionweb-japanese-390.png": {
+      "raw": {
+        "bytes": 153072,
+        "sha256": "9676492c8d0f57dbc1aded216d1b5aaf608bdd316f897a2b2ead3d388131e8de"
+      },
+      "archive": {
+        "bytes": 153072,
+        "sha256": "9676492c8d0f57dbc1aded216d1b5aaf608bdd316f897a2b2ead3d388131e8de"
+      },
+      "path": "icons-browser/default-icons-preventionweb-japanese-390.png"
+    },
+    "icons-browser/default-icons-undrr-arabic-1164.png": {
+      "raw": {
+        "bytes": 268623,
+        "sha256": "a749af2538bc88db10e98de5f60d7639326d05869c9f54be152d8a0c21165807"
+      },
+      "archive": {
+        "bytes": 268623,
+        "sha256": "a749af2538bc88db10e98de5f60d7639326d05869c9f54be152d8a0c21165807"
+      },
+      "path": "icons-browser/default-icons-undrr-arabic-1164.png"
+    },
+    "icons-browser/default-icons-undrr-arabic-390.png": {
+      "raw": {
+        "bytes": 153204,
+        "sha256": "53b6a4c9f98ccab04b489e3b55a3b993545a064ff00ed096cb0a656ca057740d"
+      },
+      "archive": {
+        "bytes": 153204,
+        "sha256": "53b6a4c9f98ccab04b489e3b55a3b993545a064ff00ed096cb0a656ca057740d"
+      },
+      "path": "icons-browser/default-icons-undrr-arabic-390.png"
+    },
+    "icons-browser/default-icons-undrr-english-1164.png": {
+      "raw": {
+        "bytes": 265430,
+        "sha256": "ba7e7f5136b19f47116606907f81a4e5ad5e7556f19469a903d5a0f7b386d5aa"
+      },
+      "archive": {
+        "bytes": 265430,
+        "sha256": "ba7e7f5136b19f47116606907f81a4e5ad5e7556f19469a903d5a0f7b386d5aa"
+      },
+      "path": "icons-browser/default-icons-undrr-english-1164.png"
+    },
+    "icons-browser/default-icons-undrr-english-390.png": {
+      "raw": {
+        "bytes": 152754,
+        "sha256": "5292b0f60c285d7341620c8a8e144aa1bdb0df10eb510ae600ed6160bc8c4865"
+      },
+      "archive": {
+        "bytes": 152754,
+        "sha256": "5292b0f60c285d7341620c8a8e144aa1bdb0df10eb510ae600ed6160bc8c4865"
+      },
+      "path": "icons-browser/default-icons-undrr-english-390.png"
+    },
+    "icons-browser/default-icons-undrr-japanese-1164.png": {
+      "raw": {
+        "bytes": 265499,
+        "sha256": "507c0b0e4f5c936ba1c2328b37a80d7e9bad70d6084ffe17525dc0debefcf599"
+      },
+      "archive": {
+        "bytes": 265499,
+        "sha256": "507c0b0e4f5c936ba1c2328b37a80d7e9bad70d6084ffe17525dc0debefcf599"
+      },
+      "path": "icons-browser/default-icons-undrr-japanese-1164.png"
+    },
+    "icons-browser/default-icons-undrr-japanese-390.png": {
+      "raw": {
+        "bytes": 152826,
+        "sha256": "cdde060b490c2bd0a5f0892028b3a55def6f9bfb56cdd0f9d2cb2978790ec30f"
+      },
+      "archive": {
+        "bytes": 152826,
+        "sha256": "cdde060b490c2bd0a5f0892028b3a55def6f9bfb56cdd0f9d2cb2978790ec30f"
+      },
+      "path": "icons-browser/default-icons-undrr-japanese-390.png"
+    },
+    "icons-browser/single-icon-delta-arabic-1164.png": {
+      "raw": {
+        "bytes": 117855,
+        "sha256": "4f5b432eb28fa40abdf88e54069c243a6227fcc552c479dd5ce7cbfabe1677eb"
+      },
+      "archive": {
+        "bytes": 117855,
+        "sha256": "4f5b432eb28fa40abdf88e54069c243a6227fcc552c479dd5ce7cbfabe1677eb"
+      },
+      "path": "icons-browser/single-icon-delta-arabic-1164.png"
+    },
+    "icons-browser/single-icon-delta-arabic-390.png": {
+      "raw": {
+        "bytes": 120662,
+        "sha256": "42046ebff309d430852805c2737702f29148c4e2d9acb3a394ff38560da6a86e"
+      },
+      "archive": {
+        "bytes": 120662,
+        "sha256": "42046ebff309d430852805c2737702f29148c4e2d9acb3a394ff38560da6a86e"
+      },
+      "path": "icons-browser/single-icon-delta-arabic-390.png"
+    },
+    "icons-browser/single-icon-delta-english-1164.png": {
+      "raw": {
+        "bytes": 117601,
+        "sha256": "b556280cd4efd25876e7b8119386a361777d59135bde951566b994a5ca0c99ef"
+      },
+      "archive": {
+        "bytes": 117601,
+        "sha256": "b556280cd4efd25876e7b8119386a361777d59135bde951566b994a5ca0c99ef"
+      },
+      "path": "icons-browser/single-icon-delta-english-1164.png"
+    },
+    "icons-browser/single-icon-delta-english-390.png": {
+      "raw": {
+        "bytes": 120943,
+        "sha256": "9d23137ee59908a3890ab8a1212d5b6c862383b36e9d2174387f2805cb342383"
+      },
+      "archive": {
+        "bytes": 120943,
+        "sha256": "9d23137ee59908a3890ab8a1212d5b6c862383b36e9d2174387f2805cb342383"
+      },
+      "path": "icons-browser/single-icon-delta-english-390.png"
+    },
+    "icons-browser/single-icon-delta-japanese-1164.png": {
+      "raw": {
+        "bytes": 117868,
+        "sha256": "aedb2cb7791a0657ac9a49e109c01b1dabf706c923b24a3e0428c82d07dacf33"
+      },
+      "archive": {
+        "bytes": 117868,
+        "sha256": "aedb2cb7791a0657ac9a49e109c01b1dabf706c923b24a3e0428c82d07dacf33"
+      },
+      "path": "icons-browser/single-icon-delta-japanese-1164.png"
+    },
+    "icons-browser/single-icon-delta-japanese-390.png": {
+      "raw": {
+        "bytes": 121220,
+        "sha256": "28489e18a77264d648ebc240290bf82ee89f0693251941c850d1c632d2ae1690"
+      },
+      "archive": {
+        "bytes": 121220,
+        "sha256": "28489e18a77264d648ebc240290bf82ee89f0693251941c850d1c632d2ae1690"
+      },
+      "path": "icons-browser/single-icon-delta-japanese-390.png"
+    },
+    "icons-browser/single-icon-irp-arabic-1164.png": {
+      "raw": {
+        "bytes": 117359,
+        "sha256": "66e38d0444f43b23594946410530f2c0f31823c344b57e682508ff8d9be491c3"
+      },
+      "archive": {
+        "bytes": 117359,
+        "sha256": "66e38d0444f43b23594946410530f2c0f31823c344b57e682508ff8d9be491c3"
+      },
+      "path": "icons-browser/single-icon-irp-arabic-1164.png"
+    },
+    "icons-browser/single-icon-irp-arabic-390.png": {
+      "raw": {
+        "bytes": 119941,
+        "sha256": "bb2c02985b7e7337fbc214c2389015f86fae710703a0184eb17e09c58fc5dc7d"
+      },
+      "archive": {
+        "bytes": 119941,
+        "sha256": "bb2c02985b7e7337fbc214c2389015f86fae710703a0184eb17e09c58fc5dc7d"
+      },
+      "path": "icons-browser/single-icon-irp-arabic-390.png"
+    },
+    "icons-browser/single-icon-irp-english-1164.png": {
+      "raw": {
+        "bytes": 116901,
+        "sha256": "4bd68def9eaa7a75bb7ffccec3b950beef6bd9ca956a173bac4655b890905250"
+      },
+      "archive": {
+        "bytes": 116901,
+        "sha256": "4bd68def9eaa7a75bb7ffccec3b950beef6bd9ca956a173bac4655b890905250"
+      },
+      "path": "icons-browser/single-icon-irp-english-1164.png"
+    },
+    "icons-browser/single-icon-irp-english-390.png": {
+      "raw": {
+        "bytes": 120125,
+        "sha256": "9e6fd682e9e7477a15e03b45c21e53b3a43215c2b1de9916705e3f841e82b4ab"
+      },
+      "archive": {
+        "bytes": 120125,
+        "sha256": "9e6fd682e9e7477a15e03b45c21e53b3a43215c2b1de9916705e3f841e82b4ab"
+      },
+      "path": "icons-browser/single-icon-irp-english-390.png"
+    },
+    "icons-browser/single-icon-irp-japanese-1164.png": {
+      "raw": {
+        "bytes": 117177,
+        "sha256": "62634b369455f15147dc5fe25a34111e4001ceb627f1b0eae620a12a897cf547"
+      },
+      "archive": {
+        "bytes": 117177,
+        "sha256": "62634b369455f15147dc5fe25a34111e4001ceb627f1b0eae620a12a897cf547"
+      },
+      "path": "icons-browser/single-icon-irp-japanese-1164.png"
+    },
+    "icons-browser/single-icon-irp-japanese-390.png": {
+      "raw": {
+        "bytes": 120407,
+        "sha256": "0878d9fa43b718043dc578f162f895725fa8a460f79142277dd412904e62b56a"
+      },
+      "archive": {
+        "bytes": 120407,
+        "sha256": "0878d9fa43b718043dc578f162f895725fa8a460f79142277dd412904e62b56a"
+      },
+      "path": "icons-browser/single-icon-irp-japanese-390.png"
+    },
+    "icons-browser/single-icon-mcr-arabic-1164.png": {
+      "raw": {
+        "bytes": 117993,
+        "sha256": "d146d4f1ec36876e1f03027efd8e6c9a80b6e639380a8d4e08acef1c3d0617f0"
+      },
+      "archive": {
+        "bytes": 117993,
+        "sha256": "d146d4f1ec36876e1f03027efd8e6c9a80b6e639380a8d4e08acef1c3d0617f0"
+      },
+      "path": "icons-browser/single-icon-mcr-arabic-1164.png"
+    },
+    "icons-browser/single-icon-mcr-arabic-390.png": {
+      "raw": {
+        "bytes": 121837,
+        "sha256": "104febd41486326caef714482e49bed22ef1ccfa3accf5f0c24d49632427b1ab"
+      },
+      "archive": {
+        "bytes": 121837,
+        "sha256": "104febd41486326caef714482e49bed22ef1ccfa3accf5f0c24d49632427b1ab"
+      },
+      "path": "icons-browser/single-icon-mcr-arabic-390.png"
+    },
+    "icons-browser/single-icon-mcr-english-1164.png": {
+      "raw": {
+        "bytes": 117759,
+        "sha256": "8391ba79a419bfb1aa9e0804ee4fac133c4c2d788a95b765f27cc5b962d97570"
+      },
+      "archive": {
+        "bytes": 117759,
+        "sha256": "8391ba79a419bfb1aa9e0804ee4fac133c4c2d788a95b765f27cc5b962d97570"
+      },
+      "path": "icons-browser/single-icon-mcr-english-1164.png"
+    },
+    "icons-browser/single-icon-mcr-english-390.png": {
+      "raw": {
+        "bytes": 122331,
+        "sha256": "388687c88611b9234a25146744af514787d69e0f90bec9feaf0ecb33133762f8"
+      },
+      "archive": {
+        "bytes": 122331,
+        "sha256": "388687c88611b9234a25146744af514787d69e0f90bec9feaf0ecb33133762f8"
+      },
+      "path": "icons-browser/single-icon-mcr-english-390.png"
+    },
+    "icons-browser/single-icon-mcr-japanese-1164.png": {
+      "raw": {
+        "bytes": 117969,
+        "sha256": "745544d693fd6d61628cc9e3558ea1343c387fa75c0a0e47a20b497844722beb"
+      },
+      "archive": {
+        "bytes": 117969,
+        "sha256": "745544d693fd6d61628cc9e3558ea1343c387fa75c0a0e47a20b497844722beb"
+      },
+      "path": "icons-browser/single-icon-mcr-japanese-1164.png"
+    },
+    "icons-browser/single-icon-mcr-japanese-390.png": {
+      "raw": {
+        "bytes": 122549,
+        "sha256": "a0777419a5453368dec6d98a891391dbac629c6e23aa24b6793d4466c5578154"
+      },
+      "archive": {
+        "bytes": 122549,
+        "sha256": "a0777419a5453368dec6d98a891391dbac629c6e23aa24b6793d4466c5578154"
+      },
+      "path": "icons-browser/single-icon-mcr-japanese-390.png"
+    },
+    "icons-browser/single-icon-preventionweb-arabic-1164.png": {
+      "raw": {
+        "bytes": 117626,
+        "sha256": "9a87c6e215db1f3e24d5aeb0d72c50a954aae9b84e48961778d9dc8874c0e5c9"
+      },
+      "archive": {
+        "bytes": 117626,
+        "sha256": "9a87c6e215db1f3e24d5aeb0d72c50a954aae9b84e48961778d9dc8874c0e5c9"
+      },
+      "path": "icons-browser/single-icon-preventionweb-arabic-1164.png"
+    },
+    "icons-browser/single-icon-preventionweb-arabic-390.png": {
+      "raw": {
+        "bytes": 120419,
+        "sha256": "595b241775064ea5bb1d8dd1e82c387e3fb3d55146279bf026783e5bad937583"
+      },
+      "archive": {
+        "bytes": 120419,
+        "sha256": "595b241775064ea5bb1d8dd1e82c387e3fb3d55146279bf026783e5bad937583"
+      },
+      "path": "icons-browser/single-icon-preventionweb-arabic-390.png"
+    },
+    "icons-browser/single-icon-preventionweb-english-1164.png": {
+      "raw": {
+        "bytes": 117331,
+        "sha256": "939f832719d68583d14f95d962e008a3704cb168dfdf1211d8fdf71784c60221"
+      },
+      "archive": {
+        "bytes": 117331,
+        "sha256": "939f832719d68583d14f95d962e008a3704cb168dfdf1211d8fdf71784c60221"
+      },
+      "path": "icons-browser/single-icon-preventionweb-english-1164.png"
+    },
+    "icons-browser/single-icon-preventionweb-english-390.png": {
+      "raw": {
+        "bytes": 120760,
+        "sha256": "3f867c29413ec94051cd0382d7e417a287e06ccec80150c015629f37cb9d0da6"
+      },
+      "archive": {
+        "bytes": 120760,
+        "sha256": "3f867c29413ec94051cd0382d7e417a287e06ccec80150c015629f37cb9d0da6"
+      },
+      "path": "icons-browser/single-icon-preventionweb-english-390.png"
+    },
+    "icons-browser/single-icon-preventionweb-japanese-1164.png": {
+      "raw": {
+        "bytes": 117589,
+        "sha256": "04b0e7386186645e308679a1823dcb5fb41431541b38bf1adc90ca585a83384e"
+      },
+      "archive": {
+        "bytes": 117589,
+        "sha256": "04b0e7386186645e308679a1823dcb5fb41431541b38bf1adc90ca585a83384e"
+      },
+      "path": "icons-browser/single-icon-preventionweb-japanese-1164.png"
+    },
+    "icons-browser/single-icon-preventionweb-japanese-390.png": {
+      "raw": {
+        "bytes": 121020,
+        "sha256": "0ef33cc967d013446255c10db759be8543650675f91792a78ee90d31565c34a8"
+      },
+      "archive": {
+        "bytes": 121020,
+        "sha256": "0ef33cc967d013446255c10db759be8543650675f91792a78ee90d31565c34a8"
+      },
+      "path": "icons-browser/single-icon-preventionweb-japanese-390.png"
+    },
+    "icons-browser/single-icon-undrr-arabic-1164.png": {
+      "raw": {
+        "bytes": 117953,
+        "sha256": "c8ff32f42272095f968f766c36a0e0062b40cf263c64324dfa145a013bfe4bbf"
+      },
+      "archive": {
+        "bytes": 117953,
+        "sha256": "c8ff32f42272095f968f766c36a0e0062b40cf263c64324dfa145a013bfe4bbf"
+      },
+      "path": "icons-browser/single-icon-undrr-arabic-1164.png"
+    },
+    "icons-browser/single-icon-undrr-arabic-390.png": {
+      "raw": {
+        "bytes": 120757,
+        "sha256": "8c9f1f59fd1dd41bea941b54cf588d2a5f728c39d742418b56a75cac24abc9b7"
+      },
+      "archive": {
+        "bytes": 120757,
+        "sha256": "8c9f1f59fd1dd41bea941b54cf588d2a5f728c39d742418b56a75cac24abc9b7"
+      },
+      "path": "icons-browser/single-icon-undrr-arabic-390.png"
+    },
+    "icons-browser/single-icon-undrr-english-1164.png": {
+      "raw": {
+        "bytes": 117590,
+        "sha256": "b657252f5ab022f70fc5814ca7bd1a437c452e80a21be50914e20f8f917b2209"
+      },
+      "archive": {
+        "bytes": 117590,
+        "sha256": "b657252f5ab022f70fc5814ca7bd1a437c452e80a21be50914e20f8f917b2209"
+      },
+      "path": "icons-browser/single-icon-undrr-english-1164.png"
+    },
+    "icons-browser/single-icon-undrr-english-390.png": {
+      "raw": {
+        "bytes": 120928,
+        "sha256": "0bbbae5f5e2745c039ce6fa60387c12cbd0ad1aa05d01b85bf76d508ff48fb3d"
+      },
+      "archive": {
+        "bytes": 120928,
+        "sha256": "0bbbae5f5e2745c039ce6fa60387c12cbd0ad1aa05d01b85bf76d508ff48fb3d"
+      },
+      "path": "icons-browser/single-icon-undrr-english-390.png"
+    },
+    "icons-browser/single-icon-undrr-japanese-1164.png": {
+      "raw": {
+        "bytes": 117661,
+        "sha256": "f612c15410350168abc215502abfa494ebda7f224d4806f38fd3eb3ff8aa1e31"
+      },
+      "archive": {
+        "bytes": 117661,
+        "sha256": "f612c15410350168abc215502abfa494ebda7f224d4806f38fd3eb3ff8aa1e31"
+      },
+      "path": "icons-browser/single-icon-undrr-japanese-1164.png"
+    },
+    "icons-browser/single-icon-undrr-japanese-390.png": {
+      "raw": {
+        "bytes": 121000,
+        "sha256": "c7adb16d0fe06ac50cbb453b7e164f8da9031762f48a496f37c5d7be5157a735"
+      },
+      "archive": {
+        "bytes": 121000,
+        "sha256": "c7adb16d0fe06ac50cbb453b7e164f8da9031762f48a496f37c5d7be5157a735"
+      },
+      "path": "icons-browser/single-icon-undrr-japanese-390.png"
+    }
+  },
+  "nativeAccepted": false,
+  "sourceOnly": true,
+  "expectedDocumentJSONSHA256": "a808209f35d91ae14202abc5a5be5bef23caf72c949bac52d30e57fb9a375ee3"
+}

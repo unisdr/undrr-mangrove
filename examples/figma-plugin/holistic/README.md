@@ -35,7 +35,7 @@ update/restoration are distinct from recipe and mock completion.
 - Published checkpoint scope: 25 families and 297 variants, subject to its
   documented per-family limitations. This is checkpoint evidence, not a fresh
   native revalidation.
-- Separate source draft packet: 109 families and 1460 bounded variants, deliberately
+- Separate source draft packet: 138 families and 2053 bounded variants, deliberately
   non-importable. The original nine families/28 variants are joined by
   SectionHeader, Imagecaption, EmbedContainer and three authored Card families.
   Search controls add four families/15 variants, and internal result families add
@@ -177,3 +177,30 @@ in one collection, exceeding the current importer collection
 limit of 5000; its source Noto weight 600 to Bold 700 mapping remains provisional. No
 smaller substitute replaces those required compositions. The reproducible
 source120 delivery at c91aaa39 and earlier deliveries remain preserved.
+
+## Reviewed standalone Icon and controlled MenuItems source registration
+
+This registration adds Icon1/131 and controlled MenuItems1/32 alongside
+saved source136/1890, giving138 families/2053 finite source variants. The Icon
+archive and corrected actual-preview MenuItems archive passed independent source
+and portability reviews. Repository-focused source checks passed complete output
+comparison and corruption refusal before caller mutation. Seven active producer,
+fixture and mock files retain exact JavaScript AST after repository formatting.
+
+MenuItems uses the actual retained JSX in an explicit UL/menu-LI caller context
+with actual preview theme, I18n, language and direction. It has no authored story
+or current public package export. Whole labels remain editable native TEXT
+candidates; captured underline and focus fragment geometry is finite. Supported
+property ownership and modeled link retention do not prove visible edited-copy
+fragment reflow. See [MenuItems](menu-items.md) and [Icon](standalone-icon.md).
+
+The combined registration check completed with terminal exit0: deterministic
+full138/2053 DTO and exact dependencies, source-only importer refusal before
+mutation, the original nine-family/28-variant edited-consumer lifecycle, and all
+CLI output/check/overwrite/staleness/source-path/argument guards passed. The
+combined scene fixture does not execute all2053 variants. Native fonts,
+bidi/baselines, SVG/mask rendering, inline placement, full ordinary rebuilds,
+publication and consumers remain separate gates. The immutable source136
+delivery from clean090b1d6c passed independent packet and checksum review;
+source120 and earlier artifacts remain preserved. No canonical library change
+is implied.

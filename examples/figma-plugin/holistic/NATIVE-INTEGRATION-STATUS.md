@@ -1,7 +1,8 @@
 # Native integration status
 
-Observed on 6 October 2026. The source registry contains136 recipe
-families and1890 bounded variants, including standalone Link and actual Arabic
+Observed on 7 October 2026. The source registry contains138 recipe
+families and2053 bounded variants, including standalone Icon, controlled MenuItems,
+standalone Link and actual Arabic
 landing compositions. Combined registration verification completed with terminal exit0. Full packet
 and dependency checks, source-only importer refusal, the bounded original9/28
 scene lifecycle and all CLI guards passed.

@@ -18,6 +18,16 @@ const recipes = [
   ['breadcrumbs', './figma-breadcrumb-recipes.cjs', 'buildBreadcrumbRecipes'],
   ['skip-link', './figma-skip-link-recipes.cjs', 'buildSkipLinkRecipes'],
   [
+    'standalone-icon-source-candidate',
+    './figma-standalone-icon-recipes.cjs',
+    'buildStandaloneIconRecipes',
+  ],
+  [
+    'menu-items-controlled-source-candidate',
+    './figma-menu-items-recipes.cjs',
+    'buildMenuItemsRecipes',
+  ],
+  [
     'standalone-link',
     './figma-standalone-link-recipes.cjs',
     'buildStandaloneLinkRecipes',

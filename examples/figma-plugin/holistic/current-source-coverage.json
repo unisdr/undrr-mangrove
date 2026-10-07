@@ -1,8 +1,8 @@
 {
   "status": "Current registry crosswalk; bounded source associations, no complete catalogue/native acceptance inferred",
   "auditedAtUTC": "2026-10-06T04:39:16.411306+00:00",
-  "committedSourceFamilies": 136,
-  "committedSourceVariants": 1890,
+  "committedSourceFamilies": 138,
+  "committedSourceVariants": 2053,
   "normalFamilies": 32,
   "normalVariants": 383,
   "historicalPublishedFamilies": 25,
@@ -703,7 +703,7 @@
       "label": "Icons system",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
+      "committedSourceFamilyIds": ["standalone-icon-source-candidate"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
@@ -837,7 +837,7 @@
       "label": "Menu Items source primitive",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
+      "committedSourceFamilyIds": ["menu-items-controlled-source-candidate"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
@@ -1093,11 +1093,11 @@
     "Composite publication and linked consumer restoration",
     "Human novice handoff and reduced maintenance merge acceptance"
   ],
-  "previousCommittedRevision": "c91aaa3949d36dfeb0c5849c89ac32b2f38b8c2d",
-  "registryRevisionScope": "This registration adds independently reviewed standalone Link1/18 and Arabic landing15/72; combined verification terminal exit0.",
-  "registrationVerification": "Root combined session25074 terminal exit0: deterministic136/1890 full source DTO and exact dependencies, source guards, actual source-only importer refusal before mutation, original9/28 scene lifecycle with zero-create repeats and retained Label overrides, and all CLI output/check/overwrite/staleness/source-path/argument guards. Dedicated all-five cohort lifecycles remain separate. No full native catalogue acceptance.",
-  "registryUpdatedAtUTC": "2026-10-06T19:06:13.592608+00:00",
-  "registryRevision": "This source136 registration commit; prior immutable source120 delivery remains c91aaa39.",
+  "previousCommittedRevision": "090b1d6ceb8b3eb3368d79720b3213eece78818f",
+  "registryRevisionScope": "This registration adds independently reviewed standalone Icon1/131 and controlled MenuItems1/32; combined verification terminal exit0.",
+  "registrationVerification": "Root combined session10692 terminal exit0: deterministic138/2053 full source DTO and exact dependencies, source guards, actual source-only importer refusal before mutation, original9/28 scene lifecycle with zero-create repeats and retained Label overrides, and all CLI output/check/overwrite/staleness/source-path/argument guards. Dedicated all-five cohort lifecycles remain separate. No full native catalogue acceptance.",
+  "registryUpdatedAtUTC": "2026-10-07T01:04:22.507661+00:00",
+  "registryRevision": "This source138 registration commit; prior immutable source136 delivery remains090b1d6c.",
   "reviewedRegisteredSource118Additions": {
     "layout-foundations": {
       "families": 3,
@@ -1185,5 +1185,24 @@
       "nativeSingleCollectionCapacityGate": "open",
       "provisionalNotoWeightMapping": "600 source mapped to Bold700; unresolved native correspondence"
     }
+  },
+  "registeredSource138Additions": {
+    "icon": {
+      "families": 1,
+      "variants": 131,
+      "sourceOnly": true,
+      "nativeAccepted": false
+    },
+    "menuItems": {
+      "families": 1,
+      "variants": 32,
+      "actualPreviewContextCorrected": true,
+      "authoredStory": false,
+      "publicPackageExport": false,
+      "visibleEditedReflowAccepted": false,
+      "nativeAccepted": false
+    },
+    "combinedRegistrationTerminal": true,
+    "originalSource136DeliveryPreserved": true
   }
 }
