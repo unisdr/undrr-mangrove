@@ -1,7 +1,0 @@
-This proposal preserves the original complete Horizontal/CTA foundation source document, production importer payload and actual import, corrected identity and six readonly foundation receipts. The earlier incorrect mgVariableId identity reader is retained as historical partial evidence; the corrected mgId read supplies the accepted identities.
-
-Run `python3 replay-archive.py` from any location. It verifies every original file hash and recomputes the full source/native comparison using archive-relative paths. It performs no native calls, modifies no source records and requires no path relocation. The deterministic verdict is regenerated in a retained isolated temporary copy and checked byte-for-byte. Original archive files remain untouched even if verification fails.
-
-Accepted scope: 70 roles, 350 values, 8 TEXT styles and 1 EFFECT style. Exact source or exact Float32 numbers and exact native alias UUID targets are checked. Raw scope order and entity getter differences remain recorded. Source offset metadata is distinct from native TextStyle fields. Applied 78 TEXT/rich ranges, image crop, scene anatomy, source pixels, ordinary lifecycle and publication remain open.
-
-Generator/mock files retain their original external preparation dependencies and are reference evidence; the self-contained replay verifies the actual raw source comparison. The source document is copied once. No large catalogue packet is included.

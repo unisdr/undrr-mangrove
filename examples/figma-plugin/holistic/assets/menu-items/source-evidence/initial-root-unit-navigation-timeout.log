@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/private/tmp/mangrove-retained-menu-items-preview-context-source-20261006/read-root-unit-contexts.py", line 9, in <module>
-    run('set','viewport',str(width),'420','1');run('open',u+'/?brand='+brand+'&script='+script)
-                                               ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/private/tmp/mangrove-retained-menu-items-preview-context-source-20261006/read-root-unit-contexts.py", line 4, in run
-    r=subprocess.run(['agent-browser','--session',session,*args],capture_output=True,text=True);assert r.returncode==0,r;return r.stdout
-                                                                                                       ^^^^^^^^^^^^^^^
-AssertionError: CompletedProcess(args=['agent-browser', '--session', 'mangrove-menu-items-preview-context-tag', 'open', 'http://127.0.0.1:57583/?brand=undrr&script=english'], returncode=1, stdout='', stderr='✗ Operation timed out. The page may still be loading or the element may not exist.\n')

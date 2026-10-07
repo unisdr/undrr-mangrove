@@ -1,7 +1,0 @@
-{
-  "inputReport": "actual-decoded.json",
-  "inputReportSHA256": "51225fb52c17e2efc7617f5079af358c0037753f8000c8d56bfba77f87573105",
-  "payloadBytes": 16637,
-  "payloadSHA256": "ccb219652de97f186f8ba80bbac377c7cf8db8552c2b30a45704b98ff6dbc133",
-  "scope": "Fresh all created IDs absent plus exact original374 ID/type/parent and sixteen summary projections only; not full-field or foundation replay."
-}

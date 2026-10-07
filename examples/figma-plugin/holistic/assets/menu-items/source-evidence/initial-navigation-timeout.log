@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "/private/tmp/mangrove-retained-menu-items-preview-context-source-20261006/capture-browser.py", line 16, in <module>
-    url=BASE+'/?brand='+brand+'&script='+script;call('set','viewport',str(width),'420','1');call('open',url);call('mouse','move','1','410');r=capture(brand,script,width,'initial')
-                                                                                            ~~~~^^^^^^^^^^^^
-  File "/private/tmp/mangrove-retained-menu-items-preview-context-source-20261006/capture-browser.py", line 5, in call
-    if r.returncode:raise RuntimeError(str(c)+r.stdout+r.stderr)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-RuntimeError: ['agent-browser', '--session', 'mangrove-menu-items-preview-context-tag', 'open', 'http://127.0.0.1:57583/?brand=undrr&script=english']✗ Operation timed out. The page may still be loading or the element may not exist.
-
