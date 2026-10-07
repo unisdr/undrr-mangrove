@@ -421,7 +421,7 @@ rounding or fixed-height patch.
 The ordinary UNDRR source-corrected rebuild now completes all two families and
 31 variants in the unpublished combined-card file. It updates 248 existing IDs
 and creates zero permanent nodes. Four named-font probes are removed in the
-same operation; their fresh committed absence check remains pending. Independent
+same operation; the separate fresh committed absence check subsequently passed. Independent
 review accounts for every one of the 84 changed fields across 18 nodes: the three
 owning main CTA instances and their three linked review counterparts widen from
 122px to 360px, with the corresponding sizing fields and badge/chevron positions.
@@ -434,7 +434,9 @@ The terminal diagnostic is closed and the file saved. A subsequent read-only
 cloud check confirms all three owning mobile CTAs at FILL/360px with badges at
 X337 in the [online rehearsal](https://www.figma.com/design/VCwJs8fTYXU8007BYYqqwp?node-id=2-258).
 This accepts the measured source correction and that narrow online geometry,
-not full native/cloud equality or source pixel equivalence. An explicit reviewed
-successor checkpoint and two zero-create ordinary repeats remain required;
-no new baseline is automatically adopted. Canonical integration and publication
-remain separate gates.
+not full native/cloud equality or source pixel equivalence. The corrected
+checkpoint is now explicitly adopted after a separate full read, and the first
+corrected ordinary repeat passed independent review. The second repeat and fresh
+probe cleanup remain pending. Canonical integration and publication are separate
+gates. See the [7 October parking point](PARKING-POINT-2026-10-07.md)
+for the current source delivery, full remaining scope and acceptance checklist.
