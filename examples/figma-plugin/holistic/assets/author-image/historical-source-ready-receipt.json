@@ -1,0 +1,309 @@
+{
+  "version": 1,
+  "scope": "External actual finite source producer and isolated opt-in node MULTIPLY copied-builder candidate; not portable/shared/native accepted",
+  "files": {
+    "PROPOSAL.md": {
+      "bytes": 6913,
+      "sha256": "62ea0a4984ed0aca5b772d7f617ffbb70cfb32524b6276796df9c31e33be9a0d"
+    },
+    "all-five-all-owning-lifecycle.log": {
+      "bytes": 891,
+      "sha256": "059a007f9a37ce74a819c498b66a37da4d11e3ff147ad47eb6ec3e6c3c103b91"
+    },
+    "archived-media-body-parity.json": {
+      "bytes": 2708,
+      "sha256": "18742624b99e03827785f9d769d4b68147dfbf2aa4d98e5e9095bbd6d4e5c6f9"
+    },
+    "builder-indexed-patch-proof.json": {
+      "bytes": 4188,
+      "sha256": "39f260ba5414531da6712fb4656b1418fb7eaac492c304831fdf735a74448175"
+    },
+    "builder-patch-proof.json": {
+      "bytes": 3946,
+      "sha256": "584372a58f4210196dc23daaef60aad43ac51b1f52b55160c4929cae0b328225"
+    },
+    "derive-profiles.py": {
+      "bytes": 3725,
+      "sha256": "815c6f99209c351e219b7aa03b1d8d827c5fd4385a776e769d48545f4eb9945d"
+    },
+    "exporter-validation.log": {
+      "bytes": 128,
+      "sha256": "862819c15a584421a3c00414ceb2c1e46b3c0480fa72b83b0c2fa5f6d203a369"
+    },
+    "final-guard-boundary-final.log": {
+      "bytes": 185,
+      "sha256": "acd9724a0ed743dda31264708c422052c3556fbf9643a873d464a42a0c54ce30"
+    },
+    "final-guard-boundary-proof.json": {
+      "bytes": 257,
+      "sha256": "a5061952739af6ee76c93d81a3bb8a4b3120417cd3cb341fbc01e525b09e32c3"
+    },
+    "final-guard-boundary.log": {
+      "bytes": 869,
+      "sha256": "c66614f66050d2fda5f86bbc00e640641d1a93fd2cb460a60c88b77b4ed54815"
+    },
+    "freeze-candidate.py": {
+      "bytes": 4802,
+      "sha256": "926e4f772b6366bd932de9bea161ce538b9c09841694c3335b555d18b3a485de"
+    },
+    "gradient-source-diagnostic.log": {
+      "bytes": 1083,
+      "sha256": "59175d92eb66f0da72c85185d7413f2b6713945cb7aef6d3d778baf13a79a253"
+    },
+    "historical-initial-role-per-owner-draft.cjs": {
+      "bytes": 15742,
+      "sha256": "971d82a69f244c62c2165d98deebab57b280ee97009e131e558d027a3d5a1549"
+    },
+    "historical-projected-document-before-final-freeze.json": {
+      "bytes": 4666454,
+      "sha256": "3ea039b5172d3c80130479df5c34570b9163534348e303902652eed188998863"
+    },
+    "indexed-lifecycle-undrr.log": {
+      "bytes": 147,
+      "sha256": "4c24f56d9d69db1eabcc9e5e820c7027e302fca63570aa075c7984439a2a1b06"
+    },
+    "initial-builder-after-source-css-serialization.log": {
+      "bytes": 359,
+      "sha256": "d9a69211204834c468f56c6e2f1778ef6f3e7b581b4de1f9c4fd606c4d0db1f0"
+    },
+    "initial-builder-unique-anatomy.log": {
+      "bytes": 571,
+      "sha256": "74eb64d0052ec5d8300e08e7e531ab22dc2941e26dc2f9823d715c2104ad14d8"
+    },
+    "initial-builder.log": {
+      "bytes": 892,
+      "sha256": "1c8df876ca72955e485f747b9b062a243c3f04b1bb39d5b00aafc5cbb9dc56b7"
+    },
+    "initial-paints-actual-owner-counts.log": {
+      "bytes": 834,
+      "sha256": "4c716d41e7ecab1ffa1cf528d0741a860ad951a5a877d454509459c80ad39b8b"
+    },
+    "initial-paints.log": {
+      "bytes": 179,
+      "sha256": "cd4ca4d681dd22ac495ad620001c1202340ebaa01d5537bb47d9830db2b3d8f3"
+    },
+    "initial-source-fields-lifecycle.log": {
+      "bytes": 584,
+      "sha256": "9570f4de44745d19238898c053c96ea5c18d6849df2849af7f660383212abcab"
+    },
+    "kit-builder-candidate.js": {
+      "bytes": 189673,
+      "sha256": "2315decdd4923030fdacc8fb5014904e17a33f35b8d21597122a17b98a66d044"
+    },
+    "kit-builder-indexed-candidate.js": {
+      "bytes": 189909,
+      "sha256": "61b40a68c4f566a0314be7cc3305fac3dc71c646007fa4a69f39722b209720fd"
+    },
+    "mock-builder-all-owning.cjs": {
+      "bytes": 7321,
+      "sha256": "520b41e996876023ef17ba2d635cfae7b0b1c5638ba7658d46f446d5b9350a0e"
+    },
+    "mock-builder-indexed.cjs": {
+      "bytes": 6788,
+      "sha256": "5187401a5591db18ec427fdb89828fd68996a12e6d78ad84c92f4cf7c1ecd0f2"
+    },
+    "mock-builder.cjs": {
+      "bytes": 6772,
+      "sha256": "38b1e6746777228eb91d151dea5e35afef277b8d86ed6f6626ba6343fbc43d82"
+    },
+    "mock-exporter-validation.cjs": {
+      "bytes": 693,
+      "sha256": "b67df83423fd102c6bb29e32b2b489025b4ca1f1c4dc5d5dcbda08e8e07efb33"
+    },
+    "mock-final-guard-boundary.cjs": {
+      "bytes": 3405,
+      "sha256": "801bbce720ffce64a2ad84f616e6d0a8fa3cc2ec41f7c0c74796e86f28adba64"
+    },
+    "mock-initial-paints.cjs": {
+      "bytes": 2756,
+      "sha256": "ec0a4754b439a6e8efe8401e425a1a81450261c9ed1a270ff9e6c239745a7277"
+    },
+    "mock-native-refusals.cjs": {
+      "bytes": 2631,
+      "sha256": "0fc24d0f672f7e1acc179c0a630877bcdbdeefa3f2f7d0d9af2c63d006cb12a1"
+    },
+    "mock-node-blend-indexed.cjs": {
+      "bytes": 4578,
+      "sha256": "e30867372751f23df54574a4ab4d0afc61f5e46e375351f42065f8645fd3f746"
+    },
+    "mock-node-blend.cjs": {
+      "bytes": 4570,
+      "sha256": "db27ace77a6154a6a17127ed226a4d01dc5a45b792f1fc18b7cfef08aff3c441"
+    },
+    "mock-source-refusals.cjs": {
+      "bytes": 1821,
+      "sha256": "191791a842bc73e60c0b90ddca6b9ccf420e3c817d583bc8959fa52877259a6f"
+    },
+    "native-blend-inheritance-source-fields.log": {
+      "bytes": 16,
+      "sha256": "d92f2b4b840129295237ae2c1629e790e84cb35ad9093ef58d67bc4a29b231d5"
+    },
+    "native-refusals.log": {
+      "bytes": 204,
+      "sha256": "7c2f5f4ceb814a0e3e2350ad5632a095e4c0e6e341037067976b5786a319976a"
+    },
+    "node-blend-capability-indexed.cjs": {
+      "bytes": 4038,
+      "sha256": "2f85cd2db07f212ee9c1bae5ad37c4afa91f7e1a9e684155d657692dc24b843d"
+    },
+    "node-blend-capability.cjs": {
+      "bytes": 3991,
+      "sha256": "347d9ea1b080d372b177f583bff6e4fbd52189030165295591f119d98a0709a9"
+    },
+    "node-blend-indexed-pure.log": {
+      "bytes": 225,
+      "sha256": "914b8d752b82798a0464ea4b168116b97409923868e3bce43ec15eaae62c88a5"
+    },
+    "prepare-builder.py": {
+      "bytes": 4432,
+      "sha256": "5357e819f3591bacc30eaa309ab350c4828069196652d15a089ebaab0a95c04e"
+    },
+    "prepare-indexed-builder.py": {
+      "bytes": 4684,
+      "sha256": "b8334fe4764942a00b84ceda86fa182f7b6343da13dd539560d13c40fae2674e"
+    },
+    "profiles.json": {
+      "bytes": 31355491,
+      "sha256": "dba9a628f694b5dee887746c6ddd93fbdb4f81f9add6e8c4c62061893a0c3b20"
+    },
+    "projected-document.json": {
+      "bytes": 10960036,
+      "sha256": "7589910f3c20ccca0375435466377eb1b0f2d518ae7233ae0203716f1382c2d9"
+    },
+    "source-census.json": {
+      "bytes": 444,
+      "sha256": "cad1432dee5f4c7741e295eb7698515cfeb580e3a25417d08e2a65e78b86a90a"
+    },
+    "source-evidence-reference-pins.json": {
+      "bytes": 7145,
+      "sha256": "af6e28c9701390ac743e206bfd86c63ed191342d5047dcdb384caab77522d0fe"
+    },
+    "source-recipes.cjs": {
+      "bytes": 19608,
+      "sha256": "bb5dc6d95252816d35696517f7f1013370e4ac0cfe9c29a113fa67d7b998038d"
+    },
+    "source-refusals-final.log": {
+      "bytes": 93,
+      "sha256": "88e51c501bd23543655ac1db3d05826c2a05412b53fbdddbb255400038968fec"
+    },
+    "source-refusals-font-guards.log": {
+      "bytes": 93,
+      "sha256": "a51d1836c615a74d90b96e04cdfaeee4c5d089be16b4999faf7f14b8438e436d"
+    },
+    "source-refusals.log": {
+      "bytes": 93,
+      "sha256": "a51d1836c615a74d90b96e04cdfaeee4c5d089be16b4999faf7f14b8438e436d"
+    },
+    "supplemental-source-font-input-pins.json": {
+      "bytes": 3222,
+      "sha256": "64d153e542e8c182b985a504d7617d7f0f2b212a4897dcbf15cfdfa0adb4947b"
+    }
+  },
+  "fileCount": 49,
+  "sourceEvidenceReferenceManifest": "source-evidence-reference-pins.json",
+  "rawSourcePins": 300,
+  "census": {
+    "families": 1,
+    "presets": 216,
+    "sourceContexts": 300,
+    "sourceOwnerStates": 1080,
+    "variablesTotal": 687,
+    "textStylesTotal": 123,
+    "effectStylesTotal": 11,
+    "newVariables": 167,
+    "newTextStyles": 21,
+    "newEffectStyles": 3,
+    "mastersWithNoImage": 60,
+    "mastersWithAvatarGradientRings": 156,
+    "mastersWithJPEG": 120,
+    "mastersWithActualSVGPlaceholder": 36,
+    "exposedOwningConsumerOverrides": 648,
+    "nativeAccepted": false
+  },
+  "runtimeInputs": {
+    "examples/figma-plugin/kit-builder.js": {
+      "bytes": 186793,
+      "sha256": "89c35a87558afd69c9e9c27f750b30ce7a26078597e96b658d95772f0cad6e98"
+    },
+    "examples/figma-plugin/importer.js": {
+      "bytes": 34934,
+      "sha256": "96e1382ed7fff92ca4414ad274cc08c1a63d6a3198c2e02ef86f584657b35cb7"
+    },
+    "examples/figma-plugin/dev/mock-kit.cjs": {
+      "bytes": 99768,
+      "sha256": "3f0b260e9968875b9d56e2e6e520c191bfaefb74da844f3bf7770cd7b763c84a"
+    },
+    "examples/figma-plugin/dev/mock-search-results.cjs": {
+      "bytes": 21568,
+      "sha256": "2fcb82547e7fbfae55830830bcba4689da83ae13bc6fd7eb2ab36d018f70fea6"
+    },
+    "examples/figma-plugin/mangrove-variables.json": {
+      "bytes": 14776426,
+      "sha256": "4525e54bda48ecf28fc2503e534a132658ebc4ab7f26d8845be07713bc965943"
+    },
+    "scripts/build-figma-component-drafts.cjs": {
+      "bytes": 20803,
+      "sha256": "70db521cf4258c546689cc7dca3e22b2754632e37911d77b2d4b910b0d7fa86c"
+    }
+  },
+  "checks": {
+    "allFiveAllOwningLifecycle": {
+      "session": 45430,
+      "exitCode": 0,
+      "log": "all-five-all-owning-lifecycle.log",
+      "initialSourceMasters": 216,
+      "unchangedZeroCreateBuilds": 10,
+      "editedOwnConsumerZeroCreateBuilds": 10,
+      "consumerOverridesPerMode": 648,
+      "finalSourceGuardAdditionsAfterRunSeparate": true
+    },
+    "allFiveInitialPaints": {
+      "session": 40491,
+      "exitCode": 0,
+      "log": "initial-paints-actual-owner-counts.log"
+    },
+    "nativeRefusalFixture": {
+      "session": 73011,
+      "exitCode": 0,
+      "log": "native-refusals.log",
+      "noNativeCalls": true
+    },
+    "typedSourceRefusals": {
+      "session": 92900,
+      "exitCode": 0,
+      "log": "source-refusals-final.log",
+      "callerPreservingCases": 16
+    },
+    "finalFontDeclarationGuardProof": {
+      "session": 73578,
+      "exitCode": 0,
+      "log": "final-guard-boundary-final.log",
+      "historicalExecutingProducerHashRecovered": false
+    },
+    "indexedPureHelper": {
+      "session": 12405,
+      "exitCode": 0,
+      "log": "node-blend-indexed-pure.log"
+    },
+    "unchangedExporterValidation": {
+      "session": 30780,
+      "exitCode": 0,
+      "log": "exporter-validation.log",
+      "families": 1,
+      "variants": 216
+    },
+    "reverseCopiedProductionBytesExact": true,
+    "interruptedHistoricalFullScan": {
+      "session": 83735,
+      "exitCode": 130,
+      "scope": "Initial application only, deliberately interrupted; not full lifecycle acceptance"
+    }
+  },
+  "sourceCandidateRasterAccepted": false,
+  "nativeAccepted": false,
+  "repoWritten": false,
+  "registryWritten": false,
+  "sharedRuntimeIntegrated": false,
+  "sharedCompilerPruningAccepted": false,
+  "independentPeerPending": true
+}

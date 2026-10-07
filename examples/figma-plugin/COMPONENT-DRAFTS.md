@@ -281,3 +281,22 @@ publication and consumers remain separate gates. The immutable source136
 delivery from clean090b1d6c passed independent packet and checksum review;
 source120 and earlier artifacts remain preserved. No canonical library change
 is implied.
+
+## AuthorImage source registration
+
+This source registration adds the independently reviewed AuthorImage1/216
+proposal to saved source138/2053, giving139 families/2269 finite variants.
+The portable producer retains300 actual source contexts, whole Name/Title/Organization
+owners, source portraits and initialized SVG placeholders. Its source validation
+and isolated all-five owning-consumer lifecycle have separate evidence.
+
+The proposed MULTIPLY helper and copied builder remain isolated evidence assets;
+they are not installed in the shared builder. Full combined registration checks
+passed with terminal exit0: complete DTO/dependency/source guards, actual importer
+refusal before mutation, the original28-variant edited-consumer repeat fixture,
+and CLI output/check/overwrite/staleness/source-path/argument guards.
+Native media crop, SVG/ring/gradient paint, font/glyph correspondence,
+visible edited-content reflow, ordinary native rebuilds and publication remain
+open. Source packets remain non-importable. The immutable source138 delivery
+from clean ca4dd702 passed independent package review and is retained alongside
+the source136 delivery and all earlier artifacts.

@@ -1,0 +1,18 @@
+{
+  "families": 1,
+  "presets": 216,
+  "sourceContexts": 300,
+  "sourceOwnerStates": 1080,
+  "variablesTotal": 687,
+  "textStylesTotal": 123,
+  "effectStylesTotal": 11,
+  "newVariables": 167,
+  "newTextStyles": 21,
+  "newEffectStyles": 3,
+  "mastersWithNoImage": 60,
+  "mastersWithAvatarGradientRings": 156,
+  "mastersWithJPEG": 120,
+  "mastersWithActualSVGPlaceholder": 36,
+  "exposedOwningConsumerOverrides": 648,
+  "nativeAccepted": false
+}

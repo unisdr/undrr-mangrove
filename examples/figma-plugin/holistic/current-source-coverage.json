@@ -1,8 +1,8 @@
 {
   "status": "Current registry crosswalk; bounded source associations, no complete catalogue/native acceptance inferred",
   "auditedAtUTC": "2026-10-06T04:39:16.411306+00:00",
-  "committedSourceFamilies": 138,
-  "committedSourceVariants": 2053,
+  "committedSourceFamilies": 139,
+  "committedSourceVariants": 2269,
   "normalFamilies": 32,
   "normalVariants": 383,
   "historicalPublishedFamilies": 25,
@@ -607,7 +607,7 @@
       "label": "Author Image",
       "sourceUnitKind": "reusable-component",
       "normalFamilyIds": [],
-      "committedSourceFamilyIds": [],
+      "committedSourceFamilyIds": ["author-image-source"],
       "stagedAdditionalFamilyIds": [],
       "sourceFingerprintsMatchHistoricalAudit": true,
       "complete": false
@@ -1093,11 +1093,11 @@
     "Composite publication and linked consumer restoration",
     "Human novice handoff and reduced maintenance merge acceptance"
   ],
-  "previousCommittedRevision": "090b1d6ceb8b3eb3368d79720b3213eece78818f",
-  "registryRevisionScope": "This registration adds independently reviewed standalone Icon1/131 and controlled MenuItems1/32; combined verification terminal exit0.",
-  "registrationVerification": "Root combined session10692 terminal exit0: deterministic138/2053 full source DTO and exact dependencies, source guards, actual source-only importer refusal before mutation, original9/28 scene lifecycle with zero-create repeats and retained Label overrides, and all CLI output/check/overwrite/staleness/source-path/argument guards. Dedicated all-five cohort lifecycles remain separate. No full native catalogue acceptance.",
-  "registryUpdatedAtUTC": "2026-10-07T01:04:22.507661+00:00",
-  "registryRevision": "This source138 registration commit; prior immutable source136 delivery remains090b1d6c.",
+  "previousCommittedRevision": "ca4dd70245fc623ee98a938e0675efe47c68b165",
+  "registryRevisionScope": "This registration adds independently reviewed AuthorImage1/216 source recipes; combined verification terminal exit0. Shared MULTIPLY capability remains unadopted.",
+  "registrationVerification": "Root combined session85246 terminal exit0: deterministic139/2269 full source DTO and exact dependencies, source guards, actual source-only importer refusal before mutation, original9/28 scene lifecycle with zero-create repeats and retained Label overrides, and all CLI output/check/overwrite/staleness/source-path/argument guards. Dedicated all-five cohort lifecycles remain separate. No full native catalogue acceptance.",
+  "registryUpdatedAtUTC": "2026-10-07T04:05:46.055892+00:00",
+  "registryRevision": "This source139 registration commit; prior immutable source138 delivery remains ca4dd702.",
   "reviewedRegisteredSource118Additions": {
     "layout-foundations": {
       "families": 3,
@@ -1204,5 +1204,17 @@
     },
     "combinedRegistrationTerminal": true,
     "originalSource136DeliveryPreserved": true
+  },
+  "registeredSource139Addition": {
+    "authorImage": {
+      "families": 1,
+      "variants": 216,
+      "sourceOnly": true,
+      "isolatedBlendCapabilityAccepted": true,
+      "sharedBlendCapabilityAdopted": false,
+      "nativeAccepted": false
+    },
+    "combinedRegistrationTerminal": true,
+    "source138DeliveryPreserved": true
   }
 }

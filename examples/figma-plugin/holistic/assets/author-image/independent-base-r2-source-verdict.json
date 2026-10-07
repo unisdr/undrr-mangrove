@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "acceptedBoundedSourceCandidate": true,
+  "acceptedR2ChangedEdgeCapabilityPreparation": true,
+  "originalRuntimePreflightAccepted": false,
+  "originalFinding": "Late genuine linked current-page INSTANCE addition escaped original awaited preflight; historical counterexample preserved",
+  "source": {
+    "familyCount": 1,
+    "finiteVariants": 216,
+    "actualContexts": 300,
+    "owningStates": 1080,
+    "mastersWithoutImage": 60,
+    "mastersJPEG": 120,
+    "mastersActualSVG": 36,
+    "ownNameTitleOrganizationOverridesPerMode": 648,
+    "allFiveRecordedLifecycle": "Inherited exact frozen owner terminal receipt; independently reviewed test and log, no broad duplicate",
+    "currentSuccessfulProducerGuardDelta": "Independently reran positive whole DTO equality and two font input drift refusals; historical executing module hash not recovered",
+    "allLogicalCopyAndUTF16Ranges": "1080 rows/12960 independent checks, source language/dir/bodytheme vs raw actual snapshots exact",
+    "allSourceProfilesDerivedAgain": "Isolated replay31MB artifact byte exact",
+    "actualExporterValidator": "Independent terminal0 at genuine1/216 bounded draft scope"
+  },
+  "runtime": {
+    "copiedBuilderReverseProductionBytesExact": true,
+    "productionSHA256": "89c35a87558afd69c9e9c27f750b30ce7a26078597e96b658d95772f0cad6e98",
+    "onlyThreeSelectedOptInHooksAndExplicitFixtureBlock": true,
+    "helperR2ChangedEdge": "Typed unique current-page INSTANCE id membership checked before/after each awaited main and final sync; fresh equivalent-ID handle leaf checked; exact target/PAGE guards and setter attempt journals retained",
+    "changedEdgeTests": "Independent original/indexed pure suites and five membership cases terminal0; no R2 broad lifecycle claim"
+  },
+  "independentRuns": [
+    {
+      "test": "mock-node-blend-indexed.cjs",
+      "exitCode": 0
+    },
+    {
+      "test": "mock-source-refusals.cjs",
+      "exitCode": 0,
+      "cases": 16
+    },
+    {
+      "test": "mock-exporter-validation.cjs",
+      "exitCode": 0
+    },
+    {
+      "test": "mock-final-guard-boundary.cjs",
+      "exitCode": 0
+    },
+    {
+      "test": "derive-profiles.py",
+      "sessionId": 43323,
+      "exitCode": 0
+    },
+    {
+      "test": "audit-projections.py",
+      "sessionId": 74474,
+      "exitCode": 0
+    },
+    {
+      "test": "R2 mock-late-instance/original/indexed",
+      "exitCode": 0
+    }
+  ],
+  "remainingGates": [
+    "Portable repository path/body archives and independent portability review",
+    "Shared compiler absent-feature exact pruning/runtime ownership integration",
+    "Native MULTIPLY/image crop/SVG placeholder paint/gradient transform/ring/focus raster",
+    "Eight failed browser candidate pixel predicates retained; no source raster acceptance",
+    "Native exact fonts/axes/bytes/Noto requested500 contextual400/Japanese fallback/glyph/bidi",
+    "Actual visible edited consumer flex/reflow and generic React props/runtime navigation/tooltip/ARIA",
+    "Native effect spread2/4 and other original rendering fields; no cross-cohort normalization",
+    "Canonical/publication/library acceptance"
+  ],
+  "nativeAccepted": false,
+  "repoOrFigmaWritten": false,
+  "r2ReadyReceipt": {
+    "path": "/tmp/mangrove-author-image-late-instance-guard-r2-20261007/ready-receipt.json",
+    "bytes": 3423,
+    "sha256": "efe97aed8fa6ac1b75ef499c3464ee5bb384a55edf84d5927e3e5a6de3c4fc79"
+  },
+  "baseReadyReceipt": {
+    "path": "/tmp/mangrove-author-image-source-recipes-20261006/frozen-ready-receipt.json",
+    "bytes": 10823,
+    "sha256": "c99acd35813ece1728c3bb324ac96db8fdbc8cd324663e888851274f35a6b102"
+  },
+  "independentEvidence": [
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/pin-audit.json",
+      "bytes": 39561,
+      "sha256": "f563f8d66a0ecdb9c85d4ff2ed93568bef7a71b4185e24ecc2d389844a07d6c5"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/r2-pin-audit.json",
+      "bytes": 1480,
+      "sha256": "4c84148894176a0ddc29f7e752b2c5006ce6e869652ad3bd4958125d40663ffc"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/source-projection-verdict.json",
+      "bytes": 860,
+      "sha256": "5c6f56f254ef52a136dc08fbe7002d09d7f968d9f78cd1cc15c81eb47e06eadd"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/independent-builder-reverse-proof.json",
+      "bytes": 194,
+      "sha256": "a391dab773139e5264794e8e4ad18298a440afa6f314dcfffde7207571ceda25"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/late-instance-counterexample.json",
+      "bytes": 542,
+      "sha256": "46ac1879a3330094a8e8597da49721e2b0fec53c3427a88eced362d8e1913876"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/mock-node-blend-indexed.cjs.log",
+      "bytes": 225,
+      "sha256": "914b8d752b82798a0464ea4b168116b97409923868e3bce43ec15eaae62c88a5"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/mock-source-refusals.cjs.log",
+      "bytes": 93,
+      "sha256": "88e51c501bd23543655ac1db3d05826c2a05412b53fbdddbb255400038968fec"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/mock-exporter-validation.cjs.log",
+      "bytes": 128,
+      "sha256": "862819c15a584421a3c00414ceb2c1e46b3c0480fa72b83b0c2fa5f6d203a369"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/mock-final-guard-boundary.cjs.log",
+      "bytes": 185,
+      "sha256": "acd9724a0ed743dda31264708c422052c3556fbf9643a873d464a42a0c54ce30"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/derive-profiles.log",
+      "bytes": 90,
+      "sha256": "65e1e8dc053ce8ae5c78b5c1a393371adc1058fbd9b48720c7ed5356d775c843"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/audit-projections.log",
+      "bytes": 802,
+      "sha256": "929118cc1170a3f3f7fca9eba373ace0eff5654c95f3029ea96a846d1c2794c3"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/r2-mock-late-instance.cjs.log",
+      "bytes": 143,
+      "sha256": "d689b84ffcdb238fb569f4a9a51665a3901c0d067e6617c3c21881864eee56c9"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/r2-mock-node-blend.cjs.log",
+      "bytes": 225,
+      "sha256": "914b8d752b82798a0464ea4b168116b97409923868e3bce43ec15eaae62c88a5"
+    },
+    {
+      "path": "/tmp/mangrove-author-image-independent-tag-20261007/r2-mock-node-blend-indexed.cjs.log",
+      "bytes": 225,
+      "sha256": "914b8d752b82798a0464ea4b168116b97409923868e3bce43ec15eaae62c88a5"
+    }
+  ]
+}

@@ -28,6 +28,11 @@ const recipes = [
     'buildMenuItemsRecipes',
   ],
   [
+    'author-image-source',
+    './figma-author-image-recipes.cjs',
+    'buildAuthorImageRecipes',
+  ],
+  [
     'standalone-link',
     './figma-standalone-link-recipes.cjs',
     'buildStandaloneLinkRecipes',

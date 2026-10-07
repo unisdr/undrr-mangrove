@@ -1,0 +1,27 @@
+{
+  "productionBuilder": {
+    "path": "/Users/khawkins/Documents/git/drupal-base/.ddev/related-repos/undrr-mangrove/examples/figma-plugin/kit-builder.js",
+    "bytes": 186793,
+    "sha256": "89c35a87558afd69c9e9c27f750b30ce7a26078597e96b658d95772f0cad6e98"
+  },
+  "candidate": {
+    "bytes": 189909,
+    "sha256": "61b40a68c4f566a0314be7cc3305fac3dc71c646007fa4a69f39722b209720fd"
+  },
+  "patches": [
+    {
+      "before": "  let frozenSourcePlans = null;",
+      "after": "  let sourceBlendPlans = [];\n  const sourceBlendTargetPage = figma.currentPage;\n  let sourceBlendInventory=new Map();\n  const sourceBlendContext = {\n    assertScope() {\n      if (typeof mgAssertExperimentOperationTarget !== 'function')\n        throw new Error('Opt-in node blend requires trusted experiment target guard');\n      mgAssertExperimentOperationTarget();\n      if (figma.currentPage !== sourceBlendTargetPage || sourceBlendTargetPage.type !== 'PAGE')\n        throw new Error('Opt-in node blend captured PAGE changed');\n    },\n    identity: node => mgReadIdentity(node, MG_KIT_KEY),\n    refreshInventory() {\n      const next=new Map();\n      for(const node of page.findAll(()=>true)){const key=mgReadIdentity(node,MG_KIT_KEY);if(!next.has(key))next.set(key,[]);next.get(key).push(node);}\n      sourceBlendInventory=next;\n    },\n    mainByKey: key => (sourceBlendInventory.get(key)||[]).filter(node=>node.type==='COMPONENT'),\n    nodesByKey: key => sourceBlendInventory.get(key)||[],\n    instances: () => page.findAllWithCriteria({ types: ['INSTANCE'] }),\n    recordAttempt: entry => sourceBlendAttempts.push(entry),\n  };\n  const sourceBlendAttempts = [];\n  async function checkSourceBlends(phase) {\n    if (!MG_NODE_BLEND_ENABLED || !sourceBlendPlans.length) return true;\n    try { await mgNodeBlend.preflight(sourceBlendPlans, sourceBlendContext); return true; }\n    catch (error) { result.errors.push(reportError(error)); result.audit.push({status:'blocked-source-node-blend',phase,reason:reportError(error)}); return false; }\n  }\n  if (MG_NODE_BLEND_ENABLED) {\n    try {\n      const selectedBlendFamilies = mgMaintenanceDependencyIds(recipes, selectedFamilyIds);\n      const blendRecords = [];\n      function blendTree(tree, key, ownerKey) {\n        blendRecords.push({tree,key,ownerKey});\n        for (const child of tree.children || []) blendTree(child, key+'/'+(child.id||child.key), ownerKey);\n      }\n      for (const family of recipes.filter(f => selectedBlendFamilies.includes(f.id)))\n        for (const variant of family.variants) {\n          const ownerKey='family/'+family.id+'/variant/'+variant.id;\n          blendTree(variant.tree,ownerKey,ownerKey);\n        }\n      sourceBlendPlans=mgNodeBlend.sourcePlans(blendRecords,mgGradientPlan);\n      if(sourceBlendPlans.length) result.audit.push({status:'source-node-blend-attempt-journal',attempts:sourceBlendAttempts});\n    } catch(error) { result.errors.push(reportError(error)); result.audit.push({status:'blocked-source-node-blend',phase:'source',reason:reportError(error)}); return result; }\n    if (!(await checkSourceBlends('before-fonts'))) return result;\n  }\n  let frozenSourcePlans = null;"
+    },
+    {
+      "before": "  // Restrict effects to the recipes being prepared, avoiding unrelated updates.",
+      "after": "  if (!(await checkSourceBlends('before-style-import'))) return result;\n  // Restrict effects to the recipes being prepared, avoiding unrelated updates."
+    },
+    {
+      "before": "      if ('strokes' in node) paint(node, 'strokes', spec.stroke);",
+      "after": "      if (MG_NODE_BLEND_ENABLED && spec.blendMode !== undefined) {\n        const blendPlan=sourceBlendPlans.find(plan=>plan.key===key);\n        if(!blendPlan) throw new Error('Opt-in node blend missing guarded source plan');\n        mgNodeBlend.apply(node,blendPlan,{...sourceBlendContext,fresh});\n      }\n      if ('strokes' in node) paint(node, 'strokes', spec.stroke);"
+    }
+  ],
+  "reverseProductionBytesExact": true,
+  "scope": "External source-only copied-builder opt-in prototype; compiler absent-feature pruning and production/runtime registration are not implemented or accepted."
+}

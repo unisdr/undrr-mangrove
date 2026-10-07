@@ -1,0 +1,9 @@
+{
+  "guardOnlySourceDelta": true,
+  "positiveWholeDTOExact": true,
+  "fontDeclarationByteDriftRefusals": 2,
+  "callerReferencesPreserved": true,
+  "indexedOnlyRefreshHook": true,
+  "historicalExecutedModuleHashRecovered": false,
+  "nativeAccepted": false
+}

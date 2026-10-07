@@ -1,0 +1,77 @@
+{
+  "scope": "Current authoritative source font declarations/role definitions/bundled requested-face resources; supplementary retrospective source guards, not original-capture body or native-font byte acceptance",
+  "pins": {
+    "stories/assets/fonts/noto-sans-arabic/noto-sans-arabic.scss": {
+      "bytes": 4801,
+      "sha256": "dbe3869243dddc0a58fd8369bdf623871151549293c091d481705cf20256a31f"
+    },
+    "stories/assets/fonts/roboto/roboto.scss": {
+      "bytes": 351,
+      "sha256": "b881ae0ebeb56f49523c791faafc1a10299fc1d7a875fa91c028b06164b8197c"
+    },
+    "stories/assets/fonts/roboto/sass/_Black.scss": {
+      "bytes": 195,
+      "sha256": "1d6ef057178c2e90eb539ccfa3b491121465388c86df9396a23e61ce672306ba"
+    },
+    "stories/assets/fonts/roboto/sass/_BlackItalic.scss": {
+      "bytes": 235,
+      "sha256": "32fd04227e1267b18d512cee32b4ac07fb527c0d9c3d9f0514f3e12b5ee2ca26"
+    },
+    "stories/assets/fonts/roboto/sass/_Bold.scss": {
+      "bytes": 354,
+      "sha256": "9f24cf0a077b2087c47c55bbb665a4086a38818680eee9ca0dfac4c0ce0d273e"
+    },
+    "stories/assets/fonts/roboto/sass/_BoldItalic.scss": {
+      "bytes": 420,
+      "sha256": "94f40e36a612417be36294f5f8fb084c73ccce4d63cc5456fdaa80b738ad1355"
+    },
+    "stories/assets/fonts/roboto/sass/_Italic.scss": {
+      "bytes": 364,
+      "sha256": "bbf29ea2da948bbd1827da7c8f1c7c95e3e8e74584445663670ded67fcbf8696"
+    },
+    "stories/assets/fonts/roboto/sass/_Light.scss": {
+      "bytes": 195,
+      "sha256": "6bf61d8ef2335ffd7b24ae23a8a57b365e9b34c5903ea522302af70dd8157c79"
+    },
+    "stories/assets/fonts/roboto/sass/_LightItalic.scss": {
+      "bytes": 235,
+      "sha256": "8dd3fdcbffe81a565626b704042d2f78da559929f35ea7fbff46b1af573665ce"
+    },
+    "stories/assets/fonts/roboto/sass/_Medium.scss": {
+      "bytes": 198,
+      "sha256": "a4604935605d15b5eeb12d7f8700e91f637ef5b545dd757ac232953ffdece828"
+    },
+    "stories/assets/fonts/roboto/sass/_MediumItalic.scss": {
+      "bytes": 238,
+      "sha256": "2222a82fffa39f7d206e5c65f328c071953b87ff1017b879ba5cec4dad4496c9"
+    },
+    "stories/assets/fonts/roboto/sass/_Regular.scss": {
+      "bytes": 368,
+      "sha256": "cb27bc0dd02ba21b4dda3249a59e352e0a42c5ea45b83d7cba0a1a2cb79f5845"
+    },
+    "stories/assets/fonts/roboto/sass/_Thin.scss": {
+      "bytes": 192,
+      "sha256": "facf43a4cf07c2d0c10599ce30c8cea4bd548dc2093b5efbf101bff4be715f10"
+    },
+    "stories/assets/fonts/roboto/sass/_ThinItalic.scss": {
+      "bytes": 232,
+      "sha256": "7ed1ce2b3c874ee702a9403be9662effadd71e3fa915ffc7f9931ffbf23796db"
+    },
+    "stories/assets/fonts/roboto/sass/_mixins.scss": {
+      "bytes": 332,
+      "sha256": "da42b1344b5a5ca7c059c96374b92286381a0a36e2d0ffadefe30683c2e916a7"
+    },
+    "stories/assets/fonts/roboto/sass/_variables.scss": {
+      "bytes": 63,
+      "sha256": "ce141aa75263b9b51a301463ddc4ac755458baf84c6636f854852394a6190ea6"
+    },
+    "stories/assets/fonts/roboto/sass/roboto.scss": {
+      "bytes": 281,
+      "sha256": "75c8844d28fcac10876344d0690fe21b9d99c28e486c824d00f6262aaf595919"
+    },
+    "stories/assets/scss/_variables.scss": {
+      "bytes": 21591,
+      "sha256": "2c9ce7c4b18d63243e45ad2eaed07c9a6284c0e57ef79a3dc3d37f8521cccdfa"
+    }
+  }
+}
