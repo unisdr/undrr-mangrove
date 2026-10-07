@@ -436,9 +436,11 @@ X337 in the [online rehearsal](https://www.figma.com/design/VCwJs8fTYXU8007BYYqq
 This accepts the measured source correction and that narrow online geometry,
 not full native/cloud equality or source pixel equivalence. The corrected
 checkpoint is now explicitly adopted after a separate full read. Two corrected
-ordinary repeats pass independent review, and a fresh read verifies the first
-eight actual probes absent locally. The second repeat's four probes still need
-a fresh absence check. Rendering, edited flow, full persistence, canonical
-integration and publication remain separate gates. Follow the [resumed Card/CTA
+ordinary repeats pass independent review. A separate read-only export now
+verifies all 12 actual probes absent and the full corrected checkpoint unchanged
+around all 31 native PNG exports. Independent review validates original PNG bytes,
+dimensions and current font/vector/image-paint observations. Source rendering,
+edited flow, full persistence, canonical integration and publication remain
+separate gates. Follow the [resumed Card/CTA
 release work](CARD-CTA-RELEASE-2026-10-07.md) for current execution. See the [7 October parking point](PARKING-POINT-2026-10-07.md)
 for the current source delivery, full remaining scope and acceptance checklist.

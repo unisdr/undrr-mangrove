@@ -8,7 +8,7 @@ The unpublished [combined-card rehearsal](https://www.figma.com/design/VCwJs8fTY
 
 Two ordinary corrected rebuilds now pass independent review. Each creates no permanent nodes, updates the same 248 existing IDs and preserves the entire recorded 391-node scene, 20 genuine component links, 70 variables/350 mode values, eight TEXT styles and one EFFECT style exactly. Existing image bytes and four SVG owners/16 vectors are reused. These are recorded-state stability checks, not source pixel, font, edited-flow or publication acceptance.
 
-A separate native read after the first repeat verifies the corrected full checkpoint and all eight actual probe IDs from the correction and first repeat absent. The second repeat's actual probes `7:555`, `7:556`, `7:557` and `7:558` were removed and looked up as null within that operation. Their separate fresh absence check remains open. The planned combined read-only export derives the full 12-ID union from actual journals, captures all 31 native PNGs and verifies the protected full checkpoint around the operation.
+A separate read-only native operation now verifies all 12 actual probe IDs from the correction and both repeats absent, including `7:555` through `7:558`. Independent review confirms the full corrected checkpoint unchanged before and after all 31 complete native PNG exports. The report retains the exact 143 TEXT font/range observations, 16 VECTOR paths/networks and 12 IMAGE paint observations. No fonts were loaded or scene nodes changed. Against the previous native PNG cohort, 28 images are byte-identical; only the three corrected mobile Cards changed. This accepts evidence collection and fresh local cleanup, not source pixel, font, edited-flow or publication equivalence.
 
 The unchanged runner embeds its historical association receipt. Execution used a separate fresh visible target/PAGE association and independently accepted current checkpoint; neither the old receipt nor original uncorrected repeats substituted for that evidence. Raw reports remain unchanged.
 
@@ -19,8 +19,9 @@ Figma displayed a connection issue affecting saving during the second operation.
 - [x] Reconfirm desktop control and fresh actual target/PAGE association.
 - [x] Independently verify the fresh corrected checkpoint and first eight probe IDs absent locally.
 - [x] Complete and independently review two corrected ordinary zero-permanent-create rebuilds.
-- [ ] Separately verify all actual probe IDs absent after the second repeat.
-- [ ] Export and compare corrected native/source rendering for all 31 variants, retaining failures and original images.
+- [x] Separately verify all actual probe IDs absent after the second repeat.
+- [x] Export and independently verify all 31 corrected native PNGs with protected-state and raw-byte checks.
+- [ ] Compare corrected native/source rendering for all 31 variants, retaining failures and original images.
 - [ ] Verify supported genuine owning edits, reflow, links and current font/script boundaries.
 - [ ] Resolve persistence with fresh evidence before canonical release operations.
 - [ ] Capture canonical descendants, property references, current fonts, foundations and affected effect users; check native private/shared identity conflicts.
@@ -31,7 +32,7 @@ Figma displayed a connection issue affecting saving during the second operation.
 
 Existing canonical `family/card-horizontal` and the new `family/horizontal-book-card` have different contracts. Add the new family separately and retain the old set/component keys. Editorial CTA's 23 IDs/names match; preserve its canonical keys and `Label#23:632` subject to actual descendant compatibility. The source raised shadow declares spread 1 while historical canonical reads showed 0. Fresh style/alias/user closure and explicit reconciliation are required before any shared-style change.
 
-The first bounded canonical descendant read succeeds for the default short CTA and observes the genuine Label property reference and current Roboto Bold axes. The next variant exceeds the cloud bridge's 19,000-byte output limit and explicitly refuses complete acceptance. Its 22,081-byte projection needs lossless output partitions. No fields were silently omitted, no canonical scene changes were made and no integration readiness is inferred from the successful first variant.
+The first bounded canonical descendant read succeeds for the default short CTA and observes the genuine Label property reference and current Roboto Bold axes. The next variant exceeded the cloud bridge's 19,000-byte output limit and explicitly refused complete acceptance. Its complete 22,081-byte report has now been recovered through three independently reviewed, hash-checked lossless partitions. Each part repeats the full guarded read and refuses changed observations; reassembly verifies the original whole hash. Independent review accepts the actual full report and bounded owning identity/property compatibility for the first two variants. The remaining 21 variants and complete integration compatibility are still pending. No fields were silently omitted and no canonical scene changes were made.
 
 Known visual limits remain explicit: the source/native title allocation differs by 0.25px; Long CTA masters at 260px use default copy and are not equivalent to the French edited review copy. Loaded font names do not establish font bytes or glyph equivalence. Source/native crop origins, effects and media must be compared under declared rules rather than shifts chosen to minimise differences.
 
@@ -55,6 +56,9 @@ Figma documents a [5,000-variable limit per collection](https://help.figma.com/h
 | Fresh second-repeat prelaunch association        | `3407d69a9c7167dfe31a75f19778ee3305681ee930f185f977a7a7809e3fda8f` |
 | Second corrected ordinary repeat                 | `5949b2f89e7ae619f10fc9c0420e1496893ceebcdbfd102ad884cd3297d46ed3` |
 | Independent two-corrected-repeat verdict         | `6bee09ae5b15bc036ee68fa69739ef35ed607260a54a2844a40b7dfa30e41f46` |
+| Corrected all31 PNG/fresh12 actual report        | `4bf71b933019eb02702eae2c3b92d7e032ecd47c277f55e0fb685471c929fb1e` |
+| Independent PNG/fresh12 collection verdict       | `d1fda8879f44d99ecc97c22d41683dd09df89319bcfd7c68a941801e56711c75` |
+| Canonical focus-short complete lossless read     | `5438a7ba5bc2777dbe91621ae41802c8bf663ddb053b0957a439b4fd324fd9e6` |
 | Fresh narrow cloud owning geometry               | `5756193f32537a881c7a5e5521a0c614a57843c268a9cf6a1093ddad34a05f78` |
 | Independent font-helper review/counterexample    | `124cb927f70be6f1a6f5f24f16b394b90bf6a0498191a951653bd5ac5e41f378` |
 
