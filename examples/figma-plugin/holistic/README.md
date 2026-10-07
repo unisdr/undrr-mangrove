@@ -223,3 +223,17 @@ visible edited-content reflow, ordinary native rebuilds and publication remain
 open. Source packets remain non-importable. The immutable source138 delivery
 from clean ca4dd702 passed independent package review and is retained alongside
 the source136 delivery and all earlier artifacts.
+
+## Legend donor stability
+
+Legend colour aliases now use only the five colour records in its guarded
+captured foundation contract. Equal-colour records added by another component
+cannot redirect the two pure-red gradient stops to that component. The complete
+pre-Icon Legend recipe, tree/style bindings and all five resolved colour values
+remain unchanged. Changed or missing captured foundations still refuse before
+caller mutation.
+
+This source correction does not change family or variant counts and does not
+repair earlier immutable packets retroactively. The source138 and pinned
+source139 deliveries retain their original producer revisions. Native gradient
+rendering, edited-content flow and publication remain separate gates.

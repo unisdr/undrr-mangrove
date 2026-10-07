@@ -29,7 +29,10 @@ function buildLegendRecipes({ root, modes, variables, styles }) {
   )
     fail('Expected five modes');
   const source = JSON.parse(read(ASSET + 'source-footprints.json'));
-  for (const expected of JSON.parse(read(ASSET + 'foundation-contract.json'))) {
+  const capturedFoundation = JSON.parse(
+    read(ASSET + 'foundation-contract.json')
+  );
+  for (const expected of capturedFoundation) {
     const v = variables.find(v => v.name === expected.name);
     if (
       !v ||
@@ -150,7 +153,14 @@ function buildLegendRecipes({ root, modes, variables, styles }) {
     };
   };
   const normalColors = variables
-    .filter(v => v.type === 'COLOR' && !v.name.startsWith('component/legend/'))
+    .filter(
+      v =>
+        v.type === 'COLOR' &&
+        v.name.startsWith('color/') &&
+        capturedFoundation.some(
+          expected => expected.type === 'COLOR' && expected.name === v.name
+        )
+    )
     .map(v => v.name);
   const color = (key, fn, scope = 'ALL_FILLS') => {
     const values = per(m => rgba(fn(m)));
