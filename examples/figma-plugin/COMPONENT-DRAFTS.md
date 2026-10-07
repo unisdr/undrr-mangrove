@@ -318,8 +318,9 @@ rendering, edited-content flow and publication remain separate gates.
 ## Mobile Horizontal Card CTA allocation, 7 October 2026
 
 All fifteen browser records (five brands, three mobile presets) show the actual
-CTA spanning the 360px content allocation. The existing native instances hug to
-122px and place the right-anchored badge beside the label. The source recipe now
+CTA spanning the 360px content allocation. At the original native checkpoint,
+CTA instances hugged to 122px and placed the right-anchored badge beside the label.
+The source recipe now
 sets the owning CTA instance width to FILL for Default, NoImage and ButtonOnly
 at 390px. Wide callers and all 23 Editorial CTA dependency masters are unchanged;
 NoLink has no CTA. Family and variant counts stay at 139 and 2,269.
@@ -328,8 +329,29 @@ Independent source review confirms exactly three changed layout fields, with
 complete reversal restoring every other source value. The existing all-five
 19-preset Card mock lifecycle passes, including owning edits and two zero-create
 repeats; additional assertions check the actual owning instance sizing. This is
-a source/model correction. No native master was changed by it. The original
-391-node native checkpoint and earlier versioned deliveries are preserved.
-Native corrected-layout execution, source font/crop/raster, edited reflow,
-all-five rendered modes and publication remain open. The separately measured
-0.25px title allocation difference has no rounding or fixed-height patch.
+a source/model correction, followed by the isolated native operation below.
+The original 391-node checkpoint and earlier versioned deliveries are preserved.
+Source font/crop/raster, edited reflow, all-five rendered modes and publication
+remain open. The separately measured 0.25px title allocation difference has no
+rounding or fixed-height patch.
+
+The ordinary UNDRR source-corrected rebuild now completes all two families and
+31 variants in the unpublished combined-card file. It updates 248 existing IDs
+and creates zero permanent nodes. Four named-font probes are removed in the
+same operation; their fresh committed absence check remains pending. Independent
+review accounts for every one of the 84 changed fields across 18 nodes: the three
+owning main CTA instances and their three linked review counterparts widen from
+122px to 360px, with the corresponding sizing fields and badge/chevron positions.
+Badges retain 22px width and move from local X99 to X337. All other 373 nodes,
+foundations, 20 genuine main links, node identities and recorded page fields stay
+exactly unchanged. The full 3,219,648-byte report has SHA256
+`261f8676b3f2bdf77643689f282195377c026fe6db78583920512a20e6d51ebc`.
+
+The terminal diagnostic is closed and the file saved. A subsequent read-only
+cloud check confirms all three owning mobile CTAs at FILL/360px with badges at
+X337 in the [online rehearsal](https://www.figma.com/design/VCwJs8fTYXU8007BYYqqwp?node-id=2-258).
+This accepts the measured source correction and that narrow online geometry,
+not full native/cloud equality or source pixel equivalence. An explicit reviewed
+successor checkpoint and two zero-create ordinary repeats remain required;
+no new baseline is automatically adopted. Canonical integration and publication
+remain separate gates.
