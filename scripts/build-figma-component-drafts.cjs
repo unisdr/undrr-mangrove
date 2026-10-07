@@ -632,6 +632,20 @@ function main(args) {
     throw new Error('Draft packet must stay outside source.');
   if (args[0] === '--output' && fs.existsSync(output))
     throw new Error('Use a new output path to preserve prior drafts.');
+  const generatedInput = path.join(
+    ROOT,
+    'examples/figma-plugin/mangrove-variables.json'
+  );
+  try {
+    if (!fs.statSync(generatedInput).isFile()) throw new Error('Not a file');
+    fs.accessSync(generatedInput, fs.constants.R_OK);
+  } catch (error) {
+    throw new Error(
+      'Generated Figma input is missing or unreadable: ' +
+        generatedInput +
+        '. Run yarn scss and yarn build:figma-tokens from the repository root, then rerun this command.'
+    );
+  }
   const json = `${JSON.stringify(buildDraftPacket(), null, 2)}\n`;
   if (args[0] === '--check') {
     assert.strictEqual(
