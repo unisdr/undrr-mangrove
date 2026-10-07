@@ -1,9 +1,10 @@
 # Native integration status
 
-Observed on 7 October 2026. The source registry contains138 recipe
-families and2053 bounded variants, including standalone Icon, controlled MenuItems,
+Observed on 7 October 2026. The source registry contains139 recipe
+families and2269 bounded variants, including standalone Icon, controlled MenuItems,
+AuthorImage,
 standalone Link and actual Arabic
-landing compositions. Combined registration verification completed with terminal exit0. Full packet
+landing compositions. Combined registration verification at the AuthorImage commit `8d9d69cc` completed with terminal exit0. The subsequent `897e2932` Legend donor correction has separate all-five lifecycle and donor-boundary regression checks; it changes no family or variant counts. Full packet
 and dependency checks, source-only importer refusal, the bounded original9/28
 scene lifecycle and all CLI guards passed.
 The saved source119 checkpoint at `0980da33` and prior source118 delivery at
@@ -372,3 +373,27 @@ exact desktop URL. This accepts the observed starting state only. The guarded
 ordinary corrected 31-variant rebuild is running in that unpublished file;
 applied source fields, effects, geometry and repeat stability are unaccepted
 until the operation report and fresh inspection are reviewed.
+
+## Combined-card committed repeat and PNG collection, 7 October 2026
+
+The separate unpublished combined-card file now passes two ordinary UNDRR
+recorded-field rebuilds against the explicitly retained original checkpoint.
+Each updates248 existing IDs, creates zero permanent nodes and preserves all391
+recorded nodes,20 genuine main links,70 variables/350 values across five modes,
+eight TEXT styles and one EFFECT style exactly. Existing image bytes and all
+four SVG owners/16 vectors are reused. Complete report hashes are
+`9e4cf782f4e99dec6f2d2b7bebeeb7296993edaebe2aff28651ff6f96fa0245f`
+and `45226347a4476277f9250cf76dfbeeb3c1c02512b08aa77d053bf76f05567737`.
+The earlier failed operations and focused image restoration remain retained.
+
+A subsequent read-only native operation independently verifies all12 temporary
+font IDs absent at committed lookup boundaries and exports all31 owning
+component PNGs. Its complete4185780-byte report (SHA256
+`c1e4da667ffe25be0122d8293230344a395fe96648ec961f74f56ecdf227ae33`)
+preserves the full original scene and foundations exactly, loads no fonts and
+records no writes or errors. Independent original-byte PNG extraction confirms
+all ordered targets, decodes and native render-bound viewports. This accepts
+PNG collection and committed cleanup, not source pixel equivalence. Six Long
+CTA masters retain default copy; edited French review specimens require their
+own source comparisons. Source font/crop/rendering, edited reflow, all-five
+native mode rendering, cloud persistence and publication remain open.

@@ -1,6 +1,6 @@
 # Source-only component drafts
 
-The current holistic packet contains **138 source families / 2053 bounded variants**.
+The current holistic packet contains **139 source families / 2269 bounded variants**.
 The original nine-family batches below are joined by SectionHeader (2),
 Imagecaption (3), EmbedContainer ratio wrappers (4), BookCard (2),
 HorizontalBookCard (8) and IconCard (9). The exact existing Editorial CTA family
