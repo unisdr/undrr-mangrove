@@ -3,7 +3,7 @@
  *
  * Storybook:    https://mangrove.undrr.org/
  * LLMs context: https://mangrove.undrr.org/llms.txt
- * Repository:   https://github.com/unisdr/undrr-mangrove
+ * Repository:   https://github.com/PreventionWeb/undrr-mangrove
  * Version: 2.0.0
  *
  *   ██╗   ██╗███╗   ██╗██████╗ ██████╗ ██████╗
@@ -30,7 +30,6 @@
 @use "sass:math";
 @use "sass:meta";
 @import "./tokens-tabs";
-@import "./control-tokens";
 
 // Data-visualisation palettes: categorical, sequential and Sendai target
 // ramps. A distinct concern from brand tokens, sourced from the DLDTS design
@@ -113,7 +112,6 @@ $img-path-Iconfourback: "~/stories/assets/icons"; // BUILD-TIME ONLY
 :root {
   @include mg-tokens-mangrove;
   @include mg-tokens-tabs;
-  @include mg-control-tokens;
 }
 
 $mg-font-body: $mg-font-size-300;

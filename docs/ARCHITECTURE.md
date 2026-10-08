@@ -1,6 +1,6 @@
 # Architecture
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ARCHITECTURE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-architecture--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/ARCHITECTURE.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-architecture--docs).
 
 This document explains the build system, distribution channels, and integration patterns for the Mangrove component library. It is the single reference for understanding how source code becomes consumable assets.
 
@@ -309,7 +309,4 @@ padding: 1.5rem;
 - [Hydration guide](HYDRATION.md) — consumer-facing integration guide
 - [Adding hydration support](HYDRATION-AUTHORING.md) — contributor guide for `fromElement`, barrel files, and tests
 - [Testing guide](TESTING.md) — unit, visual, and accessibility testing
-- [Cascade layers](CASCADE-LAYERS.md) — research findings on the former broad React Aria skin and app-level layer ordering
-- [React Aria boundary](REACT-ARIA-BOUNDARY.md) — one public Mangrove component contract per user need, with React Aria as an optional implementation
 - [Colour contrast methodology](COLOUR-CONTRAST-METHODOLOGY.md) — why token contrast is graded perceptually rather than by WCAG 2 alone
-- [React Aria architecture notes](ARIA-ARCHITECTURE-NOTES.md) — decision record for the React Aria integration: what was tried, measured and rejected. Contributor-facing, deliberately not published to Storybook.

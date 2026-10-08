@@ -22,7 +22,8 @@
  * The published package has no root entry point, by decision
  * (unisdr/undrr-mangrove#1252). Consumers import the top-level subpath
  * directories: `@undrr/undrr-mangrove/components/IconCard.js`, `…/css/…`,
- * `…/scss/…`, `…/js/…`, `…/fonts/…`, `…/error-pages/…`. See
+ * `…/scss/…`, `…/js/…`, `…/fonts/…`, `…/error-pages/…`, and `…/docs/…` for
+ * the editorial manual and the llms-*.txt sub-manifests. See
  * buildPackageJson() for why there is no `main` and no `exports`.
  *
  * The `scss/` copy below keeps each file's path below `stories/`, so the SCSS
@@ -57,12 +58,9 @@ export const PACKAGE_FILES = [
   'css/**/*',
   'js/**/*',
   'scss/**/*.scss',
-  '!scss/assets/scss/aria/_react-aria.scss',
-  '!scss/assets/scss/aria/_spike-demo.scss',
-  '!scss/assets/scss/aria/_runtime-theme-aliases.scss',
-  '!scss/assets/scss/aria/_tokens-*.scss',
   'error-pages/**/*',
   'fonts/**/*',
+  'docs/**/*',
   // Second line of defence: even if a development-only file reaches the
   // assembled directory, npm leaves it out of the tarball.
   '!**/__tests__/**',
@@ -71,16 +69,6 @@ export const PACKAGE_FILES = [
   '!**/__fixtures__/**',
   '!**/*.test.*',
   '!**/*.spec.*',
-];
-
-// Storybook keeps these adapter sources for experiments, but the release
-// package and CDN should expose only the scoped ComboBox Sass entry. Keep the
-// webpack copy rule in sync with the npm file exclusions above.
-export const RESEARCH_ONLY_GLOBS = [
-  '**/scss/aria/_react-aria.scss',
-  '**/scss/aria/_spike-demo.scss',
-  '**/scss/aria/_runtime-theme-aliases.scss',
-  '**/scss/aria/_tokens-*.scss',
 ];
 
 // Development-only files that must never reach a consumer. Jest specs live
@@ -121,6 +109,9 @@ const DIST_COPIES = [
   ['dist/assets/error-pages', 'error-pages'],
   ['dist/fonts', 'fonts'],
   ['dist/components', 'components'],
+  // The editorial manual and the llms-*.txt sub-manifests, written by
+  // scripts/copy-docs-to-dist.mjs (undrr/web-backlog#3109).
+  ['dist/docs', 'docs'],
 ];
 
 // Top-level names in the repo that must never be used as (or contain) the
@@ -271,13 +262,14 @@ export function buildPackageJson(pkg) {
     description: pkg.description,
     files: PACKAGE_FILES,
     repository: pkg.repository,
+    // Without these npm derives both from `repository`, and its package page
+    // links a README and an issue queue on unisdr/undrr-mangrove, which
+    // anonymous readers get a 404 from (undrr/web-backlog#3109).
+    ...(pkg.homepage && { homepage: pkg.homepage }),
+    ...(pkg.bugs && { bugs: pkg.bugs }),
     keywords: pkg.keywords,
     author: pkg.author,
     license: pkg.license,
-    // Component dependencies are optional at the package level because a
-    // CSS-only or vanilla JS consumer does not load the React entries.
-    peerDependencies: pkg.peerDependencies,
-    peerDependenciesMeta: pkg.peerDependenciesMeta,
   };
 }
 

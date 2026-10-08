@@ -1,6 +1,6 @@
 # Review checklist
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs).
 
 Use this checklist when building or reviewing a component. Each item links to the relevant guide.
 

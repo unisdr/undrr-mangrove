@@ -5,7 +5,7 @@ import * as Stories from './ContentHub.stories';
 
 # Content hubs
 
-> **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+> **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
 A content hub is a named set of related pages people move between repeatedly
 (for example, Sendai Framework Monitor sections). Every page keeps the same hub
@@ -101,7 +101,7 @@ stylesheet:
 | `media`, `actions`     | Both optional — a banner works as text alone                                                                                             |
 | `current` / `ancestor` | The exact page, or a section containing it                                                                                               |
 
-**Contrast:** `surface="secondary"` no longer paints the header in the orange accent. Every link and heading on it was white at 2.65 against WCAG's 4.5, and the bar tint darkened the navigation strip nowhere near enough. The orange carries no text at any size, so the bar and banner now keep the theme's own hero colour, which the white ink is already sized for, and the accent becomes a 4px rule under the bar — a line with no copy over it. That rule is 2.95 against white, under the 3:1 of SC 1.4.11, so it is emphasis rather than the only thing marking the surface. See [the colour contrast methodology](https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
+**Contrast:** `surface="secondary"` no longer paints the header in the orange accent. Every link and heading on it was white at 2.65 against WCAG's 4.5, and the bar tint darkened the navigation strip nowhere near enough. The orange carries no text at any size, so the bar and banner now keep the theme's own hero colour, which the white ink is already sized for, and the accent becomes a 4px rule under the bar — a line with no copy over it. That rule is 2.95 against white, under the 3:1 of SC 1.4.11, so it is emphasis rather than the only thing marking the surface. See [the colour contrast methodology](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text) for the measurements.
 
 Pass `current` for the exact page and `ancestor` for containing section. Both
 render similarly, but only `current` announces `aria-current="page"`. Keep

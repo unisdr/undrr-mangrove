@@ -126,7 +126,7 @@ const OrangeAccentNote = () => (
       1.4.11. For text on an orange surface, use the pale end of the ramp —{' '}
       <code>orange-50</code> and <code>orange-100</code> carry{' '}
       <code>--mg-color-text</code> at 15.7 and 14.1. See{' '}
-      <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
+      <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
         the colour contrast methodology
       </a>{' '}
       for the measurements.
@@ -565,7 +565,7 @@ export const CombinedExample = () => (
         against a 4.5 minimum. It now takes <code>orange-50</code> with{' '}
         <code>neutral-900</code> copy, 15.7, and wears the Sendai orange as a
         rule with no copy over it — the pattern the library itself uses. See{' '}
-        <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
+        <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
           the orange accent carries no text
         </a>
         .

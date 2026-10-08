@@ -18,7 +18,9 @@
  *    component build, whose keys become `components/<Key>.js`.
  * 3. `package.json` — the `scss` script's Sass directory compile
  *    (`stories/assets/scss` -> `stories/assets/css`), whose output becomes
- *    `css/`, plus the six standalone React Aria stylesheets.
+ *    `css/`.
+ * 4. `scripts/copy-docs-to-dist.mjs` — `DOCS_SOURCES` and the `llms-*.txt`
+ *    sub-manifests the AI manifest generator writes, which become `docs/`.
  *
  * `scripts/__tests__/published-paths.test.js` compares the model against a
  * real `dist/` when one is present, so the drift is caught rather than assumed
@@ -71,6 +73,39 @@ function componentEntryNames() {
 }
 
 /**
+ * The files `scripts/copy-docs-to-dist.mjs` writes to `dist/docs/`, which the
+ * package publishes as `docs/`.
+ *
+ * Read as text, like `componentEntryNames()`: the copy script is ESM, and the
+ * sub-manifest names are only known to the generator. Each generated
+ * `llms-*.txt` appears in `scripts/ai-manifest/` as a quoted file name (the
+ * name it is written under), so collecting those literals follows new
+ * sub-manifests without a list to maintain here.
+ */
+function docsFileNames() {
+  const copyScript = fs.readFileSync(
+    path.join(ROOT, 'scripts/copy-docs-to-dist.mjs'),
+    'utf8'
+  );
+  const sources = copyScript.match(/DOCS_SOURCES = \[([^\]]*)\]/);
+  const names = new Set(
+    [...(sources ? sources[1] : '').matchAll(/'docs\/([^']+\.md)'/g)].map(
+      match => match[1]
+    )
+  );
+
+  const manifestDir = path.join(ROOT, 'scripts/ai-manifest');
+  for (const file of walk(manifestDir)) {
+    if (!file.endsWith('.js')) continue;
+    const text = fs.readFileSync(file, 'utf8');
+    for (const match of text.matchAll(/['"`](llms-[\w.-]+\.txt)['"`]/g)) {
+      names.add(match[1]);
+    }
+  }
+  return [...names].sort();
+}
+
+/**
  * Every path the published tarball contains, as a consumer would write it
  * after the package name: `components/Pager.js`, `css/style.css`,
  * `js/tabs.js`, `scss/assets/scss/style.scss`, and so on.
@@ -106,30 +141,26 @@ function publishedPaths() {
     paths.add(`css/${stem}.css.map`);
   }
 
-  // Scoped optional control CSS and framework-neutral per-brand tokens.
-  if (fs.existsSync(path.join(scssRoot, 'aria/_combo-box.scss'))) {
-    paths.add('css/combo-box.css');
-    for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
-      paths.add(`css/tokens/${brand}.css`);
-    }
-  }
-
   // scss/ — every .scss under stories/, keeping its path below stories/.
   // This is why the published SCSS entry point is `scss/assets/scss/style.scss`
   // and not `scss/style.scss`.
   const storiesRoot = path.join(ROOT, 'stories');
   for (const file of walk(storiesRoot)) {
     if (!file.endsWith('.scss')) continue;
-    const published = `scss/${rel(storiesRoot, file)}`;
-    if (
-      published.startsWith('scss/assets/scss/aria/') &&
-      published !== 'scss/assets/scss/aria/_combo-box.scss'
-    )
-      continue;
-    paths.add(published);
+    paths.add(`scss/${rel(storiesRoot, file)}`);
   }
+
+  // docs/ — the editorial manual and the llms-*.txt sub-manifests.
+  for (const name of docsFileNames()) paths.add(`docs/${name}`);
 
   return paths;
 }
 
-module.exports = { ROOT, isDevOnly, componentEntryNames, publishedPaths, walk };
+module.exports = {
+  ROOT,
+  isDevOnly,
+  componentEntryNames,
+  docsFileNames,
+  publishedPaths,
+  walk,
+};

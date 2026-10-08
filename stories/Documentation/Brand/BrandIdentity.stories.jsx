@@ -262,7 +262,7 @@ function BrandIdentityPage({ themeName }) {
         <code>orange-50</code>, both under the 3:1 of SC 1.4.11, so a fill, a
         label or a position always carries the meaning alongside it. The values
         themselves are unchanged. See{' '}
-        <a href="https://github.com/unisdr/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
+        <a href="https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/COLOUR-CONTRAST-METHODOLOGY.md#the-orange-accent-carries-no-text">
           the colour contrast methodology
         </a>{' '}
         for the measurements.

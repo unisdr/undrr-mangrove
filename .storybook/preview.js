@@ -1,6 +1,5 @@
 import React from 'react';
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
-import { I18nProvider } from 'react-aria-components';
 
 import { transformSource } from './docsSource';
 
@@ -76,17 +75,7 @@ const getLangCode = (Story, context) => {
     }
   });
 
-  // React Aria derives its own locale and reading direction from useLocale(),
-  // which falls back to navigator.language and never inspects the dir we set
-  // above. Without this provider the page is visually RTL while React Aria
-  // still believes it is LTR, so DateField segment order and the
-  // direction-dependent arrow-key mapping in Tabs, Slider, DateField and Table
-  // run backwards against the layout.
-  return (
-    <I18nProvider locale={langArr[activeLang] || 'en'}>
-      <Story {...context} />
-    </I18nProvider>
-  );
+  return <Story {...context} />;
 };
 
 const sbFrameReset = (Story, context) => {
@@ -259,6 +248,7 @@ const preview = {
               'Theming guide',
               'CDN reference',
               'Hydration guide',
+              'Drupal Gutenberg',
             ],
             'Best practices',
             'Accessibility',

@@ -1,6 +1,6 @@
 # Accessibility
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-accessibility--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/ACCESSIBILITY.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-accessibility--docs).
 
 Accessible design improves usability for everyone. Mangrove components target [WCAG 2.2](https://www.w3.org/TR/WCAG22/) AA, but product-level implementation still determines final accessibility.
 

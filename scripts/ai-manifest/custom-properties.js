@@ -56,11 +56,6 @@ const PROPERTY_NAME = /^--mg-[A-Za-z0-9]+(?:-{1,2}[A-Za-z0-9]+)*$/;
 // these. Without that, "the three lists partition the properties" was wrong
 // by 143 names and nothing said so.
 export const GLOBAL_PREFIXES = {
-  '--mg-control-': {
-    label: 'framework-neutral interactive control roles',
-    where:
-      'declared by stories/assets/scss/_control-tokens.scss in each runtime theme and in the standalone Aria brand token files',
-  },
   '--mg-color-': {
     label: 'the legacy one-off brand colours',
     where:

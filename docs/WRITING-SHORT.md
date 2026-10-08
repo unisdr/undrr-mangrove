@@ -2,6 +2,8 @@
 
 Use this as a compact, LLM‑friendly summary of the Mangrove Writing standards.
 
+> **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, the full [Writing guidelines](WRITING.md), the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) and the sources they cite take precedence.
+
 1. Improve UX: simplify flows, clarify actions, reduce friction.
 2. Be truthful: avoid false urgency; state limits clearly; admit uncertainty.
 3. Inclusive language: respect all users; avoid idioms/slang; ensure accessibility.
@@ -50,6 +52,7 @@ United Nations guidance:
 - [Material Design: writing](https://m2.material.io/design/communication/writing.html)
 - [PlainLanguage.gov: guidelines](https://www.plainlanguage.gov/guidelines/)
 - [Mailchimp content style guide](https://styleguide.mailchimp.com/)
+- [A Handbook for Writers of the United Nations (PDF)](https://languages.un.org/sites/default/files/2024-01/writing_for_the_united_natons_a_handbook_of_guidelines_techniques_and_resources.pdf)
 
 Originally inspired by Nick DiLallo’s “This is good UX writing: Eight principles for every interface you’ll ever write” ([UX Collective, 2020](https://uxdesign.cc/this-is-good-ux-writing-10c4b956a6c3)).
 

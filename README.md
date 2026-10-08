@@ -1,7 +1,7 @@
 [![npm version](https://img.shields.io/npm/v/@undrr/undrr-mangrove.svg)](https://www.npmjs.com/package/@undrr/undrr-mangrove)
 [![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://mangrove.undrr.org/)
-[![Build Status](https://github.com/unisdr/undrr-mangrove/actions/workflows/storybook.yml/badge.svg)](https://github.com/unisdr/undrr-mangrove/actions)
-[![License](https://img.shields.io/github/license/unisdr/undrr-mangrove.svg)](https://github.com/unisdr/undrr-mangrove/blob/main/LICENSE)
+[![Build Status](https://github.com/PreventionWeb/undrr-mangrove/actions/workflows/storybook.yml/badge.svg)](https://github.com/PreventionWeb/undrr-mangrove/actions/workflows/storybook.yml)
+[![License](https://img.shields.io/github/license/PreventionWeb/undrr-mangrove.svg)](https://github.com/PreventionWeb/undrr-mangrove/blob/main/LICENSE)
 <!-- React Doctor score is a periodic snapshot, not live. Refresh after audit sweeps by re-running `npx -y react-doctor@latest .` and updating the s/e/w/f params below. See docs/AI-CODING-AGENTS.md#component-quality-checks-with-react-doctor. -->
 
 [![React Doctor](https://www.react.doctor/share/badge?p=%40undrr%2Fundrr-mangrove&s=100&e=0&w=0&f=0)](https://www.react.doctor/share?p=%40undrr%2Fundrr-mangrove&s=100&e=0&w=0&f=0)
@@ -12,7 +12,7 @@ Mangrove is the component library and design system of the United Nations Office
 
 - Storybook docs and live examples: <https://mangrove.undrr.org/>
 - npm package: <https://www.npmjs.com/package/@undrr/undrr-mangrove>
-- Issue tracker: <https://github.com/unisdr/undrr-mangrove/issues>
+- Issue tracker: <https://github.com/PreventionWeb/undrr-mangrove/issues> (the public fork; a GitHub account is needed to open an issue)
 
 ## Quick start
 
@@ -69,7 +69,7 @@ yarn build
 
 - Release process: [`docs/RELEASES.md`](docs/RELEASES.md)
 - Upgrading from 1.x: [v2.0 release notes](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v2-0--docs) (source: [`docs/RELEASE-2.0.md`](docs/RELEASE-2.0.md))
-- GitHub releases: <https://github.com/unisdr/undrr-mangrove/releases>
+- Changelog: [`CHANGELOG.md`](CHANGELOG.md). GitHub Releases are published on `unisdr/undrr-mangrove`, which is readable only when signed in as a member while the `unisdr` organization is flagged; the public fork has no releases
 
 ## AI and MCP integration
 
@@ -77,10 +77,14 @@ Mangrove publishes static metadata for coding agents after Storybook deploy:
 
 - `llms.txt`: <https://mangrove.undrr.org/llms.txt>
 - `llms-editorial-manual.txt` (writing/style rules and terminology only): <https://mangrove.undrr.org/llms-editorial-manual.txt>
+- `llms-page-building.txt` (building UNDRR landing pages with Drupal Gutenberg, with current block markup): <https://mangrove.undrr.org/llms-page-building.txt>
+- `llms-search-widget.txt` (search widget configuration for editors): <https://mangrove.undrr.org/llms-search-widget.txt>
 - component index: <https://mangrove.undrr.org/ai-components/index.json>
 - per-component details: `ai-components/{id}.json`
 
 Guide: [`docs/AI-MCP-INTEGRATION.md`](docs/AI-MCP-INTEGRATION.md)
+
+The editorial manual and the `llms-*.txt` sub-manifests also ship in `dist/docs/` and in the npm package under `docs/`, so the UNDRR asset library serves them at stable URLs, for example <https://assets.undrr.org/mangrove/latest/docs/llms-editorial-manual.txt> and `https://assets.undrr.org/mangrove/{version}/docs/EDITORIAL-MANUAL.md` (from the release after 2.0.0). See the [CDN reference](docs/CDN-REFERENCE.md#documentation).
 
 ## Documentation index
 

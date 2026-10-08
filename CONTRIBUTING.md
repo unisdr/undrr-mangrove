@@ -63,7 +63,7 @@ Tips for better manifest output:
 
 ## Component stylesheets and CSS documentation
 
-- **Docblocks on every stylesheet**: Every component SCSS file must begin with a docblock comment containing a concise 1–2 sentence description of what the component does and a direct link to its full `.mdx` file on GitHub (e.g., `https://github.com/unisdr/undrr-mangrove/blob/main/stories/.../Component.mdx`).
+- **Docblocks on every stylesheet**: Every component SCSS file must begin with a docblock comment containing a concise 1–2 sentence description of what the component does and a direct link to its full `.mdx` file on GitHub (e.g., `https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/.../Component.mdx`).
 - **Compiled CSS banners**: Build banners automatically guide developers and LLMs to Storybook docs (`https://mangrove.undrr.org/`) and the machine-readable LLM context (`https://mangrove.undrr.org/llms.txt`).
 - **Registration**: All component SCSS files must be imported in `stories/assets/scss/_components.scss`.
 

@@ -15,8 +15,8 @@
  * - a guide that has a Storybook page becomes `?path=/docs/<id>--docs`, which
  *   `AnchorMdx` intercepts and turns into a `NAVIGATE_URL` event;
  * - a guide that has none (for example `WRITING-SHORT.md`) becomes an absolute
- *   GitHub link to the source file, which opens in a new context rather than
- *   dead-ending inside the preview iframe.
+ *   link to the source file on the public GitHub fork, which opens in a new
+ *   context rather than dead-ending inside the preview iframe.
  *
  * `scripts/__tests__/docs-links.test.js` checks that `DOC_PAGE_IDS` still matches
  * the wrappers' own `<Meta title>` values, and that every relative link in a
@@ -31,30 +31,38 @@ export const DOC_PAGE_IDS = {
   'docs/ANALYTICS.md': 'platform-services-analytics-enhancements--docs',
   'docs/ARCHITECTURE.md': 'contributing-architecture--docs',
   'docs/BROWSER-SUPPORT.md': 'getting-started-browser-support--docs',
-  'docs/CASCADE-LAYERS.md': 'getting-started-integration-cascade-layers--docs',
   'docs/CDN-REFERENCE.md': 'getting-started-integration-cdn-reference--docs',
   'docs/COLOUR-CONTRAST-METHODOLOGY.md':
     'design-decisions-colour-contrast-methodology--docs',
   'docs/COMPONENT-GUIDE.md':
     'contributing-build-a-component-step-by-step--docs',
   'docs/CRITICAL-MESSAGING.md': 'platform-services-critical-messaging--docs',
+  'docs/DRUPAL-GUTENBERG.md':
+    'getting-started-integration-drupal-gutenberg--docs',
   'docs/EDITORIAL-MANUAL.md': 'contributing-editorial-manual--docs',
   'docs/FIGMA-INTEGRATION.md':
     'getting-started-integration-figma-and-mangrove--docs',
   'docs/HYDRATION-AUTHORING.md':
     'contributing-build-a-component-hydration--docs',
   'docs/HYDRATION.md': 'getting-started-integration-hydration-guide--docs',
+  'docs/LANDING-PAGE-GUIDE.md': 'patterns-building-landing-pages--docs',
   'docs/RELEASE-1.4.md': 'getting-started-release-notes-v1-4--docs',
   'docs/RELEASE-1.5.md': 'getting-started-release-notes-v1-5--docs',
   'docs/RELEASE-2.0.md': 'getting-started-release-notes-v2-0--docs',
   'docs/RELEASES.md': 'contributing-release-process--docs',
   'docs/REVIEW-CHECKLIST.md':
     'contributing-build-a-component-review-checklist--docs',
+  'docs/SEARCH-WIDGET-EDITOR-GUIDE.md':
+    'components-syndicated-search-editor-configuration--docs',
   'docs/TESTING.md': 'contributing-build-a-component-testing--docs',
   'docs/WRITING.md': 'contributing-writing-guidelines--docs',
 };
 
-const GITHUB_BLOB = 'https://github.com/unisdr/undrr-mangrove/blob/main/';
+// The PreventionWeb fork, not unisdr/undrr-mangrove: the unisdr organization
+// is flagged on GitHub and its pages return 404 to anonymous readers. See
+// PUBLIC_REPO_URL in scripts/ai-manifest/repo.js.
+const GITHUB_BLOB =
+  'https://github.com/PreventionWeb/undrr-mangrove/blob/main/';
 
 /** `](TARGET.md)` or `](TARGET.md#anchor)`, skipping absolute and in-page links. */
 const RELATIVE_MD_LINK = /\]\((?!https?:|\/|#)([^)\s]+\.md)(#[^)\s]*)?\)/g;

@@ -12,6 +12,8 @@
  *        llms.txt                       — plain-text discovery file for AI agents
  *        llms.json                      — structured version of llms.txt
  *        llms-editorial-manual.txt      — sub-manifest: writing/style rules, from docs/EDITORIAL-MANUAL.md
+ *        llms-page-building.txt         — sub-manifest: Drupal Gutenberg page building, from docs/LANDING-PAGE-GUIDE.md and docs/DRUPAL-GUTENBERG.md
+ *        llms-search-widget.txt         — sub-manifest: search widget editor configuration, from docs/SEARCH-WIDGET-EDITOR-GUIDE.md
  *        ai-components/index.json       — lightweight component index
  *        ai-components/{id}.json        — full details per component
  *        ai-components/utilities.json   — CSS utility class inventory
@@ -42,7 +44,15 @@ import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
 import { buildEditorialManualTxt } from './editorial-manual.js';
-import { REPO_BLOB_MAIN, REPO_URL } from './repo.js';
+import { buildDocsSubmanifest, DOCS_SUBMANIFESTS } from './docs-submanifest.js';
+import {
+  PUBLIC_ISSUES_URL,
+  PUBLIC_REPO_BLOB_MAIN,
+  PUBLIC_REPO_RAW_MAIN,
+  PUBLIC_REPO_URL,
+  REPO_URL,
+  findPrivateLinks,
+} from './repo.js';
 import {
   collectCustomProperties,
   MIN_PROPERTIES,
@@ -1391,13 +1401,7 @@ if (!fs.existsSync(compiledCssPath)) {
     `${path.relative(process.cwd(), compiledCssPath)} not found — run ` +
     '"yarn scss" first. Skipping the CSS class existence check.';
 } else {
-  const compiledCss = [
-    compiledCssPath,
-    path.resolve(process.cwd(), 'stories/assets/css/combo-box.css'),
-  ]
-    .filter(file => fs.existsSync(file))
-    .map(file => fs.readFileSync(file, 'utf8'))
-    .join('\n');
+  const compiledCss = fs.readFileSync(compiledCssPath, 'utf8');
   const storySources = readStorySources(storiesDir);
 
   const escape = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -2262,6 +2266,7 @@ async function main() {
       description: pkg.description,
       documentation: DOCS_BASE,
       repository: REPO_URL,
+      publicRepository: PUBLIC_REPO_URL,
       npm: `https://www.npmjs.com/package/${pkg.name}`,
       cssPrefix: 'mg-',
       namingConvention:
@@ -2290,7 +2295,7 @@ async function main() {
         field: 'customProperties',
       },
       releasesUrl: `${DOCS_BASE}releases.json`,
-      changelogUrl: `${REPO_BLOB_MAIN}CHANGELOG.md`,
+      changelogUrl: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
       quickstart: {
         css: `<link rel="stylesheet" href="${themeCss.undrr}" />`,
         cssThemes: themeCss,
@@ -2391,14 +2396,19 @@ async function main() {
 ## Links
 
 - Storybook: ${DOCS_BASE}
-- Repository: ${REPO_URL}
+- Repository (public mirror of ${REPO_URL.replace('https://github.com/', '')}, which is not publicly readable): ${PUBLIC_REPO_URL}
+- Report a problem with a component or a guide: ${PUBLIC_ISSUES_URL}
 - npm: https://www.npmjs.com/package/${pkg.name}
 - Release changelog (machine-readable): ${DOCS_BASE}releases.json
-- Project changelog (markdown): ${REPO_BLOB_MAIN}CHANGELOG.md
+- Project changelog (markdown): ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
 - Icons inventory: ${DOCS_BASE}ai-components/components-icons.json
 - Theme token dictionary: ${DOCS_BASE}tokens.json (theme tokens only; component custom properties are documented per component)
-- Editorial manual (capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language; each rule credited to its United Nations system or UNDRR source in the doc itself): ${DOCS_BASE}llms-editorial-manual.txt
+- Editorial manual for UNDRR web content (news, publications, blogs, events) as well as UI copy and component docs: capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language, each rule credited to its United Nations system or UNDRR source in the doc itself: ${DOCS_BASE}llms-editorial-manual.txt
+- UNDRR editorial guides for writing news, events, publications and blogs: https://assets.undrr.org/docs/editorial-guides/README.md
+- Instructions for AI agents writing UNDRR content: https://assets.undrr.org/docs/editorial-guides/ai-agent-instructions.md
+- Page building guide for UNDRR websites built with Drupal Gutenberg (landing page structure, layout patterns, component choice, UNDRR block reference with current pasteable markup): ${DOCS_BASE}llms-page-building.txt
+- Search widget editor configuration (block settings, search syntax, field:value filters, taxonomy term IDs): ${DOCS_BASE}llms-search-widget.txt
 
 ## For AI agents
 
@@ -2471,12 +2481,12 @@ The utilities.json file lists ~${utilityClassCount} utility classes grouped by c
 To inspect changes between versions, tags, and pre-releases without parsing raw git commits:
 
 - **Machine-readable releases endpoint**: ${DOCS_BASE}releases.json
-  Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs.
-- **Repository changelog**: ${REPO_BLOB_MAIN}CHANGELOG.md
+  Contains structured changelog objects for every release (version, release date, tag, PR references, categorization: Features, Bug fixes, Tooling, Security) plus component-level changelogs. Pull requests, issues and tags are on \`${REPO_URL.replace('https://github.com/', '')}\`, which is not publicly readable, so they appear as plain-text references (such as \`unisdr/undrr-mangrove#1234\`) with no URL; do not look them up on the public fork, whose numbers refer to different items.
+- **Repository changelog**: ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
   Cross-cutting library release notes.
 - **v2.0 migration notes & breaking changes**: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
   Full breaking change catalogue, architectural shifts, and token migration recipes.
-- **Component-level changelogs**: Each component's detail file (${DOCS_BASE}ai-components/{id}.json) contains a \`changelog\` array with granular version updates, dates, descriptions, and PR links.
+- **Component-level changelogs**: Each component's detail file (${DOCS_BASE}ai-components/{id}.json) contains a \`changelog\` array with granular version updates, dates, descriptions, and PR references.
 
 ### Z-index layers
 
@@ -2489,9 +2499,9 @@ Colour, spacing, radii and component tokens are CSS custom properties, so they a
 Where they come from:
 
 - Compiled theme token dictionary: ${DOCS_BASE}tokens.json — theme tokens only; see its \`scope\` field
-- \`tokens/mangrove.yaml\` — the brand-neutral base: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/tokens/mangrove.yaml
+- \`tokens/mangrove.yaml\` — the brand-neutral base: ${PUBLIC_REPO_RAW_MAIN}tokens/mangrove.yaml
 - \`tokens/undrr.yaml\`, \`preventionweb.yaml\`, \`irp.yaml\`, \`mcr.yaml\`, \`delta.yaml\` — brand layers merged over the base, same directory.
-- \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: https://raw.githubusercontent.com/unisdr/undrr-mangrove/main/stories/assets/scss/_tokens-data-viz.scss
+- \`stories/assets/scss/_tokens-data-viz.scss\` — the chart and map palette: ${PUBLIC_REPO_RAW_MAIN}stories/assets/scss/_tokens-data-viz.scss
 
 Those YAML files carry a \`$description\` on the tokens that need one, which is the reasoning behind the value. For automated and tooling integrations, fetch the machine-readable \`${DOCS_BASE}tokens.json\` dictionary which includes token types, formats, descriptions, and rgb() wrapping requirements.
 
@@ -2572,8 +2582,7 @@ Theme key facts:
 
 Brand characteristics (UNDRR voice): Knowledgeable, Approachable, Collaborative.
 
-Editorial rules:
-- Avoid UN jargon. Lead with people, not issues. Use inverted pyramid. Positive framing for prevention content.
+Editorial rules: follow the editorial manual (${DOCS_BASE}llms-editorial-manual.txt) and, for news, events, publications and blogs, the UNDRR editorial guides linked above.
 
 Typography:
 - Font families are CSS custom properties called ROLES, not Sass variables. A component stylesheet names a role and never a typeface: \`var(--mg-font-family-text)\`, \`-heading\`, \`-display\`, \`-ui\`, \`-code\`. Roles are defined on \`:root\` in \`_variables.scss\` and re-pointed for Arabic in \`_fonts.scss\`, which is the single font entry point every build path imports — entry points, the shared Drupal import list, and the per-component recipe alike.
@@ -2636,6 +2645,28 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   );
 
   // -------------------------------------------------------------------------
+  // Write llms-page-building.txt and llms-search-widget.txt
+  // (see docs-submanifest.js)
+  // -------------------------------------------------------------------------
+
+  for (const submanifest of DOCS_SUBMANIFESTS) {
+    const txt = buildDocsSubmanifest({
+      title: submanifest.title,
+      summary: submanifest.summary,
+      sources: submanifest.sources.map(source => ({
+        ...source,
+        markdown: fs.readFileSync(
+          path.resolve(process.cwd(), 'docs', source.file),
+          'utf8'
+        ),
+      })),
+      docsBase: DOCS_BASE,
+      extraLinks: submanifest.extraLinks(DOCS_BASE),
+    });
+    fs.writeFileSync(path.join(buildDir, submanifest.filename), txt);
+  }
+
+  // -------------------------------------------------------------------------
   // Write llms.json
   // -------------------------------------------------------------------------
 
@@ -2649,14 +2680,22 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
       urls: {
         storybook: DOCS_BASE,
         repository: REPO_URL,
+        publicRepository: PUBLIC_REPO_URL,
+        issues: PUBLIC_ISSUES_URL,
         npm: `https://www.npmjs.com/package/${pkg.name}`,
         releases: `${DOCS_BASE}releases.json`,
-        changelog: `${REPO_BLOB_MAIN}CHANGELOG.md`,
+        changelog: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
         releaseNotesV2: `${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
         tokens: `${DOCS_BASE}tokens.json`,
         editorialManual: `${DOCS_BASE}llms-editorial-manual.txt`,
+        ...Object.fromEntries(
+          DOCS_SUBMANIFESTS.map(submanifest => [
+            submanifest.urlKey,
+            `${DOCS_BASE}${submanifest.filename}`,
+          ])
+        ),
         css: themeCss,
       },
       latestRelease: releasesData.latest,
@@ -2704,6 +2743,38 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   fs.writeFileSync(path.join(buildDir, 'llms.json'), llmsJson);
 
   // -------------------------------------------------------------------------
+  // No links into the unisdr organization
+  // -------------------------------------------------------------------------
+
+  // Anonymous readers and AI tools get a 404 from github.com/unisdr. A link
+  // there in any manifest this build publishes is a regression: fix its source
+  // or route it through toPublicMarkdown() in parse-changelog.js.
+  const publishedManifests = [
+    ...fs
+      .readdirSync(buildDir)
+      .filter(name => /^(llms.*\.(txt|json)|releases\.json)$/.test(name))
+      .map(name => path.join(buildDir, name)),
+    ...fs
+      .readdirSync(outputDir)
+      .filter(name => name.endsWith('.json'))
+      .map(name => path.join(outputDir, name)),
+  ];
+  const privateLinks = publishedManifests.flatMap(file =>
+    findPrivateLinks(fs.readFileSync(file, 'utf8')).map(
+      url => `${path.relative(process.cwd(), file)}: ${url}`
+    )
+  );
+  if (privateLinks.length > 0) {
+    console.error(
+      `Error: ${privateLinks.length} link(s) to github.com/unisdr in the generated manifests, which anonymous readers cannot open:`
+    );
+    for (const link of [...new Set(privateLinks)].slice(0, 20)) {
+      console.error(`  - ${link}`);
+    }
+    process.exit(1);
+  }
+
+  // -------------------------------------------------------------------------
   // Summary
   // -------------------------------------------------------------------------
 
@@ -2720,6 +2791,11 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   console.log(
     `  ${path.join(buildDir, 'llms-editorial-manual.txt')} (editorial manual sub-manifest)`
   );
+  for (const submanifest of DOCS_SUBMANIFESTS) {
+    console.log(
+      `  ${path.join(buildDir, submanifest.filename)} (${submanifest.title})`
+    );
+  }
   console.log(
     `  ${path.join(buildDir, 'releases.json')} (${releasesData.releases.length} releases parsed)`
   );

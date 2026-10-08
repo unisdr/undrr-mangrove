@@ -4,7 +4,7 @@
  * Foundational styling, typography, focus rings, and validation states shared across form controls.
  *
  * Full documentation:
- * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Components/Forms/TextInput/TextInput.mdx
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Forms/TextInput/TextInput.mdx
  */
 // Shared BEM-scoped form styles for Mangrove form components.
 // All form components import this partial for consistent base styling.
@@ -52,9 +52,10 @@
   padding: var(--mg-form-input-padding);
   width: 100%;
 
-  // Filled: see the note on the React Aria surface. The [placeholder] guard
-  // matters - without it the selector matches every field that has no
-  // placeholder, so everything would look filled.
+  // Filled: a field holding a value lifts off the tinted rest surface, so a
+  // form reads as answered at a glance. The [placeholder] guard matters -
+  // without it the selector matches every field that has no placeholder, so
+  // everything would look filled.
   &[placeholder]:not(:placeholder-shown) {
     background-color: var(--mg-form-input-background--focus);
   }

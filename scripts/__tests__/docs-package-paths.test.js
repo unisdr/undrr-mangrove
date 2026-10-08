@@ -332,7 +332,7 @@ function collect() {
     if (relative === 'docs/CDN-REFERENCE.md') {
       lines.forEach((text, index) => {
         for (const match of text.matchAll(
-          /`(\/(?:css|js|components|fonts|error-pages)\/[^`]+)`/g
+          /`(\/(?:css|js|components|fonts|error-pages|docs)\/[^`]+)`/g
         )) {
           found.push({
             file: relative,

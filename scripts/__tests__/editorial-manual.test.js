@@ -25,13 +25,14 @@ Intro with a [relative link](WRITING.md), an [anchored link](WRITING.md#tone), a
     expect(output).not.toContain('Edits to this file show up on both');
   });
 
-  it('rewrites relative .md links to GitHub, keeping anchors', () => {
+  it('rewrites relative .md links to their Storybook page, keeping anchors', () => {
     expect(output).toContain(
-      '[relative link](https://github.com/unisdr/undrr-mangrove/blob/main/docs/WRITING.md)'
+      `[relative link](${DOCS_BASE}?path=/docs/contributing-writing-guidelines--docs)`
     );
     expect(output).toContain(
-      '[anchored link](https://github.com/unisdr/undrr-mangrove/blob/main/docs/WRITING.md#tone)'
+      `[anchored link](${DOCS_BASE}?path=/docs/contributing-writing-guidelines--docs#tone)`
     );
+    expect(output).not.toContain('github.com/unisdr');
   });
 
   it('leaves absolute and same-page links alone', () => {
@@ -57,5 +58,6 @@ Intro with a [relative link](WRITING.md), an [anchored link](WRITING.md#tone), a
     expect(realOutput).not.toMatch(/# Editorial manual for Mangrove/);
     expect(realOutput).not.toMatch(/\]\((?!https?:|\/|#)[^)\s]+\.md/);
     expect(realOutput).toContain('## Keeping this updated');
+    expect(realOutput).not.toMatch(/github\.com\/unisdr\//);
   });
 });

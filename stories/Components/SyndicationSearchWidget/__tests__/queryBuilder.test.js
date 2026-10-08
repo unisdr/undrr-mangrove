@@ -406,6 +406,98 @@ describe('queryBuilder', () => {
       // With just queryAppend, it should be included in the query
       expect(must.query_string.query).toContain('type:landing');
     });
+
+    it('requires queryAppend even when the reader query uses OR', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        scoring: SCORING_CONFIG,
+        queryAppend: 'field_theme:339',
+      };
+
+      const result = buildQuery(
+        { ...defaultState, query: 'earthquake OR tsunami' },
+        config
+      );
+
+      const must = result.query.function_score.query.bool.must;
+      expect(must.query_string.query).toBe(
+        '(earthquake~1 OR tsunami~1) AND (field_theme:339)'
+      );
+    });
+
+    it('uses queryAppend without parentheses when the query is empty', () => {
+      const config = {
+        ...DEFAULT_CONFIG,
+        scoring: SCORING_CONFIG,
+        queryAppend: 'type:news OR type:blog',
+      };
+
+      const result = buildQuery(defaultState, config);
+
+      const must = result.query.function_score.query.bool.must;
+      expect(must.query_string.query).toBe('type:news OR type:blog');
+    });
+  });
+
+  describe('Boolean operators in reader queries', () => {
+    const config = { ...DEFAULT_CONFIG, scoring: SCORING_CONFIG };
+    const queryFor = query => {
+      const result = buildQuery({ ...defaultState, query }, config);
+      return result.query.function_score.query.bool.must.query_string.query;
+    };
+
+    it('keeps OR as an operator', () => {
+      expect(queryFor('earthquake OR tsunami')).toBe(
+        'earthquake~1 OR tsunami~1'
+      );
+    });
+
+    it('keeps NOT as an operator without fuzziness', () => {
+      expect(queryFor('disaster NOT earthquake')).toBe(
+        'disaster~1 NOT earthquake~1'
+      );
+    });
+
+    it('keeps AND as an operator', () => {
+      expect(queryFor('flood AND drought')).toBe('flood~1 AND drought~1');
+    });
+
+    it('still removes lowercase "and" and "or" as stop words', () => {
+      expect(queryFor('flood and drought or storm')).toBe(
+        'flood~1 drought~1 storm~1'
+      );
+    });
+
+    it('keeps AND NOT together', () => {
+      expect(queryFor('flood AND NOT drought')).toBe(
+        'flood~1 AND NOT drought~1'
+      );
+    });
+
+    it('keeps a leading NOT so the term stays excluded', () => {
+      expect(queryFor('NOT earthquake')).toBe('NOT earthquake~1');
+      expect(queryFor('the NOT tsunami')).toBe('NOT tsunami~1');
+    });
+
+    it('drops operators left dangling by stop word removal', () => {
+      expect(queryFor('earthquake OR the')).toBe('earthquake~1');
+      expect(queryFor('the OR tsunami')).toBe('tsunami~1');
+      expect(queryFor('flood OR the OR drought')).toBe('flood~1 OR drought~1');
+    });
+
+    it('leaves operators out of phrase boosting', () => {
+      const result = buildQuery(
+        { ...defaultState, query: 'disaster NOT earthquake' },
+        config
+      );
+      const should = result.query.function_score.query.bool.should;
+      const boostedQueries = should.map(
+        clause => Object.values(Object.values(clause)[0])[0].query
+      );
+      boostedQueries.forEach(query => {
+        expect(query).toBe('disaster earthquake');
+      });
+    });
   });
 
   describe('aggregations', () => {

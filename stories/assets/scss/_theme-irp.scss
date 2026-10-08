@@ -2,12 +2,10 @@
 // Applied when .mg-theme-irp is present on <body> or a wrapping element.
 // ---------------------------------------------------------------------
 // Every token in this block is generated from tokens/irp.yaml, merged over
-// tokens/mangrove.yaml and tokens/undrr.yaml. The same source emits the
-// framework-neutral brand token file, so the two cannot drift apart.
+// tokens/mangrove.yaml and tokens/undrr.yaml.
 @import "./generated/tokens-irp";
 
 .mg-theme-irp {
   @include mg-tokens-tabs;
   @include mg-tokens-irp;
-  @include mg-control-tokens;
 }

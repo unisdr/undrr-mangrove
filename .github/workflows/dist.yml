@@ -8,6 +8,10 @@ on:
       - 'stories/**'
       - 'src/**'
       - 'scripts/**'
+      # dist/docs/ carries docs/EDITORIAL-MANUAL.md and the llms-*.txt
+      # sub-manifests built from docs/*.md (scripts/copy-docs-to-dist.mjs), so a
+      # docs-only merge has to rebuild the dist branch too.
+      - 'docs/**'
       - 'package.json'
       - 'webpack.config.js'
       - 'babel.config.js'

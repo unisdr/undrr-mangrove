@@ -24,6 +24,7 @@ const path = require('path');
 const {
   ROOT,
   componentEntryNames,
+  docsFileNames,
   publishedPaths,
 } = require('../published-paths.cjs');
 
@@ -44,6 +45,7 @@ describe('the published-path model', () => {
       'scss',
       'error-pages',
       'fonts',
+      'docs',
     ]) {
       expect([...paths].some(entry => entry.startsWith(`${dir}/`))).toBe(true);
     }
@@ -57,9 +59,11 @@ describe('the published-path model', () => {
       "['dist/assets/error-pages', 'error-pages']",
       "['dist/fonts', 'fonts']",
       "['dist/components', 'components']",
+      "['dist/docs', 'docs']",
     ]) {
       expect(assembleSource).toContain(line);
     }
+    expect(assembleSource).toContain("'docs/**/*'");
     // The scss copy is flattened from stories/, which is why the published
     // entry point is scss/assets/scss/style.scss.
     expect(assembleSource).toContain(
@@ -80,15 +84,14 @@ describe('the published-path model', () => {
     expect(paths.has('scss/style.scss')).toBe(false);
   });
 
-  test('publishes one scoped control stylesheet and neutral brand access', () => {
-    expect(paths.has('css/combo-box.css')).toBe(true);
-    expect(paths.has('components/ComboBox.js')).toBe(true);
-    expect(paths.has('aria/react-aria.css')).toBe(false);
-    expect(paths.has('scss/assets/scss/aria/_react-aria.scss')).toBe(false);
-    for (const brand of ['mangrove', 'preventionweb', 'irp', 'mcr', 'delta']) {
-      expect(paths.has(`css/tokens/${brand}.css`)).toBe(true);
-      expect(paths.has(`aria/tokens/${brand}.css`)).toBe(false);
-    }
+  test('names the editorial manual and its sub-manifest under docs/', () => {
+    // undrr/web-backlog#3109: public copies on the asset library, which
+    // mirrors dist/ as mangrove/latest/ and the package as mangrove/{version}/.
+    expect(paths.has('docs/EDITORIAL-MANUAL.md')).toBe(true);
+    expect(paths.has('docs/llms-editorial-manual.txt')).toBe(true);
+    // llms.txt indexes the Storybook site and is not copied.
+    expect(paths.has('docs/llms.txt')).toBe(false);
+    expect(docsFileNames().every(name => /\.(md|txt)$/.test(name))).toBe(true);
   });
 
   test('derives one component bundle per webpack entry', () => {
@@ -111,8 +114,8 @@ describe('the published-path model', () => {
         ['assets/css', 'css'],
         ['assets/error-pages', 'error-pages'],
         ['fonts', 'fonts'],
-        ['aria', 'aria'],
         ['components', 'components'],
+        ['docs', 'docs'],
       ]) {
         if (entry === from || entry.startsWith(`${from}/`)) {
           return `${to}${entry.slice(from.length)}`;
@@ -130,11 +133,6 @@ describe('the published-path model', () => {
       }
       return found;
     };
-
-    const researchFiles = walk(
-      path.join(dist, 'assets', 'scss', 'aria')
-    ).filter(file => path.basename(file) !== '_combo-box.scss');
-    expect(researchFiles).toEqual([]);
 
     const inDist = new Set();
     for (const file of walk(dist)) {

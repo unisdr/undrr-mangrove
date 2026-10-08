@@ -48,13 +48,11 @@ beforeEach(() => {
       scripts: { build: 'noop' },
       devDependencies: { jest: '1.0.0' },
       repository: { type: 'git', url: 'https://example.org/repo.git' },
+      homepage: 'https://example.org/',
+      bugs: { url: 'https://example.org/issues' },
       keywords: ['a'],
       author: 'UNDRR',
       license: 'Apache-2.0',
-      peerDependencies: { 'react-aria-components': '^1.20.0' },
-      peerDependenciesMeta: {
-        'react-aria-components': { optional: true },
-      },
     })
   );
   write(root, 'README.md', '# readme');
@@ -69,6 +67,8 @@ beforeEach(() => {
   write(root, 'dist/fonts/mangrove-icon-set.woff2');
   write(root, 'dist/components/MegaMenu.js');
   write(root, 'dist/components/nested/Thing.js');
+  write(root, 'dist/docs/EDITORIAL-MANUAL.md');
+  write(root, 'dist/docs/llms-editorial-manual.txt');
   write(root, 'stories/assets/scss/style.scss');
   write(root, 'stories/Components/Tabs/tabs.scss');
   write(root, 'stories/Components/Tabs/Tabs.jsx');
@@ -107,8 +107,12 @@ test('copies dist subpaths and SCSS sources into the CI layout', () => {
       'dist/assets/js/tabs.js',
       'dist/components/MegaMenu.js',
       'dist/components/nested/Thing.js',
+      'dist/docs/EDITORIAL-MANUAL.md',
+      'dist/docs/llms-editorial-manual.txt',
       'dist/fonts/mangrove-icon-set.woff2',
       'dist/index.js',
+      'docs/EDITORIAL-MANUAL.md',
+      'docs/llms-editorial-manual.txt',
       'error-pages/404.html',
       'fonts/mangrove-icon-set.woff2',
       'js/tabs.js',
@@ -150,10 +154,6 @@ test('the published surface never matches a development-only file', () => {
       '!**/__fixtures__/**',
       '!**/*.test.*',
       '!**/*.spec.*',
-      '!scss/assets/scss/aria/_react-aria.scss',
-      '!scss/assets/scss/aria/_spike-demo.scss',
-      '!scss/assets/scss/aria/_runtime-theme-aliases.scss',
-      '!scss/assets/scss/aria/_tokens-*.scss',
     ])
   );
   // dist/ is copied but never published: nothing in `files` matches it.
@@ -191,6 +191,8 @@ test('the packed tarball ships the subpath directories', () => {
     // release did not only because the real build emits no such file. With no
     // `main` there is nothing outside `files` to force in, and the fixture and
     // a release now pack the same shape.
+    'docs/EDITORIAL-MANUAL.md',
+    'docs/llms-editorial-manual.txt',
     'error-pages/404.html',
     'fonts/mangrove-icon-set.woff2',
     'js/tabs.js',
@@ -225,16 +227,15 @@ test('the published package advertises no root entry point', () => {
   expect(files).toContain('components/MegaMenu.js');
 }, 30000);
 
-test('webpack leaves development and research sources out of dist', () => {
+test('webpack copies the same source trees without the test files', () => {
   const config = fs.readFileSync(
     path.resolve(__dirname, '../../webpack.config.js'),
     'utf8'
   );
-  expect(config).toContain('DEV_ONLY_GLOBS');
-  expect(config).toContain('RESEARCH_ONLY_GLOBS');
-  expect(config).toContain(
-    'ignore: [...DEV_ONLY_GLOBS, ...RESEARCH_ONLY_GLOBS]'
+  expect(config).toMatch(
+    /import \{ DEV_ONLY_GLOBS \} from '\.\/scripts\/assemble-npm-package\.mjs'/
   );
+  expect(config).toMatch(/globOptions: \{ ignore: DEV_ONLY_GLOBS \}/);
 });
 
 test('generates the slimmed package.json', () => {
@@ -249,12 +250,9 @@ test('generates the slimmed package.json', () => {
       'css/**/*',
       'js/**/*',
       'scss/**/*.scss',
-      '!scss/assets/scss/aria/_react-aria.scss',
-      '!scss/assets/scss/aria/_spike-demo.scss',
-      '!scss/assets/scss/aria/_runtime-theme-aliases.scss',
-      '!scss/assets/scss/aria/_tokens-*.scss',
       'error-pages/**/*',
       'fonts/**/*',
+      'docs/**/*',
       '!**/__tests__/**',
       '!**/__snapshots__/**',
       '!**/__mocks__/**',
@@ -263,13 +261,11 @@ test('generates the slimmed package.json', () => {
       '!**/*.spec.*',
     ],
     repository: { type: 'git', url: 'https://example.org/repo.git' },
+    homepage: 'https://example.org/',
+    bugs: { url: 'https://example.org/issues' },
     keywords: ['a'],
     author: 'UNDRR',
     license: 'Apache-2.0',
-    peerDependencies: { 'react-aria-components': '^1.20.0' },
-    peerDependenciesMeta: {
-      'react-aria-components': { optional: true },
-    },
   });
   expect(Object.keys(pkg)).toEqual([
     'name',
@@ -277,11 +273,11 @@ test('generates the slimmed package.json', () => {
     'description',
     'files',
     'repository',
+    'homepage',
+    'bugs',
     'keywords',
     'author',
     'license',
-    'peerDependencies',
-    'peerDependenciesMeta',
   ]);
 });
 

@@ -1,6 +1,6 @@
 # Mangrove 1.4 release notes
 
-> Edits to this file show up on both [GitHub](https://github.com/unisdr/undrr-mangrove/blob/main/docs/RELEASE-1.4.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v1-4--docs).
+> Edits to this file show up on both [GitHub](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-1.4.md) and in [Storybook](https://mangrove.undrr.org/?path=/docs/getting-started-release-notes-v1-4--docs).
 
 Beginning with 1.4, Mangrove includes detailed release notes for each minor release so there is a clear record of what changed and why.
 
@@ -22,7 +22,7 @@ These options are a progression: Option A is the safe immediate upgrade, Option 
 
 ## What else is in 1.4
 
-Our last release was 1.3.3. For the complete diff, see the [v1.3.3...v1.4.0 comparison on GitHub](https://github.com/unisdr/undrr-mangrove/compare/v1.3.3...v1.4.0). Below are the highlights.
+Our last release was 1.3.3. For the complete diff, see the [v1.3.3...v1.4.0 comparison on GitHub](https://github.com/PreventionWeb/undrr-mangrove/compare/v1.3.3...v1.4.0). Below are the highlights.
 
 ### New features
 
