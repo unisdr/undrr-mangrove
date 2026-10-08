@@ -27,7 +27,7 @@ This directory holds the source files for documentation published in Storybook.
 - [CRITICAL-MESSAGING.md](CRITICAL-MESSAGING.md)
 - [BROWSER-SUPPORT.md](BROWSER-SUPPORT.md)
 - [AI-MCP-INTEGRATION.md](AI-MCP-INTEGRATION.md)
-- [Figma integration and maintenance](FIGMA-INTEGRATION.md)
+- [FIGMA-INTEGRATION.md](FIGMA-INTEGRATION.md)
 - [AI-CODING-AGENTS.md](AI-CODING-AGENTS.md)
 - [AGENTS.md](AGENTS.md)
 - [DESIGN-SYSTEM-RESEARCH.md](DESIGN-SYSTEM-RESEARCH.md)
