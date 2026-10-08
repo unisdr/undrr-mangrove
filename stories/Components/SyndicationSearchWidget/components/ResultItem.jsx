@@ -340,12 +340,23 @@ export function ResultItem({
     // Use vocabulary name as result type for terms, content type for nodes
     const resultType = isTerm ? vid : type;
 
+    const TeaserContainer = showMetrics ? 'div' : 'article';
+    const teaserContent = (
+      <TeaserContainer
+        className={showMetrics ? undefined : 'mg-search__result'}
+        data-result-type={showMetrics ? undefined : resultType}
+        dangerouslySetInnerHTML={{ __html: cleanHtml }}
+      />
+    );
+
+    if (!showMetrics) return teaserContent;
+
     return (
       <article className="mg-search__result" data-result-type={resultType}>
-        {showMetrics && <ScoreMetrics hit={hit} source={source} />}
+        <ScoreMetrics hit={hit} source={source} />
         {/* Teaser markup from the configured endpoint, rendered as-is. See the
             trust boundary note at the top of this file. */}
-        <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
+        {teaserContent}
       </article>
     );
   }

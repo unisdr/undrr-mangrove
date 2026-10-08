@@ -118,6 +118,32 @@ describe('stripHiddenTeaserFields', () => {
 });
 
 describe('ResultItem', () => {
+  it.each(['list', 'card', 'card-book'])(
+    'renders the card directly inside the article in %s mode',
+    displayMode => {
+      render(<ResultItem hit={createHit()} displayMode={displayMode} />);
+
+      const article = screen.getByRole('article');
+      expect(article).toHaveAttribute('data-result-type', 'publication');
+      expect(article.children).toHaveLength(1);
+      expect(article.firstElementChild).toHaveClass('mg-card');
+    }
+  );
+
+  it('preserves the scoring panel alongside teaser HTML when metrics are enabled', () => {
+    render(<ResultItem hit={createHit()} showMetrics />);
+
+    const article = screen.getByRole('article');
+    expect(
+      article.querySelector('.mg-search__result-metrics')
+    ).toBeInTheDocument();
+    expect(article.querySelector('.mg-card')).toBeInTheDocument();
+    expect(screen.getByText('Title')).toHaveAttribute(
+      'href',
+      'https://www.undrr.org/node/1'
+    );
+  });
+
   it('renders teaser HTML with card class swap for card mode', () => {
     render(<ResultItem hit={createHit()} displayMode="card" />);
 
