@@ -1,6 +1,6 @@
 # AI coding agent guidelines
 
-> This file is GitHub-only: no MDX imports it, so it does not appear in Storybook. (`docs/AI-MCP-INTEGRATION.md` is the one `docs/*.md` file that is wrapped into a Storybook page.)
+> This file is GitHub-only: no MDX imports it, so it does not appear in Storybook. Several other `docs/*.md` guides, including `AI-MCP-INTEGRATION.md` and `FIGMA-INTEGRATION.md`, have Storybook wrappers.
 
 Practical guidance for AI coding agents (Claude Code, Cursor, Copilot, etc.)
 working on Mangrove. It focuses on workflow gaps that commonly cause drift in
