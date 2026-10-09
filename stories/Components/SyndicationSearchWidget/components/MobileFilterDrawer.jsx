@@ -29,6 +29,7 @@ import {
   useSearchLabels,
   interpolateLabel,
 } from '../context/SearchContext';
+import { getOwnerDocument } from '../utils/ownerDocument';
 import FacetsSidebar from './FacetsSidebar';
 
 /**
@@ -49,23 +50,28 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   // Count active filters for the header
   const activeFilterCount = countActiveFilters(state);
 
-  // Lock body scroll when drawer is open
+  // Lock body scroll when drawer is open. The body and window are those of
+  // the document the drawer is mounted in, which differs from the global
+  // ones inside an iframe.
   useEffect(() => {
     if (isOpen) {
-      const originalOverflow = document.body.style.overflow;
-      const originalPaddingRight = document.body.style.paddingRight;
+      const doc = getOwnerDocument(drawerRef.current);
+      if (!doc) return;
+      const { body } = doc;
+      const view = doc.defaultView || window;
+      const originalOverflow = body.style.overflow;
+      const originalPaddingRight = body.style.paddingRight;
 
       // Prevent layout shift from scrollbar removal
-      const scrollbarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
+      const scrollbarWidth = view.innerWidth - doc.documentElement.clientWidth;
+      body.style.overflow = 'hidden';
       if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
+        body.style.paddingRight = `${scrollbarWidth}px`;
       }
 
       return () => {
-        document.body.style.overflow = originalOverflow;
-        document.body.style.paddingRight = originalPaddingRight;
+        body.style.overflow = originalOverflow;
+        body.style.paddingRight = originalPaddingRight;
       };
     }
   }, [isOpen]);
@@ -90,8 +96,10 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    const doc = getOwnerDocument(drawerRef.current);
+    if (!doc) return;
+    doc.addEventListener('keydown', handleKeyDown);
+    return () => doc.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
   // Focus trap - keep focus within drawer
@@ -103,11 +111,12 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
     );
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
+    const { activeElement } = getOwnerDocument(drawerRef.current);
 
-    if (e.shiftKey && document.activeElement === firstElement) {
+    if (e.shiftKey && activeElement === firstElement) {
       e.preventDefault();
       lastElement?.focus();
-    } else if (!e.shiftKey && document.activeElement === lastElement) {
+    } else if (!e.shiftKey && activeElement === lastElement) {
       e.preventDefault();
       firstElement?.focus();
     }

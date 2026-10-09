@@ -14,6 +14,8 @@ import {
   useSearchLabels,
   actions,
 } from '../context/SearchContext';
+import { useWidgetRootRef } from '../context/WidgetRootContext';
+import { getOwnerDocument } from '../utils/ownerDocument';
 
 /**
  * SearchPager: search-context-aware pagination.
@@ -26,6 +28,7 @@ export function SearchPager({ widgetId = '' }) {
   const dispatch = useSearchDispatch();
   const { resultsPerPage } = useSearchConfig();
   const labels = useSearchLabels();
+  const rootRef = useWidgetRootRef();
 
   const totalPages = useMemo(() => {
     if (!totalResults || totalResults === 0) return 0;
@@ -49,9 +52,13 @@ export function SearchPager({ widgetId = '' }) {
       // renders the pager on its own, not as a supported entry point.
       // Only the id-less case falls back: if an id was given it is
       // authoritative, so a missed lookup must not scroll a different widget.
+      // Look in the document the widget is mounted in, which differs from
+      // the global one inside an iframe.
+      const doc = getOwnerDocument(rootRef.current);
+      if (!doc) return;
       const widget = widgetId
-        ? document.getElementById(widgetId)
-        : document.querySelector('[data-mg-search-widget]');
+        ? doc.getElementById(widgetId)
+        : doc.querySelector('[data-mg-search-widget]');
       if (widget) {
         const reduce =
           typeof window.matchMedia === 'function' &&
@@ -74,7 +81,7 @@ export function SearchPager({ widgetId = '' }) {
         }
       }
     },
-    [dispatch, widgetId]
+    [dispatch, widgetId, rootRef]
   );
 
   if (totalPages <= 1) return null;

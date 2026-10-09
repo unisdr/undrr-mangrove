@@ -39,6 +39,11 @@ import {
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
 import { analyticsRegion, resolveFacetsLayout } from './utils/constants';
+import { resolveTarget } from './utils/ownerDocument';
+import {
+  WidgetRootContext,
+  useWidgetRootRef,
+} from './context/WidgetRootContext';
 import SearchForm from './components/SearchForm';
 import SearchResults from './components/SearchResults';
 import ActiveFilters from './components/ActiveFilters';
@@ -54,9 +59,16 @@ import MobileFilterDrawer from './components/MobileFilterDrawer';
  * @param {Object} [props.labels] - UI label overrides; merged with DEFAULT_LABELS
  */
 export function SyndicationSearchWidget({ config, labels }) {
+  // The widget root, attached by the inner component. Target selectors and
+  // other document lookups resolve against its ownerDocument, so a widget
+  // mounted inside an iframe (a block editor canvas) finds elements in that
+  // iframe rather than in the window its script runs in.
+  const rootRef = useRef(null);
   return (
     <SearchProvider config={config} labels={labels}>
-      <SyndicationSearchWidgetInner />
+      <WidgetRootContext value={rootRef}>
+        <SyndicationSearchWidgetInner />
+      </WidgetRootContext>
     </SearchProvider>
   );
 }
@@ -115,7 +127,10 @@ SyndicationSearchWidget.propTypes = {
      * are rendered into the target instead. The widget's React tree spans
      * the portal so search context still flows. If the target element is
      * not present at mount time, the widget falls back to the in-widget
-     * layout chosen by `facets` and a warning is logged.
+     * layout chosen by `facets` and a warning is logged. The selector is
+     * matched in the document the widget is mounted in, which is not the
+     * global `document` when the widget renders inside an iframe (such as
+     * a block editor canvas).
      */
     facetsTarget: PropTypes.string,
     /**
@@ -129,7 +144,9 @@ SyndicationSearchWidget.propTypes = {
      * widget falls back to rendering the input in-place and logs a
      * console warning. For cross-page hero patterns (input on landing,
      * results on `/search`), use a plain HTML form posting to the
-     * results page with a `#query=...` fragment instead.
+     * results page with a `#query=...` fragment instead. Like
+     * `facetsTarget`, the selector is matched in the document the widget
+     * is mounted in.
      */
     searchTarget: PropTypes.string,
     /** Whether to display active filter chips above results. */
@@ -199,6 +216,8 @@ function SyndicationSearchWidgetInner() {
 
   // Generate unique ID for this widget instance
   const widgetId = useId().replace(/:/g, '');
+
+  const rootRef = useWidgetRootRef();
 
   // Enable URL hash synchronization
   // initialHashState is read once, on the first render, and stays stable.
@@ -299,17 +318,17 @@ function SyndicationSearchWidgetInner() {
   const { isLoading } = state;
 
   // Resolve external facets target (AC2: facets in a separate DOM region).
-  // Looked up once on mount when a selector is configured. If the target
-  // node isn't in the document, fall back to the in-widget layout and log
-  // a single console warning so editors and developers can see why the
-  // portal didn't take effect.
+  // Looked up once on mount when a selector is configured, in the document
+  // the widget is mounted in. If the target node isn't there, fall back to
+  // the in-widget layout and log a single console warning so editors and
+  // developers can see why the portal didn't take effect.
   const [facetsTargetEl, setFacetsTargetEl] = useState(null);
   useEffect(() => {
     if (!facetsActive || !facetsTarget || typeof document === 'undefined') {
       setFacetsTargetEl(null);
       return;
     }
-    const el = document.querySelector(facetsTarget);
+    const el = resolveTarget(facetsTarget, rootRef.current);
     if (el) {
       setFacetsTargetEl(el);
     } else {
@@ -331,7 +350,7 @@ function SyndicationSearchWidgetInner() {
       setSearchTargetEl(null);
       return;
     }
-    const el = document.querySelector(searchTarget);
+    const el = resolveTarget(searchTarget, rootRef.current);
     if (el) {
       setSearchTargetEl(el);
     } else {
@@ -349,6 +368,7 @@ function SyndicationSearchWidgetInner() {
 
   return (
     <div
+      ref={rootRef}
       id={widgetId}
       className={`mg-search-widget ${isLoading || isPending ? 'mg-search-widget--loading' : ''}`}
       data-mg-search-widget

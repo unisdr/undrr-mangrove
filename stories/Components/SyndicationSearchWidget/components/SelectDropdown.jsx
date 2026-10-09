@@ -37,6 +37,7 @@ import React, {
   useId,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { getOwnerDocument } from '../utils/ownerDocument';
 
 const EMPTY_OPTIONS = [];
 const EMPTY_VALUE = [];
@@ -273,7 +274,10 @@ export function SelectDropdown({
       </button>
 
       {/* Invisible backdrop to capture clicks outside (prevents click-through) */}
-      {/* Rendered via portal to escape sidebar stacking context */}
+      {/* Rendered via portal to escape sidebar stacking context, into the
+          body of the document the dropdown is mounted in (not the global
+          one when it renders inside an iframe). The container is mounted
+          by the time the dropdown can open. */}
       {isOpen &&
         createPortal(
           <div
@@ -282,7 +286,7 @@ export function SelectDropdown({
             onMouseDown={handleBackdropClick}
             aria-hidden="true"
           />,
-          document.body
+          getOwnerDocument(containerRef.current).body
         )}
 
       {/* Dropdown panel */}
