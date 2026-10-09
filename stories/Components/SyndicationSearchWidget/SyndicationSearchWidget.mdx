@@ -227,7 +227,7 @@ allowedTypes: {
 
 **Available type IDs:** `news`, `event`, `publication`, `landing`, `vacancy`, `resource`, `collections`, `blog`, `terminology`, `organization`, `national_platform`
 
-**News subtype IDs:** `751` (Update), `752` (Press release), `1` (Statements), `754` (Feature), `797` (Community announcement), `756` (Op Ed)
+**News subtype IDs:** `751` (Update), `752` (Press release), `1` (Statements), `754` (Feature), `797` (Opportunities), `756` (Op Ed)
 
 ## Taxonomy term results
 
@@ -267,6 +267,28 @@ markup is often not the same organisation as the index behind it.
 Nothing from the search box reaches the page as markup: highlights are built
 from indexed documents, not from the query, so the query text is not reflected
 back.
+
+### Taxonomy endpoint
+
+The country and region, hazard and theme facets get their labels from a
+taxonomy API, set by `taxonomyEndpoint` (or `data-taxonomy-endpoint`). The
+default is the PreventionWeb v1 taxonomy view:
+
+```
+https://www.preventionweb.net/api/v1/taxonomy?vid=prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en
+```
+
+The endpoint must return JSON with a `results` array of `{ id, name }` terms.
+Names are HTML-entity decoded once on load (Drupal's views escape them, so
+`Côte d&#039;Ivoire` arrives encoded). The request is made once per page and
+shared by the sidebar, the mobile filter drawer and the active filter chips.
+
+Once terms have loaded, values on these three facets that have no matching term
+(an unpublished or deleted term still referenced by content) are left out of
+the dropdown. A value that is already selected stays visible, labelled with its
+raw ID, so it can be removed. Nothing is hidden while terms are loading, if the
+request fails, or if it returns no terms (for example a Cloudflare challenge
+page instead of JSON).
 
 ## Syndicated cards
 
@@ -481,6 +503,7 @@ platform codebase.
 | Prop                   | Type           | Default                                 | Description                                                                                                                        |
 | ---------------------- | -------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `searchEndpoint`       | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract) |
+| `taxonomyEndpoint`     | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                               |
 | `resultsPerPage`       | number         | 50                                      | Number of results to display per page                                                                                              |
 | `debounceDelay`        | number         | 500                                     | Milliseconds to wait before executing search                                                                                       |
 | `minSearchLength`      | number         | 3                                       | Minimum characters required to trigger search                                                                                      |
@@ -537,6 +560,7 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/Preventi
 | Attribute                    | Default | Description                                                       |
 | ---------------------------- | ------- | ----------------------------------------------------------------- |
 | `data-search-endpoint`       |         | Elasticsearch proxy URL                                           |
+| `data-taxonomy-endpoint`     |         | Taxonomy API URL for facet labels                                 |
 | `data-results-per-page`      |         | Number of results per page                                        |
 | `data-debounce-delay`        |         | Milliseconds before executing search                              |
 | `data-min-search-length`     |         | Minimum characters to trigger search                              |
@@ -682,6 +706,13 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.17**, 2026-10-09 ([mangrove#1324](https://github.com/unisdr/undrr-mangrove/issues/1324)): Facet label hardening and a configurable taxonomy source.
+  - Country and region, Hazard and Theme (now marked `labelSource: 'taxonomy'` in `FACET_FIELDS`) hide values with no matching term once the taxonomy has loaded, instead of showing raw term IDs such as `1177`. Selected values and active filter chips keep the raw ID so they can still be removed, and nothing is hidden while loading, after a failed request or when the response has no terms.
+  - Taxonomy term names are HTML-entity decoded, so `Côte d&#039;Ivoire` renders as `Côte d'Ivoire` in facet options, chips and dropdown search. New `utils/decodeEntities.js`.
+  - The Year facet lists newest first (selected years still float to the top), instead of by result count.
+  - New `taxonomyEndpoint` config option and `data-taxonomy-endpoint` attribute. The default is the existing PreventionWeb v1 URL without `news_type`, which was never used: news subtypes are labelled from the static list.
+  - The taxonomy request is made once per page through a shared cache, instead of once each by the sidebar, the mobile filter drawer and the active filter chips. `useTaxonomies` accepts an optional endpoint and still works outside a `SearchProvider`; it now also returns `taxonomiesReady`, and `getLabel` takes an optional `{ fallback }`.
+  - News subtype `797` is labelled "Opportunities", matching Drupal, instead of "Community announcement".
 - **1.4.16**, 2026-10-08: Render teaser cards directly inside the result article when search metrics are disabled, removing the extra div that interfered with card layout. The metrics-enabled view retains its scoring panel and teaser container.
 - **1.4.15**, 2026-09-29 ([undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109)): Added the [Editor configuration](?path=/docs/components-syndicated-search-editor-configuration--docs) sub-page, which moves the editor-facing search guidance for the Drupal Gutenberg block (block settings, practical examples, search syntax, `field:value` filters and taxonomy term IDs) into Mangrove, and links it from this page. Documentation only; the component is unchanged.
 - **1.4.14**, 2026-09-29 ([mangrove#1312](https://github.com/unisdr/undrr-mangrove/issues/1312)): OR and NOT typed by a reader work as documented. "or" was on the stop word list and removal compared words in lowercase, so `earthquake OR tsunami` was sent as `earthquake tsunami` and required both terms; "not" was not a stop word, so `disaster NOT earthquake` was fuzzed into `disaster~1 NOT~1 earthquake~1` and the search failed. Uppercase `AND`, `OR` and `NOT` are now kept as operators, never removed or fuzzed, and an operator left dangling by stop word removal (`earthquake OR the`) is dropped rather than sent as invalid syntax. Lowercase "and" and "or" are still removed as stop words. Operators are also left out of phrase boosting, which scores the words, not the syntax.

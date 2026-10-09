@@ -523,6 +523,16 @@ export function useSearchConfig() {
 }
 
 /**
+ * Hook to access search configuration when a SearchProvider may be absent.
+ * Returns null outside a provider instead of throwing, for hooks that are
+ * exported for standalone use (e.g. useTaxonomies).
+ * @returns {Object|null} Configuration object, or null
+ */
+export function useOptionalSearchConfig() {
+  return use(SearchConfigContext);
+}
+
+/**
  * Hook to access UI labels (merged with DEFAULT_LABELS).
  * @returns {Object} Labels object
  */

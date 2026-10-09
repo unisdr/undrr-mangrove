@@ -15,6 +15,8 @@ export default function syndicationSearchWidgetFromElement(container) {
   // highlight markup survives, so whatever this attribute points at is trusted
   // to return safe HTML. See the note at the top of components/ResultItem.jsx.
   if (dataset.searchEndpoint) config.searchEndpoint = dataset.searchEndpoint;
+  if (dataset.taxonomyEndpoint)
+    config.taxonomyEndpoint = dataset.taxonomyEndpoint;
   if (dataset.resultsPerPage)
     config.resultsPerPage = parseInt(dataset.resultsPerPage, 10);
   if (dataset.debounceDelay)

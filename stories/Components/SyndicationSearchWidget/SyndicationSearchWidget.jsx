@@ -70,6 +70,12 @@ SyndicationSearchWidget.propTypes = {
      * MDX documentation.
      */
     searchEndpoint: PropTypes.string,
+    /**
+     * Taxonomy API URL used to label the country, hazard and theme facets.
+     * Defaults to the PreventionWeb v1 taxonomy endpoint. The response must
+     * be JSON with a `results` array of `{ id, name }` terms.
+     */
+    taxonomyEndpoint: PropTypes.string,
     /** Number of results per page. */
     resultsPerPage: PropTypes.number,
     /** Debounce delay in milliseconds for search input. */

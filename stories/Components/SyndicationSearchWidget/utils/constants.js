@@ -147,7 +147,7 @@ export const CONTENT_SUBTYPES = {
       { id: '1', name: 'Statements and messages' },
       { id: '754', name: 'Feature' },
       { id: '755', name: 'Research briefs' },
-      { id: '797', name: 'Community announcement' },
+      { id: '797', name: 'Opportunities' },
       { id: '756', name: 'Op Ed' },
     ],
   },
@@ -328,7 +328,15 @@ export const FACET_SEARCH_THRESHOLD = 8;
 
 /**
  * Facet field definitions.
- * @type {Array<{key: string, label: string, vocabulary?: string, type: string}>}
+ *
+ * `labelSource: 'taxonomy'` marks the facets labelled from the taxonomy
+ * endpoint (`taxonomyEndpoint`). Once that endpoint has loaded, values on
+ * these facets with no matching term (unpublished or deleted terms still
+ * referenced by content) are hidden unless selected. Do not infer this from
+ * `vocabulary: 'terms'`, which subtype fields labelled from CONTENT_SUBTYPES
+ * also use.
+ *
+ * @type {Array<{key: string, label: string, vocabulary?: string, type: string, labelSource?: 'taxonomy'}>}
  */
 export const FACET_FIELDS = [
   {
@@ -392,18 +400,21 @@ export const FACET_FIELDS = [
     label: 'Country and region',
     vocabulary: 'terms',
     type: 'select-multiple',
+    labelSource: 'taxonomy',
   },
   {
     key: 'field_hazard',
     label: 'Hazard',
     vocabulary: 'terms',
     type: 'select-multiple',
+    labelSource: 'taxonomy',
   },
   {
     key: 'field_theme',
     label: 'Theme',
     vocabulary: 'terms',
     type: 'select-multiple',
+    labelSource: 'taxonomy',
   },
   {
     key: '_language',
@@ -414,12 +425,14 @@ export const FACET_FIELDS = [
 ];
 
 /**
- * Default taxonomy API endpoint.
- * Always points to PreventionWeb as the canonical source for taxonomy terms.
+ * Default taxonomy API endpoint (`DEFAULT_CONFIG.taxonomyEndpoint`).
+ * Points to PreventionWeb as the canonical source for the term labels of
+ * the taxonomy-backed facets (`labelSource: 'taxonomy'` in FACET_FIELDS).
+ * News types are not requested: they are labelled from the static NEWS_TYPES.
  * @type {string}
  */
 export const TAXONOMY_API_URL =
-  'https://www.preventionweb.net/api/v1/taxonomy?vid=news_type,prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
+  'https://www.preventionweb.net/api/v1/taxonomy?vid=prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en';
 
 /**
  * Search scoring configuration.
@@ -537,6 +550,8 @@ export const HIGHLIGHT_CONFIG = {
 export const DEFAULT_CONFIG = {
   // API Configuration
   searchEndpoint: 'https://www.undrr.org/search-endpoint',
+  // Taxonomy terms for facet labels (countries, hazards, themes)
+  taxonomyEndpoint: TAXONOMY_API_URL,
   resultsPerPage: 5,
   facetCountToShow: 500,
   debounceDelay: 500, // Balances responsiveness (<1s perceived) with fewer wasted API calls

@@ -18,6 +18,7 @@ describe('syndicationSearchWidgetFromElement', () => {
     const { config } = syndicationSearchWidgetFromElement(
       makeContainer({
         'search-endpoint': 'https://example.com/search',
+        'taxonomy-endpoint': 'https://example.com/taxonomy',
         'results-per-page': '10',
         'debounce-delay': '500',
         'min-search-length': '2',
@@ -29,6 +30,7 @@ describe('syndicationSearchWidgetFromElement', () => {
       })
     );
     expect(config.searchEndpoint).toBe('https://example.com/search');
+    expect(config.taxonomyEndpoint).toBe('https://example.com/taxonomy');
     expect(config.resultsPerPage).toBe(10);
     expect(config.debounceDelay).toBe(500);
     expect(config.minSearchLength).toBe(2);

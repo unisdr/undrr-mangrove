@@ -38,7 +38,11 @@ export function FacetsSidebar({ widgetId = 'search' }) {
   const config = useSearchConfig();
   const { aggregations } = useSearchState();
   const labels = useSearchLabels();
-  const { getLabel, isLoading: taxonomiesLoading } = useTaxonomies();
+  const {
+    getLabel,
+    isLoading: taxonomiesLoading,
+    taxonomiesReady,
+  } = useTaxonomies();
 
   const {
     visibleFilters,
@@ -93,6 +97,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
               getLabel={getLabel}
               widgetId={widgetId}
               allowedTypes={allowedTypes}
+              taxonomiesReady={taxonomiesReady}
             />
           );
         }
@@ -107,6 +112,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
             getLabel={getLabel}
             widgetId={widgetId}
             allowedTypes={allowedTypes}
+            taxonomiesReady={taxonomiesReady}
           />
         );
       });
@@ -118,6 +124,7 @@ export function FacetsSidebar({ widgetId = 'search' }) {
     subtypeFields,
     mergedTypeBuckets,
     getLabel,
+    taxonomiesReady,
     widgetId,
   ]);
 

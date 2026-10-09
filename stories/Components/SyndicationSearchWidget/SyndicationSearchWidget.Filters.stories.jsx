@@ -277,7 +277,7 @@ config: {
 | \`752\` | Press release |
 | \`1\` | Statements and messages |
 | \`754\` | Feature |
-| \`797\` | Community announcement |
+| \`797\` | Opportunities |
 | \`756\` | Op Ed |
 
 Use this when embedding search on topic-specific pages (e.g., a news section that shouldn't show events).

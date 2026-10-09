@@ -737,6 +737,8 @@ The term IDs in this guide come from the original data migration and match produ
 | `/api/v1/taxonomy?vid=syndication&items_per_page=1000` | Every syndication term, as JSON |
 | `/taxonomy/term/{tid}` | One term, to confirm an ID |
 
+The widget labels the **Country and region**, **Hazard** and **Theme** facets from PreventionWeb's `/api/v1/taxonomy` view. A term ID that content still references but that list does not return (an unpublished or deleted term) is left out of the facet dropdown rather than shown as a bare number. If a reader arrives with such a value already selected, it stays in the dropdown and the filter chips, shown by its ID, so it can be removed. The block does not change the taxonomy source; developers can, with the `taxonomyEndpoint` setting described in [Syndicated search](https://mangrove.undrr.org/?path=/docs/components-syndicated-search--docs).
+
 ## Related documentation
 
 - [Syndicated search](https://mangrove.undrr.org/?path=/docs/components-syndicated-search--docs): the component, its props and its query syntax, for developers
