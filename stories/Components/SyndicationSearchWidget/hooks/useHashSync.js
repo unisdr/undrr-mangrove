@@ -16,8 +16,9 @@ import {
   useSearchConfig,
   actions,
 } from '../context/SearchContext';
-import { FACET_FIELDS } from '../utils/constants';
+import { FACET_FIELDS, MAX_RESULT_WINDOW } from '../utils/constants';
 import {
+  isSearchHash,
   parseHashState,
   buildHashString,
   facetsFromDefaults,
@@ -71,6 +72,9 @@ export function useHashSync({ enabled = true } = {}) {
   // the current history entry instead of adding one.
   const replaceNextRef = useRef(true);
   const prevQueryRef = useRef(null);
+  // Set when the page loads on a non-search fragment (e.g. #main-content):
+  // the first write must not replace that anchor.
+  const keepLoadAnchorRef = useRef(false);
 
   const { query, page, sortBy, facets, facetOperators, isInitialized } = state;
   const {
@@ -79,8 +83,14 @@ export function useHashSync({ enabled = true } = {}) {
     defaultFilters,
     defaultSort,
     defaultQuery,
+    resultsPerPage,
   } = config;
   const fields = facetFields || FACET_FIELDS;
+  // Pages past Elasticsearch's result window can only return an error
+  const maxPage = Math.max(
+    1,
+    Math.floor(MAX_RESULT_WINDOW / (resultsPerPage || 50))
+  );
 
   // Determine if hash sync should be active.
   // Accept both boolean true and string 'true': when the value is forwarded
@@ -108,8 +118,11 @@ export function useHashSync({ enabled = true } = {}) {
    */
   const parseHash = useCallback(() => {
     if (typeof window === 'undefined') return {};
-    return parseHashState(window.location.hash, { facetFields: fields });
-  }, [fields]);
+    return parseHashState(window.location.hash, {
+      facetFields: fields,
+      maxPage,
+    });
+  }, [fields, maxPage]);
 
   // Facets and sort read from the hash on mount, passed to INITIALIZE by
   // the widget so the defaults don't overwrite them. Read during the first
@@ -119,6 +132,7 @@ export function useHashSync({ enabled = true } = {}) {
     if (getLegacyQueryParam()) return null;
     const parsed = parseHashState(window.location.hash, {
       facetFields: fields,
+      maxPage,
     });
     if (!parsed.facets && !parsed.sort) return null;
     return {
@@ -228,7 +242,12 @@ export function useHashSync({ enabled = true } = {}) {
       dispatch(actions.setPage(hashState.page));
     }
 
-    lastHashRef.current = window.location.hash.substring(1);
+    const loadHash = window.location.hash.substring(1);
+    if (loadHash && !isSearchHash(loadHash)) {
+      // An in-page anchor, not search state: leave it in the URL
+      keepLoadAnchorRef.current = true;
+    }
+    lastHashRef.current = loadHash;
     isInitializedRef.current = true;
   }, [isEnabled, dispatch, parseHash]);
 
@@ -249,6 +268,17 @@ export function useHashSync({ enabled = true } = {}) {
     if (newHash === lastHashRef.current) {
       replaceNextRef.current = false;
       return;
+    }
+
+    // The page loaded on an anchor and the state is still the initial one:
+    // keep the anchor until the reader changes something.
+    if (keepLoadAnchorRef.current) {
+      keepLoadAnchorRef.current = false;
+      if (replaceNextRef.current) {
+        replaceNextRef.current = false;
+        lastHashRef.current = newHash;
+        return;
+      }
     }
 
     // Typing a query replaces the entry; committed changes add one.
@@ -281,7 +311,15 @@ export function useHashSync({ enabled = true } = {}) {
       // Avoid loops: our own writes and already-handled navigations
       if (currentHash === lastHashRef.current) return;
 
-      const hashState = parseHashState(currentHash, { facetFields: fields });
+      // In-page anchors (skip links, table of contents) are not search
+      // state: leave both the state and the fragment alone. An empty hash
+      // is still handled, so Back to the clean entry restores the defaults.
+      if (currentHash && !isSearchHash(currentHash)) return;
+
+      const hashState = parseHashState(currentHash, {
+        facetFields: fields,
+        maxPage,
+      });
       const restored = {
         query: hashState.query ?? (defaultQuery || ''),
         page: hashState.page || 1,
@@ -314,6 +352,7 @@ export function useHashSync({ enabled = true } = {}) {
     isEnabled,
     dispatch,
     fields,
+    maxPage,
     defaultQuery,
     defaultSort,
     defaultFacets,

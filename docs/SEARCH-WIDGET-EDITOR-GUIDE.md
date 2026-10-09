@@ -310,6 +310,7 @@ With URL hash sync on, the widget writes the search text, the selected filters, 
 
 - A link with filters in it replaces the block's default filters, including the automatic current-language and current-domain filters. A link without filters uses the defaults as normal.
 - To build a link by hand, add `f.<filter key>=<value>` for each value, using the filter keys and term IDs in this guide, for example `#f.field_theme=339&f.field_theme=340`. Unknown filter keys and invalid values are ignored.
+- Ordinary page anchors, such as `#main-content` or a table of contents link, are left alone and don't reset the search.
 - Custom facet dropdowns are not included in the link. Their selections are stored by position in the option list, so a saved link would pick a different option once the options are edited.
 
 ### Saved markup

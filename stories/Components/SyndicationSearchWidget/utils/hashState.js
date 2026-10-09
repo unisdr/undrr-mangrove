@@ -21,8 +21,32 @@ import { SORT_VALUES, SUBTYPE_FIELD_TO_PARENT } from './constants';
 const FACET_PREFIX = 'f.';
 const OPERATOR_PREFIX = 'op.';
 const OPERATORS = ['OR', 'AND'];
-const MAX_VALUES_PER_FACET = 50;
-const MAX_VALUE_LENGTH = 200;
+const SEARCH_PARAMS = ['query', 'page', 'sort', 'label'];
+export const MAX_VALUES_PER_FACET = 50;
+export const MAX_VALUE_LENGTH = 200;
+
+/**
+ * Whether a hash holds search state at all. Fragments such as
+ * `#main-content` (skip link) or table-of-contents anchors don't, and must
+ * be left alone rather than read as "no filters".
+ *
+ * @param {string} hash - Hash, with or without the `#`
+ * @returns {boolean} True when any search parameter is present
+ */
+export function isSearchHash(hash) {
+  const raw = (hash || '').replace(/^#/, '');
+  if (!raw) return false;
+  for (const name of new URLSearchParams(raw).keys()) {
+    if (
+      SEARCH_PARAMS.includes(name) ||
+      name.startsWith(FACET_PREFIX) ||
+      name.startsWith(OPERATOR_PREFIX)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
 
 /**
  * Whether a facet value from the hash is acceptable for its key.
@@ -48,12 +72,14 @@ function isValidFacetValue(key, value) {
  * @param {string} hash - `window.location.hash`, with or without the `#`
  * @param {Object} options
  * @param {Array<{key: string}>} options.facetFields - Active facet fields
+ * @param {number} [options.maxPage] - Highest valid page; a larger `page`
+ *   is ignored (treated as page 1)
  * @returns {{query: (string|null), page: (number|null), label: (string|null),
  *   sort: (string|null), facets: (Object|null), facetOperators: Object}}
  *   `facets` is null when the hash has no valid `f.*` params, meaning
  *   "use the configured defaults".
  */
-export function parseHashState(hash, { facetFields }) {
+export function parseHashState(hash, { facetFields, maxPage = Infinity }) {
   const raw = (hash || '').replace(/^#/, '');
   const params = new URLSearchParams(raw);
   const allowed = new Set(facetFields.map(field => field.key));
@@ -81,7 +107,10 @@ export function parseHashState(hash, { facetFields }) {
 
   return {
     query: params.get('query'),
-    page: Number.isInteger(pageParam) && pageParam > 1 ? pageParam : null,
+    page:
+      Number.isInteger(pageParam) && pageParam > 1 && pageParam <= maxPage
+        ? pageParam
+        : null,
     label: params.get('label'),
     sort: SORT_VALUES.includes(sortParam) ? sortParam : null,
     facets: Object.keys(facets).length > 0 ? facets : null,

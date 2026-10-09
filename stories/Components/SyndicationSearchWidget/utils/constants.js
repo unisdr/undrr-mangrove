@@ -551,6 +551,13 @@ export const HIGHLIGHT_CONFIG = {
 export const SORT_VALUES = ['relevance', 'newest', 'oldest'];
 
 /**
+ * Elasticsearch's default `index.max_result_window`: `from + size` cannot
+ * exceed it, so pages beyond it would only return an error.
+ * @type {number}
+ */
+export const MAX_RESULT_WINDOW = 10000;
+
+/**
  * Default configuration values.
  * @type {Object}
  */

@@ -221,10 +221,17 @@ function SyndicationSearchWidgetInner() {
     dispatch(actions.setQuery(deferredQuery));
   }, [deferredQuery, dispatch]);
 
+  // Hash state applies to the first INITIALIZE only. A ref (not state in
+  // the deps) so a re-initialise after a config change uses the defaults,
+  // while React StrictMode's double effect run, which happens before any
+  // re-render, still sees the widget as uninitialised.
+  const isInitializedRef = useRef(state.isInitialized);
+  isInitializedRef.current = state.isInitialized;
+
   // Initialize widget on mount. Facets and sort from the URL hash, if any,
   // take precedence over the configured defaults.
   useEffect(() => {
-    const fromHash = initialHashState;
+    const fromHash = isInitializedRef.current ? null : initialHashState;
     dispatch(
       actions.initialize({
         defaultFilters: config.defaultFilters,

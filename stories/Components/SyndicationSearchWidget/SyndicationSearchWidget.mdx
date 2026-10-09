@@ -548,6 +548,12 @@ Rules:
   included, so the link reproduces the view exactly. A consequence: if a reader
   removes every filter, including the defaults, the URL has no `f.*`
   parameters and reloading brings the defaults back.
+- **Other fragments are left alone.** A hash with none of these parameters,
+  such as a skip link (`#main-content`) or a table of contents anchor, is not
+  search state: following it doesn't change the search, and a page that loads
+  on one keeps it until the reader changes the search.
+- **Page numbers are bounded.** A `page` beyond Elasticsearch's 10,000-result
+  window (for the configured `resultsPerPage`) is ignored, and page 1 is shown.
 - **History.** Choosing a filter, a match mode, a sort order or a page adds a
   history entry. Typing a search query updates the current entry instead.
 - **Custom facets are not included.** Editor-defined facets (`customFacets`)
@@ -775,6 +781,9 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
   - A query or label containing a literal `%` no longer throws: hash values were decoded a second time after `URLSearchParams` had already decoded them.
   - `SET_QUERY` with the current query no longer resets the page, so a page restored from the URL survives the search box re-syncing.
   - New `utils/hashState.js` (`parseHashState`, `buildHashString`) and `SORT_VALUES` in `utils/constants.js`. `useHashSync` also returns `initialHashState`.
+  - Fragments that carry no search parameters (skip links, table of contents anchors) are ignored rather than read as an empty search, and an anchor the page loads on is kept.
+  - The hash state applies to the first `INITIALIZE` only; re-initialising after a config change uses the defaults.
+  - A `page` beyond the Elasticsearch result window is ignored.
   - Custom facets are not written to the URL; they need stable option IDs first.
 - **1.4.17**, 2026-10-09 ([mangrove#1324](https://github.com/unisdr/undrr-mangrove/issues/1324)): Facet label hardening and a configurable taxonomy source.
   - Country and region, Hazard and Theme (now marked `labelSource: 'taxonomy'` in `FACET_FIELDS`) hide values with no matching term once the taxonomy has loaded, instead of showing raw term IDs such as `1177`. Selected values and active filter chips keep the raw ID so they can still be removed, and nothing is hidden while loading, after a failed request or when the response has no terms.

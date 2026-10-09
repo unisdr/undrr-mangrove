@@ -170,6 +170,7 @@ describe('useHashSync: URL parameter migration', () => {
  */
 const harness = {};
 function Harness() {
+  harness.renders = (harness.renders || 0) + 1;
   const state = useSearchState();
   const dispatch = useSearchDispatch();
   const config = useSearchConfig();
@@ -390,5 +391,93 @@ describe('useHashSync: facets, sort and history', () => {
     );
     expect(currentHash()).toBe('f.field_hazard=12');
     expect(pushSpy).not.toHaveBeenCalled();
+  });
+
+  describe('in-page anchors', () => {
+    it('ignores an anchor hashchange and keeps the anchor', async () => {
+      window.history.replaceState(
+        null,
+        '',
+        '/search#query=flood&f._language=en&f.field_hazard=12'
+      );
+      renderHarness();
+      await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+
+      await act(async () => {
+        window.location.hash = '#main-content';
+      });
+      expect(currentHash()).toBe('main-content');
+      expect(harness.state.query).toBe('flood');
+      expect(harness.state.facets).toEqual({
+        _language: ['en'],
+        field_hazard: ['12'],
+      });
+      expect(pushSpy).not.toHaveBeenCalled();
+    });
+
+    it('ignores Back and Forward onto an anchor entry', async () => {
+      renderHarness();
+      await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+      act(() => {
+        harness.dispatch(actions.setFacet('field_hazard', ['12']));
+      });
+      const searchHash = currentHash();
+
+      await act(async () => {
+        window.location.hash = '#toc-section';
+      });
+      await act(async () => {
+        window.history.back();
+      });
+      await waitFor(() => expect(currentHash()).toBe(searchHash));
+      await act(async () => {
+        window.history.forward();
+      });
+      await waitFor(() => expect(currentHash()).toBe('toc-section'));
+      expect(harness.state.facets).toEqual({
+        _language: ['en'],
+        field_hazard: ['12'],
+      });
+      expect(pushSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps an anchor the page loaded on, until the reader changes something', async () => {
+      window.history.replaceState(null, '', '/search#main-content');
+      renderHarness({ defaultQuery: 'risk' });
+      await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+      expect(currentHash()).toBe('main-content');
+      expect(harness.state.facets).toEqual({ _language: ['en'] });
+
+      act(() => {
+        harness.dispatch(actions.setFacet('field_hazard', ['12']));
+      });
+      expect(pushSpy).toHaveBeenCalledTimes(1);
+      expect(currentHash()).toContain('f.field_hazard=12');
+    });
+  });
+
+  it('handles popstate followed by hashchange for one navigation once', async () => {
+    renderHarness();
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+
+    window.history.replaceState(null, '', '/search#sort=oldest');
+    await act(async () => {
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    });
+    expect(harness.state.sortBy).toBe('oldest');
+    const rendersAfterFirst = harness.renders;
+
+    await act(async () => {
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    });
+    expect(harness.renders).toBe(rendersAfterFirst);
+  });
+
+  it('ignores a page beyond the Elasticsearch result window', async () => {
+    window.history.replaceState(null, '', '/search#query=flood&page=999999');
+    renderHarness({ resultsPerPage: 5 });
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    expect(harness.state.page).toBe(1);
+    expect(currentHash()).toBe('query=flood');
   });
 });

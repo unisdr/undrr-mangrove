@@ -8,6 +8,9 @@ import {
   buildHashString,
   facetsFromDefaults,
   facetsEqual,
+  isSearchHash,
+  MAX_VALUES_PER_FACET,
+  MAX_VALUE_LENGTH,
 } from '../utils/hashState';
 import { FACET_FIELDS } from '../utils/constants';
 
@@ -86,6 +89,57 @@ describe('parseHashState', () => {
       opts
     );
     expect(state.facets).toEqual({ field_hazard: ['1'] });
+  });
+});
+
+describe('parseHashState limits', () => {
+  it(`keeps at most ${MAX_VALUES_PER_FACET} values per facet`, () => {
+    const params = new URLSearchParams();
+    for (let i = 0; i < MAX_VALUES_PER_FACET + 5; i++) {
+      params.append('f.field_hazard', String(i));
+    }
+    const state = parseHashState(params.toString(), opts);
+    expect(state.facets.field_hazard).toHaveLength(MAX_VALUES_PER_FACET);
+  });
+
+  it(`rejects values longer than ${MAX_VALUE_LENGTH} characters`, () => {
+    const params = new URLSearchParams();
+    params.append('f.field_hazard', 'x'.repeat(MAX_VALUE_LENGTH + 1));
+    params.append('f.field_hazard', 'y'.repeat(MAX_VALUE_LENGTH));
+    const state = parseHashState(params.toString(), opts);
+    expect(state.facets.field_hazard).toEqual(['y'.repeat(MAX_VALUE_LENGTH)]);
+  });
+
+  it('rejects an empty vid: type value', () => {
+    const state = parseHashState('f.type=vid:&f.type=vid:hazard', opts);
+    expect(state.facets.type).toEqual(['vid:hazard']);
+  });
+
+  it('ignores a page beyond maxPage', () => {
+    expect(parseHashState('page=2000', { ...opts, maxPage: 2000 }).page).toBe(
+      2000
+    );
+    expect(
+      parseHashState('page=999999', { ...opts, maxPage: 2000 }).page
+    ).toBeNull();
+  });
+});
+
+describe('isSearchHash', () => {
+  it.each([
+    ['query=x', true],
+    ['#page=2', true],
+    ['sort=newest', true],
+    ['label=Title', true],
+    ['f.field_hazard=1', true],
+    ['op.field_hazard=AND', true],
+    ['f.foo=1', true],
+    ['', false],
+    ['#main-content', false],
+    ['section-2', false],
+    ['heading=1', false],
+  ])('%p -> %p', (hash, expected) => {
+    expect(isSearchHash(hash)).toBe(expected);
   });
 });
 

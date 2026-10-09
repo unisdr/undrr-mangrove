@@ -143,4 +143,33 @@ describe('SyndicationSearchWidget URL hash state', () => {
       expect(screen.getByRole('searchbox')).toHaveValue('100% renewable')
     );
   });
+
+  it('uses the defaults, not the load-time hash, when re-initialised later', async () => {
+    window.history.replaceState(
+      null,
+      '',
+      '/search#f.field_hazard=12&f.field_hazard=34'
+    );
+    const { rerender } = render(<SyndicationSearchWidget config={CONFIG} />);
+    await waitFor(() =>
+      expect(chipLabels()).toEqual(expect.arrayContaining(['Flood', 'Drought']))
+    );
+    fireEvent.click(
+      screen.getByRole('button', { name: /Remove filter: Hazard is Flood/ })
+    );
+    await waitFor(() => expect(chipLabels()).toEqual(['Drought']));
+
+    // A new defaultFilters identity re-runs INITIALIZE
+    rerender(
+      <SyndicationSearchWidget
+        config={{ ...CONFIG, defaultFilters: [...CONFIG.defaultFilters] }}
+      />
+    );
+    await waitFor(() => expect(chipLabels()).toEqual([]));
+    await waitFor(() =>
+      expect(lastSearchBody().post_filter).toEqual({
+        term: { _language: 'en' },
+      })
+    );
+  });
 });
