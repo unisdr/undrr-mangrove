@@ -1837,9 +1837,9 @@ npm run build</code></pre>
   },
   'components-loader': {
     summary:
-      'Animated loading spinner, 40px on mobile and 96px on desktop, named for assistive technology by an aria-label.',
+      'Animated loading spinner, 40px on mobile and 96px on desktop, announced by screen readers through visually hidden label text.',
     description:
-      'Animated loading spinner. 40px on mobile, 96px on desktop. The element is empty — there is no visible and no visually hidden label text. It carries role="status", aria-live="polite" and aria-busy="true", and the label prop becomes its accessible name through aria-label, so the wait is not silent for a screen reader.',
+      'Animated loading spinner. 40px on mobile, 96px on desktop. The element carries role="status" (implicitly aria-live="polite") and contains the label prop as visually hidden text in an mg-u-sr-only span, so screen readers announce it as the region\'s content. Do not add aria-busy to the loader: it suppresses the announcement. Put aria-busy on the region whose content is loading instead.',
   },
 
   'components-showmore': {

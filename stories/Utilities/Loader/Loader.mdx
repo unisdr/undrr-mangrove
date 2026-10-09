@@ -44,11 +44,25 @@ To use this component, follow these steps:
 - Add it to your HTML page
 - You should have loader-ready
 
+```html
+<div class="mg-loader" role="status">
+  <span class="mg-u-sr-only">Loading</span>
+</div>
+```
+
 #### Interactions
 
 - No interactions are needed with the loader
 
+### Accessibility
+
+- The loader is a `role="status"` live region, which screen readers announce politely. `role="status"` already implies `aria-live="polite"`, so the attribute is not repeated.
+- The label is visually hidden text inside the region, using the [`mg-u-sr-only`](?path=/docs/components-utility-css--docs) utility. Screen readers announce a live region's text content; an `aria-label` on an empty region is not reliably spoken. Translate the text with the `label` prop.
+- Do not put `aria-busy="true"` on the loader. It tells assistive technology to hold back announcements from that element, so the label may never be read. If you use `aria-busy`, set it on the region whose content is loading and remove it when the content arrives.
+- Some screen readers only announce a live region that was already in the page when its text changed. If the loading message must be heard, keep an empty `role="status"` container in the page and insert the loader or its text into it.
+
 ## Changelog
 
+- **1.2**, 2026-10-09 ([undrr/web-backlog#3130](https://gitlab.com/undrr/web-backlog/-/work_items/3130)): The label is now visually hidden text inside the `role="status"` region instead of an `aria-label` on an empty element, so screen readers announce it. Removed `aria-busy="true"`, which suppressed announcements from the loader, and the redundant `aria-live="polite"`.
 - **1.1**, 2026-03-21: Renamed CSS class to `mg-` prefix (`loader` → `mg-loader`).
 - **1.0**, 2022-12-12: Released component
