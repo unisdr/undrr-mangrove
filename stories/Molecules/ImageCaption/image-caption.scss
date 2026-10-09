@@ -16,7 +16,12 @@
     padding-bottom: var(--mg-spacing-150);
   }
 
-  p {
+  // .mg-image-caption__text wraps caption content that is not a single <p>
+  // (several paragraphs, or bare text). :where() keeps it one element below
+  // the matching p selector, so every rule that overrides the p caption also
+  // overrides the wrapper.
+  p,
+  :where(.mg-image-caption__text) {
     color: rgb(var(--mg-color-neutral-600));
     font-size: var(--mg-font-size-200);
     margin-bottom: var(--mg-spacing-50);
@@ -47,6 +52,14 @@
     }
   }
 
+  .mg-image-caption__text p {
+    margin: 0 0 var(--mg-spacing-50);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   .mg-credits {
     display: flex;
     margin-bottom: var(--mg-spacing-50);
@@ -70,7 +83,8 @@
 
 [dir="rtl"] {
   .mg-image-caption {
-    p {
+    p,
+    :where(.mg-image-caption__text) {
       @include devicebreak(medium) {
         padding-right: 0;
       }

@@ -1773,8 +1773,16 @@ npm run build</code></pre>
   },
 
   'components-images-image-with-credit-caption': {
-    description: 'Figure element with image, caption, and photo credit.',
-    cssClasses: ['mg-image-figcaption', 'mg-image-figcaption__cart'],
+    summary: 'Figure element with image, caption, and photo credit.',
+    description:
+      'Figure element with image, caption, and photo credit. A single-paragraph caption is a <p> inside figcaption.mg-image-caption; a caption with several paragraphs or bare text goes in one .mg-image-caption__text wrapper so it stays one block beside the credit.',
+    cssClasses: [
+      'mg-image-figcaption',
+      'mg-image-figcaption__cart',
+      'mg-image-caption',
+      'mg-image-caption__text',
+      'mg-credits',
+    ],
     examples: [
       {
         name: 'Image with caption and credit',
@@ -1782,9 +1790,24 @@ npm run build</code></pre>
   <div class="mg-image-figcaption__cart">
     <img src="https://picsum.photos/800/450" alt="Disaster preparedness training exercise" />
   </div>
-  <figcaption>
-    Disaster preparedness training in the Philippines.
-    <span class="mg-credits">Photo: UNDRR / John Smith</span>
+  <figcaption class="mg-image-caption">
+    <p>Disaster preparedness training in the Philippines.</p>
+    <div class="mg-credits">UNDRR/Philippines<br /><strong>John Smith</strong></div>
+  </figcaption>
+</figure>`,
+      },
+      {
+        name: 'Multi-paragraph caption',
+        html: `<figure class="mg-image-figcaption">
+  <div class="mg-image-figcaption__cart">
+    <img src="https://picsum.photos/800/450" alt="Disaster preparedness training exercise" />
+  </div>
+  <figcaption class="mg-image-caption">
+    <div class="mg-image-caption__text">
+      <p>Disaster preparedness training in the Philippines.</p>
+      <p>The training is part of a national early warning programme.</p>
+    </div>
+    <div class="mg-credits">UNDRR/Philippines<br /><strong>John Smith</strong></div>
   </figcaption>
 </figure>`,
       },
