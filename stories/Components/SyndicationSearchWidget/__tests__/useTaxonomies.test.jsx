@@ -292,18 +292,39 @@ describe('useTaxonomies', () => {
       expect(result.current.getLabel('field_hazard', '341')).toBe('Avalanche');
     });
 
-    it('keeps relative endpoints relative when paging', async () => {
-      global.fetch = jest.fn(() =>
-        jsonResponse({ results: TERMS.results, pager: { pages: 2 } })
-      );
-      const { result } = renderHook(() =>
-        useTaxonomies('/api/v1/taxonomy?vid=hazard')
-      );
-      await waitFor(() => expect(result.current.taxonomiesReady).toBe(true));
-      expect(global.fetch).toHaveBeenLastCalledWith(
-        '/api/v1/taxonomy?vid=hazard&page=1'
-      );
-    });
+    it.each([
+      [
+        'absolute',
+        'https://example.test/api/t?vid=x',
+        'https://example.test/api/t?vid=x&page=1',
+      ],
+      [
+        'protocol-relative',
+        '//cdn.test/api/t?vid=x',
+        `${window.location.protocol}//cdn.test/api/t?vid=x&page=1`,
+      ],
+      [
+        'root-relative',
+        '/api/t?vid=x',
+        new URL('/api/t?vid=x&page=1', window.location.href).href,
+      ],
+      [
+        'path-relative',
+        'api/t?x=1',
+        new URL('api/t?x=1&page=1', window.location.href).href,
+      ],
+    ])(
+      'resolves %s endpoints against the page when paging',
+      async (_, endpoint, expected) => {
+        global.fetch = jest.fn(() =>
+          jsonResponse({ results: TERMS.results, pager: { pages: 2 } })
+        );
+        const { result } = renderHook(() => useTaxonomies(endpoint));
+        await waitFor(() => expect(result.current.taxonomiesReady).toBe(true));
+        expect(global.fetch).toHaveBeenNthCalledWith(1, endpoint);
+        expect(global.fetch).toHaveBeenLastCalledWith(expected);
+      }
+    );
 
     it('is not ready when a later page fails', async () => {
       global.fetch = jest.fn(url =>

@@ -43,12 +43,12 @@ export const MAX_TAXONOMY_PAGES = 20;
  * @returns {string} URL with `page` set
  */
 function pageUrl(url, page) {
-  const isAbsolute = /^[a-z][a-z0-9+.-]*:/i.test(url);
-  const parsed = new URL(url, 'http://relative.invalid');
+  const base = globalThis.location?.href;
+  const parsed = new URL(url, base ?? 'http://relative.invalid');
   parsed.searchParams.set('page', String(page));
-  return isAbsolute
-    ? parsed.href
-    : `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  if (base || /^[a-z][a-z0-9+.-]*:/i.test(url)) return parsed.href;
+  // No page to resolve against (non-DOM): keep a relative URL relative
+  return `${parsed.pathname}${parsed.search}${parsed.hash}`;
 }
 
 /**
