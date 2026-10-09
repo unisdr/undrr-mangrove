@@ -513,6 +513,51 @@ Backend notes (relevance scoring, synonyms, the configuration modifier
 pattern and library load order) are maintained with the Drupal module in the
 platform codebase.
 
+## URL hash
+
+With hash sync on (`enableHashSync`; see the props table), the widget keeps
+its state in the URL fragment, so a filtered view can be bookmarked or shared
+and the browser's back and forward buttons move between filter states.
+
+```
+#query=flood&page=2&sort=newest&f.field_hazard=12&f.field_hazard=34&op.field_hazard=AND&f.type=field_news_type:751
+```
+
+| Parameter  | Meaning                                                                                  |
+| ---------- | ---------------------------------------------------------------------------------------- |
+| `query`    | Search text                                                                              |
+| `page`     | Results page, written when above 1                                                       |
+| `sort`     | `relevance`, `newest` or `oldest`, written when it differs from `defaultSort`            |
+| `f.<key>`  | A selected value of the facet `<key>`; repeat the parameter for several values           |
+| `op.<key>` | `AND` or `OR` for a multi-value facet; written only for `AND`, since `OR` is the default |
+| `label`    | Replaces the page's `h1` text when the page loads. It is read once and not written back  |
+
+Rules:
+
+- **Only known facets.** `f.*` and `op.*` keys must be keys of the active
+  facet fields (`facetFields`, or the default `FACET_FIELDS`). Anything else
+  is ignored, as are invalid `op` and `sort` values, and the URL is tidied to
+  the parameters actually applied. Facet keys become Elasticsearch field
+  names, so unknown keys never reach the query.
+- **The hash replaces the defaults.** If the hash has any valid `f.*`
+  parameter, its facets replace `defaultFilters` entirely, including filters a
+  host page adds (such as the Drupal block's current language and domain
+  detection). With no `f.*` parameters the defaults apply as usual.
+- **Defaults keep a clean URL.** Facets are written only when they differ from
+  `defaultFilters`; when they do, every selected facet is written, defaults
+  included, so the link reproduces the view exactly. A consequence: if a reader
+  removes every filter, including the defaults, the URL has no `f.*`
+  parameters and reloading brings the defaults back.
+- **History.** Choosing a filter, a match mode, a sort order or a page adds a
+  history entry. Typing a search query updates the current entry instead.
+- **Custom facets are not included.** Editor-defined facets (`customFacets`)
+  store selections by option position, so a link would select a different
+  option after an editor reorders, adds or removes options. They need stable
+  option IDs before they can be shared in the URL.
+
+Pages with more than one widget should leave hash sync on for at most one of
+them; the Drupal block's `auto` setting does this.
+
 ## Props
 
 ### Config object
@@ -533,7 +578,7 @@ platform codebase.
 | `showFacets`           | boolean        | `true`                                  | Show the facets sidebar                                                                                                            |
 | `showActiveFilters`    | boolean        | `true`                                  | Show active filter chips                                                                                                           |
 | `showSearchMetrics`    | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                   |
-| `enableHashSync`       | string/boolean | `'auto'`                                | Sync search state to URL hash                                                                                                      |
+| `enableHashSync`       | string/boolean | `'auto'`                                | Sync search state to URL hash (see [URL hash](#url-hash))                                                                          |
 | `visibleFilters`       | object         | `null`                                  | Control which filters are visible                                                                                                  |
 | `allowedTypes`         | object         | `null`                                  | Restrict content types shown                                                                                                       |
 | `customFilters`        | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                   |
@@ -723,6 +768,14 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.18**, 2026-10-09 ([mangrove#1324](https://github.com/unisdr/undrr-mangrove/issues/1324)): Selected facets and the sort order are kept in the URL hash, so filtered views can be shared and back/forward moves between them. See [URL hash](#url-hash).
+  - New hash parameters: `sort`, `f.<facet key>` (repeated for several values) and `op.<facet key>`. Keys are checked against the active facet fields and values are validated, so unknown keys never reach the query; the URL is tidied in place to what was applied.
+  - Facets and sort read from the hash are passed to `INITIALIZE` (`initialFacets`, `initialFacetOperators`, `initialSort`), so the defaults no longer overwrite them. Any valid `f.*` parameter replaces `defaultFilters` entirely.
+  - Filter, match mode, sort and page changes add a history entry (`pushState`); typing a query still replaces the current one. A `popstate` listener joins `hashchange`, and back/forward restores the whole state through a new `RESTORE_STATE` action, falling back to the defaults for an entry with no `f.*` parameters. Restoring never adds an entry.
+  - A query or label containing a literal `%` no longer throws: hash values were decoded a second time after `URLSearchParams` had already decoded them.
+  - `SET_QUERY` with the current query no longer resets the page, so a page restored from the URL survives the search box re-syncing.
+  - New `utils/hashState.js` (`parseHashState`, `buildHashString`) and `SORT_VALUES` in `utils/constants.js`. `useHashSync` also returns `initialHashState`.
+  - Custom facets are not written to the URL; they need stable option IDs first.
 - **1.4.17**, 2026-10-09 ([mangrove#1324](https://github.com/unisdr/undrr-mangrove/issues/1324)): Facet label hardening and a configurable taxonomy source.
   - Country and region, Hazard and Theme (now marked `labelSource: 'taxonomy'` in `FACET_FIELDS`) hide values with no matching term once the taxonomy has loaded, instead of showing raw term IDs such as `1177`. Selected values and active filter chips keep the raw ID so they can still be removed, and nothing is hidden while loading, after a failed request or when the response has no terms.
   - Taxonomy term names are HTML-entity decoded, so `Côte d&#039;Ivoire` renders as `Côte d'Ivoire` in facet options, chips and dropdown search. New `utils/decodeEntities.js`.

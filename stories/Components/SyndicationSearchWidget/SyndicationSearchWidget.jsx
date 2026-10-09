@@ -189,7 +189,10 @@ function SyndicationSearchWidgetInner() {
   const widgetId = useId().replace(/:/g, '');
 
   // Enable URL hash synchronization
-  useHashSync({ enabled: config.enableHashSync !== false });
+  // initialHashState is read once, on the first render, and stays stable.
+  const { initialHashState } = useHashSync({
+    enabled: config.enableHashSync !== false,
+  });
 
   // Local state for immediate input feedback
   const [inputValue, setInputValue] = useState(config.defaultQuery || '');
@@ -218,17 +221,23 @@ function SyndicationSearchWidgetInner() {
     dispatch(actions.setQuery(deferredQuery));
   }, [deferredQuery, dispatch]);
 
-  // Initialize widget on mount
+  // Initialize widget on mount. Facets and sort from the URL hash, if any,
+  // take precedence over the configured defaults.
   useEffect(() => {
+    const fromHash = initialHashState;
     dispatch(
       actions.initialize({
         defaultFilters: config.defaultFilters,
         defaultQuery: config.defaultQuery,
         defaultSort: config.defaultSort,
+        initialFacets: fromHash?.facets || null,
+        initialFacetOperators: fromHash?.facetOperators || null,
+        initialSort: fromHash?.sort || null,
       })
     );
   }, [
     dispatch,
+    initialHashState,
     config.defaultFilters,
     config.defaultQuery,
     config.defaultSort,

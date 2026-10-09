@@ -335,6 +335,93 @@ describe('SearchContext', () => {
     });
   });
 
+  describe('URL hash state', () => {
+    let state, dispatch;
+    function FullStateConsumer() {
+      state = useSearchState();
+      dispatch = useSearchDispatch();
+      return null;
+    }
+    beforeEach(() => {
+      render(
+        <SearchProvider config={{}}>
+          <FullStateConsumer />
+        </SearchProvider>
+      );
+    });
+
+    it('INITIALIZE uses initialFacets and initialSort over the defaults', () => {
+      act(() => {
+        dispatch(
+          actions.initialize({
+            defaultFilters: [{ key: '_language', value: 'en' }],
+            defaultSort: 'relevance',
+            initialFacets: { field_hazard: ['12', '34'] },
+            initialFacetOperators: { field_hazard: 'AND' },
+            initialSort: 'newest',
+          })
+        );
+      });
+      // The hash replaces defaultFilters entirely (no _language)
+      expect(state.facets).toEqual({ field_hazard: ['12', '34'] });
+      expect(state.facetOperators).toEqual({ field_hazard: 'AND' });
+      expect(state.sortBy).toBe('newest');
+    });
+
+    it('INITIALIZE falls back to defaults without initial state', () => {
+      act(() => {
+        dispatch(
+          actions.initialize({
+            defaultFilters: [{ key: '_language', value: 'en' }],
+            defaultSort: 'oldest',
+            initialFacets: null,
+            initialSort: null,
+          })
+        );
+      });
+      expect(state.facets).toEqual({ _language: ['en'] });
+      expect(state.sortBy).toBe('oldest');
+    });
+
+    it('RESTORE_STATE replaces query, page, sort, facets and operators', () => {
+      act(() => {
+        dispatch(actions.setFacet('field_theme', ['1']));
+        dispatch(actions.setFacetOperator('field_theme', 'AND'));
+      });
+      act(() => {
+        dispatch(
+          actions.restoreState({
+            query: 'flood',
+            page: 3,
+            sortBy: 'newest',
+            facets: { field_hazard: ['12'] },
+            facetOperators: {},
+          })
+        );
+      });
+      expect(state.query).toBe('flood');
+      expect(state.page).toBe(3);
+      expect(state.sortBy).toBe('newest');
+      expect(state.facets).toEqual({ field_hazard: ['12'] });
+      expect(state.facetOperators).toEqual({});
+    });
+
+    it('SET_QUERY with the current query keeps the page', () => {
+      act(() => {
+        dispatch(actions.setQuery('flood'));
+        dispatch(actions.setPage(3));
+      });
+      act(() => {
+        dispatch(actions.setQuery('flood'));
+      });
+      expect(state.page).toBe(3);
+      act(() => {
+        dispatch(actions.setQuery('drought'));
+      });
+      expect(state.page).toBe(1);
+    });
+  });
+
   describe('facet actions', () => {
     let dispatch, state;
 

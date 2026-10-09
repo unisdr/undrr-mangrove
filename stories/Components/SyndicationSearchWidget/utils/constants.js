@@ -545,6 +545,12 @@ export const HIGHLIGHT_CONFIG = {
 };
 
 /**
+ * Valid sort orders (the values offered by SortOptions).
+ * @type {string[]}
+ */
+export const SORT_VALUES = ['relevance', 'newest', 'oldest'];
+
+/**
  * Default configuration values.
  * @type {Object}
  */

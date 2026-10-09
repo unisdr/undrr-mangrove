@@ -166,6 +166,7 @@ export function interpolateLabel(template, vars = {}) {
   );
 }
 import { DEFAULT_CONFIG } from '../utils/constants';
+import { facetsFromDefaults } from '../utils/hashState';
 
 /**
  * Initial state for the search widget.
@@ -231,6 +232,7 @@ export const ActionTypes = {
   SET_LOADING: 'SET_LOADING',
   SET_ERROR: 'SET_ERROR',
   INITIALIZE: 'INITIALIZE',
+  RESTORE_STATE: 'RESTORE_STATE',
   RESET: 'RESET',
 };
 
@@ -243,6 +245,9 @@ export const ActionTypes = {
 function searchReducer(state, action) {
   switch (action.type) {
     case ActionTypes.SET_QUERY:
+      // Same query: keep the page. The input re-syncing a query restored from
+      // the URL must not reset a restored page to 1.
+      if (action.payload === state.query) return state;
       return {
         ...state,
         query: action.payload,
@@ -405,26 +410,43 @@ function searchReducer(state, action) {
         defaultFilters = [],
         defaultQuery = '',
         defaultSort = 'relevance',
+        // State read from the URL hash; takes precedence over the defaults.
+        // initialFacets replaces defaultFilters entirely when present.
+        initialFacets = null,
+        initialFacetOperators = null,
+        initialSort = null,
       } = action.payload;
-
-      // Convert defaultFilters array to facets object
-      const facets = {};
-      defaultFilters.forEach(filter => {
-        if (filter.key && filter.value) {
-          if (!facets[filter.key]) {
-            facets[filter.key] = [];
-          }
-          facets[filter.key].push(filter.value);
-        }
-      });
 
       return {
         ...state,
         // Preserve query if already set (e.g., from URL params via useHashSync)
         query: state.query || defaultQuery,
-        sortBy: defaultSort,
-        facets,
+        sortBy: initialSort || defaultSort,
+        facets: initialFacets || facetsFromDefaults(defaultFilters),
+        facetOperators: initialFacets
+          ? initialFacetOperators || {}
+          : state.facetOperators,
         isInitialized: true,
+      };
+    }
+
+    case ActionTypes.RESTORE_STATE: {
+      // Replace the URL-backed part of the state in one step (browser
+      // back/forward). Missing fields fall back to their initial values.
+      const {
+        query = '',
+        page = 1,
+        sortBy = 'relevance',
+        facets = {},
+        facetOperators = {},
+      } = action.payload;
+      return {
+        ...state,
+        query,
+        page,
+        sortBy,
+        facets,
+        facetOperators,
       };
     }
 
@@ -640,6 +662,11 @@ export const actions = {
   initialize: config => ({
     type: ActionTypes.INITIALIZE,
     payload: config,
+  }),
+
+  restoreState: urlState => ({
+    type: ActionTypes.RESTORE_STATE,
+    payload: urlState,
   }),
 
   reset: () => ({

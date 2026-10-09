@@ -304,6 +304,14 @@ A fixed filter is a default value plus a hidden dropdown: set **Website** to `ww
 
 On a page with more than one widget, `auto` hash sync stops the widgets fighting over the URL. To keep sync on one of them, set it to `true` on exactly one widget and `false` on the rest.
 
+### Shareable filtered links
+
+With URL hash sync on, the widget writes the search text, the selected filters, the match mode, the sort order and the page into the end of the page address, for example `#query=flood&sort=newest&f.field_hazard=357`. Copying the address shares that exact view, and the browser's back button steps back through filter changes.
+
+- A link with filters in it replaces the block's default filters, including the automatic current-language and current-domain filters. A link without filters uses the defaults as normal.
+- To build a link by hand, add `f.<filter key>=<value>` for each value, using the filter keys and term IDs in this guide, for example `#f.field_theme=339&f.field_theme=340`. Unknown filter keys and invalid values are ignored.
+- Custom facet dropdowns are not included in the link. Their selections are stored by position in the option list, so a saved link would pick a different option once the options are edited.
+
 ### Saved markup
 
 The block saves its settings as attributes in the block comment, leaving out any that are at their default, and writes them again as `data-*` attributes on an empty container that the platform's wrapper script reads when the page loads. A new widget with the default settings saves:
