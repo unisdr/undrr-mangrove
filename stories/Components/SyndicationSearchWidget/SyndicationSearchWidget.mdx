@@ -278,17 +278,34 @@ default is the PreventionWeb v1 taxonomy view:
 https://www.preventionweb.net/api/v1/taxonomy?vid=prevention_web_regions,hazard,theme&items_per_page=1000&langcode=en
 ```
 
-The endpoint must return JSON with a `results` array of `{ id, name }` terms.
+The endpoint must return JSON with a `results` array of `{ id, name }` terms,
+and it must return **every published term** of the three vocabularies
+(`prevention_web_regions`, `hazard`, `theme`). The widget treats a term missing
+from the list as unpublished or deleted, so an endpoint that drops terms hides
+real filter values. In particular, a `langcode` filter returns only terms
+translated into that language: with `langcode=ar` most countries are missing
+and would be hidden. If the response is paged (`pager.pages` above 1), the
+widget fetches the remaining pages with `page=N`, up to 20 pages; a response
+reporting more pages is treated as a failure.
+
 Names are HTML-entity decoded once on load (Drupal's views escape them, so
-`Côte d&#039;Ivoire` arrives encoded). The request is made once per page and
-shared by the sidebar, the mobile filter drawer and the active filter chips.
+`Côte d&#039;Ivoire` arrives encoded). One request per endpoint is shared by the
+sidebar, the mobile filter drawer and the active filter chips. A successful
+response is kept for the rest of the page load; a failed or empty one is
+retried the next time one of those components mounts.
 
 Once terms have loaded, values on these three facets that have no matching term
 (an unpublished or deleted term still referenced by content) are left out of
 the dropdown. A value that is already selected stays visible, labelled with its
 raw ID, so it can be removed. Nothing is hidden while terms are loading, if the
 request fails, or if it returns no terms (for example a Cloudflare challenge
-page instead of JSON).
+page instead of JSON). Within one facet, nothing is hidden unless at least one
+of its values has a label, so an endpoint that leaves out a whole vocabulary
+does not empty that facet.
+
+The hiding applies to facets marked `labelSource: 'taxonomy'` in
+`FACET_FIELDS`. If you pass your own `facetFields`, keep that marker on the
+country and region, hazard and theme entries.
 
 ## Syndicated cards
 
@@ -711,7 +728,9 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
   - Taxonomy term names are HTML-entity decoded, so `Côte d&#039;Ivoire` renders as `Côte d'Ivoire` in facet options, chips and dropdown search. New `utils/decodeEntities.js`.
   - The Year facet lists newest first (selected years still float to the top), instead of by result count.
   - New `taxonomyEndpoint` config option and `data-taxonomy-endpoint` attribute. The default is the existing PreventionWeb v1 URL without `news_type`, which was never used: news subtypes are labelled from the static list.
-  - The taxonomy request is made once per page through a shared cache, instead of once each by the sidebar, the mobile filter drawer and the active filter chips. `useTaxonomies` accepts an optional endpoint and still works outside a `SearchProvider`; it now also returns `taxonomiesReady`, and `getLabel` takes an optional `{ fallback }`.
+  - The sidebar, the mobile filter drawer and the active filter chips share one taxonomy request per endpoint, through a module-level store, instead of making one each. A successful response is kept for the page load; a failed or empty one is retried when a consumer next mounts, and every consumer sees the result of a retry or `refresh()`. Paged responses are fetched in full (up to 20 pages); anything incomplete counts as a failure.
+  - Hiding needs a complete term list and, within a facet, at least one value that has a label, so a `langcode` filter or an endpoint missing a vocabulary does not empty a facet.
+  - `useTaxonomies` accepts an optional endpoint and still works outside a `SearchProvider`. It now also returns `taxonomiesReady` (which stays true during a refresh after a good load), `getLabel` takes an optional `{ fallback }`, and `refresh()` returns a promise. An empty `results` array now sets `error`.
   - News subtype `797` is labelled "Opportunities", matching Drupal, instead of "Community announcement".
 - **1.4.16**, 2026-10-08: Render teaser cards directly inside the result article when search metrics are disabled, removing the extra div that interfered with card layout. The metrics-enabled view retains its scoring panel and teaser container.
 - **1.4.15**, 2026-09-29 ([undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109)): Added the [Editor configuration](?path=/docs/components-syndicated-search-editor-configuration--docs) sub-page, which moves the editor-facing search guidance for the Drupal Gutenberg block (block settings, practical examples, search syntax, `field:value` filters and taxonomy term IDs) into Mangrove, and links it from this page. Documentation only; the component is unchanged.

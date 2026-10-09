@@ -49,9 +49,10 @@ const FIELD_TO_SUBTYPE_ALLOWLIST_KEY = {
  * @param {Function} props.getLabel - Function to get label for a value
  * @param {string} props.widgetId - Unique widget ID for accessibility
  * @param {Object} props.allowedTypes - Optional type restrictions
- * @param {boolean} props.taxonomiesReady - Whether taxonomy terms loaded
- *   successfully. On facets marked `labelSource: 'taxonomy'`, unselected
- *   values with no label are hidden only once this is true.
+ * @param {boolean} props.taxonomiesReady - Whether a complete taxonomy term
+ *   list loaded. On facets marked `labelSource: 'taxonomy'`, unselected
+ *   values with no label are hidden only once this is true and at least one
+ *   value in the facet has a label.
  */
 export function FacetSelect({
   field,
@@ -66,10 +67,22 @@ export function FacetSelect({
   const labels = useSearchLabels();
 
   const { key, label, vocabulary, type, labelSource } = field;
+
   // Hide values the taxonomy can't label (unpublished or deleted terms), but
-  // only once terms loaded: while loading or after an error every value
-  // would look unlabelled.
-  const hideUnlabelled = labelSource === 'taxonomy' && taxonomiesReady;
+  // only once a complete term list has loaded, and only when at least one
+  // value in this facet resolves. While loading or after an error every value
+  // would look unlabelled, and an endpoint that omits this vocabulary (or a
+  // langcode filter that drops most of it) would otherwise empty the facet.
+  const hideUnlabelled = useMemo(
+    () =>
+      labelSource === 'taxonomy' &&
+      taxonomiesReady &&
+      buckets.some(
+        bucket =>
+          getLabel(key, bucket.key, vocabulary, { fallback: null }) !== null
+      ),
+    [labelSource, taxonomiesReady, buckets, getLabel, key, vocabulary]
+  );
   const isMultiple = type === 'select-multiple';
   const selectedValues = facets[key] || [];
 

@@ -334,7 +334,8 @@ export const FACET_SEARCH_THRESHOLD = 8;
  * these facets with no matching term (unpublished or deleted terms still
  * referenced by content) are hidden unless selected. Do not infer this from
  * `vocabulary: 'terms'`, which subtype fields labelled from CONTENT_SUBTYPES
- * also use.
+ * also use. Consumers who override `facetFields` must keep
+ * `labelSource: 'taxonomy'` on these entries to keep the hiding.
  *
  * @type {Array<{key: string, label: string, vocabulary?: string, type: string, labelSource?: 'taxonomy'}>}
  */

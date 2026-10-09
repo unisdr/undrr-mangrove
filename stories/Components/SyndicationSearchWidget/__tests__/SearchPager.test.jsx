@@ -22,6 +22,7 @@ import {
   actions,
 } from '../context/SearchContext';
 import { SearchPager } from '../components/Pager';
+import { clearTaxonomyCache } from '../hooks/useTaxonomies';
 
 const originalError = console.error;
 beforeAll(() => {
@@ -85,6 +86,7 @@ describe('SearchPager on a page with two widgets', () => {
 
   beforeEach(() => {
     jest.useFakeTimers();
+    clearTaxonomyCache();
     global.fetch = mockFetchWithResults();
     scrolled = [];
     Element.prototype.scrollIntoView = function scrollIntoView() {

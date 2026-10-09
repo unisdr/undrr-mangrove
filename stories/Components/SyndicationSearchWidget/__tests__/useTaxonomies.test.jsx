@@ -6,7 +6,11 @@
 
 import React from 'react';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useTaxonomies, clearTaxonomyCache } from '../hooks/useTaxonomies';
+import {
+  useTaxonomies,
+  clearTaxonomyCache,
+  MAX_TAXONOMY_PAGES,
+} from '../hooks/useTaxonomies';
 import { SearchProvider } from '../context/SearchContext';
 import { DEFAULT_CONFIG, TAXONOMY_API_URL } from '../utils/constants';
 
@@ -168,38 +172,162 @@ describe('useTaxonomies', () => {
       expect(result.current.taxonomiesReady).toBe(false);
     });
 
-    it('is not ready when the response has no terms', async () => {
-      global.fetch = jest.fn(() => jsonResponse({ results: [] }));
+    it('treats an empty term list as a failure and retries on next mount', async () => {
+      global.fetch = jest
+        .fn()
+        .mockImplementationOnce(() => jsonResponse({ results: [] }))
+        .mockImplementation(() => jsonResponse(TERMS));
       const { result } = renderHook(() => useTaxonomies());
       await waitFor(() => expect(result.current.isLoading).toBe(false));
-      expect(result.current.error).toBeNull();
+      expect(result.current.error).toMatch(/no terms/);
       expect(result.current.taxonomiesReady).toBe(false);
+
+      const { result: later } = renderHook(() => useTaxonomies());
+      await waitFor(() => expect(later.current.taxonomiesReady).toBe(true));
+      expect(global.fetch).toHaveBeenCalledTimes(2);
     });
 
-    it('does not cache failures, so refresh retries', async () => {
+    it('does not cache failures: a later mount retries without refresh', async () => {
       global.fetch = jest
         .fn()
         .mockImplementationOnce(() => Promise.reject(new Error('offline')))
         .mockImplementation(() => jsonResponse(TERMS));
-      const { result } = renderHook(() => useTaxonomies());
-      await waitFor(() => expect(result.current.error).toBe('offline'));
+      const { result: first } = renderHook(() => useTaxonomies());
+      await waitFor(() => expect(first.current.error).toBe('offline'));
+      expect(global.fetch).toHaveBeenCalledTimes(1);
 
-      act(() => {
-        result.current.refresh();
-      });
-      await waitFor(() => expect(result.current.taxonomiesReady).toBe(true));
+      const { result: second } = renderHook(() => useTaxonomies());
+      await waitFor(() => expect(second.current.taxonomiesReady).toBe(true));
       expect(global.fetch).toHaveBeenCalledTimes(2);
+      // The consumer that saw the failure gets the retry's result too
+      expect(first.current.taxonomiesReady).toBe(true);
+      expect(first.current.error).toBeNull();
+    });
+
+    it('refresh() retries, returns a promise and updates every consumer', async () => {
+      global.fetch = jest
+        .fn()
+        .mockImplementationOnce(() => Promise.reject(new Error('offline')))
+        .mockImplementation(() => jsonResponse(TERMS));
+      const { result: a } = renderHook(() => useTaxonomies());
+      const { result: b } = renderHook(() => useTaxonomies());
+      await waitFor(() => expect(a.current.error).toBe('offline'));
+      expect(b.current.error).toBe('offline');
+
+      let returned;
+      await act(async () => {
+        returned = a.current.refresh();
+        await returned;
+      });
+      expect(returned).toBeInstanceOf(Promise);
+      expect(a.current.taxonomiesReady).toBe(true);
+      expect(b.current.taxonomiesReady).toBe(true);
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    it('stays ready while a refresh is in flight after a good load', async () => {
+      const { result } = renderHook(() => useTaxonomies());
+      await waitFor(() => expect(result.current.taxonomiesReady).toBe(true));
+
+      let resolveRefresh;
+      global.fetch = jest.fn(
+        () =>
+          new Promise(resolve => {
+            resolveRefresh = () =>
+              resolve({ ok: true, status: 200, json: () => TERMS });
+          })
+      );
+      let pending;
+      act(() => {
+        pending = result.current.refresh();
+      });
+      expect(result.current.isLoading).toBe(true);
+      expect(result.current.taxonomiesReady).toBe(true);
+      expect(result.current.getLabel('field_hazard', '341')).toBe('Avalanche');
+
+      await act(async () => {
+        resolveRefresh();
+        await pending;
+      });
+      expect(result.current.isLoading).toBe(false);
+      expect(result.current.taxonomiesReady).toBe(true);
+    });
+
+    it('keeps the last good terms if a refresh fails', async () => {
+      const { result } = renderHook(() => useTaxonomies());
+      await waitFor(() => expect(result.current.taxonomiesReady).toBe(true));
+      global.fetch = jest.fn(() => jsonResponse({}, false, 503));
+      await act(async () => {
+        await result.current.refresh();
+      });
+      expect(result.current.error).toMatch(/503/);
+      expect(result.current.taxonomiesReady).toBe(true);
     });
   });
 
-  it('warns when the pager reports more pages than were fetched', async () => {
-    global.fetch = jest.fn(() =>
-      jsonResponse({ ...TERMS, pager: { count: 1200, pages: 2 } })
-    );
-    const { result } = renderHook(() => useTaxonomies());
-    await waitFor(() => expect(result.current.taxonomiesReady).toBe(true));
-    expect(consoleWarn).toHaveBeenCalledWith(
-      expect.stringContaining('reports 2 pages')
-    );
+  describe('paged responses', () => {
+    it('fetches every page and merges the terms', async () => {
+      global.fetch = jest.fn(url =>
+        url.includes('page=1')
+          ? jsonResponse({
+              results: [{ id: '999', name: 'Page two term' }],
+              pager: { pages: 2, current_page: 1 },
+            })
+          : jsonResponse({
+              results: TERMS.results,
+              pager: { pages: 2, current_page: 0 },
+            })
+      );
+      const { result } = renderHook(() =>
+        useTaxonomies('https://example.test/api/v1/taxonomy?vid=hazard')
+      );
+      await waitFor(() => expect(result.current.taxonomiesReady).toBe(true));
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(global.fetch).toHaveBeenLastCalledWith(
+        'https://example.test/api/v1/taxonomy?vid=hazard&page=1'
+      );
+      expect(result.current.getLabel('field_hazard', '999')).toBe(
+        'Page two term'
+      );
+      expect(result.current.getLabel('field_hazard', '341')).toBe('Avalanche');
+    });
+
+    it('keeps relative endpoints relative when paging', async () => {
+      global.fetch = jest.fn(() =>
+        jsonResponse({ results: TERMS.results, pager: { pages: 2 } })
+      );
+      const { result } = renderHook(() =>
+        useTaxonomies('/api/v1/taxonomy?vid=hazard')
+      );
+      await waitFor(() => expect(result.current.taxonomiesReady).toBe(true));
+      expect(global.fetch).toHaveBeenLastCalledWith(
+        '/api/v1/taxonomy?vid=hazard&page=1'
+      );
+    });
+
+    it('is not ready when a later page fails', async () => {
+      global.fetch = jest.fn(url =>
+        url.includes('page=1')
+          ? jsonResponse({}, false, 500)
+          : jsonResponse({ results: TERMS.results, pager: { pages: 2 } })
+      );
+      const { result } = renderHook(() => useTaxonomies());
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+      expect(result.current.taxonomiesReady).toBe(false);
+      expect(result.current.error).toMatch(/500/);
+    });
+
+    it('is not ready when the response reports too many pages', async () => {
+      global.fetch = jest.fn(() =>
+        jsonResponse({
+          results: TERMS.results,
+          pager: { pages: MAX_TAXONOMY_PAGES + 1 },
+        })
+      );
+      const { result } = renderHook(() => useTaxonomies());
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+      expect(result.current.taxonomiesReady).toBe(false);
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
   });
 });

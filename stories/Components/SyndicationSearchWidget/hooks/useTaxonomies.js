@@ -3,14 +3,17 @@
  * @description React hook for fetching taxonomy data from the UNDRR API.
  *
  * Fetches taxonomy terms for facet labels (countries, hazards, themes) from
- * `config.taxonomyEndpoint`. Requests are shared through a module-level
- * cache keyed by URL, so every component that calls the hook on a page
- * (sidebar, mobile drawer, active filter chips) uses a single fetch.
+ * `config.taxonomyEndpoint`. Each endpoint URL has one shared store at
+ * module level, so every component that calls the hook on a page (sidebar,
+ * mobile drawer, active filter chips) shares one request and one result.
+ * A successful load is kept for the page's lifetime; a failed or empty one
+ * is retried the next time a consumer mounts or calls `refresh()`, and every
+ * consumer sees the outcome.
  *
  * @module SearchWidget/hooks/useTaxonomies
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo, useSyncExternalStore } from 'react';
 import {
   DOMAINS,
   CONTENT_TYPES,
@@ -27,23 +30,33 @@ import { useOptionalSearchConfig } from '../context/SearchContext';
 import { decodeEntities } from '../utils/decodeEntities';
 
 /**
- * Shared taxonomy requests, keyed by endpoint URL.
- * Each entry is `{ promise, data }`; `data` is set once the promise settles
- * successfully so components mounted later start with labels in hand.
- * @type {Map<string, {promise: Promise<Object>, data: Object|null}>}
+ * Upper bound on pages fetched from a paged taxonomy response. A response
+ * reporting more is treated as incomplete (a failure), not partially used.
+ * @type {number}
  */
-const taxonomyCache = new Map();
+export const MAX_TAXONOMY_PAGES = 20;
 
 /**
- * Fetch and normalise taxonomy terms from an endpoint.
- *
- * Term names are HTML-entity decoded here, once, so facet options, active
- * filter chips and dropdown search all see plain text.
- *
- * @param {string} url - Taxonomy endpoint URL
- * @returns {Promise<{terms: Array<{id: string, name: string}>, termMap: Map<string, string>}>}
+ * Build the URL for one page of a Drupal views REST response.
+ * @param {string} url - Endpoint URL
+ * @param {number} page - Zero-based page number
+ * @returns {string} URL with `page` set
  */
-async function fetchTaxonomyTerms(url) {
+function pageUrl(url, page) {
+  const isAbsolute = /^[a-z][a-z0-9+.-]*:/i.test(url);
+  const parsed = new URL(url, 'http://relative.invalid');
+  parsed.searchParams.set('page', String(page));
+  return isAbsolute
+    ? parsed.href
+    : `${parsed.pathname}${parsed.search}${parsed.hash}`;
+}
+
+/**
+ * Fetch one page and validate its shape.
+ * @param {string} url - URL to fetch
+ * @returns {Promise<Object>} Parsed response with a `results` array
+ */
+async function fetchTaxonomyPage(url) {
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -61,17 +74,42 @@ async function fetchTaxonomyTerms(url) {
   if (!data || !Array.isArray(data.results)) {
     throw new Error('Taxonomy fetch failed: response has no results array');
   }
+  return data;
+}
 
-  const pages = Number(data.pager?.pages);
-  if (pages > 1) {
-    console.warn(
-      `useTaxonomies: taxonomy endpoint reports ${pages} pages but only the first was fetched, so some facet values may be hidden. Raise items_per_page on ${url}.`
+/**
+ * Fetch every page of taxonomy terms from an endpoint and normalise them.
+ *
+ * Term names are HTML-entity decoded here, once, so facet options, active
+ * filter chips and dropdown search all see plain text. Any failure, an
+ * empty list, or more pages than MAX_TAXONOMY_PAGES rejects: labels are
+ * only trusted (and missing ones hidden) when the whole list arrived.
+ *
+ * @param {string} url - Taxonomy endpoint URL
+ * @returns {Promise<{terms: Array<{id: string, name: string}>, termMap: Map<string, string>}>}
+ */
+async function fetchTaxonomyTerms(url) {
+  const first = await fetchTaxonomyPage(url);
+  const results = [...first.results];
+
+  const pages = Number(first.pager?.pages) || 1;
+  if (pages > MAX_TAXONOMY_PAGES) {
+    throw new Error(
+      `Taxonomy fetch failed: ${pages} pages exceeds the limit of ${MAX_TAXONOMY_PAGES}; raise items_per_page on ${url}`
     );
+  }
+  if (pages > 1) {
+    const rest = await Promise.all(
+      Array.from({ length: pages - 1 }, (_, i) =>
+        fetchTaxonomyPage(pageUrl(url, i + 1))
+      )
+    );
+    rest.forEach(page => results.push(...page.results));
   }
 
   const terms = [];
   const termMap = new Map();
-  for (const term of data.results) {
+  for (const term of results) {
     if (!term || term.id === undefined || term.id === null) continue;
     const id = String(term.id);
     const name = decodeEntities(term.name);
@@ -80,63 +118,110 @@ async function fetchTaxonomyTerms(url) {
     termMap.set(id, name);
   }
 
+  if (terms.length === 0) {
+    throw new Error('Taxonomy fetch failed: response contained no terms');
+  }
+
   return { terms, termMap };
 }
 
 /**
- * Load taxonomy terms for a URL, reusing an in-flight or completed request.
- * Failed requests are evicted so a later call can retry.
+ * Shared taxonomy stores, keyed by endpoint URL.
+ * @type {Map<string, Object>}
+ */
+const taxonomyStores = new Map();
+
+/**
+ * Create the store for one endpoint. The snapshot object is replaced on
+ * every change so it can be used directly with useSyncExternalStore.
+ *
+ * Snapshot fields: `terms`/`termMap` hold the last complete successful
+ * load (kept while a refresh is in flight or after a failed refresh),
+ * `isLoading`, and `error` from the latest attempt.
  *
  * @param {string} url - Taxonomy endpoint URL
- * @returns {Promise<{terms: Array, termMap: Map<string, string>}>}
+ * @returns {Object} Store
  */
-export function loadTaxonomies(url) {
-  const cached = taxonomyCache.get(url);
-  if (cached) return cached.promise;
-
-  const entry = { promise: null, data: null };
-  entry.promise = fetchTaxonomyTerms(url).then(
-    data => {
-      entry.data = data;
-      return data;
+function createStore(url) {
+  const listeners = new Set();
+  let inFlight = null;
+  const store = {
+    snapshot: { terms: null, termMap: null, isLoading: true, error: null },
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
     },
-    err => {
-      if (taxonomyCache.get(url) === entry) taxonomyCache.delete(url);
-      throw err;
-    }
-  );
-  taxonomyCache.set(url, entry);
-  return entry.promise;
+    getSnapshot: () => store.snapshot,
+    set(patch) {
+      store.snapshot = { ...store.snapshot, ...patch };
+      listeners.forEach(listener => listener());
+    },
+    /**
+     * Load terms unless a complete load already succeeded.
+     * @param {boolean} [force] - Re-fetch even after a success
+     * @returns {Promise<void>} Settles when the load does; never rejects
+     */
+    load(force = false) {
+      if (inFlight) return inFlight;
+      if (!force && store.snapshot.termMap && !store.snapshot.error) {
+        return Promise.resolve();
+      }
+      if (!store.snapshot.isLoading) store.set({ isLoading: true });
+      inFlight = fetchTaxonomyTerms(url).then(
+        ({ terms, termMap }) => {
+          inFlight = null;
+          store.set({ terms, termMap, isLoading: false, error: null });
+        },
+        err => {
+          inFlight = null;
+          console.error('useTaxonomies: Failed to fetch taxonomies:', err);
+          store.set({ isLoading: false, error: err.message });
+        }
+      );
+      return inFlight;
+    },
+  };
+  return store;
 }
 
 /**
- * Drop cached taxonomy data, for one URL or all of them.
- * Used by `refresh()` and by tests.
+ * Get (or create) the shared store for an endpoint.
+ * @param {string} url - Taxonomy endpoint URL
+ * @returns {Object} Store
+ */
+function getStore(url) {
+  let store = taxonomyStores.get(url);
+  if (!store) {
+    store = createStore(url);
+    taxonomyStores.set(url, store);
+  }
+  return store;
+}
+
+/**
+ * Load taxonomy terms for a URL, reusing an in-flight or completed request.
+ * Failed or empty loads are not kept, so a later call retries.
+ *
+ * @param {string} url - Taxonomy endpoint URL
+ * @returns {Promise<Object>} Resolves to the store snapshot once settled
+ */
+export function loadTaxonomies(url) {
+  const store = getStore(url);
+  return store.load().then(() => store.snapshot);
+}
+
+/**
+ * Drop cached taxonomy data, for one URL or all of them. For tests: mounted
+ * consumers keep the store they subscribed to.
  *
  * @param {string} [url] - Endpoint to clear; clears everything when omitted
  */
 export function clearTaxonomyCache(url) {
   if (url === undefined) {
-    taxonomyCache.clear();
+    taxonomyStores.clear();
   } else {
-    taxonomyCache.delete(url);
+    taxonomyStores.delete(url);
   }
-}
-
-/**
- * Build hook state for a URL from whatever is already cached.
- * @param {string} url - Taxonomy endpoint URL
- * @returns {Object} Hook state
- */
-function stateFromCache(url) {
-  const data = taxonomyCache.get(url)?.data;
-  return {
-    url,
-    terms: data ? data.terms : null,
-    termMap: data ? data.termMap : null,
-    isLoading: !data,
-    error: null,
-  };
 }
 
 /**
@@ -149,66 +234,35 @@ function stateFromCache(url) {
  * @param {string} [endpoint] - Taxonomy endpoint URL override
  * @returns {Object} Taxonomy utilities
  * @returns {Object} returns.taxonomies - Map of vocabulary -> terms
- * @returns {boolean} returns.isLoading - Whether taxonomies are loading
- * @returns {string|null} returns.error - Error message if fetch failed
- * @returns {boolean} returns.taxonomiesReady - True once terms loaded
- *   successfully and the list is non-empty. Only then is a missing label
- *   evidence that a term does not exist.
+ * @returns {boolean} returns.isLoading - Whether a load is in flight
+ * @returns {string|null} returns.error - Error from the latest load, if any
+ * @returns {boolean} returns.taxonomiesReady - True when a complete,
+ *   non-empty term list is loaded. Only then is a missing label evidence
+ *   that a term does not exist. Stays true during a refresh, and after a
+ *   failed refresh, when an earlier load succeeded.
  * @returns {Function} returns.getLabel - Get label for a facet value
  * @returns {Function} returns.getDomainUrl - Get the site URL for a domain
- * @returns {Function} returns.refresh - Re-fetch taxonomies
+ * @returns {Function} returns.refresh - Re-fetch taxonomies; returns a
+ *   promise that settles when the request does
  */
 export function useTaxonomies(endpoint) {
   const config = useOptionalSearchConfig();
   const url = endpoint || config?.taxonomyEndpoint || TAXONOMY_API_URL;
 
-  const [state, setState] = useState(() => stateFromCache(url));
-  const [reloadToken, setReloadToken] = useState(0);
-
-  // Reset when the endpoint changes (render-phase update, no extra commit).
-  if (state.url !== url) {
-    setState(stateFromCache(url));
-  }
+  const store = getStore(url);
+  const { terms, termMap, isLoading, error } = useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot
+  );
 
   useEffect(() => {
-    let cancelled = false;
-    loadTaxonomies(url).then(
-      data => {
-        if (cancelled) return;
-        setState({
-          url,
-          terms: data.terms,
-          termMap: data.termMap,
-          isLoading: false,
-          error: null,
-        });
-      },
-      err => {
-        if (cancelled) return;
-        console.error('useTaxonomies: Failed to fetch taxonomies:', err);
-        setState({
-          url,
-          terms: null,
-          termMap: null,
-          isLoading: false,
-          error: err.message,
-        });
-      }
-    );
-    return () => {
-      cancelled = true;
-    };
-  }, [url, reloadToken]);
+    store.load();
+  }, [store]);
 
-  const refresh = useCallback(() => {
-    clearTaxonomyCache(url);
-    setState({ ...stateFromCache(url), isLoading: true });
-    setReloadToken(token => token + 1);
-  }, [url]);
+  const refresh = useCallback(() => store.load(true), [store]);
 
-  const { terms, termMap, isLoading, error } = state;
-  const taxonomiesReady =
-    !isLoading && !error && Array.isArray(terms) && terms.length > 0;
+  const taxonomiesReady = Boolean(termMap) && termMap.size > 0;
 
   /**
    * Get human-readable label for a facet value.

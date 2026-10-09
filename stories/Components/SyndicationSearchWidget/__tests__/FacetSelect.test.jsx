@@ -131,6 +131,19 @@ describe('FacetSelect', () => {
       expect(optionValues()).toEqual(['8888', '341', '342']);
     });
 
+    it('hides nothing when no value in the facet has a label', () => {
+      // e.g. an endpoint that omits this vocabulary, or a langcode filter
+      renderFacet({
+        field: field('field_country_region'),
+        buckets: [
+          { key: '123', doc_count: 4 },
+          { key: '177', doc_count: 2 },
+        ],
+        taxonomiesReady: true,
+      });
+      expect(optionValues()).toEqual(['123', '177']);
+    });
+
     it('does not hide values on facets without labelSource', () => {
       renderFacet({
         field: field('field_resource_type'),

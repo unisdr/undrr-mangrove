@@ -15,6 +15,7 @@ import {
   SyndicationSearchWidget,
   SearchWidget,
 } from '../SyndicationSearchWidget';
+import { clearTaxonomyCache } from '../hooks/useTaxonomies';
 
 // Suppress console.error for expected async warnings
 const originalError = console.error;
@@ -71,6 +72,7 @@ function mockFetch(searchResponse = null) {
 describe('SyndicationSearchWidget', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    clearTaxonomyCache();
     global.fetch = mockFetch();
   });
 
@@ -511,6 +513,7 @@ describe('SyndicationSearchWidget', () => {
 
 describe('Widget with results', () => {
   beforeEach(() => {
+    clearTaxonomyCache();
     jest.useFakeTimers();
   });
 
