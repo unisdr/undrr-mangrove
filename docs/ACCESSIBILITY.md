@@ -64,11 +64,19 @@ For the full specification, see the [Web Content Accessibility Guidelines (WCAG)
 
 **Loading states**
 
+Announce loading through a live region that is already in the page, and put `aria-busy` on the region whose content is loading, not on the live region: `aria-busy` holds back announcements from the element it is on. A spinner next to that message is decorative.
+
 ```jsx
-<div aria-live="polite" aria-busy={isLoading}>
-  {isLoading ? 'Loading reports...' : `Found ${reports.length} reports`}
+<div role="status" className="mg-u-sr-only">
+  {isLoading ? 'Loading reports' : `Found ${reports.length} reports`}
 </div>
+<section aria-label="Reports" aria-busy={isLoading}>
+  {isLoading && <Loader decorative />}
+  <ReportList reports={reports} />
+</section>
 ```
+
+Screen readers often skip a live region that is inserted already filled, and they do not reliably announce a progress bar's value as it changes. See [Announcing a loader that is inserted by script](https://mangrove.undrr.org/?path=/docs/components-loader--docs#announcing-a-loader-that-is-inserted-by-script) for the two patterns that work, and the [progress bar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs) for announcing the start, milestones and completion of a measurable task.
 
 ### 3. Keyboard navigation
 
@@ -178,6 +186,8 @@ function ModalTrigger() {
 ### 6. Reduced motion
 
 Respect `prefers-reduced-motion` so animations run only when users have not requested reduced motion.
+
+Loading indicators need care: one frozen part way through its animation reads as loading that has stopped. Under reduced motion the [loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) keeps turning at a third of its speed, and the indeterminate [progress bar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs) shows a still, dashed bar instead of a moving segment.
 
 ```scss
 // Only animate when the user allows it
