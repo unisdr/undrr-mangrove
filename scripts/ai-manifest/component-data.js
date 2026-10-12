@@ -1860,9 +1860,69 @@ npm run build</code></pre>
   },
   'components-loader': {
     summary:
-      'Animated loading spinner, 40px on mobile and 96px on desktop, announced by screen readers through visually hidden label text.',
+      'Animated loading spinner: a default 40px/96px size for pages and regions, and a 1em mg-loader--inline size in currentColor for text, buttons and form fields.',
     description:
-      'Animated loading spinner. 40px on mobile, 96px on desktop. The element carries role="status" (implicitly aria-live="polite") and contains the label prop as visually hidden text in an mg-u-sr-only span, so screen readers announce it as the region\'s content. Do not add aria-busy to the loader: it suppresses the announcement. Put aria-busy on the region whose content is loading instead.',
+      'Animated loading spinner in the theme interactive colour, 40px on mobile and 96px on desktop. The inline size (mg-loader--inline, React size="inline", rendered as a span) is a 1em inline-block in currentColor that sits in running text, follows the font size of its context, does not grow on desktop and fits inside an mg-button next to its label without changing the button height; next to a form field it serves as an autocomplete or Drupal AJAX throbber. The announced form carries role="status" (implicitly aria-live="polite") and contains the label as visually hidden text in an mg-u-sr-only span. Decorative mode (aria-hidden="true" with no role and no label, React decorative) is for a spinner next to visible text such as "Saving…" in a button, or one whose loading state is announced elsewhere. A status region inserted already filled is often not announced, so a loader added by script should be decorative with the start and the outcome written to a live region already in the page; the React component instead inserts the region empty and adds the label 100ms after mount. Do not add aria-busy to the loader; put it on the region whose content is loading. Under reduced motion it keeps turning at a third of the speed. For measurable progress or a region updating in place, use components-progress-bar.',
+    cssClasses: ['mg-loader', 'mg-loader--inline'],
+    supplementalExamples: [
+      {
+        name: 'Announced loader already in the page',
+        html: `<div class="mg-loader" role="status">
+  <span class="mg-u-sr-only">Loading</span>
+</div>`,
+      },
+      {
+        name: 'Inline spinner inside a busy button',
+        html: `<button type="button" class="mg-button mg-button-primary" aria-disabled="true">
+  <span class="mg-loader mg-loader--inline" aria-hidden="true"></span>
+  Saving…
+</button>`,
+      },
+      {
+        name: 'Decorative loader announced through a persistent live region',
+        html: `<div id="status-message" role="status" class="mg-u-sr-only">Loading results</div>
+<div class="results" aria-busy="true">
+  <div class="mg-loader" aria-hidden="true"></div>
+</div>`,
+      },
+    ],
+  },
+
+  'components-progress-bar': {
+    summary:
+      'Determinate and indeterminate progress bar on the native progress element, with an optional label, value and help text and a thin flush variant for the top of a region or the viewport.',
+    description:
+      'Progress bar built on the native <progress> element inside .mg-progress-bar > .mg-progress-bar__track. With value and max it is determinate; without a value attribute it is indeterminate and a scanner segment sweeps across the track (a still dashed bar under reduced motion, mirrored in RTL). The bar must have an accessible name: aria-labelledby pointing at .mg-progress-bar__label, aria-label, or aria-labelledby pointing elsewhere; text inside <progress> is not a name. Never add role, aria-valuenow, aria-valuemin, aria-valuemax, role="status" or aria-live to the bar; use aria-valuetext for text values. Value changes are not reliably announced, so announce the start, milestones and completion through a live region already in the page, and put aria-busy on the updating region. mg-progress-bar--flush is a 4px bar with no visible text, positioned by the page (absolute in a relative region, or fixed with a token z-index). The element order mirrors Drupal core progress-bar.html.twig, so the template can be overridden one to one. React props: value, max, label, hideLabel, helpText, showValue, valueText, variant ("default" or "flush") and className; other attributes go to the <progress> element. For short waits, a single busy control or a blocking operation, use components-loader.',
+    cssClasses: [
+      'mg-progress-bar',
+      'mg-progress-bar--flush',
+      'mg-progress-bar__label',
+      'mg-progress-bar__track',
+      'mg-progress-bar__native',
+      'mg-progress-bar__value',
+      'mg-progress-bar__help',
+    ],
+    supplementalExamples: [
+      {
+        name: 'Indeterminate bar named by aria-label',
+        html: `<div class="mg-progress-bar">
+  <div class="mg-progress-bar__track">
+    <progress class="mg-progress-bar__native" aria-label="Loading results"></progress>
+  </div>
+</div>`,
+      },
+      {
+        name: 'Flush bar pinned to the top of a region that is updating',
+        html: `<div id="results-status" role="status" class="mg-u-sr-only">Loading results</div>
+<section class="results" aria-label="Search results" aria-busy="true" style="position: relative">
+  <div class="mg-progress-bar mg-progress-bar--flush" style="position: absolute; inset-block-start: 0; inset-inline: 0">
+    <div class="mg-progress-bar__track">
+      <progress class="mg-progress-bar__native" aria-label="Loading results"></progress>
+    </div>
+  </div>
+</section>`,
+      },
+    ],
   },
 
   'components-showmore': {

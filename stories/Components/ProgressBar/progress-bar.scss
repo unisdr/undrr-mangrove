@@ -1,0 +1,215 @@
+/**
+ * Progress bar
+ *
+ * Determinate and indeterminate progress bar built on the native progress
+ * element, with an optional visible label, value and help text, and a thin
+ * flush variant for the top edge of a region or the viewport.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/ProgressBar/ProgressBar.mdx
+ */
+
+// The scanner is 30% of the track, and translateX percentages are of the
+// scanner itself, so -100% starts it just before the inline-start edge and
+// 340% ends it just past the inline-end edge (100 / 30 = 333%).
+@keyframes mg-progress-bar-scan {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(340%);
+  }
+}
+
+// translateX is physical, so right-to-left text sweeps the other way. The
+// scanner is anchored with inset-inline-start, which is already the right
+// edge there.
+@keyframes mg-progress-bar-scan-rtl {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-340%);
+  }
+}
+
+// The element order mirrors Drupal core's progress-bar.html.twig (label,
+// track, percentage, description), so the template can be overridden one to
+// one. The grid puts the value beside the label.
+.mg-progress-bar {
+  // The indicator is the interactive colour, which every theme keeps at 4.5:1
+  // or more against white, so the filled part reaches 3:1 against the page
+  // and against this light track. The track itself cannot reach 3:1 against
+  // white without moving towards the indicator, so its extent is marked by a
+  // 1px edge in neutral-500 instead.
+  --mg-progress-bar-block-size: 0.5rem;
+  --mg-progress-bar-indicator: rgb(var(--mg-color-interactive));
+  --mg-progress-bar-track: rgb(var(--mg-color-neutral-50));
+
+  align-items: baseline;
+  column-gap: var(--mg-spacing-100);
+  display: grid;
+  grid-template-areas:
+    "label value"
+    "track track"
+    "help help";
+  grid-template-columns: 1fr auto;
+  row-gap: var(--mg-spacing-50);
+}
+
+.mg-progress-bar__label {
+  color: rgb(var(--mg-color-text));
+  font-family: var(--mg-font-family-ui);
+  font-size: var(--mg-font-size-300);
+  font-weight: 600;
+  grid-area: label;
+}
+
+.mg-progress-bar__value {
+  color: rgb(var(--mg-color-text));
+  font-family: var(--mg-font-family-ui);
+  font-size: var(--mg-font-size-300);
+  font-variant-numeric: tabular-nums;
+  grid-area: value;
+  text-align: end;
+}
+
+.mg-progress-bar__help {
+  color: rgb(var(--mg-color-neutral-500));
+  font-size: var(--mg-font-size-200);
+  grid-area: help;
+}
+
+.mg-progress-bar__track {
+  background-color: var(--mg-progress-bar-track);
+  block-size: var(--mg-progress-bar-block-size);
+  border-radius: 999px;
+
+  // An inset shadow paints under the native fill, so the edge shows only on
+  // the part of the track that is still empty.
+  box-shadow: inset 0 0 0 1px rgb(var(--mg-color-neutral-500));
+  grid-area: track;
+  overflow: hidden;
+  position: relative;
+}
+
+// The native element draws only the determinate fill; the track is drawn by
+// the wrapper and the indeterminate scanner by the wrapper's ::after, which
+// behave the same in every engine.
+.mg-progress-bar__native {
+  appearance: none;
+  background: transparent;
+  block-size: 100%;
+  border: 0;
+  border-radius: inherit;
+  color: var(--mg-progress-bar-indicator);
+  display: block;
+  inline-size: 100%;
+
+  // Vendor pseudo-elements stay in separate rules: a browser drops a whole
+  // selector list that contains a pseudo-element it does not recognise.
+  &::-webkit-progress-bar {
+    background: transparent;
+  }
+
+  &::-webkit-progress-value {
+    background-color: var(--mg-progress-bar-indicator);
+    border-radius: inherit;
+  }
+
+  &::-moz-progress-bar {
+    background-color: var(--mg-progress-bar-indicator);
+    border-radius: inherit;
+  }
+
+  // Firefox draws the indeterminate fill at full width; hide it everywhere.
+  &:indeterminate::-webkit-progress-value {
+    background: transparent;
+  }
+
+  &:indeterminate::-moz-progress-bar {
+    background: transparent;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &::-webkit-progress-value {
+      transition: width var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+    }
+  }
+}
+
+.mg-progress-bar__track::after {
+  background-color: var(--mg-progress-bar-indicator);
+  border-radius: inherit;
+  content: "";
+  display: none;
+  inline-size: 30%;
+  inset-block: 0;
+  inset-inline-start: 0;
+  position: absolute;
+  transform: translateX(-100%);
+}
+
+.mg-progress-bar__track:has(.mg-progress-bar__native:indeterminate)::after {
+  display: block;
+}
+
+// The sweep is only declared when motion is welcome. The site-wide reduced
+// motion reset would otherwise run it once in 0.01ms and leave the segment
+// where it stopped, which reads as a bar that is partly done.
+@media (prefers-reduced-motion: no-preference) {
+  .mg-progress-bar__track::after {
+    animation: mg-progress-bar-scan 1.5s ease-in-out infinite;
+  }
+
+  .mg-progress-bar__track:dir(rtl)::after {
+    animation-name: mg-progress-bar-scan-rtl;
+  }
+}
+
+// Reduced motion: a still, dashed bar across the whole track. It shows that
+// work is going on without moving, and the gaps keep it from reading as a
+// finished bar or as a partial value.
+@media (prefers-reduced-motion: reduce) {
+  .mg-progress-bar__track::after {
+    animation: none;
+    background: repeating-linear-gradient(
+      to right,
+      var(--mg-progress-bar-indicator) 0 0.75rem,
+      transparent 0.75rem 1.25rem
+    );
+    border-radius: 0;
+    inline-size: 100%;
+    transform: none;
+  }
+}
+
+// A thin bar with no visible text, for the top edge of a region or the
+// viewport. Positioning is left to the page; see the documentation.
+.mg-progress-bar--flush {
+  --mg-progress-bar-block-size: 0.25rem;
+
+  display: block;
+
+  .mg-progress-bar__track {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+// Forced colours replaces author backgrounds, which would hide the fill and
+// the scanner. Opt out (the property is inherited, so this covers the native
+// element and its pseudo-elements) and draw the bar in system colours.
+@media (forced-colors: active) {
+  .mg-progress-bar__track {
+    --mg-progress-bar-indicator: CanvasText;
+    --mg-progress-bar-track: Canvas;
+
+    border: 1px solid CanvasText;
+    box-shadow: none;
+    forced-color-adjust: none;
+  }
+}

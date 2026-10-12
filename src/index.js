@@ -58,6 +58,7 @@ export {
   default as NoticeDefault,
 } from '../stories/Components/Notice/Notice';
 export { SkipLink } from '../stories/Utilities/SkipLink/SkipLink';
+export { default as ProgressBar } from '../stories/Components/ProgressBar/ProgressBar';
 
 // Import global styles
 import '../stories/assets/scss/style.scss';

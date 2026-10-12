@@ -1,0 +1,222 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks';
+import { ProgressBar } from './ProgressBar';
+import * as ProgressBarStories from './ProgressBar.stories';
+
+<Meta of={ProgressBarStories} />
+
+> If you are creating or modifying this component, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) for Mangrove's component standards.
+
+# Progress bar
+
+A progress bar shows how far a task has got, or that work is going on in a region without blocking the page. It is built on the native `<progress>` element, which carries the `progressbar` role and exposes its value to assistive technology.
+
+### Overview
+
+- **Determinate**: the task's progress can be measured, such as a file upload or a batch job. The bar fills to `value / max`, with an optional visible label, value and help text.
+- **Indeterminate**: the end is not known. Leave out `value` and a thin segment sweeps across the track.
+- **Flush**: a thin bar with no visible text, for the top edge of a region that is updating in place or of the viewport.
+
+#### When to use:
+
+- A wait of more than 3 to 5 seconds whose progress can be measured: a determinate bar. Past about 10 seconds, add help text that tells the user what is happening.
+- A region that updates in place, such as paging or filtering results: an indeterminate flush bar pinned to the top of the region, instead of a spinner that covers the content.
+
+For short waits, a single busy control or a blocking operation, use the [loader](?path=/docs/components-loader--docs). Its docs have a table of which indicator suits which wait.
+
+### Formatting
+
+#### Determinate
+
+<Canvas of={ProgressBarStories.Determinate} meta={ProgressBarStories} />
+
+With help text, and `valueText` for a value that is not a percentage:
+
+<Canvas of={ProgressBarStories.WithHelpText} meta={ProgressBarStories} />
+
+#### Indeterminate
+
+<Canvas of={ProgressBarStories.Indeterminate} meta={ProgressBarStories} />
+
+#### Flush
+
+The flush variant (`mg-progress-bar--flush`) is a 4px bar with square ends and no visible text; the label becomes its `aria-label`. The component does not position itself: place it with your page's CSS.
+
+**Pinned to a region.** Give the region `position: relative` and the bar `position: absolute`. Dim the stale content, set `aria-busy="true"` on the region while it loads, and announce the outcome.
+
+<Canvas of={ProgressBarStories.PinnedToRegion} meta={ProgressBarStories} />
+
+```html
+<section
+  class="results"
+  aria-label="Search results"
+  aria-busy="true"
+  style="position: relative"
+>
+  <div
+    class="mg-progress-bar mg-progress-bar--flush"
+    style="position: absolute; inset-block-start: 0; inset-inline: 0"
+  >
+    <div class="mg-progress-bar__track">
+      <progress
+        class="mg-progress-bar__native"
+        aria-label="Loading results"
+      ></progress>
+    </div>
+  </div>
+  <!-- Stale results, dimmed -->
+</section>
+```
+
+**Pinned to the viewport.** Use `position: fixed` and a z-index from the tokens, such as `calc(var(--mg-z-index-header) + 1)` to sit just above the site header. Do not use a raw number.
+
+<Canvas of={ProgressBarStories.PinnedToViewport} meta={ProgressBarStories} />
+
+```css
+.page-loading-bar {
+  inset-block-start: 0;
+  inset-inline: 0;
+  position: fixed;
+  z-index: calc(var(--mg-z-index-header) + 1);
+}
+```
+
+### Behaviors
+
+#### Switching from indeterminate to determinate
+
+Start without a value while the size of the task is unknown, then set `value` once it is. `value={0}` is determinate; only a missing or `null` value is indeterminate.
+
+<Canvas
+  of={ProgressBarStories.IndeterminateToDeterminate}
+  meta={ProgressBarStories}
+/>
+
+#### Reduced motion
+
+Under `prefers-reduced-motion: reduce` the indeterminate bar does not move: it shows a still, dashed bar across the whole track. A segment frozen part way along would read as a bar that is partly done, so the component sets its own state instead of relying on the site-wide reset.
+
+#### Long waits
+
+A moving indicator that keeps going for more than 5 seconds alongside other content needs a way to stop it ([WCAG 2.2.2 Pause, stop, hide](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html)). For a non-blocking indeterminate bar, replace it after about 5 seconds with static text such as "Still loading…", or remove it, and keep the announcement of the outcome.
+
+#### Right to left and long labels
+
+The determinate fill starts at the inline-start edge and the scanner sweeps in the reading direction. Choose Arabic in the locale toolbar to see the determinate and indeterminate stories right to left; their labels follow the toolbar language.
+
+Long labels wrap above the bar, and the value stays beside the first line:
+
+<Canvas of={ProgressBarStories.LongLabels} meta={ProgressBarStories} />
+
+#### Forced colours
+
+In forced colours mode the bar is drawn in system colours: the fill and the scanner in `CanvasText`, inside a 1px `CanvasText` border.
+
+### Usage
+
+#### HTML
+
+```html
+<div class="mg-progress-bar">
+  <div class="mg-progress-bar__label" id="upload-label">
+    Uploading report.pdf
+  </div>
+  <div class="mg-progress-bar__track">
+    <progress
+      class="mg-progress-bar__native"
+      max="100"
+      value="45"
+      aria-labelledby="upload-label"
+      aria-describedby="upload-help"
+    >
+      45%
+    </progress>
+  </div>
+  <div class="mg-progress-bar__value" aria-hidden="true">45%</div>
+  <div class="mg-progress-bar__help" id="upload-help">About a minute left.</div>
+</div>
+```
+
+The label, value and help elements are optional. For an indeterminate bar, leave out the `value` attribute.
+
+#### React
+
+```jsx
+import { ProgressBar } from '@undrr/undrr-mangrove/components/ProgressBar.js';
+
+<ProgressBar label="Uploading report.pdf" value={45} showValue />
+<ProgressBar label="Uploading files" value={3} max={12} valueText="3 of 12 files" showValue />
+<ProgressBar label="Loading results" hideLabel />
+<ProgressBar label="Loading results" variant="flush" />
+```
+
+`aria-label`, `aria-labelledby`, `aria-describedby`, `id` and other attributes are passed to the `<progress>` element; `className` goes on the wrapper.
+
+<ArgTypes of={ProgressBar} />
+
+### Accessibility
+
+#### Naming the bar
+
+- A progress bar must have an accessible name. Use the visible label (`label`, which names the bar through `aria-labelledby`), `aria-label` (`hideLabel`, or the flush variant), or `aria-labelledby` pointing at a heading or label elsewhere in the page. The React component warns in development when none is given.
+- Text inside `<progress>` is fallback content for browsers that cannot draw the element. It is not an accessible name.
+- Do not add `role`, `aria-valuenow`, `aria-valuemin` or `aria-valuemax`: the native element already exposes them. Use `aria-valuetext` (`valueText`) when the value reads better as text, such as "3 of 12 files".
+- The visible value is hidden from assistive technology because the bar already exposes the same value.
+
+#### Announcing progress
+
+Screen readers do not reliably announce a progress bar that is inserted into the page, and they do not reliably announce changes to its value. Announce what matters through a live region that is already in the page, as described in [Announcing a loader that is inserted by script](?path=/docs/components-loader--docs#announcing-a-loader-that-is-inserted-by-script):
+
+- Never put `role="status"` or `aria-live` on the bar or its wrapper. Write messages into a persistent `role="status"` region, or use the site's announcer, such as `Drupal.announce()`.
+- Announce the start, notable milestones (such as every 25%) and completion. Give completion its own message ("Upload complete"); do not rely on the bar reaching 100%.
+- Set `aria-busy="true"` on the region whose content is updating, not on the bar, and remove it when the update ends.
+
+<Canvas of={ProgressBarStories.SimulatedUpload} meta={ProgressBarStories} />
+
+### Drupal integration
+
+Core's progress bar (`progress-bar.html.twig`, and `Drupal.theme.progressBar` for the Batch API and file uploads) is built from `div` elements: `Drupal.ProgressBar.setProgress()` writes `style.width` on `div.progress__bar` and the text of `div.progress__percentage`, and `aria-live` sits on the whole container. The Mangrove elements follow the same order, so the template and `Drupal.theme.progressBar` can be overridden one to one.
+
+| Drupal core                 | Mangrove                           |
+| --------------------------- | ---------------------------------- |
+| `div.progress`              | `div.mg-progress-bar`              |
+| `div.progress__label`       | `div.mg-progress-bar__label`       |
+| `div.progress__track`       | `div.mg-progress-bar__track`       |
+| `div.progress__bar`         | `progress.mg-progress-bar__native` |
+| `div.progress__percentage`  | `div.mg-progress-bar__value`       |
+| `div.progress__description` | `div.mg-progress-bar__help`        |
+
+<Canvas of={ProgressBarStories.DrupalBatch} meta={ProgressBarStories} />
+
+- Keep core's classes beside the Mangrove ones on the label, percentage and description, so `setProgress()` still updates their text.
+- `setProgress()` looks for `div.progress__bar`, which a `<progress>` element does not match. Set the native element's `value` from the progress bar's `updateCallback` (or an override of `setProgress()`), and leave out `value` while the task has not reported a percentage.
+- Drop core's container-wide `aria-live="polite"`, which re-reads the label, percentage and message on every update. Announce the start, milestones and completion with `Drupal.announce()` instead.
+
+### CSS classes
+
+| Class                     | Element    | Purpose                                                    |
+| ------------------------- | ---------- | ---------------------------------------------------------- |
+| `mg-progress-bar`         | `div`      | Wrapper and grid for the label, track, value and help text |
+| `mg-progress-bar--flush`  | modifier   | Thin bar with square ends and no visible text              |
+| `mg-progress-bar__label`  | `div`      | Visible label, referenced by the bar's `aria-labelledby`   |
+| `mg-progress-bar__track`  | `div`      | Track; draws the indeterminate scanner                     |
+| `mg-progress-bar__native` | `progress` | The native element; draws the determinate fill             |
+| `mg-progress-bar__value`  | `div`      | Visible value, hidden from assistive technology            |
+| `mg-progress-bar__help`   | `div`      | Help text, referenced by the bar's `aria-describedby`      |
+
+| Custom property                | Default                    | Purpose                            |
+| ------------------------------ | -------------------------- | ---------------------------------- |
+| `--mg-progress-bar-block-size` | `0.5rem` (`0.25rem` flush) | Thickness of the track             |
+| `--mg-progress-bar-indicator`  | interactive colour         | Colour of the fill and the scanner |
+| `--mg-progress-bar-track`      | `neutral-50`               | Colour of the empty track          |
+
+## See also
+
+- [Loader](?path=/docs/components-loader--docs): use it instead for short waits, a single busy control or a blocking operation. Its docs have a table of which indicator suits which wait.
+- [Announcing a loader that is inserted by script](?path=/docs/components-loader--docs#announcing-a-loader-that-is-inserted-by-script): the live region patterns this component relies on.
+- [Accessibility](?path=/docs/getting-started-accessibility--docs): the loading states guidance, including announcing loading and its outcome through a live region that is already in the page.
+
+## Changelog
+
+- **1.0**, 2026-10-12 ([#1332](https://github.com/unisdr/undrr-mangrove/pull/1332)): Released component.
+  - ([#1331](https://github.com/unisdr/undrr-mangrove/issues/1331)) Determinate and indeterminate bar on the native `progress` element, with a visible label, value and help text, a flush variant for the top edge of a region or the viewport, a still state under reduced motion, right-to-left support and forced colours support.
+  - ([web-backlog#3130](https://gitlab.com/undrr/web-backlog/-/work_items/3130)) Drupal Views AJAX and batch progress use cases.

@@ -280,6 +280,7 @@ const COMPONENT_IDS = {
   EmbedContainer: 'components-embedcontainer',
   FullWidth: 'components-fullwidth',
   Loader: 'components-loader',
+  ProgressBar: 'components-progress-bar',
   ShowMore: 'components-showmore',
   Chips: 'components-buttons-chips',
   TextInput: 'components-forms-text-input',
@@ -591,7 +592,16 @@ function buildSampleProps(React) {
         'This section spans the full viewport width.'
       ),
     },
-    Loader: { label: 'Loading content' },
+    // Decorative: the announced form renders its status region empty and
+    // adds the label after mount, so a static render would publish an empty
+    // region. The announced markup is a supplemental example instead.
+    Loader: { decorative: true },
+    ProgressBar: {
+      label: 'Uploading report.pdf',
+      value: 45,
+      showValue: true,
+      helpText: 'About a minute left.',
+    },
     ShowMore: {
       data: [
         {
@@ -1005,7 +1015,7 @@ function getDescription(id, component, data) {
  * `summary` and `description` used to hold the same string. They no longer
  * do: a curated description carries the whole contract, which is what an
  * agent grepping the index needs to find, but it does not read as a label in
- * a list of 82 components. A curated entry whose description runs past
+ * a list of 85 components. A curated entry whose description runs past
  * SUMMARY_MAX_LENGTH therefore carries its own short `summary`, and
  * `yarn validate-manifest` fails when it does not.
  */
@@ -1151,7 +1161,7 @@ if (uncoveredIds.length > 0) {
 // The curated description reaches `description` in index.json and in every
 // detail file, which is the point: an agent greps the index and finds the
 // contract. `summary` is the other half of that entry — the line a human or
-// an agent reads when scanning 82 components — so a description written as a
+// an agent reads when scanning 85 components — so a description written as a
 // paragraph needs a sentence written for that slot instead.
 // ---------------------------------------------------------------------------
 const missingSummaries = [];
@@ -2574,7 +2584,7 @@ The Storybook includes a Brand section for non-technical users (content editors,
 - **Brand identity** (${DOCS_BASE}?path=/story/brand-brand-identity--docs): Theme-aware page showing colors, typography, logos, buttons, and icons. Switch themes via toolbar or append \`&globals=theme:<Theme Name>\` to the URL. Colors are probed live from compiled CSS via \`getComputedStyle\`, so they stay in sync with SCSS.
 - **Brand guidelines** (${DOCS_BASE}?path=/docs/brand-brand-guidelines--docs): Editorial guidance — brand positioning, communication rules, logo usage, photography standards, web elements. Migrated from UNDRR SharePoint.
 - **Common patterns** (${DOCS_BASE}?path=/docs/brand-common-patterns--docs): Plain-language reference for foundations shared across all themes — breakpoints, grid classes (\`mg-grid__col-{N}\`), accessibility standards, language support (\`lang="ar"\` mechanism), icon sources, z-index.
-- **Component gallery** (${DOCS_BASE}?path=/docs/brand-component-gallery--docs): Curated catalog of ~40 components in 8 categories (page structure, hero, content cards, interactive, data viz, typography, layout helpers, platform features). Each row links to the full component docs. Useful first stop when navigating what exists.
+- **Component gallery** (${DOCS_BASE}?path=/docs/brand-component-gallery--docs): Curated catalog of ~40 components in 9 categories (page structure, hero, content cards, interactive, data viz, typography, layout helpers, loading and progress, platform features). Each row links to the full component docs. Useful first stop when navigating what exists.
 
 Theme key facts:
 - Five themed properties with resolved primary colors: UNDRR (blue #004f91), PreventionWeb (teal #0a6969), MCR2030 (purple #591a61), IRP (bright blue #0f78bf), DELTA Resilience (navy #132e48).

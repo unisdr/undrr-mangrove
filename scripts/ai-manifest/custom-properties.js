@@ -111,11 +111,13 @@ export const MIN_PROPERTIES = {
   'components-hero-hero': 7,
   'components-icons': 1,
   'components-images-author-image': 3,
+  'components-loader': 1,
   'components-navigation-drawer': 2,
   'components-navigation-megamenu': 2,
   'components-navigation-on-this-page-nav': 1,
   'components-navigation-tree': 5,
   'components-notice-notice': 4,
+  'components-progress-bar': 3,
   'components-reading-column': 1,
   'components-showmore': 1,
   'components-status-label': 15,
@@ -146,11 +148,13 @@ export const OWNERS = {
   'components-forms-segmented-control': ['--mg-segmented-control-'],
   'components-hero-hero': ['--mg-hero-'],
   'components-icons': ['--mg-icon-svg'],
+  'components-loader': ['--mg-loader-'],
   'components-navigation-drawer': ['--mg-drawer-'],
   'components-navigation-megamenu': ['--mg-mega-'],
   'components-navigation-on-this-page-nav': ['--mg-on-this-page-nav-'],
   'components-navigation-tree': ['--mg-tree-'],
   'components-notice-notice': ['--mg-notice-'],
+  'components-progress-bar': ['--mg-progress-bar-'],
   'components-reading-column': ['--mg-reading-with-contents-width'],
   'components-showmore': ['--mg-show-more-'],
   'components-status-label': ['--mg-status-label-'],
@@ -292,6 +296,10 @@ export const PROPERTY_DOCS = {
   '--mg-tree-guide-offset':
     "Distance from the parent row to the dashed guide line on .mg-tree--guides. The group padding gives the same amount back, so child rows keep their position. Only .mg-tree--guides .mg-tree__group declares it, so it has no value at rest and no `default` here; set it on that element, because the component's own declaration beats an inherited one.",
 
+  // Loader
+  '--mg-loader-duration':
+    'Time for one turn of the spinner. Under reduced motion the spinner turns at three times this duration instead of stopping.',
+
   // Notice
   '--mg-notice-bg':
     'Panel fill. Each status modifier (--warning, --negative, --positive) re-points it, so set it on .mg-notice or an ancestor rather than per modifier.',
@@ -299,6 +307,14 @@ export const PROPERTY_DOCS = {
   '--mg-notice-border-width':
     'Width of the leading edge that carries the status. --prominent widens it, --overlay narrows it.',
   '--mg-notice-icon-color': 'Colour of the status icon.',
+
+  // Progress bar
+  '--mg-progress-bar-block-size':
+    'Thickness of the track. The flush variant sets 0.25rem on its own wrapper.',
+  '--mg-progress-bar-indicator':
+    'Colour of the determinate fill and the indeterminate scanner. Keep it at 3:1 or more against the page and the track.',
+  '--mg-progress-bar-track':
+    'Colour of the empty track. Forced colours mode replaces it with Canvas.',
 
   // Reading column
   '--mg-reading-with-contents-width':

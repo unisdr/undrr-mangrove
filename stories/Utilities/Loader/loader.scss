@@ -1,38 +1,81 @@
 /**
  * Loader / Spinner
  *
- * Animated loading spinner indicator with brand-themed animation for asynchronous states.
+ * Animated loading spinner for asynchronous states, in a default size for
+ * pages and regions and a 1em inline size for text, buttons and form fields.
  *
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Utilities/Loader/Loader.mdx
  */
 // * loader start *//
 
-// loader animation
-@keyframes loader-animation {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
+@keyframes mg-spin {
+  to {
     transform: rotate(360deg);
   }
 }
 
 .mg-loader {
-  @include animation(loader-animation 2s linear infinite);
+  // One turn. Under a second keeps a small spinner looking busy; at 2s a 16px
+  // spinner reads as stalled.
+  --mg-loader-duration: 0.9s;
 
-  border: 8px solid rgb(var(--mg-color-blue-600));
+  animation: mg-spin var(--mg-loader-duration) linear infinite;
+  border: 8px solid rgb(var(--mg-color-interactive));
   border-radius: 50%;
   border-top: 8px solid rgb(var(--mg-color-neutral-300));
+  box-sizing: border-box;
   height: 40px;
   width: 40px;
 
   @include devicebreak(medium) {
-    border: 14px solid rgb(var(--mg-color-blue-600));
+    border: 14px solid rgb(var(--mg-color-interactive));
     border-top: 14px solid rgb(var(--mg-color-neutral-300));
     height: 96px;
     width: 96px;
+  }
+
+  // Compact inline size. It is sized in em so it follows the font size of the
+  // text or button it sits in, and it does not grow at the medium breakpoint:
+  // this rule comes after the breakpoint rule above, so it wins there too.
+  // The arc is currentColor and the track a quarter-strength currentColor, so
+  // the spinner takes the text colour of its context, including filled and
+  // outline buttons and text on dark backgrounds. Where color-mix() is not
+  // supported the track is transparent and the arc still shows.
+  &--inline {
+    border: max(2px, 0.125em) solid transparent;
+    border-color: color-mix(in oklab, currentColor 25%, transparent);
+    border-top-color: currentColor;
+    display: inline-block;
+    flex-shrink: 0;
+    height: 1em;
+
+    // A box with no text has its baseline at its bottom edge, so baseline
+    // alignment would stand the spinner on the text baseline and lift it above
+    // the letters. -0.125em centres it on the letters, as icon fonts do. In a
+    // flex container such as .mg-button the spinner is a flex item instead,
+    // centred by align-items, and vertical-align does not apply.
+    vertical-align: -0.125em;
+    width: 1em;
+  }
+
+  // Under reduced motion the site-wide reset cuts every animation to 0.01ms
+  // and one iteration, which would freeze the spinner and make it look as if
+  // loading has stopped. A slow, steady rotation still says "working" without
+  // the speed. The !important is needed to outrank the reset's own
+  // !important, and is scoped to the loader.
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: calc(var(--mg-loader-duration) * 3) !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  // Forced colours would paint every side of the border in one system colour,
+  // a full ring whose rotation cannot be seen. Opt out and use system colours
+  // for the arc and the track.
+  @media (forced-colors: active) {
+    border-color: GrayText;
+    border-top-color: CanvasText;
+    forced-color-adjust: none;
   }
 }
 

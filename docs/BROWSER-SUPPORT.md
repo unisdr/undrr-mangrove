@@ -35,6 +35,8 @@ Some Mangrove features require relatively modern CSS. The minimum browser versio
 | Space-separated `rgb(R G B / a)` with token channels | 65+ (Mar 2018) | 52+ (Mar 2017) | 12.1+ (Mar 2019) | 79+ (Jan 2020) |
 | Container queries / `cqi` units | 105+ (Jun 2022) | 110+ (Feb 2023) | 16.0+ (Sep 2022) | 105+ (Jun 2022) |
 | `:has()` selector | 105+ (Jun 2022) | 121+ (Dec 2023) | 15.4+ (Mar 2022) | 105+ (Jun 2022) |
+| `:dir()` selector | 120+ (Dec 2023) | 49+ (Sep 2016) | 16.4+ (Mar 2023) | 120+ (Dec 2023) |
+| `color-mix()` | 111+ (Mar 2023) | 113+ (May 2023) | 16.2+ (Dec 2022) | 111+ (Mar 2023) |
 
 ## Why we don't support older browsers
 
