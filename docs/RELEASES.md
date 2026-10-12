@@ -9,19 +9,20 @@ This guide explains the release process for the UNDRR Mangrove component library
 Releases use **manual versioning** with automated npm publishing: choose the
 version, update `package.json`, tag, and let CI publish.
 
-### Where CI runs: the PreventionWeb fork
+### Where CI runs: unisdr and the PreventionWeb fork
 
-The `unisdr` GitHub organisation is flagged, so GitHub Actions don't run on `unisdr/undrr-mangrove` and the repository returns 404 to anonymous visitors. Pull requests are still reviewed and merged there, but CI and deployment run on the public fork [`PreventionWeb/undrr-mangrove`](https://github.com/PreventionWeb/undrr-mangrove):
+GitHub Actions run on `unisdr/undrr-mangrove` again (2.0.1 was the first release published through CI since the organisation was flagged), but mangrove.undrr.org and the CDN still deploy from the public fork [`PreventionWeb/undrr-mangrove`](https://github.com/PreventionWeb/undrr-mangrove). So a release uses both:
 
-- **Deploying:** after merging, sync the fork. Its "Build and Deploy" workflow publishes Storybook to mangrove.undrr.org, and "Build and Push dist to dist branch" rebuilds its `dist` branch.
+- **`unisdr/undrr-mangrove`:** pull requests are reviewed and merged here, and their checks run here ("Build and Deploy", "PR Title Check", and Chromatic when a pull request is opened). Pushing a `v*` tag runs "Publish to NPM Registry", which publishes with a provenance attestation through npm's trusted publisher. Its "Build and Deploy" also deploys Storybook to `unisdr.github.io/undrr-mangrove`, which has no custom domain; that copy is not the public site.
+- **`PreventionWeb/undrr-mangrove`:** after merging, sync the fork. Its "Build and Deploy" workflow publishes Storybook to mangrove.undrr.org, and "Build and Push dist to dist branch" rebuilds its `dist` branch. npm publishing and Chromatic are disabled on the fork.
 
   ```bash
   gh repo sync PreventionWeb/undrr-mangrove --source unisdr/undrr-mangrove --branch main
   ```
 
-- **Pull request checks don't run** on `unisdr/undrr-mangrove`. Run them locally before merging: `yarn lint:check`, `yarn prettier:check`, `yarn test`, `yarn build`, `yarn validate-manifest` and, for component changes, `yarn test-storybook` against the built site (see `storybook.yml` for the exact steps).
-- **npm publishing and Chromatic are disabled** on the fork. npm's trusted publisher is linked to `unisdr/undrr-mangrove`, so until that changes, releases are published with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable) (2.0.0 was published that way, without a provenance attestation).
 - **The asset library** (`assets.undrr.org/mangrove/latest/`) is rebuilt from the fork's `dist` branch, not this repository's, whenever the GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline runs.
+
+If Actions stop on `unisdr/undrr-mangrove` again, run the pull request checks locally before merging (`yarn lint:check`, `yarn prettier:check`, `yarn test`, `yarn build`, `yarn validate-manifest` and, for component changes, `yarn test-storybook` against the built site; see `storybook.yml` for the exact steps), and publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable), as 2.0.0 was, without a provenance attestation.
 
 ### Why not automated semantic-release?
 
@@ -106,32 +107,42 @@ See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v
 
 Then add a fresh empty `## Unreleased` section above it for the next cycle.
 
-The GitHub Release link opens only for signed-in members while the organization is flagged. The manifest build keeps the version and drops the link, and turns pull request and issue links into plain `unisdr/undrr-mangrove#1234` references, so `releases.json` and `llms.json` never link to a page anonymous readers get a 404 from.
+While the organization was flagged, the GitHub Release opened only for signed-in members, so the manifest build keeps the version and drops the link, and turns pull request and issue links into plain `unisdr/undrr-mangrove#1234` references. `releases.json` and `llms.json` link to the public fork's `CHANGELOG.md` instead (`changelogUrl`).
 
 > **Automated changelog endpoints:** You only maintain `CHANGELOG.md` and per-component `## Changelog` sections in MDX files. The build pipeline (`scripts/ai-manifest/generate-ai-manifest.js`) automatically parses `CHANGELOG.md` to generate the machine-readable `releases.json` endpoint and updates `llms.txt`/`llms.json`. Storybook renders `CHANGELOG.md` directly via `stories/Documentation/Changelog.mdx` without any duplicate files to maintain.
 
-### 5. Commit, tag, and push
+### 5. Merge, tag, and push the tag
+
+Open the release changes as a pull request (`chore(release): prepare X.Y.Z release`), let its checks pass, and squash-merge it. Then tag the merge commit and push only that tag:
 
 ```bash
-git add .
-git commit -m "chore(release): v1.3.0"
+git switch main && git pull --ff-only
 git tag v1.3.0
-git push origin main --tags
+git push origin v1.3.0
 ```
 
-### 6. Monitor the publish
+Push the single tag rather than `--tags`, which would also push any stray local tags.
 
-> **Note:** while the `unisdr` organisation is flagged, no workflow runs on the tag push (see [Where CI runs](#where-ci-runs-the-preventionweb-fork)). Publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable) and sync the fork instead.
+### 6. Monitor the publish and sync the fork
 
-When Actions are available, the tag push triggers the "Publish to NPM Registry" workflow (`.github/workflows/npm-publish.yml`) on `unisdr/undrr-mangrove`, which automatically:
+The tag push triggers the "Publish to NPM Registry" workflow (`.github/workflows/npm-publish.yml`) on `unisdr/undrr-mangrove`, which:
 
 - Builds the project
 - Packages distribution files and SCSS sources (`scripts/assemble-npm-package.mjs`, the same script as `yarn pack:preview`)
-- Publishes to the npm registry
+- Publishes to the npm registry with a provenance attestation (`latest` for a stable version, `next` for one with a hyphen)
+
+```bash
+gh run list --repo unisdr/undrr-mangrove --workflow npm-publish.yml --limit 1
+gh run watch --repo unisdr/undrr-mangrove <run-id> --exit-status
+```
+
+A successful run ends with `+ @undrr/undrr-mangrove@X.Y.Z`. The registry takes a few minutes to process the new version, so `npm view` and the dist-tags can show the previous version for a while after the run succeeds.
+
+Then sync the fork (see [Where CI runs](#where-ci-runs-unisdr-and-the-preventionweb-fork)) if you haven't since merging, so mangrove.undrr.org and the fork's `dist` branch pick up the release. If no workflow runs on the tag push, Actions are down on `unisdr/undrr-mangrove`: publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable) instead.
 
 ### 7. Create a GitHub Release
 
-Create a release from the tag on the Releases page of `unisdr/undrr-mangrove`. While the organization is flagged, only signed-in members can read it, and the public fork has no releases of its own.
+Create a release from the tag on the Releases page of `unisdr/undrr-mangrove`. The public fork has no releases of its own.
 
 Write release notes as a **curated, themed narrative**, not a flat commit list, using the standard format below. Releases from `v2.0.0-rc.1` on follow it (the short rc.3 notes were an exception); see v2.0.0-rc.1 and v2.0.0-rc.2 for worked examples (`gh release view --repo unisdr/undrr-mangrove v2.0.0-rc.1`).
 
@@ -310,7 +321,7 @@ attempt does not consume the version number.
 
 ### 5. Update the CDN `dist` branch
 
-`dist.yml` force-pushes the contents of `dist/` (minus `assets/images` and `assets/icons`) to the `dist` branch on every push to `main`. While the `unisdr` organisation is flagged it runs on the PreventionWeb fork, so syncing the fork (see [Where CI runs](#where-ci-runs-the-preventionweb-fork)) is enough. The asset library builds `latest/` from the fork's `dist` branch when its pipeline runs, and produces the versioned `mangrove/X.Y.Z/` path from the npm release (see [the caveat in step 6](#6-create-the-github-release-and-verify)).
+`dist.yml` force-pushes the contents of `dist/` (minus `assets/images` and `assets/icons`) to the `dist` branch on every push to `main`. The copy that feeds the asset library runs on the PreventionWeb fork, so syncing the fork (see [Where CI runs](#where-ci-runs-unisdr-and-the-preventionweb-fork)) is enough. The asset library builds `latest/` from the fork's `dist` branch when its pipeline runs, and produces the versioned `mangrove/X.Y.Z/` path from the npm release (see [the caveat in step 6](#6-create-the-github-release-and-verify)).
 
 Only if the fork's Actions are unavailable too, replicate the push by hand to the fork's `dist` branch, from an **isolated worktree** so your `main` checkout is untouched (with `dist/` freshly built at the tagged commit, and `origin` pointing at the fork):
 
@@ -351,7 +362,7 @@ Finally, delete the local `npm-package/` once the version is live.
 | **Chromatic visual regression** | Runs | **Skipped** |
 | **Auditability** | Build tied to a CI run | Only your local shell history |
 
-Prefer restoring CI over repeating this. Every published version through 1.8.1 shipped with provenance via the normal flow; a break-glass release is a deliberate, one-off exception.
+Prefer restoring CI over repeating this. Every published version through 1.8.1, and from 2.0.1 on, shipped with provenance via the normal flow; a break-glass release (such as 2.0.0) is a deliberate exception.
 
 ## Component changelogs vs project releases
 
@@ -414,13 +425,13 @@ https://assets.undrr.org/mangrove/2.0.1/js/tabs.js
 
 ## CI/CD configuration
 
-| File | Purpose | While the org is flagged |
+| File | Purpose | Where it runs |
 |---|---|---|
-| `.github/workflows/npm-publish.yml` | npm publish on tag push (`v*`) | Disabled on the fork; publish with break-glass |
-| `.github/workflows/dist.yml` | Update `dist` branch on `main` push | Runs on the fork |
-| `.github/workflows/storybook.yml` | Build and deploy Storybook to GitHub Pages | Runs on the fork (mangrove.undrr.org) |
-| `.github/workflows/chromatic.yml` | Visual regression testing | Disabled on the fork |
-| `.github/workflows/pr-title-check.yml` | Validate PR titles follow Conventional Commits | Runs on the fork only |
+| `.github/workflows/npm-publish.yml` | npm publish on tag push (`v*`) | `unisdr` only; disabled on the fork |
+| `.github/workflows/dist.yml` | Update `dist` branch on `main` push | Both; the fork's `dist` feeds the asset library |
+| `.github/workflows/storybook.yml` | Build and deploy Storybook to GitHub Pages | Both; the fork serves mangrove.undrr.org |
+| `.github/workflows/chromatic.yml` | Visual regression testing | `unisdr` only (when a pull request opens); disabled on the fork |
+| `.github/workflows/pr-title-check.yml` | Validate PR titles follow Conventional Commits | Both |
 
 ### npm trusted publishing
 
