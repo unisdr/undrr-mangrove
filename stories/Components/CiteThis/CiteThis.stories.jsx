@@ -9,12 +9,24 @@ function CitationExample({
   title,
   site,
   url,
+  type,
+  exportFormats,
 }) {
   const ref = useRef(null);
   useEffect(() => {
     mgCiteThis(ref.current);
     return () => mgCiteThisDestroy(ref.current);
-  }, [citation, author, publisher, year, title, site, url]);
+  }, [
+    citation,
+    author,
+    publisher,
+    year,
+    title,
+    site,
+    url,
+    type,
+    exportFormats,
+  ]);
 
   return (
     <div
@@ -28,6 +40,8 @@ function CitationExample({
       data-mg-cite-this-title={title}
       data-mg-cite-this-site={site}
       data-mg-cite-this-url={url}
+      data-mg-cite-this-type={type}
+      data-mg-cite-this-export={exportFormats}
     >
       <details className="mg-cite-this__fallback">
         <summary className="mg-cite-this__summary">Cite this</summary>
@@ -98,6 +112,8 @@ export const Metadata = {
       publisher="UNDRR"
       year="2025"
       title="Hazard Information Profiles: 2025 version"
+      type="report"
+      exportFormats="ris bibtex"
       url="https://www.preventionweb.net/publication/documents-and-publications/hazard-information-profiles-hips-2025-version"
     />
   ),
@@ -118,7 +134,7 @@ export const SchemaMetadata = {
           publisher: { '@type': 'Organization', name: 'UNDRR' },
         })}
       </script>
-      <CitationExample />
+      <CitationExample exportFormats="ris bibtex" />
     </>
   ),
 };
@@ -138,6 +154,8 @@ export const LongCitation = {
       publisher="United Nations Office for Disaster Risk Reduction"
       year="2025"
       title="Hazard Information Profiles: 2025 version, technical reference and supporting material for all hazard groups"
+      type="report"
+      exportFormats="ris bibtex"
       url="https://www.preventionweb.net/publication/documents-and-publications/hazard-information-profiles-hips-2025-version"
     />
   ),

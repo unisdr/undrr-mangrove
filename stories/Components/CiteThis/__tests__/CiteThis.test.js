@@ -3,6 +3,8 @@ import {
   mgCiteThis,
   mgCiteThisDestroy,
   resolveCitation,
+  toBibtex,
+  toRis,
 } from '../../../assets/js/cite-this';
 
 function fixture(attributes = '') {
@@ -281,4 +283,108 @@ test('links URLs inside editorial citations without altering their text', () => 
     'href',
     'https://www.undrr.org/gar2022'
   );
+});
+
+const reportFields = {
+  type: 'report',
+  authors: ['United Nations Office for Disaster Risk Reduction', 'Smith, Jane'],
+  title: 'Risk & resilience: 100% {tested}',
+  publisher: 'UNDRR',
+  year: '2025',
+  url: 'https://www.undrr.org/report?id=42',
+  accessed: new Date('2026-10-12T12:00:00Z'),
+};
+
+test('RIS records use CRLF tags with one AU line per creator', () => {
+  expect(toRis(reportFields)).toBe(
+    [
+      'TY  - RPRT',
+      'AU  - United Nations Office for Disaster Risk Reduction',
+      'AU  - Smith, Jane',
+      'TI  - Risk & resilience: 100% {tested}',
+      'PY  - 2025',
+      'PB  - UNDRR',
+      'UR  - https://www.undrr.org/report?id=42',
+      'Y2  - 2026/10/12',
+      'ER  - ',
+      '',
+    ].join('\r\n')
+  );
+  expect(toRis({ ...reportFields, type: 'webpage', year: '' })).toMatch(
+    /^TY {2}- ELEC\r\n(?![\s\S]*PY)/
+  );
+});
+
+test('BibTeX braces organisations, escapes special characters and keeps the URL verbatim', () => {
+  const entry = toBibtex(reportFields);
+  expect(entry).toMatch(/^@techreport\{united2025risk,\n/);
+  expect(entry).toContain(
+    'author = {{United Nations Office for Disaster Risk Reduction} and Smith, Jane}'
+  );
+  expect(entry).toContain(
+    'title = {{Risk \\& resilience: 100\\% \\{tested\\}}}'
+  );
+  expect(entry).toContain('institution = {UNDRR}');
+  expect(entry).toContain('url = {https://www.undrr.org/report?id=42}');
+  expect(entry).toContain('urldate = {2026-10-12}');
+  expect(toBibtex({ ...reportFields, type: 'book' })).toContain(
+    'publisher = {UNDRR}'
+  );
+  expect(toBibtex({ ...reportFields, type: 'webpage' })).toMatch(/^@misc\{/);
+});
+
+test('schema people with family and given names are exported inverted', () => {
+  document.head.insertAdjacentHTML(
+    'beforeend',
+    `<link rel="canonical" href="https://www.undrr.org/publication/book">
+     <script type="application/ld+json">{"@type":"Book","url":"https://www.undrr.org/publication/book","name":"A book","datePublished":"2024","author":[{"@type":"Person","givenName":"Tania","familyName":"Schoennagel"},{"@type":"Organization","name":"UNDRR"}]}</script>`
+  );
+  const { fields } = resolveCitation(fixture());
+  expect(fields.type).toBe('book');
+  expect(fields.authors).toEqual(['Schoennagel, Tania', 'UNDRR']);
+});
+
+test('export links are opt-in, downloadable and announce an export event', () => {
+  const plain = fixture('data-mg-cite-this-title="Report"');
+  mgCiteThis(plain);
+  expect(plain.querySelector('.mg-cite-this__export')).toBeNull();
+  mgCiteThisDestroy(plain);
+
+  const element = fixture(
+    'data-mg-cite-this-title="Hazard profiles" data-mg-cite-this-year="2025" data-mg-cite-this-type="report" data-mg-cite-this-export="bibtex ris unknown ris" data-mg-cite-this-ris-label="RIS file"'
+  );
+  const events = [];
+  element.addEventListener('mg-cite-this:export', event =>
+    events.push(event.detail)
+  );
+  mgCiteThis(element);
+  const links = [...element.querySelectorAll('.mg-cite-this__export')];
+  expect(links.map(link => link.textContent)).toEqual([
+    'Download BibTeX',
+    'RIS file',
+  ]);
+  expect(links[0]).toHaveAttribute('download', 'hazard-profiles.bib');
+  expect(decodeURIComponent(links[1].href)).toContain('TY  - RPRT');
+  links[1].dispatchEvent(
+    new MouseEvent('click', { bubbles: true, cancelable: true })
+  );
+  expect(events).toEqual([expect.objectContaining({ format: 'ris' })]);
+});
+
+test('an editorial citation offers exports only with configured fields', () => {
+  const bare = fixture(
+    'data-mg-cite-this-citation="Approved." data-mg-cite-this-export="ris"'
+  );
+  mgCiteThis(bare);
+  expect(bare.querySelector('.mg-cite-this__export')).toBeNull();
+  mgCiteThisDestroy(bare);
+
+  const configured = fixture(
+    'data-mg-cite-this-citation="Approved." data-mg-cite-this-title="Report" data-mg-cite-this-export="ris"'
+  );
+  mgCiteThis(configured);
+  expect(
+    configured.querySelector('[data-mg-cite-this-text]')
+  ).toHaveTextContent('Approved.');
+  expect(configured.querySelector('.mg-cite-this__export')).not.toBeNull();
 });

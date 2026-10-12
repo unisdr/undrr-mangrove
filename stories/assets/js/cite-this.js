@@ -103,6 +103,22 @@ function schemaWork(doc, canonical) {
   );
 }
 
+function personName(value) {
+  if (value?.familyName && value?.givenName) {
+    return `${firstText(value.familyName)}, ${firstText(value.givenName)}`;
+  }
+  return firstText(value);
+}
+
+function workType(configured, work) {
+  const type = configured?.trim().toLowerCase();
+  if (['book', 'report', 'webpage'].includes(type)) return type;
+  const types = workTypes(work);
+  if (types.includes('Book')) return 'book';
+  if (types.includes('Report')) return 'report';
+  return 'webpage';
+}
+
 function publicationYear(value) {
   const match = String(value || '').match(/^(\d{4})(?:-|$)/);
   return match ? match[1] : '';
@@ -123,8 +139,6 @@ export function resolveCitation(element, now = new Date()) {
   const canonical = canonicalUrl(doc);
   const data = element.dataset;
   const explicit = data.mgCiteThisCitation?.trim();
-  if (explicit) return { text: explicit, source: 'provided', url: canonical };
-
   const configured = [
     data.mgCiteThisAuthor,
     data.mgCiteThisPublisher,
@@ -144,6 +158,9 @@ export function resolveCitation(element, now = new Date()) {
     data.mgCiteThisSite?.trim() ||
     doc.querySelector('meta[property="og:site_name"]')?.content?.trim() ||
     new URL(canonical).hostname.replace(/^www\./, '');
+  const authors = data.mgCiteThisAuthor?.trim()
+    ? [data.mgCiteThisAuthor.trim()]
+    : [work?.author].flat().map(personName).filter(Boolean);
   const author = data.mgCiteThisAuthor?.trim() || firstText(work?.author);
   const publisher =
     data.mgCiteThisPublisher?.trim() || firstText(work?.publisher) || site;
@@ -158,11 +175,137 @@ export function resolveCitation(element, now = new Date()) {
     month: 'long',
     year: 'numeric',
   }).format(now);
+  const fields = {
+    type: workType(data.mgCiteThisType, work),
+    authors,
+    title,
+    publisher,
+    year,
+    url,
+    accessed: now,
+  };
+  // An editorial citation describes the work in words Mangrove cannot parse,
+  // so exports need configured fields rather than page guesses.
+  if (explicit) {
+    return {
+      text: explicit,
+      source: 'provided',
+      url: canonical,
+      fields: configured ? fields : null,
+    };
+  }
   return {
     text: formatCitation({ author, title, publisher, year, url, accessed }),
     source: configured ? 'metadata' : work ? 'schema' : 'page',
     url,
+    fields,
   };
+}
+
+const EXPORT_FORMATS = {
+  ris: {
+    label: 'Download RIS',
+    extension: 'ris',
+    mime: 'application/x-research-info-systems',
+    build: toRis,
+  },
+  bibtex: {
+    label: 'Download BibTeX',
+    extension: 'bib',
+    mime: 'application/x-bibtex',
+    build: toBibtex,
+  },
+};
+
+function isoDate(date) {
+  return date.toISOString().slice(0, 10);
+}
+
+/** RIS record for EndNote, Zotero and Mendeley. */
+export function toRis(fields) {
+  const type = { book: 'BOOK', report: 'RPRT', webpage: 'ELEC' }[fields.type];
+  const lines = [
+    ['TY', type],
+    ...fields.authors.map(name => ['AU', name]),
+    ['TI', fields.title],
+    ['PY', fields.year],
+    ['PB', fields.publisher],
+    ['UR', fields.url],
+    ['Y2', isoDate(fields.accessed).replaceAll('-', '/')],
+  ].filter(([, value]) => value);
+  return `${[...lines, ['ER', '']]
+    .map(([tag, value]) => `${tag}  - ${value}`)
+    .join('\r\n')}\r\n`;
+}
+
+function bibtexText(value) {
+  return value
+    .replace(/\\/g, '\\textbackslash{}')
+    .replace(/([{}&%$#_])/g, '\\$1')
+    .replace(/~/g, '\\textasciitilde{}')
+    .replace(/\^/g, '\\textasciicircum{}');
+}
+
+// Organisations are braced so BibTeX does not split them into personal names;
+// "Family, Given" names come only from structured Schema.org people.
+function bibtexName(name) {
+  return /^[^,]+, [^,]+$/.test(name)
+    ? bibtexText(name)
+    : `{${bibtexText(name)}}`;
+}
+
+/** BibTeX entry; `urldate` is read by biblatex and ignored by classic BibTeX. */
+export function toBibtex(fields) {
+  const entry = { book: 'book', report: 'techreport', webpage: 'misc' }[
+    fields.type
+  ];
+  const key =
+    [fields.authors[0], fields.year, fields.title]
+      .filter(Boolean)
+      .map(part =>
+        part
+          .normalize('NFKD')
+          .replace(/[^A-Za-z0-9\s]/g, '')
+          .trim()
+          .split(/\s+/)[0]
+          ?.toLowerCase()
+      )
+      .filter(Boolean)
+      .join('') || 'citation';
+  const publisherField = fields.type === 'report' ? 'institution' : 'publisher';
+  const lines = [
+    ['author', fields.authors.map(bibtexName).join(' and ')],
+    ['title', `{${bibtexText(fields.title)}}`],
+    [publisherField, fields.publisher && bibtexText(fields.publisher)],
+    ['year', fields.year],
+    ['url', fields.url],
+    ['urldate', isoDate(fields.accessed)],
+  ].filter(([, value]) => value);
+  return `@${entry}{${key},\n${lines
+    .map(([name, value]) => `  ${name} = {${value}}`)
+    .join(',\n')}\n}\n`;
+}
+
+function exportFormats(element, citation) {
+  if (!citation.fields) return [];
+  return (element.dataset.mgCiteThisExport || '')
+    .toLowerCase()
+    .split(/[\s,]+/)
+    .filter(
+      (name, index, all) => EXPORT_FORMATS[name] && all.indexOf(name) === index
+    );
+}
+
+function fileName(title) {
+  return (
+    title
+      .normalize('NFKD')
+      .replace(/[^\w\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .toLowerCase()
+      .slice(0, 60) || 'citation'
+  );
 }
 
 const URL_PATTERN = /https?:\/\/[^\s<>"]+/g;
@@ -194,13 +337,14 @@ function elementsIn(scope) {
   ];
 }
 
-function emit(element, name, citation) {
+function emit(element, name, citation, extra = {}) {
   element.dispatchEvent(
     new CustomEvent(`mg-cite-this:${name}`, {
       bubbles: true,
       detail: {
         source: citation.source,
         url: cleanUrl(citation.url, element.ownerDocument.location.href, true),
+        ...extra,
       },
     })
   );
@@ -293,6 +437,27 @@ export function mgCiteThis(scope = document) {
     const copy = dialogContent.querySelector('[data-mg-cite-this-copy]');
     const status = dialogContent.querySelector('[data-mg-cite-this-status]');
     if (copy) copy.hidden = false;
+    const exports = exportFormats(element, citation).map(format => {
+      const { label, extension, mime, build } = EXPORT_FORMATS[format];
+      const link = doc.createElement('a');
+      link.className = 'mg-cite-this__export';
+      link.href = `data:${mime};charset=utf-8,${encodeURIComponent(
+        build(citation.fields)
+      )}`;
+      link.download = `${fileName(citation.fields.title)}.${extension}`;
+      link.textContent =
+        element.dataset[
+          `mgCiteThis${format === 'ris' ? 'Ris' : 'Bibtex'}Label`
+        ] || label;
+      link.dataset.mgCiteThisFormat = format;
+      return link;
+    });
+    if (exports.length) {
+      const list = doc.createElement('div');
+      list.className = 'mg-cite-this__exports';
+      list.append(...exports);
+      dialogContent.append(list);
+    }
     dialog.className = 'mg-cite-this__dialog';
     dialog.setAttribute('aria-labelledby', title.id);
     dialog.append(header, dialogContent);
@@ -334,7 +499,13 @@ export function mgCiteThis(scope = document) {
         }, 5000);
       }
     };
+    const onExport = event => {
+      const format = event.target.closest('[data-mg-cite-this-format]')?.dataset
+        .mgCiteThisFormat;
+      if (format) emit(element, 'export', citation, { format });
+    };
     trigger.addEventListener('click', onOpen);
+    dialogContent.addEventListener('click', onExport);
     close.addEventListener('click', closeDialog);
     dialog.addEventListener('close', onClose);
     copy?.addEventListener('click', onCopy);
@@ -344,6 +515,7 @@ export function mgCiteThis(scope = document) {
       close.removeEventListener('click', closeDialog);
       dialog.removeEventListener('close', onClose);
       copy?.removeEventListener('click', onCopy);
+      dialogContent.removeEventListener('click', onExport);
       if (dialog.open) dialog.close();
       trigger.remove();
       dialog.remove();

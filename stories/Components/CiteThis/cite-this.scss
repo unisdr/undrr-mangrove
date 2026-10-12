@@ -203,6 +203,29 @@
     }
   }
 
+  &__exports {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-50) var(--mg-spacing-200);
+    margin-block-start: var(--mg-spacing-150);
+    padding-block-start: var(--mg-spacing-150);
+    border-block-start: 1px solid rgb(var(--mg-color-neutral-200));
+    font-size: var(--mg-font-size-250);
+  }
+
+  &__export {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    color: rgb(var(--mg-color-interactive));
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+  }
+
   &__status {
     font-size: var(--mg-font-size-250);
   }
