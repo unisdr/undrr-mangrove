@@ -193,14 +193,16 @@ export const NextToField = {
   },
 };
 
+const ANNOUNCEMENTS = {
+  loading: 'Loading results',
+  done: 'Showing 12 results',
+};
+
 function AnnouncerExample() {
   const { phase, start, busy } = useSimulatedRequest({ duration: 2000 });
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    if (phase === 'loading') setMessage('Loading results');
-    if (phase === 'done') setMessage('Showing 12 results');
-  }, [phase]);
+  // Derived in the same render as aria-busy, so the outcome is written to the
+  // live region at the moment the results stop being busy.
+  const message = ANNOUNCEMENTS[phase] || '';
 
   return (
     <div>
