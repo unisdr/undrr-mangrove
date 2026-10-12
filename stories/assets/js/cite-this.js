@@ -121,19 +121,37 @@ function workType(configured, work) {
 
 // A key that survives title and URL edits, so analytics can count one work
 // across the pages that cite it. The URL is only the last resort.
-function workIdentifier(data, work, url, base) {
+function workIdentifier(data, work, url, canonical, base) {
   const schemaId = [work?.identifier]
     .flat()
-    .map(value =>
-      typeof value === 'object' ? firstText(value?.value) : firstText(value)
-    )
+    .map(value => {
+      const id = value && typeof value === 'object' ? value.value : value;
+      return typeof id === 'number' ? String(id) : firstText(id);
+    })
     .find(Boolean);
   return (
     data.mgCiteThisId?.trim() ||
     schemaId ||
-    (typeof work?.['@id'] === 'string' && work['@id'].trim()) ||
-    cleanUrl(url, base, true)
+    nodeId(work?.['@id'], [url, canonical], base) ||
+    url
   );
+}
+
+// An @id is only stable when it is not the page or work URL plus a fragment,
+// which would change with the URL or, if relative, repeat on every page.
+function nodeId(value, urls, base) {
+  if (typeof value !== 'string' || !value.trim()) return '';
+  let resolved;
+  try {
+    resolved = new URL(value.trim(), base);
+  } catch {
+    return '';
+  }
+  const withoutHash = cleanUrl(resolved.href, base);
+  if (!withoutHash || urls.includes(withoutHash)) return '';
+  if (cleanUrl(resolved.href, base, true) === cleanUrl(base, base, true))
+    return '';
+  return resolved.href;
 }
 
 function publicationYear(value) {
@@ -203,7 +221,7 @@ export function resolveCitation(element, now = new Date()) {
   };
   // An editorial citation describes the work in words Mangrove cannot parse,
   // so exports need configured fields rather than page guesses.
-  const id = workIdentifier(data, work, url, doc.location.href);
+  const id = workIdentifier(data, work, url, canonical, doc.location.href);
   if (explicit) {
     return {
       text: explicit,
@@ -237,6 +255,13 @@ const EXPORT_FORMATS = {
   },
 };
 
+// A line break inside a field would end an RIS tag or BibTeX value early.
+function oneLine(value) {
+  return String(value ?? '')
+    .replace(/\s*[\r\n]+\s*/g, ' ')
+    .trim();
+}
+
 function isoDate(date) {
   return date.toISOString().slice(0, 10);
 }
@@ -252,18 +277,25 @@ export function toRis(fields) {
     ['PB', fields.publisher],
     ['UR', fields.url],
     ['Y2', isoDate(fields.accessed).replaceAll('-', '/')],
-  ].filter(([, value]) => value);
+  ]
+    .map(([tag, value]) => [tag, oneLine(value)])
+    .filter(([, value]) => value);
   return `${[...lines, ['ER', '']]
     .map(([tag, value]) => `${tag}  - ${value}`)
     .join('\r\n')}\r\n`;
 }
 
+const BIBTEX_ESCAPES = {
+  '\\': '\\textbackslash{}',
+  '~': '\\textasciitilde{}',
+  '^': '\\textasciicircum{}',
+};
+
 function bibtexText(value) {
-  return value
-    .replace(/\\/g, '\\textbackslash{}')
-    .replace(/([{}&%$#_])/g, '\\$1')
-    .replace(/~/g, '\\textasciitilde{}')
-    .replace(/\^/g, '\\textasciicircum{}');
+  return oneLine(value).replace(
+    /[\\~^{}&%$#_]/g,
+    char => BIBTEX_ESCAPES[char] || `\\${char}`
+  );
 }
 
 // Organisations are braced so BibTeX does not split them into personal names;
@@ -297,8 +329,15 @@ export function toBibtex(fields) {
     ['author', fields.authors.map(bibtexName).join(' and ')],
     ['title', `{${bibtexText(fields.title)}}`],
     [publisherField, fields.publisher && bibtexText(fields.publisher)],
-    ['year', fields.year],
-    ['url', fields.url],
+    ['year', oneLine(fields.year)],
+    // Braces would close the field early; percent-encoding keeps the URL valid.
+    [
+      'url',
+      oneLine(fields.url).replace(
+        /[{}]/g,
+        char => `%${char.charCodeAt(0).toString(16).toUpperCase()}`
+      ),
+    ],
     ['urldate', isoDate(fields.accessed)],
   ].filter(([, value]) => value);
   return `@${entry}{${key},\n${lines
@@ -331,6 +370,21 @@ function fileName(title) {
 
 const URL_PATTERN = /https?:\/\/[^\s<>"]+/g;
 
+// Sentence punctuation and closing quotes stay outside the link; a closing
+// bracket stays inside when the URL opened it, as in Wikipedia titles.
+function trimUrl(url) {
+  let href = url;
+  for (;;) {
+    const last = href.at(-1);
+    const unbalanced = (open, close) =>
+      href.split(close).length > href.split(open).length;
+    if (/[.,;:!?'"\u2019\u201d]/.test(last)) href = href.slice(0, -1);
+    else if (last === ')' && unbalanced('(', ')')) href = href.slice(0, -1);
+    else if (last === ']' && unbalanced('[', ']')) href = href.slice(0, -1);
+    else return href;
+  }
+}
+
 // Links each URL in place while keeping the copied text identical to the
 // rendered text. Trailing sentence punctuation stays outside the link.
 function renderCitation(output, text) {
@@ -338,7 +392,7 @@ function renderCitation(output, text) {
   output.replaceChildren();
   let index = 0;
   for (const match of text.matchAll(URL_PATTERN)) {
-    const href = match[0].replace(/[.,;:)\]]+$/, '');
+    const href = trimUrl(match[0]);
     if (match.index > index) output.append(text.slice(index, match.index));
     const link = doc.createElement('a');
     link.href = href;
@@ -367,9 +421,7 @@ function emit(element, name, citation, extra = {}) {
         id: citation.id,
         url: cleanUrl(citation.url, element.ownerDocument.location.href, true),
         pageUrl: canonicalUrl(element.ownerDocument).replace(/\?.*$/, ''),
-        layout: element.classList.contains('mg-cite-this--compact')
-          ? 'compact'
-          : 'default',
+        layout: element.dataset.mgCiteThisLayout,
         ...extra,
       },
     })
@@ -411,7 +463,10 @@ function createFallback(element) {
 /** Initialise citation dialogs within a document or Drupal behaviour scope. */
 export function mgCiteThis(scope = document) {
   for (const element of elementsIn(scope)) {
-    if (instances.has(element)) continue;
+    // The ready flag also stops a second copy of this module, such as a
+    // versioned and a latest/ build on one page, from enhancing it twice.
+    if (instances.has(element) || 'mgCiteThisReady' in element.dataset)
+      continue;
     const existing = element.querySelector('details.mg-cite-this__fallback');
     const generated = !existing && element.childElementCount === 0;
     const fallback = generated ? createFallback(element) : existing;
@@ -425,8 +480,49 @@ export function mgCiteThis(scope = document) {
     renderCitation(output, citation.text);
     element.dataset.mgCiteThisSource = citation.source;
     const dialog = doc.createElement('dialog');
+    element.dataset.mgCiteThisReady = '';
     if (typeof dialog.showModal !== 'function') {
-      if (generated) instances.set(element, () => fallback.remove());
+      // Without dialog support the disclosure stays, with copying enabled.
+      element.dataset.mgCiteThisLayout = 'disclosure';
+      const fallbackCopy = content.querySelector('[data-mg-cite-this-copy]');
+      const fallbackStatus = content.querySelector(
+        '[data-mg-cite-this-status]'
+      );
+      let fallbackTimer;
+      const onFallbackCopy = async () => {
+        let message;
+        try {
+          await navigator.clipboard.writeText(citation.text);
+          message = element.dataset.mgCiteThisCopiedLabel || 'Citation copied';
+          emit(element, 'copy', citation, { placement: 'disclosure' });
+        } catch {
+          message =
+            element.dataset.mgCiteThisFailedLabel ||
+            'Copy failed. Select the citation and copy it manually.';
+          emit(element, 'copy-error', citation, {
+            target: 'citation',
+            placement: 'disclosure',
+          });
+        }
+        if (!fallbackStatus) return;
+        fallbackStatus.textContent = message;
+        clearTimeout(fallbackTimer);
+        fallbackTimer = setTimeout(() => {
+          fallbackStatus.textContent = '';
+        }, 3000);
+      };
+      if (fallbackCopy) {
+        fallbackCopy.hidden = false;
+        fallbackCopy.addEventListener('click', onFallbackCopy);
+      }
+      instances.set(element, () => {
+        clearTimeout(fallbackTimer);
+        if (fallbackCopy) {
+          fallbackCopy.removeEventListener('click', onFallbackCopy);
+          fallbackCopy.hidden = true;
+        }
+        if (generated) fallback.remove();
+      });
       continue;
     }
 
@@ -463,14 +559,14 @@ export function mgCiteThis(scope = document) {
     const copy = dialogContent.querySelector('[data-mg-cite-this-copy]');
     const status = dialogContent.querySelector('[data-mg-cite-this-status]');
     if (copy) copy.hidden = false;
-    let copyLink;
-    if (copy && element.dataset.mgCiteThisCopyLink !== 'false') {
-      copyLink = doc.createElement('button');
-      copyLink.type = 'button';
-      copyLink.className = 'mg-cite-this__copy mg-cite-this__copy-link';
-      copyLink.textContent =
-        element.dataset.mgCiteThisCopyLinkLabel || 'Copy citation URL';
-      copy.after(copyLink);
+    let copyUrl;
+    if (copy && element.dataset.mgCiteThisCopyUrl !== 'false') {
+      copyUrl = doc.createElement('button');
+      copyUrl.type = 'button';
+      copyUrl.className = 'mg-cite-this__copy mg-cite-this__copy-url';
+      copyUrl.textContent =
+        element.dataset.mgCiteThisCopyUrlLabel || 'Copy citation URL';
+      copy.after(copyUrl);
     }
     const exports = exportFormats(element, citation).map(format => {
       const { label, extension, mime, build } = EXPORT_FORMATS[format];
@@ -500,6 +596,11 @@ export function mgCiteThis(scope = document) {
     // copyable field, and a quiet link to the full dialog. The compact
     // variant is the dialog trigger alone.
     const panel = !element.classList.contains('mg-cite-this--compact');
+    element.dataset.mgCiteThisLayout = panel ? 'default' : 'compact';
+    const authored = ['role', 'aria-labelledby'].map(name => [
+      name,
+      element.getAttribute(name),
+    ]);
     let wrapper;
     let label;
     let preview;
@@ -518,10 +619,13 @@ export function mgCiteThis(scope = document) {
       preview = doc.createElement('button');
       preview.type = 'button';
       preview.className = 'mg-cite-this__preview';
-      preview.setAttribute(
-        'aria-label',
+      // The visible citation stays in the accessible name (WCAG 2.5.3); the
+      // hidden prefix says what pressing it does.
+      const previewAction = doc.createElement('span');
+      previewAction.className = 'mg-u-sr-only';
+      previewAction.textContent = `${
         element.dataset.mgCiteThisCopyLabel || 'Copy citation'
-      );
+      }: `;
       const previewIcon = doc.createElement('span');
       previewIcon.className = 'mg-icon mg-icon-file-alt';
       previewIcon.setAttribute('aria-hidden', 'true');
@@ -531,7 +635,7 @@ export function mgCiteThis(scope = document) {
       const copyIcon = doc.createElement('span');
       copyIcon.className = 'mg-icon mg-icon-clone';
       copyIcon.setAttribute('aria-hidden', 'true');
-      preview.append(previewIcon, previewText, copyIcon);
+      preview.append(previewIcon, previewAction, previewText, copyIcon);
 
       previewStatus = doc.createElement('span');
       previewStatus.className = 'mg-u-sr-only';
@@ -576,7 +680,7 @@ export function mgCiteThis(scope = document) {
       } catch {
         announce(failedLabel, 5000);
         emit(element, 'copy-error', citation, {
-          target: eventName === 'copy' ? 'citation' : 'link',
+          target: eventName === 'copy' ? 'citation' : 'url',
           placement: 'dialog',
         });
       }
@@ -590,28 +694,34 @@ export function mgCiteThis(scope = document) {
         'copy'
       );
     // The citation's own locator, not a shortlink, so the copied link lasts.
-    const onCopyLink = () =>
+    const onCopyUrl = () =>
       copyText(
         citation.url,
-        element.dataset.mgCiteThisLinkCopiedLabel || 'Link copied',
-        element.dataset.mgCiteThisLinkFailedLabel ||
+        element.dataset.mgCiteThisUrlCopiedLabel || 'URL copied',
+        element.dataset.mgCiteThisUrlFailedLabel ||
           'Copy failed. Select the URL in the citation and copy it manually.',
-        'copy-link'
+        'copy-url'
       );
     const onPreviewCopy = async () => {
-      let message;
+      const message =
+        element.dataset.mgCiteThisCopiedLabel || 'Citation copied';
       try {
         await navigator.clipboard.writeText(citation.text);
-        message = element.dataset.mgCiteThisCopiedLabel || 'Citation copied';
         emit(element, 'copy', citation, { placement: 'field' });
       } catch {
-        message =
-          element.dataset.mgCiteThisFailedLabel ||
-          'Copy failed. Select the citation and copy it manually.';
+        // The field is a button, so open the dialog where the citation is
+        // selectable text and explain there.
         emit(element, 'copy-error', citation, {
           target: 'citation',
           placement: 'field',
         });
+        onOpen();
+        announce(
+          element.dataset.mgCiteThisFailedLabel ||
+            'Copy failed. Select the citation and copy it manually.',
+          5000
+        );
+        return;
       }
       previewText.textContent = message;
       previewStatus.textContent = message;
@@ -621,33 +731,38 @@ export function mgCiteThis(scope = document) {
         previewStatus.textContent = '';
       }, 3000);
     };
-    const onExport = event => {
+    const onDialogClick = event => {
       const format = event.target.closest('[data-mg-cite-this-format]')?.dataset
         .mgCiteThisFormat;
-      if (format) emit(element, 'export', citation, { format });
+      if (format) {
+        emit(element, 'export', citation, { format, placement: 'dialog' });
+      } else if (event.target.closest('[data-mg-cite-this-text] a')) {
+        emit(element, 'visit', citation, { placement: 'dialog' });
+      }
     };
     trigger.addEventListener('click', onOpen);
-    dialogContent.addEventListener('click', onExport);
+    dialogContent.addEventListener('click', onDialogClick);
     close.addEventListener('click', closeDialog);
     dialog.addEventListener('close', onClose);
     copy?.addEventListener('click', onCopy);
-    copyLink?.addEventListener('click', onCopyLink);
+    copyUrl?.addEventListener('click', onCopyUrl);
     preview?.addEventListener('click', onPreviewCopy);
     instances.set(element, () => {
+      // Close first, while the close handler still returns focus.
+      if (dialog.open) dialog.close();
       clearTimeout(statusTimer);
+      clearTimeout(previewTimer);
       trigger.removeEventListener('click', onOpen);
       close.removeEventListener('click', closeDialog);
       dialog.removeEventListener('close', onClose);
       copy?.removeEventListener('click', onCopy);
-      copyLink?.removeEventListener('click', onCopyLink);
-      dialogContent.removeEventListener('click', onExport);
-      if (dialog.open) dialog.close();
-      clearTimeout(previewTimer);
+      copyUrl?.removeEventListener('click', onCopyUrl);
+      dialogContent.removeEventListener('click', onDialogClick);
       preview?.removeEventListener('click', onPreviewCopy);
       wrapper?.remove();
-      if (panel) {
-        element.removeAttribute('role');
-        element.removeAttribute('aria-labelledby');
+      for (const [name, value] of authored) {
+        if (value === null) element.removeAttribute(name);
+        else element.setAttribute(name, value);
       }
       trigger.remove();
       dialog.remove();
@@ -660,8 +775,11 @@ export function mgCiteThis(scope = document) {
 /** Remove listeners before replacing content in a client-side navigation. */
 export function mgCiteThisDestroy(scope = document) {
   for (const element of elementsIn(scope)) {
-    instances.get(element)?.();
+    if (!instances.has(element)) continue;
+    instances.get(element)();
     instances.delete(element);
+    delete element.dataset.mgCiteThisReady;
+    delete element.dataset.mgCiteThisLayout;
   }
 }
 

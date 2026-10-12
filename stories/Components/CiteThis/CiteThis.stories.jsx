@@ -11,7 +11,7 @@ function CitationExample({
   url,
   type,
   exportFormats,
-  copyLink,
+  copyUrl,
   variant,
 }) {
   const ref = useRef(null);
@@ -28,7 +28,7 @@ function CitationExample({
     url,
     type,
     exportFormats,
-    copyLink,
+    copyUrl,
     variant,
   ]);
 
@@ -46,7 +46,7 @@ function CitationExample({
       data-mg-cite-this-url={url}
       data-mg-cite-this-type={type}
       data-mg-cite-this-export={exportFormats}
-      data-mg-cite-this-copy-link={copyLink}
+      data-mg-cite-this-copy-url={copyUrl}
     >
       <details className="mg-cite-this__fallback">
         <summary className="mg-cite-this__summary">Cite this</summary>
@@ -173,7 +173,7 @@ export const CitationOnly = {
       title="Response"
       publisher="UNDRR"
       exportFormats="none"
-      copyLink="false"
+      copyUrl="false"
     />
   ),
 };

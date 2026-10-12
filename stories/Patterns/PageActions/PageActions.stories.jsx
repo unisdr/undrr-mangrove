@@ -26,7 +26,7 @@ function CiteThis() {
       data-mg-cite-this-year={work.year}
       data-mg-cite-this-title={work.title}
       data-mg-cite-this-type={work.type}
-      data-mg-cite-this-id="node/101"
+      data-mg-cite-this-id="preventionweb:node/101"
     />
   );
 }

@@ -43,6 +43,11 @@
     @media (prefers-reduced-motion: reduce) {
       transition: none;
     }
+
+    // The filled trigger relies on its background, which forced colours remove.
+    @media (forced-colors: active) {
+      border: 1px solid ButtonText;
+    }
   }
 
   // Default enhanced layout, with the same structure and metrics as
@@ -283,7 +288,7 @@
       color: rgb(var(--mg-color-white));
     }
 
-    &:not(.mg-cite-this__copy-link) {
+    &:not(.mg-cite-this__copy-url) {
       background: rgb(var(--mg-color-interactive));
       color: rgb(var(--mg-color-white));
 

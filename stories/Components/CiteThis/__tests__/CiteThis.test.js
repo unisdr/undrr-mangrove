@@ -400,9 +400,9 @@ test('an editorial citation offers exports only with configured fields', () => {
   expect(configured.querySelector('.mg-cite-this__export')).not.toBeNull();
 });
 
-test('Copy link copies the citation URL with its own feedback and event', async () => {
+test('Copy citation URL copies the citation URL with its own feedback and event', async () => {
   const element = fixture(
-    'data-mg-cite-this-title="Report" data-mg-cite-this-url="https://www.undrr.org/report?id=42" data-mg-cite-this-copy-link-label="Copier le lien"'
+    'data-mg-cite-this-title="Report" data-mg-cite-this-url="https://www.undrr.org/report?id=42" data-mg-cite-this-copy-url-label="Copier le lien"'
   );
   const writeText = jest.fn().mockResolvedValue();
   Object.defineProperty(navigator, 'clipboard', {
@@ -410,23 +410,23 @@ test('Copy link copies the citation URL with its own feedback and event', async 
     value: { writeText },
   });
   const events = [];
-  element.addEventListener('mg-cite-this:copy-link', event =>
+  element.addEventListener('mg-cite-this:copy-url', event =>
     events.push(event.detail)
   );
   element.addEventListener('mg-cite-this:copy', () => events.push('citation'));
   mgCiteThis(element);
-  const button = element.querySelector('.mg-cite-this__copy-link');
+  const button = element.querySelector('.mg-cite-this__copy-url');
   expect(button).toHaveTextContent('Copier le lien');
   button.click();
   await Promise.resolve();
   expect(writeText).toHaveBeenCalledWith('https://www.undrr.org/report?id=42');
   expect(
     element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-status]')
-  ).toHaveTextContent('Link copied');
+  ).toHaveTextContent('URL copied');
   expect(events).toEqual([expect.objectContaining({ source: 'metadata' })]);
 });
 
-test('a failed link copy is reported against the link', async () => {
+test('a failed URL copy is reported against the URL', async () => {
   const element = fixture('data-mg-cite-this-title="Report"');
   Object.defineProperty(navigator, 'clipboard', {
     configurable: true,
@@ -437,21 +437,21 @@ test('a failed link copy is reported against the link', async () => {
     errors.push(event.detail.target)
   );
   mgCiteThis(element);
-  element.querySelector('.mg-cite-this__copy-link').click();
+  element.querySelector('.mg-cite-this__copy-url').click();
   await Promise.resolve();
   await Promise.resolve();
-  expect(errors).toEqual(['link']);
+  expect(errors).toEqual(['url']);
   expect(
     element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-status]')
   ).toHaveTextContent('Select the URL in the citation');
 });
 
-test('Copy link can be turned off', () => {
+test('Copy citation URL can be turned off', () => {
   const element = fixture(
-    'data-mg-cite-this-title="Report" data-mg-cite-this-copy-link="false"'
+    'data-mg-cite-this-title="Report" data-mg-cite-this-copy-url="false"'
   );
   mgCiteThis(element);
-  expect(element.querySelector('.mg-cite-this__copy-link')).toBeNull();
+  expect(element.querySelector('.mg-cite-this__copy-url')).toBeNull();
 });
 
 test('the default layout labels the group, copies from the preview and keeps the dialog', async () => {
@@ -483,7 +483,9 @@ test('the default layout labels the group, copies from the preview and keeps the
   );
 
   const preview = element.querySelector('.mg-cite-this__preview');
-  expect(preview).toHaveAccessibleName('Copy citation');
+  expect(preview).toHaveAccessibleName(
+    `Copy citation: ${resolveCitation(element).text}`
+  );
   const { text } = resolveCitation(element);
   expect(preview).toHaveTextContent(text);
   preview.click();
@@ -507,7 +509,7 @@ test('the compact variant is the trigger alone', () => {
   expect(element.querySelector('.mg-cite-this__trigger')).toHaveTextContent(
     'Cite this'
   );
-  expect(element.querySelector('.mg-cite-this__copy-link')).toHaveTextContent(
+  expect(element.querySelector('.mg-cite-this__copy-url')).toHaveTextContent(
     'Copy citation URL'
   );
 });
@@ -525,7 +527,7 @@ test('events carry a stable work id, the citing page and where the action happen
     value: { writeText: jest.fn().mockResolvedValue() },
   });
   const events = [];
-  for (const name of ['open', 'copy', 'copy-link'])
+  for (const name of ['open', 'copy', 'copy-url'])
     element.addEventListener(`mg-cite-this:${name}`, event =>
       events.push([name, event.detail])
     );
@@ -533,7 +535,7 @@ test('events carry a stable work id, the citing page and where the action happen
   element.querySelector('.mg-cite-this__preview').click();
   await Promise.resolve();
   element.querySelector('.mg-cite-this__trigger').click();
-  element.querySelector('.mg-cite-this__copy-link').click();
+  element.querySelector('.mg-cite-this__copy-url').click();
   await Promise.resolve();
 
   const common = {
@@ -546,11 +548,11 @@ test('events carry a stable work id, the citing page and where the action happen
   expect(events).toEqual([
     ['copy', { ...common, placement: 'field' }],
     ['open', common],
-    ['copy-link', { ...common, placement: 'dialog' }],
+    ['copy-url', { ...common, placement: 'dialog' }],
   ]);
 });
 
-test('the work id falls back to Schema.org identifier, then @id, then the query-free URL', () => {
+test('the work id falls back to Schema.org identifier, then @id, then the URL', () => {
   document.head.insertAdjacentHTML(
     'beforeend',
     `<link rel="canonical" href="https://www.undrr.org/publication/report">
@@ -558,17 +560,34 @@ test('the work id falls back to Schema.org identifier, then @id, then the query-
   );
   expect(resolveCitation(fixture()).id).toBe('10.1234/abc');
 
-  document.querySelector('script[type="application/ld+json"]').textContent =
-    '{"@type":"Report","@id":"https://www.undrr.org/publication/report#work","url":"https://www.undrr.org/publication/report","name":"R"}';
+  const ld = document.querySelector('script[type="application/ld+json"]');
+  const work =
+    '"@type":"Report","url":"https://www.undrr.org/publication/report","name":"R"';
+  ld.textContent = `{${work},"identifier":9781234}`;
+  expect(resolveCitation(fixture()).id).toBe('9781234');
+
+  ld.textContent = `{${work},"@id":"https://data.undrr.org/works/abc"}`;
   expect(resolveCitation(fixture()).id).toBe(
-    'https://www.undrr.org/publication/report#work'
+    'https://data.undrr.org/works/abc'
   );
+
+  // A fragment on the work or page URL changes with the URL, and a bare
+  // fragment repeats on every page, so neither is a stable key.
+  for (const id of [
+    'https://www.undrr.org/publication/report#work',
+    '#article',
+  ]) {
+    ld.textContent = `{${work},"@id":"${id}"}`;
+    expect(resolveCitation(fixture()).id).toBe(
+      'https://www.undrr.org/publication/report'
+    );
+  }
 
   const element = fixture(
     'data-mg-cite-this-title="Other" data-mg-cite-this-url="https://www.undrr.org/other?x=1"'
   );
   document.querySelector('script[type="application/ld+json"]').remove();
-  expect(resolveCitation(element).id).toBe('https://www.undrr.org/other');
+  expect(resolveCitation(element).id).toBe('https://www.undrr.org/other?x=1');
 });
 
 test('an editorial citation uses the configured URL for Copy citation URL', () => {
@@ -578,4 +597,139 @@ test('an editorial citation uses the configured URL for Copy citation URL', () =
   expect(resolveCitation(element).url).toBe(
     'https://www.undrr.org/publication/report'
   );
+});
+
+test('RIS and BibTeX keep each field on one line and escape safely', () => {
+  const fields = {
+    ...reportFields,
+    authors: ['A\\B {x}'],
+    title: 'Title\nER  - \nTY  - BOOK',
+    url: 'https://www.undrr.org/a?q={1}',
+  };
+  const ris = toRis(fields);
+  expect(ris.match(/^TY {2}- /gm)).toHaveLength(1);
+  expect(ris.match(/^ER {2}- /gm)).toHaveLength(1);
+  expect(ris).toContain('TI  - Title ER  - TY  - BOOK\r\n');
+  const bib = toBibtex(fields);
+  expect(bib).toContain('author = {{A\\textbackslash{}B \\{x\\}}}');
+  expect(bib).toContain('url = {https://www.undrr.org/a?q=%7B1%7D}');
+  expect(bib).not.toContain('Title\n');
+});
+
+test.each([
+  [
+    'https://en.wikipedia.org/wiki/Risk_(statistics).',
+    'https://en.wikipedia.org/wiki/Risk_(statistics)',
+  ],
+  ['(see https://www.undrr.org/x).', 'https://www.undrr.org/x'],
+  ['“https://www.undrr.org/x”', 'https://www.undrr.org/x'],
+  ['Available: https://www.undrr.org/x?', 'https://www.undrr.org/x'],
+])('links %s as %s', (text, href) => {
+  const element = fixture(`data-mg-cite-this-citation='${text}'`);
+  mgCiteThis(element);
+  expect(element.querySelector('[data-mg-cite-this-text] a')).toHaveAttribute(
+    'href',
+    href
+  );
+  expect(element.querySelector('[data-mg-cite-this-text]').textContent).toBe(
+    text
+  );
+});
+
+test('a failed copy from the field opens the dialog to copy manually', async () => {
+  const element = fixture('data-mg-cite-this-title="Report"');
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText: jest.fn().mockRejectedValue(new Error('denied')) },
+  });
+  const errors = [];
+  element.addEventListener('mg-cite-this:copy-error', event =>
+    errors.push(event.detail)
+  );
+  mgCiteThis(element);
+  element.querySelector('.mg-cite-this__preview').click();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(element.querySelector('dialog').open).toBe(true);
+  expect(
+    element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-status]')
+  ).toHaveTextContent('Select the citation');
+  expect(errors).toEqual([
+    expect.objectContaining({ target: 'citation', placement: 'field' }),
+  ]);
+});
+
+test('a second module copy does not enhance an element twice', () => {
+  const element = fixture('data-mg-cite-this-title="Report"');
+  mgCiteThis(element);
+  expect(element.dataset.mgCiteThisReady).toBe('');
+  let second;
+  jest.isolateModules(() => {
+    second = require('../../../assets/js/cite-this');
+  });
+  expect(second.mgCiteThis).not.toBe(mgCiteThis);
+  second.mgCiteThis(element);
+  expect(element.querySelectorAll('.mg-cite-this__panel')).toHaveLength(1);
+  expect(element.querySelectorAll('dialog')).toHaveLength(1);
+  mgCiteThisDestroy(element);
+  expect('mgCiteThisReady' in element.dataset).toBe(false);
+});
+
+test('destroy restores authored group attributes', () => {
+  const element = fixture('data-mg-cite-this-title="Report"');
+  element.setAttribute('role', 'region');
+  mgCiteThis(element);
+  expect(element).toHaveAttribute('role', 'group');
+  mgCiteThisDestroy(element);
+  expect(element).toHaveAttribute('role', 'region');
+  expect(element).not.toHaveAttribute('aria-labelledby');
+});
+
+test('without dialog support the disclosure offers copying', async () => {
+  HTMLDialogElement.prototype.showModal = undefined;
+  const element = fixture('data-mg-cite-this-title="Report"');
+  const writeText = jest.fn().mockResolvedValue();
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText },
+  });
+  const events = [];
+  element.addEventListener('mg-cite-this:copy', event =>
+    events.push(event.detail)
+  );
+  mgCiteThis(element);
+  const copy = element.querySelector('[data-mg-cite-this-copy]');
+  expect(copy).not.toHaveAttribute('hidden');
+  copy.click();
+  await Promise.resolve();
+  expect(writeText).toHaveBeenCalled();
+  expect(events).toEqual([
+    expect.objectContaining({ placement: 'disclosure', layout: 'disclosure' }),
+  ]);
+  mgCiteThisDestroy(element);
+  expect(copy).toHaveAttribute('hidden');
+});
+
+test('export and linked URL clicks are reported with their placement', () => {
+  const element = fixture(
+    'data-mg-cite-this-title="Report" data-mg-cite-this-url="https://www.undrr.org/report"'
+  );
+  const events = [];
+  for (const name of ['export', 'visit'])
+    element.addEventListener(`mg-cite-this:${name}`, event =>
+      events.push([name, event.detail.placement, event.detail.format])
+    );
+  mgCiteThis(element);
+  const click = target =>
+    target.dispatchEvent(
+      new MouseEvent('click', { bubbles: true, cancelable: true })
+    );
+  click(
+    element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-text] a')
+  );
+  click(element.querySelector('.mg-cite-this__export'));
+  expect(events).toEqual([
+    ['visit', 'dialog', undefined],
+    ['export', 'dialog', 'ris'],
+  ]);
 });
