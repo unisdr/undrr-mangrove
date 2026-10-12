@@ -201,7 +201,7 @@ Each component gets its own JSON file (roughly 0.3-21 KB) with some of:
 - **Story examples** with JSX code snippets (from Storybook)
 - **Rendered HTML** — copy-pasteable HTML showing the actual DOM structure. Some components are auto-rendered from the built React bundles using `renderToStaticMarkup`; others have curated HTML examples.
 - **CSS classes** — list of the classes the component uses. Only curated components carry this (about a third of the files); `renderedHtml` is on roughly three quarters. Check for the key rather than assuming it is there.
-- **CSS custom properties** — under `customProperties`, the properties the component exposes for theming. Present on the 20 components that have any; the index entry carries the count. See below.
+- **CSS custom properties** — under `customProperties`, the properties the component exposes for theming. Present on the 24 components that have any; the index entry carries the count. See below.
 - **Changelog** — structured version history with release dates, notes, and PR links (from the component's MDX docs)
 - **Branding flags** — `doNotModify` warnings on components like PageHeader and Footer where the markup is a UNDRR branding requirement
 
