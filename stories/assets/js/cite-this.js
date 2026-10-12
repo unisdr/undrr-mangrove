@@ -471,14 +471,18 @@ export function mgCiteThis(scope = document) {
     dialog.className = 'mg-cite-this__dialog';
     dialog.setAttribute('aria-labelledby', title.id);
     dialog.append(header, dialogContent);
-    // The compact layout mirrors ShareButtons: a label, the citation as a
-    // copyable field, and a quiet link to the full dialog.
-    const compact = element.classList.contains('mg-cite-this--compact');
+    // The default layout mirrors ShareButtons: a label, the citation as a
+    // copyable field, and a quiet link to the full dialog. The compact
+    // variant is the dialog trigger alone.
+    const panel = !element.classList.contains('mg-cite-this--compact');
+    let wrapper;
     let label;
     let preview;
     let previewText;
     let previewStatus;
-    if (compact) {
+    if (panel) {
+      wrapper = doc.createElement('div');
+      wrapper.className = 'mg-cite-this__panel';
       label = doc.createElement('p');
       label.id = `${dialogId}-label`;
       label.className = 'mg-cite-this__header';
@@ -511,9 +515,12 @@ export function mgCiteThis(scope = document) {
 
       trigger.textContent =
         element.dataset.mgCiteThisMoreLabel || 'All citation options';
-      element.append(label, preview, previewStatus);
+      trigger.classList.add('mg-cite-this__more');
+      wrapper.append(label, preview, previewStatus, trigger);
+      element.append(wrapper, dialog);
+    } else {
+      element.append(trigger, dialog);
     }
-    element.append(trigger, dialog);
     fallback.hidden = true;
 
     let statusTimer;
@@ -608,10 +615,8 @@ export function mgCiteThis(scope = document) {
       if (dialog.open) dialog.close();
       clearTimeout(previewTimer);
       preview?.removeEventListener('click', onPreviewCopy);
-      label?.remove();
-      preview?.remove();
-      previewStatus?.remove();
-      if (compact) {
+      wrapper?.remove();
+      if (panel) {
         element.removeAttribute('role');
         element.removeAttribute('aria-labelledby');
       }

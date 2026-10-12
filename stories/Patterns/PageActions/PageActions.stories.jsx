@@ -10,18 +10,16 @@ const work = {
   type: 'report',
 };
 
-function CiteThis({ compact }) {
+function CiteThis() {
   const ref = useRef(null);
   useEffect(() => {
     mgCiteThis(ref.current);
     return () => mgCiteThisDestroy(ref.current);
-  }, [compact]);
+  }, []);
   return (
     <div
       ref={ref}
-      className={
-        compact ? 'mg-cite-this mg-cite-this--compact' : 'mg-cite-this'
-      }
+      className="mg-cite-this"
       data-mg-cite-this
       data-mg-cite-this-author={work.author}
       data-mg-cite-this-publisher={work.publisher}
@@ -38,7 +36,7 @@ export function PageActions({ share = true, cite = true }) {
     <div className="mg-container">
       <div className="mg-grid mg-grid__col-2">
         {share && <ShareButtons SharingSubject={work.title} />}
-        {cite && <CiteThis compact={share} />}
+        {cite && <CiteThis />}
       </div>
     </div>
   );

@@ -18,14 +18,14 @@ Cite this shows less inline than Share this on purpose. People share more often 
 ## Layout
 
 - Put the two in `mg-grid mg-grid__col-2`. They sit as equal columns on wide screens and stack, Share this first, on narrow ones.
-- Add `mg-cite-this--compact` to Cite this so it takes the same structure as ShareButtons.
-- When a page has only one of them, use the component alone. On its own, Cite this keeps its default filled button, which suits a page where citing is the main action, such as a publication.
+- Both components already share one structure, so no modifier is needed.
+- When a page has only one of them, use the component alone. Where there is room only for a button, such as beside a Download PDF button, use the `mg-cite-this--compact` Cite this button instead.
 
 ```html
 <div class="mg-grid mg-grid__col-2">
   <section data-mg-share-buttons data-main-label="Share this"></section>
   <div
-    class="mg-cite-this mg-cite-this--compact"
+    class="mg-cite-this"
     data-mg-cite-this
     data-mg-cite-this-title="Hazard Information Profiles: 2025 version"
     data-mg-cite-this-author="United Nations Office for Disaster Risk Reduction"

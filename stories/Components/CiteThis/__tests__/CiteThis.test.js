@@ -215,7 +215,7 @@ test('an empty vanilla marker uses the page title and URL', () => {
   mgCiteThis(element);
 
   expect(element.dataset.mgCiteThisSource).toBe('page');
-  expect(element.querySelector('.mg-cite-this__trigger')).toHaveTextContent(
+  expect(element.querySelector('.mg-cite-this__header')).toHaveTextContent(
     'Cite this'
   );
   expect(
@@ -454,11 +454,10 @@ test('Copy link can be turned off', () => {
   expect(element.querySelector('.mg-cite-this__copy-link')).toBeNull();
 });
 
-test('compact layout labels the group, copies from the preview and keeps the dialog', async () => {
+test('the default layout labels the group, copies from the preview and keeps the dialog', async () => {
   const element = fixture(
     'data-mg-cite-this-title="Report" data-mg-cite-this-year="2025"'
   );
-  element.classList.add('mg-cite-this--compact');
   const writeText = jest.fn().mockResolvedValue();
   Object.defineProperty(navigator, 'clipboard', {
     configurable: true,
@@ -470,7 +469,9 @@ test('compact layout labels the group, copies from the preview and keeps the dia
   );
   mgCiteThis(element);
 
-  const label = element.querySelector('.mg-cite-this__header');
+  const label = element.querySelector(
+    '.mg-cite-this__panel .mg-cite-this__header'
+  );
   expect(label).toHaveTextContent('Cite this');
   expect(element).toHaveAttribute('role', 'group');
   expect(element).toHaveAttribute('aria-labelledby', label.id);
@@ -493,16 +494,19 @@ test('compact layout labels the group, copies from the preview and keeps the dia
   expect(events).toHaveLength(1);
 
   mgCiteThisDestroy(element);
-  expect(element.querySelector('.mg-cite-this__preview')).toBeNull();
-  expect(element.querySelector('.mg-cite-this__header')).toBeNull();
+  expect(element.querySelector('.mg-cite-this__panel')).toBeNull();
   expect(element).not.toHaveAttribute('role');
 });
 
-test('the default layout has no group label or preview', () => {
+test('the compact variant is the trigger alone', () => {
   const element = fixture('data-mg-cite-this-title="Report"');
+  element.classList.add('mg-cite-this--compact');
   mgCiteThis(element);
-  expect(element.querySelector('.mg-cite-this__header')).toBeNull();
-  expect(element.querySelector('.mg-cite-this__preview')).toBeNull();
+  expect(element.querySelector('.mg-cite-this__panel')).toBeNull();
+  expect(element).not.toHaveAttribute('role');
+  expect(element.querySelector('.mg-cite-this__trigger')).toHaveTextContent(
+    'Cite this'
+  );
   expect(element.querySelector('.mg-cite-this__copy-link')).toHaveTextContent(
     'Copy citation URL'
   );

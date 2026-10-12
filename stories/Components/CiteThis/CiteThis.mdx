@@ -7,7 +7,7 @@ import * as CiteThisStories from './CiteThis.stories';
 
 # Cite this
 
-A Cite this button opens a citation dialog on article, terminology, HIP and publication detail pages. The publishing site decides where to show it; Mangrove formats available data and provides copying.
+Cite this shows a page's citation on article, terminology, HIP and publication detail pages. Like ShareButtons, it has a label and a field to copy from, plus **All citation options**, which opens a dialog with the full citation, its URL and reference manager downloads. The publishing site decides where to show it; Mangrove formats available data and provides copying.
 
 ## Vanilla HTML page fallback
 
@@ -64,7 +64,7 @@ An authored canonical link or configured citation URL keeps its query string, be
 
 ## Vanilla HTML
 
-The shortest integration is `<div class="mg-cite-this" data-mg-cite-this></div>` plus the module script. If JavaScript is unavailable, that empty marker has no visible citation. To keep a citation readable without JavaScript, render the full HTML on the server, including citation text when it is known. JavaScript replaces the disclosure with a button and native dialog, resolves the citation, adds copy behavior, and emits events. The copy button is hidden until the script starts.
+The shortest integration is `<div class="mg-cite-this" data-mg-cite-this></div>` plus the module script. If JavaScript is unavailable, that empty marker has no visible citation. To keep a citation readable without JavaScript, render the full HTML on the server, including citation text when it is known. JavaScript replaces the disclosure with the label, citation field, options link and native dialog (or, in the compact variant, a single button), resolves the citation, adds copy behavior, and emits events. The copy button is hidden until the script starts.
 
 ```html
 <div
@@ -124,9 +124,9 @@ The files are generated in the browser from the same fields as the citation: cre
 
 Translate the labels with `data-mg-cite-this-copy-link-label`, `data-mg-cite-this-link-copied-label`, `data-mg-cite-this-link-failed-label`, `data-mg-cite-this-ris-label` and `data-mg-cite-this-bibtex-label`.
 
-## Compact layout
+## Compact trigger
 
-Add `mg-cite-this--compact` where Cite this sits beside ShareButtons. It takes the same structure as ShareButtons: a "Cite this" label, the citation as a two-line field that copies it in one click, and an **All citation options** link to the full dialog. The element becomes a group named by its label. Set `data-mg-cite-this-more-label` to translate the link. See the [Page actions pattern](?path=/docs/patterns-page-actions--docs).
+Add `mg-cite-this--compact` where there is room only for a button, such as beside a publication's Download PDF button. It shows a single **Cite this** button that opens the same dialog. Use the default layout wherever it fits, especially beside ShareButtons; see the [Page actions pattern](?path=/docs/patterns-page-actions--docs).
 
 <Canvas of={CiteThisStories.Compact} />
 
@@ -145,10 +145,10 @@ document.addEventListener('mg-cite-this:copy', event => {
 
 ## Accessibility
 
-The enhanced button opens a native modal dialog. Focus moves to its title, stays in the dialog while it is open, and returns to the button when closed with Escape or the named close icon button. The close control uses Mangrove's shared `mg-icon-button` and `mg-icon-close` styles. Without JavaScript, native `details` and `summary` provide disclosure keyboard behavior. The copy button appears only when the JavaScript enhancement is active. Copy success and failure are announced in a polite live region. The citation is always selectable text.
+Once enhanced, the element is a group named by its "Cite this" label. The citation field is a button named Copy citation; it shows the citation clamped to two lines, and the full text is in the dialog. **All citation options** (or the compact Cite this button) opens a native modal dialog. Focus moves to its title, stays in the dialog while it is open, and returns to the button that opened it when closed with Escape or the named close icon button. The close control uses Mangrove's shared `mg-icon-button` and `mg-icon-close` styles. Without JavaScript, native `details` and `summary` provide disclosure keyboard behavior. The copy button appears only when the JavaScript enhancement is active. Copy success and failure are announced in a polite live region. The citation is always selectable text.
 
 ## Changelog
 
-- **1.2.0**, 2026-10-12: The dialog adds Copy citation URL and RIS and BibTeX downloads for reference managers, on by default and removable with `data-mg-cite-this-copy-link` and `data-mg-cite-this-export`. Adds a `data-mg-cite-this-type` record type, `mg-cite-this:copy-link` and `mg-cite-this:export` analytics events, a `target` on copy errors, and an `mg-cite-this--compact` layout that matches ShareButtons. Copy citation is a compact filled button again, as the primary action beside the outlined Copy citation URL, and the citation box uses the same surface as the ShareButtons link. A new Page actions pattern places Cite this beside ShareButtons.
+- **1.2.0**, 2026-10-12: The dialog adds Copy citation URL and RIS and BibTeX downloads for reference managers, on by default and removable with `data-mg-cite-this-copy-link` and `data-mg-cite-this-export`. Adds a `data-mg-cite-this-type` record type, `mg-cite-this:copy-link` and `mg-cite-this:export` analytics events, a `target` on copy errors, The enhanced default now matches ShareButtons: a "Cite this" label, the citation as a two-line field that copies in one click, and an **All citation options** link to the dialog (`data-mg-cite-this-more-label`). The previous single button is the new `mg-cite-this--compact` variant. Copy citation is a compact filled button again, as the primary action beside the outlined Copy citation URL, and the citation box uses the same surface as the ShareButtons link. A new Page actions pattern places Cite this beside ShareButtons.
 - **1.1.0**, 2026-10-12: Citation reads as prose rather than code: body typeface in a tinted bordered box, linked URLs, a compact outlined Copy citation button and even dialog padding. The Matching Schema.org work story now matches its JSON-LD work instead of falling back to the page citation.
 - **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, analytics events, labelled Storybook examples, and a zero-configuration HTML marker.

@@ -45,9 +45,10 @@
     }
   }
 
-  // Compact layout beside ShareButtons, with the same structure and metrics:
-  // a label, the citation as a copyable field, and a quiet dialog link.
-  &--compact {
+  // Default enhanced layout, with the same structure and metrics as
+  // ShareButtons: a label, the citation as a copyable field, and a quiet
+  // dialog link. `--compact` shows the dialog trigger alone.
+  &__panel {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -120,7 +121,8 @@
     line-clamp: 2;
   }
 
-  &--compact &__trigger {
+  // Doubled selector outranks the filled `__trigger` styles.
+  & &__more {
     min-block-size: 44px;
     padding: 0;
     background: transparent;

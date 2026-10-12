@@ -179,7 +179,7 @@ export const CitationOnly = {
 };
 
 export const Compact = {
-  name: 'Compact, beside ShareButtons',
+  name: 'Compact trigger',
   render: () => (
     <CitationExample
       variant="compact"
