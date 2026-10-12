@@ -209,8 +209,14 @@ Core's progress bar (`progress-bar.html.twig`, and `Drupal.theme.progressBar` fo
 | `--mg-progress-bar-indicator`  | interactive colour         | Colour of the fill and the scanner |
 | `--mg-progress-bar-track`      | `neutral-50`               | Colour of the empty track          |
 
+## See also
+
+- [Loader](?path=/docs/components-loader--docs): use it instead for short waits, a single busy control or a blocking operation. Its docs have a table of which indicator suits which wait.
+- [Announcing a loader that is inserted by script](?path=/docs/components-loader--docs#announcing-a-loader-that-is-inserted-by-script): the live region patterns this component relies on.
+- [Accessibility](?path=/docs/getting-started-accessibility--docs): the loading states guidance, including announcing loading and its outcome through a live region that is already in the page.
+
 ## Changelog
 
-- **1.0**, 2026-10-12:
-  - ([#1331](https://github.com/unisdr/undrr-mangrove/issues/1331)) Released component: determinate and indeterminate bar on the native `progress` element, with a visible label, value and help text, a flush variant for the top edge of a region or the viewport, a still state under reduced motion, right-to-left support and forced colours support.
+- **1.0**, 2026-10-12 ([#1332](https://github.com/unisdr/undrr-mangrove/pull/1332)): Released component.
+  - ([#1331](https://github.com/unisdr/undrr-mangrove/issues/1331)) Determinate and indeterminate bar on the native `progress` element, with a visible label, value and help text, a flush variant for the top edge of a region or the viewport, a still state under reduced motion, right-to-left support and forced colours support.
   - ([web-backlog#3130](https://gitlab.com/undrr/web-backlog/-/work_items/3130)) Drupal Views AJAX and batch progress use cases.

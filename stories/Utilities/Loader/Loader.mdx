@@ -198,9 +198,16 @@ The first pattern is more reliable: some screen readers take a moment to registe
 | ---------------------- | ------- | ----------------- |
 | `--mg-loader-duration` | `0.9s`  | Time for one turn |
 
+## See also
+
+- [Progress bar](?path=/docs/components-progress-bar--docs): use it instead when progress can be measured, or when a region updates in place, such as paging or filtering results.
+- [Inline loading pattern](#inline-loading-pattern): an inline spinner with visible status text that ends in a success or an error message.
+- [Buttons](?path=/docs/components-buttons-buttons--docs): the inline spinner sits inside `.mg-button` next to the label while an action runs.
+- [Accessibility](?path=/docs/getting-started-accessibility--docs): the loading states guidance, including announcing loading and its outcome through a live region that is already in the page.
+
 ## Changelog
 
-- **1.3**, 2026-10-12:
+- **1.3**, 2026-10-12 ([#1332](https://github.com/unisdr/undrr-mangrove/pull/1332)): Inline size, decorative mode, theme colour and announcement on insertion.
   - ([#1330](https://github.com/unisdr/undrr-mangrove/issues/1330)) Added the inline size (`mg-loader--inline`, React `size="inline"`, rendered as a `span`) and the React `decorative` prop. The React component now inserts its status region empty and adds the label after mount, so it is announced when inserted while the page is in use; its final markup is unchanged. The default spinner uses the theme's interactive colour instead of a fixed blue, turns in 0.9s instead of 2s, keeps turning slowly under reduced motion and stays visible in forced colours mode. Documented how to announce a loader that is inserted by script, when to use a loader, and the inline loading pattern.
   - ([web-backlog#3130](https://gitlab.com/undrr/web-backlog/-/work_items/3130)) Drupal AJAX throbber use case.
 - **1.2**, 2026-10-09 ([undrr/web-backlog#3130](https://gitlab.com/undrr/web-backlog/-/work_items/3130)): The label is now visually hidden text inside the `role="status"` region instead of an `aria-label` on an empty element, so screen readers announce it. Removed `aria-busy="true"`, which suppressed announcements from the loader, and the redundant `aria-live="polite"`.
