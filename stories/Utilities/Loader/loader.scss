@@ -34,6 +34,44 @@
     height: 96px;
     width: 96px;
   }
+
+  // Compact inline size. It is sized in em so it follows the font size of the
+  // text or button it sits in, and it does not grow at the medium breakpoint.
+  // The arc is currentColor, so it takes the text colour of its context,
+  // including filled buttons and dark backgrounds; the transparent quarter is
+  // the gap that makes the rotation visible. Width and height stay physical
+  // so they replace the default size, and this rule comes after the medium
+  // breakpoint rule above, so the spinner keeps its size on wider screens.
+  &--small {
+    border: max(2px, 0.125em) solid currentColor;
+    border-top-color: transparent;
+    display: inline-block;
+    flex: none;
+    height: 1em;
+
+    // A box with no text has its baseline at its bottom edge, so baseline
+    // alignment would stand the spinner on the text baseline and lift it above
+    // the letters. Dropping it by 0.15em centres it on the capital height and
+    // keeps it within a line box of line-height 1, so a button holding the
+    // spinner and a label keeps its height.
+    vertical-align: -0.15em;
+    width: 1em;
+
+    // Forced colours would paint every side of the border in the same system
+    // colour, a full ring whose rotation cannot be seen. Opting out keeps the
+    // transparent gap; currentColor already resolves to the forced text colour
+    // inherited from the parent.
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+    }
+  }
+}
+
+// A small spinner with a visible label. The gap is the word space between
+// them, which scales with the text and survives any formatting of the markup;
+// nowrap keeps the spinner on the same line as its label.
+.mg-loader-group {
+  white-space: nowrap;
 }
 
 // * loader end *//

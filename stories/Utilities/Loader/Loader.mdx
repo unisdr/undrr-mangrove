@@ -1,4 +1,4 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Story, Canvas, ArgTypes } from '@storybook/addon-docs/blocks';
 import { Loader } from './Loader';
 import * as LoaderStories from './Loader.stories';
 
@@ -8,47 +8,110 @@ import * as LoaderStories from './Loader.stories';
 
 # Loader
 
-A loading spinner is a utility that shows a loading page overlay when clicking a link or button
+A loading spinner tells the user that something is happening in the background and that they need to wait for it to finish. It comes in two sizes: the default spinner for a page or region that is loading, and a compact spinner that sits inline with text, inside a button or next to a form field.
 
 ### Overview
 
-A loading spinner displays a loading page overlay to inform the user of some background activity happening in response to their action on a page. This helps the user understand that they need to wait for the activity to finish before proceeding further.
+Use the loader when an action takes long enough for the user to wonder whether it worked, such as a search, a form submission or loading more content. If you can tell how far along the task is, or the update happens in place without blocking the page, consider the [progress bar](?path=/docs/components-progress-bar--docs) instead.
 
 #### When to use:
 
-- To inform the user that some background activity is happening when they encounter a delay in response to a button or link click
+- To show that a page, region or overlay is loading after a button or link click: use the default size
+- To show that a single control is busy, such as a button that is saving or an autocomplete field that is fetching suggestions: use the small size
 
 ### Formatting
 
 #### Default
 
-The loading spinner is a simple animation that informs the user that the page is loading. It will be displayed until the full page has been loaded.
+A circle animation, 40px on small screens and 96px from the medium breakpoint, in the brand blue.
 
-### Content
+<Canvas of={LoaderStories.DefaultLoader} meta={LoaderStories} />
 
-The loading spinner is a simple circle animation. The size varies depending on the screen size.
+#### Small
+
+`mg-loader--small` is a 1em spinner. It is an inline element, so it sits in a line of text, and because it is sized in em it follows the font size of its context. It does not grow at the medium breakpoint. The arc uses `currentColor`, so it takes the text colour of whatever it sits in, including filled and outline buttons and text on dark backgrounds.
+
+<Canvas of={LoaderStories.InlineInText} meta={LoaderStories} />
+
+Inside a `mg-button` the spinner is a flex item next to the label, so the button keeps its height while it is busy.
+
+<Canvas of={LoaderStories.InButtons} meta={LoaderStories} />
+
+Next to a form field, as an autocomplete or AJAX throbber:
+
+<Canvas of={LoaderStories.NextToField} meta={LoaderStories} />
+
+With a visible label, the spinner and its text are wrapped in `mg-loader-group`, which keeps them on one line:
+
+<Canvas of={LoaderStories.WithVisibleLabel} meta={LoaderStories} />
 
 ### Behaviors
 
 #### States
 
-The loading spinner has just one state - spinning. As soon as the page loads, the loading spinner is removed
+The loader has one state: spinning. Remove it when loading finishes.
 
-<Canvas of={LoaderStories.DefaultLoader} meta={LoaderStories} />
+#### Reduced motion
+
+Both sizes follow the site-wide `prefers-reduced-motion: reduce` setting, which stops the rotation and leaves the spinner as a still ring with a gap.
 
 ### Usage
 
-To use this component, follow these steps:
-
-- Copy the HTML from the canvas
-- Add it to your HTML page
-- You should have loader-ready
+#### Default
 
 ```html
 <div class="mg-loader" role="status">
   <span class="mg-u-sr-only">Loading</span>
 </div>
 ```
+
+This markup announces itself only when it is already in the page. If your script inserts the loader when loading starts, see [Announcing a loader that is inserted by script](#announcing-a-loader-that-is-inserted-by-script).
+
+#### Small, inline
+
+Use a `span` so the spinner is valid inside a paragraph, a label or a button.
+
+```html
+<p>
+  Fetching the latest figures
+  <span class="mg-loader mg-loader--small" aria-hidden="true"></span>
+</p>
+```
+
+#### Small, inside a button
+
+Mark the spinner decorative and keep the visible label, which becomes the button's accessible name. Use `aria-disabled="true"` rather than `disabled` while the action runs, so the button keeps focus.
+
+```html
+<button type="button" class="mg-button mg-button-primary" aria-disabled="true">
+  <span class="mg-loader mg-loader--small" aria-hidden="true"></span>
+  Saving…
+</button>
+```
+
+#### Small, with a visible label
+
+```html
+<span class="mg-loader-group" role="status">
+  <span class="mg-loader mg-loader--small" aria-hidden="true"></span>
+  <span class="mg-loader-group__label">Loading results…</span>
+</span>
+```
+
+Keep a space between the spinner and the label: the word space is the gap, so it scales with the text.
+
+#### React
+
+```jsx
+import { Loader } from '@undrr/undrr-mangrove/components/Loader.js';
+
+<Loader />                                    // default, announced
+<Loader size="small" />                       // small span, announced
+<Loader size="small" announce={false} />      // small span, decorative
+<Loader size="small" showLabel label="Saving…" />
+```
+
+<ArgTypes of={Loader} />
 
 #### Interactions
 
@@ -59,10 +122,64 @@ To use this component, follow these steps:
 - The loader is a `role="status"` live region, which screen readers announce politely. `role="status"` already implies `aria-live="polite"`, so the attribute is not repeated.
 - The label is visually hidden text inside the region, using the [`mg-u-sr-only`](?path=/docs/components-utility-css--docs) utility. Screen readers announce a live region's text content; an `aria-label` on an empty region is not reliably spoken. Translate the text with the `label` prop.
 - Do not put `aria-busy="true"` on the loader. It tells assistive technology to hold back announcements from that element, so the label may never be read. If you use `aria-busy`, set it on the region whose content is loading and remove it when the content arrives.
-- Some screen readers only announce a live region that was already in the page when its text changed. If the loading message must be heard, keep an empty `role="status"` container in the page and insert the loader or its text into it.
+- When the loader sits next to a visible label, such as "Saving…" in a button, mark the spinner `aria-hidden="true"` so the text is not repeated.
+- The small spinner keeps its gap in forced colours mode, so the rotation stays visible.
+
+#### Announcing a loader that is inserted by script
+
+Many screen readers announce a live region only when its content changes after the region is already in the page. A loader that a script inserts already filled, region and text together, is often not announced at all. This is the usual case for a JavaScript loader, so pick one of these two patterns. The same guidance applies to the [progress bar](?path=/docs/components-progress-bar--docs).
+
+**1. Announce through a live region that stays in the page (recommended).** Render an empty `role="status"` container when the page loads, or use the site's existing announcer, such as `Drupal.announce()`. Make the spinner decorative with `aria-hidden="true"` (in React, `announce={false}`) and write the message into the persistent region.
+
+```html
+<!-- In the page from the start -->
+<div id="status-message" role="status" class="mg-u-sr-only"></div>
+
+<!-- Inserted when loading starts -->
+<div class="mg-loader" aria-hidden="true"></div>
+```
+
+```js
+const status = document.getElementById('status-message');
+status.textContent = 'Loading results';
+// …when loading finishes, remove the spinner and report the outcome:
+status.textContent = '12 results loaded';
+```
+
+<Canvas of={LoaderStories.AnnouncedThroughLiveRegion} meta={LoaderStories} />
+
+**2. Insert an empty status region first, then add the text.** Insert the loader without its label, then add the label in a later task so the screen reader sees the region change.
+
+```js
+const loader = document.createElement('div');
+loader.className = 'mg-loader';
+loader.setAttribute('role', 'status');
+container.append(loader);
+
+// A later task, after the empty region is in the accessibility tree.
+setTimeout(() => {
+  loader.innerHTML = '<span class="mg-u-sr-only">Loading</span>';
+}, 100);
+```
+
+The first pattern is more reliable: some screen readers take a moment to register a new live region, and the delay that is long enough varies. It also lets you announce how loading ended ("12 results loaded", "Could not load results"), which the loader cannot do, because it is removed when loading finishes.
+
+The React component's default output is the announced markup, so `<Loader />` rendered when the page or component first renders works as before. When the loader appears only once loading starts, use `announce={false}` and announce through a persistent region.
+
+### CSS classes
+
+| Class                    | Element         | Purpose                                                                  |
+| ------------------------ | --------------- | ------------------------------------------------------------------------ |
+| `mg-loader`              | `div` or `span` | The spinner                                                              |
+| `mg-loader--small`       | modifier        | 1em inline spinner in `currentColor` that does not grow on wider screens |
+| `mg-loader-group`        | `span` or `div` | Wraps a small spinner and a visible label on one line                    |
+| `mg-loader-group__label` | `span`          | The visible label                                                        |
 
 ## Changelog
 
+- **1.3**, 2026-10-12:
+  - ([#1330](https://github.com/unisdr/undrr-mangrove/issues/1330)) Added the compact inline `mg-loader--small` size, the `mg-loader-group` visible label pattern, and the React `size`, `as`, `announce` and `showLabel` props. Documented how to announce a loader that is inserted by script. The default markup is unchanged.
+  - ([web-backlog#3130](https://gitlab.com/undrr/web-backlog/-/work_items/3130)) Drupal AJAX throbber use case.
 - **1.2**, 2026-10-09 ([undrr/web-backlog#3130](https://gitlab.com/undrr/web-backlog/-/work_items/3130)): The label is now visually hidden text inside the `role="status"` region instead of an `aria-label` on an empty element, so screen readers announce it. Removed `aria-busy="true"`, which suppressed announcements from the loader, and the redundant `aria-live="polite"`.
 - **1.1**, 2026-03-21: Renamed CSS class to `mg-` prefix (`loader` → `mg-loader`).
 - **1.0**, 2022-12-12: Released component

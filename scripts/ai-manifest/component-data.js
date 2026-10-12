@@ -1860,9 +1860,33 @@ npm run build</code></pre>
   },
   'components-loader': {
     summary:
-      'Animated loading spinner, 40px on mobile and 96px on desktop, announced by screen readers through visually hidden label text.',
+      'Animated loading spinner: a default 40px/96px size for pages and regions, and a 1em inline mg-loader--small size in currentColor for text, buttons and form fields.',
     description:
-      'Animated loading spinner. 40px on mobile, 96px on desktop. The element carries role="status" (implicitly aria-live="polite") and contains the label prop as visually hidden text in an mg-u-sr-only span, so screen readers announce it as the region\'s content. Do not add aria-busy to the loader: it suppresses the announcement. Put aria-busy on the region whose content is loading instead.',
+      'Animated loading spinner. The default size is 40px on mobile and 96px on desktop. mg-loader--small is a 1em inline-block spinner in currentColor that sits on the text baseline, follows the font size of its context, does not grow on desktop and fits inside an mg-button next to its label without changing the button height. The announced form carries role="status" (implicitly aria-live="polite") and contains the label as visually hidden text in an mg-u-sr-only span. A status region inserted already filled is often not announced, so a loader added by script should be decorative (aria-hidden="true", React announce={false}) with the message written to a live region already in the page. Do not add aria-busy to the loader; put it on the region whose content is loading.',
+    cssClasses: [
+      'mg-loader',
+      'mg-loader--small',
+      'mg-loader-group',
+      'mg-loader-group__label',
+    ],
+    supplementalExamples: [
+      {
+        name: 'Small spinner inside a button',
+        html: `<button type="button" class="mg-button mg-button-primary" aria-disabled="true">
+  <span class="mg-loader mg-loader--small" aria-hidden="true"></span>
+  Saving…
+</button>`,
+      },
+      {
+        name: 'Decorative loader announced through a persistent live region',
+        html: `<div id="status-message" role="status" class="mg-u-sr-only">Loading results</div>
+<div class="mg-loader" aria-hidden="true"></div>`,
+      },
+      {
+        name: 'Small spinner with a visible label',
+        html: `<span class="mg-loader-group" role="status"><span class="mg-loader mg-loader--small" aria-hidden="true"></span> <span class="mg-loader-group__label">Loading results…</span></span>`,
+      },
+    ],
   },
 
   'components-showmore': {
