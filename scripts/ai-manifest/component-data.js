@@ -1888,6 +1888,43 @@ npm run build</code></pre>
     ],
   },
 
+  'components-progress-bar': {
+    summary:
+      'Determinate and indeterminate progress bar on the native progress element, with an optional label, value and help text and a thin flush variant for the top of a region or the viewport.',
+    description:
+      'Progress bar built on the native <progress> element inside .mg-progress-bar > .mg-progress-bar__track. With value and max it is determinate; without a value attribute it is indeterminate and a scanner segment sweeps across the track (a still dashed bar under reduced motion, mirrored in RTL). The bar must have an accessible name: aria-labelledby pointing at .mg-progress-bar__label, aria-label, or aria-labelledby pointing elsewhere; text inside <progress> is not a name. Never add role, aria-valuenow, aria-valuemin, aria-valuemax, role="status" or aria-live to the bar; use aria-valuetext for text values. Value changes are not reliably announced, so announce the start, milestones and completion through a live region already in the page, and put aria-busy on the updating region. mg-progress-bar--flush is a 4px bar with no visible text, positioned by the page (absolute in a relative region, or fixed with a token z-index). The element order mirrors Drupal core progress-bar.html.twig.',
+    cssClasses: [
+      'mg-progress-bar',
+      'mg-progress-bar--flush',
+      'mg-progress-bar__label',
+      'mg-progress-bar__track',
+      'mg-progress-bar__native',
+      'mg-progress-bar__value',
+      'mg-progress-bar__help',
+    ],
+    supplementalExamples: [
+      {
+        name: 'Indeterminate bar named by aria-label',
+        html: `<div class="mg-progress-bar">
+  <div class="mg-progress-bar__track">
+    <progress class="mg-progress-bar__native" aria-label="Loading results"></progress>
+  </div>
+</div>`,
+      },
+      {
+        name: 'Flush bar pinned to the top of a region that is updating',
+        html: `<div id="results-status" role="status" class="mg-u-sr-only">Loading results</div>
+<section class="results" aria-label="Search results" aria-busy="true" style="position: relative">
+  <div class="mg-progress-bar mg-progress-bar--flush" style="position: absolute; inset-block-start: 0; inset-inline: 0">
+    <div class="mg-progress-bar__track">
+      <progress class="mg-progress-bar__native" aria-label="Loading results"></progress>
+    </div>
+  </div>
+</section>`,
+      },
+    ],
+  },
+
   'components-showmore': {
     summary:
       'Collapse long content behind a gradient fade with a toggle button, driven by the mgShowMore vanilla JS utility. Height customizable via CSS variable.',

@@ -280,6 +280,7 @@ const COMPONENT_IDS = {
   EmbedContainer: 'components-embedcontainer',
   FullWidth: 'components-fullwidth',
   Loader: 'components-loader',
+  ProgressBar: 'components-progress-bar',
   ShowMore: 'components-showmore',
   Chips: 'components-buttons-chips',
   TextInput: 'components-forms-text-input',
@@ -595,6 +596,12 @@ function buildSampleProps(React) {
     // adds the label after mount, so a static render would publish an empty
     // region. The announced markup is a supplemental example instead.
     Loader: { decorative: true },
+    ProgressBar: {
+      label: 'Uploading report.pdf',
+      value: 45,
+      showValue: true,
+      helpText: 'About a minute left.',
+    },
     ShowMore: {
       data: [
         {

@@ -171,6 +171,7 @@ export default [
       EmbedContainer: './stories/Utilities/EmbedContainer/EmbedContainer.jsx',
       FullWidth: './stories/Utilities/FullWidth/FullWidth.jsx',
       Loader: './stories/Utilities/Loader/Loader.jsx',
+      ProgressBar: './stories/Components/ProgressBar/ProgressBar.jsx',
       ShowMore: './stories/Utilities/ShowMore/ShowMore.jsx',
       SkipLink: './stories/Utilities/SkipLink/SkipLink.entry.js',
       Range: './stories/Components/Forms/Range/Range.jsx',

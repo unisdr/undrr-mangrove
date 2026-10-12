@@ -117,6 +117,7 @@ export const MIN_PROPERTIES = {
   'components-navigation-on-this-page-nav': 1,
   'components-navigation-tree': 5,
   'components-notice-notice': 4,
+  'components-progress-bar': 3,
   'components-reading-column': 1,
   'components-showmore': 1,
   'components-status-label': 15,
@@ -153,6 +154,7 @@ export const OWNERS = {
   'components-navigation-on-this-page-nav': ['--mg-on-this-page-nav-'],
   'components-navigation-tree': ['--mg-tree-'],
   'components-notice-notice': ['--mg-notice-'],
+  'components-progress-bar': ['--mg-progress-bar-'],
   'components-reading-column': ['--mg-reading-with-contents-width'],
   'components-showmore': ['--mg-show-more-'],
   'components-status-label': ['--mg-status-label-'],
@@ -305,6 +307,14 @@ export const PROPERTY_DOCS = {
   '--mg-notice-border-width':
     'Width of the leading edge that carries the status. --prominent widens it, --overlay narrows it.',
   '--mg-notice-icon-color': 'Colour of the status icon.',
+
+  // Progress bar
+  '--mg-progress-bar-block-size':
+    'Thickness of the track. The flush variant sets 0.25rem on its own wrapper.',
+  '--mg-progress-bar-indicator':
+    'Colour of the determinate fill and the indeterminate scanner. Keep it at 3:1 or more against the page and the track.',
+  '--mg-progress-bar-track':
+    'Colour of the empty track. Forced colours mode replaces it with Canvas.',
 
   // Reading column
   '--mg-reading-with-contents-width':

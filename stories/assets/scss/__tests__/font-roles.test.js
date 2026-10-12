@@ -772,6 +772,8 @@ describe('every component names the role it is meant to', () => {
     ['.mg-preview-access__label', 'ui'],
     ['.mg-preview-access__submit', 'text'],
     ['.mg-preview-access__title', 'ui'],
+    ['.mg-progress-bar__label', 'ui'],
+    ['.mg-progress-bar__value', 'ui'],
     ['.mg-search__input', 'text'],
     // A segment is a button wearing a label's class name: it takes the button
     // tokens, so it takes the button's role too, as every other button does.
