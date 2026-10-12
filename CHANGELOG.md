@@ -13,6 +13,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+- **Release guide, CI back on `unisdr`:** `docs/RELEASES.md` now describes the flow 2.0.1 used. Pull request checks and the tag-triggered npm publish run on `unisdr/undrr-mangrove` again, with a provenance attestation, while mangrove.undrr.org and the `dist` branch that feeds the asset library still deploy from the synced `PreventionWeb/undrr-mangrove` fork. The release is merged as a pull request and its single tag pushed, and the break-glass steps are kept for when Actions stop.
+
 ## 2.0.1, 2026-10-12
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.0.1) for full details.
