@@ -30,8 +30,8 @@ The React components need React and ReactDOM 18 or later, installed by your proj
 
 ```html
 <!-- CDN, versioned path. Load one only: the base stylesheet or a sub-brand one -->
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0/css/style.css">
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.0/css/style-preventionweb.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.1/css/style.css">
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.0.1/css/style-preventionweb.css">
 ```
 
 For most compiled-CSS consumers the upgrade is two lines: swap the stylesheet href above, and for a sub-brand add `class="mg-theme-{brand}"` (`mg-theme-preventionweb`, `mg-theme-irp`, `mg-theme-mcr` or `mg-theme-delta`, matching the `style-{brand}.css` you load) to `<body>` or a wrapping element. The exceptions are listed in [Find your path](#find-your-path). Found a problem? See [where to report](#feedback).
@@ -69,7 +69,7 @@ Arriving part-way through an upgrade? Start at the row that describes you.
 Work through these in order. Each step says when it applies; skip the ones that don't.
 
 1. **Pin any `latest/` CDN URL.** Applies if a page loads `assets.undrr.org/mangrove/latest/`, which moves to 2.0 with this release. Pin it to `mangrove/1.8.2/` now, and to `mangrove/2.0.0/` once the steps below are done.
-2. **Update the version.** Change CDN URLs to `https://assets.undrr.org/mangrove/2.0.0/`, or run `npm install @undrr/undrr-mangrove@^2`.
+2. **Update the version.** Change CDN URLs to `https://assets.undrr.org/mangrove/2.0.1/`, or run `npm install @undrr/undrr-mangrove@^2`.
 3. **Load one Mangrove stylesheet per page.** Applies if a page loads both `style.css` and a sub-brand stylesheet. Load one, or `style-all.css` for several brands. See [Multi-brand pages and the combined bundle](#multi-brand-pages-and-the-combined-bundle).
 4. **Add the theme class.** Applies if you load `style-preventionweb.css`, `style-irp.css`, `style-mcr.css`, `style-delta.css` or `style-all.css`. Add `mg-theme-preventionweb`, `mg-theme-irp`, `mg-theme-mcr` or `mg-theme-delta` to `<body>` or a wrapping element, or the page renders in the UNDRR palette. See [Sub-brand theming migration](#sub-brand-theming-migration).
 5. **Move off a 10px root.** Applies if you load a `*-legacy.css` stylesheet, set `html { font-size: 62.5% }` or `10px`, or set `$mg-html-font-size: 10`. The legacy stylesheets are gone. See [breaking change #5](#5-legacy-10px-root-removed).
@@ -655,7 +655,7 @@ A vanilla tab set removed from the page without `mgTabsDestroy()` is suspended r
 
 `js/copy-button.js` enhances `data-mg-copy-button` markup on load and exports `mgCopyButton(scope)` for content added later, with no React at all. ([#1163](https://github.com/unisdr/undrr-mangrove/pull/1163))
 
-`js/switch-pending.js` drives the switch pending state. It is on the CDN (`https://assets.undrr.org/mangrove/2.0.0/js/switch-pending.js`) and in npm (`@undrr/undrr-mangrove/js/switch-pending.js`). While a save is pending, it announces "Saving…", "Still saving…" for ignored presses and the outcome in a `role="status"` region, ignores clicks and changes, lets only the latest request settle and reverts on failure or after the timeout (10s by default). Switches marked `data-mg-switch-pending` are enhanced on page load.
+`js/switch-pending.js` drives the switch pending state. It is on the CDN (`https://assets.undrr.org/mangrove/2.0.1/js/switch-pending.js`) and in npm (`@undrr/undrr-mangrove/js/switch-pending.js`). While a save is pending, it announces "Saving…", "Still saving…" for ignored presses and the outcome in a `role="status"` region, ignores clicks and changes, lets only the latest request settle and reverts on failure or after the timeout (10s by default). Switches marked `data-mg-switch-pending` are enhanced on page load.
 
 - `mgSwitchPending(input, { save, status, timeout, labels, signal })` returns `{ destroy() }`.
 - Without a `save` function, a cancelable `mg-switch:save` event lets one site-wide listener answer every switch with `event.detail.respondWith(promise)`. An `async` listener passes an immediately invoked async function (IIFE), or calls `event.preventDefault()` first and `respondWith()` later.
