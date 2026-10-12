@@ -132,13 +132,34 @@ Add `mg-cite-this--compact` where there is room only for a button, such as besid
 
 ## Analytics
 
-The element dispatches bubbling `mg-cite-this:open`, `mg-cite-this:copy` and `mg-cite-this:copy-link` (each after a successful clipboard write), `mg-cite-this:copy-error` and `mg-cite-this:export` events. The copy error event adds `detail.target` (`citation` or `link`), and the export event adds `detail.format` (`ris` or `bibtex`). Each event has `detail.source` (`provided`, `metadata`, `schema`, or `page`) and a query-free `detail.url`. The consuming site maps these to GA4 through its consent-aware analytics setup. Mangrove itself sends nothing to Google.
+The element dispatches bubbling events:
+
+| Event                     | When                                                           |
+| ------------------------- | -------------------------------------------------------------- |
+| `mg-cite-this:open`       | The dialog opens.                                              |
+| `mg-cite-this:copy`       | The citation is copied, from the field or the dialog.          |
+| `mg-cite-this:copy-link`  | Copy citation URL succeeds.                                    |
+| `mg-cite-this:copy-error` | A copy fails. `detail.target` is `citation` or `link`.         |
+| `mg-cite-this:export`     | A download link is used. `detail.format` is `ris` or `bibtex`. |
+
+Every event's `detail` has:
+
+- `id`: a stable key for the cited work, for counting one work across the pages that cite it. It is `data-mg-cite-this-id` when set, otherwise the matching Schema.org work's `identifier` (such as a DOI) or `@id`, and only as a last resort the work's query-free URL. **Set `data-mg-cite-this-id`** to something that never changes, such as the Drupal node ID or the DOI, so that renaming a publication or changing its URL does not split its counts.
+- `pageUrl`: the query-free canonical URL of the page where the action happened.
+- `url`: the cited work's query-free URL, which can change when the work is edited.
+- `source`: where the citation came from (`provided`, `metadata`, `schema` or `page`).
+- `layout`: `default` or `compact`.
+- `placement` on copy events: `field` for the citation field, `dialog` for the dialog buttons.
+
+To see how often a given publication is cited on given pages, group by `id` and `pageUrl`. The consuming site maps these events to GA4 through its consent-aware analytics setup. Mangrove itself sends nothing to Google.
 
 ```js
 document.addEventListener('mg-cite-this:copy', event => {
   analytics.track('citation_copy', {
+    work_id: event.detail.id,
+    page_url: event.detail.pageUrl,
     citation_source: event.detail.source,
-    page_url: event.detail.url,
+    placement: event.detail.placement,
   });
 });
 ```
@@ -149,6 +170,6 @@ Once enhanced, the element is a group named by its "Cite this" label. The citati
 
 ## Changelog
 
-- **1.2.0**, 2026-10-12: The dialog adds Copy citation URL and RIS and BibTeX downloads for reference managers, on by default and removable with `data-mg-cite-this-copy-link` and `data-mg-cite-this-export`. Adds a `data-mg-cite-this-type` record type, `mg-cite-this:copy-link` and `mg-cite-this:export` analytics events, a `target` on copy errors, The enhanced default now matches ShareButtons: a "Cite this" label, the citation as a two-line field that copies in one click, and an **All citation options** link to the dialog (`data-mg-cite-this-more-label`). The previous single button is the new `mg-cite-this--compact` variant. Copy citation is a compact filled button again, as the primary action beside the outlined Copy citation URL, and the citation box uses the same surface as the ShareButtons link. A new Page actions pattern places Cite this beside ShareButtons.
+- **1.2.0**, 2026-10-12: The dialog adds Copy citation URL and RIS and BibTeX downloads for reference managers, on by default and removable with `data-mg-cite-this-copy-link` and `data-mg-cite-this-export`. Adds a `data-mg-cite-this-type` record type, a `data-mg-cite-this-id` work key, `id`, `pageUrl`, `layout` and `placement` on every analytics event, and an editorial citation now uses a configured `data-mg-cite-this-url` for its URL instead of the page URL, `mg-cite-this:copy-link` and `mg-cite-this:export` analytics events, a `target` on copy errors, The enhanced default now matches ShareButtons: a "Cite this" label, the citation as a two-line field that copies in one click, and an **All citation options** link to the dialog (`data-mg-cite-this-more-label`). The previous single button is the new `mg-cite-this--compact` variant. Copy citation is a compact filled button again, as the primary action beside the outlined Copy citation URL, and the citation box uses the same surface as the ShareButtons link. A new Page actions pattern places Cite this beside ShareButtons.
 - **1.1.0**, 2026-10-12: Citation reads as prose rather than code: body typeface in a tinted bordered box, linked URLs, a compact outlined Copy citation button and even dialog padding. The Matching Schema.org work story now matches its JSON-LD work instead of falling back to the page citation.
 - **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, analytics events, labelled Storybook examples, and a zero-configuration HTML marker.

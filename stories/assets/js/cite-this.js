@@ -119,6 +119,23 @@ function workType(configured, work) {
   return 'webpage';
 }
 
+// A key that survives title and URL edits, so analytics can count one work
+// across the pages that cite it. The URL is only the last resort.
+function workIdentifier(data, work, url, base) {
+  const schemaId = [work?.identifier]
+    .flat()
+    .map(value =>
+      typeof value === 'object' ? firstText(value?.value) : firstText(value)
+    )
+    .find(Boolean);
+  return (
+    data.mgCiteThisId?.trim() ||
+    schemaId ||
+    (typeof work?.['@id'] === 'string' && work['@id'].trim()) ||
+    cleanUrl(url, base, true)
+  );
+}
+
 function publicationYear(value) {
   const match = String(value || '').match(/^(\d{4})(?:-|$)/);
   return match ? match[1] : '';
@@ -186,11 +203,13 @@ export function resolveCitation(element, now = new Date()) {
   };
   // An editorial citation describes the work in words Mangrove cannot parse,
   // so exports need configured fields rather than page guesses.
+  const id = workIdentifier(data, work, url, doc.location.href);
   if (explicit) {
     return {
       text: explicit,
       source: 'provided',
-      url: canonical,
+      url,
+      id,
       fields: configured ? fields : null,
     };
   }
@@ -198,6 +217,7 @@ export function resolveCitation(element, now = new Date()) {
     text: formatCitation({ author, title, publisher, year, url, accessed }),
     source: configured ? 'metadata' : work ? 'schema' : 'page',
     url,
+    id,
     fields,
   };
 }
@@ -344,7 +364,12 @@ function emit(element, name, citation, extra = {}) {
       bubbles: true,
       detail: {
         source: citation.source,
+        id: citation.id,
         url: cleanUrl(citation.url, element.ownerDocument.location.href, true),
+        pageUrl: canonicalUrl(element.ownerDocument).replace(/\?.*$/, ''),
+        layout: element.classList.contains('mg-cite-this--compact')
+          ? 'compact'
+          : 'default',
         ...extra,
       },
     })
@@ -547,11 +572,12 @@ export function mgCiteThis(scope = document) {
       try {
         await navigator.clipboard.writeText(text);
         announce(copiedLabel, 3000);
-        emit(element, eventName, citation);
+        emit(element, eventName, citation, { placement: 'dialog' });
       } catch {
         announce(failedLabel, 5000);
         emit(element, 'copy-error', citation, {
           target: eventName === 'copy' ? 'citation' : 'link',
+          placement: 'dialog',
         });
       }
     };
@@ -577,12 +603,15 @@ export function mgCiteThis(scope = document) {
       try {
         await navigator.clipboard.writeText(citation.text);
         message = element.dataset.mgCiteThisCopiedLabel || 'Citation copied';
-        emit(element, 'copy', citation);
+        emit(element, 'copy', citation, { placement: 'field' });
       } catch {
         message =
           element.dataset.mgCiteThisFailedLabel ||
           'Copy failed. Select the citation and copy it manually.';
-        emit(element, 'copy-error', citation, { target: 'citation' });
+        emit(element, 'copy-error', citation, {
+          target: 'citation',
+          placement: 'field',
+        });
       }
       previewText.textContent = message;
       previewStatus.textContent = message;

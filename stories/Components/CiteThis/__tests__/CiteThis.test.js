@@ -511,3 +511,71 @@ test('the compact variant is the trigger alone', () => {
     'Copy citation URL'
   );
 });
+
+test('events carry a stable work id, the citing page and where the action happened', async () => {
+  document.head.insertAdjacentHTML(
+    'beforeend',
+    '<link rel="canonical" href="https://www.preventionweb.net/news/story?utm_source=x">'
+  );
+  const element = fixture(
+    'data-mg-cite-this-id="node/12345" data-mg-cite-this-title="Report" data-mg-cite-this-url="https://www.undrr.org/publication/report?lang=fr"'
+  );
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText: jest.fn().mockResolvedValue() },
+  });
+  const events = [];
+  for (const name of ['open', 'copy', 'copy-link'])
+    element.addEventListener(`mg-cite-this:${name}`, event =>
+      events.push([name, event.detail])
+    );
+  mgCiteThis(element);
+  element.querySelector('.mg-cite-this__preview').click();
+  await Promise.resolve();
+  element.querySelector('.mg-cite-this__trigger').click();
+  element.querySelector('.mg-cite-this__copy-link').click();
+  await Promise.resolve();
+
+  const common = {
+    id: 'node/12345',
+    url: 'https://www.undrr.org/publication/report',
+    pageUrl: 'https://www.preventionweb.net/news/story',
+    layout: 'default',
+    source: 'metadata',
+  };
+  expect(events).toEqual([
+    ['copy', { ...common, placement: 'field' }],
+    ['open', common],
+    ['copy-link', { ...common, placement: 'dialog' }],
+  ]);
+});
+
+test('the work id falls back to Schema.org identifier, then @id, then the query-free URL', () => {
+  document.head.insertAdjacentHTML(
+    'beforeend',
+    `<link rel="canonical" href="https://www.undrr.org/publication/report">
+     <script type="application/ld+json">{"@type":"Report","@id":"https://www.undrr.org/publication/report#work","url":"https://www.undrr.org/publication/report","name":"R","identifier":{"@type":"PropertyValue","propertyID":"DOI","value":"10.1234/abc"}}</script>`
+  );
+  expect(resolveCitation(fixture()).id).toBe('10.1234/abc');
+
+  document.querySelector('script[type="application/ld+json"]').textContent =
+    '{"@type":"Report","@id":"https://www.undrr.org/publication/report#work","url":"https://www.undrr.org/publication/report","name":"R"}';
+  expect(resolveCitation(fixture()).id).toBe(
+    'https://www.undrr.org/publication/report#work'
+  );
+
+  const element = fixture(
+    'data-mg-cite-this-title="Other" data-mg-cite-this-url="https://www.undrr.org/other?x=1"'
+  );
+  document.querySelector('script[type="application/ld+json"]').remove();
+  expect(resolveCitation(element).id).toBe('https://www.undrr.org/other');
+});
+
+test('an editorial citation uses the configured URL for Copy citation URL', () => {
+  const element = fixture(
+    'data-mg-cite-this-citation="Approved." data-mg-cite-this-url="https://www.undrr.org/publication/report"'
+  );
+  expect(resolveCitation(element).url).toBe(
+    'https://www.undrr.org/publication/report'
+  );
+});
