@@ -72,7 +72,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--mg-spacing-200);
-    padding: var(--mg-spacing-150) var(--mg-spacing-200) 0;
+    padding: var(--mg-spacing-200) var(--mg-spacing-200) var(--mg-spacing-150);
   }
 
   &__title {
@@ -134,10 +134,32 @@
     padding: 0 var(--mg-spacing-200) var(--mg-spacing-200);
   }
 
-  &__text {
+  // Doubled selector outranks `.mg-code`, which earlier markup put on the
+  // citation; a citation is prose to read, not code.
+  & &__text {
     margin: 0;
+    padding: var(--mg-spacing-150) var(--mg-spacing-200);
+    background: rgb(var(--mg-color-neutral-50) / 0.5);
+    border: 1px solid rgb(var(--mg-color-neutral-200));
+    border-radius: var(--mg-radius-form-input);
+    box-shadow: none;
+    color: rgb(var(--mg-color-neutral-800));
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-font-size-300);
+    font-weight: 400;
+    line-height: 1.6;
     overflow-wrap: anywhere;
     text-wrap: pretty;
+
+    a {
+      color: rgb(var(--mg-color-interactive));
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+
+      &:focus-visible {
+        @include mg-focus-ring;
+      }
+    }
   }
 
   &__actions {
@@ -150,21 +172,22 @@
 
   &__copy {
     min-block-size: 44px;
-    padding: var(--mg-spacing-100) var(--mg-spacing-200);
-    background: rgb(var(--mg-color-interactive));
-    border: 0;
+    padding: var(--mg-spacing-50) var(--mg-spacing-150);
+    background: transparent;
+    border: 2px solid rgb(var(--mg-color-interactive));
     border-radius: var(--mg-radius-button);
-    color: rgb(var(--mg-color-white));
+    color: rgb(var(--mg-color-interactive));
     cursor: pointer;
     font-family: var(--mg-font-family-text);
-    font-size: var(--mg-font-size-300);
+    font-size: var(--mg-font-size-250);
     font-weight: 600;
-    transition-property: filter, scale;
+    transition-property: background-color, color, scale;
     transition-duration: var(--mg-motion-duration-fast);
     transition-timing-function: var(--mg-motion-easing-standard);
 
     &:hover {
-      filter: brightness(0.92);
+      background: rgb(var(--mg-color-interactive));
+      color: rgb(var(--mg-color-white));
     }
 
     &:active {

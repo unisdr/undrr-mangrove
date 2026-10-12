@@ -78,7 +78,7 @@ The shortest integration is `<div class="mg-cite-this" data-mg-cite-this></div>`
   <details class="mg-cite-this__fallback">
     <summary class="mg-cite-this__summary">Cite this</summary>
     <div class="mg-cite-this__content">
-      <p class="mg-cite-this__text mg-code" data-mg-cite-this-text>
+      <p class="mg-cite-this__text" data-mg-cite-this-text>
         United Nations Office for Disaster Risk Reduction (2017), “Response”,
         UNDRR, https://www.undrr.org/terminology/response.
       </p>
@@ -109,7 +109,7 @@ The shortest integration is `<div class="mg-cite-this" data-mg-cite-this></div>`
 
 For Drupal behaviors or client-side navigation, call `mgCiteThis(context)` after insertion and `mgCiteThisDestroy(context)` before removal. Initialisation is idempotent and also runs on page load. The published module is `@undrr/undrr-mangrove/js/cite-this.js`.
 
-All strings can be translated in the server markup. For the empty-marker version, set `data-mg-cite-this-label` and `data-mg-cite-this-copy-label` for its generated button labels. Set `data-mg-cite-this-close-label` for the icon button's accessible name, plus `data-mg-cite-this-copied-label` and `data-mg-cite-this-failed-label` for feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation text uses Mangrove's `mg-code` style and remains selectable.
+All strings can be translated in the server markup. For the empty-marker version, set `data-mg-cite-this-label` and `data-mg-cite-this-copy-label` for its generated button labels. Set `data-mg-cite-this-close-label` for the icon button's accessible name, plus `data-mg-cite-this-copied-label` and `data-mg-cite-this-failed-label` for feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation is set in the body typeface inside a tinted box, with its title in quotation marks, and remains selectable. URLs in the citation, including those in an editorial citation, become links; the copied text is the same plain text as the rendered citation. Earlier markup put `mg-code` on the citation element; the component now overrides it, so existing markup does not need to change.
 
 ## Analytics
 
@@ -130,4 +130,5 @@ The enhanced button opens a native modal dialog. Focus moves to its title, stays
 
 ## Changelog
 
+- **1.1.0**, 2026-10-12: Citation reads as prose rather than code: body typeface in a tinted bordered box, linked URLs, a compact outlined Copy citation button and even dialog padding. The Matching Schema.org work story now matches its JSON-LD work instead of falling back to the page citation.
 - **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, analytics events, labelled Storybook examples, and a zero-configuration HTML marker.

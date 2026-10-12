@@ -10,7 +10,7 @@ function fixture(attributes = '') {
     <details class="mg-cite-this__fallback">
     <summary class="mg-cite-this__summary">Cite this</summary>
     <div class="mg-cite-this__content">
-      <p class="mg-cite-this__text mg-code" data-mg-cite-this-text></p>
+      <p class="mg-cite-this__text" data-mg-cite-this-text></p>
       <div class="mg-cite-this__actions">
         <button type="button" data-mg-cite-this-copy hidden>Copy citation</button>
         <span data-mg-cite-this-status role="status" aria-live="polite"></span>
@@ -242,4 +242,43 @@ test('an empty marker becomes a readable disclosure when dialog is unavailable',
   expect(element.querySelector('.mg-cite-this__trigger')).toBeNull();
   mgCiteThisDestroy(element);
   expect(element.querySelector('details')).toBeNull();
+});
+
+test('links URLs in the citation and copies the same plain text', async () => {
+  const element = fixture(
+    'data-mg-cite-this-title="Report" data-mg-cite-this-year="2025" data-mg-cite-this-url="https://www.undrr.org/report?id=42"'
+  );
+  const writeText = jest.fn().mockResolvedValue();
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText },
+  });
+  mgCiteThis(element);
+  const text = element.querySelector(
+    '.mg-cite-this__dialog [data-mg-cite-this-text]'
+  );
+  const link = text.querySelector('a');
+  expect(link).toHaveAttribute('href', 'https://www.undrr.org/report?id=42');
+  expect(link).toHaveTextContent('https://www.undrr.org/report?id=42');
+  expect(text.textContent.endsWith('?id=42.')).toBe(true);
+
+  element.querySelector('.mg-cite-this__trigger').click();
+  element
+    .querySelector('.mg-cite-this__dialog [data-mg-cite-this-copy]')
+    .click();
+  await Promise.resolve();
+  expect(writeText).toHaveBeenCalledWith(text.textContent);
+});
+
+test('links URLs inside editorial citations without altering their text', () => {
+  const citation =
+    'UNDRR (2022). Global Assessment Report 2022. Geneva: UNDRR. Available at: https://www.undrr.org/gar2022.';
+  const element = fixture(`data-mg-cite-this-citation="${citation}"`);
+  mgCiteThis(element);
+  const text = element.querySelector('[data-mg-cite-this-text]');
+  expect(text.textContent).toBe(citation);
+  expect(text.querySelector('a')).toHaveAttribute(
+    'href',
+    'https://www.undrr.org/gar2022'
+  );
 });

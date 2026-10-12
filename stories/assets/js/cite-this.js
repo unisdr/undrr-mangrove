@@ -165,6 +165,26 @@ export function resolveCitation(element, now = new Date()) {
   };
 }
 
+const URL_PATTERN = /https?:\/\/[^\s<>"]+/g;
+
+// Links each URL in place while keeping the copied text identical to the
+// rendered text. Trailing sentence punctuation stays outside the link.
+function renderCitation(output, text) {
+  const doc = output.ownerDocument;
+  output.replaceChildren();
+  let index = 0;
+  for (const match of text.matchAll(URL_PATTERN)) {
+    const href = match[0].replace(/[.,;:)\]]+$/, '');
+    if (match.index > index) output.append(text.slice(index, match.index));
+    const link = doc.createElement('a');
+    link.href = href;
+    link.textContent = href;
+    output.append(link);
+    index = match.index + href.length;
+  }
+  if (index < text.length) output.append(text.slice(index));
+}
+
 function elementsIn(scope) {
   if (!scope) return [];
   if (!scope.querySelectorAll) return Array.from(scope).flatMap(elementsIn);
@@ -196,7 +216,7 @@ function createFallback(element) {
   const content = doc.createElement('div');
   content.className = 'mg-cite-this__content';
   const output = doc.createElement('p');
-  output.className = 'mg-cite-this__text mg-code';
+  output.className = 'mg-cite-this__text';
   output.dataset.mgCiteThisText = '';
   const actions = doc.createElement('div');
   actions.className = 'mg-cite-this__actions';
@@ -232,7 +252,7 @@ export function mgCiteThis(scope = document) {
 
     const doc = element.ownerDocument;
     const citation = resolveCitation(element);
-    output.textContent = citation.text;
+    renderCitation(output, citation.text);
     element.dataset.mgCiteThisSource = citation.source;
     const dialog = doc.createElement('dialog');
     if (typeof dialog.showModal !== 'function') {

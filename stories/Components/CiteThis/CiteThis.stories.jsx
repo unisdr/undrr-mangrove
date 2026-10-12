@@ -32,7 +32,7 @@ function CitationExample({
       <details className="mg-cite-this__fallback">
         <summary className="mg-cite-this__summary">Cite this</summary>
         <div className="mg-cite-this__content">
-          <p className="mg-cite-this__text mg-code" data-mg-cite-this-text />
+          <p className="mg-cite-this__text" data-mg-cite-this-text />
           <div className="mg-cite-this__actions">
             <button
               type="button"
@@ -111,7 +111,7 @@ export const SchemaMetadata = {
         {JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'Report',
-          mainEntityOfPage: window.location.href,
+          mainEntityOfPage: `${window.location.origin}${window.location.pathname}`,
           name: '2025 Hazard Information Profiles',
           datePublished: '2025-01-01',
           author: { '@type': 'Organization', name: 'UNDRR and ISC' },

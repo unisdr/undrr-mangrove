@@ -711,6 +711,7 @@ describe('every component names the role it is meant to', () => {
     ['.mg-chip', 'text'],
     ['.mg-cite-this', 'text'],
     ['.mg-cite-this__trigger', 'text'],
+    ['.mg-cite-this .mg-cite-this__text', 'text'],
     ['.mg-cite-this__title', 'ui'],
     ['.mg-cite-this__copy', 'text'],
     ['.mg-cite-this__summary', 'ui'],
