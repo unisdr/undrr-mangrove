@@ -2,9 +2,70 @@ import React, { useEffect, useRef, useState } from 'react';
 import { expect, waitFor, within } from 'storybook/test';
 import { ProgressBar } from './ProgressBar';
 
+// Translations for the args stories, keyed by the English text. The locale
+// toolbar picks the language, and Arabic also sets the direction, so these
+// stories cover right to left. Text not in the table, such as a value typed
+// into the controls, is shown as entered.
+const TRANSLATIONS = {
+  'Uploading report.pdf': {
+    arabic: 'جارٍ رفع report.pdf',
+    french: 'Téléversement de report.pdf',
+    japanese: 'report.pdf をアップロードしています',
+    russian: 'Загрузка report.pdf',
+    spanish: 'Subiendo report.pdf',
+    chinese: '正在上传 report.pdf',
+  },
+  'Uploading files': {
+    arabic: 'جارٍ رفع الملفات',
+    french: 'Téléversement des fichiers',
+    japanese: 'ファイルをアップロードしています',
+    russian: 'Загрузка файлов',
+    spanish: 'Subiendo archivos',
+    chinese: '正在上传文件',
+  },
+  '3 of 12 files': {
+    arabic: '3 من 12 ملفًا',
+    french: '3 fichiers sur 12',
+    japanese: '12 件中 3 件',
+    russian: '3 из 12 файлов',
+    spanish: '3 de 12 archivos',
+    chinese: '3/12 个文件',
+  },
+  'You can keep working while the files upload.': {
+    arabic: 'يمكنك مواصلة العمل أثناء رفع الملفات.',
+    french:
+      'Vous pouvez continuer à travailler pendant le téléversement des fichiers.',
+    japanese: 'アップロード中も作業を続けられます。',
+    russian: 'Вы можете продолжать работу, пока файлы загружаются.',
+    spanish: 'Puede seguir trabajando mientras se suben los archivos.',
+    chinese: '上传文件时，您可以继续工作。',
+  },
+  'Loading results': {
+    arabic: 'جارٍ تحميل النتائج',
+    french: 'Chargement des résultats',
+    japanese: '結果を読み込んでいます',
+    russian: 'Загрузка результатов',
+    spanish: 'Cargando resultados',
+    chinese: '正在加载结果',
+  },
+};
+
+const TRANSLATED_ARGS = ['label', 'helpText', 'valueText'];
+
+const withLocaleText = (Story, context) => {
+  const locale = context.globals?.locale;
+  const args = { ...context.args };
+  TRANSLATED_ARGS.forEach(key => {
+    const translated = TRANSLATIONS[args[key]]?.[locale];
+    if (translated) args[key] = translated;
+  });
+  return <Story {...context} args={args} />;
+};
+
 export default {
   title: 'Components/Progress bar',
   component: ProgressBar,
+  decorators: [withLocaleText],
   args: {
     label: 'Uploading report.pdf',
     value: 45,
@@ -319,28 +380,6 @@ export const DrupalBatch = {
       description: {
         story:
           "The markup a `progress-bar.html.twig` override renders. The elements follow core's order: `progress__label`, `progress__track` and `progress__bar`, `progress__percentage`, `progress__description`.",
-      },
-    },
-  },
-};
-
-export const Rtl = {
-  name: 'Right to left',
-  render: () => (
-    <div
-      dir="rtl"
-      lang="ar"
-      style={{ display: 'grid', gap: 'var(--mg-spacing-300)' }}
-    >
-      <ProgressBar label="جارٍ رفع الملف" value={60} showValue />
-      <ProgressBar label="جارٍ تحميل النتائج" />
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'The determinate fill starts at the inline-start edge, which is the right in Arabic, and the scanner sweeps from right to left.',
       },
     },
   },

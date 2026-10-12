@@ -3,9 +3,34 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { Loader } from './Loader';
 import { TextInput } from '../../Components/Forms/TextInput/TextInput';
 
+// The visually hidden label in the language picked in the locale toolbar.
+// Arabic also sets the direction, so the stories cover right to left. A label
+// typed into the controls is shown as entered.
+const LOADING_LABELS = {
+  arabic: 'جارٍ التحميل',
+  french: 'Chargement',
+  japanese: '読み込み中',
+  russian: 'Загрузка',
+  spanish: 'Cargando',
+  chinese: '正在加载',
+};
+
+const withLocaleLabel = (Story, context) => {
+  const { label = 'Loading' } = context.args;
+  const translated =
+    label === 'Loading' ? LOADING_LABELS[context.globals?.locale] : undefined;
+  return (
+    <Story
+      {...context}
+      args={translated ? { ...context.args, label: translated } : context.args}
+    />
+  );
+};
+
 export default {
   title: 'Components/Loader',
   component: Loader,
+  decorators: [withLocaleLabel],
   argTypes: {
     size: { control: 'inline-radio', options: ['default', 'inline'] },
   },
@@ -326,23 +351,4 @@ export const InlineLoadingPattern = {
       },
     },
   },
-};
-
-export const Rtl = {
-  name: 'Right to left',
-  render: () => (
-    <div dir="rtl" lang="ar">
-      <p>
-        جارٍ تحميل البيانات <Loader size="inline" decorative /> من الخادم.
-      </p>
-      <button
-        type="button"
-        className="mg-button mg-button-primary"
-        aria-disabled="true"
-      >
-        <Loader size="inline" decorative />
-        جارٍ الحفظ…
-      </button>
-    </div>
-  ),
 };

@@ -99,11 +99,11 @@ Under `prefers-reduced-motion: reduce` the indeterminate bar does not move: it s
 
 A moving indicator that keeps going for more than 5 seconds alongside other content needs a way to stop it ([WCAG 2.2.2 Pause, stop, hide](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html)). For a non-blocking indeterminate bar, replace it after about 5 seconds with static text such as "Still loading…", or remove it, and keep the announcement of the outcome.
 
-#### Right to left
+#### Right to left and long labels
 
-The determinate fill starts at the inline-start edge and the scanner sweeps in the reading direction.
+The determinate fill starts at the inline-start edge and the scanner sweeps in the reading direction. Choose Arabic in the locale toolbar to see the determinate and indeterminate stories right to left; their labels follow the toolbar language.
 
-<Canvas of={ProgressBarStories.Rtl} meta={ProgressBarStories} />
+Long labels wrap above the bar, and the value stays beside the first line:
 
 <Canvas of={ProgressBarStories.LongLabels} meta={ProgressBarStories} />
 
