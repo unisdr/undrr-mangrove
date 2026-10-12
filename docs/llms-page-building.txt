@@ -1,0 +1,1140 @@
+# Mangrove page building guide for Drupal Gutenberg
+
+> How to build landing pages on UNDRR websites (undrr.org, preventionweb.net, mcr2030.undrr.org and the microsites) with the Drupal Gutenberg block editor and Mangrove components: page shapes, section structure, layout patterns and component choice, then the UNDRR block reference with serialization rules, rendering constraints and the current markup for every block. Markup can be pasted into the editor through the Code editor. For copy, follow the editorial manual; for search widget configuration, fetch llms-search-widget.txt.
+
+# Building landing pages
+
+> **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, follow the source: the block definitions in the Drupal `undrr_gutenberg_blocks` module as deployed (for block behaviour and markup), the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) and the sources it cites (for writing and style) and the [UNDRR Web Style Guide](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Web-Style-Guide.aspx) (UNDRR staff only) (for UNDRR web style).
+
+Guidance for editors building landing pages on UNDRR websites: which page shape to start from, how to structure sections and which Mangrove component suits each job. The structure and editorial advice comes first in each section; the Drupal Gutenberg markup that produces it follows.
+
+## Quick start for editors
+
+> **First version:** a short outline for building a page in the visual editor, without writing code. A fuller editor guide will follow; the rest of this page has the detail.
+
+1. **Pick a page shape.** Decide what the page is for, then find its shape in [Choose a page shape](#choose-a-page-shape).
+2. **Insert a starting pattern.** Open the block inserter, switch to patterns and choose the **UNDRR pages** category. Insert the pattern closest to your page shape: a reading page, an initiative overview, a publication collection or a frequently asked questions section.
+3. **Replace the placeholders.** Rewrite every heading and paragraph, and check every link destination. Select each image, hero and card and choose a real image from the media library, with alt text and a photo credit. Follow the [Editorial manual](https://mangrove.undrr.org/llms-editorial-manual.txt) for the words.
+4. **Add a search widget if the page needs one.** Insert the **UNDRR Search Widget** block from the **UNDRR** category of the inserter and set it up in the block sidebar. [Search widget editor configuration](https://mangrove.undrr.org/llms-search-widget.txt) explains each setting and has ready-made recipes.
+5. **Preview.** Check the page before publishing, including at a narrow window width, and fix any block that shows a validation warning.
+6. **Publish** the page the way your website's editorial workflow requires.
+
+Developers, and AI tools that write block markup, should start from [Drupal Gutenberg integration](#drupal-gutenberg-integration), which has the current markup for every block.
+
+The [Landing page patterns](https://mangrove.undrr.org/?path=/docs/patterns-landing-pages--docs) page shows the three common page shapes rendered side by side. [Drupal Gutenberg integration](#drupal-gutenberg-integration) covers how each UNDRR block serializes and has the current markup for every block; this guide links to it rather than repeating it.
+
+> **Tip:** An AI tool can read this guide and the integration guide as one plain-text file: <https://mangrove.undrr.org/llms-page-building.txt>. [Using this guide with an AI tool](#using-this-guide-with-an-ai-tool) has a prompt to start from.
+
+## Writing for landing pages
+
+This guide covers structure, not prose. For the words on the page:
+
+- [Editorial manual](https://mangrove.undrr.org/llms-editorial-manual.txt): capitalization, punctuation, numbers and dates, abbreviations, spelling, UNDRR terminology and inclusive language. It is the single source for these rules; the other guides link to it rather than restating it.
+- [Writing guidelines](https://mangrove.undrr.org/?path=/docs/contributing-writing-guidelines--docs): plain language, front-loading and descriptive link text. Its rules on second person are written for interface copy; body copy on a landing page follows the editorial manual.
+- UNDRR editorial guides for news, events, publications and blogs, being published at <https://assets.undrr.org/docs/editorial-guides/README.md>.
+
+Points specific to landing pages:
+
+- Write for the people who use UNDRR websites: Member States, disaster risk reduction practitioners, researchers and policymakers.
+- Give every H2 section a short introduction of one or two sentences that says what the reader will find below. Keep it factual and action-oriented, and reference the Sendai Framework where it fits naturally.
+- Use "disaster risk reduction" rather than "disaster management" or "disaster prevention", and spell it out before abbreviating it to DRR. Use "hazard" for the natural phenomenon and "disaster" for its impact on people.
+- Headings are in sentence case.
+
+## Choose a page shape
+
+Decide what the page is for before choosing blocks. Most UNDRR landing pages are one of these:
+
+| The page… | Shape | Start from |
+| --- | --- | --- |
+| Introduces a subject and points several ways into it | Topic or initiative | A split hero, an on-this-page bar, then routes and recent material |
+| Is one long document that people cite sections of | Report or publication | A coloured header with a contents sidebar, or a hero with an on-this-page bar; see [Publication landing page](#publication-landing-page) |
+| Exists to reach many items | Collection index | A plain H1, a contents block and rows of book cards; see [Card grid rows](#card-grid-rows) |
+| Presents several charts about one place or theme | Data page | See [Data chart page](#data-chart-page) |
+| Is returned to repeatedly, with movement between sections | Content hub | See [Content hub](https://mangrove.undrr.org/?path=/docs/patterns-content-hub--docs) |
+
+The inserter's **UNDRR pages** pattern category has starting points for a reading page, an initiative overview, a publication collection and a frequently asked questions section.
+
+## Page structure
+
+### Page title
+
+Every page has exactly one H1. Either the hero supplies it (`headingLevel` `h1`) or a level 1 heading block does. Do not use the Drupal page title block (`drupalblock/page-title-block`) in the page body.
+
+```html
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Page title</h1>
+<!-- /wp:heading -->
+```
+
+For a large display title on a publication or campaign page, set the font size to **Huge**, which saves `has-huge-font-size mg-u-font-size-800`.
+
+### Choosing a hero
+
+The hero block has two layouts:
+
+- **Split** (preferred for new pages): text in one column and an image, video or custom HTML in the other, on a solid theme colour. Contrast is predictable because the text never sits over a photograph.
+- **Background** (legacy): text over a full-bleed image. Existing background heroes do not need migrating, but new pages should use split.
+
+A newly inserted hero block starts on the background layout, so switch **Layout** to split in the block sidebar.
+
+To draft a split hero before the image is in the media library, leave the image out: the hero saves no media column until an image is chosen, and the rest of the block still works. [Drupal Gutenberg integration: Hero](#hero) shows what to leave out of hand-written markup.
+
+Split ratios describe the **content** column, which is the easiest thing to get backwards:
+
+| Ratio | Content column | Use for |
+| --- | --- | --- |
+| 2/3 (default) | Two thirds | Text-led heroes: a long lede, several buttons, a supporting image |
+| 1/2 | Half | Equal weight for a short lede and a strong image |
+| 1/3 | One third | Video heroes, and any hero where the media is the message |
+
+Use 1/3 for video: a video in a one-third column is too small to watch. Use custom HTML media for a statistic callout, a small chart or a captioned figure.
+
+A hero has no slot for a contents list. Pair a hero with the [on-this-page bar](#in-page-navigation) directly below it, or use the [page header with a contents sidebar](#page-header-with-a-contents-sidebar) instead of a hero. A page with both reads as two headers.
+
+Markup and attributes: [Drupal Gutenberg integration: Hero](#hero).
+
+### In-page navigation
+
+Long pages need a way to jump between sections. There are two blocks for this, and a page uses one of them:
+
+- **On this page navigation** (`undrr/undrr-on-this-page-nav-block`): a sticky horizontal bar built from the H2 headings. Use it on narrative and campaign pages, directly after the hero. To keep a download in view as the reader scrolls, turn on its call-to-action link.
+- **Table of contents** (`undrr/undrr-table-of-contents-block`): a contents list, usually in a sidebar of the page header. Use it on index and reference pages.
+
+Both read the page's headings, so the headings are the navigation: keep H2 text short and specific. To leave a heading out, add a class to it: `mg-on-this-page-nav--exclude` for the on-this-page bar, `mg-table-of-contents--exclude` for the contents list.
+
+Markup: [Table of contents](#table-of-contents) and [On this page navigation](#on-this-page-navigation).
+
+### Page header with a contents sidebar
+
+The reference-page alternative to a hero: a full-width coloured band with the title and lede on the left and the contents block on the right. The colour attributes go on the outer columns block, and the contents block sits directly in the right column.
+
+```html
+<!-- wp:columns {"backgroundColor":"undrr-blue","textColor":"white","style":{"elements":{"link":{"color":{"text":"var:preset|color|white"}}}},"undrrUtilityClasses":["mg-container-full-width"]} -->
+<div class="wp-block-columns has-white-color has-undrr-blue-background-color has-text-color has-background has-link-color mg-container-full-width"><!-- wp:column {"width":"66.66%"} -->
+<div class="wp-block-column" style="flex-basis:66.66%"><!-- wp:heading {"level":1,"fontSize":"huge"} -->
+<h1 class="wp-block-heading has-huge-font-size mg-u-font-size-800">Page title</h1>
+<!-- /wp:heading -->
+
+  [lede paragraphs and a left-aligned outline download button]
+
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"center","width":"33.33%"} -->
+<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:33.33%">[table of contents block]</div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+```
+
+When the introduction runs on after the header, continue it in a plain 66.66/33.33 columns block so the text stays aligned under the header.
+
+### Section introductions
+
+Each H2 section opens with its heading and a one- or two-sentence introduction, then its content. On campaign and long narrative pages, section H2s can be set to the **Huge** font size for a stronger break between sections; keep default sizing on index and reference pages.
+
+### Section backgrounds
+
+A full-width tinted band marks a change of job, such as a hand-off or a call to action at the end of a narrative run. On index pages, alternating white and light grey sections give a long page some rhythm. Used on every ordinary section, tinted bands just stripe the page.
+
+Wrap the section in a columns block with one column. Do not use a group block as the wrapper; it breaks in Drupal Gutenberg.
+
+```html
+<!-- wp:columns {"backgroundColor":"undrr-light-grey","undrrUtilityClasses":["mg-container-full-width"]} -->
+<div class="wp-block-columns has-undrr-light-grey-background-color has-background mg-container-full-width"><!-- wp:column -->
+<div class="wp-block-column">
+
+  [H2, introduction and the section content]
+
+</div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+```
+
+To hold the section content to the default content width inside the band, put a constrained group inside the column. This is the one place a group block works:
+
+```html
+<!-- wp:columns {"backgroundColor":"undrr-light-grey","undrrUtilityClasses":["mg-container-full-width"]} -->
+<div class="wp-block-columns has-undrr-light-grey-background-color has-background mg-container-full-width"><!-- wp:column {"width":"100%"} -->
+<div class="wp-block-column" style="flex-basis:100%"><!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group">
+
+  [H2, introduction and the section content]
+
+</div>
+<!-- /wp:group --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+```
+
+For a band that also needs a centred reading column, put the percentage columns (below) directly in the band's columns block rather than nesting a second one.
+
+Background colours belong on a container, not on a column in a row. A coloured column has no padding, so the text runs to its edges. For a call-out beside body text, put a [Highlight box](#highlight-box) in a plain column instead.
+
+### Reading column widths
+
+Long lines are hard to read. On narrative pages (annual reports, flagship publications, concept notes), centre body text in a narrower column and let full-width elements such as the hero, the on-this-page bar and stats cards break out of it. The side columns collapse on mobile.
+
+| Split | Use for |
+| --- | --- |
+| 15/70/15 | Wide featured text, a hero-style lede, full-width call-to-action bars and download buttons |
+| 20/60/20 | Body prose: roughly four or more consecutive paragraphs, and show-more targets |
+
+```html
+<!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"20%"} -->
+<div class="wp-block-column" style="flex-basis:20%"></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"60%"} -->
+<div class="wp-block-column" style="flex-basis:60%">
+
+  [paragraphs]
+
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"20%"} -->
+<div class="wp-block-column" style="flex-basis:20%"></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+```
+
+Do not use reading columns on index and reference pages, where full-width card rows use the space better.
+
+### Spacing
+
+Headings carry the rhythm, not spacers. A spacer between every H2 is usually the wrong tool; default block spacing plus clear section headings reads better, with a spacer kept for a genuine break. Where spacers are used, these values keep pages consistent:
+
+| Where | Spacer |
+| --- | --- |
+| Between H2 sections on index and reference pages | 60px |
+| Between H2 sections on campaign and narrative pages | 45px |
+| Above the contents block, and below it | 32px, 40px |
+| Between chart rows in a data page section | 40px |
+| Top and bottom inside a tinted band | 48px |
+| Between two tightly coupled blocks | 8px |
+
+Card rows within a section need no spacer; default block spacing handles them.
+
+### Composition defaults
+
+Observations from pages that have been through editorial review, offered as defaults rather than rules:
+
+- **Fill the short column or do not split.** A 66.66/33.33 split with an empty right column looks like a mistake once it repeats down a page. Put the pull quote, supporting image or diagram there.
+- **Stats cards want full width.** In a one-third column their figures stack into a narrow strip. Place them between sections, not inside a split.
+- **Buttons align left**, on the same axis as the text they follow. Centred buttons float free of the reading column.
+- **A large first paragraph works as a lede.** The **Large** font size on a section's opening paragraph gives readers a way in without another heading level.
+
+## Page archetypes
+
+### Card grid rows
+
+For collection index pages, which exist to reach many items:
+
+- Put a full-width H3 above each row of cards, not inside a column.
+- Below the H3, add a paragraph linking to the subsection's own landing page. Name the destination in the link text ("All early warning resources"), not a generic "View landing page", which reads the same for every row to a screen reader user scanning links. When the subsection covers two related topics, add both links separated by a line break.
+- Lay book cards out in five-column rows, and pad a short row with empty columns so the covers keep their size.
+- When two neighbouring subsections have only one or two cards each, merge them under one H3.
+- Turn items that do not suit a card (training modules, other landing pages) into text links.
+- Put editorial labels such as "(Suggested)" in the title text rather than the card's label.
+
+```html
+<!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Subsection name</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p><a href="https://www.undrr.org/example">All early warning resources</a></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column -->
+<div class="wp-block-column">[book card]</div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column">[book card]</div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column">[book card]</div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+```
+
+Book card markup is in [Drupal Gutenberg integration: Card](#card).
+
+### Publication landing page
+
+For annual reports and other PDF-led publications, the web page is a guided tour that sends readers to the full document, not a copy of it:
+
+1. A hero with the cover image or a video.
+2. An on-this-page bar with a download call to action.
+3. The foreword or introduction in a 15/70/15 reading column.
+4. Key figures in full-width stats cards.
+5. Thematic H2 sections, each with a story preview cut to two or three paragraphs and a "Read more in the full report (PDF)" link.
+6. Quote highlights for official quotes from named people.
+7. Cross-cutting themes as vertical cards linking to the thematic pages, rather than repeating text that is already in the PDF.
+8. A download section with book cards for the PDF and any annexes.
+9. A "More on UNDRR" section with vertical cards linking to related pages.
+
+Alternate white and grey section backgrounds down the page. Global Assessment Report 2025 and the UNDRR Annual Reports 2024 and 2025 follow this shape.
+
+```html
+<!-- wp:paragraph -->
+<p>The first two or three paragraphs of the story from the report.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><a href="/media/[media ID]/download">Read more in the full report (PDF)</a></p>
+<!-- /wp:paragraph -->
+```
+
+### Data chart page
+
+For pages built around several charts, such as country resilience profiles or thematic dashboards, with three to five thematic sections. Keep prose brief: one framing sentence per section and one key finding per chart.
+
+1. A full-width blue header: a back link, the H1, a row of metadata in four columns, a separator and a one- or two-sentence lead paragraph, in white text.
+2. An on-this-page bar built from the H2s.
+3. Thematic sections, alternating white and grey. Each opens with a short section label, an H2 with an anchor and a framing paragraph, followed by one row per chart.
+
+Each chart row is a columns block split 33.33/66.66: an H3 stating the key message, one or two sentences of supporting data and an outline button on the left; the chart and its caption on the right.
+
+```html
+<!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"verticalAlignment":"top","width":"33.33%"} -->
+<div class="wp-block-column is-vertically-aligned-top" style="flex-basis:33.33%"><!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">[Key finding, stated as a message]</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>One or two sentences supporting the key message with specific data.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"top","width":"66.66%"} -->
+<div class="wp-block-column is-vertically-aligned-top" style="flex-basis:66.66%"><!-- wp:html -->
+<iframe title="[Key finding, stated as a message]" src="https://datawrapper.dwcdn.net/XXXXX/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="425" data-external="1"></iframe>
+<!-- /wp:html -->
+
+<!-- wp:paragraph {"fontSize":"small"} -->
+<p class="has-small-font-size mg-u-font-size-250">[Metric, units and scope]. <em>Source</em>: [organization] ([year])</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+```
+
+Chart titles and captions follow a convention. The text in square brackets is a placeholder: write the finding and source from the data the chart shows.
+
+| Element | Content | Form |
+| --- | --- | --- |
+| H3 in the left column | The key takeaway, stated as a message | "[What the data shows, in one sentence]" |
+| `iframe` `title` | The same text as the H3; it is the chart's accessible name | The H3 text |
+| Caption paragraph | Neutral: metric, units, scope and source, with the source line following the [editorial manual's template](https://mangrove.undrr.org/llms-editorial-manual.txt#undrr-specific-terminology) | "[Metric] ([units]), [scope]. _Source_: [organization] ([year])" |
+| Title inside the chart | Can be hidden in the chart tool's publish settings | |
+
+Datawrapper's own embed code adds a script that resizes the iframe; include it in the same `wp:html` block.
+
+### Logo wall
+
+For partner and consortium logos, use icon cards with `imageScale` `full` and `centered` on, six to a row, inside a 10/80/10 centring wrapper.
+
+- For an organization with no usable logo, use a text-only icon card.
+- For a logo that only exists in white, give that one column `"backgroundColor":"undrr-blue","textColor":"white"`.
+- A first version can hotlink logos from the organizations' own websites by setting the image URL and leaving out `mediaID`; upload them to the media library before the page is final.
+
+Icon card markup is in [Drupal Gutenberg integration: Card](#card).
+
+## Choosing components
+
+### Cards
+
+| Content | Card |
+| --- | --- |
+| Topics, programmes or pages, each with a picture and a short description | Vertical card (`vc`) |
+| The same, where a row of vertical cards would be too tall | Horizontal card (`hc`) |
+| Publications and documents with a cover | Book card (`book`), or horizontal book card (`hc_book`) in a list |
+| Partner logos and short route links | Icon card (`icon`) |
+
+- Always give vertical and horizontal cards an image. Without one they lose their border, background and padding and render as bare text.
+- Keep summaries to two or three sentences. Long summaries make rows ragged, because each card grows to its own content.
+- Cover images are decorative when the title is beside them: set `mediaAlt` to an empty string. Photographs in content cards need descriptive alt text.
+- Publication cover scans (the generated document thumbnails in the media library) look wrong in a vertical card; use a photograph.
+
+### Figures and statistics
+
+Use the [stats card](#stats-card) for headline figures, at full width. When there are more figures than fit one row, put several single-stat cards, each without a title, inside a [scroll container](#scroll-container) rather than stacking rows. Write figures the way the [editorial manual](https://mangrove.undrr.org/llms-editorial-manual.txt#numbers-and-dates) sets out.
+
+### Quotes
+
+Use the [Quote highlight](#quote-highlight) block for a quote with a named speaker, their title and optionally a portrait. For a pull quote with no attribution beside body text, a blockquote in the right-hand column of a 60/40 split is lighter:
+
+```html
+<!-- wp:columns {"backgroundColor":"undrr-light-grey","undrrUtilityClasses":["mg-container-full-width"]} -->
+<div class="wp-block-columns has-undrr-light-grey-background-color has-background mg-container-full-width"><!-- wp:column {"width":"60%"} -->
+<div class="wp-block-column" style="flex-basis:60%">
+
+  [H2 and body paragraphs]
+
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"center","width":"40%"} -->
+<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:40%"><!-- wp:html -->
+<blockquote class="mg-quote-highlight mg-u-font-size-600">Pull quote text.</blockquote>
+<!-- /wp:html --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+```
+
+### Show more
+
+The show more button collapses a long block, such as a list of resources, behind a toggle. It needs two things: a unique class on the block to collapse, and a layout that centres the button.
+
+1. Give the content's columns block a class such as `show-more-target-k7q2xa`, with a random six- to eight-character suffix so that two show more blocks on one page cannot collide.
+2. Put the button in its own columns row directly below, in the middle column of a 40/20/40 split.
+3. Add a page-level style to centre the button.
+
+```html
+<!-- wp:columns {"className":"show-more-target-k7q2xa"} -->
+<div class="wp-block-columns show-more-target-k7q2xa"><!-- wp:column {"width":"20%"} -->
+<div class="wp-block-column" style="flex-basis:20%"></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"60%"} -->
+<div class="wp-block-column" style="flex-basis:60%">
+
+  [content to collapse]
+
+</div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"20%"} -->
+<div class="wp-block-column" style="flex-basis:20%"></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+
+<!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"40%"} -->
+<div class="wp-block-column" style="flex-basis:40%"></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"center","width":"20%"} -->
+<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:20%"><!-- wp:undrr/undrr-show-more-button {"targetSelector":".show-more-target-k7q2xa","collapsedHeight":300} -->
+<div class="wp-block-undrr-undrr-show-more-button"><style>.show-more-target-k7q2xa{--mg-show-more-height:300px}</style><a href="#" class="mg-button mg-button-primary mg-show-more--button" data-mg-show-more="true" data-mg-show-more-target=".show-more-target-k7q2xa" data-mg-show-more-label-collapsed="Show more" data-mg-show-more-label-open="Show less">Show more</a></div>
+<!-- /wp:undrr/undrr-show-more-button --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"40%"} -->
+<div class="wp-block-column" style="flex-basis:40%"></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+
+<!-- wp:html -->
+<style>
+.wp-block-undrr-undrr-show-more-button {
+  text-align: center;
+}
+</style>
+<!-- /wp:html -->
+```
+
+### Frequently asked questions and long reference content
+
+There are two tools for content that readers expand one item at a time:
+
+- **A short set of questions** (up to about ten): use the **Frequently asked questions** pattern from the **UNDRR pages** category. It inserts core Details blocks with the Mangrove presentation switched on, one per question. Details are native HTML disclosures, so they need no script and the browser's find-in-page search reaches the answers.
+- **Long reference content**, such as a long question list or the Sendai Framework targets and indicators: use stacked tabs with **Show filter input** and **Single open (accordion)** turned on, so readers can type a word and go straight to the matching section. Horizontal tabs are the wrong tool here; they truncate their labels and make readers click through each tab. Write section labels with the words a reader would search for.
+
+When a stacked tab set sits inside an H2 section and the tab labels are the only headings needed, turn on **Hide heading** for each section. Otherwise each open panel repeats its label as a visible H2 below the tab, which duplicates the heading.
+
+Markup: [Drupal Gutenberg integration: Tabs](#tabs).
+
+### Images and video
+
+- Use images from the media library, with alt text that describes what the image shows. Every photograph needs a credit.
+- Put images inside a reading column rather than full width, unless the image is the point of the section.
+- For video, use the embed block with the ordinary YouTube or Vimeo URL, and put the caption in a small paragraph after it. Hero video is different: it needs the `/embed/` URL.
+
+Markup: [Drupal Gutenberg integration: Core blocks](#core-blocks-used-alongside-the-undrr-blocks).
+
+## Starter page
+
+A minimal index page: title, contents, one white section of book cards and one grey section. Paste it through the Code editor, then replace the placeholder text, links and images; `[cover image URL]` stands for the URL of an image chosen from the media library. Elsewhere in this guide, text in square brackets is a placeholder. On a line of its own, such as `[book card]`, it marks where other blocks go and is not valid block markup, so replace it with real blocks before pasting. Inside a block, such as `[Key finding, stated as a message]`, it is a value to replace with real content.
+
+```html
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Landing page title</h1>
+<!-- /wp:heading -->
+
+<!-- wp:spacer {"height":"32px"} -->
+<div style="height:32px" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
+
+<!-- wp:undrr/undrr-table-of-contents-block -->
+<section class="wp-block-undrr-undrr-table-of-contents-block mg-table-of-contents" data-mg-table-of-contents="true" data-mg-table-of-contents-title="On this page" data-mg-table-of-contents-show-title="true" data-mg-table-of-contents-skip-auto-init="true"></section>
+<!-- /wp:undrr/undrr-table-of-contents-block -->
+
+<!-- wp:spacer {"height":"40px"} -->
+<div style="height:40px" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">First section</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>One or two sentences on what readers will find in this section.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:undrr/undrr-card {"title":"Resource A","titleLink":"https://www.undrr.org/example-a","cardType":"book","mediaAlt":""} -->
+<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__visual"><img src="[cover image URL]" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-a">Resource A</a></header></div></article>
+<!-- /wp:undrr/undrr-card --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:undrr/undrr-card {"title":"Resource B","titleLink":"https://www.undrr.org/example-b","cardType":"book","mediaAlt":""} -->
+<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__visual"><img src="[cover image URL]" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/example-b">Resource B</a></header></div></article>
+<!-- /wp:undrr/undrr-card --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+
+<!-- wp:spacer {"height":"60px"} -->
+<div style="height:60px" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
+
+<!-- wp:columns {"backgroundColor":"undrr-light-grey","undrrUtilityClasses":["mg-container-full-width"]} -->
+<div class="wp-block-columns has-undrr-light-grey-background-color has-background mg-container-full-width"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:heading -->
+<h2 class="wp-block-heading">Second section</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>One or two sentences on what readers will find in this section.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Replace this paragraph with a row of cards, as in the first section.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+```
+
+## Found a problem?
+
+If something in this guide is wrong or out of date, open an issue in the [Mangrove issue queue](https://github.com/PreventionWeb/undrr-mangrove/issues) (a GitHub account is needed).
+
+## Related documentation
+
+- [Drupal Gutenberg integration](#drupal-gutenberg-integration): block reference, serialization rules and rendering constraints
+- [Search widget editor configuration](https://mangrove.undrr.org/llms-search-widget.txt): adding a search or "latest content" panel to a page
+- [Landing page patterns](https://mangrove.undrr.org/?path=/docs/patterns-landing-pages--docs) and [Content hub](https://mangrove.undrr.org/?path=/docs/patterns-content-hub--docs): rendered examples of these shapes
+- [Component gallery](https://mangrove.undrr.org/?path=/docs/brand-component-gallery--docs): every component, grouped by what it is for
+
+# Drupal Gutenberg integration
+
+> **About this guidance:** this page brings together guidance maintained elsewhere and is provided for reference and ease of access. It is not the authoritative source. Where it differs from a source, or doesn't cover a point, follow the source: the block definitions and `save()` output in the Drupal `undrr_gutenberg_blocks` module as deployed (for blocks, attributes and markup), the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs) and the sources it cites (for writing and style) and the [UNDRR Web Style Guide](https://unitednations.sharepoint.com/sites/UNDRR-DRR-COMMS/SitePages/Web-Style-Guide.aspx) (UNDRR staff only) (for UNDRR web style).
+
+UNDRR websites (undrr.org, preventionweb.net, mcr2030.undrr.org and the microsites) run on a shared Drupal platform, and editors build landing pages there with the Gutenberg block editor. Most of what an editor places on a page is a Mangrove component wrapped in a Gutenberg block. This page is the thin layer between the two: which block renders which component, how the blocks serialize, what the deployed build can and cannot render, and the current markup for each block.
+
+It has two companions:
+
+- [Building landing pages](#building-landing-pages): the editorial and structural guidance, meaning which page shapes to use and how to compose them. Start there if you are planning a page.
+- [Search widget editor configuration](https://mangrove.undrr.org/llms-search-widget.txt): filters, facets and search syntax for the UNDRR search widget block.
+
+## Using this guide with an AI tool
+
+The Storybook site is a single-page app, so an AI tool that fetches a Storybook URL gets an empty shell. Every build publishes this guide and [Building landing pages](#building-landing-pages) as one plain-text file instead: <https://mangrove.undrr.org/llms-page-building.txt>. The search widget reference has its own file: <https://mangrove.undrr.org/llms-search-widget.txt>.
+
+Use this prompt in any AI tool that can fetch URLs:
+
+> Using the UNDRR page building guide at https://mangrove.undrr.org/llms-page-building.txt, draft a Drupal Gutenberg landing page about disaster preparedness with a split hero, an on-this-page navigation bar and three sections of book cards.
+
+Replace everything after "draft" with your page brief. Add <https://mangrove.undrr.org/llms-editorial-manual.txt> to the prompt when the tool is also writing the copy, and <https://mangrove.undrr.org/llms-search-widget.txt> when the page needs a search widget.
+
+If you use Claude Code or Cursor with access to the block module source, the [drupal-gutenberg-llm-skills](https://github.com/khawkins98/drupal-gutenberg-llm-skills) plugin gives better results because it validates against the full block definitions.
+
+Review AI output in the editor before publishing. A block the editor cannot validate shows an "Attempt block recovery" prompt; recovering it rewrites the markup to what the block would save, which usually drops attributes. The search widget is an exception: all its settings are in the block comment, so recovery rebuilds its markup from them and loses nothing.
+
+## Platform context
+
+The platform uses the [Drupal Gutenberg module](https://www.drupal.org/project/gutenberg), a port of the WordPress block editor to Drupal. Block comments keep the WordPress `wp:` prefix, but a few things differ from WordPress:
+
+- Landing pages use the `landing_page_gutenberg` content type.
+- Blocks are registered in JavaScript and `*.gutenberg.yml`; there is no `block.json`.
+- Libraries load through Drupal's `*.libraries.yml`, not `wp_enqueue_script()`.
+- Translations use `Drupal.t()`, wrapped as `__()` in block code.
+- `wp:group` does not work as a standalone section wrapper. Use `wp:columns` with a single `wp:column` child instead (see [Serialization rules](#serialization-rules)).
+
+The UNDRR blocks live in the `undrr_gutenberg_blocks` Drupal module, in the platform codebase. Each block's `save()` function writes Mangrove markup (the `mg-` classes and `data-mg-*` attributes documented on each component page), and the Mangrove CSS and scripts that the theme loads style and hydrate it on the published page.
+
+## Pasting markup into the editor
+
+1. Open the page in the block editor.
+2. Open the three-dot menu at the top right and choose **Code editor**.
+3. Paste the markup where it belongs, then choose **Exit code editor**.
+4. Check every block in the visual editor. A block with a validation warning has markup that does not match what the block saves; fix the markup or rebuild that block in the visual editor.
+
+The body field's text format must be **Gutenberg**. It is the only format that parses block comments, renders dynamic blocks and resolves embeds. Markup saved under any other format, Full HTML included, is stored without complaint and then rendered as plain HTML: embeds print their URL as text, dynamic blocks such as the media entity block render nothing, and every block comment appears in the page source. Static blocks still look right, so a page can seem mostly fine while every dynamic block is broken. `<!-- wp:` in the page source is the give-away. Saving the page once through the editor sets the format.
+
+## Where the markup comes from
+
+The source of truth for every UNDRR block's serialized markup is that block's `save()` output in the `undrr_gutenberg_blocks` module. The examples on this page reproduce it so that editors and AI tools can work without access to the platform codebase. The module's maintainers keep the two in step: when a block's `save()` output changes, the matching example here is updated in the same round of work.
+
+When an example here and the editor disagree, the editor wins. Build the block in the visual editor, open the Code editor and copy what it saved.
+
+Media IDs, file paths, image style tokens (`?h=…&itok=…`), file UUIDs and `/media/…` links in the examples are illustrative. They belong to items in one website's media library, so on another website they point at nothing or at something else. Replace them with values from the media library of the website you are editing, or leave the media out while drafting, as described for each block.
+
+Blocks keep older save formats as deprecations, so pages saved with earlier markup (nested card wrappers, the previous stats card format, heroes without `mg-hero--no-image`) still validate and are rewritten to the current format the next time the block is saved.
+
+## UNDRR blocks and the Mangrove components they render
+
+All UNDRR blocks sit in the **UNDRR** category of the block inserter.
+
+| Block (inserter name) | Registration name | Renders | Notes |
+| --- | --- | --- | --- |
+| UNDRR Hero | `undrr/undrr-hero-block` | [Hero](https://mangrove.undrr.org/?path=/docs/components-hero-hero--docs) | Split layout preferred; see [Hero](#hero) |
+| UNDRR Card | `undrr/undrr-card` | [Vertical card](https://mangrove.undrr.org/?path=/docs/components-cards-vertical-card--docs), [Horizontal card](https://mangrove.undrr.org/?path=/docs/components-cards-horizontal-card--docs), [Book card](https://mangrove.undrr.org/?path=/docs/components-cards-book-card--docs), [Horizontal book card](https://mangrove.undrr.org/?path=/docs/components-cards-horizontal-book-card--docs), [Icon card](https://mangrove.undrr.org/?path=/docs/components-cards-icon-card--docs) | One block, five card types via `cardType` |
+| Stats card | `undrr/stats-card` | [Stats card](https://mangrove.undrr.org/?path=/docs/components-cards-stats-card--docs) | Hydrated from `data-stats` |
+| Tabs V2 and Tab section V2 | `undrr/undrr-tabs-v2-block`, `undrr/undrr-tabs-v2-section` | [Tabs](https://mangrove.undrr.org/?path=/docs/components-tabs--docs) | Horizontal or stacked |
+| Table of contents | `undrr/undrr-table-of-contents-block` | [Table of contents](https://mangrove.undrr.org/?path=/docs/components-navigation-table-of-contents--docs) | Sidebar contents list |
+| On this page navigation | `undrr/undrr-on-this-page-nav-block` | [On this page nav](https://mangrove.undrr.org/?path=/docs/components-navigation-on-this-page-nav--docs) | Sticky bar built from headings |
+| Show more button | `undrr/undrr-show-more-button` | [Show more](https://mangrove.undrr.org/?path=/docs/components-showmore--docs) | Collapses another block |
+| Scroll container | `undrr/undrr-scroll-container` | [Scroll container](https://mangrove.undrr.org/?path=/docs/components-scrollcontainer--docs) | Horizontal scrolling row |
+| Highlight box | `undrr/highlight-box` | [Highlight box](https://mangrove.undrr.org/?path=/docs/components-highlightbox--docs) | Call-out with inner blocks |
+| Quote highlight | `undrr/undrr-quote-highlight-block` | [Quote highlight](https://mangrove.undrr.org/?path=/docs/components-quotehighlight--docs) | Quote with attribution |
+| Social share | `undrr/undrr-social-share-block` | [Share buttons](https://mangrove.undrr.org/?path=/docs/components-buttons-sharebuttons--docs) | No attributes |
+| Gallery | `undrr/gallery` | [Gallery](https://mangrove.undrr.org/?path=/docs/components-gallery--docs) | Hydrated from `data-mg-gallery-data` |
+| UNDRR Call to Action | `undrr/cta-band` | [CTA](https://mangrove.undrr.org/?path=/docs/components-cta--docs) | Full-width call-to-action band |
+| UNDRR Notice | `undrr/notice` | [Notice](https://mangrove.undrr.org/?path=/docs/components-notice-notice--docs) | Deadlines, corrections, milestones |
+| UNDRR Hub Header | `undrr/hub-header` | Hub header, shown in [Content hub](https://mangrove.undrr.org/?path=/docs/patterns-content-hub--docs) | Persistent identity and section links for a hub |
+| UNDRR Search Widget | `undrr/search-widget` | [Syndicated search](https://mangrove.undrr.org/?path=/docs/components-syndicated-search--docs) | See [Search widget editor configuration](https://mangrove.undrr.org/llms-search-widget.txt) |
+| UNDRR Search Bar Container, UNDRR Search Facets Container | `undrr/search-bar-target`, `undrr/search-facets-target` | Regions for the search widget | Place the search input or facets elsewhere on the page |
+
+The module also extends some core blocks rather than adding new ones:
+
+- Every core block gains an `undrrUtilityClasses` attribute, which is how Mangrove utility classes such as `mg-container-full-width` reach the saved markup.
+- **Columns** gains a **Mangrove grid** toggle. Columns inserted from the layout picker start on the grid: the block saves `"mgGrid":true` and adds [`mg-grid mg-grid__col-N`](https://mangrove.undrr.org/?path=/docs/design-decisions-grid-layout--docs) to the wrapper, and columns stack below 900px. Existing columns, and hand-written markup without `mgGrid`, keep the standard Gutenberg flex columns. The layout examples in these guides use the flex form, which is what most existing pages use.
+- **Details** and **Table** gain an opt-in **Mangrove presentation** panel. Details keep their native disclosure behaviour. Tables offer compact density, stripes, borders and a named, keyboard-focusable scrolling region; give tables proper header cells and a descriptive caption, because these controls do not add sorting or stacked mobile labels.
+
+The **UNDRR pages** pattern category in the inserter provides a reading page with contents, an initiative overview, a publication collection and a frequently asked questions section. Patterns insert ordinary editable blocks, so replace the starter text, figures, images and link destinations before publishing.
+
+Deprecated blocks remain valid on existing pages but should not be used in new content. Nor should the Drupal page title block (`drupalblock/page-title-block`): use a level 1 heading block instead.
+
+| Deprecated block | Use instead |
+| --- | --- |
+| Tabs V1 (`undrr/undrr-tabs-block`) | Tabs V2 (`undrr/undrr-tabs-v2-block`) |
+| Tab section V1 (`undrr/undrr-tabs-section`) | Tab section V2 (`undrr/undrr-tabs-v2-section`) |
+
+## Serialization rules
+
+Drupal Gutenberg 3.x does not always serialize the way WordPress Gutenberg does. Markup written the WordPress way causes validation warnings or block recovery prompts.
+
+### Wrap HTML comments in `wp:html`
+
+The block parser is confused by bare HTML comments between blocks. To keep an editorial note in the saved page, wrap it in a `wp:html` block:
+
+```html
+<!-- wp:html -->
+<!-- Editorial note: replace the placeholder images before publishing. -->
+<!-- /wp:html -->
+```
+
+A notes block like this at the top of a page is a useful place for editors to leave instructions for each other.
+
+### Headings
+
+Level 2 is the default, so `{"level":2}` can be omitted. An anchor goes in the HTML `id`; `{"anchor":"my-section"}` in the block comment also works and survives round trips through the editor better.
+
+```html
+<!-- wp:heading -->
+<h2 class="wp-block-heading" id="my-section">Section heading</h2>
+<!-- /wp:heading -->
+```
+
+### Font sizes write two classes
+
+A `fontSize` attribute writes the Gutenberg class and a paired Mangrove utility class from a fixed map, so the markup also renders correctly where Mangrove CSS is loaded without the Gutenberg styles:
+
+| `fontSize` | Saved classes |
+| --- | --- |
+| `small` | `has-small-font-size mg-u-font-size-250` |
+| `regular` | `has-regular-font-size mg-u-font-size-300` |
+| `medium` | `has-medium-font-size mg-u-font-size-400` |
+| `large` | `has-large-font-size mg-u-font-size-500` |
+| `huge` | `has-huge-font-size mg-u-font-size-800` |
+
+On `wp:buttons`, Gutenberg also adds `has-custom-font-size`.
+
+```html
+<!-- wp:heading {"level":1,"fontSize":"huge"} -->
+<h1 class="wp-block-heading has-huge-font-size mg-u-font-size-800">Page title</h1>
+<!-- /wp:heading -->
+```
+
+Older pages set `{"className":"has-large-font-size"}` on paragraphs instead. That still renders, but new content should use the `fontSize` attribute from the editor's typography panel.
+
+### Buttons carry Mangrove classes
+
+`wp:button` writes the core `wp-element-button` class and a Mangrove button class. The default style maps to `mg-button-primary`; the **Outline** style maps to `mg-button-secondary`. `mg-button-arrow` appears only in the hero block's own buttons, never in `wp:button`.
+
+```html
+<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"left"}} -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button mg-button mg-button-primary" href="/path">Primary action</a></div>
+<!-- /wp:button -->
+
+<!-- wp:button {"className":"is-style-outline"} -->
+<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button mg-button mg-button-secondary" href="/path">Secondary action</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons -->
+```
+
+`is-style-primary is-style-outline` together still produce `mg-button-secondary`; the outline style wins.
+
+### Lists
+
+`wp:list` is saved with an explicit `className` even though `wp-block-list` is its default, and every item needs its own `wp:list-item` wrapper. Bare `<li>` elements fail validation.
+
+```html
+<!-- wp:list {"className":"wp-block-list"} -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li>First item</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li>Second item with a <a href="https://www.undrr.org">link</a></li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+```
+
+### Separators and spacers
+
+```html
+<!-- wp:separator {"opacity":"css"} -->
+<hr class="wp-block-separator has-css-opacity"/>
+<!-- /wp:separator -->
+
+<!-- wp:spacer {"height":"40px"} -->
+<div style="height:40px" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
+```
+
+### Images from the media library
+
+An image inserted from the Drupal media library records the Drupal file in a `mediaAttrs` object and mirrors it as `data-*` attributes on the `<img>`. Captions use `wp-element-caption`.
+
+```html
+<!-- wp:image {"id":95062,"sizeSlug":"full","linkDestination":"none","mediaAttrs":{"data-entity-type":"file","data-entity-uuid":"c406fed6-d9d1-413c-9ed0-f067d4c2f93f","data-image-style":"original"}} -->
+<figure class="wp-block-image size-full"><img src="/sites/default/files/2025-10/photo.jpg" alt="Alt text" class="wp-image-95062" data-entity-type="file" data-entity-uuid="c406fed6-d9d1-413c-9ed0-f067d4c2f93f" data-image-style="original"/><figcaption class="wp-element-caption">Caption. Photo: UNDRR</figcaption></figure>
+<!-- /wp:image -->
+```
+
+When drafting without a real media item, use a placeholder `src` and leave out `mediaAttrs`; the editor fills them in when an image is chosen.
+
+Image paths start with `/sites/default/files/`. A Drupal `public://` path becomes `/sites/default/files/`, and spaces in file names are URL-encoded.
+
+### Media URLs are not stored in the block comment
+
+For `undrr/undrr-card` and `undrr/undrr-hero-block`, `mediaURL` is read back from the `src` of the saved `<img>`, so it does not belong in the block comment; the editor drops it there on the next save. `mediaID` and the alt text attribute (`mediaAlt` on cards, `mediaAltText` on heroes) do belong in the comment.
+
+### Special characters
+
+In the JSON block comment, characters can be written literally when pasting: `"Climate & Disaster"`. In the saved HTML, use entities: `Climate &amp; Disaster`, which matches what the blocks' `save()` functions produce.
+
+When the editor saves, it escapes `<`, `>`, `&` and `"` inside attribute values as Unicode sequences (`\u003c`, `\u003e`, `\u0026`, `\u0022`), so an attribute that holds HTML, such as a hero `summaryText` with a link, reads `\u003ca href=\u0022…\u0022\u003e` in the block comment. Write it that way when composing by hand: an unescaped `"` inside an attribute value ends the JSON string and breaks the block.
+
+### Section wrappers use columns, not groups
+
+`wp:group` breaks when it is used as a standalone section or background wrapper. Use `wp:columns` with a single `wp:column` child instead:
+
+```html
+<!-- wp:columns {"backgroundColor":"undrr-light-grey","undrrUtilityClasses":["mg-container-full-width"]} -->
+<div class="wp-block-columns has-undrr-light-grey-background-color has-background mg-container-full-width"><!-- wp:column -->
+<div class="wp-block-column">
+
+  [section content]
+
+</div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+```
+
+One exception works: `wp:group {"layout":{"type":"constrained"}}` nested inside a `wp:column` of such a wrapper, which holds the section content to the default content width without percentage columns. [Building landing pages](#section-backgrounds) shows both.
+
+## Rendering constraints
+
+Valid markup can still render wrongly because of the Mangrove CSS and scripts a site loads. Several limits of older builds are fixed in current Mangrove, so check which Mangrove version the site loads before applying a workaround. Page-level CSS goes in a `wp:html` block containing a `<style>` element, and each workaround should be removed once the site runs a version with the fix.
+
+- **Root font size.** Mangrove 1.x sites use a 10px root (`html { font-size: 62.5% }`), so in page-level CSS `1rem` is 10px: write `1.6rem` for 16px text and `1.4rem` for 14px. Mangrove 2.0 removes the 10px root and uses the browser-standard 16px, so on 2.0 write plain rem values. A rule written for the wrong root looks as if it was ignored.
+- **Stats card column count.** Before Mangrove 1.8.2 the grid had classes for 1–6 columns only, and a stats card with seven or more stats collapsed to one stacked column. Current Mangrove supports 1–12 columns, and the block saves `mg-grid--auto-fit` for larger sets. Keep groups small enough for values and labels to stay readable on a phone.
+- **Icon cards.** Before Icon card 1.4, `centered: true` centred the label but left the glyph pinned to the left, and `iconSize` was dropped at hydration. Current Mangrove centres both and applies custom glyph sizes in the editor and on the published card.
+- **Cards without an image.** Vertical and horizontal cards hang their border, background and padding on the image area. With no image they render as bare text. Give them an image, or choose another pattern for imageless content.
+- **Highlight box primary tone.** Before Highlight box 1.2, text inside the dark blue `primary` tone inherited near-black and failed contrast. Current Mangrove sets the text to white.
+- **Hero without an image.** Since Hero 1.9.0 the background layout shows the photograph as a banner above the copy on narrow screens. The block adds `mg-hero--no-image` to a background hero saved without an image, so the empty banner collapses. Heroes saved before the block added the class still carry the empty banner until they are saved again.
+
+## Block reference
+
+Attributes and current markup for each UNDRR block. Blocks whose markup is long or depends on the media library (Gallery, Call to Action, Notice, Hub Header, Search Bar Container, Search Facets Container) are best built in the visual editor; their attributes are listed in the block's sidebar.
+
+### Hero
+
+`undrr/undrr-hero-block` renders the [Hero](https://mangrove.undrr.org/?path=/docs/components-hero-hero--docs) component. [Building landing pages](#choosing-a-hero) covers when to use each layout.
+
+| Attribute | Values | Notes |
+| --- | --- | --- |
+| `layout` | `background` (default), `split` | Prefer `split` for new pages. `background` is still the default, so set `layout` explicitly |
+| `splitRatio` | `2/3` (default), `1/2`, `1/3` | Split only. The fraction is the **content** column: `2/3` is text-led, `1/3` is media-led. Saves `mg-hero--split-2-3`, `-1-2` or `-1-3`; an unrecognized value falls back to `2-3` |
+| `mediaType` | `image` (default), `video`, `html` | Split only. `background` accepts an image only |
+| `headingLevel` | `h1` (default), `h2`, `h3`, `header` | Use `h1` when the hero opens the page. `header` (no heading level) saves the title in a `<span>` |
+| `title` | Plain text | Accepts `<br>` and `&nbsp;` for line breaks |
+| `summaryText` | Rich text | Saved raw when it holds inline markup only; wrap it in `<p>` in the attribute to get a `<p>` in the output |
+| `labelText`, `labelLink`, `toggleLabel` | Text, URL, boolean | Short eyebrow label above the title |
+| `primaryButtonText`, `primaryButtonLink` | Text, URL | The title links to `primaryButtonLink`; there is no separate title link |
+| `secondaryButtonText`, `secondaryButtonLink`, `toggleButtonSecondary` | Text, URL, boolean | Second button |
+| `tertiaryButtonText`, `tertiaryButtonLink`, `toggleButtonTertiary` | Text, URL, boolean | Third button |
+| `openTab` | Boolean | Opens every hero link in a new tab |
+| `overlayBackgroundColor` | `primary`, `secondary`, `tertiary`, `quaternary` | Saves `mg-hero--{value}`, except `primary`, which saves `mg-hero--` with an empty suffix; unset saves `mg-hero--undefined` |
+| `mediaID`, `mediaAltText` | Media ID, text | Image media |
+| `videoEmbedUrl`, `videoTitle` | URL, text | Video media. Use the `/embed/` URL; a watch URL renders a refused frame. `videoTitle` is the iframe's accessible name and is required |
+| `customHtml` | HTML string | HTML media. Rendered verbatim, so it must be sanitized before saving. A bare `<figure>` with `<img>` and `<figcaption>` gets an attribution overlay |
+
+The `heroType` option (`parent` or `child`) was retired in April 2026; leave it unset.
+
+Current split hero with an image and no label, as the editor saves it today:
+
+```html
+<!-- wp:undrr/undrr-hero-block {"title":"Monitoring the Sendai Framework","summaryText":"Strong accountability is a cornerstone of the \u003ca href=\u0022https://www.undrr.org/implementing-sendai-framework/what-sendai-framework\u0022\u003eSendai Framework for Disaster Risk Reduction\u003c/a\u003e","primaryButtonText":"Go to the SFM analytics portal","primaryButtonLink":"https://sendaimonitor.undrr.org/analytics","layout":"split","splitRatio":"1/2","headingLevel":"h1","mediaType":"image","mediaID":"119162","mediaAltText":"Firefighters amongst a brush fire","undrrUtilityClasses":[]} -->
+<section class="wp-block-undrr-undrr-hero-block mg-hero mg-hero--split mg-hero--split-1-2 mg-hero--undefined"><div class="mg-hero__split-grid mg-container"><article class="mg-hero__content"><header class="mg-hero__title"><h1 class="text-xxl"><a href="https://sendaimonitor.undrr.org/analytics">Monitoring the Sendai Framework</a></h1></header><div class="mg-hero__summaryText">Strong accountability is a cornerstone of the <a href="https://www.undrr.org/implementing-sendai-framework/what-sendai-framework">Sendai Framework for Disaster Risk Reduction</a></div><div class="mg-hero__buttons"><a href="https://sendaimonitor.undrr.org/analytics" target="_self" rel="noreferrer" role="button" type="Primary" class="mg-button mg-button-primary mg-button-arrow">Go to the SFM analytics portal</a></div></article><div class="mg-hero__media"><img src="/sites/default/files/styles/ultrawide_16_6/public/2026-07/smoke-firefighters.jpg?h=c673cd1c&amp;itok=DmrYvrbd" alt="Firefighters amongst a brush fire" class="mg-hero__media-img" data-mg-media-id="119162"/></div></div></section>
+<!-- /wp:undrr/undrr-hero-block -->
+```
+
+Details that trip up hand-written hero markup:
+
+- `mg-hero--undefined` when `overlayBackgroundColor` is unset. Heroes saved before the current block version have a trailing space after it; both forms validate.
+- No `mg-hero__meta` element when there is no label.
+- The title is `<h1 class="text-xxl"><a href="…">Text</a></h1>`.
+- The `<img>` carries `data-mg-media-id`, and its `src` is a Drupal image style derivative with an `?h=…&itok=…` query. Copy the URL the media library generates rather than writing one. The `mediaID` and URL in the example above are illustrative.
+- To draft a split image hero without a real media ID, leave `mediaID` and `mediaAltText` out of the block comment and leave out the whole `<div class="mg-hero__media">` element. The block saves no media column until an image is chosen, so the markup still validates; choose the image in the editor before publishing.
+
+Current split hero with a video, media-led (`1/3`):
+
+```html
+<!-- wp:undrr/undrr-hero-block {"title":"El Niño","summaryText":"A shift in the Pacific Ocean that raises the odds of drought, flood, heat and fire across large parts of the world.","primaryButtonText":"Explore the evidence on PreventionWeb","primaryButtonLink":"https://www.preventionweb.net/hubs/el-nino","layout":"split","splitRatio":"1/3","headingLevel":"h1","mediaType":"video","videoEmbedUrl":"https://www.youtube.com/embed/FVTESdSeWnw","videoTitle":"What can be done to protect Southern Africa from El Niño?","undrrUtilityClasses":[]} -->
+<section class="wp-block-undrr-undrr-hero-block mg-hero mg-hero--split mg-hero--split-1-3 mg-hero--undefined"><div class="mg-hero__split-grid mg-container"><article class="mg-hero__content"><header class="mg-hero__title"><h1 class="text-xxl"><a href="https://www.preventionweb.net/hubs/el-nino">El Niño</a></h1></header><div class="mg-hero__summaryText">A shift in the Pacific Ocean that raises the odds of drought, flood, heat and fire across large parts of the world.</div><div class="mg-hero__buttons"><a href="https://www.preventionweb.net/hubs/el-nino" target="_self" rel="noreferrer" role="button" type="Primary" class="mg-button mg-button-primary mg-button-arrow">Explore the evidence on PreventionWeb</a></div></article><div class="mg-hero__media mg-hero__media--video"><iframe src="https://www.youtube.com/embed/FVTESdSeWnw" title="What can be done to protect Southern Africa from El Niño?" class="mg-hero__media-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe></div></div></section>
+<!-- /wp:undrr/undrr-hero-block -->
+```
+
+Copy the iframe's `allow` list and `allowfullscreen` exactly; the block writes a fixed list and anything else fails validation. When a hero has both `mediaID` and `videoEmbedUrl`, the video wins and the image is ignored.
+
+For a hero with a label, extra buttons or custom HTML media, build it in the visual editor and copy the result from the Code editor: those options change the saved structure in ways that are easy to get wrong by hand.
+
+### Card
+
+`undrr/undrr-card` renders one of five Mangrove cards, chosen by `cardType`.
+
+| `cardType` | Wrapper classes | Renders | Image style picked by the editor |
+| --- | --- | --- | --- |
+| `vc` (default) | `mg-card mg-card__vc` | [Vertical card](https://mangrove.undrr.org/?path=/docs/components-cards-vertical-card--docs) | `landscape_16_9` |
+| `hc` | `mg-card mg-card__hc` | [Horizontal card](https://mangrove.undrr.org/?path=/docs/components-cards-horizontal-card--docs) | `landscape_16_9` |
+| `book` | `mg-card mg-card__book` | [Book card](https://mangrove.undrr.org/?path=/docs/components-cards-book-card--docs) | `por` (portrait) |
+| `hc_book` | `mg-card mg-card__hc mg-card-book__hc` | [Horizontal book card](https://mangrove.undrr.org/?path=/docs/components-cards-horizontal-book-card--docs) | `por` (portrait) |
+| `icon` | `mg-card mg-card__icon` | [Icon card](https://mangrove.undrr.org/?path=/docs/components-cards-icon-card--docs) | `thumbnail` |
+
+Every attribute except `title` is optional, and each element is saved only when its attribute is set: no image means no `mg-card__visual`, no label means no `mg-card__meta`.
+
+| Attribute | Saved as |
+| --- | --- |
+| `title`, `titleLink` | `<header class="mg-card__title"><a href="{titleLink}">{title}</a></header>` |
+| `labelText`, `labelLink` | `<div class="mg-card__meta"><a href="{labelLink}" class="mg-card__label">{labelText}</a></div>` |
+| `summary` | `<div class="mg-card__summary">{summary}</div>` |
+| `mediaID`, `mediaAlt` | `<div class="mg-card__visual"><img … class="mg-card__image" loading="lazy"/></div>`. Use `"mediaAlt":""` for a decorative cover |
+| `primaryButtonText`, `primaryButtonLink` | `<a class="mg-button mg-button-primary mg-button-arrow" role="button" type="Primary">` |
+| `colorVariant` | `mg-card--{value}` for `secondary`, `tertiary` or `quaternary`; `primary` (the default) saves no class |
+| `plainTitle` | `mg-card--plain-title`, which drops the title link's underline and hover colour |
+
+Vertical, horizontal and book cards save a single `<article>` that carries both the block class and the Mangrove card classes (`wp-block-undrr-undrr-card mg-card mg-card__vc`). Icon cards keep an inner `<div class="mg-card mg-card__icon">`, because their hydration reads it. The saved order is `mg-card__visual` before `mg-card__content`, and inside the content the meta, then the title, then the summary.
+
+Vertical card with image and summary:
+
+```html
+<!-- wp:undrr/undrr-card {"title":"Drought","titleLink":"/hazard-information-profiles","summary":"Rainfall deficits tend to concentrate in Central America's Dry Corridor, parts of southern Africa, Australia and Southeast Asia.","mediaID":"118479","mediaAlt":"A farmer in Mozambique receives agricultural inputs"} -->
+<article class="wp-block-undrr-undrr-card mg-card mg-card__vc"><div class="mg-card__visual"><img src="/sites/default/files/2026-06/example.jpg" alt="A farmer in Mozambique receives agricultural inputs" data-mg-media-id="118479" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="/hazard-information-profiles">Drought</a></header><div class="mg-card__summary">Rainfall deficits tend to concentrate in Central America's Dry Corridor, parts of southern Africa, Australia and Southeast Asia.</div></div></article>
+<!-- /wp:undrr/undrr-card -->
+```
+
+Book card with a cover, and without one:
+
+```html
+<!-- wp:undrr/undrr-card {"title":"Global Assessment Report 2024","titleLink":"https://www.undrr.org/gar/2024","cardType":"book","mediaAlt":""} -->
+<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__visual"><img src="/sites/default/files/2024-06/gar2024-cover.jpg" alt="" class="mg-card__image" loading="lazy"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/gar/2024">Global Assessment Report 2024</a></header></div></article>
+<!-- /wp:undrr/undrr-card -->
+
+<!-- wp:undrr/undrr-card {"title":"Document title","titleLink":"https://www.undrr.org/publication/example","cardType":"book"} -->
+<article class="wp-block-undrr-undrr-card mg-card mg-card__book"><div class="mg-card__content"><header class="mg-card__title"><a href="https://www.undrr.org/publication/example">Document title</a></header></div></article>
+<!-- /wp:undrr/undrr-card -->
+```
+
+Icon cards are the standard pattern for partner logo walls. They add `imageScale` (`"full"` fills the card), `centered` and `variant`, and the `<article>` carries four `data-mg-icon-card*` attributes that the component hydrates from. An icon card can show a Mangrove icon instead of an image through the `icon` attribute (for example `"icon":"mg-icon mg-icon-globe"`); see the [Icons gallery](https://mangrove.undrr.org/?path=/docs/components-icons--docs) for names.
+
+```html
+<!-- wp:undrr/undrr-card {"title":"WMO","titleLink":"https://wmo.int/","mediaID":"116764","mediaAlt":"WMO","cardType":"icon","imageScale":"full","centered":true} -->
+<article class="wp-block-undrr-undrr-card" data-mg-icon-card="" data-mg-icon-card-data="[{&quot;imgback&quot;:&quot;/sites/default/files/2026-04/wmo-logo.png&quot;,&quot;imgalt&quot;:&quot;WMO&quot;,&quot;iconSize&quot;:72,&quot;imageScale&quot;:&quot;full&quot;,&quot;title&quot;:&quot;WMO&quot;,&quot;srOnlyTitle&quot;:false,&quot;link&quot;:&quot;https://wmo.int/&quot;,&quot;buttonType&quot;:&quot;Primary&quot;}]" data-mg-icon-card-centered="true" data-mg-icon-card-variant="default"><div class="mg-card mg-card__icon mg-card__icon--centered"><div class="mg-card__visual"><img src="/sites/default/files/2026-04/wmo-logo.png" alt="WMO" data-mg-media-id="116764" class="mg-card__image mg-card__image--full"/></div><div class="mg-card__content"><header class="mg-card__title"><a href="https://wmo.int/">WMO</a></header></div></div></article>
+<!-- /wp:undrr/undrr-card -->
+```
+
+For an organization with no usable logo, leave out `mediaID` and the image; the card saves a text-only tile. Recent block versions add further keys to `data-mg-icon-card-data` (`icon`, `label`, `summaryText`, `linkText`, `button`) and save `imageScale` as `null` when it is unset, so copy icon cards from the editor when using those options.
+
+### Stats card
+
+`undrr/stats-card` renders the [Stats card](https://mangrove.undrr.org/?path=/docs/components-cards-stats-card--docs). Attributes: `title`, `variant` (`default`, `compact`, `highlighted`, `negative`) and `stats`, an array of `{icon, label, value, bottomLabel, summaryText, link}`.
+
+```html
+<!-- wp:undrr/stats-card {"title":"Global reporting snapshot","stats":[…]} -->
+<section class="wp-block-undrr-stats-card" data-mg-stats-card="" data-stats="[…]" data-variant="default" data-title="Global reporting snapshot"><div class="mg-stats-card mg-stats-card--default"><h2 class="mg-stats-card__title">Global reporting snapshot</h2><div class="mg-grid mg-grid__col-3">
+  <article class="mg-stats-card-item mg-card">…</article>
+</div></div></section>
+<!-- /wp:undrr/stats-card -->
+```
+
+- With no `title`, the block saves no `<h2>` and no `data-title`. That makes single-stat cards usable as items in a scroll container.
+- The stats sit in an `mg-stats-card mg-stats-card--{variant}` wrapper, and the grid is saved with its column class: `mg-grid__col-N` for 1–12 stats, `mg-grid--auto-fit` above that.
+- Older pages use earlier formats: a grid without a column class, or everything in one `data-mg-stats-card-data` object. They still validate and render, but new markup should use the format above. Enter the stats in the block sidebar rather than writing the JSON by hand.
+
+### Tabs
+
+`undrr/undrr-tabs-v2-block` holds `undrr/undrr-tabs-v2-section` children and renders [Tabs](https://mangrove.undrr.org/?path=/docs/components-tabs--docs).
+
+| Attribute | Block | Effect |
+| --- | --- | --- |
+| `tabOrientation` | Tabs | `horizontal` (default) or `stacked` (an accordion) |
+| `hasFullWidthBackground` | Tabs | Full-width background band |
+| `defaultOpen` | Tabs, stacked only | **Default open state**: `default` (first section open), `true` (all open) or `false` (all closed); saves `data-mg-js-tabs-default-open` unless it is `default` |
+| `filterable` | Tabs, stacked only | **Show filter input**: a keyword search field above the sections; saves `data-mg-js-tabs-filterable=""` |
+| `filterPlaceholder` | Tabs, stacked only | Placeholder for that field |
+| `singleOpen` | Tabs, stacked only | **Single open (accordion)**: only one section open at a time; saves `data-mg-js-tabs-single-open=""` |
+| `id` | Section | Used raw in the link `href` and section `id`, prefixed with `mg-tabs__section-` |
+| `label` | Section | Tab text, and the section's `<h2>` |
+| `unlabelled` | Section | **Hide heading**: saves that `<h2>` as `mg-u-sr-only`, for when the tab label is already the visible heading |
+| `defaultOpen` | Section | Opens this section first |
+
+Serialization details:
+
+- The outer `<div>` has only Mangrove classes, not the `wp-block-undrr-undrr-tabs-v2-block` class, and `mg-tabs__list` has a trailing space in its `class`.
+- The editor writes a `dirty` attribute holding a timestamp when the block is saved. It does not appear in the saved HTML.
+- Boolean options save as empty-string attributes (`=""`), not `="true"`, and the stacked-only options are dropped from the output of a horizontal tab set.
+- Each section saves **two sibling `<li>` elements**: a link item and a content item. Writing one `<li>` per section is the most common cause of an invalid tabs block.
+
+Horizontal tabs with one section:
+
+```html
+<!-- wp:undrr/undrr-tabs-v2-block -->
+<div class="mg-tabs mg-tabs--horizontal" data-mg-js-tabs="true" data-mg-js-tabs-variant="horizontal"><ul class="mg-tabs__list "><!-- wp:undrr/undrr-tabs-v2-section {"id":"overview","label":"Overview","defaultOpen":true} -->
+<li class="mg-tabs__item"><a class="mg-tabs__link" href="#mg-tabs__section-overview" data-mg-js-tabs-default="true" role="tab">Overview</a></li><li class="mg-tabs-content" data-mg-js-tabs-content="true"><section class="mg-tabs__section" id="mg-tabs__section-overview"><h2>Overview</h2><!-- wp:paragraph -->
+<p>Section content.</p>
+<!-- /wp:paragraph --></section></li>
+<!-- /wp:undrr/undrr-tabs-v2-section --></ul></div>
+<!-- /wp:undrr/undrr-tabs-v2-block -->
+```
+
+Stacked tabs with a keyword filter, the right tool for long reference content such as frequently asked questions:
+
+```html
+<!-- wp:undrr/undrr-tabs-v2-block {"tabOrientation":"stacked","singleOpen":true,"filterable":true,"filterPlaceholder":"Search targets, indicators and topics"} -->
+<div class="mg-tabs mg-tabs--stacked" data-mg-js-tabs="true" data-mg-js-tabs-variant="stacked" data-mg-js-tabs-single-open="" data-mg-js-tabs-filterable="" data-mg-js-tabs-filter-placeholder="Search targets, indicators and topics"><ul class="mg-tabs__list "><!-- wp:undrr/undrr-tabs-v2-section {"id":"target-a","label":"Target A: Mortality"} -->
+<li class="mg-tabs__item"><a class="mg-tabs__link" href="#mg-tabs__section-target-a" data-mg-js-tabs-default="false" role="tab">Target A: Mortality</a></li><li class="mg-tabs-content" data-mg-js-tabs-content="true"><section class="mg-tabs__section" id="mg-tabs__section-target-a"><h2>Target A: Mortality</h2><!-- wp:paragraph -->
+<p>Section content.</p>
+<!-- /wp:paragraph --></section></li>
+<!-- /wp:undrr/undrr-tabs-v2-section --></ul></div>
+<!-- /wp:undrr/undrr-tabs-v2-block -->
+```
+
+The filter matches section labels, so write labels with the words a reader would search for.
+
+### Table of contents
+
+`undrr/undrr-table-of-contents-block` renders the [Table of contents](https://mangrove.undrr.org/?path=/docs/components-navigation-table-of-contents--docs) from the page's `<h2>` headings. Attributes: `title` (default "On this page") and `showTitle`. It is not self-closing: it needs its `<section>`, and the saved markup always includes `data-mg-table-of-contents-skip-auto-init="true"`, which stops the Mangrove script initializing it twice.
+
+```html
+<!-- wp:undrr/undrr-table-of-contents-block -->
+<section class="wp-block-undrr-undrr-table-of-contents-block mg-table-of-contents" data-mg-table-of-contents="true" data-mg-table-of-contents-title="On this page" data-mg-table-of-contents-show-title="true" data-mg-table-of-contents-skip-auto-init="true"></section>
+<!-- /wp:undrr/undrr-table-of-contents-block -->
+```
+
+To leave a heading out of the list, add the `mg-table-of-contents--exclude` class to it through its utility classes or `className`:
+
+```html
+<!-- wp:heading {"className":"mg-table-of-contents--exclude"} -->
+<h2 class="wp-block-heading mg-table-of-contents--exclude">Introduction</h2>
+<!-- /wp:heading -->
+```
+
+### On this page navigation
+
+`undrr/undrr-on-this-page-nav-block` renders the [On this page nav](https://mangrove.undrr.org/?path=/docs/components-navigation-on-this-page-nav--docs), a sticky bar built from the page headings when the page loads.
+
+| Attribute | Default | Notes |
+| --- | --- | --- |
+| `depth` | `"2"` | `"2"` for H2 only, `"3"` adds H3, `"4"` adds H4 |
+| `contentSelector` | `".landing-page-body"` | Container scanned for headings |
+| `label` | `"On this page"` | Text before the links |
+| `showCta`, `ctaText`, `ctaUrl` | `false`, empty, empty | Optional call-to-action link at the end of the bar |
+
+```html
+<!-- wp:undrr/undrr-on-this-page-nav-block {"showCta":true,"ctaText":"Download the concept note","ctaUrl":"/media/118609"} -->
+<nav class="wp-block-undrr-undrr-on-this-page-nav-block mg-on-this-page-nav" data-mg-on-this-page-nav="true" data-mg-on-this-page-nav-depth="2" data-mg-on-this-page-nav-content=".landing-page-body" data-mg-on-this-page-nav-label="On this page"><a href="/media/118609" class="mg-on-this-page-nav__cta">Download the concept note</a></nav>
+<!-- /wp:undrr/undrr-on-this-page-nav-block -->
+```
+
+Without the call to action, the `<nav>` is empty.
+
+Some older pages build this bar by hand in a `wp:html` block marked with a `prototype: mga-nav-on-this-page` comment (tracked in [undrr/web-backlog#337](https://gitlab.com/undrr/web-backlog/-/issues/337)). Use the block for new pages.
+
+### Show more button
+
+`undrr/undrr-show-more-button` renders a [Show more](https://mangrove.undrr.org/?path=/docs/components-showmore--docs) toggle that collapses another block. Attributes: `targetSelector` (a class selector on the block to collapse), `labelCollapsed`, `labelOpen`, `collapsedHeight` (pixels) and `buttonStyle` (`primary` or `secondary`). `collapsedHeight` defaults to 200; any other value saves a `<style>` element that sets `--mg-show-more-height` on the target.
+
+```html
+<!-- wp:undrr/undrr-show-more-button {"targetSelector":".show-more-target-k7q2xa","collapsedHeight":300} -->
+<div class="wp-block-undrr-undrr-show-more-button"><style>.show-more-target-k7q2xa{--mg-show-more-height:300px}</style><a href="#" class="mg-button mg-button-primary mg-show-more--button" data-mg-show-more="true" data-mg-show-more-target=".show-more-target-k7q2xa" data-mg-show-more-label-collapsed="Show more" data-mg-show-more-label-open="Show less">Show more</a></div>
+<!-- /wp:undrr/undrr-show-more-button -->
+```
+
+[Building landing pages](#show-more) has the full layout with the target block.
+
+### Scroll container
+
+`undrr/undrr-scroll-container` renders a [Scroll container](https://mangrove.undrr.org/?path=/docs/components-scrollcontainer--docs) around its inner blocks. Each direct child becomes one scroll item.
+
+| Attribute | Default | Effect |
+| --- | --- | --- |
+| `itemWidth` | `auto` | Width of each item. Set a value such as `"300px"`, or items shrink to their content |
+| `stepSize` | `300` | Pixels scrolled per arrow click. Set it a little larger than `itemWidth` so a click advances one item and the gap |
+| `showArrows` | `true` | Previous and next buttons |
+| `height`, `minWidth`, `padding` | `auto`, `auto`, `0` | Row height, minimum item width, inner padding |
+| `ariaLabel` | Empty | Accessible name for the row, such as "Publications" or "Partners"; saved as `data-aria-label` only when set |
+
+The six layout attributes are saved as `data-*` attributes whether or not they differ from the default. Name every scroll container, so screen reader users can tell one collection from another.
+
+```html
+<!-- wp:undrr/undrr-scroll-container {"itemWidth":"300px","stepSize":320} -->
+<div class="wp-block-undrr-undrr-scroll-container mg-scroll" data-mg-scroll-container="" data-height="auto" data-min-width="auto" data-item-width="300px" data-padding="0" data-show-arrows="true" data-step-size="320"><div class="mg-scroll__content">
+
+  [inner blocks]
+
+</div></div>
+<!-- /wp:undrr/undrr-scroll-container -->
+```
+
+### Highlight box
+
+`undrr/highlight-box` renders a [Highlight box](https://mangrove.undrr.org/?path=/docs/components-highlightbox--docs) around its inner blocks. `tone` is `default`, `primary` or `secondary`; `layout` is `full` (default), `centered`, `float-start` or `float-end`. Non-default values add `mg-highlight-box--{value}`.
+
+```html
+<!-- wp:undrr/highlight-box {"tone":"secondary","layout":"centered"} -->
+<div class="wp-block-undrr-highlight-box mg-highlight-box mg-highlight-box--secondary mg-highlight-box--centered"><!-- wp:heading {"level":3} -->
+<h3 class="wp-block-heading">Did you know?</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>[One short fact, with its source.]</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:undrr/highlight-box -->
+```
+
+### Quote highlight
+
+`undrr/undrr-quote-highlight-block` renders a [Quote highlight](https://mangrove.undrr.org/?path=/docs/components-quotehighlight--docs). Attributes: `attribution`, `attributionTitle`, `imageSrc`, `imageAlt`, `backgroundColor` (`light` or `dark`), `variant` (`line` or `image`) and `alignment`. The quote itself is inner paragraph blocks.
+
+```html
+<!-- wp:undrr/undrr-quote-highlight-block {"attribution":"Name Surname","attributionTitle":"Title and organization"} -->
+<div class="wp-block-undrr-undrr-quote-highlight-block mg-quote-highlight mg-quote-highlight--light mg-quote-highlight--line mg-quote-highlight--full "><div class="mg-quote-highlight__content"><blockquote class="mg-quote-highlight__quote"><div class="mg-quote-highlight__quote-text"><!-- wp:paragraph -->
+<p>Disaster risk reduction is everyone's business. It requires the engagement of all sectors and all people.</p>
+<!-- /wp:paragraph --></div></blockquote><div class="mg-quote-highlight__separator"></div><div class="mg-quote-highlight__attribution"><div class="mg-quote-highlight__attribution-wrapper"><div class="mg-quote-highlight__attribution-text"><p class="mg-quote-highlight__attribution-name">Name Surname</p><p class="mg-quote-highlight__attribution-title">Title and organization</p></div></div></div></div></div>
+<!-- /wp:undrr/undrr-quote-highlight-block -->
+```
+
+For a pull quote with no attribution, a lighter pattern is in [Building landing pages](#quotes).
+
+### Social share
+
+`undrr/undrr-social-share-block` has no attributes and renders [Share buttons](https://mangrove.undrr.org/?path=/docs/components-buttons-sharebuttons--docs).
+
+```html
+<!-- wp:undrr/undrr-social-share-block -->
+<div class="wp-block-undrr-undrr-social-share-block mg-share"><section data-mg-share-buttons="true"></section></div>
+<!-- /wp:undrr/undrr-social-share-block -->
+```
+
+### Search widget
+
+`undrr/search-widget` renders the [Syndicated search](https://mangrove.undrr.org/?path=/docs/components-syndicated-search--docs) widget. The block writes around 20 `data-*` attributes on a container with `data-undrr-search-widget="true"`, and a wrapper script in the Drupal theme reads them and mounts the Mangrove component. Mangrove's own hydration does not read that attribute; it is specific to the platform wrapper. Widgets saved before [undrr/web-backlog#2822](https://gitlab.com/undrr/web-backlog/-/work_items/2822) keep **Override with current website domain** and **Override with current page language** off through the block's deprecation; new widgets have both on. Configure it in the block sidebar rather than by hand; [Search widget editor configuration](https://mangrove.undrr.org/llms-search-widget.txt) documents every setting and the filter syntax, and has the [saved markup](https://mangrove.undrr.org/llms-search-widget.txt#saved-markup) of a new widget.
+
+### Core blocks used alongside the UNDRR blocks
+
+**Video.** Use `wp:embed` with the ordinary watch URL; the Gutenberg text format swaps it for the player at render time. Put the caption in a paragraph after the embed, not in a `<figcaption>`.
+
+```html
+<!-- wp:embed {"url":"https://www.youtube.com/watch?v=VIDEO_ID","type":"rich","providerNameSlug":"youtube","responsive":true,"className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} -->
+<figure class="wp-block-embed is-type-rich is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+https://www.youtube.com/watch?v=VIDEO_ID
+</div></figure>
+<!-- /wp:embed -->
+
+<!-- wp:paragraph {"fontSize":"small"} -->
+<p class="has-small-font-size mg-u-font-size-250">Caption. Video: UNDRR</p>
+<!-- /wp:paragraph -->
+```
+
+**Drupal media.** `drupalmedia/drupal-media-entity` embeds a media entity (image, video or document) and is self-closing, because the server renders it. `viewMode` is a Drupal image style: `ultrawide_16_6`, `landscape_16_9`, `portrait_3_4`, `thumbnail` or `full`. A video media entity is worth it when the same video appears on several pages; for a one-off, `wp:embed` needs no media entity.
+
+```html
+<!-- wp:drupalmedia/drupal-media-entity {"mediaEntityIds":["84501"],"viewMode":"ultrawide_16_6"} /-->
+```
+
+**Page-level CSS.** A `wp:html` block with a `<style>` element holds CSS that no block attribute can express. Keep it at the end of the page body and keep it small; each rule is a page-level patch that someone has to find later.
+
+## Found a problem?
+
+If something in this guide is wrong or out of date, such as markup that no longer matches what the editor saves, open an issue in the [Mangrove issue queue](https://github.com/PreventionWeb/undrr-mangrove/issues) (a GitHub account is needed).
+
+## Related documentation
+
+- [Building landing pages](#building-landing-pages): page structure, layout patterns and component choice
+- [Search widget editor configuration](https://mangrove.undrr.org/llms-search-widget.txt): search widget settings and filter syntax
+- [Landing page patterns](https://mangrove.undrr.org/?path=/docs/patterns-landing-pages--docs): topic, report and collection index examples
+- [Hydration guide](https://mangrove.undrr.org/?path=/docs/getting-started-integration-hydration-guide--docs): how Mangrove turns saved markup into interactive components
+- [Editorial manual](https://mangrove.undrr.org/llms-editorial-manual.txt): capitalization, punctuation, numbers, spelling and UNDRR terminology
+
+## Links
+
+- Rendered version in Storybook (Building landing pages): https://mangrove.undrr.org/?path=/docs/patterns-building-landing-pages--docs
+- Source on GitHub (Building landing pages): https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/LANDING-PAGE-GUIDE.md
+- Rendered version in Storybook (Drupal Gutenberg integration): https://mangrove.undrr.org/?path=/docs/getting-started-integration-drupal-gutenberg--docs
+- Source on GitHub (Drupal Gutenberg integration): https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/DRUPAL-GUTENBERG.md
+- Search widget editor configuration: https://mangrove.undrr.org/llms-search-widget.txt
+- Editorial manual: https://mangrove.undrr.org/llms-editorial-manual.txt
+- Full component/library manifest: https://mangrove.undrr.org/llms.txt
+- Report a problem with this guide: https://github.com/PreventionWeb/undrr-mangrove/issues
