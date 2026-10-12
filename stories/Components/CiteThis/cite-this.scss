@@ -45,6 +45,20 @@
     }
   }
 
+  // Quieter trigger for pages where Cite this sits beside other page
+  // actions such as ShareButtons.
+  &--secondary &__trigger {
+    background: transparent;
+    border: 2px solid rgb(var(--mg-color-interactive));
+    color: rgb(var(--mg-color-interactive));
+
+    &:hover {
+      background: rgb(var(--mg-color-interactive));
+      color: rgb(var(--mg-color-white));
+      filter: none;
+    }
+  }
+
   &__dialog {
     inline-size: min(calc(100% - 2rem), 44rem);
     max-block-size: calc(100vh - 2rem);
@@ -139,8 +153,8 @@
   & &__text {
     margin: 0;
     padding: var(--mg-spacing-150) var(--mg-spacing-200);
-    background: rgb(var(--mg-color-neutral-50) / 0.5);
-    border: 1px solid rgb(var(--mg-color-neutral-200));
+    background: rgb(var(--mg-color-neutral-25));
+    border: 1px solid rgb(var(--mg-color-neutral-300) / 0.4);
     border-radius: var(--mg-radius-form-input);
     box-shadow: none;
     color: rgb(var(--mg-color-neutral-800));
@@ -188,6 +202,15 @@
     &:hover {
       background: rgb(var(--mg-color-interactive));
       color: rgb(var(--mg-color-white));
+    }
+
+    &:not(.mg-cite-this__copy-link) {
+      background: rgb(var(--mg-color-interactive));
+      color: rgb(var(--mg-color-white));
+
+      &:hover {
+        filter: brightness(0.92);
+      }
     }
 
     &:active {

@@ -344,11 +344,22 @@ test('schema people with family and given names are exported inverted', () => {
   expect(fields.authors).toEqual(['Schoennagel, Tania', 'UNDRR']);
 });
 
-test('export links are opt-in, downloadable and announce an export event', () => {
+test('export links are on by default, can be turned off and announce an export event', () => {
   const plain = fixture('data-mg-cite-this-title="Report"');
   mgCiteThis(plain);
-  expect(plain.querySelector('.mg-cite-this__export')).toBeNull();
+  expect(
+    [...plain.querySelectorAll('.mg-cite-this__export')].map(
+      link => link.dataset.mgCiteThisFormat
+    )
+  ).toEqual(['ris', 'bibtex']);
   mgCiteThisDestroy(plain);
+
+  const off = fixture(
+    'data-mg-cite-this-title="Report" data-mg-cite-this-export="none"'
+  );
+  mgCiteThis(off);
+  expect(off.querySelector('.mg-cite-this__exports')).toBeNull();
+  mgCiteThisDestroy(off);
 
   const element = fixture(
     'data-mg-cite-this-title="Hazard profiles" data-mg-cite-this-year="2025" data-mg-cite-this-type="report" data-mg-cite-this-export="bibtex ris unknown ris" data-mg-cite-this-ris-label="RIS file"'
@@ -387,4 +398,58 @@ test('an editorial citation offers exports only with configured fields', () => {
     configured.querySelector('[data-mg-cite-this-text]')
   ).toHaveTextContent('Approved.');
   expect(configured.querySelector('.mg-cite-this__export')).not.toBeNull();
+});
+
+test('Copy link copies the citation URL with its own feedback and event', async () => {
+  const element = fixture(
+    'data-mg-cite-this-title="Report" data-mg-cite-this-url="https://www.undrr.org/report?id=42" data-mg-cite-this-copy-link-label="Copier le lien"'
+  );
+  const writeText = jest.fn().mockResolvedValue();
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText },
+  });
+  const events = [];
+  element.addEventListener('mg-cite-this:copy-link', event =>
+    events.push(event.detail)
+  );
+  element.addEventListener('mg-cite-this:copy', () => events.push('citation'));
+  mgCiteThis(element);
+  const button = element.querySelector('.mg-cite-this__copy-link');
+  expect(button).toHaveTextContent('Copier le lien');
+  button.click();
+  await Promise.resolve();
+  expect(writeText).toHaveBeenCalledWith('https://www.undrr.org/report?id=42');
+  expect(
+    element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-status]')
+  ).toHaveTextContent('Link copied');
+  expect(events).toEqual([expect.objectContaining({ source: 'metadata' })]);
+});
+
+test('a failed link copy is reported against the link', async () => {
+  const element = fixture('data-mg-cite-this-title="Report"');
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText: jest.fn().mockRejectedValue(new Error('denied')) },
+  });
+  const errors = [];
+  element.addEventListener('mg-cite-this:copy-error', event =>
+    errors.push(event.detail.target)
+  );
+  mgCiteThis(element);
+  element.querySelector('.mg-cite-this__copy-link').click();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(errors).toEqual(['link']);
+  expect(
+    element.querySelector('.mg-cite-this__dialog [data-mg-cite-this-status]')
+  ).toHaveTextContent('Select the link in the citation');
+});
+
+test('Copy link can be turned off', () => {
+  const element = fixture(
+    'data-mg-cite-this-title="Report" data-mg-cite-this-copy-link="false"'
+  );
+  mgCiteThis(element);
+  expect(element.querySelector('.mg-cite-this__copy-link')).toBeNull();
 });

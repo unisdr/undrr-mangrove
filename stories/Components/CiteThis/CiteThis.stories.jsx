@@ -11,6 +11,8 @@ function CitationExample({
   url,
   type,
   exportFormats,
+  copyLink,
+  variant,
 }) {
   const ref = useRef(null);
   useEffect(() => {
@@ -26,12 +28,14 @@ function CitationExample({
     url,
     type,
     exportFormats,
+    copyLink,
+    variant,
   ]);
 
   return (
     <div
       ref={ref}
-      className="mg-cite-this"
+      className={`mg-cite-this${variant ? ` mg-cite-this--${variant}` : ''}`}
       data-mg-cite-this
       data-mg-cite-this-citation={citation}
       data-mg-cite-this-author={author}
@@ -42,6 +46,7 @@ function CitationExample({
       data-mg-cite-this-url={url}
       data-mg-cite-this-type={type}
       data-mg-cite-this-export={exportFormats}
+      data-mg-cite-this-copy-link={copyLink}
     >
       <details className="mg-cite-this__fallback">
         <summary className="mg-cite-this__summary">Cite this</summary>
@@ -113,7 +118,6 @@ export const Metadata = {
       year="2025"
       title="Hazard Information Profiles: 2025 version"
       type="report"
-      exportFormats="ris bibtex"
       url="https://www.preventionweb.net/publication/documents-and-publications/hazard-information-profiles-hips-2025-version"
     />
   ),
@@ -134,7 +138,7 @@ export const SchemaMetadata = {
           publisher: { '@type': 'Organization', name: 'UNDRR' },
         })}
       </script>
-      <CitationExample exportFormats="ris bibtex" />
+      <CitationExample />
     </>
   ),
 };
@@ -155,8 +159,32 @@ export const LongCitation = {
       year="2025"
       title="Hazard Information Profiles: 2025 version, technical reference and supporting material for all hazard groups"
       type="report"
-      exportFormats="ris bibtex"
       url="https://www.preventionweb.net/publication/documents-and-publications/hazard-information-profiles-hips-2025-version"
+    />
+  ),
+};
+
+export const CitationOnly = {
+  name: 'Citation only',
+  render: () => (
+    <CitationExample
+      author="United Nations Office for Disaster Risk Reduction"
+      year="2017"
+      title="Response"
+      publisher="UNDRR"
+      exportFormats="none"
+      copyLink="false"
+    />
+  ),
+};
+
+export const Secondary = {
+  name: 'Secondary trigger',
+  render: () => (
+    <CitationExample
+      variant="secondary"
+      site="UNDRR"
+      title="Understanding disaster risk"
     />
   ),
 };

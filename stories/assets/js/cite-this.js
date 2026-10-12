@@ -286,9 +286,10 @@ export function toBibtex(fields) {
     .join(',\n')}\n}\n`;
 }
 
+// Both formats are offered unless the site lists its own or sets "none".
 function exportFormats(element, citation) {
   if (!citation.fields) return [];
-  return (element.dataset.mgCiteThisExport || '')
+  return (element.dataset.mgCiteThisExport ?? 'ris bibtex')
     .toLowerCase()
     .split(/[\s,]+/)
     .filter(
@@ -437,6 +438,15 @@ export function mgCiteThis(scope = document) {
     const copy = dialogContent.querySelector('[data-mg-cite-this-copy]');
     const status = dialogContent.querySelector('[data-mg-cite-this-status]');
     if (copy) copy.hidden = false;
+    let copyLink;
+    if (copy && element.dataset.mgCiteThisCopyLink !== 'false') {
+      copyLink = doc.createElement('button');
+      copyLink.type = 'button';
+      copyLink.className = 'mg-cite-this__copy mg-cite-this__copy-link';
+      copyLink.textContent =
+        element.dataset.mgCiteThisCopyLinkLabel || 'Copy link';
+      copy.after(copyLink);
+    }
     const exports = exportFormats(element, citation).map(format => {
       const { label, extension, mime, build } = EXPORT_FORMATS[format];
       const link = doc.createElement('a');
@@ -476,29 +486,42 @@ export function mgCiteThis(scope = document) {
       trigger.focus();
     };
     const closeDialog = () => dialog.close();
-    const onCopy = async () => {
+    const announce = (message, delay) => {
+      if (status) status.textContent = message;
+      clearTimeout(statusTimer);
+      statusTimer = setTimeout(() => {
+        if (status) status.textContent = '';
+      }, delay);
+    };
+    const copyText = async (text, copiedLabel, failedLabel, eventName) => {
       try {
-        await navigator.clipboard.writeText(citation.text);
-        if (status)
-          status.textContent =
-            element.dataset.mgCiteThisCopiedLabel || 'Citation copied';
-        emit(element, 'copy', citation);
-        clearTimeout(statusTimer);
-        statusTimer = setTimeout(() => {
-          if (status) status.textContent = '';
-        }, 3000);
+        await navigator.clipboard.writeText(text);
+        announce(copiedLabel, 3000);
+        emit(element, eventName, citation);
       } catch {
-        if (status)
-          status.textContent =
-            element.dataset.mgCiteThisFailedLabel ||
-            'Copy failed. Select the citation and copy it manually.';
-        emit(element, 'copy-error', citation);
-        clearTimeout(statusTimer);
-        statusTimer = setTimeout(() => {
-          if (status) status.textContent = '';
-        }, 5000);
+        announce(failedLabel, 5000);
+        emit(element, 'copy-error', citation, {
+          target: eventName === 'copy' ? 'citation' : 'link',
+        });
       }
     };
+    const onCopy = () =>
+      copyText(
+        citation.text,
+        element.dataset.mgCiteThisCopiedLabel || 'Citation copied',
+        element.dataset.mgCiteThisFailedLabel ||
+          'Copy failed. Select the citation and copy it manually.',
+        'copy'
+      );
+    // The citation's own locator, not a shortlink, so the copied link lasts.
+    const onCopyLink = () =>
+      copyText(
+        citation.url,
+        element.dataset.mgCiteThisLinkCopiedLabel || 'Link copied',
+        element.dataset.mgCiteThisLinkFailedLabel ||
+          'Copy failed. Select the link in the citation and copy it manually.',
+        'copy-link'
+      );
     const onExport = event => {
       const format = event.target.closest('[data-mg-cite-this-format]')?.dataset
         .mgCiteThisFormat;
@@ -509,12 +532,14 @@ export function mgCiteThis(scope = document) {
     close.addEventListener('click', closeDialog);
     dialog.addEventListener('close', onClose);
     copy?.addEventListener('click', onCopy);
+    copyLink?.addEventListener('click', onCopyLink);
     instances.set(element, () => {
       clearTimeout(statusTimer);
       trigger.removeEventListener('click', onOpen);
       close.removeEventListener('click', closeDialog);
       dialog.removeEventListener('close', onClose);
       copy?.removeEventListener('click', onCopy);
+      copyLink?.removeEventListener('click', onCopyLink);
       dialogContent.removeEventListener('click', onExport);
       if (dialog.open) dialog.close();
       trigger.remove();

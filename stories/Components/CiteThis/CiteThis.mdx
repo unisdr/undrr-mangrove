@@ -111,17 +111,28 @@ For Drupal behaviors or client-side navigation, call `mgCiteThis(context)` after
 
 All strings can be translated in the server markup. For the empty-marker version, set `data-mg-cite-this-label` and `data-mg-cite-this-copy-label` for its generated button labels. Set `data-mg-cite-this-close-label` for the icon button's accessible name, plus `data-mg-cite-this-copied-label` and `data-mg-cite-this-failed-label` for feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation is set in the body typeface inside a tinted box, with its title in quotation marks, and remains selectable. URLs in the citation, including those in an editorial citation, become links; the copied text is the same plain text as the rendered citation. Earlier markup put `mg-code` on the citation element; the component now overrides it, so existing markup does not need to change.
 
-## Reference manager export
+## Copy link and reference manager export
 
-Add `data-mg-cite-this-export="ris bibtex"` to offer **Download RIS** (for EndNote, Zotero and Mendeley) and **Download BibTeX** links under the citation. Either format can be listed alone, and the order of the list sets the order of the links. Exports are off unless requested, so existing integrations do not change.
+Below the Copy citation button, the dialog offers:
+
+- **Copy link**, which copies the citation's URL: the configured URL, a matching Schema.org work's URL, or the canonical page URL. It is not the shortlink that ShareButtons copies, because a citation needs a lasting locator. Set `data-mg-cite-this-copy-link="false"` to remove it.
+- **Download RIS** (for EndNote, Zotero and Mendeley) and **Download BibTeX** links. Both are on by default. Set `data-mg-cite-this-export` to `ris` or `bibtex` to offer one (a list sets the order), or to `none` to remove them.
+
+<Canvas of={CiteThisStories.CitationOnly} />
 
 The files are generated in the browser from the same fields as the citation: creators, title, publisher, year, URL and access date. Set `data-mg-cite-this-type` to `report`, `book` or `webpage` to choose the record type. Otherwise a matching Schema.org `Report` or `Book` sets it, and anything else is exported as a web page. Creators from configured fields, and Schema.org organisations, are exported as single corporate names. A Schema.org `Person` with `familyName` and `givenName` is exported as "Family, Given". An editorial citation is offered for export only when configured fields are also supplied, because its wording cannot be parsed back into fields.
 
-Set `data-mg-cite-this-ris-label` and `data-mg-cite-this-bibtex-label` to translate the link text.
+Translate the labels with `data-mg-cite-this-copy-link-label`, `data-mg-cite-this-link-copied-label`, `data-mg-cite-this-link-failed-label`, `data-mg-cite-this-ris-label` and `data-mg-cite-this-bibtex-label`.
+
+## Secondary trigger
+
+Add `mg-cite-this--secondary` to the element for an outlined trigger. Use it where Cite this sits beside quieter page actions, such as ShareButtons; see the [Page actions pattern](?path=/docs/patterns-page-actions--docs).
+
+<Canvas of={CiteThisStories.Secondary} />
 
 ## Analytics
 
-The element dispatches bubbling `mg-cite-this:open`, `mg-cite-this:copy` (after successful clipboard write), `mg-cite-this:copy-error` and `mg-cite-this:export` events. The export event adds `detail.format` (`ris` or `bibtex`). Each event has `detail.source` (`provided`, `metadata`, `schema`, or `page`) and a query-free `detail.url`. The consuming site maps these to GA4 through its consent-aware analytics setup. Mangrove itself sends nothing to Google.
+The element dispatches bubbling `mg-cite-this:open`, `mg-cite-this:copy` and `mg-cite-this:copy-link` (each after a successful clipboard write), `mg-cite-this:copy-error` and `mg-cite-this:export` events. The copy error event adds `detail.target` (`citation` or `link`), and the export event adds `detail.format` (`ris` or `bibtex`). Each event has `detail.source` (`provided`, `metadata`, `schema`, or `page`) and a query-free `detail.url`. The consuming site maps these to GA4 through its consent-aware analytics setup. Mangrove itself sends nothing to Google.
 
 ```js
 document.addEventListener('mg-cite-this:copy', event => {
@@ -138,6 +149,6 @@ The enhanced button opens a native modal dialog. Focus moves to its title, stays
 
 ## Changelog
 
-- **1.2.0**, 2026-10-12: Optional RIS and BibTeX downloads for reference managers, enabled with `data-mg-cite-this-export`, with a `data-mg-cite-this-type` record type and an `mg-cite-this:export` analytics event.
+- **1.2.0**, 2026-10-12: The dialog adds Copy link and RIS and BibTeX downloads for reference managers, on by default and removable with `data-mg-cite-this-copy-link` and `data-mg-cite-this-export`. Adds a `data-mg-cite-this-type` record type, `mg-cite-this:copy-link` and `mg-cite-this:export` analytics events, a `target` on copy errors, and an `mg-cite-this--secondary` outlined trigger. Copy citation is a compact filled button again, as the primary action beside the outlined Copy link, and the citation box uses the same surface as the ShareButtons link. A new Page actions pattern places Cite this beside ShareButtons.
 - **1.1.0**, 2026-10-12: Citation reads as prose rather than code: body typeface in a tinted bordered box, linked URLs, a compact outlined Copy citation button and even dialog padding. The Matching Schema.org work story now matches its JSON-LD work instead of falling back to the page citation.
 - **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, analytics events, labelled Storybook examples, and a zero-configuration HTML marker.

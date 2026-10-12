@@ -1,0 +1,45 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './PageActions.stories';
+
+<Meta of={Stories} />
+
+# Page actions
+
+How [ShareButtons](?path=/docs/components-buttons-sharebuttons--docs) and [Cite this](?path=/docs/components-cite-this--docs) sit together at the end of an article, publication, terminology or HIP page. This is a composition of existing components and utility classes, not a new component. Each component still works alone, and the publishing site decides which ones a page needs.
+
+<Canvas of={Stories.ShareAndCite} />
+
+## Why two components
+
+They meet different needs. Share this sends the page to other people: social networks, email, a QR code, or the page's shortlink. Cite this is for referencing the work in the reader's own writing: a formatted citation, the work's lasting URL, and RIS or BibTeX files for reference managers. Cite this does not repeat the social buttons. Its one share-like action, Copy link, copies the citation's URL rather than the shortlink, because a citation needs a locator that lasts.
+
+## Layout
+
+- Stack the two in one container with `mg-u-flex mg-u-flex-column mg-u-gap-200`, Share this first.
+- Add `mg-cite-this--secondary` to Cite this. Its outlined trigger sits more evenly with the quiet ShareButtons icons than the default filled button.
+- When a page has only one of them, use the component alone. The default filled Cite this trigger suits a page where citing is the main action, such as a publication.
+
+```html
+<div class="mg-u-flex mg-u-flex-column mg-u-gap-200">
+  <section data-mg-share-buttons data-main-label="Share this"></section>
+  <div
+    class="mg-cite-this mg-cite-this--secondary"
+    data-mg-cite-this
+    data-mg-cite-this-title="Hazard Information Profiles: 2025 version"
+    data-mg-cite-this-author="United Nations Office for Disaster Risk Reduction"
+    data-mg-cite-this-year="2025"
+    data-mg-cite-this-publisher="UNDRR"
+    data-mg-cite-this-type="report"
+  ></div>
+</div>
+```
+
+For a citation that stays readable without JavaScript, render the full Cite this markup shown in its documentation.
+
+## Share only
+
+<Canvas of={Stories.ShareOnly} />
+
+## Cite only
+
+<Canvas of={Stories.CiteOnly} />
