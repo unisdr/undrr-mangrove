@@ -111,6 +111,7 @@ export const MIN_PROPERTIES = {
   'components-hero-hero': 7,
   'components-icons': 1,
   'components-images-author-image': 3,
+  'components-loader': 1,
   'components-navigation-drawer': 2,
   'components-navigation-megamenu': 2,
   'components-navigation-on-this-page-nav': 1,
@@ -146,6 +147,7 @@ export const OWNERS = {
   'components-forms-segmented-control': ['--mg-segmented-control-'],
   'components-hero-hero': ['--mg-hero-'],
   'components-icons': ['--mg-icon-svg'],
+  'components-loader': ['--mg-loader-'],
   'components-navigation-drawer': ['--mg-drawer-'],
   'components-navigation-megamenu': ['--mg-mega-'],
   'components-navigation-on-this-page-nav': ['--mg-on-this-page-nav-'],
@@ -291,6 +293,10 @@ export const PROPERTY_DOCS = {
     "Indent of a nested group on .mg-tree--guides, measured from the parent row. Only .mg-tree--guides .mg-tree__group declares it, so it has no value at rest and no `default` here; set it on that element, because the component's own declaration beats an inherited one.",
   '--mg-tree-guide-offset':
     "Distance from the parent row to the dashed guide line on .mg-tree--guides. The group padding gives the same amount back, so child rows keep their position. Only .mg-tree--guides .mg-tree__group declares it, so it has no value at rest and no `default` here; set it on that element, because the component's own declaration beats an inherited one.",
+
+  // Loader
+  '--mg-loader-duration':
+    'Time for one turn of the spinner. Under reduced motion the spinner turns at three times this duration instead of stopping.',
 
   // Notice
   '--mg-notice-bg':

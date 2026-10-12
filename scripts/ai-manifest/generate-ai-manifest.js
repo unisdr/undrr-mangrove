@@ -591,7 +591,10 @@ function buildSampleProps(React) {
         'This section spans the full viewport width.'
       ),
     },
-    Loader: { label: 'Loading content' },
+    // Decorative: the announced form renders its status region empty and
+    // adds the label after mount, so a static render would publish an empty
+    // region. The announced markup is a supplemental example instead.
+    Loader: { decorative: true },
     ShowMore: {
       data: [
         {

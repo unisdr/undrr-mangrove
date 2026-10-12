@@ -1860,31 +1860,30 @@ npm run build</code></pre>
   },
   'components-loader': {
     summary:
-      'Animated loading spinner: a default 40px/96px size for pages and regions, and a 1em inline mg-loader--small size in currentColor for text, buttons and form fields.',
+      'Animated loading spinner: a default 40px/96px size for pages and regions, and a 1em mg-loader--inline size in currentColor for text, buttons and form fields.',
     description:
-      'Animated loading spinner. The default size is 40px on mobile and 96px on desktop. mg-loader--small is a 1em inline-block spinner in currentColor that sits on the text baseline, follows the font size of its context, does not grow on desktop and fits inside an mg-button next to its label without changing the button height. The announced form carries role="status" (implicitly aria-live="polite") and contains the label as visually hidden text in an mg-u-sr-only span. A status region inserted already filled is often not announced, so a loader added by script should be decorative (aria-hidden="true", React announce={false}) with the message written to a live region already in the page. Do not add aria-busy to the loader; put it on the region whose content is loading.',
-    cssClasses: [
-      'mg-loader',
-      'mg-loader--small',
-      'mg-loader-group',
-      'mg-loader-group__label',
-    ],
+      'Animated loading spinner in the theme interactive colour, 40px on mobile and 96px on desktop. mg-loader--inline is a 1em inline-block span in currentColor that sits in running text, follows the font size of its context, does not grow on desktop and fits inside an mg-button next to its label without changing the button height. The announced form carries role="status" (implicitly aria-live="polite") and contains the label as visually hidden text in an mg-u-sr-only span. A status region inserted already filled is often not announced, so a loader added by script should be decorative (aria-hidden="true", React decorative) with the start and the outcome written to a live region already in the page; the React component instead inserts the region empty and adds the label 100ms after mount. Do not add aria-busy to the loader; put it on the region whose content is loading.',
+    cssClasses: ['mg-loader', 'mg-loader--inline'],
     supplementalExamples: [
       {
-        name: 'Small spinner inside a button',
+        name: 'Announced loader already in the page',
+        html: `<div class="mg-loader" role="status">
+  <span class="mg-u-sr-only">Loading</span>
+</div>`,
+      },
+      {
+        name: 'Inline spinner inside a busy button',
         html: `<button type="button" class="mg-button mg-button-primary" aria-disabled="true">
-  <span class="mg-loader mg-loader--small" aria-hidden="true"></span>
+  <span class="mg-loader mg-loader--inline" aria-hidden="true"></span>
   Saving…
 </button>`,
       },
       {
         name: 'Decorative loader announced through a persistent live region',
         html: `<div id="status-message" role="status" class="mg-u-sr-only">Loading results</div>
-<div class="mg-loader" aria-hidden="true"></div>`,
-      },
-      {
-        name: 'Small spinner with a visible label',
-        html: `<span class="mg-loader-group" role="status"><span class="mg-loader mg-loader--small" aria-hidden="true"></span> <span class="mg-loader-group__label">Loading results…</span></span>`,
+<div class="results" aria-busy="true">
+  <div class="mg-loader" aria-hidden="true"></div>
+</div>`,
       },
     ],
   },

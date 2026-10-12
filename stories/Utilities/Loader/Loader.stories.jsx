@@ -1,36 +1,76 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { Loader } from './Loader';
+import { TextInput } from '../../Components/Forms/TextInput/TextInput';
 
 export default {
   title: 'Components/Loader',
   component: Loader,
   argTypes: {
-    size: { control: 'inline-radio', options: ['default', 'small'] },
-    as: { control: 'inline-radio', options: ['div', 'span'] },
+    size: { control: 'inline-radio', options: ['default', 'inline'] },
   },
 };
 
+// Wait this long before showing a spinner or announcing anything, so quick
+// responses do not flash a spinner or interrupt the screen reader.
+const SHOW_DELAY_MS = 300;
+
+/**
+ * Runs a fake request. `phase` is idle, waiting (the show delay), loading or
+ * done; `finish` decides how it ends.
+ */
+function useSimulatedRequest({ duration = 1500, outcome = 'success' } = {}) {
+  const [phase, setPhase] = useState('idle');
+  const [result, setResult] = useState(null);
+  const timers = useRef([]);
+
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+
+  const start = () => {
+    timers.current.forEach(clearTimeout);
+    setResult(null);
+    setPhase('waiting');
+    timers.current = [
+      setTimeout(() => setPhase('loading'), SHOW_DELAY_MS),
+      setTimeout(() => {
+        setPhase('done');
+        setResult(outcome);
+      }, duration),
+    ];
+  };
+
+  return {
+    phase,
+    result,
+    start,
+    busy: phase === 'waiting' || phase === 'loading',
+  };
+}
+
 export const DefaultLoader = {
-  render: () => <Loader />,
+  render: args => <Loader {...args} />,
   name: 'Loader',
 };
 
-export const Small = {
-  args: { size: 'small' },
+export const Inline = {
+  args: { size: 'inline' },
 };
 
 export const InlineInText = {
-  name: 'Small, inline in text',
+  name: 'Inline, in text',
   render: () => (
     <div>
       <p>
-        Fetching the latest figures <Loader size="small" announce={false} />{' '}
-        from the Sendai Framework monitor.
+        Body text: fetching the latest figures{' '}
+        <Loader size="inline" decorative /> from the Sendai Framework monitor.
       </p>
-      <p className="mg-u-font-size-600">
-        Larger text <Loader size="small" announce={false} /> gets a larger
-        spinner.
+      <p className="mg-u-font-size-200">
+        Small text: fetching the latest figures{' '}
+        <Loader size="inline" decorative /> from the monitor.
       </p>
+      <h2>
+        Heading <Loader size="inline" decorative /> with a spinner
+      </h2>
       <p
         style={{
           backgroundColor: 'rgb(var(--mg-color-neutral-800))',
@@ -38,8 +78,8 @@ export const InlineInText = {
           padding: 'var(--mg-spacing-100)',
         }}
       >
-        On a dark background <Loader size="small" announce={false} /> the
-        spinner takes the text colour.
+        On a dark background <Loader size="inline" decorative /> the spinner
+        takes the text colour.
       </p>
     </div>
   ),
@@ -53,60 +93,93 @@ const BUTTON_VARIANTS = [
     className: 'mg-button-secondary mg-button-outline',
     name: 'Secondary outline',
   },
+  { className: 'mg-button-cta', name: 'CTA' },
 ];
 
 export const InButtons = {
-  name: 'Small, in buttons',
+  name: 'Inline, in buttons',
   render: () => (
-    <div className="mg-buttons">
-      {BUTTON_VARIANTS.map(variant => (
-        <button
-          key={variant.name}
-          type="button"
-          className={`mg-button ${variant.className}`}
-          aria-disabled="true"
-        >
-          <Loader size="small" announce={false} />
-          Saving…
-        </button>
-      ))}
-      <button type="button" className="mg-button mg-button-primary">
-        Save
-      </button>
-    </div>
+    <table className="mg-table">
+      <thead>
+        <tr>
+          <th scope="col">Variant</th>
+          <th scope="col">Resting</th>
+          <th scope="col">Busy button</th>
+          <th scope="col">Busy link</th>
+        </tr>
+      </thead>
+      <tbody>
+        {BUTTON_VARIANTS.map(variant => (
+          <tr key={variant.name}>
+            <th scope="row">{variant.name}</th>
+            <td>
+              <button
+                type="button"
+                className={`mg-button ${variant.className}`}
+              >
+                Save
+              </button>
+            </td>
+            <td>
+              <button
+                type="button"
+                className={`mg-button ${variant.className}`}
+                aria-disabled="true"
+              >
+                <Loader size="inline" decorative />
+                Saving…
+              </button>
+            </td>
+            <td>
+              <a
+                href="#loader-demo"
+                className={`mg-button ${variant.className}`}
+                aria-disabled="true"
+              >
+                <Loader size="inline" decorative />
+                Loading…
+              </a>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   ),
   parameters: {
     docs: {
       description: {
         story:
-          'The spinner is a decorative flex item next to the visible label, so the button keeps its height. The last button shows the resting height for comparison.',
+          'Each row compares a resting button with the same button while busy, as a `button` and as a link. The spinner is a decorative flex item next to the visible label, so the height does not change. The button stays focusable with `aria-disabled="true"`.',
       },
     },
   },
 };
 
 export const NextToField = {
-  name: 'Small, next to a form field',
+  name: 'Inline, next to a form field',
   render: () => (
-    <div className="mg-form-field">
-      <label className="mg-form-label" htmlFor="loader-autocomplete">
-        Country
-      </label>
+    <div>
       <div
         style={{
-          alignItems: 'center',
+          alignItems: 'end',
           display: 'flex',
-          gap: 'var(--mg-spacing-50)',
+          gap: 'var(--mg-spacing-75)',
         }}
       >
-        <input
-          className="mg-form-input"
+        <TextInput
           id="loader-autocomplete"
-          type="text"
+          label="Country"
           defaultValue="Indon"
           autoComplete="off"
         />
-        <Loader size="small" announce={false} />
+        <span style={{ paddingBlockEnd: 'var(--mg-spacing-100)' }}>
+          <Loader size="inline" decorative />
+        </span>
+      </div>
+      <h3>Drupal AJAX throbber</h3>
+      <div className="ajax-progress ajax-progress--throbber">
+        <span className="mg-loader mg-loader--inline" aria-hidden="true" />{' '}
+        <span className="ajax-progress__message">Please wait…</span>
       </div>
     </div>
   ),
@@ -114,64 +187,160 @@ export const NextToField = {
     docs: {
       description: {
         story:
-          'The case of an autocomplete or AJAX throbber. The spinner is decorative; announce the result (for example the number of suggestions) through a live region that is already in the page.',
+          'The autocomplete and AJAX throbber case. The spinner is decorative; Drupal announces the message with `Drupal.announce()`, and other pages should announce the result (for example the number of suggestions) through a live region that is already in the page.',
       },
     },
   },
 };
 
-export const WithVisibleLabel = {
-  name: 'Small, with a visible label',
-  args: { size: 'small', showLabel: true, label: 'Loading results…' },
-};
-
-function LiveRegionExample() {
-  const [loading, setLoading] = useState(false);
+function AnnouncerExample() {
+  const { phase, start, busy } = useSimulatedRequest({ duration: 2000 });
   const [message, setMessage] = useState('');
-  const timer = useRef(null);
 
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const start = () => {
-    setLoading(true);
-    setMessage('Loading results');
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      setLoading(false);
-      setMessage('12 results loaded');
-    }, 3000);
-  };
+  useEffect(() => {
+    if (phase === 'loading') setMessage('Loading results');
+    if (phase === 'done') setMessage('Showing 12 results');
+  }, [phase]);
 
   return (
     <div>
-      <div role="status" className="mg-u-sr-only">
+      <div role="status" className="mg-u-sr-only" data-testid="announcer">
         {message}
       </div>
       <button
         type="button"
         className="mg-button mg-button-primary"
-        onClick={start}
-        aria-disabled={loading || undefined}
+        onClick={busy ? undefined : start}
+        aria-disabled={busy || undefined}
       >
-        {loading && <Loader size="small" announce={false} />}
-        {loading ? 'Loading…' : 'Load results'}
+        Load results
       </button>
-      <div aria-busy={loading || undefined} style={{ minHeight: '6rem' }}>
-        {loading ? <Loader announce={false} /> : <p>{message}</p>}
+      <div
+        aria-busy={busy || undefined}
+        data-testid="results"
+        style={{ minHeight: '7rem', paddingBlock: 'var(--mg-spacing-100)' }}
+      >
+        {phase === 'loading' && <Loader decorative />}
+        {phase === 'done' && <p>12 results.</p>}
       </div>
     </div>
   );
 }
 
 export const AnnouncedThroughLiveRegion = {
-  name: 'Announced through a live region',
-  render: () => <LiveRegionExample />,
+  name: 'Decorative, announced through a live region',
+  render: () => <AnnouncerExample />,
   parameters: {
     docs: {
       description: {
         story:
-          'The `role="status"` region is in the page from the start and the spinners are decorative, so the start and the end of loading are announced even though the spinners are inserted by script.',
+          'The `role="status"` region is in the page from the start and the spinner is decorative. The spinner and the "Loading results" announcement wait 300ms, so a fast response shows and says nothing; the outcome gets its own message. `aria-busy` is set on the results while they load and cleared at the end.',
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const results = canvas.getByTestId('results');
+    await userEvent.click(canvas.getByRole('button', { name: 'Load results' }));
+    await expect(results).toHaveAttribute('aria-busy', 'true');
+    await waitFor(
+      () =>
+        expect(canvas.getByTestId('announcer')).toHaveTextContent(
+          'Loading results'
+        ),
+      { timeout: 1000 }
+    );
+    await waitFor(() => expect(results).not.toHaveAttribute('aria-busy'), {
+      timeout: 3000,
+    });
+    await expect(canvas.getByTestId('announcer')).toHaveTextContent(
+      'Showing 12 results'
+    );
+  },
+};
+
+function InlineLoadingExample({ outcome }) {
+  const { phase, result, start, busy } = useSimulatedRequest({ outcome });
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (phase === 'loading') setMessage('Saving…');
+    if (result === 'success') setMessage('Saved');
+    if (result === 'error') setMessage('Could not save. Try again.');
+  }, [phase, result]);
+
+  return (
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 'var(--mg-spacing-100)',
+      }}
+    >
+      <button
+        type="button"
+        className="mg-button mg-button-primary"
+        onClick={busy ? undefined : start}
+        aria-disabled={busy || undefined}
+      >
+        Save changes
+      </button>
+      {/* The status region is always rendered, so its changes are announced. */}
+      <span role="status">
+        {phase === 'loading' && (
+          <>
+            <Loader size="inline" decorative /> {message}
+          </>
+        )}
+        {phase === 'done' && result === 'error' && (
+          <>
+            <span
+              className="mg-icon mg-icon-exclamation-triangle"
+              aria-hidden="true"
+            />{' '}
+            {message}
+          </>
+        )}
+        {phase === 'done' && result === 'success' && message}
+      </span>
+    </div>
+  );
+}
+
+export const InlineLoadingPattern = {
+  name: 'Inline loading pattern',
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--mg-spacing-200)' }}>
+      <InlineLoadingExample outcome="success" />
+      <InlineLoadingExample outcome="error" />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A composed pattern, not a component: an inline spinner with visible status text, ending in a success or an error message. The text sits in a `role="status"` region that is in the page from the start, so each change is announced; the spinner and the icon are decorative. The first example succeeds and the second fails.',
+      },
+    },
+  },
+};
+
+export const Rtl = {
+  name: 'Right to left',
+  render: () => (
+    <div dir="rtl" lang="ar">
+      <p>
+        جارٍ تحميل البيانات <Loader size="inline" decorative /> من الخادم.
+      </p>
+      <button
+        type="button"
+        className="mg-button mg-button-primary"
+        aria-disabled="true"
+      >
+        <Loader size="inline" decorative />
+        جارٍ الحفظ…
+      </button>
+    </div>
+  ),
 };

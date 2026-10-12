@@ -4,94 +4,85 @@
  *
  * Renders a CSS-only spinning circle inside a `role="status"` live region.
  * The label is visually hidden text inside the region, so screen readers
- * announce it as the region's content. The compact `small` size sits inline
- * with text and inside buttons, and the decorative mode (`announce={false}`)
- * hides the spinner from assistive technology for pages that announce the
- * loading state through their own live region.
+ * announce it as the region's content. The `inline` size is a 1em spinner
+ * that sits in a line of text or inside a button, and `decorative` hides the
+ * spinner from assistive technology for pages that announce the loading state
+ * through their own live region.
  *
  * @module Loader
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-const SIZE_CLASSES = {
-  default: '',
-  small: 'mg-loader--small',
-};
+/**
+ * How long the status region stays empty after it is inserted. A live region
+ * that arrives already filled is often not announced, so the label is added
+ * once the empty region has had time to register with assistive technology.
+ */
+export const LOADER_LABEL_DELAY_MS = 100;
 
 /**
  * Loader component.
  *
- * Displays an accessible loading spinner. The label is rendered as visually
- * hidden text (`mg-u-sr-only`) inside a `role="status"` region, which screen
- * readers announce politely. Put `aria-busy="true"` on the region whose
- * content is loading, not on the loader.
+ * Displays an accessible loading spinner. The status region is rendered
+ * empty and the label, visually hidden text (`mg-u-sr-only`), is added
+ * shortly after mount, so a loader inserted while the page is in use is
+ * announced. Put `aria-busy="true"` on the region whose content is loading,
+ * not on the loader.
  *
- * A status region that is inserted already filled is often not announced, so
- * a loader added to the page by script should either be decorative
- * (`announce={false}`) with the message sent to a live region that is already
- * in the page, or be inserted into such a region.
+ * The inline size renders a `span`, so it is valid inside a paragraph, a
+ * label or a button. Set `decorative` when the loading state is announced
+ * elsewhere or a visible label sits next to the spinner.
  *
  * @param {Object} props
- * @param {string} [props.label='Loading']   Text announced by screen readers, or shown next to the spinner with `showLabel`
- * @param {string} [props.size='default']    `default` for page and region overlays, `small` for a 1em spinner that sits inline with text
- * @param {string} [props.as]                Element to render: `div` or `span`. Defaults to `span` for the small size and `div` otherwise
- * @param {boolean} [props.announce=true]    Render a `role="status"` region with the label. Set to false when the page announces loading elsewhere
- * @param {boolean} [props.showLabel=false]  Show the label as visible text next to the spinner instead of visually hidden text
- * @param {string} [props.className='']      Additional CSS classes to apply to the outermost element
+ * @param {string} [props.label='Loading']     Visually hidden text announced by screen readers
+ * @param {string} [props.size='default']      `default` for pages and regions, `inline` for a 1em spinner in text and buttons
+ * @param {boolean} [props.decorative=false]   Hide the spinner from assistive technology, with no role and no label
+ * @param {string} [props.className='']        Additional CSS classes to apply
  */
 export function Loader({
   label = 'Loading',
   size = 'default',
-  as,
-  announce = true,
-  showLabel = false,
+  decorative = false,
   className = '',
 }) {
-  const Tag = as || (size === 'small' ? 'span' : 'div');
-  const spinnerClasses = ['mg-loader', SIZE_CLASSES[size]]
+  const [showLabel, setShowLabel] = useState(false);
+
+  useEffect(() => {
+    if (decorative) return undefined;
+    const timer = setTimeout(() => setShowLabel(true), LOADER_LABEL_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [decorative]);
+
+  const Tag = size === 'inline' ? 'span' : 'div';
+  const classes = [
+    'mg-loader',
+    size === 'inline' && 'mg-loader--inline',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
-  const statusProps = announce ? { role: 'status' } : { 'aria-hidden': true };
 
-  if (showLabel) {
-    const groupClasses = ['mg-loader-group', className]
-      .filter(Boolean)
-      .join(' ');
-    return (
-      <Tag className={groupClasses} {...statusProps}>
-        <span className={spinnerClasses} aria-hidden="true" />{' '}
-        <span className="mg-loader-group__label">{label}</span>
-      </Tag>
-    );
-  }
-
-  const classes = [spinnerClasses, className].filter(Boolean).join(' ');
-
-  if (!announce) {
+  if (decorative) {
     return <Tag className={classes} aria-hidden="true" />;
   }
 
   return (
     <Tag className={classes} role="status">
-      <span className="mg-u-sr-only">{label}</span>
+      {showLabel && <span className="mg-u-sr-only">{label}</span>}
     </Tag>
   );
 }
 
 Loader.propTypes = {
-  /** Text announced by screen readers, or shown next to the spinner with `showLabel` */
+  /** Visually hidden text announced by screen readers */
   label: PropTypes.string,
-  /** `default` for page and region overlays, `small` for a 1em spinner that sits inline with text */
-  size: PropTypes.oneOf(['default', 'small']),
-  /** Element to render. Defaults to `span` for the small size and `div` otherwise */
-  as: PropTypes.oneOf(['div', 'span']),
-  /** Render a `role="status"` region with the label. Set to false when the page announces loading elsewhere */
-  announce: PropTypes.bool,
-  /** Show the label as visible text next to the spinner instead of visually hidden text */
-  showLabel: PropTypes.bool,
-  /** Additional CSS classes to apply to the outermost element */
+  /** `default` for pages and regions, `inline` for a 1em spinner in text and buttons */
+  size: PropTypes.oneOf(['default', 'inline']),
+  /** Hide the spinner from assistive technology, with no role and no label */
+  decorative: PropTypes.bool,
+  /** Additional CSS classes to apply */
   className: PropTypes.string,
 };
 
