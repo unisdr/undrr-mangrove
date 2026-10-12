@@ -178,13 +178,16 @@ export const CitationOnly = {
   ),
 };
 
-export const Secondary = {
-  name: 'Secondary trigger',
+export const Compact = {
+  name: 'Compact, beside ShareButtons',
   render: () => (
     <CitationExample
-      variant="secondary"
-      site="UNDRR"
-      title="Understanding disaster risk"
+      variant="compact"
+      author="United Nations Office for Disaster Risk Reduction"
+      publisher="UNDRR"
+      year="2025"
+      title="Hazard Information Profiles: 2025 version"
+      type="report"
     />
   ),
 };

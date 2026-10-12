@@ -111,11 +111,11 @@ For Drupal behaviors or client-side navigation, call `mgCiteThis(context)` after
 
 All strings can be translated in the server markup. For the empty-marker version, set `data-mg-cite-this-label` and `data-mg-cite-this-copy-label` for its generated button labels. Set `data-mg-cite-this-close-label` for the icon button's accessible name, plus `data-mg-cite-this-copied-label` and `data-mg-cite-this-failed-label` for feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation is set in the body typeface inside a tinted box, with its title in quotation marks, and remains selectable. URLs in the citation, including those in an editorial citation, become links; the copied text is the same plain text as the rendered citation. Earlier markup put `mg-code` on the citation element; the component now overrides it, so existing markup does not need to change.
 
-## Copy link and reference manager export
+## Copy citation URL and reference manager export
 
 Below the Copy citation button, the dialog offers:
 
-- **Copy link**, which copies the citation's URL: the configured URL, a matching Schema.org work's URL, or the canonical page URL. It is not the shortlink that ShareButtons copies, because a citation needs a lasting locator. Set `data-mg-cite-this-copy-link="false"` to remove it.
+- **Copy citation URL**, which copies the citation's URL: the configured URL, a matching Schema.org work's URL, or the canonical page URL. It is not the shortlink that ShareButtons copies, because a citation needs a lasting locator. Set `data-mg-cite-this-copy-link="false"` to remove it.
 - **Download RIS** (for EndNote, Zotero and Mendeley) and **Download BibTeX** links. Both are on by default. Set `data-mg-cite-this-export` to `ris` or `bibtex` to offer one (a list sets the order), or to `none` to remove them.
 
 <Canvas of={CiteThisStories.CitationOnly} />
@@ -124,11 +124,11 @@ The files are generated in the browser from the same fields as the citation: cre
 
 Translate the labels with `data-mg-cite-this-copy-link-label`, `data-mg-cite-this-link-copied-label`, `data-mg-cite-this-link-failed-label`, `data-mg-cite-this-ris-label` and `data-mg-cite-this-bibtex-label`.
 
-## Secondary trigger
+## Compact layout
 
-Add `mg-cite-this--secondary` to the element for an outlined trigger. Use it where Cite this sits beside quieter page actions, such as ShareButtons; see the [Page actions pattern](?path=/docs/patterns-page-actions--docs).
+Add `mg-cite-this--compact` where Cite this sits beside ShareButtons. It takes the same structure as ShareButtons: a "Cite this" label, the citation as a two-line field that copies it in one click, and an **All citation options** link to the full dialog. The element becomes a group named by its label. Set `data-mg-cite-this-more-label` to translate the link. See the [Page actions pattern](?path=/docs/patterns-page-actions--docs).
 
-<Canvas of={CiteThisStories.Secondary} />
+<Canvas of={CiteThisStories.Compact} />
 
 ## Analytics
 
@@ -149,6 +149,6 @@ The enhanced button opens a native modal dialog. Focus moves to its title, stays
 
 ## Changelog
 
-- **1.2.0**, 2026-10-12: The dialog adds Copy link and RIS and BibTeX downloads for reference managers, on by default and removable with `data-mg-cite-this-copy-link` and `data-mg-cite-this-export`. Adds a `data-mg-cite-this-type` record type, `mg-cite-this:copy-link` and `mg-cite-this:export` analytics events, a `target` on copy errors, and an `mg-cite-this--secondary` outlined trigger. Copy citation is a compact filled button again, as the primary action beside the outlined Copy link, and the citation box uses the same surface as the ShareButtons link. A new Page actions pattern places Cite this beside ShareButtons.
+- **1.2.0**, 2026-10-12: The dialog adds Copy citation URL and RIS and BibTeX downloads for reference managers, on by default and removable with `data-mg-cite-this-copy-link` and `data-mg-cite-this-export`. Adds a `data-mg-cite-this-type` record type, `mg-cite-this:copy-link` and `mg-cite-this:export` analytics events, a `target` on copy errors, and an `mg-cite-this--compact` layout that matches ShareButtons. Copy citation is a compact filled button again, as the primary action beside the outlined Copy citation URL, and the citation box uses the same surface as the ShareButtons link. A new Page actions pattern places Cite this beside ShareButtons.
 - **1.1.0**, 2026-10-12: Citation reads as prose rather than code: body typeface in a tinted bordered box, linked URLs, a compact outlined Copy citation button and even dialog padding. The Matching Schema.org work story now matches its JSON-LD work instead of falling back to the page citation.
 - **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, analytics events, labelled Storybook examples, and a zero-configuration HTML marker.

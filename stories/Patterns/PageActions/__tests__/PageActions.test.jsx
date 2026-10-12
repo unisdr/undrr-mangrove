@@ -8,12 +8,24 @@ beforeEach(() => {
   };
 });
 
-test('composes ShareButtons and a secondary Cite this', () => {
+test('composes ShareButtons and a compact Cite this as equal columns', () => {
   const { container } = render(<PageActions />);
-  expect(container.querySelector('.mg-share')).toBeInTheDocument();
   expect(
-    container.querySelector('.mg-cite-this--secondary .mg-cite-this__trigger')
+    container.querySelector('.mg-grid__col-2 > .mg-share')
+  ).toBeInTheDocument();
+  expect(
+    container.querySelector(
+      '.mg-grid__col-2 > .mg-cite-this--compact .mg-cite-this__header'
+    )
   ).toHaveTextContent('Cite this');
+});
+
+test('cite only uses the default trigger', () => {
+  const { container } = render(<PageActions share={false} />);
+  expect(container.querySelector('.mg-cite-this--compact')).toBeNull();
+  expect(container.querySelector('.mg-cite-this__trigger')).toHaveTextContent(
+    'Cite this'
+  );
 });
 
 test.each([

@@ -444,7 +444,7 @@ export function mgCiteThis(scope = document) {
       copyLink.type = 'button';
       copyLink.className = 'mg-cite-this__copy mg-cite-this__copy-link';
       copyLink.textContent =
-        element.dataset.mgCiteThisCopyLinkLabel || 'Copy link';
+        element.dataset.mgCiteThisCopyLinkLabel || 'Copy citation URL';
       copy.after(copyLink);
     }
     const exports = exportFormats(element, citation).map(format => {
@@ -471,10 +471,53 @@ export function mgCiteThis(scope = document) {
     dialog.className = 'mg-cite-this__dialog';
     dialog.setAttribute('aria-labelledby', title.id);
     dialog.append(header, dialogContent);
+    // The compact layout mirrors ShareButtons: a label, the citation as a
+    // copyable field, and a quiet link to the full dialog.
+    const compact = element.classList.contains('mg-cite-this--compact');
+    let label;
+    let preview;
+    let previewText;
+    let previewStatus;
+    if (compact) {
+      label = doc.createElement('p');
+      label.id = `${dialogId}-label`;
+      label.className = 'mg-cite-this__header';
+      label.textContent = trigger.textContent;
+      element.setAttribute('role', 'group');
+      element.setAttribute('aria-labelledby', label.id);
+
+      preview = doc.createElement('button');
+      preview.type = 'button';
+      preview.className = 'mg-cite-this__preview';
+      preview.setAttribute(
+        'aria-label',
+        element.dataset.mgCiteThisCopyLabel || 'Copy citation'
+      );
+      const previewIcon = doc.createElement('span');
+      previewIcon.className = 'mg-icon mg-icon-file-alt';
+      previewIcon.setAttribute('aria-hidden', 'true');
+      previewText = doc.createElement('span');
+      previewText.className = 'mg-cite-this__preview-text';
+      previewText.textContent = citation.text;
+      const copyIcon = doc.createElement('span');
+      copyIcon.className = 'mg-icon mg-icon-clone';
+      copyIcon.setAttribute('aria-hidden', 'true');
+      preview.append(previewIcon, previewText, copyIcon);
+
+      previewStatus = doc.createElement('span');
+      previewStatus.className = 'mg-u-sr-only';
+      previewStatus.setAttribute('role', 'status');
+      previewStatus.setAttribute('aria-live', 'polite');
+
+      trigger.textContent =
+        element.dataset.mgCiteThisMoreLabel || 'All citation options';
+      element.append(label, preview, previewStatus);
+    }
     element.append(trigger, dialog);
     fallback.hidden = true;
 
     let statusTimer;
+    let previewTimer;
     const onOpen = () => {
       dialog.showModal();
       title.focus();
@@ -519,9 +562,29 @@ export function mgCiteThis(scope = document) {
         citation.url,
         element.dataset.mgCiteThisLinkCopiedLabel || 'Link copied',
         element.dataset.mgCiteThisLinkFailedLabel ||
-          'Copy failed. Select the link in the citation and copy it manually.',
+          'Copy failed. Select the URL in the citation and copy it manually.',
         'copy-link'
       );
+    const onPreviewCopy = async () => {
+      let message;
+      try {
+        await navigator.clipboard.writeText(citation.text);
+        message = element.dataset.mgCiteThisCopiedLabel || 'Citation copied';
+        emit(element, 'copy', citation);
+      } catch {
+        message =
+          element.dataset.mgCiteThisFailedLabel ||
+          'Copy failed. Select the citation and copy it manually.';
+        emit(element, 'copy-error', citation, { target: 'citation' });
+      }
+      previewText.textContent = message;
+      previewStatus.textContent = message;
+      clearTimeout(previewTimer);
+      previewTimer = setTimeout(() => {
+        previewText.textContent = citation.text;
+        previewStatus.textContent = '';
+      }, 3000);
+    };
     const onExport = event => {
       const format = event.target.closest('[data-mg-cite-this-format]')?.dataset
         .mgCiteThisFormat;
@@ -533,6 +596,7 @@ export function mgCiteThis(scope = document) {
     dialog.addEventListener('close', onClose);
     copy?.addEventListener('click', onCopy);
     copyLink?.addEventListener('click', onCopyLink);
+    preview?.addEventListener('click', onPreviewCopy);
     instances.set(element, () => {
       clearTimeout(statusTimer);
       trigger.removeEventListener('click', onOpen);
@@ -542,6 +606,15 @@ export function mgCiteThis(scope = document) {
       copyLink?.removeEventListener('click', onCopyLink);
       dialogContent.removeEventListener('click', onExport);
       if (dialog.open) dialog.close();
+      clearTimeout(previewTimer);
+      preview?.removeEventListener('click', onPreviewCopy);
+      label?.remove();
+      preview?.remove();
+      previewStatus?.remove();
+      if (compact) {
+        element.removeAttribute('role');
+        element.removeAttribute('aria-labelledby');
+      }
       trigger.remove();
       dialog.remove();
       if (generated) fallback.remove();

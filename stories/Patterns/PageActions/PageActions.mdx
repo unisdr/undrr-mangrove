@@ -9,21 +9,23 @@ How [ShareButtons](?path=/docs/components-buttons-sharebuttons--docs) and [Cite 
 
 <Canvas of={Stories.ShareAndCite} />
 
-## Why two components
+## Two peers, one structure
 
-They meet different needs. Share this sends the page to other people: social networks, email, a QR code, or the page's shortlink. Cite this is for referencing the work in the reader's own writing: a formatted citation, the work's lasting URL, and RIS or BibTeX files for reference managers. Cite this does not repeat the social buttons. Its one share-like action, Copy link, copies the citation's URL rather than the shortlink, because a citation needs a locator that lasts.
+Share this and Cite this meet different needs. Share this sends the page to other people: social networks, email, a QR code, or the page's shortlink. Cite this is for referencing the work in the reader's own writing. Because they are peers, they are presented the same way: a label, then the main thing to copy in the same kind of field, the shortlink for Share this and the citation for Cite this. There is no umbrella heading over them; "Share this" and "Cite this" are already clear.
+
+Cite this shows less inline than Share this on purpose. People share more often than they cite, and the full citation, Copy citation URL and the RIS and BibTeX downloads would crowd the page, so they sit behind **All citation options**. Copy citation URL copies the work's lasting URL rather than the shortlink, because a citation needs a locator that lasts.
 
 ## Layout
 
-- Stack the two in one container with `mg-u-flex mg-u-flex-column mg-u-gap-200`, Share this first.
-- Add `mg-cite-this--secondary` to Cite this. Its outlined trigger sits more evenly with the quiet ShareButtons icons than the default filled button.
-- When a page has only one of them, use the component alone. The default filled Cite this trigger suits a page where citing is the main action, such as a publication.
+- Put the two in `mg-grid mg-grid__col-2`. They sit as equal columns on wide screens and stack, Share this first, on narrow ones.
+- Add `mg-cite-this--compact` to Cite this so it takes the same structure as ShareButtons.
+- When a page has only one of them, use the component alone. On its own, Cite this keeps its default filled button, which suits a page where citing is the main action, such as a publication.
 
 ```html
-<div class="mg-u-flex mg-u-flex-column mg-u-gap-200">
+<div class="mg-grid mg-grid__col-2">
   <section data-mg-share-buttons data-main-label="Share this"></section>
   <div
-    class="mg-cite-this mg-cite-this--secondary"
+    class="mg-cite-this mg-cite-this--compact"
     data-mg-cite-this
     data-mg-cite-this-title="Hazard Information Profiles: 2025 version"
     data-mg-cite-this-author="United Nations Office for Disaster Risk Reduction"
