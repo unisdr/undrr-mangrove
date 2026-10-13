@@ -557,6 +557,13 @@ function emit(element, name, citation, extra = {}) {
   );
 }
 
+// Fixed English labels for the UNDRR click tracker, which otherwise reports
+// visible text: the citation itself, or a translated label.
+const REGION = 'data-vf-google-analytics-region';
+function track(node, action) {
+  node.dataset.vfAnalyticsLabel = `Cite this: ${action}`;
+}
+
 function createFallback(element) {
   const doc = element.ownerDocument;
   const t = citeThisStrings(languageOf(element));
@@ -612,6 +619,8 @@ export function mgCiteThis(scope = document) {
     element.dataset.mgCiteThisSource = citation.source;
     const dialog = doc.createElement('dialog');
     element.dataset.mgCiteThisReady = '';
+    const regionSet = !element.hasAttribute(REGION);
+    if (regionSet) element.setAttribute(REGION, 'cite-this');
     if (typeof dialog.showModal !== 'function') {
       // Without dialog support the disclosure stays, with copying enabled.
       element.dataset.mgCiteThisLayout = 'disclosure';
@@ -641,6 +650,7 @@ export function mgCiteThis(scope = document) {
         }, 3000);
       };
       if (fallbackCopy) {
+        track(fallbackCopy, 'Copy citation (disclosure)');
         fallbackCopy.hidden = false;
         fallbackCopy.addEventListener('click', onFallbackCopy);
       }
@@ -649,7 +659,9 @@ export function mgCiteThis(scope = document) {
         if (fallbackCopy) {
           fallbackCopy.removeEventListener('click', onFallbackCopy);
           fallbackCopy.hidden = true;
+          delete fallbackCopy.dataset.vfAnalyticsLabel;
         }
+        if (regionSet) element.removeAttribute(REGION);
         if (generated) fallback.remove();
       });
       continue;
@@ -687,13 +699,23 @@ export function mgCiteThis(scope = document) {
     const dialogContent = content.cloneNode(true);
     const copy = dialogContent.querySelector('[data-mg-cite-this-copy]');
     const status = dialogContent.querySelector('[data-mg-cite-this-status]');
-    if (copy) copy.hidden = false;
+    if (copy) {
+      copy.hidden = false;
+      track(copy, 'Copy citation (dialog)');
+    }
+    for (const link of dialogContent.querySelectorAll(
+      '[data-mg-cite-this-text] a'
+    )) {
+      track(link, 'Citation link');
+    }
+    track(close, 'Close');
     let copyUrl;
     if (copy && element.dataset.mgCiteThisCopyUrl !== 'false') {
       copyUrl = doc.createElement('button');
       copyUrl.type = 'button';
       copyUrl.className = 'mg-cite-this__copy mg-cite-this__copy-url';
       copyUrl.textContent = element.dataset.mgCiteThisCopyUrlLabel || t.copyUrl;
+      track(copyUrl, 'Copy citation URL');
       copy.after(copyUrl);
     }
     const exports = exportFormats(element, citation).map(format => {
@@ -709,6 +731,7 @@ export function mgCiteThis(scope = document) {
           `mgCiteThis${format === 'ris' ? 'Ris' : 'Bibtex'}Label`
         ] || t[format];
       link.dataset.mgCiteThisFormat = format;
+      track(link, `Download ${format === 'ris' ? 'RIS' : 'BibTeX'}`);
       return link;
     });
     if (exports.length) {
@@ -764,6 +787,7 @@ export function mgCiteThis(scope = document) {
       copyIcon.className = 'mg-icon mg-icon-clone';
       copyIcon.setAttribute('aria-hidden', 'true');
       preview.append(previewIcon, previewAction, previewText, copyIcon);
+      track(preview, 'Copy citation (field)');
 
       previewStatus = doc.createElement('span');
       previewStatus.className = 'mg-u-sr-only';
@@ -772,9 +796,11 @@ export function mgCiteThis(scope = document) {
 
       trigger.textContent = element.dataset.mgCiteThisMoreLabel || t.more;
       trigger.classList.add('mg-cite-this__more');
+      track(trigger, 'All citation options');
       wrapper.append(label, preview, previewStatus, trigger);
       element.append(wrapper, dialog);
     } else {
+      track(trigger, 'Open');
       element.append(trigger, dialog);
     }
     fallback.hidden = true;
@@ -880,6 +906,7 @@ export function mgCiteThis(scope = document) {
       dialogContent.removeEventListener('click', onDialogClick);
       preview?.removeEventListener('click', onPreviewCopy);
       wrapper?.remove();
+      if (regionSet) element.removeAttribute(REGION);
       for (const [name, value] of authored) {
         if (value === null) element.removeAttribute(name);
         else element.setAttribute(name, value);

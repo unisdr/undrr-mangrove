@@ -790,3 +790,54 @@ test('the access date is written in the page language', () => {
     '“Page title”, UNDRR, consulté le 25 septembre 2026, https://www.undrr.org/fr/terminologie.'
   );
 });
+
+test('controls carry fixed labels for the UNDRR click tracker', () => {
+  document.documentElement.lang = 'fr';
+  const element = fixture(
+    'data-mg-cite-this-title="Rapport" data-mg-cite-this-url="https://www.undrr.org/fr/rapport"'
+  );
+  mgCiteThis(element);
+  const label = selector =>
+    element.querySelector(selector).dataset.vfAnalyticsLabel;
+  expect(element).toHaveAttribute(
+    'data-vf-google-analytics-region',
+    'cite-this'
+  );
+  expect(label('.mg-cite-this__preview')).toBe(
+    'Cite this: Copy citation (field)'
+  );
+  expect(label('.mg-cite-this__more')).toBe('Cite this: All citation options');
+  expect(label('.mg-cite-this__dialog [data-mg-cite-this-copy]')).toBe(
+    'Cite this: Copy citation (dialog)'
+  );
+  expect(label('.mg-cite-this__copy-url')).toBe('Cite this: Copy citation URL');
+  expect(label('[data-mg-cite-this-format="ris"]')).toBe(
+    'Cite this: Download RIS'
+  );
+  expect(label('.mg-cite-this__dialog [data-mg-cite-this-text] a')).toBe(
+    'Cite this: Citation link'
+  );
+  expect(label('.mg-cite-this__close')).toBe('Cite this: Close');
+  mgCiteThisDestroy(element);
+  expect(element).not.toHaveAttribute('data-vf-google-analytics-region');
+});
+
+test('a host analytics region is kept', () => {
+  const element = fixture(
+    'data-vf-google-analytics-region="publication-actions"'
+  );
+  element.classList.add('mg-cite-this--compact');
+  mgCiteThis(element);
+  expect(element).toHaveAttribute(
+    'data-vf-google-analytics-region',
+    'publication-actions'
+  );
+  expect(
+    element.querySelector('.mg-cite-this__trigger').dataset.vfAnalyticsLabel
+  ).toBe('Cite this: Open');
+  mgCiteThisDestroy(element);
+  expect(element).toHaveAttribute(
+    'data-vf-google-analytics-region',
+    'publication-actions'
+  );
+});
