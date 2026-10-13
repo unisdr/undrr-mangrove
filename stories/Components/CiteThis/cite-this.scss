@@ -43,6 +43,104 @@
     @media (prefers-reduced-motion: reduce) {
       transition: none;
     }
+
+    // The filled trigger relies on its background, which forced colours remove.
+    @media (forced-colors: active) {
+      border: 1px solid ButtonText;
+    }
+  }
+
+  // Default enhanced layout, with the same structure and metrics as
+  // ShareButtons: a label, the citation as a copyable field, and a quiet
+  // dialog link. `--compact` shows the dialog trigger alone.
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--mg-spacing-100);
+    max-inline-size: mg-rem(400);
+  }
+
+  &__header {
+    margin: 0;
+    color: rgb(var(--mg-color-text));
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-font-size-300);
+    font-weight: 600;
+  }
+
+  &__preview {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--mg-spacing-100);
+    inline-size: 100%;
+    min-block-size: mg-rem(40);
+    padding: var(--mg-spacing-100);
+    background-color: rgb(var(--mg-color-neutral-25));
+    border: 1px solid rgb(var(--mg-color-neutral-300) / 0.4);
+    border-radius: var(--mg-radius-button);
+    color: rgb(var(--mg-color-text));
+    cursor: pointer;
+    font-family: var(--mg-font-family-text);
+    text-align: start;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+    }
+
+    .mg-icon {
+      flex: 0 0 mg-rem(24);
+      text-align: center;
+    }
+
+    &:hover {
+      background-color: rgb(var(--mg-color-neutral-50));
+
+      .mg-cite-this__preview-text {
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+      }
+    }
+
+    &:focus-visible {
+      @include mg-focus-ring;
+    }
+
+    @media (forced-colors: active) {
+      border-color: ButtonText;
+    }
+  }
+
+  &__preview-text {
+    display: -webkit-box;
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    font-size: var(--mg-font-size-250);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  // Doubled selector outranks the filled `__trigger` styles.
+  & &__more {
+    min-block-size: 44px;
+    padding: 0;
+    background: transparent;
+    color: rgb(var(--mg-color-interactive));
+    font-size: var(--mg-font-size-250);
+    font-weight: 400;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+
+    &:hover {
+      filter: none;
+      text-decoration-thickness: 2px;
+    }
   }
 
   &__dialog {
@@ -72,7 +170,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--mg-spacing-200);
-    padding: var(--mg-spacing-150) var(--mg-spacing-200) 0;
+    padding: var(--mg-spacing-200) var(--mg-spacing-200) var(--mg-spacing-150);
   }
 
   &__title {
@@ -134,10 +232,32 @@
     padding: 0 var(--mg-spacing-200) var(--mg-spacing-200);
   }
 
-  &__text {
+  // Doubled selector outranks `.mg-code`, which earlier markup put on the
+  // citation; a citation is prose to read, not code.
+  & &__text {
     margin: 0;
+    padding: var(--mg-spacing-150) var(--mg-spacing-200);
+    background: rgb(var(--mg-color-neutral-25));
+    border: 1px solid rgb(var(--mg-color-neutral-300) / 0.4);
+    border-radius: var(--mg-radius-form-input);
+    box-shadow: none;
+    color: rgb(var(--mg-color-neutral-800));
+    font-family: var(--mg-font-family-text);
+    font-size: var(--mg-font-size-300);
+    font-weight: 400;
+    line-height: 1.6;
     overflow-wrap: anywhere;
     text-wrap: pretty;
+
+    a {
+      color: rgb(var(--mg-color-interactive));
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+
+      &:focus-visible {
+        @include mg-focus-ring;
+      }
+    }
   }
 
   &__actions {
@@ -150,21 +270,31 @@
 
   &__copy {
     min-block-size: 44px;
-    padding: var(--mg-spacing-100) var(--mg-spacing-200);
-    background: rgb(var(--mg-color-interactive));
-    border: 0;
+    padding: var(--mg-spacing-50) var(--mg-spacing-150);
+    background: transparent;
+    border: 2px solid rgb(var(--mg-color-interactive));
     border-radius: var(--mg-radius-button);
-    color: rgb(var(--mg-color-white));
+    color: rgb(var(--mg-color-interactive));
     cursor: pointer;
     font-family: var(--mg-font-family-text);
-    font-size: var(--mg-font-size-300);
+    font-size: var(--mg-font-size-250);
     font-weight: 600;
-    transition-property: filter, scale;
+    transition-property: background-color, color, scale;
     transition-duration: var(--mg-motion-duration-fast);
     transition-timing-function: var(--mg-motion-easing-standard);
 
     &:hover {
-      filter: brightness(0.92);
+      background: rgb(var(--mg-color-interactive));
+      color: rgb(var(--mg-color-white));
+    }
+
+    &:not(.mg-cite-this__copy-url) {
+      background: rgb(var(--mg-color-interactive));
+      color: rgb(var(--mg-color-white));
+
+      &:hover {
+        filter: brightness(0.92);
+      }
     }
 
     &:active {
@@ -177,6 +307,29 @@
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
+    }
+  }
+
+  &__exports {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mg-spacing-50) var(--mg-spacing-200);
+    margin-block-start: var(--mg-spacing-150);
+    padding-block-start: var(--mg-spacing-150);
+    border-block-start: 1px solid rgb(var(--mg-color-neutral-200));
+    font-size: var(--mg-font-size-250);
+  }
+
+  &__export {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    color: rgb(var(--mg-color-interactive));
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+
+    &:focus-visible {
+      @include mg-focus-ring;
     }
   }
 

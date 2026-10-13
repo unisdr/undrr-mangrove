@@ -1,0 +1,48 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './PageActions.stories';
+
+<Meta of={Stories} />
+
+# Page actions
+
+How [ShareButtons](?path=/docs/components-buttons-sharebuttons--docs) and [Cite this](?path=/docs/components-cite-this--docs) sit together at the end of an article, publication, terminology or HIP page. This is a composition of existing components and utility classes, not a new component. Each component still works alone, and the publishing site decides which ones a page needs.
+
+<Canvas of={Stories.ShareAndCite} />
+
+## Two peers, one structure
+
+Share this and Cite this meet different needs. Share this sends the page to other people: social networks, email, a QR code, or the page's shortlink. Cite this is for referencing the work in the reader's own writing. Because they are peers, they are presented the same way: a label, then the main thing to copy in the same kind of field, the shortlink for Share this and the citation for Cite this. There is no umbrella heading over them; "Share this" and "Cite this" are already clear.
+
+Cite this shows less inline than Share this on purpose. People share more often than they cite, and the full citation, Copy citation URL and the RIS and BibTeX downloads would crowd the page, so they sit behind **All citation options**. Copy citation URL copies the work's lasting URL rather than the shortlink, because a citation needs a locator that lasts.
+
+## Layout
+
+- Put the two in `mg-grid mg-grid__col-2`. They sit as equal columns on wide screens and stack, Share this first, on narrow ones.
+- Both components already share one structure, so no modifier is needed.
+- When a page has only one of them, use the component alone. Where there is room only for a button, such as beside a Download PDF button, use the `mg-cite-this--compact` Cite this button instead.
+
+```html
+<div class="mg-grid mg-grid__col-2">
+  <section data-mg-share-buttons data-main-label="Share this"></section>
+  <div
+    class="mg-cite-this"
+    data-mg-cite-this
+    data-mg-cite-this-title="Hazard Information Profiles: 2025 version"
+    data-mg-cite-this-author="United Nations Office for Disaster Risk Reduction"
+    data-mg-cite-this-year="2025"
+    data-mg-cite-this-publisher="UNDRR"
+    data-mg-cite-this-type="report"
+    data-mg-cite-this-id="preventionweb:node/101"
+  ></div>
+</div>
+```
+
+For a citation that stays readable without JavaScript, render the full Cite this markup shown in its documentation.
+
+## Share only
+
+<Canvas of={Stories.ShareOnly} />
+
+## Cite only
+
+<Canvas of={Stories.CiteOnly} />
