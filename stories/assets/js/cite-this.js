@@ -854,11 +854,14 @@ export function mgCiteThis(scope = document) {
 
     let statusTimer;
     let previewTimer;
-    const onOpen = () => {
+    // `trigger` is a person opening the dialog; `copy-error` is the dialog
+    // opening itself after a failed copy from the field.
+    const openDialog = placement => {
       dialog.showModal();
       title.focus();
-      emit(element, 'open', citation);
+      emit(element, 'open', citation, { placement });
     };
+    const onOpen = () => openDialog('trigger');
     const onClose = () => {
       clearTimeout(statusTimer);
       if (status) status.textContent = '';
@@ -912,7 +915,7 @@ export function mgCiteThis(scope = document) {
           target: 'citation',
           placement: 'field',
         });
-        onOpen();
+        openDialog('copy-error');
         announce(element.dataset.mgCiteThisFailedLabel || t.failed, 5000);
         return;
       }

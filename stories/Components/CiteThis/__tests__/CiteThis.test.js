@@ -553,7 +553,7 @@ test('events carry a stable work id, the citing page and where the action happen
   };
   expect(events).toEqual([
     ['copy', { ...common, placement: 'field' }],
-    ['open', common],
+    ['open', { ...common, placement: 'trigger' }],
     ['copy-url', { ...common, placement: 'dialog' }],
   ]);
 });
@@ -652,6 +652,10 @@ test('a failed copy from the field opens the dialog to copy manually', async () 
   element.addEventListener('mg-cite-this:copy-error', event =>
     errors.push(event.detail)
   );
+  const opens = [];
+  element.addEventListener('mg-cite-this:open', event =>
+    opens.push(event.detail.placement)
+  );
   mgCiteThis(element);
   element.querySelector('.mg-cite-this__preview').click();
   await Promise.resolve();
@@ -663,6 +667,7 @@ test('a failed copy from the field opens the dialog to copy manually', async () 
   expect(errors).toEqual([
     expect.objectContaining({ target: 'citation', placement: 'field' }),
   ]);
+  expect(opens).toEqual(['copy-error']);
 });
 
 test('a second module copy does not enhance an element twice', () => {

@@ -60,7 +60,7 @@ Generated citations follow a simple UN website-materials form: creator and year 
 
 The page's URL is a locator. A publication citation describes the publication, and a HIP citation should identify its profile and edition. Schema.org's `citation` field lists works referenced _by_ a work; it is not read as that work's recommended citation.
 
-An authored canonical link or configured citation URL keeps its query string, because it may identify the work. When no canonical link exists, the browser URL's query string is omitted from the page fallback. Analytics events omit query strings even when the citation itself includes one.
+An authored canonical link or configured citation URL keeps its query string, because it may identify the work. When no canonical link exists, the browser URL's query string is omitted from the page fallback. In analytics events, `url` and `pageUrl` omit query strings even when the citation includes one. The work `id` keeps the query when it falls back to the work's URL, because the query may be what identifies the work; set `data-mg-cite-this-id` to avoid sending a URL at all.
 
 ## Vanilla HTML
 
@@ -172,7 +172,7 @@ Every event's `detail` has:
 - `url`: the cited work's query-free URL, which can change when the work is edited.
 - `source`: where the citation came from (`provided`, `metadata`, `schema` or `page`).
 - `layout`: `default`, `compact`, or `disclosure` when the browser has no `<dialog>` support.
-- `placement` on copy, copy error, export and visit events: `field` for the citation field, `dialog` for the dialog, or `disclosure`.
+- `placement` on every event: `field` for the citation field, `dialog` for the dialog, or `disclosure`. An `open` event has `trigger` when someone opens the dialog, or `copy-error` when the dialog opens itself after a failed copy from the field.
 
 To see how often a given publication is cited on given pages, group by `id` and `pageUrl`. The consuming site maps these events to GA4 through its consent-aware analytics setup. Mangrove itself sends nothing to Google.
 
