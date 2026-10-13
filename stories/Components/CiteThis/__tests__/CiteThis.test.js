@@ -484,11 +484,16 @@ test('the default layout labels the group, copies from the preview and keeps the
   );
 
   const preview = element.querySelector('.mg-cite-this__preview');
-  expect(preview).toHaveAccessibleName(
-    `Copy citation: ${resolveCitation(element).text}`
-  );
   const { text } = resolveCitation(element);
-  expect(preview).toHaveTextContent(text);
+  // jsdom computes no display value, so its accessible name pads the inline
+  // title and URL isolates with spaces; browsers do not.
+  const loose = [...`Copy citation: ${text}`]
+    .map(char => char.replace(/[.*+?^${}()|[\]\\]/, '\\$&'))
+    .join('\\s*');
+  expect(preview).toHaveAccessibleName(new RegExp(`^${loose}$`));
+  expect(element.querySelector('.mg-cite-this__preview-text').textContent).toBe(
+    text
+  );
   preview.click();
   await Promise.resolve();
   await Promise.resolve();
@@ -787,7 +792,7 @@ test('the access date is written in the page language', () => {
   );
   const citation = resolveCitation(fixture(), new Date('2026-09-25T12:00:00Z'));
   expect(citation.text).toBe(
-    '“Page title”, UNDRR, consulté le 25 septembre 2026, https://www.undrr.org/fr/terminologie.'
+    '«\u202FPage title\u202F», UNDRR, consulté le 25 septembre 2026, https://www.undrr.org/fr/terminologie.'
   );
 });
 
@@ -840,4 +845,50 @@ test('a host analytics region is kept', () => {
     'data-vf-google-analytics-region',
     'publication-actions'
   );
+});
+
+test('title quotes, separators and digits follow each language', () => {
+  document.head.insertAdjacentHTML(
+    'beforeend',
+    '<link rel="canonical" href="https://www.undrr.org/page">'
+  );
+  const now = new Date('2026-09-25T12:00:00Z');
+  const cite = lang => {
+    document.documentElement.lang = lang;
+    return resolveCitation(fixture('data-mg-cite-this-title="T"'), now).text;
+  };
+  expect(cite('ru')).toBe(
+    '«T», UNDRR, дата обращения: 25 сентября 2026 г., https://www.undrr.org/page.'
+  );
+  expect(cite('zh')).toMatch(/^《T》, UNDRR, 访问日期：2026年9月25日, /);
+  expect(cite('ar-EG')).toBe(
+    '“T”، UNDRR، تاريخ الاطلاع: 25 سبتمبر 2026، https://www.undrr.org/page.'
+  );
+});
+
+test('the title and URLs are isolated for right-to-left pages', () => {
+  document.documentElement.lang = 'ar';
+  const element = fixture(
+    'data-mg-cite-this-title="Global Assessment Report" data-mg-cite-this-url="https://www.undrr.org/gar"'
+  );
+  mgCiteThis(element);
+  const text = element.querySelector(
+    '.mg-cite-this__dialog [data-mg-cite-this-text]'
+  );
+  expect(text.querySelector('bdi')).toHaveTextContent(
+    /^Global Assessment Report$/
+  );
+  expect(text.querySelector('a')).toHaveAttribute('dir', 'ltr');
+  const preview = element.querySelector('.mg-cite-this__preview-text');
+  expect(preview.querySelector('bdi')).not.toBeNull();
+  expect(preview.querySelector('a')).toBeNull();
+  expect(preview.querySelector('span[dir="ltr"]')).toHaveTextContent(
+    'https://www.undrr.org/gar'
+  );
+});
+
+test('an editorial citation is rendered without a title isolate', () => {
+  const element = fixture('data-mg-cite-this-citation="Approved citation."');
+  mgCiteThis(element);
+  expect(element.querySelector('[data-mg-cite-this-text] bdi')).toBeNull();
 });

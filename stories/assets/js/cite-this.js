@@ -20,6 +20,7 @@ let nextDialogId = 0;
 
 // Built-in interface text for the UN official languages and Japanese. Data
 // attributes still override any string, for other languages or house style.
+// Title quotes and separators follow each language's citation conventions.
 const STRINGS = {
   en: {
     label: 'Cite this',
@@ -35,6 +36,9 @@ const STRINGS = {
     ris: 'Download RIS',
     bibtex: 'Download BibTeX',
     accessed: 'accessed {date}',
+    quoteOpen: '“',
+    quoteClose: '”',
+    separator: ', ',
   },
   ar: {
     label: 'الاستشهاد بهذا المحتوى',
@@ -49,6 +53,9 @@ const STRINGS = {
     ris: 'تنزيل RIS',
     bibtex: 'تنزيل BibTeX',
     accessed: 'تاريخ الاطلاع: {date}',
+    quoteOpen: '“',
+    quoteClose: '”',
+    separator: '، ',
   },
   es: {
     label: 'Citar',
@@ -64,22 +71,28 @@ const STRINGS = {
     ris: 'Descargar RIS',
     bibtex: 'Descargar BibTeX',
     accessed: 'consultado el {date}',
+    quoteOpen: '“',
+    quoteClose: '”',
+    separator: ', ',
   },
   fr: {
     label: 'Citer',
-    copy: 'Copier la citation',
-    copied: 'Citation copiée',
+    copy: 'Copier la référence',
+    copied: 'Référence copiée',
     failed:
-      'La copie a échoué. Sélectionnez la citation et copiez-la manuellement.',
+      'La copie a échoué. Sélectionnez la référence et copiez-la manuellement.',
     copyUrl: 'Copier l’URL de la citation',
     urlCopied: 'URL copiée',
     urlFailed:
-      'La copie a échoué. Sélectionnez l’URL dans la citation et copiez-la manuellement.',
+      'La copie a échoué. Sélectionnez l’URL dans la référence et copiez-la manuellement.',
     close: 'Fermer',
     more: 'Toutes les options de citation',
     ris: 'Télécharger RIS',
     bibtex: 'Télécharger BibTeX',
     accessed: 'consulté le {date}',
+    quoteOpen: '«\u202F',
+    quoteClose: '\u202F»',
+    separator: ', ',
   },
   ja: {
     label: '引用する',
@@ -95,21 +108,28 @@ const STRINGS = {
     ris: 'RISをダウンロード',
     bibtex: 'BibTeXをダウンロード',
     accessed: '閲覧日：{date}',
+    quoteOpen: '“',
+    quoteClose: '”',
+    separator: ', ',
   },
   ru: {
     label: 'Как цитировать',
-    copy: 'Копировать ссылку',
-    copied: 'Ссылка скопирована',
-    failed: 'Не удалось скопировать. Выделите ссылку и скопируйте её вручную.',
+    copy: 'Копировать библиографическую ссылку',
+    copied: 'Библиографическая ссылка скопирована',
+    failed:
+      'Не удалось скопировать. Выделите библиографическую ссылку и скопируйте её вручную.',
     copyUrl: 'Копировать URL-адрес',
     urlCopied: 'URL-адрес скопирован',
     urlFailed:
-      'Не удалось скопировать. Выделите URL-адрес в ссылке и скопируйте его вручную.',
+      'Не удалось скопировать. Выделите URL-адрес в библиографической ссылке и скопируйте его вручную.',
     close: 'Закрыть',
     more: 'Все варианты цитирования',
     ris: 'Скачать RIS',
     bibtex: 'Скачать BibTeX',
     accessed: 'дата обращения: {date}',
+    quoteOpen: '«',
+    quoteClose: '»',
+    separator: ', ',
   },
   zh: {
     label: '引用',
@@ -124,6 +144,9 @@ const STRINGS = {
     ris: '下载 RIS',
     bibtex: '下载 BibTeX',
     accessed: '访问日期：{date}',
+    quoteOpen: '《',
+    quoteClose: '》',
+    separator: ', ',
   },
 };
 
@@ -286,14 +309,18 @@ function formatCitation(
   { author, title, publisher, year, url, accessed },
   strings = STRINGS.en
 ) {
-  const lead = author ? `${author}${year ? ` (${year})` : ''}, ` : '';
-  const titlePart = `“${title}”`;
-  const source = publisher && publisher !== author ? `, ${publisher}` : '';
+  const sep = strings.separator;
+  const lead = author ? `${author}${year ? ` (${year})` : ''}${sep}` : '';
+  const source = publisher && publisher !== author ? `${sep}${publisher}` : '';
   const date = !author && year ? ` (${year})` : '';
   const access = year
     ? ''
-    : `, ${strings.accessed.replace('{date}', accessed)}`;
-  return `${lead}${titlePart}${source}${date}${access}, ${url}.`;
+    : `${sep}${strings.accessed.replace('{date}', accessed)}`;
+  const start = lead.length + strings.quoteOpen.length;
+  return {
+    text: `${lead}${strings.quoteOpen}${title}${strings.quoteClose}${source}${date}${access}${sep}${url}.`,
+    titleRange: [start, start + title.length],
+  };
 }
 
 /** Resolve a citation, in editorial → configured → matching JSON-LD → page order. */
@@ -337,6 +364,7 @@ export function resolveCitation(element, now = new Date()) {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    numberingSystem: 'latn',
   }).format(now);
   const fields = {
     type: workType(data.mgCiteThisType, work),
@@ -359,11 +387,13 @@ export function resolveCitation(element, now = new Date()) {
       fields: configured ? fields : null,
     };
   }
+  const { text, titleRange } = formatCitation(
+    { author, title, publisher, year, url, accessed },
+    citeThisStrings(pageLang)
+  );
   return {
-    text: formatCitation(
-      { author, title, publisher, year, url, accessed },
-      citeThisStrings(pageLang)
-    ),
+    text,
+    titleRange,
     source: configured ? 'metadata' : work ? 'schema' : 'page',
     url,
     id,
@@ -516,20 +546,37 @@ function trimUrl(url) {
 
 // Links each URL in place while keeping the copied text identical to the
 // rendered text. Trailing sentence punctuation stays outside the link.
-function renderCitation(output, text) {
+// URLs and the title are isolated so that, in right-to-left text, a Latin
+// title or URL does not pull the surrounding punctuation out of place.
+function appendText(output, text, links) {
   const doc = output.ownerDocument;
-  output.replaceChildren();
   let index = 0;
   for (const match of text.matchAll(URL_PATTERN)) {
     const href = trimUrl(match[0]);
     if (match.index > index) output.append(text.slice(index, match.index));
-    const link = doc.createElement('a');
-    link.href = href;
-    link.textContent = href;
-    output.append(link);
+    const url = doc.createElement(links ? 'a' : 'span');
+    if (links) url.href = href;
+    url.dir = 'ltr';
+    url.textContent = href;
+    output.append(url);
     index = match.index + href.length;
   }
   if (index < text.length) output.append(text.slice(index));
+}
+
+function renderCitation(output, citation, links = true) {
+  const { text, titleRange } = citation;
+  output.replaceChildren();
+  if (!titleRange) {
+    appendText(output, text, links);
+    return;
+  }
+  const [start, end] = titleRange;
+  const title = output.ownerDocument.createElement('bdi');
+  title.textContent = text.slice(start, end);
+  appendText(output, text.slice(0, start), links);
+  output.append(title);
+  appendText(output, text.slice(end), links);
 }
 
 function elementsIn(scope) {
@@ -615,7 +662,7 @@ export function mgCiteThis(scope = document) {
     const doc = element.ownerDocument;
     const t = citeThisStrings(languageOf(element));
     const citation = resolveCitation(element);
-    renderCitation(output, citation.text);
+    renderCitation(output, citation);
     element.dataset.mgCiteThisSource = citation.source;
     const dialog = doc.createElement('dialog');
     element.dataset.mgCiteThisReady = '';
@@ -782,7 +829,7 @@ export function mgCiteThis(scope = document) {
       previewIcon.setAttribute('aria-hidden', 'true');
       previewText = doc.createElement('span');
       previewText.className = 'mg-cite-this__preview-text';
-      previewText.textContent = citation.text;
+      renderCitation(previewText, citation, false);
       const copyIcon = doc.createElement('span');
       copyIcon.className = 'mg-icon mg-icon-clone';
       copyIcon.setAttribute('aria-hidden', 'true');
@@ -873,7 +920,7 @@ export function mgCiteThis(scope = document) {
       previewStatus.textContent = message;
       clearTimeout(previewTimer);
       previewTimer = setTimeout(() => {
-        previewText.textContent = citation.text;
+        renderCitation(previewText, citation, false);
         previewStatus.textContent = '';
       }, 3000);
     };
