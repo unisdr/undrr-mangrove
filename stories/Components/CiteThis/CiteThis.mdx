@@ -189,7 +189,9 @@ document.addEventListener('mg-cite-this:copy', event => {
 
 ### UNDRR click tracking
 
-UNDRR sites also load a shared GA4 click tracker, which names each click after the element's visible text unless `data-vf-analytics-label` is set. Like ShareButtons, Cite this sets fixed English labels so reports do not split by citation text or language: `Cite this: Copy citation (field)`, `Cite this: All citation options`, `Cite this: Open` (compact), `Cite this: Copy citation (dialog)`, `Cite this: Copy citation URL`, `Cite this: Download RIS`, `Cite this: Download BibTeX`, `Cite this: Citation link` and `Cite this: Close`. The element gets `data-vf-google-analytics-region="cite-this"` unless the host has set its own region. These click events count attempts, not successful copies, and carry no work `id`; for per-publication reporting, map the events above to GA4 as well.
+UNDRR sites also load a shared GA4 click tracker, which names each click after the element's visible text unless `data-vf-analytics-label` is set. Like ShareButtons, Cite this sets fixed English labels so reports do not split by citation text or language: `Cite this: Copy citation (field)`, `Cite this: All citation options`, `Cite this: Open` (compact), `Cite this: Copy citation (dialog)`, `Cite this: Copy citation URL`, `Cite this: Download RIS`, `Cite this: Download BibTeX`, `Cite this: Citation link` and `Cite this: Close`. The element gets `data-vf-google-analytics-region="cite-this"` unless the host has set its own region. These click events count attempts, not successful copies, and carry no work `id`.
+
+The shared tracker also listens for the events above and sends them as `Cite this / <action>` (for example `Cite this / copy`), reusing its existing parameters so no new custom dimensions are needed: `event_label` is the work `id`, `link_text` is the placement (with the format for exports), and `link_url` is the cited work's URL. Use these for per-publication reporting, and the click events for interface questions; do not add the two together.
 
 ## Accessibility
 
