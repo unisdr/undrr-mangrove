@@ -2152,6 +2152,31 @@ npm run build</code></pre>
     },
   },
 
+  'patterns-page-actions': {
+    summary:
+      'Share this and Cite this side by side as peer page actions, in two equal columns that stack on narrow screens.',
+    description:
+      'Places ShareButtons and Cite this as peers below a content page: each has a label, a copyable field and a quiet secondary action, so the pair reads as one structure without an umbrella heading. Use either alone when a page has nothing to cite or should not be shared. Composes mg-grid, ShareButtons and the vanilla Cite this module.',
+    examples: [
+      {
+        name: 'Share this and Cite this',
+        html: `<div class="mg-grid mg-grid__col-2">
+  <section data-mg-share-buttons data-main-label="Share this" aria-label="Share this"></section>
+  <div
+    class="mg-cite-this"
+    data-mg-cite-this
+    data-mg-cite-this-title="Hazard Information Profiles: 2025 version"
+    data-mg-cite-this-author="United Nations Office for Disaster Risk Reduction"
+    data-mg-cite-this-year="2025"
+    data-mg-cite-this-publisher="UNDRR"
+    data-mg-cite-this-type="report"
+    data-mg-cite-this-id="preventionweb:node/101"
+  ></div>
+</div>`,
+      },
+    ],
+  },
+
   'patterns-article-story': {
     summary:
       'A news or event article page: headline, header image, reading body and related content cards.',
