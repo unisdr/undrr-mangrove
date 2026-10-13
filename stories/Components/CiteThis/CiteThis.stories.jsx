@@ -1,5 +1,22 @@
-import React, { useEffect, useRef } from 'react';
-import { mgCiteThis, mgCiteThisDestroy } from '../../assets/js/cite-this';
+import React, { createContext, useContext, useEffect, useRef } from 'react';
+import {
+  citeThisStrings,
+  mgCiteThis,
+  mgCiteThisDestroy,
+} from '../../assets/js/cite-this';
+
+// Follows the Storybook locale toolbar, as a Drupal page would render the
+// fallback in its own language.
+const LOCALES = {
+  english: 'en',
+  arabic: 'ar',
+  french: 'fr',
+  japanese: 'ja',
+  russian: 'ru',
+  spanish: 'es',
+  chinese: 'zh',
+};
+const LangContext = createContext('en');
 
 function CitationExample({
   citation,
@@ -15,6 +32,8 @@ function CitationExample({
   variant,
 }) {
   const ref = useRef(null);
+  const lang = useContext(LangContext);
+  const strings = citeThisStrings(lang);
   useEffect(() => {
     mgCiteThis(ref.current);
     return () => mgCiteThisDestroy(ref.current);
@@ -30,6 +49,7 @@ function CitationExample({
     exportFormats,
     copyUrl,
     variant,
+    lang,
   ]);
 
   return (
@@ -49,7 +69,7 @@ function CitationExample({
       data-mg-cite-this-copy-url={copyUrl}
     >
       <details className="mg-cite-this__fallback">
-        <summary className="mg-cite-this__summary">Cite this</summary>
+        <summary className="mg-cite-this__summary">{strings.label}</summary>
         <div className="mg-cite-this__content">
           <p className="mg-cite-this__text" data-mg-cite-this-text />
           <div className="mg-cite-this__actions">
@@ -59,7 +79,7 @@ function CitationExample({
               data-mg-cite-this-copy
               hidden
             >
-              Copy citation
+              {strings.copy}
             </button>
             <span
               className="mg-cite-this__status"
@@ -76,16 +96,24 @@ function CitationExample({
 
 function BareHtmlExample() {
   const ref = useRef(null);
+  const lang = useContext(LangContext);
   useEffect(() => {
     mgCiteThis(ref.current);
     return () => mgCiteThisDestroy(ref.current);
-  }, []);
+  }, [lang]);
   return <div ref={ref} className="mg-cite-this" data-mg-cite-this="" />;
 }
 
 export default {
   title: 'Components/Cite this',
   component: CitationExample,
+  decorators: [
+    (Story, { globals }) => (
+      <LangContext.Provider value={LOCALES[globals.locale] || 'en'}>
+        <Story />
+      </LangContext.Provider>
+    ),
+  ],
   parameters: {
     docs: {
       description: {

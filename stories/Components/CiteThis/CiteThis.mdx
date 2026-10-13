@@ -109,7 +109,7 @@ The shortest integration is `<div class="mg-cite-this" data-mg-cite-this></div>`
 
 For Drupal behaviors or client-side navigation, call `mgCiteThis(context)` after insertion and `mgCiteThisDestroy(context)` before removal. Initialisation is idempotent and also runs on page load. The published module is `@undrr/undrr-mangrove/js/cite-this.js`.
 
-All strings can be translated in the server markup. For the empty-marker version, set `data-mg-cite-this-label` and `data-mg-cite-this-copy-label` for its generated button labels. Set `data-mg-cite-this-close-label` for the icon button's accessible name, plus `data-mg-cite-this-copied-label` and `data-mg-cite-this-failed-label` for feedback. If using an automatic citation, set the document's `lang` attribute to format the access date. The citation is set in the body typeface inside a tinted box, with its title in quotation marks, and remains selectable. URLs in the citation, including those in an editorial citation, become links; the copied text is the same plain text as the rendered citation. Earlier markup put `mg-code` on the citation element; the component now overrides it, so existing markup does not need to change.
+Interface text has built-in translations; see [Languages](#languages). The citation is set in the body typeface inside a tinted box, with its title in quotation marks, and remains selectable. URLs in the citation, including those in an editorial citation, become links; the copied text is the same plain text as the rendered citation. Earlier markup put `mg-code` on the citation element; the component now overrides it, so existing markup does not need to change.
 
 ## Copy citation URL and reference manager export
 
@@ -122,7 +122,29 @@ Below the Copy citation button, the dialog offers:
 
 The files are generated in the browser from the same fields as the citation: creators, title, publisher, year, URL and access date. Set `data-mg-cite-this-type` to `report`, `book` or `webpage` to choose the record type. Otherwise a matching Schema.org `Report` or `Book` sets it, and anything else is exported as a web page. Creators from configured fields, and Schema.org organisations, are exported as single corporate names. A Schema.org `Person` with `familyName` and `givenName` is exported as "Family, Given". An editorial citation is offered for export only when configured fields are also supplied, because its wording cannot be parsed back into fields.
 
-Translate the labels with `data-mg-cite-this-copy-url-label`, `data-mg-cite-this-url-copied-label`, `data-mg-cite-this-url-failed-label`, `data-mg-cite-this-ris-label` and `data-mg-cite-this-bibtex-label`.
+## Languages
+
+Cite this reads the `lang` attribute of its nearest ancestor, or of the document, and uses built-in text for Arabic, Chinese, English, French, Japanese, Russian and Spanish. Region subtags are ignored, so `fr-CA` uses French. Any other language falls back to English. Use the Locale toolbar to preview each one.
+
+The same language formats the access date in an automatic citation, for example "consulté le 25 septembre 2026". Title quotation marks stay “ ” in every language, and an editorial citation is shown exactly as written.
+
+With full server markup, the summary and copy button text come from the markup, so render them in the page language. Any string can be overridden with a data attribute, for another language or for house style:
+
+| Attribute                            | Default (English)                                                 |
+| ------------------------------------ | ----------------------------------------------------------------- |
+| `data-mg-cite-this-label`            | Cite this (empty marker only; otherwise the summary text)         |
+| `data-mg-cite-this-copy-label`       | Copy citation                                                     |
+| `data-mg-cite-this-copied-label`     | Citation copied                                                   |
+| `data-mg-cite-this-failed-label`     | Copy failed. Select the citation and copy it manually.            |
+| `data-mg-cite-this-copy-url-label`   | Copy citation URL                                                 |
+| `data-mg-cite-this-url-copied-label` | URL copied                                                        |
+| `data-mg-cite-this-url-failed-label` | Copy failed. Select the URL in the citation and copy it manually. |
+| `data-mg-cite-this-close-label`      | Close                                                             |
+| `data-mg-cite-this-more-label`       | All citation options                                              |
+| `data-mg-cite-this-ris-label`        | Download RIS                                                      |
+| `data-mg-cite-this-bibtex-label`     | Download BibTeX                                                   |
+
+JavaScript hosts, such as React wrappers or these stories, can read the built-in table with `citeThisStrings(lang)` to render the fallback in the same words.
 
 ## Compact trigger
 
@@ -171,5 +193,5 @@ Once enhanced, the element is a group named by its "Cite this" label. The citati
 
 ## Changelog
 
-- **1.1.0**, 2026-10-12: Redesigned to sit beside ShareButtons as a peer. The default now shows a "Cite this" label, the citation as a two-line field that copies in one click, and an **All citation options** link (`data-mg-cite-this-more-label`) to the dialog. The previous single button is the `mg-cite-this--compact` variant. The citation reads as prose rather than code, with quoted titles and linked URLs. The dialog adds Copy citation URL (`data-mg-cite-this-copy-url`) and RIS and BibTeX downloads (`data-mg-cite-this-export`, with a `data-mg-cite-this-type` record type), both on by default. Analytics events gain a stable work `id` (`data-mg-cite-this-id`), `pageUrl`, `layout` and `placement`, and there are new `copy-url`, `export` and `visit` events. An editorial citation uses a configured `data-mg-cite-this-url`, and browsers without `<dialog>` can copy from the disclosure. The Matching Schema.org work story now matches its JSON-LD work. A new Page actions pattern places Cite this beside ShareButtons.
+- **1.1.0**, 2026-10-12: Redesigned to sit beside ShareButtons as a peer. The default now shows a "Cite this" label, the citation as a two-line field that copies in one click, and an **All citation options** link (`data-mg-cite-this-more-label`) to the dialog. The previous single button is the `mg-cite-this--compact` variant. The citation reads as prose rather than code, with quoted titles and linked URLs. The dialog adds Copy citation URL (`data-mg-cite-this-copy-url`) and RIS and BibTeX downloads (`data-mg-cite-this-export`, with a `data-mg-cite-this-type` record type), both on by default. Analytics events gain a stable work `id` (`data-mg-cite-this-id`), `pageUrl`, `layout` and `placement`, and there are new `copy-url`, `export` and `visit` events. An editorial citation uses a configured `data-mg-cite-this-url`, and browsers without `<dialog>` can copy from the disclosure. The Matching Schema.org work story now matches its JSON-LD work. A new Page actions pattern places Cite this beside ShareButtons. Interface text and the access date follow the page language, with built-in Arabic, Chinese, French, Japanese, Russian and Spanish (`citeThisStrings`).
 - **1.0.0**, 2026-09-25 ([web-backlog#334](https://gitlab.com/undrr/web-backlog/-/work_items/334)): Initial vanilla citation button and dialog with editorial, metadata, JSON-LD and page fallbacks, copy feedback, analytics events, labelled Storybook examples, and a zero-configuration HTML marker.

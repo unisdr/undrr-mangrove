@@ -18,6 +18,129 @@ const WORK_TYPES = new Set([
 const instances = new WeakMap();
 let nextDialogId = 0;
 
+// Built-in interface text for the UN official languages and Japanese. Data
+// attributes still override any string, for other languages or house style.
+const STRINGS = {
+  en: {
+    label: 'Cite this',
+    copy: 'Copy citation',
+    copied: 'Citation copied',
+    failed: 'Copy failed. Select the citation and copy it manually.',
+    copyUrl: 'Copy citation URL',
+    urlCopied: 'URL copied',
+    urlFailed:
+      'Copy failed. Select the URL in the citation and copy it manually.',
+    close: 'Close',
+    more: 'All citation options',
+    ris: 'Download RIS',
+    bibtex: 'Download BibTeX',
+    accessed: 'accessed {date}',
+  },
+  ar: {
+    label: 'الاستشهاد بهذا المحتوى',
+    copy: 'نسخ الاستشهاد',
+    copied: 'تم نسخ الاستشهاد',
+    failed: 'تعذّر النسخ. حدّد الاستشهاد وانسخه يدويًا.',
+    copyUrl: 'نسخ رابط الاستشهاد',
+    urlCopied: 'تم نسخ الرابط',
+    urlFailed: 'تعذّر النسخ. حدّد الرابط في الاستشهاد وانسخه يدويًا.',
+    close: 'إغلاق',
+    more: 'جميع خيارات الاستشهاد',
+    ris: 'تنزيل RIS',
+    bibtex: 'تنزيل BibTeX',
+    accessed: 'تاريخ الاطلاع: {date}',
+  },
+  es: {
+    label: 'Citar',
+    copy: 'Copiar la cita',
+    copied: 'Cita copiada',
+    failed: 'No se pudo copiar. Seleccione la cita y cópiela manualmente.',
+    copyUrl: 'Copiar la URL de la cita',
+    urlCopied: 'URL copiada',
+    urlFailed:
+      'No se pudo copiar. Seleccione la URL en la cita y cópiela manualmente.',
+    close: 'Cerrar',
+    more: 'Todas las opciones de cita',
+    ris: 'Descargar RIS',
+    bibtex: 'Descargar BibTeX',
+    accessed: 'consultado el {date}',
+  },
+  fr: {
+    label: 'Citer',
+    copy: 'Copier la citation',
+    copied: 'Citation copiée',
+    failed:
+      'La copie a échoué. Sélectionnez la citation et copiez-la manuellement.',
+    copyUrl: 'Copier l’URL de la citation',
+    urlCopied: 'URL copiée',
+    urlFailed:
+      'La copie a échoué. Sélectionnez l’URL dans la citation et copiez-la manuellement.',
+    close: 'Fermer',
+    more: 'Toutes les options de citation',
+    ris: 'Télécharger RIS',
+    bibtex: 'Télécharger BibTeX',
+    accessed: 'consulté le {date}',
+  },
+  ja: {
+    label: '引用する',
+    copy: '引用をコピー',
+    copied: '引用をコピーしました',
+    failed: 'コピーできませんでした。引用を選択して手動でコピーしてください。',
+    copyUrl: '引用URLをコピー',
+    urlCopied: 'URLをコピーしました',
+    urlFailed:
+      'コピーできませんでした。引用内のURLを選択して手動でコピーしてください。',
+    close: '閉じる',
+    more: 'すべての引用オプション',
+    ris: 'RISをダウンロード',
+    bibtex: 'BibTeXをダウンロード',
+    accessed: '閲覧日：{date}',
+  },
+  ru: {
+    label: 'Как цитировать',
+    copy: 'Копировать ссылку',
+    copied: 'Ссылка скопирована',
+    failed: 'Не удалось скопировать. Выделите ссылку и скопируйте её вручную.',
+    copyUrl: 'Копировать URL-адрес',
+    urlCopied: 'URL-адрес скопирован',
+    urlFailed:
+      'Не удалось скопировать. Выделите URL-адрес в ссылке и скопируйте его вручную.',
+    close: 'Закрыть',
+    more: 'Все варианты цитирования',
+    ris: 'Скачать RIS',
+    bibtex: 'Скачать BibTeX',
+    accessed: 'дата обращения: {date}',
+  },
+  zh: {
+    label: '引用',
+    copy: '复制引用',
+    copied: '引用已复制',
+    failed: '复制失败。请选中引用内容并手动复制。',
+    copyUrl: '复制引用网址',
+    urlCopied: '网址已复制',
+    urlFailed: '复制失败。请选中引用中的网址并手动复制。',
+    close: '关闭',
+    more: '所有引用选项',
+    ris: '下载 RIS',
+    bibtex: '下载 BibTeX',
+    accessed: '访问日期：{date}',
+  },
+};
+
+function languageOf(element) {
+  return (
+    element.closest('[lang]')?.getAttribute('lang') ||
+    element.ownerDocument.documentElement.lang ||
+    'en'
+  );
+}
+
+/** Built-in interface text for a language tag, falling back to English. */
+export function citeThisStrings(lang = 'en') {
+  const primary = String(lang).toLowerCase().split(/[-_]/)[0];
+  return STRINGS[primary] || STRINGS.en;
+}
+
 function firstText(value) {
   if (Array.isArray(value))
     return value.map(firstText).filter(Boolean).join(', ');
@@ -159,12 +282,17 @@ function publicationYear(value) {
   return match ? match[1] : '';
 }
 
-function formatCitation({ author, title, publisher, year, url, accessed }) {
+function formatCitation(
+  { author, title, publisher, year, url, accessed },
+  strings = STRINGS.en
+) {
   const lead = author ? `${author}${year ? ` (${year})` : ''}, ` : '';
   const titlePart = `“${title}”`;
   const source = publisher && publisher !== author ? `, ${publisher}` : '';
   const date = !author && year ? ` (${year})` : '';
-  const access = year ? '' : `, accessed ${accessed}`;
+  const access = year
+    ? ''
+    : `, ${strings.accessed.replace('{date}', accessed)}`;
   return `${lead}${titlePart}${source}${date}${access}, ${url}.`;
 }
 
@@ -203,7 +331,7 @@ export function resolveCitation(element, now = new Date()) {
   const url =
     cleanUrl(data.mgCiteThisUrl || work?.url || canonical, doc.location.href) ||
     canonical;
-  const pageLang = doc.documentElement.lang || 'en-GB';
+  const pageLang = languageOf(element);
   const locale = pageLang === 'en' ? 'en-GB' : pageLang;
   const accessed = new Intl.DateTimeFormat(locale, {
     day: 'numeric',
@@ -232,7 +360,10 @@ export function resolveCitation(element, now = new Date()) {
     };
   }
   return {
-    text: formatCitation({ author, title, publisher, year, url, accessed }),
+    text: formatCitation(
+      { author, title, publisher, year, url, accessed },
+      citeThisStrings(pageLang)
+    ),
     source: configured ? 'metadata' : work ? 'schema' : 'page',
     url,
     id,
@@ -242,13 +373,11 @@ export function resolveCitation(element, now = new Date()) {
 
 const EXPORT_FORMATS = {
   ris: {
-    label: 'Download RIS',
     extension: 'ris',
     mime: 'application/x-research-info-systems',
     build: toRis,
   },
   bibtex: {
-    label: 'Download BibTeX',
     extension: 'bib',
     mime: 'application/x-bibtex',
     build: toBibtex,
@@ -430,11 +559,12 @@ function emit(element, name, citation, extra = {}) {
 
 function createFallback(element) {
   const doc = element.ownerDocument;
+  const t = citeThisStrings(languageOf(element));
   const fallback = doc.createElement('details');
   fallback.className = 'mg-cite-this__fallback';
   const summary = doc.createElement('summary');
   summary.className = 'mg-cite-this__summary';
-  summary.textContent = element.dataset.mgCiteThisLabel || 'Cite this';
+  summary.textContent = element.dataset.mgCiteThisLabel || t.label;
   const content = doc.createElement('div');
   content.className = 'mg-cite-this__content';
   const output = doc.createElement('p');
@@ -446,7 +576,7 @@ function createFallback(element) {
   copy.type = 'button';
   copy.className = 'mg-cite-this__copy';
   copy.dataset.mgCiteThisCopy = '';
-  copy.textContent = element.dataset.mgCiteThisCopyLabel || 'Copy citation';
+  copy.textContent = element.dataset.mgCiteThisCopyLabel || t.copy;
   copy.hidden = true;
   const status = doc.createElement('span');
   status.className = 'mg-cite-this__status';
@@ -476,6 +606,7 @@ export function mgCiteThis(scope = document) {
     if (!fallback || !summary || !content || !output) continue;
 
     const doc = element.ownerDocument;
+    const t = citeThisStrings(languageOf(element));
     const citation = resolveCitation(element);
     renderCitation(output, citation.text);
     element.dataset.mgCiteThisSource = citation.source;
@@ -493,12 +624,10 @@ export function mgCiteThis(scope = document) {
         let message;
         try {
           await navigator.clipboard.writeText(citation.text);
-          message = element.dataset.mgCiteThisCopiedLabel || 'Citation copied';
+          message = element.dataset.mgCiteThisCopiedLabel || t.copied;
           emit(element, 'copy', citation, { placement: 'disclosure' });
         } catch {
-          message =
-            element.dataset.mgCiteThisFailedLabel ||
-            'Copy failed. Select the citation and copy it manually.';
+          message = element.dataset.mgCiteThisFailedLabel || t.failed;
           emit(element, 'copy-error', citation, {
             target: 'citation',
             placement: 'disclosure',
@@ -544,7 +673,7 @@ export function mgCiteThis(scope = document) {
     close.className = 'mg-icon-button mg-cite-this__close';
     close.setAttribute(
       'aria-label',
-      element.dataset.mgCiteThisCloseLabel || 'Close'
+      element.dataset.mgCiteThisCloseLabel || t.close
     );
     const closeIcon = doc.createElement('span');
     closeIcon.className = 'mg-icon mg-icon-close';
@@ -564,12 +693,11 @@ export function mgCiteThis(scope = document) {
       copyUrl = doc.createElement('button');
       copyUrl.type = 'button';
       copyUrl.className = 'mg-cite-this__copy mg-cite-this__copy-url';
-      copyUrl.textContent =
-        element.dataset.mgCiteThisCopyUrlLabel || 'Copy citation URL';
+      copyUrl.textContent = element.dataset.mgCiteThisCopyUrlLabel || t.copyUrl;
       copy.after(copyUrl);
     }
     const exports = exportFormats(element, citation).map(format => {
-      const { label, extension, mime, build } = EXPORT_FORMATS[format];
+      const { extension, mime, build } = EXPORT_FORMATS[format];
       const link = doc.createElement('a');
       link.className = 'mg-cite-this__export';
       link.href = `data:${mime};charset=utf-8,${encodeURIComponent(
@@ -579,7 +707,7 @@ export function mgCiteThis(scope = document) {
       link.textContent =
         element.dataset[
           `mgCiteThis${format === 'ris' ? 'Ris' : 'Bibtex'}Label`
-        ] || label;
+        ] || t[format];
       link.dataset.mgCiteThisFormat = format;
       return link;
     });
@@ -624,7 +752,7 @@ export function mgCiteThis(scope = document) {
       const previewAction = doc.createElement('span');
       previewAction.className = 'mg-u-sr-only';
       previewAction.textContent = `${
-        element.dataset.mgCiteThisCopyLabel || 'Copy citation'
+        element.dataset.mgCiteThisCopyLabel || t.copy
       }: `;
       const previewIcon = doc.createElement('span');
       previewIcon.className = 'mg-icon mg-icon-file-alt';
@@ -642,8 +770,7 @@ export function mgCiteThis(scope = document) {
       previewStatus.setAttribute('role', 'status');
       previewStatus.setAttribute('aria-live', 'polite');
 
-      trigger.textContent =
-        element.dataset.mgCiteThisMoreLabel || 'All citation options';
+      trigger.textContent = element.dataset.mgCiteThisMoreLabel || t.more;
       trigger.classList.add('mg-cite-this__more');
       wrapper.append(label, preview, previewStatus, trigger);
       element.append(wrapper, dialog);
@@ -688,23 +815,20 @@ export function mgCiteThis(scope = document) {
     const onCopy = () =>
       copyText(
         citation.text,
-        element.dataset.mgCiteThisCopiedLabel || 'Citation copied',
-        element.dataset.mgCiteThisFailedLabel ||
-          'Copy failed. Select the citation and copy it manually.',
+        element.dataset.mgCiteThisCopiedLabel || t.copied,
+        element.dataset.mgCiteThisFailedLabel || t.failed,
         'copy'
       );
     // The citation's own locator, not a shortlink, so the copied link lasts.
     const onCopyUrl = () =>
       copyText(
         citation.url,
-        element.dataset.mgCiteThisUrlCopiedLabel || 'URL copied',
-        element.dataset.mgCiteThisUrlFailedLabel ||
-          'Copy failed. Select the URL in the citation and copy it manually.',
+        element.dataset.mgCiteThisUrlCopiedLabel || t.urlCopied,
+        element.dataset.mgCiteThisUrlFailedLabel || t.urlFailed,
         'copy-url'
       );
     const onPreviewCopy = async () => {
-      const message =
-        element.dataset.mgCiteThisCopiedLabel || 'Citation copied';
+      const message = element.dataset.mgCiteThisCopiedLabel || t.copied;
       try {
         await navigator.clipboard.writeText(citation.text);
         emit(element, 'copy', citation, { placement: 'field' });
@@ -716,11 +840,7 @@ export function mgCiteThis(scope = document) {
           placement: 'field',
         });
         onOpen();
-        announce(
-          element.dataset.mgCiteThisFailedLabel ||
-            'Copy failed. Select the citation and copy it manually.',
-          5000
-        );
+        announce(element.dataset.mgCiteThisFailedLabel || t.failed, 5000);
         return;
       }
       previewText.textContent = message;

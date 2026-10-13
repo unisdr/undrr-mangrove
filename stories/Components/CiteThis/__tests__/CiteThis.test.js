@@ -1,5 +1,6 @@
 import { axe } from 'jest-axe';
 import {
+  citeThisStrings,
   mgCiteThis,
   mgCiteThisDestroy,
   resolveCitation,
@@ -732,4 +733,60 @@ test('export and linked URL clicks are reported with their placement', () => {
     ['visit', 'dialog', undefined],
     ['export', 'dialog', 'ris'],
   ]);
+});
+
+test('interface text follows the page language and falls back to English', () => {
+  expect(citeThisStrings('fr-CA').label).toBe('Citer');
+  expect(citeThisStrings('zh-Hans').copy).toBe('复制引用');
+  expect(citeThisStrings('pt-BR').label).toBe('Cite this');
+  expect(citeThisStrings('').label).toBe('Cite this');
+
+  document.documentElement.lang = 'es';
+  document.body.innerHTML =
+    '<div class="mg-cite-this" data-mg-cite-this></div>';
+  const element = document.querySelector('[data-mg-cite-this]');
+  mgCiteThis(element);
+  expect(element.querySelector('.mg-cite-this__header')).toHaveTextContent(
+    'Citar'
+  );
+  expect(element.querySelector('.mg-cite-this__more')).toHaveTextContent(
+    'Todas las opciones de cita'
+  );
+  expect(element.querySelector('.mg-cite-this__preview').textContent).toMatch(
+    /^Copiar la cita: /
+  );
+  expect(element.querySelector('.mg-cite-this__close')).toHaveAttribute(
+    'aria-label',
+    'Cerrar'
+  );
+  expect(
+    [...element.querySelectorAll('.mg-cite-this__export')].map(
+      link => link.textContent
+    )
+  ).toEqual(['Descargar RIS', 'Descargar BibTeX']);
+});
+
+test('the nearest lang attribute wins and data attributes still override', () => {
+  document.documentElement.lang = 'en';
+  document.body.innerHTML = `<section lang="fr"><div class="mg-cite-this" data-mg-cite-this data-mg-cite-this-copy-url-label="Copier le lien"></div></section>`;
+  const element = document.querySelector('[data-mg-cite-this]');
+  mgCiteThis(element);
+  expect(element.querySelector('.mg-cite-this__header')).toHaveTextContent(
+    'Citer'
+  );
+  expect(element.querySelector('.mg-cite-this__copy-url')).toHaveTextContent(
+    'Copier le lien'
+  );
+});
+
+test('the access date is written in the page language', () => {
+  document.documentElement.lang = 'fr';
+  document.head.insertAdjacentHTML(
+    'beforeend',
+    '<link rel="canonical" href="https://www.undrr.org/fr/terminologie">'
+  );
+  const citation = resolveCitation(fixture(), new Date('2026-09-25T12:00:00Z'));
+  expect(citation.text).toBe(
+    '“Page title”, UNDRR, consulté le 25 septembre 2026, https://www.undrr.org/fr/terminologie.'
+  );
 });
