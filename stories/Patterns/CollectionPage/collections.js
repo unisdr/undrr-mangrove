@@ -150,19 +150,12 @@ export const itemFilters = (collection, langcode = 'en') => [
   `_language:${langcode}`,
 ];
 
-// Themes applied to so much DRR content that sharing one says little about
-// whether two collections are related: the "Core disaster risk reduction"
-// group in the PreventionWeb metadata guidance
-// (https://assets.undrr.org/docs/editorial-guides/metadata.md#theme-list),
-// plus Climate change, which the guide pairs with most sector themes.
-// Preparedness and Climate change are also the two themes most used on
-// collections (24 and 21 of 225 in September 2026).
+// Themes on so many collections that sharing one says little about whether
+// two are related: Preparedness and Climate change, the two themes most used
+// on collections (24 and 21 of 225 in September 2026). Every other theme
+// counts as a match.
 export const BROAD_THEMES = [
   { tid: 315, name: 'Preparedness' },
-  { tid: 333, name: 'Risk identification and assessment' },
-  { tid: 324, name: 'Governance' },
-  { tid: 316, name: 'Early warning' },
-  { tid: 307, name: 'Disaster risk communication' },
   { tid: 311, name: 'Climate change' },
 ];
 const broad = new Set(BROAD_THEMES.map(theme => theme.tid));

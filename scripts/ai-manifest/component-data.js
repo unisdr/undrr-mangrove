@@ -998,6 +998,8 @@ export const COMPONENT_DATA = {
       'mg-on-this-page-nav',
       'mg-on-this-page-nav--hidden',
       'mg-on-this-page-nav--has-left-overflow',
+      'mg-on-this-page-nav--has-right-overflow',
+      'mg-on-this-page-nav--align-container',
       'mg-on-this-page-nav__list',
       'mg-on-this-page-nav__item',
       'mg-on-this-page-nav__link',
@@ -2207,9 +2209,9 @@ npm run build</code></pre>
 
   'patterns-collection-page': {
     summary:
-      'A PreventionWeb collection page: neutral split Hero header with count, newest item and tags, a sticky On this page bar, a collapsible description, a scoped search index and ranked related collections.',
+      'A PreventionWeb collection page: neutral Hero header with a linked count and tags, a sticky On this page bar, a collapsible description, a scoped search index and related collections.',
     description:
-      'A page for a curated collection of content on one topic. Header: a breadcrumb (PreventionWeb > Collections > title), then Hero layout="split" variant="neutral" with the collection type as label, the h1, the body summary as standfirst (omitted when empty; never fall back to the body), a detail line "N items · Latest item: <date>" (count and newest published_at computed on the server; "No items yet" at zero), tags as ul.mg-hero__tags aria-label="Topics", and a "Browse N items" secondary button (analyticsLabel "Collection: browse items") only when N > 0. A sticky OnThisPageNav (explicit mode, mg-on-this-page-nav--align-container, full section headings, always shown) follows; drop the Related link when that section is absent. About: body in ShowMore with --mg-show-more-height: 6lh, data-mg-show-more-min-hidden-lines="4", the toggle shipped hidden, mg-button-secondary, sr-only context. List: SyndicationSearchWidget scoped with customFilters ["field_collections:<nid>", "_language:<lang>"], never defaultFilters; labels say items; data-enable-hash-sync="true". Related: up to 3 collections ranked on the server, hazard matches first (country boost), then specific (non-broad) theme matches, excluding the current nid; rendered by a second widget with every control off and hash sync "false". Analytics: regions collection-header, on-this-page-nav, collection-about, collection-content, collection-related; widgets set analyticsRegionPrefix to their section; fixed English data-vf-analytics-label values; one section_view event per section on first view.',
+      'A page for a curated collection of content on one topic. Header: a breadcrumb (PreventionWeb > Collections > title), then Hero layout="split" variant="neutral" with the collection type as label, the h1, the body summary as standfirst (omitted when empty; never fall back to the body), a detail line "N items · Latest item: <date>" whose count links to the list (data-vf-analytics-label "Collection: item count"; count and newest published_at computed on the server; "No items yet" as plain text at zero), and tags as ul.mg-hero__tags aria-label="Topics". A sticky OnThisPageNav (explicit mode, mg-on-this-page-nav--align-container, full section headings, always shown) follows; drop the Related link when that section is absent. About: body in ShowMore with --mg-show-more-height: 6lh, data-mg-show-more-min-hidden-lines="4", the toggle shipped hidden, mg-button-secondary, sr-only context. List: SyndicationSearchWidget scoped with customFilters ["field_collections:<nid>", "_language:<lang>"], never defaultFilters; labels say items; data-enable-hash-sync="true". Related: up to 3 collections ranked on the server, hazard matches first (country boost), then theme matches other than Preparedness and Climate change, excluding the current nid; rendered by a second widget with every control off and hash sync "false". Analytics: regions collection-header, on-this-page-nav, collection-about, collection-content, collection-related; widgets set analyticsRegionPrefix to their section; fixed English data-vf-analytics-label values.',
     examples: [
       {
         name: 'On this page bar, description and list',

@@ -44,10 +44,6 @@ const text = {
     count === 1
       ? '1 item'
       : `${new Intl.NumberFormat(locale).format(count)} items`,
-  browse: (count, locale) =>
-    count === 1
-      ? 'Browse 1 item'
-      : `Browse ${new Intl.NumberFormat(locale).format(count)} items`,
   noItems: 'No items yet',
   latest: 'Latest item:',
   about: 'About this collection',
@@ -197,62 +193,6 @@ function useRelated(collection) {
   return state;
 }
 
-/**
- * One `section_view` per section region, the first time it scrolls into view,
- * so reports show how far down the page readers get. Sent with gtag, as the
- * shared tracker sends its events, and as an `mg-section-view` event for any
- * other listener.
- */
-function useSectionViews(root) {
-  useEffect(() => {
-    if (typeof IntersectionObserver !== 'function' || !root.current) {
-      return undefined;
-    }
-    const seen = new Set();
-    const observer = new IntersectionObserver(
-      entries =>
-        entries.forEach(entry => {
-          const region = entry.target.dataset.vfGoogleAnalyticsRegion;
-          if (!entry.isIntersecting || seen.has(region)) return;
-          seen.add(region);
-          observer.unobserve(entry.target);
-          window.gtag?.('event', 'section_view', {
-            vf_analytics: 'true',
-            event_category: 'UI',
-            page_container: region,
-            event_label: region,
-          });
-          entry.target.dispatchEvent(
-            new CustomEvent('mg-section-view', {
-              bubbles: true,
-              detail: { region },
-            })
-          );
-        }),
-      { rootMargin: '0px 0px -20% 0px' }
-    );
-    const watch = () =>
-      root.current
-        ?.querySelectorAll('[data-mg-section-view]')
-        .forEach(section => {
-          if (!seen.has(section.dataset.vfGoogleAnalyticsRegion)) {
-            observer.observe(section);
-          }
-        });
-    watch();
-    // Sections that mount later (related collections) are picked up too.
-    const mutations =
-      typeof MutationObserver === 'function'
-        ? new MutationObserver(watch)
-        : null;
-    mutations?.observe(root.current, { childList: true, subtree: true });
-    return () => {
-      observer.disconnect();
-      mutations?.disconnect();
-    };
-  }, [root]);
-}
-
 function Paragraph({ part }) {
   if (typeof part === 'string') return <p>{part}</p>;
   return (
@@ -311,13 +251,18 @@ About.propTypes = {
   paragraphs: PropTypes.array.isRequired,
 };
 
-/** The facts line: the item count and the date of the newest item. */
-function Facts({ items, locale }) {
+/**
+ * The facts line: the item count, linked to the list, and the date of the
+ * newest item. At zero the count is plain text: there is nothing to jump to.
+ */
+function Facts({ items, locale, itemsId }) {
   if (items.status === 'loading') return text.counting;
   if (items.count === 0) return text.noItems;
   return (
     <>
-      {text.items(items.count, locale)}
+      <a href={`#${itemsId}`} data-vf-analytics-label="Collection: item count">
+        {text.items(items.count, locale)}
+      </a>
       {items.latest && (
         <>
           <span aria-hidden="true"> · </span>
@@ -337,6 +282,7 @@ function Facts({ items, locale }) {
 
 Facts.propTypes = {
   items: PropTypes.object.isRequired,
+  itemsId: PropTypes.string.isRequired,
   locale: PropTypes.string.isRequired,
 };
 
@@ -406,12 +352,10 @@ export function CollectionPage({
   const aboutId = `${prefix}-about`;
   const itemsId = `${prefix}-items`;
   const relatedId = `${prefix}-related`;
-  const page = useRef(null);
   const items = useItems(itemFilters(collection), itemCount);
   const related = useRelated(collection);
   const [relatedEmpty, setRelatedEmpty] = useState(false);
   const showRelated = related.nids.length > 0 && !relatedEmpty;
-  useSectionViews(page);
 
   const hasItems = items.status === 'done' && items.count > 0;
   // Wait for the count before mounting the list, so an empty collection
@@ -439,15 +383,11 @@ export function CollectionPage({
       <UndrrChrome locale="english" id={prefix} />
       <div className="mg-demo-shell | mg-container">
         <main
-          ref={page}
           id={`${prefix}-content`}
           className="mg-page-main | mg-container--spacer"
           tabIndex={-1}
         >
-          <header
-            data-vf-google-analytics-region={REGION.header}
-            data-mg-section-view
-          >
+          <header data-vf-google-analytics-region={REGION.header}>
             <nav
               className="mg-breadcrumb | mg-u-font-size-250"
               aria-label={text.breadcrumbs}
@@ -474,20 +414,10 @@ export function CollectionPage({
                   summaryText: collection.summary || undefined,
                   detail:
                     items.status === 'failed' ? undefined : (
-                      <Facts items={items} locale={locale} />
+                      <Facts items={items} locale={locale} itemsId={itemsId} />
                     ),
                   tags: tagsFor(collection),
                   tagsLabel: text.topics,
-                  buttons: hasItems
-                    ? [
-                        {
-                          label: text.browse(items.count, locale),
-                          url: `#${itemsId}`,
-                          type: 'Secondary',
-                          analyticsLabel: 'Collection: browse items',
-                        },
-                      ]
-                    : [],
                   media: { type: 'image', ...collection.image },
                 },
               ]}
@@ -499,7 +429,6 @@ export function CollectionPage({
             className="mg-demo-collection-section"
             aria-labelledby={`${aboutId}-title`}
             data-vf-google-analytics-region={REGION.about}
-            data-mg-section-view
           >
             <h2 id={`${aboutId}-title`}>{text.about}</h2>
             <About id={prefix} paragraphs={collection.body} />
@@ -509,7 +438,6 @@ export function CollectionPage({
             className="mg-demo-collection-section"
             aria-labelledby={`${itemsId}-title`}
             data-vf-google-analytics-region={REGION.content}
-            data-mg-section-view
           >
             <h2 id={`${itemsId}-title`}>{text.index}</h2>
             {items.status === 'done' && items.count === 0 && (
@@ -560,7 +488,6 @@ export function CollectionPage({
               className="mg-demo-collection-section"
               aria-labelledby={`${relatedId}-title`}
               data-vf-google-analytics-region={REGION.related}
-              data-mg-section-view
             >
               <h2 id={`${relatedId}-title`}>{text.related}</h2>
               <SyndicationSearchWidget

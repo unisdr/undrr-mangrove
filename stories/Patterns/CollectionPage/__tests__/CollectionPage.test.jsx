@@ -82,10 +82,6 @@ beforeEach(() => {
   });
 });
 
-afterEach(() => {
-  delete window.gtag;
-});
-
 const countRequest = () =>
   requests.find(request => request.body._source?.includes('published_at'));
 const rankingRequest = () =>
@@ -98,7 +94,7 @@ const waitForFacts = pattern => waitFor(() => expect(facts()).toMatch(pattern));
 const renderPage = props =>
   render(<CollectionPage id="demo" syncUrl={false} {...props} />);
 
-test('orients the reader: breadcrumb, type, one h1, count, newest item and a browse button', async () => {
+test('orients the reader: breadcrumb, type, one h1, a linked count and the newest item', async () => {
   renderPage();
   expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
   const crumbs = screen.getByRole('navigation', { name: 'Breadcrumbs' });
@@ -119,12 +115,13 @@ test('orients the reader: breadcrumb, type, one h1, count, newest item and a bro
     'datetime',
     '2025-11-11'
   );
-  const browse = within(hero).getByRole('link', { name: 'Browse 36 items' });
-  expect(browse).toHaveAttribute('href', '#demo-items');
-  expect(browse).toHaveAttribute(
+  const count = within(hero).getByRole('link', { name: '36 items' });
+  expect(count).toHaveAttribute('href', '#demo-items');
+  expect(count).toHaveAttribute(
     'data-vf-analytics-label',
-    'Collection: browse items'
+    'Collection: item count'
   );
+  expect(within(hero).queryByRole('link', { name: /Browse/ })).toBeNull();
   expect(within(hero).getByRole('list', { name: 'Topics' })).toContainElement(
     screen.getByRole('link', { name: 'Wildfire and Bushfire' })
   );
@@ -175,7 +172,7 @@ test('does not mount the list until the count is known', async () => {
   expect(await within(list).findByRole('searchbox')).toBeInTheDocument();
 });
 
-test('a count that resolves to zero shows the empty state and no browse button', async () => {
+test('a count that resolves to zero shows the empty state and an unlinked count', async () => {
   respond = request =>
     request.body._source?.includes('published_at')
       ? reply(hits(0))
@@ -196,7 +193,7 @@ test('a count that resolves to zero shows the empty state and no browse button',
   expect(within(list).queryByRole('searchbox')).toBeNull();
   const hero = document.querySelector('header .mg-hero');
   expect(within(hero).getByText('No items yet').tagName).not.toBe('A');
-  expect(within(hero).queryByRole('link', { name: /Browse/ })).toBeNull();
+  expect(within(hero).queryByRole('link', { name: /items/ })).toBeNull();
   // Related collections exist, so the full listing is not offered as well.
   await screen.findByRole('region', { name: 'Related collections' });
   expect(
@@ -227,7 +224,7 @@ test.each([
   const list = screen.getByRole('region', { name: 'In this collection' });
   expect(await within(list).findByRole('searchbox')).toBeInTheDocument();
   expect(screen.queryByText('Counting items…')).toBeNull();
-  expect(screen.queryByRole('link', { name: /Browse/ })).toBeNull();
+  expect(screen.queryByRole('link', { name: /items/ })).toBeNull();
 });
 
 test('gives up counting after the timeout', async () => {
@@ -271,8 +268,8 @@ test('ranks related collections hazard first, country next, then specific themes
       'type:collections',
       'NOT nid:101346',
       '_language:en',
-      // Preparedness and Risk identification and assessment are too broad.
-      'field_hazard:(357)',
+      // Preparedness is too broad; Risk identification and assessment counts.
+      'field_hazard:(357) OR field_theme:(333)',
     ])
   );
   expect(body.query.bool.should).toEqual([
@@ -296,11 +293,12 @@ test('ranks related collections hazard first, country next, then specific themes
   );
 });
 
-test('fills with specific themes only, and skips the ranking with nothing to relate on', async () => {
+test('leaves out only the broad themes, and skips the ranking with nothing to relate on', async () => {
   renderPage();
   await screen.findByRole('region', { name: 'Related collections' });
+  // Climate change (311) is left out; the other two themes count.
   expect(rankingRequest().filters).toContain(
-    'field_hazard:(357) OR field_theme:(1176)'
+    'field_hazard:(357) OR field_theme:(1176 OR 333)'
   );
   requests = [];
   document.body.innerHTML = '';
@@ -399,39 +397,6 @@ test('names an analytics region for each section and each widget', async () => {
     );
     expect(regions.some(name => name.startsWith('undrr-search'))).toBe(false);
   });
-});
-
-test('sends one section_view per section region, the first time it is seen', async () => {
-  window.gtag = jest.fn();
-  renderPage();
-  await screen.findByRole('region', { name: 'Related collections' });
-  // The reach observer, not On this page's scroll-spy, which also watches
-  // the sections.
-  const sectionObserver = observers.find(
-    observer =>
-      observer.options.rootMargin === '0px 0px -20% 0px' &&
-      observer.targets.length > 0
-  );
-  const seeAll = () =>
-    act(() =>
-      sectionObserver.callback(
-        sectionObserver.targets.map(target => ({
-          target,
-          isIntersecting: true,
-        }))
-      )
-    );
-  seeAll();
-  seeAll();
-  const regions = window.gtag.mock.calls
-    .filter(([, name]) => name === 'section_view')
-    .map(([, , params]) => params.page_container);
-  expect(regions.sort()).toEqual([
-    'collection-about',
-    'collection-content',
-    'collection-header',
-    'collection-related',
-  ]);
 });
 
 test('wraps the description in a show-more that only collapses long bodies', () => {

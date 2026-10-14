@@ -19,7 +19,7 @@ The examples use real PreventionWeb collections and query the live search index,
 
 An orienting header, a sticky On this page bar, then three sections, each a landmark named by its heading:
 
-1. **Orienting header.** A breadcrumb (PreventionWeb › Collections › the collection), then a [Hero](?path=/docs/components-hero-hero--docs) with `layout="split"` and `variant="neutral"`: the collection type as the eyebrow, the title (`h1`), the body summary as the standfirst, a facts line ("36 items · Latest item: 11 November 2025"), the hazard, country and theme tags as a list named "Topics", a "Browse 36 items" button to the list, and the image. On a phone the image is a short banner above the copy.
+1. **Orienting header.** A breadcrumb (PreventionWeb › Collections › the collection), then a [Hero](?path=/docs/components-hero-hero--docs) with `layout="split"` and `variant="neutral"`: the collection type as the eyebrow, the title (`h1`), the body summary as the standfirst, a facts line ("36 items · Latest item: 11 November 2025", the count linking to the list), the hazard, country and theme tags as a list named "Topics", and the image. On a phone the image is a short banner above the copy.
 2. **On this page.** A sticky [On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) with the full section headings as links. It keeps related collections one press away from anywhere on a long page, and its clicks show which section readers want. It is always shown.
 3. **About this collection.** The body, collapsed to about six lines with [Show more](?path=/docs/components-showmore--docs), and only when at least four more lines would be hidden.
 4. **In this collection.** The [syndicated search widget](?path=/docs/components-syndicated-search--docs) scoped to the collection, newest first, with its count ("Showing 1–10 of 36 items") and hazard, theme, type and year filters.
@@ -49,7 +49,7 @@ The body summary is required on new collections, but 29 of 226 published collect
 
 <Canvas of={Stories.NoItemsYet} />
 
-When the count is zero the facts line says "No items yet", there is no browse button, and the list is replaced with an [empty state](?path=/docs/components-empty-state--docs). Related collections are the most useful next step from an empty page, so "Browse all collections" (a secondary button) appears only when there are none.
+When the count is zero the facts line says "No items yet", as plain text with nothing to link to, and the list is replaced with an [empty state](?path=/docs/components-empty-state--docs). Related collections are the most useful next step from an empty page, so "Browse all collections" (a secondary button) appears only when there are none.
 
 ## Building one
 
@@ -83,7 +83,12 @@ When the count is zero the facts line says "No items yet", there is no browse bu
         </div>
         <div class="mg-hero__meta meta-detail">
           <span class="mg-hero__label detail">
-            36 items
+            <a
+              href="#collection-items"
+              data-vf-analytics-label="Collection: item count"
+            >
+              36 items
+            </a>
             <span aria-hidden="true">·</span>
             Latest item:
             <time datetime="2025-11-11">11 November 2025</time>
@@ -99,15 +104,6 @@ When the count is zero the facts line says "No items yet", there is no browse bu
             <a class="mg-tag" href="/taxonomy/term/311">Climate change</a>
           </li>
         </ul>
-        <div class="mg-hero__buttons">
-          <a
-            class="mg-button mg-button-cta mg-button-secondary"
-            href="#collection-items"
-            data-vf-analytics-label="Collection: browse items"
-          >
-            Browse 36 items
-          </a>
-        </div>
       </article>
       <div class="mg-hero__media">
         <img
@@ -129,9 +125,8 @@ When the count is zero the facts line says "No items yet", there is no browse bu
 | Item count  | Search total for the list's filters, computed on the server                                                                                                                                   |
 | Latest item | `_undrr_custom_collection_newest_date()` in `undrr_custom.module`, the newest published member's `published_at`. It replaces the node's changed date, which moves when an editor fixes a typo |
 | Tags        | `field_hazard`, `field_country`, `field_theme`, in that order                                                                                                                                 |
-| Browse      | Only when the count is above zero                                                                                                                                                             |
 
-The count in the facts line is plain text; the button is the link to the list, so there are not two links side by side to the same place. With no items the facts line reads "No items yet" and the button is left out.
+The count links to the list, with the fixed analytics label "Collection: item count". With no items the facts line reads "No items yet" as plain text.
 
 The neutral Hero is the header's only layout CSS. It reaches Drupal the way every Mangrove style does, through the `mangrove_source_version` theme setting, so a release with this Hero needs that version bumped; there is no SCSS to wire into the theme.
 
@@ -248,9 +243,9 @@ Ranked in three tiers, filling up to three places:
 
 1. Collections that share a hazard.
 2. Among those, collections that also share a country come first.
-3. Collections that share a **specific** theme fill any remaining places.
+3. Collections that share a theme fill any remaining places, other than the two broad themes below.
 
-Broad themes are left out of the match: they apply to so much DRR content that sharing one says little. The list is the "Core disaster risk reduction" group in the [metadata guidance](https://assets.undrr.org/docs/editorial-guides/metadata.md#theme-list) plus Climate change, which the guidance pairs with most sector themes: Preparedness (315), Risk identification and assessment (333), Governance (324), Early warning (316), Disaster risk communication (307) and Climate change (311). Preparedness and Climate change are also the two themes used most on collections. A collection with no hazard and no specific theme has no related collections.
+Two broad themes are left out of the match, Preparedness (315) and Climate change (311): they are the two themes used most on collections (24 and 21 of 225 in September 2026), so sharing one says little about whether two collections are related. Every other theme counts. A collection with no hazard and no theme other than those two has no related collections.
 
 The widget's filters don't score, so the example ranks with its own query: the tiers become `constant_score` boosts (hazard 100, country 10) over the match, sorted by score and then `published_at`, which for collections is already the newest item's date. It then lists the chosen nodes with `nid:(…)`. **In Drupal, do the ranking on the server** and render the three node ids into the related widget's `data-custom-filters`, with `data-show-search-box`, `data-show-results-count`, `data-show-facets`, `data-show-active-filters` and `data-show-pager` all "false", `data-display-mode="card"`, `data-enable-hash-sync="false"` and `data-analytics-region-prefix="collection-related"`. The widget then lists them in its own relevance order.
 
@@ -272,15 +267,13 @@ The shared UNDRR analytics script ([google_analytics_enhancements.js](https://as
 
 | Element             | Region                                                                                       | Labels                                                                                                         |
 | ------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Header              | `collection-header`                                                                          | "Collection: browse items" (the button). Breadcrumb and tag links report their text                            |
+| Header              | `collection-header`                                                                          | "Collection: item count". Breadcrumb and tag links report their text                                           |
 | On this page bar    | `on-this-page-nav`                                                                           | "On this page: About this collection", "On this page: In this collection", "On this page: Related collections" |
 | About section       | `collection-about`                                                                           | "Collection: show more", "Collection: show less"                                                               |
 | In this collection  | `collection-content`; the widget reports `collection-content-form`, `-results` and `-facets` | "Collection: browse all collections" (empty state)                                                             |
 | Related collections | `collection-related`; the widget reports `collection-related-results`                        | Card titles                                                                                                    |
 
 Because the innermost region wins, a region on the section never reaches clicks inside a search widget, which reports its own. Each widget's `analyticsRegionPrefix` names those after the section, so the two lists don't both report `undrr-search-results`.
-
-**Section reach.** Each section region (`collection-header`, `collection-about`, `collection-content`, `collection-related`) sends one `section_view` event the first time it scrolls into view (80% of the way up the viewport): `gtag('event', 'section_view', { vf_analytics: 'true', event_category: 'UI', page_container: region, event_label: region })`, plus a bubbling `mg-section-view` DOM event. Reports can then show how far down the page readers get. In Drupal, a small behaviour does the same with an `IntersectionObserver` over `[data-vf-google-analytics-region]` sections.
 
 ## Accessibility
 
@@ -312,9 +305,9 @@ The same structure could serve hazard and theme pages: scope the list with `fiel
 ## Still to test
 
 - Is a six-line collapse, with at least four more lines hidden, right for PreventionWeb's descriptions?
-- Do readers use the On this page bar, and how far do they get? The `section_view` and nav-label events answer both.
-- Is the broad-theme list right? It is easy to adjust as reports come in.
+- Do readers use the On this page bar? The "On this page: …" click labels answer that.
+- Is leaving out only Preparedness and Climate change enough? It is easy to adjust as reports come in.
 
 ## Changelog
 
-- **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern. A breadcrumb, then a neutral split Hero with the collection type, summary, item count, newest item's date, topic tags and a browse button. A sticky On this page bar with full section headings. A description that collapses only when long. The collection's content as a scoped search index. Related collections ranked hazard first, country next, then specific themes. Analytics regions and fixed English labels on every section, separate regions for the two widgets, and a `section_view` event per section. Examples for a typical, short, long, summary-less and empty collection.
+- **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern. A breadcrumb, then a neutral split Hero with the collection type, summary, item count, a count linking to the list, the newest item's date and topic tags. A sticky On this page bar with full section headings. A description that collapses only when long. The collection's content as a scoped search index. Related collections ranked hazard first, country next, then shared themes other than Preparedness and Climate change. Analytics regions and fixed English labels on every section, and separate regions for the two widgets. Examples for a typical, short, long, summary-less and empty collection.
