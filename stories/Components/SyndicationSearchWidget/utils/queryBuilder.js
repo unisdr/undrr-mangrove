@@ -212,15 +212,6 @@ function buildBaseFilters(config) {
     }
   }
 
-  // Hide expired events: drop documents whose event ended before yesterday,
-  // and keep documents without event_end (non-events in a mixed listing).
-  // Plain range/exists clauses with date math, so Elasticsearch resolves
-  // "today" and server-rendered results honour it without a baked timestamp;
-  // the SSR renderer rejects script filters.
-  if (config.hideExpiredEvents) {
-    filters.push(buildHideExpiredEventsFilter());
-  }
-
   // Require image: only return results that have an image (has_image indexed field)
   if (config.requireImage) {
     filters.push({ term: { has_image: 'true' } });
@@ -252,29 +243,6 @@ function buildBaseFilters(config) {
   }
 
   return filters;
-}
-
-/**
- * Filter clause that excludes events whose `event_end` is before yesterday
- * (UTC) while keeping every document that has no `event_end`.
- *
- * `now-1d/d` rather than `now/d`: date math rounds in UTC, so an event that
- * ends today in the Americas would vanish in the late afternoon there, while
- * it is still running, once UTC has moved on to the next day. A day of
- * leniency keeps it listed until the day after it ends.
- *
- * @returns {Object} Elasticsearch bool clause
- */
-export function buildHideExpiredEventsFilter() {
-  return {
-    bool: {
-      should: [
-        { range: { event_end: { gte: 'now-1d/d' } } },
-        { bool: { must_not: { exists: { field: 'event_end' } } } },
-      ],
-      minimum_should_match: 1,
-    },
-  };
 }
 
 /**

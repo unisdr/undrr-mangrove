@@ -3,11 +3,7 @@
  * @description Tests for Elasticsearch query builder utility.
  */
 
-import {
-  buildQuery,
-  buildHideExpiredEventsFilter,
-  getAggregationBuckets,
-} from '../utils/queryBuilder';
+import { buildQuery, getAggregationBuckets } from '../utils/queryBuilder';
 import {
   DEFAULT_CONFIG,
   SCORING_CONFIG,
@@ -587,46 +583,24 @@ describe('queryBuilder', () => {
     });
   });
 
-  describe('hideExpiredEvents filter', () => {
-    const expiredClause = {
-      bool: {
-        should: [
-          { range: { event_end: { gte: 'now-1d/d' } } },
-          { bool: { must_not: { exists: { field: 'event_end' } } } },
-        ],
-        minimum_should_match: 1,
-      },
-    };
+  describe('event status recipe (customFilters)', () => {
+    // Drupal expands its upcoming/past event setting into these strings.
+    const UPCOMING = '(event_end:[now-1d/d TO *] OR (*:* -_exists_:event_end))';
+    const PAST = '(event_end:[* TO now-1d/d} OR (*:* -_exists_:event_end))';
 
-    it('keeps current events and documents without event_end', () => {
-      const config = { ...DEFAULT_CONFIG, hideExpiredEvents: true };
-      const result = buildQuery(defaultState, config);
-      const filters = result.query.function_score.query.bool.filter;
+    it.each([UPCOMING, PAST])(
+      'passes %s to the main query as a query_string filter',
+      filter => {
+        const config = { ...DEFAULT_CONFIG, customFilters: [filter] };
+        const result = buildQuery(defaultState, config);
+        const filters = result.query.function_score.query.bool.filter;
 
-      expect(filters).toContainEqual(expiredClause);
-      expect(buildHideExpiredEventsFilter()).toEqual(expiredClause);
-    });
-
-    it('uses date math and no scripts, so server rendering accepts it', () => {
-      const json = JSON.stringify(buildHideExpiredEventsFilter());
-      expect(json).toContain('now-1d/d');
-      expect(json).not.toContain('script');
-    });
-
-    it('stays in the main query, not the post_filter', () => {
-      const config = { ...DEFAULT_CONFIG, hideExpiredEvents: true };
-      const result = buildQuery(
-        { ...defaultState, facets: { type: ['event'] } },
-        config
-      );
-
-      expect(JSON.stringify(result.post_filter)).not.toContain('event_end');
-    });
-
-    it('is off by default', () => {
-      const result = buildQuery(defaultState, DEFAULT_CONFIG);
-      expect(JSON.stringify(result.query)).not.toContain('event_end');
-    });
+        expect(filters).toContainEqual({ query_string: { query: filter } });
+        expect(JSON.stringify(result.post_filter ?? {})).not.toContain(
+          'event_end'
+        );
+      }
+    );
   });
 
   describe('tier filters', () => {

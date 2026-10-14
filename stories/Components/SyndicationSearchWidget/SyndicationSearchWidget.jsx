@@ -191,13 +191,6 @@ SyndicationSearchWidget.propTypes = {
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
     /**
-     * Exclude events that ended before yesterday (Elasticsearch
-     * `now-1d/d`, a day of leniency for time zones west of UTC). Results
-     * without `event_end`, such as news in a mixed
-     * listing, are unaffected.
-     */
-    hideExpiredEvents: PropTypes.bool,
-    /**
      * Called after each completed search with `{ total, query, page }`. The
      * widget also dispatches an `mg-search-widget:results` event with the same
      * detail, bubbling from its root, for hosts without React.

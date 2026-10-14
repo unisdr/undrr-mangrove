@@ -626,10 +626,6 @@ export const DEFAULT_CONFIG = {
   // Require image: adds has_image:true filter to exclude results without images
   requireImage: false,
 
-  // Hide expired events: exclude events whose event_end is before yesterday (UTC).
-  // Results without event_end (non-events) are unaffected.
-  hideExpiredEvents: false,
-
   // Tier filters: array of tier names to restrict results by editorial weight or freshness.
   // Tier boundaries are derived from SCORING_CONFIG so definitions aren't duplicated.
   // Interestingness tiers: 'demoted', 'deferred', 'average', 'promoted', 'announced'

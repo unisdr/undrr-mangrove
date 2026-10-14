@@ -71,8 +71,6 @@ export default function syndicationSearchWidgetFromElement(container) {
   }
   if (dataset.requireImage !== undefined)
     config.requireImage = dataset.requireImage === 'true';
-  if (dataset.hideExpiredEvents !== undefined)
-    config.hideExpiredEvents = dataset.hideExpiredEvents === 'true';
 
   // JSON-encoded complex props
   if (dataset.defaultFilters) {
