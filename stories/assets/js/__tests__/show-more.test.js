@@ -358,36 +358,34 @@ describe('mgShowMore', () => {
     });
   });
 
-  describe('data-mg-show-more-threshold', () => {
-    // jsdom has no layout, so give the target the heights a browser would:
-    // the collapsed box is 200px tall and the content `full` px.
-    function setupThreshold({ full, threshold = '' }) {
+  describe('data-mg-show-more-min-hidden-lines', () => {
+    // jsdom has no layout, so give the target what a browser would compute:
+    // a 20px line, a collapsed max-height of 6 lines (120px), and content
+    // `full` px tall.
+    function setup({ full, lines = '4', attrs = '' }) {
       document.body.innerHTML = `
-        <div id="body"><p>Content</p></div>
-        <button type="button" data-mg-show-more data-mg-show-more-target="#body"
-          data-mg-show-more-threshold="${threshold}">Show more</button>
+        <section>
+          <h2 id="heading">About</h2>
+          <div id="body"><p>Content</p></div>
+          <button type="button" data-mg-show-more data-mg-show-more-target="#body"
+            data-mg-show-more-min-hidden-lines="${lines}" ${attrs}>Show more</button>
+        </section>
       `;
       const target = document.getElementById('body');
       const height = { full };
       Object.defineProperty(target, 'scrollHeight', {
+        configurable: true,
         get: () => height.full,
       });
-      Object.defineProperty(target, 'clientHeight', {
-        get: () =>
-          target.classList.contains('mg-show-more--collapsed')
-            ? Math.min(200, height.full)
-            : height.full,
-      });
-      return {
-        target,
-        button: document.querySelector('button'),
-        height,
-      };
+      return { target, button: document.querySelector('button'), height };
     }
 
     let observers;
+    let frames;
+    let styleSpy;
     beforeEach(() => {
       observers = [];
+      frames = [];
       global.ResizeObserver = class {
         constructor(callback) {
           this.callback = callback;
@@ -399,74 +397,122 @@ describe('mgShowMore', () => {
           this.disconnected = true;
         }
       };
+      global.requestAnimationFrame = callback => frames.push(callback);
+      global.cancelAnimationFrame = () => {};
+      const real = window.getComputedStyle;
+      styleSpy = jest
+        .spyOn(window, 'getComputedStyle')
+        .mockImplementation(element => {
+          const style = real(element);
+          if (element.id !== 'body') return style;
+          return {
+            ...style,
+            lineHeight: '20px',
+            fontSize: '16px',
+            maxHeight: element.classList.contains('mg-show-more--collapsed')
+              ? '120px'
+              : 'none',
+          };
+        });
     });
     afterEach(() => {
+      styleSpy.mockRestore();
       delete global.ResizeObserver;
     });
+    const resize = () => {
+      observers[0].callback();
+      frames.splice(0).forEach(callback => callback());
+    };
 
-    it('leaves content that fits open and hides the toggle', () => {
-      const { target, button } = setupThreshold({ full: 150 });
+    it('leaves content open when fewer lines would be hidden', () => {
+      // 120px collapsed + 3 lines = 180px: hiding three lines is not worth it.
+      const { target, button } = setup({ full: 180 });
       mgShowMore(button);
       expect(target).not.toHaveClass('mg-show-more--collapsed');
       expect(button.hidden).toBe(true);
     });
 
-    it('collapses content taller than the collapsed height', () => {
-      const { target, button } = setupThreshold({ full: 900 });
+    it('collapses when at least that many lines would be hidden', () => {
+      const { target, button } = setup({ full: 200 });
       mgShowMore(button);
       expect(target).toHaveClass('mg-show-more--collapsed');
       expect(button.hidden).toBe(false);
       expect(button).toHaveTextContent('Show more');
     });
 
-    it('uses a pixel value as the threshold', () => {
-      const { target, button } = setupThreshold({
-        full: 280,
-        threshold: '320',
-      });
+    it('does not depend on the current state, so it cannot flip on resize', () => {
+      const { target, button } = setup({ full: 150 });
       mgShowMore(button);
+      for (let i = 0; i < 3; i++) resize();
       expect(target).not.toHaveClass('mg-show-more--collapsed');
       expect(button.hidden).toBe(true);
     });
 
-    it('measures again when the content resizes', () => {
-      const { target, button, height } = setupThreshold({ full: 150 });
+    it('collapses when content grows past the rule, and opens when it shrinks', () => {
+      const { target, button, height } = setup({ full: 150 });
       mgShowMore(button);
-      height.full = 600;
-      observers[0].callback();
+      height.full = 400;
+      resize();
       expect(target).toHaveClass('mg-show-more--collapsed');
       expect(button.hidden).toBe(false);
-      height.full = 120;
-      observers[0].callback();
+      height.full = 130;
+      resize();
       expect(target).not.toHaveClass('mg-show-more--collapsed');
       expect(button.hidden).toBe(true);
+    });
+
+    it('applies resize decisions in an animation frame', () => {
+      const { target, button, height } = setup({ full: 150 });
+      mgShowMore(button);
+      height.full = 400;
+      observers[0].callback();
+      expect(target).not.toHaveClass('mg-show-more--collapsed');
+      frames.splice(0).forEach(callback => callback());
+      expect(target).toHaveClass('mg-show-more--collapsed');
+    });
+
+    it('never clicks the toggle to change state', () => {
+      const { button, height } = setup({ full: 400 });
+      const clicks = jest.fn();
+      button.addEventListener('click', clicks);
+      mgShowMore(button);
+      height.full = 100;
+      resize();
+      height.full = 400;
+      resize();
+      expect(clicks).not.toHaveBeenCalled();
     });
 
     it('stops measuring once the reader uses the toggle', () => {
-      const { target, button, height } = setupThreshold({ full: 600 });
+      const { target, button, height } = setup({ full: 600 });
       mgShowMore(button);
       button.click();
       expect(target).not.toHaveClass('mg-show-more--collapsed');
       height.full = 100;
-      observers[0].callback();
+      resize();
       expect(button.hidden).toBe(false);
       expect(button).toHaveTextContent('Show less');
     });
 
     it('waits for layout before deciding', () => {
-      const { target, button } = setupThreshold({ full: 0 });
+      const { target, button } = setup({ full: 0 });
       mgShowMore(button);
       expect(target).toHaveClass('mg-show-more--collapsed');
       expect(button.hidden).toBe(false);
     });
 
-    it('cleanup disconnects the observer and shows the toggle again', () => {
-      const { button } = setupThreshold({ full: 150 });
+    it('shows a toggle the template shipped hidden when it collapses', () => {
+      const { button } = setup({ full: 400, attrs: 'hidden' });
+      mgShowMore(button);
+      expect(button.hidden).toBe(false);
+    });
+
+    it('cleanup disconnects the observer and restores the toggle', () => {
+      const { button } = setup({ full: 150, attrs: 'hidden' });
       const cleanup = mgShowMore(button);
-      expect(button.hidden).toBe(true);
       cleanup();
       expect(observers[0].disconnected).toBe(true);
-      expect(button.hidden).toBe(false);
+      expect(button.hidden).toBe(true);
     });
 
     it('leaves toggles without the attribute alone', () => {
@@ -481,6 +527,102 @@ describe('mgShowMore', () => {
       );
       expect(button.hidden).toBe(false);
       expect(observers).toHaveLength(0);
+    });
+  });
+
+  describe('analytics label', () => {
+    it('reports the action in data-vf-analytics-label, which the tracker reads', () => {
+      // setupButton ships the content collapsed, so init opens it.
+      const button = setupButton();
+      mgShowMore(button);
+      expect(button).toHaveAttribute('data-vf-analytics-label', 'Show less');
+      button.click();
+      expect(button).toHaveAttribute('data-vf-analytics-label', 'Show more');
+      expect(button).not.toHaveAttribute('data-data-vf-google-analytics-label');
+    });
+
+    it('uses per-state labels when given', () => {
+      document.body.innerHTML = `
+        <div id="body"></div>
+        <button data-mg-show-more data-mg-show-more-target="#body"
+          data-mg-show-more-analytics-collapsed="Collection: show more"
+          data-mg-show-more-analytics-open="Collection: show less">Show more</button>`;
+      const button = document.querySelector('button');
+      const cleanup = mgShowMore(button);
+      expect(button).toHaveAttribute(
+        'data-vf-analytics-label',
+        'Collection: show more'
+      );
+      button.click();
+      expect(button).toHaveAttribute(
+        'data-vf-analytics-label',
+        'Collection: show less'
+      );
+      cleanup();
+      expect(button).not.toHaveAttribute('data-vf-analytics-label');
+    });
+
+    it('keeps a fixed label the author set', () => {
+      document.body.innerHTML = `
+        <div id="body"></div>
+        <button data-mg-show-more data-mg-show-more-target="#body"
+          data-vf-analytics-label="Report: summary toggle">Show more</button>`;
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      button.click();
+      expect(button).toHaveAttribute(
+        'data-vf-analytics-label',
+        'Report: summary toggle'
+      );
+    });
+  });
+
+  describe('label with hidden context', () => {
+    it('updates only the [data-mg-show-more-label] text', () => {
+      document.body.innerHTML = `
+        <div id="body"></div>
+        <button data-mg-show-more data-mg-show-more-target="#body">
+          <span data-mg-show-more-label>Show more</span><span class="mg-u-sr-only"> about this collection</span>
+        </button>`;
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      button.click();
+      expect(button).toHaveTextContent('Show less about this collection');
+      expect(button.querySelector('.mg-u-sr-only')).toBeInTheDocument();
+    });
+  });
+
+  describe('Show less', () => {
+    it('brings the heading back into view when the toggle has left it', () => {
+      document.body.innerHTML = `
+        <h2 id="heading">About</h2>
+        <div id="body"></div>
+        <button data-mg-show-more data-mg-show-more-target="#body">Show more</button>`;
+      const heading = document.getElementById('heading');
+      heading.scrollIntoView = jest.fn();
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      button.click(); // open
+      button.getBoundingClientRect = () => ({ top: -300, bottom: -260 });
+      button.click(); // collapse; the toggle is above the viewport
+      expect(heading.scrollIntoView).toHaveBeenCalledWith(
+        expect.objectContaining({ block: 'start' })
+      );
+    });
+
+    it('does not scroll when the toggle is still in view', () => {
+      document.body.innerHTML = `
+        <h2 id="heading">About</h2>
+        <div id="body"></div>
+        <button data-mg-show-more data-mg-show-more-target="#body">Show more</button>`;
+      const heading = document.getElementById('heading');
+      heading.scrollIntoView = jest.fn();
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      button.click();
+      button.getBoundingClientRect = () => ({ top: 200, bottom: 240 });
+      button.click();
+      expect(heading.scrollIntoView).not.toHaveBeenCalled();
     });
   });
 });

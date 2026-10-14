@@ -714,7 +714,7 @@ export default {
     {
       name: 'Show more',
       description:
-        'Collapse long content behind a fade. Requires the mg-show-more vanilla JS utility for toggle behavior. Customizable height via the --mg-show-more-height CSS variable (default: 200px). Add data-mg-show-more-threshold to the toggle to collapse only content taller than a threshold.',
+        'Collapse long content behind a fade. Requires the mg-show-more vanilla JS utility for toggle behavior. Customizable height via the --mg-show-more-height CSS variable (default: 200px). Add data-mg-show-more-min-hidden-lines to the toggle to collapse only when enough lines would be hidden.',
       classes: [
         {
           class: 'mg-show-more--collapsed',

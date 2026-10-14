@@ -219,10 +219,11 @@ const shortText =
 export const OnlyWhenLong = {
   name: 'Only when long',
   render: () => (
-    <div style={{ maxWidth: '400px' }}>
+    // Collapse to six lines of the content's own line height.
+    <div style={{ maxWidth: '400px', '--mg-show-more-height': '6lh' }}>
       <h3 className="mg-heading-300">Short content</h3>
       <ShowMore
-        threshold
+        minHiddenLines={4}
         data={[
           {
             collapsable_wrapper_class: 'show-more-wrapper-class',
@@ -232,7 +233,7 @@ export const OnlyWhenLong = {
       />
       <h3 className="mg-heading-300">Long content</h3>
       <ShowMore
-        threshold
+        minHiddenLines={4}
         data={[
           {
             collapsable_wrapper_class: 'show-more-wrapper-class',
