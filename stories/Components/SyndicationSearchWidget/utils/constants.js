@@ -565,6 +565,29 @@ export const SORT_VALUES = [
 export const EVENT_SORT_VALUES = ['eventDateAsc', 'eventDateDesc'];
 
 /**
+ * `_source` fields the widget reads from a hit: the teaser HTML, the fields
+ * the no-teaser fallback renders (title, url, nid, type, vid, domain, dates),
+ * and the debug metrics. Everything else in the index (`body`,
+ * `aggregated_field`, ...) is large and unused, so it is not requested.
+ * Override with `config.sourceFields` for an endpoint whose hits need more.
+ * @type {string[]}
+ */
+export const SOURCE_FIELDS = [
+  'teaser',
+  'title',
+  'url',
+  'nid',
+  'type',
+  'vid',
+  'field_domain_access',
+  'published_at',
+  'event_start',
+  'event_end',
+  'field_meta_interestingness',
+  'field_meta_longevity',
+];
+
+/**
  * Elasticsearch's default `index.max_result_window`: `from + size` cannot
  * exceed it, so pages beyond it would only return an error.
  * @type {number}

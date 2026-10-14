@@ -11,6 +11,7 @@
 import {
   SCORING_CONFIG,
   HIGHLIGHT_CONFIG,
+  SOURCE_FIELDS,
   FACET_FIELDS,
   parseTypeValue,
   TAXONOMY_VOCABULARY_MAP,
@@ -86,6 +87,8 @@ export function buildQuery(
     size: resultsPerPage,
     sort: buildSort(sortBy),
     query: mainQuery,
+    // Only the fields the widget renders; `body` alone is most of a hit.
+    _source: { includes: config.sourceFields || SOURCE_FIELDS },
   };
 
   // Skip highlights in card mode when summary is hidden: card teasers use

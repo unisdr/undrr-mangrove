@@ -7,6 +7,7 @@ import { buildQuery, getAggregationBuckets } from '../utils/queryBuilder';
 import {
   DEFAULT_CONFIG,
   SCORING_CONFIG,
+  SOURCE_FIELDS,
   buildTierRanges,
   buildTierFilter,
 } from '../utils/constants';
@@ -53,6 +54,26 @@ describe('queryBuilder', () => {
           minimum_should_match: 1,
         },
       });
+    });
+  });
+
+  describe('_source fields', () => {
+    it('requests only the fields the widget renders', () => {
+      const result = buildQuery(defaultState, DEFAULT_CONFIG);
+      expect(result._source).toEqual({ includes: SOURCE_FIELDS });
+      expect(SOURCE_FIELDS).not.toContain('body');
+      expect(SOURCE_FIELDS).not.toContain('aggregated_field');
+      expect(SOURCE_FIELDS).toEqual(
+        expect.arrayContaining(['teaser', 'title', 'event_start', 'event_end'])
+      );
+    });
+
+    it('uses config.sourceFields when set', () => {
+      const result = buildQuery(defaultState, {
+        ...DEFAULT_CONFIG,
+        sourceFields: ['teaser', 'body'],
+      });
+      expect(result._source).toEqual({ includes: ['teaser', 'body'] });
     });
   });
 

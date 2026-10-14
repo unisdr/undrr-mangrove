@@ -188,6 +188,12 @@ SyndicationSearchWidget.propTypes = {
     gridColumns: PropTypes.number,
     /** Controls which teaser fields are visible; null shows all. */
     visibleTeaserFields: PropTypes.object,
+    /**
+     * `_source` fields to request for each hit. Defaults to `SOURCE_FIELDS`
+     * in utils/constants.js, the fields the widget renders. Set it only for
+     * an endpoint whose hits need other fields.
+     */
+    sourceFields: PropTypes.arrayOf(PropTypes.string),
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
     /**
