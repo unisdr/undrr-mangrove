@@ -316,6 +316,12 @@ export function SelectDropdown({
             role="listbox"
             aria-label={label}
             aria-multiselectable={multiple}
+            // Hover is CSS. When the pointer moves over the list, drop the
+            // keyboard highlight so two options don't both look current;
+            // after that, pointer movement costs no renders.
+            onPointerMove={() => {
+              if (highlightedIndex !== -1) setHighlightedIndex(-1);
+            }}
           >
             {filteredOptions.length === 0 ? (
               <li className="mg-select__empty">{noOptionsText}</li>
