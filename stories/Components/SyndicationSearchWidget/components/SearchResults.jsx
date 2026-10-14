@@ -5,7 +5,13 @@
  * @module SearchWidget/components/SearchResults
  */
 
-import React, { useMemo } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   useSearchState,
   useSearchConfig,
@@ -18,8 +24,35 @@ import {
   resolveFacetsLayout,
 } from '../utils/constants';
 import { Loader } from '../../../Utilities/Loader/Loader';
+import { getOwnerDocument } from '../utils/ownerDocument';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
+
+// useLayoutEffect warns when rendered on a server; the SSR handoff only
+// matters in a browser anyway.
+const useBrowserLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+/**
+ * Resolve `config.ssrResults` to the server-rendered results element: an
+ * Element, or a CSS selector looked up in the document. Runs during the first
+ * render, before React's first commit clears the mount container, so markup
+ * inside the container can still be found.
+ *
+ * @param {Element|string|null|undefined} ssrResults
+ * @returns {Element|null}
+ */
+function resolveSsrResults(ssrResults) {
+  if (!ssrResults) return null;
+  if (typeof ssrResults !== 'string') {
+    return ssrResults.nodeType === 1 ? ssrResults : null;
+  }
+  try {
+    return getOwnerDocument(null)?.querySelector(ssrResults) || null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * SearchResults component.
@@ -79,7 +112,33 @@ export function SearchResults({
     [visibleTeaserFields]
   );
 
+  // Server-rendered results stay on screen until the first client results
+  // (or an error) arrive: the element is moved into this region, then removed
+  // with it. See "Server-rendered results" in the MDX.
+  const [ssrNode] = useState(() => resolveSsrResults(config.ssrResults));
+  const ssrSlotRef = useRef(null);
   const searched = Array.isArray(results);
+  const handingOff = ssrNode !== null && !searched && !error;
+  useBrowserLayoutEffect(() => {
+    if (handingOff && ssrSlotRef.current) {
+      if (ssrNode.parentNode !== ssrSlotRef.current) {
+        ssrSlotRef.current.appendChild(ssrNode);
+      }
+    } else if (ssrNode?.isConnected) {
+      ssrNode.remove();
+    }
+  }, [handingOff, ssrNode]);
+
+  if (handingOff) {
+    return (
+      <div
+        ref={ssrSlotRef}
+        className="mg-search__ssr"
+        aria-busy="true"
+        data-mg-search-ssr-slot=""
+      />
+    );
+  }
 
   const skeleton = (
     <div

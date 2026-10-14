@@ -30,7 +30,7 @@ function nextRootId() {
  * @param {Function|object} config.component - React component (or module with `.default`)
  * @param {Function} config.fromElement - (container: Element) => props object
  * @param {object} [config.options]
- * @param {boolean} [config.options.clearContainer=true] - Clear innerHTML before rendering
+ * @param {boolean} [config.options.clearContainer=true] - Clear innerHTML before rendering. A container with a `data-mg-ssr` attribute is never cleared early: its server-rendered markup stays on screen until React's first commit replaces it, and the component may keep part of it longer (SyndicationSearchWidget keeps `[data-mg-search-ssr]` until its first results)
  * @param {string} [config.options.debugLabel] - Label for error messages (defaults to selector)
  * @param {Function} [config.options.onError] - (error, container) callback
  * @param {string} [config.options.identifierPrefix] - Prefix for React useId() (defaults to selector-based slug). A page-wide root number is appended, so ids stay unique across hydrators and `update()` calls
@@ -121,10 +121,15 @@ export default function createHydrator({
       if (container.dataset.mgHydrated === 'true') return;
       if (isInsideHydratedContainerOfSameKind(container, context)) return;
 
-      const savedHTML = clearContainer ? container.innerHTML : null;
+      // Server-rendered content opts out of the early clear, per container:
+      // React's first commit empties the container anyway, in the same frame
+      // that paints the component, so the page never shows it empty.
+      const clearEarly =
+        clearContainer && !container.hasAttribute('data-mg-ssr');
+      const savedHTML = clearEarly ? container.innerHTML : null;
       try {
         const props = fromElement(container);
-        if (clearContainer) container.innerHTML = '';
+        if (clearEarly) container.innerHTML = '';
         const root = createRoot(container, {
           identifierPrefix: `${prefix}-${nextRootId()}-`,
           onCaughtError(error, errorInfo) {

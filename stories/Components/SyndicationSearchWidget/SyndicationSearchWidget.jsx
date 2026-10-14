@@ -194,6 +194,15 @@ SyndicationSearchWidget.propTypes = {
      * an endpoint whose hits need other fields.
      */
     sourceFields: PropTypes.arrayOf(PropTypes.string),
+    /**
+     * Server-rendered results to keep on screen until the first client
+     * results (or an error) commit: an Element, or a CSS selector resolved
+     * on the first render. The element is moved into the results region and
+     * removed when the client results replace it. `fromElement` sets it from
+     * a `[data-mg-search-ssr]` child of the container. See "Server-rendered
+     * results" in the MDX.
+     */
+    ssrResults: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
     /**
