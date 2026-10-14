@@ -245,3 +245,92 @@ describe('aggregations', () => {
     expect((await step(actions.setQuery('flood'))).aggs).toBeDefined();
   });
 });
+
+describe('searching at once', () => {
+  const mount = async () => {
+    render(<SyndicationSearchWidget config={base} />);
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    await flush();
+    expect(searchCalls()).toHaveLength(1);
+  };
+  const lastQuery = () =>
+    JSON.parse(searchCalls()[searchCalls().length - 1][1].body).query
+      .function_score.query.bool.must.query_string.query;
+
+  it('runs a typed query waiting for the debounce when the reader presses Enter', async () => {
+    await mount();
+    const input = screen.getByRole('searchbox');
+    fireEvent.change(input, { target: { value: 'flood' } });
+    act(() => {
+      jest.advanceTimersByTime(10);
+    });
+    expect(searchCalls()).toHaveLength(1);
+
+    fireEvent.submit(input.closest('form'));
+    await flush();
+    expect(searchCalls()).toHaveLength(2);
+    expect(lastQuery()).toContain('flood');
+
+    // The debounce doesn't fire a second time.
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    await flush();
+    expect(searchCalls()).toHaveLength(2);
+  });
+
+  it('runs Clear at once', async () => {
+    await mount();
+    const input = screen.getByRole('searchbox');
+    fireEvent.change(input, { target: { value: 'flood' } });
+    act(() => {
+      jest.advanceTimersByTime(600);
+    });
+    await flush();
+    expect(searchCalls()).toHaveLength(2);
+
+    fireEvent.click(screen.getByRole('button', { name: /clear search/i }));
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    await flush();
+    expect(searchCalls()).toHaveLength(3);
+    expect(lastQuery()).toBe('*');
+  });
+});
+
+describe('back and forward', () => {
+  let dispatch;
+  function Harness() {
+    useSearch();
+    dispatch = useSearchDispatch();
+    return null;
+  }
+
+  it('searches a restored query at once', async () => {
+    render(
+      <SearchProvider config={base}>
+        <Harness />
+      </SearchProvider>
+    );
+    act(() => {
+      dispatch(actions.initialize({ defaultFilters: [] }));
+    });
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    await flush();
+    expect(searchCalls()).toHaveLength(1);
+
+    act(() => {
+      dispatch(actions.restoreState({ query: 'drought' }));
+    });
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    await flush();
+    expect(searchCalls()).toHaveLength(2);
+  });
+});

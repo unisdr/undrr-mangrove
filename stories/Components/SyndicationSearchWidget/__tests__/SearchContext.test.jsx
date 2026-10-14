@@ -625,7 +625,11 @@ describe('SearchContext', () => {
       expect(actions.setQuery('test')).toEqual({
         type: ActionTypes.SET_QUERY,
         payload: 'test',
+        immediate: false,
       });
+      expect(actions.setQuery('test', { immediate: true }).immediate).toBe(
+        true
+      );
 
       expect(actions.setFacet('type', 'news', false)).toEqual({
         type: ActionTypes.SET_FACET,

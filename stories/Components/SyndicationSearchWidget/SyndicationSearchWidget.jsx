@@ -237,7 +237,7 @@ function SyndicationSearchWidgetInner() {
   const config = useSearchConfig();
   const state = useSearchState();
   const dispatch = useSearchDispatch();
-  const { isPending } = useSearch();
+  const { isPending, flushSearch } = useSearch();
 
   // Generate unique ID for this widget instance
   const widgetId = useId().replace(/:/g, '');
@@ -323,6 +323,20 @@ function SyndicationSearchWidgetInner() {
     }
   }, [state.query, state.isInitialized]);
 
+  // Enter, the search button and Clear search at once rather than after the
+  // typing debounce. A query already waiting for the debounce runs now.
+  const submitQuery = useCallback(
+    value => {
+      sentQueryRef.current = value;
+      if (value === state.query) {
+        flushSearch();
+      } else {
+        dispatch(actions.setQuery(value, { immediate: true }));
+      }
+    },
+    [state.query, flushSearch, dispatch]
+  );
+
   // Tell the page what came back, once per completed search: config.onResults
   // for React hosts, and an `mg-search-widget:results` event that bubbles from
   // the widget for everything else. A host can hide a section around a widget
@@ -383,6 +397,7 @@ function SyndicationSearchWidgetInner() {
     <SearchForm
       value={inputValue}
       onChange={setInputValue}
+      onSubmit={submitQuery}
       isStale={isPending}
       isLoading={isLoading}
       widgetId={widgetId}
@@ -486,6 +501,7 @@ function SyndicationSearchWidgetInner() {
             <SearchForm
               value={inputValue}
               onChange={setInputValue}
+              onSubmit={submitQuery}
               isStale={isPending}
               isLoading={isLoading}
               widgetId={widgetId}

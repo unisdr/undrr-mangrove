@@ -79,6 +79,7 @@ export function useSearch() {
     page,
     isInitialized,
     aggregations,
+    queryIsTyped,
   } = state;
   const { searchEndpoint, minSearchLength, debounceDelay } = config;
 
@@ -221,27 +222,47 @@ export function useSearch() {
   // the only thing worth debouncing.
   const scheduledQueryRef = useRef(null);
 
+  // The scheduled search, so a submit can run it at once.
+  const timerRef = useRef(null);
+
   useEffect(() => {
     if (!isInitialized) return undefined;
 
     const typed =
-      scheduledQueryRef.current !== null && scheduledQueryRef.current !== query;
+      queryIsTyped &&
+      scheduledQueryRef.current !== null &&
+      scheduledQueryRef.current !== query;
     scheduledQueryRef.current = query;
 
     const timeoutId = setTimeout(
       () => {
+        timerRef.current = null;
         executeSearchRef.current();
       },
       typed ? debounceDelay : 0
     );
+    timerRef.current = timeoutId;
 
     return () => {
       clearTimeout(timeoutId);
+      timerRef.current = null;
       // The request this effect started is stale now; a newer one follows.
       abortControllerRef.current?.abort();
     };
     // request.key stands for everything the request depends on.
   }, [request.key, isInitialized, debounceDelay]);
+
+  /**
+   * Run a scheduled search now instead of after the typing debounce, e.g.
+   * when the reader submits the query that is waiting. Does nothing when no
+   * search is waiting.
+   */
+  const flushSearch = useCallback(() => {
+    if (timerRef.current === null) return;
+    clearTimeout(timerRef.current);
+    timerRef.current = null;
+    executeSearchRef.current();
+  }, []);
 
   /**
    * Refresh the current search (re-execute with same parameters).
@@ -252,6 +273,7 @@ export function useSearch() {
 
   return {
     executeSearch,
+    flushSearch,
     isPending,
     refresh,
   };

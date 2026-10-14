@@ -216,7 +216,7 @@ export function useHashSync({ enabled = true } = {}) {
       window.history.replaceState(null, '', newUrl);
 
       // Set query in state
-      dispatch(actions.setQuery(queryParam));
+      dispatch(actions.setQuery(queryParam, { immediate: true }));
       lastHashRef.current = newHash;
       isInitializedRef.current = true;
       return;
@@ -226,7 +226,7 @@ export function useHashSync({ enabled = true } = {}) {
     // they are used as-is (decoding again breaks on a literal "%").
     const hashState = parseHash();
     if (hashState.query) {
-      dispatch(actions.setQuery(hashState.query));
+      dispatch(actions.setQuery(hashState.query, { immediate: true }));
 
       // Update page title if specified
       if (hashState.label && typeof document !== 'undefined') {

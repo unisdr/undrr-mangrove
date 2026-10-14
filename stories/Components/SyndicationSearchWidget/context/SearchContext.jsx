@@ -206,6 +206,9 @@ const initialState = {
   // Search query
   query: '',
 
+  // Whether the last query change came from typing (and so is debounced)
+  queryIsTyped: false,
+
   // defaultQuery applied by the last INITIALIZE. A query still equal to it
   // hasn't been changed by the reader, so a new defaultQuery replaces it.
   appliedDefaultQuery: '',
@@ -288,6 +291,9 @@ function searchReducer(state, action) {
       return {
         ...state,
         query: action.payload,
+        // Typing is debounced; a submitted, cleared or URL-driven query is
+        // searched at once.
+        queryIsTyped: !action.immediate,
         page: 1, // Reset to first page on new query
       };
 
@@ -480,6 +486,7 @@ function searchReducer(state, action) {
         facetOperators: initialFacets
           ? initialFacetOperators || {}
           : state.facetOperators,
+        queryIsTyped: false,
         isInitialized: true,
       };
     }
@@ -501,6 +508,8 @@ function searchReducer(state, action) {
         sortBy,
         facets,
         facetOperators,
+        // Back/forward: search at once.
+        queryIsTyped: false,
       };
     }
 
@@ -654,9 +663,16 @@ export function useSearch() {
  * Action creators for common operations.
  */
 export const actions = {
-  setQuery: query => ({
+  /**
+   * @param {string} query
+   * @param {Object} [options]
+   * @param {boolean} [options.immediate] - Search at once rather than after
+   *   the typing debounce (submit, clear, URL).
+   */
+  setQuery: (query, { immediate = false } = {}) => ({
     type: ActionTypes.SET_QUERY,
     payload: query,
+    immediate,
   }),
 
   setFacet: (key, value, replace = true) => ({
