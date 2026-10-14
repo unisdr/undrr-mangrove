@@ -247,6 +247,21 @@ $search-input-padding-x: mg-rem(44);
   gap: var(--mg-spacing-200);
 }
 
+// Results column: the search box and filter chips (sidebar layout) and the
+// results.
+.mg-search__column {
+  flex: 1;
+  min-width: 0;
+}
+
+// The in-widget search box is capped at a comfortable reading width, start
+// aligned, in every layout; on narrow screens it is full width anyway. A
+// form portaled into a searchTarget is outside the widget and left to the
+// host page.
+.mg-search-widget .mg-search__form {
+  max-inline-size: mg-rem(768);
+}
+
 .mg-search__main {
   flex: 1;
   min-width: 0;

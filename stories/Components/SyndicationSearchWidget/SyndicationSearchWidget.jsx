@@ -376,6 +376,22 @@ function SyndicationSearchWidgetInner() {
   );
   const searchPortaled = showSearchBox && searchTargetEl !== null;
 
+  // With the facets sidebar, the search box and filter chips belong to the
+  // results column rather than spanning the sidebar too.
+  const inColumn = facetsLayout === 'sidebar' && !facetsPortaled;
+  const searchForm = showSearchBox && !searchPortaled && (
+    <SearchForm
+      value={inputValue}
+      onChange={setInputValue}
+      isStale={isPending}
+      isLoading={isLoading}
+      widgetId={widgetId}
+    />
+  );
+  const activeFilters = showActiveFilters && (
+    <ActiveFilters widgetId={widgetId} />
+  );
+
   // Count active filters for mobile button badge
   const activeFilterCount = countActiveFilters(state);
 
@@ -395,16 +411,9 @@ function SyndicationSearchWidgetInner() {
       )}
 
       {/* Search form: rendered in-widget unless searchTarget is portaling
-          it elsewhere on the page. */}
-      {showSearchBox && !searchPortaled && (
-        <SearchForm
-          value={inputValue}
-          onChange={setInputValue}
-          isStale={isPending}
-          isLoading={isLoading}
-          widgetId={widgetId}
-        />
-      )}
+          it elsewhere on the page. With the facets sidebar it sits in the
+          results column instead (below). */}
+      {!inColumn && searchForm}
 
       {/* Horizontal facet strip: only when facets layout is 'horizontal'
           AND no external target is taking the facets via portal. Renders
@@ -421,34 +430,39 @@ function SyndicationSearchWidgetInner() {
       )}
 
       {/* Active filter chips */}
-      {showActiveFilters && <ActiveFilters widgetId={widgetId} />}
+      {!inColumn && activeFilters}
 
       {/* Main content area */}
       <div className="mg-search__content">
-        {/* Results area. A div, not <main>: the widget always sits inside
+        <div className="mg-search__column">
+          {inColumn && searchForm}
+          {inColumn && activeFilters}
+
+          {/* Results area. A div, not <main>: the widget always sits inside
             the page's own main landmark, and a page has only one. */}
-        <div
-          className={`mg-search__main ${isPending ? 'mg-search__main--stale' : ''}`}
-          data-vf-google-analytics-region={analyticsRegion(config, 'results')}
-          aria-busy={isLoading || isPending}
-        >
-          <Suspense
-            fallback={
-              <SearchResultsSkeleton
-                displayMode={config.displayMode}
-                count={config.resultsPerPage}
-                gridColumns={config.gridColumns}
-              />
-            }
+          <div
+            className={`mg-search__main ${isPending ? 'mg-search__main--stale' : ''}`}
+            data-vf-google-analytics-region={analyticsRegion(config, 'results')}
+            aria-busy={isLoading || isPending}
           >
-            <SearchResults
-              isStale={isPending}
-              widgetId={widgetId}
-              showMobileFilterButton={facetsActive && !facetsPortaled}
-              onOpenFilters={openDrawer}
-              activeFilterCount={activeFilterCount}
-            />
-          </Suspense>
+            <Suspense
+              fallback={
+                <SearchResultsSkeleton
+                  displayMode={config.displayMode}
+                  count={config.resultsPerPage}
+                  gridColumns={config.gridColumns}
+                />
+              }
+            >
+              <SearchResults
+                isStale={isPending}
+                widgetId={widgetId}
+                showMobileFilterButton={facetsActive && !facetsPortaled}
+                onOpenFilters={openDrawer}
+                activeFilterCount={activeFilterCount}
+              />
+            </Suspense>
+          </div>
         </div>
 
         {/* Facets sidebar: desktop only, and only when not portaled out. */}

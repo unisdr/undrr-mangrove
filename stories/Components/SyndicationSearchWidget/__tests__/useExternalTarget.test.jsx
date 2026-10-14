@@ -86,9 +86,7 @@ describe('target re-resolution', () => {
     await waitFor(() =>
       expect(target.querySelector('form[role="search"]')).not.toBeNull()
     );
-    expect(
-      widget.querySelector(':scope > form[role="search"]')
-    ).not.toBeInTheDocument();
+    expect(widget.querySelector('form[role="search"]')).not.toBeInTheDocument();
   });
 
   it('warns once, not on every DOM change, while the target is missing', async () => {

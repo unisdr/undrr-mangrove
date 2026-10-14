@@ -285,7 +285,7 @@ describe('SyndicationSearchWidget', () => {
         // ...and not as a direct child of the widget container
         const widget = document.querySelector('[data-mg-search-widget]');
         expect(
-          widget.querySelector(':scope > form[role="search"]')
+          widget.querySelector('form[role="search"]')
         ).not.toBeInTheDocument();
       } finally {
         target.remove();
@@ -332,6 +332,24 @@ describe('SyndicationSearchWidget', () => {
         target.remove();
       }
     });
+  });
+
+  describe('search box placement', () => {
+    it('sits in the results column with the facets sidebar', () => {
+      render(<SyndicationSearchWidget config={{ facets: 'sidebar' }} />);
+      const form = screen.getByRole('search');
+      expect(form.closest('.mg-search__column')).not.toBeNull();
+      expect(form.closest('.mg-search__sidebar')).toBeNull();
+    });
+
+    it.each(['horizontal', false])(
+      'sits above the content with facets %p',
+      facets => {
+        render(<SyndicationSearchWidget config={{ facets }} />);
+        const form = screen.getByRole('search');
+        expect(form.parentElement).toHaveAttribute('data-mg-search-widget');
+      }
+    );
   });
 
   describe('search input', () => {
