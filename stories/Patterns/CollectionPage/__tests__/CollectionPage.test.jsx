@@ -42,13 +42,14 @@ const hits = (total, sources = []) => ({
 });
 
 // Default endpoint: 36 items, newest 11 November 2025; the ranking finds two
-// related collections, which the related widget then lists.
+// related collections, which the related widget then lists. `published_at`
+// is in the index's own shape: Unix seconds wrapped in an array.
 const defaults = ({ body, filters }) => {
   if (body._source?.includes('nid')) {
     return reply(hits(2, [{ nid: [98866] }, { nid: [92055] }]));
   }
   if (body._source?.includes('published_at')) {
-    return reply(hits(36, [{ published_at: '2025-11-11T09:00:00' }]));
+    return reply(hits(36, [{ published_at: [1762851600] }]));
   }
   if (filters.some(filter => filter.startsWith('nid:('))) {
     return reply(
@@ -125,6 +126,27 @@ test('orients the reader: breadcrumb, type, one h1, a linked count and the newes
   expect(within(hero).getByRole('list', { name: 'Topics' })).toContainElement(
     screen.getByRole('link', { name: 'Wildfire and Bushfire' })
   );
+});
+
+test.each([
+  ['an ISO string', '2025-11-11T09:00:00Z', /Latest item: 11 November 2025$/],
+  ['milliseconds', 1762851600000, /Latest item: 11 November 2025$/],
+])('reads the newest date given as %s', async (_label, value, pattern) => {
+  respond = request =>
+    request.body._source?.includes('published_at')
+      ? reply(hits(36, [{ published_at: value }]))
+      : defaults(request);
+  renderPage();
+  await waitForFacts(pattern);
+});
+
+test('leaves the date out when the newest item has no usable date', async () => {
+  respond = request =>
+    request.body._source?.includes('published_at')
+      ? reply(hits(36, [{ published_at: ['not a date'] }]))
+      : defaults(request);
+  renderPage();
+  await waitForFacts(/^36 items$/);
 });
 
 test('counts and dates with the list’s own filters, in one query', async () => {

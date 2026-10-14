@@ -108,6 +108,24 @@ async function search(body, signal) {
   }
 }
 
+/**
+ * The index stores `published_at` as Unix seconds, usually wrapped in an
+ * array (`[1762955302]`). Accept that, milliseconds and ISO strings, and
+ * return an ISO string, or null when the value is not a usable date.
+ */
+const toIsoDate = value => {
+  const raw = [].concat(value ?? [])[0];
+  if (raw === undefined || raw === null || raw === '') return null;
+  const numeric = typeof raw === 'number' ? raw : Number(raw);
+  let date;
+  if (Number.isFinite(numeric)) {
+    date = new Date(numeric < 1e12 ? numeric * 1000 : numeric);
+  } else {
+    date = new Date(raw);
+  }
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+};
+
 const totalOf = data => {
   const total = data?.hits?.total;
   return typeof total === 'number' ? total : (total?.value ?? 0);
@@ -150,7 +168,7 @@ function useItems(filters, known) {
         setState({
           status: 'done',
           count: totalOf(data),
-          latest: [].concat(newest ?? [])[0] ?? null,
+          latest: toIsoDate(newest),
         });
       })
       .catch(() => {
