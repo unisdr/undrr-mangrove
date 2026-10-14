@@ -60,7 +60,9 @@ describe('on this page nav', () => {
     expect(rule).toMatch(
       /scroll-padding-top:\s*var\(--mg-on-this-page-nav-scroll-padding\)/
     );
-    expect(rule).toMatch(/var\(--mg-scroll-padding-base, 0px\)/);
+    expect(rule).toMatch(
+      /var\(--mg-on-this-page-nav-scroll-padding-base, 0px\)/
+    );
   });
 
   // A fade belongs only on a side with links hidden behind it. Each RTL rule

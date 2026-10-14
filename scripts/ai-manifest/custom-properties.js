@@ -291,8 +291,10 @@ export const PROPERTY_DOCS = {
     "The bar's height, set on the root by on-this-page-nav.js while the bar is sticky (0px when it is not) and read by the root's scroll padding. Do not set it yourself.",
   '--mg-on-this-page-nav-container':
     'Width of the mg-container the links line up with under .mg-on-this-page-nav--align-container. Declared per breakpoint to match mg-container; override it when the content column is narrower.',
+  '--mg-on-this-page-nav-scroll-padding-base':
+    "A site's own scroll padding, set on :root, that the page's scroll padding starts from before adding the On this page bar's offset and height. Nothing declares it; use it instead of html { scroll-padding-top } to keep the site's value and add the bar.",
   '--mg-on-this-page-nav-scroll-padding':
-    "Declared on the root while an On this page bar is on the page: --mg-scroll-padding-base plus the docking offset plus the bar's published height (--mg-on-this-page-nav-block-size, set by the script while the bar is sticky). It is the page's scroll-padding-top, so focus, anchors and scrollIntoView land below the bar. The rule has zero specificity, so a site's own html { scroll-padding-top } wins; to keep the site's padding and add the bar to it, set --mg-scroll-padding-base on :root instead.",
+    "Declared on the root while an On this page bar is on the page: --mg-on-this-page-nav-scroll-padding-base plus the docking offset plus the bar's published height (--mg-on-this-page-nav-block-size, set by the script while the bar is sticky). It is the page's scroll-padding-top, so focus, anchors and scrollIntoView land below the bar. The rule has zero specificity, so a site's own html { scroll-padding-top } wins; to keep the site's padding and add the bar to it, set --mg-on-this-page-nav-scroll-padding-base on :root instead.",
 
   // Tree
   '--mg-tree-item-background--hover': 'Row tint on hover.',

@@ -327,11 +327,11 @@
 // --mg-on-this-page-nav-offset is read here from the root, so set it on :root
 // for it to count.
 // Zero specificity (:where), so a site's own `html { scroll-padding-top }`
-// wins outright. A site that wants both sets --mg-scroll-padding-base to its
+// wins outright. A site that wants both sets --mg-on-this-page-nav-scroll-padding-base to its
 // own value and lets this rule add the bar on top.
 :where(html:has(.mg-on-this-page-nav:not(.mg-on-this-page-nav--hidden))) {
   // prettier-ignore
-  --mg-on-this-page-nav-scroll-padding: calc(var(--mg-scroll-padding-base, 0px) + var(--mg-on-this-page-nav-offset, 0px) + var(--mg-on-this-page-nav-block-size, 0px));
+  --mg-on-this-page-nav-scroll-padding: calc(var(--mg-on-this-page-nav-scroll-padding-base, 0px) + var(--mg-on-this-page-nav-offset, 0px) + var(--mg-on-this-page-nav-block-size, 0px));
 
   scroll-padding-top: var(--mg-on-this-page-nav-scroll-padding);
 }
