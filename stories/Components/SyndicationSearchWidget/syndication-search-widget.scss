@@ -423,6 +423,12 @@ $search-input-padding-x: mg-rem(44);
 
 // Result item
 .mg-search__result {
+  // Contain each result: teaser HTML comes from the consuming site's index,
+  // and a malformed teaser's absolutely positioned pieces (e.g. a stretched
+  // link's ::after) otherwise anchor to the page and cover it.
+  // undrr/web-backlog#3145.
+  position: relative;
+  isolation: isolate;
   padding-bottom: var(--mg-spacing-150);
   border-bottom: 1px solid $search-border-light;
 
