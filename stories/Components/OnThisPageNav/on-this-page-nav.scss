@@ -260,9 +260,21 @@
 
 // RTL: flex layout places prevBtn at the right (visual-start) edge and nextBtn
 // at the left (visual-end) edge. The JS scrollBy direction, button visibility,
-// and chevron icon direction are all RTL-aware. The mask-image gradient uses
-// physical `to right` which fades the correct edge in LTR; RTL gradient
-// correction is a known open item.
+// and chevron icon direction are all RTL-aware. The trailing fade is a
+// physical gradient, so it is mirrored here: `to right` faded the first link
+// in an RTL bar instead of the last.
+[dir="rtl"] .mg-on-this-page-nav__list {
+  -webkit-mask-image: linear-gradient(
+    to left,
+    #000 calc(100% - var(--mg-spacing-500)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to left,
+    #000 calc(100% - var(--mg-spacing-500)),
+    transparent
+  );
+}
 
 // Anything the browser scrolls into view (keyboard focus, anchors, a pager's
 // scrollIntoView) lands below the docked bar instead of under it (WCAG 2.4.11
