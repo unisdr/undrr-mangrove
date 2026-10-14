@@ -229,6 +229,19 @@ allowedTypes: {
 
 **News subtype IDs:** `751` (Update), `752` (Press release), `1` (Statements), `754` (Feature), `797` (Opportunities), `756` (Op Ed)
 
+## Event listings
+
+Two options turn a listing into an events listing. Both read the `event_start` and `event_end` date fields that the UNDRR index holds for `event` and `conference_event` content (`event_end` falls back to the start date, so every event has both).
+
+- **`hideExpiredEvents: true`** (data attribute `data-hide-expired-events="true"`) excludes events whose `event_end` is before today. Results without `event_end`, such as news in a mixed listing, are kept. The filter is a plain `range` clause on `now/d`, so Elasticsearch decides what "today" is and server-rendered results honour it without a baked-in timestamp.
+- **`defaultSort: 'eventDateAsc'`** (soonest first) or **`'eventDateDesc'`** (latest first) sorts by `event_start`. Results without an event date sort last in both directions. The sort uses `unmapped_type: 'date'`, so it is safe on an index that doesn't have the field yet.
+
+The Sort dropdown offers the two event date sorts only when `defaultSort` is one of them (or the URL hash selects one), so ordinary listings don't show sorts that would push every non-event to the end. To limit a listing to a date window, add a `customFilters` range such as `event_start:[2026-01-01 TO 2026-03-31]`.
+
+In list mode without teaser HTML, event results show their event date (a range when the event runs over several days) instead of the publish date.
+
+<Canvas of={FiltersStories.UpcomingEvents} meta={FiltersStories} />
+
 ## Taxonomy term results
 
 Shows mixed results with both content nodes and taxonomy terms (Hazard, Country,
@@ -523,14 +536,14 @@ and the browser's back and forward buttons move between filter states.
 #query=flood&page=2&sort=newest&f.field_hazard=12&f.field_hazard=34&op.field_hazard=AND&f.type=field_news_type:751
 ```
 
-| Parameter  | Meaning                                                                                  |
-| ---------- | ---------------------------------------------------------------------------------------- |
-| `query`    | Search text                                                                              |
-| `page`     | Results page, written when above 1                                                       |
-| `sort`     | `relevance`, `newest` or `oldest`, written when it differs from `defaultSort`            |
-| `f.<key>`  | A selected value of the facet `<key>`; repeat the parameter for several values           |
-| `op.<key>` | `AND` or `OR` for a multi-value facet; written only for `AND`, since `OR` is the default |
-| `label`    | Replaces the page's `h1` text when the page loads. It is read once and not written back  |
+| Parameter  | Meaning                                                                                                        |
+| ---------- | -------------------------------------------------------------------------------------------------------------- |
+| `query`    | Search text                                                                                                    |
+| `page`     | Results page, written when above 1                                                                             |
+| `sort`     | `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`, written when it differs from `defaultSort` |
+| `f.<key>`  | A selected value of the facet `<key>`; repeat the parameter for several values                                 |
+| `op.<key>` | `AND` or `OR` for a multi-value facet; written only for `AND`, since `OR` is the default                       |
+| `label`    | Replaces the page's `h1` text when the page loads. It is read once and not written back                        |
 
 Rules:
 
@@ -576,7 +589,7 @@ them; the Drupal block's `auto` setting does this.
 | `debounceDelay`         | number         | 500                                     | Milliseconds to wait before executing search                                                                                       |
 | `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                      |
 | `defaultQuery`          | string         | `''`                                    | Initial search query                                                                                                               |
-| `defaultSort`           | string         | `'relevance'`                           | Initial sort order (`relevance`, `newest`, `oldest`)                                                                               |
+| `defaultSort`           | string         | `'relevance'`                           | Initial sort order: `relevance`, `newest`, `oldest`, `eventDateAsc` or `eventDateDesc`. See [Event listings](#event-listings)      |
 | `defaultFilters`        | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                    |
 | `showSearchBox`         | boolean        | `true`                                  | Show the search input                                                                                                              |
 | `showResultsCount`      | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                      |
@@ -593,6 +606,7 @@ them; the Drupal block's `auto` setting does this.
 | `gridColumns`           | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                   |
 | `visibleTeaserFields`   | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                       |
 | `requireImage`          | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                |
+| `hideExpiredEvents`     | boolean        | `false`                                 | Exclude events whose `event_end` is before today; results without `event_end` are kept. See [Event listings](#event-listings)      |
 | `interestingnessTiers`  | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                             |
 | `longevityTiers`        | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                       |
 | `analyticsRegionPrefix` | string         | `'undrr-search'`                        | Stem for the analytics regions (`<prefix>-form`, `-results`, `-facets`). See [Analytics regions](#analytics-regions)               |
@@ -690,6 +704,7 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/Preventi
 | `data-default-filters`         |         | JSON array of `{key, value}` filter objects                                 |
 | `data-allowed-types`           |         | JSON object restricting content type options                                |
 | `data-require-image`           |         | Only return results with images (`true`/`false`)                            |
+| `data-hide-expired-events`     |         | Hide events that have ended (`true`/`false`)                                |
 | `data-interestingness-tiers`   |         | JSON array of tier names (e.g., `'["promoted","announced"]'`)               |
 | `data-longevity-tiers`         |         | JSON array of tier names (e.g., `'["year","longtime","always"]'`)           |
 | `data-custom-filters`          |         | JSON array of custom filter strings (e.g., `'["type:news"]'`)               |
@@ -781,7 +796,7 @@ SyndicationSearchWidget
 │   ├── SearchResults (with Suspense)
 │   │   └── ResultItem (×n)
 │   ├── FacetsSidebar (desktop)
-│   │   ├── SortOptions (relevance/newest/oldest)
+│   │   ├── SortOptions (relevance/newest/oldest, event date sorts on event listings)
 │   │   ├── FacetSelect (×n, from Elasticsearch aggregations)
 │   │   │   └── SelectDropdown (custom Chosen-like component)
 │   │   └── CustomFacetSelect (×n, editor-defined)
@@ -817,6 +832,13 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.23**, 2026-10-14 ([undrr/web-backlog#3175](https://gitlab.com/undrr/web-backlog/-/work_items/3175)): Event listings and editor preview fixes. See [Event listings](#event-listings).
+  - New `hideExpiredEvents` config (data attribute `data-hide-expired-events`) excludes events whose `event_end` is before today with a `range` on `now/d`, keeping results without `event_end`. No script filters, so server rendering accepts it.
+  - New sort values `eventDateAsc` and `eventDateDesc` sort by `event_start`, missing values last, guarded with `unmapped_type: 'date'`. They are accepted as `defaultSort` and in the URL hash, and the Sort dropdown offers them only when `defaultSort` or the current sort is one of them. New labels `sortEventDateAsc` and `sortEventDateDesc`, translated in the shipped label sets.
+  - In list mode without teaser HTML, `event` and `conference_event` results show their event date, or a start to end range, instead of the publish date. Index dates sent as Unix seconds in an array (`[1762955302]`) are read correctly; the publish date used to render as "Invalid Date" for them. New `utils/dateUtils.js`.
+  - `facetsTarget` and `searchTarget` re-resolve when the target appears, is replaced or is removed after mount, watching the widget's own document (the iframe in a block editor canvas). The fallback warning is logged once per selector rather than on every DOM change. New `hooks/useExternalTarget.js`.
+  - A changed `defaultQuery` replaces the query on re-initialise when the reader hasn't typed a different one, and clearing it clears the query. Before, only the first default applied.
+  - The `mg-search-widget:results` event is dispatched from the widget root rather than looked up by id in the global document, so it also fires inside an iframe.
 - **1.4.22**, 2026-10-14 ([undrr/web-backlog#3157](https://gitlab.com/undrr/web-backlog/-/work_items/3157)): `facetsTarget` and `searchTarget` are matched in the document the widget is mounted in rather than the global `document`, so a widget rendered inside an iframe while its script runs in the parent window (the Drupal Gutenberg 4 editor canvas) finds its target regions in that iframe. The pager's scroll back to the results, the dropdown backdrop portal, and the mobile filter drawer's scroll lock and Escape listener resolve the same way. On a normal page the widget's document is the global one, so nothing changes there. Both props are now listed in the config table.
 - **1.4.21**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): New `onResults` config and `mg-search-widget:results` event after each completed search. Paging scrolls without smooth motion under `prefers-reduced-motion` and moves focus to the results count (or results area) instead of dropping it to the page. A widget without a search box shows its skeleton until its first results arrive and then, if it found nothing, says "No results found" rather than "Enter a search term". A widget with no search box and no facets no longer announces its total. See [Results notification](#results-notification).
 - **1.4.20**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): New `analyticsRegionPrefix` config (data attribute `data-analytics-region-prefix`) sets the stem of the widget's analytics regions, so two widgets on one page report their clicks separately. The default, `undrr-search`, keeps today's region names. See [Analytics regions](#analytics-regions).
