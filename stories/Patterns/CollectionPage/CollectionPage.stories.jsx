@@ -6,9 +6,7 @@ export default {
   title: 'Patterns/Collection page',
   component: CollectionPage,
   parameters: { layout: 'fullscreen' },
-  args: { headerStyle: 'page' },
   argTypes: {
-    headerStyle: { control: 'inline-radio', options: ['page', 'hero'] },
     collection: { control: false },
     itemCount: { control: false },
     syncUrl: { table: { disable: true } },
@@ -18,7 +16,7 @@ export default {
   // holds several examples, and one widget per page may sync.
   render: (args, context) => (
     <CollectionPage
-      key={`${args.collection}-${args.headerStyle}`}
+      key={args.collection}
       {...args}
       syncUrl={context.viewMode === 'story'}
       id={context.id}
@@ -44,9 +42,4 @@ export const LongDescription = {
 export const NoItemsYet = {
   name: 'No items yet',
   args: { collection: 'empty', itemCount: 0 },
-};
-
-export const HeroHeader = {
-  name: 'With a hero header',
-  args: { collection: 'wildfire', headerStyle: 'hero' },
 };

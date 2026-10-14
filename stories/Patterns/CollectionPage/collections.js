@@ -122,7 +122,7 @@ export const collections = {
 /** Tags for the header, in the order PreventionWeb lists them. */
 export const tagsFor = collection =>
   [...collection.hazards, ...collection.countries, ...collection.themes].map(
-    t => ({ name: t.name, href: term(t.tid) })
+    t => ({ label: t.name, href: term(t.tid) })
   );
 
 /**

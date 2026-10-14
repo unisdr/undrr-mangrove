@@ -156,13 +156,14 @@ About.propTypes = {
   paragraphs: PropTypes.array.isRequired,
 };
 
+/** The facts line: the item count, linked to the list, and the last update. */
 function Facts({ count, failed, itemsId, updated }) {
   return (
-    <p className="mg-demo-collection-facts | mg-u-font-size-250">
+    <>
       {!failed && (
         <>
           {count === null ? (
-            <span>{text.counting}</span>
+            text.counting
           ) : (
             <a
               href={`#${itemsId}`}
@@ -175,7 +176,7 @@ function Facts({ count, failed, itemsId, updated }) {
         </>
       )}
       {text.lastUpdated} <time dateTime={updated.iso}>{updated.label}</time>
-    </p>
+    </>
   );
 }
 
@@ -234,26 +235,9 @@ SectionNav.propTypes = {
   ).isRequired,
 };
 
-function Tags({ tags }) {
-  return (
-    <div className="mg-tag-container">
-      {tags.map(tag => (
-        <a key={tag.href} href={tag.href}>
-          {tag.name}
-        </a>
-      ))}
-    </div>
-  );
-}
-
-Tags.propTypes = {
-  tags: PropTypes.array.isRequired,
-};
-
 /** Story-only composition of a PreventionWeb collection page. */
 export function CollectionPage({
   collection: collectionKey = 'wildfire',
-  headerStyle = 'page',
   itemCount,
   syncUrl = true,
   id,
@@ -264,8 +248,6 @@ export function CollectionPage({
   const itemsId = `${prefix}-items`;
   const items = useResultCount(itemFilters(collection), itemCount);
   const related = useResultCount(relatedFilters(collection));
-  const tags = tagsFor(collection);
-  const kicker = `${text.collection} · ${collection.type}`;
   const aboutId = `${prefix}-about`;
   const relatedId = `${prefix}-related`;
   const showRelated = related.count > 0;
@@ -294,70 +276,42 @@ export function CollectionPage({
           className="mg-page-main | mg-container--spacer"
           tabIndex={-1}
         >
-          {headerStyle === 'hero' ? (
-            <div data-vf-google-analytics-region={REGION.header}>
-              <Hero
-                layout="split"
-                split="2/3"
-                headingLevel="h1"
-                data={[
-                  {
-                    label: kicker,
-                    title: collection.title,
-                    summaryText: collection.summary,
-                    // Hero detail is plain text, so the count cannot link here.
-                    detail: [
-                      !items.failed &&
-                        (items.count === null
-                          ? text.counting
-                          : text.items(items.count)),
-                      `${text.lastUpdated} ${collection.updated.label}`,
-                    ]
-                      .filter(Boolean)
-                      .join(' · '),
-                    media: { type: 'image', ...collection.image },
-                  },
-                ]}
-              />
-              <div className="mg-demo-collection-after-hero">
-                <Tags tags={tags} />
-              </div>
-            </div>
-          ) : (
-            <header
-              className="mg-demo-collection-header"
-              data-vf-google-analytics-region={REGION.header}
-            >
-              <div className="mg-demo-collection-header__text">
-                <p className="mg-u-font-size-250">
-                  <a
-                    href={COLLECTIONS_URL}
-                    data-vf-analytics-label="Collection: all collections"
-                  >
-                    {text.collection}
-                  </a>
-                  <span aria-hidden="true"> · </span>
-                  {collection.type}
-                </p>
-                <h1 className="mg-u-font-size-900">{collection.title}</h1>
-                <p className="mg-demo-lede | mg-u-font-size-500">
-                  {collection.summary}
-                </p>
-                <Facts
-                  count={items.count}
-                  failed={items.failed}
-                  itemsId={itemsId}
-                  updated={collection.updated}
-                />
-                <Tags tags={tags} />
-              </div>
-              <img
-                className="mg-demo-collection-header__image"
-                src={collection.image.src}
-                alt={collection.image.alt}
-              />
-            </header>
-          )}
+          <header data-vf-google-analytics-region={REGION.header}>
+            <Hero
+              layout="split"
+              split="2/3"
+              variant="neutral"
+              headingLevel="h1"
+              data={[
+                {
+                  label: (
+                    <>
+                      <a
+                        href={COLLECTIONS_URL}
+                        data-vf-analytics-label="Collection: all collections"
+                      >
+                        {text.collection}
+                      </a>
+                      <span aria-hidden="true"> · </span>
+                      {collection.type}
+                    </>
+                  ),
+                  title: collection.title,
+                  summaryText: collection.summary,
+                  detail: (
+                    <Facts
+                      count={items.count}
+                      failed={items.failed}
+                      itemsId={itemsId}
+                      updated={collection.updated}
+                    />
+                  ),
+                  tags: tagsFor(collection),
+                  media: { type: 'image', ...collection.image },
+                },
+              ]}
+            />
+          </header>
           {/* Remounted when the related link comes or goes, so scroll-spy
               observes exactly the sections that are on the page. */}
           <SectionNav key={navItems.length} items={navItems} />
@@ -455,12 +409,6 @@ export function CollectionPage({
 CollectionPage.propTypes = {
   /** Sample collection: typical, short, long, or one with no items yet. */
   collection: PropTypes.oneOf(['wildfire', 'jasper', 'japan', 'empty']),
-  /**
-   * `page` sets the header on the page background with the image beside it,
-   * like a hazard page. `hero` uses a split `Hero` band, whose detail line is
-   * plain text, so the count cannot link to the list.
-   */
-  headerStyle: PropTypes.oneOf(['page', 'hero']),
   /**
    * A known item count. Leave unset to count with the content list's own
    * query, as a server would.

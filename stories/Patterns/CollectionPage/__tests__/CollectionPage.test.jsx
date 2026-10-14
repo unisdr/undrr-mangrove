@@ -225,12 +225,22 @@ test('wraps the description in a show-more that only collapses long bodies', () 
   expect(toggle).toHaveAttribute('aria-controls', 'demo-body');
 });
 
-test('the hero header keeps one h1 and states the count in its detail line', async () => {
-  render(<CollectionPage headerStyle="hero" id="demo" syncUrl={false} />);
-  expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
-  expect(
-    await screen.findByText('36 items · Last updated 10 July 2026')
-  ).toBeVisible();
+test('the header is a neutral split Hero with the facts line and tags', async () => {
+  const { container } = render(<CollectionPage id="demo" syncUrl={false} />);
+  const hero = container.querySelector('header .mg-hero');
+  expect(hero).toHaveClass('mg-hero--split', 'mg-hero--neutral');
+  expect(within(hero).getByRole('heading', { level: 1 })).toHaveTextContent(
+    'Wildfire risk assessment'
+  );
+  const count = await within(hero).findByRole('link', { name: '36 items' });
+  expect(count.closest('.mg-hero__label.detail')).toBeInTheDocument();
+  expect(hero.querySelector('.mg-hero__tags')).toContainElement(
+    screen.getByRole('link', { name: 'Wildfire and Bushfire' })
+  );
+  expect(hero.querySelector('.mg-hero__media-img')).toHaveAttribute(
+    'alt',
+    'Aerial view of smoke rising from a fire line in a pine forest'
+  );
 });
 
 test('has no detectable accessibility violations', async () => {

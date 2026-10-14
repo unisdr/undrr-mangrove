@@ -7,7 +7,7 @@ import * as Stories from './CollectionPage.stories';
 
 > **Note:** Designed for PreventionWeb collections on [undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728); Drupal implements it later. Review against the [component checklist](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
-A collection is a curated set of news, publications, blogs and other resources on one topic, such as [wildfire risk assessment](https://www.preventionweb.net/collections/wildfire-risk-assessment). The page's job is to orient the reader: what the collection is, what is in it, and where to go next. It follows the shape of a PreventionWeb hazard page: a defining header with the image beside it, the detail behind a show-more, then an index of the content.
+A collection is a curated set of news, publications, blogs and other resources on one topic, such as [wildfire risk assessment](https://www.preventionweb.net/collections/wildfire-risk-assessment). The page's job is to orient the reader: what the collection is, what is in it, and where to go next. It follows the shape of a PreventionWeb hazard page: a defining header with the image beside it, on the page's own white surface, the detail behind a show-more, then an index of the content.
 
 The examples use real PreventionWeb collections and query the live search index, so the item counts and lists are real.
 
@@ -19,7 +19,7 @@ The examples use real PreventionWeb collections and query the live search index,
 
 An orienting header, a sticky "On this page" bar, then three sections, each a landmark named by its heading:
 
-1. **Orienting header.** "Collection" and the collection type, the title (`h1`), the body summary as the standfirst, the image, a facts row with the item count and the last updated date, and the hazard, country and theme tags. The count links to the content list.
+1. **Orienting header.** A [Hero](?path=/docs/components-hero-hero--docs) with `layout="split"` and `variant="neutral"`: "Collection" and the collection type, the title (`h1`), the body summary as the standfirst, the image, a facts row with the item count and the last updated date, and the hazard, country and theme tags. The count links to the content list.
    - **On this page.** A sticky [On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) under the header, with one link per section: About, In this collection and Related collections. It keeps the related collections one press away from anywhere on a long page, and its clicks show which section readers want.
 2. **About this collection.** The body, collapsed with [Show more](?path=/docs/components-showmore--docs) only when it is taller than 320px.
 3. **In this collection.** The [syndicated search widget](?path=/docs/components-syndicated-search--docs) scoped to the collection, newest first, with its results count and hazard, theme, type and year filters. Its total is the item count.
@@ -43,43 +43,60 @@ A few descriptions run to several thousand characters. Collapsed, the content li
 
 When the count is zero the list is replaced with an [empty state](?path=/docs/components-empty-state--docs) that says what is missing and offers a way on. Related collections still show, because they are the most useful next step from an empty page.
 
-## With a hero header
-
-<Canvas of={Stories.HeroHeader} />
-
-The same content in a split `Hero` band. It is more prominent, but `Hero`'s detail line is plain text, so the count cannot link to the list, and the tags have to sit below the band. The page header is the recommended option; this variant is here for comparison.
-
 ## Building one
 
 ### Header
 
-The header composes utilities and tags. The `mg-demo-collection-*` classes are story scaffolding (a two-column grid that stacks below 48rem, a 4:3 image crop and spacing); a site supplies its own equivalent.
+The header is a split Hero on the neutral surface. Its eyebrow holds the link to all collections and the type, its facts line holds the linked item count and the last updated date, and the tags sit below. No layout CSS of its own is needed.
 
 ```html
-<header class="collection-header">
-  <div>
-    <p class="mg-u-font-size-250">
-      <a href="/collections">Collection</a>
-      <span aria-hidden="true">·</span>
-      Topic guide
-    </p>
-    <h1 class="mg-u-font-size-900">Wildfire risk assessment</h1>
-    <p class="mg-u-font-size-500">Discover research, assessments and …</p>
-    <p class="mg-u-font-size-250">
-      <a href="#collection-items">36 items</a>
-      <span aria-hidden="true">·</span>
-      Last updated
-      <time datetime="2026-07-10">10 July 2026</time>
-    </p>
-    <div class="mg-tag-container">
-      <a href="/taxonomy/term/357">Wildfire and Bushfire</a>
-      <a href="/taxonomy/term/311">Climate change</a>
+<header data-vf-google-analytics-region="collection-header">
+  <section class="mg-hero mg-hero--split mg-hero--split-2-3 mg-hero--neutral">
+    <div class="mg-hero__split-grid mg-container">
+      <article class="mg-hero__content">
+        <div class="mg-hero__meta">
+          <span class="mg-hero__label">
+            <a
+              href="/collections"
+              data-vf-analytics-label="Collection: all collections"
+            >
+              Collection
+            </a>
+            <span aria-hidden="true">·</span>
+            Topic guide
+          </span>
+        </div>
+        <h1 class="mg-hero__title">Wildfire risk assessment</h1>
+        <div class="mg-hero__summaryText">
+          <span>Discover research, assessments and …</span>
+        </div>
+        <div class="mg-hero__meta meta-detail">
+          <span class="mg-hero__label detail">
+            <a
+              href="#collection-items"
+              data-vf-analytics-label="Collection: item count"
+            >
+              36 items
+            </a>
+            <span aria-hidden="true">·</span>
+            Last updated
+            <time datetime="2026-07-10">10 July 2026</time>
+          </span>
+        </div>
+        <div class="mg-tag-container mg-hero__tags">
+          <a href="/taxonomy/term/357">Wildfire and Bushfire</a>
+          <a href="/taxonomy/term/311">Climate change</a>
+        </div>
+      </article>
+      <div class="mg-hero__media">
+        <img
+          class="mg-hero__media-img"
+          src="…"
+          alt="Aerial view of smoke rising from a fire line in a pine forest"
+        />
+      </div>
     </div>
-  </div>
-  <img
-    src="…"
-    alt="Aerial view of smoke rising from a fire line in a pine forest"
-  />
+  </section>
 </header>
 ```
 
@@ -240,6 +257,8 @@ Because the innermost region wins, a region on the section never reaches clicks 
 
 **"In this collection", not "Latest additions".** The list is sorted by each item's publication date, not by when it was added to the collection, so "latest additions" would claim something the index cannot show.
 
+**A neutral Hero for the header.** A coloured band made the page read as a campaign rather than a reference page, and the hazard pages it follows sit on white. The header is still a Hero rather than page-specific CSS, so the eyebrow, facts line and tags it needed are now Hero options any page can use.
+
 **Body summary as standfirst.** It is required on collections and already written as a one-sentence pitch, so the header can carry it without new editorial work.
 
 ## Reuse
@@ -254,4 +273,4 @@ The same structure could serve hazard and theme pages: scope the list with `fiel
 
 ## Changelog
 
-- **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern: orienting header with item count and tags, a description that collapses only when long, the collection's content as a scoped search index, related collections, and a sticky On this page bar linking the sections. Analytics regions and fixed English labels on every section, with the two search widgets reporting separate regions. Examples for a typical, short, long and empty collection, and a hero header for comparison.
+- **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern: orienting header with item count and tags, a description that collapses only when long, the collection's content as a scoped search index, related collections, and a sticky On this page bar linking the sections. Analytics regions and fixed English labels on every section, with the two search widgets reporting separate regions. The header is a split Hero on the new neutral surface. Examples for a typical, short, long and empty collection.
