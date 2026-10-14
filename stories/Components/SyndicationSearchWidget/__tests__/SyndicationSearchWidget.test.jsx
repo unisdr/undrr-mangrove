@@ -464,9 +464,8 @@ describe('SyndicationSearchWidget', () => {
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 20));
       });
-      expect(searchBodies().every(body => body.highlight === undefined)).toBe(
-        true
-      );
+      expect(searchBodies()).toHaveLength(1);
+      expect(searchBodies()[0].highlight).toBeUndefined();
     });
   });
 

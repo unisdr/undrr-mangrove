@@ -8,7 +8,14 @@
  * @module SearchWidget/hooks/useSearch
  */
 
-import { useEffect, useRef, useCallback, useState, useTransition } from 'react';
+import {
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  useState,
+  useTransition,
+} from 'react';
 import {
   useSearchConfig,
   useSearchState,
@@ -18,13 +25,29 @@ import {
 import { buildQuery } from '../utils/queryBuilder';
 
 /**
+ * Serialise a request so that two requests Elasticsearch would answer the
+ * same way compare equal. The recency function's `now` parameter changes on
+ * every build and is left out.
+ * @private
+ */
+function requestKey(endpoint, body) {
+  return JSON.stringify({ endpoint, body }, (key, value) =>
+    key === 'now' ? undefined : value
+  );
+}
+
+/**
  * Hook for executing searches against the Elasticsearch endpoint.
  *
- * Features:
- * - AbortController for cancelling in-flight requests
- * - Automatic debouncing via useEffect dependencies
- * - useTransition for non-blocking result updates
- * - Error handling with retry support
+ * - Searches when the request would change, not when the config object's
+ *   identity changes: the request body (minus the volatile `now` parameter)
+ *   is the dependency, so cosmetic options such as `displayMode` or
+ *   `showResultsCount` don't cost a request.
+ * - Only typing is debounced. The first search, and facet, sort, page and
+ *   config changes, run at once.
+ * - A superseded or unmounted search is aborted, and a response that arrives
+ *   after it was superseded is ignored.
+ * - useTransition for non-blocking result updates.
  *
  * @returns {Object} Search utilities
  * @returns {Function} returns.executeSearch - Manually trigger a search
@@ -53,6 +76,39 @@ export function useSearch() {
   } = state;
   const { searchEndpoint, minSearchLength, debounceDelay } = config;
 
+  // The request as Elasticsearch would see it. Rebuilt when state or config
+  // change; the effect below only runs when its serialised form changes.
+  const request = useMemo(() => {
+    const body = buildQuery(
+      { query, facets, facetOperators, customFacets, sortBy, page },
+      config,
+      { highlight: needsHighlight }
+    );
+    return { body, key: requestKey(searchEndpoint, body) };
+  }, [
+    query,
+    facets,
+    facetOperators,
+    customFacets,
+    sortBy,
+    page,
+    config,
+    needsHighlight,
+    searchEndpoint,
+  ]);
+
+  // Latest values for the search function, so it can stay stable.
+  const latestRef = useRef(null);
+  latestRef.current = {
+    request,
+    query,
+    facets,
+    customFacets,
+    searchEndpoint,
+    minSearchLength,
+    needsHighlight,
+  };
+
   /**
    * Execute a search request.
    * @param {Object} options - Search options
@@ -61,42 +117,39 @@ export function useSearch() {
   const executeSearch = useCallback(
     async (options = {}) => {
       const { force = false } = options;
+      const latest = latestRef.current;
 
       // Check minimum query length (unless forced, has facets, or query is empty)
       // Empty queries are allowed - they return all results (match_all)
       // Short queries (1-2 chars) are blocked unless forced or has facets
       const hasActiveFacets =
-        Object.keys(facets).length > 0 ||
-        Object.keys(customFacets || {}).length > 0;
-      const isEmptyQuery = query.length === 0;
-      const isTooShort = query.length > 0 && query.length < minSearchLength;
+        Object.keys(latest.facets).length > 0 ||
+        Object.keys(latest.customFacets || {}).length > 0;
+      const isEmptyQuery = latest.query.length === 0;
+      const isTooShort =
+        latest.query.length > 0 && latest.query.length < latest.minSearchLength;
 
       if (!force && !hasActiveFacets && !isEmptyQuery && isTooShort) {
+        // An earlier search may have been aborted on the way here.
+        dispatch(actions.setLoading(false));
         return;
       }
 
       // Cancel any in-flight request
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      abortControllerRef.current = new AbortController();
+      abortControllerRef.current?.abort();
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
 
       dispatch(actions.setLoading(true));
 
       try {
-        const queryBody = buildQuery(
-          { query, facets, facetOperators, customFacets, sortBy, page },
-          config,
-          { highlight: needsHighlight }
-        );
-
-        const response = await fetch(searchEndpoint, {
+        const response = await fetch(latest.searchEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(queryBody),
-          signal: abortControllerRef.current.signal,
+          body: JSON.stringify(latest.request.body),
+          signal: controller.signal,
         });
 
         if (!response.ok) {
@@ -106,9 +159,11 @@ export function useSearch() {
         }
 
         const data = await response.json();
+        // Superseded while the body was read: a newer search owns the state.
+        if (controller.signal.aborted) return;
 
         if (
-          !needsHighlight &&
+          !latest.needsHighlight &&
           data?.hits?.hits?.some(hit => !hit._source?.teaser)
         ) {
           setNeedsHighlight(true);
@@ -120,7 +175,7 @@ export function useSearch() {
         });
       } catch (error) {
         // Don't treat aborted requests as errors
-        if (error.name === 'AbortError') {
+        if (error.name === 'AbortError' || controller.signal.aborted) {
           return;
         }
 
@@ -128,59 +183,39 @@ export function useSearch() {
         dispatch(actions.setError(error.message || 'Search failed'));
       }
     },
-    [
-      query,
-      facets,
-      facetOperators,
-      customFacets,
-      sortBy,
-      page,
-      searchEndpoint,
-      minSearchLength,
-      config,
-      needsHighlight,
-      dispatch,
-      startTransition,
-    ]
+    [dispatch, startTransition]
   );
 
-  /**
-   * Debounced search effect.
-   * Triggers search when query/facets/sort/page changes.
-   */
-  useEffect(() => {
-    if (!isInitialized) return;
+  // Called through a ref so the effect below depends on the request alone,
+  // not on the identity of this function.
+  const executeSearchRef = useRef(executeSearch);
+  executeSearchRef.current = executeSearch;
 
-    // Debounce the search
-    const timeoutId = setTimeout(() => {
-      executeSearch();
-    }, debounceDelay);
+  // The query of the last scheduled search: a change to it alone is typing,
+  // the only thing worth debouncing.
+  const scheduledQueryRef = useRef(null);
+
+  useEffect(() => {
+    if (!isInitialized) return undefined;
+
+    const typed =
+      scheduledQueryRef.current !== null && scheduledQueryRef.current !== query;
+    scheduledQueryRef.current = query;
+
+    const timeoutId = setTimeout(
+      () => {
+        executeSearchRef.current();
+      },
+      typed ? debounceDelay : 0
+    );
 
     return () => {
       clearTimeout(timeoutId);
+      // The request this effect started is stale now; a newer one follows.
+      abortControllerRef.current?.abort();
     };
-  }, [
-    query,
-    facets,
-    facetOperators,
-    customFacets,
-    sortBy,
-    page,
-    isInitialized,
-    debounceDelay,
-    executeSearch,
-  ]);
-
-  /**
-   * Cleanup on unmount.
-   */
-  useEffect(() => {
-    return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-  }, []);
+    // request.key stands for everything the request depends on.
+  }, [request.key, isInitialized, debounceDelay]);
 
   /**
    * Refresh the current search (re-execute with same parameters).

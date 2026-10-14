@@ -1,0 +1,183 @@
+/**
+ * @file useSearch.scheduling.test.jsx
+ * @description When the widget searches: at once on mount and on non-text
+ * changes, debounced only while typing, never for cosmetic config changes,
+ * and never letting a stale response land.
+ */
+
+import React from 'react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import { SyndicationSearchWidget } from '../SyndicationSearchWidget';
+import {
+  SearchProvider,
+  useSearchDispatch,
+  useSearchState,
+  actions,
+} from '../context/SearchContext';
+import { useSearch } from '../hooks/useSearch';
+
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
+  useTransition: () => [false, fn => fn()],
+  useDeferredValue: value => value,
+}));
+
+const response = (hits = []) => ({
+  ok: true,
+  json: () =>
+    Promise.resolve({
+      hits: { hits, total: { value: hits.length } },
+      took: 1,
+      results: [],
+    }),
+});
+
+const searchCalls = () =>
+  global.fetch.mock.calls.filter(
+    ([url]) => !String(url).includes('preventionweb.net/api')
+  );
+
+const flush = () =>
+  act(async () => {
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+
+beforeEach(() => {
+  jest.useFakeTimers();
+  global.fetch = jest.fn().mockResolvedValue(response());
+});
+
+afterEach(() => {
+  jest.useRealTimers();
+});
+
+const base = { debounceDelay: 500, enableHashSync: false };
+
+it('searches once on mount without waiting for the debounce', async () => {
+  render(<SyndicationSearchWidget config={base} />);
+  act(() => {
+    jest.advanceTimersByTime(1);
+  });
+  await flush();
+  expect(searchCalls()).toHaveLength(1);
+});
+
+it('debounces typing', async () => {
+  render(<SyndicationSearchWidget config={base} />);
+  act(() => {
+    jest.advanceTimersByTime(1);
+  });
+  await flush();
+
+  fireEvent.change(screen.getByRole('searchbox'), {
+    target: { value: 'flood' },
+  });
+  act(() => {
+    jest.advanceTimersByTime(100);
+  });
+  expect(searchCalls()).toHaveLength(1);
+  act(() => {
+    jest.advanceTimersByTime(500);
+  });
+  await flush();
+  expect(searchCalls()).toHaveLength(2);
+});
+
+it('does not search again for a cosmetic config change', async () => {
+  const { rerender } = render(
+    <SyndicationSearchWidget config={{ ...base, displayMode: 'list' }} />
+  );
+  act(() => {
+    jest.advanceTimersByTime(1);
+  });
+  await flush();
+
+  rerender(
+    <SyndicationSearchWidget
+      config={{ ...base, displayMode: 'card', showResultsCount: false }}
+    />
+  );
+  act(() => {
+    jest.advanceTimersByTime(1000);
+  });
+  await flush();
+  expect(searchCalls()).toHaveLength(1);
+});
+
+it('searches again at once when a query-affecting option changes', async () => {
+  const { rerender } = render(<SyndicationSearchWidget config={base} />);
+  act(() => {
+    jest.advanceTimersByTime(1);
+  });
+  await flush();
+
+  rerender(
+    <SyndicationSearchWidget
+      config={{ ...base, customFilters: ['type:news'] }}
+    />
+  );
+  act(() => {
+    jest.advanceTimersByTime(1);
+  });
+  await flush();
+  expect(searchCalls()).toHaveLength(2);
+  expect(JSON.parse(searchCalls()[1][1].body).query).toBeDefined();
+});
+
+describe('with a hook harness', () => {
+  let dispatch;
+  let state;
+  function Harness() {
+    useSearch();
+    dispatch = useSearchDispatch();
+    state = useSearchState();
+    return null;
+  }
+
+  it('runs a facet change at once and ignores the superseded response', async () => {
+    let resolveFirst;
+    global.fetch = jest
+      .fn()
+      .mockImplementationOnce(
+        (url, { signal }) =>
+          new Promise((resolve, reject) => {
+            resolveFirst = () => resolve(response([{ _id: 'stale' }]));
+            signal.addEventListener('abort', () =>
+              reject(
+                Object.assign(new Error('aborted'), { name: 'AbortError' })
+              )
+            );
+          })
+      )
+      .mockResolvedValue(
+        response([{ _id: 'fresh', _source: { teaser: 'x' } }])
+      );
+
+    render(
+      <SearchProvider config={base}>
+        <Harness />
+      </SearchProvider>
+    );
+    act(() => {
+      dispatch(actions.initialize({ defaultFilters: [] }));
+    });
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      dispatch(actions.setFacet('type', 'news'));
+    });
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch.mock.calls[0][1].signal.aborted).toBe(true);
+
+    resolveFirst();
+    await flush();
+    expect(state.results.map(hit => hit._id)).toEqual(['fresh']);
+  });
+});
