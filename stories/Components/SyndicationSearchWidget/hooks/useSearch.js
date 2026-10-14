@@ -23,6 +23,7 @@ import {
   actions,
 } from '../context/SearchContext';
 import { buildQuery } from '../utils/queryBuilder';
+import { isQueryTooShortToSearch } from '../utils/constants';
 
 /**
  * Serialise a request so that two requests Elasticsearch would answer the
@@ -135,17 +136,10 @@ export function useSearch() {
       const { force = false } = options;
       const latest = latestRef.current;
 
-      // Check minimum query length (unless forced, has facets, or query is empty)
-      // Empty queries are allowed - they return all results (match_all)
-      // Short queries (1-2 chars) are blocked unless forced or has facets
-      const hasActiveFacets =
-        Object.keys(latest.facets).length > 0 ||
-        Object.keys(latest.customFacets || {}).length > 0;
-      const isEmptyQuery = latest.query.length === 0;
-      const isTooShort =
-        latest.query.length > 0 && latest.query.length < latest.minSearchLength;
-
-      if (!force && !hasActiveFacets && !isEmptyQuery && isTooShort) {
+      // A short query without filters waits for more input (the empty query
+      // searches everything). SearchResults uses the same rule to decide
+      // between the skeleton and asking for input.
+      if (!force && isQueryTooShortToSearch(latest, latest.minSearchLength)) {
         // An earlier search may have been aborted on the way here.
         dispatch(actions.setLoading(false));
         return;

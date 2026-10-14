@@ -21,10 +21,12 @@ import {
 import {
   analyticsRegion,
   buildHiddenFieldClasses,
+  isQueryTooShortToSearch,
   resolveFacetsLayout,
 } from '../utils/constants';
 import { Loader } from '../../../Utilities/Loader/Loader';
 import { getOwnerDocument } from '../utils/ownerDocument';
+import { useWidgetRootRef } from '../context/WidgetRootContext';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
 
@@ -86,8 +88,6 @@ export function SearchResults({
     query,
     page,
     isInitialized,
-    facets,
-    customFacets,
     resultsVersion,
   } = state;
 
@@ -118,14 +118,36 @@ export function SearchResults({
   const [ssrNode] = useState(() => resolveSsrResults(config.ssrResults));
   const ssrSlotRef = useRef(null);
   const searched = Array.isArray(results);
-  const handingOff = ssrNode !== null && !searched && !error;
+  // The same rule useSearch applies: a short query without filters isn't
+  // searched, so the widget asks for input instead of waiting for results.
+  const waitingForInput = isQueryTooShortToSearch(state, minSearchLength);
+  const handingOff =
+    ssrNode !== null && !searched && !error && !waitingForInput;
+  // Focus inside the server results when they go would drop to the page;
+  // it moves to the results count (or the results region) instead.
+  const ssrHadFocusRef = useRef(false);
+  const rootRef = useWidgetRootRef();
   useBrowserLayoutEffect(() => {
     if (handingOff && ssrSlotRef.current) {
       if (ssrNode.parentNode !== ssrSlotRef.current) {
         ssrSlotRef.current.appendChild(ssrNode);
       }
-    } else if (ssrNode?.isConnected) {
-      ssrNode.remove();
+      return;
+    }
+    if (ssrNode?.isConnected) ssrNode.remove();
+    if (ssrHadFocusRef.current) {
+      ssrHadFocusRef.current = false;
+      const doc = getOwnerDocument(rootRef.current);
+      const active = doc?.activeElement;
+      if (!active || active === doc.body) {
+        const target =
+          rootRef.current?.querySelector('.mg-search__results-count') ||
+          rootRef.current?.querySelector('.mg-search__main');
+        if (target) {
+          if (!target.hasAttribute('tabindex')) target.tabIndex = -1;
+          target.focus({ preventScroll: true });
+        }
+      }
     }
   }, [handingOff, ssrNode]);
 
@@ -136,6 +158,14 @@ export function SearchResults({
         className="mg-search__ssr"
         aria-busy="true"
         data-mg-search-ssr-slot=""
+        onFocus={() => {
+          ssrHadFocusRef.current = true;
+        }}
+        onBlur={event => {
+          if (!event.currentTarget.contains(event.relatedTarget)) {
+            ssrHadFocusRef.current = false;
+          }
+        }}
       />
     );
   }
@@ -175,15 +205,8 @@ export function SearchResults({
     );
   }
 
-  // The widget searches an empty query (everything) and any query of at
-  // least minSearchLength characters, or a shorter one with filters set.
-  // Only a short query without filters is a genuine wait for input.
-  const hasFilters =
-    Object.values(facets || {}).some(v => v?.length > 0) ||
-    Object.values(customFacets || {}).some(v => v?.length > 0);
-  const waitingForInput =
-    Boolean(query) && query.length < minSearchLength && !hasFilters;
-
+  // Only a short query without filters (waitingForInput, above) is a
+  // genuine wait for input; anything else is about to search.
   if (!searched && !waitingForInput) return skeleton;
 
   if (!searched) {

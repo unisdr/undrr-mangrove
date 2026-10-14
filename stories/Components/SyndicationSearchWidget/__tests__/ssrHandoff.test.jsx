@@ -56,7 +56,7 @@ function mountWithSsr(extraConfig = {}) {
   container.setAttribute('data-mg-search-widget', '');
   container.setAttribute('data-mg-ssr', '');
   container.innerHTML =
-    '<div data-mg-search-ssr><p class="ssr-hit">Server hit</p></div>';
+    '<div data-mg-search-ssr><p class="ssr-hit"><a href="/ssr">Server hit</a></p></div>';
   document.body.appendChild(container);
   const { config } = syndicationSearchWidgetFromElement(container);
   const view = render(
@@ -121,4 +121,45 @@ it('drops the server results when the first search fails', async () => {
   await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
   expect(container.querySelector('.ssr-hit')).toBeNull();
   console.error.mockRestore();
+});
+
+it('ends the handoff and asks for input when the query is too short to search', async () => {
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: () => Promise.resolve({ results: [] }),
+  });
+  const { container } = mountWithSsr({ defaultQuery: 'a', defaultFilters: [] });
+
+  await waitFor(() =>
+    expect(screen.getByText(/enter a search term/i)).toBeInTheDocument()
+  );
+  expect(container.querySelector('[data-mg-search-ssr-slot]')).toBeNull();
+  expect(container.querySelector('.ssr-hit')).toBeNull();
+  const searches = global.fetch.mock.calls.filter(
+    ([url]) => !String(url).includes('preventionweb.net/api')
+  );
+  expect(searches).toHaveLength(0);
+});
+
+it('moves focus to the results when focus was inside the server results', async () => {
+  const resolveSearch = deferredFetch();
+  const { container } = mountWithSsr();
+  const link = container.querySelector('.ssr-hit a');
+  act(() => {
+    link.focus();
+  });
+  expect(document.activeElement).toBe(link);
+
+  await act(async () => {
+    await new Promise(resolve => setTimeout(resolve, 0));
+  });
+  await act(async () => {
+    resolveSearch();
+  });
+  await waitFor(() =>
+    expect(container.querySelector('.client-hit')).not.toBeNull()
+  );
+  expect(document.activeElement).toBe(
+    container.querySelector('.mg-search__results-count')
+  );
 });

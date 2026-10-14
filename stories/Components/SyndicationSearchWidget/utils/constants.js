@@ -659,6 +659,25 @@ export const DEFAULT_CONFIG = {
 };
 
 /**
+ * Whether the widget holds off searching until the reader types more: a
+ * non-empty query shorter than `minSearchLength` with no filters set. An
+ * empty query searches everything, and filters make a short query useful.
+ *
+ * @param {Object} state - `{ query, facets, customFacets }`
+ * @param {number} minSearchLength
+ * @returns {boolean}
+ */
+export function isQueryTooShortToSearch(
+  { query, facets, customFacets },
+  minSearchLength
+) {
+  const hasFilters =
+    Object.values(facets || {}).some(v => v?.length > 0) ||
+    Object.values(customFacets || {}).some(v => v?.length > 0);
+  return Boolean(query) && query.length < minSearchLength && !hasFilters;
+}
+
+/**
  * Resolve the facets layout from a (merged or partial) config object.
  *
  * The component exposes a single union prop `facets` for layout:
