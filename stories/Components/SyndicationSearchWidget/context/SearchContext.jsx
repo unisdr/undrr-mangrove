@@ -228,6 +228,9 @@ const initialState = {
   // Search results from Elasticsearch
   results: null,
 
+  // Incremented on each new result set
+  resultsVersion: 0,
+
   // Aggregations from Elasticsearch (for facet counts)
   aggregations: null,
 
@@ -417,6 +420,8 @@ function searchReducer(state, action) {
       return {
         ...state,
         results: action.payload.hits?.hits || [],
+        // Bumped per result set, so the list can animate in a new set.
+        resultsVersion: state.resultsVersion + 1,
         aggregations: action.keepAggregations
           ? state.aggregations
           : normaliseAggregations(action.payload.aggregations),

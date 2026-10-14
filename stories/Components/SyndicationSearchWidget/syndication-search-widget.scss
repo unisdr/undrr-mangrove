@@ -307,6 +307,46 @@ $search-input-padding-x: mg-rem(44);
   transition: opacity 0.2s ease-out;
 }
 
+// A new search with results on screen: keep them, dimmed, with an inline
+// loader in the header, instead of swapping in the skeleton.
+.mg-search__results--refreshing {
+  opacity: 0.6;
+}
+
+.mg-search__results-loader {
+  margin-inline-start: auto;
+  color: $search-primary;
+}
+
+// A new result set, or an empty state replacing results, fades and rises
+// in. The list is keyed per result set, so this runs once per set.
+.mg-search__results-list,
+.mg-search__results-grid,
+.mg-search__results-empty {
+  animation: mg-search-results-in 0.2s ease-out;
+}
+
+@keyframes mg-search-results-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--mg-spacing-25));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-search__results,
+  .mg-search__results-list,
+  .mg-search__results-grid,
+  .mg-search__results-empty {
+    animation: none;
+    transition: none;
+  }
+}
+
 .mg-search__results-header {
   display: flex;
   flex-wrap: wrap;

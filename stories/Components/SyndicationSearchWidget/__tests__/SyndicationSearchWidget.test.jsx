@@ -102,10 +102,33 @@ describe('SyndicationSearchWidget', () => {
       expect(screen.queryByRole('search')).not.toBeInTheDocument();
     });
 
-    it('shows empty state message before searching', () => {
+    // The widget searches on mount, so the first render is a loading state,
+    // not "enter a search term".
+    it('shows the loading skeleton, not the empty-query message, before the first results', () => {
       render(<SyndicationSearchWidget config={{}} />);
 
-      expect(screen.getByText(/enter a search term/i)).toBeInTheDocument();
+      expect(
+        document.querySelector(
+          '.mg-search__results-loading .mg-search__skeleton'
+        )
+      ).toBeInTheDocument();
+      expect(screen.queryByText(/enter a search term/i)).toBeNull();
+    });
+
+    it('asks for input only for a query too short to search', async () => {
+      render(
+        <SyndicationSearchWidget
+          config={{
+            defaultQuery: 'ab',
+            defaultFilters: [],
+            enableHashSync: false,
+          }}
+        />
+      );
+
+      await waitFor(() =>
+        expect(screen.getByText(/enter a search term/i)).toBeInTheDocument()
+      );
     });
 
     it('renders facets sidebar when showFacets is true', () => {

@@ -17,6 +17,7 @@ import {
   buildHiddenFieldClasses,
   resolveFacetsLayout,
 } from '../utils/constants';
+import { Loader } from '../../../Utilities/Loader/Loader';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
 
@@ -52,6 +53,9 @@ export function SearchResults({
     query,
     page,
     isInitialized,
+    facets,
+    customFacets,
+    resultsVersion,
   } = state;
 
   const {
@@ -75,14 +79,26 @@ export function SearchResults({
     [visibleTeaserFields]
   );
 
-  // Don't render anything until initialized
-  if (!isInitialized) {
-    return (
-      <div className="mg-search__results-placeholder">
-        <p>{labels.initializing}</p>
-      </div>
-    );
-  }
+  const searched = Array.isArray(results);
+
+  const skeleton = (
+    <div
+      className="mg-search__results-loading"
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <span className="mg-u-sr-only">{labels.initializing}</span>
+      <SearchSkeleton
+        count={resultsPerPage}
+        displayMode={displayMode}
+        gridColumns={cardGridCols}
+      />
+    </div>
+  );
+
+  // Until the first search, show the skeleton rather than an empty or
+  // "enter a search term" state: the widget searches on mount.
+  if (!isInitialized) return skeleton;
 
   // Error state
   if (error) {
@@ -100,51 +116,18 @@ export function SearchResults({
     );
   }
 
-  // Loading state (only show if no stale results)
-  if (isLoading && !results) {
-    return (
-      <div
-        className="mg-search__results-loading"
-        aria-busy="true"
-        aria-live="polite"
-      >
-        <SearchSkeleton
-          count={resultsPerPage}
-          displayMode={displayMode}
-          gridColumns={cardGridCols}
-        />
-      </div>
-    );
-  }
+  // The widget searches an empty query (everything) and any query of at
+  // least minSearchLength characters, or a shorter one with filters set.
+  // Only a short query without filters is a genuine wait for input.
+  const hasFilters =
+    Object.values(facets || {}).some(v => v?.length > 0) ||
+    Object.values(customFacets || {}).some(v => v?.length > 0);
+  const waitingForInput =
+    Boolean(query) && query.length < minSearchLength && !hasFilters;
 
-  // A widget with no search box has nothing to type into. Before its first
-  // results arrive (between initialising and the debounced fetch, results is
-  // still null and nothing is loading yet) show the skeleton rather than a
-  // message; once they arrive, an empty set is simply no results.
-  if (config.showSearchBox === false && !Array.isArray(results)) {
-    return (
-      <div className="mg-search__results-loading" aria-busy="true">
-        <SearchSkeleton
-          count={resultsPerPage}
-          displayMode={displayMode}
-          gridColumns={cardGridCols}
-        />
-      </div>
-    );
-  }
-  if (
-    !query &&
-    Array.isArray(results) &&
-    results.length === 0 &&
-    config.showSearchBox === false
-  ) {
-    return (
-      <div className="mg-search__results-empty" role="status">
-        <p>{labels.srNoResults}</p>
-      </div>
-    );
-  }
-  if (!query && (!results || results.length === 0)) {
+  if (!searched && !waitingForInput) return skeleton;
+
+  if (!searched) {
     return (
       <div className="mg-search__results-empty">
         <p>{labels.enterSearchTerm}</p>
@@ -159,8 +142,17 @@ export function SearchResults({
     );
   }
 
+  // An empty query searches everything, so nothing found is just that.
+  if (!query && results.length === 0) {
+    return (
+      <div className="mg-search__results-empty" role="status">
+        <p>{labels.srNoResults}</p>
+      </div>
+    );
+  }
+
   // No results
-  if (results && results.length === 0) {
+  if (results.length === 0) {
     return (
       <div
         className="mg-search__results-empty"
@@ -173,12 +165,15 @@ export function SearchResults({
     );
   }
 
+  // A new search with results on screen: keep them, dimmed, with a small
+  // loader, rather than flashing the skeleton.
+  const refreshing = isLoading || isStale;
+
   // Results
   return (
     <div
-      className="mg-search__results"
+      className={`mg-search__results${refreshing ? ' mg-search__results--refreshing' : ''}`}
       data-vf-google-analytics-region={analyticsRegion(config, 'results')}
-      style={{ opacity: isStale ? 0.7 : 1, transition: 'opacity 0.2s' }}
     >
       {/* Screen reader announcement for results updates */}
       <div
@@ -252,6 +247,15 @@ export function SearchResults({
           </p>
         )}
 
+        {/* Small spinner while a new search replaces the results on screen;
+            the results count announces the outcome. */}
+        {refreshing && (
+          <Loader
+            size="inline"
+            decorative
+            className="mg-search__results-loader"
+          />
+        )}
         {/* Mobile filter button - compact, inline */}
         {showMobileFilterButton && onOpenFilters && (
           <button
@@ -294,6 +298,7 @@ export function SearchResults({
       {/* Results list or grid */}
       {isCardMode ? (
         <div
+          key={resultsVersion}
           className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
@@ -311,6 +316,7 @@ export function SearchResults({
         </div>
       ) : (
         <div
+          key={resultsVersion}
           className={`mg-search__results-list ${hiddenFieldClasses}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
