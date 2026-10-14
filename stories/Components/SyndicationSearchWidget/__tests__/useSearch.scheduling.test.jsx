@@ -181,3 +181,67 @@ describe('with a hook harness', () => {
     expect(state.results.map(hit => hit._id)).toEqual(['fresh']);
   });
 });
+
+describe('aggregations', () => {
+  let dispatch;
+  let state;
+  function Harness() {
+    useSearch();
+    dispatch = useSearchDispatch();
+    state = useSearchState();
+    return null;
+  }
+
+  const withAggs = {
+    ok: true,
+    json: () =>
+      Promise.resolve({
+        hits: { hits: [], total: { value: 20 } },
+        aggregations: { type: { buckets: [{ key: 'news', doc_count: 20 }] } },
+        took: 1,
+      }),
+  };
+
+  const bodies = () =>
+    global.fetch.mock.calls.map(([, init]) => JSON.parse(init.body));
+
+  it('are requested again only when the main query changes', async () => {
+    global.fetch = jest.fn().mockResolvedValue(withAggs);
+    render(
+      <SearchProvider config={base}>
+        <Harness />
+      </SearchProvider>
+    );
+    act(() => {
+      dispatch(actions.initialize({ defaultFilters: [] }));
+    });
+    const step = async action => {
+      act(() => {
+        dispatch(action);
+      });
+      act(() => {
+        jest.advanceTimersByTime(600);
+      });
+      await flush();
+      return bodies()[bodies().length - 1];
+    };
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    await flush();
+    expect(bodies()[0].aggs).toBeDefined();
+
+    // Page, sort and facet selections (a post_filter) don't change them.
+    const paged = await step(actions.setPage(2));
+    expect(paged.from).toBe(5);
+    expect(paged.aggs).toBeUndefined();
+    expect((await step(actions.setSort('newest'))).aggs).toBeUndefined();
+    const faceted = await step(actions.setFacet('type', 'news'));
+    expect(faceted.post_filter).toBeDefined();
+    expect(faceted.aggs).toBeUndefined();
+    expect(state.aggregations.type.buckets[0].key).toBe('news');
+
+    // A new query does.
+    expect((await step(actions.setQuery('flood'))).aggs).toBeDefined();
+  });
+});

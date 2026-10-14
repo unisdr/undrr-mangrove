@@ -12,6 +12,7 @@ import {
   useSearchDispatch,
   actions,
   ActionTypes,
+  normaliseAggregations,
 } from '../context/SearchContext';
 
 // Test component to expose context values
@@ -654,5 +655,26 @@ describe('SearchContext', () => {
         type: ActionTypes.RESET,
       });
     });
+  });
+});
+
+describe('normaliseAggregations', () => {
+  it('keys year histogram buckets by year', () => {
+    const result = normaliseAggregations({
+      type: { buckets: [{ key: 'news', doc_count: 3 }] },
+      year: {
+        buckets: [{ key_as_string: '2024', key: 1704067200000, doc_count: 5 }],
+      },
+    });
+    expect(result.year.buckets).toEqual([
+      { key_as_string: '2024', key: '2024', doc_count: 5 },
+    ]);
+    expect(result.type.buckets[0].key).toBe('news');
+  });
+
+  it('leaves terms buckets and missing aggregations alone', () => {
+    const terms = { year: { buckets: [{ key: 2024, doc_count: 1 }] } };
+    expect(normaliseAggregations(terms)).toBe(terms);
+    expect(normaliseAggregations(undefined)).toBeNull();
   });
 });

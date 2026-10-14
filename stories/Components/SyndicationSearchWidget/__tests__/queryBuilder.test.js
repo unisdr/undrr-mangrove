@@ -345,17 +345,52 @@ describe('queryBuilder', () => {
       });
     });
 
-    it('uses script filter for year facet', () => {
+    const yearRange = year => ({
+      range: {
+        published_at: {
+          gte: `${year}-01-01T00:00:00Z`,
+          lt: `${year + 1}-01-01T00:00:00Z`,
+        },
+      },
+    });
+
+    it('filters a year with a plain range, no script', () => {
+      const result = buildQuery(
+        { ...defaultState, facets: { year: ['2024'] } },
+        DEFAULT_CONFIG
+      );
+
+      expect(result.post_filter).toEqual(yearRange(2024));
+      expect(JSON.stringify(result.post_filter)).not.toContain('script');
+    });
+
+    it('matches any of several years with OR', () => {
+      const result = buildQuery(
+        { ...defaultState, facets: { year: ['2019', '2024'] } },
+        DEFAULT_CONFIG
+      );
+
+      expect(result.post_filter).toEqual({
+        bool: {
+          should: [yearRange(2019), yearRange(2024)],
+          minimum_should_match: 1,
+        },
+      });
+    });
+
+    it('requires every year with AND (which matches nothing)', () => {
       const result = buildQuery(
         {
           ...defaultState,
-          facets: { year: ['2024'] },
+          facets: { year: ['2019', '2024'] },
+          facetOperators: { year: 'AND' },
         },
         DEFAULT_CONFIG
       );
 
-      expect(result.post_filter.script).toBeDefined();
-      expect(result.post_filter.script.script.params.years).toContain(2024);
+      expect(result.post_filter).toEqual({
+        bool: { must: [yearRange(2019), yearRange(2024)] },
+      });
     });
   });
 
@@ -564,11 +599,17 @@ describe('queryBuilder', () => {
       expect(result.aggs.field_hazard).toBeDefined();
     });
 
-    it('uses script aggregation for year', () => {
+    it('aggregates years with a date_histogram, no script', () => {
       const result = buildQuery(defaultState, DEFAULT_CONFIG);
 
-      expect(result.aggs.year.terms.script).toBeDefined();
-      expect(result.aggs.year.terms.script.lang).toBe('painless');
+      expect(result.aggs.year).toEqual({
+        date_histogram: {
+          field: 'published_at',
+          calendar_interval: 'year',
+          format: 'yyyy',
+          min_doc_count: 1,
+        },
+      });
     });
 
     it('respects facetCountToShow config', () => {

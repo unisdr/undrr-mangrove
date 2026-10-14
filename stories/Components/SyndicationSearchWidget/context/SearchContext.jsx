@@ -171,6 +171,34 @@ import { DEFAULT_CONFIG } from '../utils/constants';
 import { facetsFromDefaults } from '../utils/hashState';
 
 /**
+ * Normalise aggregations from Elasticsearch. The year facet comes from a
+ * `date_histogram` whose bucket keys are epoch milliseconds; the facet UI and
+ * the URL hash use the year itself, which the histogram's `yyyy` format puts
+ * in `key_as_string`.
+ *
+ * @param {Object|undefined} aggregations
+ * @returns {Object|null}
+ */
+export function normaliseAggregations(aggregations) {
+  if (!aggregations) return null;
+  const year = aggregations.year;
+  if (!year?.buckets?.some(bucket => bucket.key_as_string !== undefined)) {
+    return aggregations;
+  }
+  return {
+    ...aggregations,
+    year: {
+      ...year,
+      buckets: year.buckets.map(bucket =>
+        bucket.key_as_string !== undefined
+          ? { ...bucket, key: bucket.key_as_string }
+          : bucket
+      ),
+    },
+  };
+}
+
+/**
  * Initial state for the search widget.
  * @type {Object}
  */
@@ -389,7 +417,9 @@ function searchReducer(state, action) {
       return {
         ...state,
         results: action.payload.hits?.hits || [],
-        aggregations: action.payload.aggregations || null,
+        aggregations: action.keepAggregations
+          ? state.aggregations
+          : normaliseAggregations(action.payload.aggregations),
         totalResults: action.payload.hits?.total?.value || 0,
         totalResultsRelation: action.payload.hits?.total?.relation || 'eq',
         searchTime: action.payload.took || null,
@@ -663,9 +693,16 @@ export const actions = {
     payload: page,
   }),
 
-  setResults: results => ({
+  /**
+   * @param {Object} results - Elasticsearch response
+   * @param {Object} [options]
+   * @param {boolean} [options.keepAggregations] - Keep the current
+   *   aggregations: the request skipped them because only the page changed.
+   */
+  setResults: (results, { keepAggregations = false } = {}) => ({
     type: ActionTypes.SET_RESULTS,
     payload: results,
+    keepAggregations,
   }),
 
   setLoading: isLoading => ({

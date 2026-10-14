@@ -59,6 +59,8 @@ export function useSearch() {
   const state = useSearchState();
   const dispatch = useSearchDispatch();
   const abortControllerRef = useRef(null);
+  // aggregationsKey of the last response whose aggregations are in state.
+  const aggregationsKeyRef = useRef(null);
   const [isPending, startTransition] = useTransition();
   // Highlights are only displayed by the no-teaser fallback rendering, and
   // body highlighting roughly doubles Elasticsearch's time. Request them only
@@ -73,6 +75,7 @@ export function useSearch() {
     sortBy,
     page,
     isInitialized,
+    aggregations,
   } = state;
   const { searchEndpoint, minSearchLength, debounceDelay } = config;
 
@@ -84,7 +87,17 @@ export function useSearch() {
       config,
       { highlight: needsHighlight }
     );
-    return { body, key: requestKey(searchEndpoint, body) };
+    return {
+      body,
+      key: requestKey(searchEndpoint, body),
+      // Aggregations depend on the main query and the aggregation
+      // definitions only: not on the page, the sort or the facet selections
+      // (those are a post_filter, applied after aggregating).
+      aggregationsKey: requestKey(searchEndpoint, {
+        query: body.query,
+        aggs: body.aggs,
+      }),
+    };
   }, [
     query,
     facets,
@@ -107,6 +120,7 @@ export function useSearch() {
     searchEndpoint,
     minSearchLength,
     needsHighlight,
+    aggregations,
   };
 
   /**
@@ -142,13 +156,25 @@ export function useSearch() {
 
       dispatch(actions.setLoading(true));
 
+      // Turning a page, sorting or picking a facet leaves the aggregations in
+      // state right, so don't ask Elasticsearch to compute them again.
+      let { body } = latest.request;
+      const keepAggregations =
+        Boolean(body.aggs) &&
+        latest.aggregations !== null &&
+        aggregationsKeyRef.current === latest.request.aggregationsKey;
+      if (keepAggregations) {
+        body = { ...body };
+        delete body.aggs;
+      }
+
       try {
         const response = await fetch(latest.searchEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(latest.request.body),
+          body: JSON.stringify(body),
           signal: controller.signal,
         });
 
@@ -169,9 +195,13 @@ export function useSearch() {
           setNeedsHighlight(true);
         }
 
+        if (body.aggs) {
+          aggregationsKeyRef.current = latest.request.aggregationsKey;
+        }
+
         // Use transition for non-blocking result updates
         startTransition(() => {
-          dispatch(actions.setResults(data));
+          dispatch(actions.setResults(data, { keepAggregations }));
         });
       } catch (error) {
         // Don't treat aborted requests as errors
