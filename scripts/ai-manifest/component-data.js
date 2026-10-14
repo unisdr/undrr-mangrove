@@ -2676,6 +2676,8 @@ npm run build</code></pre>
           'CSS selector of an element to portal the facets into.',
         'data-search-target':
           'CSS selector of an element to portal the search box into.',
+        'data-analytics-region-prefix':
+          'Stem for the analytics regions (<prefix>-form, -results, -facets). Defaults to undrr-search. Give each widget on a page its own prefix, because the analytics script reports only the innermost region.',
         'data-show-search-box': '"false" to hide the search box.',
         'data-show-results-count': '"false" to hide the result count.',
         'data-show-facets': '"false" to hide the facets.',

@@ -12,7 +12,7 @@ import {
   useSearchLabels,
   interpolateLabel,
 } from '../context/SearchContext';
-import { buildHiddenFieldClasses } from '../utils/constants';
+import { analyticsRegion, buildHiddenFieldClasses } from '../utils/constants';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
 
@@ -147,7 +147,7 @@ export function SearchResults({
   return (
     <div
       className="mg-search__results"
-      data-vf-google-analytics-region="undrr-search-results"
+      data-vf-google-analytics-region={analyticsRegion(config, 'results')}
       style={{ opacity: isStale ? 0.7 : 1, transition: 'opacity 0.2s' }}
     >
       {/* Screen reader announcement for results updates */}

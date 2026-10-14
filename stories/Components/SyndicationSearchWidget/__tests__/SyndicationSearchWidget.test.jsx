@@ -458,6 +458,41 @@ describe('SyndicationSearchWidget', () => {
     });
   });
 
+  describe('analytics regions', () => {
+    const regions = container =>
+      [...container.querySelectorAll('[data-vf-google-analytics-region]')].map(
+        el => el.getAttribute('data-vf-google-analytics-region')
+      );
+
+    it('defaults to the undrr-search regions', () => {
+      const { container } = render(<SyndicationSearchWidget config={{}} />);
+      expect(regions(container)).toEqual(
+        expect.arrayContaining([
+          'undrr-search-form',
+          'undrr-search-results',
+          'undrr-search-facets',
+        ])
+      );
+    });
+
+    it('uses analyticsRegionPrefix for every region', () => {
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{ analyticsRegionPrefix: 'collection-content' }}
+        />
+      );
+      const names = regions(container);
+      expect(names).toEqual(
+        expect.arrayContaining([
+          'collection-content-form',
+          'collection-content-results',
+          'collection-content-facets',
+        ])
+      );
+      expect(names.some(name => name.startsWith('undrr-search'))).toBe(false);
+    });
+  });
+
   describe('no results state', () => {
     it('displays no results message when search returns empty', async () => {
       jest.useFakeTimers();

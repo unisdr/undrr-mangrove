@@ -31,6 +31,8 @@ export default function syndicationSearchWidgetFromElement(container) {
   if (dataset.queryAppend) config.queryAppend = dataset.queryAppend;
   if (dataset.facetsTarget) config.facetsTarget = dataset.facetsTarget;
   if (dataset.searchTarget) config.searchTarget = dataset.searchTarget;
+  if (dataset.analyticsRegionPrefix)
+    config.analyticsRegionPrefix = dataset.analyticsRegionPrefix;
 
   // Boolean props (only set if explicitly present)
   if (dataset.showSearchBox !== undefined)

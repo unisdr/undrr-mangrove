@@ -38,7 +38,7 @@ import {
 } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
-import { resolveFacetsLayout } from './utils/constants';
+import { analyticsRegion, resolveFacetsLayout } from './utils/constants';
 import SearchForm from './components/SearchForm';
 import SearchResults from './components/SearchResults';
 import ActiveFilters from './components/ActiveFilters';
@@ -163,6 +163,12 @@ SyndicationSearchWidget.propTypes = {
     visibleTeaserFields: PropTypes.object,
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
+    /**
+     * Stem for the widget's analytics regions: `<prefix>-form`,
+     * `<prefix>-results` and `<prefix>-facets`. Defaults to `undrr-search`.
+     * Give each widget its own prefix when a page has more than one.
+     */
+    analyticsRegionPrefix: PropTypes.string,
   }).isRequired,
   /**
    * UI label overrides merged with DEFAULT_LABELS.
@@ -347,7 +353,7 @@ function SyndicationSearchWidgetInner() {
       {facetsLayout === 'horizontal' && !facetsPortaled && (
         <div
           className="mg-search__facets-strip"
-          data-vf-google-analytics-region="undrr-search-facets"
+          data-vf-google-analytics-region={analyticsRegion(config, 'facets')}
         >
           <FacetsSidebar widgetId={widgetId} />
         </div>
@@ -362,7 +368,7 @@ function SyndicationSearchWidgetInner() {
             the page's own main landmark, and a page has only one. */}
         <div
           className={`mg-search__main ${isPending ? 'mg-search__main--stale' : ''}`}
-          data-vf-google-analytics-region="undrr-search-results"
+          data-vf-google-analytics-region={analyticsRegion(config, 'results')}
           aria-busy={isLoading || isPending}
         >
           <Suspense
@@ -388,7 +394,7 @@ function SyndicationSearchWidgetInner() {
         {facetsLayout === 'sidebar' && !facetsPortaled && (
           <aside
             className="mg-search__sidebar"
-            data-vf-google-analytics-region="undrr-search-facets"
+            data-vf-google-analytics-region={analyticsRegion(config, 'facets')}
           >
             <FacetsSidebar widgetId={widgetId} />
           </aside>
@@ -420,7 +426,7 @@ function SyndicationSearchWidgetInner() {
         createPortal(
           <div
             className="mg-search__facets-external"
-            data-vf-google-analytics-region="undrr-search-facets"
+            data-vf-google-analytics-region={analyticsRegion(config, 'facets')}
           >
             <FacetsSidebar widgetId={widgetId} />
           </div>,

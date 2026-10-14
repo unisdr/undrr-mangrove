@@ -13,6 +13,7 @@ import {
   interpolateLabel,
   actions,
 } from '../context/SearchContext';
+import { analyticsRegion } from '../utils/constants';
 
 /**
  * SearchForm component.
@@ -68,7 +69,7 @@ export function SearchForm({
       role="search"
       aria-label={labels.searchFormLabel}
       onSubmit={handleSubmit}
-      data-vf-google-analytics-region="undrr-search-form"
+      data-vf-google-analytics-region={analyticsRegion(config, 'form')}
     >
       <div className="mg-search__input-wrapper">
         <label htmlFor={inputId} className="mg-u-sr-only">
