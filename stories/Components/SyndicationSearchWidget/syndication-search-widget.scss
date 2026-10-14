@@ -1637,3 +1637,45 @@ $search-input-padding-x: mg-rem(44);
 
 // Pager styles now live in the standalone Pager component.
 // @see stories/Components/Pager/pager.scss
+
+// ========================================
+// Reduced motion
+// The widget's decorative motion stops here, without relying on a page-wide
+// reset. Loading states stay visible as static ones: a full, steady progress
+// bar, plain skeleton blocks and a still overlay on stale results. Spinners
+// (the Mangrove Loader and .mg-search__spinner) keep a slow rotation, as the
+// Loader does, so loading never looks stalled.
+// ========================================
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-search__progress-bar {
+    animation: none;
+    width: 100%;
+    opacity: 0.6;
+  }
+
+  .mg-search__skeleton-title,
+  .mg-search__skeleton-meta,
+  .mg-search__skeleton-text,
+  .mg-search__skeleton-card-image {
+    animation: none;
+    background: $search-skeleton-bg;
+  }
+
+  .mg-search__main--stale::after,
+  .mg-select__dropdown,
+  .mg-search__drawer-backdrop {
+    animation: none;
+  }
+
+  .mg-search__result--pending,
+  .mg-search__result--visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .mg-search__spinner {
+    animation-duration: 3s;
+  }
+}
