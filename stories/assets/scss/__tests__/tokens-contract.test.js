@@ -1251,6 +1251,20 @@ const COMPONENT_PAIRS = [
     why: 'SC 1.4.3 — .mg-hero--split has a flat token background, no photo',
   },
   {
+    name: 'hero text on the neutral variant',
+    fg: '--mg-color-text',
+    bg: ['--mg-color-neutral-0'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-hero--neutral sets title, summary, eyebrow and facts in --mg-color-text on white',
+  },
+  {
+    name: 'hero link on the neutral variant',
+    fg: '--mg-color-interactive',
+    bg: ['--mg-color-neutral-0'],
+    min: 4.5,
+    why: 'SC 1.4.3 — .mg-hero--neutral sets eyebrow and facts links in --mg-color-interactive on white',
+  },
+  {
     name: 'hero title on the split hero',
     fg: '--mg-color-hero-title',
     bg: ['--mg-color-hero'],

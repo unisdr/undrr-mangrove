@@ -344,3 +344,89 @@ describe('Hero — accessibility', () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe('Hero — neutral variant, linked eyebrow and facts, tags', () => {
+  const neutralItem = {
+    ...splitItem,
+    label: (
+      <>
+        <a href="/collections">Collection</a> · Topic guide
+      </>
+    ),
+    detail: (
+      <>
+        <a href="#items">36 items</a> · Last updated 10 July 2026
+      </>
+    ),
+    tags: [
+      { label: 'Wildfire', href: '/taxonomy/term/357' },
+      { label: 'Climate change' },
+    ],
+  };
+
+  it('adds the neutral modifier', () => {
+    const { container } = render(
+      <Hero data={[neutralItem]} layout="split" variant="neutral" />
+    );
+    expect(container.querySelector('.mg-hero')).toHaveClass(
+      'mg-hero--split',
+      'mg-hero--neutral'
+    );
+  });
+
+  it('renders links in the eyebrow and the facts line', () => {
+    render(<Hero data={[neutralItem]} layout="split" variant="neutral" />);
+    expect(screen.getByRole('link', { name: 'Collection' })).toHaveAttribute(
+      'href',
+      '/collections'
+    );
+    const count = screen.getByRole('link', { name: '36 items' });
+    expect(count.closest('.mg-hero__label.detail')).toBeInTheDocument();
+  });
+
+  it('renders tags after the facts line and before the buttons', () => {
+    const { container } = render(
+      <Hero data={[neutralItem]} layout="split" variant="neutral" />
+    );
+    const tags = container.querySelector('.mg-hero__tags');
+    expect(tags).toHaveClass('mg-tag-container');
+    expect(tags.previousElementSibling).toHaveClass('meta-detail');
+    expect(tags.nextElementSibling).toHaveClass('mg-hero__buttons');
+    expect(screen.getByRole('link', { name: 'Wildfire' })).toHaveAttribute(
+      'href',
+      '/taxonomy/term/357'
+    );
+    expect(tags.querySelector('span')).toHaveTextContent('Climate change');
+  });
+
+  it('renders no tag container without tags', () => {
+    const { container } = render(<Hero data={[splitItem]} layout="split" />);
+    expect(container.querySelector('.mg-hero__tags')).toBeNull();
+  });
+
+  it('keeps string labels and details exactly as before', () => {
+    const { container } = render(
+      <Hero data={[{ ...splitItem, detail: 'Plain detail' }]} layout="split" />
+    );
+    expect(container.querySelector('.mg-hero__label').outerHTML).toBe(
+      '<span class="mg-hero__label">Test Label</span>'
+    );
+    expect(container.querySelector('.mg-hero__label.detail').outerHTML).toBe(
+      '<span class="mg-hero__label detail">Plain detail</span>'
+    );
+  });
+
+  it('drops the photograph in the background layout', () => {
+    const { container } = render(<Hero data={[baseItem]} variant="neutral" />);
+    const section = container.querySelector('.mg-hero');
+    expect(section).toHaveClass('mg-hero--no-image', 'mg-hero--neutral');
+    expect(section.getAttribute('style')).toBeNull();
+  });
+
+  it('has no detectable accessibility violations', async () => {
+    const { container } = render(
+      <Hero data={[neutralItem]} layout="split" variant="neutral" />
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});

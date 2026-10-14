@@ -748,3 +748,97 @@ $variant-colour-props: (
     direction: rtl; // reverses grid item order (content stays first semantically)
   }
 }
+
+// Tags below the summary and facts line.
+.mg-hero__tags {
+  padding-block: var(--mg-spacing-50);
+}
+
+// Neutral variant: the page's own white surface, dark copy and the theme's
+// interactive colour for links, for a page header that should not read as a
+// coloured band. Every pairing is a published text token on white, so the
+// contrast is solved rather than sampled: --mg-color-text and
+// --mg-color-interactive both clear 4.5:1 on white in all five themes.
+// --mg-color-hero-title is not used, because DELTA sets it to a light blue
+// meant for a dark surface.
+.mg-hero.mg-hero--neutral {
+  --mg-border-color-button-primary: transparent;
+  --mg-border-color-button-secondary: transparent;
+  --mg-hero-link-color: var(--mg-color-interactive);
+
+  background-color: rgb(var(--mg-color-neutral-0));
+  color: rgb(var(--mg-color-text));
+
+  // No photograph and no veil: dark copy cannot sit on either.
+  &::before {
+    content: none;
+  }
+
+  .mg-hero__title,
+  .mg-hero__title a,
+  .mg-hero__title a:hover,
+  .mg-hero__title a:visited {
+    color: rgb(var(--mg-color-text));
+  }
+
+  .mg-hero__overlay,
+  .mg-hero__content {
+    a:hover {
+      color: rgb(var(--mg-color-interactive-active));
+    }
+  }
+
+  // Tags keep their own filled surface and white label (the tag's default
+  // foreground; --mg-tag-foreground is not in every bundle Hero ships in).
+  .mg-hero__tags > a,
+  .mg-hero__tags > a:visited,
+  .mg-hero__tags > a:hover {
+    color: rgb(var(--mg-color-neutral-0));
+  }
+
+  // Buttons go back to their ordinary page styling.
+  a.mg-button,
+  a.mg-button:hover,
+  a.mg-button:visited {
+    color: rgb(var(--mg-color-button));
+  }
+
+  a.mg-button-primary {
+    background-color: var(--mg-color-button-background);
+
+    &:hover {
+      background-color: var(--mg-color-button-background--hover);
+    }
+  }
+
+  a.mg-button-secondary:not(.mg-button-cta),
+  a.mg-button-secondary:not(.mg-button-cta):hover,
+  a.mg-button-secondary:not(.mg-button-cta):visited {
+    background-color: rgb(var(--mg-color-button-secondary-background));
+    border-color: var(--mg-border-color-button-secondary);
+    color: rgb(var(--mg-color-button));
+  }
+
+  a.mg-button.mg-button-cta,
+  a.mg-button.mg-button-cta:hover,
+  a.mg-button.mg-button-cta:visited {
+    background: transparent;
+    border-color: transparent;
+    color: rgb(var(--mg-color-interactive));
+
+    &::after {
+      background: rgb(var(--mg-color-interactive));
+      color: rgb(var(--mg-color-neutral-0));
+    }
+  }
+
+  a.mg-button:focus-visible {
+    @include mg-focus-ring;
+  }
+
+  // The split layout's padding was spacing for a coloured band. On the page
+  // surface the copy aligns with the content below, so it starts at the top.
+  &.mg-hero--split .mg-hero__content {
+    padding-block-start: 0;
+  }
+}
