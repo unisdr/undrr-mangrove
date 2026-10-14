@@ -1,0 +1,194 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as Stories from './CollectionPage.stories';
+
+<Meta of={Stories} />
+
+# Collection page
+
+> **Note:** Designed for PreventionWeb collections on [undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728); Drupal implements it later. Review against the [component checklist](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
+
+A collection is a curated set of news, publications, blogs and other resources on one topic, such as [wildfire risk assessment](https://www.preventionweb.net/collections/wildfire-risk-assessment). The page's job is to orient the reader: what the collection is, what is in it, and where to go next. It follows the shape of a PreventionWeb hazard page: a defining header with the image beside it, the detail behind a show-more, then an index of the content.
+
+The examples use real PreventionWeb collections and query the live search index, so the item counts and lists are real.
+
+## Collection page
+
+<Canvas of={Stories.Typical} />
+
+<Controls of={Stories.Typical} />
+
+Four sections, each a landmark named by its heading:
+
+1. **Orienting header.** "Collection" and the collection type, the title (`h1`), the body summary as the standfirst, the image, a facts row with the item count and the last updated date, and the hazard, country and theme tags. The count links to the content list.
+2. **About this collection.** The body, collapsed with [Show more](?path=/docs/components-showmore--docs) only when it is taller than 320px.
+3. **In this collection.** The [syndicated search widget](?path=/docs/components-syndicated-search--docs) scoped to the collection, newest first, with its results count and hazard, theme, type and year filters. Its total is the item count.
+4. **Related collections.** A second widget with every control turned off, showing three other collections that share a hazard or theme. The section is left out when there are none.
+
+## Short description
+
+<Canvas of={Stories.ShortDescription} />
+
+Most descriptions are about 150 words and fit under the threshold, so they show in full with no toggle. Readers should not have to press a button to reveal one more sentence.
+
+## Long description
+
+<Canvas of={Stories.LongDescription} />
+
+A few descriptions run to several thousand characters. Collapsed, the content list stays close to the top of the page; the full text is one press away, and it opens on its own when keyboard focus enters it.
+
+## No items yet
+
+<Canvas of={Stories.NoItemsYet} />
+
+When the count is zero the list is replaced with an [empty state](?path=/docs/components-empty-state--docs) that says what is missing and offers a way on. Related collections still show, because they are the most useful next step from an empty page.
+
+## With a hero header
+
+<Canvas of={Stories.HeroHeader} />
+
+The same content in a split `Hero` band. It is more prominent, but `Hero`'s detail line is plain text, so the count cannot link to the list, and the tags have to sit below the band. The page header is the recommended option; this variant is here for comparison.
+
+## Building one
+
+### Header
+
+The header composes utilities and tags. The `mg-demo-collection-*` classes are story scaffolding (a two-column grid that stacks below 48rem, a 4:3 image crop and spacing); a site supplies its own equivalent.
+
+```html
+<header class="collection-header">
+  <div>
+    <p class="mg-u-font-size-250">
+      <a href="/collections">Collection</a>
+      <span aria-hidden="true">·</span>
+      Topic guide
+    </p>
+    <h1 class="mg-u-font-size-900">Wildfire risk assessment</h1>
+    <p class="mg-u-font-size-500">Discover research, assessments and …</p>
+    <p class="mg-u-font-size-250">
+      <a href="#collection-items">36 items</a>
+      <span aria-hidden="true">·</span>
+      Last updated
+      <time datetime="2026-07-10">10 July 2026</time>
+    </p>
+    <div class="mg-tag-container">
+      <a href="/taxonomy/term/357">Wildfire and Bushfire</a>
+      <a href="/taxonomy/term/311">Climate change</a>
+    </div>
+  </div>
+  <img
+    src="…"
+    alt="Aerial view of smoke rising from a fire line in a pine forest"
+  />
+</header>
+```
+
+| Part         | Drupal source                                                  |
+| ------------ | -------------------------------------------------------------- |
+| Type         | `field_collection_type`                                        |
+| Standfirst   | The body summary (required; about 164 characters, at most 255) |
+| Image        | `field_image`                                                  |
+| Item count   | Search total for the content list's filters (see below)        |
+| Last updated | The node's changed date                                        |
+| Tags         | `field_hazard`, `field_country`, `field_theme`, in that order  |
+
+### About
+
+The body uses the vanilla Show more markup with the threshold attribute, so content under 320px stays open and the toggle is hidden:
+
+```html
+<section aria-labelledby="collection-about">
+  <h2 id="collection-about">About this collection</h2>
+  <div id="collection-body" class="mg-content">…body…</div>
+  <button
+    type="button"
+    class="mg-button mg-button-primary mg-show-more--button"
+    data-mg-show-more="true"
+    data-mg-show-more-target="#collection-body"
+    data-mg-show-more-threshold="320"
+    data-mg-show-more-label-collapsed="Show more"
+    data-mg-show-more-label-open="Show less"
+  >
+    Show more
+  </button>
+</section>
+```
+
+### Content list
+
+Scope the widget with `customFilters`, not `defaultFilters`. Default filters become removable chips and are written to the URL hash, so a reader could remove the collection scope and see the whole site. Custom filters are invisible and fixed.
+
+```js
+{
+  customFilters: ['field_collections:101264', '_language:en'],
+  defaultFilters: [],
+  defaultSort: 'newest',
+  resultsPerPage: 10,
+  showResultsCount: true,
+  visibleFilters: { field_domain_access: false, field_country_region: false, _language: false },
+}
+```
+
+`visibleFilters` has no data attribute; a Drupal block wrapper merges it into the config, as it already does for `customFilters`.
+
+### Item count
+
+The count in the header must equal the list's total. The example sends the widget's own query with `size: 0` and the same `customFilters`, so the status filter and scope match exactly. In Drupal, run that query on the server and cache it with the node, so the number is in the HTML and does not shift the layout when it arrives. The hidden Views count (`undrr_custom_views_pre_view()`) is a fallback if that is not ready.
+
+### Related collections
+
+```js
+{
+  customFilters: [
+    'type:collections',
+    'field_hazard:(357) OR field_theme:(311 OR 1176 OR 333)',
+    'NOT nid:101264',
+    '_language:en',
+  ],
+  defaultFilters: [],
+  resultsPerPage: 3,
+  displayMode: 'card',
+  gridColumns: 3,
+  showSearchBox: false,
+  showResultsCount: false,
+  showFacets: false,
+  showActiveFilters: false,
+  showPager: false,
+  enableHashSync: false,
+}
+```
+
+Each custom filter is a separate `query_string` clause, so a clause can stand alone as an exclusion: `NOT nid:101264` (or `-nid:101264`) removes the current collection. Checked against a local copy of the PreventionWeb index: without it, the current collection came back as its own first match.
+
+Only one widget on a page may sync with the URL hash; leave it to the content list.
+
+## Accessibility
+
+- One `h1`, then an `h2` per section; the empty state's title is an `h3` under its section.
+- Each section is a `section` named by its heading with `aria-labelledby`, so screen reader users can move between them as regions.
+- The count is link text ("36 items"), read in full, and goes to the list. The widget announces its own total in a live region when results load.
+- The middle dots between facts are hidden from assistive technology.
+- Show more clips the body visually only; screen readers read it in full. See [Show more](?path=/docs/components-showmore--docs#accessibility).
+
+## Design decisions
+
+**No tabs.** Splitting about, content and related into tabs hides the content list, which is what most readers came for, and makes the count link point at a tab that may not be showing.
+
+**No on-this-page navigation.** With the description capped at 320px, the content list starts within a screen or two of the top, and the header's count link already jumps to it. A contents block would list three headings the reader can see. Revisit it if collections gain more sections.
+
+**"In this collection", not "Latest additions".** The list is sorted by each item's publication date, not by when it was added to the collection, so "latest additions" would claim something the index cannot show.
+
+**Body summary as standfirst.** It is required on collections and already written as a one-sentence pitch, so the header can carry it without new editorial work.
+
+## Reuse
+
+The same structure could serve hazard and theme pages: scope the list with `field_hazard:<tid>` or `field_theme:<tid>` instead of `field_collections:<nid>`, and relate collections on the same term. This is not built or tested yet.
+
+## Still to test
+
+- Is 320px the right threshold for PreventionWeb's descriptions, and should the collapsed height rise from 200px to show more of a long one?
+- Should related collections match on hazard only? Broad themes such as Climate change make the theme match loose.
+- Translated collection pages: the language filter is fixed to the page language, which hides items with no translation.
+
+## Changelog
+
+- **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern: orienting header with item count and tags, a description that collapses only when long, the collection's content as a scoped search index, and related collections. Examples for a typical, short, long and empty collection, and a hero header for comparison.

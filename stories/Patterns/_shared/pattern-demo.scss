@@ -53,3 +53,35 @@
 .mg-demo-article-header .mg-hero__split-grid {
   max-inline-size: var(--mg-reading-with-contents-width);
 }
+
+// CollectionPage: the orienting header sets its text beside the image, the
+// way a hazard page does, and stacks below 48rem.
+.mg-demo-collection-header {
+  display: grid;
+  gap: var(--mg-spacing-300);
+  align-items: start;
+  margin-block-end: var(--mg-spacing-300);
+
+  @media (width >= 48rem) {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}
+
+.mg-demo-collection-header__image {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.mg-demo-collection-facts {
+  margin-block: var(--mg-spacing-200);
+}
+
+.mg-demo-collection-after-hero {
+  margin-block: var(--mg-spacing-200) var(--mg-spacing-300);
+}
+
+.mg-demo-collection-section {
+  margin-block-end: var(--mg-spacing-400);
+}

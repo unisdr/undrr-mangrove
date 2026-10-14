@@ -1929,7 +1929,7 @@ npm run build</code></pre>
     summary:
       'Collapse long content behind a gradient fade with a toggle button, driven by the mgShowMore vanilla JS utility. Height customizable via CSS variable.',
     description:
-      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. The mgShowMore vanilla JS utility reads data-mg-show-more attributes and returns optional lifecycle cleanup. The React wrapper enhances each item independently, supports items added after mount, and accepts translated labelOpen and labelCollapsed props.',
+      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. The mgShowMore vanilla JS utility reads data-mg-show-more attributes and returns optional lifecycle cleanup. Add data-mg-show-more-threshold (React: threshold) to collapse only content taller than a pixel value, or than the collapsed height when empty; shorter content stays open and the toggle gets hidden. The React wrapper enhances each item independently, supports items added after mount, and accepts translated labelOpen and labelCollapsed props.',
     cssClasses: ['mg-show-more--collapsed', 'mg-show-more--button'],
     examples: [
       {
@@ -2173,6 +2173,38 @@ npm run build</code></pre>
     data-mg-cite-this-id="preventionweb:node/101"
   ></div>
 </div>`,
+      },
+    ],
+  },
+
+  'patterns-collection-page': {
+    summary:
+      'A PreventionWeb collection page: orienting header with item count and tags, a description that collapses only when long, the collection as a scoped search index, and related collections.',
+    description:
+      'A page for a curated collection of content on one topic. The header carries Collection plus the collection type, the h1, the body summary as standfirst, an image, a facts row whose item count links to the list, and hazard, country and theme tags (mg-tag-container). The body sits in Show more with data-mg-show-more-threshold so short descriptions stay open. The list is SyndicationSearchWidget scoped with customFilters (field_collections:<nid>), never defaultFilters, which become removable chips; the header count uses the same filters. Related collections are a second widget with every control off, filtered by type:collections, shared hazard or theme, and NOT nid:<nid>. Each section is a section landmark named by its h2.',
+    examples: [
+      {
+        name: 'Header and description',
+        html: `<header>
+  <p class="mg-u-font-size-250"><a href="/collections">Collection</a><span aria-hidden="true"> · </span>Topic guide</p>
+  <h1 class="mg-u-font-size-900">Wildfire risk assessment</h1>
+  <p class="mg-u-font-size-500">Discover research, assessments and technical resources on future wildfire trends.</p>
+  <p class="mg-u-font-size-250"><a href="#collection-items">36 items</a><span aria-hidden="true"> · </span>Last updated <time datetime="2026-07-10">10 July 2026</time></p>
+  <div class="mg-tag-container">
+    <a href="/taxonomy/term/357">Wildfire and Bushfire</a>
+    <a href="/taxonomy/term/311">Climate change</a>
+  </div>
+  <img src="/sites/default/files/wildfire.jpg" alt="Aerial view of smoke rising from a fire line in a pine forest" />
+</header>
+<section aria-labelledby="collection-about">
+  <h2 id="collection-about">About this collection</h2>
+  <div id="collection-body" class="mg-content"><p>Understanding wildfire risk begins with understanding how and why wildfire hazards are changing.</p></div>
+  <button type="button" class="mg-button mg-button-primary mg-show-more--button" data-mg-show-more data-mg-show-more-target="#collection-body" data-mg-show-more-threshold="320">Show more</button>
+</section>
+<section id="collection-items" aria-labelledby="collection-items-title">
+  <h2 id="collection-items-title">In this collection</h2>
+  <div data-mg-search-widget data-custom-filters='["field_collections:101264","_language:en"]' data-default-filters="[]" data-default-sort="newest"></div>
+</section>`,
       },
     ],
   },
