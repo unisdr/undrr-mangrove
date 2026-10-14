@@ -10,7 +10,7 @@
  * @module SearchWidget/components/SortOptions
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import {
   useSearchState,
   useSearchDispatch,
@@ -73,22 +73,47 @@ export function SortOptions({ widgetId = 'search' }) {
     [dispatch]
   );
 
+  return (
+    <SortSelect
+      widgetId={widgetId}
+      legend={labels.sortLegend}
+      placeholder={labels.sortPlaceholder}
+      options={sortOptions}
+      value={sortBy || 'relevance'}
+      onChange={handleChange}
+    />
+  );
+}
+
+/**
+ * The rendered dropdown, memoised: SortOptions reads the whole search state
+ * and re-renders on every keystroke, but the dropdown only needs to when the
+ * sort or its options change.
+ */
+const SortSelect = memo(function SortSelect({
+  widgetId,
+  legend,
+  placeholder,
+  options,
+  value,
+  onChange,
+}) {
   const selectId = `sort-${widgetId}`;
 
   return (
     <fieldset className="mg-search__sort">
-      <legend id={`${selectId}-label`}>{labels.sortLegend}</legend>
+      <legend id={`${selectId}-label`}>{legend}</legend>
       <SelectDropdown
         id={selectId}
-        label={labels.sortLegend}
-        placeholder={labels.sortPlaceholder}
-        options={sortOptions}
-        value={sortBy || 'relevance'}
-        onChange={handleChange}
+        label={legend}
+        placeholder={placeholder}
+        options={options}
+        value={value}
+        onChange={onChange}
         multiple={false}
       />
     </fieldset>
   );
-}
+});
 
 export default SortOptions;

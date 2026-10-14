@@ -336,7 +336,6 @@ export function SelectDropdown({
                   role="option"
                   aria-selected={isSelected(option.value)}
                   onClick={() => handleOptionClick(option.value)}
-                  onMouseEnter={() => setHighlightedIndex(index)}
                 >
                   {/* Checkbox/Radio indicator */}
                   <span

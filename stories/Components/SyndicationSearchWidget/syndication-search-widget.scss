@@ -1107,6 +1107,9 @@ $search-input-padding-x: mg-rem(44);
     }
   }
 
+  // Hover is pure CSS; --highlighted is the keyboard position only, so
+  // moving the pointer over a long list doesn't re-render it.
+  &--selected:hover,
   &--selected#{&}--highlighted {
     background-color: rgb(var(--mg-color-blue-900) / 0.12);
   }
