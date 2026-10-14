@@ -448,11 +448,13 @@ describe('SyndicationSearchWidget', () => {
   });
 
   describe('loading indicator', () => {
-    it('has main element for results area', () => {
+    it('has a results area that is not a second main landmark', () => {
       render(<SyndicationSearchWidget config={{}} />);
 
-      const main = document.querySelector('.mg-search__main');
-      expect(main).toBeInTheDocument();
+      const results = document.querySelector('.mg-search__main');
+      expect(results).toBeInTheDocument();
+      expect(results.tagName).toBe('DIV');
+      expect(screen.queryByRole('main')).not.toBeInTheDocument();
     });
   });
 

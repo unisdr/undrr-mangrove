@@ -358,8 +358,9 @@ function SyndicationSearchWidgetInner() {
 
       {/* Main content area */}
       <div className="mg-search__content">
-        {/* Results area */}
-        <main
+        {/* Results area. A div, not <main>: the widget always sits inside
+            the page's own main landmark, and a page has only one. */}
+        <div
           className={`mg-search__main ${isPending ? 'mg-search__main--stale' : ''}`}
           data-vf-google-analytics-region="undrr-search-results"
           aria-busy={isLoading || isPending}
@@ -381,7 +382,7 @@ function SyndicationSearchWidgetInner() {
               activeFilterCount={activeFilterCount}
             />
           </Suspense>
-        </main>
+        </div>
 
         {/* Facets sidebar: desktop only, and only when not portaled out. */}
         {facetsLayout === 'sidebar' && !facetsPortaled && (
