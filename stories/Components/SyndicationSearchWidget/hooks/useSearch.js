@@ -64,7 +64,9 @@ export function useSearch() {
   const [isPending, startTransition] = useTransition();
   // Highlights are only displayed by the no-teaser fallback rendering, and
   // body highlighting roughly doubles Elasticsearch's time. Request them only
-  // once a response has a hit without teaser HTML.
+  // once a response has a hit without teaser HTML. Turning them on is left
+  // out of the request key: it applies from the next search the reader
+  // causes, rather than firing a second request for the results on screen.
   const [needsHighlight, setNeedsHighlight] = useState(false);
 
   const {
@@ -89,7 +91,7 @@ export function useSearch() {
     );
     return {
       body,
-      key: requestKey(searchEndpoint, body),
+      key: requestKey(searchEndpoint, { ...body, highlight: undefined }),
       // Aggregations depend on the main query and the aggregation
       // definitions only: not on the page, the sort or the facet selections
       // (those are a post_filter, applied after aggregating).

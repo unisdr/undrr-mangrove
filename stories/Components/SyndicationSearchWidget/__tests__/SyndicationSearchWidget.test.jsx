@@ -447,7 +447,7 @@ describe('SyndicationSearchWidget', () => {
         .filter(([url]) => !String(url).includes('preventionweb.net/api'))
         .map(([, init]) => JSON.parse(init.body));
 
-    it('asks for highlights only after a hit without a teaser', async () => {
+    it('asks for highlights from the next search after a hit without a teaser, without a second request', async () => {
       global.fetch = mockFetch({
         ok: true,
         json: () =>
@@ -471,10 +471,18 @@ describe('SyndicationSearchWidget', () => {
 
       render(<SyndicationSearchWidget config={{ debounceDelay: 0 }} />);
 
-      await waitFor(() => expect(searchBodies().length).toBeGreaterThan(1));
-      const bodies = searchBodies();
-      expect(bodies[0].highlight).toBeUndefined();
-      expect(bodies[bodies.length - 1].highlight).toBeDefined();
+      await waitFor(() => expect(searchBodies()).toHaveLength(1));
+      expect(searchBodies()[0].highlight).toBeUndefined();
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 20));
+      });
+      expect(searchBodies()).toHaveLength(1);
+
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'flood' },
+      });
+      await waitFor(() => expect(searchBodies()).toHaveLength(2));
+      expect(searchBodies()[1].highlight).toBeDefined();
     });
 
     it('never asks for highlights while every hit has a teaser', async () => {
