@@ -80,7 +80,7 @@ import createHydrator from '@undrr/undrr-mangrove/components/hydrate.js';
 | `selector` | `string` | Yes | CSS selector for containers |
 | `component` | `Function \| object` | Yes | React component or module with `.default` |
 | `fromElement` | `Function` | Yes | `(container: Element) => props` |
-| `options.clearContainer` | `boolean` | No | Clear `innerHTML` before render (default: `true`) |
+| `options.clearContainer` | `boolean` | No | Clear `innerHTML` before render (default: `true`). A container with a `data-mg-ssr` attribute is never cleared early: its server-rendered content stays until React's first commit replaces it, and a component may keep part of it longer (SyndicationSearchWidget keeps `[data-mg-search-ssr]` until its first results) |
 | `options.debugLabel` | `string` | No | Error label (default: `selector`) |
 | `options.onError` | `Function` | No | `(error, container) => void` callback |
 | `options.identifierPrefix` | `string` | No | `useId()` prefix override |
