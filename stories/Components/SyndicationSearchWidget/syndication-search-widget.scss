@@ -493,6 +493,13 @@ $search-input-padding-x: mg-rem(44);
   }
 }
 
+// Teaser images are inline by default, and the teaser's field wrappers set
+// a 24px line height, which left a few pixels of descender space under every
+// result image. Block images sit flush in list, card and book cover modes.
+.mg-search__result :where(.mg-card__visual) img {
+  display: block;
+}
+
 .mg-search__result-content {
   display: flex;
   gap: var(--mg-spacing-100);
