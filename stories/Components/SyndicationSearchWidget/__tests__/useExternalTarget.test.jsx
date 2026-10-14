@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { render, waitFor, act, cleanup } from '@testing-library/react';
+import { StrictMode } from 'react';
 import { SyndicationSearchWidget } from '../SyndicationSearchWidget';
 
 const originalError = console.error;
@@ -166,5 +167,88 @@ describe('target re-resolution', () => {
       cleanup();
       iframe.remove();
     }
+  });
+
+  // Regression: a selector that matches the widget's own markup used to
+  // portal into it, which removed the match, fell back, matched again and
+  // never settled.
+  it.each([
+    ['searchTarget', { searchTarget: '.mg-search__input-wrapper' }],
+    [
+      'facetsTarget',
+      { facets: 'sidebar', facetsTarget: '.mg-search__sidebar' },
+    ],
+    ['the widget root', { searchTarget: '[data-mg-search-widget]' }],
+  ])('ignores matches inside the widget (%s)', async (_, config) => {
+    render(<SyndicationSearchWidget config={config} />);
+    await act(async () => {});
+
+    const widget = document.querySelector('[data-mg-search-widget]');
+    expect(widget.querySelector('form[role="search"]')).not.toBeNull();
+    expect(document.querySelector('.mg-search__form-external')).toBeNull();
+    expect(document.querySelector('.mg-search__facets-external')).toBeNull();
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses a match outside the widget when the selector also matches inside it', async () => {
+    // The widget comes first in document order, so its own wrapper is the
+    // first match for the selector.
+    render(
+      <SyndicationSearchWidget
+        config={{ searchTarget: '.mg-search__input-wrapper' }}
+      />
+    );
+    let outside;
+    await act(async () => {
+      outside = document.createElement('div');
+      outside.className = 'mg-search__input-wrapper';
+      added.push(outside);
+      document.body.appendChild(outside);
+    });
+    await waitFor(() =>
+      expect(outside.querySelector('form[role="search"]')).not.toBeNull()
+    );
+  });
+
+  it('gives up and keeps the in-widget layout when the target keeps being removed', async () => {
+    let slot = add('thrash-slot');
+    // A host script that replaces the target whenever anything lands in it.
+    const host = new MutationObserver(() => {
+      if (slot.childNodes.length) {
+        slot.remove();
+        slot = add('thrash-slot');
+      }
+    });
+    host.observe(document.body, { childList: true, subtree: true });
+
+    try {
+      render(
+        <SyndicationSearchWidget config={{ searchTarget: '#thrash-slot' }} />
+      );
+      await waitFor(() =>
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('kept being removed')
+        )
+      );
+      host.disconnect();
+      await act(async () => {});
+      const widget = document.querySelector('[data-mg-search-widget]');
+      expect(widget.querySelector('form[role="search"]')).not.toBeNull();
+    } finally {
+      host.disconnect();
+    }
+  });
+
+  it('warns once under StrictMode', async () => {
+    render(
+      <StrictMode>
+        <SyndicationSearchWidget config={{ searchTarget: '#strict-missing' }} />
+      </StrictMode>
+    );
+    await act(async () => {});
+    const targetWarnings = warnSpy.mock.calls.filter(([message]) =>
+      String(message).includes('searchTarget selector "#strict-missing"')
+    );
+    expect(targetWarnings).toHaveLength(1);
   });
 });
