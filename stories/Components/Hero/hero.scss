@@ -749,9 +749,51 @@ $variant-colour-props: (
   }
 }
 
-// Tags below the summary and facts line.
+// Tags below the summary and facts line: a list of outline tags in the
+// hero's own ink, so they read on every surface. On the coloured variants the
+// ink is white, the same pairing as the hero's copy; on the neutral variant it
+// is the interactive colour. The plain fill a .mg-tag has elsewhere would be
+// close to invisible on the theme's hero colour. Tags carrying a Tag modifier
+// (mg-tag--secondary, --accent, …) keep that modifier's styling.
+.mg-hero {
+  --mg-hero-tag-color: var(--mg-color-neutral-0);
+}
+
 .mg-hero__tags {
-  padding-block: var(--mg-spacing-50);
+  @include mg-list-unmarked;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-50);
+  margin: 0;
+  padding: var(--mg-spacing-50) 0;
+
+  > li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .mg-tag:not([class*="mg-tag--"]) {
+    --mg-tag-foreground: rgb(var(--mg-hero-tag-color));
+    --mg-tag-background: transparent;
+    --mg-tag-background-hover: transparent;
+
+    background-color: transparent;
+    border-color: currentColor;
+    color: rgb(var(--mg-hero-tag-color));
+  }
+
+  // The hero's link colour rules are scoped to its copy; a tag is not copy.
+  a.mg-tag:not([class*="mg-tag--"]),
+  a.mg-tag:not([class*="mg-tag--"]):visited,
+  a.mg-tag:not([class*="mg-tag--"]):hover {
+    color: rgb(var(--mg-hero-tag-color));
+  }
+
+  a.mg-tag:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
 }
 
 // Neutral variant: the page's own white surface, dark copy and the theme's
@@ -788,12 +830,15 @@ $variant-colour-props: (
     }
   }
 
-  // Tags keep their own filled surface and white label (the tag's default
-  // foreground; --mg-tag-foreground is not in every bundle Hero ships in).
-  .mg-hero__tags > a,
-  .mg-hero__tags > a:visited,
-  .mg-hero__tags > a:hover {
-    color: rgb(var(--mg-color-neutral-0));
+  // Outline tags in the interactive colour.
+  --mg-hero-tag-color: var(--mg-color-interactive);
+
+  // Links in the eyebrow, facts line and summary are underlined: colour alone
+  // separates them from the text around them by only about 2:1 (WCAG 1.4.1).
+  .mg-hero__label a,
+  .mg-hero__summaryText a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
   }
 
   // Buttons go back to their ordinary page styling.
@@ -840,5 +885,31 @@ $variant-colour-props: (
   // surface the copy aligns with the content below, so it starts at the top.
   &.mg-hero--split .mg-hero__content {
     padding-block-start: 0;
+  }
+}
+
+// Neutral in the background layout drops the photograph even when the markup
+// carries one inline, as Drupal or hand-written markup may: an inline
+// background-image beats any selector, but background-size does not, so the
+// image is sized away. The mobile banner (::after, which inherits the image)
+// and the space reserved for it go too. Three classes, to beat both the
+// mobile banner rules and .mg-hero--no-image.
+.mg-hero.mg-hero--neutral:not(.mg-hero--split) {
+  --mg-hero-banner-block-size: 0px;
+
+  background-size: 0 0;
+
+  &::after {
+    content: none;
+  }
+}
+
+// On a phone the neutral split hero's image is a short banner above the copy
+// rather than a 16:9 block below it, so the page's first screen keeps the
+// title and summary. Visual order only; the copy stays first in the source.
+.mg-hero.mg-hero--neutral.mg-hero--split .mg-hero__media {
+  @media (max-width: $mg-breakpoint-tablet) {
+    aspect-ratio: 3 / 1;
+    order: -1;
   }
 }

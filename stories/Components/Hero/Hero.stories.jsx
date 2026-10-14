@@ -408,3 +408,24 @@ export const SplitNeutral = {
   },
   render: args => <Hero data={neutralData} {...args} />,
 };
+
+// Tags take the hero's ink, so they stay visible on a coloured surface.
+export const SplitWithTags = {
+  name: 'Split (tags on a coloured surface)',
+  args: {
+    data: [
+      {
+        ...splitMediaData[0],
+        tags: [
+          { label: 'Climate change', href: '#climate-change' },
+          { label: 'Governance', href: '#governance' },
+          { label: 'Financing DRR', href: '#financing' },
+        ],
+      },
+    ],
+    layout: 'split',
+    variant: 'primary',
+    headingLevel: 'h2',
+    split: '2/3',
+  },
+};

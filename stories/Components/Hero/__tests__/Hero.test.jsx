@@ -384,19 +384,69 @@ describe('Hero — neutral variant, linked eyebrow and facts, tags', () => {
     expect(count.closest('.mg-hero__label.detail')).toBeInTheDocument();
   });
 
-  it('renders tags after the facts line and before the buttons', () => {
+  it('renders tags as a list named Topics, after the facts line', () => {
     const { container } = render(
       <Hero data={[neutralItem]} layout="split" variant="neutral" />
     );
-    const tags = container.querySelector('.mg-hero__tags');
-    expect(tags).toHaveClass('mg-tag-container');
-    expect(tags.previousElementSibling).toHaveClass('meta-detail');
-    expect(tags.nextElementSibling).toHaveClass('mg-hero__buttons');
-    expect(screen.getByRole('link', { name: 'Wildfire' })).toHaveAttribute(
-      'href',
-      '/taxonomy/term/357'
+    const list = screen.getByRole('list', { name: 'Topics' });
+    expect(list).toHaveClass('mg-hero__tags');
+    expect(list.previousElementSibling).toHaveClass('meta-detail');
+    expect(list.nextElementSibling).toHaveClass('mg-hero__buttons');
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+    const link = screen.getByRole('link', { name: 'Wildfire' });
+    expect(link).toHaveClass('mg-tag');
+    expect(link).toHaveAttribute('href', '/taxonomy/term/357');
+    expect(
+      container.querySelector('.mg-hero__tags span.mg-tag')
+    ).toHaveTextContent('Climate change');
+  });
+
+  it('names the tag list with tagsLabel', () => {
+    render(
+      <Hero
+        data={[{ ...neutralItem, tagsLabel: 'Sujets' }]}
+        layout="split"
+        variant="neutral"
+      />
     );
-    expect(tags.querySelector('span')).toHaveTextContent('Climate change');
+    expect(screen.getByRole('list', { name: 'Sujets' })).toBeInTheDocument();
+  });
+
+  it('omits the summary when there is none', () => {
+    const { container } = render(
+      <Hero
+        data={[{ ...neutralItem, summaryText: undefined }]}
+        layout="split"
+        variant="neutral"
+      />
+    );
+    expect(container.querySelector('.mg-hero__summaryText')).toBeNull();
+  });
+
+  it('gives a button a fixed analytics label', () => {
+    render(
+      <Hero
+        data={[
+          {
+            ...neutralItem,
+            primary_button: undefined,
+            buttons: [
+              {
+                label: 'Browse 36 items',
+                url: '#items',
+                type: 'Secondary',
+                analyticsLabel: 'Collection: browse items',
+              },
+            ],
+          },
+        ]}
+        layout="split"
+        variant="neutral"
+      />
+    );
+    expect(
+      screen.getByRole('link', { name: 'Browse 36 items' })
+    ).toHaveAttribute('data-vf-analytics-label', 'Collection: browse items');
   });
 
   it('renders no tag container without tags', () => {

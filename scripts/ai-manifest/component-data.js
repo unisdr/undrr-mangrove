@@ -1184,7 +1184,7 @@ npm run build</code></pre>
     summary:
       'Full-width hero with title, summary and CTAs: four colour variants plus a neutral white surface, and a full-bleed background or split content-and-media layout.',
     description:
-      'Full-width hero banner with title, summary, and CTA buttons. Four colour variants, plus `variant="neutral"`: the page\'s white surface with dark text (--mg-color-text) and links in --mg-color-interactive, for a page header that should not read as a coloured band; use it with `layout="split"` (in the background layout it drops the photograph). Optional, for any variant: `label` (eyebrow) and `detail` (facts line) accept a React node as well as a string, so either can hold links (for example a parent link and a type, or an item count linking to a list on the page); `tags` ([{label, href}]) renders an mg-tag-container (`mg-hero__tags`) below the facts line. Strings render exactly as before. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
+      'Full-width hero banner with title, summary, and CTA buttons. Four colour variants, plus `variant="neutral"`: the page\'s white surface with dark text (--mg-color-text) and links in --mg-color-interactive, for a page header that should not read as a coloured band; use it with `layout="split"` (in the background layout it drops the photograph). Optional, for any variant: `label` (eyebrow) and `detail` (facts line) accept a React node as well as a string, so either can hold links (for example a parent link and a type, or an item count linking to a list on the page); `tags` ([{label, href}]) renders a list of outline tags (ul.mg-hero__tags aria-label="Topics", li > a.mg-tag; `tagsLabel` renames it) below the facts line that read on every variant; `summaryText` is optional; buttons accept `analyticsLabel` (data-vf-analytics-label). Neutral underlines links in the label, detail and summary. Strings render exactly as before. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
     cssClasses: [
       'mg-hero',
       'mg-hero--secondary',
@@ -1224,10 +1224,10 @@ npm run build</code></pre>
       <div class="mg-hero__meta meta-detail">
         <span class="mg-hero__label detail"><a href="#collection-items">36 items</a><span aria-hidden="true"> · </span>Last updated <time datetime="2026-07-10">10 July 2026</time></span>
       </div>
-      <div class="mg-tag-container mg-hero__tags">
-        <a href="/taxonomy/term/357">Wildfire and Bushfire</a>
-        <a href="/taxonomy/term/311">Climate change</a>
-      </div>
+      <ul class="mg-hero__tags" aria-label="Topics">
+        <li><a class="mg-tag" href="/taxonomy/term/357">Wildfire and Bushfire</a></li>
+        <li><a class="mg-tag" href="/taxonomy/term/311">Climate change</a></li>
+      </ul>
     </article>
     <div class="mg-hero__media">
       <img src="/sites/default/files/wildfire.jpg" alt="Aerial view of smoke rising from a fire line in a pine forest" class="mg-hero__media-img" />
