@@ -174,7 +174,53 @@ export function mgShowMore(scope) {
     mgShowMoreTarget.addEventListener('click', onTargetClick);
 
     item.click();
+
+    // Opt-in: only collapse content that is taller than a threshold. Short
+    // content stays open and the toggle is hidden, so a page template can
+    // wrap every body in ShowMore without a "Show more" that reveals nothing.
+    // The value is a height in pixels; with no value the threshold is the
+    // collapsed height itself. Measured again on resize, because rewrapping
+    // changes the height, until the reader uses the toggle. Content with no
+    // layout yet (inside a closed tab, say) is left collapsed until it has
+    // one.
+    const initialHidden = item.hidden;
+    let observer = null;
+    if (item.hasAttribute('data-mg-show-more-threshold')) {
+      let readerToggled = false;
+      let collapsedHeight = 0;
+      const markToggled = () => {
+        readerToggled = true;
+      };
+      const measure = () => {
+        if (readerToggled || mgShowMoreTarget.scrollHeight === 0) return;
+        const collapsed = mgShowMoreTarget.classList.contains(
+          'mg-show-more--collapsed'
+        );
+        if (collapsed) collapsedHeight = mgShowMoreTarget.clientHeight;
+        const threshold = parseFloat(item.dataset.mgShowMoreThreshold);
+        const limit = threshold > 0 ? threshold : collapsedHeight;
+        const fits = mgShowMoreTarget.scrollHeight <= limit;
+        if (fits === collapsed) {
+          item.removeEventListener('click', markToggled);
+          item.click();
+          item.addEventListener('click', markToggled);
+        }
+        item.hidden = fits;
+      };
+      measure();
+      item.addEventListener('click', markToggled);
+      if (typeof ResizeObserver === 'function') {
+        observer = new ResizeObserver(() => measure());
+        observer.observe(mgShowMoreTarget);
+      }
+      cleanups.push(() => {
+        item.removeEventListener('click', markToggled);
+      });
+    }
+
     cleanups.push(() => {
+      observer?.disconnect();
+      item.hidden = initialHidden;
       item.removeEventListener('click', onClick);
       item.removeEventListener('keydown', onKeydown);
       mgShowMoreTarget.removeEventListener('focusin', onFocusin);

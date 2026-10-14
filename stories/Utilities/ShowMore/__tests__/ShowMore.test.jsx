@@ -162,6 +162,26 @@ describe('ShowMore', () => {
     });
   });
 
+  it('passes the threshold to the toggle', () => {
+    const { rerender } = render(
+      <ShowMore data={[item('Show more', 'Body')]} threshold={320} />
+    );
+    // jsdom has no layout, so the script waits; only the attribute is checked.
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'data-mg-show-more-threshold',
+      '320'
+    );
+    rerender(<ShowMore data={[item('Show more', 'Body')]} threshold />);
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'data-mg-show-more-threshold',
+      ''
+    );
+    rerender(<ShowMore data={[item('Show more', 'Body')]} />);
+    expect(screen.getByRole('button')).not.toHaveAttribute(
+      'data-mg-show-more-threshold'
+    );
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(
       <ShowMore

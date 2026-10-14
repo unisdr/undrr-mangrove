@@ -15,7 +15,7 @@ import { mgShowMore } from '../../assets/js/show-more';
 
 const EMPTY_DATA = [];
 
-function ShowMoreItem({ item, id, labelOpen, labelCollapsed }) {
+function ShowMoreItem({ item, id, labelOpen, labelCollapsed, threshold }) {
   const buttonRef = useRef(null);
 
   // Each new item owns its enhancement. Mounting or updating this component
@@ -44,6 +44,9 @@ function ShowMoreItem({ item, id, labelOpen, labelCollapsed }) {
         data-mg-show-more-target={`#${id}`}
         data-mg-show-more-label-open={labelOpen}
         data-mg-show-more-label-collapsed={labelCollapsed}
+        data-mg-show-more-threshold={
+          threshold === true ? '' : threshold || undefined
+        }
       >
         {labelCollapsed}
       </button>
@@ -63,6 +66,7 @@ ShowMoreItem.propTypes = {
   id: PropTypes.string.isRequired,
   labelOpen: PropTypes.string.isRequired,
   labelCollapsed: PropTypes.string.isRequired,
+  threshold: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
 };
 
 /**
@@ -78,11 +82,13 @@ ShowMoreItem.propTypes = {
  * @param {string} props.data[].collapsable_text              Text content to show/hide
  * @param {string} props.labelOpen                           Translated expanded-state label
  * @param {string} props.labelCollapsed                      Translated collapsed-state label
+ * @param {boolean|number} props.threshold                   Collapse only content taller than this many pixels (`true`: the collapsed height)
  */
 export function ShowMore({
   data = EMPTY_DATA,
   labelOpen = 'Show less',
   labelCollapsed = 'Show more',
+  threshold,
 }) {
   // Each item gets its own id, and the toggle targets that id rather than
   // `collapsable_wrapper_class`. Two items sharing a wrapper class used to
@@ -103,6 +109,7 @@ export function ShowMore({
           id={`mg-show-more-${instanceId}-${index}`}
           labelOpen={labelOpen}
           labelCollapsed={labelCollapsed}
+          threshold={threshold}
         />
       ))}
     </React.Fragment>
@@ -116,6 +123,12 @@ ShowMore.propTypes = {
   labelOpen: PropTypes.string,
   /** Label while collapsed; supply the page's translated wording. */
   labelCollapsed: PropTypes.string,
+  /**
+   * Collapse only content taller than this many pixels, and hide the toggle
+   * otherwise. `true` uses the collapsed height (`--mg-show-more-height`).
+   * Set it before the item is enhanced.
+   */
+  threshold: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
 };
 
 export default ShowMore;

@@ -45,6 +45,34 @@ told apart — see "How the target is resolved" below.
 
 <Canvas of={ShowMoreStories.TwoOnOnePage} />
 
+## Only when long
+
+Add `data-mg-show-more-threshold` (React: `threshold`) to collapse content only
+when it is taller than a threshold. Shorter content stays open and the toggle
+gets `hidden`, so a template can wrap every body field in ShowMore without
+offering a "Show more" that reveals nothing. With no value the threshold is the
+collapsed height (`--mg-show-more-height`); give a number of pixels to leave
+content a little taller than that open too. The height is measured again when
+the content resizes, until the reader uses the toggle.
+
+<Canvas of={ShowMoreStories.OnlyWhenLong} />
+
+<Source
+  language="html"
+  code={`
+<div id="collection-body">
+  <p>Body text of any length…</p>
+</div>
+<button type="button"
+   class="mg-button mg-button-primary mg-show-more--button"
+   data-mg-show-more="true"
+   data-mg-show-more-target="#collection-body"
+   data-mg-show-more-threshold="320">
+  Show more
+</button>
+`}
+/>
+
 ## How it works
 
 The `mgShowMore()` function finds all elements with `data-mg-show-more` and wires up click handlers. On click, the targeted container's `mg-show-more--collapsed` class is toggled, which controls `max-height`, `overflow`, and a CSS `mask-image` fade.
@@ -142,13 +170,14 @@ than reaching for this utility.
 
 ### Data attributes
 
-| Attribute                           | Required | Description                                                                                                       |
-| ----------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
-| `data-mg-show-more`                 | Yes      | Set to `"true"` on the toggle button to register it                                                               |
-| `data-mg-show-more-target`          | No       | CSS selector for the content container, resolved nearest ancestor first. Defaults to `".mg-show-more--container"` |
-| `data-mg-show-more-label-collapsed` | No       | Button text when content is collapsed. Defaults to "Show more"                                                    |
-| `data-mg-show-more-label-open`      | No       | Button text when content is expanded. Defaults to "Show less"                                                     |
-| `data-mg-show-more-skip-auto-init`  | No       | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually.          |
+| Attribute                           | Required | Description                                                                                                                      |
+| ----------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `data-mg-show-more`                 | Yes      | Set to `"true"` on the toggle button to register it                                                                              |
+| `data-mg-show-more-target`          | No       | CSS selector for the content container, resolved nearest ancestor first. Defaults to `".mg-show-more--container"`                |
+| `data-mg-show-more-label-collapsed` | No       | Button text when content is collapsed. Defaults to "Show more"                                                                   |
+| `data-mg-show-more-label-open`      | No       | Button text when content is expanded. Defaults to "Show less"                                                                    |
+| `data-mg-show-more-skip-auto-init`  | No       | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually.                         |
+| `data-mg-show-more-threshold`       | No       | Collapse only when the content is taller than this many pixels; empty means the collapsed height. Otherwise the toggle is hidden |
 
 ### JavaScript initialization
 
@@ -211,6 +240,8 @@ The collapsed height is controlled by the `--mg-show-more-height` CSS custom pro
 `} />
 
 ## Changelog
+
+- **1.7**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Added `data-mg-show-more-threshold` and the React `threshold` prop. With either, content collapses only when it is taller than the threshold (by default the collapsed height); shorter content stays open and the toggle is hidden. The height is measured again on resize until the reader uses the toggle. A `.mg-show-more--button[hidden]` rule keeps that toggle hidden, since `.mg-button` sets `display`. Without the attribute nothing changes. New "Only when long" story.
 
 - **1.6**, 2026-09-20 ([#1239](https://github.com/unisdr/undrr-mangrove/issues/1239)): Added translated per-instance React labels with generic defaults, scoped per-item enhancement, dynamic-item support and lifecycle cleanup. The default story's locale toolbar previews both translated toggle labels. Regression tests cover late items, translation changes and StrictMode cleanup.
 

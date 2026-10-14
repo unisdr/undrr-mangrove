@@ -357,4 +357,130 @@ describe('mgShowMore', () => {
       expect(btn.dataset.mgShowMoreInitialized).toBe('true');
     });
   });
+
+  describe('data-mg-show-more-threshold', () => {
+    // jsdom has no layout, so give the target the heights a browser would:
+    // the collapsed box is 200px tall and the content `full` px.
+    function setupThreshold({ full, threshold = '' }) {
+      document.body.innerHTML = `
+        <div id="body"><p>Content</p></div>
+        <button type="button" data-mg-show-more data-mg-show-more-target="#body"
+          data-mg-show-more-threshold="${threshold}">Show more</button>
+      `;
+      const target = document.getElementById('body');
+      const height = { full };
+      Object.defineProperty(target, 'scrollHeight', {
+        get: () => height.full,
+      });
+      Object.defineProperty(target, 'clientHeight', {
+        get: () =>
+          target.classList.contains('mg-show-more--collapsed')
+            ? Math.min(200, height.full)
+            : height.full,
+      });
+      return {
+        target,
+        button: document.querySelector('button'),
+        height,
+      };
+    }
+
+    let observers;
+    beforeEach(() => {
+      observers = [];
+      global.ResizeObserver = class {
+        constructor(callback) {
+          this.callback = callback;
+          this.disconnected = false;
+          observers.push(this);
+        }
+        observe() {}
+        disconnect() {
+          this.disconnected = true;
+        }
+      };
+    });
+    afterEach(() => {
+      delete global.ResizeObserver;
+    });
+
+    it('leaves content that fits open and hides the toggle', () => {
+      const { target, button } = setupThreshold({ full: 150 });
+      mgShowMore(button);
+      expect(target).not.toHaveClass('mg-show-more--collapsed');
+      expect(button.hidden).toBe(true);
+    });
+
+    it('collapses content taller than the collapsed height', () => {
+      const { target, button } = setupThreshold({ full: 900 });
+      mgShowMore(button);
+      expect(target).toHaveClass('mg-show-more--collapsed');
+      expect(button.hidden).toBe(false);
+      expect(button).toHaveTextContent('Show more');
+    });
+
+    it('uses a pixel value as the threshold', () => {
+      const { target, button } = setupThreshold({
+        full: 280,
+        threshold: '320',
+      });
+      mgShowMore(button);
+      expect(target).not.toHaveClass('mg-show-more--collapsed');
+      expect(button.hidden).toBe(true);
+    });
+
+    it('measures again when the content resizes', () => {
+      const { target, button, height } = setupThreshold({ full: 150 });
+      mgShowMore(button);
+      height.full = 600;
+      observers[0].callback();
+      expect(target).toHaveClass('mg-show-more--collapsed');
+      expect(button.hidden).toBe(false);
+      height.full = 120;
+      observers[0].callback();
+      expect(target).not.toHaveClass('mg-show-more--collapsed');
+      expect(button.hidden).toBe(true);
+    });
+
+    it('stops measuring once the reader uses the toggle', () => {
+      const { target, button, height } = setupThreshold({ full: 600 });
+      mgShowMore(button);
+      button.click();
+      expect(target).not.toHaveClass('mg-show-more--collapsed');
+      height.full = 100;
+      observers[0].callback();
+      expect(button.hidden).toBe(false);
+      expect(button).toHaveTextContent('Show less');
+    });
+
+    it('waits for layout before deciding', () => {
+      const { target, button } = setupThreshold({ full: 0 });
+      mgShowMore(button);
+      expect(target).toHaveClass('mg-show-more--collapsed');
+      expect(button.hidden).toBe(false);
+    });
+
+    it('cleanup disconnects the observer and shows the toggle again', () => {
+      const { button } = setupThreshold({ full: 150 });
+      const cleanup = mgShowMore(button);
+      expect(button.hidden).toBe(true);
+      cleanup();
+      expect(observers[0].disconnected).toBe(true);
+      expect(button.hidden).toBe(false);
+    });
+
+    it('leaves toggles without the attribute alone', () => {
+      document.body.innerHTML = `
+        <div id="body"><p>Content</p></div>
+        <button type="button" data-mg-show-more data-mg-show-more-target="#body">Show more</button>
+      `;
+      const button = document.querySelector('button');
+      mgShowMore(button);
+      expect(document.getElementById('body')).toHaveClass(
+        'mg-show-more--collapsed'
+      );
+      expect(button.hidden).toBe(false);
+      expect(observers).toHaveLength(0);
+    });
+  });
 });

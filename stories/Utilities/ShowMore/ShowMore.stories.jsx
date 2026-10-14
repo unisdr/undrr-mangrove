@@ -212,3 +212,34 @@ export const TwoOnOnePage = {
     },
   },
 };
+
+const shortText =
+  'This collection brings together key articles on the 2024 wildfire season in Canada.';
+
+export const OnlyWhenLong = {
+  name: 'Only when long',
+  render: () => (
+    <div style={{ maxWidth: '400px' }}>
+      <h3 className="mg-heading-300">Short content</h3>
+      <ShowMore
+        threshold
+        data={[
+          {
+            collapsable_wrapper_class: 'show-more-wrapper-class',
+            collapsable_text: shortText,
+          },
+        ]}
+      />
+      <h3 className="mg-heading-300">Long content</h3>
+      <ShowMore
+        threshold
+        data={[
+          {
+            collapsable_wrapper_class: 'show-more-wrapper-class',
+            collapsable_text: `${blockText} ${blockText} ${blockText}`,
+          },
+        ]}
+      />
+    </div>
+  ),
+};
