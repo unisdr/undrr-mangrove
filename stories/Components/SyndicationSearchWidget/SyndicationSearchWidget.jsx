@@ -38,8 +38,8 @@ import {
 } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
+import { useExternalTarget } from './hooks/useExternalTarget';
 import { analyticsRegion, resolveFacetsLayout } from './utils/constants';
-import { resolveTarget } from './utils/ownerDocument';
 import {
   WidgetRootContext,
   useWidgetRootRef,
@@ -318,11 +318,11 @@ function SyndicationSearchWidgetInner() {
       page: state.page,
     };
     onResults?.(detail);
-    document
-      .getElementById(widgetId)
-      ?.dispatchEvent(
-        new CustomEvent('mg-search-widget:results', { bubbles: true, detail })
-      );
+    // Dispatch from the root itself: a global getElementById misses a widget
+    // mounted in an iframe (a block editor canvas).
+    rootRef.current?.dispatchEvent(
+      new CustomEvent('mg-search-widget:results', { bubbles: true, detail })
+    );
     // Only a new result set is news; query and page arrive with it.
   }, [results, totalResults, error]);
 
@@ -333,50 +333,28 @@ function SyndicationSearchWidgetInner() {
   const showSearchBox = config.showSearchBox !== false;
   const { isLoading } = state;
 
-  // Resolve external facets target (AC2: facets in a separate DOM region).
-  // Looked up once on mount when a selector is configured, in the document
-  // the widget is mounted in. If the target node isn't there, fall back to
-  // the in-widget layout and log a single console warning so editors and
-  // developers can see why the portal didn't take effect.
-  const [facetsTargetEl, setFacetsTargetEl] = useState(null);
-  useEffect(() => {
-    if (!facetsActive || !facetsTarget || typeof document === 'undefined') {
-      setFacetsTargetEl(null);
-      return;
-    }
-    const el = resolveTarget(facetsTarget, rootRef.current);
-    if (el) {
-      setFacetsTargetEl(el);
-    } else {
-      setFacetsTargetEl(null);
-      console.warn(
-        `[SyndicationSearchWidget] facetsTarget selector "${facetsTarget}" did not match any element; falling back to in-widget facets layout.`
-      );
-    }
-  }, [facetsActive, facetsTarget]);
-
+  // Resolve the external facets target (facets in a separate DOM region)
+  // and the external search-input target (typically a hero or banner region
+  // while results render lower on the page), in the document the widget is
+  // mounted in (an iframe in block editor canvases). Both are re-resolved when the
+  // target appears, moves or is replaced after mount, as happens in block
+  // editors. Until a target matches, the in-widget layout is used, with one
+  // console warning per selector so editors and developers can see why the
+  // portal didn't take effect.
+  const facetsTargetEl = useExternalTarget(
+    facetsTarget,
+    facetsActive,
+    rootRef,
+    warnFacetsTargetMissing
+  );
   const facetsPortaled = facetsActive && facetsTargetEl !== null;
 
-  // Resolve external search-input target (AC3: search input rendered in a
-  // separate DOM region, typically a hero/banner region while results
-  // render lower on the page). Same pattern as facetsTarget.
-  const [searchTargetEl, setSearchTargetEl] = useState(null);
-  useEffect(() => {
-    if (!showSearchBox || !searchTarget || typeof document === 'undefined') {
-      setSearchTargetEl(null);
-      return;
-    }
-    const el = resolveTarget(searchTarget, rootRef.current);
-    if (el) {
-      setSearchTargetEl(el);
-    } else {
-      setSearchTargetEl(null);
-      console.warn(
-        `[SyndicationSearchWidget] searchTarget selector "${searchTarget}" did not match any element; falling back to in-widget search input.`
-      );
-    }
-  }, [showSearchBox, searchTarget]);
-
+  const searchTargetEl = useExternalTarget(
+    searchTarget,
+    showSearchBox,
+    rootRef,
+    warnSearchTargetMissing
+  );
   const searchPortaled = showSearchBox && searchTargetEl !== null;
 
   // Count active filters for mobile button badge
@@ -510,6 +488,16 @@ function SyndicationSearchWidgetInner() {
     </div>
   );
 }
+
+const warnFacetsTargetMissing = selector =>
+  console.warn(
+    `[SyndicationSearchWidget] facetsTarget selector "${selector}" did not match any element; falling back to in-widget facets layout until it appears.`
+  );
+
+const warnSearchTargetMissing = selector =>
+  console.warn(
+    `[SyndicationSearchWidget] searchTarget selector "${selector}" did not match any element; falling back to in-widget search input until it appears.`
+  );
 
 /**
  * Loading skeleton for search results.
