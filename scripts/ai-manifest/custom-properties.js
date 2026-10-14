@@ -246,6 +246,8 @@ export const PROPERTY_DOCS = {
   // Hero
   '--mg-hero-banner-block-size':
     "How deep the photograph is below the tablet breakpoint, where the background layout is a banner with the copy on a solid panel underneath rather than copy over the frame. The copy's offset and the panel's upper edge both read it, so a theme changes the banner's depth with this one property and the panel follows. A hero with no background image collapses it to zero through `mg-hero--no-image`, so the copy keeps the panel without a band reserved for an image that never arrives.",
+  '--mg-hero-tag-color':
+    'Ink of the outline tags in a hero (border and label): white on the coloured variants, the interactive colour on the neutral variant. Tags with a Tag modifier ignore it.',
   '--mg-hero-cta-color':
     'Colour of the hero CTA button. Each colour variant re-points it.',
   '--mg-hero-gradient-color':
@@ -285,6 +287,8 @@ export const PROPERTY_DOCS = {
   // OnThisPageNav
   '--mg-on-this-page-nav-offset':
     "Docking offset for a fixed header above the nav. Accepts any CSS length, and the scroll position calculations use it too. Nothing declares it, so set it in your theme CSS to dock below a sticky header; set it on :root so the page's scroll-padding-top counts it as well. In Drupal, var(--drupal-displace-offset-top, 0px) allows for the admin toolbar.",
+  '--mg-on-this-page-nav-block-size':
+    "The bar's height, set on the root by on-this-page-nav.js while the bar is sticky (0px when it is not) and read by the root's scroll padding. Do not set it yourself.",
   '--mg-on-this-page-nav-container':
     'Width of the mg-container the links line up with under .mg-on-this-page-nav--align-container. Declared per breakpoint to match mg-container; override it when the content column is narrower.',
   '--mg-on-this-page-nav-scroll-padding':
