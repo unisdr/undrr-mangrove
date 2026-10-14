@@ -4,6 +4,10 @@ import { Hero } from '../../Components/Hero/Hero';
 import { SyndicationSearchWidget } from '../../Components/SyndicationSearchWidget/SyndicationSearchWidget';
 import { buildQuery } from '../../Components/SyndicationSearchWidget/utils/queryBuilder';
 import { mgShowMore } from '../../assets/js/show-more';
+import {
+  mgOnThisPageNav,
+  mgOnThisPageNavDestroy,
+} from '../../assets/js/on-this-page-nav';
 import { UndrrChrome } from '../_shared/UndrrChrome';
 import { SkipLink } from '../../Utilities/SkipLink/SkipLink';
 import {
@@ -36,6 +40,20 @@ const text = {
   emptyAction: 'Browse all collections',
   showMore: 'Show more',
   showLess: 'Show less',
+  onThisPage: 'On this page',
+  navAbout: 'About',
+};
+
+// Analytics regions and labels. The shared UNDRR analytics script reports a
+// click's innermost data-vf-google-analytics-region and prefers
+// data-vf-analytics-label over link text. Labels stay in English and leave out
+// counts, so reports do not split by language or by number.
+const REGION = {
+  header: 'collection-header',
+  nav: 'on-this-page-nav',
+  about: 'collection-about',
+  content: 'collection-content',
+  related: 'collection-related',
 };
 
 /**
@@ -125,6 +143,7 @@ function About({ id, paragraphs }) {
         data-mg-show-more-threshold={ABOUT_THRESHOLD}
         data-mg-show-more-label-collapsed={text.showMore}
         data-mg-show-more-label-open={text.showLess}
+        data-vf-analytics-label="Collection: show more or less"
       >
         {text.showMore}
       </button>
@@ -145,7 +164,12 @@ function Facts({ count, failed, itemsId, updated }) {
           {count === null ? (
             <span>{text.counting}</span>
           ) : (
-            <a href={`#${itemsId}`}>{text.items(count)}</a>
+            <a
+              href={`#${itemsId}`}
+              data-vf-analytics-label="Collection: item count"
+            >
+              {text.items(count)}
+            </a>
           )}
           <span aria-hidden="true"> · </span>
         </>
@@ -160,6 +184,54 @@ Facts.propTypes = {
   failed: PropTypes.bool,
   itemsId: PropTypes.string.isRequired,
   updated: PropTypes.object.isRequired,
+};
+
+/**
+ * The sticky On this page bar in explicit mode: vanilla OnThisPageNav markup
+ * with one link per section, as a Drupal template would emit it.
+ */
+function SectionNav({ items }) {
+  const nav = useRef(null);
+  useEffect(() => {
+    const element = nav.current;
+    mgOnThisPageNav([element]);
+    return () => mgOnThisPageNavDestroy(element);
+  }, []);
+  return (
+    <nav
+      ref={nav}
+      className="mg-on-this-page-nav"
+      data-mg-on-this-page-nav
+      data-mg-on-this-page-nav-skip-auto-init
+      data-mg-on-this-page-nav-label={text.onThisPage}
+      aria-label={text.onThisPage}
+      data-vf-google-analytics-region={REGION.nav}
+    >
+      <ul className="mg-on-this-page-nav__list">
+        {items.map(item => (
+          <li key={item.href} className="mg-on-this-page-nav__item">
+            <a
+              href={item.href}
+              className="mg-on-this-page-nav__link"
+              data-vf-analytics-label={`On this page: ${item.label}`}
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+SectionNav.propTypes = {
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      href: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 function Tags({ tags }) {
@@ -194,6 +266,23 @@ export function CollectionPage({
   const related = useResultCount(relatedFilters(collection));
   const tags = tagsFor(collection);
   const kicker = `${text.collection} · ${collection.type}`;
+  const aboutId = `${prefix}-about`;
+  const relatedId = `${prefix}-related`;
+  const showRelated = related.count > 0;
+  // English analytics labels are fixed; the visible text may be translated.
+  const navItems = [
+    { href: `#${aboutId}`, text: text.navAbout, label: 'About' },
+    { href: `#${itemsId}`, text: text.index, label: 'In this collection' },
+    ...(showRelated
+      ? [
+          {
+            href: `#${relatedId}`,
+            text: text.related,
+            label: 'Related collections',
+          },
+        ]
+      : []),
+  ];
 
   return (
     <div lang="en">
@@ -206,7 +295,7 @@ export function CollectionPage({
           tabIndex={-1}
         >
           {headerStyle === 'hero' ? (
-            <>
+            <div data-vf-google-analytics-region={REGION.header}>
               <Hero
                 layout="split"
                 split="2/3"
@@ -233,12 +322,20 @@ export function CollectionPage({
               <div className="mg-demo-collection-after-hero">
                 <Tags tags={tags} />
               </div>
-            </>
+            </div>
           ) : (
-            <header className="mg-demo-collection-header">
+            <header
+              className="mg-demo-collection-header"
+              data-vf-google-analytics-region={REGION.header}
+            >
               <div className="mg-demo-collection-header__text">
                 <p className="mg-u-font-size-250">
-                  <a href={COLLECTIONS_URL}>{text.collection}</a>
+                  <a
+                    href={COLLECTIONS_URL}
+                    data-vf-analytics-label="Collection: all collections"
+                  >
+                    {text.collection}
+                  </a>
                   <span aria-hidden="true"> · </span>
                   {collection.type}
                 </p>
@@ -261,17 +358,23 @@ export function CollectionPage({
               />
             </header>
           )}
+          {/* Remounted when the related link comes or goes, so scroll-spy
+              observes exactly the sections that are on the page. */}
+          <SectionNav key={navItems.length} items={navItems} />
           <section
+            id={aboutId}
             className="mg-demo-collection-section"
-            aria-labelledby={`${prefix}-about`}
+            aria-labelledby={`${aboutId}-title`}
+            data-vf-google-analytics-region={REGION.about}
           >
-            <h2 id={`${prefix}-about`}>{text.about}</h2>
+            <h2 id={`${aboutId}-title`}>{text.about}</h2>
             <About id={prefix} paragraphs={collection.body} />
           </section>
           <section
             id={itemsId}
             className="mg-demo-collection-section"
             aria-labelledby={`${itemsId}-title`}
+            data-vf-google-analytics-region={REGION.content}
           >
             <h2 id={`${itemsId}-title`}>{text.index}</h2>
             {items.count === 0 ? (
@@ -282,6 +385,7 @@ export function CollectionPage({
                   <a
                     href={COLLECTIONS_URL}
                     className="mg-button mg-button-primary"
+                    data-vf-analytics-label="Collection: browse all collections"
                   >
                     {text.emptyAction}
                   </a>
@@ -304,16 +408,19 @@ export function CollectionPage({
                     _language: false,
                   },
                   enableHashSync: syncUrl,
+                  analyticsRegionPrefix: REGION.content,
                 }}
               />
             )}
           </section>
-          {related.count > 0 && (
+          {showRelated && (
             <section
+              id={relatedId}
               className="mg-demo-collection-section"
-              aria-labelledby={`${prefix}-related`}
+              aria-labelledby={`${relatedId}-title`}
+              data-vf-google-analytics-region={REGION.related}
             >
-              <h2 id={`${prefix}-related`}>{text.related}</h2>
+              <h2 id={`${relatedId}-title`}>{text.related}</h2>
               <SyndicationSearchWidget
                 config={{
                   searchEndpoint: SEARCH_ENDPOINT,
@@ -329,6 +436,7 @@ export function CollectionPage({
                   showActiveFilters: false,
                   showPager: false,
                   enableHashSync: false,
+                  analyticsRegionPrefix: REGION.related,
                   visibleTeaserFields: {
                     contentType: false,
                     date: false,

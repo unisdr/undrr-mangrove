@@ -17,12 +17,13 @@ The examples use real PreventionWeb collections and query the live search index,
 
 <Controls of={Stories.Typical} />
 
-Four sections, each a landmark named by its heading:
+An orienting header, a sticky "On this page" bar, then three sections, each a landmark named by its heading:
 
 1. **Orienting header.** "Collection" and the collection type, the title (`h1`), the body summary as the standfirst, the image, a facts row with the item count and the last updated date, and the hazard, country and theme tags. The count links to the content list.
+   - **On this page.** A sticky [On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) under the header, with one link per section: About, In this collection and Related collections. It keeps the related collections one press away from anywhere on a long page, and its clicks show which section readers want.
 2. **About this collection.** The body, collapsed with [Show more](?path=/docs/components-showmore--docs) only when it is taller than 320px.
 3. **In this collection.** The [syndicated search widget](?path=/docs/components-syndicated-search--docs) scoped to the collection, newest first, with its results count and hazard, theme, type and year filters. Its total is the item count.
-4. **Related collections.** A second widget with every control turned off, showing three other collections that share a hazard or theme. The section is left out when there are none.
+4. **Related collections.** A second widget with every control turned off, showing three other collections that share a hazard or theme. The section, and its link in the On this page bar, are left out when there are none.
 
 ## Short description
 
@@ -90,6 +91,53 @@ The header composes utilities and tags. The `mg-demo-collection-*` classes are s
 | Item count   | Search total for the content list's filters (see below)        |
 | Last updated | The node's changed date                                        |
 | Tags         | `field_hazard`, `field_country`, `field_theme`, in that order  |
+
+### On this page
+
+Explicit mode: write the links, because collection bodies have almost no `h2`s for the script to find. Each link points at a section's `id`, so scroll-spy marks the section in view; drop the Related collections link whenever that section is not rendered.
+
+```html
+<nav
+  class="mg-on-this-page-nav"
+  data-mg-on-this-page-nav
+  data-mg-on-this-page-nav-label="On this page"
+  data-vf-google-analytics-region="on-this-page-nav"
+>
+  <ul class="mg-on-this-page-nav__list">
+    <li class="mg-on-this-page-nav__item">
+      <a
+        class="mg-on-this-page-nav__link"
+        href="#collection-about"
+        data-vf-analytics-label="On this page: About"
+      >
+        About
+      </a>
+    </li>
+    <li class="mg-on-this-page-nav__item">
+      <a
+        class="mg-on-this-page-nav__link"
+        href="#collection-items"
+        data-vf-analytics-label="On this page: In this collection"
+      >
+        In this collection
+      </a>
+    </li>
+    <li class="mg-on-this-page-nav__item">
+      <a
+        class="mg-on-this-page-nav__link"
+        href="#collection-related"
+        data-vf-analytics-label="On this page: Related collections"
+      >
+        Related collections
+      </a>
+    </li>
+  </ul>
+</nav>
+```
+
+Place it directly in `main`, after the header, so it stays docked for the whole page. Under a sticky site header, set `--mg-on-this-page-nav-offset` to that header's height.
+
+The item count stays out of the link text. It is already in the header and in the list's own results line, it would make the bar shift as the number arrives, and a link name that changes with the count is harder to compare in analytics.
 
 ### About
 
@@ -161,19 +209,34 @@ Each custom filter is a separate `query_string` clause, so a clause can stand al
 
 Only one widget on a page may sync with the URL hash; leave it to the content list.
 
+### Analytics
+
+The shared UNDRR analytics script ([google_analytics_enhancements.js](https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js)) reports each click with the innermost `data-vf-google-analytics-region` around it, and uses `data-vf-analytics-label` as the click's name when present. The labels are fixed English strings with no counts, as on Share this and Cite this, so reports do not split by language or by number.
+
+| Element             | Region                                                                                    | Label                                                                                          |
+| ------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Header              | `collection-header`                                                                       | "Collection: all collections" (the Collection link), "Collection: item count" (the count)      |
+| On this page bar    | `on-this-page-nav`                                                                        | "On this page: About", "On this page: In this collection", "On this page: Related collections" |
+| About section       | `collection-about`                                                                        | "Collection: show more or less" (the toggle)                                                   |
+| In this collection  | `collection-content`; the widget uses `collection-content-form`, `-results` and `-facets` | "Collection: browse all collections" (empty state)                                             |
+| Related collections | `collection-related`; the widget uses `collection-related-results`                        | Card titles                                                                                    |
+
+Because the innermost region wins, a region on the section never reaches clicks inside a search widget, which reports its own. Set each widget's `analyticsRegionPrefix` (`data-analytics-region-prefix` on a hydrated container) to the section's region so the two widgets do not both report `undrr-search-results`. Tag links keep their term names as labels: the term is the useful thing to count.
+
 ## Accessibility
 
 - One `h1`, then an `h2` per section; the empty state's title is an `h3` under its section.
 - Each section is a `section` named by its heading with `aria-labelledby`, so screen reader users can move between them as regions.
 - The count is link text ("36 items"), read in full, and goes to the list. The widget announces its own total in a live region when results load.
 - The middle dots between facts are hidden from assistive technology.
+- The On this page bar is a `nav` named "On this page"; the section in view carries `aria-current="true"`, and following a link moves focus to that section.
 - Show more clips the body visually only; screen readers read it in full. See [Show more](?path=/docs/components-showmore--docs#accessibility).
 
 ## Design decisions
 
 **No tabs.** Splitting about, content and related into tabs hides the content list, which is what most readers came for, and makes the count link point at a tab that may not be showing.
 
-**No on-this-page navigation.** With the description capped at 320px, the content list starts within a screen or two of the top, and the header's count link already jumps to it. A contents block would list three headings the reader can see. Revisit it if collections gain more sections.
+**A sticky On this page bar.** The content list can run to many pages of results, which puts related collections far down the page. The bar keeps them one press away, and its clicks record which section readers were looking for.
 
 **"In this collection", not "Latest additions".** The list is sorted by each item's publication date, not by when it was added to the collection, so "latest additions" would claim something the index cannot show.
 
@@ -191,4 +254,4 @@ The same structure could serve hazard and theme pages: scope the list with `fiel
 
 ## Changelog
 
-- **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern: orienting header with item count and tags, a description that collapses only when long, the collection's content as a scoped search index, and related collections. Examples for a typical, short, long and empty collection, and a hero header for comparison.
+- **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern: orienting header with item count and tags, a description that collapses only when long, the collection's content as a scoped search index, related collections, and a sticky On this page bar linking the sections. Analytics regions and fixed English labels on every section, with the two search widgets reporting separate regions. Examples for a typical, short, long and empty collection, and a hero header for comparison.

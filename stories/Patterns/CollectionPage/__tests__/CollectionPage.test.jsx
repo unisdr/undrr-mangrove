@@ -124,6 +124,72 @@ test('omits related collections when there are none', async () => {
   expect(
     screen.queryByRole('region', { name: 'Related collections' })
   ).not.toBeInTheDocument();
+  const nav = screen.getByRole('navigation', { name: 'On this page' });
+  expect(
+    within(nav)
+      .getAllByRole('link')
+      .map(link => link.textContent)
+  ).toEqual(['About', 'In this collection']);
+});
+
+test('the sticky On this page bar links every section, related last', async () => {
+  render(<CollectionPage id="demo" syncUrl={false} />);
+  await screen.findByRole('region', { name: 'Related collections' });
+  const nav = screen.getByRole('navigation', { name: 'On this page' });
+  expect(nav).toHaveClass('mg-on-this-page-nav');
+  expect(nav.previousElementSibling).toHaveAttribute(
+    'data-vf-google-analytics-region',
+    'collection-header'
+  );
+  const links = within(nav).getAllByRole('link');
+  expect(links.map(link => link.textContent)).toEqual([
+    'About',
+    'In this collection',
+    'Related collections',
+  ]);
+  for (const link of links) {
+    const target = document.getElementById(link.hash.slice(1));
+    expect(target.tagName).toBe('SECTION');
+    expect(target).toHaveAccessibleName();
+  }
+  expect(links[0]).toHaveAttribute('aria-current', 'true');
+  expect(links.map(link => link.dataset.vfAnalyticsLabel)).toEqual([
+    'On this page: About',
+    'On this page: In this collection',
+    'On this page: Related collections',
+  ]);
+});
+
+test('names an analytics region for each section and each widget', async () => {
+  const { container } = render(<CollectionPage id="demo" syncUrl={false} />);
+  await screen.findByRole('region', { name: 'Related collections' });
+  const regionOf = name =>
+    screen
+      .getByRole('region', { name })
+      .getAttribute('data-vf-google-analytics-region');
+  expect(regionOf('About this collection')).toBe('collection-about');
+  expect(regionOf('In this collection')).toBe('collection-content');
+  expect(regionOf('Related collections')).toBe('collection-related');
+  expect(
+    screen
+      .getByRole('navigation', { name: 'On this page' })
+      .getAttribute('data-vf-google-analytics-region')
+  ).toBe('on-this-page-nav');
+  const regions = [
+    ...container.querySelectorAll('[data-vf-google-analytics-region]'),
+  ].map(el => el.getAttribute('data-vf-google-analytics-region'));
+  expect(regions).toEqual(
+    expect.arrayContaining([
+      'collection-content-form',
+      'collection-content-results',
+      'collection-related-results',
+    ])
+  );
+  expect(regions.some(name => name.startsWith('undrr-search'))).toBe(false);
+  expect(screen.getByRole('link', { name: '36 items' })).toHaveAttribute(
+    'data-vf-analytics-label',
+    'Collection: item count'
+  );
 });
 
 test('a collection with no items shows an empty state instead of the list', () => {
