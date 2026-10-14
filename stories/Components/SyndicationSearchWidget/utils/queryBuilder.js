@@ -125,6 +125,9 @@ export function buildSort(sortBy) {
       // Results without an event date (non-events in a mixed listing) sort
       // last in both directions. unmapped_type keeps the sort valid on an
       // index that doesn't have event_start yet, before a reindex.
+      // Date-only events share a start time (12:00 UTC) and non-events all
+      // tie as missing, so publish date and then nid break ties: from/size
+      // paging needs a total order, or pages repeat and skip results.
       return [
         {
           event_start: {
@@ -133,6 +136,14 @@ export function buildSort(sortBy) {
             unmapped_type: 'date',
           },
         },
+        {
+          published_at: {
+            order: 'desc',
+            missing: '_last',
+            unmapped_type: 'date',
+          },
+        },
+        { nid: { order: 'desc', missing: '_last', unmapped_type: 'long' } },
       ];
     case 'relevance':
     default:
@@ -201,9 +212,9 @@ function buildBaseFilters(config) {
     }
   }
 
-  // Hide expired events: drop documents whose event ended before today, and
-  // keep documents without event_end (non-events in a mixed listing). Plain
-  // range/exists clauses with `now/d` date math, so Elasticsearch resolves
+  // Hide expired events: drop documents whose event ended before yesterday,
+  // and keep documents without event_end (non-events in a mixed listing).
+  // Plain range/exists clauses with date math, so Elasticsearch resolves
   // "today" and server-rendered results honour it without a baked timestamp;
   // the SSR renderer rejects script filters.
   if (config.hideExpiredEvents) {
@@ -244,8 +255,13 @@ function buildBaseFilters(config) {
 }
 
 /**
- * Filter clause that excludes events whose `event_end` is before today while
- * keeping every document that has no `event_end`.
+ * Filter clause that excludes events whose `event_end` is before yesterday
+ * (UTC) while keeping every document that has no `event_end`.
+ *
+ * `now-1d/d` rather than `now/d`: date math rounds in UTC, so an event that
+ * ends today in the Americas would vanish in the late afternoon there, while
+ * it is still running, once UTC has moved on to the next day. A day of
+ * leniency keeps it listed until the day after it ends.
  *
  * @returns {Object} Elasticsearch bool clause
  */
@@ -253,7 +269,7 @@ export function buildHideExpiredEventsFilter() {
   return {
     bool: {
       should: [
-        { range: { event_end: { gte: 'now/d' } } },
+        { range: { event_end: { gte: 'now-1d/d' } } },
         { bool: { must_not: { exists: { field: 'event_end' } } } },
       ],
       minimum_should_match: 1,

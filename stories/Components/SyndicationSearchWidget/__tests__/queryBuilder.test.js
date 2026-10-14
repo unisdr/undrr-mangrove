@@ -85,16 +85,32 @@ describe('queryBuilder', () => {
     ])('sorts %s by event_start %s, missing last', (sortBy, order) => {
       const result = buildQuery({ ...defaultState, sortBy }, DEFAULT_CONFIG);
 
-      expect(result.sort).toEqual([
-        {
-          event_start: {
-            order,
-            missing: '_last',
-            unmapped_type: 'date',
-          },
+      expect(result.sort[0]).toEqual({
+        event_start: {
+          order,
+          missing: '_last',
+          unmapped_type: 'date',
         },
-      ]);
+      });
     });
+
+    it.each(['eventDateAsc', 'eventDateDesc'])(
+      'breaks %s ties by publish date, then nid, for stable paging',
+      sortBy => {
+        const result = buildQuery({ ...defaultState, sortBy }, DEFAULT_CONFIG);
+
+        expect(result.sort.slice(1)).toEqual([
+          {
+            published_at: {
+              order: 'desc',
+              missing: '_last',
+              unmapped_type: 'date',
+            },
+          },
+          { nid: { order: 'desc', missing: '_last', unmapped_type: 'long' } },
+        ]);
+      }
+    );
 
     it('sorts by published_at asc for oldest', () => {
       const result = buildQuery(
@@ -575,7 +591,7 @@ describe('queryBuilder', () => {
     const expiredClause = {
       bool: {
         should: [
-          { range: { event_end: { gte: 'now/d' } } },
+          { range: { event_end: { gte: 'now-1d/d' } } },
           { bool: { must_not: { exists: { field: 'event_end' } } } },
         ],
         minimum_should_match: 1,
@@ -593,7 +609,7 @@ describe('queryBuilder', () => {
 
     it('uses date math and no scripts, so server rendering accepts it', () => {
       const json = JSON.stringify(buildHideExpiredEventsFilter());
-      expect(json).toContain('now/d');
+      expect(json).toContain('now-1d/d');
       expect(json).not.toContain('script');
     });
 

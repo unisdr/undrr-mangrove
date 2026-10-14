@@ -25,6 +25,13 @@ import {
   toDateTimeAttribute,
 } from '../utils/dateUtils';
 
+/** Publish date format, shared by every result (local time zone). */
+const PUBLISH_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+
 /**
  * Trust boundary: response HTML is rendered unescaped, on purpose.
  *
@@ -389,11 +396,7 @@ export function ResultItem({
     const date = toDate(publishedAt);
     if (!date) return null;
     return {
-      text: date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      }),
+      text: PUBLISH_DATE_FORMAT.format(date),
       dateTime: toDateTimeAttribute(date),
     };
   }, [type, eventStart, eventEnd, publishedAt]);

@@ -191,8 +191,9 @@ SyndicationSearchWidget.propTypes = {
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
     /**
-     * Exclude events whose `event_end` is before today (Elasticsearch
-     * `now/d`). Results without `event_end`, such as news in a mixed
+     * Exclude events that ended before yesterday (Elasticsearch
+     * `now-1d/d`, a day of leniency for time zones west of UTC). Results
+     * without `event_end`, such as news in a mixed
      * listing, are unaffected.
      */
     hideExpiredEvents: PropTypes.bool,

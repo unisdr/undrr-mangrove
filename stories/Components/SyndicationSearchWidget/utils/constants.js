@@ -626,7 +626,7 @@ export const DEFAULT_CONFIG = {
   // Require image: adds has_image:true filter to exclude results without images
   requireImage: false,
 
-  // Hide expired events: exclude events whose event_end is before today.
+  // Hide expired events: exclude events whose event_end is before yesterday (UTC).
   // Results without event_end (non-events) are unaffected.
   hideExpiredEvents: false,
 

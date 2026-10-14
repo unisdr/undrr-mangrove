@@ -220,10 +220,10 @@ describe('ResultItem', () => {
   });
 
   describe('fallback date', () => {
-    // 2025-11-12T00:00:00Z and 2025-11-14T00:00:00Z: date-only events are
-    // indexed as midnight UTC, as Unix seconds wrapped in an array.
-    const NOV_12 = 1762905600;
-    const NOV_14 = 1763078400;
+    // 2025-11-12T12:00:00Z and 2025-11-14T12:00:00Z: Search API indexes
+    // date-only values at 12:00 UTC, as Unix seconds wrapped in an array.
+    const NOV_12 = 1762948800;
+    const NOV_14 = 1763121600;
 
     const renderFallback = overrides => {
       const { container } = render(
