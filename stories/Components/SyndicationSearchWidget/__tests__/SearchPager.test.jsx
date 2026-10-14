@@ -193,3 +193,64 @@ describe('SearchPager used standalone, without a widgetId', () => {
     expect(scrolled).toEqual([root]);
   });
 });
+
+describe('SearchPager focus and motion', () => {
+  let calls;
+
+  const renderStandalone = () => {
+    const Seed = () => {
+      const dispatch = useSearchDispatch();
+      React.useEffect(() => {
+        dispatch(
+          actions.setResults({ hits: { hits: [], total: { value: 40 } } })
+        );
+      }, [dispatch]);
+      return null;
+    };
+    render(
+      <div data-mg-search-widget>
+        <div className="mg-search__main">
+          <p className="mg-search__results-count">Showing 1–10 of 40</p>
+        </div>
+        <SearchProvider config={{ resultsPerPage: 10 }}>
+          <Seed />
+          <SearchPager />
+        </SearchProvider>
+      </div>
+    );
+    fireEvent.click(
+      document.querySelector('.mg-pager button[aria-label="Go to next page"]')
+    );
+  };
+
+  beforeEach(() => {
+    calls = [];
+    Element.prototype.scrollIntoView = function scrollIntoView(options) {
+      calls.push(options);
+    };
+  });
+
+  afterEach(() => {
+    delete window.matchMedia;
+  });
+
+  it('moves focus to the results count rather than dropping it', () => {
+    renderStandalone();
+    const count = document.querySelector('.mg-search__results-count');
+    expect(count).toHaveFocus();
+    expect(count).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('scrolls smoothly by default and instantly under reduced motion', () => {
+    renderStandalone();
+    expect(calls[0]).toEqual({ behavior: 'smooth', block: 'start' });
+    document.body.innerHTML = '';
+    window.matchMedia = query => ({
+      matches: query.includes('reduce'),
+      addEventListener() {},
+      removeEventListener() {},
+    });
+    renderStandalone();
+    expect(calls[1]).toEqual({ behavior: 'auto', block: 'start' });
+  });
+});

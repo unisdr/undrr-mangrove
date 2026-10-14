@@ -574,6 +574,9 @@ export const DEFAULT_CONFIG = {
   // URL Hash Sync
   enableHashSync: 'auto',
 
+  // Analytics: regions are `${analyticsRegionPrefix}-form|results|facets`
+  analyticsRegionPrefix: 'undrr-search',
+
   // Default search query and sort
   defaultQuery: '',
   defaultSort: 'relevance',
@@ -964,4 +967,22 @@ export function buildTierFilter(field, tierNames, tierRanges) {
   if (rangeFilters.length === 0) return null;
   if (rangeFilters.length === 1) return rangeFilters[0];
   return { bool: { should: rangeFilters, minimum_should_match: 1 } };
+}
+
+/**
+ * The `data-vf-google-analytics-region` value for one part of the widget.
+ * The shared analytics script reports a click's innermost region, so a page
+ * with two widgets gives each its own prefix to tell their clicks apart.
+ *
+ * @param {Object} config - Widget config
+ * @param {'form'|'results'|'facets'} part - Part of the widget
+ * @returns {string} For example `undrr-search-results`
+ */
+export function analyticsRegion(config, part) {
+  const prefix =
+    typeof config?.analyticsRegionPrefix === 'string' &&
+    config.analyticsRegionPrefix.trim()
+      ? config.analyticsRegionPrefix.trim()
+      : 'undrr-search';
+  return `${prefix}-${part}`;
 }

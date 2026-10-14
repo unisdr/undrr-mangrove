@@ -53,3 +53,8 @@
 .mg-demo-article-header .mg-hero__split-grid {
   max-inline-size: var(--mg-reading-with-contents-width);
 }
+
+// CollectionPage: space between the page's sections.
+.mg-demo-collection-section {
+  margin-block-end: var(--mg-spacing-400);
+}

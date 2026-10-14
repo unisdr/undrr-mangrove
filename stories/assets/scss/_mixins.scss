@@ -176,6 +176,11 @@
 // (`tree`, `group`, `menu`, `listbox`, `tablist`): that role already replaces
 // list semantics, and there is nothing to preserve.
 @mixin mg-list-unmarked {
+  // A list with no bullets has nothing to align its items with, so it opts
+  // out of the RTL item indent in _foundational.scss. Read only under
+  // [dir="rtl"]; no effect in LTR.
+  --mg-list-item-indent-rtl: 0;
+
   list-style: none;
   list-style-type: "";
 }

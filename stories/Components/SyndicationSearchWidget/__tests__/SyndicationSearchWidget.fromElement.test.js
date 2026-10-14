@@ -14,6 +14,13 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config).toEqual({});
   });
 
+  it('reads the analytics region prefix', () => {
+    const { config } = syndicationSearchWidgetFromElement(
+      makeContainer({ 'analytics-region-prefix': 'collection-related' })
+    );
+    expect(config.analyticsRegionPrefix).toBe('collection-related');
+  });
+
   it('extracts simple string and number props', () => {
     const { config } = syndicationSearchWidgetFromElement(
       makeContainer({

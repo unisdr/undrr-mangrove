@@ -38,7 +38,7 @@ import {
 } from './context/SearchContext';
 import { useSearch } from './hooks/useSearch';
 import { useHashSync } from './hooks/useHashSync';
-import { resolveFacetsLayout } from './utils/constants';
+import { analyticsRegion, resolveFacetsLayout } from './utils/constants';
 import SearchForm from './components/SearchForm';
 import SearchResults from './components/SearchResults';
 import ActiveFilters from './components/ActiveFilters';
@@ -163,6 +163,18 @@ SyndicationSearchWidget.propTypes = {
     visibleTeaserFields: PropTypes.object,
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
+    /**
+     * Called after each completed search with `{ total, query, page }`. The
+     * widget also dispatches an `mg-search-widget:results` event with the same
+     * detail, bubbling from its root, for hosts without React.
+     */
+    onResults: PropTypes.func,
+    /**
+     * Stem for the widget's analytics regions: `<prefix>-form`,
+     * `<prefix>-results` and `<prefix>-facets`. Defaults to `undrr-search`.
+     * Give each widget its own prefix when a page has more than one.
+     */
+    analyticsRegionPrefix: PropTypes.string,
   }).isRequired,
   /**
    * UI label overrides merged with DEFAULT_LABELS.
@@ -257,6 +269,28 @@ function SyndicationSearchWidgetInner() {
     }
   }, [state.query, state.isInitialized]);
 
+  // Tell the page what came back, once per completed search: config.onResults
+  // for React hosts, and an `mg-search-widget:results` event that bubbles from
+  // the widget for everything else. A host can hide a section around a widget
+  // that found nothing, or show the total elsewhere.
+  const { results, totalResults, error } = state;
+  const onResults = config.onResults;
+  useEffect(() => {
+    if (results === null || error) return;
+    const detail = {
+      total: totalResults,
+      query: state.query,
+      page: state.page,
+    };
+    onResults?.(detail);
+    document
+      .getElementById(widgetId)
+      ?.dispatchEvent(
+        new CustomEvent('mg-search-widget:results', { bubbles: true, detail })
+      );
+    // Only a new result set is news; query and page arrive with it.
+  }, [results, totalResults, error]);
+
   const { showActiveFilters, showSearchMetrics, facetsTarget, searchTarget } =
     config;
   const facetsLayout = resolveFacetsLayout(config);
@@ -347,7 +381,7 @@ function SyndicationSearchWidgetInner() {
       {facetsLayout === 'horizontal' && !facetsPortaled && (
         <div
           className="mg-search__facets-strip"
-          data-vf-google-analytics-region="undrr-search-facets"
+          data-vf-google-analytics-region={analyticsRegion(config, 'facets')}
         >
           <FacetsSidebar widgetId={widgetId} />
         </div>
@@ -358,10 +392,11 @@ function SyndicationSearchWidgetInner() {
 
       {/* Main content area */}
       <div className="mg-search__content">
-        {/* Results area */}
-        <main
+        {/* Results area. A div, not <main>: the widget always sits inside
+            the page's own main landmark, and a page has only one. */}
+        <div
           className={`mg-search__main ${isPending ? 'mg-search__main--stale' : ''}`}
-          data-vf-google-analytics-region="undrr-search-results"
+          data-vf-google-analytics-region={analyticsRegion(config, 'results')}
           aria-busy={isLoading || isPending}
         >
           <Suspense
@@ -381,13 +416,13 @@ function SyndicationSearchWidgetInner() {
               activeFilterCount={activeFilterCount}
             />
           </Suspense>
-        </main>
+        </div>
 
         {/* Facets sidebar: desktop only, and only when not portaled out. */}
         {facetsLayout === 'sidebar' && !facetsPortaled && (
           <aside
             className="mg-search__sidebar"
-            data-vf-google-analytics-region="undrr-search-facets"
+            data-vf-google-analytics-region={analyticsRegion(config, 'facets')}
           >
             <FacetsSidebar widgetId={widgetId} />
           </aside>
@@ -419,7 +454,7 @@ function SyndicationSearchWidgetInner() {
         createPortal(
           <div
             className="mg-search__facets-external"
-            data-vf-google-analytics-region="undrr-search-facets"
+            data-vf-google-analytics-region={analyticsRegion(config, 'facets')}
           >
             <FacetsSidebar widgetId={widgetId} />
           </div>,

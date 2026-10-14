@@ -12,7 +12,11 @@ import {
   useSearchLabels,
   interpolateLabel,
 } from '../context/SearchContext';
-import { buildHiddenFieldClasses } from '../utils/constants';
+import {
+  analyticsRegion,
+  buildHiddenFieldClasses,
+  resolveFacetsLayout,
+} from '../utils/constants';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
 
@@ -113,7 +117,33 @@ export function SearchResults({
     );
   }
 
-  // No query yet
+  // A widget with no search box has nothing to type into. Before its first
+  // results arrive (between initialising and the debounced fetch, results is
+  // still null and nothing is loading yet) show the skeleton rather than a
+  // message; once they arrive, an empty set is simply no results.
+  if (config.showSearchBox === false && !Array.isArray(results)) {
+    return (
+      <div className="mg-search__results-loading" aria-busy="true">
+        <SearchSkeleton
+          count={resultsPerPage}
+          displayMode={displayMode}
+          gridColumns={cardGridCols}
+        />
+      </div>
+    );
+  }
+  if (
+    !query &&
+    Array.isArray(results) &&
+    results.length === 0 &&
+    config.showSearchBox === false
+  ) {
+    return (
+      <div className="mg-search__results-empty" role="status">
+        <p>{labels.srNoResults}</p>
+      </div>
+    );
+  }
   if (!query && (!results || results.length === 0)) {
     return (
       <div className="mg-search__results-empty">
@@ -147,7 +177,7 @@ export function SearchResults({
   return (
     <div
       className="mg-search__results"
-      data-vf-google-analytics-region="undrr-search-results"
+      data-vf-google-analytics-region={analyticsRegion(config, 'results')}
       style={{ opacity: isStale ? 0.7 : 1, transition: 'opacity 0.2s' }}
     >
       {/* Screen reader announcement for results updates */}
@@ -157,32 +187,38 @@ export function SearchResults({
         aria-atomic="true"
         className="mg-u-sr-only"
       >
-        {!isLoading && totalResults !== null && (
-          <>
-            {totalResults === 0
-              ? interpolateLabel(
-                  query ? labels.srNoResultsForQuery : labels.srNoResults,
-                  { query }
-                )
-              : totalResultsRelation === 'gte'
+        {/* A widget with nothing interactive (no search box, no facets) is a
+            fixed list of cards: nothing the reader does changes it, so its
+            total is noise to a screen reader. Every other widget announces. */}
+        {!isLoading &&
+          totalResults !== null &&
+          (config.showSearchBox !== false ||
+            resolveFacetsLayout(config) !== false) && (
+            <>
+              {totalResults === 0
                 ? interpolateLabel(
-                    query
-                      ? labels.srResultsFoundApproxForQuery
-                      : labels.srResultsFoundApprox,
-                    { count: totalResults.toLocaleString(), query }
+                    query ? labels.srNoResultsForQuery : labels.srNoResults,
+                    { query }
                   )
-                : interpolateLabel(
-                    totalResults !== 1
-                      ? query
-                        ? labels.srResultsFoundPluralForQuery
-                        : labels.srResultsFoundPlural
-                      : query
-                        ? labels.srResultsFoundForQuery
-                        : labels.srResultsFound,
-                    { count: totalResults.toLocaleString(), query }
-                  )}
-          </>
-        )}
+                : totalResultsRelation === 'gte'
+                  ? interpolateLabel(
+                      query
+                        ? labels.srResultsFoundApproxForQuery
+                        : labels.srResultsFoundApprox,
+                      { count: totalResults.toLocaleString(), query }
+                    )
+                  : interpolateLabel(
+                      totalResults !== 1
+                        ? query
+                          ? labels.srResultsFoundPluralForQuery
+                          : labels.srResultsFoundPlural
+                        : query
+                          ? labels.srResultsFoundForQuery
+                          : labels.srResultsFound,
+                      { count: totalResults.toLocaleString(), query }
+                    )}
+            </>
+          )}
       </div>
 
       {/* Results header */}

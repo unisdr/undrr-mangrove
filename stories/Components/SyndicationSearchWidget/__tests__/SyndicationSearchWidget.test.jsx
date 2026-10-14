@@ -448,11 +448,169 @@ describe('SyndicationSearchWidget', () => {
   });
 
   describe('loading indicator', () => {
-    it('has main element for results area', () => {
+    it('has a results area that is not a second main landmark', () => {
       render(<SyndicationSearchWidget config={{}} />);
 
-      const main = document.querySelector('.mg-search__main');
-      expect(main).toBeInTheDocument();
+      const results = document.querySelector('.mg-search__main');
+      expect(results).toBeInTheDocument();
+      expect(results.tagName).toBe('DIV');
+      expect(screen.queryByRole('main')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('results notification and empty widgets without a search box', () => {
+    it('calls onResults and dispatches mg-search-widget:results', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: { hits: [], total: { value: 0 } },
+            aggregations: {},
+          }),
+      });
+      window.history.replaceState(null, '', '/');
+      const onResults = jest.fn();
+      const events = jest.fn();
+      document.addEventListener('mg-search-widget:results', events);
+      render(
+        <SyndicationSearchWidget
+          config={{
+            onResults,
+            showSearchBox: false,
+            debounceDelay: 0,
+            enableHashSync: false,
+          }}
+        />
+      );
+      await waitFor(() => expect(onResults).toHaveBeenCalled());
+      expect(onResults.mock.calls[0][0]).toEqual(
+        expect.objectContaining({ total: 0 })
+      );
+      expect(events).toHaveBeenCalled();
+      expect(events.mock.calls[0][0].detail.total).toBe(0);
+      document.removeEventListener('mg-search-widget:results', events);
+      // With no search box there is nothing to type into: say no results.
+      expect(screen.queryByText(/enter a search term/i)).toBeNull();
+      expect(screen.getByText('No results found')).toBeInTheDocument();
+    });
+
+    it('shows no "No results found" before the first results arrive', () => {
+      // Before the debounced fetch, results is null and nothing is loading.
+      global.fetch = jest.fn(() => new Promise(() => {}));
+      window.history.replaceState(null, '', '/');
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{
+            showSearchBox: false,
+            debounceDelay: 500,
+            enableHashSync: false,
+          }}
+        />
+      );
+      expect(screen.queryByText('No results found')).toBeNull();
+      expect(screen.queryByText(/enter a search term/i)).toBeNull();
+      expect(
+        container.querySelector('.mg-search__results-loading')
+      ).not.toBeNull();
+    });
+
+    it('still announces totals when facets are on, even with count and pager off', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [{ _id: '1', _source: { title: 'A', url: '/a' } }],
+              total: { value: 3 },
+            },
+            aggregations: {},
+          }),
+      });
+      window.history.replaceState(null, '', '/');
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{
+            showSearchBox: false,
+            showResultsCount: false,
+            showPager: false,
+            debounceDelay: 0,
+            enableHashSync: false,
+          }}
+        />
+      );
+      await waitFor(() =>
+        expect(
+          container.querySelector('.mg-search__results > [role="status"]')
+            ?.textContent
+        ).toMatch(/3/)
+      );
+    });
+
+    it('does not announce totals when nothing in the widget is interactive', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [{ _id: '1', _source: { title: 'A', url: '/a' } }],
+              total: { value: 3 },
+            },
+            aggregations: {},
+          }),
+      });
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{
+            showSearchBox: false,
+            showResultsCount: false,
+            showPager: false,
+            showFacets: false,
+            debounceDelay: 0,
+          }}
+        />
+      );
+      await waitFor(() =>
+        expect(container.querySelector('.mg-search__results')).not.toBeNull()
+      );
+      const live = container.querySelector(
+        '.mg-search__results > [role="status"]'
+      );
+      expect(live.textContent).toBe('');
+    });
+  });
+
+  describe('analytics regions', () => {
+    const regions = container =>
+      [...container.querySelectorAll('[data-vf-google-analytics-region]')].map(
+        el => el.getAttribute('data-vf-google-analytics-region')
+      );
+
+    it('defaults to the undrr-search regions', () => {
+      const { container } = render(<SyndicationSearchWidget config={{}} />);
+      expect(regions(container)).toEqual(
+        expect.arrayContaining([
+          'undrr-search-form',
+          'undrr-search-results',
+          'undrr-search-facets',
+        ])
+      );
+    });
+
+    it('uses analyticsRegionPrefix for every region', () => {
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{ analyticsRegionPrefix: 'collection-content' }}
+        />
+      );
+      const names = regions(container);
+      expect(names).toEqual(
+        expect.arrayContaining([
+          'collection-content-form',
+          'collection-content-results',
+          'collection-content-facets',
+        ])
+      );
+      expect(names.some(name => name.startsWith('undrr-search'))).toBe(false);
     });
   });
 

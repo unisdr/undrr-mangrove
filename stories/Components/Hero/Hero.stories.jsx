@@ -84,7 +84,7 @@ export default {
   tags: ['autodocs'],
   argTypes: {
     variant: {
-      options: ['primary', 'secondary', 'tertiary', 'quaternary'],
+      options: ['primary', 'secondary', 'tertiary', 'quaternary', 'neutral'],
       control: { type: 'inline-radio' },
       description: 'Variant of the Hero component',
       defaultValue: 'primary',
@@ -352,5 +352,80 @@ export const SplitWithHtml = {
     variant: 'quaternary',
     headingLevel: 'h2',
     split: '1/2',
+  },
+};
+
+// Neutral: a page header on the page's own surface. The eyebrow and the facts
+// line are nodes, so each can hold a link; tags sit below the summary.
+const neutralData = [
+  {
+    label: (
+      <>
+        <a href="https://www.preventionweb.net/collections">Collection</a>
+        <span aria-hidden="true"> · </span>
+        Topic guide
+      </>
+    ),
+    title: 'Wildfire risk assessment',
+    summaryText:
+      'Discover research, assessments and technical resources on future wildfire trends, the science behind wildfire-related compound events, and attribution studies on the influence of climate change.',
+    detail: (
+      <>
+        <a href="#collection-items">36 items</a>
+        <span aria-hidden="true"> · </span>
+        Last updated <time dateTime="2026-07-10">10 July 2026</time>
+      </>
+    ),
+    tags: [
+      {
+        label: 'Wildfire and Bushfire',
+        href: 'https://www.preventionweb.net/taxonomy/term/357',
+      },
+      {
+        label: 'Climate change',
+        href: 'https://www.preventionweb.net/taxonomy/term/311',
+      },
+      {
+        label: 'Risk identification and assessment',
+        href: 'https://www.preventionweb.net/taxonomy/term/333',
+      },
+    ],
+    media: {
+      type: 'image',
+      src: resilientInfrastructure,
+      alt: 'Aerial view of a canal through Almaty, Kazakhstan',
+    },
+  },
+];
+
+export const SplitNeutral = {
+  name: 'Split (neutral surface)',
+  args: {
+    layout: 'split',
+    variant: 'neutral',
+    headingLevel: 'h1',
+    split: '2/3',
+  },
+  render: args => <Hero data={neutralData} {...args} />,
+};
+
+// Tags take the hero's ink, so they stay visible on a coloured surface.
+export const SplitWithTags = {
+  name: 'Split (tags on a coloured surface)',
+  args: {
+    data: [
+      {
+        ...splitMediaData[0],
+        tags: [
+          { label: 'Climate change', href: '#climate-change' },
+          { label: 'Governance', href: '#governance' },
+          { label: 'Financing DRR', href: '#financing' },
+        ],
+      },
+    ],
+    layout: 'split',
+    variant: 'primary',
+    headingLevel: 'h2',
+    split: '2/3',
   },
 };

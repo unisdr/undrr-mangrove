@@ -46,6 +46,39 @@
     display: none;
   }
 
+  // Line the links up with an mg-container content column instead of the
+  // bar's own padding. The bar stays full-bleed; only its padding changes, to
+  // half the space outside the container plus the container's gutter. A
+  // container is 100% wide below the mobile breakpoint, so the padding is the
+  // gutter alone there.
+  &--align-container {
+    --mg-on-this-page-nav-container: 100vw;
+
+    padding-inline: calc(
+      (100vw - var(--mg-on-this-page-nav-container)) / 2 + #{mg-rem(10)}
+    );
+
+    @media (min-width: $mg-breakpoint-mobile) {
+      --mg-on-this-page-nav-container: #{$mg-breakpoint-mobile};
+    }
+
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      --mg-on-this-page-nav-container: #{$mg-breakpoint-tablet};
+
+      padding-inline: calc(
+        (100vw - var(--mg-on-this-page-nav-container)) / 2 + #{mg-rem(10)}
+      );
+    }
+
+    @media (min-width: $mg-breakpoint-desktop) {
+      --mg-on-this-page-nav-container: #{$mg-breakpoint-desktop};
+    }
+
+    @media (min-width: $mg-breakpoint-desktop-wide) {
+      --mg-on-this-page-nav-container: #{$mg-breakpoint-desktop-wide};
+    }
+  }
+
   &__list {
     display: flex;
     align-items: center;
@@ -227,6 +260,78 @@
 
 // RTL: flex layout places prevBtn at the right (visual-start) edge and nextBtn
 // at the left (visual-end) edge. The JS scrollBy direction, button visibility,
-// and chevron icon direction are all RTL-aware. The mask-image gradient uses
-// physical `to right` which fades the correct edge in LTR; RTL gradient
-// correction is a known open item.
+// and chevron icon direction are all RTL-aware. The fades are physical
+// gradients, so RTL states each case: a fade only on a side with content
+// hidden behind it, and the trailing (left) edge when nothing is hidden, to
+// match LTR. has-left-overflow and has-right-overflow are set by the script.
+// Each rule outranks the direction-neutral has-left-overflow rule above.
+
+// Nothing hidden, or hidden only on the left (at the start of the list).
+[dir="rtl"] .mg-on-this-page-nav__list,
+[dir="rtl"] .mg-on-this-page-nav--has-left-overflow .mg-on-this-page-nav__list {
+  padding-inline-start: 0;
+  -webkit-mask-image: linear-gradient(
+    to left,
+    #000 calc(100% - var(--mg-spacing-500)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to left,
+    #000 calc(100% - var(--mg-spacing-500)),
+    transparent
+  );
+}
+
+// Hidden only on the right (scrolled to the end of the list).
+[dir="rtl"]
+  .mg-on-this-page-nav--has-right-overflow
+  .mg-on-this-page-nav__list {
+  padding-inline-start: var(--mg-spacing-300);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - var(--mg-spacing-500)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - var(--mg-spacing-500)),
+    transparent
+  );
+}
+
+// Hidden on both sides (mid-scroll).
+[dir="rtl"]
+  .mg-on-this-page-nav--has-left-overflow.mg-on-this-page-nav--has-right-overflow
+  .mg-on-this-page-nav__list {
+  padding-inline-start: var(--mg-spacing-300);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--mg-spacing-500),
+    #000 calc(100% - var(--mg-spacing-500)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--mg-spacing-500),
+    #000 calc(100% - var(--mg-spacing-500)),
+    transparent
+  );
+}
+
+// Anything the browser scrolls into view (keyboard focus, anchors, a pager's
+// scrollIntoView) lands below the docked bar instead of under it (WCAG 2.4.11
+// Focus Not Obscured). The script publishes the bar's height as
+// --mg-on-this-page-nav-block-size while it is sticky, and 0px when it is not.
+// --mg-on-this-page-nav-offset is read here from the root, so set it on :root
+// for it to count.
+// Zero specificity (:where), so a site's own `html { scroll-padding-top }`
+// wins outright. A site that wants both sets --mg-on-this-page-nav-scroll-padding-base to its
+// own value and lets this rule add the bar on top.
+:where(html:has(.mg-on-this-page-nav:not(.mg-on-this-page-nav--hidden))) {
+  // prettier-ignore
+  --mg-on-this-page-nav-scroll-padding: calc(var(--mg-on-this-page-nav-scroll-padding-base, 0px) + var(--mg-on-this-page-nav-offset, 0px) + var(--mg-on-this-page-nav-block-size, 0px));
+
+  scroll-padding-top: var(--mg-on-this-page-nav-scroll-padding);
+}

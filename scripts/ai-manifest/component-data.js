@@ -58,7 +58,7 @@ export const REQUIRES_REACT = {
     'Storybook integration demo measuring rendered font families across nested Arabic and Latin language boundaries. Requires React and browser layout APIs for live measurements; this is a documentation specimen, not a reusable production component.',
 
   'components-syndicated-search':
-    'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
+    'SyndicationSearchWidget is a complex search interface querying an Elasticsearch API. Requires React 19. After each completed search it calls config.onResults({ total, query, page }) and dispatches a bubbling mg-search-widget:results event with the same detail, so a host can hide an empty section. Can be hydrated on a vanilla HTML page using the createHydrator pattern with data-mg-search-widget attributes. Supports full UI string translation via the labels prop (or data-labels JSON attribute in Drupal). Ships with label sets for ES, FR, JA, ZH (Simplified), AR, and RU. See the hydration documentation.',
   'components-syndicated-search-translations':
     'SyndicationSearchWidget translation label sets for ES, FR, JA, ZH-Hans, AR, and RU. Pass via the labels prop (React) or data-labels JSON attribute (Drupal). String keys support {token} substitution; function keys handle Intl.PluralRules plural forms for Arabic (6-form) and Russian (3-form). Function keys cannot be serialized to JSON for data-labels.',
   'components-syndicated-search-display-modes':
@@ -998,6 +998,8 @@ export const COMPONENT_DATA = {
       'mg-on-this-page-nav',
       'mg-on-this-page-nav--hidden',
       'mg-on-this-page-nav--has-left-overflow',
+      'mg-on-this-page-nav--has-right-overflow',
+      'mg-on-this-page-nav--align-container',
       'mg-on-this-page-nav__list',
       'mg-on-this-page-nav__item',
       'mg-on-this-page-nav__link',
@@ -1182,14 +1184,15 @@ npm run build</code></pre>
   // --- Hero ---
   'components-hero-hero': {
     summary:
-      'Full-width hero banner with title, summary and CTA buttons. Four color variants, and two layouts: a full-bleed background image or a split content-and-media band.',
+      'Full-width hero with title, summary and CTAs: four colour variants plus a neutral white surface, and a full-bleed background or split content-and-media layout.',
     description:
-      'Full-width hero banner with title, summary, and CTA buttons. Four color variants. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
+      'Full-width hero banner with title, summary, and CTA buttons. Four colour variants, plus `variant="neutral"`: the page\'s white surface with dark text (--mg-color-text) and links in --mg-color-interactive, for a page header that should not read as a coloured band; use it with `layout="split"` (in the background layout it drops the photograph). Optional, for any variant: `label` (eyebrow) and `detail` (facts line) accept a React node as well as a string, so either can hold links (for example a parent link and a type, or an item count linking to a list on the page); `tags` ([{label, href}]) renders a list of outline tags (ul.mg-hero__tags aria-label="Topics", li > a.mg-tag; `tagsLabel` renames it) below the facts line that read on every variant; `summaryText` is optional; buttons accept `analyticsLabel` (data-vf-analytics-label). Neutral underlines links in the label, detail and summary. Strings render exactly as before. Two layouts: `background` (full-bleed image with overlay, default) and `split` (solid theme-colour background with a content column plus a media column). Split layout supports 2/3, 1/2, and 1/3 content-to-media ratios, a configurable heading level (h1–h3), and three media types: `image` (default), `video` (iframe embed — provide the provider embed URL and a `title` for accessibility), or `html` (pre-sanitized HTML string for custom embeds; consumer must sanitize).',
     cssClasses: [
       'mg-hero',
       'mg-hero--secondary',
       'mg-hero--tertiary',
       'mg-hero--quaternary',
+      'mg-hero--neutral',
       'mg-hero--split',
       'mg-hero--split-2-3',
       'mg-hero--split-1-2',
@@ -1201,12 +1204,39 @@ npm run build</code></pre>
       'mg-hero__label',
       'mg-hero__title',
       'mg-hero__summaryText',
+      'mg-hero__tags',
       'mg-hero__buttons',
       'mg-hero__media',
       'mg-hero__media--video',
       'mg-hero__media--html',
       'mg-hero__media-img',
       'mg-hero__media-iframe',
+    ],
+    examples: [
+      {
+        name: 'Neutral split hero as a page header',
+        html: `<section class="mg-hero mg-hero--split mg-hero--split-2-3 mg-hero--neutral" aria-labelledby="hero-title">
+  <div class="mg-hero__split-grid mg-container">
+    <article class="mg-hero__content">
+      <div class="mg-hero__meta">
+        <span class="mg-hero__label"><a href="/collections">Collection</a><span aria-hidden="true"> · </span>Topic guide</span>
+      </div>
+      <h1 class="mg-hero__title" id="hero-title">Wildfire risk assessment</h1>
+      <div class="mg-hero__summaryText"><span>Research, assessments and technical resources on future wildfire trends.</span></div>
+      <div class="mg-hero__meta meta-detail">
+        <span class="mg-hero__label detail"><a href="#collection-items">36 items</a><span aria-hidden="true"> · </span>Last updated <time datetime="2026-07-10">10 July 2026</time></span>
+      </div>
+      <ul class="mg-hero__tags" aria-label="Topics">
+        <li><a class="mg-tag" href="/taxonomy/term/357">Wildfire and Bushfire</a></li>
+        <li><a class="mg-tag" href="/taxonomy/term/311">Climate change</a></li>
+      </ul>
+    </article>
+    <div class="mg-hero__media">
+      <img src="/sites/default/files/wildfire.jpg" alt="Aerial view of smoke rising from a fire line in a pine forest" class="mg-hero__media-img" />
+    </div>
+  </div>
+</section>`,
+      },
     ],
   },
 
@@ -1929,7 +1959,7 @@ npm run build</code></pre>
     summary:
       'Collapse long content behind a gradient fade with a toggle button, driven by the mgShowMore vanilla JS utility. Height customizable via CSS variable.',
     description:
-      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. The mgShowMore vanilla JS utility reads data-mg-show-more attributes and returns optional lifecycle cleanup. The React wrapper enhances each item independently, supports items added after mount, and accepts translated labelOpen and labelCollapsed props.',
+      'Collapse long content behind a gradient fade with a toggle button. Height customizable via CSS variable. The mgShowMore vanilla JS utility reads data-mg-show-more attributes and returns optional lifecycle cleanup. Add data-mg-show-more-min-hidden-lines="N" (React: minHiddenLines) to collapse only when at least N lines would be hidden past the collapsed height (read from CSS; --mg-show-more-height may use lh); otherwise the content stays open and the toggle gets hidden. Ship the toggle with hidden in server markup; the script reveals it. Analytics: the toggle carries data-vf-analytics-label ("Show more"/"Show less", or data-mg-show-more-analytics-collapsed/-open). A [data-mg-show-more-label] child keeps visually hidden context in the toggle name. The React wrapper enhances each item independently, supports items added after mount, and accepts translated labelOpen and labelCollapsed props.',
     cssClasses: ['mg-show-more--collapsed', 'mg-show-more--button'],
     examples: [
       {
@@ -2173,6 +2203,33 @@ npm run build</code></pre>
     data-mg-cite-this-id="preventionweb:node/101"
   ></div>
 </div>`,
+      },
+    ],
+  },
+
+  'patterns-collection-page': {
+    summary:
+      'A PreventionWeb collection page: neutral Hero header with a linked count and tags, a sticky On this page bar, a collapsible description, a scoped search index and related collections.',
+    description:
+      'A page for a curated collection of content on one topic. Header: a breadcrumb (PreventionWeb > Collections > title), then Hero layout="split" variant="neutral" with the collection type as label, the h1, the body summary as standfirst (omitted when empty; never fall back to the body), a detail line "N items · Latest item: <date>" whose count links to the list (data-vf-analytics-label "Collection: item count"; count and newest published_at computed on the server; "No items yet" as plain text at zero), and tags as ul.mg-hero__tags aria-label="Topics". A sticky OnThisPageNav (explicit mode, mg-on-this-page-nav--align-container, full section headings, always shown) follows; drop the Related link when that section is absent. About: body in ShowMore with --mg-show-more-height: 8lh, data-mg-show-more-min-hidden-lines="6" (only bodies over about 14 lines collapse), the toggle shipped hidden, mg-button-secondary, sr-only context. List: SyndicationSearchWidget scoped with customFilters ["field_collections:<nid>", "_language:<lang>"], never defaultFilters; labels say items; data-enable-hash-sync="true". Related: up to 3 collections ranked on the server, hazard matches first (country boost), then theme matches other than Preparedness and Climate change, excluding the current nid; rendered by a second widget with every control off and hash sync "false". Analytics: regions collection-header, on-this-page-nav, collection-about, collection-content, collection-related; widgets set analyticsRegionPrefix to their section; fixed English data-vf-analytics-label values.',
+    examples: [
+      {
+        name: 'On this page bar, description and list',
+        html: `<nav class="mg-on-this-page-nav mg-on-this-page-nav--align-container" data-mg-on-this-page-nav aria-label="On this page" data-vf-google-analytics-region="on-this-page-nav">
+  <ul class="mg-on-this-page-nav__list">
+    <li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#collection-about" data-vf-analytics-label="On this page: About this collection">About this collection</a></li>
+    <li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#collection-items" data-vf-analytics-label="On this page: In this collection">In this collection</a></li>
+  </ul>
+</nav>
+<section id="collection-about" aria-labelledby="collection-about-title" data-vf-google-analytics-region="collection-about">
+  <h2 id="collection-about-title">About this collection</h2>
+  <div id="collection-body" class="mg-content" style="--mg-show-more-height: 8lh"><p>Understanding wildfire risk begins with understanding how and why wildfire hazards are changing.</p></div>
+  <button type="button" hidden class="mg-button mg-button-secondary mg-show-more--button" data-mg-show-more data-mg-show-more-target="#collection-body" data-mg-show-more-min-hidden-lines="6" data-mg-show-more-analytics-collapsed="Collection: show more" data-mg-show-more-analytics-open="Collection: show less"><span data-mg-show-more-label>Show more</span><span class="mg-u-sr-only"> about this collection</span></button>
+</section>
+<section id="collection-items" aria-labelledby="collection-items-title" data-vf-google-analytics-region="collection-content">
+  <h2 id="collection-items-title">In this collection</h2>
+  <div data-undrr-search-widget data-custom-filters='["field_collections:101264","_language:en"]' data-default-filters="[]" data-default-sort="newest" data-enable-hash-sync="true" data-analytics-region-prefix="collection-content"></div>
+</section>`,
       },
     ],
   },
@@ -2644,6 +2701,8 @@ npm run build</code></pre>
           'CSS selector of an element to portal the facets into.',
         'data-search-target':
           'CSS selector of an element to portal the search box into.',
+        'data-analytics-region-prefix':
+          'Stem for the analytics regions (<prefix>-form, -results, -facets). Defaults to undrr-search. Give each widget on a page its own prefix, because the analytics script reports only the innermost region.',
         'data-show-search-box': '"false" to hide the search box.',
         'data-show-results-count': '"false" to hide the result count.',
         'data-show-facets': '"false" to hide the facets.',

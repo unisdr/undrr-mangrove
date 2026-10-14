@@ -162,6 +162,21 @@ describe('ShowMore', () => {
     });
   });
 
+  it('passes minHiddenLines to the toggle', () => {
+    const { rerender } = render(
+      <ShowMore data={[item('Show more', 'Body')]} minHiddenLines={4} />
+    );
+    // jsdom has no layout, so the script waits; only the attribute is checked.
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'data-mg-show-more-min-hidden-lines',
+      '4'
+    );
+    rerender(<ShowMore data={[item('Show more', 'Body')]} />);
+    expect(screen.getByRole('button')).not.toHaveAttribute(
+      'data-mg-show-more-min-hidden-lines'
+    );
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(
       <ShowMore

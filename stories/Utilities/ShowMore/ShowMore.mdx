@@ -45,6 +45,49 @@ told apart — see "How the target is resolved" below.
 
 <Canvas of={ShowMoreStories.TwoOnOnePage} />
 
+## Only when long
+
+Add `data-mg-show-more-min-hidden-lines` (React: `minHiddenLines`) to collapse content only when it runs at least that many lines past the collapsed height. Shorter content stays open and the toggle gets `hidden`, so a template can wrap every body field in ShowMore without offering a "Show more" that reveals one more sentence.
+
+- The collapsed height comes from CSS: the computed `max-height` of `.mg-show-more--collapsed`, which is `--mg-show-more-height`. Any unit works; `lh` sizes it in lines of the content's own line height.
+- A line is the content's computed `line-height`. An empty attribute means 1 line.
+- The decision does not depend on whether the content is open, so it cannot flip back and forth. It is made again, in the next animation frame, when the content resizes, until the reader uses the toggle.
+- Ship the toggle with `hidden` in server markup. Without JavaScript the content is simply open and no dead button shows; the script reveals the toggle when it is needed.
+
+For "show about 8 lines, but collapse only when at least 6 more would be hidden" (so only bodies over about 14 lines collapse), as the [Collection page](?path=/docs/patterns-collection-page--docs) does:
+
+<Canvas of={ShowMoreStories.OnlyWhenLong} />
+
+<Source
+  language="html"
+  code={`
+<div id="collection-body" style="--mg-show-more-height: 8lh">
+  <p>Body text of any length…</p>
+</div>
+<button type="button" hidden
+   class="mg-button mg-button-secondary mg-show-more--button"
+   data-mg-show-more="true"
+   data-mg-show-more-target="#collection-body"
+   data-mg-show-more-min-hidden-lines="6"
+   data-mg-show-more-label-collapsed="Show more"
+   data-mg-show-more-label-open="Show less">
+  <span data-mg-show-more-label>Show more</span><span class="mg-u-sr-only"> about this collection</span>
+</button>
+`}
+/>
+
+### Hidden context in the label
+
+When the toggle contains a `[data-mg-show-more-label]` element, only that element's text changes on each toggle, so visually hidden context beside it ("about this collection") stays in the accessible name.
+
+### Show less
+
+Collapsing a long block pulls the toggle up the page, often out of view. When that happens the script scrolls the heading just before the content (or the content itself) back into view. It honours `scroll-padding-top`, so a sticky bar such as [On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) does not cover it, and `prefers-reduced-motion`.
+
+### Analytics
+
+The toggle carries `data-vf-analytics-label`, which the UNDRR click tracker reads: "Show more" while collapsed and "Show less" while open, in English whatever the page language. Set `data-mg-show-more-analytics-collapsed` and `data-mg-show-more-analytics-open` for page-specific labels. A `data-vf-analytics-label` you set yourself, without those two, is left as it is.
+
 ## How it works
 
 The `mgShowMore()` function finds all elements with `data-mg-show-more` and wires up click handlers. On click, the targeted container's `mg-show-more--collapsed` class is toggled, which controls `max-height`, `overflow`, and a CSS `mask-image` fade.
@@ -142,13 +185,16 @@ than reaching for this utility.
 
 ### Data attributes
 
-| Attribute                           | Required | Description                                                                                                       |
-| ----------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
-| `data-mg-show-more`                 | Yes      | Set to `"true"` on the toggle button to register it                                                               |
-| `data-mg-show-more-target`          | No       | CSS selector for the content container, resolved nearest ancestor first. Defaults to `".mg-show-more--container"` |
-| `data-mg-show-more-label-collapsed` | No       | Button text when content is collapsed. Defaults to "Show more"                                                    |
-| `data-mg-show-more-label-open`      | No       | Button text when content is expanded. Defaults to "Show less"                                                     |
-| `data-mg-show-more-skip-auto-init`  | No       | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually.          |
+| Attribute                               | Required | Description                                                                                                                            |
+| --------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-mg-show-more`                     | Yes      | Set to `"true"` on the toggle button to register it                                                                                    |
+| `data-mg-show-more-target`              | No       | CSS selector for the content container, resolved nearest ancestor first. Defaults to `".mg-show-more--container"`                      |
+| `data-mg-show-more-label-collapsed`     | No       | Button text when content is collapsed. Defaults to "Show more"                                                                         |
+| `data-mg-show-more-label-open`          | No       | Button text when content is expanded. Defaults to "Show less"                                                                          |
+| `data-mg-show-more-skip-auto-init`      | No       | Presence-based. Skips this button during auto-init. Call `mgShowMore([element])` to initialize manually.                               |
+| `data-mg-show-more-min-hidden-lines`    | No       | Collapse only when the content runs at least this many lines past the collapsed height (empty means 1); otherwise the toggle is hidden |
+| `data-mg-show-more-analytics-collapsed` | No       | Analytics label while collapsed. Defaults to "Show more"                                                                               |
+| `data-mg-show-more-analytics-open`      | No       | Analytics label while open. Defaults to "Show less"                                                                                    |
 
 ### JavaScript initialization
 
@@ -211,6 +257,15 @@ The collapsed height is controlled by the `--mg-show-more-height` CSS custom pro
 `} />
 
 ## Changelog
+
+- **1.7**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): **Behaviour change for existing toggles:** the analytics label is now written to `data-vf-analytics-label`, the attribute the UNDRR click tracker reads, and names the action ("Show more" or "Show less"). The script used to write it to `data-data-vf-google-analytics-label`, which nothing read, so toggles reported their visible, translated text. Expect those clicks to appear under the new labels. Also new:
+  - `data-mg-show-more-min-hidden-lines` (React: `minHiddenLines`) collapses content only when at least that many lines would be hidden. The collapsed height is read from CSS, so the decision cannot flip with the open state. Re-measures run in an animation frame and never click the toggle.
+  - Initialisation and re-measures change state without clicking the toggle, so they no longer reach click listeners (such as one that reports clicks to analytics). Two paths still call `item.click()` on purpose, because they stand for a reader's action: keyboard focus moving into collapsed content, and a click on the collapsed content itself. The Drupal ShowMore wrapper relies on those clicks.
+  - A toggle shipped `hidden` is revealed when it is needed.
+  - A `[data-mg-show-more-label]` child keeps visually hidden context in the toggle's name.
+  - Collapsing scrolls the content's heading back into view when the toggle has left the viewport.
+  - Per-state analytics labels, and a `.mg-show-more--button[hidden]` rule, because `.mg-button` sets `display`.
+  - New "Only when long" story.
 
 - **1.6**, 2026-09-20 ([#1239](https://github.com/unisdr/undrr-mangrove/issues/1239)): Added translated per-instance React labels with generic defaults, scoped per-item enhancement, dynamic-item support and lifecycle cleanup. The default story's locale toolbar previews both translated toggle labels. Regression tests cover late items, translation changes and StrictMode cleanup.
 

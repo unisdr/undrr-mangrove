@@ -568,33 +568,71 @@ them; the Drupal block's `auto` setting does this.
 
 ### Config object
 
-| Prop                   | Type           | Default                                 | Description                                                                                                                        |
-| ---------------------- | -------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `searchEndpoint`       | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract) |
-| `taxonomyEndpoint`     | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                               |
-| `resultsPerPage`       | number         | 50                                      | Number of results to display per page                                                                                              |
-| `debounceDelay`        | number         | 500                                     | Milliseconds to wait before executing search                                                                                       |
-| `minSearchLength`      | number         | 3                                       | Minimum characters required to trigger search                                                                                      |
-| `defaultQuery`         | string         | `''`                                    | Initial search query                                                                                                               |
-| `defaultSort`          | string         | `'relevance'`                           | Initial sort order (`relevance`, `newest`, `oldest`)                                                                               |
-| `defaultFilters`       | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                    |
-| `showSearchBox`        | boolean        | `true`                                  | Show the search input                                                                                                              |
-| `showResultsCount`     | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                      |
-| `showSearchTimer`      | boolean        | `true`                                  | Show search execution time                                                                                                         |
-| `showFacets`           | boolean        | `true`                                  | Show the facets sidebar                                                                                                            |
-| `showActiveFilters`    | boolean        | `true`                                  | Show active filter chips                                                                                                           |
-| `showSearchMetrics`    | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                   |
-| `enableHashSync`       | string/boolean | `'auto'`                                | Sync search state to URL hash (see [URL hash](#url-hash))                                                                          |
-| `visibleFilters`       | object         | `null`                                  | Control which filters are visible                                                                                                  |
-| `allowedTypes`         | object         | `null`                                  | Restrict content types shown                                                                                                       |
-| `customFilters`        | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                   |
-| `customFacets`         | array          | `[]`                                    | Custom facet definitions                                                                                                           |
-| `displayMode`          | string         | `'list'`                                | Result rendering style: `'list'`, `'card'`, or `'card-book'`                                                                       |
-| `gridColumns`          | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                   |
-| `visibleTeaserFields`  | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                       |
-| `requireImage`         | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                |
-| `interestingnessTiers` | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                             |
-| `longevityTiers`       | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                       |
+| Prop                    | Type           | Default                                 | Description                                                                                                                        |
+| ----------------------- | -------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `searchEndpoint`        | string         | `https://www.undrr.org/search-endpoint` | API endpoint for Elasticsearch queries. Its HTML is rendered unsanitised — see [Endpoint trust contract](#endpoint-trust-contract) |
+| `taxonomyEndpoint`      | string         | PreventionWeb v1 taxonomy URL           | Taxonomy API for country, hazard and theme facet labels. See [Taxonomy endpoint](#taxonomy-endpoint)                               |
+| `resultsPerPage`        | number         | 50                                      | Number of results to display per page                                                                                              |
+| `debounceDelay`         | number         | 500                                     | Milliseconds to wait before executing search                                                                                       |
+| `minSearchLength`       | number         | 3                                       | Minimum characters required to trigger search                                                                                      |
+| `defaultQuery`          | string         | `''`                                    | Initial search query                                                                                                               |
+| `defaultSort`           | string         | `'relevance'`                           | Initial sort order (`relevance`, `newest`, `oldest`)                                                                               |
+| `defaultFilters`        | array          | `[]`                                    | Default facet filters (array of `{key, value}`)                                                                                    |
+| `showSearchBox`         | boolean        | `true`                                  | Show the search input                                                                                                              |
+| `showResultsCount`      | boolean        | `true`                                  | Show "Showing X of Y results"                                                                                                      |
+| `showSearchTimer`       | boolean        | `true`                                  | Show search execution time                                                                                                         |
+| `showFacets`            | boolean        | `true`                                  | Show the facets sidebar                                                                                                            |
+| `showActiveFilters`     | boolean        | `true`                                  | Show active filter chips                                                                                                           |
+| `showSearchMetrics`     | boolean        | `false`                                 | Show debug metrics (score, etc.)                                                                                                   |
+| `enableHashSync`        | string/boolean | `'auto'`                                | Sync search state to URL hash (see [URL hash](#url-hash))                                                                          |
+| `visibleFilters`        | object         | `null`                                  | Control which filters are visible                                                                                                  |
+| `allowedTypes`          | object         | `null`                                  | Restrict content types shown                                                                                                       |
+| `customFilters`         | array          | `[]`                                    | Additional Elasticsearch filters                                                                                                   |
+| `customFacets`          | array          | `[]`                                    | Custom facet definitions                                                                                                           |
+| `displayMode`           | string         | `'list'`                                | Result rendering style: `'list'`, `'card'`, or `'card-book'`                                                                       |
+| `gridColumns`           | number         | `null`                                  | Grid columns for card modes (2-6). `null` = use `resultsPerPage`                                                                   |
+| `visibleTeaserFields`   | object         | `null`                                  | Toggle teaser field visibility (`{image: false, ...}`). `null` = all visible                                                       |
+| `requireImage`          | boolean        | `false`                                 | Only return results that have an image (`has_image:true` ES filter)                                                                |
+| `interestingnessTiers`  | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                             |
+| `longevityTiers`        | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                       |
+| `analyticsRegionPrefix` | string         | `'undrr-search'`                        | Stem for the analytics regions (`<prefix>-form`, `-results`, `-facets`). See [Analytics regions](#analytics-regions)               |
+| `onResults`             | function       | —                                       | Called after each completed search with `{ total, query, page }`. See [Results notification](#results-notification)                |
+
+## Analytics regions
+
+The widget marks its search form, results and facets with `data-vf-google-analytics-region`: `undrr-search-form`, `undrr-search-results` and `undrr-search-facets`. The shared UNDRR analytics script reports each click with the innermost region around it, so a region set on a section around the widget is never reported for clicks inside it.
+
+When a page has more than one widget, give each its own `analyticsRegionPrefix` (data attribute `data-analytics-region-prefix`). The prefix replaces `undrr-search` in all three names:
+
+```js
+const config = { analyticsRegionPrefix: 'collection-related' };
+// Regions: collection-related-form, collection-related-results and
+// collection-related-facets
+```
+
+```html
+<div
+  data-mg-search-widget
+  data-analytics-region-prefix="collection-related"
+></div>
+```
+
+Without it, nothing changes. A Drupal block wrapper that builds the config itself needs to pass the setting through.
+
+## Results notification
+
+After each completed search the widget calls `onResults({ total, query, page })` and dispatches an `mg-search-widget:results` event with the same `detail`, bubbling from its root. A host uses it to hide a section around a widget that found nothing, or to show the total somewhere else; the event works without React:
+
+```js
+document.addEventListener('mg-search-widget:results', event => {
+  const section = event.target.closest('section');
+  if (section) section.hidden = event.detail.total === 0;
+});
+```
+
+A widget with no search box (`showSearchBox: false`) shows its loading skeleton until its first results arrive, then says "No results found" if there are none, rather than asking for a search term. A widget with nothing interactive (no search box and no facets, a fixed list of cards) does not announce its total in the live region; every other widget does.
+
+After paging, the widget scrolls back to its results (instantly under `prefers-reduced-motion`) and moves focus to the results count, or to the results area when the count is hidden, instead of leaving it on a pager button that has been replaced.
 
 ## Accessibility
 
@@ -625,35 +663,36 @@ SyndicationSearchWidget supports [layered hydration](https://github.com/Preventi
 ></div>
 ```
 
-| Attribute                    | Default | Description                                                       |
-| ---------------------------- | ------- | ----------------------------------------------------------------- |
-| `data-search-endpoint`       |         | Elasticsearch proxy URL                                           |
-| `data-taxonomy-endpoint`     |         | Taxonomy API URL for facet labels                                 |
-| `data-results-per-page`      |         | Number of results per page                                        |
-| `data-debounce-delay`        |         | Milliseconds before executing search                              |
-| `data-min-search-length`     |         | Minimum characters to trigger search                              |
-| `data-default-query`         |         | Initial search query                                              |
-| `data-default-sort`          |         | Initial sort order                                                |
-| `data-display-mode`          |         | `'list'`, `'card'`, or `'card-book'`                              |
-| `data-grid-columns`          |         | Grid columns for card modes (2-6)                                 |
-| `data-query-append`          |         | Query every result must also match (a filter, not a bias)         |
-| `data-show-search-box`       |         | Show search input                                                 |
-| `data-show-results-count`    |         | Show result count                                                 |
-| `data-show-facets`           |         | Show facets sidebar                                               |
-| `data-show-active-filters`   |         | Show active filter chips                                          |
-| `data-show-pager`            |         | Show pagination                                                   |
-| `data-show-search-metrics`   |         | Show debug metrics                                                |
-| `data-show-search-timer`     |         | Show search execution time                                        |
-| `data-enable-hash-sync`      |         | Sync search state to URL hash                                     |
-| `data-default-filters`       |         | JSON array of `{key, value}` filter objects                       |
-| `data-allowed-types`         |         | JSON object restricting content type options                      |
-| `data-require-image`         |         | Only return results with images (`true`/`false`)                  |
-| `data-interestingness-tiers` |         | JSON array of tier names (e.g., `'["promoted","announced"]'`)     |
-| `data-longevity-tiers`       |         | JSON array of tier names (e.g., `'["year","longtime","always"]'`) |
-| `data-custom-filters`        |         | JSON array of custom filter strings (e.g., `'["type:news"]'`)     |
-| `data-custom-facets`         |         | JSON array of custom facet objects                                |
-| `data-visible-teaser-fields` |         | JSON array of teaser field names to show                          |
-| `data-labels`                |         | JSON object of UI label overrides (see [UI labels](#ui-labels))   |
+| Attribute                      | Default | Description                                                                 |
+| ------------------------------ | ------- | --------------------------------------------------------------------------- |
+| `data-search-endpoint`         |         | Elasticsearch proxy URL                                                     |
+| `data-taxonomy-endpoint`       |         | Taxonomy API URL for facet labels                                           |
+| `data-results-per-page`        |         | Number of results per page                                                  |
+| `data-debounce-delay`          |         | Milliseconds before executing search                                        |
+| `data-min-search-length`       |         | Minimum characters to trigger search                                        |
+| `data-default-query`           |         | Initial search query                                                        |
+| `data-default-sort`            |         | Initial sort order                                                          |
+| `data-display-mode`            |         | `'list'`, `'card'`, or `'card-book'`                                        |
+| `data-grid-columns`            |         | Grid columns for card modes (2-6)                                           |
+| `data-query-append`            |         | Query every result must also match (a filter, not a bias)                   |
+| `data-show-search-box`         |         | Show search input                                                           |
+| `data-show-results-count`      |         | Show result count                                                           |
+| `data-show-facets`             |         | Show facets sidebar                                                         |
+| `data-show-active-filters`     |         | Show active filter chips                                                    |
+| `data-show-pager`              |         | Show pagination                                                             |
+| `data-show-search-metrics`     |         | Show debug metrics                                                          |
+| `data-show-search-timer`       |         | Show search execution time                                                  |
+| `data-enable-hash-sync`        |         | Sync search state to URL hash                                               |
+| `data-default-filters`         |         | JSON array of `{key, value}` filter objects                                 |
+| `data-allowed-types`           |         | JSON object restricting content type options                                |
+| `data-require-image`           |         | Only return results with images (`true`/`false`)                            |
+| `data-interestingness-tiers`   |         | JSON array of tier names (e.g., `'["promoted","announced"]'`)               |
+| `data-longevity-tiers`         |         | JSON array of tier names (e.g., `'["year","longtime","always"]'`)           |
+| `data-custom-filters`          |         | JSON array of custom filter strings (e.g., `'["type:news"]'`)               |
+| `data-custom-facets`           |         | JSON array of custom facet objects                                          |
+| `data-visible-teaser-fields`   |         | JSON array of teaser field names to show                                    |
+| `data-labels`                  |         | JSON object of UI label overrides (see [UI labels](#ui-labels))             |
+| `data-analytics-region-prefix` |         | Stem for the analytics regions; see [Analytics regions](#analytics-regions) |
 
 All attributes are optional. Only attributes present on the container are included in the config; the component uses its own defaults for anything missing.
 
@@ -774,6 +813,9 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.21**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): New `onResults` config and `mg-search-widget:results` event after each completed search. Paging scrolls without smooth motion under `prefers-reduced-motion` and moves focus to the results count (or results area) instead of dropping it to the page. A widget without a search box shows its skeleton until its first results arrive and then, if it found nothing, says "No results found" rather than "Enter a search term". A widget with no search box and no facets no longer announces its total. See [Results notification](#results-notification).
+- **1.4.20**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): New `analyticsRegionPrefix` config (data attribute `data-analytics-region-prefix`) sets the stem of the widget's analytics regions, so two widgets on one page report their clicks separately. The default, `undrr-search`, keeps today's region names. See [Analytics regions](#analytics-regions).
+- **1.4.19**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): The results area (`mg-search__main`) is a `div` rather than a `main` element. The widget always sits inside the page's own `main`, so every embedded widget added a second, nested main landmark (axe `landmark-no-duplicate-main` and `landmark-main-is-top-level`). The class and styling are unchanged.
 - **1.4.18**, 2026-10-09 ([mangrove#1324](https://github.com/unisdr/undrr-mangrove/issues/1324)): Selected facets and the sort order are kept in the URL hash, so filtered views can be shared and back/forward moves between them. See [URL hash](#url-hash).
   - New hash parameters: `sort`, `f.<facet key>` (repeated for several values) and `op.<facet key>`. Keys are checked against the active facet fields and values are validated, so unknown keys never reach the query; the URL is tidied in place to what was applied.
   - Facets and sort read from the hash are passed to `INITIALIZE` (`initialFacets`, `initialFacetOperators`, `initialSort`), so the defaults no longer overwrite them. Any valid `f.*` parameter replaces `defaultFilters` entirely.

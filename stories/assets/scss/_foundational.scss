@@ -206,9 +206,22 @@ a {
   }
 }
 
-[dir="rtl"] {
+// RTL list indentation. The direction is wrapped in :where() so these rules
+// carry exactly the specificity of the LTR `ul`, `ol` and `ul li` rules they
+// mirror. A bare [dir="rtl"] made them outrank a component's own list reset
+// (a class rule), so in RTL every unmarked component list (On this page nav,
+// hero tags, breadcrumbs, pager, tabs and more) picked up the prose indent and
+// sat 9-22px inside its content edge. LTR is untouched: these rules only match
+// under an RTL ancestor, and the custom property is only read here.
+:where([dir="rtl"]) {
   ul,
   ol {
+    // The item indent below aligns Arabic text with its bullets. A list
+    // with no bullets (mg-list-unmarked) sets this to 0 on itself; each
+    // list declares its own default, so a bulleted list nested inside an
+    // unmarked one keeps its indent.
+    --mg-list-item-indent-rtl: #{mg-rem(9)};
+
     direction: rtl;
     padding-left: 0;
     padding-right: mg-rem(11);
@@ -219,16 +232,15 @@ a {
 
     li {
       padding-left: 0;
-      padding-right: mg-rem(9);
 
-      @include devicebreak(medium) {
-        // Keep RTL list item text aligned with bullets at medium
-        // https://gitlab.com/undrr/web-backlog/-/issues/2444
-        padding-right: mg-rem(9);
-      }
+      // Keep RTL list item text aligned with bullets
+      // https://gitlab.com/undrr/web-backlog/-/issues/2444
+      padding-right: var(--mg-list-item-indent-rtl);
     }
   }
+}
 
+[dir="rtl"] {
   // 900 weight Roboto does not work well with Arabic
   // https://gitlab.com/undrr/web-backlog/-/issues/1711
   h1,
