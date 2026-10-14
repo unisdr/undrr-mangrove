@@ -260,11 +260,15 @@ function SyndicationSearchWidgetInner() {
   // unconditional setQuery('') here on mount we would stomp that value before
   // INITIALIZE could preserve it. Subsequent renders sync user input as normal.
   const isFirstQuerySync = useRef(true);
+  // The query this input last sent to the state. The state echoing it back
+  // is not news, and must not overwrite what the reader has typed since.
+  const sentQueryRef = useRef(null);
   useEffect(() => {
     if (isFirstQuerySync.current) {
       isFirstQuerySync.current = false;
       return;
     }
+    sentQueryRef.current = deferredQuery;
     dispatch(actions.setQuery(deferredQuery));
   }, [deferredQuery, dispatch]);
 
@@ -297,9 +301,15 @@ function SyndicationSearchWidgetInner() {
     config.defaultSort,
   ]);
 
-  // Sync input with state (e.g., from URL hash)
+  // Sync the input with query changes from elsewhere (URL hash, INITIALIZE,
+  // back/forward). useDeferredValue lags the input, so the state briefly
+  // holds an older query than the input; copying that back dropped
+  // keystrokes ("earthquake" became "earthuake").
   useEffect(() => {
-    if (state.query !== inputValue && state.isInitialized) {
+    if (!state.isInitialized) return;
+    if (state.query === sentQueryRef.current) return;
+    sentQueryRef.current = state.query;
+    if (state.query !== inputValue) {
       setInputValue(state.query);
     }
   }, [state.query, state.isInitialized]);
