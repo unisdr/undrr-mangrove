@@ -599,6 +599,21 @@ function setupScrollSpy(container) {
   targets.forEach(target => observer.observe(target));
   container._mgOnThisPageNavObserver = observer;
 
+  // A short last section can never scroll up into the observed band, so at
+  // the foot of the page the previous section stayed marked, even straight
+  // after following the last link. At the bottom, mark the last target.
+  const onScroll = () => {
+    const doc = document.documentElement;
+    const atBottom =
+      window.innerHeight + window.scrollY >= doc.scrollHeight - 2 &&
+      doc.scrollHeight > window.innerHeight;
+    if (atBottom) setActive(targets[targets.length - 1].id);
+  };
+  window.addEventListener('scroll', onScroll, {
+    passive: true,
+    signal: container._mgOnThisPageNavAbort?.signal,
+  });
+
   const hashId = window.location.hash ? window.location.hash.slice(1) : null;
   if (hashId && linkMap.has(hashId)) {
     setActive(hashId);

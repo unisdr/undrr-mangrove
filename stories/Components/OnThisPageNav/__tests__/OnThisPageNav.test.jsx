@@ -294,6 +294,48 @@ describe('OnThisPageNav', () => {
       const firstLink = nav.querySelector('[href="#sec-1"]');
       expect(firstLink.hasAttribute('aria-current')).toBe(false);
     });
+
+    describe('at the foot of the page', () => {
+      const scrollTo = (scrollY, scrollHeight) => {
+        Object.defineProperty(document.documentElement, 'scrollHeight', {
+          configurable: true,
+          get: () => scrollHeight,
+        });
+        Object.defineProperty(window, 'scrollY', {
+          configurable: true,
+          get: () => scrollY,
+        });
+        window.dispatchEvent(new Event('scroll'));
+      };
+
+      afterEach(() => {
+        delete document.documentElement.scrollHeight;
+        delete window.scrollY;
+      });
+
+      it('marks the last section, which can never reach the observed band', () => {
+        const nav = setupAutoDetect();
+        scrollTo(3000 - window.innerHeight, 3000);
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-3'
+        );
+      });
+
+      it('leaves the mark alone above the bottom and after destroy', () => {
+        const nav = setupAutoDetect();
+        scrollTo(100, 3000);
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-1'
+        );
+        mgOnThisPageNavDestroy(nav);
+        scrollTo(3000 - window.innerHeight, 3000);
+        expect(nav.querySelector('[href="#sec-3"]')).not.toHaveAttribute(
+          'aria-current'
+        );
+      });
+    });
   });
 
   describe('click handling', () => {
