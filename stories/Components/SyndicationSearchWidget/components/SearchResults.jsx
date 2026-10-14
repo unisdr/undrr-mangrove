@@ -36,24 +36,16 @@ const useBrowserLayoutEffect =
   typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 /**
- * Resolve `config.ssrResults` to the server-rendered results element: an
- * Element, or a CSS selector looked up in the document. Runs during the first
- * render, before React's first commit clears the mount container, so markup
- * inside the container can still be found.
+ * `config.ssrResults` when it is an element. Only an Element is accepted: a
+ * selector would have to be resolved before the widget knows its document
+ * (an iframe in block editors) and after React's first commit has emptied
+ * the mount container, so the caller captures the element instead.
  *
- * @param {Element|string|null|undefined} ssrResults
+ * @param {*} ssrResults
  * @returns {Element|null}
  */
 function resolveSsrResults(ssrResults) {
-  if (!ssrResults) return null;
-  if (typeof ssrResults !== 'string') {
-    return ssrResults.nodeType === 1 ? ssrResults : null;
-  }
-  try {
-    return getOwnerDocument(null)?.querySelector(ssrResults) || null;
-  } catch {
-    return null;
-  }
+  return ssrResults && ssrResults.nodeType === 1 ? ssrResults : null;
 }
 
 /**

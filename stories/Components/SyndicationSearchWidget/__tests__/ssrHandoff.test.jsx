@@ -167,3 +167,17 @@ it('moves focus to the results when focus was inside the server results', async 
     container.querySelector('.mg-search__results-count')
   );
 });
+
+it('ignores an ssrResults that is not an element', () => {
+  deferredFetch();
+  const marker = document.createElement('div');
+  marker.id = 'by-selector';
+  document.body.appendChild(marker);
+  const { container } = render(
+    <SyndicationSearchWidget
+      config={{ ssrResults: '#by-selector', enableHashSync: false }}
+    />
+  );
+  expect(container.querySelector('[data-mg-search-ssr-slot]')).toBeNull();
+  expect(marker.isConnected).toBe(true);
+});

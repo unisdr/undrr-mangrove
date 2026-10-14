@@ -616,7 +616,7 @@ them; the Drupal block's `auto` setting does this.
 | `analyticsRegionPrefix` | string         | `'undrr-search'`                        | Stem for the analytics regions (`<prefix>-form`, `-results`, `-facets`). See [Analytics regions](#analytics-regions)                                 |
 | `onResults`             | function       | —                                       | Called after each completed search with `{ total, query, page }`. See [Results notification](#results-notification)                                  |
 | `sourceFields`          | array          | `SOURCE_FIELDS`                         | `_source` fields requested per hit; the default is what the widget renders. Set only for an endpoint whose hits need other fields                    |
-| `ssrResults`            | Element/string | —                                       | Server-rendered results to keep on screen until the first client results. See [Server-rendered results](#server-rendered-results)                    |
+| `ssrResults`            | Element        | —                                       | Server-rendered results to keep on screen until the first client results. See [Server-rendered results](#server-rendered-results)                    |
 | `facetsTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the facets into (Drupal: `data-facets-target`)                                              |
 | `searchTarget`          | string         | `null`                                  | CSS selector for an element outside the widget to render the search input into (Drupal: `data-search-target`)                                        |
 
@@ -708,7 +708,7 @@ Render the server results with the same structure and classes as the widget's ow
 
 ### Custom wrappers
 
-A wrapper that builds the config and calls `createRoot` itself passes the element as `ssrResults`: an `Element` captured before mounting, or a selector that still matches, in the widget's own document, on the widget's first render. An element inside the mount target has to be passed as an `Element`, because React's first commit empties the target. Two widgets on a page must not share one `ssrResults` element or selector.
+A wrapper that builds the config and calls `createRoot` itself passes the element as `ssrResults`, captured before mounting (React's first commit empties the mount target). Only an `Element` is accepted, not a selector. Each widget needs its own server results element; two widgets must not share one.
 
 If the widget won't search (a query shorter than `minSearchLength` with no filters, from the URL for instance), the server results are removed and the widget asks for input. If keyboard focus was inside the server results when they go, it moves to the results count, or to the results region.
 
