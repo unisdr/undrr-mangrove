@@ -838,6 +838,36 @@ describe('OnThisPageNav', () => {
           nav.classList.contains('mg-on-this-page-nav--has-left-overflow')
         ).toBe(true);
       });
+
+      it('has-right-overflow tracks content hidden on the right in RTL', () => {
+        const nav = setupAutoDetect();
+        const list = nav.querySelector('.mg-on-this-page-nav__list');
+        Object.defineProperty(list, 'scrollWidth', {
+          value: 500,
+          configurable: true,
+        });
+        Object.defineProperty(list, 'clientWidth', {
+          value: 200,
+          configurable: true,
+        });
+        const at = scrollLeft => {
+          Object.defineProperty(list, 'scrollLeft', {
+            value: scrollLeft,
+            configurable: true,
+          });
+          list.dispatchEvent(new Event('scroll'));
+          return ['left', 'right'].filter(side =>
+            nav.classList.contains(`mg-on-this-page-nav--has-${side}-overflow`)
+          );
+        };
+        expect(at(0)).toEqual(['left']); // start: more to the left
+        expect(at(-150)).toEqual(['left', 'right']); // mid-scroll
+        expect(at(-300)).toEqual(['right']); // end: earlier links to the right
+        mgOnThisPageNavDestroy(nav);
+        expect(
+          nav.classList.contains('mg-on-this-page-nav--has-right-overflow')
+        ).toBe(false);
+      });
     });
 
     it('destroy removes injected scroll buttons', () => {

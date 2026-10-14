@@ -35,6 +35,8 @@ const BUNDLES = [
 ];
 
 const INPUT_HOOKS = {
+  '--mg-scroll-padding-base':
+    "A site's own scroll padding, set on :root, that the On this page bar adds itself to",
   '--mg-on-this-page-nav-block-size':
     'On this page bar height, set on the root by on-this-page-nav.js while the bar is sticky',
   '--mg-card-border':

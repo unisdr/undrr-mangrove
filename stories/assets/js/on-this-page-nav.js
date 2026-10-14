@@ -141,7 +141,10 @@ export function mgOnThisPageNavDestroy(container) {
   container
     .querySelectorAll('.mg-on-this-page-nav__scroll-btn')
     .forEach(btn => btn.remove());
-  container.classList.remove('mg-on-this-page-nav--has-left-overflow');
+  container.classList.remove(
+    'mg-on-this-page-nav--has-left-overflow',
+    'mg-on-this-page-nav--has-right-overflow'
+  );
   delete container.dataset.mgOnThisPageNavInitialized;
 }
 
@@ -436,6 +439,13 @@ function updateScrollButtons(container, list, prevBtn, nextBtn) {
   container.classList.toggle(
     'mg-on-this-page-nav--has-left-overflow',
     rtl ? canScrollFurther : scrolledFromStart
+  );
+  // has-right-overflow is its mirror. Only the RTL fades read it: in RTL the
+  // hidden content can sit on either physical side, and a fade belongs only
+  // on a side with something hidden behind it.
+  container.classList.toggle(
+    'mg-on-this-page-nav--has-right-overflow',
+    rtl ? scrolledFromStart : canScrollFurther
   );
 }
 

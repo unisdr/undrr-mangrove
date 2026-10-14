@@ -292,7 +292,7 @@ export const PROPERTY_DOCS = {
   '--mg-on-this-page-nav-container':
     'Width of the mg-container the links line up with under .mg-on-this-page-nav--align-container. Declared per breakpoint to match mg-container; override it when the content column is narrower.',
   '--mg-on-this-page-nav-scroll-padding':
-    "Declared on the root while an On this page bar is on the page: the docking offset plus the bar's published height (--mg-on-this-page-nav-block-size, set by the script while the bar is sticky). It is the page's scroll-padding-top, so focus, anchors and scrollIntoView land below the bar.",
+    "Declared on the root while an On this page bar is on the page: --mg-scroll-padding-base plus the docking offset plus the bar's published height (--mg-on-this-page-nav-block-size, set by the script while the bar is sticky). It is the page's scroll-padding-top, so focus, anchors and scrollIntoView land below the bar. The rule has zero specificity, so a site's own html { scroll-padding-top } wins; to keep the site's padding and add the bar to it, set --mg-scroll-padding-base on :root instead.",
 
   // Tree
   '--mg-tree-item-background--hover': 'Row tint on hover.',

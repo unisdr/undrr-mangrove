@@ -53,13 +53,35 @@ describe('hero tags', () => {
 });
 
 describe('on this page nav', () => {
-  test('pads page scrolling below the docked bar', () => {
-    expect(
-      ruleFor(
-        'html:has(.mg-on-this-page-nav:not(.mg-on-this-page-nav--hidden))'
-      )
-    ).toMatch(
+  test('pads page scrolling below the docked bar, giving way to the site', () => {
+    const rule = ruleFor(
+      ':where(html:has(.mg-on-this-page-nav:not(.mg-on-this-page-nav--hidden)))'
+    );
+    expect(rule).toMatch(
       /scroll-padding-top:\s*var\(--mg-on-this-page-nav-scroll-padding\)/
     );
+    expect(rule).toMatch(/var\(--mg-scroll-padding-base, 0px\)/);
+  });
+
+  // A fade belongs only on a side with links hidden behind it. Each RTL rule
+  // has to outrank the direction-neutral has-left-overflow rule.
+  test.each([
+    [
+      'nothing hidden or left only',
+      '[dir=rtl] .mg-on-this-page-nav__list, [dir=rtl] .mg-on-this-page-nav--has-left-overflow .mg-on-this-page-nav__list',
+      /mask-image:\s*linear-gradient\(to left, #000 calc/,
+    ],
+    [
+      'right only',
+      '[dir=rtl] .mg-on-this-page-nav--has-right-overflow .mg-on-this-page-nav__list',
+      /mask-image:\s*linear-gradient\(to right, #000 calc/,
+    ],
+    [
+      'both sides',
+      '[dir=rtl] .mg-on-this-page-nav--has-left-overflow.mg-on-this-page-nav--has-right-overflow .mg-on-this-page-nav__list',
+      /mask-image:\s*linear-gradient\(to right, transparent, #000 var/,
+    ],
+  ])('RTL fade: %s', (_name, selector, gradient) => {
+    expect(ruleFor(selector)).toMatch(gradient);
   });
 });
