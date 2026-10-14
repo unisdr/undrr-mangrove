@@ -178,6 +178,10 @@ const initialState = {
   // Search query
   query: '',
 
+  // defaultQuery applied by the last INITIALIZE. A query still equal to it
+  // hasn't been changed by the reader, so a new defaultQuery replaces it.
+  appliedDefaultQuery: '',
+
   // Active facet filters: { [key]: [values] }
   facets: {},
 
@@ -419,10 +423,23 @@ function searchReducer(state, action) {
         initialSort = null,
       } = action.payload;
 
+      // Keep a query the reader typed or that came from the URL hash. A
+      // query that is still the previous defaultQuery was never changed, so
+      // a new defaultQuery (e.g. edited in a block editor preview) replaces
+      // it, including when the new default is empty.
+      const keepQuery =
+        state.query !== '' && state.query !== state.appliedDefaultQuery;
+
+      const nextDefaultQuery = defaultQuery || '';
+      const query = keepQuery ? state.query : nextDefaultQuery;
+
       return {
         ...state,
-        // Preserve query if already set (e.g., from URL params via useHashSync)
-        query: state.query || defaultQuery,
+        query,
+        appliedDefaultQuery: nextDefaultQuery,
+        // A re-initialise that swaps the query starts again from page 1. The
+        // first INITIALIZE keeps a page restored from the URL hash.
+        page: state.isInitialized && query !== state.query ? 1 : state.page,
         sortBy: initialSort || defaultSort,
         facets: initialFacets || facetsFromDefaults(defaultFilters),
         facetOperators: initialFacets

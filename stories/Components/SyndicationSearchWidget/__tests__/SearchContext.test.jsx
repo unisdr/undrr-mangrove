@@ -383,6 +383,52 @@ describe('SearchContext', () => {
       expect(state.sortBy).toBe('oldest');
     });
 
+    it('INITIALIZE replaces an unchanged default query with a new one', () => {
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'flood' }));
+      });
+      expect(state.query).toBe('flood');
+
+      act(() => {
+        dispatch(actions.setPage(3));
+      });
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'drought' }));
+      });
+      expect(state.query).toBe('drought');
+      expect(state.page).toBe(1);
+
+      // Clearing the default clears the query too.
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: '' }));
+      });
+      expect(state.query).toBe('');
+    });
+
+    it('INITIALIZE keeps a query the reader typed over a new default', () => {
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'flood' }));
+      });
+      act(() => {
+        dispatch(actions.setQuery('cyclone'));
+      });
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'drought' }));
+      });
+      expect(state.query).toBe('cyclone');
+    });
+
+    it('INITIALIZE keeps a page restored from the URL on first initialise', () => {
+      act(() => {
+        dispatch(actions.restoreState({ query: '', page: 2 }));
+      });
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'flood' }));
+      });
+      expect(state.query).toBe('flood');
+      expect(state.page).toBe(2);
+    });
+
     it('RESTORE_STATE replaces query, page, sort, facets and operators', () => {
       act(() => {
         dispatch(actions.setFacet('field_theme', ['1']));

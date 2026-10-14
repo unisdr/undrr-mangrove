@@ -349,6 +349,32 @@ describe('SyndicationSearchWidget', () => {
 
       window.history.pushState({}, '', '/');
     });
+
+    // A block editor preview re-renders the widget with the edited setting.
+    it('applies a changed defaultQuery unless the reader typed a query', async () => {
+      const { rerender } = render(
+        <SyndicationSearchWidget
+          config={{ defaultQuery: 'flood', enableHashSync: false }}
+        />
+      );
+      const input = screen.getByRole('searchbox');
+      await waitFor(() => expect(input).toHaveValue('flood'));
+
+      rerender(
+        <SyndicationSearchWidget
+          config={{ defaultQuery: 'drought', enableHashSync: false }}
+        />
+      );
+      await waitFor(() => expect(input).toHaveValue('drought'));
+
+      fireEvent.change(input, { target: { value: 'cyclone' } });
+      rerender(
+        <SyndicationSearchWidget
+          config={{ defaultQuery: 'heatwave', enableHashSync: false }}
+        />
+      );
+      await waitFor(() => expect(input).toHaveValue('cyclone'));
+    });
   });
 
   describe('search execution', () => {
