@@ -400,6 +400,74 @@ describe('SyndicationSearchWidget', () => {
       // Search should have been called (at least for initial empty search + this one)
       expect(global.fetch).toHaveBeenCalled();
     });
+
+    const searchBodies = () =>
+      global.fetch.mock.calls
+        .filter(([url]) => !String(url).includes('preventionweb.net/api'))
+        .map(([, init]) => JSON.parse(init.body));
+
+    it('asks for highlights only after a hit without a teaser', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [
+                {
+                  _id: '1',
+                  _source: {
+                    title: 'No teaser',
+                    type: 'news',
+                    field_domain_access: ['www_undrr_org'],
+                  },
+                },
+              ],
+              total: { value: 1 },
+            },
+            took: 1,
+          }),
+      });
+
+      render(<SyndicationSearchWidget config={{ debounceDelay: 0 }} />);
+
+      await waitFor(() => expect(searchBodies().length).toBeGreaterThan(1));
+      const bodies = searchBodies();
+      expect(bodies[0].highlight).toBeUndefined();
+      expect(bodies[bodies.length - 1].highlight).toBeDefined();
+    });
+
+    it('never asks for highlights while every hit has a teaser', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [
+                {
+                  _id: '1',
+                  _source: {
+                    teaser: '<div>Teaser</div>',
+                    type: 'news',
+                    field_domain_access: ['www_undrr_org'],
+                  },
+                },
+              ],
+              total: { value: 1 },
+            },
+            took: 1,
+          }),
+      });
+
+      render(<SyndicationSearchWidget config={{ debounceDelay: 0 }} />);
+
+      await waitFor(() => expect(searchBodies().length).toBeGreaterThan(0));
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 20));
+      });
+      expect(searchBodies().every(body => body.highlight === undefined)).toBe(
+        true
+      );
+    });
   });
 
   describe('configuration', () => {

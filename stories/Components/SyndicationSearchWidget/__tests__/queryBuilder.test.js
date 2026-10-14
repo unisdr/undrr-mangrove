@@ -801,6 +801,15 @@ describe('queryBuilder', () => {
     });
   });
 
+  describe('highlight option', () => {
+    it('omits highlight when options.highlight is false', () => {
+      const result = buildQuery(defaultState, DEFAULT_CONFIG, {
+        highlight: false,
+      });
+      expect(result.highlight).toBeUndefined();
+    });
+  });
+
   describe('highlight configuration', () => {
     it('includes highlight configuration', () => {
       const result = buildQuery(defaultState, DEFAULT_CONFIG);

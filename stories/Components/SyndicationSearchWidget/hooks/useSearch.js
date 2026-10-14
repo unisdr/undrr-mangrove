@@ -8,7 +8,7 @@
  * @module SearchWidget/hooks/useSearch
  */
 
-import { useEffect, useRef, useCallback, useTransition } from 'react';
+import { useEffect, useRef, useCallback, useState, useTransition } from 'react';
 import {
   useSearchConfig,
   useSearchState,
@@ -37,6 +37,10 @@ export function useSearch() {
   const dispatch = useSearchDispatch();
   const abortControllerRef = useRef(null);
   const [isPending, startTransition] = useTransition();
+  // Highlights are only displayed by the no-teaser fallback rendering, and
+  // body highlighting roughly doubles Elasticsearch's time. Request them only
+  // once a response has a hit without teaser HTML.
+  const [needsHighlight, setNeedsHighlight] = useState(false);
 
   const {
     query,
@@ -82,7 +86,8 @@ export function useSearch() {
       try {
         const queryBody = buildQuery(
           { query, facets, facetOperators, customFacets, sortBy, page },
-          config
+          config,
+          { highlight: needsHighlight }
         );
 
         const response = await fetch(searchEndpoint, {
@@ -101,6 +106,13 @@ export function useSearch() {
         }
 
         const data = await response.json();
+
+        if (
+          !needsHighlight &&
+          data?.hits?.hits?.some(hit => !hit._source?.teaser)
+        ) {
+          setNeedsHighlight(true);
+        }
 
         // Use transition for non-blocking result updates
         startTransition(() => {
@@ -126,6 +138,7 @@ export function useSearch() {
       searchEndpoint,
       minSearchLength,
       config,
+      needsHighlight,
       dispatch,
       startTransition,
     ]

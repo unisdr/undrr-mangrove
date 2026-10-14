@@ -43,11 +43,16 @@ const BOOLEAN_OPERATORS = ['AND', 'OR', 'NOT'];
  *   'eventDateAsc' or 'eventDateDesc'
  * @param {number} params.page - Current page number (1-based)
  * @param {Object} config - Widget configuration
+ * @param {Object} [options]
+ * @param {boolean} [options.highlight=true] - Request title and body
+ *   highlights. They are only displayed by the no-teaser fallback, so the
+ *   widget turns them on only once it has seen a hit without a teaser.
  * @returns {Object} Elasticsearch query body
  */
 export function buildQuery(
   { query, facets, facetOperators, customFacets, sortBy, page = 1 },
-  config
+  config,
+  { highlight: wantHighlight = true } = {}
 ) {
   const scoring = config.scoring || SCORING_CONFIG;
   const highlight = config.highlight || HIGHLIGHT_CONFIG;
@@ -94,7 +99,7 @@ export function buildQuery(
   // Skip highlights in card mode when summary is hidden: card teasers use
   // pre-rendered HTML and don't show body text, so highlight fragments are
   // wasted response payload.
-  if (!(isCardMode && summaryHidden)) {
+  if (wantHighlight && !(isCardMode && summaryHidden)) {
     result.highlight = buildHighlight(highlight);
   }
 
