@@ -494,7 +494,59 @@ describe('SyndicationSearchWidget', () => {
       expect(screen.getByText('No results found')).toBeInTheDocument();
     });
 
-    it('does not announce totals when the count and pager are both off', async () => {
+    it('shows no "No results found" before the first results arrive', () => {
+      // Before the debounced fetch, results is null and nothing is loading.
+      global.fetch = jest.fn(() => new Promise(() => {}));
+      window.history.replaceState(null, '', '/');
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{
+            showSearchBox: false,
+            debounceDelay: 500,
+            enableHashSync: false,
+          }}
+        />
+      );
+      expect(screen.queryByText('No results found')).toBeNull();
+      expect(screen.queryByText(/enter a search term/i)).toBeNull();
+      expect(
+        container.querySelector('.mg-search__results-loading')
+      ).not.toBeNull();
+    });
+
+    it('still announces totals when facets are on, even with count and pager off', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [{ _id: '1', _source: { title: 'A', url: '/a' } }],
+              total: { value: 3 },
+            },
+            aggregations: {},
+          }),
+      });
+      window.history.replaceState(null, '', '/');
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{
+            showSearchBox: false,
+            showResultsCount: false,
+            showPager: false,
+            debounceDelay: 0,
+            enableHashSync: false,
+          }}
+        />
+      );
+      await waitFor(() =>
+        expect(
+          container.querySelector('.mg-search__results > [role="status"]')
+            ?.textContent
+        ).toMatch(/3/)
+      );
+    });
+
+    it('does not announce totals when nothing in the widget is interactive', async () => {
       global.fetch = mockFetch({
         ok: true,
         json: () =>
@@ -512,6 +564,7 @@ describe('SyndicationSearchWidget', () => {
             showSearchBox: false,
             showResultsCount: false,
             showPager: false,
+            showFacets: false,
             debounceDelay: 0,
           }}
         />

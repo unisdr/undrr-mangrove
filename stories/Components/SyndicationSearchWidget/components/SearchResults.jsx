@@ -12,7 +12,11 @@ import {
   useSearchLabels,
   interpolateLabel,
 } from '../context/SearchContext';
-import { analyticsRegion, buildHiddenFieldClasses } from '../utils/constants';
+import {
+  analyticsRegion,
+  buildHiddenFieldClasses,
+  resolveFacetsLayout,
+} from '../utils/constants';
 import ResultItem from './ResultItem';
 import Pager from './Pager';
 
@@ -113,11 +117,25 @@ export function SearchResults({
     );
   }
 
-  // No query yet. A widget with no search box has nothing to type into, so
-  // an empty result there is simply no results.
+  // A widget with no search box has nothing to type into. Before its first
+  // results arrive (between initialising and the debounced fetch, results is
+  // still null and nothing is loading yet) show the skeleton rather than a
+  // message; once they arrive, an empty set is simply no results.
+  if (config.showSearchBox === false && !Array.isArray(results)) {
+    return (
+      <div className="mg-search__results-loading" aria-busy="true">
+        <SearchSkeleton
+          count={resultsPerPage}
+          displayMode={displayMode}
+          gridColumns={cardGridCols}
+        />
+      </div>
+    );
+  }
   if (
     !query &&
-    (!results || results.length === 0) &&
+    Array.isArray(results) &&
+    results.length === 0 &&
     config.showSearchBox === false
   ) {
     return (
@@ -169,11 +187,13 @@ export function SearchResults({
         aria-atomic="true"
         className="mg-u-sr-only"
       >
-        {/* A widget showing neither a count nor a pager is a fixed list of
-            cards, and its total is noise to a screen reader. */}
+        {/* A widget with nothing interactive (no search box, no facets) is a
+            fixed list of cards: nothing the reader does changes it, so its
+            total is noise to a screen reader. Every other widget announces. */}
         {!isLoading &&
           totalResults !== null &&
-          (showResultsCount || showPager) && (
+          (config.showSearchBox !== false ||
+            resolveFacetsLayout(config) !== false) && (
             <>
               {totalResults === 0
                 ? interpolateLabel(
