@@ -284,7 +284,11 @@ export const PROPERTY_DOCS = {
 
   // OnThisPageNav
   '--mg-on-this-page-nav-offset':
-    'Docking offset for a fixed header above the nav. Accepts any CSS length, and the scroll position calculations use it too. Nothing declares it, so set it in your theme CSS to dock below a sticky header.',
+    "Docking offset for a fixed header above the nav. Accepts any CSS length, and the scroll position calculations use it too. Nothing declares it, so set it in your theme CSS to dock below a sticky header; set it on :root so the page's scroll-padding-top counts it as well. In Drupal, var(--drupal-displace-offset-top, 0px) allows for the admin toolbar.",
+  '--mg-on-this-page-nav-container':
+    'Width of the mg-container the links line up with under .mg-on-this-page-nav--align-container. Declared per breakpoint to match mg-container; override it when the content column is narrower.',
+  '--mg-on-this-page-nav-scroll-padding':
+    "Declared on the root while an On this page bar is on the page: the docking offset plus the bar's published height (--mg-on-this-page-nav-block-size, set by the script while the bar is sticky). It is the page's scroll-padding-top, so focus, anchors and scrollIntoView land below the bar.",
 
   // Tree
   '--mg-tree-item-background--hover': 'Row tint on hover.',

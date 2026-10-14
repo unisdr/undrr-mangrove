@@ -322,6 +322,31 @@ describe('OnThisPageNav', () => {
         );
       });
 
+      it('checks on load, for a page restored at its foot', () => {
+        Object.defineProperty(document.documentElement, 'scrollHeight', {
+          configurable: true,
+          get: () => 3000,
+        });
+        Object.defineProperty(window, 'scrollY', {
+          configurable: true,
+          get: () => 3000 - window.innerHeight,
+        });
+        const nav = setupAutoDetect();
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-3'
+        );
+      });
+
+      it('does not apply on a page that barely scrolls', () => {
+        const nav = setupAutoDetect();
+        scrollTo(50, window.innerHeight + 50);
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-1'
+        );
+      });
+
       it('leaves the mark alone above the bottom and after destroy', () => {
         const nav = setupAutoDetect();
         scrollTo(100, 3000);
@@ -335,6 +360,55 @@ describe('OnThisPageNav', () => {
           'aria-current'
         );
       });
+    });
+  });
+
+  describe('published block size', () => {
+    let styleSpy;
+    afterEach(() => styleSpy?.mockRestore());
+
+    const stickyWith = position => {
+      const real = window.getComputedStyle;
+      styleSpy = jest
+        .spyOn(window, 'getComputedStyle')
+        .mockImplementation(element =>
+          element.matches?.('.mg-on-this-page-nav')
+            ? { ...real(element), position, getPropertyValue: () => '' }
+            : real(element)
+        );
+    };
+
+    it('publishes the bar height on the root while it is sticky', () => {
+      stickyWith('sticky');
+      document.body.innerHTML = `
+        <nav data-mg-on-this-page-nav class="mg-on-this-page-nav">
+          <ul class="mg-on-this-page-nav__list"><li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#a">A</a></li></ul>
+        </nav><h2 id="a">A</h2>`;
+      const nav = document.querySelector('nav');
+      Object.defineProperty(nav, 'offsetHeight', { get: () => 48 });
+      mgOnThisPageNav([nav]);
+      expect(
+        document.documentElement.style.getPropertyValue(
+          '--mg-on-this-page-nav-block-size'
+        )
+      ).toBe('48px');
+      mgOnThisPageNavDestroy(nav);
+      expect(
+        document.documentElement.style.getPropertyValue(
+          '--mg-on-this-page-nav-block-size'
+        )
+      ).toBe('');
+    });
+
+    it('publishes 0px when the bar is not sticky', () => {
+      stickyWith('static');
+      const nav = setupExplicit([{ id: 'a', text: 'A' }]);
+      expect(
+        document.documentElement.style.getPropertyValue(
+          '--mg-on-this-page-nav-block-size'
+        )
+      ).toBe('0px');
+      mgOnThisPageNavDestroy(nav);
     });
   });
 

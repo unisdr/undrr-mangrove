@@ -46,6 +46,39 @@
     display: none;
   }
 
+  // Line the links up with an mg-container content column instead of the
+  // bar's own padding. The bar stays full-bleed; only its padding changes, to
+  // half the space outside the container plus the container's gutter. A
+  // container is 100% wide below the mobile breakpoint, so the padding is the
+  // gutter alone there.
+  &--align-container {
+    --mg-on-this-page-nav-container: 100vw;
+
+    padding-inline: calc(
+      (100vw - var(--mg-on-this-page-nav-container)) / 2 + #{mg-rem(10)}
+    );
+
+    @media (min-width: $mg-breakpoint-mobile) {
+      --mg-on-this-page-nav-container: #{$mg-breakpoint-mobile};
+    }
+
+    @media screen and (min-width: $mg-breakpoint-tablet) {
+      --mg-on-this-page-nav-container: #{$mg-breakpoint-tablet};
+
+      padding-inline: calc(
+        (100vw - var(--mg-on-this-page-nav-container)) / 2 + #{mg-rem(10)}
+      );
+    }
+
+    @media (min-width: $mg-breakpoint-desktop) {
+      --mg-on-this-page-nav-container: #{$mg-breakpoint-desktop};
+    }
+
+    @media (min-width: $mg-breakpoint-desktop-wide) {
+      --mg-on-this-page-nav-container: #{$mg-breakpoint-desktop-wide};
+    }
+  }
+
   &__list {
     display: flex;
     align-items: center;
@@ -230,3 +263,16 @@
 // and chevron icon direction are all RTL-aware. The mask-image gradient uses
 // physical `to right` which fades the correct edge in LTR; RTL gradient
 // correction is a known open item.
+
+// Anything the browser scrolls into view (keyboard focus, anchors, a pager's
+// scrollIntoView) lands below the docked bar instead of under it (WCAG 2.4.11
+// Focus Not Obscured). The script publishes the bar's height as
+// --mg-on-this-page-nav-block-size while it is sticky, and 0px when it is not.
+// --mg-on-this-page-nav-offset is read here from the root, so set it on :root
+// for it to count.
+html:has(.mg-on-this-page-nav:not(.mg-on-this-page-nav--hidden)) {
+  // prettier-ignore
+  --mg-on-this-page-nav-scroll-padding: calc(var(--mg-on-this-page-nav-offset, 0px) + var(--mg-on-this-page-nav-block-size, 0px));
+
+  scroll-padding-top: var(--mg-on-this-page-nav-scroll-padding);
+}
