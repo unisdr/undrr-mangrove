@@ -596,6 +596,7 @@ them; the Drupal block's `auto` setting does this.
 | `interestingnessTiers`  | array          | `[]`                                    | Restrict by editorial weight tiers (e.g., `['promoted', 'announced']`)                                                             |
 | `longevityTiers`        | array          | `[]`                                    | Restrict by content freshness tiers (e.g., `['year', 'longtime', 'always']`)                                                       |
 | `analyticsRegionPrefix` | string         | `'undrr-search'`                        | Stem for the analytics regions (`<prefix>-form`, `-results`, `-facets`). See [Analytics regions](#analytics-regions)               |
+| `onResults`             | function       | —                                       | Called after each completed search with `{ total, query, page }`. See [Results notification](#results-notification)                |
 
 ## Analytics regions
 
@@ -617,6 +618,21 @@ const config = { analyticsRegionPrefix: 'collection-related' };
 ```
 
 Without it, nothing changes. A Drupal block wrapper that builds the config itself needs to pass the setting through.
+
+## Results notification
+
+After each completed search the widget calls `onResults({ total, query, page })` and dispatches an `mg-search-widget:results` event with the same `detail`, bubbling from its root. A host uses it to hide a section around a widget that found nothing, or to show the total somewhere else; the event works without React:
+
+```js
+document.addEventListener('mg-search-widget:results', event => {
+  const section = event.target.closest('section');
+  if (section) section.hidden = event.detail.total === 0;
+});
+```
+
+A widget with no search box (`showSearchBox: false`) that finds nothing says "No results found" rather than asking for a search term. A widget with neither a results count nor a pager (a fixed list of cards) does not announce its total in the live region.
+
+After paging, the widget scrolls back to its results (instantly under `prefers-reduced-motion`) and moves focus to the results count, or to the results area when the count is hidden, instead of leaving it on a pager button that has been replaced.
 
 ## Accessibility
 
@@ -797,6 +813,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.21**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): New `onResults` config and `mg-search-widget:results` event after each completed search. Paging scrolls without smooth motion under `prefers-reduced-motion` and moves focus to the results count (or results area) instead of dropping it to the page. A widget without a search box that finds nothing says "No results found" rather than "Enter a search term". A widget with neither a count nor a pager no longer announces its total. See [Results notification](#results-notification).
 - **1.4.20**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): New `analyticsRegionPrefix` config (data attribute `data-analytics-region-prefix`) sets the stem of the widget's analytics regions, so two widgets on one page report their clicks separately. The default, `undrr-search`, keeps today's region names. See [Analytics regions](#analytics-regions).
 - **1.4.19**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): The results area (`mg-search__main`) is a `div` rather than a `main` element. The widget always sits inside the page's own `main`, so every embedded widget added a second, nested main landmark (axe `landmark-no-duplicate-main` and `landmark-main-is-top-level`). The class and styling are unchanged.
 - **1.4.18**, 2026-10-09 ([mangrove#1324](https://github.com/unisdr/undrr-mangrove/issues/1324)): Selected facets and the sort order are kept in the URL hash, so filtered views can be shared and back/forward moves between them. See [URL hash](#url-hash).

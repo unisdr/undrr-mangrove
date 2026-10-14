@@ -458,6 +458,74 @@ describe('SyndicationSearchWidget', () => {
     });
   });
 
+  describe('results notification and empty widgets without a search box', () => {
+    it('calls onResults and dispatches mg-search-widget:results', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: { hits: [], total: { value: 0 } },
+            aggregations: {},
+          }),
+      });
+      window.history.replaceState(null, '', '/');
+      const onResults = jest.fn();
+      const events = jest.fn();
+      document.addEventListener('mg-search-widget:results', events);
+      render(
+        <SyndicationSearchWidget
+          config={{
+            onResults,
+            showSearchBox: false,
+            debounceDelay: 0,
+            enableHashSync: false,
+          }}
+        />
+      );
+      await waitFor(() => expect(onResults).toHaveBeenCalled());
+      expect(onResults.mock.calls[0][0]).toEqual(
+        expect.objectContaining({ total: 0 })
+      );
+      expect(events).toHaveBeenCalled();
+      expect(events.mock.calls[0][0].detail.total).toBe(0);
+      document.removeEventListener('mg-search-widget:results', events);
+      // With no search box there is nothing to type into: say no results.
+      expect(screen.queryByText(/enter a search term/i)).toBeNull();
+      expect(screen.getByText('No results found')).toBeInTheDocument();
+    });
+
+    it('does not announce totals when the count and pager are both off', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [{ _id: '1', _source: { title: 'A', url: '/a' } }],
+              total: { value: 3 },
+            },
+            aggregations: {},
+          }),
+      });
+      const { container } = render(
+        <SyndicationSearchWidget
+          config={{
+            showSearchBox: false,
+            showResultsCount: false,
+            showPager: false,
+            debounceDelay: 0,
+          }}
+        />
+      );
+      await waitFor(() =>
+        expect(container.querySelector('.mg-search__results')).not.toBeNull()
+      );
+      const live = container.querySelector(
+        '.mg-search__results > [role="status"]'
+      );
+      expect(live.textContent).toBe('');
+    });
+  });
+
   describe('analytics regions', () => {
     const regions = container =>
       [...container.querySelectorAll('[data-vf-google-analytics-region]')].map(

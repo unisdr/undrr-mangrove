@@ -164,6 +164,12 @@ SyndicationSearchWidget.propTypes = {
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
     /**
+     * Called after each completed search with `{ total, query, page }`. The
+     * widget also dispatches an `mg-search-widget:results` event with the same
+     * detail, bubbling from its root, for hosts without React.
+     */
+    onResults: PropTypes.func,
+    /**
      * Stem for the widget's analytics regions: `<prefix>-form`,
      * `<prefix>-results` and `<prefix>-facets`. Defaults to `undrr-search`.
      * Give each widget its own prefix when a page has more than one.
@@ -262,6 +268,28 @@ function SyndicationSearchWidgetInner() {
       setInputValue(state.query);
     }
   }, [state.query, state.isInitialized]);
+
+  // Tell the page what came back, once per completed search: config.onResults
+  // for React hosts, and an `mg-search-widget:results` event that bubbles from
+  // the widget for everything else. A host can hide a section around a widget
+  // that found nothing, or show the total elsewhere.
+  const { results, totalResults, error } = state;
+  const onResults = config.onResults;
+  useEffect(() => {
+    if (results === null || error) return;
+    const detail = {
+      total: totalResults,
+      query: state.query,
+      page: state.page,
+    };
+    onResults?.(detail);
+    document
+      .getElementById(widgetId)
+      ?.dispatchEvent(
+        new CustomEvent('mg-search-widget:results', { bubbles: true, detail })
+      );
+    // Only a new result set is news; query and page arrive with it.
+  }, [results, totalResults, error]);
 
   const { showActiveFilters, showSearchMetrics, facetsTarget, searchTarget } =
     config;

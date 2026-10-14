@@ -113,7 +113,19 @@ export function SearchResults({
     );
   }
 
-  // No query yet
+  // No query yet. A widget with no search box has nothing to type into, so
+  // an empty result there is simply no results.
+  if (
+    !query &&
+    (!results || results.length === 0) &&
+    config.showSearchBox === false
+  ) {
+    return (
+      <div className="mg-search__results-empty" role="status">
+        <p>{labels.srNoResults}</p>
+      </div>
+    );
+  }
   if (!query && (!results || results.length === 0)) {
     return (
       <div className="mg-search__results-empty">
@@ -157,32 +169,36 @@ export function SearchResults({
         aria-atomic="true"
         className="mg-u-sr-only"
       >
-        {!isLoading && totalResults !== null && (
-          <>
-            {totalResults === 0
-              ? interpolateLabel(
-                  query ? labels.srNoResultsForQuery : labels.srNoResults,
-                  { query }
-                )
-              : totalResultsRelation === 'gte'
+        {/* A widget showing neither a count nor a pager is a fixed list of
+            cards, and its total is noise to a screen reader. */}
+        {!isLoading &&
+          totalResults !== null &&
+          (showResultsCount || showPager) && (
+            <>
+              {totalResults === 0
                 ? interpolateLabel(
-                    query
-                      ? labels.srResultsFoundApproxForQuery
-                      : labels.srResultsFoundApprox,
-                    { count: totalResults.toLocaleString(), query }
+                    query ? labels.srNoResultsForQuery : labels.srNoResults,
+                    { query }
                   )
-                : interpolateLabel(
-                    totalResults !== 1
-                      ? query
-                        ? labels.srResultsFoundPluralForQuery
-                        : labels.srResultsFoundPlural
-                      : query
-                        ? labels.srResultsFoundForQuery
-                        : labels.srResultsFound,
-                    { count: totalResults.toLocaleString(), query }
-                  )}
-          </>
-        )}
+                : totalResultsRelation === 'gte'
+                  ? interpolateLabel(
+                      query
+                        ? labels.srResultsFoundApproxForQuery
+                        : labels.srResultsFoundApprox,
+                      { count: totalResults.toLocaleString(), query }
+                    )
+                  : interpolateLabel(
+                      totalResults !== 1
+                        ? query
+                          ? labels.srResultsFoundPluralForQuery
+                          : labels.srResultsFoundPlural
+                        : query
+                          ? labels.srResultsFoundForQuery
+                          : labels.srResultsFound,
+                      { count: totalResults.toLocaleString(), query }
+                    )}
+            </>
+          )}
       </div>
 
       {/* Results header */}
