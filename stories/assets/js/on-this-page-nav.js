@@ -581,6 +581,15 @@ function setupScrollSpy(container) {
   if (targets.length === 0) return;
 
   let activeId = null;
+
+  // At the foot of a page that scrolls a real distance. On a page that barely
+  // scrolls, the bottom is also the top, and the first section is right.
+  const atFoot = () => {
+    const doc = document.documentElement;
+    const scrollable = doc.scrollHeight - window.innerHeight;
+    const minimum = Math.max(120, window.innerHeight * 0.25);
+    return scrollable >= minimum && window.scrollY >= scrollable - 2;
+  };
   // Track which targets are currently intersecting (avoids DOM expando properties)
   const intersecting = new Set();
 
@@ -622,6 +631,13 @@ function setupScrollSpy(container) {
         }
       });
 
+      // At the foot of the page the last section wins (see onScroll). The
+      // observer reports after the scroll event, so without this check it
+      // would take the mark straight back.
+      if (atFoot()) {
+        setActive(targets[targets.length - 1].id);
+        return;
+      }
       // Pick the first intersecting target in DOM order
       const firstVisible = targets.find(t => intersecting.has(t));
       if (firstVisible) {
@@ -643,11 +659,7 @@ function setupScrollSpy(container) {
   // on pages that scroll a real distance: on one that barely scrolls, the
   // bottom is also the top, and the first section is the right answer.
   const onScroll = () => {
-    const doc = document.documentElement;
-    const scrollable = doc.scrollHeight - window.innerHeight;
-    const minimum = Math.max(120, window.innerHeight * 0.25);
-    const atBottom = scrollable >= minimum && window.scrollY >= scrollable - 2;
-    if (atBottom) setActive(targets[targets.length - 1].id);
+    if (atFoot()) setActive(targets[targets.length - 1].id);
   };
   window.addEventListener('scroll', onScroll, {
     passive: true,

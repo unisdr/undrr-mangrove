@@ -338,6 +338,22 @@ describe('OnThisPageNav', () => {
         );
       });
 
+      it('keeps the last section when the observer reports after the scroll', () => {
+        const nav = setupAutoDetect();
+        scrollTo(3000 - window.innerHeight, 3000);
+        const cb = observerCallbacks[observerCallbacks.length - 1];
+        cb([
+          {
+            target: document.getElementById('sec-2'),
+            isIntersecting: true,
+          },
+        ]);
+        expect(nav.querySelector('[aria-current="true"]')).toHaveAttribute(
+          'href',
+          '#sec-3'
+        );
+      });
+
       it('does not apply on a page that barely scrolls', () => {
         const nav = setupAutoDetect();
         scrollTo(50, window.innerHeight + 50);
