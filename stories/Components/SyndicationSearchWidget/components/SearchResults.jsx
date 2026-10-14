@@ -151,6 +151,12 @@ export function SearchResults({
     }
   }, [handingOff, ssrNode]);
 
+  // New result sets fade in, except the first one after server-rendered
+  // results: it replaces the same content, and a fade would flash it.
+  const enter = !(ssrNode !== null && resultsVersion <= 1)
+    ? ' mg-search__enter'
+    : '';
+
   if (handingOff) {
     return (
       <div
@@ -211,7 +217,7 @@ export function SearchResults({
 
   if (!searched) {
     return (
-      <div className="mg-search__results-empty">
+      <div className={`mg-search__results-empty${enter}`}>
         <p>{labels.enterSearchTerm}</p>
         {minSearchLength > 1 && (
           <p className="mg-search__results-hint">
@@ -227,7 +233,7 @@ export function SearchResults({
   // An empty query searches everything, so nothing found is just that.
   if (!query && results.length === 0) {
     return (
-      <div className="mg-search__results-empty" role="status">
+      <div className={`mg-search__results-empty${enter}`} role="status">
         <p>{labels.srNoResults}</p>
       </div>
     );
@@ -237,7 +243,7 @@ export function SearchResults({
   if (results.length === 0) {
     return (
       <div
-        className="mg-search__results-empty"
+        className={`mg-search__results-empty${enter}`}
         role="status"
         aria-live="polite"
       >
@@ -381,7 +387,7 @@ export function SearchResults({
       {isCardMode ? (
         <div
           key={resultsVersion}
-          className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}`.trim()}
+          className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}${enter}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
         >
@@ -399,7 +405,7 @@ export function SearchResults({
       ) : (
         <div
           key={resultsVersion}
-          className={`mg-search__results-list ${hiddenFieldClasses}`.trim()}
+          className={`mg-search__results-list ${hiddenFieldClasses}${enter}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
         >

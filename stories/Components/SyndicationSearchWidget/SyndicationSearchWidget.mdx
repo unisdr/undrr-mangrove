@@ -674,7 +674,43 @@ A page can render the first results on the server so they show before the widget
 </div>
 ```
 
-A wrapper that builds the config and calls `createRoot` itself passes the element as `ssrResults` (an `Element`, captured before mounting) or a selector that still matches on the widget's first render. Render as many server results as `resultsPerPage`, so the handoff doesn't change the page height.
+### Server results markup
+
+Render the server results with the same structure and classes as the widget's own results, so they get the same layout, spacing, borders, containment and block images, and the swap doesn't move anything. In list mode:
+
+```html
+<div data-mg-search-ssr>
+  <div class="mg-search__results">
+    <div class="mg-search__results-header">
+      <p class="mg-search__results-count">Showing 1–10 of 245 results</p>
+    </div>
+    <div
+      class="mg-search__results-list"
+      role="list"
+      aria-label="Search results"
+    >
+      <div role="listitem">
+        <article class="mg-search__result" data-result-type="news">
+          <!-- the item's teaser HTML -->
+        </article>
+      </div>
+      <!-- one listitem per result, resultsPerPage of them -->
+    </div>
+  </div>
+</div>
+```
+
+- Add the widget's hidden-field classes to the list when teaser fields are hidden (`mg-search--hide-image`, `mg-search--hide-date` and so on, from `buildHiddenFieldClasses(visibleTeaserFields)`).
+- In card modes, use `<div class="mg-search__results-grid mg-grid mg-grid__col-N" role="list">` with the card variant classes the widget applies (`mg-card__vc`, plus `mg-card__book` for book cards).
+- Render as many results as `resultsPerPage`. Leave out the results header only if `showResultsCount` is off.
+- Server results don't fade in, and neither does the first client result set that replaces them.
+- `[data-mg-search-ssr]` is itself positioned and isolated, so markup that doesn't use these classes still can't cover the page.
+
+### Custom wrappers
+
+A wrapper that builds the config and calls `createRoot` itself passes the element as `ssrResults`: an `Element` captured before mounting, or a selector that still matches, in the widget's own document, on the widget's first render. An element inside the mount target has to be passed as an `Element`, because React's first commit empties the target. Two widgets on a page must not share one `ssrResults` element or selector.
+
+If the widget won't search (a query shorter than `minSearchLength` with no filters, from the URL for instance), the server results are removed and the widget asks for input. If keyboard focus was inside the server results when they go, it moves to the results count, or to the results region.
 
 ## Accessibility
 

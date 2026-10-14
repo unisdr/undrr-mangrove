@@ -334,10 +334,9 @@ $search-input-padding-x: mg-rem(44);
 }
 
 // A new result set, or an empty state replacing results, fades and rises
-// in. The list is keyed per result set, so this runs once per set.
-.mg-search__results-list,
-.mg-search__results-grid,
-.mg-search__results-empty {
+// in. The list is keyed per result set, so this runs once per set. Not on
+// server-rendered markup, nor on the first client set that replaces it.
+.mg-search__enter {
   animation: mg-search-results-in 0.2s ease-out;
 }
 
@@ -354,11 +353,24 @@ $search-input-padding-x: mg-rem(44);
 
 @media (prefers-reduced-motion: reduce) {
   .mg-search__results,
-  .mg-search__results-list,
-  .mg-search__results-grid,
-  .mg-search__results-empty {
+  .mg-search__enter {
     animation: none;
     transition: none;
+  }
+}
+
+// Server-rendered results ([data-mg-search-ssr], moved into the results
+// region until the first client results). The recommended markup reuses the
+// client classes (.mg-search__results-list, .mg-search__result), which get
+// containment and block images from their own rules; these cover markup
+// that doesn't, so a malformed teaser can't cover the page here either.
+// undrr/web-backlog#3145.
+[data-mg-search-ssr] {
+  position: relative;
+  isolation: isolate;
+
+  :where(.mg-card__visual) img {
+    display: block;
   }
 }
 

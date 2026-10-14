@@ -64,6 +64,9 @@ it('keeps results visible and dimmed while the next search runs', async () => {
     />
   );
   await waitFor(() => expect(screen.getByText('first')).toBeInTheDocument());
+  expect(
+    document.querySelector('.mg-search__results-list.mg-search__enter')
+  ).not.toBeNull();
 
   fireEvent.change(screen.getByRole('searchbox'), {
     target: { value: 'flood' },

@@ -107,6 +107,10 @@ it('keeps the server results in the results region until client results arrive',
   );
   expect(container.querySelector('.ssr-hit')).toBeNull();
   expect(document.querySelector('[data-mg-search-ssr]')).toBeNull();
+  // The first client set replaces the same content: no fade.
+  expect(
+    container.querySelector('.mg-search__results-list.mg-search__enter')
+  ).toBeNull();
 });
 
 it('drops the server results when the first search fails', async () => {
