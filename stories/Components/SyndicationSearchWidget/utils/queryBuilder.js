@@ -38,7 +38,8 @@ const BOOLEAN_OPERATORS = ['AND', 'OR', 'NOT'];
  * @param {Object} params.facets - Active facet filters { [key]: [values] }
  * @param {Object} params.facetOperators - Operator per facet { [key]: 'OR' | 'AND' }
  * @param {Object} params.customFacets - Custom facet selections { [facetId]: [indices] }
- * @param {string} params.sortBy - Sort order: 'newest', 'oldest', 'relevance'
+ * @param {string} params.sortBy - Sort order: 'relevance', 'newest', 'oldest',
+ *   'eventDateAsc' or 'eventDateDesc'
  * @param {number} params.page - Current page number (1-based)
  * @param {Object} config - Widget configuration
  * @returns {Object} Elasticsearch query body
@@ -113,12 +114,26 @@ export function buildQuery(
  * @param {string} sortBy - Sort order
  * @returns {Array} Elasticsearch sort array
  */
-function buildSort(sortBy) {
+export function buildSort(sortBy) {
   switch (sortBy) {
     case 'newest':
       return [{ published_at: { order: 'desc' } }];
     case 'oldest':
       return [{ published_at: { order: 'asc' } }];
+    case 'eventDateAsc':
+    case 'eventDateDesc':
+      // Results without an event date (non-events in a mixed listing) sort
+      // last in both directions. unmapped_type keeps the sort valid on an
+      // index that doesn't have event_start yet, before a reindex.
+      return [
+        {
+          event_start: {
+            order: sortBy === 'eventDateAsc' ? 'asc' : 'desc',
+            missing: '_last',
+            unmapped_type: 'date',
+          },
+        },
+      ];
     case 'relevance':
     default:
       return [{ _score: { order: 'desc' } }];
@@ -186,6 +201,15 @@ function buildBaseFilters(config) {
     }
   }
 
+  // Hide expired events: drop documents whose event ended before today, and
+  // keep documents without event_end (non-events in a mixed listing). Plain
+  // range/exists clauses with `now/d` date math, so Elasticsearch resolves
+  // "today" and server-rendered results honour it without a baked timestamp;
+  // the SSR renderer rejects script filters.
+  if (config.hideExpiredEvents) {
+    filters.push(buildHideExpiredEventsFilter());
+  }
+
   // Require image: only return results that have an image (has_image indexed field)
   if (config.requireImage) {
     filters.push({ term: { has_image: 'true' } });
@@ -217,6 +241,24 @@ function buildBaseFilters(config) {
   }
 
   return filters;
+}
+
+/**
+ * Filter clause that excludes events whose `event_end` is before today while
+ * keeping every document that has no `event_end`.
+ *
+ * @returns {Object} Elasticsearch bool clause
+ */
+export function buildHideExpiredEventsFilter() {
+  return {
+    bool: {
+      should: [
+        { range: { event_end: { gte: 'now/d' } } },
+        { bool: { must_not: { exists: { field: 'event_end' } } } },
+      ],
+      minimum_should_match: 1,
+    },
+  };
 }
 
 /**

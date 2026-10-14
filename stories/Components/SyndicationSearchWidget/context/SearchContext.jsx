@@ -110,6 +110,8 @@ export const DEFAULT_LABELS = {
   sortRelevance: 'Relevance',
   sortNewest: 'Newest',
   sortOldest: 'Oldest',
+  sortEventDateAsc: 'Event date (earliest first)',
+  sortEventDateDesc: 'Event date (latest first)',
 
   // FacetsSidebar
   loadingFilters: 'Loading filters…',
@@ -185,7 +187,7 @@ const initialState = {
   // Custom facet selections: { [facetId]: [selectedOptionIndices] }
   customFacets: {},
 
-  // Sort order: 'relevance', 'newest', 'oldest'
+  // Sort order: one of SORT_VALUES in utils/constants.js
   sortBy: 'relevance',
 
   // Pagination (future use)

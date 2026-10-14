@@ -14,9 +14,11 @@ import React, { useCallback, useMemo } from 'react';
 import {
   useSearchState,
   useSearchDispatch,
+  useSearchConfig,
   useSearchLabels,
   actions,
 } from '../context/SearchContext';
+import { EVENT_SORT_VALUES } from '../utils/constants';
 import { SelectDropdown } from './SelectDropdown';
 
 /**
@@ -27,17 +29,39 @@ import { SelectDropdown } from './SelectDropdown';
  */
 export function SortOptions({ widgetId = 'search' }) {
   const { sortBy } = useSearchState();
+  const { defaultSort } = useSearchConfig();
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
 
-  const sortOptions = useMemo(
-    () => [
+  // Event date sorts put every result without an event date last, so they
+  // are offered only on listings set up for events: when the configured
+  // default sort, or the current one (e.g. from a shared link), is an event
+  // date sort.
+  const showEventSorts =
+    EVENT_SORT_VALUES.includes(defaultSort) ||
+    EVENT_SORT_VALUES.includes(sortBy);
+
+  const sortOptions = useMemo(() => {
+    const options = [
       { value: 'relevance', label: labels.sortRelevance },
       { value: 'newest', label: labels.sortNewest },
       { value: 'oldest', label: labels.sortOldest },
-    ],
-    [labels.sortRelevance, labels.sortNewest, labels.sortOldest]
-  );
+    ];
+    if (showEventSorts) {
+      options.push(
+        { value: 'eventDateAsc', label: labels.sortEventDateAsc },
+        { value: 'eventDateDesc', label: labels.sortEventDateDesc }
+      );
+    }
+    return options;
+  }, [
+    showEventSorts,
+    labels.sortRelevance,
+    labels.sortNewest,
+    labels.sortOldest,
+    labels.sortEventDateAsc,
+    labels.sortEventDateDesc,
+  ]);
 
   const handleChange = useCallback(
     value => {

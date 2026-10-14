@@ -64,7 +64,7 @@ export const REQUIRES_REACT = {
   'components-syndicated-search-display-modes':
     'SyndicationSearchWidget display-mode variants (list / card / card-book layouts and teaser-field visibility). Requires React 19. Same hydration pattern as the main widget.',
   'components-syndicated-search-filters':
-    'SyndicationSearchWidget filter and facet customisation variants (customFilters, customFacets, allowedTypes). Requires React 19. Same hydration pattern as the main widget.',
+    'SyndicationSearchWidget filter and facet customisation variants (customFilters, customFacets, allowedTypes) and an upcoming events listing (hideExpiredEvents, eventDateAsc sort). Requires React 19. Same hydration pattern as the main widget.',
   'components-syndicated-search-integrations':
     'SyndicationSearchWidget integration / syndication examples (taxonomy term results, custom endpoints, syndicated card layouts as content blocks). Requires React 19. Same hydration pattern as the main widget.',
   'components-syndicated-search-layouts':

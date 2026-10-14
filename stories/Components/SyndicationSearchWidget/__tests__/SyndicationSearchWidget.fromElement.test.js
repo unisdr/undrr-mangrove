@@ -69,6 +69,22 @@ describe('syndicationSearchWidgetFromElement', () => {
     expect(config.enableHashSync).toBe(false);
   });
 
+  it('reads hideExpiredEvents from data-hide-expired-events', () => {
+    expect(
+      syndicationSearchWidgetFromElement(
+        makeContainer({ 'hide-expired-events': 'true' })
+      ).config.hideExpiredEvents
+    ).toBe(true);
+    expect(
+      syndicationSearchWidgetFromElement(
+        makeContainer({ 'hide-expired-events': 'false' })
+      ).config.hideExpiredEvents
+    ).toBe(false);
+    expect(
+      syndicationSearchWidgetFromElement(makeContainer()).config
+    ).not.toHaveProperty('hideExpiredEvents');
+  });
+
   it('only includes boolean props when explicitly set', () => {
     const { config } = syndicationSearchWidgetFromElement(makeContainer());
     expect(config).not.toHaveProperty('showSearchBox');

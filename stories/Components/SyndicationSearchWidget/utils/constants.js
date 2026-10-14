@@ -548,7 +548,21 @@ export const HIGHLIGHT_CONFIG = {
  * Valid sort orders (the values offered by SortOptions).
  * @type {string[]}
  */
-export const SORT_VALUES = ['relevance', 'newest', 'oldest'];
+export const SORT_VALUES = [
+  'relevance',
+  'newest',
+  'oldest',
+  'eventDateAsc',
+  'eventDateDesc',
+];
+
+/**
+ * Event date sorts. SortOptions offers them only when `defaultSort` (or the
+ * current sort) is one of them, so ordinary listings don't show sorts that
+ * would put every non-event last.
+ * @type {string[]}
+ */
+export const EVENT_SORT_VALUES = ['eventDateAsc', 'eventDateDesc'];
 
 /**
  * Elasticsearch's default `index.max_result_window`: `from + size` cannot
@@ -611,6 +625,10 @@ export const DEFAULT_CONFIG = {
 
   // Require image: adds has_image:true filter to exclude results without images
   requireImage: false,
+
+  // Hide expired events: exclude events whose event_end is before today.
+  // Results without event_end (non-events) are unaffected.
+  hideExpiredEvents: false,
 
   // Tier filters: array of tier names to restrict results by editorial weight or freshness.
   // Tier boundaries are derived from SCORING_CONFIG so definitions aren't duplicated.

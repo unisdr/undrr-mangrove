@@ -18,6 +18,12 @@ import {
   TEASER_FIELDS,
 } from '../utils/constants';
 import { useSearchLabels, interpolateLabel } from '../context/SearchContext';
+import {
+  EVENT_TYPES,
+  formatEventDate,
+  toDate,
+  toDateTimeAttribute,
+} from '../utils/dateUtils';
 
 /**
  * Trust boundary: response HTML is rendered unescaped, on purpose.
@@ -225,6 +231,8 @@ export function ResultItem({
     vid,
     field_domain_access: domainArray,
     published_at: publishedAt,
+    event_start: eventStart,
+    event_end: eventEnd,
     teaser,
   } = source;
   const type = Array.isArray(rawType) ? rawType[0] : rawType;
@@ -370,20 +378,25 @@ export function ResultItem({
   const highlightedTitle = highlight.title?.[0] || title;
   const highlightedBody = highlight.body?.join(' ... ') || '';
 
-  // Format date
-  const formattedDate = useMemo(() => {
-    if (!publishedAt) return null;
-    try {
-      const date = new Date(publishedAt);
-      return date.toLocaleDateString('en-US', {
+  // Events show when they happen (start, or a start to end range); other
+  // results, and events not yet indexed with event_start, show the publish
+  // date. Index dates arrive as Unix seconds, often wrapped in an array.
+  const displayDate = useMemo(() => {
+    if (EVENT_TYPES.includes(type)) {
+      const eventDate = formatEventDate(eventStart, eventEnd);
+      if (eventDate) return eventDate;
+    }
+    const date = toDate(publishedAt);
+    if (!date) return null;
+    return {
+      text: date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
-      });
-    } catch {
-      return null;
-    }
-  }, [publishedAt]);
+      }),
+      dateTime: toDateTimeAttribute(date),
+    };
+  }, [type, eventStart, eventEnd, publishedAt]);
 
   // Get type label: vocabulary name for terms, content type for nodes
   const typeLabel = useMemo(() => {
@@ -438,9 +451,12 @@ export function ResultItem({
                 <span className="mg-search__result-domain">{domainLabel}</span>
               )}
               {/* Taxonomy terms don't have published_at, so skip date */}
-              {!hideDate && !isTerm && formattedDate && (
-                <time className="mg-search__result-date" dateTime={publishedAt}>
-                  {formattedDate}
+              {!hideDate && !isTerm && displayDate && (
+                <time
+                  className="mg-search__result-date"
+                  dateTime={displayDate.dateTime}
+                >
+                  {displayDate.text}
                 </time>
               )}
             </div>

@@ -101,8 +101,18 @@ SyndicationSearchWidget.propTypes = {
     ]),
     /** Initial search query string. */
     defaultQuery: PropTypes.string,
-    /** Default sort order. */
-    defaultSort: PropTypes.oneOf(['relevance', 'newest', 'oldest']),
+    /**
+     * Default sort order. `eventDateAsc` / `eventDateDesc` sort by
+     * `event_start`, results without one last, and add both event sorts to
+     * the sort dropdown.
+     */
+    defaultSort: PropTypes.oneOf([
+      'relevance',
+      'newest',
+      'oldest',
+      'eventDateAsc',
+      'eventDateDesc',
+    ]),
     /** Whether to display the search input box. */
     showSearchBox: PropTypes.bool,
     /** Whether to display the total results count. */
@@ -180,6 +190,12 @@ SyndicationSearchWidget.propTypes = {
     visibleTeaserFields: PropTypes.object,
     /** Whether to exclude results that have no image. */
     requireImage: PropTypes.bool,
+    /**
+     * Exclude events whose `event_end` is before today (Elasticsearch
+     * `now/d`). Results without `event_end`, such as news in a mixed
+     * listing, are unaffected.
+     */
+    hideExpiredEvents: PropTypes.bool,
     /**
      * Called after each completed search with `{ total, query, page }`. The
      * widget also dispatches an `mg-search-widget:results` event with the same
