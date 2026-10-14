@@ -21,7 +21,7 @@ An orienting header, a sticky On this page bar, then three sections, each a land
 
 1. **Orienting header.** A breadcrumb (PreventionWeb › Collections › the collection), then a [Hero](?path=/docs/components-hero-hero--docs) with `layout="split"` and `variant="neutral"`: the collection type as the eyebrow, the title (`h1`), the body summary as the standfirst, a facts line ("36 items · Latest item: 11 November 2025", the count linking to the list), the hazard, country and theme tags as a list named "Topics", and the image. On a phone the image is a short banner above the copy.
 2. **On this page.** A sticky [On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) with the full section headings as links. It keeps related collections one press away from anywhere on a long page, and its clicks show which section readers want. It is always shown.
-3. **About this collection.** The body, collapsed to about six lines with [Show more](?path=/docs/components-showmore--docs), and only when at least four more lines would be hidden.
+3. **About this collection.** The body, showing about eight lines with [Show more](?path=/docs/components-showmore--docs), and collapsed only when at least six more lines would be hidden, so only bodies over about fourteen lines collapse.
 4. **In this collection.** The [syndicated search widget](?path=/docs/components-syndicated-search--docs) scoped to the collection, newest first, with its count ("Showing 1–10 of 36 items") and hazard, theme, type and year filters.
 5. **Related collections.** Up to three collections, hazard matches first (see [Related collections](#related-collections)). The section and its link are left out when there are none.
 
@@ -191,7 +191,7 @@ Explicit mode, with the full section headings as links, because collection bodie
   <div
     id="collection-body"
     class="mg-content"
-    style="--mg-show-more-height: 6lh"
+    style="--mg-show-more-height: 8lh"
   >
     …body…
   </div>
@@ -201,7 +201,7 @@ Explicit mode, with the full section headings as links, because collection bodie
     class="mg-button mg-button-secondary mg-show-more--button"
     data-mg-show-more="true"
     data-mg-show-more-target="#collection-body"
-    data-mg-show-more-min-hidden-lines="4"
+    data-mg-show-more-min-hidden-lines="6"
     data-mg-show-more-label-collapsed="Show more"
     data-mg-show-more-label-open="Show less"
     data-mg-show-more-analytics-collapsed="Collection: show more"
@@ -213,7 +213,7 @@ Explicit mode, with the full section headings as links, because collection bodie
 </section>
 ```
 
-The toggle ships `hidden`: without JavaScript the body is simply open, and the script reveals the toggle only for a body that runs at least four lines past the six-line collapsed height. Browsers without the `lh` unit need a length instead (about `10rem`).
+The toggle ships `hidden`: without JavaScript the body is simply open, and the script reveals the toggle only for a body that runs at least six lines past the eight-line collapsed height. Browsers without the `lh` unit need a length instead (about `13.5rem`).
 
 ### In this collection
 
@@ -304,7 +304,7 @@ The same structure could serve hazard and theme pages: scope the list with `fiel
 
 ## Still to test
 
-- Is a six-line collapse, with at least four more lines hidden, right for PreventionWeb's descriptions?
+- Is an eight-line collapse, with at least six more lines hidden, right for PreventionWeb's descriptions?
 - Do readers use the On this page bar? The "On this page: …" click labels answer that.
 - Is leaving out only Preparedness and Climate change enough? It is easy to adjust as reports come in.
 

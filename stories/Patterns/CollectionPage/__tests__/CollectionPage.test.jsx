@@ -403,7 +403,7 @@ test('wraps the description in a show-more that only collapses long bodies', () 
   renderPage({ collection: 'japan' });
   const about = screen.getByRole('region', { name: 'About this collection' });
   const toggle = about.querySelector('[data-mg-show-more]');
-  expect(toggle).toHaveAttribute('data-mg-show-more-min-hidden-lines', '4');
+  expect(toggle).toHaveAttribute('data-mg-show-more-min-hidden-lines', '6');
   expect(toggle).toHaveAttribute('aria-controls', 'demo-body');
   expect(toggle).toHaveClass('mg-button-secondary');
   expect(toggle).toHaveTextContent('Show more about this collection');

@@ -54,21 +54,21 @@ Add `data-mg-show-more-min-hidden-lines` (React: `minHiddenLines`) to collapse c
 - The decision does not depend on whether the content is open, so it cannot flip back and forth. It is made again, in the next animation frame, when the content resizes, until the reader uses the toggle.
 - Ship the toggle with `hidden` in server markup. Without JavaScript the content is simply open and no dead button shows; the script reveals the toggle when it is needed.
 
-For "collapse to about 6 lines, but only when at least 4 more would be hidden" (so only bodies over about 10 lines collapse):
+For "show about 8 lines, but collapse only when at least 6 more would be hidden" (so only bodies over about 14 lines collapse), as the [Collection page](?path=/docs/patterns-collection-page--docs) does:
 
 <Canvas of={ShowMoreStories.OnlyWhenLong} />
 
 <Source
   language="html"
   code={`
-<div id="collection-body" style="--mg-show-more-height: 6lh">
+<div id="collection-body" style="--mg-show-more-height: 8lh">
   <p>Body text of any length…</p>
 </div>
 <button type="button" hidden
    class="mg-button mg-button-secondary mg-show-more--button"
    data-mg-show-more="true"
    data-mg-show-more-target="#collection-body"
-   data-mg-show-more-min-hidden-lines="4"
+   data-mg-show-more-min-hidden-lines="6"
    data-mg-show-more-label-collapsed="Show more"
    data-mg-show-more-label-open="Show less">
   <span data-mg-show-more-label>Show more</span><span class="mg-u-sr-only"> about this collection</span>

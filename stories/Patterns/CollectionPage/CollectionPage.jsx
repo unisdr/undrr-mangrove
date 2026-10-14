@@ -25,14 +25,14 @@ const PREVENTIONWEB_URL = 'https://www.preventionweb.net/';
 // A slow or blocked endpoint must not leave "Counting items…" on screen.
 const REQUEST_TIMEOUT = 8000;
 
-// Collapse the description to about six lines, and only when at least four
-// more would be hidden, so only bodies over about ten lines collapse.
-const MIN_HIDDEN_LINES = 4;
-// Six of the body's own lines; 10rem is about the same where lh is missing.
+// Show about eight lines of the description, and collapse only when at least
+// six more would be hidden, so only bodies over about fourteen lines collapse.
+const MIN_HIDDEN_LINES = 6;
+// Eight of the body's own lines; 13.5rem is about the same where lh is missing.
 const COLLAPSED_HEIGHT =
   typeof CSS !== 'undefined' && CSS.supports?.('height', '1lh')
-    ? '6lh'
-    : '10rem';
+    ? '8lh'
+    : '13.5rem';
 
 const text = {
   skip: 'Skip to page content',
