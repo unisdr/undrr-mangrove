@@ -201,9 +201,10 @@ export function mgShowMore(scope) {
       item.addEventListener('keydown', onKeydown);
     }
 
-    // The one place state changes. Programmatic changes go through here
-    // rather than through item.click(), so no synthetic click reaches
-    // listeners that report clicks to analytics.
+    // Initialisation and re-measures change state here rather than through
+    // item.click(), so they reach no click listener (analytics reporting, the
+    // Drupal wrapper). Focus entering, or a click on, collapsed content still
+    // clicks the toggle below: those stand for a reader's action.
     const setCollapsed = collapsed => {
       mgShowMoreTarget.classList.toggle(COLLAPSED, collapsed);
       labelNode.textContent = collapsed

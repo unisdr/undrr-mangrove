@@ -260,7 +260,7 @@ The collapsed height is controlled by the `--mg-show-more-height` CSS custom pro
 
 - **1.7**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): **Behaviour change for existing toggles:** the analytics label is now written to `data-vf-analytics-label`, the attribute the UNDRR click tracker reads, and names the action ("Show more" or "Show less"). The script used to write it to `data-data-vf-google-analytics-label`, which nothing read, so toggles reported their visible, translated text. Expect those clicks to appear under the new labels. Also new:
   - `data-mg-show-more-min-hidden-lines` (React: `minHiddenLines`) collapses content only when at least that many lines would be hidden. The collapsed height is read from CSS, so the decision cannot flip with the open state. Re-measures run in an animation frame and never click the toggle.
-  - State changes inside the script no longer dispatch synthetic clicks, including the one at initialisation.
+  - Initialisation and re-measures change state without clicking the toggle, so they no longer reach click listeners (such as one that reports clicks to analytics). Two paths still call `item.click()` on purpose, because they stand for a reader's action: keyboard focus moving into collapsed content, and a click on the collapsed content itself. The Drupal ShowMore wrapper relies on those clicks.
   - A toggle shipped `hidden` is revealed when it is needed.
   - A `[data-mg-show-more-label]` child keeps visually hidden context in the toggle's name.
   - Collapsing scrolls the content's heading back into view when the toggle has left the viewport.
