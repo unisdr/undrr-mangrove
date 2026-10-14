@@ -87,6 +87,8 @@ export const GLOBAL_PREFIXES = {
 // in the validate log, and in the count — rather than only shrinking a JSON
 // file nobody diffs.
 export const NOT_PUBLIC = {
+  '--mg-list-item-indent-rtl':
+    'Internal hook between the RTL list rules in _foundational.scss and the mg-list-unmarked mixin: a list with no bullets sets it to 0 so its items lose the RTL bullet indent. Use the mixin rather than setting it.',
   '--mg-gutenberg-spacer':
     'Declared on .mg-footer and read by nothing. A leftover of the Gutenberg spacing work that --mg-container-spacer replaced; see the note in stories/Atom/Layout/Container/container.scss.',
 };

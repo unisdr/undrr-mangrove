@@ -87,3 +87,37 @@ describe('on this page nav', () => {
     expect(ruleFor(selector)).toMatch(gradient);
   });
 });
+
+// In RTL the prose list indent used to outrank component list resets, so
+// unmarked component lists sat 9-22px inside their content edge.
+describe('RTL list indentation', () => {
+  test('carries the specificity of the LTR list rules it mirrors', () => {
+    expect(css).not.toMatch(/(^|[}\s])\[dir=rtl\] ul/);
+    expect(ruleFor(':where([dir=rtl]) ul, :where([dir=rtl]) ol')).toMatch(
+      /padding-right:/
+    );
+  });
+
+  test('indents items through a hook that unmarked lists set to 0', () => {
+    expect(ruleFor(':where([dir=rtl]) ul li, :where([dir=rtl]) ol li')).toMatch(
+      /padding-right:\s*var\(--mg-list-item-indent-rtl\)/
+    );
+    for (const list of [
+      '.mg-on-this-page-nav__list',
+      '.mg-hero__tags',
+      '.mg-pager__list',
+    ]) {
+      const declarations = [
+        ...css.matchAll(
+          new RegExp(
+            `(?:^|})\\s*${list.replace('.', '\\.')}\\s*\\{([^}]*)\\}`,
+            'g'
+          )
+        ),
+      ]
+        .map(match => match[1])
+        .join('');
+      expect(declarations).toMatch(/--mg-list-item-indent-rtl:\s*0/);
+    }
+  });
+});
