@@ -208,6 +208,11 @@ export function useSearch() {
 
         console.error('Search error:', error);
         dispatch(actions.setError(error.message || 'Search failed'));
+      } finally {
+        // Done: nothing of this search is in flight any more.
+        if (abortControllerRef.current === controller) {
+          abortControllerRef.current = null;
+        }
       }
     },
     [dispatch, startTransition]
@@ -246,11 +251,19 @@ export function useSearch() {
     return () => {
       clearTimeout(timeoutId);
       timerRef.current = null;
-      // The request this effect started is stale now; a newer one follows.
-      abortControllerRef.current?.abort();
+      // A request still in flight is stale now. Abort it and clear the
+      // loading state: while a typed query waits for the debounce nothing is
+      // loading, so the results on screen shouldn't look like they are being
+      // replaced. The next search sets it again when it is actually sent.
+      const inFlight = abortControllerRef.current;
+      if (inFlight) {
+        inFlight.abort();
+        abortControllerRef.current = null;
+        dispatch(actions.setLoading(false));
+      }
     };
     // request.key stands for everything the request depends on.
-  }, [request.key, isInitialized, debounceDelay]);
+  }, [request.key, isInitialized, debounceDelay, dispatch]);
 
   /**
    * Run a scheduled search now instead of after the typing debounce, e.g.

@@ -87,3 +87,44 @@ it('keeps results visible and dimmed while the next search runs', async () => {
   expect(document.querySelector('.mg-search__results--refreshing')).toBeNull();
   expect(document.querySelector('.mg-search__results-loader')).toBeNull();
 });
+
+it('does not dim the results while a typed query waits for the debounce', async () => {
+  let searches = 0;
+  global.fetch = jest.fn().mockImplementation(url => {
+    if (String(url).includes('preventionweb.net/api')) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ results: [] }),
+      });
+    }
+    searches += 1;
+    if (searches === 1) return Promise.resolve(hitsResponse('first'));
+    // Never answers: stays in flight until aborted.
+    return new Promise(() => {});
+  });
+
+  render(
+    <SyndicationSearchWidget
+      config={{ enableHashSync: false, debounceDelay: 50, defaultFilters: [] }}
+    />
+  );
+  await waitFor(() => expect(screen.getByText('first')).toBeInTheDocument());
+
+  const input = screen.getByRole('searchbox');
+  fireEvent.change(input, { target: { value: 'flood' } });
+  await waitFor(() =>
+    expect(
+      document.querySelector('.mg-search__results--refreshing')
+    ).not.toBeNull()
+  );
+
+  // Typing on aborts the request in flight; nothing is sent until the
+  // debounce ends, so the results are not dimmed meanwhile.
+  fireEvent.change(input, { target: { value: 'flood risk' } });
+  expect(document.querySelector('.mg-search__results--refreshing')).toBeNull();
+  await waitFor(() =>
+    expect(
+      document.querySelector('.mg-search__results--refreshing')
+    ).not.toBeNull()
+  );
+});
