@@ -2207,44 +2207,26 @@ npm run build</code></pre>
 
   'patterns-collection-page': {
     summary:
-      'A PreventionWeb collection page: orienting header with item count and tags, a description that collapses only when long, the collection as a scoped search index, and related collections.',
+      'A PreventionWeb collection page: neutral split Hero header with count, newest item and tags, a sticky On this page bar, a collapsible description, a scoped search index and ranked related collections.',
     description:
-      'A page for a curated collection of content on one topic. The header is a Hero with layout="split" and variant="neutral": a label with a Collection link and the collection type, the h1, the body summary as standfirst, a detail (facts) line whose item count links to the list, hazard, country and theme tags (Hero tags), and the image in the media column. The body sits in Show more with data-mg-show-more-threshold so short descriptions stay open. The list is SyndicationSearchWidget scoped with customFilters (field_collections:<nid>), never defaultFilters, which become removable chips; the header count uses the same filters. Related collections are a second widget with every control off, filtered by type:collections, shared hazard or theme, and NOT nid:<nid>. A sticky OnThisPageNav in explicit mode follows the header with links to About, In this collection and Related collections (drop the last when that section is not rendered). Each section is a section landmark named by its h2. Analytics: regions collection-header, on-this-page-nav, collection-about, collection-content and collection-related; each widget sets analyticsRegionPrefix to its section region; nav links carry fixed English data-vf-analytics-label values such as "On this page: Related collections".',
+      'A page for a curated collection of content on one topic. Header: a breadcrumb (PreventionWeb > Collections > title), then Hero layout="split" variant="neutral" with the collection type as label, the h1, the body summary as standfirst (omitted when empty; never fall back to the body), a detail line "N items · Latest item: <date>" (count and newest published_at computed on the server; "No items yet" at zero), tags as ul.mg-hero__tags aria-label="Topics", and a "Browse N items" secondary button (analyticsLabel "Collection: browse items") only when N > 0. A sticky OnThisPageNav (explicit mode, mg-on-this-page-nav--align-container, full section headings, always shown) follows; drop the Related link when that section is absent. About: body in ShowMore with --mg-show-more-height: 6lh, data-mg-show-more-min-hidden-lines="4", the toggle shipped hidden, mg-button-secondary, sr-only context. List: SyndicationSearchWidget scoped with customFilters ["field_collections:<nid>", "_language:<lang>"], never defaultFilters; labels say items; data-enable-hash-sync="true". Related: up to 3 collections ranked on the server, hazard matches first (country boost), then specific (non-broad) theme matches, excluding the current nid; rendered by a second widget with every control off and hash sync "false". Analytics: regions collection-header, on-this-page-nav, collection-about, collection-content, collection-related; widgets set analyticsRegionPrefix to their section; fixed English data-vf-analytics-label values; one section_view event per section on first view.',
     examples: [
       {
-        name: 'Header, On this page bar and description',
-        html: `<header data-vf-google-analytics-region="collection-header">
-  <section class="mg-hero mg-hero--split mg-hero--split-2-3 mg-hero--neutral" aria-labelledby="collection-title">
-    <div class="mg-hero__split-grid mg-container">
-      <article class="mg-hero__content">
-        <div class="mg-hero__meta"><span class="mg-hero__label"><a href="/collections" data-vf-analytics-label="Collection: all collections">Collection</a><span aria-hidden="true"> · </span>Topic guide</span></div>
-        <h1 class="mg-hero__title" id="collection-title">Wildfire risk assessment</h1>
-        <div class="mg-hero__summaryText"><span>Discover research, assessments and technical resources on future wildfire trends.</span></div>
-        <div class="mg-hero__meta meta-detail"><span class="mg-hero__label detail"><a href="#collection-items" data-vf-analytics-label="Collection: item count">36 items</a><span aria-hidden="true"> · </span>Last updated <time datetime="2026-07-10">10 July 2026</time></span></div>
-        <div class="mg-tag-container mg-hero__tags">
-          <a href="/taxonomy/term/357">Wildfire and Bushfire</a>
-          <a href="/taxonomy/term/311">Climate change</a>
-        </div>
-      </article>
-      <div class="mg-hero__media"><img class="mg-hero__media-img" src="/sites/default/files/wildfire.jpg" alt="Aerial view of smoke rising from a fire line in a pine forest" /></div>
-    </div>
-  </section>
-</header>
-<nav class="mg-on-this-page-nav" data-mg-on-this-page-nav aria-label="On this page" data-vf-google-analytics-region="on-this-page-nav">
+        name: 'On this page bar, description and list',
+        html: `<nav class="mg-on-this-page-nav mg-on-this-page-nav--align-container" data-mg-on-this-page-nav aria-label="On this page" data-vf-google-analytics-region="on-this-page-nav">
   <ul class="mg-on-this-page-nav__list">
-    <li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#collection-about" data-vf-analytics-label="On this page: About">About</a></li>
+    <li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#collection-about" data-vf-analytics-label="On this page: About this collection">About this collection</a></li>
     <li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#collection-items" data-vf-analytics-label="On this page: In this collection">In this collection</a></li>
-    <li class="mg-on-this-page-nav__item"><a class="mg-on-this-page-nav__link" href="#collection-related" data-vf-analytics-label="On this page: Related collections">Related collections</a></li>
   </ul>
 </nav>
 <section id="collection-about" aria-labelledby="collection-about-title" data-vf-google-analytics-region="collection-about">
   <h2 id="collection-about-title">About this collection</h2>
-  <div id="collection-body" class="mg-content"><p>Understanding wildfire risk begins with understanding how and why wildfire hazards are changing.</p></div>
-  <button type="button" class="mg-button mg-button-primary mg-show-more--button" data-mg-show-more data-mg-show-more-target="#collection-body" data-mg-show-more-threshold="320" data-vf-analytics-label="Collection: show more or less">Show more</button>
+  <div id="collection-body" class="mg-content" style="--mg-show-more-height: 6lh"><p>Understanding wildfire risk begins with understanding how and why wildfire hazards are changing.</p></div>
+  <button type="button" hidden class="mg-button mg-button-secondary mg-show-more--button" data-mg-show-more data-mg-show-more-target="#collection-body" data-mg-show-more-min-hidden-lines="4" data-mg-show-more-analytics-collapsed="Collection: show more" data-mg-show-more-analytics-open="Collection: show less"><span data-mg-show-more-label>Show more</span><span class="mg-u-sr-only"> about this collection</span></button>
 </section>
 <section id="collection-items" aria-labelledby="collection-items-title" data-vf-google-analytics-region="collection-content">
   <h2 id="collection-items-title">In this collection</h2>
-  <div data-mg-search-widget data-custom-filters='["field_collections:101264","_language:en"]' data-default-filters="[]" data-default-sort="newest" data-analytics-region-prefix="collection-content"></div>
+  <div data-undrr-search-widget data-custom-filters='["field_collections:101264","_language:en"]' data-default-filters="[]" data-default-sort="newest" data-enable-hash-sync="true" data-analytics-region-prefix="collection-content"></div>
 </section>`,
       },
     ],

@@ -15,33 +15,65 @@ import {
   collections,
   itemFilters,
   relatedFilters,
+  relatedRanking,
   tagsFor,
 } from './collections';
 
 const SEARCH_ENDPOINT = 'https://www.undrr.org/search-endpoint';
+const PREVENTIONWEB_URL = 'https://www.preventionweb.net/';
 
-// Bodies shorter than this stay open; longer ones collapse to
-// --mg-show-more-height. Most PreventionWeb collection descriptions (about
-// 150 words) fit.
-const ABOUT_THRESHOLD = 320;
+// A slow or blocked endpoint must not leave "Counting items…" on screen.
+const REQUEST_TIMEOUT = 8000;
+
+// Collapse the description to about six lines, and only when at least four
+// more would be hidden, so only bodies over about ten lines collapse.
+const MIN_HIDDEN_LINES = 4;
+// Six of the body's own lines; 10rem is about the same where lh is missing.
+const COLLAPSED_HEIGHT =
+  typeof CSS !== 'undefined' && CSS.supports?.('height', '1lh')
+    ? '6lh'
+    : '10rem';
 
 const text = {
   skip: 'Skip to page content',
-  collection: 'Collection',
-  lastUpdated: 'Last updated',
+  breadcrumbs: 'Breadcrumbs',
+  home: 'PreventionWeb',
+  collections: 'Collections',
   counting: 'Counting items…',
-  items: count => (count === 1 ? '1 item' : `${count.toLocaleString()} items`),
+  items: (count, locale) =>
+    count === 1
+      ? '1 item'
+      : `${new Intl.NumberFormat(locale).format(count)} items`,
+  browse: (count, locale) =>
+    count === 1
+      ? 'Browse 1 item'
+      : `Browse ${new Intl.NumberFormat(locale).format(count)} items`,
+  noItems: 'No items yet',
+  latest: 'Latest item:',
   about: 'About this collection',
   index: 'In this collection',
   related: 'Related collections',
   emptyTitle: 'Nothing has been added to this collection yet',
-  emptyText:
-    'Content tagged to this collection will be listed here. Until then, browse the other collections on PreventionWeb.',
+  emptyText: 'Items added to this collection will be listed here.',
   emptyAction: 'Browse all collections',
   showMore: 'Show more',
   showLess: 'Show less',
+  showContext: ' about this collection',
   onThisPage: 'On this page',
-  navAbout: 'About',
+  topics: 'Topics',
+};
+
+// The search widget says "results"; a collection holds items. One noun on
+// the page, in the header and in the list's own count.
+const ITEM_LABELS = {
+  showingResults: 'Showing {start}–{end} of {total} items',
+  showingResultsApprox: 'Showing {start}–{end} of more than {total} items',
+  srResultsFound: '{count} item found',
+  srResultsFoundPlural: '{count} items found',
+  srResultsFoundForQuery: '{count} item found for {query}',
+  srResultsFoundPluralForQuery: '{count} items found for {query}',
+  srResultsFoundApprox: 'More than {count} items found',
+  srResultsFoundApproxForQuery: 'More than {count} items found for {query}',
 };
 
 // Analytics regions and labels. The shared UNDRR analytics script reports a
@@ -56,21 +88,51 @@ const REGION = {
   related: 'collection-related',
 };
 
+// Dates follow the editorial manual ("10 July 2026"), which en-US does not.
+const dateLocale = lang => (lang === 'en' ? 'en-GB' : lang);
+
+/** POST a query to the search endpoint, giving up after REQUEST_TIMEOUT. */
+async function search(body, signal) {
+  const timeout = new AbortController();
+  const timer = setTimeout(() => timeout.abort(), REQUEST_TIMEOUT);
+  const abort = () => timeout.abort();
+  signal.addEventListener('abort', abort);
+  try {
+    const response = await fetch(SEARCH_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: timeout.signal,
+    });
+    if (!response.ok) throw new Error(String(response.status));
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+    signal.removeEventListener('abort', abort);
+  }
+}
+
+const totalOf = data => {
+  const total = data?.hits?.total;
+  return typeof total === 'number' ? total : (total?.value ?? 0);
+};
+
 /**
- * The number of results a widget scoped by `filters` would find. Runs the
- * widget's own query (status filter included) with no results, so the
- * header and the widget cannot disagree.
+ * The item count and the newest item's date, from one query: the content
+ * list's own query (status filter included) with the same filters, sorted
+ * newest first, one hit. The header and the list cannot disagree. A server
+ * should run the same query and cache the answer with the collection.
  */
-function useResultCount(filters, known) {
-  const [count, setCount] = useState(known ?? null);
-  const [failed, setFailed] = useState(false);
+function useItems(filters, known) {
+  const [state, setState] = useState(() =>
+    known === undefined
+      ? { status: 'loading', count: null, latest: null }
+      : { status: 'done', count: known, latest: null }
+  );
   const key = JSON.stringify(filters);
 
   useEffect(() => {
-    if (known !== undefined) {
-      setCount(known);
-      return undefined;
-    }
+    if (known !== undefined) return undefined;
     const controller = new AbortController();
     const body = buildQuery(
       {
@@ -78,32 +140,117 @@ function useResultCount(filters, known) {
         facets: {},
         facetOperators: {},
         customFacets: {},
-        sortBy: 'relevance',
+        sortBy: 'newest',
       },
-      { customFilters: JSON.parse(key), facets: false }
+      { customFilters: JSON.parse(key), facets: false, resultsPerPage: 1 }
     );
     delete body.highlight;
-    fetch(SEARCH_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...body, size: 0 }),
-      signal: controller.signal,
-    })
-      .then(response => {
-        if (!response.ok) throw new Error(String(response.status));
-        return response.json();
-      })
+    search(
+      { ...body, track_total_hits: true, _source: ['published_at'] },
+      controller.signal
+    )
       .then(data => {
-        const total = data?.hits?.total;
-        setCount(typeof total === 'number' ? total : (total?.value ?? 0));
+        const newest = data?.hits?.hits?.[0]?._source?.published_at;
+        setState({
+          status: 'done',
+          count: totalOf(data),
+          latest: [].concat(newest ?? [])[0] ?? null,
+        });
       })
-      .catch(error => {
-        if (error.name !== 'AbortError') setFailed(true);
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setState({ status: 'failed', count: null, latest: null });
+        }
       });
     return () => controller.abort();
   }, [key, known]);
 
-  return { count, failed };
+  return state;
+}
+
+/** The node ids of up to three related collections, best first. */
+function useRelated(collection) {
+  const ranking = relatedRanking(collection);
+  const key = JSON.stringify(ranking);
+  const [state, setState] = useState(() =>
+    ranking ? { status: 'loading', nids: [] } : { status: 'done', nids: [] }
+  );
+
+  useEffect(() => {
+    if (!key || key === 'null') return undefined;
+    const controller = new AbortController();
+    search(JSON.parse(key), controller.signal)
+      .then(data =>
+        setState({
+          status: 'done',
+          nids: (data?.hits?.hits || [])
+            .map(hit => [].concat(hit._source?.nid)[0])
+            .filter(Boolean),
+        })
+      )
+      .catch(() => {
+        if (!controller.signal.aborted) setState({ status: 'done', nids: [] });
+      });
+    return () => controller.abort();
+  }, [key]);
+
+  return state;
+}
+
+/**
+ * One `section_view` per section region, the first time it scrolls into view,
+ * so reports show how far down the page readers get. Sent with gtag, as the
+ * shared tracker sends its events, and as an `mg-section-view` event for any
+ * other listener.
+ */
+function useSectionViews(root) {
+  useEffect(() => {
+    if (typeof IntersectionObserver !== 'function' || !root.current) {
+      return undefined;
+    }
+    const seen = new Set();
+    const observer = new IntersectionObserver(
+      entries =>
+        entries.forEach(entry => {
+          const region = entry.target.dataset.vfGoogleAnalyticsRegion;
+          if (!entry.isIntersecting || seen.has(region)) return;
+          seen.add(region);
+          observer.unobserve(entry.target);
+          window.gtag?.('event', 'section_view', {
+            vf_analytics: 'true',
+            event_category: 'UI',
+            page_container: region,
+            event_label: region,
+          });
+          entry.target.dispatchEvent(
+            new CustomEvent('mg-section-view', {
+              bubbles: true,
+              detail: { region },
+            })
+          );
+        }),
+      { rootMargin: '0px 0px -20% 0px' }
+    );
+    const watch = () =>
+      root.current
+        ?.querySelectorAll('[data-mg-section-view]')
+        .forEach(section => {
+          if (!seen.has(section.dataset.vfGoogleAnalyticsRegion)) {
+            observer.observe(section);
+          }
+        });
+    watch();
+    // Sections that mount later (related collections) are picked up too.
+    const mutations =
+      typeof MutationObserver === 'function'
+        ? new MutationObserver(watch)
+        : null;
+    mutations?.observe(root.current, { childList: true, subtree: true });
+    return () => {
+      observer.disconnect();
+      mutations?.disconnect();
+    };
+  }, [root]);
 }
 
 function Paragraph({ part }) {
@@ -127,25 +274,33 @@ function About({ id, paragraphs }) {
   useEffect(() => mgShowMore(button.current), []);
   return (
     <>
-      <div id={`${id}-body`} className="mg-reading__article mg-content">
+      <div
+        id={`${id}-body`}
+        className="mg-reading__article mg-content"
+        style={{ '--mg-show-more-height': COLLAPSED_HEIGHT }}
+      >
         {paragraphs.map((part, index) => (
           // Index key: fixed sample copy that never reorders.
           <Paragraph key={index} part={part} />
         ))}
       </div>
+      {/* Shipped hidden: without JavaScript the body is simply open. */}
       <button
         ref={button}
         type="button"
-        className="mg-button mg-button-primary mg-show-more--button"
+        hidden
+        className="mg-button mg-button-secondary mg-show-more--button"
         data-mg-show-more="true"
         data-mg-show-more-skip-auto-init="true"
         data-mg-show-more-target={`#${id}-body`}
-        data-mg-show-more-threshold={ABOUT_THRESHOLD}
+        data-mg-show-more-min-hidden-lines={MIN_HIDDEN_LINES}
         data-mg-show-more-label-collapsed={text.showMore}
         data-mg-show-more-label-open={text.showLess}
-        data-vf-analytics-label="Collection: show more or less"
+        data-mg-show-more-analytics-collapsed="Collection: show more"
+        data-mg-show-more-analytics-open="Collection: show less"
       >
-        {text.showMore}
+        <span data-mg-show-more-label>{text.showMore}</span>
+        <span className="mg-u-sr-only">{text.showContext}</span>
       </button>
     </>
   );
@@ -156,52 +311,53 @@ About.propTypes = {
   paragraphs: PropTypes.array.isRequired,
 };
 
-/** The facts line: the item count, linked to the list, and the last update. */
-function Facts({ count, failed, itemsId, updated }) {
+/** The facts line: the item count and the date of the newest item. */
+function Facts({ items, locale }) {
+  if (items.status === 'loading') return text.counting;
+  if (items.count === 0) return text.noItems;
   return (
     <>
-      {!failed && (
+      {text.items(items.count, locale)}
+      {items.latest && (
         <>
-          {count === null ? (
-            text.counting
-          ) : (
-            <a
-              href={`#${itemsId}`}
-              data-vf-analytics-label="Collection: item count"
-            >
-              {text.items(count)}
-            </a>
-          )}
           <span aria-hidden="true"> · </span>
+          {text.latest}{' '}
+          <time dateTime={items.latest.slice(0, 10)}>
+            {new Intl.DateTimeFormat(dateLocale(locale), {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            }).format(new Date(items.latest))}
+          </time>
         </>
       )}
-      {text.lastUpdated} <time dateTime={updated.iso}>{updated.label}</time>
     </>
   );
 }
 
 Facts.propTypes = {
-  count: PropTypes.number,
-  failed: PropTypes.bool,
-  itemsId: PropTypes.string.isRequired,
-  updated: PropTypes.object.isRequired,
+  items: PropTypes.object.isRequired,
+  locale: PropTypes.string.isRequired,
 };
 
 /**
  * The sticky On this page bar in explicit mode: vanilla OnThisPageNav markup
- * with one link per section, as a Drupal template would emit it.
+ * with one link per section, as a Drupal template would emit it. When the
+ * links change (related collections arrive) the script is re-run on the same
+ * element, so scroll-spy watches exactly the sections on the page.
  */
 function SectionNav({ items }) {
   const nav = useRef(null);
+  const key = items.map(item => item.href).join(' ');
   useEffect(() => {
     const element = nav.current;
     mgOnThisPageNav([element]);
     return () => mgOnThisPageNavDestroy(element);
-  }, []);
+  }, [key]);
   return (
     <nav
       ref={nav}
-      className="mg-on-this-page-nav"
+      className="mg-on-this-page-nav mg-on-this-page-nav--align-container"
       data-mg-on-this-page-nav
       data-mg-on-this-page-nav-skip-auto-init
       data-mg-on-this-page-nav-label={text.onThisPage}
@@ -240,20 +396,31 @@ export function CollectionPage({
   collection: collectionKey = 'wildfire',
   itemCount,
   syncUrl = true,
+  dir,
   id,
 }) {
   const collection = collections[collectionKey] || collections.wildfire;
+  const locale = 'en';
   const instanceId = useId().replace(/:/g, '');
   const prefix = id || `collection-${instanceId}`;
-  const itemsId = `${prefix}-items`;
-  const items = useResultCount(itemFilters(collection), itemCount);
-  const related = useResultCount(relatedFilters(collection));
   const aboutId = `${prefix}-about`;
+  const itemsId = `${prefix}-items`;
   const relatedId = `${prefix}-related`;
-  const showRelated = related.count > 0;
-  // English analytics labels are fixed; the visible text may be translated.
+  const page = useRef(null);
+  const items = useItems(itemFilters(collection), itemCount);
+  const related = useRelated(collection);
+  const [relatedEmpty, setRelatedEmpty] = useState(false);
+  const showRelated = related.nids.length > 0 && !relatedEmpty;
+  useSectionViews(page);
+
+  const hasItems = items.status === 'done' && items.count > 0;
+  // Wait for the count before mounting the list, so an empty collection
+  // never flashes an empty search; if counting fails, show the list anyway.
+  const showList = hasItems || items.status === 'failed';
+
+  // Full headings as link text; English analytics labels are fixed.
   const navItems = [
-    { href: `#${aboutId}`, text: text.navAbout, label: 'About' },
+    { href: `#${aboutId}`, text: text.about, label: 'About this collection' },
     { href: `#${itemsId}`, text: text.index, label: 'In this collection' },
     ...(showRelated
       ? [
@@ -267,16 +434,34 @@ export function CollectionPage({
   ];
 
   return (
-    <div lang="en">
+    <div lang={locale} dir={dir}>
       <SkipLink targetId={`${prefix}-content`} label={text.skip} />
       <UndrrChrome locale="english" id={prefix} />
       <div className="mg-demo-shell | mg-container">
         <main
+          ref={page}
           id={`${prefix}-content`}
           className="mg-page-main | mg-container--spacer"
           tabIndex={-1}
         >
-          <header data-vf-google-analytics-region={REGION.header}>
+          <header
+            data-vf-google-analytics-region={REGION.header}
+            data-mg-section-view
+          >
+            <nav
+              className="mg-breadcrumb | mg-u-font-size-250"
+              aria-label={text.breadcrumbs}
+            >
+              <ul>
+                <li>
+                  <a href={PREVENTIONWEB_URL}>{text.home}</a>
+                </li>
+                <li>
+                  <a href={COLLECTIONS_URL}>{text.collections}</a>
+                </li>
+                <li aria-current="page">{collection.title}</li>
+              </ul>
+            </nav>
             <Hero
               layout="split"
               split="2/3"
@@ -284,42 +469,37 @@ export function CollectionPage({
               headingLevel="h1"
               data={[
                 {
-                  label: (
-                    <>
-                      <a
-                        href={COLLECTIONS_URL}
-                        data-vf-analytics-label="Collection: all collections"
-                      >
-                        {text.collection}
-                      </a>
-                      <span aria-hidden="true"> · </span>
-                      {collection.type}
-                    </>
-                  ),
+                  label: collection.type,
                   title: collection.title,
-                  summaryText: collection.summary,
-                  detail: (
-                    <Facts
-                      count={items.count}
-                      failed={items.failed}
-                      itemsId={itemsId}
-                      updated={collection.updated}
-                    />
-                  ),
+                  summaryText: collection.summary || undefined,
+                  detail:
+                    items.status === 'failed' ? undefined : (
+                      <Facts items={items} locale={locale} />
+                    ),
                   tags: tagsFor(collection),
+                  tagsLabel: text.topics,
+                  buttons: hasItems
+                    ? [
+                        {
+                          label: text.browse(items.count, locale),
+                          url: `#${itemsId}`,
+                          type: 'Secondary',
+                          analyticsLabel: 'Collection: browse items',
+                        },
+                      ]
+                    : [],
                   media: { type: 'image', ...collection.image },
                 },
               ]}
             />
           </header>
-          {/* Remounted when the related link comes or goes, so scroll-spy
-              observes exactly the sections that are on the page. */}
-          <SectionNav key={navItems.length} items={navItems} />
+          <SectionNav items={navItems} />
           <section
             id={aboutId}
             className="mg-demo-collection-section"
             aria-labelledby={`${aboutId}-title`}
             data-vf-google-analytics-region={REGION.about}
+            data-mg-section-view
           >
             <h2 id={`${aboutId}-title`}>{text.about}</h2>
             <About id={prefix} paragraphs={collection.body} />
@@ -329,24 +509,31 @@ export function CollectionPage({
             className="mg-demo-collection-section"
             aria-labelledby={`${itemsId}-title`}
             data-vf-google-analytics-region={REGION.content}
+            data-mg-section-view
           >
             <h2 id={`${itemsId}-title`}>{text.index}</h2>
-            {items.count === 0 ? (
+            {items.status === 'done' && items.count === 0 && (
               <div className="mg-empty-state">
                 <h3 className="mg-empty-state__title">{text.emptyTitle}</h3>
                 <p className="mg-empty-state__description">{text.emptyText}</p>
-                <div className="mg-empty-state__actions">
-                  <a
-                    href={COLLECTIONS_URL}
-                    className="mg-button mg-button-primary"
-                    data-vf-analytics-label="Collection: browse all collections"
-                  >
-                    {text.emptyAction}
-                  </a>
-                </div>
+                {/* Related collections are the better next step; offer the
+                    full listing only when there are none. */}
+                {related.status === 'done' && !showRelated && (
+                  <div className="mg-empty-state__actions">
+                    <a
+                      href={COLLECTIONS_URL}
+                      className="mg-button mg-button-secondary"
+                      data-vf-analytics-label="Collection: browse all collections"
+                    >
+                      {text.emptyAction}
+                    </a>
+                  </div>
+                )}
               </div>
-            ) : (
+            )}
+            {showList && (
               <SyndicationSearchWidget
+                labels={ITEM_LABELS}
                 config={{
                   searchEndpoint: SEARCH_ENDPOINT,
                   customFilters: itemFilters(collection),
@@ -373,12 +560,13 @@ export function CollectionPage({
               className="mg-demo-collection-section"
               aria-labelledby={`${relatedId}-title`}
               data-vf-google-analytics-region={REGION.related}
+              data-mg-section-view
             >
               <h2 id={`${relatedId}-title`}>{text.related}</h2>
               <SyndicationSearchWidget
                 config={{
                   searchEndpoint: SEARCH_ENDPOINT,
-                  customFilters: relatedFilters(collection),
+                  customFilters: relatedFilters(related.nids),
                   defaultFilters: [],
                   resultsPerPage: 3,
                   displayMode: 'card',
@@ -391,6 +579,9 @@ export function CollectionPage({
                   showPager: false,
                   enableHashSync: false,
                   analyticsRegionPrefix: REGION.related,
+                  // The ranking found them; if the list itself comes back
+                  // empty (unpublished since), drop the section and its link.
+                  onResults: ({ total }) => setRelatedEmpty(total === 0),
                   visibleTeaserFields: {
                     contentType: false,
                     date: false,
@@ -407,8 +598,17 @@ export function CollectionPage({
 }
 
 CollectionPage.propTypes = {
-  /** Sample collection: typical, short, long, or one with no items yet. */
-  collection: PropTypes.oneOf(['wildfire', 'jasper', 'japan', 'empty']),
+  /**
+   * Sample collection: typical, short, long, without a summary, or one with
+   * no items yet.
+   */
+  collection: PropTypes.oneOf([
+    'wildfire',
+    'jasper',
+    'japan',
+    'planned',
+    'empty',
+  ]),
   /**
    * A known item count. Leave unset to count with the content list's own
    * query, as a server would.
@@ -416,6 +616,8 @@ CollectionPage.propTypes = {
   itemCount: PropTypes.number,
   /** Write the content list's filters to the URL hash. One widget per page. */
   syncUrl: PropTypes.bool,
+  /** Text direction, from the Storybook locale toolbar. */
+  dir: PropTypes.oneOf(['ltr', 'rtl']),
   /** Prefix for in-page ids, so several examples can share a page. */
   id: PropTypes.string,
 };

@@ -10,6 +10,7 @@ export default {
     collection: { control: false },
     itemCount: { control: false },
     syncUrl: { table: { disable: true } },
+    dir: { table: { disable: true } },
     id: { table: { disable: true } },
   },
   // Only the canvas of a single story writes to the URL hash: a docs page
@@ -19,6 +20,7 @@ export default {
       key={args.collection}
       {...args}
       syncUrl={context.viewMode === 'story'}
+      dir={context.globals.locale === 'arabic' ? 'rtl' : undefined}
       id={context.id}
     />
   ),
@@ -37,6 +39,11 @@ export const ShortDescription = {
 export const LongDescription = {
   name: 'Long description',
   args: { collection: 'japan' },
+};
+
+export const NoSummary = {
+  name: 'No summary',
+  args: { collection: 'planned' },
 };
 
 export const NoItemsYet = {

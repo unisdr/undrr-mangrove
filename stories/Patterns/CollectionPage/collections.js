@@ -15,7 +15,6 @@ export const collections = {
     title: 'Wildfire risk assessment',
     summary:
       'Discover research, assessments and technical resources on future wildfire trends, the science behind wildfire-related compound events, and attribution studies examining the influence of climate change on wildfire occurrence and severity.',
-    updated: { iso: '2026-07-10', label: '10 July 2026' },
     image: {
       src: `${PW}/sites/default/files/2026-03/Shutterstock_1974441557.jpg`,
       alt: 'Aerial view of smoke rising from a fire line in a pine forest',
@@ -29,7 +28,7 @@ export const collections = {
     countries: [],
     body: [
       'Understanding wildfire risk begins with understanding how and why wildfire hazards are changing.',
-      'This collection brings together research, assessments and technical resources on future wildfire trends, the science behind wildfire-related compound events, and attribution studies examining the influence of climate change on wildfire occurrence and severity. Whether you are a policymaker, researcher or practitioner, these resources offer the latest insights to help anticipate emerging risks and strengthen resilience to a changing wildfire landscape.',
+      'Whether you are a policymaker, researcher or practitioner, these resources offer the latest insights to help anticipate emerging risks and strengthen resilience to a changing wildfire landscape.',
       'Wildfire risk can have several cascading impacts, from smoke that harms health far from the fire front to damage to power, water and transport systems.',
       {
         before: 'Read more about the ',
@@ -49,7 +48,6 @@ export const collections = {
     title: 'Canada: Jasper fires 2024',
     summary:
       'This collection brings together key articles examining the 2024 wildfire season in Canada, a year marked by widespread fires, significant environmental impacts and growing concern over the country’s evolving fire regime.',
-    updated: { iso: '2026-04-24', label: '24 April 2026' },
     image: {
       src: `${PW}/sites/default/files/2025-11/Wild-fire-compund-event-with-heatwaves.jpg`,
       alt: 'A helicopter carries a water bucket over a forest under an orange, smoke-filled sky',
@@ -72,7 +70,6 @@ export const collections = {
     title: 'Recovery collection: Great East Japan Earthquake and Tsunami 2011',
     summary:
       'The Great East Japan Earthquake and Tsunami caused extensive damage, including the nuclear meltdown at the Fukushima Daiichi Nuclear Power Plant.',
-    updated: { iso: '2025-02-12', label: '12 February 2025' },
     image: {
       src: `${PW}/sites/default/files/Japan-earthquake-2011-min.jpg`,
       alt: 'A fishing boat stranded on a street among debris after the 2011 tsunami',
@@ -98,14 +95,33 @@ export const collections = {
     ],
   },
 
-  // A collection with nothing tagged to it yet.
+  // No summary: 29 of 226 published collections have none, mostly older
+  // topic guides. The header shows no standfirst rather than repeating the
+  // body, and with no hazard or theme there are no related collections.
+  planned: {
+    nid: 65586,
+    type: 'Topic guide',
+    title: 'Planned relocation',
+    summary: '',
+    image: {
+      src: `${PW}/sites/default/files/Planned-relocation-min.jpg`,
+      alt: 'Houses collapsing into a river after the bank beneath them eroded',
+    },
+    hazards: [],
+    themes: [],
+    countries: [],
+    body: [
+      'These resources analyse how well-planned relocations can help to increase resilience and reduce disaster risk.',
+    ],
+  },
+
+  // A collection with nothing added to it yet.
   empty: {
     nid: 0,
     type: 'Community collection',
     title: 'Anticipatory action for heatwaves',
     summary:
       'Resources on acting ahead of forecast heatwaves, from early warning triggers to pre-arranged financing and cooling centres.',
-    updated: { iso: '2026-10-08', label: '8 October 2026' },
     image: {
       src: `${PW}/sites/default/files/2025-11/Wild-fire-compund-event-with-heatwaves.jpg`,
       alt: 'A helicopter carries a water bucket over a forest under an orange, smoke-filled sky',
@@ -134,16 +150,87 @@ export const itemFilters = (collection, langcode = 'en') => [
   `_language:${langcode}`,
 ];
 
-export const relatedFilters = (collection, langcode = 'en') => {
-  const ids = list => list.map(t => t.tid).join(' OR ');
+// Themes applied to so much DRR content that sharing one says little about
+// whether two collections are related: the "Core disaster risk reduction"
+// group in the PreventionWeb metadata guidance
+// (https://assets.undrr.org/docs/editorial-guides/metadata.md#theme-list),
+// plus Climate change, which the guide pairs with most sector themes.
+// Preparedness and Climate change are also the two themes most used on
+// collections (24 and 21 of 225 in September 2026).
+export const BROAD_THEMES = [
+  { tid: 315, name: 'Preparedness' },
+  { tid: 333, name: 'Risk identification and assessment' },
+  { tid: 324, name: 'Governance' },
+  { tid: 316, name: 'Early warning' },
+  { tid: 307, name: 'Disaster risk communication' },
+  { tid: 311, name: 'Climate change' },
+];
+const broad = new Set(BROAD_THEMES.map(theme => theme.tid));
+
+const ids = list => list.map(t => t.tid).join(' OR ');
+
+/**
+ * The related-collections ranking, as an Elasticsearch query: collections
+ * that share a hazard come first, those that also share a country first among
+ * them, and collections that share a specific (not broad) theme fill the rest.
+ * Returns null when the collection has nothing to relate on.
+ */
+export const relatedRanking = (collection, langcode = 'en', size = 3) => {
+  const themes = collection.themes.filter(theme => !broad.has(theme.tid));
   const shared = [
     collection.hazards.length && `field_hazard:(${ids(collection.hazards)})`,
-    collection.themes.length && `field_theme:(${ids(collection.themes)})`,
+    themes.length && `field_theme:(${ids(themes)})`,
   ].filter(Boolean);
-  return [
-    'type:collections',
-    shared.join(' OR '),
-    `NOT nid:${collection.nid}`,
-    `_language:${langcode}`,
-  ].filter(Boolean);
+  if (!shared.length) return null;
+  const clause = query => ({ query_string: { query } });
+  return {
+    size,
+    track_total_hits: true,
+    _source: ['nid'],
+    sort: [{ _score: { order: 'desc' } }, { published_at: { order: 'desc' } }],
+    query: {
+      bool: {
+        filter: [
+          {
+            bool: {
+              should: [
+                { term: { status: 'true' } },
+                { bool: { must_not: { exists: { field: 'status' } } } },
+              ],
+              minimum_should_match: 1,
+            },
+          },
+          clause('type:collections'),
+          clause(`NOT nid:${collection.nid}`),
+          clause(`_language:${langcode}`),
+          clause(shared.join(' OR ')),
+        ],
+        // Filters do not score; these clauses alone set the order.
+        should: [
+          collection.hazards.length && {
+            constant_score: {
+              filter: clause(`field_hazard:(${ids(collection.hazards)})`),
+              boost: 100,
+            },
+          },
+          collection.hazards.length &&
+            collection.countries.length && {
+              constant_score: {
+                filter: clause(
+                  `field_country_region:(${ids(collection.countries)})`
+                ),
+                boost: 10,
+              },
+            },
+        ].filter(Boolean),
+      },
+    },
+  };
 };
+
+/** Filters for the related widget once the ranking has chosen the nodes. */
+export const relatedFilters = (nids, langcode = 'en') => [
+  'type:collections',
+  `nid:(${nids.join(' OR ')})`,
+  `_language:${langcode}`,
+];

@@ -9,7 +9,7 @@ import * as Stories from './CollectionPage.stories';
 
 A collection is a curated set of news, publications, blogs and other resources on one topic, such as [wildfire risk assessment](https://www.preventionweb.net/collections/wildfire-risk-assessment). The page's job is to orient the reader: what the collection is, what is in it, and where to go next. It follows the shape of a PreventionWeb hazard page: a defining header with the image beside it, on the page's own white surface, the detail behind a show-more, then an index of the content.
 
-The examples use real PreventionWeb collections and query the live search index, so the item counts and lists are real.
+The examples use real PreventionWeb collections and query the live search index, so the counts and lists are real. The copy is English only; the locale toolbar's Arabic option sets right-to-left direction to check the layout.
 
 ## Collection page
 
@@ -17,75 +17,96 @@ The examples use real PreventionWeb collections and query the live search index,
 
 <Controls of={Stories.Typical} />
 
-An orienting header, a sticky "On this page" bar, then three sections, each a landmark named by its heading:
+An orienting header, a sticky On this page bar, then three sections, each a landmark named by its heading:
 
-1. **Orienting header.** A [Hero](?path=/docs/components-hero-hero--docs) with `layout="split"` and `variant="neutral"`: "Collection" and the collection type, the title (`h1`), the body summary as the standfirst, the image, a facts row with the item count and the last updated date, and the hazard, country and theme tags. The count links to the content list.
-   - **On this page.** A sticky [On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) under the header, with one link per section: About, In this collection and Related collections. It keeps the related collections one press away from anywhere on a long page, and its clicks show which section readers want.
-2. **About this collection.** The body, collapsed with [Show more](?path=/docs/components-showmore--docs) only when it is taller than 320px.
-3. **In this collection.** The [syndicated search widget](?path=/docs/components-syndicated-search--docs) scoped to the collection, newest first, with its results count and hazard, theme, type and year filters. Its total is the item count.
-4. **Related collections.** A second widget with every control turned off, showing three other collections that share a hazard or theme. The section, and its link in the On this page bar, are left out when there are none.
+1. **Orienting header.** A breadcrumb (PreventionWeb › Collections › the collection), then a [Hero](?path=/docs/components-hero-hero--docs) with `layout="split"` and `variant="neutral"`: the collection type as the eyebrow, the title (`h1`), the body summary as the standfirst, a facts line ("36 items · Latest item: 11 November 2025"), the hazard, country and theme tags as a list named "Topics", a "Browse 36 items" button to the list, and the image. On a phone the image is a short banner above the copy.
+2. **On this page.** A sticky [On this page nav](?path=/docs/components-navigation-on-this-page-nav--docs) with the full section headings as links. It keeps related collections one press away from anywhere on a long page, and its clicks show which section readers want. It is always shown.
+3. **About this collection.** The body, collapsed to about six lines with [Show more](?path=/docs/components-showmore--docs), and only when at least four more lines would be hidden.
+4. **In this collection.** The [syndicated search widget](?path=/docs/components-syndicated-search--docs) scoped to the collection, newest first, with its count ("Showing 1–10 of 36 items") and hazard, theme, type and year filters.
+5. **Related collections.** Up to three collections, hazard matches first (see [Related collections](#related-collections)). The section and its link are left out when there are none.
 
 ## Short description
 
 <Canvas of={Stories.ShortDescription} />
 
-Most descriptions are about 150 words and fit under the threshold, so they show in full with no toggle. Readers should not have to press a button to reveal one more sentence.
+Most descriptions are about 150 words and show in full, with no toggle. Readers should not have to press a button to reveal one more sentence.
 
 ## Long description
 
 <Canvas of={Stories.LongDescription} />
 
-A few descriptions run to several thousand characters. Collapsed, the content list stays close to the top of the page; the full text is one press away, and it opens on its own when keyboard focus enters it.
+A few descriptions run to several thousand characters. Collapsed, the list stays close to the top of the page; the full text is one press away, it opens on its own when keyboard focus enters it, and "Show less" brings the reader back to the heading.
+
+## No summary
+
+<Canvas of={Stories.NoSummary} />
+
+The body summary is required on new collections, but 29 of 226 published collections have none, mostly older topic guides. The header then has no standfirst; it does not fall back to the opening of the body, which would print the same sentence twice. This one has no hazard or theme either, so there are no tags and no related collections.
+
+> **Editorial note:** Write the summary as its own one- or two-sentence pitch, not as a copy of the body's first sentence. The header shows the summary, and the body sits directly below it, so a repeated opening reads twice.
 
 ## No items yet
 
 <Canvas of={Stories.NoItemsYet} />
 
-When the count is zero the list is replaced with an [empty state](?path=/docs/components-empty-state--docs) that says what is missing and offers a way on. Related collections still show, because they are the most useful next step from an empty page.
+When the count is zero the facts line says "No items yet", there is no browse button, and the list is replaced with an [empty state](?path=/docs/components-empty-state--docs). Related collections are the most useful next step from an empty page, so "Browse all collections" (a secondary button) appears only when there are none.
 
 ## Building one
 
-### Header
+> **Integration note:** Count, latest date and related collections are **requirements on the server**, not suggestions. Compute them in Drupal and render them into the HTML, cached with the collection and invalidated when a member node is saved or unpublished. The example fetches them in the browser only because Storybook has no server.
 
-The header is a split Hero on the neutral surface. Its eyebrow holds the link to all collections and the type, its facts line holds the linked item count and the last updated date, and the tags sit below. No layout CSS of its own is needed.
+### Header
 
 ```html
 <header data-vf-google-analytics-region="collection-header">
-  <section class="mg-hero mg-hero--split mg-hero--split-2-3 mg-hero--neutral">
+  <nav class="mg-breadcrumb mg-u-font-size-250" aria-label="Breadcrumbs">
+    <ul>
+      <li><a href="/">PreventionWeb</a></li>
+      <li><a href="/collections">Collections</a></li>
+      <li aria-current="page">Wildfire risk assessment</li>
+    </ul>
+  </nav>
+  <section
+    class="mg-hero mg-hero--split mg-hero--split-2-3 mg-hero--neutral"
+    aria-labelledby="collection-title"
+  >
     <div class="mg-hero__split-grid mg-container">
       <article class="mg-hero__content">
         <div class="mg-hero__meta">
-          <span class="mg-hero__label">
-            <a
-              href="/collections"
-              data-vf-analytics-label="Collection: all collections"
-            >
-              Collection
-            </a>
-            <span aria-hidden="true">·</span>
-            Topic guide
-          </span>
+          <span class="mg-hero__label">Topic guide</span>
         </div>
-        <h1 class="mg-hero__title">Wildfire risk assessment</h1>
+        <h1 class="mg-hero__title" id="collection-title">
+          Wildfire risk assessment
+        </h1>
         <div class="mg-hero__summaryText">
           <span>Discover research, assessments and …</span>
         </div>
         <div class="mg-hero__meta meta-detail">
           <span class="mg-hero__label detail">
-            <a
-              href="#collection-items"
-              data-vf-analytics-label="Collection: item count"
-            >
-              36 items
-            </a>
+            36 items
             <span aria-hidden="true">·</span>
-            Last updated
-            <time datetime="2026-07-10">10 July 2026</time>
+            Latest item:
+            <time datetime="2025-11-11">11 November 2025</time>
           </span>
         </div>
-        <div class="mg-tag-container mg-hero__tags">
-          <a href="/taxonomy/term/357">Wildfire and Bushfire</a>
-          <a href="/taxonomy/term/311">Climate change</a>
+        <ul class="mg-hero__tags" aria-label="Topics">
+          <li>
+            <a class="mg-tag" href="/taxonomy/term/357">
+              Wildfire and Bushfire
+            </a>
+          </li>
+          <li>
+            <a class="mg-tag" href="/taxonomy/term/311">Climate change</a>
+          </li>
+        </ul>
+        <div class="mg-hero__buttons">
+          <a
+            class="mg-button mg-button-cta mg-button-secondary"
+            href="#collection-items"
+            data-vf-analytics-label="Collection: browse items"
+          >
+            Browse 36 items
+          </a>
         </div>
       </article>
       <div class="mg-hero__media">
@@ -100,24 +121,29 @@ The header is a split Hero on the neutral surface. Its eyebrow holds the link to
 </header>
 ```
 
-| Part         | Drupal source                                                  |
-| ------------ | -------------------------------------------------------------- |
-| Type         | `field_collection_type`                                        |
-| Standfirst   | The body summary (required; about 164 characters, at most 255) |
-| Image        | `field_image`                                                  |
-| Item count   | Search total for the content list's filters (see below)        |
-| Last updated | The node's changed date                                        |
-| Tags         | `field_hazard`, `field_country`, `field_theme`, in that order  |
+| Part        | Drupal source                                                                                                                                                                                 |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type        | `field_collection_type`                                                                                                                                                                       |
+| Standfirst  | The body summary. Omit the block when it is empty                                                                                                                                             |
+| Image       | `field_image`                                                                                                                                                                                 |
+| Item count  | Search total for the list's filters, computed on the server                                                                                                                                   |
+| Latest item | `_undrr_custom_collection_newest_date()` in `undrr_custom.module`, the newest published member's `published_at`. It replaces the node's changed date, which moves when an editor fixes a typo |
+| Tags        | `field_hazard`, `field_country`, `field_theme`, in that order                                                                                                                                 |
+| Browse      | Only when the count is above zero                                                                                                                                                             |
+
+The count in the facts line is plain text; the button is the link to the list, so there are not two links side by side to the same place. With no items the facts line reads "No items yet" and the button is left out.
+
+The neutral Hero is the header's only layout CSS. It reaches Drupal the way every Mangrove style does, through the `mangrove_source_version` theme setting, so a release with this Hero needs that version bumped; there is no SCSS to wire into the theme.
 
 ### On this page
 
-Explicit mode: write the links, because collection bodies have almost no `h2`s for the script to find. Each link points at a section's `id`, so scroll-spy marks the section in view; drop the Related collections link whenever that section is not rendered.
+Explicit mode, with the full section headings as links, because collection bodies have almost no `h2`s for the script to find. Each link points at a section's `id`; leave out the Related collections link whenever that section is not rendered.
 
 ```html
 <nav
-  class="mg-on-this-page-nav"
+  class="mg-on-this-page-nav mg-on-this-page-nav--align-container"
   data-mg-on-this-page-nav
-  data-mg-on-this-page-nav-label="On this page"
+  aria-label="On this page"
   data-vf-google-analytics-region="on-this-page-nav"
 >
   <ul class="mg-on-this-page-nav__list">
@@ -125,9 +151,9 @@ Explicit mode: write the links, because collection bodies have almost no `h2`s f
       <a
         class="mg-on-this-page-nav__link"
         href="#collection-about"
-        data-vf-analytics-label="On this page: About"
+        data-vf-analytics-label="On this page: About this collection"
       >
-        About
+        About this collection
       </a>
     </li>
     <li class="mg-on-this-page-nav__item">
@@ -152,114 +178,132 @@ Explicit mode: write the links, because collection bodies have almost no `h2`s f
 </nav>
 ```
 
-Place it directly in `main`, after the header, so it stays docked for the whole page. Under a sticky site header, set `--mg-on-this-page-nav-offset` to that header's height.
-
-The item count stays out of the link text. It is already in the header and in the list's own results line, it would make the bar shift as the number arrives, and a link name that changes with the count is harder to compare in analytics.
+- Place it directly in `main`, after the header, so it stays docked for the whole page.
+- `mg-on-this-page-nav--align-container` lines the links up with the content column.
+- In Drupal, dock it below the admin toolbar: `:root { --mg-on-this-page-nav-offset: var(--drupal-displace-offset-top, 0px); }`. Setting it on `:root` also lets the page's scroll padding include it.
+- While the bar is sticky the page gets `scroll-padding-top`, so keyboard focus, anchors and the list's pager land below the bar.
+- The item count is not in the link text. It is already in the header and the list's results line, and a link name that changes with the number is harder to compare in analytics.
 
 ### About
 
-The body uses the vanilla Show more markup with the threshold attribute, so content under 320px stays open and the toggle is hidden:
-
 ```html
-<section aria-labelledby="collection-about">
-  <h2 id="collection-about">About this collection</h2>
-  <div id="collection-body" class="mg-content">…body…</div>
+<section
+  id="collection-about"
+  aria-labelledby="collection-about-title"
+  data-vf-google-analytics-region="collection-about"
+>
+  <h2 id="collection-about-title">About this collection</h2>
+  <div
+    id="collection-body"
+    class="mg-content"
+    style="--mg-show-more-height: 6lh"
+  >
+    …body…
+  </div>
   <button
     type="button"
-    class="mg-button mg-button-primary mg-show-more--button"
+    hidden
+    class="mg-button mg-button-secondary mg-show-more--button"
     data-mg-show-more="true"
     data-mg-show-more-target="#collection-body"
-    data-mg-show-more-threshold="320"
+    data-mg-show-more-min-hidden-lines="4"
     data-mg-show-more-label-collapsed="Show more"
     data-mg-show-more-label-open="Show less"
+    data-mg-show-more-analytics-collapsed="Collection: show more"
+    data-mg-show-more-analytics-open="Collection: show less"
   >
-    Show more
+    <span data-mg-show-more-label>Show more</span>
+    <span class="mg-u-sr-only">about this collection</span>
   </button>
 </section>
 ```
 
-### Content list
+The toggle ships `hidden`: without JavaScript the body is simply open, and the script reveals the toggle only for a body that runs at least four lines past the six-line collapsed height. Browsers without the `lh` unit need a length instead (about `10rem`).
 
-Scope the widget with `customFilters`, not `defaultFilters`. Default filters become removable chips and are written to the URL hash, so a reader could remove the collection scope and see the whole site. Custom filters are invisible and fixed.
+### In this collection
 
-```js
-{
-  customFilters: ['field_collections:101264', '_language:en'],
-  defaultFilters: [],
-  defaultSort: 'newest',
-  resultsPerPage: 10,
-  showResultsCount: true,
-  visibleFilters: { field_domain_access: false, field_country_region: false, _language: false },
-}
+Scope the widget with `customFilters`, not `defaultFilters`. Default filters become removable chips and are written to the URL hash, so a reader could remove the collection scope and see the whole site. For the same reason, don't use the block's "current language" option here, which adds the language as a default filter; put it in `customFilters`.
+
+The Drupal wrapper hydrates `[data-undrr-search-widget]` containers and already parses `data-visible-filters` and `data-custom-filters`. It does not yet map `data-analytics-region-prefix`; it needs to (see [Analytics](#analytics)).
+
+```html
+<div
+  data-undrr-search-widget
+  data-custom-filters='["field_collections:101264","_language:en"]'
+  data-default-filters="[]"
+  data-default-sort="newest"
+  data-results-per-page="10"
+  data-visible-filters='{"field_domain_access":false,"field_country_region":false,"_language":false}'
+  data-enable-hash-sync="true"
+  data-analytics-region-prefix="collection-content"
+  data-labels='{"showingResults":"Showing {start}–{end} of {total} items"}'
+></div>
 ```
 
-`visibleFilters` has no data attribute; a Drupal block wrapper merges it into the config, as it already does for `customFilters`.
-
-### Item count
-
-The count in the header must equal the list's total. The example sends the widget's own query with `size: 0` and the same `customFilters`, so the status filter and scope match exactly. In Drupal, run that query on the server and cache it with the node, so the number is in the HTML and does not shift the layout when it arrives. The hidden Views count (`undrr_custom_views_pre_view()`) is a fallback if that is not ready.
+Set `data-enable-hash-sync` explicitly on both widgets ("true" here, "false" on related collections). With two widgets on the page the wrapper's `auto` turns hash sync off for both.
 
 ### Related collections
 
-```js
-{
-  customFilters: [
-    'type:collections',
-    'field_hazard:(357) OR field_theme:(311 OR 1176 OR 333)',
-    'NOT nid:101264',
-    '_language:en',
-  ],
-  defaultFilters: [],
-  resultsPerPage: 3,
-  displayMode: 'card',
-  gridColumns: 3,
-  showSearchBox: false,
-  showResultsCount: false,
-  showFacets: false,
-  showActiveFilters: false,
-  showPager: false,
-  enableHashSync: false,
-}
+Ranked in three tiers, filling up to three places:
+
+1. Collections that share a hazard.
+2. Among those, collections that also share a country come first.
+3. Collections that share a **specific** theme fill any remaining places.
+
+Broad themes are left out of the match: they apply to so much DRR content that sharing one says little. The list is the "Core disaster risk reduction" group in the [metadata guidance](https://assets.undrr.org/docs/editorial-guides/metadata.md#theme-list) plus Climate change, which the guidance pairs with most sector themes: Preparedness (315), Risk identification and assessment (333), Governance (324), Early warning (316), Disaster risk communication (307) and Climate change (311). Preparedness and Climate change are also the two themes used most on collections. A collection with no hazard and no specific theme has no related collections.
+
+The widget's filters don't score, so the example ranks with its own query: the tiers become `constant_score` boosts (hazard 100, country 10) over the match, sorted by score and then `published_at`, which for collections is already the newest item's date. It then lists the chosen nodes with `nid:(…)`. **In Drupal, do the ranking on the server** and render the three node ids into the related widget's `data-custom-filters`, with `data-show-search-box`, `data-show-results-count`, `data-show-facets`, `data-show-active-filters` and `data-show-pager` all "false", `data-display-mode="card"`, `data-enable-hash-sync="false"` and `data-analytics-region-prefix="collection-related"`. The widget then lists them in its own relevance order.
+
+Clicks on related cards record only the region and the card title, not the card's position.
+
+### Language
+
+The example filters both lists to the page language (`_language:en`). That shows nothing for an item with no translation in that language. The intended filter is the page-language version, or the original when no translation exists:
+
+```
+_language:fr OR (default_langcode:true AND NOT available_langcodes:fr)
 ```
 
-Each custom filter is a separate `query_string` clause, so a clause can stand alone as an exclusion: `NOT nid:101264` (or `-nid:101264`) removes the current collection. Checked against a local copy of the PreventionWeb index: without it, the current collection came back as its own first match.
-
-Only one widget on a page may sync with the URL hash; leave it to the content list.
+The search index has no `default_langcode` or `available_langcodes` field yet, so this is a follow-up for the Drupal index. Until then the stories keep the page-language filter.
 
 ### Analytics
 
-The shared UNDRR analytics script ([google_analytics_enhancements.js](https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js)) reports each click with the innermost `data-vf-google-analytics-region` around it, and uses `data-vf-analytics-label` as the click's name when present. The labels are fixed English strings with no counts, as on Share this and Cite this, so reports do not split by language or by number.
+The shared UNDRR analytics script ([google_analytics_enhancements.js](https://assets.undrr.org/analytics/v1.0.0/google_analytics_enhancements.js)) reports each click with the innermost `data-vf-google-analytics-region` around it, and uses `data-vf-analytics-label` (it reads `dataset.vfAnalyticsLabel`) as the click's name when present. Labels are fixed English strings with no counts, as on Share this and Cite this, so reports don't split by language or number.
 
-| Element             | Region                                                                                    | Label                                                                                          |
-| ------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Header              | `collection-header`                                                                       | "Collection: all collections" (the Collection link), "Collection: item count" (the count)      |
-| On this page bar    | `on-this-page-nav`                                                                        | "On this page: About", "On this page: In this collection", "On this page: Related collections" |
-| About section       | `collection-about`                                                                        | "Collection: show more or less" (the toggle)                                                   |
-| In this collection  | `collection-content`; the widget uses `collection-content-form`, `-results` and `-facets` | "Collection: browse all collections" (empty state)                                             |
-| Related collections | `collection-related`; the widget uses `collection-related-results`                        | Card titles                                                                                    |
+| Element             | Region                                                                                       | Labels                                                                                                         |
+| ------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Header              | `collection-header`                                                                          | "Collection: browse items" (the button). Breadcrumb and tag links report their text                            |
+| On this page bar    | `on-this-page-nav`                                                                           | "On this page: About this collection", "On this page: In this collection", "On this page: Related collections" |
+| About section       | `collection-about`                                                                           | "Collection: show more", "Collection: show less"                                                               |
+| In this collection  | `collection-content`; the widget reports `collection-content-form`, `-results` and `-facets` | "Collection: browse all collections" (empty state)                                                             |
+| Related collections | `collection-related`; the widget reports `collection-related-results`                        | Card titles                                                                                                    |
 
-Because the innermost region wins, a region on the section never reaches clicks inside a search widget, which reports its own. Set each widget's `analyticsRegionPrefix` (`data-analytics-region-prefix` on a hydrated container) to the section's region so the two widgets do not both report `undrr-search-results`. Tag links keep their term names as labels: the term is the useful thing to count.
+Because the innermost region wins, a region on the section never reaches clicks inside a search widget, which reports its own. Each widget's `analyticsRegionPrefix` names those after the section, so the two lists don't both report `undrr-search-results`.
+
+**Section reach.** Each section region (`collection-header`, `collection-about`, `collection-content`, `collection-related`) sends one `section_view` event the first time it scrolls into view (80% of the way up the viewport): `gtag('event', 'section_view', { vf_analytics: 'true', event_category: 'UI', page_container: region, event_label: region })`, plus a bubbling `mg-section-view` DOM event. Reports can then show how far down the page readers get. In Drupal, a small behaviour does the same with an `IntersectionObserver` over `[data-vf-google-analytics-region]` sections.
 
 ## Accessibility
 
 - One `h1`, then an `h2` per section; the empty state's title is an `h3` under its section.
 - Each section is a `section` named by its heading with `aria-labelledby`, so screen reader users can move between them as regions.
-- The count is link text ("36 items"), read in full, and goes to the list. The widget announces its own total in a live region when results load.
+- The breadcrumb marks the current page with `aria-current="page"`. The tags are a list named "Topics", announced with a count.
+- The On this page bar is a `nav` named "On this page"; the section in view carries `aria-current="true"`, and following a link moves focus to that section. While it is docked, the page's `scroll-padding-top` keeps focused elements from sliding under it (WCAG 2.4.11).
+- After paging through the list, focus moves to the results count, which reads the new range.
 - The middle dots between facts are hidden from assistive technology.
-- The On this page bar is a `nav` named "On this page"; the section in view carries `aria-current="true"`, and following a link moves focus to that section.
-- Show more clips the body visually only; screen readers read it in full. See [Show more](?path=/docs/components-showmore--docs#accessibility).
+- The Show more toggle's name includes "about this collection" as visually hidden text. The collapse is visual only; screen readers read the full body. See [Show more](?path=/docs/components-showmore--docs#accessibility).
+- Links in the neutral hero are underlined, because colour alone sets them apart from the text by only about 2:1 (WCAG 1.4.1).
 
 ## Design decisions
 
-**No tabs.** Splitting about, content and related into tabs hides the content list, which is what most readers came for, and makes the count link point at a tab that may not be showing.
+**No tabs.** Splitting about, content and related into tabs hides the list, which is what most readers came for.
 
-**A sticky On this page bar.** The content list can run to many pages of results, which puts related collections far down the page. The bar keeps them one press away, and its clicks record which section readers were looking for.
+**A sticky On this page bar, always shown.** The list can run to many pages, which puts related collections far down the page. The bar keeps them one press away, and its clicks record which section readers were looking for.
 
-**"In this collection", not "Latest additions".** The list is sorted by each item's publication date, not by when it was added to the collection, so "latest additions" would claim something the index cannot show.
+**"In this collection", not "Latest additions".** The list is sorted by each item's publication date, not by when it was added to the collection, so "latest additions" would claim something the index can't show.
 
-**A neutral Hero for the header.** A coloured band made the page read as a campaign rather than a reference page, and the hazard pages it follows sit on white. The header is still a Hero rather than page-specific CSS, so the eyebrow, facts line and tags it needed are now Hero options any page can use.
+**"Latest item", not "Last updated".** The node's changed date moves when an editor fixes a typo; the newest item's date says whether the collection is still growing.
 
-**Body summary as standfirst.** It is required on collections and already written as a one-sentence pitch, so the header can carry it without new editorial work.
+**A neutral Hero for the header.** A coloured band made the page read as a campaign rather than a reference page, and the hazard pages it follows sit on white. The header is still a Hero rather than page-specific CSS, so the eyebrow, facts line and tags it needed are Hero options any page can use.
 
 ## Reuse
 
@@ -267,10 +311,10 @@ The same structure could serve hazard and theme pages: scope the list with `fiel
 
 ## Still to test
 
-- Is 320px the right threshold for PreventionWeb's descriptions, and should the collapsed height rise from 200px to show more of a long one?
-- Should related collections match on hazard only? Broad themes such as Climate change make the theme match loose.
-- Translated collection pages: the language filter is fixed to the page language, which hides items with no translation.
+- Is a six-line collapse, with at least four more lines hidden, right for PreventionWeb's descriptions?
+- Do readers use the On this page bar, and how far do they get? The `section_view` and nav-label events answer both.
+- Is the broad-theme list right? It is easy to adjust as reports come in.
 
 ## Changelog
 
-- **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern: orienting header with item count and tags, a description that collapses only when long, the collection's content as a scoped search index, related collections, and a sticky On this page bar linking the sections. Analytics regions and fixed English labels on every section, with the two search widgets reporting separate regions. The header is a split Hero on the new neutral surface. Examples for a typical, short, long and empty collection.
+- **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern. A breadcrumb, then a neutral split Hero with the collection type, summary, item count, newest item's date, topic tags and a browse button. A sticky On this page bar with full section headings. A description that collapses only when long. The collection's content as a scoped search index. Related collections ranked hazard first, country next, then specific themes. Analytics regions and fixed English labels on every section, separate regions for the two widgets, and a `section_view` event per section. Examples for a typical, short, long, summary-less and empty collection.
