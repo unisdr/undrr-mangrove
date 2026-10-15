@@ -191,7 +191,10 @@ a {
 // Long-form and WYSIWYG content opt into this boundary. Navigation, cards and
 // button-like links carry their purpose through their component treatment;
 // prose links do not, so colour alone is insufficient (WCAG 1.4.1).
-.mg-content p a {
+// Retain the reach through CMS classes, with low specificity so component
+// links (including paragraph-wrapped buttons) can own their treatment.
+:where(.mg-content p)
+  a:not(:where(.mg-button, .mg-icon-button, [role="button"])) {
   text-decoration: underline;
 }
 

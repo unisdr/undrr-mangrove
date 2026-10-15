@@ -454,7 +454,7 @@ export function ContentHub({
                   }))}
                 />
               )}
-              <div className="mg-reading__article">
+              <div className="mg-reading__article mg-content">
                 {articleHeadings.map((label, index) => (
                   <section key={label} id={`${prefix}/${page}/${index}`}>
                     <h2>{label}</h2>

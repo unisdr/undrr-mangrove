@@ -132,6 +132,7 @@ jobs:
           curl --retry 30 --retry-delay 1 --retry-connrefused --silent --fail \
             --output /dev/null http://127.0.0.1:6099/index.json
           yarn test:motion-browser
+          yarn test:rich-content-browser
           yarn test-storybook --maxWorkers=2
       - name: Archive motion browser screenshots and results
         if: always()
@@ -139,6 +140,13 @@ jobs:
         with:
           name: motion-browser
           path: artifacts/motion
+          if-no-files-found: ignore
+      - name: Archive rich-content browser screenshots and results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: rich-content-browser
+          path: artifacts/rich-content
           if-no-files-found: ignore
       - name: Cache Jest cache
         uses: actions/cache@v6

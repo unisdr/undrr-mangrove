@@ -1,0 +1,110 @@
+import { Meta, Canvas, Source } from '@storybook/addon-docs/blocks';
+import * as RichContentStories from './RichContent.stories';
+import { EDITORIAL_HTML } from './rich-content-fixtures';
+
+<Meta of={RichContentStories} />
+
+> If you are creating or modifying this pattern, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs).
+
+# Rich content
+
+Use `.mg-content` on the actual body of trusted, rendered editorial HTML: a publication, article, WYSIWYG field or long-form tab panel. It supplies semantic defaults without requiring a React component or JavaScript. The caller or CMS must sanitise HTML before rendering; this class performs no sanitisation.
+
+Keep navigation, controls, cards, calls to action, component layouts and embedded third-party content outside the prose wrapper where practical. This is a typography boundary, not a page-width, grid, colour, font-family or spacing reset for arbitrary layout containers.
+
+## Editorial HTML
+
+<Canvas of={RichContentStories.Editorial} />
+
+<Source
+  code={`<article class="mg-content">${EDITORIAL_HTML}</article>`}
+  language="html"
+/>
+
+The specimen's text and schedule are illustrative. Its figure is explicitly described as an illustration, and the quotation links to its source. Use meaningful headings in order, descriptive links, image alternatives, native lists and table headings/captions. Use `cite` for a work's title, rather than a person's name. Do not use a display pull quote as the default treatment of an ordinary quotation.
+
+| Element                            | Deliberate default                                                                                                                                                                           |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Paragraphs, lists and descriptions | Token-based vertical rhythm; native list markers and logical indentation preserve hierarchy in LTR and RTL                                                                                   |
+| Headings                           | Existing size, weight and inherited brand font remain; token-based rhythm and a readable heading line height apply                                                                           |
+| Blockquote                         | Body-size text, a neutral leading rule and logical inset; use QuoteHighlight for a designed pull quote                                                                                       |
+| Cite                               | Inline italic work title; attribution belongs in surrounding prose or the quotation's footer                                                                                                 |
+| Links                              | Underlined without relying on colour alone; focus remains the shared visible focus treatment                                                                                                 |
+| Horizontal rule                    | Existing neutral rule with editorial spacing; no decorative colour identification                                                                                                            |
+| Figure and caption                 | Image fits available width with its alternative; caption remains readable body-colour text                                                                                                   |
+| Table                              | Native table/caption/header semantics, logical alignment and neutral cell borders; wrapping text works without converting rows to blocks                                                     |
+| Code                               | Inline code uses readable text-role ink on the neutral-50 surface; existing code face and literal block formatting remain; preformatted content scrolls locally instead of widening the page |
+
+There are no new public tokens. The defaults use the existing spacing, font-size, line-height and neutral-colour tokens. No wrapper width, root text colour or heading font-family is imposed: the publication still owns its reading measure, surface and brand typography.
+
+## Boundaries and compatibility
+
+New semantic defaults pass through classless `div` and `section` wrappers. A classed descendant and its subtree keep their own presentation, so component headings, lists, quotations, forms and media are not treated as plain editorial HTML. Semantic navigation/control roots (`nav`, `form`, `fieldset`, `button` and navigation/menu/tab/dialog/toolbar/listbox/tree roles) and their subtrees are excluded from new defaults even when classless. Classes on the `.mg-content` root itself do not opt it out. The pattern's `.mg-content__scroll` wrapper is the one explicit structural exception.
+
+Place the wrapper on the innermost rendered body field. An arbitrary classed CMS layout wrapper is not assumed to be prose; if it needs the new defaults, move the boundary to its actual inner body. New defaults do not re-enter a nested `.mg-content` inside a classed island: use separate sibling prose wrappers around composed components.
+
+**Existing paragraph-link reach is retained through CMS classes**, including classed paragraphs and reference anchors. Its specificity is reduced so explicit component link styles can win. Button-like anchors (`mg-button`, `mg-icon-button` and `role="button"`) are excluded from this legacy prose-link rule. Links in a component that intentionally owns an underline retain that treatment.
+
+The existing `.mg-body` styles and global element defaults are unchanged. `.mg-body` alone keeps its legacy display quotation and block citation. Adding `.mg-content` deliberately opts classless editorial elements into these new defaults, including when both classes share the root. Existing classed quotation/citation presentations keep their prior aliases. There is no deprecation, forced rename or removal date.
+
+<Canvas of={RichContentStories.Boundaries} />
+
+## Wide tables and code
+
+Keep a short table in ordinary flow: it needs no extra keyboard stop. When a real table requires horizontal scrolling, author a named, keyboard-focusable `.mg-content__scroll` region around it. Its name can reference the table's caption; keep the table itself native and preserve `scope` on header cells. The wrapper has an inset focus ring. Only add `tabindex="0"` where overflow is expected and verify it at narrow viewports and zoom.
+
+```html
+<div class="mg-content">
+  <div
+    class="mg-content__scroll"
+    tabindex="0"
+    role="region"
+    aria-labelledby="review-caption"
+  >
+    <table>
+      <caption id="review-caption">Review responsibilities</caption>
+      <thead>
+        <tr>
+          <th scope="col">Activity</th>
+          <th scope="col">Owner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Review evidence</th>
+          <td>Local government</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+```
+
+A genuinely overflowing `pre` similarly needs a meaningful region name and keyboard access; the specimen shows this. Keep code's spaces and line breaks intact. The scoped preformatted container uses LTR direction to match the existing code child, so both ends remain keyboard-scrollable on RTL pages. Do not turn all short tables/code blocks into focusable regions, remove native table roles, or hide overflow to conceal inaccessible content. Verify keyboard scrolling, focus, long URLs, narrow viewports, RTL and forced colours on the actual published content.
+
+## Adoption checklist and audit
+
+1. Identify an actual editorial body and confirm its trusted/sanitised HTML contract.
+2. Keep page chrome and component wrappers outside the boundary. Classed component islands keep their own styling, but separate prose wrappers make ownership clearer.
+3. Check headings, lists, quotes, work-title citations, image alternatives and table headers/captions. A typography class cannot repair incorrect semantics.
+4. Compare the existing page before and after opt-in, including any legacy `.mg-body` quote/citation presentation. Confirm that brand fonts and surrounding controls have not changed.
+5. Test narrow/zoomed content, long links/code and any named overflow region with keyboard input, RTL, forced colours and each supported theme.
+
+The 2.1 audit found:
+
+| Existing context                                                      | Disposition                                                                                                                                       |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ArticleStory reading column                                           | Already opted in; retain its plain section prose and preserve QuoteHighlight, HighlightBox and embedded-media islands                             |
+| LandingPages report and CollectionPage about body                     | Already opted in; retain scoped headings/paragraphs and existing ShowMore behaviour                                                               |
+| ContentHub how-to reporting details                                   | Adopted: the actual reading column contains editorial headings/paragraphs; hub navigation, cards and resource lists remain outside                |
+| React Tab panels                                                      | Already opted in for caller-owned HTML; preserve classed forms/embeds and classed paragraph-link cues, including direct classless editorial links |
+| PageTemplateExample                                                   | Already opted in around a classed grid; retain its existing paragraph-link cue, without treating the grid as unclassed prose                      |
+| TypographyIntegration and UtilityCSS                                  | Retain deliberate type/utility/component specimens and classed islands; do not migrate their layouts or swatches wholesale                        |
+| TableOfContents demo article                                          | Already opted in; keep its actual navigation component's own link and list presentation                                                           |
+| Other landing-page cards, newsletter promotion and third-party embeds | Component/layout demonstrations, not blanket adoption candidates                                                                                  |
+
+The boundary/browser regressions exercise the pattern itself and existing reading-column adopters, rather than treating downstream stories alone as proof.
+
+## Changelog
+
+- **1.0**, 2026-10-15 ([#1277](https://github.com/unisdr/undrr-mangrove/issues/1277)): Published the opt-in editorial HTML contract, scoped semantic defaults and boundary specimens. Preserved `.mg-body`/global typography and classed paragraph-link cues, protected button-like links, and adopted the actual ContentHub reading column. Documented keyboard access for authored overflow regions and deliberate changes to classless editorial quotations/citations.

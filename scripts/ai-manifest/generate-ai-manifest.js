@@ -2508,6 +2508,10 @@ To inspect changes between versions, tags, and pre-releases without parsing raw 
 
 Use the --mg-z-index-* custom properties for global stacking contexts (fixed, sticky, portaled, or deliberately negative elements). One token per UI concept: --mg-z-index-behind, -nav, -sticky, -nav-toggle, -header, -drawer, -dropdown, -modal, -toast. Derive backdrops with calc(), e.g. z-index: calc(var(--mg-z-index-drawer) - 1). For local stacking within a component's own isolated stacking context (e.g. inside position: relative), use a raw value with a comment instead of a token. The navigation zone tokens (-nav through -header, values 10-22) are frozen; do not change their numeric values. These were $mg-z-index-* Sass variables before 2.0 and no longer exist in that form. See the "Design decisions/Z-index layers" Storybook page for the full layer table and philosophy.
 
+### Rich editorial content
+
+For trusted rendered editorial HTML, use \`mg-content\` on the actual body field and follow ${DOCS_BASE}?path=/docs/patterns-rich-content--docs. It supplies scoped semantic defaults, not sanitisation or a layout/font reset. Keep navigation, controls, cards and embeds outside the prose boundary where practical; classed component islands own their presentation. Existing paragraph links retain their cue through CMS classes. Preserve native table headers/captions and provide named keyboard-accessible local overflow only when content is genuinely wide. \`mg-body\` remains supported without deprecation.
+
 ### Motion and animation
 
 Before adding or changing component motion, read ${DOCS_BASE}llms-motion.txt (rendered: ${DOCS_BASE}?path=/docs/design-decisions-motion--docs). Use interaction timing tokens, gate optional CSS motion with prefers-reduced-motion: no-preference, and check the preference before JavaScript-driven motion. Reuse Loader or ProgressBar so loading remains understandable under reduced motion and forced colours; directional travel follows RTL reading direction. The guide documents loop-cycle exceptions and browser review requirements.
