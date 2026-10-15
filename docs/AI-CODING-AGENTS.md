@@ -10,6 +10,8 @@ agent-generated changes.
 
 When you touch a component's JSX, SCSS, stories, or tests, read the [review checklist](REVIEW-CHECKLIST.md) **before committing**. The checklist is referenced in every component's MDX file, but agents typically don't read MDX until late in the process — by then the commit is already made.
 
+Before adding or changing motion, read [Motion and animation](MOTION.md). It is the shared policy for interaction tokens, looping indicators, reduced motion in CSS and JavaScript, forced colours and RTL. The published equivalent is [llms-motion.txt](https://mangrove.undrr.org/llms-motion.txt).
+
 Common misses:
 
 - **SCSS docblock comment**: every component stylesheet must begin with a docblock describing the component and linking to its full `.mdx` file on GitHub

@@ -35,7 +35,10 @@ See [Component standards](https://mangrove.undrr.org/?path=/docs/contributing-co
 - [ ] Heading hierarchy is logical (no skipped levels)
 - [ ] Images and icons have appropriate alt text (empty `alt=""` for decorative images)
 - [ ] Touch/click targets meet minimum size (24x24px, 44x44px recommended)
-- [ ] Animations respect `prefers-reduced-motion`
+- [ ] Motion has a user purpose and uses [motion guidance](MOTION.md): interaction duration/easing tokens, documented cycle exceptions, and a visible usable base state
+- [ ] Optional CSS motion is gated by `prefers-reduced-motion: no-preference`; JavaScript checks the preference at the action, and interrupted/reversed interactions and preference changes leave correct state and focus
+- [ ] Loading remains understandable under reduced motion; shared Loader/ProgressBar or a reviewed static alternative stays visible under forced colours, including when reduced motion is also active
+- [ ] Directional motion follows RTL reading direction; component MDX describes motion, reduced-motion behaviour and exceptions
 - [ ] Error states are announced to assistive technology (`aria-describedby`, `aria-live`)
 - [ ] Component works across all five themes without contrast failures
 

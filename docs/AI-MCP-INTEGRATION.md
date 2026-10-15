@@ -161,12 +161,14 @@ A structured [`llms.json`](https://mangrove.undrr.org/llms.json) provides the sa
 
 A separate, topic-scoped sub-manifest, [`llms-editorial-manual.txt`](https://mangrove.undrr.org/llms-editorial-manual.txt), carries only writing/style rules (capitalization, punctuation, numbers, abbreviations, italics, spelling, UNDRR terminology, disability inclusive and gender-inclusive language) for an agent generating UI copy or docs prose — fetch it instead of the full `llms.txt` when component data isn't needed.
 
+The [motion guidance](https://mangrove.undrr.org/llms-motion.txt) (`urls.motion` in `llms.json`) publishes [Motion and animation](MOTION.md) for agents implementing components: purpose, timing, reduced motion, loading, forced colours and RTL. It is also copied to `dist/docs/llms-motion.txt` and the versioned asset library by the existing sub-manifest pipeline.
+
 Two more sub-manifests serve editors building pages on UNDRR websites, and the AI tools they use:
 
 - [`llms-page-building.txt`](https://mangrove.undrr.org/llms-page-building.txt) combines [Building landing pages](https://mangrove.undrr.org/?path=/docs/patterns-building-landing-pages--docs) and [Drupal Gutenberg integration](https://mangrove.undrr.org/?path=/docs/getting-started-integration-drupal-gutenberg--docs): page shapes, layout patterns, component choice and the current markup of every UNDRR Gutenberg block. It replaces the Gutenberg content guide formerly published on assets.undrr.org. A prompt such as "Using the UNDRR page building guide at https://mangrove.undrr.org/llms-page-building.txt, draft a landing page about…" works in any tool that can fetch URLs.
 - [`llms-search-widget.txt`](https://mangrove.undrr.org/llms-search-widget.txt) carries [Search widget editor configuration](https://mangrove.undrr.org/?path=/docs/components-syndicated-search-editor-configuration--docs): block settings, search syntax and `field:value` filters with taxonomy term IDs.
 
-All three are built from `docs/*.md` by `scripts/ai-manifest/docs-submanifest.js` and are listed in `llms.txt` and under `urls` in `llms.json` (`editorialManual`, `pageBuilding`, `searchWidget`).
+These topic guides are built from `docs/*.md` by `scripts/ai-manifest/docs-submanifest.js` and are listed in `llms.txt` and under `urls` in `llms.json` (`editorialManual`, `pageBuilding`, `searchWidget`).
 
 ### Component index (`ai-components/index.json`)
 
