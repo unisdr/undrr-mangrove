@@ -1,0 +1,123 @@
+# Mangrove motion and animation guidance
+
+> Shared component motion policy: purpose, interaction tokens, looping cycles, CSS and JavaScript reduced motion, progress indicators, forced colours, RTL, documentation and browser review.
+
+This is Mangrove's shared reference for component motion. Apply it alongside the [accessibility guide](https://mangrove.undrr.org/?path=/docs/getting-started-accessibility--docs) and [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs). AI consumers can fetch the same guidance as [llms-motion.txt](https://mangrove.undrr.org/llms-motion.txt).
+
+The [Interfaces.dev cheat sheet](https://interfaces.dev/cheat-sheet#animation) is a review lens, not a specification. Mangrove adopts its feedback and continuity principles. Press scaling, icon transitions and task-specific sequencing are optional only where they improve feedback or continuity; decorative and viewport-entry effects are excluded. Other review themes belong to the interface quality review (unisdr/undrr-mangrove#1280).
+
+## Give motion a purpose
+
+Use motion to confirm a user action, explain continuity between states, or communicate ongoing work. Keep it brief, restrained and interruptible. A user can reverse an open/close action or start another task without waiting for an animation to finish. Focus, activation and semantic state must update without waiting for visual completion.
+
+Do not add decorative, attention-seeking or viewport-entry animations. Mangrove removed viewport scroll animations in unisdr/undrr-mangrove#867. An element must remain visible and usable when animation never runs; motion must never be the only way to communicate state.
+
+Choose whether to animate before choosing timing. Repetitive navigation, selection and hover feedback may be instant; frequently opened menus should normally appear immediately. Test repeated use at realistic working speed.
+
+Prefer transitions for reversible state changes. Reserve finite keyframes for justified sequences with a cancellation path. Initial rendering, hydration and theme changes must not trigger incidental interaction animations.
+
+Anchor popup motion to its trigger and edge-attached surfaces to their edge. Closing should be quieter than opening; timing and travel need not be symmetrical.
+
+For pointer-only hover effects, use `@media (hover: hover)`; preserve keyboard feedback.
+
+## Use the existing timing tokens
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--mg-motion-duration-fast` | `160ms` | Optional local feedback, small state changes and brief exits |
+| `--mg-motion-duration-medium` | `300ms` | Larger surface or drawer movement that needs continuity |
+| `--mg-motion-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` | Interaction transitions and finite state-change animations |
+
+These tokens live in `tokens/mangrove.yaml`. Start with this set when motion is justified; it is not a minimum duration or evidence that one curve suits every interaction. Immediate feedback needs no transition or timing token. Add a shared token only when repeated component needs justify it, with evidence across themes and reduced motion. Never hand-edit generated token output.
+
+Name the properties being transitioned instead of using `transition: all`. Use tokens for finite interaction timing, including finite keyframes. Prefer transform and opacity where they serve the interaction, while keeping the final layout correct without them.
+
+### Loop periods and behavioural delays
+
+A spinner revolution or scanner sweep is a cycle, not an interaction transition. Do not shorten it to the fast or medium token. Reuse Loader or ProgressBar rather than creating another indicator. Loader documents `--mg-loader-duration: 0.9s` for one revolution; ProgressBar uses a `1.5s` scanner cycle in its stylesheet. Linear rotation and the scanner's `ease-in-out` describe their repeating motion rather than a finite state change.
+
+If a new component needs an adjustable cycle, use a component-scoped property such as `--mg-{component}-duration`. Document its base value, what one cycle means, why the duration is needed, and the reduced-motion state in SCSS and MDX. Describe any public property in `scripts/ai-manifest/custom-properties.js`. A justified, documented cycle literal is allowed; it does not justify hard-coded interaction timing.
+
+Hover intent, debounce and delayed loading feedback are behavioural delays, not motion tokens. Document them separately. If JavaScript retains an exiting element, derive retention from the actual transition duration and delay, use zero when reduced motion is requested, and release focus immediately. Do not use an animation event as the only way to complete an action or remove a blocking overlay.
+
+## Start with a usable reduced-motion state
+
+Put optional motion inside `@media (prefers-reduced-motion: no-preference)`. The base style provides the final visible and usable state; the media query enhances the transition to it.
+
+```scss
+.mg-example {
+  opacity: 1;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
+}
+```
+
+Check intermediate states as well as start and end: content must not remain at zero opacity, off-screen, or non-interactive when motion is disabled. Cancelling or reversing an animation must leave the correct state.
+
+### The global reset is a fallback
+
+`stories/assets/scss/_foundational.scss` sets `animation-duration` and `transition-duration` to `0.01ms !important`, animation iteration count to `1 !important`, and `scroll-behavior` to `auto !important` under reduced motion. It applies to elements and their `::before` and `::after` pseudo-elements.
+
+This is a safety net, not a component's reduced-motion design. It runs an ungated animation once almost immediately; the visible result depends on its keyframes and fill mode. It can leave a loading indicator looking stalled or partly complete. It does not remove transition delays or guarantee that JavaScript lifecycle work completes correctly.
+
+### Keep progress understandable
+
+Reuse the shared [Loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) or [ProgressBar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs), with accessible labels and the component's announcement pattern. Freezing a spinner is not a designed static loading state; a labelled still alternative can communicate ongoing work.
+
+- Loader is an existing, explicit exception: under reduced motion it retains steady rotation at three times its normal cycle duration (`2.7s` by default). Its scoped overrides outrank the global reset. This describes the current implementation, not evidence that everyone requesting reduced motion can comfortably tolerate rotation. Consider a clearly labelled still alternative; evaluate this exception with affected users before extending it to other components.
+- Indeterminate ProgressBar replaces its moving scanner with a static, full-width dashed pattern under reduced motion. Use it with a visible loading label where a still indicator is appropriate. Determinate progress continues to show the true value without interpolating it.
+- A custom static alternative must identify that work is ongoing through a label and shape, and distinguish it from completed or failed work. Document and review the exception before creating another indicator.
+
+An indicator alone cannot detect a stalled request. Delay, error and completion messages must follow application state, rather than implying that motion proves useful work is continuing.
+
+### Check JavaScript-driven motion at the action
+
+The CSS reset does not control an explicit JavaScript smooth-scroll request, Web Animations API playback, or motion lifecycle timers. Check the preference when initiating motion, using the target element's owning window so embedded contexts work correctly.
+
+```js
+const view = target.ownerDocument.defaultView;
+const allowMotion = view?.matchMedia(
+  '(prefers-reduced-motion: no-preference)'
+).matches;
+
+target.scrollIntoView({
+  behavior: allowMotion ? 'smooth' : 'instant',
+  block: 'nearest',
+});
+```
+
+`instant` ensures the reduced-motion path does not inherit a consumer's CSS smooth scrolling. If using `auto`, guarantee `scroll-behavior: auto` on the scrolling container in that path. TableOfContents and Pager check the preference before scrolling; MegaMenu checks it when deciding exit retention. Inspect their context rather than copying a cached preference blindly.
+
+For CSS classes applied by JavaScript, gate the corresponding CSS animation as above and ensure state changes work without it. For ongoing JavaScript animations, observe preference changes and cancel or settle to the final usable state; remove listeners on cleanup. Do not delay focus or announcements to match visual motion.
+
+## Preserve forced colours and reading direction
+
+Test forced colours and reduced motion together. Indicators need a visible track and state with system colours; gradients, shadows or author background colours alone may disappear. Loader uses `GrayText` and `CanvasText` for its border segments; ProgressBar uses system colours and a visible border. Scope `forced-color-adjust: none` narrowly when required to preserve a meaningful shape, and supply system colours explicitly.
+
+Directional travel follows the reading direction. Use logical positioning and mirror horizontal transforms where they imply inline start/end; logical offsets do not reverse physical `translateX()` values. ProgressBar's `:dir(rtl)` scanner is the reference. Rotation and vertical movement do not need mirroring merely because the page is RTL.
+
+## Document and verify component behaviour
+
+A component's MDX behaviours section must state:
+
+- What moves and which user need it serves, including the trigger and final state.
+- Interaction tokens or cycle properties, base values and any justified exceptions.
+- What users see under reduced motion, including loading and interrupted states.
+- How JavaScript honours the preference, if applicable, and how focus and announcements behave.
+- Relevant forced-colours and RTL treatment.
+
+Include representative interaction/loading stories and a changelog entry when behaviour changes. Link this guide rather than duplicating the policy. Verify in a real browser with no preference and reduced motion, forced colours separately and combined, RTL, keyboard operation, relevant viewports and all affected themes. Toggle the preference while mounted and repeat/reverse interactions. Confirm labels and state remain understandable with motion disabled; jsdom and screenshot snapshots alone cannot verify animation timing or the CSS cascade.
+
+
+The deterministic real-browser regression gate is `yarn test:motion-browser`; see [Testing: motion and forced-colour browser gate](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-testing--docs#motion-and-forced-colour-browser-gate) for serving Storybook, the theme/media matrix and review artifacts. New literal timing values are rejected by Stylelint; legacy baseline entries must be pruned as their declarations are migrated.
+
+## Links
+
+- Rendered version in Storybook: https://mangrove.undrr.org/?path=/docs/design-decisions-motion--docs
+- Source on GitHub: https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/MOTION.md
+- Component review checklist: https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs
+- Full component/library manifest: https://mangrove.undrr.org/llms.txt
+- Report a problem with this guide: https://github.com/PreventionWeb/undrr-mangrove/issues
