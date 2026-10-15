@@ -65,6 +65,7 @@ export function TopBarItem({
 
       <Section
         section={section}
+        isActive={isActive}
         index={index}
         sectionListRef={sectionListRef}
         itemListRef={itemListRef}

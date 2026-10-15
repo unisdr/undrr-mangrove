@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { TopBarItem } from './TopBarItem';
 import { TopBarMobileIconButton } from './TopBarMobileIconButton.jsx';
 
@@ -11,6 +11,7 @@ export function TopBar({
   showSidebar,
   sections,
   activeItem,
+  activateItem,
   sectionListRef,
   itemListRef,
   logoSrc,
@@ -19,6 +20,14 @@ export function TopBar({
   logoWidth,
   logoHeight,
 }) {
+  const pendingPanelFocusRef = useRef(null);
+  useEffect(() => {
+    if (pendingPanelFocusRef.current === activeItem) {
+      sectionListRef.current?.[activeItem]?.focus();
+      pendingPanelFocusRef.current = null;
+    }
+  }, [activeItem, sectionListRef]);
+
   const handleFocusByArrows = (e, index) => {
     // Prevent default browser scrolling for arrow keys
     if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
@@ -33,8 +42,12 @@ export function TopBar({
     if (e.key === 'ArrowRight' && index < itemRef?.length - 1) {
       itemRef[index + 1].focus();
     }
-    if (e.key === 'ArrowDown') {
-      sectionListRef?.current?.[index].focus();
+    if (e.key === 'ArrowDown' && sectionListRef.current?.[index]) {
+      if (activeItem === index) sectionListRef.current[index].focus();
+      else {
+        pendingPanelFocusRef.current = index;
+        activateItem(index);
+      }
     }
   };
 

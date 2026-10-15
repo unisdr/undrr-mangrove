@@ -1,3 +1,7 @@
+import { useEffect, useRef } from 'react';
+import { expect, userEvent, within } from 'storybook/test';
+import createHydrator from '../../../src/hydrate';
+import fromElement from './MegaMenu.fromElement';
 import MegaMenu from './MegaMenu';
 import {
   LABELS_ES,
@@ -640,5 +644,146 @@ export const ProgressiveMobile = {
           'At widths below 900px, tap anywhere on the navigation strip. Open a section, continue into a nested group, then use the labelled back control or Close. Existing section data is used unchanged.',
       },
     },
+  },
+};
+
+const motionSections = [
+  {
+    title: 'Resources',
+    bannerHeading: 'Resources',
+    bannerDescription: 'Browse publications and practical guidance.',
+    items: ['Publications', 'Guidance'].map(title => ({
+      title,
+      url: `#${title.toLowerCase()}`,
+      items: Array.from({ length: 30 }, (_, index) => ({
+        title: `${title} ${index + 1}`,
+        url: `#${title.toLowerCase()}-${index + 1}`,
+      })),
+    })),
+  },
+];
+
+export const MotionReview = {
+  name: 'Motion: open and category swap',
+  args: { sections: motionSections, hoverDelay: 0, delay: 300 },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Opens a 30-link category, swaps categories rapidly, then leaves the panel open for review. Every destination appears immediately. Repeat with RTL, each theme, reduced motion and forced colours enabled in browser settings.',
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    if (canvasElement.ownerDocument.defaultView.innerWidth < 900) return;
+    const canvas = within(canvasElement);
+    // Vanilla hydration mounts a separate React root after this story commits.
+    // Wait for the rendered control rather than racing its hydration effect.
+    const trigger = await canvas.findByRole('button', { name: 'Resources' });
+    await userEvent.hover(trigger);
+    const category = await canvas.findByRole('menuitem', { name: 'Guidance' });
+    for (const title of ['Guidance', 'Publications', 'Guidance']) {
+      // eslint-disable-next-line no-await-in-loop -- exercise successive, interrupting category changes
+      await userEvent.hover(canvas.getByRole('menuitem', { name: title }));
+      const list = canvasElement.querySelector(
+        '.mg-mega-content__menu--desktop'
+      );
+      const styles = Array.from(list.children, item => {
+        const style =
+          canvasElement.ownerDocument.defaultView.getComputedStyle(item);
+        return { animation: style.animationName, opacity: style.opacity };
+      });
+      // eslint-disable-next-line no-await-in-loop -- assert each category before changing to the next
+      await expect({
+        count: list.children.length,
+        last: list.lastElementChild.textContent,
+        styles,
+      }).toEqual({
+        count: 30,
+        last: `${title} 30`,
+        styles: Array.from({ length: 30 }, () => ({
+          animation: 'none',
+          opacity: '1',
+        })),
+      });
+    }
+    await expect(category).toHaveAttribute('aria-current', 'page');
+  },
+};
+
+export const MobileMotionReview = {
+  name: 'Motion: mobile close and reopen',
+  args: MotionReview.args,
+  globals: { viewport: { value: 'iphone12', isRotated: false } },
+  play: async ({ canvasElement }) => {
+    if (canvasElement.ownerDocument.defaultView.innerWidth >= 900) return;
+    const canvas = within(canvasElement);
+    const opener = canvas.getByRole('button', { name: 'Open navigation menu' });
+    await userEvent.click(opener);
+    let dialog = canvas.getByRole('dialog');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Resources' })
+    );
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Close mobile navigation' })
+    );
+    await expect(dialog).toHaveAttribute('inert');
+    await expect(opener).toHaveFocus();
+    await userEvent.click(opener);
+    dialog = canvas.getByRole('dialog');
+    await expect(
+      within(dialog).getByRole('heading', { name: 'All sections' })
+    ).toHaveFocus();
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Resources' })
+    );
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Guidance' })
+    );
+    await expect(within(dialog).getAllByRole('link')).toHaveLength(31);
+    await expect(
+      within(dialog).getByRole('link', { name: 'Guidance 30' })
+    ).toBeVisible();
+  },
+};
+
+function HydratedMotionExample() {
+  const hostRef = useRef(null);
+  useEffect(() => {
+    const hydrator = createHydrator({
+      selector: '[data-mg-mega-menu]',
+      component: MegaMenu,
+      fromElement,
+    });
+    return () => hydrator.unmountAll();
+  }, []);
+  return (
+    <div
+      ref={hostRef}
+      data-mg-mega-menu
+      data-sections={JSON.stringify(motionSections)}
+      data-hover-delay="0"
+    >
+      <nav aria-label="Navigation fallback">
+        <a href="#publications">Publications</a>
+      </nav>
+    </div>
+  );
+}
+
+export const HydratedMotionReview = {
+  ...MotionReview,
+  name: 'Motion: vanilla hydration',
+  render: () => <HydratedMotionExample />,
+  play: async context => {
+    const canvas = within(context.canvasElement);
+    await canvas.findByRole('navigation', { name: 'Main Navigation' });
+    await expect(
+      context.canvasElement.querySelector('[data-mg-mega-menu]')
+    ).toHaveAttribute('data-mg-hydrated', 'true');
+    await expect(
+      canvas.queryByRole('navigation', { name: 'Navigation fallback' })
+    ).not.toBeInTheDocument();
+    await MotionReview.play(context);
   },
 };

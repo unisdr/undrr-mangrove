@@ -224,7 +224,38 @@ is still accepted but no longer displayed.
 
 <Canvas of={MegaMenuStories.ProgressiveMobile} />
 
+## Motion decisions
+
+Follow [Motion and animation](?path=/docs/design-decisions-motion--docs) when extending this navigation.
+
+Navigation destinations and active category borders, underlines and tints appear
+immediately. Pointer intent delays (`hoverDelay` and `delay`) remain behavioural
+settings, independent of visual motion tokens.
+
+| Previous animation          | Decision and purpose                                                                                                                                            |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mg-mega-tab-pulse`         | Removed: active border, underline and tint already identify the category.                                                                                       |
+| `mg-mega-content-swap`      | Removed: category contents update immediately, without a directional slide. The public `mg-mega-content__right--sliding` class remains as a compatibility hook. |
+| `mg-mega-right-flash`       | Removed: flashing the panel adds no navigation information.                                                                                                     |
+| `mg-mega-item-slide-in`     | Removed: every destination is visible immediately, including menus with more than 25 links.                                                                     |
+| `mg-mega-progressive-enter` | Kept: a small logical 8px entry identifies a newly opened mobile level; uses the fast duration and standard easing.                                             |
+| `mg-mega-surface-enter`     | Replaced with an interruptible fast transition for the bounded mobile surface, using an 8px logical offset.                                                     |
+| `mg-mega-backdrop-enter`    | Replaced with an interruptible fast opacity transition, connecting the surface to the page beneath.                                                             |
+
+The mobile entry transitions use `@starting-style`; browsers that do not support
+it open immediately. Exit retention reads the computed CSS duration, including
+theme overrides and delays. Focus and scroll are released immediately on close;
+the retained surface is inert and hidden from assistive technology. Reopening
+cancels pending removal. The mobile offset follows RTL. Desktop panel reveal and
+legacy sidebar/chevron transitions use the medium token. Reduced motion and
+forced colours disable these effects without hiding destinations or active states.
+Inactive desktop panels also become inert and hidden from assistive technology immediately, so fading links cannot retain keyboard focus. Escape returns focus to the top-level trigger before closing. Existing classes, Drupal attributes and hydration entry points remain supported.
+
+<Canvas of={MegaMenuStories.MotionReview} />
+
 ## Changelog
+
+- **1.4.6**, 2026-10-15 ([#1359](https://github.com/unisdr/undrr-mangrove/issues/1359)): Removed decorative category pulses, panel flashes and delayed link entrances. Tokenised remaining navigation motion, made mobile transitions interruptible, aligned inert exit retention with computed CSS timing, and fixed desktop reduced-motion/forced-colours overrides. Public state classes and hydration contracts remain compatible.
 
 - **1.4.5**, 2026-09-18 ([#1247](https://github.com/unisdr/undrr-mangrove/pull/1247), [#1235](https://github.com/unisdr/undrr-mangrove/issues/1235)): The three section and top-bar ref callbacks are statement bodies instead of parenthesised assignments, so they no longer return the element they assign. React 19.3 does not reject that return value (it stores it as the ref cleanup, finds it is not a function and still calls `ref(null)` on detach), so these were correct as written; the hazard React 19 introduced is a ref callback returning a _function_, which silently replaces the detach call. Found by widening ESLint coverage to component `.jsx`, which had never been linted. No visual or behavioural change.
 
