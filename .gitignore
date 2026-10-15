@@ -30,3 +30,6 @@ debug-storybook.log
 .superpowers/
 .worktrees/
 .claude/worktrees/
+
+# Local and CI motion regression evidence
+/artifacts/motion/

@@ -10,8 +10,8 @@ on:
       - '*.config.js'
       - '.github/workflows/chromatic.yml'
   pull_request:
-    types: opened
-    branches: [main, develop]
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main, develop, 'codex/**']
     paths:
       - 'stories/**'
       - '.storybook/**'

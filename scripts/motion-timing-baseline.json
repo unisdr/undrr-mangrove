@@ -1,0 +1,14 @@
+{
+  "stories/Components/Forms/_form-base.scss": {
+    "animation: mg-switch-pending-spin 0.8s linear infinite": 1
+  },
+  "stories/Components/ProgressBar/progress-bar.scss": {
+    "animation: mg-progress-bar-scan 1.5s ease-in-out infinite": 1
+  },
+  "stories/assets/scss/_foundational.scss": {
+    "transition: color 150ms ease": 1
+  },
+  "stories/Components/Buttons/CtaButton/cta-button.scss": {
+    "transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, scale var(--mg-motion-duration-fast) var(--mg-motion-easing-standard)": 1
+  }
+}

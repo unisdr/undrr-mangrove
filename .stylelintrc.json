@@ -54,7 +54,9 @@
     ],
     "value-no-vendor-prefix": null,
     "scss/dollar-variable-pattern": null,
-    "scss/percent-placeholder-pattern": null
+    "scss/percent-placeholder-pattern": null,
+    "mangrove/no-unapproved-motion-timing": true
   },
-  "ignoreFiles": ["stories/assets/fonts/**/*.*"]
+  "ignoreFiles": ["stories/assets/fonts/**/*.*"],
+  "plugins": ["./scripts/stylelint-motion.mjs"]
 }
