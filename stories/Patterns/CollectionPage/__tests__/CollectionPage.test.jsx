@@ -183,7 +183,7 @@ test('counts and dates with the list’s own filters, in one query', async () =>
   );
 });
 
-test('does not mount the list until the count is known', async () => {
+test('explains the pending list locally until the count is known, without another live region', async () => {
   let release;
   respond = request =>
     ownSource(request.body)?.includes('published_at')
@@ -195,8 +195,11 @@ test('does not mount the list until the count is known', async () => {
   const list = screen.getByRole('region', { name: 'In this collection' });
   expect(within(list).queryByRole('searchbox')).toBeNull();
   expect(screen.getByText('Counting items…')).toBeInTheDocument();
+  expect(within(list).getByText('Loading collection items…')).toBeVisible();
+  expect(list.querySelector('[role="status"], [aria-live]')).toBeNull();
   await act(async () => release());
   expect(await within(list).findByRole('searchbox')).toBeInTheDocument();
+  expect(within(list).queryByText('Loading collection items…')).toBeNull();
 });
 
 test('a count that resolves to zero shows the empty state and an unlinked count', async () => {
@@ -212,6 +215,7 @@ test('a count that resolves to zero shows the empty state and an unlinked count'
       name: 'Nothing has been added to this collection yet',
     })
   ).toBeVisible();
+  expect(within(list).queryByText('Loading collection items…')).toBeNull();
   expect(
     within(list).getByText(
       'Items added to this collection will be listed here.'
@@ -254,6 +258,7 @@ test.each([
   const list = screen.getByRole('region', { name: 'In this collection' });
   expect(await within(list).findByRole('searchbox')).toBeInTheDocument();
   expect(screen.queryByText('Counting items…')).toBeNull();
+  expect(within(list).queryByText('Loading collection items…')).toBeNull();
   expect(screen.queryByRole('link', { name: /items/ })).toBeNull();
 });
 
@@ -280,10 +285,12 @@ test('gives up counting after the timeout', async () => {
     });
     renderPage();
     expect(screen.getByText('Counting items…')).toBeInTheDocument();
+    expect(screen.getByText('Loading collection items…')).toBeVisible();
     await act(async () => {
       jest.advanceTimersByTime(8000);
     });
     expect(screen.queryByText('Counting items…')).toBeNull();
+    expect(screen.queryByText('Loading collection items…')).toBeNull();
   } finally {
     jest.useRealTimers();
   }

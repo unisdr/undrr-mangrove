@@ -28,16 +28,17 @@ import { SelectDropdown } from './SelectDropdown';
  * @param {string} props.widgetId - Unique widget ID for accessibility
  */
 export function SortOptions({ widgetId = 'search' }) {
-  const { sortBy } = useSearchState();
+  const { sortBy, hasEventSorts } = useSearchState();
   const { defaultSort } = useSearchConfig();
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
 
   // Event date sorts put every result without an event date last, so they
   // are offered only on listings set up for events: when the configured
-  // default sort, or the current one (e.g. from a shared link), is an event
-  // date sort.
+  // default sort, or a sort seen during this session (e.g. from a shared
+  // link), is an event date sort. Switching away must not remove the choice.
   const showEventSorts =
+    hasEventSorts ||
     EVENT_SORT_VALUES.includes(defaultSort) ||
     EVENT_SORT_VALUES.includes(sortBy);
 

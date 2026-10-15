@@ -51,6 +51,8 @@ The body summary is required on new collections, but 29 of 226 published collect
 
 When the count is zero the facts line says "No items yet", as plain text with nothing to link to, and the list is replaced with an [empty state](?path=/docs/components-empty-state--docs). Related collections are the most useful next step from an empty page, so "Browse all collections" (a secondary button) appears only when there are none.
 
+While the example counts items, the "In this collection" section says "Loading collection items…", so following its in-page link does not lead to an unexplained blank section. This is ordinary readable text, without a separate live announcement. It disappears when the count resolves to a list or an empty state, or when counting fails and the search widget takes over. The widget owns its loading and results announcements.
+
 ## Building one
 
 > **Integration note:** Count, latest date and related collections are **requirements on the server**, not suggestions. Compute them in Drupal and render them into the HTML, cached with the collection and invalidated when a member node is saved or unpublished. The example fetches them in the browser only because Storybook has no server.
@@ -309,5 +311,7 @@ The same structure could serve hazard and theme pages: scope the list with `fiel
 - Is leaving out only Preparedness and Climate change enough? It is easy to adjust as reports come in.
 
 ## Changelog
+
+- **1.0.1**, 2026-10-15: Explain pending collection items within their section while the initial count is loading, without adding a competing live region. Remove the message when the list or empty state takes over, including after a count failure or timeout.
 
 - **1.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): Collection page pattern. A breadcrumb, then a neutral split Hero with the collection type, summary, item count, a count linking to the list, the newest item's date and topic tags. A sticky On this page bar with full section headings. A description that collapses only when long. The collection's content as a scoped search index. Related collections ranked hazard first, country next, then shared themes other than Preparedness and Climate change. Analytics regions and fixed English labels on every section, and separate regions for the two widgets. Examples for a typical, short, long, summary-less and empty collection.

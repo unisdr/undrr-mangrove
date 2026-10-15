@@ -40,6 +40,7 @@ const text = {
   home: 'PreventionWeb',
   collections: 'Collections',
   counting: 'Counting items…',
+  loadingItems: 'Loading collection items…',
   items: (count, locale) =>
     count === 1
       ? '1 item'
@@ -458,6 +459,10 @@ export function CollectionPage({
             data-vf-google-analytics-region={REGION.content}
           >
             <h2 id={`${itemsId}-title`}>{text.index}</h2>
+            {/* Explain the wait at the destination of the in-page link.
+                This is readable content, not another live announcement;
+                the search widget owns announcements once it mounts. */}
+            {items.status === 'loading' && <p>{text.loadingItems}</p>}
             {items.status === 'done' && items.count === 0 && (
               <div className="mg-empty-state">
                 <h3 className="mg-empty-state__title">{text.emptyTitle}</h3>

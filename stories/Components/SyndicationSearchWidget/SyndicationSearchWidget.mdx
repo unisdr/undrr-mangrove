@@ -242,7 +242,7 @@ The UNDRR index holds `event_start` and `event_end` date fields for `event` and 
 
 - **`defaultSort: 'eventDateAsc'`** (soonest first) or **`'eventDateDesc'`** (latest first) sorts by `event_start`. Results without an event date sort last in both directions, and ties (date-only events share 12:00 UTC) are broken by publish date, newest first, then `nid`, so paging is stable. The sort uses `unmapped_type: 'date'`, so it is safe on an index that doesn't have the field yet.
 
-The Sort dropdown offers the two event date sorts only when `defaultSort` is one of them (or the URL hash selects one), so ordinary listings don't show sorts that would push every non-event to the end. To limit a listing to a date window, add a `customFilters` range such as `event_start:[2026-01-01 TO 2026-03-31]`.
+The Sort dropdown offers the two event date sorts when `defaultSort` is one of them or the widget has encountered one during the current session (for example through a shared URL). Once available, both choices remain available after selecting a different sort or moving between layouts. Ordinary listings that have never used an event sort keep the standard choices, so they don't show sorts that would push every non-event to the end. To limit a listing to a date window, add a `customFilters` range such as `event_start:[2026-01-01 TO 2026-03-31]`.
 
 In list mode without teaser HTML, event results show their event date (a range when the event runs over several days) instead of the publish date.
 
@@ -906,6 +906,8 @@ On screens ≤800px, the sidebar is replaced with a drawer that slides in from t
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
 ## Changelog
+
+- **1.4.28**, 2026-10-15: Re-evaluate search eligibility when a live React configuration changes the minimum query length, cancelling requests that become ineligible without searching again for threshold changes that leave eligibility unchanged. Keep event-date sort choices available for the widget session after opening a shared link or selecting another sort, including when sort controls remount.
 
 - **1.4.27**, 2026-10-15: Preserve retained result links and keyboard focus when a pending search completes in list, card and book-card layouts. Refreshes no longer remount the whole results surface to replay its entrance animation.
 

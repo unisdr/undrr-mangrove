@@ -334,3 +334,114 @@ describe('back and forward', () => {
     expect(searchCalls()).toHaveLength(2);
   });
 });
+
+describe('live minimum query length', () => {
+  let dispatch;
+  let state;
+  function Harness() {
+    useSearch();
+    dispatch = useSearchDispatch();
+    state = useSearchState();
+    return null;
+  }
+
+  const config = { ...base, defaultFilters: [], minSearchLength: 3 };
+  const view = settings => (
+    <SearchProvider config={settings}>
+      <Harness />
+    </SearchProvider>
+  );
+  const settle = async () => {
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    await flush();
+  };
+  const mount = async query => {
+    const rendered = render(view(config));
+    act(() => {
+      dispatch(actions.initialize({ defaultQuery: query, defaultFilters: [] }));
+    });
+    await settle();
+    return rendered;
+  };
+
+  it('searches a newly eligible query immediately when the threshold is lowered', async () => {
+    const { rerender } = await mount('ai');
+    expect(global.fetch).not.toHaveBeenCalled();
+
+    rerender(view({ ...config, minSearchLength: 1 }));
+    await settle();
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(state.results).toEqual([]);
+    expect(state.isLoading).toBe(false);
+  });
+
+  it('aborts a request that becomes ineligible and ignores its eventual response', async () => {
+    let resolveFirst;
+    global.fetch = jest
+      .fn()
+      // Deliberately ignore abort, as a proxy may already have a response.
+      .mockImplementationOnce(
+        () =>
+          new Promise(resolve => {
+            resolveFirst = resolve;
+          })
+      )
+      .mockResolvedValue(
+        response([{ _id: 'fresh', _source: { teaser: 'x' } }])
+      );
+    const { rerender } = await mount('flood');
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(state.isLoading).toBe(true);
+    const signal = global.fetch.mock.calls[0][1].signal;
+
+    rerender(view({ ...config, minSearchLength: 10 }));
+    await settle();
+    expect(signal.aborted).toBe(true);
+    expect(state.isLoading).toBe(false);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+
+    resolveFirst(response([{ _id: 'stale', _source: { teaser: 'x' } }]));
+    await flush();
+    expect(state.results).toBeNull();
+
+    rerender(view({ ...config, minSearchLength: 2 }));
+    await settle();
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(state.results.map(hit => hit._id)).toEqual(['fresh']);
+  });
+
+  it('keeps an eligible request in flight when only the threshold changes', async () => {
+    let resolveRequest;
+    global.fetch = jest.fn().mockImplementation(
+      () =>
+        new Promise(resolve => {
+          resolveRequest = resolve;
+        })
+    );
+    const { rerender } = await mount('flood');
+    const signal = global.fetch.mock.calls[0][1].signal;
+
+    rerender(view({ ...config, minSearchLength: 4 }));
+    await settle();
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(signal.aborted).toBe(false);
+    expect(state.isLoading).toBe(true);
+    resolveRequest(response([{ _id: 'current', _source: { teaser: 'x' } }]));
+    await flush();
+    expect(state.results.map(hit => hit._id)).toEqual(['current']);
+
+    rerender(view({ ...config, minSearchLength: 1 }));
+    await settle();
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not search when the query remains below the threshold', async () => {
+    const { rerender } = await mount('ai');
+    rerender(view({ ...config, minSearchLength: 4 }));
+    await settle();
+    expect(global.fetch).not.toHaveBeenCalled();
+    expect(state.isLoading).toBe(false);
+  });
+});

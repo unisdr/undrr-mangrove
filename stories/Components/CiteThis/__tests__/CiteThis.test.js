@@ -593,8 +593,108 @@ test('the work id falls back to Schema.org identifier, then @id, then the URL', 
     'data-mg-cite-this-title="Other" data-mg-cite-this-url="https://www.undrr.org/other?x=1"'
   );
   document.querySelector('script[type="application/ld+json"]').remove();
-  expect(resolveCitation(element).id).toBe('https://www.undrr.org/other?x=1');
+  expect(resolveCitation(element).id).toBeNull();
 });
+
+test.each(['42', '43'])(
+  'query-addressed work %s has no automatic analytics identity but retains its locator in copies and exports',
+  async record => {
+    const url = `https://www.undrr.org/report?id=${record}`;
+    const element = fixture(
+      `data-mg-cite-this-title="Report" data-mg-cite-this-url="${url}"`
+    );
+    const writeText = jest.fn().mockResolvedValue();
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+    const citation = resolveCitation(element);
+    expect(citation.id).toBeNull();
+    expect(citation.url).toBe(url);
+    const events = [];
+    for (const name of ['open', 'copy', 'copy-url', 'export']) {
+      element.addEventListener(`mg-cite-this:${name}`, event =>
+        events.push(event.detail)
+      );
+    }
+    mgCiteThis(element);
+    element.querySelector('.mg-cite-this__trigger').click();
+    element.querySelector('dialog [data-mg-cite-this-copy]').click();
+    element.querySelector('.mg-cite-this__copy-url').click();
+    await Promise.resolve();
+    expect(writeText).toHaveBeenCalledWith(citation.text);
+    expect(writeText).toHaveBeenCalledWith(url);
+    for (const link of element.querySelectorAll('[data-mg-cite-this-format]')) {
+      const download = decodeURIComponent(
+        link.getAttribute('href').split(',')[1]
+      );
+      expect(download).toContain(url);
+      // Prevent jsdom from trying to navigate to the download data URL.
+      link.addEventListener('click', event => event.preventDefault());
+      link.click();
+    }
+    expect(events).toHaveLength(5);
+    for (const detail of events) {
+      expect(detail.id).toBeNull();
+      expect(detail.url).toBe('https://www.undrr.org/report');
+      expect(JSON.stringify(detail)).not.toContain(`id=${record}`);
+    }
+  }
+);
+
+test('a query-bearing Schema.org @id has no automatic identity or less-specific fallback', () => {
+  document.head.insertAdjacentHTML(
+    'beforeend',
+    `<link rel="canonical" href="https://www.undrr.org/publication/report">
+     <script type="application/ld+json">{"@type":"Report","url":"https://www.undrr.org/publication/report","@id":"https://data.undrr.org/works?id=42","name":"R"}</script>`
+  );
+  const element = fixture();
+  expect(resolveCitation(element).id).toBeNull();
+  const opens = [];
+  element.addEventListener('mg-cite-this:open', event =>
+    opens.push(event.detail)
+  );
+  mgCiteThis(element);
+  element.querySelector('.mg-cite-this__trigger').click();
+  expect(opens[0].id).toBeNull();
+  element.dataset.mgCiteThisId = 'preventionweb:node/42';
+  expect(resolveCitation(element).id).toBe('preventionweb:node/42');
+});
+
+test.each(['10.1234/example', '9781234567890'])(
+  'a structured identifier %s remains available for a query-addressed work',
+  identifier => {
+    document.head.insertAdjacentHTML(
+      'beforeend',
+      `<link rel="canonical" href="https://www.undrr.org/report?id=42">
+       <script type="application/ld+json">{"@type":"Report","url":"https://www.undrr.org/report?id=42","identifier":"${identifier}","name":"R"}</script>`
+    );
+    expect(resolveCitation(fixture()).id).toBe(identifier);
+  }
+);
+
+test.each(['host', 'structured'])(
+  'an explicitly authored %s identifier is retained even when it is a URL with a query',
+  source => {
+    const id = 'https://data.undrr.org/works?edition=approved';
+    document.head.insertAdjacentHTML(
+      'beforeend',
+      `<link rel="canonical" href="https://www.undrr.org/report?id=42">
+       <script type="application/ld+json">{"@type":"Report","url":"https://www.undrr.org/report?id=42","identifier":"${id}","name":"R"}</script>`
+    );
+    const element = fixture(
+      source === 'host' ? `data-mg-cite-this-id="${id}"` : ''
+    );
+    expect(resolveCitation(element).id).toBe(id);
+    const opens = [];
+    element.addEventListener('mg-cite-this:open', event =>
+      opens.push(event.detail)
+    );
+    mgCiteThis(element);
+    element.querySelector('.mg-cite-this__trigger').click();
+    expect(opens[0].id).toBe(id);
+  }
+);
 
 test('an editorial citation uses the configured URL for Copy citation URL', () => {
   const element = fixture(
@@ -669,6 +769,39 @@ test('a failed copy from the field opens the dialog to copy manually', async () 
   ]);
   expect(opens).toEqual(['copy-error']);
 });
+
+test.each(['close button', 'native close'])(
+  'failed field copy returns focus to the field after %s, then normal opening returns to its trigger',
+  async closePath => {
+    const element = fixture('data-mg-cite-this-title="Report"');
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: jest.fn().mockRejectedValue(new Error('denied')) },
+    });
+    mgCiteThis(element);
+    const preview = element.querySelector('.mg-cite-this__preview');
+    const trigger = element.querySelector('.mg-cite-this__trigger');
+    const dialog = element.querySelector('dialog');
+    preview.focus();
+    preview.click();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(document.activeElement).toBe(
+      element.querySelector('.mg-cite-this__title')
+    );
+    if (closePath === 'close button') {
+      element.querySelector('.mg-cite-this__close').click();
+    } else {
+      // Escape/native dismissal delivers the same close event.
+      dialog.close();
+    }
+    expect(document.activeElement).toBe(preview);
+    trigger.focus();
+    trigger.click();
+    dialog.close();
+    expect(document.activeElement).toBe(trigger);
+  }
+);
 
 test('a second module copy does not enhance an element twice', () => {
   const element = fixture('data-mg-cite-this-title="Report"');

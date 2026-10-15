@@ -557,9 +557,9 @@ export const SORT_VALUES = [
 ];
 
 /**
- * Event date sorts. SortOptions offers them only when `defaultSort` (or the
- * current sort) is one of them, so ordinary listings don't show sorts that
- * would put every non-event last.
+ * Event date sorts. SortOptions offers them when `defaultSort` or a sort
+ * seen during the widget session is one of them, so ordinary listings
+ * do not show sorts that would put every non-event last.
  * @type {string[]}
  */
 export const EVENT_SORT_VALUES = ['eventDateAsc', 'eventDateDesc'];
