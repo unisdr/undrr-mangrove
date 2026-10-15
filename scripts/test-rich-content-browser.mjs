@@ -34,6 +34,27 @@ async function open(page, story, theme, rtl) {
   await page
     .locator(story === 'editorial' ? '#rich-content-demo' : '#rich-boundaries')
     .waitFor();
+  const expected = ['', 'preventionweb', 'irp', 'mcr', 'delta'][
+    themes.findIndex(([name]) => name === theme)
+  ];
+  await page.waitForFunction(token => {
+    const body = document.body;
+    const loaded = getComputedStyle(body)
+      .getPropertyValue('--mg-theme-loaded')
+      .trim();
+    const correctClass = token
+      ? body.classList.contains(`mg-theme-${token}`)
+      : ![...body.classList].some(name => name.startsWith('mg-theme-'));
+    return (
+      correctClass &&
+      loaded === token &&
+      getComputedStyle(body).getPropertyValue('--mg-spacing-100').trim() !== ''
+    );
+  }, expected);
+  assert.equal(
+    await page.locator('body').evaluate(el => getComputedStyle(el).direction),
+    rtl ? 'rtl' : 'ltr'
+  );
   await page.evaluate(() => document.fonts.ready);
 }
 
@@ -119,10 +140,11 @@ try {
           start,
           'Named table region scrolls by keyboard'
         );
-        await page.locator('pre').focus();
+        const code = page.locator('#rich-content-demo pre');
+        await code.focus();
         assert(
           await page
-            .locator('pre')
+            .locator('#rich-content-demo pre')
             .evaluate(
               el =>
                 el.matches(':focus-visible') &&
@@ -130,6 +152,20 @@ try {
             ),
           'Code region has visible keyboard focus'
         );
+        if (width === 320) {
+          const codeStart = await code.evaluate(el => el.scrollLeft);
+          assert.equal(
+            await code.evaluate(el => getComputedStyle(el).direction),
+            'ltr'
+          );
+          await page.keyboard.press('ArrowRight');
+          await page.waitForFunction(
+            start =>
+              document.querySelector('#rich-content-demo pre').scrollLeft !==
+              start,
+            codeStart
+          );
+        }
         await a11y(page);
         if (width === 320)
           await page.screenshot({
@@ -187,8 +223,8 @@ try {
       }
     }
   }
-  // Combined media settings still retain visible link cues, overflow access,
-  // native semantics and component-owned button presentation.
+  // Combined media settings retain visible link cues and pass the same
+  // scoped WCAG axe checks; viewport/direction cases cover keyboard overflow.
   const page = await browser.newPage({
     viewport: { width: 320, height: 900 },
     forcedColors: 'active',

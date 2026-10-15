@@ -147,6 +147,9 @@
   max-width: 100%;
   margin-block: var(--mg-spacing-150);
   overflow-x: auto;
+  // Match the existing LTR code child so RTL pages can reach both ends.
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 @include mg-editorial-element("pre:focus-visible") {
