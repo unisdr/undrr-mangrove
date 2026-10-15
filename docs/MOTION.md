@@ -4,21 +4,31 @@
 
 This is Mangrove's shared reference for component motion. Apply it alongside the [accessibility guide](ACCESSIBILITY.md) and [review checklist](REVIEW-CHECKLIST.md). AI consumers can fetch the same guidance as [llms-motion.txt](https://mangrove.undrr.org/llms-motion.txt).
 
+The [Interfaces.dev cheat sheet](https://interfaces.dev/cheat-sheet#animation) is a review lens, not a specification. Mangrove adopts its feedback and continuity principles. Press scaling, icon transitions and task-specific sequencing are optional only where they improve feedback or continuity; decorative and viewport-entry effects are excluded. Other review themes belong to the interface quality review (unisdr/undrr-mangrove#1280).
+
 ## Give motion a purpose
 
 Use motion to confirm a user action, explain continuity between states, or communicate ongoing work. Keep it brief, restrained and interruptible. A user can reverse an open/close action or start another task without waiting for an animation to finish. Focus, activation and semantic state must update without waiting for visual completion.
 
 Do not add decorative, attention-seeking or viewport-entry animations. Mangrove removed viewport scroll animations in unisdr/undrr-mangrove#867. An element must remain visible and usable when animation never runs; motion must never be the only way to communicate state.
 
+Choose whether to animate before choosing timing. Repetitive navigation, selection and hover feedback may be instant; frequently opened menus should normally appear immediately. Test repeated use at realistic working speed.
+
+Prefer transitions for reversible state changes. Reserve finite keyframes for justified sequences with a cancellation path. Initial rendering, hydration and theme changes must not trigger incidental interaction animations.
+
+Anchor popup motion to its trigger and edge-attached surfaces to their edge. Closing should be quieter than opening; timing and travel need not be symmetrical.
+
+For pointer-only hover effects, use `@media (hover: hover)`; preserve keyboard feedback.
+
 ## Use the existing timing tokens
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--mg-motion-duration-fast` | `160ms` | Local feedback, small state changes and brief exits |
+| `--mg-motion-duration-fast` | `160ms` | Optional local feedback, small state changes and brief exits |
 | `--mg-motion-duration-medium` | `300ms` | Larger surface or drawer movement that needs continuity |
 | `--mg-motion-easing-standard` | `cubic-bezier(0.2, 0, 0, 1)` | Interaction transitions and finite state-change animations |
 
-These tokens live in `tokens/mangrove.yaml`. The current set is sufficient for the motion review: no slow duration or separate enter/exit easing is required. Add a shared token only when repeated component needs justify it, with evidence across themes and reduced motion. Never hand-edit generated token output.
+These tokens live in `tokens/mangrove.yaml`. Start with this set when motion is justified; it is not a minimum duration or evidence that one curve suits every interaction. Immediate feedback needs no transition or timing token. Add a shared token only when repeated component needs justify it, with evidence across themes and reduced motion. Never hand-edit generated token output.
 
 Name the properties being transitioned instead of using `transition: all`. Use tokens for finite interaction timing, including finite keyframes. Prefer transform and opacity where they serve the interaction, while keeping the final layout correct without them.
 
@@ -55,11 +65,13 @@ This is a safety net, not a component's reduced-motion design. It runs an ungate
 
 ### Keep progress understandable
 
-Reuse the shared [Loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) or [ProgressBar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs), with accessible labels and the component's announcement pattern. A frozen spinner is not an adequate static loading state.
+Reuse the shared [Loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) or [ProgressBar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs), with accessible labels and the component's announcement pattern. Freezing a spinner is not a designed static loading state; a labelled still alternative can communicate ongoing work.
 
-- Loader is an existing, explicit exception: under reduced motion it retains steady rotation at three times its normal cycle duration (`2.7s` by default). Its scoped overrides outrank the global reset. This is not permission for arbitrary looping animations under reduced motion.
+- Loader is an existing, explicit exception: under reduced motion it retains steady rotation at three times its normal cycle duration (`2.7s` by default). Its scoped overrides outrank the global reset. This describes the current implementation, not evidence that everyone requesting reduced motion can comfortably tolerate rotation. Consider a clearly labelled still alternative; evaluate this exception with affected users before extending it to other components.
 - Indeterminate ProgressBar replaces its moving scanner with a static, full-width dashed pattern under reduced motion. Use it with a visible loading label where a still indicator is appropriate. Determinate progress continues to show the true value without interpolating it.
-- A custom static alternative must identify that work is ongoing through a label and shape, and distinguish it from completed, failed or stalled work. Document and review the exception before creating another indicator.
+- A custom static alternative must identify that work is ongoing through a label and shape, and distinguish it from completed or failed work. Document and review the exception before creating another indicator.
+
+An indicator alone cannot detect a stalled request. Delay, error and completion messages must follow application state, rather than implying that motion proves useful work is continuing.
 
 ### Check JavaScript-driven motion at the action
 
