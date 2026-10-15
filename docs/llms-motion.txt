@@ -73,6 +73,8 @@ Reuse the shared [Loader](https://mangrove.undrr.org/?path=/docs/components-load
 
 An indicator alone cannot detect a stalled request. Delay, error and completion messages must follow application state, rather than implying that motion proves useful work is continuing.
 
+The [Loader reduced-motion research brief](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/LOADER-REDUCED-MOTION-RESEARCH.md) records the open evaluation (unisdr/undrr-mangrove#1368) and the provisional 2.1 release disposition. It is a study plan, not evidence that the exception has been validated with users.
+
 ### Check JavaScript-driven motion at the action
 
 The CSS reset does not control an explicit JavaScript smooth-scroll request, Web Animations API playback, or motion lifecycle timers. Check the preference when initiating motion, using the target element's owning window so embedded contexts work correctly.

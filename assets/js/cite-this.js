@@ -275,12 +275,13 @@ function workIdentifier(data, work, url, canonical, base) {
       return typeof id === 'number' ? String(id) : firstText(id);
     })
     .find(Boolean);
-  return (
-    data.mgCiteThisId?.trim() ||
-    schemaId ||
-    nodeId(work?.['@id'], [url, canonical], base) ||
-    url
-  );
+  const provided = data.mgCiteThisId?.trim() || schemaId;
+  if (provided) return provided;
+  const candidate = nodeId(work?.['@id'], [url, canonical], base) || url;
+  // A query can identify a distinct work or contain private data. Do not
+  // forward it automatically, or strip it and merge unrelated works. The
+  // host can supply an approved stable identifier for per-work analytics.
+  return new URL(candidate, base).search ? null : candidate;
 }
 
 // An @id is only stable when it is not the page or work URL plus a fragment,
@@ -856,7 +857,9 @@ export function mgCiteThis(scope = document) {
     let previewTimer;
     // `trigger` is a person opening the dialog; `copy-error` is the dialog
     // opening itself after a failed copy from the field.
-    const openDialog = placement => {
+    let returnFocus = trigger;
+    const openDialog = (placement, opener = trigger) => {
+      returnFocus = opener;
       dialog.showModal();
       title.focus();
       emit(element, 'open', citation, { placement });
@@ -865,7 +868,7 @@ export function mgCiteThis(scope = document) {
     const onClose = () => {
       clearTimeout(statusTimer);
       if (status) status.textContent = '';
-      trigger.focus();
+      returnFocus.focus();
     };
     const closeDialog = () => dialog.close();
     const announce = (message, delay) => {
@@ -915,7 +918,7 @@ export function mgCiteThis(scope = document) {
           target: 'citation',
           placement: 'field',
         });
-        openDialog('copy-error');
+        openDialog('copy-error', preview);
         announce(element.dataset.mgCiteThisFailedLabel || t.failed, 5000);
         return;
       }
