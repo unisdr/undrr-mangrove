@@ -1,14 +1,20 @@
-# Loader under reduced motion: research brief
+# Loader under reduced motion: decision and research record
 
-Status: proposed study, not conducted. Tracked by unisdr/undrr-mangrove#1368, following the release review disposition in unisdr/undrr-mangrove#1367 and the interface quality review, unisdr/undrr-mangrove#1280. The research ticket remains open after the release review is resolved. A product/design owner must arrange participants and record the resulting decision; no recruitment or participant findings are implied by this brief.
+Status: static-default design decision for unisdr/undrr-mangrove#1368, superseding the provisional slow-rotation exception recorded in unisdr/undrr-mangrove#1367. The proposed participant study below was not conducted. Close the implementation ticket only after the new treatment and its regression checks have landed; do not record the study as completed.
 
-## Question and current release disposition
+## Decision for 2.1
 
-Can people who request reduced motion understand ongoing work comfortably with the current slow Loader, and would a deliberately designed still indicator serve them better?
+Replace the shared Loader's reduced-motion rotation with a deliberately static dashed ring. Non-decorative Loaders show their translated label visibly in normal flow, with wrapping in narrow contexts. Decorative Loaders remain icon-only and require visible pending text and an announcement owner from their caller. Keep normal-motion rotation, the existing label/announcement contract, forced-colour visibility and application-owned completion/error states.
 
-For 2.1, retain the existing documented Loader exception: rotation takes three times the normal cycle duration (`2.7s` by default). The open research is a follow-up, not a claim of validated comfort or a release blocker solely because the study has not happened. Do not extend the exception to new bespoke indicators. Keep the [motion guidance](MOTION.md#keep-progress-understandable) and the existing labelled static ProgressBar option available to authors. This brief changes no Loader runtime behaviour.
+This removes an optional motion exception whose comfort had not been evaluated. It is a design decision, not a claim that every person understands or prefers the new treatment. The [CSS reduced-motion technique](https://www.w3.org/WAI/WCAG22/Techniques/css/C39.html) and [media-feature guidance](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/%40media/prefers-reduced-motion) support responding to the preference by removing non-essential motion. They do not establish that every loading spinner violates WCAG or that a particular static design is validated.
 
-A concrete report of unacceptable discomfort or an inability to identify the current state should reopen this disposition. Automated checks can establish timing, visibility and semantics, but cannot settle comfort or comprehension.
+The retained legacy search-spinner CSS is a separate compatibility path pending a consumer migration audit. This decision removes the shared Loader exception; it does not claim that every external or legacy loading indicator has been migrated.
+
+Acceptance requires visible pending text, no Loader animation under reduced motion, unchanged normal-motion rotation, usable default/inline and CSS-only patterns, translated and long labels, RTL, forced colours both alone and combined, and correct behaviour when the preference changes while mounted. Verify Gallery and search consumers as well as the standalone component. Automated checks establish these observable behaviours, not user comfort or comprehension.
+
+## Optional future evaluation (not conducted)
+
+The original qualitative study plan follows as a record and a possible basis for future work. It is not a prerequisite for removing the unvalidated rotation exception. If user feedback identifies ambiguity, discomfort or a lost loading state, open a focused follow-up and revise the design. Any future participant study needs an owner, recruitment and actual observations; none are implied here.
 
 ## Participants and comparison
 
@@ -16,7 +22,7 @@ Plan a first qualitative round with six to eight adults who already choose reduc
 
 Compare two prototypes in the same layout with identical labels, timing and outcomes:
 
-- The shared Loader at its current reduced-motion speed, beside visible loading text.
+- The previous slow-rotation treatment, beside visible loading text, only if participants are comfortable trying it. It is no longer the shared reduced-motion default.
 - A designed still indicator beside the same text, clearly different from success and failure states. Use the existing static indeterminate ProgressBar where the layout accommodates it; for an inline slot, prototype a meaningful still shape rather than freezing a spinner frame.
 
 Agree the test conditions with each participant. Explain that motion is optional, provide a still preview first, and let them skip the moving condition or stop immediately. For participants comfortable trying both, vary their order to reduce ordering effects. A skipped or stopped moving condition is relevant evidence; it is not a failed participant task. Keep keyboard and screen-reader semantics equivalent between candidates so those differences do not confound the visual comparison.
@@ -41,4 +47,4 @@ Before sessions, agree these qualitative decision rules:
 - Do not recommend a moving reduced-motion default when a participant reports unacceptable discomfort or needs to stop that condition. Investigate a still default or a suitable still alternative; do not average the report away.
 - A still candidate must preserve understandable progress, focus, readable labels and reliable announcements. If it falls short, revise those cues before concluding that motion is required.
 
-The deliverable is a short findings record: participant coverage without identifying details, prototype versions, observations, unresolved cases and a named decision owner. State whether to retain, replace or constrain the current exception, and link any implementation work with its compatibility and documentation implications. Keep the research open if participants have not been recruited or observations are inconclusive. A six-to-eight-person round can guide the next design decision; it cannot prove universal tolerance.
+The deliverable is a short findings record: participant coverage without identifying details, prototype versions, observations, unresolved cases and a named decision owner. State whether to retain or revise the static treatment, and link any implementation work with its compatibility and documentation implications. If a separate research ticket is opened, keep it open until participants have actually been recruited and observations support a decision. A six-to-eight-person round can guide the next design decision; it cannot prove universal tolerance.

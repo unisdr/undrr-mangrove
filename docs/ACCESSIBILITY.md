@@ -187,7 +187,7 @@ function ModalTrigger() {
 
 Follow the [motion and animation guidance](MOTION.md) for purpose, tokens, CSS and JavaScript patterns, and browser checks. Optional interaction motion runs only when users have not requested reduced motion; loading indicators use the explicit alternatives below.
 
-Loading indicators need care: one frozen part way through its animation reads as loading that has stopped. Under reduced motion the [loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) keeps turning at a third of its speed, and the indeterminate [progress bar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs) shows a still, dashed bar instead of a moving segment.
+Loading indicators need a designed pending state rather than a spinner accidentally frozen by a reset. Under reduced motion the shared [loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) shows a static dashed ring with a visible loading label; decorative use requires visible pending text from the caller. The indeterminate [progress bar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs) shows a still, dashed bar instead of a moving segment. Labels and application messages distinguish pending, completed and failed work; movement does not prove that a request is making progress.
 
 ```scss
 // Only animate when the user allows it

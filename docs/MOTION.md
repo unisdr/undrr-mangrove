@@ -67,13 +67,13 @@ This is a safety net, not a component's reduced-motion design. It runs an ungate
 
 Reuse the shared [Loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) or [ProgressBar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs), with accessible labels and the component's announcement pattern. Freezing a spinner is not a designed static loading state; a labelled still alternative can communicate ongoing work.
 
-- Loader is an existing, explicit exception: under reduced motion it retains steady rotation at three times its normal cycle duration (`2.7s` by default). Its scoped overrides outrank the global reset. This describes the current implementation, not evidence that everyone requesting reduced motion can comfortably tolerate rotation. Consider a clearly labelled still alternative; evaluate this exception with affected users before extending it to other components.
+- Loader uses a deliberately static dashed ring under reduced motion. Its non-decorative form exposes the translated loading label in normal flow; decorative use requires caller-owned visible pending text and an announcement owner. Remove the indicator when work ends and report completion or failure through application state. The shared Loader no longer has a slow-rotation exception.
 - Indeterminate ProgressBar replaces its moving scanner with a static, full-width dashed pattern under reduced motion. Use it with a visible loading label where a still indicator is appropriate. Determinate progress continues to show the true value without interpolating it.
 - A custom static alternative must identify that work is ongoing through a label and shape, and distinguish it from completed or failed work. Document and review the exception before creating another indicator.
 
 An indicator alone cannot detect a stalled request. Delay, error and completion messages must follow application state, rather than implying that motion proves useful work is continuing.
 
-The [Loader reduced-motion research brief](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/LOADER-REDUCED-MOTION-RESEARCH.md) records the open evaluation (unisdr/undrr-mangrove#1368) and the provisional 2.1 release disposition. It is a study plan, not evidence that the exception has been validated with users.
+The [Loader decision and research record](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/LOADER-REDUCED-MOTION-RESEARCH.md) explains the static default adopted for unisdr/undrr-mangrove#1368. This is a design decision to remove an unvalidated motion exception, not a completed study or proof of universal comprehension. The retained legacy search-spinner CSS has a separate compatibility exception pending its consumer migration; do not copy it into new implementations.
 
 ### Check JavaScript-driven motion at the action
 
@@ -97,7 +97,7 @@ For CSS classes applied by JavaScript, gate the corresponding CSS animation as a
 
 ## Preserve forced colours and reading direction
 
-Test forced colours and reduced motion together. Indicators need a visible track and state with system colours; gradients, shadows or author background colours alone may disappear. Loader uses `GrayText` and `CanvasText` for its border segments; ProgressBar uses system colours and a visible border. Scope `forced-color-adjust: none` narrowly when required to preserve a meaningful shape, and supply system colours explicitly.
+Test forced colours and reduced motion together. Indicators need a visible track and state with system colours; gradients, shadows or author background colours alone may disappear. Loader uses `GrayText` and `CanvasText` for its moving border segments, and a static `CanvasText` shape under reduced motion; ProgressBar uses system colours and a visible border. Scope `forced-color-adjust: none` narrowly when required to preserve a meaningful shape, and supply system colours explicitly.
 
 Directional travel follows the reading direction. Use logical positioning and mirror horizontal transforms where they imply inline start/end; logical offsets do not reverse physical `translateX()` values. ProgressBar's `:dir(rtl)` scanner is the reference. Rotation and vertical movement do not need mirroring merely because the page is RTL.
 
