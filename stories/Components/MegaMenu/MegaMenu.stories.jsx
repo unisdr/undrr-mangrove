@@ -677,7 +677,10 @@ export const MotionReview = {
   play: async ({ canvasElement }) => {
     if (canvasElement.ownerDocument.defaultView.innerWidth < 900) return;
     const canvas = within(canvasElement);
-    await userEvent.hover(canvas.getByRole('button', { name: 'Resources' }));
+    // Vanilla hydration mounts a separate React root after this story commits.
+    // Wait for the rendered control rather than racing its hydration effect.
+    const trigger = await canvas.findByRole('button', { name: 'Resources' });
+    await userEvent.hover(trigger);
     const category = await canvas.findByRole('menuitem', { name: 'Guidance' });
     for (const title of ['Guidance', 'Publications', 'Guidance']) {
       // eslint-disable-next-line no-await-in-loop -- exercise successive, interrupting category changes
@@ -772,4 +775,15 @@ export const HydratedMotionReview = {
   ...MotionReview,
   name: 'Motion: vanilla hydration',
   render: () => <HydratedMotionExample />,
+  play: async context => {
+    const canvas = within(context.canvasElement);
+    await canvas.findByRole('navigation', { name: 'Main Navigation' });
+    await expect(
+      context.canvasElement.querySelector('[data-mg-mega-menu]')
+    ).toHaveAttribute('data-mg-hydrated', 'true');
+    await expect(
+      canvas.queryByRole('navigation', { name: 'Navigation fallback' })
+    ).not.toBeInTheDocument();
+    await MotionReview.play(context);
+  },
 };
