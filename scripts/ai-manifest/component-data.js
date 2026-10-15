@@ -2069,7 +2069,7 @@ npm run build</code></pre>
 
   'components-cite-this': {
     description:
-      'Vanilla citation button and native dialog for detail pages. An empty data-mg-cite-this element uses the page title and URL; server-rendered disclosure markup preserves a no-JavaScript fallback. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent.',
+      'Vanilla citation button and native dialog for detail pages. An empty data-mg-cite-this element uses the page title and URL; server-rendered disclosure markup preserves a no-JavaScript fallback. Prefer an approved citation, then configured metadata, a matching JSON-LD CreativeWork, or a page-title fallback. The script supplies copy feedback and bubbling analytics events; the host owns GA4 and consent. Event id is null for automatically URL-derived IDs containing a query: supply an approved data-mg-cite-this-id for per-work reporting without forwarding query values or merging distinct works.',
     summary:
       'Vanilla citation dialog with editorial, structured-data and page fallbacks, copy feedback, and analytics events.',
     cssClasses: [
@@ -2121,6 +2121,8 @@ npm run build</code></pre>
         'data-mg-cite-this-publisher': 'Override publisher.',
         'data-mg-cite-this-year': 'Override publication year.',
         'data-mg-cite-this-url': 'Override the citation locator.',
+        'data-mg-cite-this-id':
+          'Approved stable work identifier for analytics. Required for per-work reporting when an automatically URL-derived ID contains a query (otherwise event id is null).',
         'data-mg-cite-this-site': 'Override site name for page fallback.',
         'data-mg-cite-this-label': 'Translate the generated Cite this button.',
         'data-mg-cite-this-copy-label':
