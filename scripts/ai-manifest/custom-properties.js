@@ -103,7 +103,7 @@ export const NOT_PUBLIC = {
 // this file exists to prevent, reached through the file itself.
 export const MIN_PROPERTIES = {
   'components-buttons-buttons': 1,
-  'components-syndicated-search': 2,
+  'components-syndicated-search': 3,
   'components-cards-icon-card': 4,
   'components-cta': 2,
   'components-dataviz-legend': 1,
@@ -135,7 +135,10 @@ export const MIN_PROPERTIES = {
 // anything else claims that exact name.
 export const OWNERS = {
   'components-images-author-image': ['--mg-author-image-'],
-  'components-syndicated-search': ['--mg-search-drawer-'],
+  'components-syndicated-search': [
+    '--mg-search-drawer-',
+    '--mg-search-spinner-',
+  ],
   'components-buttons-buttons': ['--mg-cta-arrow-shift'],
   'components-cards-icon-card': [
     '--mg-card-border',
@@ -275,6 +278,8 @@ export const PROPERTY_DOCS = {
     'Width of a start or end drawer, height of a bottom drawer.',
   '--mg-drawer-offset':
     'Translation that holds the drawer off-screen while it is closed. The component flips it per edge and per text direction, so set the size instead unless you are replacing that behaviour deliberately.',
+  '--mg-search-spinner-duration':
+    'One revolution of the retained legacy search spinner (1s by default; three times longer under reduced motion). New widget code uses shared Loader instead.',
   '--mg-search-drawer-offset':
     'Translation that holds the mobile filter drawer off-screen before it slides in. The component flips it per text direction, so the drawer enters from the inline start in both; set it only if you are replacing that behaviour.',
   '--mg-search-drawer-shadow-offset':

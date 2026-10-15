@@ -43,7 +43,7 @@ const inMedia = (rule, pattern) => {
   return false;
 };
 
-const REDUCED_MOTION = /prefers-reduced-motion:\s*reduce/;
+const ALLOW_MOTION = /prefers-reduced-motion:\s*no-preference/;
 
 /** True when no at-rule wraps this rule, so it applies unconditionally. */
 const unconditional = rule => {
@@ -157,7 +157,10 @@ describe('the drawer slides in from the inline start', () => {
   };
 
   const animationName = () => {
-    const [name] = declared(panelRule(), 'animation')[0].split(/\s+/);
+    const [{ rule }] = rulesWhere(
+      selector => selector === '.mg-search__drawer'
+    ).filter(({ rule }) => inMedia(rule, ALLOW_MOTION));
+    const [name] = declared(rule, 'animation')[0].split(/\s+/);
     return name;
   };
 
@@ -186,11 +189,12 @@ describe('the drawer slides in from the inline start', () => {
     });
   });
 
-  test('reduced motion drops the slide', () => {
-    const [match] = rulesWhere(
+  test('the slide is an optional enhancement over the usable base panel', () => {
+    const animations = rulesWhere(
       selector => selector === '.mg-search__drawer'
-    ).filter(({ rule }) => inMedia(rule, REDUCED_MOTION));
-    expect(match).toBeDefined();
-    expect(declared(match.rule, 'animation')).toEqual(['none']);
+    ).filter(({ rule }) => declared(rule, 'animation').length);
+    expect(animations).toHaveLength(1);
+    expect(inMedia(animations[0].rule, ALLOW_MOTION)).toBe(true);
+    expect(declared(panelRule(), 'animation')).toEqual([]);
   });
 });

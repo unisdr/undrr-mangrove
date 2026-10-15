@@ -5,6 +5,7 @@ import * as DisplayModesStories from './SyndicationSearchWidget.DisplayModes.sto
 import * as FiltersStories from './SyndicationSearchWidget.Filters.stories';
 import * as IntegrationsStories from './SyndicationSearchWidget.Integrations.stories';
 import * as TogglesStories from './SyndicationSearchWidget.Toggles.stories';
+import * as MotionStories from './SyndicationSearchWidget.Motion.stories';
 
 <Meta of={SyndicationSearchWidgetStories} />
 
@@ -654,7 +655,20 @@ document.addEventListener('mg-search-widget:results', event => {
 });
 ```
 
-Until its first results arrive the widget shows its loading skeleton (or the server-rendered results, see [Server-rendered results](#server-rendered-results)); it asks for a search term only when the query is shorter than `minSearchLength` and no filters are set, the one case where it won't search. After that, an empty query that finds nothing says "No results found". When a new search runs with results on screen, the results stay, dimmed, with a small loader in the results header, and the new set fades in; the skeleton is only for the first load. Under `prefers-reduced-motion` the decorative motion stops (fades, the shimmer, the pulsing overlay, the moving progress bar), leaving static loading states; spinners keep a slow rotation, as Mangrove's Loader does. Enter, the search button, Clear, and back/forward search at once; only typing waits for `debounceDelay`. A widget with nothing interactive (no search box and no facets, a fixed list of cards) does not announce its total in the live region; every other widget does.
+Until its first results arrive the widget shows its loading skeleton (or the server-rendered results, see [Server-rendered results](#server-rendered-results)); it asks for a search term only when the query is shorter than `minSearchLength` and no filters are set, the one case where it won't search. After that, an empty query that finds nothing says "No results found". When a new search runs with results on screen, the results stay, dimmed, with a small loader in the results header, and the new set fades in; the skeleton is only for the first load. The results region uses the shared flush indeterminate ProgressBar, with its existing status text and `aria-busy` owning announcements. Skeletons keep stable geometry without shimmer; retained results, the strip and the inline Loader provide refresh feedback without an additional pulsing overlay. Under reduced motion, result fades stop and the shared strip becomes a still dashed pattern; the inline Loader retains its documented slow rotation. Forced colours keeps the strip and skeleton outlines visible. Enter, the search button, Clear, and back/forward search at once; only typing waits for `debounceDelay`. A widget with nothing interactive (no search box and no facets, a fixed list of cards) does not announce its total in the live region; every other widget does.
+
+### Motion and loading states
+
+Follow [Motion and animation](?path=/docs/design-decisions-motion--docs). Interaction transitions and the one whole-set opacity fade use `--mg-motion-duration-fast` and `--mg-motion-easing-standard`, only under `prefers-reduced-motion: no-preference`. The filter drawer uses `--mg-motion-duration-medium`, mirrors inline-start travel in RTL, and appears immediately under reduced motion. Focus moves on opening without waiting for animation; closing unmounts immediately. Legacy pending/visible result classes are retained for consumers, with their hidden start state gated alongside the transition. Typing debounce and other behavioural delays are unchanged. The public legacy `.mg-search__spinner` remains compatible for existing hand-written markup: `--mg-search-spinner-duration` is one revolution (`1s`, three times longer under reduced motion), with system-colour border segments in forced colours. New implementations use shared Loader instead.
+
+Migration: `.mg-search__progress-bar` and `mg-search-progress` are removed. The `.mg-search__progress` positioning wrapper now contains shared ProgressBar markup; consumers overriding the old segment should use ProgressBar properties instead.
+
+These deterministic states use the same results, progress and drawer components without a live search endpoint. Complete, refresh or fail a search to inspect the state changes. Check reduced motion, forced colours and their combination, all themes, and RTL; use a narrow viewport for the filter drawer.
+
+<Canvas of={MotionStories.InitialLoading} meta={MotionStories} />
+<Canvas of={MotionStories.RefreshingResults} meta={MotionStories} />
+<Canvas of={MotionStories.ResultsEntry} meta={MotionStories} />
+<Canvas of={MotionStories.FilterDrawer} meta={MotionStories} />
 
 After paging, the widget scrolls back to its results (instantly under `prefers-reduced-motion`) and moves focus to the results count, or to the results area when the count is hidden, instead of leaving it on a pager button that has been replaced.
 
@@ -892,6 +906,8 @@ On screens ≤800px, the sidebar is replaced with a drawer that slides in from t
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
 ## Changelog
+
+- **1.4.26**, 2026-10-15: Reuse the shared flush ProgressBar inside the results region. Keep stable skeletons, retain inline Loader refresh feedback and remove the competing pulse overlay. Gate interaction motion and legacy hidden states by `no-preference`, use motion timing tokens, preserve forced-colour outlines and RTL drawer travel, and move drawer focus without waiting for entry. Paging checks the owning window and uses instant scrolling under reduced motion. Add deterministic loading, refresh, result-entry and drawer stories.
 
 - **1.4.25**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Retains the legacy public search spinner class for server-rendered Drupal compatibility pending a deployment migration audit. React loading indicators already use Loader.
 

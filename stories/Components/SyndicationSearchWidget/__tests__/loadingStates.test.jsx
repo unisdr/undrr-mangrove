@@ -79,6 +79,13 @@ it('keeps results visible and dimmed while the next search runs', async () => {
   expect(screen.getByText('first')).toBeInTheDocument();
   expect(document.querySelector('.mg-search__results-loader')).not.toBeNull();
   expect(document.querySelector('.mg-search__skeleton')).toBeNull();
+  const region = document.querySelector('.mg-search__main');
+  expect(region).toHaveAttribute('aria-busy', 'true');
+  const bar = region.querySelector('progress');
+  expect(bar).not.toHaveAttribute('value');
+  expect(bar.closest('[aria-hidden="true"]')).not.toBeNull();
+  expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+  expect(bar.closest('[role="status"]')).toBeNull();
 
   await act(async () => {
     release();
@@ -86,6 +93,11 @@ it('keeps results visible and dimmed while the next search runs', async () => {
   await waitFor(() => expect(screen.getByText('second')).toBeInTheDocument());
   expect(document.querySelector('.mg-search__results--refreshing')).toBeNull();
   expect(document.querySelector('.mg-search__results-loader')).toBeNull();
+  expect(region).toHaveAttribute('aria-busy', 'false');
+  expect(region.querySelector('progress')).toBeNull();
+  expect(
+    region.querySelector('.mg-u-sr-only[role="status"]')
+  ).toHaveTextContent('1 result found for flood');
 });
 
 it('does not dim the results while a typed query waits for the debounce', async () => {
@@ -128,3 +140,69 @@ it('does not dim the results while a typed query waits for the debounce', async 
     ).not.toBeNull()
   );
 });
+
+// A rejected request must clear busy/progress in both first-load and refresh
+// paths. Otherwise the native bar would keep implying work after failure.
+it.each([false, true])(
+  'clears shared progress on failure (refresh=%s)',
+  async refresh => {
+    let rejectSearch;
+    let searches = 0;
+    global.fetch = jest.fn().mockImplementation(url => {
+      if (String(url).includes('preventionweb.net/api')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ results: [] }),
+        });
+      }
+      searches += 1;
+      if (refresh && searches === 1)
+        return Promise.resolve(hitsResponse('first'));
+      return new Promise((resolve, reject) => {
+        rejectSearch = reject;
+      });
+    });
+    const errorLog = jest.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      render(
+        <SyndicationSearchWidget
+          config={{
+            enableHashSync: false,
+            debounceDelay: 0,
+            defaultFilters: [],
+          }}
+        />
+      );
+      if (refresh) {
+        await screen.findByText('first');
+        fireEvent.change(screen.getByRole('searchbox'), {
+          target: { value: 'flood' },
+        });
+      }
+      await waitFor(() =>
+        expect(
+          document.querySelector('.mg-search__main progress')
+        ).not.toBeNull()
+      );
+      expect(document.querySelector('.mg-search__main')).toHaveAttribute(
+        'aria-busy',
+        'true'
+      );
+      expect(Boolean(document.querySelector('.mg-search__skeleton'))).toBe(
+        !refresh
+      );
+      await act(async () => rejectSearch(new Error('Network unavailable')));
+      expect(await screen.findByRole('alert')).toHaveTextContent(
+        'Network unavailable'
+      );
+      expect(document.querySelector('.mg-search__main')).toHaveAttribute(
+        'aria-busy',
+        'false'
+      );
+      expect(document.querySelector('.mg-search__main progress')).toBeNull();
+      expect(document.querySelector('.mg-search__results-loader')).toBeNull();
+    } finally {
+      errorLog.mockRestore();
+    }
+  }
+);
