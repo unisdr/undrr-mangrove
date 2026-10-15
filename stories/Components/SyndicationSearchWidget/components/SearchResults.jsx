@@ -143,8 +143,9 @@ export function SearchResults({
     }
   }, [handingOff, ssrNode]);
 
-  // New result sets fade in, except the first one after server-rendered
-  // results: it replaces the same content, and a fade would flash it.
+  // The results surface can fade in on mount, except after server-rendered
+  // results. Refreshes retain the surface and stable hit nodes so keyboard
+  // focus is not discarded merely to replay an entrance animation.
   const enter = !(ssrNode !== null && resultsVersion <= 1)
     ? ' mg-search__enter'
     : '';
@@ -378,7 +379,6 @@ export function SearchResults({
       {/* Results list or grid */}
       {isCardMode ? (
         <div
-          key={resultsVersion}
           className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}${enter}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
@@ -396,7 +396,6 @@ export function SearchResults({
         </div>
       ) : (
         <div
-          key={resultsVersion}
           className={`mg-search__results-list ${hiddenFieldClasses}${enter}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
