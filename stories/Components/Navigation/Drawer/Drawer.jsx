@@ -52,10 +52,11 @@ export const Drawer = ({
   useEffect(() => {
     const drawer = drawerRef.current;
     if (!drawer) return;
+    const ownerDocument = drawer.ownerDocument;
     drawer.inert = !isOpen;
 
     if (isOpen) {
-      returnFocusRef.current = document.activeElement;
+      returnFocusRef.current = ownerDocument.activeElement;
       (closeButtonRef.current || drawer).focus();
       return;
     }
@@ -64,9 +65,9 @@ export const Drawer = ({
     returnFocusRef.current = null;
     if (target && target.isConnected && typeof target.focus === 'function') {
       if (
-        drawer.contains(document.activeElement) ||
-        !document.activeElement ||
-        document.activeElement === document.body
+        drawer.contains(ownerDocument.activeElement) ||
+        !ownerDocument.activeElement ||
+        ownerDocument.activeElement === ownerDocument.body
       ) {
         target.focus();
       }

@@ -165,3 +165,26 @@ describe('Drawer', () => {
     expect(results).toHaveNoViolations();
   });
 });
+
+it('moves and restores focus within the drawer owning document', () => {
+  const frame = document.createElement('iframe');
+  document.body.appendChild(frame);
+  const ownerDocument = frame.contentDocument;
+  const trigger = ownerDocument.createElement('button');
+  ownerDocument.body.appendChild(trigger);
+  trigger.focus();
+  const host = ownerDocument.createElement('div');
+  ownerDocument.body.appendChild(host);
+  const { rerender, getByRole, unmount } = render(
+    <Drawer isOpen={false} onClose={jest.fn()} title="Embedded" />,
+    { container: host }
+  );
+  rerender(<Drawer isOpen onClose={jest.fn()} title="Embedded" />);
+  expect(ownerDocument.activeElement).toBe(
+    getByRole('button', { name: 'Close' })
+  );
+  rerender(<Drawer isOpen={false} onClose={jest.fn()} title="Embedded" />);
+  expect(ownerDocument.activeElement).toBe(trigger);
+  unmount();
+  frame.remove();
+});

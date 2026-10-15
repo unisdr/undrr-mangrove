@@ -2592,8 +2592,10 @@ npm run build</code></pre>
 
   // --- Media and scrolling collections (hydration) ---
   'components-gallery': {
+    summary:
+      'Media gallery with thumbnails, navigation, captions and accessible pending-media indicators.',
     description:
-      'Media gallery with a main stage, optional thumbnail rail, navigation arrows, captions and keyboard support. Handles images, videos and embedded players.',
+      'Media gallery with a main stage, optional thumbnail rail, navigation arrows, captions and keyboard support. Handles images, videos and embedded players. Pending media uses the shared inline Loader; thumbnail navigation scrolls instantly under reduced motion.',
     hydration: {
       note: 'renderedHtml contains the arrows and the thumbnail rail, but they are inert markup: slide changing, thumbnail selection and keyboard navigation are all React behaviour. Render an empty data-mg-gallery container carrying data-media and hydrate it. Every media object whose type is "image" (or has no type) needs an alt value — WCAG 1.1.1. Validate data-media server-side: the JSON parse failure itself is swallowed, but the component has no empty-media guard, so an empty or malformed list throws during render and leaves the container blank. Security: an item of type "html" is injected unsanitised, so never build one from untrusted input.',
       selector: '[data-mg-gallery]',

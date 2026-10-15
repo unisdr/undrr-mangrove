@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { Loader } from '../../Utilities/Loader/Loader';
 // Styles imported via stories/assets/scss/_components.scss to maintain Sass cascade
 
 const cls = (...classes) =>
@@ -93,10 +94,15 @@ function GalleryComponent({
         onMediaChange(index, media[index]);
       }
 
-      // Scroll thumbnail into view
-      if (thumbnailRefs.current[index]) {
-        thumbnailRefs.current[index].scrollIntoView({
-          behavior: 'smooth',
+      // Read the preference at navigation time, from the thumbnail's window.
+      const thumbnail = thumbnailRefs.current[index];
+      if (thumbnail) {
+        const reducedMotion = thumbnail.ownerDocument.defaultView.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
+        thumbnail.scrollIntoView({
+          // `auto` can inherit a consumer's smooth-scroll CSS.
+          behavior: reducedMotion ? 'instant' : 'smooth',
           block: 'nearest',
           inline: 'center',
         });
@@ -270,12 +276,8 @@ function GalleryComponent({
             />
           )}
           {isLoading && (
-            <div
-              className="mg-gallery__loading"
-              aria-live="polite"
-              aria-label={loadingLabel}
-            >
-              <div className="mg-gallery__spinner"></div>
+            <div className="mg-gallery__loading">
+              <Loader size="inline" label={loadingLabel} />
             </div>
           )}
         </div>

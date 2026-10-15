@@ -149,3 +149,13 @@
     max-block-size: mg-rem(400);
   }
 }
+
+// The global reduced-motion reset gives every element a tiny transition
+// duration. With the initial `all` transition property, descendants briefly
+// animate inherited visibility and cannot receive opening focus. Disable the
+// properties themselves so an open drawer and its controls appear together.
+@media (prefers-reduced-motion: reduce) {
+  .mg-drawer * {
+    transition-property: none !important;
+  }
+}

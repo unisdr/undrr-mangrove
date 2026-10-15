@@ -120,7 +120,8 @@
       text-decoration: underline;
       position: relative;
       z-index: 2; // above stretched-link cover — local to stats-card stacking context
-      transition: opacity 200ms ease;
+      transition: opacity var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
 
       &:hover {
         opacity: 0.7;
@@ -228,3 +229,9 @@
 }
 
 /* RTL support is automatic: the highlighted accent uses `border-inline-start`. */
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-stats-card-item__summary a {
+    transition: none;
+  }
+}

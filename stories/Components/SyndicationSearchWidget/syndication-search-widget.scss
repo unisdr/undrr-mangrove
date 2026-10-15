@@ -1002,6 +1002,8 @@ $search-input-padding-x: mg-rem(44);
   padding: var(--mg-spacing-200);
 }
 
+// Legacy public class retained for Drupal deployments using server-rendered markup.
+// React uses Loader; removal needs a consumer migration audit (#1357).
 .mg-search__spinner {
   border: 4px solid $search-border-light;
   border-top: 4px solid $search-primary;

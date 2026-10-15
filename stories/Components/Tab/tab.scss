@@ -107,7 +107,8 @@
       transform: rotate(-45deg);
       vertical-align: top;
       width: 0.45em;
-      transition: transform 0.3s ease;
+      transition: transform var(--mg-motion-duration-medium)
+        var(--mg-motion-easing-standard);
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;

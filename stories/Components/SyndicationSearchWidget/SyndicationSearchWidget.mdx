@@ -893,6 +893,8 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.25**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Retains the legacy public search spinner class for server-rendered Drupal compatibility pending a deployment migration audit. React loading indicators already use Loader.
+
 - **1.4.24**, 2026-10-14 ([undrr/web-backlog#3175](https://gitlab.com/undrr/web-backlog/-/work_items/3175)): Performance, loading states and layout. Measured against the local PreventionWeb index (empty query, 10 results): the initial response is 946KB / 99KB gzip before and 130KB / 8.6KB after.
   - Requests carry `_source.includes` (`SOURCE_FIELDS`, overridable with `sourceFields`), so hits no longer bring `body` and `aggregated_field`.
   - Title and body highlights are requested only once a hit without teaser HTML has appeared, since only the fallback rendering shows them. They start with the next search the reader causes; the results on screen are not fetched again.

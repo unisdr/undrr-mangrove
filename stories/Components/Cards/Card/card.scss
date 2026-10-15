@@ -242,7 +242,8 @@
     width: 0.35em;
 
     @media (prefers-reduced-motion: no-preference) {
-      transition: translate 200ms ease;
+      transition: translate var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
     }
   }
 
@@ -578,7 +579,12 @@ span.mg-card__label {
   // Visual link for logo cards (srOnlyTitle) - stretched link pattern
   .mg-card__visual-link {
     display: block;
-    transition: opacity 200ms ease;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: opacity var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+    }
+
     width: 100%;
 
     &::after {
