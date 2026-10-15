@@ -436,6 +436,35 @@ try {
           await checkLoader(page.locator('.mg-gallery .mg-loader'), {
             label: 'Chargement du média…',
           });
+          if (mode.reducedMotion === 'reduce') {
+            const loadingText = page.locator('.mg-gallery .mg-loader > span');
+            const originalText = await loadingText.textContent();
+            try {
+              // Stress the translated caller label within the real media stage.
+              // The feedback surface must not intercept gallery controls.
+              await loadingText.evaluate(el => {
+                el.textContent =
+                  'جارٍ تحميل محتوى الوسائط. يرجى الانتظار حتى تصبح المعلومات المعروضة متاحة للقراءة.';
+              });
+              const next = page.locator('.mg-gallery__arrow--next');
+              assert(
+                await next.evaluate(button => {
+                  const bounds = button.getBoundingClientRect();
+                  const hit = document.elementFromPoint(
+                    bounds.x + bounds.width / 2,
+                    bounds.y + bounds.height / 2
+                  );
+                  return button.contains(hit);
+                }),
+                'Long reduced-motion Gallery loading text must not intercept the Next control'
+              );
+              await next.click({ trial: true });
+            } finally {
+              await loadingText.evaluate((el, text) => {
+                el.textContent = text;
+              }, originalText);
+            }
+          }
           await page.evaluate(() => {
             document.documentElement.style.scrollBehavior = 'smooth';
             document.querySelector(
