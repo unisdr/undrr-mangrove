@@ -247,6 +247,21 @@ $search-input-padding-x: mg-rem(44);
   gap: var(--mg-spacing-200);
 }
 
+// Results column: the search box and filter chips (sidebar layout) and the
+// results.
+.mg-search__column {
+  flex: 1;
+  min-width: 0;
+}
+
+// The in-widget search box is capped at a comfortable reading width, start
+// aligned, in every layout; on narrow screens it is full width anyway. A
+// form portaled into a searchTarget is outside the widget and left to the
+// host page.
+.mg-search-widget .mg-search__form {
+  max-inline-size: mg-rem(768);
+}
+
 .mg-search__main {
   flex: 1;
   min-width: 0;
@@ -305,6 +320,58 @@ $search-input-padding-x: mg-rem(44);
 // Results
 .mg-search__results {
   transition: opacity 0.2s ease-out;
+}
+
+// A new search with results on screen: keep them, dimmed, with an inline
+// loader in the header, instead of swapping in the skeleton.
+.mg-search__results--refreshing {
+  opacity: 0.6;
+}
+
+.mg-search__results-loader {
+  margin-inline-start: auto;
+  color: $search-primary;
+}
+
+// A new result set, or an empty state replacing results, fades and rises
+// in. The list is keyed per result set, so this runs once per set. Not on
+// server-rendered markup, nor on the first client set that replaces it.
+.mg-search__enter {
+  animation: mg-search-results-in 0.2s ease-out;
+}
+
+@keyframes mg-search-results-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--mg-spacing-25));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-search__results,
+  .mg-search__enter {
+    animation: none;
+    transition: none;
+  }
+}
+
+// Server-rendered results ([data-mg-search-ssr], moved into the results
+// region until the first client results). The recommended markup reuses the
+// client classes (.mg-search__results-list, .mg-search__result), which get
+// containment and block images from their own rules; these cover markup
+// that doesn't, so a malformed teaser can't cover the page here either.
+// undrr/web-backlog#3145.
+[data-mg-search-ssr] {
+  position: relative;
+  isolation: isolate;
+
+  :where(.mg-card__visual) img {
+    display: block;
+  }
 }
 
 .mg-search__results-header {
@@ -423,6 +490,12 @@ $search-input-padding-x: mg-rem(44);
 
 // Result item
 .mg-search__result {
+  // Contain each result: teaser HTML comes from the consuming site's index,
+  // and a malformed teaser's absolutely positioned pieces (e.g. a stretched
+  // link's ::after) otherwise anchor to the page and cover it.
+  // undrr/web-backlog#3145.
+  position: relative;
+  isolation: isolate;
   padding-bottom: var(--mg-spacing-150);
   border-bottom: 1px solid $search-border-light;
 
@@ -430,6 +503,13 @@ $search-input-padding-x: mg-rem(44);
     border-bottom: none;
     padding-bottom: 0;
   }
+}
+
+// Teaser images are inline by default, and the teaser's field wrappers set
+// a 24px line height, which left a few pixels of descender space under every
+// result image. Block images sit flush in list, card and book cover modes.
+.mg-search__result :where(.mg-card__visual) img {
+  display: block;
 }
 
 .mg-search__result-content {
@@ -1101,6 +1181,9 @@ $search-input-padding-x: mg-rem(44);
     }
   }
 
+  // Hover is pure CSS; --highlighted is the keyboard position only, so
+  // moving the pointer over a long list doesn't re-render it.
+  &--selected:hover,
   &--selected#{&}--highlighted {
     background-color: rgb(var(--mg-color-blue-900) / 0.12);
   }
@@ -1554,3 +1637,45 @@ $search-input-padding-x: mg-rem(44);
 
 // Pager styles now live in the standalone Pager component.
 // @see stories/Components/Pager/pager.scss
+
+// ========================================
+// Reduced motion
+// The widget's decorative motion stops here, without relying on a page-wide
+// reset. Loading states stay visible as static ones: a full, steady progress
+// bar, plain skeleton blocks and a still overlay on stale results. Spinners
+// (the Mangrove Loader and .mg-search__spinner) keep a slow rotation, as the
+// Loader does, so loading never looks stalled.
+// ========================================
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-search__progress-bar {
+    animation: none;
+    width: 100%;
+    opacity: 0.6;
+  }
+
+  .mg-search__skeleton-title,
+  .mg-search__skeleton-meta,
+  .mg-search__skeleton-text,
+  .mg-search__skeleton-card-image {
+    animation: none;
+    background: $search-skeleton-bg;
+  }
+
+  .mg-search__main--stale::after,
+  .mg-select__dropdown,
+  .mg-search__drawer-backdrop {
+    animation: none;
+  }
+
+  .mg-search__result--pending,
+  .mg-search__result--visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .mg-search__spinner {
+    animation-duration: 3s;
+  }
+}

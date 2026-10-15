@@ -12,6 +12,7 @@ import {
   useSearchDispatch,
   actions,
   ActionTypes,
+  normaliseAggregations,
 } from '../context/SearchContext';
 
 // Test component to expose context values
@@ -383,6 +384,52 @@ describe('SearchContext', () => {
       expect(state.sortBy).toBe('oldest');
     });
 
+    it('INITIALIZE replaces an unchanged default query with a new one', () => {
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'flood' }));
+      });
+      expect(state.query).toBe('flood');
+
+      act(() => {
+        dispatch(actions.setPage(3));
+      });
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'drought' }));
+      });
+      expect(state.query).toBe('drought');
+      expect(state.page).toBe(1);
+
+      // Clearing the default clears the query too.
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: '' }));
+      });
+      expect(state.query).toBe('');
+    });
+
+    it('INITIALIZE keeps a query the reader typed over a new default', () => {
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'flood' }));
+      });
+      act(() => {
+        dispatch(actions.setQuery('cyclone'));
+      });
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'drought' }));
+      });
+      expect(state.query).toBe('cyclone');
+    });
+
+    it('INITIALIZE keeps a page restored from the URL on first initialise', () => {
+      act(() => {
+        dispatch(actions.restoreState({ query: '', page: 2 }));
+      });
+      act(() => {
+        dispatch(actions.initialize({ defaultQuery: 'flood' }));
+      });
+      expect(state.query).toBe('flood');
+      expect(state.page).toBe(2);
+    });
+
     it('RESTORE_STATE replaces query, page, sort, facets and operators', () => {
       act(() => {
         dispatch(actions.setFacet('field_theme', ['1']));
@@ -578,7 +625,11 @@ describe('SearchContext', () => {
       expect(actions.setQuery('test')).toEqual({
         type: ActionTypes.SET_QUERY,
         payload: 'test',
+        immediate: false,
       });
+      expect(actions.setQuery('test', { immediate: true }).immediate).toBe(
+        true
+      );
 
       expect(actions.setFacet('type', 'news', false)).toEqual({
         type: ActionTypes.SET_FACET,
@@ -608,5 +659,26 @@ describe('SearchContext', () => {
         type: ActionTypes.RESET,
       });
     });
+  });
+});
+
+describe('normaliseAggregations', () => {
+  it('keys year histogram buckets by year', () => {
+    const result = normaliseAggregations({
+      type: { buckets: [{ key: 'news', doc_count: 3 }] },
+      year: {
+        buckets: [{ key_as_string: '2024', key: 1704067200000, doc_count: 5 }],
+      },
+    });
+    expect(result.year.buckets).toEqual([
+      { key_as_string: '2024', key: '2024', doc_count: 5 },
+    ]);
+    expect(result.type.buckets[0].key).toBe('news');
+  });
+
+  it('leaves terms buckets and missing aggregations alone', () => {
+    const terms = { year: { buckets: [{ key: 2024, doc_count: 1 }] } };
+    expect(normaliseAggregations(terms)).toBe(terms);
+    expect(normaliseAggregations(undefined)).toBeNull();
   });
 });

@@ -22,6 +22,8 @@ import { analyticsRegion } from '../utils/constants';
  * @param {Object} props - Component props
  * @param {string} props.value - Current query value
  * @param {Function} props.onChange - Query change handler
+ * @param {Function} [props.onSubmit] - Called with the query on submit and
+ *   with '' on clear, to search at once instead of after the typing debounce
  * @param {boolean} props.isStale - Whether results are stale (search pending)
  * @param {boolean} props.isLoading - Whether search is loading
  * @param {string} props.widgetId - Unique widget ID for accessibility
@@ -29,6 +31,7 @@ import { analyticsRegion } from '../utils/constants';
 export function SearchForm({
   value,
   onChange,
+  onSubmit,
   isStale,
   isLoading,
   widgetId = '',
@@ -41,11 +44,15 @@ export function SearchForm({
 
   const { showSearchBox, minSearchLength } = config;
 
-  const handleSubmit = useCallback(e => {
-    e.preventDefault();
-    // Form submission doesn't need special handling -
-    // the search is triggered by the value change
-  }, []);
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      // Typing already searches after a pause; Enter and the button search
+      // now.
+      onSubmit?.(value);
+    },
+    [onSubmit, value]
+  );
 
   const handleChange = useCallback(
     e => {
@@ -56,8 +63,12 @@ export function SearchForm({
 
   const handleClear = useCallback(() => {
     onChange('');
-    dispatch(actions.setQuery(''));
-  }, [onChange, dispatch]);
+    if (onSubmit) {
+      onSubmit('');
+    } else {
+      dispatch(actions.setQuery('', { immediate: true }));
+    }
+  }, [onChange, onSubmit, dispatch]);
 
   if (!showSearchBox) {
     return null;

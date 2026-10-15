@@ -8,7 +8,14 @@
  * @module SearchWidget/hooks/useSearch
  */
 
-import { useEffect, useRef, useCallback, useTransition } from 'react';
+import {
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  useState,
+  useTransition,
+} from 'react';
 import {
   useSearchConfig,
   useSearchState,
@@ -16,15 +23,32 @@ import {
   actions,
 } from '../context/SearchContext';
 import { buildQuery } from '../utils/queryBuilder';
+import { isQueryTooShortToSearch } from '../utils/constants';
+
+/**
+ * Serialise a request so that two requests Elasticsearch would answer the
+ * same way compare equal. The recency function's `now` parameter changes on
+ * every build and is left out.
+ * @private
+ */
+function requestKey(endpoint, body) {
+  return JSON.stringify({ endpoint, body }, (key, value) =>
+    key === 'now' ? undefined : value
+  );
+}
 
 /**
  * Hook for executing searches against the Elasticsearch endpoint.
  *
- * Features:
- * - AbortController for cancelling in-flight requests
- * - Automatic debouncing via useEffect dependencies
- * - useTransition for non-blocking result updates
- * - Error handling with retry support
+ * - Searches when the request would change, not when the config object's
+ *   identity changes: the request body (minus the volatile `now` parameter)
+ *   is the dependency, so cosmetic options such as `displayMode` or
+ *   `showResultsCount` don't cost a request.
+ * - Only typing is debounced. The first search, and facet, sort, page and
+ *   config changes, run at once.
+ * - A superseded or unmounted search is aborted, and a response that arrives
+ *   after it was superseded is ignored.
+ * - useTransition for non-blocking result updates.
  *
  * @returns {Object} Search utilities
  * @returns {Function} returns.executeSearch - Manually trigger a search
@@ -36,7 +60,15 @@ export function useSearch() {
   const state = useSearchState();
   const dispatch = useSearchDispatch();
   const abortControllerRef = useRef(null);
+  // aggregationsKey of the last response whose aggregations are in state.
+  const aggregationsKeyRef = useRef(null);
   const [isPending, startTransition] = useTransition();
+  // Highlights are only displayed by the no-teaser fallback rendering, and
+  // body highlighting roughly doubles Elasticsearch's time. Request them only
+  // once a response has a hit without teaser HTML. Turning them on is left
+  // out of the request key: it applies from the next search the reader
+  // causes, rather than firing a second request for the results on screen.
+  const [needsHighlight, setNeedsHighlight] = useState(false);
 
   const {
     query,
@@ -46,8 +78,54 @@ export function useSearch() {
     sortBy,
     page,
     isInitialized,
+    aggregations,
+    queryIsTyped,
   } = state;
   const { searchEndpoint, minSearchLength, debounceDelay } = config;
+
+  // The request as Elasticsearch would see it. Rebuilt when state or config
+  // change; the effect below only runs when its serialised form changes.
+  const request = useMemo(() => {
+    const body = buildQuery(
+      { query, facets, facetOperators, customFacets, sortBy, page },
+      config,
+      { highlight: needsHighlight }
+    );
+    return {
+      body,
+      key: requestKey(searchEndpoint, { ...body, highlight: undefined }),
+      // Aggregations depend on the main query and the aggregation
+      // definitions only: not on the page, the sort or the facet selections
+      // (those are a post_filter, applied after aggregating).
+      aggregationsKey: requestKey(searchEndpoint, {
+        query: body.query,
+        aggs: body.aggs,
+      }),
+    };
+  }, [
+    query,
+    facets,
+    facetOperators,
+    customFacets,
+    sortBy,
+    page,
+    config,
+    needsHighlight,
+    searchEndpoint,
+  ]);
+
+  // Latest values for the search function, so it can stay stable.
+  const latestRef = useRef(null);
+  latestRef.current = {
+    request,
+    query,
+    facets,
+    customFacets,
+    searchEndpoint,
+    minSearchLength,
+    needsHighlight,
+    aggregations,
+  };
 
   /**
    * Execute a search request.
@@ -57,41 +135,44 @@ export function useSearch() {
   const executeSearch = useCallback(
     async (options = {}) => {
       const { force = false } = options;
+      const latest = latestRef.current;
 
-      // Check minimum query length (unless forced, has facets, or query is empty)
-      // Empty queries are allowed - they return all results (match_all)
-      // Short queries (1-2 chars) are blocked unless forced or has facets
-      const hasActiveFacets =
-        Object.keys(facets).length > 0 ||
-        Object.keys(customFacets || {}).length > 0;
-      const isEmptyQuery = query.length === 0;
-      const isTooShort = query.length > 0 && query.length < minSearchLength;
-
-      if (!force && !hasActiveFacets && !isEmptyQuery && isTooShort) {
+      // A short query without filters waits for more input (the empty query
+      // searches everything). SearchResults uses the same rule to decide
+      // between the skeleton and asking for input.
+      if (!force && isQueryTooShortToSearch(latest, latest.minSearchLength)) {
+        // An earlier search may have been aborted on the way here.
+        dispatch(actions.setLoading(false));
         return;
       }
 
       // Cancel any in-flight request
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      abortControllerRef.current = new AbortController();
+      abortControllerRef.current?.abort();
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
 
       dispatch(actions.setLoading(true));
 
-      try {
-        const queryBody = buildQuery(
-          { query, facets, facetOperators, customFacets, sortBy, page },
-          config
-        );
+      // Turning a page, sorting or picking a facet leaves the aggregations in
+      // state right, so don't ask Elasticsearch to compute them again.
+      let { body } = latest.request;
+      const keepAggregations =
+        Boolean(body.aggs) &&
+        latest.aggregations !== null &&
+        aggregationsKeyRef.current === latest.request.aggregationsKey;
+      if (keepAggregations) {
+        body = { ...body };
+        delete body.aggs;
+      }
 
-        const response = await fetch(searchEndpoint, {
+      try {
+        const response = await fetch(latest.searchEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(queryBody),
-          signal: abortControllerRef.current.signal,
+          body: JSON.stringify(body),
+          signal: controller.signal,
         });
 
         if (!response.ok) {
@@ -101,72 +182,99 @@ export function useSearch() {
         }
 
         const data = await response.json();
+        // Superseded while the body was read: a newer search owns the state.
+        if (controller.signal.aborted) return;
+
+        if (
+          !latest.needsHighlight &&
+          data?.hits?.hits?.some(hit => !hit._source?.teaser)
+        ) {
+          setNeedsHighlight(true);
+        }
+
+        if (body.aggs) {
+          aggregationsKeyRef.current = latest.request.aggregationsKey;
+        }
 
         // Use transition for non-blocking result updates
         startTransition(() => {
-          dispatch(actions.setResults(data));
+          dispatch(actions.setResults(data, { keepAggregations }));
         });
       } catch (error) {
         // Don't treat aborted requests as errors
-        if (error.name === 'AbortError') {
+        if (error.name === 'AbortError' || controller.signal.aborted) {
           return;
         }
 
         console.error('Search error:', error);
         dispatch(actions.setError(error.message || 'Search failed'));
+      } finally {
+        // Done: nothing of this search is in flight any more.
+        if (abortControllerRef.current === controller) {
+          abortControllerRef.current = null;
+        }
       }
     },
-    [
-      query,
-      facets,
-      facetOperators,
-      customFacets,
-      sortBy,
-      page,
-      searchEndpoint,
-      minSearchLength,
-      config,
-      dispatch,
-      startTransition,
-    ]
+    [dispatch, startTransition]
   );
 
-  /**
-   * Debounced search effect.
-   * Triggers search when query/facets/sort/page changes.
-   */
-  useEffect(() => {
-    if (!isInitialized) return;
+  // Called through a ref so the effect below depends on the request alone,
+  // not on the identity of this function.
+  const executeSearchRef = useRef(executeSearch);
+  executeSearchRef.current = executeSearch;
 
-    // Debounce the search
-    const timeoutId = setTimeout(() => {
-      executeSearch();
-    }, debounceDelay);
+  // The query of the last scheduled search: a change to it alone is typing,
+  // the only thing worth debouncing.
+  const scheduledQueryRef = useRef(null);
+
+  // The scheduled search, so a submit can run it at once.
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    if (!isInitialized) return undefined;
+
+    const typed =
+      queryIsTyped &&
+      scheduledQueryRef.current !== null &&
+      scheduledQueryRef.current !== query;
+    scheduledQueryRef.current = query;
+
+    const timeoutId = setTimeout(
+      () => {
+        timerRef.current = null;
+        executeSearchRef.current();
+      },
+      typed ? debounceDelay : 0
+    );
+    timerRef.current = timeoutId;
 
     return () => {
       clearTimeout(timeoutId);
-    };
-  }, [
-    query,
-    facets,
-    facetOperators,
-    customFacets,
-    sortBy,
-    page,
-    isInitialized,
-    debounceDelay,
-    executeSearch,
-  ]);
-
-  /**
-   * Cleanup on unmount.
-   */
-  useEffect(() => {
-    return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
+      timerRef.current = null;
+      // A request still in flight is stale now. Abort it and clear the
+      // loading state: while a typed query waits for the debounce nothing is
+      // loading, so the results on screen shouldn't look like they are being
+      // replaced. The next search sets it again when it is actually sent.
+      const inFlight = abortControllerRef.current;
+      if (inFlight) {
+        inFlight.abort();
+        abortControllerRef.current = null;
+        dispatch(actions.setLoading(false));
       }
     };
+    // request.key stands for everything the request depends on.
+  }, [request.key, isInitialized, debounceDelay, dispatch]);
+
+  /**
+   * Run a scheduled search now instead of after the typing debounce, e.g.
+   * when the reader submits the query that is waiting. Does nothing when no
+   * search is waiting.
+   */
+  const flushSearch = useCallback(() => {
+    if (timerRef.current === null) return;
+    clearTimeout(timerRef.current);
+    timerRef.current = null;
+    executeSearchRef.current();
   }, []);
 
   /**
@@ -178,6 +286,7 @@ export function useSearch() {
 
   return {
     executeSearch,
+    flushSearch,
     isPending,
     refresh,
   };

@@ -548,7 +548,44 @@ export const HIGHLIGHT_CONFIG = {
  * Valid sort orders (the values offered by SortOptions).
  * @type {string[]}
  */
-export const SORT_VALUES = ['relevance', 'newest', 'oldest'];
+export const SORT_VALUES = [
+  'relevance',
+  'newest',
+  'oldest',
+  'eventDateAsc',
+  'eventDateDesc',
+];
+
+/**
+ * Event date sorts. SortOptions offers them only when `defaultSort` (or the
+ * current sort) is one of them, so ordinary listings don't show sorts that
+ * would put every non-event last.
+ * @type {string[]}
+ */
+export const EVENT_SORT_VALUES = ['eventDateAsc', 'eventDateDesc'];
+
+/**
+ * `_source` fields the widget reads from a hit: the teaser HTML, the fields
+ * the no-teaser fallback renders (title, url, nid, type, vid, domain, dates),
+ * and the debug metrics. Everything else in the index (`body`,
+ * `aggregated_field`, ...) is large and unused, so it is not requested.
+ * Override with `config.sourceFields` for an endpoint whose hits need more.
+ * @type {string[]}
+ */
+export const SOURCE_FIELDS = [
+  'teaser',
+  'title',
+  'url',
+  'nid',
+  'type',
+  'vid',
+  'field_domain_access',
+  'published_at',
+  'event_start',
+  'event_end',
+  'field_meta_interestingness',
+  'field_meta_longevity',
+];
 
 /**
  * Elasticsearch's default `index.max_result_window`: `from + size` cannot
@@ -620,6 +657,25 @@ export const DEFAULT_CONFIG = {
   interestingnessTiers: [],
   longevityTiers: [],
 };
+
+/**
+ * Whether the widget holds off searching until the reader types more: a
+ * non-empty query shorter than `minSearchLength` with no filters set. An
+ * empty query searches everything, and filters make a short query useful.
+ *
+ * @param {Object} state - `{ query, facets, customFacets }`
+ * @param {number} minSearchLength
+ * @returns {boolean}
+ */
+export function isQueryTooShortToSearch(
+  { query, facets, customFacets },
+  minSearchLength
+) {
+  const hasFilters =
+    Object.values(facets || {}).some(v => v?.length > 0) ||
+    Object.values(customFacets || {}).some(v => v?.length > 0);
+  return Boolean(query) && query.length < minSearchLength && !hasFilters;
+}
 
 /**
  * Resolve the facets layout from a (merged or partial) config object.

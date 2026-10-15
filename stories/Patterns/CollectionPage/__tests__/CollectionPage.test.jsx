@@ -29,6 +29,11 @@ const filtersOf = body =>
     .map(clause => clause.query_string?.query)
     .filter(Boolean);
 
+// The pattern's own count and ranking queries send `_source` as a field
+// list; the search widget sends `_source: { includes }`, so a list marks one
+// of the pattern's own queries.
+const ownSource = body => (Array.isArray(body._source) ? body._source : null);
+
 let requests;
 let respond;
 
@@ -45,10 +50,10 @@ const hits = (total, sources = []) => ({
 // related collections, which the related widget then lists. `published_at`
 // is in the index's own shape: Unix seconds wrapped in an array.
 const defaults = ({ body, filters }) => {
-  if (body._source?.includes('nid')) {
+  if (ownSource(body)?.includes('nid')) {
     return reply(hits(2, [{ nid: [98866] }, { nid: [92055] }]));
   }
-  if (body._source?.includes('published_at')) {
+  if (ownSource(body)?.includes('published_at')) {
     return reply(hits(36, [{ published_at: [1762851600] }]));
   }
   if (filters.some(filter => filter.startsWith('nid:('))) {
@@ -84,9 +89,9 @@ beforeEach(() => {
 });
 
 const countRequest = () =>
-  requests.find(request => request.body._source?.includes('published_at'));
+  requests.find(request => ownSource(request.body)?.includes('published_at'));
 const rankingRequest = () =>
-  requests.find(request => request.body._source?.includes('nid'));
+  requests.find(request => ownSource(request.body)?.includes('nid'));
 
 const facts = () =>
   document.querySelector('header .mg-hero__label.detail')?.textContent ?? '';
@@ -133,7 +138,7 @@ test.each([
   ['milliseconds', 1762851600000, /Latest item: 11 November 2025$/],
 ])('reads the newest date given as %s', async (_label, value, pattern) => {
   respond = request =>
-    request.body._source?.includes('published_at')
+    ownSource(request.body)?.includes('published_at')
       ? reply(hits(36, [{ published_at: value }]))
       : defaults(request);
   renderPage();
@@ -142,7 +147,7 @@ test.each([
 
 test('leaves the date out when the newest item has no usable date', async () => {
   respond = request =>
-    request.body._source?.includes('published_at')
+    ownSource(request.body)?.includes('published_at')
       ? reply(hits(36, [{ published_at: ['not a date'] }]))
       : defaults(request);
   renderPage();
@@ -157,14 +162,14 @@ test('counts and dates with the list’s own filters, in one query', async () =>
       requests.some(
         request =>
           request.body.size !== 0 &&
-          !request.body._source &&
+          !ownSource(request.body) &&
           request.filters.includes('field_collections:101264')
       )
     ).toBe(true)
   );
   const list = requests.find(
     request =>
-      !request.body._source &&
+      !ownSource(request.body) &&
       request.filters.includes('field_collections:101264')
   );
   const count = countRequest();
@@ -181,7 +186,7 @@ test('counts and dates with the list’s own filters, in one query', async () =>
 test('does not mount the list until the count is known', async () => {
   let release;
   respond = request =>
-    request.body._source?.includes('published_at')
+    ownSource(request.body)?.includes('published_at')
       ? new Promise(resolve => {
           release = () => resolve(reply(hits(36, [])));
         })
@@ -196,7 +201,7 @@ test('does not mount the list until the count is known', async () => {
 
 test('a count that resolves to zero shows the empty state and an unlinked count', async () => {
   respond = request =>
-    request.body._source?.includes('published_at')
+    ownSource(request.body)?.includes('published_at')
       ? reply(hits(0))
       : defaults(request);
   renderPage({ collection: 'empty' });
@@ -225,8 +230,9 @@ test('a count that resolves to zero shows the empty state and an unlinked count'
 
 test('offers the full listing, as a secondary button, when nothing is related either', async () => {
   respond = request => {
-    if (request.body._source?.includes('nid')) return reply(hits(0));
-    if (request.body._source?.includes('published_at')) return reply(hits(0));
+    if (ownSource(request.body)?.includes('nid')) return reply(hits(0));
+    if (ownSource(request.body)?.includes('published_at'))
+      return reply(hits(0));
     return defaults(request);
   };
   renderPage({ collection: 'empty' });
@@ -241,7 +247,9 @@ test.each([
   ['a network error', () => Promise.reject(new TypeError('Failed to fetch'))],
 ])('when counting fails with %s, the list still shows', async (_name, fail) => {
   respond = request =>
-    request.body._source?.includes('published_at') ? fail() : defaults(request);
+    ownSource(request.body)?.includes('published_at')
+      ? fail()
+      : defaults(request);
   renderPage();
   const list = screen.getByRole('region', { name: 'In this collection' });
   expect(await within(list).findByRole('searchbox')).toBeInTheDocument();
@@ -253,7 +261,7 @@ test('gives up counting after the timeout', async () => {
   jest.useFakeTimers();
   try {
     respond = request =>
-      request.body._source?.includes('published_at')
+      ownSource(request.body)?.includes('published_at')
         ? new Promise(() => {})
         : defaults(request);
     global.fetch.mockImplementation((url, options = {}) => {
@@ -261,7 +269,7 @@ test('gives up counting after the timeout', async () => {
       const body = JSON.parse(options.body);
       const request = { body, filters: filtersOf(body) };
       requests.push(request);
-      if (body._source?.includes('published_at')) {
+      if (ownSource(body)?.includes('published_at')) {
         return new Promise((resolve, reject) =>
           options.signal.addEventListener('abort', () =>
             reject(new DOMException('Aborted', 'AbortError'))
@@ -335,7 +343,7 @@ test('leaves out only the broad themes, and skips the ranking with nothing to re
 test('the On this page bar links every section with full headings, updated in place', async () => {
   let releaseRanking;
   respond = request =>
-    request.body._source?.includes('nid')
+    ownSource(request.body)?.includes('nid')
       ? new Promise(resolve => {
           releaseRanking = () => resolve(reply(hits(1, [{ nid: [98866] }])));
         })

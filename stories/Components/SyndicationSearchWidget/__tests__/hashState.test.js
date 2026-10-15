@@ -64,6 +64,13 @@ describe('parseHashState', () => {
     expect(parseHashState('', opts).facets).toBeNull();
   });
 
+  it.each(['eventDateAsc', 'eventDateDesc'])(
+    'accepts the event date sort %s',
+    sort => {
+      expect(parseHashState(`#sort=${sort}`, opts).sort).toBe(sort);
+    }
+  );
+
   it('rejects invalid operators, sorts and pages', () => {
     const state = parseHashState(
       'f.field_hazard=1&f.field_hazard=2&op.field_hazard=XOR&sort=random&page=-3',

@@ -102,10 +102,33 @@ describe('SyndicationSearchWidget', () => {
       expect(screen.queryByRole('search')).not.toBeInTheDocument();
     });
 
-    it('shows empty state message before searching', () => {
+    // The widget searches on mount, so the first render is a loading state,
+    // not "enter a search term".
+    it('shows the loading skeleton, not the empty-query message, before the first results', () => {
       render(<SyndicationSearchWidget config={{}} />);
 
-      expect(screen.getByText(/enter a search term/i)).toBeInTheDocument();
+      expect(
+        document.querySelector(
+          '.mg-search__results-loading .mg-search__skeleton'
+        )
+      ).toBeInTheDocument();
+      expect(screen.queryByText(/enter a search term/i)).toBeNull();
+    });
+
+    it('asks for input only for a query too short to search', async () => {
+      render(
+        <SyndicationSearchWidget
+          config={{
+            defaultQuery: 'ab',
+            defaultFilters: [],
+            enableHashSync: false,
+          }}
+        />
+      );
+
+      await waitFor(() =>
+        expect(screen.getByText(/enter a search term/i)).toBeInTheDocument()
+      );
     });
 
     it('renders facets sidebar when showFacets is true', () => {
@@ -262,7 +285,7 @@ describe('SyndicationSearchWidget', () => {
         // ...and not as a direct child of the widget container
         const widget = document.querySelector('[data-mg-search-widget]');
         expect(
-          widget.querySelector(':scope > form[role="search"]')
+          widget.querySelector('form[role="search"]')
         ).not.toBeInTheDocument();
       } finally {
         target.remove();
@@ -311,6 +334,24 @@ describe('SyndicationSearchWidget', () => {
     });
   });
 
+  describe('search box placement', () => {
+    it('sits in the results column with the facets sidebar', () => {
+      render(<SyndicationSearchWidget config={{ facets: 'sidebar' }} />);
+      const form = screen.getByRole('search');
+      expect(form.closest('.mg-search__column')).not.toBeNull();
+      expect(form.closest('.mg-search__sidebar')).toBeNull();
+    });
+
+    it.each(['horizontal', false])(
+      'sits above the content with facets %p',
+      facets => {
+        render(<SyndicationSearchWidget config={{ facets }} />);
+        const form = screen.getByRole('search');
+        expect(form.parentElement).toHaveAttribute('data-mg-search-widget');
+      }
+    );
+  });
+
   describe('search input', () => {
     it('updates input value on change', () => {
       render(<SyndicationSearchWidget config={{}} />);
@@ -349,6 +390,32 @@ describe('SyndicationSearchWidget', () => {
 
       window.history.pushState({}, '', '/');
     });
+
+    // A block editor preview re-renders the widget with the edited setting.
+    it('applies a changed defaultQuery unless the reader typed a query', async () => {
+      const { rerender } = render(
+        <SyndicationSearchWidget
+          config={{ defaultQuery: 'flood', enableHashSync: false }}
+        />
+      );
+      const input = screen.getByRole('searchbox');
+      await waitFor(() => expect(input).toHaveValue('flood'));
+
+      rerender(
+        <SyndicationSearchWidget
+          config={{ defaultQuery: 'drought', enableHashSync: false }}
+        />
+      );
+      await waitFor(() => expect(input).toHaveValue('drought'));
+
+      fireEvent.change(input, { target: { value: 'cyclone' } });
+      rerender(
+        <SyndicationSearchWidget
+          config={{ defaultQuery: 'heatwave', enableHashSync: false }}
+        />
+      );
+      await waitFor(() => expect(input).toHaveValue('cyclone'));
+    });
   });
 
   describe('search execution', () => {
@@ -373,6 +440,81 @@ describe('SyndicationSearchWidget', () => {
 
       // Search should have been called (at least for initial empty search + this one)
       expect(global.fetch).toHaveBeenCalled();
+    });
+
+    const searchBodies = () =>
+      global.fetch.mock.calls
+        .filter(([url]) => !String(url).includes('preventionweb.net/api'))
+        .map(([, init]) => JSON.parse(init.body));
+
+    it('asks for highlights from the next search after a hit without a teaser, without a second request', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [
+                {
+                  _id: '1',
+                  _source: {
+                    title: 'No teaser',
+                    type: 'news',
+                    field_domain_access: ['www_undrr_org'],
+                  },
+                },
+              ],
+              total: { value: 1 },
+            },
+            took: 1,
+          }),
+      });
+
+      render(<SyndicationSearchWidget config={{ debounceDelay: 0 }} />);
+
+      await waitFor(() => expect(searchBodies()).toHaveLength(1));
+      expect(searchBodies()[0].highlight).toBeUndefined();
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 20));
+      });
+      expect(searchBodies()).toHaveLength(1);
+
+      fireEvent.change(screen.getByRole('searchbox'), {
+        target: { value: 'flood' },
+      });
+      await waitFor(() => expect(searchBodies()).toHaveLength(2));
+      expect(searchBodies()[1].highlight).toBeDefined();
+    });
+
+    it('never asks for highlights while every hit has a teaser', async () => {
+      global.fetch = mockFetch({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            hits: {
+              hits: [
+                {
+                  _id: '1',
+                  _source: {
+                    teaser: '<div>Teaser</div>',
+                    type: 'news',
+                    field_domain_access: ['www_undrr_org'],
+                  },
+                },
+              ],
+              total: { value: 1 },
+            },
+            took: 1,
+          }),
+      });
+
+      render(<SyndicationSearchWidget config={{ debounceDelay: 0 }} />);
+
+      await waitFor(() => expect(searchBodies().length).toBeGreaterThan(0));
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 20));
+      });
+      expect(searchBodies()).toHaveLength(1);
+      expect(searchBodies()[0].highlight).toBeUndefined();
     });
   });
 

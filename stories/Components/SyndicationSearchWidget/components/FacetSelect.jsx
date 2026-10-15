@@ -11,9 +11,8 @@
  * @module SearchWidget/components/FacetSelect
  */
 
-import React, { useMemo, useCallback } from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
 import {
-  useSearchState,
   useSearchDispatch,
   useSearchLabels,
   interpolateLabel,
@@ -53,16 +52,19 @@ const FIELD_TO_SUBTYPE_ALLOWLIST_KEY = {
  *   list loaded. On facets marked `labelSource: 'taxonomy'`, unselected
  *   values with no label are hidden only once this is true and at least one
  *   value in the facet has a label.
+ * @param {Array} props.selectedValues - Selected values of this facet
+ * @param {string} props.operator - 'OR' or 'AND' for this facet
  */
-export function FacetSelect({
+function FacetSelectComponent({
   field,
   buckets = EMPTY_BUCKETS,
   getLabel,
   widgetId = 'search',
   allowedTypes = null,
   taxonomiesReady = false,
+  selectedValues = EMPTY_BUCKETS,
+  operator = 'OR',
 }) {
-  const { facets, facetOperators } = useSearchState();
   const dispatch = useSearchDispatch();
   const labels = useSearchLabels();
 
@@ -84,14 +86,13 @@ export function FacetSelect({
     [labelSource, taxonomiesReady, buckets, getLabel, key, vocabulary]
   );
   const isMultiple = type === 'select-multiple';
-  const selectedValues = facets[key] || [];
 
   // Determine if operator toggle should be shown
   // Only show for multi-select facets with 2+ values that aren't in ALWAYS_OR_FACETS
   const showOperatorToggle =
     isMultiple && selectedValues.length >= 2 && !ALWAYS_OR_FACETS.includes(key);
 
-  const currentOperator = facetOperators[key] || 'OR';
+  const currentOperator = operator;
 
   /**
    * Handle operator toggle change.
@@ -392,5 +393,12 @@ export function FacetSelect({
     </fieldset>
   );
 }
+
+/**
+ * Memoised: the selected values and operator arrive as props rather than
+ * from the search state, so typing a query or a new results page doesn't
+ * re-render every dropdown.
+ */
+export const FacetSelect = memo(FacetSelectComponent);
 
 export default FacetSelect;

@@ -123,6 +123,11 @@ export default function syndicationSearchWidgetFromElement(container) {
     }
   }
 
+  // Server-rendered results to keep on screen until the first client results
+  // commit. Captured now, before React's first commit empties the container.
+  const ssrResults = container.querySelector('[data-mg-search-ssr]');
+  if (ssrResults) config.ssrResults = ssrResults;
+
   let labels;
   if (dataset.labels) {
     try {

@@ -110,6 +110,8 @@ export const DEFAULT_LABELS = {
   sortRelevance: 'Relevance',
   sortNewest: 'Newest',
   sortOldest: 'Oldest',
+  sortEventDateAsc: 'Event date (earliest first)',
+  sortEventDateDesc: 'Event date (latest first)',
 
   // FacetsSidebar
   loadingFilters: 'Loading filters…',
@@ -169,12 +171,47 @@ import { DEFAULT_CONFIG } from '../utils/constants';
 import { facetsFromDefaults } from '../utils/hashState';
 
 /**
+ * Normalise aggregations from Elasticsearch. The year facet comes from a
+ * `date_histogram` whose bucket keys are epoch milliseconds; the facet UI and
+ * the URL hash use the year itself, which the histogram's `yyyy` format puts
+ * in `key_as_string`.
+ *
+ * @param {Object|undefined} aggregations
+ * @returns {Object|null}
+ */
+export function normaliseAggregations(aggregations) {
+  if (!aggregations) return null;
+  const year = aggregations.year;
+  if (!year?.buckets?.some(bucket => bucket.key_as_string !== undefined)) {
+    return aggregations;
+  }
+  return {
+    ...aggregations,
+    year: {
+      ...year,
+      buckets: year.buckets.map(bucket =>
+        bucket.key_as_string !== undefined
+          ? { ...bucket, key: bucket.key_as_string }
+          : bucket
+      ),
+    },
+  };
+}
+
+/**
  * Initial state for the search widget.
  * @type {Object}
  */
 const initialState = {
   // Search query
   query: '',
+
+  // Whether the last query change came from typing (and so is debounced)
+  queryIsTyped: false,
+
+  // defaultQuery applied by the last INITIALIZE. A query still equal to it
+  // hasn't been changed by the reader, so a new defaultQuery replaces it.
+  appliedDefaultQuery: '',
 
   // Active facet filters: { [key]: [values] }
   facets: {},
@@ -185,7 +222,7 @@ const initialState = {
   // Custom facet selections: { [facetId]: [selectedOptionIndices] }
   customFacets: {},
 
-  // Sort order: 'relevance', 'newest', 'oldest'
+  // Sort order: one of SORT_VALUES in utils/constants.js
   sortBy: 'relevance',
 
   // Pagination (future use)
@@ -193,6 +230,9 @@ const initialState = {
 
   // Search results from Elasticsearch
   results: null,
+
+  // Incremented on each new result set
+  resultsVersion: 0,
 
   // Aggregations from Elasticsearch (for facet counts)
   aggregations: null,
@@ -251,6 +291,9 @@ function searchReducer(state, action) {
       return {
         ...state,
         query: action.payload,
+        // Typing is debounced; a submitted, cleared or URL-driven query is
+        // searched at once.
+        queryIsTyped: !action.immediate,
         page: 1, // Reset to first page on new query
       };
 
@@ -383,7 +426,11 @@ function searchReducer(state, action) {
       return {
         ...state,
         results: action.payload.hits?.hits || [],
-        aggregations: action.payload.aggregations || null,
+        // Bumped per result set, so the list can animate in a new set.
+        resultsVersion: state.resultsVersion + 1,
+        aggregations: action.keepAggregations
+          ? state.aggregations
+          : normaliseAggregations(action.payload.aggregations),
         totalResults: action.payload.hits?.total?.value || 0,
         totalResultsRelation: action.payload.hits?.total?.relation || 'eq',
         searchTime: action.payload.took || null,
@@ -417,15 +464,29 @@ function searchReducer(state, action) {
         initialSort = null,
       } = action.payload;
 
+      // Keep a query the reader typed or that came from the URL hash. A
+      // query that is still the previous defaultQuery was never changed, so
+      // a new defaultQuery (e.g. edited in a block editor preview) replaces
+      // it, including when the new default is empty.
+      const keepQuery =
+        state.query !== '' && state.query !== state.appliedDefaultQuery;
+
+      const nextDefaultQuery = defaultQuery || '';
+      const query = keepQuery ? state.query : nextDefaultQuery;
+
       return {
         ...state,
-        // Preserve query if already set (e.g., from URL params via useHashSync)
-        query: state.query || defaultQuery,
+        query,
+        appliedDefaultQuery: nextDefaultQuery,
+        // A re-initialise that swaps the query starts again from page 1. The
+        // first INITIALIZE keeps a page restored from the URL hash.
+        page: state.isInitialized && query !== state.query ? 1 : state.page,
         sortBy: initialSort || defaultSort,
         facets: initialFacets || facetsFromDefaults(defaultFilters),
         facetOperators: initialFacets
           ? initialFacetOperators || {}
           : state.facetOperators,
+        queryIsTyped: false,
         isInitialized: true,
       };
     }
@@ -447,6 +508,8 @@ function searchReducer(state, action) {
         sortBy,
         facets,
         facetOperators,
+        // Back/forward: search at once.
+        queryIsTyped: false,
       };
     }
 
@@ -600,9 +663,16 @@ export function useSearch() {
  * Action creators for common operations.
  */
 export const actions = {
-  setQuery: query => ({
+  /**
+   * @param {string} query
+   * @param {Object} [options]
+   * @param {boolean} [options.immediate] - Search at once rather than after
+   *   the typing debounce (submit, clear, URL).
+   */
+  setQuery: (query, { immediate = false } = {}) => ({
     type: ActionTypes.SET_QUERY,
     payload: query,
+    immediate,
   }),
 
   setFacet: (key, value, replace = true) => ({
@@ -644,9 +714,16 @@ export const actions = {
     payload: page,
   }),
 
-  setResults: results => ({
+  /**
+   * @param {Object} results - Elasticsearch response
+   * @param {Object} [options]
+   * @param {boolean} [options.keepAggregations] - Keep the current
+   *   aggregations: the request skipped them because only the page changed.
+   */
+  setResults: (results, { keepAggregations = false } = {}) => ({
     type: ActionTypes.SET_RESULTS,
     payload: results,
+    keepAggregations,
   }),
 
   setLoading: isLoading => ({

@@ -7,6 +7,7 @@ import { buildQuery, getAggregationBuckets } from '../utils/queryBuilder';
 import {
   DEFAULT_CONFIG,
   SCORING_CONFIG,
+  SOURCE_FIELDS,
   buildTierRanges,
   buildTierFilter,
 } from '../utils/constants';
@@ -56,6 +57,26 @@ describe('queryBuilder', () => {
     });
   });
 
+  describe('_source fields', () => {
+    it('requests only the fields the widget renders', () => {
+      const result = buildQuery(defaultState, DEFAULT_CONFIG);
+      expect(result._source).toEqual({ includes: SOURCE_FIELDS });
+      expect(SOURCE_FIELDS).not.toContain('body');
+      expect(SOURCE_FIELDS).not.toContain('aggregated_field');
+      expect(SOURCE_FIELDS).toEqual(
+        expect.arrayContaining(['teaser', 'title', 'event_start', 'event_end'])
+      );
+    });
+
+    it('uses config.sourceFields when set', () => {
+      const result = buildQuery(defaultState, {
+        ...DEFAULT_CONFIG,
+        sourceFields: ['teaser', 'body'],
+      });
+      expect(result._source).toEqual({ includes: ['teaser', 'body'] });
+    });
+  });
+
   describe('sort configuration', () => {
     it('sorts by _score for relevance', () => {
       const result = buildQuery(
@@ -74,6 +95,39 @@ describe('queryBuilder', () => {
 
       expect(result.sort).toEqual([{ published_at: { order: 'desc' } }]);
     });
+
+    it.each([
+      ['eventDateAsc', 'asc'],
+      ['eventDateDesc', 'desc'],
+    ])('sorts %s by event_start %s, missing last', (sortBy, order) => {
+      const result = buildQuery({ ...defaultState, sortBy }, DEFAULT_CONFIG);
+
+      expect(result.sort[0]).toEqual({
+        event_start: {
+          order,
+          missing: '_last',
+          unmapped_type: 'date',
+        },
+      });
+    });
+
+    it.each(['eventDateAsc', 'eventDateDesc'])(
+      'breaks %s ties by publish date, then nid, for stable paging',
+      sortBy => {
+        const result = buildQuery({ ...defaultState, sortBy }, DEFAULT_CONFIG);
+
+        expect(result.sort.slice(1)).toEqual([
+          {
+            published_at: {
+              order: 'desc',
+              missing: '_last',
+              unmapped_type: 'date',
+            },
+          },
+          { nid: { order: 'desc', missing: '_last', unmapped_type: 'long' } },
+        ]);
+      }
+    );
 
     it('sorts by published_at asc for oldest', () => {
       const result = buildQuery(
@@ -291,17 +345,52 @@ describe('queryBuilder', () => {
       });
     });
 
-    it('uses script filter for year facet', () => {
+    const yearRange = year => ({
+      range: {
+        published_at: {
+          gte: `${year}-01-01T00:00:00Z`,
+          lt: `${year + 1}-01-01T00:00:00Z`,
+        },
+      },
+    });
+
+    it('filters a year with a plain range, no script', () => {
+      const result = buildQuery(
+        { ...defaultState, facets: { year: ['2024'] } },
+        DEFAULT_CONFIG
+      );
+
+      expect(result.post_filter).toEqual(yearRange(2024));
+      expect(JSON.stringify(result.post_filter)).not.toContain('script');
+    });
+
+    it('matches any of several years with OR', () => {
+      const result = buildQuery(
+        { ...defaultState, facets: { year: ['2019', '2024'] } },
+        DEFAULT_CONFIG
+      );
+
+      expect(result.post_filter).toEqual({
+        bool: {
+          should: [yearRange(2019), yearRange(2024)],
+          minimum_should_match: 1,
+        },
+      });
+    });
+
+    it('requires every year with AND (which matches nothing)', () => {
       const result = buildQuery(
         {
           ...defaultState,
-          facets: { year: ['2024'] },
+          facets: { year: ['2019', '2024'] },
+          facetOperators: { year: 'AND' },
         },
         DEFAULT_CONFIG
       );
 
-      expect(result.post_filter.script).toBeDefined();
-      expect(result.post_filter.script.script.params.years).toContain(2024);
+      expect(result.post_filter).toEqual({
+        bool: { must: [yearRange(2019), yearRange(2024)] },
+      });
     });
   });
 
@@ -510,11 +599,17 @@ describe('queryBuilder', () => {
       expect(result.aggs.field_hazard).toBeDefined();
     });
 
-    it('uses script aggregation for year', () => {
+    it('aggregates years with a date_histogram, no script', () => {
       const result = buildQuery(defaultState, DEFAULT_CONFIG);
 
-      expect(result.aggs.year.terms.script).toBeDefined();
-      expect(result.aggs.year.terms.script.lang).toBe('painless');
+      expect(result.aggs.year).toEqual({
+        date_histogram: {
+          field: 'published_at',
+          calendar_interval: 'year',
+          format: 'yyyy',
+          min_doc_count: 1,
+        },
+      });
     });
 
     it('respects facetCountToShow config', () => {
@@ -548,6 +643,26 @@ describe('queryBuilder', () => {
       const hasImageFilter = filters.find(f => f.term?.has_image);
       expect(hasImageFilter).toBeUndefined();
     });
+  });
+
+  describe('event status recipe (customFilters)', () => {
+    // Drupal expands its upcoming/past event setting into these strings.
+    const UPCOMING = '(event_end:[now-1d/d TO *] OR (*:* -_exists_:event_end))';
+    const PAST = '(event_end:[* TO now-1d/d} OR (*:* -_exists_:event_end))';
+
+    it.each([UPCOMING, PAST])(
+      'passes %s to the main query as a query_string filter',
+      filter => {
+        const config = { ...DEFAULT_CONFIG, customFilters: [filter] };
+        const result = buildQuery(defaultState, config);
+        const filters = result.query.function_score.query.bool.filter;
+
+        expect(filters).toContainEqual({ query_string: { query: filter } });
+        expect(JSON.stringify(result.post_filter ?? {})).not.toContain(
+          'event_end'
+        );
+      }
+    );
   });
 
   describe('tier filters', () => {
@@ -724,6 +839,15 @@ describe('queryBuilder', () => {
       const result = buildQuery(defaultState, config);
 
       expect(result.highlight).toBeDefined();
+    });
+  });
+
+  describe('highlight option', () => {
+    it('omits highlight when options.highlight is false', () => {
+      const result = buildQuery(defaultState, DEFAULT_CONFIG, {
+        highlight: false,
+      });
+      expect(result.highlight).toBeUndefined();
     });
   });
 

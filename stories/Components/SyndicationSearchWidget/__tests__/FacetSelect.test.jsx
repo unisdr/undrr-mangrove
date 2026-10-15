@@ -56,7 +56,12 @@ function renderFacet(props, selected = NO_FACETS) {
   return render(
     <SearchProvider config={{}}>
       <SeedFacets facets={selected} />
-      <FacetSelect getLabel={getLabel} widgetId="test" {...props} />
+      <FacetSelect
+        getLabel={getLabel}
+        widgetId="test"
+        selectedValues={selected[props.field?.key]}
+        {...props}
+      />
     </SearchProvider>
   );
 }

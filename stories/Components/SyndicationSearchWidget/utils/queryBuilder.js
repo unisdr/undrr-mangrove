@@ -11,6 +11,7 @@
 import {
   SCORING_CONFIG,
   HIGHLIGHT_CONFIG,
+  SOURCE_FIELDS,
   FACET_FIELDS,
   parseTypeValue,
   TAXONOMY_VOCABULARY_MAP,
@@ -38,14 +39,20 @@ const BOOLEAN_OPERATORS = ['AND', 'OR', 'NOT'];
  * @param {Object} params.facets - Active facet filters { [key]: [values] }
  * @param {Object} params.facetOperators - Operator per facet { [key]: 'OR' | 'AND' }
  * @param {Object} params.customFacets - Custom facet selections { [facetId]: [indices] }
- * @param {string} params.sortBy - Sort order: 'newest', 'oldest', 'relevance'
+ * @param {string} params.sortBy - Sort order: 'relevance', 'newest', 'oldest',
+ *   'eventDateAsc' or 'eventDateDesc'
  * @param {number} params.page - Current page number (1-based)
  * @param {Object} config - Widget configuration
+ * @param {Object} [options]
+ * @param {boolean} [options.highlight=true] - Request title and body
+ *   highlights. They are only displayed by the no-teaser fallback, so the
+ *   widget turns them on only once it has seen a hit without a teaser.
  * @returns {Object} Elasticsearch query body
  */
 export function buildQuery(
   { query, facets, facetOperators, customFacets, sortBy, page = 1 },
-  config
+  config,
+  { highlight: wantHighlight = true } = {}
 ) {
   const scoring = config.scoring || SCORING_CONFIG;
   const highlight = config.highlight || HIGHLIGHT_CONFIG;
@@ -85,12 +92,14 @@ export function buildQuery(
     size: resultsPerPage,
     sort: buildSort(sortBy),
     query: mainQuery,
+    // Only the fields the widget renders; `body` alone is most of a hit.
+    _source: { includes: config.sourceFields || SOURCE_FIELDS },
   };
 
   // Skip highlights in card mode when summary is hidden: card teasers use
   // pre-rendered HTML and don't show body text, so highlight fragments are
   // wasted response payload.
-  if (!(isCardMode && summaryHidden)) {
+  if (wantHighlight && !(isCardMode && summaryHidden)) {
     result.highlight = buildHighlight(highlight);
   }
 
@@ -113,12 +122,37 @@ export function buildQuery(
  * @param {string} sortBy - Sort order
  * @returns {Array} Elasticsearch sort array
  */
-function buildSort(sortBy) {
+export function buildSort(sortBy) {
   switch (sortBy) {
     case 'newest':
       return [{ published_at: { order: 'desc' } }];
     case 'oldest':
       return [{ published_at: { order: 'asc' } }];
+    case 'eventDateAsc':
+    case 'eventDateDesc':
+      // Results without an event date (non-events in a mixed listing) sort
+      // last in both directions. unmapped_type keeps the sort valid on an
+      // index that doesn't have event_start yet, before a reindex.
+      // Date-only events share a start time (12:00 UTC) and non-events all
+      // tie as missing, so publish date and then nid break ties: from/size
+      // paging needs a total order, or pages repeat and skip results.
+      return [
+        {
+          event_start: {
+            order: sortBy === 'eventDateAsc' ? 'asc' : 'desc',
+            missing: '_last',
+            unmapped_type: 'date',
+          },
+        },
+        {
+          published_at: {
+            order: 'desc',
+            missing: '_last',
+            unmapped_type: 'date',
+          },
+        },
+        { nid: { order: 'desc', missing: '_last', unmapped_type: 'long' } },
+      ];
     case 'relevance':
     default:
       return [{ _score: { order: 'desc' } }];
@@ -220,6 +254,23 @@ function buildBaseFilters(config) {
 }
 
 /**
+ * Range clause matching one calendar year (UTC) of published_at.
+ * @param {number} year
+ * @returns {Object}
+ * @private
+ */
+function buildYearRange(year) {
+  return {
+    range: {
+      published_at: {
+        gte: `${String(year).padStart(4, '0')}-01-01T00:00:00Z`,
+        lt: `${String(year + 1).padStart(4, '0')}-01-01T00:00:00Z`,
+      },
+    },
+  };
+}
+
+/**
  * Build post_filter containing all facet filters.
  * Applied after aggregations for disjunctive faceting.
  * @private
@@ -242,49 +293,23 @@ function buildPostFilter(facets, facetOperators, customFacets, config) {
 
     const operator = facetOperators[key] || 'OR';
 
-    // Year uses script filter because published_at is a date
+    // Year: a calendar-year range on published_at per selected year (UTC,
+    // as the index stores it). Plain ranges, so server rendering accepts
+    // them, and much cheaper than the painless script they replace.
     if (key === 'year') {
-      const years = values.map(y => parseInt(y, 10));
-      if (operator === 'AND' && years.length > 1) {
-        // AND for year is semantically impossible (one doc can't have multiple years)
-        // but we include it for completeness - will return no results
-        filters.push({
-          bool: {
-            must: years.map(y => ({
-              script: {
-                script: {
-                  source: `
-                    if (doc.containsKey('published_at') && doc['published_at'].size() != 0) {
-                      return doc['published_at'].value.getYear() == params.year;
-                    }
-                    return false;
-                  `,
-                  lang: 'painless',
-                  params: { year: y },
-                },
-              },
-            })),
-          },
-        });
+      const ranges = values
+        .map(y => parseInt(y, 10))
+        .filter(Number.isFinite)
+        .map(buildYearRange);
+      if (ranges.length === 0) continue;
+      if (ranges.length === 1) {
+        filters.push(ranges[0]);
+      } else if (operator === 'AND') {
+        // AND across years can't match (a document has one publication
+        // year); kept for completeness, it returns no results.
+        filters.push({ bool: { must: ranges } });
       } else {
-        // OR: match any of the selected years
-        filters.push({
-          script: {
-            script: {
-              source: `
-                if (doc.containsKey('published_at') && doc['published_at'].size() != 0) {
-                  int docYear = doc['published_at'].value.getYear();
-                  for (int y : params.years) {
-                    if (docYear == y) return true;
-                  }
-                }
-                return false;
-              `,
-              lang: 'painless',
-              params: { years },
-            },
-          },
-        });
+        filters.push({ bool: { should: ranges, minimum_should_match: 1 } });
       }
       continue;
     }
@@ -901,18 +926,15 @@ function buildAggregations(facetFields, facetCount) {
     };
   }
 
-  // Year aggregation uses script to extract year from date
+  // Year aggregation: one bucket per calendar year (UTC) of published_at.
+  // `yyyy` puts the year in key_as_string; normaliseAggregations in
+  // SearchContext makes it the bucket key.
   aggs.year = {
-    terms: {
-      script: {
-        source: `
-          if (doc.containsKey('published_at') && doc['published_at'].size() != 0) {
-            return doc['published_at'].value.getYear();
-          }
-        `,
-        lang: 'painless',
-      },
-      size: facetCount,
+    date_histogram: {
+      field: 'published_at',
+      calendar_interval: 'year',
+      format: 'yyyy',
+      min_doc_count: 1,
     },
   };
 

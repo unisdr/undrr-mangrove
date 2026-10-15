@@ -286,3 +286,41 @@ Use this when embedding search on topic-specific pages (e.g., a news section tha
     },
   },
 };
+
+/**
+ * Upcoming events listing: hides events that have ended and sorts by event
+ * date, soonest first, using customFilters and an event date sort.
+ */
+export const UpcomingEvents = {
+  args: {
+    config: {
+      ...defaultConfig,
+      customFilters: [
+        'type:(event OR conference_event)',
+        '(event_end:[now-1d/d TO *] OR (*:* -_exists_:event_end))',
+      ],
+      defaultSort: 'eventDateAsc',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+An events listing that hides events that have already ended and lists the rest by event date, soonest first.
+
+\`\`\`js
+config: {
+  customFilters: [
+    'type:(event OR conference_event)',
+    '(event_end:[now-1d/d TO *] OR (*:* -_exists_:event_end))',
+  ],
+  defaultSort: 'eventDateAsc',
+}
+\`\`\`
+
+The second filter keeps events whose \`event_end\` is yesterday or later, and anything without \`event_end\`. Until an index has the event date fields, the sort falls back to index order and nothing is hidden.
+        `,
+      },
+    },
+  },
+};
