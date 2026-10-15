@@ -1,7 +1,7 @@
 /**
  * Loader / Spinner
  *
- * Animated loading spinner for asynchronous states, in a default size for
+ * Loading indicator for asynchronous states, in a default size for
  * pages and regions and a 1em inline size for text, buttons and form fields.
  *
  * Full documentation:
@@ -59,16 +59,6 @@
     width: 1em;
   }
 
-  // Under reduced motion the site-wide reset cuts every animation to 0.01ms
-  // and one iteration, which would freeze the spinner and make it look as if
-  // loading has stopped. A slow, steady rotation still says "working" without
-  // the speed. The !important is needed to outrank the reset's own
-  // !important, and is scoped to the loader.
-  @media (prefers-reduced-motion: reduce) {
-    animation-duration: calc(var(--mg-loader-duration) * 3) !important;
-    animation-iteration-count: infinite !important;
-  }
-
   // Forced colours would paint every side of the border in one system colour,
   // a full ring whose rotation cannot be seen. Opt out and use system colours
   // for the arc and the track.
@@ -76,6 +66,94 @@
     border-color: GrayText;
     border-top-color: CanvasText;
     forced-color-adjust: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    // A complete dashed ring is a deliberate pending marker, not a frozen
+    // frame of the asymmetric spinner. Its label carries the state meaning.
+    animation: none !important;
+    transform: none;
+    border-style: dashed;
+    border-color: rgb(var(--mg-color-interactive));
+
+    &--inline {
+      border-color: currentColor;
+    }
+
+    // The same existing markup works for React and CSS-only consumers. The
+    // status label joins normal flow; only the marker keeps the old size.
+    &:not([aria-hidden="true"]) {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--mg-spacing-50);
+      width: fit-content;
+      max-width: 100%;
+      height: auto;
+      border: 0;
+      border-radius: 0;
+      vertical-align: middle;
+      text-align: center;
+
+      &::before {
+        content: "";
+        display: block;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        width: 40px;
+        max-width: 100%;
+        aspect-ratio: 1;
+        border: 8px dashed rgb(var(--mg-color-interactive));
+        border-radius: 50%;
+
+        @include devicebreak(medium) {
+          width: 96px;
+          border-width: 14px;
+        }
+      }
+
+      > .mg-u-sr-only {
+        position: static;
+        width: auto;
+        min-width: 0;
+        max-width: 100%;
+        height: auto;
+        margin: 0;
+        overflow: visible;
+        clip-path: none;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        line-height: var(--mg-font-line-height-700);
+      }
+    }
+
+    &--inline:not([aria-hidden="true"]) {
+      flex-direction: row;
+      align-items: baseline;
+      text-align: start;
+
+      &::before {
+        width: 1em;
+        height: 1em;
+        border-width: max(2px, 0.125em);
+        border-color: currentColor;
+      }
+    }
+
+    @media (forced-colors: active) {
+      border-color: CanvasText;
+
+      &:not([aria-hidden="true"]) {
+        // Let the visible label use the user's text colours. Only the
+        // decorative marker opts out to keep its dashed outline distinct.
+        forced-color-adjust: auto;
+
+        &::before {
+          border-color: CanvasText;
+          forced-color-adjust: none;
+        }
+      }
+    }
   }
 }
 

@@ -108,6 +108,18 @@
     color: rgb(var(--mg-color-interactive));
     font-size: var(--mg-spacing-300);
     z-index: 3; // loading spinner above nav buttons — local to gallery stacking context
+
+    @media (prefers-reduced-motion: reduce) {
+      // The shared Loader reveals translated text. Keep it inside the stage
+      // and give the label a stable surface over arbitrary video/posters.
+      width: max-content;
+      max-width: calc(100% - var(--mg-spacing-200));
+      box-sizing: border-box;
+      padding: var(--mg-spacing-75);
+      background: rgb(var(--mg-color-neutral-0));
+      color: rgb(var(--mg-color-text));
+      font-size: var(--mg-font-size-300);
+    }
   }
 
   // Description area

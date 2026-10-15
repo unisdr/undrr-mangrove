@@ -3,7 +3,7 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { Loader } from './Loader';
 import { TextInput } from '../../Components/Forms/TextInput/TextInput';
 
-// The visually hidden label in the language picked in the locale toolbar.
+// The status label in the language picked in the locale toolbar.
 // Arabic also sets the direction, so the stories cover right to left. A label
 // typed into the controls is shown as entered.
 const LOADING_LABELS = {
@@ -79,6 +79,40 @@ export const DefaultLoader = {
 
 export const Inline = {
   args: { size: 'inline' },
+};
+
+// Review with the browser's reduced-motion preference, including while this
+// story stays mounted. CSS-only consumers use the same existing label markup.
+export const StatusLayouts = {
+  name: 'Status labels in constrained layouts',
+  args: { label: 'Loading the latest disaster risk reduction information…' },
+  render: args => (
+    <div
+      style={{
+        display: 'grid',
+        gap: 'var(--mg-spacing-200)',
+        maxWidth: '18rem',
+      }}
+    >
+      <div data-testid="loader-default-layout">
+        <Loader {...args} />
+      </div>
+      <div data-testid="loader-inline-layout" style={{ maxWidth: '9rem' }}>
+        <Loader {...args} size="inline" />
+      </div>
+      <div
+        data-testid="loader-custom-layout"
+        style={{ fontSize: '2rem', maxWidth: '12rem' }}
+      >
+        <Loader {...args} size="inline" />
+      </div>
+      <div data-testid="loader-css-layout" style={{ maxWidth: '9rem' }}>
+        <div className="mg-loader" role="status">
+          <span className="mg-u-sr-only">{args.label}</span>
+        </div>
+      </div>
+    </div>
+  ),
 };
 
 export const InlineInText = {
@@ -247,7 +281,12 @@ function AnnouncerExample() {
         data-testid="results"
         style={{ minHeight: '7rem', paddingBlock: 'var(--mg-spacing-100)' }}
       >
-        {phase === 'loading' && <Loader decorative />}
+        {phase === 'loading' && (
+          <>
+            <Loader decorative />
+            <p>{ANNOUNCEMENTS.loading}</p>
+          </>
+        )}
         {phase === 'done' && <p>12 results.</p>}
       </div>
     </div>

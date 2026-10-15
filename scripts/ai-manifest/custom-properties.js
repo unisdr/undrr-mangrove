@@ -315,7 +315,7 @@ export const PROPERTY_DOCS = {
 
   // Loader
   '--mg-loader-duration':
-    'Time for one turn of the spinner. Under reduced motion the spinner turns at three times this duration instead of stopping.',
+    'Time for one turn of the spinner when motion is permitted. Under reduced motion the Loader is a static dashed marker with a visible status label, so this property has no effect.',
 
   // Notice
   '--mg-notice-bg':

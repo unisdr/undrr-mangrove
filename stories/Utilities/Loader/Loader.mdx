@@ -75,15 +75,21 @@ For an action whose result appears next to the control, combine an inline spinne
 
 #### States
 
-The loader has one state: spinning. Remove it when loading finishes.
+The loader represents pending work: a spinner when motion is permitted, or a complete dashed marker with a visible label under reduced motion. Remove it when loading finishes and report completion or failure through application state.
 
 #### Reduced motion
 
-Under `prefers-reduced-motion: reduce` both sizes keep turning, three times more slowly. The site-wide reduced motion reset would otherwise stop the spinner after its first frame, and a spinner that does not move reads as loading that has stopped.
+Under `prefers-reduced-motion: reduce` both sizes stop rotating and change to a complete dashed ring. This is a deliberately different pending marker, rather than a frozen frame of the asymmetric spinner. Nondecorative loaders reveal their existing translated status label in normal flow: below the default-size marker, or beside the inline marker. The label wraps within the available width, so the status container can grow beyond the marker's original dimensions. Keep loading labels concise and task-specific. The marker remains 40px/96px by default or 1em inline.
+
+The same CSS applies to React and the documented CSS-only markup with a direct `.mg-u-sr-only` label. Decorative loaders remain compact empty markers; their caller must provide visible loading context, such as "Saving…", as well as the appropriate announcement. A hidden announcer alone does not provide visible meaning for a static marker.
+
+Changing the preference while a loader is mounted switches its visual presentation without remounting the status region or inserting another announcement. This design removes motion; its comprehension has not yet been validated with affected users.
+
+<Canvas of={LoaderStories.StatusLayouts} meta={LoaderStories} />
 
 #### Timing
 
-One turn takes `--mg-loader-duration`, 0.9s by default. Set it on the loader to change the speed.
+When motion is permitted, one turn takes `--mg-loader-duration`, 0.9s by default. Set it on the loader to change the speed; the property has no effect under reduced motion.
 
 ### Usage
 
@@ -140,10 +146,10 @@ The React component renders the `role="status"` region empty and adds the label 
 ### Accessibility
 
 - The loader is a `role="status"` live region, which screen readers announce politely. `role="status"` already implies `aria-live="polite"`, so the attribute is not repeated.
-- The label is visually hidden text inside the region, using the [`mg-u-sr-only`](?path=/docs/components-utility-css--docs) utility. Screen readers announce a live region's text content; an `aria-label` on an empty region is not reliably spoken. Translate the text with the `label` prop.
+- The label is visually hidden when motion is permitted and visible under reduced motion, using the [`mg-u-sr-only`](?path=/docs/components-utility-css--docs) utility. Screen readers announce a live region's text content; an `aria-label` on an empty region is not reliably spoken. Translate the text with the `label` prop.
 - Do not put `aria-busy="true"` on the loader. It tells assistive technology to hold back announcements from that element, so the label may never be read. Set `aria-busy` on the region whose content is loading and remove it when the content arrives.
 - When the loader sits next to visible text, such as "Saving…" in a button, mark it decorative (`aria-hidden="true"`, or `decorative` in React) so the text is not repeated.
-- In forced colours mode the spinner is drawn in system colours, with the arc in `CanvasText` and the track in `GrayText`, so the rotation stays visible.
+- In forced colours mode the moving spinner uses `CanvasText` and `GrayText`. With reduced motion also active, the static dashed marker uses `CanvasText`; its visible label keeps automatic forced-colour adjustment and remains readable.
 
 #### Announcing a loader that is inserted by script
 
@@ -155,8 +161,9 @@ Many screen readers announce a live region only when its content changes after t
 <!-- In the page from the start -->
 <div id="status-message" role="status" class="mg-u-sr-only"></div>
 
-<!-- Inserted when loading starts -->
+<!-- Inserted when loading starts; visible context accompanies the marker -->
 <div class="mg-loader" aria-hidden="true"></div>
+<p>Loading results</p>
 ```
 
 ```js
@@ -207,6 +214,7 @@ The first pattern is more reliable: some screen readers take a moment to registe
 
 ## Changelog
 
+- **1.4**, 2026-10-15 ([#1368](https://github.com/unisdr/undrr-mangrove/issues/1368)): Reduced motion now shows a static full dashed marker and the existing translated status label in normal flow, including forced colours. Decorative loaders stay icon-only and require visible caller-owned loading context. Normal-motion sizes, rotation, markup, roles and the 100ms React announcement delay are unchanged. Labels can expand the reduced-motion status container; CSS consumers should leave room for wrapping rather than constraining the entire status to the marker dimensions.
 - **1.3**, 2026-10-12 ([#1332](https://github.com/unisdr/undrr-mangrove/pull/1332)): Inline size, decorative mode, theme colour and announcement on insertion.
   - ([#1330](https://github.com/unisdr/undrr-mangrove/issues/1330)) Added the inline size (`mg-loader--inline`, React `size="inline"`, rendered as a `span`) and the React `decorative` prop. The React component now inserts its status region empty and adds the label after mount, so it is announced when inserted while the page is in use; its final markup is unchanged. The default spinner uses the theme's interactive colour instead of a fixed blue, turns in 0.9s instead of 2s, keeps turning slowly under reduced motion and stays visible in forced colours mode. Documented how to announce a loader that is inserted by script, when to use a loader, and the inline loading pattern.
   - ([web-backlog#3130](https://gitlab.com/undrr/web-backlog/-/work_items/3130)) Drupal AJAX throbber use case.
