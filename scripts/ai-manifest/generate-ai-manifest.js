@@ -43,6 +43,10 @@ import path from 'path';
 import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+import {
+  selectPublishedComponents,
+  propTypesCoverage,
+} from './catalog-components.js';
 import { buildEditorialManualTxt } from './editorial-manual.js';
 import { buildDocsSubmanifest, DOCS_SUBMANIFESTS } from './docs-submanifest.js';
 import {
@@ -725,6 +729,9 @@ const pkg = JSON.parse(
   fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')
 );
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+// Filter once, before curated validation, PropTypes coverage and catalog output.
+// The raw Storybook manifest is left intact for its QA routes and test runner.
+manifest.components = selectPublishedComponents(manifest.components);
 const iconInventoryPath = path.resolve(
   process.cwd(),
   'stories/Atom/Icons/Icons.json'
@@ -1659,12 +1666,11 @@ if (a11yViolations.length > 0) {
 // Check 2: PropTypes coverage warning
 // ---------------------------------------------------------------------------
 
-const totalComponents = Object.keys(manifest.components).length;
-const withProps = Object.values(manifest.components).filter(
-  c => c.reactDocgen?.props && Object.keys(c.reactDocgen.props).length > 0
-).length;
-const coverage =
-  totalComponents > 0 ? Math.round((withProps / totalComponents) * 100) : 0;
+const {
+  total: totalComponents,
+  documented: withProps,
+  percent: coverage,
+} = propTypesCoverage(manifest.components);
 
 console.log(
   `PropTypes coverage: ${withProps} of ${totalComponents} components have props documented (${coverage}%)`

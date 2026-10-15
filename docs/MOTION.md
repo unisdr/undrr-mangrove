@@ -110,3 +110,6 @@ A component's MDX behaviours section must state:
 - Relevant forced-colours and RTL treatment.
 
 Include representative interaction/loading stories and a changelog entry when behaviour changes. Link this guide rather than duplicating the policy. Verify in a real browser with no preference and reduced motion, forced colours separately and combined, RTL, keyboard operation, relevant viewports and all affected themes. Toggle the preference while mounted and repeat/reverse interactions. Confirm labels and state remain understandable with motion disabled; jsdom and screenshot snapshots alone cannot verify animation timing or the CSS cascade.
+
+
+The deterministic real-browser regression gate is `yarn test:motion-browser`; see [Testing: motion and forced-colour browser gate](TESTING.md#motion-and-forced-colour-browser-gate) for serving Storybook, the theme/media matrix and review artifacts. New literal timing values are rejected by Stylelint; legacy baseline entries must be pruned as their declarations are migrated.

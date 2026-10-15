@@ -357,3 +357,14 @@ it('renders efficiently', () => {
 - [React Testing Library](https://testing-library.com/react)
 - [Chromatic Documentation](https://www.chromatic.com/docs/)
 - [WCAG Guidelines](https://www.w3.org/WAI/WCAG22/quickref/)
+
+
+## Motion and forced-colour browser gate
+
+After `yarn build`, serve the built Storybook with `yarn serve-storybook`, then run `yarn test:motion-browser`. For a development server, set `MOTION_STORYBOOK_URL=http://127.0.0.1:6006`. The gate uses the Chromium installed for the Storybook test runner and stops after six minutes.
+
+Deterministic `Quality/Motion` fixtures cover Loader, ProgressBar, Gallery, MegaMenu, SyndicationSearchWidget, Drawer and Details. The gate emulates reduced motion, forced colours and both together **before mounting** each fixture, across all five brand themes at desktop LTR and 375px RTL. It checks loading shapes, persistent slow spinners, static dashed indeterminate progress, explicit instant Gallery scrolling even with consumer smooth-scroll CSS, keyboard access and focus return, and visible menu destinations. Search states use local context fixtures with explicit complete/fail controls; media requests are local and external network requests are blocked.
+
+`artifacts/motion/` contains screenshots and a JSON result log; override its location with `MOTION_ARTIFACT_DIR`. CI uploads these artifacts even when the gate fails. The existing Storybook workflow runs the gate on every pull-request update, and Chromatic also reruns on synchronisation and reopening. Screenshots support review; computed-style and interaction assertions decide pass/fail.
+
+Stylelint's `mangrove/no-unapproved-motion-timing` rule rejects new literal transition/animation times, including longhands, vendor prefixes, variable fallbacks and transition mixins. `scripts/motion-timing-baseline.json` permits only the recorded legacy declaration counts. Prune removed timings with `node scripts/prune-motion-baseline.mjs --write` when migrating them; baseline changes require reviewed justification. The prune command can only remove exemptions and cannot grow the baseline. Zero lifecycle delays, the exact foundational reduced-motion reset and component properties for repeating progress cycles are intentional exceptions. Run `yarn test scripts/__tests__/stylelint-motion.test.js` for adversarial examples.
