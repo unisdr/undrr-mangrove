@@ -446,6 +446,48 @@ try {
                 el.textContent =
                   'جارٍ تحميل محتوى الوسائط. يرجى الانتظار حتى تصبح المعلومات المعروضة متاحة للقراءة.';
               });
+              await loadingText.evaluate(async el => {
+                // Force the new script into layout before waiting for its font.
+                el.getBoundingClientRect();
+                await document.fonts.ready;
+              });
+              const geometry = await loadingText.evaluate(el => {
+                const overlay = el.closest('.mg-gallery__loading');
+                const frame = overlay.parentElement;
+                const box = overlay.getBoundingClientRect();
+                const stage = frame.getBoundingClientRect();
+                const probe = document.createElement('span');
+                probe.style.cssText =
+                  'position:absolute;inline-size:var(--mg-spacing-50);block-size:0;visibility:hidden';
+                frame.appendChild(probe);
+                const clearance = probe.getBoundingClientRect().width;
+                probe.remove();
+                return {
+                  clearance,
+                  gaps: Array.from(
+                    frame.parentElement.querySelectorAll('.mg-gallery__arrow')
+                  ).map(arrow => {
+                    const bounds = arrow.getBoundingClientRect();
+                    return Math.max(
+                      bounds.left - box.right,
+                      box.left - bounds.right
+                    );
+                  }),
+                  contained:
+                    box.top >= stage.top - 0.5 &&
+                    box.bottom <= stage.bottom + 0.5,
+                };
+              });
+              assert(
+                geometry.clearance > 0 &&
+                  geometry.gaps.length === 2 &&
+                  geometry.gaps.every(gap => gap >= geometry.clearance - 0.5),
+                `Gallery loading backplate must leave focus clearance from both arrows: ${JSON.stringify(geometry)}`
+              );
+              assert(
+                geometry.contained,
+                'Long reduced-motion Gallery loading text must fit vertically inside the media stage'
+              );
               const next = page.locator('.mg-gallery__arrow--next');
               assert(
                 await next.evaluate(button => {
