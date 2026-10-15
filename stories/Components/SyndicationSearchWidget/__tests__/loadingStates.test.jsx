@@ -206,3 +206,77 @@ it.each([false, true])(
     }
   }
 );
+
+it.each(['list', 'card', 'card-book'])(
+  'preserves focused retained results when a %s refresh completes',
+  async displayMode => {
+    let release;
+    let searches = 0;
+    const response = () => ({
+      ok: true,
+      json: async () => ({
+        hits: {
+          hits: [
+            {
+              _id: 'retained',
+              _source: {
+                teaser: '<p><a href="/retained">Retained result</a></p>',
+                title: 'Retained result',
+                url: '/retained',
+                type: 'news',
+                field_domain_access: ['www_undrr_org'],
+              },
+            },
+          ],
+          total: { value: 1 },
+        },
+        took: 1,
+      }),
+    });
+    global.fetch = jest.fn().mockImplementation(url => {
+      if (String(url).includes('preventionweb.net/api')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({ results: [] }),
+        });
+      }
+      searches += 1;
+      if (searches === 1) return Promise.resolve(response());
+      return new Promise(resolve => {
+        release = () => resolve(response());
+      });
+    });
+    render(
+      <SyndicationSearchWidget
+        config={{
+          enableHashSync: false,
+          debounceDelay: 0,
+          defaultFilters: [],
+          displayMode,
+        }}
+      />
+    );
+    const link = await screen.findByRole('link', { name: 'Retained result' });
+    fireEvent.change(screen.getByRole('searchbox'), {
+      target: { value: 'flood' },
+    });
+    await waitFor(() =>
+      expect(
+        document.querySelector('.mg-search__results--refreshing')
+      ).not.toBeNull()
+    );
+    // A keyboard user can reach retained results while the request is pending.
+    link.focus();
+    expect(link).toHaveFocus();
+    await act(async () => {
+      release();
+    });
+    await waitFor(() =>
+      expect(
+        document.querySelector('.mg-search__results--refreshing')
+      ).toBeNull()
+    );
+    expect(screen.getByRole('link', { name: 'Retained result' })).toBe(link);
+    expect(link).toHaveFocus();
+  }
+);
