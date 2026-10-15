@@ -1,9 +1,9 @@
 /**
  * @file Loader.jsx
- * @description Animated loading spinner for indicating pending operations.
+ * @description Loading indicator for pending operations.
  *
- * Renders a CSS-only spinning circle inside a `role="status"` live region.
- * The label is visually hidden text inside the region, so screen readers
+ * Renders a CSS-only pending indicator inside a `role="status"` live region.
+ * The label is visually hidden during motion and visible under reduced motion, so screen readers
  * announce it as the region's content. The `inline` size is a 1em spinner
  * that sits in a line of text or inside a button, and `decorative` hides the
  * spinner from assistive technology for pages that announce the loading state
@@ -25,18 +25,18 @@ export const LOADER_LABEL_DELAY_MS = 100;
 /**
  * Loader component.
  *
- * Displays an accessible loading spinner. The status region is rendered
- * empty and the label, visually hidden text (`mg-u-sr-only`), is added
+ * Displays an accessible loading indicator. The status region is rendered
+ * empty and the label (`mg-u-sr-only`, revealed under reduced motion) is added
  * shortly after mount, so a loader inserted while the page is in use is
  * announced. Put `aria-busy="true"` on the region whose content is loading,
  * not on the loader.
  *
  * The inline size renders a `span`, so it is valid inside a paragraph, a
- * label or a button. Set `decorative` when the loading state is announced
- * elsewhere or a visible label sits next to the spinner.
+ * label or a button. Decorative indicators need visible caller-owned loading
+ * text; the caller also owns any announcement through its existing region.
  *
  * @param {Object} props
- * @param {string} [props.label='Loading']     Visually hidden text announced by screen readers
+ * @param {string} [props.label='Loading']     Translated status text, visible under reduced motion and announced by screen readers
  * @param {string} [props.size='default']      `default` for pages and regions, `inline` for a 1em spinner in text and buttons
  * @param {boolean} [props.decorative=false]   Hide the spinner from assistive technology, with no role and no label
  * @param {string} [props.className='']        Additional CSS classes to apply
@@ -76,7 +76,7 @@ export function Loader({
 }
 
 Loader.propTypes = {
-  /** Visually hidden text announced by screen readers */
+  /** Translated status text, visible under reduced motion and announced by screen readers */
   label: PropTypes.string,
   /** `default` for pages and regions, `inline` for a 1em spinner in text and buttons */
   size: PropTypes.oneOf(['default', 'inline']),

@@ -108,6 +108,25 @@
     color: rgb(var(--mg-color-interactive));
     font-size: var(--mg-spacing-300);
     z-index: 3; // loading spinner above nav buttons — local to gallery stacking context
+
+    @media (prefers-reduced-motion: reduce) {
+      // The shared Loader reveals translated text. Keep it inside the stage
+      // and give the label a stable surface over arbitrary video/posters.
+      width: max-content;
+
+      // Reserve both 44px arrow targets, their largest inset, and a focus gap.
+      $navigation-space: calc(
+        #{mg-rem(44)} + var(--mg-spacing-100) + var(--mg-spacing-50)
+      );
+
+      max-width: calc(100% - 2 * $navigation-space);
+      box-sizing: border-box;
+      pointer-events: none;
+      padding: var(--mg-spacing-75);
+      background: rgb(var(--mg-color-neutral-0));
+      color: rgb(var(--mg-color-text));
+      font-size: var(--mg-font-size-300);
+    }
   }
 
   // Description area

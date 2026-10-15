@@ -119,7 +119,10 @@ function MotionState({ initialState = 'initial' }) {
 
 function MotionPreview({ initialState }) {
   return (
-    <SearchProvider config={PREVIEW_CONFIG}>
+    <SearchProvider
+      config={PREVIEW_CONFIG}
+      labels={{ srSearching: 'Recherche en cours…' }}
+    >
       <MotionState initialState={initialState} />
     </SearchProvider>
   );

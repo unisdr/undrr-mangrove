@@ -1890,9 +1890,9 @@ npm run build</code></pre>
   },
   'components-loader': {
     summary:
-      'Animated loading spinner: a default 40px/96px size for pages and regions, and a 1em mg-loader--inline size in currentColor for text, buttons and form fields.',
+      'Loading indicator: spinning normally and static with visible text under reduced motion; default 40px/96px or 1em inline size.',
     description:
-      'Animated loading spinner in the theme interactive colour, 40px on mobile and 96px on desktop. The inline size (mg-loader--inline, React size="inline", rendered as a span) is a 1em inline-block in currentColor that sits in running text, follows the font size of its context, does not grow on desktop and fits inside an mg-button next to its label without changing the button height; next to a form field it serves as an autocomplete or Drupal AJAX throbber. The announced form carries role="status" (implicitly aria-live="polite") and contains the label as visually hidden text in an mg-u-sr-only span. Decorative mode (aria-hidden="true" with no role and no label, React decorative) is for a spinner next to visible text such as "Saving…" in a button, or one whose loading state is announced elsewhere. A status region inserted already filled is often not announced, so a loader added by script should be decorative with the start and the outcome written to a live region already in the page; the React component instead inserts the region empty and adds the label 100ms after mount. Do not add aria-busy to the loader; put it on the region whose content is loading. Under reduced motion it keeps turning at a third of the speed. For measurable progress or a region updating in place, use components-progress-bar.',
+      'Animated loading spinner in the theme interactive colour, 40px on mobile and 96px on desktop. The inline size (mg-loader--inline, React size="inline", rendered as a span) is a 1em inline-block in currentColor that sits in running text, follows the font size of its context, does not grow on desktop and fits inside an mg-button next to its label without changing the button height; next to a form field it serves as an autocomplete or Drupal AJAX throbber. The announced form carries role="status" (implicitly aria-live="polite") and contains the label in an mg-u-sr-only span, revealed under reduced motion. Decorative mode (aria-hidden="true" with no role and no label, React decorative) is for a spinner next to visible text such as "Saving…" in a button, with announcements owned by the surrounding application. A status region inserted already filled is often not announced, so a loader added by script should be decorative with the start and the outcome written to a live region already in the page; the React component instead inserts the region empty and adds the label 100ms after mount. Do not add aria-busy to the loader; put it on the region whose content is loading. Under reduced motion the indicator becomes a static full dashed marker: its existing translated status label is visible in normal flow below the default marker or beside the inline marker and wraps within available width. Decorative markers remain fixed-sized and require visible caller-owned loading context. Normal-motion presentation and the 100ms React status-label delay are unchanged. For measurable progress or a region updating in place, use components-progress-bar.',
     cssClasses: ['mg-loader', 'mg-loader--inline'],
     supplementalExamples: [
       {
@@ -1913,6 +1913,7 @@ npm run build</code></pre>
         html: `<div id="status-message" role="status" class="mg-u-sr-only">Loading results</div>
 <div class="results" aria-busy="true">
   <div class="mg-loader" aria-hidden="true"></div>
+  <p>Loading results</p>
 </div>`,
       },
     ],
