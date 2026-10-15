@@ -223,6 +223,7 @@ export const NextToField = {
           alignItems: 'end',
           display: 'flex',
           gap: 'var(--mg-spacing-75)',
+          flexWrap: 'wrap',
         }}
       >
         <TextInput
@@ -231,8 +232,11 @@ export const NextToField = {
           defaultValue="Indon"
           autoComplete="off"
         />
-        <span style={{ paddingBlockEnd: 'var(--mg-spacing-100)' }}>
-          <Loader size="inline" decorative />
+        <span
+          role="status"
+          style={{ paddingBlockEnd: 'var(--mg-spacing-100)' }}
+        >
+          <Loader size="inline" decorative /> Checking countries…
         </span>
       </div>
       <h3>Drupal AJAX throbber</h3>
