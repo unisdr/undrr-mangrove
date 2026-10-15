@@ -57,16 +57,8 @@ export const Drawer = ({
 
     if (isOpen) {
       returnFocusRef.current = ownerDocument.activeElement;
-      // Removing inert and revealing the drawer must reach the browser before
-      // focus moves. Focusing in this effect can still see the closed state.
-      // One frame follows rendering; it does not wait for the entry animation.
-      const ownerWindow = ownerDocument.defaultView;
-      const frame = ownerWindow.requestAnimationFrame(() => {
-        if (drawer.isConnected && !drawer.inert) {
-          (closeButtonRef.current || drawer).focus();
-        }
-      });
-      return () => ownerWindow.cancelAnimationFrame(frame);
+      (closeButtonRef.current || drawer).focus();
+      return;
     }
 
     const target = returnFocusRef.current;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { Drawer } from '../Drawer';
 
@@ -103,7 +103,7 @@ describe('Drawer', () => {
     expect(container.querySelector('.custom-html')).toBeNull();
   });
 
-  it('moves focus in on open and returns it on close', async () => {
+  it('moves focus in on open and returns it on close', () => {
     const trigger = document.createElement('button');
     document.body.appendChild(trigger);
     trigger.focus();
@@ -112,9 +112,7 @@ describe('Drawer', () => {
       <Drawer isOpen={false} onClose={jest.fn()} title="Focus" />
     );
     rerender(<Drawer isOpen onClose={jest.fn()} title="Focus" />);
-    await waitFor(() =>
-      expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus()
-    );
+    expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus();
 
     rerender(<Drawer isOpen={false} onClose={jest.fn()} title="Focus" />);
     expect(trigger).toHaveFocus();
@@ -168,34 +166,25 @@ describe('Drawer', () => {
   });
 });
 
-it.each(['close', 'unmount'])('cancels pending opening focus on %s', action => {
-  let focusFrame;
-  const schedule = jest
-    .spyOn(window, 'requestAnimationFrame')
-    .mockImplementation(callback => {
-      focusFrame = callback;
-      return 77;
-    });
-  const cancel = jest
-    .spyOn(window, 'cancelAnimationFrame')
-    .mockImplementation(() => {});
-  const trigger = document.createElement('button');
-  document.body.appendChild(trigger);
+it('moves and restores focus within the drawer owning document', () => {
+  const frame = document.createElement('iframe');
+  document.body.appendChild(frame);
+  const ownerDocument = frame.contentDocument;
+  const trigger = ownerDocument.createElement('button');
+  ownerDocument.body.appendChild(trigger);
   trigger.focus();
-  const { rerender, unmount } = render(
-    <Drawer isOpen onClose={jest.fn()} title="Pending focus" />
+  const host = ownerDocument.createElement('div');
+  ownerDocument.body.appendChild(host);
+  const { rerender, getByRole, unmount } = render(
+    <Drawer isOpen={false} onClose={jest.fn()} title="Embedded" />,
+    { container: host }
   );
-  expect(trigger).toHaveFocus();
-  if (action === 'close')
-    rerender(
-      <Drawer isOpen={false} onClose={jest.fn()} title="Pending focus" />
-    );
-  else unmount();
-  expect(cancel).toHaveBeenCalledWith(77);
-  focusFrame();
-  expect(trigger).toHaveFocus();
+  rerender(<Drawer isOpen onClose={jest.fn()} title="Embedded" />);
+  expect(ownerDocument.activeElement).toBe(
+    getByRole('button', { name: 'Close' })
+  );
+  rerender(<Drawer isOpen={false} onClose={jest.fn()} title="Embedded" />);
+  expect(ownerDocument.activeElement).toBe(trigger);
   unmount();
-  trigger.remove();
-  schedule.mockRestore();
-  cancel.mockRestore();
+  frame.remove();
 });
