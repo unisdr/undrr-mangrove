@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { Drawer } from '../Drawer';
 
@@ -103,7 +103,7 @@ describe('Drawer', () => {
     expect(container.querySelector('.custom-html')).toBeNull();
   });
 
-  it('moves focus in on open and returns it on close', () => {
+  it('moves focus in on open and returns it on close', async () => {
     const trigger = document.createElement('button');
     document.body.appendChild(trigger);
     trigger.focus();
@@ -112,7 +112,9 @@ describe('Drawer', () => {
       <Drawer isOpen={false} onClose={jest.fn()} title="Focus" />
     );
     rerender(<Drawer isOpen onClose={jest.fn()} title="Focus" />);
-    expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus();
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus()
+    );
 
     rerender(<Drawer isOpen={false} onClose={jest.fn()} title="Focus" />);
     expect(trigger).toHaveFocus();
@@ -164,4 +166,36 @@ describe('Drawer', () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+});
+
+it.each(['close', 'unmount'])('cancels pending opening focus on %s', action => {
+  let focusFrame;
+  const schedule = jest
+    .spyOn(window, 'requestAnimationFrame')
+    .mockImplementation(callback => {
+      focusFrame = callback;
+      return 77;
+    });
+  const cancel = jest
+    .spyOn(window, 'cancelAnimationFrame')
+    .mockImplementation(() => {});
+  const trigger = document.createElement('button');
+  document.body.appendChild(trigger);
+  trigger.focus();
+  const { rerender, unmount } = render(
+    <Drawer isOpen onClose={jest.fn()} title="Pending focus" />
+  );
+  expect(trigger).toHaveFocus();
+  if (action === 'close')
+    rerender(
+      <Drawer isOpen={false} onClose={jest.fn()} title="Pending focus" />
+    );
+  else unmount();
+  expect(cancel).toHaveBeenCalledWith(77);
+  focusFrame();
+  expect(trigger).toHaveFocus();
+  unmount();
+  trigger.remove();
+  schedule.mockRestore();
+  cancel.mockRestore();
 });

@@ -52,21 +52,30 @@ export const Drawer = ({
   useEffect(() => {
     const drawer = drawerRef.current;
     if (!drawer) return;
+    const ownerDocument = drawer.ownerDocument;
     drawer.inert = !isOpen;
 
     if (isOpen) {
-      returnFocusRef.current = document.activeElement;
-      (closeButtonRef.current || drawer).focus();
-      return;
+      returnFocusRef.current = ownerDocument.activeElement;
+      // Removing inert and revealing the drawer must reach the browser before
+      // focus moves. Focusing in this effect can still see the closed state.
+      // One frame follows rendering; it does not wait for the entry animation.
+      const ownerWindow = ownerDocument.defaultView;
+      const frame = ownerWindow.requestAnimationFrame(() => {
+        if (drawer.isConnected && !drawer.inert) {
+          (closeButtonRef.current || drawer).focus();
+        }
+      });
+      return () => ownerWindow.cancelAnimationFrame(frame);
     }
 
     const target = returnFocusRef.current;
     returnFocusRef.current = null;
     if (target && target.isConnected && typeof target.focus === 'function') {
       if (
-        drawer.contains(document.activeElement) ||
-        !document.activeElement ||
-        document.activeElement === document.body
+        drawer.contains(ownerDocument.activeElement) ||
+        !ownerDocument.activeElement ||
+        ownerDocument.activeElement === ownerDocument.body
       ) {
         target.focus();
       }
