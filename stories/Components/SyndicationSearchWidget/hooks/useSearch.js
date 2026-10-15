@@ -82,6 +82,9 @@ export function useSearch() {
     queryIsTyped,
   } = state;
   const { searchEndpoint, minSearchLength, debounceDelay } = config;
+  // Eligibility can change without changing the Elasticsearch request body.
+  // Observe that boundary, rather than every threshold tweak.
+  const waitingForInput = isQueryTooShortToSearch(state, minSearchLength);
 
   // The request as Elasticsearch would see it. Rebuilt when state or config
   // change; the effect below only runs when its serialised form changes.
@@ -262,8 +265,9 @@ export function useSearch() {
         dispatch(actions.setLoading(false));
       }
     };
-    // request.key stands for everything the request depends on.
-  }, [request.key, isInitialized, debounceDelay, dispatch]);
+    // request.key covers the request body; waitingForInput covers whether
+    // the current query is eligible to send it.
+  }, [request.key, waitingForInput, isInitialized, debounceDelay, dispatch]);
 
   /**
    * Run a scheduled search now instead of after the typing debounce, e.g.

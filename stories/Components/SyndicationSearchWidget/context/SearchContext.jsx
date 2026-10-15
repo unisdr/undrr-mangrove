@@ -167,7 +167,7 @@ export function interpolateLabel(template, vars = {}) {
     Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : `{${key}}`
   );
 }
-import { DEFAULT_CONFIG } from '../utils/constants';
+import { DEFAULT_CONFIG, EVENT_SORT_VALUES } from '../utils/constants';
 import { facetsFromDefaults } from '../utils/hashState';
 
 /**
@@ -224,6 +224,10 @@ const initialState = {
 
   // Sort order: one of SORT_VALUES in utils/constants.js
   sortBy: 'relevance',
+
+  // Once offered, event sorts remain available for this widget session,
+  // including when the controls remount in another layout.
+  hasEventSorts: false,
 
   // Pagination (future use)
   page: 1,
@@ -413,6 +417,8 @@ function searchReducer(state, action) {
       return {
         ...state,
         sortBy: action.payload,
+        hasEventSorts:
+          state.hasEventSorts || EVENT_SORT_VALUES.includes(action.payload),
         page: 1,
       };
 
@@ -482,6 +488,10 @@ function searchReducer(state, action) {
         // first INITIALIZE keeps a page restored from the URL hash.
         page: state.isInitialized && query !== state.query ? 1 : state.page,
         sortBy: initialSort || defaultSort,
+        hasEventSorts:
+          state.hasEventSorts ||
+          EVENT_SORT_VALUES.includes(defaultSort) ||
+          EVENT_SORT_VALUES.includes(initialSort),
         facets: initialFacets || facetsFromDefaults(defaultFilters),
         facetOperators: initialFacets
           ? initialFacetOperators || {}
@@ -506,6 +516,8 @@ function searchReducer(state, action) {
         query,
         page,
         sortBy,
+        hasEventSorts:
+          state.hasEventSorts || EVENT_SORT_VALUES.includes(sortBy),
         facets,
         facetOperators,
         // Back/forward: search at once.
@@ -516,6 +528,7 @@ function searchReducer(state, action) {
     case ActionTypes.RESET:
       return {
         ...initialState,
+        hasEventSorts: state.hasEventSorts,
         isInitialized: true,
       };
 

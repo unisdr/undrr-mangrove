@@ -172,4 +172,33 @@ describe('SyndicationSearchWidget URL hash state', () => {
       })
     );
   });
+
+  it('keeps shared-link event sorts available after choosing a different sort', async () => {
+    window.history.replaceState(null, '', '/search#sort=eventDateAsc');
+    render(<SyndicationSearchWidget config={CONFIG} />);
+    await waitFor(() =>
+      expect(lastSearchBody()?.sort[0]).toHaveProperty('event_start')
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Sort' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Newest' }));
+    await waitFor(() =>
+      expect(lastSearchBody()?.sort).toEqual([
+        { published_at: { order: 'desc' } },
+      ])
+    );
+    expect(window.location.hash).toContain('sort=newest');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Sort' }));
+    expect(
+      screen.getByRole('option', { name: 'Event date (earliest first)' })
+    ).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole('option', { name: 'Event date (latest first)' })
+    );
+    await waitFor(() =>
+      expect(lastSearchBody()?.sort[0].event_start.order).toBe('desc')
+    );
+    expect(window.location.hash).toContain('sort=eventDateDesc');
+  });
 });

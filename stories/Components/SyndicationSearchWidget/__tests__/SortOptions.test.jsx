@@ -74,4 +74,52 @@ describe('SortOptions', () => {
     });
     expect(offered()).toContain('eventDateDesc');
   });
+
+  it('retains shared-link event sorts after switching away and remounting controls', () => {
+    const config = { defaultSort: 'relevance' };
+    const view = key => (
+      <SearchProvider config={config}>
+        <DispatchCapture />
+        <SortOptions key={key} widgetId="test" />
+      </SearchProvider>
+    );
+    const { rerender } = render(view('sidebar'));
+    act(() => {
+      dispatch(actions.initialize({ initialSort: 'eventDateAsc' }));
+    });
+    expect(offered()).toContain('eventDateAsc');
+    act(() => {
+      dispatch(actions.setSort('newest'));
+    });
+    expect(offered()).toContain('eventDateAsc');
+    expect(offered()).toContain('eventDateDesc');
+    rerender(view('drawer'));
+    expect(offered()).toContain('eventDateAsc');
+    act(() => {
+      dispatch(actions.setSort('eventDateDesc'));
+    });
+    expect(offered()).toContain('eventDateDesc');
+  });
+
+  it('retains event sorts first encountered through browser navigation', () => {
+    renderSort({ defaultSort: 'relevance' });
+    expect(offered()).not.toContain('eventDateAsc');
+    act(() => {
+      dispatch(actions.restoreState({ sortBy: 'eventDateDesc' }));
+    });
+    act(() => {
+      dispatch(actions.restoreState({ sortBy: 'relevance' }));
+    });
+    expect(offered()).toContain('eventDateAsc');
+    expect(offered()).toContain('eventDateDesc');
+  });
+
+  it('keeps the session capability when the search is reset', () => {
+    renderSort({ defaultSort: 'relevance' });
+    act(() => {
+      dispatch(actions.setSort('eventDateAsc'));
+      dispatch(actions.reset());
+    });
+    expect(offered()).toContain('eventDateAsc');
+  });
 });
