@@ -47,6 +47,8 @@ describe('optional motion leaves usable static states', () => {
         !rule.selector.includes('.mg-select')
       )
         return;
+      // The public legacy spinner retains the shared Loader exception.
+      if (rule.selector === '.mg-search__spinner') return;
       rule.walkDecls(decl => {
         const motion = /^(animation|transition)(-|$)/.test(decl.prop);
         const hidden =

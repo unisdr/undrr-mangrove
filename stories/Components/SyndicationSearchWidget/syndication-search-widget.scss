@@ -956,6 +956,38 @@ $search-input-padding-x: mg-rem(44);
   padding: var(--mg-spacing-200);
 }
 
+// Legacy public class: keep compatibility for hand-written Drupal markup.
+// New widget code uses shared Loader. One cycle is 1s; this is a documented
+// looping exception, not interaction timing. Like Loader, slow rotation must
+// outrank the global reset so progress never looks frozen.
+@keyframes mg-search-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mg-search__spinner {
+  --mg-search-spinner-duration: 1s;
+
+  border: 4px solid $search-border-light;
+  border-top: 4px solid $search-primary;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: mg-search-spin var(--mg-search-spinner-duration) linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: calc(var(--mg-search-spinner-duration) * 3) !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  @media (forced-colors: active) {
+    border-color: GrayText;
+    border-top-color: CanvasText;
+    forced-color-adjust: none;
+  }
+}
+
 .mg-search__loader-text {
   text-align: center;
   color: $search-text-muted;
@@ -1334,7 +1366,6 @@ $search-input-padding-x: mg-rem(44);
   box-shadow: var(--mg-search-drawer-shadow-offset) 0 20px rgb(0 0 0 / 0.15);
   display: flex;
   flex-direction: column;
-
   z-index: var(--mg-z-index-drawer);
   cursor: default; // Reset cursor inside drawer
 
