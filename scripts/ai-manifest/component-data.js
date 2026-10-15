@@ -2185,6 +2185,25 @@ npm run build</code></pre>
     },
   },
 
+  'patterns-rich-content': {
+    summary:
+      'Opt-in semantic defaults for trusted rendered editorial HTML: prose, lists, quotations, figures, tables and code.',
+    description:
+      'Use mg-content on the actual sanitised editorial body, not navigation, cards, controls or arbitrary layout wrappers. CSS only; no React import or JavaScript is required. Classless structural wrappers pass through; classed descendants keep component/author-owned presentation, except the explicit mg-content__scroll wrapper. Existing paragraph-link cues reach through CMS classes with lower specificity so component links can own their styling; button-like anchors are excluded. Plain editorial quotations use body-size text and a leading neutral rule; cite is an inline work title. Logical rhythm, native list/table semantics, captions and contained code preserve reading and reflow. Keep native headers/captions and author a named keyboard-focusable mg-content__scroll region only for genuinely wide tables; pre overflow likewise needs authored keyboard access. No sanitisation, root width, colour or font-family reset. mg-body/global styles remain supported unchanged; adding mg-content deliberately opts plain editorial elements into the new defaults. See the Rich content docs for the adoption audit and compatibility details.',
+    cssClasses: ['mg-content', 'mg-content__scroll'],
+    examples: [
+      {
+        name: 'Trusted editorial body',
+        html: `<article class="mg-content">
+  <h2>Understand the risk</h2>
+  <p>Read the <a href="/report">assessment report</a>.</p>
+  <ul><li>Review local evidence.</li><li>Agree priorities.</li></ul>
+  <blockquote><p>Illustrative quotation.</p><footer>Source: <cite>Work title</cite>.</footer></blockquote>
+</article>`,
+      },
+    ],
+  },
+
   'patterns-page-actions': {
     summary:
       'Share this and Cite this side by side as peer page actions, in two equal columns that stack on narrow screens.',

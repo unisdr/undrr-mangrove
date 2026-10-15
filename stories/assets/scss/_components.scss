@@ -97,3 +97,6 @@
 @import "../../Components/DataViz/Legend/legend";
 @import "../../Components/Navigation/Drawer/drawer";
 @import "../../Components/Navigation/Tree/tree";
+
+// Opt-in editorial defaults follow component styles; classed islands opt out.
+@import "../../Patterns/RichContent/rich-content";

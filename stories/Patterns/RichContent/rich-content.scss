@@ -1,0 +1,166 @@
+/**
+ * Rich content
+ *
+ * Opt-in semantic defaults for trusted editorial HTML. Classed descendants
+ * keep their own presentation; classless structural wrappers pass through.
+ *
+ * Full documentation:
+ * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Patterns/RichContent/RichContent.mdx
+ */
+
+// The pattern's scroll wrapper is editorial structure, not a component
+// island. Root classes never exclude the root's own content.
+@mixin mg-editorial-element($element) {
+  .mg-content
+    #{$element}:not(
+      :where(
+        .mg-content [class]:not(.mg-content__scroll),
+        .mg-content [class]:not(.mg-content__scroll) *,
+        .mg-content
+          :is(
+            nav,
+            form,
+            fieldset,
+            button,
+            [role="navigation"],
+            [role="menu"],
+            [role="menubar"],
+            [role="tablist"],
+            [role="dialog"],
+            [role="toolbar"],
+            [role="listbox"],
+            [role="tree"]
+          ),
+        .mg-content
+          :is(
+            nav,
+            form,
+            fieldset,
+            button,
+            [role="navigation"],
+            [role="menu"],
+            [role="menubar"],
+            [role="tablist"],
+            [role="dialog"],
+            [role="toolbar"],
+            [role="listbox"],
+            [role="tree"]
+          )
+          *
+      )
+    ) {
+    @content;
+  }
+}
+
+@include mg-editorial-element(":is(p, ul, ol, dl)") {
+  margin-block: 0 var(--mg-spacing-150);
+}
+
+@include mg-editorial-element(":is(h1, h2, h3, h4, h5, h6)") {
+  margin-block: var(--mg-spacing-200) var(--mg-spacing-100);
+  line-height: var(--mg-font-line-height-500);
+}
+
+@include mg-editorial-element(":is(ul, ol)") {
+  padding-inline: 0;
+  padding-inline-start: var(--mg-spacing-250);
+}
+
+@include mg-editorial-element("li") {
+  padding-inline: 0;
+  margin-block-end: var(--mg-spacing-25);
+}
+
+@include mg-editorial-element("li > :is(ul, ol)") {
+  margin-block: var(--mg-spacing-50) 0;
+}
+
+@include mg-editorial-element(
+  "blockquote:not(:where(:has(.mg-highlight-box)))"
+) {
+  margin-block: var(--mg-spacing-200);
+  margin-inline: 0;
+  padding-inline-start: var(--mg-spacing-150);
+  border-inline-start: 3px solid rgb(var(--mg-color-neutral-400));
+  font-size: var(--mg-font-size-300);
+  font-weight: 400;
+  line-height: var(--mg-font-line-height-700);
+}
+
+@include mg-editorial-element("cite") {
+  display: inline;
+  margin: 0;
+  font-style: italic;
+}
+
+@include mg-editorial-element("a:not(:where([role=button]))") {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+@include mg-editorial-element("hr") {
+  margin-block: var(--mg-spacing-200);
+}
+
+@include mg-editorial-element("figure") {
+  margin-block: var(--mg-spacing-200);
+  margin-inline: 0;
+}
+
+@include mg-editorial-element("figure > img") {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  padding: 0;
+}
+
+@include mg-editorial-element(":is(figcaption, caption)") {
+  font-size: var(--mg-font-size-250);
+  line-height: var(--mg-font-line-height-700);
+  text-align: start;
+}
+
+@include mg-editorial-element("figcaption") {
+  margin-block-start: var(--mg-spacing-50);
+}
+
+@include mg-editorial-element("table") {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: var(--mg-spacing-150);
+}
+
+@include mg-editorial-element(":is(th, td)") {
+  padding: var(--mg-spacing-75) var(--mg-spacing-100);
+  border: 1px solid rgb(var(--mg-color-neutral-400));
+  text-align: start;
+  vertical-align: top;
+}
+
+@include mg-editorial-element("caption") {
+  margin-block-end: var(--mg-spacing-50);
+  font-weight: 600;
+}
+
+@include mg-editorial-element("pre") {
+  max-width: 100%;
+  margin-block: var(--mg-spacing-150);
+  overflow-x: auto;
+}
+
+@include mg-editorial-element("pre:focus-visible") {
+  @include mg-focus-ring-inset;
+}
+
+// Only authored overflow regions become keyboard stops. Native table
+// semantics remain on the table; the wrapper supplies scrolling and focus.
+.mg-content .mg-content__scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-block: var(--mg-spacing-150);
+
+  &:focus-visible {
+    @include mg-focus-ring-inset;
+  }
+}

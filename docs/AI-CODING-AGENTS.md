@@ -86,6 +86,8 @@ Renaming CSS classes is a common task that creates subtle breakage because CSS f
 
 ## Bare element selectors
 
+For trusted rendered editorial HTML, use the [Rich content pattern](https://mangrove.undrr.org/?path=/docs/patterns-rich-content--docs). Put `mg-content` on the actual body field, keep composed controls outside it, and preserve classed component islands. Its new semantic defaults pass through classless wrappers; existing paragraph-link cues still reach through CMS classes. Wide authored tables/code need local keyboard-accessible overflow, not hidden content or a page-width reset. `.mg-body` remains supported without deprecation.
+
 Mangrove's BaseTypography SCSS files (`stories/Atom/BaseTypography/`) historically used bare HTML element selectors (`blockquote`, `cite`, `mark`, etc.) that style every instance globally. New additions or modifications to these files should scope styles to `.mg-body` to prevent leaking into non-Mangrove areas:
 
 ```scss
