@@ -113,8 +113,15 @@
       // The shared Loader reveals translated text. Keep it inside the stage
       // and give the label a stable surface over arbitrary video/posters.
       width: max-content;
-      max-width: calc(100% - var(--mg-spacing-200));
+
+      // Reserve both 44px arrow targets, their largest inset, and a focus gap.
+      $navigation-space: calc(
+        #{mg-rem(44)} + var(--mg-spacing-100) + var(--mg-spacing-50)
+      );
+
+      max-width: calc(100% - 2 * $navigation-space);
       box-sizing: border-box;
+      pointer-events: none;
       padding: var(--mg-spacing-75);
       background: rgb(var(--mg-color-neutral-0));
       color: rgb(var(--mg-color-text));
