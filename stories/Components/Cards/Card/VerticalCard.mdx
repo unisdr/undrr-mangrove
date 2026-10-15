@@ -161,6 +161,8 @@ Linked and unlinked cards frequently sit in the same row. They should read as on
 
 ## Changelog
 
+- **1.6.1**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Shared card hover transitions use the fast motion token and standard easing.
+
 - **1.6.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `mg-card--secondary` no longer paints its title in the orange accent (2.65 on the card surface, 2.37 on DELTA's). The title takes the interactive colour, and the accent becomes a 4px rule on the card's leading edge instead. `--mg-color-secondary` is unchanged. This applies to every card layout that carries the modifier, and is a visible change in all five themes.
 - **1.5.5**, 2026-09-18 ([#1193](https://github.com/unisdr/undrr-mangrove/pull/1193)): The "In separate columns" story used a fixed three-column grid, so at 375px the demo pushed the page sideways. The columns now use `auto-fit` and stack on narrow viewports; the equal-height behaviour the story demonstrates is unchanged. Story only, no component change.
 - **1.5.4**, 2026-09-18 ([#1198](https://github.com/unisdr/undrr-mangrove/pull/1198)): Documented the `secondary` variant as a recorded contrast exception: an orange-accent title is 2.65 on the card surface, and no text colour clears AA on that hue. No colour changed; removal is tracked in [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196).

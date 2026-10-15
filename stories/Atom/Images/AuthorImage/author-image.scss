@@ -49,8 +49,8 @@
   position: absolute;
   z-index: 1;
   transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+    opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+    transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
   transform: translateY(2px);
 }
 
@@ -223,4 +223,11 @@
 .mg-author-image--no-image .mg-author-image__content {
   justify-items: center;
   text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-author-image__avatar::before {
+    transition: none;
+    transform: none;
+  }
 }

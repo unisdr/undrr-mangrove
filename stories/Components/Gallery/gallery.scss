@@ -105,22 +105,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    color: rgb(var(--mg-color-interactive));
+    font-size: var(--mg-spacing-300);
     z-index: 3; // loading spinner above nav buttons — local to gallery stacking context
-  }
-
-  &__spinner {
-    width: var(--mg-spacing-300); // 30px
-    height: var(--mg-spacing-300);
-    border: 4px solid rgb(var(--mg-color-neutral-300));
-    border-top-color: rgb(var(--mg-color-interactive));
-    border-radius: 50%;
-    animation: mg-gallery-spin 0.8s linear infinite;
-  }
-
-  @keyframes mg-gallery-spin {
-    to {
-      transform: rotate(360deg);
-    }
   }
 
   // Description area
@@ -213,7 +200,10 @@
     padding: 0;
     position: relative;
 
-    @include transition(border-color 0.2s ease);
+    @include transition(
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard)
+    );
 
     @include devicebreak(medium) {
       width: 100%;
@@ -366,7 +356,11 @@
     align-items: center;
     justify-content: center;
 
-    @include transition(background-color 0.2s, opacity 0.2s);
+    @include transition(
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard)
+    );
 
     &:hover {
       background: rgb(var(--mg-color-neutral-600));
@@ -436,7 +430,11 @@
     align-items: center;
     justify-content: center;
 
-    @include transition(background-color 0.2s, opacity 0.2s);
+    @include transition(
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard)
+    );
 
     &:hover {
       background: rgb(var(--mg-color-neutral-600));
@@ -509,5 +507,13 @@
       right: auto;
       left: var(--mg-spacing-100);
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-gallery__thumbnail,
+  .mg-gallery__arrow,
+  .mg-gallery__arrow-button {
+    transition: none;
   }
 }
