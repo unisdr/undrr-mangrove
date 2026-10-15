@@ -251,6 +251,6 @@ describe('SearchPager focus and motion', () => {
       removeEventListener() {},
     });
     renderStandalone();
-    expect(calls[1]).toEqual({ behavior: 'auto', block: 'start' });
+    expect(calls[1]).toEqual({ behavior: 'instant', block: 'start' });
   });
 });

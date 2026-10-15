@@ -79,10 +79,8 @@ export function MobileFilterDrawer({ isOpen, onClose, widgetId = 'search' }) {
   // Focus management - focus close button when opened
   useEffect(() => {
     if (isOpen && closeButtonRef.current) {
-      // Small delay to ensure animation has started
-      requestAnimationFrame(() => {
-        closeButtonRef.current?.focus();
-      });
+      // Focus does not wait for the optional visual entry animation.
+      closeButtonRef.current.focus();
     }
   }, [isOpen]);
 

@@ -60,13 +60,13 @@ export function SearchPager({ widgetId = '' }) {
         ? doc.getElementById(widgetId)
         : doc.querySelector('[data-mg-search-widget]');
       if (widget) {
-        const reduce =
-          typeof window.matchMedia === 'function' &&
-          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const reduce = doc.defaultView?.matchMedia?.(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
         // scrollIntoView honours scroll-padding-top, so a sticky bar above
         // the list (On this page) does not cover the top of it.
         widget.scrollIntoView({
-          behavior: reduce ? 'auto' : 'smooth',
+          behavior: reduce ? 'instant' : 'smooth',
           block: 'start',
         });
         // The pager button the reader pressed is about to be replaced, which

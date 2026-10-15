@@ -6,6 +6,7 @@
 
 const sass = require('sass');
 const path = require('path');
+const postcss = require('postcss');
 
 const scssDir = path.resolve(__dirname, '../../../assets/scss');
 const css = sass
@@ -17,25 +18,6 @@ const css = sass
   .css.replace(/\/\*[\s\S]*?\*\//g, '')
   .replace(/,\s+/g, ', ');
 
-// Every rule inside `@media (prefers-reduced-motion: reduce)` blocks, as
-// "selector { declarations }" strings.
-const reducedMotionRules = (() => {
-  const rules = [];
-  const re = /@media \(prefers-reduced-motion: reduce\)\s*\{/g;
-  let match;
-  while ((match = re.exec(css))) {
-    let depth = 1;
-    let i = re.lastIndex;
-    while (depth > 0 && i < css.length) {
-      if (css[i] === '{') depth += 1;
-      if (css[i] === '}') depth -= 1;
-      i += 1;
-    }
-    rules.push(css.slice(re.lastIndex, i - 1));
-  }
-  return rules.join('\n');
-})();
-
 const ruleIn = (source, selector) => {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const match = source.match(
@@ -44,15 +26,60 @@ const ruleIn = (source, selector) => {
   return match ? match[1] : '';
 };
 
-describe('reduced motion', () => {
-  test.each([
-    '.mg-search__progress-bar',
-    '.mg-search__skeleton-title',
-    '.mg-search__skeleton-card-image',
-    '.mg-search__main--stale::after',
-    '.mg-search__enter',
-  ])('stops the animation on %s', selector => {
-    expect(ruleIn(reducedMotionRules, selector)).toMatch(/animation:\s*none/);
+describe('optional motion leaves usable static states', () => {
+  const root = postcss.parse(css);
+  const gated = rule => {
+    for (let node = rule.parent; node; node = node.parent) {
+      if (
+        node.type === 'atrule' &&
+        /prefers-reduced-motion:\s*no-preference/.test(node.params)
+      )
+        return true;
+    }
+    return false;
+  };
+
+  test('every widget animation/transition and legacy hidden state is gated', () => {
+    const violations = [];
+    root.walkRules(rule => {
+      if (
+        !rule.selector.includes('.mg-search') &&
+        !rule.selector.includes('.mg-select')
+      )
+        return;
+      rule.walkDecls(decl => {
+        const motion = /^(animation|transition)(-|$)/.test(decl.prop);
+        const hidden =
+          rule.selector.includes('.mg-search__result--pending') &&
+          decl.prop === 'opacity' &&
+          decl.value === '0';
+        if ((motion || hidden) && !gated(rule))
+          violations.push(`${rule.selector}: ${decl.toString()}`);
+      });
+    });
+    expect(violations).toEqual([]);
+  });
+
+  test('bespoke moving progress, shimmer and pulse have been removed', () => {
+    expect(css).not.toMatch(/mg-search-(progress|shimmer|pulse)/);
+    expect(css).not.toContain('.mg-search__progress-bar');
+  });
+
+  test('skeleton shapes remain visible without colour backgrounds', () => {
+    root.walkRules(rule => {
+      if (!rule.selector.includes('.mg-search__skeleton-title')) return;
+      let forced = false;
+      for (let node = rule.parent; node; node = node.parent) {
+        if (
+          node.type === 'atrule' &&
+          /forced-colors:\s*active/.test(node.params)
+        )
+          forced = true;
+      }
+      if (forced)
+        expect(rule.toString()).toContain('outline: 1px solid GrayText');
+    });
+    expect(css).toContain('outline: 1px solid GrayText');
   });
 });
 

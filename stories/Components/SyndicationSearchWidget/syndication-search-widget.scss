@@ -57,34 +57,13 @@ $search-input-padding-x: mg-rem(44);
 // Loading Progress Bar
 // ========================================
 
+// Shared ProgressBar owns track, animation, RTL and accessibility modes.
+// Keep the historical wrapper class as the positioning hook.
 .mg-search__progress {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: $search-border-light;
-  overflow: hidden;
-  z-index: 10;
-}
-
-.mg-search__progress-bar {
-  height: 100%;
-  width: 30%;
-  background: linear-gradient(90deg, $search-primary, $search-primary-dark);
-  animation: mg-search-progress 1.2s ease-in-out infinite;
-}
-
-@keyframes mg-search-progress {
-  0% {
-    transform: translateX(-100%);
-  }
-  50% {
-    transform: translateX(200%);
-  }
-  100% {
-    transform: translateX(400%);
-  }
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 1; // local stacking within the positioned results region
 }
 
 // Search form (used by both the in-widget SearchForm and the standalone
@@ -109,9 +88,13 @@ $search-input-padding-x: mg-rem(44);
 
   // Override the inline-end padding to leave room for the clear button
   padding-inline-end: $search-input-padding-x;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      box-shadow var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 
   &::placeholder {
     color: $search-text-muted;
@@ -140,12 +123,6 @@ $search-input-padding-x: mg-rem(44);
 
   &:hover {
     color: $search-primary;
-  }
-}
-
-@keyframes mg-search-spin {
-  to {
-    transform: rotate(360deg);
   }
 }
 
@@ -202,9 +179,14 @@ $search-input-padding-x: mg-rem(44);
   border: 1px solid $search-border;
   border-radius: $search-radius;
   cursor: pointer;
-  transition:
-    background-color 0.2s,
-    border-color 0.2s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     background: $search-chip-hover;
@@ -231,9 +213,13 @@ $search-input-padding-x: mg-rem(44);
   border: 1px solid $search-primary;
   border-radius: $search-radius;
   cursor: pointer;
-  transition:
-    background-color 0.2s,
-    color 0.2s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     color: #fff;
@@ -263,6 +249,7 @@ $search-input-padding-x: mg-rem(44);
 }
 
 .mg-search__main {
+  position: relative;
   flex: 1;
   min-width: 0;
 }
@@ -319,7 +306,10 @@ $search-input-padding-x: mg-rem(44);
 
 // Results
 .mg-search__results {
-  transition: opacity 0.2s ease-out;
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 }
 
 // A new search with results on screen: keep them, dimmed, with an inline
@@ -333,29 +323,21 @@ $search-input-padding-x: mg-rem(44);
   color: $search-primary;
 }
 
-// A new result set, or an empty state replacing results, fades and rises
-// in. The list is keyed per result set, so this runs once per set. Not on
-// server-rendered markup, nor on the first client set that replaces it.
+// One short fade for a completed set. No per-item delays or movement:
+// results are immediately usable and the base state is fully visible.
 .mg-search__enter {
-  animation: mg-search-results-in 0.2s ease-out;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mg-search-results-in var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 }
 
 @keyframes mg-search-results-in {
   from {
     opacity: 0;
-    transform: translateY(var(--mg-spacing-25));
   }
   to {
     opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mg-search__results,
-  .mg-search__enter {
-    animation: none;
-    transition: none;
   }
 }
 
@@ -409,9 +391,15 @@ $search-input-padding-x: mg-rem(44);
   border: 1px solid $search-border;
   border-radius: $search-radius;
   cursor: pointer;
-  transition:
-    background-color 0.15s,
-    border-color 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+  }
+
   white-space: nowrap;
 
   &:hover {
@@ -629,14 +617,7 @@ $search-input-padding-x: mg-rem(44);
 .mg-search__skeleton-title,
 .mg-search__skeleton-meta,
 .mg-search__skeleton-text {
-  background: linear-gradient(
-    90deg,
-    $search-skeleton-bg 25%,
-    #e8e8e8 50%,
-    $search-skeleton-bg 75%
-  );
-  background-size: 200% 100%;
-  animation: mg-search-shimmer 1.5s infinite;
+  background: $search-skeleton-bg;
   border-radius: $search-radius;
 }
 
@@ -679,14 +660,7 @@ $search-input-padding-x: mg-rem(44);
 
 .mg-search__skeleton-card-image {
   aspect-ratio: 16 / 9;
-  background: linear-gradient(
-    90deg,
-    $search-skeleton-bg 25%,
-    #e8e8e8 50%,
-    $search-skeleton-bg 75%
-  );
-  background-size: 200% 100%;
-  animation: mg-search-shimmer 1.5s infinite;
+  background: $search-skeleton-bg;
 }
 
 .mg-search__skeleton-card-body {
@@ -699,15 +673,6 @@ $search-input-padding-x: mg-rem(44);
   .mg-search__skeleton-meta {
     width: 50%;
     margin-bottom: 0;
-  }
-}
-
-@keyframes mg-search-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
   }
 }
 
@@ -890,19 +855,25 @@ $search-input-padding-x: mg-rem(44);
 // Animation classes applied via JS (which checks prefers-reduced-motion).
 // ========================================
 
-// Initial hidden state - applied before animation
-.mg-search__result--pending {
-  opacity: 0;
-  transform: translateX(-20px);
-}
+// Legacy consumers may still toggle these classes. Gate the hidden state as
+// well as its transition, so reduced motion never strands a result invisible.
+@media (prefers-reduced-motion: no-preference) {
+  .mg-search__result--pending {
+    opacity: 0;
+    transform: translateX(-20px);
 
-// Animated state - triggers the transition
-.mg-search__result--visible {
-  opacity: 1;
-  transform: translateX(0);
-  transition:
-    opacity 0.3s ease-out,
-    transform 0.3s ease-out;
+    &:dir(rtl) {
+      transform: translateX(20px);
+    }
+  }
+
+  .mg-search__result--visible {
+    opacity: 1;
+    transform: translateX(0);
+    transition:
+      opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 }
 
 // Stale state - dim results while loading new data
@@ -911,29 +882,8 @@ $search-input-padding-x: mg-rem(44);
   pointer-events: none;
 }
 
-// Stale main area with more visible feedback
-.mg-search__main--stale {
-  position: relative;
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgb(255 255 255 / 0.4);
-    pointer-events: none;
-    animation: mg-search-pulse 1.5s ease-in-out infinite;
-  }
-}
-
-@keyframes mg-search-pulse {
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
+// Refresh feedback is retained/dimmed results, inline Loader and the shared
+// progress strip; an additional pulsing overlay would compete with them.
 
 // ========================================
 // Collapsible Filter Sections
@@ -980,7 +930,11 @@ $search-input-padding-x: mg-rem(44);
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid currentColor;
-  transition: transform 0.2s ease;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   .mg-search__facet-toggle[aria-expanded="false"] & {
     transform: rotate(-90deg);
@@ -1000,17 +954,6 @@ $search-input-padding-x: mg-rem(44);
   align-items: center;
   justify-content: center;
   padding: var(--mg-spacing-200);
-}
-
-// Legacy public class retained for Drupal deployments using server-rendered markup.
-// React uses Loader; removal needs a consumer migration audit (#1357).
-.mg-search__spinner {
-  border: 4px solid $search-border-light;
-  border-top: 4px solid $search-primary;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: mg-search-spin 1s linear infinite;
 }
 
 .mg-search__loader-text {
@@ -1045,9 +988,13 @@ $search-input-padding-x: mg-rem(44);
   border: 1px solid rgb(var(--mg-color-neutral-600) / 0.22);
   border-radius: var(--mg-radius-form-input);
   cursor: pointer;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      box-shadow var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     border-color: $search-primary;
@@ -1079,7 +1026,11 @@ $search-input-padding-x: mg-rem(44);
   flex-shrink: 0;
   margin-inline-start: var(--mg-spacing-50);
   color: $search-text-muted;
-  transition: transform 0.2s ease;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   .mg-select--open & {
     transform: rotate(180deg);
@@ -1111,7 +1062,11 @@ $search-input-padding-x: mg-rem(44);
   border-top: none;
   border-radius: 0 0 $search-radius $search-radius;
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
-  animation: mg-select-fade-in 0.15s ease-out;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mg-select-fade-in var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 }
 
 @keyframes mg-select-fade-in {
@@ -1167,7 +1122,11 @@ $search-input-padding-x: mg-rem(44);
   padding: var(--mg-spacing-50) var(--mg-spacing-75);
   min-height: 40px; // Touch-friendly
   cursor: pointer;
-  transition: background-color 0.1s ease;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   &:hover,
   &--highlighted {
@@ -1274,7 +1233,11 @@ $search-input-padding-x: mg-rem(44);
   border-radius: $search-radius;
   align-items: baseline;
   gap: 0 var(--mg-spacing-25);
-  transition: background-color 0.15s ease;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     background-color: rgb(var(--mg-color-blue-900) / 0.05);
@@ -1335,7 +1298,12 @@ $search-input-padding-x: mg-rem(44);
   inset: 0;
   background: rgb(0 0 0 / 0.5);
   z-index: calc(var(--mg-z-index-drawer) - 1); // backdrop behind drawer panel
-  animation: mg-search-fade-in 0.2s ease-out;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mg-search-fade-in var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
+
   cursor: pointer; // Indicate clickable to close
 }
 
@@ -1366,18 +1334,19 @@ $search-input-padding-x: mg-rem(44);
   box-shadow: var(--mg-search-drawer-shadow-offset) 0 20px rgb(0 0 0 / 0.15);
   display: flex;
   flex-direction: column;
-  animation: mg-search-slide-in-start 0.3s ease-out;
+
   z-index: var(--mg-z-index-drawer);
   cursor: default; // Reset cursor inside drawer
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mg-search-slide-in-start var(--mg-motion-duration-medium)
+      var(--mg-motion-easing-standard);
+  }
 
   // The shadow points at the page content, so it mirrors with the panel.
   &:dir(rtl) {
     --mg-search-drawer-offset: 100%;
     --mg-search-drawer-shadow-offset: -4px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
   }
 }
 
@@ -1436,9 +1405,13 @@ $search-input-padding-x: mg-rem(44);
   border: none;
   border-radius: $search-radius;
   cursor: pointer;
-  transition:
-    background-color 0.15s,
-    color 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     background: $search-chip-bg;
@@ -1480,7 +1453,11 @@ $search-input-padding-x: mg-rem(44);
   border: none;
   border-radius: $search-radius;
   cursor: pointer;
-  transition: background-color 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
+  }
 
   &:hover {
     background: $search-primary-dark;
@@ -1588,9 +1565,14 @@ $search-input-padding-x: mg-rem(44);
   align-items: center;
   padding: var(--mg-spacing-25) var(--mg-spacing-50);
   cursor: pointer;
-  transition:
-    color 0.15s,
-    border-color 0.15s;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+      border-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
+  }
+
   font-weight: 400;
   font-size: var(--mg-font-size-200);
   user-select: none;
@@ -1640,44 +1622,19 @@ $search-input-padding-x: mg-rem(44);
 // Pager styles now live in the standalone Pager component.
 // @see stories/Components/Pager/pager.scss
 
-// ========================================
-// Reduced motion
-// The widget's decorative motion stops here, without relying on a page-wide
-// reset. Loading states stay visible as static ones: a full, steady progress
-// bar, plain skeleton blocks and a still overlay on stale results. Spinners
-// (the Mangrove Loader and .mg-search__spinner) keep a slow rotation, as the
-// Loader does, so loading never looks stalled.
-// ========================================
-
-@media (prefers-reduced-motion: reduce) {
-  .mg-search__progress-bar {
-    animation: none;
-    width: 100%;
-    opacity: 0.6;
-  }
-
+// Skeleton surfaces must stay identifiable when forced colours removes
+// author backgrounds. These shapes are decorative; the status owns meaning.
+@media (forced-colors: active) {
   .mg-search__skeleton-title,
   .mg-search__skeleton-meta,
   .mg-search__skeleton-text,
-  .mg-search__skeleton-card-image {
-    animation: none;
-    background: $search-skeleton-bg;
+  .mg-search__skeleton-card-image,
+  .mg-search__skeleton-card {
+    outline: 1px solid GrayText;
+    outline-offset: -1px;
   }
 
-  .mg-search__main--stale::after,
-  .mg-select__dropdown,
-  .mg-search__drawer-backdrop {
-    animation: none;
-  }
-
-  .mg-search__result--pending,
-  .mg-search__result--visible {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  .mg-search__spinner {
-    animation-duration: 3s;
+  .mg-search__drawer {
+    border-inline-end: 1px solid CanvasText;
   }
 }

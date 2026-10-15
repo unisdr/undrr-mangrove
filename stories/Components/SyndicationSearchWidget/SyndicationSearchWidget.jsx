@@ -46,6 +46,7 @@ import {
 } from './context/WidgetRootContext';
 import SearchForm from './components/SearchForm';
 import SearchResults from './components/SearchResults';
+import SearchProgress from './components/SearchProgress';
 import ActiveFilters from './components/ActiveFilters';
 import FacetsSidebar from './components/FacetsSidebar';
 import MobileFilterDrawer from './components/MobileFilterDrawer';
@@ -418,13 +419,6 @@ function SyndicationSearchWidgetInner() {
       data-mg-search-widget
       data-mg-search-debug={showSearchMetrics ? 'true' : undefined}
     >
-      {/* Loading progress bar: only during actual fetch or transition */}
-      {(isLoading || isPending) && (
-        <div className="mg-search__progress" aria-hidden="true">
-          <div className="mg-search__progress-bar" />
-        </div>
-      )}
-
       {/* Search form: rendered in-widget unless searchTarget is portaling
           it elsewhere on the page. With the facets sidebar it sits in the
           results column instead (below). */}
@@ -460,6 +454,7 @@ function SyndicationSearchWidgetInner() {
             data-vf-google-analytics-region={analyticsRegion(config, 'results')}
             aria-busy={isLoading || isPending}
           >
+            {(isLoading || isPending) && <SearchProgress />}
             <Suspense
               fallback={
                 <SearchResultsSkeleton
