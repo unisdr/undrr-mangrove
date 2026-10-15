@@ -154,7 +154,7 @@ export function facetsEqual(a, b) {
 /**
  * Build the hash (without `#`) for a search state.
  *
- * Facets are written only when they differ from the defaults, so a page in
+ * Facets are written when their values or match mode differ from defaults, so a page in
  * its default state keeps a clean URL. When written, all facets are written,
  * including default ones, so the link reproduces the state exactly.
  *
@@ -176,7 +176,11 @@ export function buildHashString(
     params.set('sort', sortBy);
   }
 
-  if (!facetsEqual(facets, defaultFacets)) {
+  const hasAndConstraint = facetFields.some(
+    ({ key }) =>
+      facetOperators?.[key] === 'AND' && new Set(facets?.[key] || []).size > 1
+  );
+  if (!facetsEqual(facets, defaultFacets) || hasAndConstraint) {
     for (const { key } of facetFields) {
       const values = facets?.[key];
       if (!values || values.length === 0) continue;

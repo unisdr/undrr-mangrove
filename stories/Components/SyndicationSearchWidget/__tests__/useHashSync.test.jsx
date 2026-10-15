@@ -52,7 +52,7 @@ describe('useHashSync: URL parameter migration', () => {
       expect(screen.getByTestId('query').textContent).toBe('climate');
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null,
+      {},
       '',
       expect.stringContaining('#query=climate')
     );
@@ -66,7 +66,7 @@ describe('useHashSync: URL parameter migration', () => {
       expect(screen.getByTestId('query').textContent).toBe('disaster');
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null,
+      {},
       '',
       expect.stringContaining('#query=disaster')
     );
@@ -80,7 +80,7 @@ describe('useHashSync: URL parameter migration', () => {
       expect(screen.getByTestId('query').textContent).toBe('from-text');
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null,
+      {},
       '',
       expect.stringContaining('#query=from-text')
     );
@@ -94,7 +94,7 @@ describe('useHashSync: URL parameter migration', () => {
       expect(screen.getByTestId('query').textContent).toBe('climate');
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null,
+      {},
       '',
       expect.stringMatching(/\?lang=fr&page=2#query=climate$/)
     );
@@ -123,7 +123,7 @@ describe('useHashSync: URL parameter migration', () => {
       );
     });
     expect(replaceStateSpy).toHaveBeenCalledWith(
-      null,
+      {},
       '',
       expect.stringContaining('#query=risk%20reduction%20%26%20resilience')
     );
@@ -179,6 +179,8 @@ function Harness() {
     dispatch(
       actions.initialize({
         defaultFilters: config.defaultFilters,
+        defaultQuery: config.defaultQuery,
+        initialQuery: initialHashState?.initialQuery ?? null,
         defaultSort: config.defaultSort,
         initialFacets: initialHashState?.facets || null,
         initialFacetOperators: initialHashState?.facetOperators || null,
@@ -415,7 +417,7 @@ describe('useHashSync: facets, sort and history', () => {
       expect(pushSpy).not.toHaveBeenCalled();
     });
 
-    it('ignores Back and Forward onto an anchor entry', async () => {
+    it('restores the snapshot on Back and Forward onto an anchor entry', async () => {
       renderHarness();
       await waitFor(() => expect(harness.state.isInitialized).toBe(true));
       act(() => {
@@ -479,5 +481,215 @@ describe('useHashSync: facets, sort and history', () => {
     await waitFor(() => expect(harness.state.isInitialized).toBe(true));
     expect(harness.state.page).toBe(1);
     expect(currentHash()).toBe('query=flood');
+  });
+
+  it.each([
+    [400, 400],
+    [401, 1],
+  ])(
+    'bounds page %s for a 25-result page size to %s',
+    async (requested, expected) => {
+      window.history.replaceState(
+        null,
+        '',
+        `/search#query=flood&page=${requested}`
+      );
+      renderHarness({ resultsPerPage: 25 });
+      await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+      expect(harness.state.page).toBe(expected);
+    }
+  );
+
+  it('restores loaded anchor defaults after a facet change and preserves host state', async () => {
+    window.history.replaceState(
+      { router: { key: 'host' } },
+      '',
+      '/search#main-content'
+    );
+    renderHarness({ defaultQuery: 'risk', defaultSort: 'oldest' });
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    expect(window.history.state.router).toEqual({ key: 'host' });
+    act(() => harness.dispatch(actions.setFacet('field_hazard', ['12'])));
+    expect(window.history.state).toEqual({ router: { key: 'host' } });
+    await act(async () => window.history.back());
+    await waitFor(() => expect(currentHash()).toBe('main-content'));
+    expect(harness.state.facets).toEqual({ _language: ['en'] });
+    expect(harness.state.query).toBe('risk');
+    expect(harness.state.sortBy).toBe('oldest');
+    await act(async () => window.history.forward());
+    await waitFor(() =>
+      expect(harness.state.facets.field_hazard).toEqual(['12'])
+    );
+  });
+
+  it('restores a filtered anchor snapshot instead of the newer facet state', async () => {
+    renderHarness();
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    act(() => harness.dispatch(actions.setFacet('field_hazard', ['12'])));
+    await act(async () => {
+      window.location.hash = '#main-content';
+    });
+    act(() => harness.dispatch(actions.setFacet('field_hazard', ['34'])));
+    await act(async () => window.history.back());
+    await waitFor(() => expect(currentHash()).toBe('main-content'));
+    await waitFor(() =>
+      expect(harness.state.facets.field_hazard).toEqual(['12'])
+    );
+    const renders = harness.renders;
+    act(() => window.dispatchEvent(new HashChangeEvent('hashchange')));
+    expect(harness.renders).toBe(renders);
+  });
+
+  it('pushes the first typed query away from an anchor, then replaces ordinary typing', async () => {
+    window.history.replaceState(null, '', '/search#main-content');
+    renderHarness();
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    act(() => harness.dispatch(actions.setQuery('flo')));
+    act(() => harness.dispatch(actions.setQuery('flood')));
+    expect(pushSpy).toHaveBeenCalledTimes(1);
+    await act(async () => window.history.back());
+    await waitFor(() => expect(currentHash()).toBe('main-content'));
+    expect(harness.state.query).toBe('');
+  });
+
+  it('restores explicit empty query and facets on a same-document anchor remount', async () => {
+    const first = renderHarness({ defaultQuery: 'risk' });
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    act(() => {
+      harness.dispatch(actions.setQuery(''));
+      harness.dispatch(actions.clearFacets());
+    });
+    await act(async () => {
+      window.location.hash = '#main-content';
+    });
+    await waitFor(() =>
+      expect(
+        window.history.state?.__mgSyndicationSearch?.searchState?.query
+      ).toBe('')
+    );
+    first.unmount();
+    renderHarness({ defaultQuery: 'risk' });
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    expect(harness.state.query).toBe('');
+    expect(harness.state.facets).toEqual({});
+    expect(currentHash()).toBe('main-content');
+  });
+
+  it('ignores a prior-document anchor snapshot, as on a genuine reload', async () => {
+    window.history.replaceState(
+      {
+        __mgSyndicationSearch: {
+          version: 1,
+          documentTimeOrigin: window.performance.timeOrigin - 1,
+          path: '/search',
+          anchor: 'main-content',
+          searchState: {
+            query: 'stale',
+            page: 2,
+            sortBy: 'newest',
+            facets: { field_hazard: ['12'] },
+            facetOperators: {},
+          },
+        },
+      },
+      '',
+      '/search#main-content'
+    );
+    renderHarness({ defaultQuery: 'risk' });
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    expect(harness.state.query).toBe('risk');
+    expect(harness.state.facets).toEqual({ _language: ['en'] });
+    expect(currentHash()).toBe('main-content');
+  });
+
+  it.each(['host-token', ['host-token']])(
+    'preserves incompatible host state %j and falls back to defaults on Back',
+    async host => {
+      window.history.replaceState(host, '', '/search#main-content');
+      renderHarness();
+      await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+      expect(window.history.state).toEqual(host);
+      act(() => harness.dispatch(actions.setFacet('field_hazard', ['12'])));
+      expect(window.history.state).toEqual(host);
+      await act(async () => window.history.back());
+      await waitFor(() => expect(currentHash()).toBe('main-content'));
+      expect(harness.state.facets).toEqual({ _language: ['en'] });
+      expect(window.history.state).toEqual(host);
+    }
+  );
+
+  it('distinguishes repeated visits to the same anchor and deduplicates only the same entry', async () => {
+    renderHarness();
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    act(() => harness.dispatch(actions.setFacet('field_hazard', ['12'])));
+    await act(async () => {
+      window.location.hash = '#main-content';
+    });
+    await waitFor(() =>
+      expect(
+        window.history.state?.__mgSyndicationSearch?.searchState?.facets
+          ?.field_hazard
+      ).toEqual(['12'])
+    );
+    const first = window.history.state;
+    act(() => harness.dispatch(actions.setFacet('field_hazard', ['34'])));
+    await act(async () => {
+      window.location.hash = '#main-content';
+    });
+    await waitFor(() =>
+      expect(
+        window.history.state?.__mgSyndicationSearch?.searchState?.facets
+          ?.field_hazard
+      ).toEqual(['34'])
+    );
+    window.history.replaceState(first, '', '/search#main-content');
+    act(() =>
+      window.dispatchEvent(new PopStateEvent('popstate', { state: first }))
+    );
+    expect(harness.state.facets.field_hazard).toEqual(['12']);
+    const renders = harness.renders;
+    act(() => window.dispatchEvent(new HashChangeEvent('hashchange')));
+    expect(harness.renders).toBe(renders);
+  });
+
+  it('sanitizes same-document metadata through the URL validator', async () => {
+    window.history.replaceState(
+      {
+        __mgSyndicationSearch: {
+          version: 1,
+          documentTimeOrigin: window.performance.timeOrigin,
+          path: '/search',
+          anchor: 'main-content',
+          searchState: {
+            query: 'risk',
+            page: 401,
+            sortBy: 'bogus',
+            facets: { field_hazard: ['12'], foo: ['unsafe'], year: ['wrong'] },
+            facetOperators: { field_hazard: 'XOR' },
+          },
+        },
+      },
+      '',
+      '/search#main-content'
+    );
+    renderHarness({ resultsPerPage: 25 });
+    await waitFor(() => expect(harness.state.isInitialized).toBe(true));
+    expect(harness.state.page).toBe(1);
+    expect(harness.state.sortBy).toBe('relevance');
+    expect(harness.state.facets).toEqual({ field_hazard: ['12'] });
+    expect(harness.state.facetOperators).toEqual({});
+  });
+
+  it('preserves host state while canonicalizing a search URL', async () => {
+    window.history.replaceState(
+      { router: { key: 'keep' } },
+      '',
+      '/search#f.foo=bad&sort=oldest'
+    );
+    renderHarness();
+    await waitFor(() => expect(currentHash()).toBe('sort=oldest'));
+    expect(window.history.state).toEqual({ router: { key: 'keep' } });
+    act(() => harness.dispatch(actions.setFacet('field_hazard', ['12'])));
+    expect(window.history.state).toEqual({ router: { key: 'keep' } });
   });
 });

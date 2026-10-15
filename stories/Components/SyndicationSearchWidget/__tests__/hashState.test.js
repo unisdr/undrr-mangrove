@@ -230,3 +230,26 @@ describe('facetsEqual', () => {
     expect(facetsEqual({ a: ['1'] }, { a: ['1'], b: ['2'] })).toBe(false);
   });
 });
+
+it('round-trips AND on otherwise unchanged multi-value defaults', () => {
+  const facets = { field_hazard: ['12', '34'] };
+  const hash = buildHashString(
+    {
+      query: '',
+      page: 1,
+      sortBy: 'relevance',
+      facets,
+      facetOperators: { field_hazard: 'AND' },
+    },
+    { ...opts, defaultFacets: facets, defaultSort: 'relevance' }
+  );
+  const parsed = parseHashState(hash, opts);
+  expect(parsed.facets).toEqual(facets);
+  expect(parsed.facetOperators).toEqual({ field_hazard: 'AND' });
+  expect(
+    buildHashString(
+      { ...parsed, sortBy: 'relevance', facetOperators: {} },
+      { ...opts, defaultFacets: facets, defaultSort: 'relevance' }
+    )
+  ).toBe('');
+});

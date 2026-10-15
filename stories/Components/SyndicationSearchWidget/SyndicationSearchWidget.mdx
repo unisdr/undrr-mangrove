@@ -562,15 +562,15 @@ Rules:
   parameter, its facets replace `defaultFilters` entirely, including filters a
   host page adds (such as the Drupal block's current language and domain
   detection). With no `f.*` parameters the defaults apply as usual.
-- **Defaults keep a clean URL.** Facets are written only when they differ from
+- **Defaults keep a clean URL.** Facets are written when their values or AND match mode differ from
   `defaultFilters`; when they do, every selected facet is written, defaults
   included, so the link reproduces the view exactly. A consequence: if a reader
   removes every filter, including the defaults, the URL has no `f.*`
   parameters and reloading brings the defaults back.
-- **Other fragments are left alone.** A hash with none of these parameters,
-  such as a skip link (`#main-content`) or a table of contents anchor, is not
-  search state: following it doesn't change the search, and a page that loads
-  on one keeps it until the reader changes the search.
+- **Clear all returns to the configured baseline.** The reader-facing button restores every `defaultFilters` value, including hidden language/site defaults, clears custom facet selections and match operators, and resets page 1. It preserves the query and sort. Unchanged default groups do not appear as removable chips; a different AND constraint remains visible. Defaults are not access control: explicit `f.*` links still replace them. Use `customFilters` for a scope readers must not remove. Programmatic `actions.clearFacets()` without arguments still empties selections; its optional `{ defaultFilters }` argument requests a baseline reset.
+- **Other fragments preserve native navigation.** A skip link (`#main-content`) or table-of-contents anchor keeps its fragment and does not change the current search. Back/Forward restores that anchor entry's same-document search snapshot. The first search edit away from an anchor adds an entry, including typing; later typing replaces the search entry as usual. A same-document widget remount can recover the snapshot. Copying the anchor URL or loading a new document uses configured defaults, because filters are not encoded in an anchor URL. The snapshot is not a shareable search link.
+- **Host history state is preserved.** Private snapshots merge into null/plain-object `history.state` without removing unrelated keys. A host-owned primitive, array or other non-record value stays untouched; without a writable snapshot, returning to an anchor falls back to configured defaults. Browser back/forward cache retains same-document snapshots.
+- **Reserve search-like anchor names.** IDs exactly `query`, `page`, `sort` or `label`, or beginning with `f.` or `op.`, are interpreted as search parameters. Choose other IDs when hash sync is enabled.
 - **Page numbers are bounded.** A `page` beyond Elasticsearch's 10,000-result
   window (for the configured `resultsPerPage`) is ignored, and page 1 is shown.
 - **History.** Choosing a filter, a match mode, a sort order or a page adds a
@@ -906,6 +906,8 @@ On screens ≤800px, the sidebar is replaced with a drawer that slides in from t
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
 ## Changelog
+
+- **1.4.30**, 2026-10-15 ([#1329](https://github.com/unisdr/undrr-mangrove/issues/1329)): Clear all restores configured defaults, including hidden scopes, while preserving the no-argument programmatic clear contract. Compare complete default groups and preserve meaningful AND constraints in chips and shared URLs. Restore per-anchor same-document history snapshots without losing host state or overwriting the first typed-away anchor entry; document reload and host-state fallbacks and reserved names. Cover non-default page sizes and isolate widget test URLs.
 
 - **1.4.29**, 2026-10-15: Pair the decorative refresh Loader with visible translated pending text, including when reduced motion replaces rotation with a static shape. Keep the status header at full contrast while dimming retained hits, preserve announcement ownership in the results region and clear the text when the request settles. The separate legacy `.mg-search__spinner` compatibility exception remains pending a consumer migration audit.
 

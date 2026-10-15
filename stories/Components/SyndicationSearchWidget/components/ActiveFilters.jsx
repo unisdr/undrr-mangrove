@@ -15,6 +15,7 @@ import {
   actions,
 } from '../context/SearchContext';
 import { useTaxonomies } from '../hooks/useTaxonomies';
+import { facetsFromDefaults } from '../utils/hashState';
 import {
   getDomain,
   getLanguage,
@@ -45,6 +46,11 @@ export function ActiveFilters() {
     facetFields,
   } = config;
 
+  const defaultFacets = useMemo(
+    () => facetsFromDefaults(defaultFilters),
+    [defaultFilters]
+  );
+
   // Build list of chips from active filters
   const chips = useMemo(() => {
     const result = [];
@@ -62,15 +68,15 @@ export function ActiveFilters() {
       // Skip hidden filters
       if (!isFilterVisible(key, visibleFilters)) continue;
 
-      // Skip if matches default value
-      const defaultFilter = defaultFilters?.find(f => f.key === key);
+      // Hide a complete baseline group, including repeated configured values.
+      // A changed group (defaults plus extras, or a subset) remains removable.
+      const defaults = new Set(defaultFacets[key] || []);
       if (
-        defaultFilter &&
-        values.length === 1 &&
-        values[0] === defaultFilter.value
-      ) {
+        defaults.size === new Set(values).size &&
+        values.every(value => defaults.has(value)) &&
+        !(facetOperators[key] === 'AND' && defaults.size > 1)
+      )
         continue;
-      }
 
       // Get operator for this facet (OR is default)
       const operator = facetOperators[key] || 'OR';
@@ -132,7 +138,7 @@ export function ActiveFilters() {
     customFacetSelections,
     facetFields,
     visibleFilters,
-    defaultFilters,
+    defaultFacets,
     customFacetConfigs,
     getTaxonomyLabel,
   ]);
@@ -151,8 +157,8 @@ export function ActiveFilters() {
 
   // Handle clear all
   const handleClearAll = useCallback(() => {
-    dispatch(actions.clearFacets());
-  }, [dispatch]);
+    dispatch(actions.clearFacets({ defaultFilters }));
+  }, [dispatch, defaultFilters]);
 
   // Don't render if disabled or no chips
   if (!showActiveFilters || chips.length === 0) {

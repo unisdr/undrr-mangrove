@@ -24,6 +24,92 @@ import {
   facetsFromDefaults,
 } from '../utils/hashState';
 
+// Private same-document history metadata; host-owned state stays intact.
+const HISTORY_KEY = '__mgSyndicationSearch';
+const isRecord = value =>
+  value !== null &&
+  typeof value === 'object' &&
+  (Object.getPrototypeOf(value) === Object.prototype ||
+    Object.getPrototypeOf(value) === null);
+
+function hostHistoryState() {
+  const current = window.history.state;
+  if (!isRecord(current)) return current;
+  const { [HISTORY_KEY]: own, ...host } = current;
+  return host;
+}
+
+function saveAnchorState(searchState) {
+  const current = window.history.state;
+  if (current != null && !isRecord(current)) return false;
+  window.history.replaceState(
+    {
+      ...current,
+      [HISTORY_KEY]: {
+        version: 1,
+        documentTimeOrigin: window.performance.timeOrigin,
+        path: window.location.pathname + window.location.search,
+        anchor: window.location.hash.substring(1),
+        searchState,
+      },
+    },
+    '',
+    window.location.href
+  );
+  return true;
+}
+
+function readAnchorState(fields, maxPage) {
+  const saved = window.history.state?.[HISTORY_KEY];
+  if (
+    !isRecord(saved) ||
+    saved.version !== 1 ||
+    saved.documentTimeOrigin !== window.performance.timeOrigin ||
+    saved.path !== window.location.pathname + window.location.search ||
+    saved.anchor !== window.location.hash.substring(1) ||
+    !isRecord(saved.searchState)
+  )
+    return null;
+  const source = saved.searchState;
+  // Round-trip only URL-backed fields through the existing URL validator.
+  // Empty selections stay explicit inside history, without a new URL grammar.
+  const facets = Object.fromEntries(
+    Object.entries(isRecord(source.facets) ? source.facets : {})
+      .filter(([, values]) => Array.isArray(values))
+      .map(([key, values]) => [
+        key,
+        values.filter(value => typeof value === 'string'),
+      ])
+  );
+  const encoded = buildHashString(
+    {
+      query: typeof source.query === 'string' ? source.query : '',
+      page: Number.isInteger(source.page) ? source.page : 1,
+      sortBy: typeof source.sortBy === 'string' ? source.sortBy : 'relevance',
+      facets,
+      facetOperators: isRecord(source.facetOperators)
+        ? source.facetOperators
+        : {},
+    },
+    { facetFields: fields, defaultFacets: {}, defaultSort: 'relevance' }
+  );
+  const parsed = parseHashState(encoded, { facetFields: fields, maxPage });
+  return {
+    query: parsed.query || '',
+    page: parsed.page || 1,
+    sortBy: parsed.sort || 'relevance',
+    facets: parsed.facets || {},
+    facetOperators: parsed.facetOperators,
+  };
+}
+
+function currentLocationKey(fields, maxPage) {
+  const hash = window.location.hash.substring(1);
+  return hash && !isSearchHash(hash)
+    ? `${hash}\n${JSON.stringify(readAnchorState(fields, maxPage))}`
+    : hash;
+}
+
 /**
  * Whether the current URL carries a legacy `?text=` / `?query=` parameter.
  * @returns {string|null} The query to migrate, if any
@@ -68,10 +154,12 @@ export function useHashSync({ enabled = true } = {}) {
   const dispatch = useSearchDispatch();
   const isInitializedRef = useRef(false);
   const lastHashRef = useRef('');
+  const lastLocationRef = useRef(null);
   // The first write after initialisation (and any canonicalisation) replaces
   // the current history entry instead of adding one.
   const replaceNextRef = useRef(true);
   const prevQueryRef = useRef(null);
+  const previousSearchStateRef = useRef(null);
   // Set when the page loads on a non-search fragment (e.g. #main-content):
   // the first write must not replace that anchor.
   const keepLoadAnchorRef = useRef(false);
@@ -118,6 +206,9 @@ export function useHashSync({ enabled = true } = {}) {
    */
   const parseHash = useCallback(() => {
     if (typeof window === 'undefined') return {};
+    const saved = readAnchorState(fields, maxPage);
+    if (saved && !isSearchHash(window.location.hash))
+      return { ...saved, sort: saved.sortBy };
     return parseHashState(window.location.hash, {
       facetFields: fields,
       maxPage,
@@ -130,15 +221,15 @@ export function useHashSync({ enabled = true } = {}) {
   const [initialHashState] = useState(() => {
     if (!isEnabled || typeof window === 'undefined') return null;
     if (getLegacyQueryParam()) return null;
-    const parsed = parseHashState(window.location.hash, {
-      facetFields: fields,
-      maxPage,
-    });
+    const parsed = parseHash();
     if (!parsed.facets && !parsed.sort) return null;
     return {
       facets: parsed.facets,
       facetOperators: parsed.facetOperators,
       sort: parsed.sort,
+      initialQuery: !isSearchHash(window.location.hash)
+        ? (readAnchorState(fields, maxPage)?.query ?? null)
+        : null,
     };
   });
 
@@ -149,14 +240,15 @@ export function useHashSync({ enabled = true } = {}) {
    */
   const writeHash = useCallback((newHash, replace) => {
     lastHashRef.current = newHash;
+    lastLocationRef.current = newHash;
     const url = newHash
       ? `#${newHash}`
       : // Clear hash without causing a scroll jump
         window.location.pathname + window.location.search;
     if (replace) {
-      window.history.replaceState(null, '', url);
+      window.history.replaceState(hostHistoryState(), '', url);
     } else {
-      window.history.pushState(null, '', url);
+      window.history.pushState(hostHistoryState(), '', url);
     }
   }, []);
 
@@ -213,11 +305,12 @@ export function useHashSync({ enabled = true } = {}) {
         (remainingParams ? '?' + remainingParams : '') +
         '#' +
         newHash;
-      window.history.replaceState(null, '', newUrl);
+      window.history.replaceState(hostHistoryState(), '', newUrl);
 
       // Set query in state
       dispatch(actions.setQuery(queryParam, { immediate: true }));
       lastHashRef.current = newHash;
+      lastLocationRef.current = newHash;
       isInitializedRef.current = true;
       return;
     }
@@ -248,6 +341,7 @@ export function useHashSync({ enabled = true } = {}) {
       keepLoadAnchorRef.current = true;
     }
     lastHashRef.current = loadHash;
+    lastLocationRef.current = loadHash;
     isInitializedRef.current = true;
   }, [isEnabled, dispatch, parseHash]);
 
@@ -257,10 +351,10 @@ export function useHashSync({ enabled = true } = {}) {
   useEffect(() => {
     if (!isEnabled || !isInitialized || typeof window === 'undefined') return;
 
-    const newHash = buildHashString(
-      { query, page, sortBy, facets, facetOperators },
-      hashOptions
-    );
+    const current = { query, page, sortBy, facets, facetOperators };
+    const previous = previousSearchStateRef.current;
+    previousSearchStateRef.current = current;
+    const newHash = buildHashString(current, hashOptions);
     const queryChanged =
       prevQueryRef.current !== null && prevQueryRef.current !== query;
     prevQueryRef.current = query;
@@ -277,12 +371,19 @@ export function useHashSync({ enabled = true } = {}) {
       if (replaceNextRef.current) {
         replaceNextRef.current = false;
         lastHashRef.current = newHash;
+        saveAnchorState(current);
+        lastLocationRef.current = currentLocationKey(fields, maxPage);
         return;
       }
     }
 
     // Typing a query replaces the entry; committed changes add one.
-    const replace = replaceNextRef.current || queryChanged;
+    const onAnchor =
+      window.location.hash && !isSearchHash(window.location.hash);
+    // A search update can run before a just-followed anchor's native event.
+    // Save the previous view before leaving that entry, not the new filters.
+    if (onAnchor) saveAnchorState(previous || current);
+    const replace = !onAnchor && (replaceNextRef.current || queryChanged);
     replaceNextRef.current = false;
     writeHash(newHash, replace);
   }, [
@@ -309,12 +410,32 @@ export function useHashSync({ enabled = true } = {}) {
       const currentHash = window.location.hash.substring(1);
 
       // Avoid loops: our own writes and already-handled navigations
-      if (currentHash === lastHashRef.current) return;
+      const locationKey = currentLocationKey(fields, maxPage);
+      if (locationKey === lastLocationRef.current) return;
+      lastLocationRef.current = locationKey;
 
-      // In-page anchors (skip links, table of contents) are not search
-      // state: leave both the state and the fragment alone. An empty hash
-      // is still handled, so Back to the clean entry restores the defaults.
-      if (currentHash && !isSearchHash(currentHash)) return;
+      // Anchor entries keep their fragment and native scroll behaviour. Their
+      // private same-document snapshot restores search state on traversal.
+      if (currentHash && !isSearchHash(currentHash)) {
+        let restored = readAnchorState(fields, maxPage);
+        if (!restored) {
+          const current = { query, page, sortBy, facets, facetOperators };
+          if (saveAnchorState(current)) restored = current;
+          else
+            restored = {
+              query: defaultQuery || '',
+              page: 1,
+              sortBy: defaultSort || 'relevance',
+              facets: defaultFacets,
+              facetOperators: {},
+            };
+        }
+        lastHashRef.current = buildHashString(restored, hashOptions);
+        lastLocationRef.current = currentLocationKey(fields, maxPage);
+        prevQueryRef.current = restored.query;
+        dispatch(actions.restoreState(restored));
+        return;
+      }
 
       const hashState = parseHashState(currentHash, {
         facetFields: fields,
@@ -358,6 +479,11 @@ export function useHashSync({ enabled = true } = {}) {
     defaultFacets,
     hashOptions,
     writeHash,
+    query,
+    page,
+    sortBy,
+    facets,
+    facetOperators,
   ]);
 
   return {

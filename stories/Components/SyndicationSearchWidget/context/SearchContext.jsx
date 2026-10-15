@@ -369,7 +369,7 @@ function searchReducer(state, action) {
     case ActionTypes.CLEAR_FACETS:
       return {
         ...state,
-        facets: {},
+        facets: facetsFromDefaults(action.payload?.defaultFilters),
         facetOperators: {},
         customFacets: {},
         page: 1,
@@ -462,6 +462,7 @@ function searchReducer(state, action) {
       const {
         defaultFilters = [],
         defaultQuery = '',
+        initialQuery = null,
         defaultSort = 'relevance',
         // State read from the URL hash; takes precedence over the defaults.
         // initialFacets replaces defaultFilters entirely when present.
@@ -478,7 +479,12 @@ function searchReducer(state, action) {
         state.query !== '' && state.query !== state.appliedDefaultQuery;
 
       const nextDefaultQuery = defaultQuery || '';
-      const query = keepQuery ? state.query : nextDefaultQuery;
+      const query =
+        !state.isInitialized && initialQuery !== null
+          ? initialQuery
+          : keepQuery
+            ? state.query
+            : nextDefaultQuery;
 
       return {
         ...state,
@@ -698,8 +704,9 @@ export const actions = {
     payload: { key, value },
   }),
 
-  clearFacets: () => ({
+  clearFacets: options => ({
     type: ActionTypes.CLEAR_FACETS,
+    ...(options ? { payload: options } : {}),
   }),
 
   setFacetOperator: (key, operator) => ({
