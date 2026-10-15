@@ -143,10 +143,18 @@
   font-weight: 600;
 }
 
+@include mg-editorial-element("code:not(:where(pre code))") {
+  // Code is prose, not a link: use the readable text/surface pairing rather
+  // than interactive ink on its tinted global background in every theme.
+  color: rgb(var(--mg-color-text));
+  background: rgb(var(--mg-color-neutral-50));
+}
+
 @include mg-editorial-element("pre") {
   max-width: 100%;
   margin-block: var(--mg-spacing-150);
   overflow-x: auto;
+
   // Match the existing LTR code child so RTL pages can reach both ends.
   direction: ltr;
   unicode-bidi: isolate;

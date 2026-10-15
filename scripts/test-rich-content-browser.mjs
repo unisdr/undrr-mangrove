@@ -28,7 +28,7 @@ async function open(page, story, theme, rtl) {
   url.searchParams.set('viewMode', 'story');
   url.searchParams.set(
     'globals',
-    `theme:${theme};locale:${rtl ? 'arabic' : 'english'}`
+    `theme:${theme};locale:${rtl ? 'arabic' : 'english'};a11y.manual:true`
   );
   await page.goto(url.href);
   await page
@@ -177,7 +177,28 @@ try {
         const boundary = await page.evaluate(() => {
           const s = selector =>
             getComputedStyle(document.querySelector(selector));
+          const component = () => {
+            const card = s('#rich-boundaries .mg-card');
+            const title = s('#rich-boundaries .mg-card__title');
+            const link = s('#rich-boundaries .mg-card__title a');
+            return [
+              card.padding,
+              card.borderWidth,
+              title.fontFamily,
+              title.fontSize,
+              title.lineHeight,
+              link.color,
+              link.textDecorationLine,
+            ];
+          };
+          const cardInside = component();
+          const root = document.querySelector('#rich-boundaries');
+          root.classList.remove('mg-content');
+          const cardOutside = component();
+          root.classList.add('mg-content');
           return {
+            cardInside,
+            cardOutside,
             classedProse: s('.editorial-reference').textDecorationLine.includes(
               'underline'
             ),
@@ -190,7 +211,7 @@ try {
               s('.third-party-widget blockquote').fontSize ===
               s('#legacy-body blockquote').fontSize,
             calloutBorder: s('#ckeditor-callout').borderInlineStartWidth,
-            panelLink: s('#rich-panel a').textDecorationLine,
+            panelLink: s('#mg-tabs__section-rich-panel a').textDecorationLine,
             navPadding: s('[aria-label="Panel navigation"] ul')
               .paddingInlineStart,
             outsideNavPadding: s('#outside-navigation ul').paddingInlineStart,
@@ -204,7 +225,11 @@ try {
           JSON.stringify(boundary)
         );
         assert.equal(boundary.button, 'none');
-        assert.equal(boundary.card, 'none');
+        assert.deepEqual(
+          boundary.cardInside,
+          boundary.cardOutside,
+          'Card must retain its own link/typography/box treatment'
+        );
         assert.equal(boundary.outside, 'none');
         assert.equal(boundary.legacyCite, 'block');
         assert.equal(boundary.optedCite, 'inline');
