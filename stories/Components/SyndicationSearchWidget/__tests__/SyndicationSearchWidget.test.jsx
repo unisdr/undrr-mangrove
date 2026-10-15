@@ -72,12 +72,14 @@ function mockFetch(searchResponse = null) {
 describe('SyndicationSearchWidget', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    window.history.replaceState(null, '', '/');
     clearTaxonomyCache();
     global.fetch = mockFetch();
   });
 
   afterEach(() => {
     jest.useRealTimers();
+    window.history.replaceState(null, '', '/');
   });
 
   describe('rendering', () => {

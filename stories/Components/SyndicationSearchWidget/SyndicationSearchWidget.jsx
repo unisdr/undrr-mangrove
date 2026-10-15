@@ -297,6 +297,7 @@ function SyndicationSearchWidgetInner() {
       actions.initialize({
         defaultFilters: config.defaultFilters,
         defaultQuery: config.defaultQuery,
+        initialQuery: fromHash?.initialQuery ?? null,
         defaultSort: config.defaultSort,
         initialFacets: fromHash?.facets || null,
         initialFacetOperators: fromHash?.facetOperators || null,
