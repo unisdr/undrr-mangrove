@@ -46,7 +46,7 @@ export const GalleryLoading = {
       <Gallery
         media={media}
         thumbnailPosition="bottom"
-        loadingLabel="Chargement du média…"
+        labels={{ loadingLabel: 'Chargement du média…' }}
       />
     </div>
   ),
