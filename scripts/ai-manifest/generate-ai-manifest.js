@@ -2502,6 +2502,10 @@ To inspect changes between versions, tags, and pre-releases without parsing raw 
 
 Use the --mg-z-index-* custom properties for global stacking contexts (fixed, sticky, portaled, or deliberately negative elements). One token per UI concept: --mg-z-index-behind, -nav, -sticky, -nav-toggle, -header, -drawer, -dropdown, -modal, -toast. Derive backdrops with calc(), e.g. z-index: calc(var(--mg-z-index-drawer) - 1). For local stacking within a component's own isolated stacking context (e.g. inside position: relative), use a raw value with a comment instead of a token. The navigation zone tokens (-nav through -header, values 10-22) are frozen; do not change their numeric values. These were $mg-z-index-* Sass variables before 2.0 and no longer exist in that form. See the "Design decisions/Z-index layers" Storybook page for the full layer table and philosophy.
 
+### Motion and animation
+
+Before adding or changing component motion, read ${DOCS_BASE}llms-motion.txt (rendered: ${DOCS_BASE}?path=/docs/design-decisions-motion--docs). Use interaction timing tokens, gate optional CSS motion with prefers-reduced-motion: no-preference, and check the preference before JavaScript-driven motion. Reuse Loader or ProgressBar so loading remains understandable under reduced motion and forced colours; directional travel follows RTL reading direction. The guide documents loop-cycle exceptions and browser review requirements.
+
 ### Design tokens
 
 Colour, spacing, radii and component tokens are CSS custom properties, so they are themeable at runtime from a \`:root\` block or a \`.mg-theme-*\` block. No rebuild of Mangrove is needed.
@@ -2655,7 +2659,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
   );
 
   // -------------------------------------------------------------------------
-  // Write llms-page-building.txt and llms-search-widget.txt
+  // Write topic-scoped llms-*.txt guides
   // (see docs-submanifest.js)
   // -------------------------------------------------------------------------
 

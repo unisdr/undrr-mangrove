@@ -185,7 +185,7 @@ function ModalTrigger() {
 
 ### 6. Reduced motion
 
-Respect `prefers-reduced-motion` so animations run only when users have not requested reduced motion.
+Follow the [motion and animation guidance](MOTION.md) for purpose, tokens, CSS and JavaScript patterns, and browser checks. Optional interaction motion runs only when users have not requested reduced motion; loading indicators use the explicit alternatives below.
 
 Loading indicators need care: one frozen part way through its animation reads as loading that has stopped. Under reduced motion the [loader](https://mangrove.undrr.org/?path=/docs/components-loader--docs) keeps turning at a third of its speed, and the indeterminate [progress bar](https://mangrove.undrr.org/?path=/docs/components-progress-bar--docs) shows a still, dashed bar instead of a moving segment.
 
@@ -193,7 +193,8 @@ Loading indicators need care: one frozen part way through its animation reads as
 // Only animate when the user allows it
 .mg-card__title a::after {
   @media (prefers-reduced-motion: no-preference) {
-    transition: translate 200ms ease;
+    transition: translate var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
   }
 }
 ```

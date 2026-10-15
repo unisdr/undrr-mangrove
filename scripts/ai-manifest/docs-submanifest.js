@@ -188,6 +188,23 @@ ${[
  */
 export const DOCS_SUBMANIFESTS = [
   {
+    filename: 'llms-motion.txt',
+    urlKey: 'motion',
+    title: 'Mangrove motion and animation guidance',
+    summary:
+      'Shared component motion policy: purpose, interaction tokens, looping cycles, CSS and JavaScript reduced motion, progress indicators, forced colours, RTL, documentation and browser review.',
+    sources: [
+      {
+        title: 'Motion and animation',
+        file: 'MOTION.md',
+        storybookId: 'design-decisions-motion--docs',
+      },
+    ],
+    extraLinks: docsBase => [
+      `- Component review checklist: ${docsBase}?path=/docs/contributing-build-a-component-review-checklist--docs`,
+    ],
+  },
+  {
     filename: 'llms-page-building.txt',
     urlKey: 'pageBuilding',
     title: 'Mangrove page building guide for Drupal Gutenberg',

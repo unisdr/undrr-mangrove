@@ -4,6 +4,8 @@
 
 A step-by-step tutorial for building a new component in Mangrove from scratch. For code standards (React patterns, BEM, PropTypes, JSDoc), see the [component standards](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs) in Storybook.
 
+For component motion, follow [Motion and animation](MOTION.md): purpose, timing tokens, reduced motion, progress indicators, forced colours and RTL.
+
 ## Decision tree: what files do I need?
 
 ```

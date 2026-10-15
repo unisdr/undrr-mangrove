@@ -45,6 +45,7 @@ export const DOC_PAGE_IDS = {
   'docs/HYDRATION-AUTHORING.md':
     'contributing-build-a-component-hydration--docs',
   'docs/HYDRATION.md': 'getting-started-integration-hydration-guide--docs',
+  'docs/MOTION.md': 'design-decisions-motion--docs',
   'docs/LANDING-PAGE-GUIDE.md': 'patterns-building-landing-pages--docs',
   'docs/RELEASE-1.4.md': 'getting-started-release-notes-v1-4--docs',
   'docs/RELEASE-1.5.md': 'getting-started-release-notes-v1-5--docs',
