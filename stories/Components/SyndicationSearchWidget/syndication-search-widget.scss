@@ -314,11 +314,20 @@ $search-input-padding-x: mg-rem(44);
 
 // A new search with results on screen: keep them, dimmed, with an inline
 // loader in the header, instead of swapping in the skeleton.
+// Keep active status text at full contrast; only the retained hits are stale.
 .mg-search__results--refreshing {
-  opacity: 0.6;
+  .mg-search__results-list,
+  .mg-search__results-grid {
+    opacity: 0.6;
+  }
 }
 
 .mg-search__results-loader {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mg-spacing-50);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
   margin-inline-start: auto;
   color: $search-primary;
 }
@@ -958,8 +967,9 @@ $search-input-padding-x: mg-rem(44);
 
 // Legacy public class: keep compatibility for hand-written Drupal markup.
 // New widget code uses shared Loader. One cycle is 1s; this is a documented
-// looping exception, not interaction timing. Like Loader, slow rotation must
-// outrank the global reset so progress never looks frozen.
+// looping compatibility exception, not interaction timing. Unlike the shared
+// Loader's designed static reduced-motion state, this legacy markup keeps slow
+// rotation until its consumers can be audited and migrated.
 @keyframes mg-search-spin {
   to {
     transform: rotate(360deg);

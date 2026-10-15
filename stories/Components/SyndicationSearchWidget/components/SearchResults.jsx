@@ -328,14 +328,14 @@ export function SearchResults({
           </p>
         )}
 
-        {/* Small spinner while a new search replaces the results on screen;
-            the results count announces the outcome. */}
+        {/* Caller-owned visible text keeps the decorative loading shape
+            understandable when motion is reduced; the results region owns
+            announcements, so this adds no live region. */}
         {refreshing && (
-          <Loader
-            size="inline"
-            decorative
-            className="mg-search__results-loader"
-          />
+          <span className="mg-search__results-loader">
+            <Loader size="inline" decorative />
+            <span>{labels.srSearching}</span>
+          </span>
         )}
         {/* Mobile filter button - compact, inline */}
         {showMobileFilterButton && onOpenFilters && (

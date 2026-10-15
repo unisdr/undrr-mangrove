@@ -60,6 +60,7 @@ it('keeps results visible and dimmed while the next search runs', async () => {
 
   render(
     <SyndicationSearchWidget
+      labels={{ srSearching: 'Recherche en cours…' }}
       config={{ enableHashSync: false, debounceDelay: 0, defaultFilters: [] }}
     />
   );
@@ -78,6 +79,11 @@ it('keeps results visible and dimmed while the next search runs', async () => {
   );
   expect(screen.getByText('first')).toBeInTheDocument();
   expect(document.querySelector('.mg-search__results-loader')).not.toBeNull();
+  const pending = screen.getByText('Recherche en cours…');
+  expect(pending).toBeVisible();
+  expect(
+    pending.closest('[role="status"], [aria-live], [aria-hidden="true"]')
+  ).toBeNull();
   expect(document.querySelector('.mg-search__skeleton')).toBeNull();
   const region = document.querySelector('.mg-search__main');
   expect(region).toHaveAttribute('aria-busy', 'true');
@@ -93,6 +99,7 @@ it('keeps results visible and dimmed while the next search runs', async () => {
   await waitFor(() => expect(screen.getByText('second')).toBeInTheDocument());
   expect(document.querySelector('.mg-search__results--refreshing')).toBeNull();
   expect(document.querySelector('.mg-search__results-loader')).toBeNull();
+  expect(screen.queryByText('Recherche en cours…')).toBeNull();
   expect(region).toHaveAttribute('aria-busy', 'false');
   expect(region.querySelector('progress')).toBeNull();
   expect(
@@ -201,6 +208,7 @@ it.each([false, true])(
       );
       expect(document.querySelector('.mg-search__main progress')).toBeNull();
       expect(document.querySelector('.mg-search__results-loader')).toBeNull();
+      expect(screen.queryByText('Searching…')).toBeNull();
     } finally {
       errorLog.mockRestore();
     }

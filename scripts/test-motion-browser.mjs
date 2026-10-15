@@ -110,6 +110,28 @@ const style = (locator, pseudo) =>
       opacity: Number(s.opacity),
       border: s.borderTopColor,
       track: s.borderBottomColor,
+      borders: [
+        s.borderTopColor,
+        s.borderRightColor,
+        s.borderBottomColor,
+        s.borderLeftColor,
+      ],
+      borderWidths: [
+        s.borderTopWidth,
+        s.borderRightWidth,
+        s.borderBottomWidth,
+        s.borderLeftWidth,
+      ].map(parseFloat),
+      borderStyles: [
+        s.borderTopStyle,
+        s.borderRightStyle,
+        s.borderBottomStyle,
+        s.borderLeftStyle,
+      ],
+      display: s.display,
+      visibility: s.visibility,
+      width: parseFloat(s.width),
+      height: parseFloat(s.height),
       adjust: s.forcedColorAdjust,
       transition: s.transitionDuration,
       outline: s.outlineStyle,
@@ -214,26 +236,186 @@ try {
             expectedTheme
           );
         };
-        const checkLoader = async loader => {
+        const checkLoader = async (
+          loader,
+          {
+            label,
+            decorative = false,
+            reduced = mode.reducedMotion === 'reduce',
+          } = {}
+        ) => {
           await visible(loader);
           const css = await style(loader);
-          assert(
-            css.animation !== 'none' && css.iterations === 'infinite',
-            'Pending Loader must continue rotating'
-          );
-          assert(
-            css.duration >= (mode.reducedMotion === 'reduce' ? 2 : 0.5),
-            'Loader duration must survive global reset'
-          );
-          if (mode.forcedColors === 'active')
-            assert(
-              css.border !== css.track && css.adjust === 'none',
-              'Forced-colour arc must stay distinct'
+          const shape =
+            reduced && !decorative ? await style(loader, '::before') : css;
+          if (reduced) {
+            assert.equal(
+              css.animation,
+              'none',
+              'Reduced Loader host must not animate'
             );
+            assert.equal(
+              shape.animation,
+              'none',
+              'Reduced Loader shape must not animate'
+            );
+            assert.equal(
+              css.transform,
+              'none',
+              'Reduced Loader must not retain a rotated frame'
+            );
+            assert.equal(
+              shape.transform,
+              'none',
+              'Reduced shape must not retain a rotated frame'
+            );
+            assert(
+              shape.opacity > 0 &&
+                shape.display !== 'none' &&
+                shape.visibility === 'visible',
+              'Static loading shape must be painted'
+            );
+            assert(
+              shape.width > 0 && shape.height > 0,
+              'Static loading shape has nonzero dimensions'
+            );
+            assert(
+              shape.borderStyles.every(value => value === 'dashed'),
+              'Static pending shape must be a complete dashed ring'
+            );
+            assert(
+              shape.borderWidths.every(width => width > 0),
+              'Every side of the static ring must have painted width'
+            );
+            assert(
+              shape.borders.every(
+                value =>
+                  value === shape.borders[0] &&
+                  value !== 'transparent' &&
+                  !/rgba\([^)]*,\s*0\)/.test(value)
+              ),
+              'Every side of the static ring must remain painted'
+            );
+            const pending = decorative
+              ? loader.locator('..').getByText(label, { exact: true })
+              : loader.getByText(label, { exact: true });
+            await visible(pending);
+            assert(
+              await pending.evaluate(el => {
+                const css = getComputedStyle(el);
+                const r = el.getBoundingClientRect();
+                return (
+                  css.clip === 'auto' &&
+                  css.clipPath === 'none' &&
+                  r.width > 1 &&
+                  r.height > 1 &&
+                  !el.closest('[aria-hidden="true"]')
+                );
+              }),
+              'Reduced loading text must be visibly readable, not clipped screen-reader-only text'
+            );
+          } else {
+            assert(
+              css.animation !== 'none' && css.iterations === 'infinite',
+              'Normal-motion Loader must continue rotating'
+            );
+            assert(
+              css.duration >= 0.5,
+              'Normal Loader duration must survive global reset'
+            );
+          }
+          const movement = await loader.evaluate(
+            async (el, pseudo) => {
+              const frame = () =>
+                new Promise(resolve => requestAnimationFrame(resolve));
+              await frame();
+              const before = getComputedStyle(el, pseudo).transform;
+              await new Promise(resolve => setTimeout(resolve, 120));
+              await frame();
+              return {
+                before,
+                after: getComputedStyle(el, pseudo).transform,
+                running: el
+                  .getAnimations({ subtree: true })
+                  .filter(animation => animation.playState === 'running')
+                  .length,
+              };
+            },
+            reduced && !decorative ? '::before' : undefined
+          );
+          if (reduced) {
+            assert.equal(
+              movement.before,
+              movement.after,
+              'Reduced Loader must stay still over time'
+            );
+            assert.equal(
+              movement.running,
+              0,
+              'Reduced Loader must have no running animations, including pseudos'
+            );
+          } else
+            assert.notEqual(
+              movement.before,
+              movement.after,
+              'Normal Loader must actually rotate over time'
+            );
+          if (mode.forcedColors === 'active') {
+            assert.equal(
+              shape.adjust,
+              'none',
+              'Forced-colour loading shape must retain its painted system colours'
+            );
+            if (!reduced)
+              assert.notEqual(
+                css.border,
+                css.track,
+                'Forced-colour rotating arc must stay distinct'
+              );
+            else
+              assert(
+                await loader.evaluate(
+                  (el, pseudo) => {
+                    const probe = document.createElement('span');
+                    probe.style.backgroundColor = 'Canvas';
+                    document.body.appendChild(probe);
+                    const canvas = getComputedStyle(probe).backgroundColor;
+                    probe.remove();
+                    return (
+                      getComputedStyle(el, pseudo).borderTopColor !== canvas
+                    );
+                  },
+                  decorative ? undefined : '::before'
+                ),
+                'Static forced-colour ring must contrast with Canvas'
+              );
+          }
         };
         try {
           await visit('loading');
-          await checkLoader(page.locator('.mg-loader'));
+          const fixtureLoaders = page.locator('.mg-loader');
+          const fixtureLabels = [
+            'Chargement du contenu…',
+            'Chargement des données…',
+            'Chargement HTML…',
+          ];
+          assert.equal(await fixtureLoaders.count(), fixtureLabels.length);
+          for (const [index, label] of fixtureLabels.entries())
+            await checkLoader(fixtureLoaders.nth(index), { label });
+          // Preferences can change while pending work stays mounted. Check the
+          // same nodes in both policies, then restore the tested media mode.
+          const flipped = mode.reducedMotion !== 'reduce';
+          await page.emulateMedia({
+            reducedMotion: flipped ? 'reduce' : 'no-preference',
+          });
+          for (const [index, label] of fixtureLabels.entries())
+            await checkLoader(fixtureLoaders.nth(index), {
+              label,
+              reduced: flipped,
+            });
+          await page.emulateMedia({ reducedMotion: mode.reducedMotion });
+          for (const [index, label] of fixtureLabels.entries())
+            await checkLoader(fixtureLoaders.nth(index), { label });
           const progress = page.locator('.mg-progress-bar__track');
           await visible(progress);
           const scanner = await style(progress, '::after');
@@ -251,7 +433,9 @@ try {
           });
 
           await visit('gallery-loading');
-          await checkLoader(page.locator('.mg-gallery .mg-loader'));
+          await checkLoader(page.locator('.mg-gallery .mg-loader'), {
+            label: 'Chargement du média…',
+          });
           await page.evaluate(() => {
             document.documentElement.style.scrollBehavior = 'smooth';
             document.querySelector(
@@ -556,7 +740,31 @@ try {
           await page
             .getByRole('button', { name: 'Refresh results', exact: true })
             .click();
-          await checkLoader(page.locator('.mg-search__main .mg-loader'));
+          await checkLoader(page.locator('.mg-search__main .mg-loader'), {
+            label: 'Recherche en cours…',
+            decorative: true,
+          });
+          const pendingLabel = page
+            .locator('.mg-search__results-loader')
+            .getByText('Recherche en cours…', { exact: true });
+          await visible(pendingLabel);
+          assert(
+            await pendingLabel.evaluate(el => {
+              const bounds = el.getBoundingClientRect();
+              for (let node = el; node; node = node.parentElement) {
+                if (Number(getComputedStyle(node).opacity) < 1) return false;
+              }
+              return bounds.left >= -1 && bounds.right <= innerWidth + 1;
+            }),
+            'Translated pending text must fit narrow LTR and RTL headers at full opacity'
+          );
+          assert.equal(
+            await pendingLabel
+              .locator('xpath=ancestor::*[@role="status" or @aria-live]')
+              .count(),
+            0,
+            'Visible search pending text must not add an announcement region'
+          );
           assert.equal(
             await page
               .locator('.mg-search__main .mg-loader')
@@ -585,6 +793,13 @@ try {
               .locator('.mg-search__main progress, .mg-search__main .mg-loader')
               .count(),
             0
+          );
+          assert.equal(
+            await page
+              .getByText('Recherche en cours…', { exact: true })
+              .count(),
+            0,
+            'Search pending text must clear on failure'
           );
           assert.deepEqual(
             errors,

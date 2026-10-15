@@ -16,7 +16,11 @@ export default {
 export const Loading = {
   render: () => (
     <div style={{ padding: '2rem' }}>
-      <Loader size="inline" label="Loading fixture" />
+      <Loader size="inline" label="Chargement du contenu…" />
+      <Loader label="Chargement des données…" />
+      <div className="mg-loader" role="status">
+        <span className="mg-u-sr-only">Chargement HTML…</span>
+      </div>
       <ProgressBar label="Fetching fixture" />
     </div>
   ),
@@ -39,7 +43,11 @@ const media = [
 export const GalleryLoading = {
   render: () => (
     <div style={{ maxWidth: '600px', padding: '1rem' }}>
-      <Gallery media={media} thumbnailPosition="bottom" />
+      <Gallery
+        media={media}
+        thumbnailPosition="bottom"
+        loadingLabel="Chargement du média…"
+      />
     </div>
   ),
 };
