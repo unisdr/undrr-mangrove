@@ -28,6 +28,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 export default function Section({
   section,
+  isActive,
   index,
   sectionListRef,
   itemListRef,
@@ -126,6 +127,8 @@ export default function Section({
           className="mg-mega-content | mg-container-full-width"
           aria-label={sectionTitle}
           aria-live="polite"
+          aria-hidden={!isActive}
+          inert={!isActive ? true : undefined}
           tabIndex={0}
           ref={element => {
             sectionListRef.current[index] = element;
@@ -267,9 +270,7 @@ export default function Section({
               </ul>
 
               {/* Desktop version - shows items based on hover state */}
-              {/* Key forces remount on tab change, retriggering CSS animations */}
               <ul
-                key={`desktop-menu-${itemIndex}`}
                 role="menu"
                 aria-label="Submenu items"
                 className="mg-mega-content__menu--desktop"
@@ -321,6 +322,8 @@ export default function Section({
         <article
           className="mg-mega-content | mg-container-full-width"
           aria-live="polite"
+          aria-hidden={!isActive}
+          inert={!isActive ? true : undefined}
           aria-label={sectionTitle}
           tabIndex={0}
           ref={element => {

@@ -10,6 +10,8 @@ it('dismisses from the backdrop, retains the current level only during exit, and
     const opener = screen.getByRole('button', { name: 'Open navigation menu' });
     fireEvent.click(opener);
     const dialog = screen.getByRole('dialog');
+    // jsdom does not load the component SCSS. Model its computed timing.
+    dialog.style.transitionDuration = '0.16s';
     fireEvent.click(within(dialog).getByRole('button', { name: 'About' }));
     const backdrop = container.querySelector('.mg-mega-mobile-sidebar-overlay');
     backdrop.focus();
@@ -23,7 +25,7 @@ it('dismisses from the backdrop, retains the current level only during exit, and
     outside.focus();
     expect(outside).toHaveFocus();
     outside.remove();
-    act(() => jest.advanceTimersByTime(179));
+    act(() => jest.advanceTimersByTime(159));
     expect(dialog).not.toHaveAttribute('hidden');
     act(() => jest.advanceTimersByTime(1));
     expect(dialog).toHaveAttribute('hidden');
@@ -52,6 +54,8 @@ it('resets a retained nested level when rapidly reopened and keeps the reopened 
     const opener = screen.getByRole('button', { name: 'Open navigation menu' });
     fireEvent.click(opener);
     const dialog = screen.getByRole('dialog');
+    // jsdom does not load the component SCSS. Model its computed timing.
+    dialog.style.transitionDuration = '0.16s';
     fireEvent.click(within(dialog).getByRole('button', { name: 'About' }));
     fireEvent.click(
       within(dialog).getByRole('button', { name: 'Close mobile navigation' })
@@ -71,3 +75,40 @@ it('resets a retained nested level when rapidly reopened and keeps the reopened 
     jest.useRealTimers();
   }
 });
+
+it.each([
+  ['themed transition with a delay', '0.24s, 300ms', '20ms, 0s', 300],
+  ['suppressed motion', '0s', '0s', 0],
+])(
+  'removes the inert exit surface at the computed CSS duration: %s',
+  (_, duration, delay, expected) => {
+    jest.useFakeTimers();
+    try {
+      const { container } = render(<MegaMenu sections={sections} />);
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Open navigation menu' })
+      );
+      const dialog = screen.getByRole('dialog');
+      dialog.style.transitionProperty = 'opacity, transform';
+      dialog.style.transitionDuration = duration;
+      dialog.style.transitionDelay = delay;
+      fireEvent.click(
+        within(dialog).getByRole('button', { name: 'Close mobile navigation' })
+      );
+      expect(dialog).toHaveAttribute('inert');
+      expect(dialog).toHaveAttribute('aria-hidden', 'true');
+      if (expected > 0) {
+        act(() => jest.advanceTimersByTime(expected - 1));
+        expect(dialog).not.toHaveAttribute('hidden');
+      }
+      act(() => jest.advanceTimersByTime(expected > 0 ? 1 : 0));
+      expect(dialog).toHaveAttribute('hidden');
+      expect(
+        container.querySelector('.mg-mega-mobile-sidebar-overlay')
+      ).toBeNull();
+      expect(document.body.style.overflow).toBe('');
+    } finally {
+      jest.useRealTimers();
+    }
+  }
+);

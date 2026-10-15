@@ -188,14 +188,6 @@
           background: rgb(var(--mg-color-interactive));
           opacity: 0;
           transform: scaleX(0);
-
-          @media (prefers-reduced-motion: no-preference) {
-            transition:
-              transform var(--mg-motion-duration-fast)
-                var(--mg-motion-easing-standard),
-              opacity var(--mg-motion-duration-fast)
-                var(--mg-motion-easing-standard);
-          }
         }
       }
     }
@@ -386,9 +378,9 @@
 
     font-weight: 600;
     transition:
-      background-color 150ms ease,
-      color 150ms ease,
-      transform 150ms ease;
+      background-color var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard),
+      color var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
 
     &:hover,
     &:focus-visible {
@@ -405,11 +397,8 @@
       inset-inline-end: auto;
       padding-inline-start: var(--mg-spacing-150);
       margin-inline-end: var(--mg-spacing-150);
-      transition:
-        transform 150ms ease,
-        inset-inline-start 200ms cubic-bezier(0.4, 0, 0.2, 1),
-        inset-inline-end 200ms cubic-bezier(0.4, 0, 0.2, 1),
-        opacity 150ms ease;
+      transition: opacity var(--mg-motion-duration-fast)
+        var(--mg-motion-easing-standard);
       opacity: 0.55;
     }
 
@@ -435,43 +424,9 @@
   content: "‹";
 }
 
-/* Brief pulse to draw attention when active becomes visible */
-@keyframes mg-mega-tab-pulse {
-  0% {
-    box-shadow:
-      inset 4px 0 0 0 rgb(var(--mg-color-button)),
-      0 0 0 0 rgb(var(--mg-color-blue-900) / 0);
-  }
-  60% {
-    box-shadow:
-      inset 4px 0 0 0 rgb(var(--mg-color-button)),
-      0 0 0 8px rgb(var(--mg-color-blue-900) / 0.12);
-  }
-  100% {
-    box-shadow:
-      inset 4px 0 0 0 rgb(var(--mg-color-button)),
-      0 0 0 0 rgb(var(--mg-color-blue-900) / 0);
-  }
-}
-
-.mg-mega-content__section-list-link--active {
-  animation: mg-mega-tab-pulse 700ms ease-out 1;
-}
-
-/* Slide motion for right content when tab changes */
-@keyframes mg-mega-content-swap {
-  0% {
-    transform: translateX(8px);
-    opacity: 0.98;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
+// Public compatibility hook: content changes are immediate, without a slide.
 .mg-mega-content__right--sliding {
-  animation: mg-mega-content-swap 180ms ease-out;
+  animation: none;
 }
 
 /* Stronger keyboard focus ring for accessibility.
@@ -518,19 +473,7 @@
     .mg-mega-content__menu--desktop {
       display: block;
 
-      // Blue flash background that fades out (retriggered via React key)
-      animation: mg-mega-right-flash 400ms ease-out;
-
-      // Staggered slide-in for menu items
-      li {
-        animation: mg-mega-item-slide-in 250ms ease-out both;
-
-        @for $i from 1 through 25 {
-          &:nth-child(#{$i}) {
-            animation-delay: #{($i - 1) * 30}ms;
-          }
-        }
-      }
+      // Every destination is available immediately, including long menus.
     }
   }
 
@@ -585,32 +528,6 @@
         }
       }
     }
-  }
-}
-
-/* Subtle blue gradient flash that fades to transparent on right content area */
-@keyframes mg-mega-right-flash {
-  0% {
-    background: linear-gradient(
-      to bottom,
-      rgb(var(--mg-color-blue-900) / 0.06) 0%,
-      transparent 100%
-    );
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-/* Menu items slide in from the left */
-@keyframes mg-mega-item-slide-in {
-  0% {
-    opacity: 0;
-    transform: translateX(-12px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
   }
 }
 
@@ -684,13 +601,15 @@
   &[aria-expanded="true"] {
     .mg-icon-angle-circled-left {
       transform: rotate(-90deg);
-      transition: transform 0.3s ease-in-out;
+      transition: transform var(--mg-motion-duration-medium)
+        var(--mg-motion-easing-standard);
     }
   }
 
   // Ensure smooth transition for icon default state
   .mg-icon-angle-circled-left {
-    transition: transform 0.3s ease-in-out;
+    transition: transform var(--mg-motion-duration-medium)
+      var(--mg-motion-easing-standard);
   }
 }
 
@@ -713,7 +632,8 @@
   max-height: 80vh;
   top: -100%;
   inset-inline: 0; // RTL-friendly
-  transition: top 0.4s ease-in-out;
+  transition: top var(--mg-motion-duration-medium)
+    var(--mg-motion-easing-standard);
   box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
 
   &.mg-sidebar-open {
@@ -827,7 +747,8 @@
   max-height: 80vh;
   height: 80vh;
   transform: translateY(-100vh);
-  transition: transform 0.4s ease-in-out;
+  transition: transform var(--mg-motion-duration-medium)
+    var(--mg-motion-easing-standard);
   box-shadow: 0 5px 8px -4px rgb(0 0 0 / 0.25);
 
   &.mg-mega-mobile-sidebar--open {
@@ -910,8 +831,8 @@
   opacity: 0;
   transform: translateX(var(--mg-mega-enter-offset, 8px));
   transition:
-    opacity 180ms ease,
-    transform 180ms ease;
+    opacity var(--mg-motion-duration-fast) var(--mg-motion-easing-standard),
+    transform var(--mg-motion-duration-fast) var(--mg-motion-easing-standard);
   pointer-events: none;
 
   &[hidden] {
@@ -922,7 +843,13 @@
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
-    animation: mg-mega-surface-enter 180ms ease-out;
+
+    // Establish the entry frame when the hidden surface becomes rendered.
+    // Transitions also reverse smoothly if a close is interrupted by reopening.
+    @starting-style {
+      opacity: 0;
+      transform: translateX(var(--mg-mega-enter-offset, 8px));
+    }
   }
 
   .mg-mega-mobile-sidebar__header {
@@ -967,7 +894,8 @@
   .mg-mega-mobile-sidebar__page {
     padding: var(--mg-spacing-250);
     padding-bottom: max(var(--mg-spacing-300), env(safe-area-inset-bottom));
-    animation: mg-mega-progressive-enter 160ms ease-out;
+    animation: mg-mega-progressive-enter var(--mg-motion-duration-fast)
+      var(--mg-motion-easing-standard);
   }
 
   .mg-mega-mobile-sidebar__title {
@@ -1099,36 +1027,20 @@
   z-index: var(--mg-z-index-modal);
 }
 
-@keyframes mg-mega-surface-enter {
-  from {
-    opacity: 0;
-    transform: translateX(var(--mg-mega-enter-offset, 8px));
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 .mg-mega-mobile-sidebar-overlay {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 180ms ease;
+  transition: opacity var(--mg-motion-duration-fast)
+    var(--mg-motion-easing-standard);
   background: rgb(var(--mg-color-black) / 0.16);
 
   &--open {
     opacity: 1;
     pointer-events: auto;
-    animation: mg-mega-backdrop-enter 180ms ease-out;
-  }
-}
 
-@keyframes mg-mega-backdrop-enter {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+    @starting-style {
+      opacity: 0;
+    }
   }
 }
 
@@ -1163,7 +1075,16 @@
   }
 
   // Reduced motion: keep states, remove transition animation.
-  .mg-mega-content {
+  .mg-mega-topbar__item .mg-mega-content,
+  .mg-mega-topbar__item--active .mg-mega-content,
+  .mg-mega-content__section-list-item .mg-mega-content__section-list-link,
+  .mg-mega-content__section-list-item
+    .mg-mega-content__section-list-link::after,
+  .mg-mega-sidebar,
+  .mg-mega-mobile-sidebar,
+  .mg-mega-sidebar-section__item .mg-icon-angle-circled-left,
+  .mg-mega-sidebar-section__item[aria-expanded="true"]
+    .mg-icon-angle-circled-left {
     transition: none;
   }
 }
