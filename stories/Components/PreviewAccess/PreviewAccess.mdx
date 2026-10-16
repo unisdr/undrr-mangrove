@@ -28,7 +28,7 @@ Use the locale toolbar to preview the modal in other languages, including Arabic
 ## When to use
 
 - Sharing unfinished dashboards or content with reviewers before public launch
-- Hiding unfinished pages from search engines and casual visitors
+- Signalling to casual visitors that a page is unfinished (use server access controls to restrict access and indexing)
 - Marking a whole product preview (for example, a DELTA preview site) with a single shared PIN
 
 For real access control, gate the page at the edge with a service like Cloudflare Access. This component is for editorial signalling only.
@@ -71,6 +71,8 @@ With no extra attributes, the gate uses PIN `5498`, default UNDRR copy, and `und
 ></div>
 ```
 
+> **Integration note:** The persistence attributes and unlock event below require a build containing [#1384](https://github.com/unisdr/undrr-mangrove/pull/1384). The pinned 2.1.1 CDN script above predates them; use the release containing this change once published, or a local build in the meantime.
+
 ## Data attributes
 
 All attributes go on the trigger element. All optional except the bare `data-mg-preview-access`.
@@ -107,8 +109,8 @@ For multi-page previews that reviewers share links into, set `data-mg-preview-pe
 ></div>
 ```
 
-- **Expiry.** With `data-mg-preview-max-age` (days, decimals allowed), a local unlock older than that is treated as locked and removed. Without it, a local unlock does not expire.
-- **Changing the PIN relocks everyone.** A local unlock stores a short fingerprint of the PIN it was made with. When the page's PIN changes, existing local unlocks no longer match and are removed. This applies to `local` only; a `session` unlock still lasts until its tab closes.
+- **Expiry.** With `data-mg-preview-max-age` (days, decimals allowed), a local unlock at least that old is treated as locked and removed when a page initialises. Without it, a local unlock does not expire. Invalid or future-dated timestamps are rejected in either case.
+- **Changing the PIN invalidates local entries.** A local unlock stores a short fingerprint of the PIN it was made with. When the page's PIN changes, existing local unlocks no longer match and are removed. This applies to `local` entries only. Both modes still accept an existing `session` unlock until its tab closes, including after a PIN change or local expiry. Already open pages are not relocked automatically.
 - **Existing session unlocks still count.** Both modes honour a `session` unlock, so switching a site to `local` does not relock tabs that are already open.
 - **Fallback.** If `localStorage` cannot be written (some private modes, storage blocked), the unlock falls back to `sessionStorage` for that tab.
 
@@ -116,7 +118,7 @@ Both modes use the same key, `mg-preview-access:{id}`. A `session` entry is the 
 
 ### Consent
 
-A `local` unlock is a strictly necessary preference: it remembers a choice the visitor made (entering the PIN), holds no identifier, and is never sent to a server or used for tracking. It should not need cookie consent, but whoever owns the site's consent policy should confirm that before you enable it.
+A `local` unlock remembers that the visitor entered the PIN. This component stores only the PIN fingerprint and unlock time, and does not send them to a server or use them for tracking. Ask the site's consent-policy owner to confirm how persistent storage should be handled before enabling it.
 
 ## Unlock event
 
@@ -125,7 +127,8 @@ When the gate opens, it dispatches a bubbling `mg-preview-access:unlock` `Custom
 ```js
 document.addEventListener('mg-preview-access:unlock', event => {
   const { id, persist, source } = event.detail;
-  // id: the storage scope key; persist: 'session' or 'local';
+  // id: the storage scope key; persist: configured mode ('session' or 'local'),
+  // even if storage is blocked and the unlock falls back to this tab;
   // source: 'pin' (just entered) or 'storage' (already unlocked on load)
 });
 ```
@@ -170,7 +173,7 @@ mgPreviewAccess([myGateElement]);
 mgPreviewAccessDestroy(myGateElement);
 ```
 
-The runtime is also exposed as `window.mgPreviewAccess` for plain-script consumers.
+After the ESM script has loaded, the initializer is also exposed as `window.mgPreviewAccess`. The file must still be loaded with `type="module"`; loading it as a classic script fails on its exports.
 
 ## Usage with React
 
@@ -222,7 +225,7 @@ To activate the real gate from the Storybook story, pass `live` to `<PreviewAcce
 - Body siblings receive `inert` so focus is trapped in the modal and the rest of the page is hidden from assistive technology
 - The wrong-PIN error uses `role="alert"` so the message is announced
 - Focus moves into the PIN input on mount, after `requestAnimationFrame` so layout has settled
-- After unlock, focus returns to the element that had it before the gate mounted, if there was one. On page load there usually is not (focus is on `<body>`), so focus moves to `<main>` or `[role="main"]`, then the `#main` skip-link target, then the first `<h1>`, with `<body>` as the last resort. If the target has no `tabindex`, it gets a temporary `tabindex="-1"`, removed when it loses focus
+- After unlock, focus returns to the element that had it before the gate mounted, if there was one. On page load there usually is not (focus is on `<body>`), so focus moves to `<main>` or `[role="main"]`, then the `#main` skip-link target, then the first `<h1>`, with `<body>` as the last resort. Hidden, inert or disabled targets are skipped if they cannot receive focus. Non-focusable targets get a temporary `tabindex="-1"`, removed when they lose focus or immediately if focus fails; author-set values are preserved
 - The submit button passes 4.5:1 contrast against `$mg-color-interactive` across all five themes
 - There is no Escape-to-close. The gate is meant to hold until a PIN is entered
 
@@ -241,7 +244,7 @@ The component supports RTL automatically when `dir="rtl"` and `lang="ar"` are se
 
 **`visibility: hidden`, not `display: none`.** This preserves layout and avoids unlock reflow. Images/iframes still load in the background.
 
-**`inert` on body siblings.** While open, every direct `<body>` child except the overlay gets `inert`, providing focus trapping, AT hiding, and pointer blocking without a focus-trap library. ARIA 1.2 treats `aria-hidden` as redundant with `inert`, so it is intentionally omitted.
+**`inert` on body siblings.** While open, every direct `<body>` child except the overlay gets `inert` (pre-existing inert content stays inert after unlock or teardown), providing focus trapping, AT hiding, and pointer blocking without a focus-trap library. ARIA 1.2 treats `aria-hidden` as redundant with `inert`, so it is intentionally omitted.
 
 **Persistence.** On unlock, the gate stores `sessionStorage["mg-preview-access:<id>"] = "unlocked"`, or with `persist="local"` a JSON entry under the same key in `localStorage` (see [Remembering an unlock](#remembering-an-unlock)). The id defaults to `location.pathname` and can be overridden with `data-mg-preview-id` to share unlock state across pages. The PIN fingerprint is a 32-bit FNV-1a hash: enough to notice a changed PIN, not a security measure. Every storage call is wrapped in `try`/`catch`, so blocked storage means "locked", never an error.
 
@@ -258,7 +261,9 @@ The component supports RTL automatically when `dir="rtl"` and `lang="ar"` are se
 
 ## Changelog
 
-- **1.1.0**, 2026-10-16 ([#1382](https://github.com/unisdr/undrr-mangrove/issues/1382)): Added `data-mg-preview-persist="local"` to keep an unlock in `localStorage` across tabs and visits, with an optional `data-mg-preview-max-age` in days; a local unlock is tied to a fingerprint of the PIN, so changing the PIN relocks it. `session` remains the default and behaves as before. The gate now dispatches a bubbling `mg-preview-access:unlock` event, both on PIN entry and when it starts unlocked from storage. Fixed focus after unlock landing on `<body>`: it now moves to `<main>` (then the `#main` skip-link target, then the first `<h1>`), with a temporary `tabindex="-1"`. The React component gains matching `persist` and `maxAge` props. Corrected the accessibility notes, which still described `aria-hidden` on siblings, `aria-live` on the error and an `<h1>` title.
+- **1.1.0**, 2026-10-16 ([#1384](https://github.com/unisdr/undrr-mangrove/pull/1384), [#1382](https://github.com/unisdr/undrr-mangrove/issues/1382)): Added `data-mg-preview-persist="local"` to keep an unlock in `localStorage` across tabs and visits, with an optional `data-mg-preview-max-age` in days; a local unlock is tied to a fingerprint of the PIN, so changing the PIN relocks it. `session` remains the default and behaves as before. The gate now dispatches a bubbling `mg-preview-access:unlock` event, both on PIN entry and when it starts unlocked from storage. Fixed focus after unlock landing on `<body>`: it now moves to `<main>` (then the `#main` skip-link target, then the first `<h1>`), with a temporary `tabindex="-1"`. The React component gains matching `persist` and `maxAge` props. Corrected the accessibility notes, which still described `aria-hidden` on siblings, `aria-live` on the error and an `<h1>` title.
+
+  - Reject malformed and future-dated local timestamps; expire at the exact max-age boundary. Skip focus targets that cannot receive focus, preserve author-set tabindex values and inert content, and document session exceptions and build requirements.
 
 - **1.0.3**, 2026-09-19 ([#1267](https://github.com/unisdr/undrr-mangrove/issues/1267)): The Option B React snippet imported `@undrr/undrr-mangrove/js/preview-access` without the extension, which fails with `ERR_MODULE_NOT_FOUND` in Node ESM: the package ships no `exports` map to fill it in. It now names `js/preview-access.js`. Documentation only; the module is unchanged.
 - **1.0.2**, 2026-09-09 ([#1098](https://github.com/unisdr/undrr-mangrove/issues/1098)): Fixed Arabic typography coverage in gate headings, button, and input by using `ui`/`text` font roles and removing the component-level `:lang(ar)` block. Latin rendering is unchanged except the submit button now follows the standard button text font role.

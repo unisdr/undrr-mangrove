@@ -46,6 +46,7 @@ const SAFE_URL_SCHEMES = ['http:', 'https:', 'mailto:'];
 // drop when a gate is detached and unreferenced.
 const overlays = new WeakMap();
 const previousFocus = new WeakMap();
+const inertSiblings = new WeakMap();
 
 /**
  * Validate that a contact URL uses an allow-listed scheme. Returns the URL
@@ -126,12 +127,13 @@ function isValidLocalEntry(raw, config) {
     return false;
   }
   if (!entry || entry.pin !== pinFingerprint(config.pin)) return false;
-  if (config.maxAge !== null) {
-    const at = Number(entry.at);
-    if (!Number.isFinite(at)) return false;
-    if (Date.now() - at > config.maxAge * DAY_MS) return false;
-  }
-  return true;
+  // Require the format we write, even when expiry is not configured. A future
+  // timestamp (including after a clock correction) must not extend an unlock.
+  const at = entry.at;
+  const age = Date.now() - at;
+  if (typeof at !== 'number' || !Number.isFinite(at) || at < 0 || age < 0)
+    return false;
+  return config.maxAge === null || age < config.maxAge * DAY_MS;
 }
 
 function hasLocalUnlock(config) {
@@ -260,14 +262,19 @@ function buildOverlay(config) {
  * so the redundant aria-hidden writes are intentionally omitted (ARIA 1.2).
  */
 function setSiblingsInert(overlay, on) {
-  Array.from(document.body.children).forEach(child => {
-    if (child === overlay) return;
-    if (on) {
-      child.setAttribute('inert', '');
-    } else {
-      child.removeAttribute('inert');
-    }
-  });
+  if (on) {
+    const siblings = Array.from(document.body.children).filter(
+      child => child !== overlay && !child.hasAttribute('inert')
+    );
+    inertSiblings.set(overlay, siblings);
+    siblings.forEach(child => child.setAttribute('inert', ''));
+  } else {
+    // Only undo this gate's changes; authored inactive content stays inert.
+    (inertSiblings.get(overlay) || []).forEach(child =>
+      child.removeAttribute('inert')
+    );
+    inertSiblings.delete(overlay);
+  }
 }
 
 /**
@@ -276,31 +283,37 @@ function setSiblingsInert(overlay, on) {
  * blur, so the page's tab order is left as it was.
  */
 function focusElement(el) {
-  if (!el || typeof el.focus !== 'function') return;
-  if (!el.hasAttribute('tabindex')) {
-    el.setAttribute('tabindex', '-1');
-    el.addEventListener('blur', () => el.removeAttribute('tabindex'), {
-      once: true,
-    });
-  }
+  if (!el || !el.isConnected || typeof el.focus !== 'function') return false;
+  if (el.closest('[inert], [hidden]') || el.matches(':disabled')) return false;
+  const temporary = !el.hasAttribute('tabindex') && el.tabIndex < 0;
+  const cleanup = () => {
+    if (el.getAttribute('tabindex') === '-1') el.removeAttribute('tabindex');
+  };
+  if (temporary) el.setAttribute('tabindex', '-1');
   el.focus({ preventScroll: true });
+  if (document.activeElement !== el) {
+    if (temporary) cleanup();
+    return false;
+  }
+  if (temporary) el.addEventListener('blur', cleanup, { once: true });
+  return true;
 }
 
 /**
- * Where focus goes after unlock. A real previously focused element wins.
- * <body> is not a real target: the gate mounts on load, when body nearly
- * always holds focus. Next comes the main landmark (or the #main skip-link
- * target), then the first h1, and body only as a last resort.
+ * Try previous focus, main landmarks, the skip-link target, headings and body.
+ * Connected targets may still be hidden or disabled; only stop once focus
+ * actually moves. This also handles CMS pages with an inactive main landmark.
  */
-function focusTargetAfterUnlock(gate) {
+function focusAfterUnlock(gate) {
   const saved = previousFocus.get(gate);
-  if (saved && saved !== document.body && saved.isConnected) return saved;
-  return (
-    document.querySelector('main, [role="main"]') ||
-    document.getElementById('main') ||
-    document.querySelector('h1') ||
-    document.body
-  );
+  const targets = [
+    saved !== document.body ? saved : null,
+    ...document.querySelectorAll('main, [role="main"]'),
+    document.getElementById('main'),
+    ...document.querySelectorAll('h1'),
+    document.body,
+  ];
+  targets.some(focusElement);
 }
 
 function unlockGate(gate, overlay, config) {
@@ -314,7 +327,7 @@ function unlockGate(gate, overlay, config) {
 
   // Move focus to the revealed content so keyboard and screen reader users
   // are not dropped on document.body with no sign that the page changed.
-  focusElement(focusTargetAfterUnlock(gate));
+  focusAfterUnlock(gate);
   previousFocus.delete(gate);
 
   // Dispatch last, so listeners see the final state (overlay gone, focus set).

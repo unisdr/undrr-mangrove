@@ -474,6 +474,75 @@ describe('mgPreviewAccess persistence, unlock event and focus', () => {
     expect(document.querySelector('.mg-preview-access__overlay')).toBeTruthy();
   });
 
+  it.each([undefined, null, 'tomorrow', '1790812800000', -1, 1e20])(
+    'rejects a local entry with invalid timestamp %s, even without max-age',
+    at => {
+      const attrs = {
+        'data-mg-preview-id': 'persist-invalid-time',
+        'data-mg-preview-pin': '1',
+        'data-mg-preview-persist': 'local',
+      };
+      const gate = mountGate(attrs);
+      mgPreviewAccess([gate]);
+      enterPin('1');
+      const key = 'mg-preview-access:persist-invalid-time';
+      const entry = JSON.parse(localStorage.getItem(key));
+      simulateNewTab(gate);
+      localStorage.setItem(key, JSON.stringify({ ...entry, at }));
+      const next = mountGate(attrs);
+      mgPreviewAccess([next]);
+      expect(next).not.toHaveClass('mg-preview-access--unlocked');
+      expect(localStorage.getItem(key)).toBeNull();
+    }
+  );
+
+  it('expires at the exact max-age boundary', () => {
+    const now = jest.spyOn(Date, 'now').mockReturnValue(1790812800000);
+    const attrs = {
+      'data-mg-preview-id': 'persist-boundary',
+      'data-mg-preview-pin': '1',
+      'data-mg-preview-persist': 'local',
+      'data-mg-preview-max-age': '0.5',
+    };
+    const gate = mountGate(attrs);
+    mgPreviewAccess([gate]);
+    enterPin('1');
+    simulateNewTab(gate);
+    now.mockReturnValue(1790812800000 + DAY_MS / 2);
+    const next = mountGate(attrs);
+    mgPreviewAccess([next]);
+    expect(next).not.toHaveClass('mg-preview-access--unlocked');
+  });
+
+  it('preserves author-owned inert content on unlock and destroy', () => {
+    document.body.innerHTML =
+      '<aside inert><button>Inactive</button></aside><main></main>';
+    const aside = document.querySelector('aside');
+    const gate = mountGate({ 'data-mg-preview-pin': '1' });
+    mgPreviewAccess([gate]);
+    enterPin('1');
+    expect(aside).toHaveAttribute('inert');
+    expect(document.querySelector('main')).not.toHaveAttribute('inert');
+    mgPreviewAccessDestroy(gate);
+    sessionStorage.clear();
+    mgPreviewAccess([gate]);
+    mgPreviewAccessDestroy(gate);
+    expect(aside).toHaveAttribute('inert');
+    expect(document.querySelector('main')).not.toHaveAttribute('inert');
+  });
+
+  it('falls back when the previously focused control becomes disabled', () => {
+    document.body.innerHTML = '<main><button>Open</button></main>';
+    const button = document.querySelector('button');
+    button.focus();
+    const gate = mountGate({ 'data-mg-preview-pin': '1' });
+    mgPreviewAccess([gate]);
+    button.disabled = true;
+    enterPin('1');
+    expect(document.activeElement).toBe(document.querySelector('main'));
+    expect(button).not.toHaveAttribute('tabindex');
+  });
+
   it('dispatches a bubbling unlock event when the PIN is entered', () => {
     const listener = jest.fn();
     document.addEventListener('mg-preview-access:unlock', listener);

@@ -239,7 +239,7 @@ const VANILLA_SCRIPTS = [
     selector: '[data-mg-preview-access]',
     initFunction: 'mgPreviewAccess(scope)',
     description:
-      'Password gate and preview notice bar for staging and pre-publication review.',
+      'Page-level editorial PIN gate with session or optional local persistence, max-age in days and a bubbling mg-preview-access:unlock event. Not access control.',
   },
   {
     name: 'UNDRR shared constants',
