@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/Chips/Chips.mdx
  */
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/config" as *;
+
 .mg-chip {
   align-items: center;
   background: rgb(var(--mg-color-neutral-50));

@@ -216,7 +216,8 @@ Run `yarn build:tokens` to emit `stories/assets/scss/generated/_tokens-myorg.scs
 `stories/assets/scss/_theme-myorg.scss` wraps the generated mixin in the brand selector:
 
 ```scss
-@import './generated/tokens-myorg';
+@use './tokens-tabs' as *;
+@use './generated/tokens-myorg' as *;
 
 .mg-theme-myorg {
   @include mg-tokens-tabs;
@@ -227,14 +228,14 @@ Run `yarn build:tokens` to emit `stories/assets/scss/generated/_tokens-myorg.scs
 `stories/assets/scss/style-myorg.scss` is the entry point:
 
 ```scss
-@import './variables';
-@import './theme-myorg';
-@import './fonts';
-@import './breakpoints';
-@import './mixins';
-@import './utility';
-@import './foundational';
-@import './components';
+@use './variables' as *;
+@use './theme-myorg' as *;
+@use './fonts' as *;
+@use './breakpoints' as *;
+@use './mixins' as *;
+@use './utility' as *;
+@use './foundational' as *;
+@use './components' as *;
 ```
 
 Run `yarn scss`, then apply `class="mg-theme-myorg"` to `<body>` or any wrapping element. The class can sit on any ancestor, and different subtrees can carry different theme classes.

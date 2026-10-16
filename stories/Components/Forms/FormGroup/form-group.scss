@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Forms/FormGroup/FormGroup.mdx
  */
+@use "../../../assets/scss/mixins" as *;
+
 // FormGroup — styled fieldset/legend for grouping related form controls.
 
 .mg-form-group {

@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/BaseTypography/BaseTypography.mdx
  */
+@use "../../../assets/scss/config" as *;
+
 .mg-code,
 code {
   background: rgb(var(--mg-color-interactive) / 0.08);

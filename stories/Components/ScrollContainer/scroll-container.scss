@@ -6,6 +6,10 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/ScrollContainer/ScrollContainer.mdx
  */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 .mg-scroll {
   position: relative;
   display: flex;

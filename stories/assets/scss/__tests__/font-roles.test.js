@@ -386,7 +386,9 @@ describe('the documented per-component Sass recipe', () => {
     const source = fs.readFileSync(MDX, 'utf8');
     for (const block of source.matchAll(/```scss\n([\s\S]*?)```/g)) {
       // Quote style is Prettier's to choose; match either.
-      const imports = block[1].match(/^@import\s+['"][^'"]+['"];/gm) || [];
+      const imports =
+        block[1].match(/^@(?:import|use)\s+['"][^'"]+['"](?:\s+as\s+\*)?;/gm) ||
+        [];
       if (
         imports.some(line => line.includes('scss/variables')) &&
         imports.some(line => line.includes('scss/foundational'))

@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Cards/StatsCard/StatsCard.mdx
  */
+@use "../../../assets/scss/breakpoints" as *;
+@use "../../../assets/scss/mixins" as *;
+
 /* Stats Card Component */
 .mg-stats-card {
   width: 100%;

@@ -1,102 +1,102 @@
 // A rollup of all Mangrove components
 
 // Normalize
-@import "../../Utilities/Normalize/normalize";
+@use "../../Utilities/Normalize/normalize" as *;
 
 // Atom
-@import "../../Atom/BaseTypography/Abbr/abbr";
-@import "../../Atom/BaseTypography/Blockquote/blockquote";
-@import "../../Atom/BaseTypography/Cite/cite";
-@import "../../Atom/BaseTypography/Code/code";
-@import "../../Atom/BaseTypography/Mark/mark";
-@import "../../Atom/BaseTypography/Quotation/quotation";
-@import "../../Atom/BaseTypography/Small/small";
-@import "../../Atom/Colors/color";
+@use "../../Atom/BaseTypography/Abbr/abbr" as *;
+@use "../../Atom/BaseTypography/Blockquote/blockquote" as *;
+@use "../../Atom/BaseTypography/Cite/cite" as *;
+@use "../../Atom/BaseTypography/Code/code" as *;
+@use "../../Atom/BaseTypography/Mark/mark" as *;
+@use "../../Atom/BaseTypography/Quotation/quotation" as *;
+@use "../../Atom/BaseTypography/Small/small" as *;
+@use "../../Atom/Colors/color" as *;
 
 // Icon definitions — included here so every theme CSS file contains icons.
 // See: https://github.com/unisdr/undrr-mangrove/issues/906
-@import "../../Atom/Icons/icons";
-@import "../../Atom/Images/AuthorImage/author-image";
-@import "../../Atom/Images/Image/image";
-@import "../../Atom/Images/ImageCaptionCredit/image-caption-credit";
-@import "../../Atom/Images/ImageCredit/image-credit";
-@import "../../Atom/Layout/Container/container";
-@import "../../Atom/Layout/Grid/grid";
-@import "../../Atom/Logo/logo";
+@use "../../Atom/Icons/icons" as *;
+@use "../../Atom/Images/AuthorImage/author-image" as *;
+@use "../../Atom/Images/Image/image" as *;
+@use "../../Atom/Images/ImageCaptionCredit/image-caption-credit" as *;
+@use "../../Atom/Images/ImageCredit/image-credit" as *;
+@use "../../Atom/Layout/Container/container" as *;
+@use "../../Atom/Layout/Grid/grid" as *;
+@use "../../Atom/Logo/logo" as *;
 
 // @import "../../Atom/Layout/Spacing/spacing"; // Retried
 // @import "../../Atom/Navigation/Breadcrumb/breadcrumb"; // Retried
-@import "../../Atom/Navigation/MenuItems/menu-items";
-@import "../../Atom/ReachElement/Details/details";
-@import "../../Atom/ReachElement/Figcaption/figcaption";
-@import "../../Atom/EmptyState/empty-state";
-@import "../../Atom/StatusLabel/status-label";
-@import "../../Atom/Table/table";
-@import "../../Atom/Tag/tag";
-@import "../../Atom/Video/video";
+@use "../../Atom/Navigation/MenuItems/menu-items" as *;
+@use "../../Atom/ReachElement/Details/details" as *;
+@use "../../Atom/ReachElement/Figcaption/figcaption" as *;
+@use "../../Atom/EmptyState/empty-state" as *;
+@use "../../Atom/StatusLabel/status-label" as *;
+@use "../../Atom/Table/table" as *;
+@use "../../Atom/Tag/tag" as *;
+@use "../../Atom/Video/video" as *;
 
 // Components
-@import "../../Components/Boilerplate/boilerplate";
-@import "../../Components/Forms/form-base";
-@import "../../Components/Forms/FormAction/form-action";
-@import "../../Components/Forms/FormGroup/form-group";
-@import "../../Components/Forms/TextInput/text-input";
-@import "../../Components/Forms/Textarea/textarea";
-@import "../../Components/Forms/Checkbox/checkbox";
-@import "../../Components/Forms/Radio/radio";
-@import "../../Components/Forms/SegmentedControl/segmented-control";
-@import "../../Components/Forms/Select/select";
-@import "../../Components/Forms/Range/range";
-@import "../../Components/Breadcrumbs/breadcrumbs";
+@use "../../Components/Boilerplate/boilerplate" as *;
+@use "../../Components/Forms/form-base" as *;
+@use "../../Components/Forms/FormAction/form-action" as *;
+@use "../../Components/Forms/FormGroup/form-group" as *;
+@use "../../Components/Forms/TextInput/text-input" as *;
+@use "../../Components/Forms/Textarea/textarea" as *;
+@use "../../Components/Forms/Checkbox/checkbox" as *;
+@use "../../Components/Forms/Radio/radio" as *;
+@use "../../Components/Forms/SegmentedControl/segmented-control" as *;
+@use "../../Components/Forms/Select/select" as *;
+@use "../../Components/Forms/Range/range" as *;
+@use "../../Components/Breadcrumbs/breadcrumbs" as *;
 
 // Deprecated (February 2026) — removal planned by end of 2026. Use Pager instead.
-@import "../../Components/Pager/pager";
-@import "../../Components/Gallery/gallery";
-@import "../../Components/HighlightBox/highlight-box";
-@import "../../Components/QuoteHighlight/quote-highlight";
-@import "../../Components/Buttons/Chips/chips";
-@import "../../Components/Buttons/CtaButton/cta-button";
-@import "../../Components/Buttons/ShareButtons/share-buttons";
-@import "../../Components/Buttons/CopyButton/copy-button";
-@import "../../Components/MegaMenu/mega-menu";
-@import "../../Patterns/HubHeader/hub-header";
-@import "../../Components/CiteThis/cite-this";
-@import "../../Utilities/PagePatterns/page-patterns";
-@import "../../Components/PageHeader/page-header";
-@import "../../Components/Cards/Card/card";
-@import "../../Components/Cards/StatsCard/stats-card";
-@import "../../Components/Snackbar/snackbar";
-@import "../../Components/CookieConsentBanner/cookie-consent-banner";
-@import "../../Components/Hero/hero";
-@import "../../Components/TextCta/text-cta";
-@import "../../Components/Notice/notice";
-@import "../../Components/ProgressBar/progress-bar";
-@import "../../Components/ScrollContainer/scroll-container";
-@import "../../Components/Tab/tab";
-@import "../../Components/UserFeedback/user-feedback";
+@use "../../Components/Pager/pager" as *;
+@use "../../Components/Gallery/gallery" as *;
+@use "../../Components/HighlightBox/highlight-box" as *;
+@use "../../Components/QuoteHighlight/quote-highlight" as *;
+@use "../../Components/Buttons/Chips/chips" as *;
+@use "../../Components/Buttons/CtaButton/cta-button" as *;
+@use "../../Components/Buttons/ShareButtons/share-buttons" as *;
+@use "../../Components/Buttons/CopyButton/copy-button" as *;
+@use "../../Components/MegaMenu/mega-menu" as *;
+@use "../../Patterns/HubHeader/hub-header" as *;
+@use "../../Components/CiteThis/cite-this" as *;
+@use "../../Utilities/PagePatterns/page-patterns" as *;
+@use "../../Components/PageHeader/page-header" as *;
+@use "../../Components/Cards/Card/card" as *;
+@use "../../Components/Cards/StatsCard/stats-card" as *;
+@use "../../Components/Snackbar/snackbar" as *;
+@use "../../Components/CookieConsentBanner/cookie-consent-banner" as *;
+@use "../../Components/Hero/hero" as *;
+@use "../../Components/TextCta/text-cta" as *;
+@use "../../Components/Notice/notice" as *;
+@use "../../Components/ProgressBar/progress-bar" as *;
+@use "../../Components/ScrollContainer/scroll-container" as *;
+@use "../../Components/Tab/tab" as *;
+@use "../../Components/UserFeedback/user-feedback" as *;
 
 // CSS+vanilla-JS component — Drupal integration via Gutenberg block, not a React export.
-@import "../../Components/TableOfContents/table-of-contents";
-@import "../../Components/OnThisPageNav/on-this-page-nav";
-@import "../../Components/PreviewAccess/preview-access";
-@import "../../Components/SyndicationSearchWidget/syndication-search-widget";
+@use "../../Components/TableOfContents/table-of-contents" as *;
+@use "../../Components/OnThisPageNav/on-this-page-nav" as *;
+@use "../../Components/PreviewAccess/preview-access" as *;
+@use "../../Components/SyndicationSearchWidget/syndication-search-widget" as *;
 
 // CSS+static-HTML component — not a React export. Static pages in dist/assets/error-pages/.
-@import "../../Components/ErrorPages/error-pages";
-@import "../../Components/Footer/footer";
+@use "../../Components/ErrorPages/error-pages" as *;
+@use "../../Components/Footer/footer" as *;
 
 // Molecules
-@import "../../Molecules/ImageCaption/image-caption";
+@use "../../Molecules/ImageCaption/image-caption" as *;
 
 // Utilities
-@import "../../Utilities/EmbedContainer/embed-container";
-@import "../../Utilities/Loader/loader";
-@import "../../Utilities/FullWidth/full-width";
-@import "../../Utilities/ShowMore/show-more";
-@import "../../Utilities/SkipLink/skip-link";
-@import "../../Components/DataViz/Legend/legend";
-@import "../../Components/Navigation/Drawer/drawer";
-@import "../../Components/Navigation/Tree/tree";
+@use "../../Utilities/EmbedContainer/embed-container" as *;
+@use "../../Utilities/Loader/loader" as *;
+@use "../../Utilities/FullWidth/full-width" as *;
+@use "../../Utilities/ShowMore/show-more" as *;
+@use "../../Utilities/SkipLink/skip-link" as *;
+@use "../../Components/DataViz/Legend/legend" as *;
+@use "../../Components/Navigation/Drawer/drawer" as *;
+@use "../../Components/Navigation/Tree/tree" as *;
 
 // Opt-in editorial defaults follow component styles; classed islands opt out.
-@import "../../Patterns/RichContent/rich-content";
+@use "../../Patterns/RichContent/rich-content" as *;

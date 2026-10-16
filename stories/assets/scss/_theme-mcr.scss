@@ -3,7 +3,8 @@
 // ---------------------------------------------------------------------
 // Every token in this block is generated from tokens/mcr.yaml, merged over
 // tokens/mangrove.yaml and tokens/undrr.yaml.
-@import "./generated/tokens-mcr";
+@use "generated/tokens-mcr" as *;
+@use "tokens-tabs" as *;
 
 .mg-theme-mcr {
   @include mg-tokens-tabs;

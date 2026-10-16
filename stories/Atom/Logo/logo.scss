@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Logo/Logo.mdx
  */
+@use "../../assets/scss/config" as *;
+
 .mg-logo {
   display: block;
   max-inline-size: 100%;

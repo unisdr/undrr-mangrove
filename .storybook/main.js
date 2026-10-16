@@ -100,24 +100,6 @@ export default {
       })
     );
 
-    // Silence import warnings
-    // https://gitlab.com/undrr/web-backlog/-/issues/2094
-    if (!config.ignoreWarnings) {
-      config.ignoreWarnings = [];
-    }
-
-    config.ignoreWarnings.push({
-      message: /Sass @import rules are deprecated/,
-    });
-
-    config.ignoreWarnings.push({
-      message: /mixed-decls/,
-    });
-
-    config.ignoreWarnings.push({
-      message: /repetitive deprecation warnings omitted/,
-    });
-
     return config;
   },
 

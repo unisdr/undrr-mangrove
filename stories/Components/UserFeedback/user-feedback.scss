@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/UserFeedback/UserFeedback.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
 .mg-user-feedback {
   align-items: center;
   box-sizing: border-box;
