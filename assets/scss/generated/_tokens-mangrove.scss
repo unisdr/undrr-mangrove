@@ -561,6 +561,31 @@ $mg-font-line-height-700: 1.5em;
   // card.icon-badge-radius
   --mg-card-icon-badge-radius: 20%;
 
+  // card.publication.background
+  // Background of book and horizontal book publication teasers.
+  --mg-card-publication-background: transparent;
+
+  // card.publication.padding
+  // Outer publication teaser inset; cover-to-caption gaps are separate.
+  --mg-card-publication-padding: 0px;
+
+  // card.publication.border-radius
+  // Outer publication surface radius; complete cover artwork remains square.
+  --mg-card-publication-border-radius: 0px;
+
+  // card.publication.shadow
+  // Publication surface elevation at rest.
+  --mg-card-publication-shadow: none;
+
+  // card.publication.shadow-hover
+  // Linked publication surface elevation on hover.
+  --mg-card-publication-shadow-hover: none;
+
+  // search.book-cover-height
+  // Desktop search book-grid media stage; missing media reserves this space
+  // only in multi-column layouts.
+  --mg-search-book-cover-height: 20rem;
+
   // notice.action-secondary
   --mg-notice-action-secondary: rgb(var(--mg-color-button-outline-secondary));
 

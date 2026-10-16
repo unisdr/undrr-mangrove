@@ -364,10 +364,12 @@ Icon card markup is in [Drupal Gutenberg integration: Card](#card).
 | Publications and documents with a cover | Book card (`book`), or horizontal book card (`hc_book`) in a list |
 | Partner logos and short route links | Icon card (`icon`) |
 
-- Always give vertical and horizontal cards an image. Without one they lose their border, background and padding and render as bare text.
-- Keep summaries to two or three sentences. Long summaries make rows ragged, because each card grows to its own content.
+- Use meaningful photographs for vertical and horizontal cards when available. Text-only cards retain their surface and inset; omit the visual instead of adding an empty image frame.
+- Keep summaries to two or three sentences. Grouped cards can share row heights, but concise copy still improves scanning.
 - Cover images are decorative when the title is beside them: set `mediaAlt` to an empty string. Photographs in content cards need descriptive alt text.
-- Publication cover scans (the generated document thumbnails in the media library) look wrong in a vertical card; use a photograph.
+- Use book cards for publication cover scans: they keep the complete cover with one square border and an unboxed caption. Photo cards crop to their frame.
+- Use small icons for short route links. Reserve proportional icon/image scales for illustrations and partner logos.
+- Without labels, a photo card title starts at one content inset. Avoid adding a second top padding or empty metadata row.
 
 ### Figures and statistics
 
