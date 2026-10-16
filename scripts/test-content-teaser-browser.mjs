@@ -46,6 +46,76 @@ try {
           })
         )
       );
+      const typography = await page.evaluate(() => {
+        const probe = document.createElement('span');
+        probe.style.cssText =
+          'position:absolute;visibility:hidden;font-family:var(--mg-font-family-ui);font-size:var(--mg-content-teaser-metadata-font-size)';
+        document.body.append(probe);
+        const expected = getComputedStyle(probe);
+        const fontSize = expected.fontSize;
+        const fontFamily = expected.fontFamily;
+        probe.remove();
+        const metadata = [
+          ...document.querySelectorAll(
+            '.mg-content-teaser__before-title time, .mg-content-teaser__metadata, .mg-content-teaser__attribution li, .mg-content-teaser .mg-card__label'
+          ),
+        ];
+        const summary = document.querySelector(
+          '.mg-content-teaser .mg-card__summary'
+        );
+        return {
+          count: metadata.length,
+          consistent: metadata.every(el => {
+            const style = getComputedStyle(el);
+            return (
+              style.fontSize === fontSize && style.fontFamily === fontFamily
+            );
+          }),
+          smallerThanSummary:
+            parseFloat(fontSize) <
+            parseFloat(getComputedStyle(summary).fontSize),
+        };
+      });
+      assert(typography.count > 15, `${theme}: metadata missing`);
+      assert(
+        typography.consistent,
+        `${theme}: metadata typography falls back to body styling`
+      );
+      assert(
+        typography.smallerThanSummary,
+        `${theme}: metadata should be secondary to summary`
+      );
+      if (!mobile) {
+        const override = await cards.first().evaluate(async card => {
+          const summary = card.querySelector('.mg-card__summary');
+          const originalSummarySize = getComputedStyle(summary).fontSize;
+          card.style.setProperty(
+            '--mg-content-teaser-metadata-font-size',
+            '19px'
+          );
+          // Reduced-motion styles retain near-zero transitions; allow them to settle.
+          await new Promise(resolve =>
+            requestAnimationFrame(() => requestAnimationFrame(resolve))
+          );
+          const metadata = [
+            ...card.querySelectorAll(
+              'time, .mg-content-teaser__attribution li, .mg-card__label'
+            ),
+          ];
+          const result =
+            metadata.every(el => getComputedStyle(el).fontSize === '19px') &&
+            getComputedStyle(summary).fontSize === originalSummarySize;
+          card.style.removeProperty('--mg-content-teaser-metadata-font-size');
+          await new Promise(resolve =>
+            requestAnimationFrame(() => requestAnimationFrame(resolve))
+          );
+          return result;
+        });
+        assert(
+          override,
+          `${theme}: metadata token override must preserve summary size`
+        );
+      }
       const geometry = await page.evaluate(() => {
         const cover = document.querySelector(
           '[data-content-type="publication"] img'

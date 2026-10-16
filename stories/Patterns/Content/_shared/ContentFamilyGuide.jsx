@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LinkTo from '@storybook/addon-links/react';
 
-function Presentation({ name, presentation }) {
+function Presentation({ name, presentation, children }) {
   return (
     <section>
       <h2>{name}</h2>
@@ -34,6 +34,7 @@ function Presentation({ name, presentation }) {
           : {reference.intent}
         </p>
       ))}
+      {children}
       {presentation.status === 'stub' && (
         <p>
           This reserves a place for future work. It has no component, rendering
@@ -61,12 +62,13 @@ const presentationType = PropTypes.shape({
   }),
 });
 Presentation.propTypes = {
+  children: PropTypes.node,
   name: PropTypes.string.isRequired,
   presentation: presentationType.isRequired,
 };
 
 /** Documentation-only guide; no stub is exported as a usable UI component. */
-export function ContentFamilyGuide({ family }) {
+export function ContentFamilyGuide({ family, children }) {
   return (
     <div>
       <p>{family.model.intent}</p>
@@ -75,18 +77,13 @@ export function ContentFamilyGuide({ family }) {
         card select different information from that model. The current teaser
         input is a presentation projection, not the complete domain record.
       </p>
-      <Presentation
-        name="Full page"
-        presentation={family.presentations.fullPage}
-      />
-      <Presentation name="Teaser" presentation={family.presentations.teaser} />
       <section>
         <h2>Editorial profiles</h2>
         <p>
           Profiles select meaning and metadata within this archetype. They are
-          independent of presentation (page, teaser, card) and layout. Each
-          teaser profile below is experimental; it does not establish a working
-          full page or card.
+          independent of presentation (page, teaser, card) and layout. The
+          implemented teaser profiles are experimental; they do not establish a
+          working full page or card.
         </p>
         <ul>
           {Object.entries(family.profiles).map(([id, profile]) => (
@@ -104,6 +101,13 @@ export function ContentFamilyGuide({ family }) {
           ))}
         </ul>
       </section>
+      <Presentation
+        name="Full page"
+        presentation={family.presentations.fullPage}
+      />
+      <Presentation name="Teaser" presentation={family.presentations.teaser}>
+        {children}
+      </Presentation>
       <Presentation name="Card" presentation={family.presentations.card} />
       <p>
         <LinkTo kind="Patterns/Content/Overview" story="docs">
@@ -114,6 +118,8 @@ export function ContentFamilyGuide({ family }) {
   );
 }
 ContentFamilyGuide.propTypes = {
+  /** Live teaser previews appear with their presentation status and references. */
+  children: PropTypes.node,
   family: PropTypes.shape({
     defaultProfile: PropTypes.string.isRequired,
     profiles: PropTypes.object.isRequired,

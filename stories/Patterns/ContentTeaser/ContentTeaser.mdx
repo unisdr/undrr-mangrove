@@ -104,6 +104,10 @@ Use `ul.mg-content-teaser-list` with one teaser per `li` for a responsive readin
 
 Fixture values are illustrative. They represent audited field selection and hierarchy, not captured API records or evidence of runtime parity. Conference, focal point and other unselected node bundles are not claimed as indexed content support; preserve their existing renderer if search scope changes.
 
+## Metadata typography
+
+Dates, attribution and supporting metadata use the UI font role and `--mg-content-teaser-metadata-font-size`, which defaults to the 14px scale step. Labels inherit that metadata size and retain their existing weight and colour. Summaries retain body typography. Themes and consumers can override the metadata token without changing field selection or summary text.
+
 ## Drupal adapter and link boundary
 
 Map source fields before rendering. Do not pass entity objects or Display Suite HTML. The audit records each bundle's visible fields, summary formatters and conditional labels. Confirm actual indexed fields and active rendered teasers before adopting an adapter, especially collection freshness, multiple source organizations, conference schedules and hidden profile fields.
@@ -132,6 +136,8 @@ Approve the canonical content contract and domain policy, verify live source ada
 ## Changelog
 
 ### 0.1.0 (16 October 2026)
+
+- Unify metadata typography across dates, authors, sources and other supporting fields with a themeable size token; keep summaries at body size.
 
 - Organize specifications under content families with separate full-page, teaser and card status; keep the shared renderer and existing story routes.
 - Add experimental horizontal content patterns for all 15 indexed Drupal node bundles, with audited field order and media rules, structured attribution, optional taxonomy links, semantic dates and plain-text summaries.

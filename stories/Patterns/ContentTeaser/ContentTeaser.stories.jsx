@@ -121,7 +121,7 @@ export const MixedContent = {
   render: () => (
     <ul className="mg-content-teaser-list">
       {Object.values(teaserFixtures).map(content => (
-        <li key={content.type}>
+        <li key={`${content.type}/${content.profile}`}>
           <ContentTeaser content={content} />
         </li>
       ))}

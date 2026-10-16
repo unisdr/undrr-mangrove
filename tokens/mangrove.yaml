@@ -562,6 +562,13 @@ card:
       $value: none
       $description: Linked publication surface elevation on hover.
 
+content-teaser:
+  metadata-font-size:
+    $type: dimension
+    $value: '{font-size.250}'
+    $format: literal
+    $description: Dates, attribution and supporting metadata in content teasers; summaries retain body size.
+
 # Shared publication stages in search grids align captions without cropping.
 search:
   book-cover-height:

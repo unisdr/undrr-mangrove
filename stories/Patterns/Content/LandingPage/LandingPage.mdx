@@ -9,14 +9,12 @@ import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
 
 > See the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) before modifying this archetype.
 
-<ContentFamilyGuide family={landingPagePatterns} />
-
-## Teaser profiles
-
-<Canvas of={TeaserStories.LandingPage} />
+<ContentFamilyGuide family={landingPagePatterns}>
+  <Canvas of={TeaserStories.LandingPage} />
+</ContentFamilyGuide>
 
 ## Changelog
 
 ### 0.1.0 (16 October 2026)
 
-- Define the source-independent archetype, its editorial profiles and presentation coverage. Keep Drupal bindings in Mangrove's integration layer.
+- Define the source-independent archetype, its editorial profiles and presentation coverage. Keep Drupal bindings in Mangrove's integration layer and group teaser status, references and previews in one section.
