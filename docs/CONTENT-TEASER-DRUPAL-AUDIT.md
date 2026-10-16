@@ -81,3 +81,8 @@ The selected node set is blog, collections, commitment, conference_event, event,
 ## Red-team contract checks
 
 Storage configuration confirms unlimited cardinality for resource country/region, organisation type and commitment status. These inputs preserve ordered arrays as well as scalar shorthand; adapters must not discard extra values. Displayed collection freshness and closing dates require localised role labels. Exhibition ranges require labels, and schedules displayed alongside exhibitions require their own labels. Native text boundaries supplement visual CSS gaps, including for multiple after-title taxonomy links. Combined session `topics` is a presentation-only list; canonical session-type and theme taxonomies remain distinct.
+
+
+## Content-family ownership
+
+The audited teaser hierarchy is a presentation projection owned by each `stories/Patterns/Content/{Family}/patterns.js` file. Other presentations have separate status records: an existing reference, an experimental implementation or a stub with no implementation. The shared `ContentTeaser` renderer consumes only teaser layouts. These source-configured fields do not define a canonical model for full pages or compact cards. Full resource, event and other missing page designs remain explicit stubs; news, publication, collection and landing-page examples are linked as references rather than claimed complete canonical implementations.

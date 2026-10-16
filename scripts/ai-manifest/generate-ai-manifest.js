@@ -43,6 +43,7 @@ import path from 'path';
 import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
+import { buildContentPatterns } from './content-patterns.js';
 import {
   selectPublishedComponents,
   propTypesCoverage,
@@ -2395,6 +2396,14 @@ async function main() {
   });
   const releasesJson = JSON.stringify(releasesData, null, 2);
   fs.writeFileSync(path.join(buildDir, 'releases.json'), releasesJson);
+  fs.writeFileSync(
+    path.join(buildDir, 'content-patterns.json'),
+    JSON.stringify(
+      buildContentPatterns({ docsBase: DOCS_BASE, packageName: pkg.name }),
+      null,
+      2
+    )
+  );
   fs.writeFileSync(path.join(outputDir, 'releases.json'), releasesJson);
 
   // -------------------------------------------------------------------------
@@ -2411,10 +2420,14 @@ async function main() {
 
 ## Links
 
+Content families organise full-page, teaser and card presentations. Read content-patterns.json before choosing a presentation: experimental teasers are implemented, references are examples, and stubs are not designed or implemented. Never invent a callable component or import for a stub. Teaser inputs are projections, not canonical content schemas.
+
 - Storybook: ${DOCS_BASE}
 - Repository (public mirror of ${REPO_URL.replace('https://github.com/', '')}, which is not publicly readable): ${PUBLIC_REPO_URL}
 - Report a problem with a component or a guide: ${PUBLIC_ISSUES_URL}
 - npm: https://www.npmjs.com/package/${pkg.name}
+- Content families and presentation status (machine-readable): ${DOCS_BASE}content-patterns.json
+- Content pattern overview: ${DOCS_BASE}?path=/docs/patterns-content-overview--docs
 - Release changelog (machine-readable): ${DOCS_BASE}releases.json
 - Project changelog (markdown): ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
@@ -2720,6 +2733,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         changelog: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
         releaseNotesV2: `${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
         tokens: `${DOCS_BASE}tokens.json`,
         editorialManual: `${DOCS_BASE}llms-editorial-manual.txt`,
@@ -2754,6 +2768,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         total: customPropertyCount,
         components: Object.keys(customProperties.byComponent).length,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
       },
       conventions: {
         cssPrefix: 'mg-',

@@ -2261,9 +2261,9 @@ npm run build</code></pre>
 
   'patterns-content-teaser': {
     summary:
-      'Experimental horizontal teasers for all 15 indexed Drupal node types.',
+      'Shared experimental teaser renderer; content families own separate page, teaser and card presentations.',
     description:
-      'Experimental horizontal teasers for all 15 indexed Drupal node types. Audited content order, eligible media, native title and taxonomy links, structured attribution and distinct publication, event, deadline and freshness dates. Resolved URLs and localised plain text; no domain inference.',
+      'Shared experimental horizontal teaser renderer driven by content-family specifications. Its input is a presentation projection, not a canonical domain model. See content-patterns.json for family-specific full-page, teaser and card status; stubs are not implemented.',
     cssClasses: [
       'mg-content-teaser',
       'mg-content-teaser__before-title',

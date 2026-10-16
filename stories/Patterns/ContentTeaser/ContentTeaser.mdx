@@ -1,11 +1,14 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
 import * as TeaserStories from './ContentTeaser.stories';
 
 <Meta of={TeaserStories} />
 
 > If you are creating or modifying this pattern, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs).
 
-# Content teaser
+# Shared content teaser implementation
+
+Content-family specifications live under <LinkTo kind="Patterns/Content/Overview" story="docs">Content patterns</LinkTo>, alongside their full-page and card presentations. This page documents the shared teaser renderer and its presentation-only input. It is not the canonical content model or the organising hierarchy for every view. Existing story routes remain available for compatibility.
 
 **Experimental, for review in [#1381](https://github.com/unisdr/undrr-mangrove/issues/1381).** These patterns cover all 15 node bundles selected by the inspected Drupal search index. They share the horizontal `teaser_3_9` layout, content hierarchy and omission rules, rather than introducing 15 visual card variants. Drupal is one source; normalised data also supports other publishing systems.
 
@@ -115,7 +118,7 @@ Static React rendering includes complete titles, destinations and metadata. Nati
 ## CSS and JavaScript references
 
 - Published React import: `import { ContentTeaser, DRUPAL_TEASER_TYPES } from "@undrr/undrr-mangrove/components/ContentTeaser.js"`. The repository barrel `src/index.js` also re-exports them for repository development; the published npm package has no root entry.
-- Pattern selection: `contentTeaserPatterns.js` owns media eligibility and before/after-title field order.
+- Pattern selection: each `Content/{Family}/patterns.js` owns its teaser projection alongside full-page/card status. `contentTeaserPatterns.js` assembles those projections for the shared renderer.
 - Styles: `content-teaser.scss` adds wrapping, metadata rhythm, list semantics, independent metadata-link focus and logo framing. It uses shared `--mg-card-*`, `--mg-card-publication-*` and spacing tokens; no new colour or surface defaults.
 - No hydration registration: the complete teaser markup needs no client initialisation.
 
@@ -127,4 +130,5 @@ Approve the canonical content contract and domain policy, verify live source ada
 
 ### 0.1.0 (16 October 2026)
 
+- Organise specifications under content families with separate full-page, teaser and card status; keep the shared renderer and existing story routes.
 - Add experimental horizontal content patterns for all 15 indexed Drupal node bundles, with audited field order and media rules, structured attribution, optional taxonomy links, semantic dates and plain-text summaries.

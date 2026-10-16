@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { resolveCardLink } from '../../Components/Cards/Card/cardParts';
+import { CONTENT_FAMILY_IDS } from '../Content/contentFamilies';
 import { TEASER_PATTERNS } from './contentTeaserPatterns';
 export { DRUPAL_TEASER_TYPES } from './contentTeaserPatterns';
 
@@ -360,7 +361,7 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
 ContentTeaser.propTypes = {
   /** Normalised content; all visible strings are caller-localised plain text. Labels may have resolved links. */
   content: PropTypes.shape({
-    type: PropTypes.oneOf(Object.keys(TEASER_PATTERNS)).isRequired,
+    type: PropTypes.oneOf(CONTENT_FAMILY_IDS).isRequired,
     title: PropTypes.string.isRequired,
     shortTitle: PropTypes.string,
     link: PropTypes.string.isRequired,

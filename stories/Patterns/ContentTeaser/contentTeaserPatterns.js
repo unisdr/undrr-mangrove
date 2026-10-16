@@ -1,62 +1,14 @@
 /** Source-neutral patterns; see docs/CONTENT-TEASER-DRUPAL-AUDIT.md for provenance. */
-export const TEASER_PATTERNS = {
-  news: {
-    image: true,
-    before: ['labels', 'published'],
-    after: ['summary', 'sources', 'language'],
-  },
-  publication: {
-    image: true,
-    before: ['labels', 'published'],
-    after: ['identifier', 'summary', 'sources', 'language'],
-  },
-  resource: {
-    before: ['labels', 'location', 'delivery'],
-    after: ['summary', 'sources', 'language'],
-  },
-  event: {
-    before: ['labels', 'location', 'event', 'delivery'],
-    after: ['summary', 'language'],
-  },
-  blog: {
-    image: true,
-    before: ['labels', 'published', 'authors'],
-    after: ['summary'],
-  },
-  organization: {
-    image: true,
-    logo: true,
-    before: ['location'],
-    after: ['summary', 'organizationType'],
-  },
-  collection: {
-    image: true,
-    before: ['labels', 'freshness'],
-    after: ['summary'],
-  },
-  vacancy: {
-    before: ['labels', 'location', 'deadline', 'status'],
-    after: ['summary'],
-  },
-  'hazard-profile': {
-    before: ['classification', 'identifier'],
-    after: ['summary'],
-  },
-  'conference-session': {
-    image: true,
-    before: ['bucket', 'schedule', 'exhibitions', 'room', 'format'],
-    after: ['summary', 'topics'],
-  },
-  commitment: {
-    image: true,
-    before: ['scope', 'status', 'published'],
-    after: ['summary'],
-  },
-  'landing-page': { image: true, before: ['labels'], after: ['summary'] },
-  'national-platform': { before: ['labels'], after: ['summary'] },
-  terminology: { before: ['labels'], after: ['summary'] },
-  person: { before: [], after: ['summary'] },
-};
+import { CONTENT_FAMILIES } from '../Content/contentFamilies.js';
+
+// Shared rendering consumes each family's teaser projection. Other presentations
+// own their own content selection; this map is not a domain schema.
+export const TEASER_PATTERNS = Object.fromEntries(
+  CONTENT_FAMILIES.map(family => [
+    family.id,
+    family.presentations.teaser.layout,
+  ])
+);
 
 // Explicit bundle mapping only: this does not extract fields or resolve URLs.
 export const DRUPAL_TEASER_TYPES = {

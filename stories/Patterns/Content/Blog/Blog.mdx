@@ -1,0 +1,22 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import { ContentFamilyGuide } from '../_shared/ContentFamilyGuide';
+import { blogPatterns } from './patterns';
+import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
+
+<Meta title="Patterns/Content/Blog" />
+
+# Blog content patterns
+
+> See the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) before modifying this family.
+
+<ContentFamilyGuide family={blogPatterns} />
+
+## Teaser preview
+
+<Canvas of={TeaserStories.Blog} />
+
+## Changelog
+
+### 0.1.0 (16 October 2026)
+
+- Establish the blog content family, link its experimental teaser and record full-page/card presentation status.

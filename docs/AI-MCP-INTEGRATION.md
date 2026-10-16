@@ -4,6 +4,10 @@
 
 Mangrove publishes structured component data so AI coding agents can look up components, props, rendered HTML, and usage examples. This page shows you how to point your agent at that data.
 
+## Content-pattern discovery
+
+`content-patterns.json` on the Storybook site describes content families and their full-page, teaser and card presentations separately from the usable component catalogue. It distinguishes experimental implementations, existing references and stubs. A stub has no rendering implementation or import; agents must not present it as a completed page. The content family's model is provisional, and a teaser input is only one presentation projection. Start at [Content patterns](?path=/docs/patterns-content-overview--docs) when choosing a content presentation.
+
 ## Quick start: point your agent at Mangrove
 
 Pick whichever option fits your setup. Each one gives the agent enough context to start generating correct Mangrove markup.

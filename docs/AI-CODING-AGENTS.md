@@ -21,6 +21,10 @@ and verify an override as well as the default across all five themes.
 
 Before implementing a CMS content pattern, inspect its entity view display, layout template, field formatters, conditional visibility and theme overrides in the source repository. Record the source revision, visible field order, hidden fields and deliberate departures in the pattern documentation. A generic card example does not establish parity with a Drupal teaser. The [content teaser audit](CONTENT-TEASER-DRUPAL-AUDIT.md) is the baseline for all 15 indexed node bundles. Keep publication dates, collection freshness, occurrence ranges and vacancy deadlines distinct. Preserve source/author list structure and optional taxonomy links; source adapters own field extraction, domain visibility and URL resolution.
 
+### Content families and presentation stubs
+
+Organise editorial patterns under `stories/Patterns/Content/{Family}/`. Each family's `patterns.js` records its provisional domain meaning and separate full-page, teaser and card presentations. The shared teaser renderer consumes only the family's teaser projection; do not expand that input into a universal domain model. Reconcile canonical contracts with schema work before adoption. Status `reference` links an existing example; `experimental` identifies implemented provisional work; `stub` reserves a presentation that is not designed or implemented. Never publish a stub as a callable component or fabricate an import. Update the family registry and generated `content-patterns.json` discovery metadata together when a presentation graduates. Keep existing story routes compatible while connecting them to their content family.
+
 ### Review the component family, not just the first screenshot
 
 - Check optional content: labels present/absent, media absent, long titles, summaries and actions. A first title should not inherit spacing intended to separate metadata.

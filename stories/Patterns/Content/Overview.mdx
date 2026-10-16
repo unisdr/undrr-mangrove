@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import { CONTENT_FAMILIES } from './contentFamilies';
+
+<Meta title="Patterns/Content/Overview" />
+
+# Content patterns
+
+Content families organise Mangrove's editorial patterns. A news article, publication or resource has a domain meaning and several possible presentations: a full page, a listing teaser and a compact card. Shared components provide geometry and interactions beneath those presentations.
+
+The family files own presentation specifications. The shared teaser renderer reads only the teaser projection from each family; its optional fields must not become a canonical schema for full pages or other views. Canonical contracts remain provisional and need reconciliation with the existing schema work.
+
+## Presentation coverage
+
+**Experimental** means an implemented teaser with a provisional contract. **Reference** links an existing page example whose family contract is still provisional. **Stub** means not designed or implemented: a reserved place with no callable component or import. Shared card primitives are available, but content-family card patterns remain stubs until their field selection and mapping are specified.
+
+<table>
+  <thead>
+    <tr>
+      <th>Content family</th>
+      <th>Full page</th>
+      <th>Teaser</th>
+      <th>Card</th>
+    </tr>
+  </thead>
+  <tbody>
+    {CONTENT_FAMILIES.map(family => (
+      <tr key={family.id}>
+        <th scope="row">
+          <LinkTo kind={`Patterns/Content/${family.name}`} story="docs">
+            {family.name}
+          </LinkTo>
+        </th>
+        <td>
+          {family.presentations.fullPage.status === 'reference'
+            ? 'Reference'
+            : 'Stub'}
+        </td>
+        <td>Experimental</td>
+        <td>Stub</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Building a presentation
+
+Start from the content family's meaning and the reader's task. Define required and optional information, omission rules and source mapping for that presentation. Compose shared components after those decisions. An existing horizontal teaser does not establish the layout, fields or actions of a full page; a generic vertical card does not establish a content-specific card pattern.
+
+For example, Resource has an implemented experimental teaser and explicit full-page/card stubs. Its full-page information architecture has not been specified. Publication has a report-page reference and a teaser, with its compact-card content pattern still a stub. Keep source taxonomies, dates and identity distinct even when a particular presentation combines labels for display.
+
+<LinkTo kind="Patterns/Content teaser" story="docs">
+  Shared teaser implementation and contract reference
+</LinkTo>
+
+## AI and integration
+
+The generated `content-patterns.json` catalogue records every family's model and presentation status separately from the usable component catalogue. Stubs carry no import or component entry. AI agents must preserve those status distinctions and must not fabricate a working page from a stub. Drupal adapters, domain policy and canonical schema decisions remain explicit production gates.
+
+## Changelog
+
+### 0.1.0 (16 October 2026)
+
+- Organise content patterns by family, connect existing references and experimental teasers, and reserve explicit full-page/card stubs.
