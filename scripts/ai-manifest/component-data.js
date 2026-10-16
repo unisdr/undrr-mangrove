@@ -696,6 +696,8 @@ export const COMPONENT_DATA = {
   },
 
   'components-cards-stats-card': {
+    summary:
+      'Grid of statistics with optional icons, labels, summaries and links. Compact, highlighted and negative variants support different densities and surfaces.',
     description:
       'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact (reduced padding and gaps without stacked child margins), highlighted, negative.',
     hydration: {
