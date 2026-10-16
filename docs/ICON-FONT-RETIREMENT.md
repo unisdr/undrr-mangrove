@@ -4,13 +4,15 @@ This breaking change completes the Mangrove portion of [unisdr/undrr-mangrove#90
 
 ## Merge and release gate
 
-Keep the pull request in draft until [undrr/web-backlog#3185](https://gitlab.com/undrr/web-backlog/-/issues/3185) is deployed and verified in production. That tracker owns Drupal templates/modules, editor previews, stored content, font-codepoint SCSS, local font copies and historical content restoration. Its local database audit is a baseline, not proof of production readiness.
+The pull request may merge into the isolated `release/3.0` branch after code review and green CI, provided preview publication remains separate from stable Pages, dist/CDN and npm latest. This gives Drupal a shared SVG-only migration candidate. Integration does not authorise promotion to `main` or a stable release.
 
-Before merging, record the Drupal deployment and verification evidence on the tracker and upstream issue. Confirm affected themes, frontend and editor rendering, editor validation, restored revisions, RTL, forced colours, print and zoom against the SVG-only CSS built from this pull request, with Drupal's local legacy icon-font copies disabled. Disabling only the font does not reproduce the removal of aliases, sizing/spacing helpers and legacy selector exclusions. Record the exact tested commit and candidate asset URLs. Recheck whether Drupal needed additional SVG mappings and ensure its consumed Mangrove release already supplies them. Do not rely on closing the tracker alone as evidence of a verified rollout.
+Stable 3.0 publication remains blocked until [undrr/web-backlog#3185](https://gitlab.com/undrr/web-backlog/-/issues/3185) is deployed and verified in production. That tracker owns Drupal templates/modules, editor previews, stored content, font-codepoint SCSS, local font copies and historical content restoration. Its local database audit is a baseline, not proof of production readiness.
+
+Before promoting 3.0 to `main` or publishing stable assets, record the Drupal deployment and verification evidence on the tracker and upstream issue. Confirm affected themes, frontend and editor rendering, editor validation, restored revisions, RTL, forced colours, print and zoom against the SVG-only CSS built from this pull request, with Drupal's local legacy icon-font copies disabled. Disabling only the font does not reproduce the removal of aliases, sizing/spacing helpers and legacy selector exclusions. Record the exact tested commit and candidate asset URLs. Recheck whether Drupal needed additional SVG mappings and ensure its consumed Mangrove release already supplies them. Do not rely on closing the tracker alone as evidence of a verified rollout.
 
 The Drupal rollout must first stop editors generating legacy values, then run an idempotent content migration with counts/logging and invalidate affected render and editor asset caches. Re-inventory after migration and account for content edited during rollout. Record a database backup/recovery procedure and a code/CSS rollback path that preserves subsequent editorial work; do not blindly restore an old database over newer edits.
 
-Ship this in a release that explicitly announces the breaking change. This draft does not choose a package release number or publish a release. Older versioned assets remain valid for consumers pinned to those versions.
+Ship this in a release that explicitly announces the breaking change. Integration does not choose a package release number or publish a release. Older versioned assets remain valid for consumers pinned to those versions.
 
 ## Removed surface
 
