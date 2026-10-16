@@ -854,6 +854,12 @@ $search-input-padding-x: mg-rem(44);
     display: flex;
   }
 
+  // Match vertical cards' row fill without changing standalone book cards.
+  // The book card's existing start alignment keeps cover rows intrinsic.
+  .mg-card__book {
+    block-size: 100%;
+  }
+
   // Remove list-style dividers in grid/card mode
   .mg-search__result {
     padding-bottom: 0;
