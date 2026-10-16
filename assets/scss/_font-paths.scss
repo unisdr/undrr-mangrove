@@ -1,0 +1,10 @@
+// Build-time font asset URLs. Shared by the font entry point and face modules.
+$font-path-roboto: "https://assets.undrr.org/fonts/roboto/v1.0.0" !default;
+$font-path-roboto-condensed: "https://assets.undrr.org/fonts/roboto-condensed/v1.0.0" !default;
+$font-path-noto-kufi-arabic: "https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0" !default;
+$font-path-noto-sans-arabic: "https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0" !default;
+
+// Legacy Roboto file-name/version hooks were shared by the import chain.
+// Keep one source for both Roboto families, including configured overrides.
+$FontName: "Roboto" !default;
+$font-version: "2.137" !default;

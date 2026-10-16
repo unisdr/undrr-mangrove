@@ -1,3 +1,7 @@
+@use "breakpoints" as *;
+@use "mixins" as *;
+@use "config" as *;
+
 /* typography start */
 *,
 *::before,
@@ -71,9 +75,8 @@ caption {
 // Latin face and _fonts.scss re-points to Noto Kufi Arabic. Compile
 // _foundational.scss without _fonts.scss and the rule still matches but
 // resolves to Roboto, which has no Arabic coverage. Every documented import
-// list names both; _fonts.scss does not import itself into this file, because
-// the entry points already import it and Sass's legacy `@import` would emit its
-// 32 `@font-face` blocks a second time.
+// list names both. Keep face loading in the fonts module, which emits its
+// 32 text `@font-face` blocks once for every supported entry point.
 h1:lang(ar),
 h2:lang(ar),
 h3:lang(ar) {

@@ -212,7 +212,7 @@
 +=============================================================================+
 | KEY: d=web-dwarf  c=coder-dwarf  w=wrangler  [=O=]=data forge  X=stairwell  |
 +============================================================================*/
-/* Roboto */
+
 /* BEGIN Light */@font-face{font-family:Roboto;font-style:normal;font-weight:300;src:url(https://assets.undrr.org/fonts/roboto/v1.0.0/Light/Roboto-Light.woff2?v=2.137) format("woff2"),url(https://assets.undrr.org/fonts/roboto/v1.0.0/Light/Roboto-Light.woff?v=2.137) format("woff")}
 /* END Light */
 /* BEGIN Light Italic */@font-face{font-family:Roboto;font-style:italic;font-weight:300;src:url(https://assets.undrr.org/fonts/roboto/v1.0.0/LightItalic/Roboto-LightItalic.woff2?v=2.137) format("woff2"),url(https://assets.undrr.org/fonts/roboto/v1.0.0/LightItalic/Roboto-LightItalic.woff?v=2.137) format("woff")}
@@ -233,7 +233,6 @@
 /* END Black */
 /* BEGIN Black Italic */@font-face{font-family:Roboto;font-style:italic;font-weight:900;src:url(https://assets.undrr.org/fonts/roboto/v1.0.0/BlackItalic/Roboto-BlackItalic.woff2?v=2.137) format("woff2"),url(https://assets.undrr.org/fonts/roboto/v1.0.0/BlackItalic/Roboto-BlackItalic.woff?v=2.137) format("woff")}
 /* END Black Italic */
-/* Roboto Condensed */
 /* BEGIN Light */@font-face{font-display:fallback;font-family:Roboto Condensed;font-style:normal;font-weight:300;src:url(https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/Light/RobotoCondensed-Light.woff2?v=2.137) format("woff2"),url(https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/Light/RobotoCondensed-Light.woff?v=2.137) format("woff")}
 /* END Light */
 /* BEGIN Light Italic */@font-face{font-display:fallback;font-family:Roboto Condensed;font-style:italic;font-weight:300;src:url(https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/LightItalic/RobotoCondensed-LightItalic.woff2?v=2.137) format("woff2"),url(https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/LightItalic/RobotoCondensed-LightItalic.woff?v=2.137) format("woff")}
@@ -246,8 +245,6 @@
 /* END Bold */
 /* BEGIN Bold Italic */@font-face{font-display:fallback;font-family:Roboto Condensed;font-style:italic;font-weight:700;src:url(https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/BoldItalic/RobotoCondensed-BoldItalic.woff2?v=2.137) format("woff2"),url(https://assets.undrr.org/fonts/roboto-condensed/v1.0.0/BoldItalic/RobotoCondensed-BoldItalic.woff?v=2.137) format("woff")}
 /* END Bold Italic */
-/* Arabic Fonts */
-/* Noto Kufi Arabic - for headings in Arabic */
 /* Noto Kufi Arabic - Arabic headings.
    OFL-1.1. Repackaged from @fontsource/noto-kufi-arabic v5.3.0 by the UNDRR asset library;
    see https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/.
@@ -273,7 +270,6 @@
    present in the file). WOFF2 only, per the asset library's format policy. */
 /* Regular (400) */@font-face{font-display:swap;font-family:Noto Kufi Arabic;font-style:normal;font-weight:400;src:url(https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Regular/noto-kufi-arabic-arabic-400-normal.woff2) format("woff2");unicode-range:u+0020,u+00a0,u+06??,u+0750-077f,u+0870-088e,u+0890-0891,u+0898-08e1,u+08e3-08ff,u+200c-200e,u+204f,u+2e41,u+fb50-fbc2,u+fbd3-fd8f,u+fd92-fdc7,u+fdcf,u+fdf?,u+fe70-fe74,u+fe76-fefc,u+feff,u+10efd-10eff}@font-face{font-display:swap;font-family:Noto Kufi Arabic;font-style:normal;font-weight:400;src:url(https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Regular/noto-kufi-arabic-latin-400-normal.woff2) format("woff2");unicode-range:u+0020-007e,u+00a0-00a3,u+00a5,u+00a7-00ab,u+00ae-00b0,u+00b4,u+00b6-00b8,u+00ba-00bb,u+00bf-00ff,u+0131,u+0152-0153,u+02c6,u+02da,u+02dc,u+0300-0301,u+0303-0304,u+0308,u+2009,u+200b,u+2013-2014,u+2018-201a,u+201c-201e,u+2022,u+2026,u+2039-203a,u+20ac,u+2122,u+2212,u+feff}@font-face{font-display:swap;font-family:Noto Kufi Arabic;font-style:normal;font-weight:400;src:url(https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Regular/noto-kufi-arabic-latin-ext-400-normal.woff2) format("woff2");unicode-range:u+0020,u+00a0,u+0100-0107,u+010a-0113,u+0116-011b,u+011e-0123,u+0126-0127,u+012a-012b,u+012e-0130,u+0136-0137,u+0139-013e,u+0141-0148,u+014a-014d,u+0150-0151,u+0154-015b,u+015e-0161,u+0164-0165,u+016a-017e,u+0218-021b,u+0237,u+02c7,u+02c9,u+02dd,u+0300-0301,u+0303-0304,u+0308,u+1e80-1e85,u+1e9e,u+1ef2-1ef3,u+feff}
 /* Bold (700) */@font-face{font-display:swap;font-family:Noto Kufi Arabic;font-style:normal;font-weight:700;src:url(https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Bold/noto-kufi-arabic-arabic-700-normal.woff2) format("woff2");unicode-range:u+0020,u+00a0,u+06??,u+0750-077f,u+0870-088e,u+0890-0891,u+0898-08e1,u+08e3-08ff,u+200c-200e,u+204f,u+2e41,u+fb50-fbc2,u+fbd3-fd8f,u+fd92-fdc7,u+fdcf,u+fdf?,u+fe70-fe74,u+fe76-fefc,u+feff,u+10efd-10eff}@font-face{font-display:swap;font-family:Noto Kufi Arabic;font-style:normal;font-weight:700;src:url(https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Bold/noto-kufi-arabic-latin-700-normal.woff2) format("woff2");unicode-range:u+0020-007e,u+00a0-00a3,u+00a5,u+00a7-00ab,u+00ae-00b0,u+00b4,u+00b6-00b8,u+00ba-00bb,u+00bf-00ff,u+0131,u+0152-0153,u+02c6,u+02da,u+02dc,u+0300-0301,u+0303-0304,u+0308,u+2009,u+200b,u+2013-2014,u+2018-201a,u+201c-201e,u+2022,u+2026,u+2039-203a,u+20ac,u+2122,u+2212,u+feff}@font-face{font-display:swap;font-family:Noto Kufi Arabic;font-style:normal;font-weight:700;src:url(https://assets.undrr.org/fonts/noto-kufi-arabic/v1.1.0/Bold/noto-kufi-arabic-latin-ext-700-normal.woff2) format("woff2");unicode-range:u+0020,u+00a0,u+0100-0107,u+010a-0113,u+0116-011b,u+011e-0123,u+0126-0127,u+012a-012b,u+012e-0130,u+0136-0137,u+0139-013e,u+0141-0148,u+014a-014d,u+0150-0151,u+0154-015b,u+015e-0161,u+0164-0165,u+016a-017e,u+0218-021b,u+0237,u+02c7,u+02c9,u+02dd,u+0300-0301,u+0303-0304,u+0308,u+1e80-1e85,u+1e9e,u+1ef2-1ef3,u+feff}
-/* Noto Sans Arabic - for body text in Arabic */
 /* Noto Sans Arabic - Arabic body text.
    OFL-1.1. Repackaged from @fontsource/noto-sans-arabic v5.3.0 by the UNDRR asset library;
    see https://assets.undrr.org/fonts/noto-sans-arabic/v1.0.0/.

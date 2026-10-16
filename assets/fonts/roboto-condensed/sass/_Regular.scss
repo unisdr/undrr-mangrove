@@ -1,3 +1,7 @@
+@use "../../../scss/font-paths" as *;
+@use "mixins" as *;
+@use "variables" as *;
+
 /* BEGIN Regular */
 @font-face {
   font-family: "Roboto Condensed";
