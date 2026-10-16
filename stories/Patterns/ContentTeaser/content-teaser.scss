@@ -2,6 +2,8 @@
  * Content teaser patterns compose shared card geometry with semantic metadata.
  * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Patterns/ContentTeaser/ContentTeaser.mdx
  */
+@use "../../assets/scss/mixins" as *;
+
 .mg-content-teaser {
   min-inline-size: 0;
   inline-size: 100%;
@@ -23,7 +25,10 @@
 
   .mg-card__label {
     margin: 0;
-    cursor: inherit;
+
+    &:not(a) {
+      cursor: inherit;
+    }
   }
 
   .mg-card__title {
@@ -40,5 +45,50 @@
 
   .mg-content-teaser__metadata {
     font-size: var(--mg-font-size-300);
+  }
+}
+
+.mg-content-teaser__attribution {
+  @include mg-list-unmarked;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-50) var(--mg-spacing-100);
+  margin: 0;
+  padding: 0;
+  font-size: var(--mg-font-size-300);
+}
+
+.mg-content-teaser__metadata-link {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  z-index: 2; // Above the title's stretched link, within the card stacking context.
+  min-block-size: var(--mg-spacing-250);
+  text-decoration: underline;
+
+  &:focus-visible {
+    @include mg-focus-ring;
+  }
+}
+
+.mg-content-teaser--logo > .mg-card__visual {
+  border: 0;
+}
+
+.mg-content-teaser-list {
+  @include mg-list-unmarked;
+
+  display: grid;
+  gap: var(--mg-spacing-200);
+  margin: 0;
+  padding: 0;
+
+  > li {
+    min-inline-size: 0;
+  }
+
+  .mg-content-teaser {
+    margin-block-end: 0;
   }
 }

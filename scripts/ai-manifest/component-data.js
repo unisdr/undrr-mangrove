@@ -2261,13 +2261,17 @@ npm run build</code></pre>
 
   'patterns-content-teaser': {
     summary:
-      'Experimental structured news, publication, resource and event teaser patterns.',
+      'Experimental horizontal teasers for all 15 indexed Drupal node types.',
     description:
-      'Experimental horizontal news, publication, resource and event teasers based on Drupal Display Suite field order and media visibility. Structured plain text, resolved native links and semantic dates; no domain inference.',
+      'Experimental horizontal teasers for all 15 indexed Drupal node types. Audited content order, eligible media, native title and taxonomy links, structured attribution and distinct publication, event, deadline and freshness dates. Resolved URLs and localised plain text; no domain inference.',
     cssClasses: [
       'mg-content-teaser',
       'mg-content-teaser__before-title',
       'mg-content-teaser__metadata',
+      'mg-content-teaser__metadata-link',
+      'mg-content-teaser__attribution',
+      'mg-content-teaser--logo',
+      'mg-content-teaser-list',
     ],
   },
 

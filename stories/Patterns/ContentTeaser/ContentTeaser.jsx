@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { resolveCardLink } from '../../Components/Cards/Card/cardParts';
+import { TEASER_PATTERNS } from './contentTeaserPatterns';
+export { DRUPAL_TEASER_TYPES } from './contentTeaserPatterns';
 
-const TYPES = ['news', 'publication', 'resource', 'event'];
-
-// Sources resolve destinations before rendering. Never infer a domain from an
-// array order here. Relative paths must be root-relative on the consuming site.
+// Sources resolve destinations before rendering, including current-site eligibility.
 export function resolveTeaserUrl(value) {
   const url = resolveCardLink(value)?.trim();
   if (
@@ -24,72 +23,216 @@ export function resolveTeaserUrl(value) {
   }
 }
 
-function TeaserDate({ value }) {
-  return value ? <time dateTime={value.dateTime}>{value.text}</time> : null;
-}
-
 const dateType = PropTypes.shape({
   dateTime: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
+  label: PropTypes.string,
 });
-TeaserDate.propTypes = { value: dateType };
+const labelType = PropTypes.oneOfType([
+  PropTypes.string,
+  PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    link: PropTypes.string,
+  }),
+]);
+const rangeType = PropTypes.shape({
+  start: dateType,
+  end: dateType,
+  timeZone: PropTypes.string,
+  label: PropTypes.string,
+});
+const validDate = date => Boolean(date?.dateTime && date?.text?.trim());
+const validRange = range => validDate(range?.start);
+const text = value =>
+  typeof value === 'string' && value.trim() ? value : null;
+
+function normaliseLabels(values) {
+  const seen = new Set();
+  return values
+    .flat()
+    .filter(Boolean)
+    .map(value => (typeof value === 'string' ? { label: value } : value))
+    .filter(value => {
+      if (!text(value.label)) return false;
+      const key = JSON.stringify([value.label, resolveTeaserUrl(value.link)]);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+function TeaserDate({ value }) {
+  return (
+    <>
+      {value.label && <>{value.label} </>}
+      <time dateTime={value.dateTime} dir="auto">
+        {value.text}
+      </time>
+    </>
+  );
+}
+TeaserDate.propTypes = { value: dateType.isRequired };
+
+function TeaserRange({ value }) {
+  return (
+    <span>
+      {value.label && <>{value.label} </>}
+      <TeaserDate value={value.start} />
+      {validDate(value.end) && (
+        <>
+          {' '}
+          – <TeaserDate value={value.end} />
+        </>
+      )}
+      {value.timeZone && <> ({value.timeZone})</>}
+    </span>
+  );
+}
+TeaserRange.propTypes = { value: rangeType.isRequired };
+
+function TeaserLabels({ items, compact = true }) {
+  return items.map(item => {
+    const link = resolveTeaserUrl(item.link);
+    return link ? (
+      <a
+        key={`${item.label}-${link}`}
+        href={link}
+        className={[
+          compact && 'mg-card__label',
+          'mg-content-teaser__metadata-link',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      >
+        {item.label}
+      </a>
+    ) : (
+      <span key={item.label} className={compact ? 'mg-card__label' : undefined}>
+        {item.label}
+      </span>
+    );
+  });
+}
+TeaserLabels.propTypes = {
+  compact: PropTypes.bool,
+  items: PropTypes.arrayOf(labelType).isRequired,
+};
+
+function TeaserAttribution({ items }) {
+  return (
+    <ul className="mg-content-teaser__attribution">
+      {items.map(item => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
+}
+TeaserAttribution.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+function fieldValue(content, field) {
+  if (field === 'labels') {
+    return normaliseLabels([
+      content.typeLabel,
+      content.type === 'resource' && content.resourceType,
+      ...(content.labels || []),
+    ]);
+  }
+  if (field === 'location') {
+    return normaliseLabels([
+      content.type === 'event' ? content.event?.location : content.location,
+    ]);
+  }
+  if (field === 'classification' || field === 'topics')
+    return normaliseLabels(content[field] || []);
+  if (field === 'published' || field === 'deadline')
+    return validDate(content[field]) ? content[field] : null;
+  if (field === 'event')
+    return validRange(content.event) ? content.event : null;
+  if (field === 'schedule' || field === 'exhibitions')
+    return (content.session?.[field] || []).filter(validRange);
+  if (['bucket', 'room', 'format'].includes(field))
+    return text(content.session?.[field]);
+  if (field === 'freshness') {
+    return ['updated', 'created'].includes(content.freshness?.kind) &&
+      validDate(content.freshness?.date)
+      ? content.freshness
+      : null;
+  }
+  if (field === 'sources' || field === 'authors') {
+    const values =
+      content[field] ??
+      (field === 'sources' && content.source ? [content.source] : []);
+    return [...new Set(values.filter(value => text(value)))];
+  }
+  return text(content[field]);
+}
+
+function TeaserField({ field, value }) {
+  if (['labels', 'location', 'classification', 'topics'].includes(field))
+    return <TeaserLabels items={value} compact={field !== 'location'} />;
+  if (field === 'published' || field === 'deadline')
+    return <TeaserDate value={value} />;
+  if (field === 'event') return <TeaserRange value={value} />;
+  if (field === 'schedule' || field === 'exhibitions')
+    return value.map(range => (
+      <TeaserRange key={JSON.stringify(range)} value={range} />
+    ));
+  if (field === 'freshness')
+    return (
+      <span data-freshness-kind={value.kind}>
+        <TeaserDate value={value.date} />
+      </span>
+    );
+  if (field === 'sources' || field === 'authors')
+    return <TeaserAttribution items={value} />;
+  return <span>{value}</span>;
+}
+TeaserField.propTypes = {
+  field: PropTypes.string.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function selectedFields(content, fields) {
+  return fields
+    .map(field => ({ field, value: fieldValue(content, field) }))
+    .filter(({ value }) =>
+      Array.isArray(value) ? value.length > 0 : Boolean(value)
+    );
+}
 
 /**
- * Experimental content pattern for a single news, publication, resource or
- * event teaser. Reuses card geometry and interaction classes, with plain-text
- * content and native links that also work in server-rendered HTML.
+ * Experimental horizontal content teasers for all fifteen indexed Drupal node
+ * bundles. Shared card geometry, native links and server-renderable content;
+ * source adapters supply localised metadata, attribution and resolved URLs.
  */
 export function ContentTeaser({ content, headingLevel = 3, className }) {
-  const {
-    type,
-    title,
-    shortTitle,
-    link,
-    image,
-    summary,
-    labels,
-    typeLabel,
-    published,
-    event,
-    resourceType,
-    location,
-    delivery,
-    identifier,
-    source,
-    language,
-    lang,
-  } = content;
+  const { type, title, shortTitle, link, image, lang } = content;
+  const pattern = Object.hasOwn(TEASER_PATTERNS, type)
+    ? TEASER_PATTERNS[type]
+    : null;
   const href = resolveTeaserUrl(link);
-  if (!TYPES.includes(type) || !title?.trim() || !href) {
+  if (!pattern || !title?.trim() || !href)
     throw new TypeError(
       'ContentTeaser requires a supported type, title and resolved HTTP(S) or root-relative link.'
     );
-  }
-  if (![2, 3, 4, 5, 6].includes(headingLevel)) {
+  if (![2, 3, 4, 5, 6].includes(headingLevel))
     throw new TypeError('ContentTeaser headingLevel must be between 2 and 6.');
-  }
   const Heading = `h${headingLevel}`;
-  const imageSrc = ['news', 'publication'].includes(type)
-    ? resolveTeaserUrl(image?.src)
-    : null;
-  const labelItems = [
-    ...new Set(
-      [
-        typeLabel,
-        type === 'resource' && resourceType,
-        ...(labels || []),
-      ].filter(Boolean)
-    ),
-  ];
+  const imageSrc = pattern.image ? resolveTeaserUrl(image?.src) : null;
+  const before = selectedFields(content, pattern.before);
+  const after = selectedFields(content, pattern.after);
   return (
     <article
       lang={lang}
+      data-content-type={type}
       className={[
         'mg-card',
         'mg-card__hc',
         'mg-card-book__hc',
         'mg-content-teaser',
-
+        pattern.logo && 'mg-content-teaser--logo',
         className,
       ]
         .filter(Boolean)
@@ -106,51 +249,31 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
         </div>
       )}
       <div className="mg-card__content">
-        {(labelItems.length > 0 ||
-          (['news', 'publication'].includes(type) && published) ||
-          (type === 'event' && (event?.start || event?.location || delivery)) ||
-          (type === 'resource' && (location || delivery))) && (
+        {before.length > 0 && (
           <div className="mg-card__meta mg-content-teaser__before-title">
-            {labelItems.map(label => (
-              <span className="mg-card__label" key={label}>
-                {label}
-              </span>
+            {before.map(({ field, value }) => (
+              <TeaserField key={field} field={field} value={value} />
             ))}
-            {type === 'resource' && location && <span>{location}</span>}
-            {type === 'event' && event?.location && (
-              <span>{event.location}</span>
-            )}
-            {type === 'event' && event?.start && (
-              <span>
-                <TeaserDate value={event.start} />
-                {event.end && (
-                  <>
-                    {' '}
-                    – <TeaserDate value={event.end} />
-                  </>
-                )}
-                {event.timeZone && <> ({event.timeZone})</>}
-              </span>
-            )}
-            {['resource', 'event'].includes(type) && delivery && (
-              <span>{delivery}</span>
-            )}
-            {['news', 'publication'].includes(type) && published && (
-              <TeaserDate value={published} />
-            )}
           </div>
         )}
         <Heading className="mg-card__title">
           <a href={href}>{(type === 'news' && shortTitle?.trim()) || title}</a>
         </Heading>
-        {type === 'publication' && identifier && (
-          <p className="mg-content-teaser__metadata">{identifier}</p>
-        )}
-        {summary && <p className="mg-card__summary">{summary}</p>}
-        {((type !== 'event' && source) || language) && (
-          <p className="mg-content-teaser__metadata">
-            {[type !== 'event' && source, language].filter(Boolean).join(' · ')}
-          </p>
+        {after.map(({ field, value }) =>
+          ['sources', 'authors'].includes(field) ? (
+            <TeaserField key={field} field={field} value={value} />
+          ) : (
+            <p
+              key={field}
+              className={
+                field === 'summary'
+                  ? 'mg-card__summary'
+                  : 'mg-content-teaser__metadata'
+              }
+            >
+              <TeaserField field={field} value={value} />
+            </p>
+          )
         )}
       </div>
     </article>
@@ -158,9 +281,9 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
 }
 
 ContentTeaser.propTypes = {
-  /** Normalised source-neutral content; all visible strings are caller-localised plain text. */
+  /** Normalised content; all visible strings are caller-localised plain text. Labels may have resolved links. */
   content: PropTypes.shape({
-    type: PropTypes.oneOf(TYPES).isRequired,
+    type: PropTypes.oneOf(Object.keys(TEASER_PATTERNS)).isRequired,
     title: PropTypes.string.isRequired,
     shortTitle: PropTypes.string,
     link: PropTypes.string.isRequired,
@@ -169,7 +292,7 @@ ContentTeaser.propTypes = {
       alt: PropTypes.string.isRequired,
     }),
     summary: PropTypes.string,
-    labels: PropTypes.arrayOf(PropTypes.string),
+    labels: PropTypes.arrayOf(labelType),
     typeLabel: PropTypes.string,
     published: dateType,
     event: PropTypes.shape({
@@ -177,12 +300,33 @@ ContentTeaser.propTypes = {
       end: dateType,
       timeZone: PropTypes.string,
       location: PropTypes.string,
+      label: PropTypes.string,
     }),
     resourceType: PropTypes.string,
-    location: PropTypes.string,
+    location: labelType,
     delivery: PropTypes.string,
     identifier: PropTypes.string,
+    sources: PropTypes.arrayOf(PropTypes.string),
+    authors: PropTypes.arrayOf(PropTypes.string),
+    /** Compatibility input for the first experimental draft; prefer sources. */
     source: PropTypes.string,
+    organizationType: PropTypes.string,
+    scope: PropTypes.string,
+    status: PropTypes.string,
+    deadline: dateType,
+    freshness: PropTypes.shape({
+      kind: PropTypes.oneOf(['updated', 'created']).isRequired,
+      date: dateType.isRequired,
+    }),
+    classification: PropTypes.arrayOf(labelType),
+    topics: PropTypes.arrayOf(labelType),
+    session: PropTypes.shape({
+      bucket: PropTypes.string,
+      schedule: PropTypes.arrayOf(rangeType),
+      exhibitions: PropTypes.arrayOf(rangeType),
+      room: PropTypes.string,
+      format: PropTypes.string,
+    }),
     language: PropTypes.string,
     lang: PropTypes.string,
   }).isRequired,

@@ -27,18 +27,29 @@ try {
         `${base}/iframe.html?id=patterns-content-teaser--mixed-content&viewMode=story&globals=theme:${encodeURIComponent(theme)}`
       );
       await page.locator('.mg-content-teaser').first().waitFor();
+      await page.locator('body').evaluate(el => {
+        el.tabIndex = -1;
+        el.focus();
+      });
       await page.evaluate(() => document.fonts.ready);
       if (mobile)
         await page.locator('body').evaluate(el => {
           el.dir = 'rtl';
         });
       const cards = page.locator('.mg-content-teaser');
-      assert.equal(await cards.count(), 4);
-      await page
-        .locator('.mg-card__image')
-        .evaluateAll(images => Promise.all(images.map(img => img.decode())));
+      assert.equal(await cards.count(), 15);
+      await page.locator('.mg-card__image').evaluateAll(images =>
+        Promise.all(
+          images.map(img => {
+            img.loading = 'eager';
+            return img.decode();
+          })
+        )
+      );
       const geometry = await page.evaluate(() => {
-        const cover = document.querySelectorAll('.mg-card__image')[1];
+        const cover = document.querySelector(
+          '[data-content-type="publication"] img'
+        );
         const image = cover.getBoundingClientRect();
         return {
           overflow: document.documentElement.scrollWidth > innerWidth,
@@ -91,10 +102,36 @@ try {
           .evaluate(el => el.matches(':focus-visible')),
         true
       );
+      const metadataLink = page.locator(
+        '[data-content-type="publication"] .mg-content-teaser__metadata-link'
+      );
+      await metadataLink.focus();
+      assert.equal(
+        await metadataLink.evaluate(el => el === document.activeElement),
+        true
+      );
+      assert.equal(
+        await metadataLink.evaluate(el => getComputedStyle(el).zIndex),
+        '2'
+      );
       await page.screenshot({
         path: `${output}/${index}-${mobile ? 'mobile-rtl-forced' : 'desktop'}.png`,
         fullPage: true,
       });
+      await page.route('**/publications/guidance', route =>
+        route.fulfill({
+          contentType: 'text/html',
+          body: '<p>Taxonomy destination fixture</p>',
+        })
+      );
+      await Promise.all([
+        page.waitForURL('**/publications/guidance'),
+        metadataLink.click(),
+      ]);
+      assert(
+        new URL(page.url()).pathname === '/publications/guidance',
+        `${theme}: taxonomy link activated the wrong destination`
+      );
       await page.close();
     }
   }
