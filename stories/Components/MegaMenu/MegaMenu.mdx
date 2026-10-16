@@ -255,6 +255,8 @@ Inactive desktop panels also become inert and hidden from assistive technology i
 
 ## Changelog
 
+- **1.4.7**, 2026-10-16: The mobile motion story waits for visible content after category navigation, avoiding a race with the entry animation's zero-opacity frame in browser tests. Component behaviour and consumer APIs are unchanged.
+
 - **1.4.6**, 2026-10-15 ([#1359](https://github.com/unisdr/undrr-mangrove/issues/1359)): Removed decorative category pulses, panel flashes and delayed link entrances. Tokenised remaining navigation motion, made mobile transitions interruptible, aligned inert exit retention with computed CSS timing, and fixed desktop reduced-motion/forced-colours overrides. Public state classes and hydration contracts remain compatible.
 
 - **1.4.5**, 2026-09-18 ([#1247](https://github.com/unisdr/undrr-mangrove/pull/1247), [#1235](https://github.com/unisdr/undrr-mangrove/issues/1235)): The three section and top-bar ref callbacks are statement bodies instead of parenthesised assignments, so they no longer return the element they assign. React 19.3 does not reject that return value (it stores it as the ref cleanup, finds it is not a function and still calls `ref(null)` on detach), so these were correct as written; the hazard React 19 introduced is a ref callback returning a _function_, which silently replaces the detach call. Found by widening ESLint coverage to component `.jsx`, which had never been linted. No visual or behavioural change.

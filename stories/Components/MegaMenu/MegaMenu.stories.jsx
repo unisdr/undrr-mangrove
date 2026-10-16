@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import createHydrator from '../../../src/hydrate';
 import fromElement from './MegaMenu.fromElement';
 import MegaMenu from './MegaMenu';
@@ -741,9 +741,13 @@ export const MobileMotionReview = {
       within(dialog).getByRole('button', { name: 'Guidance' })
     );
     await expect(within(dialog).getAllByRole('link')).toHaveLength(31);
-    await expect(
-      within(dialog).getByRole('link', { name: 'Guidance 30' })
-    ).toBeVisible();
+    // The new page begins its entry animation at opacity zero. Wait for
+    // visible content rather than racing its first animation frame in CI.
+    await waitFor(() =>
+      expect(
+        within(dialog).getByRole('link', { name: 'Guidance 30' })
+      ).toBeVisible()
+    );
   },
 };
 

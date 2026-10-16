@@ -302,7 +302,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
    When writing stories for TypeScript components, use CSF3 object syntax with Storybook's `Meta` and `StoryObj` types:
 
    ```tsx
-   import type { Meta, StoryObj } from '@storybook/react-webpack5';
+   import type { Meta, StoryObj } from '@storybook/react-vite';
    import TypedButton from './TypedButton';
 
    const meta: Meta<typeof TypedButton> = {
@@ -396,7 +396,7 @@ Mangrove supports TypeScript for component development. Using TypeScript provide
 
    ```tsx
    // TypeScriptExampleComponent.stories.tsx
-   import type { Meta, StoryObj } from '@storybook/react-webpack5';
+   import type { Meta, StoryObj } from '@storybook/react-vite';
    import TypeScriptExampleComponent from './TypeScriptExampleComponent';
 
    const meta: Meta<typeof TypeScriptExampleComponent> = {
