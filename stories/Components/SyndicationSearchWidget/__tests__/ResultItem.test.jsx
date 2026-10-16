@@ -83,12 +83,14 @@ describe('swapCardVariant', () => {
     expect(result).toContain('mg-card');
   });
 
-  it('rewrites Drupal image style to portrait for card-book mode', () => {
+  it('preserves supplied artwork URLs for card-book mode', () => {
     const html =
       '<img src="https://www.undrr.org/sites/default/files/styles/landscape_16_9/public/2023-06/photo.jpg?itok=abc">';
     const result = swapCardVariant(html, 'card-book');
-    expect(result).toContain('/styles/por/public/');
-    expect(result).not.toContain('landscape_16_9');
+    expect(result).toContain(
+      '/styles/landscape_16_9/public/2023-06/photo.jpg?itok=abc'
+    );
+    expect(result).not.toContain('/styles/por/public/');
   });
 
   it('rewrites Drupal image style to landscape for card mode', () => {
