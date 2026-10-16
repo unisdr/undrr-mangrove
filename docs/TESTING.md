@@ -190,6 +190,12 @@ is in the CDN bundle or in this story's selectors, not in the component.
 If a story genuinely cannot run headlessly, give it the `!test` tag and record
 the reason in the story rather than leaving a silent failure.
 
+## Storybook Vite evaluation
+
+The opt-in [Vite builder spike](STORYBOOK-VITE-SPIKE.md) documents commands,
+parity evidence and remaining migration checks for #1355. The default builder
+and test runner remain unchanged.
+
 ## Visual testing with Chromatic
 
 Visual testing is handled automatically through our CI/CD pipeline.

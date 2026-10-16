@@ -3,13 +3,7 @@ import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
 import { transformSource } from './docsSource';
 
-// Import theme SCSS files as lazy-loaded modules (via lazyStyleTag in main.js)
-// These provide .use() and .unuse() methods to toggle styles on/off
-import themeUNDRR from '../stories/assets/scss/style.scss';
-import themePreventionWeb from '../stories/assets/scss/style-preventionweb.scss';
-import themeIRP from '../stories/assets/scss/style-irp.scss';
-import themeMCR from '../stories/assets/scss/style-mcr.scss';
-import themeDelta from '../stories/assets/scss/style-delta.scss';
+import themeStyles from './themeStyles';
 
 // RTL languages
 const rtlLanguages = ['arabic'];
@@ -108,14 +102,6 @@ const setDirection = (Story, context) => {
   }, []);
 
   return <Story {...context} />;
-};
-
-const themeStyles = {
-  'Global UNDRR Theme': themeUNDRR,
-  'PreventionWeb Theme': themePreventionWeb,
-  'IRP Theme': themeIRP,
-  'MCR2030 Theme': themeMCR,
-  'DELTA Resilience Theme': themeDelta,
 };
 
 // Maps toolbar theme names to the CSS class applied to <body> so that
