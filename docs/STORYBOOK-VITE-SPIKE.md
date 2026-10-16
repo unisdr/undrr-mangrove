@@ -1,7 +1,7 @@
 # Storybook Vite migration
 
 [#1355](https://github.com/unisdr/undrr-mangrove/issues/1355), evaluated
-2026-10-16. The first commit preserves the opt-in spike; the stacked 3.0
+2026-10-16. The first commit preserves the opt-in spike; the stacked 2.2
 migration makes Vite and addon-vitest the default. The published library's
 Webpack bundle build and the Jest unit-test suite remain separate.
 
@@ -62,7 +62,9 @@ story sources. Keep `scripts/serve-storybook.mjs` after removing the old runner.
 
 ## Verification evidence
 
-The 3.0 Webpack baseline and Vite build were compared in the same checkout.
+The original 3.0 Webpack baseline and Vite build were compared in the same
+checkout. The stack now targets 2.2 on main, excluding the icon-font retirement
+and 3.0 preview-branch changes. Fresh verification on that base is recorded below.
 
 | Check | Result |
 | --- | --- |
@@ -86,8 +88,8 @@ The lazy strategy reduced the main preview entry from the spike's roughly
 controlled load-time benchmark or the total initial transfer including docs.
 
 The builds retain an existing warning about syndicated-search stories sharing
-a component ID. Existing Sass import deprecations on `release/3.0` are outside
-this migration; the Sass-module migration on main is not pulled into this PR.
+a component ID. The 2.2 base includes main's Sass-module migration and card
+refinements; these are base changes, not part of the Storybook migration.
 
 ## Regression checks and review
 

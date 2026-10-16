@@ -11,8 +11,6 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
-
-
 ### Repository maintenance
 
 - Migrated Storybook to the Vite builder and its supported Vitest Browser Mode integration with Playwright Chromium. Themes load in separate cached chunks; story assertions await the selected CSS, while production-site theme, search, motion and rich-content gates remain in CI. The published library bundle build and Jest unit tests retain their existing toolchains. See [#1355](https://github.com/unisdr/undrr-mangrove/issues/1355).
