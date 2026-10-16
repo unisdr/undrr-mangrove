@@ -22,7 +22,7 @@
  * The published package has no root entry point, by decision
  * (unisdr/undrr-mangrove#1252). Consumers import the top-level subpath
  * directories: `@undrr/undrr-mangrove/components/IconCard.js`, `…/css/…`,
- * `…/scss/…`, `…/js/…`, `…/fonts/…`, `…/error-pages/…`, and `…/docs/…` for
+ * `…/scss/…`, `…/js/…`, `…/error-pages/…`, and `…/docs/…` for
  * the editorial manual and the llms-*.txt sub-manifests. See
  * buildPackageJson() for why there is no `main` and no `exports`.
  *
@@ -59,7 +59,6 @@ export const PACKAGE_FILES = [
   'js/**/*',
   'scss/**/*.scss',
   'error-pages/**/*',
-  'fonts/**/*',
   'docs/**/*',
   // Second line of defence: even if a development-only file reaches the
   // assembled directory, npm leaves it out of the tarball.
@@ -107,7 +106,6 @@ const DIST_COPIES = [
   ['dist/assets/js', 'js'],
   ['dist/assets/css', 'css'],
   ['dist/assets/error-pages', 'error-pages'],
-  ['dist/fonts', 'fonts'],
   ['dist/components', 'components'],
   // The editorial manual and the llms-*.txt sub-manifests, written by
   // scripts/copy-docs-to-dist.mjs (undrr/web-backlog#3109).

@@ -2,26 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Icon Component
+ * Renders a decorative Mangrove SVG icon using CSS classes.
  *
- * Renders a Mangrove icon using CSS classes. Supports multiple formats:
- *
- * 1. Name only: <Icon name="globe" /> → "mg-icon mg-icon-globe"
- * 2. Full class string: <Icon name="mg-icon fa-globe" /> → passed through
- * 3. Legacy fa- format: <Icon name="fa-globe" /> → "mg-icon fa-globe"
- * 4. mg-icon- prefixed: <Icon name="mg-icon-globe" /> → "mg-icon mg-icon-globe"
- *
- * The component normalizes all formats to work with Mangrove's icon system.
+ * Accepts a bare name ("globe"), a qualified name ("mg-icon-globe"),
+ * a legacy Mangrove name ("mg-globe"), or a full class string
+ * ("mg-icon mg-icon-globe"). FontAwesome names are no longer supported.
  *
  * @example
- * // Preferred - just the icon name
- * <Icon name="globe" />
- *
- * // Legacy - FontAwesome style (still supported)
- * <Icon name="fa-globe" />
- *
- * // Full class string (passed through)
- * <Icon name="mg-icon fa-globe" />
+ * <Icon name="globe" size="lg" />
  */
 export function Icon({ name, className = '', size, ...props }) {
   if (!name) return null;
@@ -29,11 +17,8 @@ export function Icon({ name, className = '', size, ...props }) {
   let iconClasses;
 
   if (name.includes(' ')) {
-    // Full class string passed - use as-is (e.g., "mg-icon fa-globe")
+    // Full class string passed - use as-is (e.g., "mg-icon mg-icon-globe")
     iconClasses = name;
-  } else if (name.startsWith('fa-')) {
-    // Legacy FontAwesome format: fa-globe → mg-icon fa-globe
-    iconClasses = `mg-icon ${name}`;
   } else if (name.startsWith('mg-icon-')) {
     // Already qualified: mg-icon-globe → mg-icon mg-icon-globe
     iconClasses = `mg-icon ${name}`;
@@ -59,7 +44,7 @@ export function Icon({ name, className = '', size, ...props }) {
 }
 
 Icon.propTypes = {
-  /** Icon name - can be just the name (e.g., "globe"), fa- prefixed (e.g., "fa-globe"), or full class string */
+  /** Icon name ("globe", "mg-icon-globe", "mg-globe") or full Mangrove class string */
   name: PropTypes.string.isRequired,
   /** Additional CSS classes */
   className: PropTypes.string,

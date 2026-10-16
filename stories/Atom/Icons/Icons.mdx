@@ -45,8 +45,9 @@ import Icon from './Icon';
 // Multi-color (preserves SVG's original colors)
 <Icon name="sdg-wheel" className="mg-icon--multicolor" />
 
-// Legacy fa- format (still supported via font fallback)
-<Icon name="fa-globe" />
+// Qualified name or full Mangrove class string
+<Icon name="mg-icon-globe" />
+<Icon name="mg-icon mg-icon-globe" />
 ```
 
 ### CSS classes
@@ -70,7 +71,7 @@ For map and media controls, use `plus` and `minus` for zoom, or pair `circle-plu
 </button>
 ```
 
-Legacy `fa-*` classes still work via the icon font fallback. New code should use `mg-icon-*`.
+The icon font and its `fa-*`, `.fa`, `.fas` and `.fab` aliases have been removed. Use `mg-icon mg-icon-{name}` in HTML and a Mangrove icon name in React.
 
 ### Size modifiers
 
@@ -133,7 +134,7 @@ Multi-color only works with SVGs that have explicit fill/stroke color values in 
 
 ### Migrating from `fa-*` to `mg-icon-*`
 
-For most icons, replace `fa-` with `mg-icon-`:
+Replace legacy icon classes using the mapping below. In React, change `<Icon name="fa-globe" />` to `<Icon name="globe" />`. Full class strings must also use the Mangrove namespace:
 
 | Old class         | New class                                      |
 | ----------------- | ---------------------------------------------- |
@@ -150,7 +151,11 @@ For most icons, replace `fa-` with `mg-icon-`:
 | `fa-right`        | `mg-icon-right` (or `mg-icon-arrow-right`)     |
 | `fa-menu`         | `mg-icon-menu` (or `mg-icon-hamburger`)        |
 
-The full list is in `scripts/icon-map.cjs`. Legacy `fa-*` classes still work during the transition but will be removed in a future release (see [#906](https://github.com/unisdr/undrr-mangrove/issues/906) phases 3-4).
+The full supported inventory is in `scripts/icon-map.cjs`. Do not blindly replace prefixes for icons outside that inventory: choose an existing SVG or add a mapping first. This includes saved editor attributes and hydration data as well as rendered HTML.
+
+The `.fa-before` spacing helper and `.fa-2x` size helper are removed too. Use a layout gap or logical margin for spacing, and set `font-size: 2em` or choose a documented `mg-icon--*` size modifier. `.mg-icon--xl` is 2em.
+
+Custom CSS using `font-family: FontAwesome` and private-use `content` codepoints must switch to SVG masks or CSS shapes. `$mgIconFontPath` and the published `fonts/mangrove-icon-set/` files no longer exist. Text font loading is unchanged. See the [retirement release gate](https://github.com/unisdr/undrr-mangrove/blob/main/docs/ICON-FONT-RETIREMENT.md) and [unisdr/undrr-mangrove#906](https://github.com/unisdr/undrr-mangrove/issues/906).
 
 ## Adding a new icon
 
@@ -177,7 +182,7 @@ The full list is in `scripts/icon-map.cjs`. Legacy `fa-*` classes still work dur
 
 **Browser support:** `mask-image` requires Chrome 120+, Firefox 53+, Safari 15.4+, Edge 120+. CSS custom properties (`var()`) have wider support, so they add no additional browser requirement. See [browser support](https://mangrove.undrr.org/?path=/docs/getting-started-browser-support--docs) for the full baseline.
 
-**Legacy icon font:** The `mangrove-icon-set` icon font is still loaded as a fallback for `fa-*` selectors. It will be removed in a future release once all consumers migrate to `mg-icon-*` (see [#906](https://github.com/unisdr/undrr-mangrove/issues/906) phases 3-4).
+**SVG only:** Mangrove ships no icon font, FontAwesome font-family declaration or `fa-*` alias selectors. Existing SVG names, colours, size modifiers and multi-colour rendering remain available.
 
 > **Implementation note (for contributors):** Each icon sets a `--mg-icon-svg` CSS custom property containing the SVG as a data URI; the base `.mg-icon::before` rule applies `mask-image: var(--mg-icon-svg)` so each data URI is defined once rather than duplicated. The `mg-icon--multicolor` modifier switches to `background-image: var(--mg-icon-svg)` to preserve original fill/stroke colors.
 >
@@ -195,6 +200,8 @@ The full list is in `scripts/icon-map.cjs`. Legacy `fa-*` classes still work dur
 - When an icon is the sole content of a button or link, the interactive element must meet a minimum target size of 24x24 CSS pixels (WCAG 2.5.8). The `mg-share__button` class (40x40px) is a good reference pattern.
 
 ## Changelog
+
+- **3.0**, 2026-10-16 ([unisdr/undrr-mangrove#906](https://github.com/unisdr/undrr-mangrove/issues/906)): **Breaking:** Removed the legacy icon font, FontAwesome aliases and React `fa-*` name support. Use `mg-icon-*` classes or Mangrove icon names. Removed `$mgIconFontPath` and the published icon-font files. SVG masks now apply directly to `.mg-icon::before`.
 
 - **2.3.1**, 2026-10-12 ([#1337](https://github.com/unisdr/undrr-mangrove/pull/1337)): `pen-nib` follows Lucide 1.55, which redraws its source icon (`pen-tool`) with a rounder nib and handle. Same overall shape; no icons were renamed or removed.
 - **2.3**, 2026-09-25 ([#1296](https://github.com/unisdr/undrr-mangrove/issues/1296)): Added `plus`, `minus`, `pause`, `play`, `circle-minus`, `expand`, `shrink` and `layers` Lucide icons for map and media controls.

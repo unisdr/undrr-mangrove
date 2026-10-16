@@ -126,8 +126,8 @@
 // The icon mask is an inline-block that sits on the text baseline, which leaves
 // the font's descender space below it and lifts the glyph about 1.5px above
 // centre. As a block it fills the icon box, so flex centring is exact.
-.mg-button .mg-icon:not([class*="fa-"])::before,
-.mg-icon-button .mg-icon:not([class*="fa-"])::before {
+.mg-button .mg-icon::before,
+.mg-icon-button .mg-icon::before {
   display: block;
 }
 

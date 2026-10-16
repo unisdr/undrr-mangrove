@@ -272,7 +272,7 @@ Follow the normal [Release steps](#release-steps) 1–5 (version bump, CDN links
 
 ### 2. Assemble the package exactly as CI does
 
-The `npm-publish.yml` workflow does **not** publish the repo root. It runs `scripts/assemble-npm-package.mjs`, which builds a curated `npm-package/` directory from `dist/` (compiled `components/`, `css/`, `js/`, `fonts/`, `error-pages/`, the `scss/` sources, and a slimmed `package.json`). Run the same script from the repo root after a clean `yarn build`:
+The `npm-publish.yml` workflow does **not** publish the repo root. It runs `scripts/assemble-npm-package.mjs`, which builds a curated `npm-package/` directory from `dist/` (compiled `components/`, `css/`, `js/`, `error-pages/`, the `scss/` sources, and a slimmed `package.json`). Run the same script from the repo root after a clean `yarn build`:
 
 ```bash
 yarn pack:assemble   # replaces npm-package/ (gitignored)
@@ -399,7 +399,6 @@ Published npm packages include:
 - `/js/**/*`: compiled vanilla JavaScript files
 - `/scss/**/*`: source SCSS files
 - `/error-pages/**/*`: static error page templates
-- `/fonts/**/*`: Mangrove icon font
 
 The layout and the slimmed `package.json` are produced by `scripts/assemble-npm-package.mjs`, used by both the publish workflow and `yarn pack:assemble` / `yarn pack:preview`. Change that script, not the workflow, to change what is published.
 

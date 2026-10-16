@@ -80,7 +80,7 @@
 {
   @if meta.variable-exists($_legacy) {
     @if $_role == "" {
-      @warn "Mangrove 2.0: `$#{$_legacy}` no longer exists and has no replacement — it had no stylesheet consumer, and icons.scss names the FontAwesome family directly. See docs/RELEASE-2.0.md.";
+      @warn "Mangrove 2.0: `$#{$_legacy}` no longer exists and has no replacement — it had no stylesheet consumer. Icons use SVG masks. See docs/RELEASE-2.0.md.";
     } @else {
       @warn "Mangrove 2.0: `$#{$_legacy}` no longer has any effect — font families are role custom properties now. Move the override into a `.mg-theme-* { --mg-font-family-#{$_role}: ...; }` block (or `:root`). See docs/RELEASE-2.0.md.";
     }
@@ -98,10 +98,6 @@ $mg-html-font-size: 16; // BUILD-TIME ONLY
 @function mg-rem($px) {
   @return math.div($px, $mg-html-font-size) * 1rem;
 }
-
-// font file variables
-// Path adjusted for Storybook staticDirs (serves assets/ at root, not /assets/)
-$mgIconFontPath: "../fonts/mangrove-icon-set/font" !default; // BUILD-TIME ONLY
 
 // image variables
 $img-path: "~/stories/assets/images"; // BUILD-TIME ONLY

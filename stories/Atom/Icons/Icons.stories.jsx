@@ -99,10 +99,6 @@ export const DefaultIcons = {
 <Icon name="globe" />
 // Renders: <span class="mg-icon mg-icon-globe" aria-hidden="true"></span>
 
-// Legacy format (still supported via font fallback)
-<Icon name="fa-globe" />
-// Renders: <span class="mg-icon fa-globe" aria-hidden="true"></span>
-
 // Direct CSS usage
 <span class="mg-icon mg-icon-globe"></span>`,
       },

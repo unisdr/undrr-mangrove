@@ -138,11 +138,6 @@ describe('every font-family names a role', () => {
     // browser default for `pre` / `code` / `kbd` / `samp` before Mangrove's own
     // code styling (which does use --mg-font-family-code) lands on top.
     monospace: ['pre', 'code, kbd, samp'],
-    // FontAwesome is an icon font, not a text face. It has no reader-task role
-    // and no Arabic counterpart; icons.scss names it directly (ruling 3 of
-    // unisdr/undrr-mangrove#1098, which is also why $mg-font-family-icons was
-    // removed with no replacement).
-    'FontAwesome, sans-serif': ['.mg-icon, .fa-before:before, .fab, .fas, .fa'],
   };
 
   test.each(['style', 'style-all'])(
@@ -609,8 +604,8 @@ describe('the shared Drupal import list', () => {
 describe('the removed font variables warn at compile time', () => {
   /**
    * The six names #1098 deleted, each with the role that replaces it.
-   * `$mg-font-family-icons` has none: it had no stylesheet consumer, and
-   * icons.scss names FontAwesome directly.
+   * `$mg-font-family-icons` has none: it had no stylesheet consumer.
+   * Icons now use SVG masks.
    *
    * Setting one of these before importing Mangrove used to change the type on
    * every page. It is now a silent no-op, which is the worst possible failure

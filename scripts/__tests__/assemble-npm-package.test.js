@@ -114,7 +114,6 @@ test('copies dist subpaths and SCSS sources into the CI layout', () => {
       'docs/EDITORIAL-MANUAL.md',
       'docs/llms-editorial-manual.txt',
       'error-pages/404.html',
-      'fonts/mangrove-icon-set.woff2',
       'js/tabs.js',
       'package.json',
       'scss/Components/Tabs/tabs.scss',
@@ -194,7 +193,6 @@ test('the packed tarball ships the subpath directories', () => {
     'docs/EDITORIAL-MANUAL.md',
     'docs/llms-editorial-manual.txt',
     'error-pages/404.html',
-    'fonts/mangrove-icon-set.woff2',
     'js/tabs.js',
     'package.json',
     'scss/Components/Tabs/tabs.scss',
@@ -251,7 +249,6 @@ test('generates the slimmed package.json', () => {
       'js/**/*',
       'scss/**/*.scss',
       'error-pages/**/*',
-      'fonts/**/*',
       'docs/**/*',
       '!**/__tests__/**',
       '!**/__snapshots__/**',
@@ -298,8 +295,8 @@ test('fails with a build hint when dist is missing', () => {
 });
 
 test('fails like `cp -r dir/*` when a source directory is empty', () => {
-  fs.rmSync(path.join(root, 'dist/fonts'), { recursive: true });
-  fs.mkdirSync(path.join(root, 'dist/fonts'));
+  fs.rmSync(path.join(root, 'dist/assets/error-pages'), { recursive: true });
+  fs.mkdirSync(path.join(root, 'dist/assets/error-pages'));
   const result = run(out, '--root', root);
   expect(result.status).toBe(1);
   expect(result.stderr).toMatch(/no files to copy/);

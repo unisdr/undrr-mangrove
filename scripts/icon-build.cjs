@@ -126,10 +126,7 @@ function buildIconDefinitions() {
     const encoded = encodeSvg(optimised.data);
     const dataUri = `url("data:image/svg+xml,${encoded}")`;
 
-    // Only emit --mg-icon-svg here. content: "" and background-color: currentColor
-    // live in the base .mg-icon:not([class*="fa-"])::before rule (specificity 0,2,1),
-    // which is excluded for fa-* elements so those rules never interfere with
-    // font glyph rendering.
+    // Each SVG is defined once; .mg-icon::before applies the mask.
     rules.push(`.mg-icon-${name}::before {\n  --mg-icon-svg: ${dataUri};\n}`);
   }
 

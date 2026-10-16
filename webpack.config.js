@@ -20,7 +20,7 @@ export default [
     cache: { type: 'filesystem', name: `assets-${packMode}` },
     // The asset pass: it compiles nothing and exists for the CopyPlugin
     // patterns below, which are what put the vanilla modules, the compiled
-    // CSS, the fonts and the error pages into dist/assets/.
+    // CSS and the error pages into dist/assets/.
     //
     // It used to take glob-discovered entries from webpack.entries.js and
     // was documented as emitting dist/js/*.min.js, but the glob doubled a
@@ -67,7 +67,7 @@ export default [
       // the CDN and the npm `js/` directory actually serve today:
       //  - dist/assets/js/*.js stay byte for byte what a contributor wrote,
       //    because no JS minifier is in the list;
-      //  - dist/assets/error-pages/*.html and the icon-font demo page stay
+      //  - dist/assets/error-pages/*.html stay
       //    readable, because no HTML minifier is in the list;
       //  - dist/assets/css/*.css keep their header comment, because of
       //    `discardComments: false` below.
@@ -100,10 +100,6 @@ export default [
           {
             from: 'stories/Components/ErrorPages/static',
             to: 'assets/error-pages',
-          },
-          {
-            from: 'stories/assets/fonts/mangrove-icon-set',
-            to: 'fonts/mangrove-icon-set',
           },
         ].map(pattern => ({
           ...pattern,

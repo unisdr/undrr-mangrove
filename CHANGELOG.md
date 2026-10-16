@@ -11,7 +11,7 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
-_Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
+- **Breaking, pending the Drupal migration:** Retired the FontAwesome icon-font fallback, `fa-*` aliases (including `.fa-before` and `.fa-2x`), React `fa-*` icon names, `$mgIconFontPath` and the published `fonts/mangrove-icon-set/` assets. SVG icons continue through `mg-icon-*`. This must ship in a release that explicitly announces the breaking change, after [undrr/web-backlog#3185](https://gitlab.com/undrr/web-backlog/-/issues/3185) is deployed and verified in production. See [migration and release gate](docs/ICON-FONT-RETIREMENT.md) and [unisdr/undrr-mangrove#906](https://github.com/unisdr/undrr-mangrove/issues/906).
 
 ## 2.1.0, 2026-10-15
 
