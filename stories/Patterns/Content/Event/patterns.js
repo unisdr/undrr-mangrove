@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const eventPatterns = {
   id: 'event',
   name: 'Event',
@@ -24,9 +24,28 @@ export const eventPatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact event presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'Event',
+        id: 'patterns-content-card--event',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'Event',
+          id: 'patterns-content-card--event',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'Event book',
+          id: 'patterns-content-card--event-book',
+        },
+      },
+      basis: 'audited-card-selection',
     },
   },
   defaultProfile: 'general',
@@ -43,10 +62,40 @@ export const eventPatterns = {
             story: 'Event',
             id: 'patterns-content-teaser--event',
           },
-          layout: {
-            before: ['labels', 'location', 'event', 'delivery'],
+          fields: {
+            before: ['labels', 'eventLocation', 'event', 'delivery'],
             after: ['summary', 'language'],
+            media: 'none',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Event',
+            id: 'patterns-content-card--event',
+          },
+          fields: {
+            media: 'photo',
+            before: ['labels'],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Event',
+              id: 'patterns-content-card--event',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Event book',
+              id: 'patterns-content-card--event-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },
@@ -62,11 +111,40 @@ export const eventPatterns = {
             story: 'Conference session',
             id: 'patterns-content-teaser--conference-session',
           },
-          layout: {
-            image: true,
+          fields: {
             before: ['bucket', 'schedule', 'exhibitions', 'room', 'format'],
             after: ['summary', 'topics'],
+            media: 'photo',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Programme session',
+            id: 'patterns-content-card--programme-session',
+          },
+          fields: {
+            media: 'photo',
+            before: ['sessionBucket', 'sessionTypes'],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Programme session',
+              id: 'patterns-content-card--programme-session',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Programme session book',
+              id: 'patterns-content-card--programme-session-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },

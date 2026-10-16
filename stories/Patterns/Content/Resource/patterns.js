@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const resourcePatterns = {
   id: 'resource',
   name: 'Resource',
@@ -24,9 +24,28 @@ export const resourcePatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact resource presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'Resource',
+        id: 'patterns-content-card--resource',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'Resource',
+          id: 'patterns-content-card--resource',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'Resource book',
+          id: 'patterns-content-card--resource-book',
+        },
+      },
+      basis: 'audited-card-selection',
     },
   },
   defaultProfile: 'default',
@@ -43,10 +62,40 @@ export const resourcePatterns = {
             story: 'Resource',
             id: 'patterns-content-teaser--resource',
           },
-          layout: {
-            before: ['labels', 'location', 'delivery'],
+          fields: {
+            before: ['labels', 'resourceType', 'location', 'delivery'],
             after: ['summary', 'sources', 'language'],
+            media: 'none',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Resource',
+            id: 'patterns-content-card--resource',
+          },
+          fields: {
+            media: 'photo',
+            before: ['resourceType'],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Resource',
+              id: 'patterns-content-card--resource',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Resource book',
+              id: 'patterns-content-card--resource-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },

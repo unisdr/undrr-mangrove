@@ -2259,19 +2259,36 @@ npm run build</code></pre>
     ],
   },
 
+  'patterns-content-card': {
+    summary:
+      'Compact content cards with separately selected metadata and vertical/book layouts across content archetypes.',
+    description:
+      'Experimental card presentation selected by archetype/profile, separate from teaser and full-page projections. Vertical and book are geometry choices over the same card field selection. Audited Drupal card modes hide most summaries/dates; profiles without a source card mode are explicit Mangrove proposals. Complete covers and logos are preserved. See content-patterns.json for profile references, layout inputs and status.',
+    cssClasses: [
+      'mg-content-card',
+      'mg-content-card--vertical',
+      'mg-content-card--book',
+      'mg-content-pattern--logo',
+      'mg-content-card-grid',
+      'mg-content-meta__before-title',
+      'mg-content-meta__group',
+      'mg-content-meta__metadata-link',
+    ],
+  },
+
   'patterns-content-teaser': {
     summary:
       'Shared experimental teaser renderer; content families own separate page, teaser and card presentations.',
     description:
-      'Shared experimental horizontal teaser renderer driven by content-family specifications. Its input is a presentation projection, not a canonical domain model. See content-patterns.json for family-specific full-page, teaser and card status; stubs are not implemented.',
+      'Shared experimental horizontal teaser renderer driven by content-family specifications. Its input is a presentation projection, not a canonical domain model. Cards use the separate ContentCard renderer and field projection. See content-patterns.json for family-specific full-page, teaser and card status; stubs are not implemented.',
     cssClasses: [
       'mg-content-teaser',
-      'mg-content-teaser__before-title',
-      'mg-content-teaser__group',
-      'mg-content-teaser__metadata',
-      'mg-content-teaser__metadata-link',
-      'mg-content-teaser__attribution',
-      'mg-content-teaser--logo',
+      'mg-content-meta__before-title',
+      'mg-content-meta__group',
+      'mg-content-meta__metadata',
+      'mg-content-meta__metadata-link',
+      'mg-content-meta__attribution',
+      'mg-content-pattern--logo',
       'mg-content-teaser-list',
     ],
   },

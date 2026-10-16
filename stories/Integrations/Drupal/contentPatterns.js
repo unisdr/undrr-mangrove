@@ -65,6 +65,3 @@ export const DRUPAL_CONTENT_PATTERNS = {
     profile: 'default',
   },
 };
-
-// Draft API alias; values now select an archetype AND profile.
-export const DRUPAL_TEASER_TYPES = DRUPAL_CONTENT_PATTERNS;

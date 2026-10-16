@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const collectionPatterns = {
   id: 'collection',
   name: 'Collection',
@@ -37,9 +37,28 @@ export const collectionPatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact collection presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'Collection',
+        id: 'patterns-content-card--collection',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'Collection',
+          id: 'patterns-content-card--collection',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'Collection book',
+          id: 'patterns-content-card--collection-book',
+        },
+      },
+      basis: 'audited-card-selection',
     },
   },
   defaultProfile: 'default',
@@ -56,11 +75,40 @@ export const collectionPatterns = {
             story: 'Collection',
             id: 'patterns-content-teaser--collection',
           },
-          layout: {
-            image: true,
+          fields: {
             before: ['labels', 'freshness'],
             after: ['summary'],
+            media: 'photo',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Collection',
+            id: 'patterns-content-card--collection',
+          },
+          fields: {
+            media: 'photo',
+            before: ['labels'],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Collection',
+              id: 'patterns-content-card--collection',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Collection book',
+              id: 'patterns-content-card--collection-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },

@@ -14,13 +14,13 @@ Family files own presentation specifications and profile projections. The shared
 
 ## Drupal integration
 
-Drupal is a major consumer. Its explicit bundle-to-archetype/profile bindings stay in Mangrove at `stories/Integrations/Drupal/contentPatterns.js` and are published as `DRUPAL_CONTENT_PATTERNS` from the ContentTeaser entry. News maps to Article/news and blog to Article/commentary. These are provisional bundle defaults, not authoritative per-record classifications. Gutenberg blocks can compose report pages and collection directories as well as topic pages; production adapters must discriminate by content purpose before adopting these bindings. Page references demonstrate composition rather than establishing Drupal entity identity. Bindings may evolve without reorganizing the pattern library. They select profiles only; production field adapters and domain/link policy still need implementation and review.
+Drupal is a major consumer. Its explicit bundle-to-archetype/profile bindings stay in Mangrove at `stories/Integrations/Drupal/contentPatterns.js` and are published as `DRUPAL_CONTENT_PATTERNS` from the separate `components/DrupalContentPatterns.js` entry. News maps to Article/news and blog to Article/commentary. These are provisional bundle defaults, not authoritative per-record classifications. Gutenberg blocks can compose report pages and collection directories as well as topic pages; production adapters must discriminate by content purpose before adopting these bindings. Page references demonstrate composition rather than establishing Drupal entity identity. Bindings may evolve without reorganizing the pattern library. They select profiles only; production field adapters and domain/link policy still need implementation and review.
 
 National platform provisionally maps to Organization/coordination-platform, preserving its existing teaser selection. An activity-led portal may map to Landing page instead; the consumer's purpose should determine that choice.
 
 ## Presentation coverage
 
-**Experimental** means an implemented teaser with a provisional contract. **Reference** links an existing page example whose family contract is still provisional. **Stub** means not designed or implemented: a reserved place with no callable component or import. Shared card primitives are available, but content-family card patterns remain stubs until their field selection and mapping are specified.
+**Experimental** means an implemented presentation with a provisional contract. **Reference** links an existing page example whose family contract is still provisional. **Stub** means not designed or implemented: a reserved place with no callable component or import. Card presentations are now experimental implementations with their own compact field selection; vertical and book are alternate layouts. Full-page stubs remain reserved where no implementation exists.
 
 <table>
   <thead>
@@ -44,8 +44,8 @@ National platform provisionally maps to Organization/coordination-platform, pres
             ? 'Reference'
             : 'Stub'}
         </td>
-        <td>Experimental</td>
-        <td>Stub</td>
+        <td>{family.presentations.teaser.status}</td>
+        <td>{family.presentations.card.status}</td>
       </tr>
     ))}
   </tbody>
@@ -55,7 +55,7 @@ National platform provisionally maps to Organization/coordination-platform, pres
 
 Start from the content family's meaning and the reader's task. Define required and optional information, omission rules and source mapping for that presentation. Compose shared components after those decisions. An existing horizontal teaser does not establish the layout, fields or actions of a full page; a generic vertical card does not establish a content-specific card pattern.
 
-For example, Resource has an implemented experimental teaser and explicit full-page/card stubs. Its full-page information architecture has not been specified. Publication has a report-page reference and a teaser, with its compact-card content pattern still a stub. Keep source taxonomies, dates and identity distinct even when a particular presentation combines labels for display.
+For example, Resource has implemented experimental teaser and card presentations and an explicit full-page stub. Its full-page information architecture has not been specified. Publication has a report-page reference and a teaser, with vertical and book card layouts preserving the complete cover. Keep source taxonomies, dates and identity distinct even when a particular presentation combines labels for display.
 
 <LinkTo kind="Patterns/Content teaser" story="docs">
   Shared teaser implementation and contract reference
@@ -69,4 +69,4 @@ The generated `content-patterns.json` catalogue records every family's model and
 
 ### 0.1.0 (16 October 2026)
 
-- Organize content patterns by family, connect existing references and experimental teasers, and reserve explicit full-page/card stubs.
+- Organize content patterns by family, connect existing references and experimental teasers, reserve explicit full-page stubs, and implement card field projections with vertical/book layouts.

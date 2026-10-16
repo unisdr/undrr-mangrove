@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const opportunityPatterns = {
   id: 'opportunity',
   name: 'Opportunity',
@@ -24,9 +24,28 @@ export const opportunityPatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact opportunity presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'Job',
+        id: 'patterns-content-card--job',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'Job',
+          id: 'patterns-content-card--job',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'Job book',
+          id: 'patterns-content-card--job-book',
+        },
+      },
+      basis: 'audited-card-selection',
     },
   },
   defaultProfile: 'job',
@@ -43,10 +62,40 @@ export const opportunityPatterns = {
             story: 'Vacancy',
             id: 'patterns-content-teaser--vacancy',
           },
-          layout: {
+          fields: {
             before: ['labels', 'location', 'deadline', 'status'],
             after: ['summary'],
+            media: 'none',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Job',
+            id: 'patterns-content-card--job',
+          },
+          fields: {
+            media: 'none',
+            before: [],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Job',
+              id: 'patterns-content-card--job',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Job book',
+              id: 'patterns-content-card--job-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },

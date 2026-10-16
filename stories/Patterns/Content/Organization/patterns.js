@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const organizationPatterns = {
   id: 'organization',
   name: 'Organization',
@@ -24,9 +24,28 @@ export const organizationPatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact organization presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'Organization',
+        id: 'patterns-content-card--organization',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'Organization',
+          id: 'patterns-content-card--organization',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'Organization book',
+          id: 'patterns-content-card--organization-book',
+        },
+      },
+      basis: 'audited-card-selection',
     },
   },
   defaultProfile: 'general',
@@ -43,12 +62,40 @@ export const organizationPatterns = {
             story: 'Organization',
             id: 'patterns-content-teaser--organization',
           },
-          layout: {
-            image: true,
-            logo: true,
+          fields: {
             before: ['location'],
             after: ['summary', 'organizationType'],
+            media: 'logo',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Organization',
+            id: 'patterns-content-card--organization',
+          },
+          fields: {
+            media: 'logo',
+            before: ['organizationLabels'],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Organization',
+              id: 'patterns-content-card--organization',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Organization book',
+              id: 'patterns-content-card--organization-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },
@@ -64,10 +111,40 @@ export const organizationPatterns = {
             story: 'National platform',
             id: 'patterns-content-teaser--national-platform',
           },
-          layout: {
+          fields: {
             before: ['labels'],
             after: ['summary'],
+            media: 'none',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Mangrove proposal: no explicit Drupal card display exists for this profile. Vertical and book layouts share this compact selection.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Coordination platform',
+            id: 'patterns-content-card--coordination-platform',
+          },
+          fields: {
+            media: 'none',
+            before: ['labels'],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Coordination platform',
+              id: 'patterns-content-card--coordination-platform',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Coordination platform book',
+              id: 'patterns-content-card--coordination-platform-book',
+            },
+          },
+          basis: 'proposed-card-selection',
         },
       },
     },

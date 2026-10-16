@@ -3,7 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { axe } from 'jest-axe';
 import { ContentTeaser, resolveTeaserUrl } from '../ContentTeaser';
-import { DRUPAL_TEASER_TYPES } from '../../../Integrations/Drupal/contentPatterns';
+import { DRUPAL_CONTENT_PATTERNS } from '../../../Integrations/Drupal/contentPatterns';
 import { teaserFixtures } from '../contentTeaserFixtures';
 
 describe('Content teaser contract', () => {
@@ -205,7 +205,7 @@ describe('Content teaser contract', () => {
 
 describe('Complete indexed content coverage', () => {
   test('explicit bundle mapping covers the fifteen configured node types', () => {
-    expect(Object.keys(DRUPAL_TEASER_TYPES).sort()).toEqual(
+    expect(Object.keys(DRUPAL_CONTENT_PATTERNS).sort()).toEqual(
       [
         'blog',
         'collections',
@@ -225,7 +225,7 @@ describe('Complete indexed content coverage', () => {
       ].sort()
     );
     expect(
-      Object.values(DRUPAL_TEASER_TYPES)
+      Object.values(DRUPAL_CONTENT_PATTERNS)
         .map(binding => `${binding.type}/${binding.profile}`)
         .sort()
     ).toEqual(
@@ -303,7 +303,7 @@ describe('Complete indexed content coverage', () => {
     const { container } = render(
       <ContentTeaser content={teaserFixtures.organization} />
     );
-    expect(container.firstChild).toHaveClass('mg-content-teaser--logo');
+    expect(container.firstChild).toHaveClass('mg-content-pattern--logo');
     expect(screen.getByRole('presentation')).toHaveAttribute(
       'src',
       teaserFixtures.organization.image.src
@@ -629,6 +629,6 @@ test('a closing-date label and its time occupy one metadata flex item', () => {
   expect(time.parentElement.tagName).toBe('SPAN');
   expect(time.parentElement).toHaveTextContent('Closing date: 30 Nov 2026');
   expect(time.parentElement.parentElement).toHaveClass(
-    'mg-content-teaser__before-title'
+    'mg-content-meta__before-title'
   );
 });

@@ -14,14 +14,14 @@ test('archetypes and profiles resolve independently of CMS bundles', () => {
   for (const family of CONTENT_FAMILIES) {
     expect(family.model.status).toBe('provisional');
     expect(family.profiles).toHaveProperty(family.defaultProfile);
-    expect(family.presentations.card.status).toBe('stub');
+    expect(family.presentations.card.status).toBe('experimental');
     expect(resolveTeaserPattern(family.id)).toBe(
-      family.profiles[family.defaultProfile].presentations.teaser.layout
+      family.profiles[family.defaultProfile].presentations.teaser.fields
     );
     expect(resolveTeaserPattern(family.id, 'toString')).toBeNull();
     for (const [id, profile] of Object.entries(family.profiles)) {
       expect(resolveTeaserPattern(family.id, id)).toBe(
-        profile.presentations.teaser.layout
+        profile.presentations.teaser.fields
       );
     }
   }
@@ -57,7 +57,33 @@ test('AI discovery distinguishes archetypes, profiles, bindings and non-callable
     packageName: '@undrr/undrr-mangrove',
   });
   expect(catalog.version).toBe(2);
+  expect(catalog.integrations.drupal.import).toContain(
+    '/components/DrupalContentPatterns.js'
+  );
+  const profiles = catalog.families.flatMap(family =>
+    Object.values(family.profiles)
+  );
+  expect(
+    profiles.filter(
+      profile => profile.presentations.card.basis === 'proposed-card-selection'
+    )
+  ).toHaveLength(3);
+  for (const profile of profiles) {
+    expect(profile.presentations.card.layouts[1].props).toEqual({
+      layout: 'book',
+    });
+    expect(profile.presentations.card.layouts[1].input).not.toHaveProperty(
+      'layout'
+    );
+  }
   expect(catalog.families).toHaveLength(11);
+  const publication = catalog.families.find(
+    family => family.id === 'publication'
+  ).profiles.default;
+  expect(publication.presentations.card.projection.after).toEqual([]);
+  expect(publication.presentations.teaser.projection.after).toContain(
+    'summary'
+  );
   expect(catalog.integrations.drupal.bindings).toEqual(DRUPAL_CONTENT_PATTERNS);
   for (const family of catalog.families) {
     for (const presentation of Object.values(family.presentations)) {
@@ -67,6 +93,10 @@ test('AI discovery distinguishes archetypes, profiles, bindings and non-callable
         expect(presentation).not.toHaveProperty('component');
       }
     }
+    expect(family.presentations.card.import).toBe(
+      'import { ContentCard } from "@undrr/undrr-mangrove/components/ContentCard.js";'
+    );
+    expect(family.presentations.card.layouts).toEqual(['vertical', 'book']);
     expect(family.presentations.teaser.import).toBe(
       'import { ContentTeaser } from "@undrr/undrr-mangrove/components/ContentTeaser.js";'
     );

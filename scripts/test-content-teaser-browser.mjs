@@ -71,7 +71,7 @@ try {
       const typography = await page.evaluate(() => {
         const probe = document.createElement('span');
         probe.style.cssText =
-          'position:absolute;visibility:hidden;font-family:var(--mg-font-family-ui);font-size:var(--mg-content-teaser-metadata-font-size)';
+          'position:absolute;visibility:hidden;font-family:var(--mg-font-family-ui);font-size:var(--mg-content-meta-font-size)';
         document.body.append(probe);
         const expected = getComputedStyle(probe);
         const fontSize = expected.fontSize;
@@ -79,7 +79,7 @@ try {
         probe.remove();
         const metadata = [
           ...document.querySelectorAll(
-            '.mg-content-teaser__before-title time, .mg-content-teaser__metadata, .mg-content-teaser__attribution li, .mg-content-teaser .mg-card__label'
+            '.mg-content-meta__before-title time, .mg-content-meta__metadata, .mg-content-meta__attribution li, .mg-content-teaser .mg-card__label'
           ),
         ];
         const summary = document.querySelector(
@@ -111,23 +111,20 @@ try {
         const override = await cards.first().evaluate(async card => {
           const summary = card.querySelector('.mg-card__summary');
           const originalSummarySize = getComputedStyle(summary).fontSize;
-          card.style.setProperty(
-            '--mg-content-teaser-metadata-font-size',
-            '19px'
-          );
+          card.style.setProperty('--mg-content-meta-font-size', '19px');
           // Reduced-motion styles retain near-zero transitions; allow them to settle.
           await new Promise(resolve =>
             requestAnimationFrame(() => requestAnimationFrame(resolve))
           );
           const metadata = [
             ...card.querySelectorAll(
-              'time, .mg-content-teaser__attribution li, .mg-card__label'
+              'time, .mg-content-meta__attribution li, .mg-card__label'
             ),
           ];
           const result =
             metadata.every(el => getComputedStyle(el).fontSize === '19px') &&
             getComputedStyle(summary).fontSize === originalSummarySize;
-          card.style.removeProperty('--mg-content-teaser-metadata-font-size');
+          card.style.removeProperty('--mg-content-meta-font-size');
           await new Promise(resolve =>
             requestAnimationFrame(() => requestAnimationFrame(resolve))
           );
@@ -195,7 +192,7 @@ try {
         true
       );
       const metadataLink = page.locator(
-        '[data-content-type="publication"] .mg-content-teaser__metadata-link'
+        '[data-content-type="publication"] .mg-content-meta__metadata-link'
       );
       await metadataLink.focus();
       assert.equal(
@@ -207,7 +204,7 @@ try {
         '2'
       );
       const topics = page.locator(
-        '[data-content-type="event"][data-content-profile="programme-session"] .mg-content-teaser__metadata-link'
+        '[data-content-type="event"][data-content-profile="programme-session"] .mg-content-meta__metadata-link'
       );
       assert.equal(await topics.count(), 2);
       const firstTopic = await topics.nth(0).boundingBox();

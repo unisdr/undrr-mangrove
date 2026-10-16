@@ -1,0 +1,63 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import * as Stories from './ContentCard.stories';
+
+<Meta of={Stories} />
+
+# Content cards
+
+Experimental compact presentations for the content archetypes. Card field selection is separate from teaser field selection. **Vertical** and **book** are layouts of the same card projection, not additional content types or profiles.
+
+> Review the [component checklist](https://github.com/unisdr/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md) and [content pattern coverage](?path=/docs/patterns-content-overview--docs). The [Drupal source audit](https://github.com/unisdr/undrr-mangrove/blob/main/docs/CONTENT-TEASER-DRUPAL-AUDIT.md) records visible fields, hidden fields and deliberate departures.
+
+## Vertical cards
+
+<Canvas of={Stories.AllProfiles} />
+
+## Book layout
+
+Complete publication covers remain uncropped and use publication surface tokens. Photographs keep a landscape stage; logos are contained. Other book-layout cards have independent `--mg-content-card-book-*` surface tokens. A photo is not converted to a portrait cover. No image means no visual or placeholder region.
+
+<Canvas of={Stories.AllProfilesBook} />
+
+## Source evidence and proposals
+
+Drupal has explicit `card` displays for 12 of the 15 supported bundles. These generally contain only an image, selected category labels and a title. Vacancy has only a title. Summary, dates, authors and source attribution remain omitted where the card display hides them, even if present on the input record.
+
+Definition, hazard-profile and coordination-platform cards are **Mangrove proposals**, because those Drupal bundles have no explicit card display in the audited configuration. Their profile specifications say so. The book layout is a Mangrove construction, informed by Drupal's Gutenberg book card, rather than a claim that Drupal has 15 matching book display modes.
+
+## Asset meaning
+
+The profile supplies a default media role. A caller can supply `image.kind` (`photo`, `cover` or `logo`) when the asset has a different meaning: for example, a toolkit cover on a Resource card. Complete covers and logos remain complete in either layout. This does not enable an image in a presentation that hides media; a vacancy card still omits it.
+
+<Canvas of={Stories.ResourceCover} />
+
+## Missing media and labels
+
+<Canvas of={Stories.MissingMedia} />
+
+<Canvas of={Stories.Unlabelled} />
+
+## Mixed languages
+
+Record-level `lang` and `dir` allow an Arabic result in an English listing. When only `lang` is supplied, the article uses `dir="auto"`. A source adapter can supply an explicit direction. Title, labels and metadata use native links and plain text, with no HTML injection or invented URLs.
+
+<Canvas of={Stories.MixedLanguage} />
+
+## API and integration
+
+Published import: `import { ContentCard } from "@undrr/undrr-mangrove/components/ContentCard.js"`.
+
+Pass `content`, a contextual `headingLevel` (2–6, default 3), and `layout` (`vertical`, default, or `book`). Both layouts select the profile's **card** fields. `type`, optional `profile`, `title` and resolved `link` follow the shared normalized projection contract. Card inputs are not canonical domain records. Labels and taxonomy destinations must already be selected for this presentation by the caller. Supplied URLs must be HTTP(S) or root-relative; invalid required destinations throw.
+
+Publication covers and organization logos should use complete source assets; this intentionally improves on Drupal's landscape card crop. Resource/event/person images are eligible in cards even when hidden in their teaser display. The caller supplies visible field values, localizes labels and resolves domain eligibility and destinations. Drupal bindings remain in Mangrove at the separate data entry: `import { DRUPAL_CONTENT_PATTERNS } from "@undrr/undrr-mangrove/components/DrupalContentPatterns.js"`.
+
+Shared metadata uses the UI font and `--mg-content-meta-font-size`. Card title sizes use `--mg-content-card-title-font-size` and `--mg-content-card-book-title-font-size`. Load Mangrove's global stylesheet; the JavaScript entries do not inject styles or require hydration for native links. Production search replacement, canonical schema alignment, field extraction and URL/domain policy remain separate adoption gates.
+
+<Controls of={Stories.Publication} />
+
+## Changelog
+
+### 0.1.0 (16 October 2026)
+
+- Add vertical and book card layouts for all 15 profiles, with separate field projections audited from Drupal's card displays and explicit proposals for three missing displays.
+- Share field semantics, URL checks, metadata styling and field-based date-role validation with teasers. Keep source integration bindings in their own published data entry.

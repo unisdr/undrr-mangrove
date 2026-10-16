@@ -60,11 +60,9 @@ export {
 export { SkipLink } from '../stories/Utilities/SkipLink/SkipLink';
 export { default as ProgressBar } from '../stories/Components/ProgressBar/ProgressBar';
 
-export {
-  ContentTeaser,
-  DRUPAL_CONTENT_PATTERNS,
-  DRUPAL_TEASER_TYPES,
-} from '../stories/Patterns/ContentTeaser/ContentTeaser';
+export { ContentTeaser } from '../stories/Patterns/ContentTeaser/ContentTeaser';
+export { ContentCard } from '../stories/Patterns/ContentCard/ContentCard';
+export { DRUPAL_CONTENT_PATTERNS } from '../stories/Integrations/Drupal/contentPatterns';
 
 // Import global styles
 import '../stories/assets/scss/style.scss';

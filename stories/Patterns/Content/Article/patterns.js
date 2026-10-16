@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const articlePatterns = {
   id: 'article',
   name: 'Article',
@@ -29,9 +29,28 @@ export const articlePatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact article presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'News',
+        id: 'patterns-content-card--news',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'News',
+          id: 'patterns-content-card--news',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'News book',
+          id: 'patterns-content-card--news-book',
+        },
+      },
+      basis: 'audited-card-selection',
     },
   },
   defaultProfile: 'news',
@@ -48,12 +67,42 @@ export const articlePatterns = {
             story: 'News',
             id: 'patterns-content-teaser--news',
           },
-          layout: {
-            image: true,
+          fields: {
             before: ['labels', 'published'],
             after: ['summary', 'sources', 'language'],
             useShortTitle: true,
+            media: 'photo',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'News',
+            id: 'patterns-content-card--news',
+          },
+          fields: {
+            media: 'photo',
+            before: ['labels'],
+            after: [],
+            useShortTitle: true,
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'News',
+              id: 'patterns-content-card--news',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'News book',
+              id: 'patterns-content-card--news-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },
@@ -69,11 +118,40 @@ export const articlePatterns = {
             story: 'Blog',
             id: 'patterns-content-teaser--blog',
           },
-          layout: {
-            image: true,
+          fields: {
             before: ['labels', 'published', 'authors'],
             after: ['summary'],
+            media: 'photo',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Commentary',
+            id: 'patterns-content-card--commentary',
+          },
+          fields: {
+            media: 'photo',
+            before: ['labels'],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Commentary',
+              id: 'patterns-content-card--commentary',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Commentary book',
+              id: 'patterns-content-card--commentary-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },

@@ -85,10 +85,36 @@ Storage configuration confirms unlimited cardinality for resource country/region
 
 ## Content-family ownership
 
-The audited teaser hierarchy is a presentation projection owned by each `stories/Patterns/Content/{Family}/patterns.js` file. Other presentations have separate status records: an existing reference, an experimental implementation or a stub with no implementation. The shared `ContentTeaser` renderer consumes only teaser layouts. These source-configured fields do not define a canonical model for full pages or compact cards. Full resource, event and other missing page designs remain explicit stubs; news, publication, collection and landing-page examples are linked as references rather than claimed complete canonical implementations.
+The audited teaser hierarchy is a presentation projection owned by each `stories/Patterns/Content/{Family}/patterns.js` file. Other presentations have separate status records: an existing reference, an experimental implementation or a stub with no implementation. The shared `ContentTeaser` renderer consumes only teaser field projections. These source-configured fields do not define a canonical model for full pages or compact cards. Full resource, event and other missing page designs remain explicit stubs; news, publication, collection and landing-page examples are linked as references rather than claimed complete canonical implementations.
 
 ## Archetype/profile integration boundary
 
-The audited Drupal bundle names below remain source identities, not the pattern hierarchy. Mangrove retains their provisional bindings in `stories/Integrations/Drupal/contentPatterns.js`, exported as `DRUPAL_CONTENT_PATTERNS` (`DRUPAL_TEASER_TYPES` is a draft alias with descriptor values). News/blog select Article news/commentary; event/conference_event select Event general/programme-session; terminology/hazard_information_profile select Reference entry definition/hazard-profile; vacancy selects Opportunity/job. National platform provisionally selects Organization/coordination-platform, preserving its labels, summary and absent media; an activity-led portal may instead use Landing page after consumer review. Remaining bundles select their matching archetype's default/general profile. No source field order or omission rule changes in this consolidation. These are editable consumer bindings, not canonical CMS-independent schemas or production field adapters.
+The audited Drupal bundle names below remain source identities, not the pattern hierarchy. Mangrove retains their provisional bindings in `stories/Integrations/Drupal/contentPatterns.js`, exported as `DRUPAL_CONTENT_PATTERNS`. News/blog select Article news/commentary; event/conference_event select Event general/programme-session; terminology/hazard_information_profile select Reference entry definition/hazard-profile; vacancy selects Opportunity/job. National platform provisionally selects Organization/coordination-platform, preserving its labels, summary and absent media; an activity-led portal may instead use Landing page after consumer review. Remaining bundles select their matching archetype's default/general profile. No source field order or omission rule changes in this consolidation. These are editable consumer bindings, not canonical CMS-independent schemas or production field adapters.
 
 The bundle bindings are provisional defaults, not a per-node classification rule. Gutenberg page compositions may serve a report, a directory or a topic; production adapters must establish content purpose before choosing an archetype/profile. A Storybook page reference demonstrates composition and does not prove that its Drupal entity has the same identity.
+
+
+## Card presentation source audit (16 October 2026)
+
+Inspected at the same Drupal revision `226b54812725eb648faa8e09b21b59a338ddf26b`. The 12 `core.entity_view_display.node.<bundle>.card.yml` files below are enabled and use `card_vertical`; `docroot/themes/custom/undrr_common/templates/layout/card-vertical.html.twig` renders only `visual`, `meta` and `main`. Fields configured in another region are not promoted into the card. Source files remained unmodified.
+
+| Drupal bundle | Visual | Metadata above title | Title / main | Mangrove card projection |
+| --- | --- | --- | --- | --- |
+| `news` | Image, landscape 16:9 | News type, linked | Short title, canonical source-domain link | Article/news; explicit short-title fallback |
+| `blog` | Image, landscape 16:9 | Blog type, linked | Node title | Article/commentary |
+| `publication` | Image, landscape 16:9 in Drupal | Publication type; ARISE resource type only on its domain, both unlinked | Node title | Publication/default; deliberately preserve the complete cover |
+| `resource` | Image, landscape 16:9 | Resource type, linked | Node title | Resource/default; resource images are eligible in cards even though hidden in teasers |
+| `event` | Image, landscape 16:9 | Event type, unlinked | Node title | Event/general; occurrence range and location are omitted in cards |
+| `conference_event` | Image, landscape 16:9 | Content bucket; event-type terms, linked | Node title | Event/programme-session; `session.types` remains distinct from theme/topic labels |
+| `organization` | Image, landscape 16:9 in Drupal | Organization type, unlinked | Node title | Organization/general; deliberately contain complete logos |
+| `collections` | Image, landscape 16:9 | Bundle label | Node title | Collection/default; freshness and summary remain teaser fields |
+| `commitment` | Image, landscape 16:9 | None | Node title | Commitment/default; ECA summary is in the unrendered `content` region and is omitted |
+| `landing_page_gutenberg` | Image, landscape 16:9 | None | Node title | Landing page/default |
+| `people` | Image, landscape 16:9 | None | Node title | Person/default; unlike its teaser, its card may have an image |
+| `vacancy` | None | None | Node title | Opportunity/job; deadline, status, location and summary are hidden in this presentation |
+
+No explicit `card` display exists for `terminology`, `hazard_information_profile` or `national_platform`. Mangrove supplies explicit experimental proposals for Definition (label, title, brief definition), Hazard profile (classification, identifier, title) and Coordination platform (labels and title). They are not claims of active Drupal parity.
+
+The book layout is constructed in Mangrove over the same compact field selection as the vertical card. Drupal's Gutenberg `undrr-card.es6.js` and book-card sample markup establish `mg-card__book` and complete-cover use; there is no separate configured node book view mode in this audit. Photographs keep a landscape stage, publication covers keep their complete ratio and logos are contained. Missing images produce no media region. Unlike the richer teaser, a card does not automatically display dates, authors, source attribution, taxonomy themes or a body summary merely because the normalized record contains them.
+
+These source-view selections are not canonical content schemas. Per-node archetype classification, conditional domain visibility, taxonomy destinations and image-source choice remain adapter responsibilities. Source card evidence promotes card status only; the seven unimplemented full-page presentations stay stubs.

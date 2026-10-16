@@ -562,12 +562,29 @@ card:
       $value: none
       $description: Linked publication surface elevation on hover.
 
-content-teaser:
-  metadata-font-size:
+content-meta:
+  font-size:
     $type: dimension
     $value: '{font-size.250}'
     $format: literal
-    $description: Dates, attribution and supporting metadata in content teasers; summaries retain body size.
+    $description: Dates, attribution and supporting metadata in content teasers and cards; summaries retain body size.
+
+content-teaser:
+  background: { $type: color, $value: 'transparent', $format: literal, $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
+  padding: { $type: dimension, $value: '0px', $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
+  border-radius: { $type: dimension, $value: '0px', $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
+  shadow: { $type: shadow, $value: 'none', $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
+  shadow-hover: { $type: shadow, $value: 'none', $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
+
+content-card:
+  title-font-size: { $type: dimension, $value: '{font-size.500}', $format: literal, $description: 'Title size in vertical content card layouts.' }
+  book-title-font-size: { $type: dimension, $value: '{font-size.300}', $format: literal, $description: 'Title size in book card layouts.' }
+  book:
+    background: { $type: color, $value: 'transparent', $format: literal, $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
+    padding: { $type: dimension, $value: '0px', $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
+    border-radius: { $type: dimension, $value: '0px', $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
+    shadow: { $type: shadow, $value: 'none', $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
+    shadow-hover: { $type: shadow, $value: 'none', $description: 'Independent content-card surface; publication surfaces do not determine this value.' }
 
 # Shared publication stages in search grids align captions without cropping.
 search:

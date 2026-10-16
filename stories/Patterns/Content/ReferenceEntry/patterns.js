@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const referenceEntryPatterns = {
   id: 'reference-entry',
   name: 'Reference entry',
@@ -24,9 +24,28 @@ export const referenceEntryPatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact reference entry presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Mangrove proposal: no explicit Drupal card display exists for this profile. Vertical and book layouts share this compact selection.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'Definition',
+        id: 'patterns-content-card--definition',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'Definition',
+          id: 'patterns-content-card--definition',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'Definition book',
+          id: 'patterns-content-card--definition-book',
+        },
+      },
+      basis: 'proposed-card-selection',
     },
   },
   defaultProfile: 'definition',
@@ -42,10 +61,40 @@ export const referenceEntryPatterns = {
             story: 'Terminology',
             id: 'patterns-content-teaser--terminology',
           },
-          layout: {
+          fields: {
+            before: ['labels'],
+            after: ['summary'],
+            media: 'none',
+          },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Mangrove proposal: no explicit Drupal card display exists for this profile. Vertical and book layouts share this compact selection.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Definition',
+            id: 'patterns-content-card--definition',
+          },
+          fields: {
+            media: 'none',
             before: ['labels'],
             after: ['summary'],
           },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Definition',
+              id: 'patterns-content-card--definition',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Definition book',
+              id: 'patterns-content-card--definition-book',
+            },
+          },
+          basis: 'proposed-card-selection',
         },
       },
     },
@@ -61,10 +110,40 @@ export const referenceEntryPatterns = {
             story: 'Hazard profile',
             id: 'patterns-content-teaser--hazard-profile',
           },
-          layout: {
+          fields: {
             before: ['classification', 'identifier'],
             after: ['summary'],
+            media: 'none',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Mangrove proposal: no explicit Drupal card display exists for this profile. Vertical and book layouts share this compact selection.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Hazard profile',
+            id: 'patterns-content-card--hazard-profile',
+          },
+          fields: {
+            media: 'none',
+            before: ['classification', 'identifier'],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Hazard profile',
+              id: 'patterns-content-card--hazard-profile',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Hazard profile book',
+              id: 'patterns-content-card--hazard-profile-book',
+            },
+          },
+          basis: 'proposed-card-selection',
         },
       },
     },

@@ -68,7 +68,7 @@ Presentation.propTypes = {
 };
 
 /** Documentation-only guide; no stub is exported as a usable UI component. */
-export function ContentFamilyGuide({ family, children }) {
+export function ContentFamilyGuide({ family, children, cardExamples }) {
   return (
     <div>
       <p>{family.model.intent}</p>
@@ -82,8 +82,9 @@ export function ContentFamilyGuide({ family, children }) {
         <p>
           Profiles select meaning and metadata within this archetype. They are
           independent of presentation (page, teaser, card) and layout. The
-          implemented teaser profiles are experimental; they do not establish a
-          working full page or card.
+          implemented teaser profiles are experimental; their contracts remain
+          provisional. Card layouts select their own fields and do not establish
+          a working full page.
         </p>
         <ul>
           {Object.entries(family.profiles).map(([id, profile]) => (
@@ -97,6 +98,19 @@ export function ContentFamilyGuide({ family, children }) {
               >
                 Open teaser
               </LinkTo>
+              {profile.presentations.card?.reference && (
+                <>
+                  {' · '}
+                  <LinkTo
+                    kind={profile.presentations.card.reference.kind}
+                    story={profile.presentations.card.reference.story}
+                  >
+                    Open card
+                  </LinkTo>
+                  {profile.presentations.card.basis ===
+                    'proposed-card-selection' && ' (proposed card selection)'}
+                </>
+              )}
             </li>
           ))}
         </ul>
@@ -108,7 +122,9 @@ export function ContentFamilyGuide({ family, children }) {
       <Presentation name="Teaser" presentation={family.presentations.teaser}>
         {children}
       </Presentation>
-      <Presentation name="Card" presentation={family.presentations.card} />
+      <Presentation name="Card" presentation={family.presentations.card}>
+        {cardExamples}
+      </Presentation>
       <p>
         <LinkTo kind="Patterns/Content/Overview" story="docs">
           Browse all content families and their presentation status
@@ -120,6 +136,7 @@ export function ContentFamilyGuide({ family, children }) {
 ContentFamilyGuide.propTypes = {
   /** Live teaser previews appear with their presentation status and references. */
   children: PropTypes.node,
+  cardExamples: PropTypes.node,
   family: PropTypes.shape({
     defaultProfile: PropTypes.string.isRequired,
     profiles: PropTypes.object.isRequired,

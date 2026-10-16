@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const commitmentPatterns = {
   id: 'commitment',
   name: 'Commitment',
@@ -24,9 +24,28 @@ export const commitmentPatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact commitment presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'Commitment',
+        id: 'patterns-content-card--commitment',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'Commitment',
+          id: 'patterns-content-card--commitment',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'Commitment book',
+          id: 'patterns-content-card--commitment-book',
+        },
+      },
+      basis: 'audited-card-selection',
     },
   },
   defaultProfile: 'default',
@@ -43,11 +62,40 @@ export const commitmentPatterns = {
             story: 'Commitment',
             id: 'patterns-content-teaser--commitment',
           },
-          layout: {
-            image: true,
+          fields: {
             before: ['scope', 'status', 'published'],
             after: ['summary'],
+            media: 'photo',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Commitment',
+            id: 'patterns-content-card--commitment',
+          },
+          fields: {
+            media: 'photo',
+            before: [],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Commitment',
+              id: 'patterns-content-card--commitment',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Commitment book',
+              id: 'patterns-content-card--commitment-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },

@@ -27,7 +27,7 @@ All metadata is optional. The title and resolved destination are always required
 
 <DrupalPatternTable />
 
-The exported `DRUPAL_CONTENT_PATTERNS` maps bundle identifiers to `{ type, profile }` selections in the Mangrove Drupal integration layer. `DRUPAL_TEASER_TYPES` is a draft compatibility alias to that same descriptor map; it no longer returns type strings. Spread a binding into the normalized content record. Use an own-property lookup before selecting a mapped value. It does not extract Drupal fields, sanitize body HTML, choose labels or resolve URLs. Unknown bundles keep the existing renderer during migration. Taxonomy-term results remain outside this node-pattern contract.
+The separately exported `DRUPAL_CONTENT_PATTERNS` maps bundle identifiers to `{ type, profile }` selections in the Mangrove Drupal integration layer. Spread a binding into the normalized content record. Use an own-property lookup before selecting a mapped value. It does not extract Drupal fields, sanitize body HTML, choose labels or resolve URLs. Unknown bundles keep the existing renderer during migration. Taxonomy-term results remain outside this node-pattern contract.
 
 ## Shared content contract
 
@@ -89,9 +89,13 @@ Use `ul.mg-content-teaser-list` with one teaser per `li` for a responsive readin
 
 Fixture values are illustrative. They represent audited field selection and hierarchy, not captured API records or evidence of runtime parity. Conference, focal point and other unselected node bundles are not claimed as indexed content support; preserve their existing renderer if search scope changes.
 
+## Card presentation
+
+Cards have separate field selections audited from Drupal's `card` mode. They are implemented by `ContentCard`, with vertical and book layouts. Changing geometry does not turn a full teaser into a compact card. See [Content card](?path=/docs/patterns-content-card--docs).
+
 ## Metadata typography
 
-Dates, attribution and supporting metadata use the UI font role and `--mg-content-teaser-metadata-font-size`, which defaults to the 14px scale step. Labels inherit that metadata size and retain their existing weight and colour. Summaries retain body typography. Themes and consumers can override the metadata token without changing field selection or summary text.
+Dates, attribution and supporting metadata use the UI font role and `--mg-content-meta-font-size`, which defaults to the 14px scale step. Labels inherit that metadata size and retain their existing weight and colour. Summaries retain body typography. Themes and consumers can override the metadata token without changing field selection or summary text.
 
 ## Drupal adapter and link boundary
 
@@ -109,9 +113,9 @@ Static React rendering includes complete titles, destinations and metadata. Nati
 
 ## CSS and JavaScript references
 
-- Published React import: `import { ContentTeaser, DRUPAL_CONTENT_PATTERNS } from "@undrr/undrr-mangrove/components/ContentTeaser.js"`. The repository barrel `src/index.js` also re-exports them for repository development; the published npm package has no root entry.
+- Published React import: `import { ContentTeaser } from "@undrr/undrr-mangrove/components/ContentTeaser.js"`; Drupal bindings use `import { DRUPAL_CONTENT_PATTERNS } from "@undrr/undrr-mangrove/components/DrupalContentPatterns.js"`. The repository barrel `src/index.js` also re-exports them for repository development; the published npm package has no root entry.
 - Pattern selection: each `Content/{Family}/patterns.js` owns its teaser projection alongside full-page/card status. `contentTeaserPatterns.js` assembles those projections for the shared renderer.
-- Styles: `content-teaser.scss` adds wrapping, metadata rhythm, list semantics, independent metadata-link focus and logo framing. It uses shared `--mg-card-*`, `--mg-card-publication-*` and spacing tokens; no new colour or surface defaults.
+- Styles: `content-teaser.scss` adds wrapping, metadata rhythm, list semantics, independent metadata-link focus and logo framing. It uses shared `--mg-card-*`, `--mg-card-publication-*` and spacing tokens; horizontal surfaces use independent `--mg-content-teaser-*` tokens; publication-only overrides do not style unrelated results. Shared metadata uses `--mg-content-meta-font-size`.
 - No hydration registration: the complete teaser markup needs no client initialization.
 
 ## Review gates before production adoption

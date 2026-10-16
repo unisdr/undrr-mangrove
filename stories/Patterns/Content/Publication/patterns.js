@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const publicationPatterns = {
   id: 'publication',
   name: 'Publication',
@@ -29,9 +29,28 @@ export const publicationPatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact publication presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'Publication',
+        id: 'patterns-content-card--publication',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'Publication',
+          id: 'patterns-content-card--publication',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'Publication book',
+          id: 'patterns-content-card--publication-book',
+        },
+      },
+      basis: 'audited-card-selection',
     },
   },
   defaultProfile: 'default',
@@ -48,11 +67,40 @@ export const publicationPatterns = {
             story: 'Publication',
             id: 'patterns-content-teaser--publication',
           },
-          layout: {
-            image: true,
+          fields: {
             before: ['labels', 'published'],
             after: ['identifier', 'summary', 'sources', 'language'],
+            media: 'cover',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Publication',
+            id: 'patterns-content-card--publication',
+          },
+          fields: {
+            media: 'cover',
+            before: ['labels'],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Publication',
+              id: 'patterns-content-card--publication',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Publication book',
+              id: 'patterns-content-card--publication-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },

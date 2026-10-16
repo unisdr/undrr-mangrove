@@ -4,7 +4,8 @@
  */
 @use "../../assets/scss/mixins" as *;
 
-.mg-content-teaser {
+.mg-content-teaser,
+.mg-content-card {
   min-inline-size: 0;
   inline-size: 100%;
   overflow-wrap: anywhere;
@@ -15,15 +16,15 @@
     gap: var(--mg-spacing-75);
   }
 
-  .mg-content-teaser__before-title,
-  .mg-content-teaser__metadata,
-  .mg-content-teaser__attribution {
+  .mg-content-meta__before-title,
+  .mg-content-meta__metadata,
+  .mg-content-meta__attribution {
     font-family: var(--mg-font-family-ui);
-    font-size: var(--mg-content-teaser-metadata-font-size);
+    font-size: var(--mg-content-meta-font-size);
     line-height: var(--mg-font-line-height-700);
   }
 
-  .mg-content-teaser__before-title {
+  .mg-content-meta__before-title {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
@@ -46,13 +47,13 @@
   }
 
   .mg-card__summary,
-  .mg-content-teaser__metadata {
+  .mg-content-meta__metadata {
     margin: 0;
     padding: 0;
   }
 }
 
-.mg-content-teaser__group {
+.mg-content-meta__group {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -60,7 +61,7 @@
   gap: var(--mg-spacing-50) var(--mg-spacing-100);
 }
 
-.mg-content-teaser__attribution {
+.mg-content-meta__attribution {
   @include mg-list-unmarked;
 
   display: flex;
@@ -70,7 +71,7 @@
   padding: 0;
 }
 
-.mg-content-teaser__metadata-link {
+.mg-content-meta__metadata-link {
   cursor: pointer;
   display: inline-block;
   position: relative;
@@ -83,7 +84,7 @@
   }
 }
 
-.mg-content-teaser--logo > .mg-card__visual {
+.mg-content-pattern--logo > .mg-card__visual {
   border: 0;
 }
 
@@ -101,5 +102,17 @@
 
   .mg-content-teaser {
     margin-block-end: 0;
+  }
+}
+
+// Horizontal listing surfaces have their own contract, independent of book cards.
+.mg-card.mg-content-teaser {
+  background: var(--mg-content-teaser-background);
+  padding: var(--mg-content-teaser-padding);
+  border-radius: var(--mg-content-teaser-border-radius);
+  box-shadow: var(--mg-content-teaser-shadow);
+
+  &:hover {
+    box-shadow: var(--mg-content-teaser-shadow-hover);
   }
 }

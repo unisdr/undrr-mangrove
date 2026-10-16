@@ -19,6 +19,7 @@ export function buildContentPatterns({ docsBase, packageName }) {
     integrations: {
       drupal: {
         status: 'provisional',
+        import: `import { DRUPAL_CONTENT_PATTERNS } from "${packageName}/components/DrupalContentPatterns.js";`,
         bindings: DRUPAL_CONTENT_PATTERNS,
         note: 'Profile selection only; no field extraction or URL policy.',
       },
@@ -35,13 +36,31 @@ export function buildContentPatterns({ docsBase, packageName }) {
           {
             name: profile.name,
             intent: profile.intent,
-            presentations: {
-              teaser: {
-                status: profile.presentations.teaser.status,
-                referenceUrl: `${base}?path=/story/${profile.presentations.teaser.reference.id}`,
-                input: { type: family.id, profile: id },
-              },
-            },
+            presentations: Object.fromEntries(
+              Object.entries(profile.presentations).map(
+                ([presentationName, presentation]) => [
+                  presentationName,
+                  {
+                    status: presentation.status,
+                    basis: presentation.basis,
+                    intent: presentation.intent,
+                    projection: presentation.fields,
+                    referenceUrl: `${base}?path=/story/${presentation.reference.id}`,
+                    input: { type: family.id, profile: id },
+                    ...(presentation.layouts
+                      ? {
+                          layouts: presentation.layouts.map(layout => ({
+                            id: layout,
+                            input: { type: family.id, profile: id },
+                            props: { layout },
+                            referenceUrl: `${base}?path=/story/${presentation.layoutReferences[layout].id}`,
+                          })),
+                        }
+                      : {}),
+                  },
+                ]
+              )
+            ),
           },
         ])
       ),
@@ -50,6 +69,7 @@ export function buildContentPatterns({ docsBase, packageName }) {
           const result = {
             status: presentation.status,
             intent: presentation.intent,
+            ...(presentation.basis ? { basis: presentation.basis } : {}),
           };
           if (presentation.additionalReferences)
             result.additionalReferences = presentation.additionalReferences.map(
@@ -61,13 +81,47 @@ export function buildContentPatterns({ docsBase, packageName }) {
             );
           if (presentation.reference)
             result.referenceUrl = `${base}?path=/story/${presentation.reference.id}`;
-          if (presentation.status === 'experimental' && name === 'teaser') {
-            result.import = `import { ContentTeaser } from "${packageName}/components/ContentTeaser.js";`;
-            result.input = 'teaser projection; not a canonical domain record';
+          if (
+            presentation.status === 'experimental' &&
+            ['teaser', 'card'].includes(name)
+          ) {
+            const renderer = name === 'card' ? 'ContentCard' : 'ContentTeaser';
+            result.import = `import { ${renderer} } from "${packageName}/components/${renderer}.js";`;
+            result.input = `${name} projection; not a canonical domain record`;
+            if (presentation.layouts) result.layouts = presentation.layouts;
           }
           return [name, result];
         })
       ),
     })),
   };
+}
+
+/** Build-time check: documentation links and machine IDs must resolve to the same story. */
+export function validateContentReferences(entries) {
+  const check = reference => {
+    if (!reference) return;
+    const story = entries[reference.id];
+    if (
+      !story ||
+      story.title !== reference.kind ||
+      story.name !== reference.story
+    )
+      throw new Error(
+        `Content pattern reference does not match the built Storybook index: ${reference.id}`
+      );
+  };
+  for (const family of CONTENT_FAMILIES) {
+    if (!entries[`patterns-content-${slug(family.name)}--docs`])
+      throw new Error(`Missing content family guide: ${family.id}`);
+    for (const presentation of Object.values(family.presentations)) {
+      check(presentation.reference);
+      presentation.additionalReferences?.forEach(check);
+    }
+    for (const profile of Object.values(family.profiles))
+      for (const presentation of Object.values(profile.presentations)) {
+        check(presentation.reference);
+        Object.values(presentation.layoutReferences || {}).forEach(check);
+      }
+  }
 }

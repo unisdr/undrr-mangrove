@@ -1,4 +1,4 @@
-/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
+/** Archetype and profile projections; layout does not select content. */
 export const personPatterns = {
   id: 'person',
   name: 'Person',
@@ -24,9 +24,28 @@ export const personPatterns = {
       },
     },
     card: {
-      status: 'stub',
+      status: 'experimental',
       intent:
-        'A compact person presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+      reference: {
+        kind: 'Patterns/Content card',
+        story: 'Person',
+        id: 'patterns-content-card--person',
+      },
+      layouts: ['vertical', 'book'],
+      layoutReferences: {
+        vertical: {
+          kind: 'Patterns/Content card',
+          story: 'Person',
+          id: 'patterns-content-card--person',
+        },
+        book: {
+          kind: 'Patterns/Content card',
+          story: 'Person book',
+          id: 'patterns-content-card--person-book',
+        },
+      },
+      basis: 'audited-card-selection',
     },
   },
   defaultProfile: 'default',
@@ -43,10 +62,40 @@ export const personPatterns = {
             story: 'Person',
             id: 'patterns-content-teaser--person',
           },
-          layout: {
+          fields: {
             before: [],
             after: ['summary'],
+            media: 'none',
           },
+        },
+        card: {
+          status: 'experimental',
+          intent:
+            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+          reference: {
+            kind: 'Patterns/Content card',
+            story: 'Person',
+            id: 'patterns-content-card--person',
+          },
+          fields: {
+            media: 'photo',
+            before: [],
+            after: [],
+          },
+          layouts: ['vertical', 'book'],
+          layoutReferences: {
+            vertical: {
+              kind: 'Patterns/Content card',
+              story: 'Person',
+              id: 'patterns-content-card--person',
+            },
+            book: {
+              kind: 'Patterns/Content card',
+              story: 'Person book',
+              id: 'patterns-content-card--person-book',
+            },
+          },
+          basis: 'audited-card-selection',
         },
       },
     },

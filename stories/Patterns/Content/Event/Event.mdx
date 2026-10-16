@@ -1,6 +1,7 @@
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import { ContentFamilyGuide } from '../_shared/ContentFamilyGuide';
 import { eventPatterns } from './patterns';
+import * as CardStories from '../../ContentCard/ContentCard.stories';
 import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
 
 <Meta title="Patterns/Content/Event" />
@@ -9,7 +10,23 @@ import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
 
 > See the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs) before modifying this archetype.
 
-<ContentFamilyGuide family={eventPatterns}>
+<ContentFamilyGuide
+  family={eventPatterns}
+  cardExamples={
+    <>
+      <h3>{eventPatterns.profiles['general'].name}</h3>
+      <h4>Vertical</h4>
+      <Canvas of={CardStories.Event} />
+      <h4>Book</h4>
+      <Canvas of={CardStories.EventBook} />
+      <h3>{eventPatterns.profiles['programme-session'].name}</h3>
+      <h4>Vertical</h4>
+      <Canvas of={CardStories.ProgrammeSession} />
+      <h4>Book</h4>
+      <Canvas of={CardStories.ProgrammeSessionBook} />
+    </>
+  }
+>
   <h3>{eventPatterns.profiles['general'].name}</h3>
   <Canvas of={TeaserStories.Event} />
   <h3>{eventPatterns.profiles['programme-session'].name}</h3>
@@ -20,4 +37,4 @@ import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
 
 ### 0.1.0 (16 October 2026)
 
-- Define the source-independent archetype, its editorial profiles and presentation coverage. Keep Drupal bindings in Mangrove's integration layer and group teaser status, references and previews in one section.
+- Define the source-independent archetype, its editorial profiles and presentation coverage. Keep Drupal bindings in Mangrove's integration layer and group each presentation with its previews. Add experimental vertical/book card layouts from audited selections, with explicit proposals where no Drupal card display exists.
