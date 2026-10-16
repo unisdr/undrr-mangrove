@@ -11,6 +11,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- Established `release/3.0` as an integration branch with build/test coverage, isolated Storybook artifacts and Chromatic previews. Stable Pages/dist publication remains on main and npm remains tag/manual. Scope and release gates: [unisdr/undrr-mangrove#1379](https://github.com/unisdr/undrr-mangrove/issues/1379).
+
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
 ## 2.1.1, 2026-10-16

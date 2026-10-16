@@ -3,6 +3,7 @@ on:
   pull_request:
     branches:
       - main
+      - release/3.0
       - 'codex/**'
   push:
     paths:
@@ -30,16 +31,16 @@ on:
       - '.babelrc*'
       # yarn.lock and tsconfig.json changes without package.json are rare enough to skip
       # Trigger the action only when files change in the paths defined here
-    branches: ['main']
+    branches: ['main', 'release/3.0']
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 permissions:
   contents: write
   pages: write
   id-token: write
-# Allow one concurrent deployment
+# Keep stable builds and 3.0 previews in separate concurrency groups.
 concurrency:
-  group: 'pages'
+  group: 'pages-${{ github.ref }}'
   cancel-in-progress: false
 jobs:
   build:
@@ -161,11 +162,18 @@ jobs:
         with:
           name: output
           path: ./dist
+      - name: Archive 3.0 Storybook preview
+        if: github.ref == 'refs/heads/release/3.0' || github.base_ref == 'release/3.0'
+        uses: actions/upload-artifact@v7
+        with:
+          name: storybook-3.0-preview
+          path: ./_site
       - name: Upload artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v5
   # Deployment job
   deploy:
-    if: github.ref == 'refs/heads/main' # only deploy if branch is master
+    if: github.ref == 'refs/heads/main' # Preview branches never deploy stable Pages.
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

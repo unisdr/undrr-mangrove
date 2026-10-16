@@ -2,7 +2,7 @@ name: 'Chromatic Visual Testing'
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, 'release/3.0']
     paths:
       - 'stories/**'
       - '.storybook/**'
@@ -11,7 +11,7 @@ on:
       - '.github/workflows/chromatic.yml'
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: [main, develop, 'codex/**']
+    branches: [main, develop, 'release/3.0', 'codex/**']
     paths:
       - 'stories/**'
       - '.storybook/**'
