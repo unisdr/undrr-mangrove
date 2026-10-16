@@ -2512,6 +2512,15 @@ Use the --mg-z-index-* custom properties for global stacking contexts (fixed, st
 
 For trusted rendered editorial HTML, use \`mg-content\` on the actual body field and follow ${DOCS_BASE}?path=/docs/patterns-rich-content--docs. It supplies scoped semantic defaults, not sanitisation or a layout/font reset. Keep navigation, controls, cards and embeds outside the prose boundary where practical; classed component islands own their presentation. Existing paragraph links retain their cue through CMS classes. Preserve native table headers/captions and provide named keyboard-accessible local overflow only when content is genuinely wide. \`mg-body\` remains supported without deprecation.
 
+### Visual decisions and card composition
+
+Read ${DOCS_BASE}?path=/docs/design-decisions-experience-principles--docs before visual refinements. Shared components own semantics, geometry and interactions; themes own surface expression. Verify all five themes, optional content and supported CMS markup. Design review is not user research.
+
+- Photo cards have edge images and inset content; text-only cards retain their enclosure. Without labels, the title uses one content inset rather than stacked metadata spacing.
+- Publication teasers preserve complete natural-ratio covers with a square hairline and default to an unboxed caption/listing. Theme their surface with the five \`--mg-card-publication-*\` tokens in \`tokens.json\`; do not assume general card surface overrides also style publications. Gutenberg's book shape is \`mg-card mg-card__book\`, without \`mg-card__vc\`.
+- Choose \`imageScale: 'small'\` for navigation glyphs, reserving proportional sizes for illustrations and logos. \`iconSize\` supplies image attributes, not CSS glyph sizing. For horizontal visual sizing, set \`--mg-card-icon-size\` in CSS.
+- Compact stats reduce both padding and internal spacing. Do not reintroduce child margins that duplicate their gap.
+
 ### Motion and animation
 
 Before adding or changing component motion, read ${DOCS_BASE}llms-motion.txt (rendered: ${DOCS_BASE}?path=/docs/design-decisions-motion--docs). Use interaction timing tokens, gate optional CSS motion with prefers-reduced-motion: no-preference, and check the preference before JavaScript-driven motion. Reuse Loader or ProgressBar so loading remains understandable under reduced motion and forced colours; directional travel follows RTL reading direction. The guide documents loop-cycle exceptions and browser review requirements.

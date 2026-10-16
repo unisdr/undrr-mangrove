@@ -278,7 +278,7 @@
   }
 }
 
-// Photo media forms the card edge; publication covers and icons stay inset.
+// Photo media forms the card edge; publication teasers preserve complete covers.
 // Clip only the visual so content focus rings can extend beyond the surface.
 .mg-card__vc:not(.mg-card__book),
 .mg-card__hc:not(.mg-card-book__hc) {
@@ -516,13 +516,13 @@ span.mg-card__label {
 // Publication teasers: the cover is the object, without a second raised frame.
 .mg-card.mg-card__book,
 .mg-card.mg-card-book__hc {
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
-  box-shadow: none;
+  background: var(--mg-card-publication-background);
+  padding: var(--mg-card-publication-padding);
+  border-radius: var(--mg-card-publication-border-radius);
+  box-shadow: var(--mg-card-publication-shadow);
 
   &:hover {
-    box-shadow: none;
+    box-shadow: var(--mg-card-publication-shadow-hover);
   }
 
   > .mg-card__visual {
@@ -550,7 +550,21 @@ span.mg-card__label {
   }
 }
 
+// An unlinked teaser never advertises elevation on hover, including themed surfaces.
+.mg-card.mg-card__book.mg-card--no-link:hover,
+.mg-card.mg-card-book__hc.mg-card--no-link:hover,
+.mg-card:is(.mg-card__book, .mg-card-book__hc):has(
+    .mg-card__title a:not([href])
+  ):hover,
+.mg-card:is(.mg-card__book, .mg-card-book__hc):has(
+    .mg-card__title a[href=""]
+  ):hover {
+  box-shadow: var(--mg-card-publication-shadow);
+}
+
 .mg-card__book {
+  display: grid;
+  align-content: start;
   gap: var(--mg-spacing-100);
 }
 

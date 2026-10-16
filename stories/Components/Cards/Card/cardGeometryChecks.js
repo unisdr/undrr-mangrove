@@ -98,3 +98,25 @@ export async function checkPublicationSurface({ canvasElement }) {
     2
   );
 }
+
+export const publicationSurfaceOverrides = {
+  '--mg-card-publication-background': 'var(--mg-card-background)',
+  '--mg-card-publication-padding': 'var(--mg-card-padding)',
+  '--mg-card-publication-border-radius': 'var(--mg-card-border-radius)',
+  '--mg-card-publication-shadow': 'var(--mg-card-shadow)',
+  '--mg-card-publication-shadow-hover': 'var(--mg-card-shadow-hover)',
+};
+
+export async function checkPublicationOverride({ canvasElement }) {
+  const card = canvasElement.querySelector('.mg-card');
+  const style = canvasElement.ownerDocument.defaultView.getComputedStyle(card);
+  expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  expect(style.boxShadow).not.toBe('none');
+  expect(parseFloat(style.paddingTop)).toBeGreaterThan(0);
+  expect(parseFloat(style.borderTopLeftRadius)).toBeGreaterThanOrEqual(0);
+  const image = card.querySelector('img');
+  await image.decode();
+  expect(
+    image.getBoundingClientRect().width / image.getBoundingClientRect().height
+  ).toBeCloseTo(image.naturalWidth / image.naturalHeight, 2);
+}

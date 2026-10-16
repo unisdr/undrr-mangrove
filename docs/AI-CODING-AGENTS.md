@@ -10,6 +10,23 @@ agent-generated changes.
 
 When you touch a component's JSX, SCSS, stories, or tests, read the [review checklist](REVIEW-CHECKLIST.md) **before committing**. The checklist is referenced in every component's MDX file, but agents typically don't read MDX until late in the process — by then the commit is already made.
 
+For visual refinements, first read [Experience principles](../stories/Documentation/ExperiencePrinciples.mdx)
+([published](https://mangrove.undrr.org/?path=/docs/design-decisions-experience-principles--docs)).
+Use its decision order: semantics, accessibility and content comprehension precede
+visual polish. Shared components own behaviour and geometry; themes own surface
+expression. Keep new visual defaults themeable, document changed token routing,
+and verify an override as well as the default across all five themes.
+
+### Review the component family, not just the first screenshot
+
+- Check optional content: labels present/absent, media absent, long titles, summaries and actions. A first title should not inherit spacing intended to separate metadata.
+- Distinguish photographs, complete publication covers, navigation glyphs and illustrations. Shared card classes do not require identical framing or cropping. Photo cards use an enclosed edge image; publication teasers default to a complete square-edged cover with an unboxed caption. Themes can change publication surfaces through `--mg-card-publication-*`.
+- Compact variants should reduce padding and internal spacing together; check child margins so they do not duplicate the gap.
+- Use `imageScale: 'small'` for ordinary navigation icon examples. Medium/large/full are explicit illustration scales; changing a demo does not change the React prop default. `iconSize` supplies image dimensions, not CSS glyph sizing.
+- Verify supported plain HTML/CMS shapes as well as React. Gutenberg book cards use `mg-card mg-card__book` without `mg-card__vc`; do not accidentally require an extra class for their layout.
+- Keep copyable examples, curated AI descriptions, public token descriptions and the page-building guide consistent with the chosen defaults. Update source files, not generated manifests.
+- Record the problem, before/after evidence, themes, relevant accessibility conditions and migration impact in the PR. Label design review as design review; it is not user research.
+
 Before adding or changing motion, read [Motion and animation](MOTION.md). It is the shared policy for interaction tokens, looping indicators, reduced motion in CSS and JavaScript, forced colours and RTL. The published equivalent is [llms-motion.txt](https://mangrove.undrr.org/llms-motion.txt).
 
 Common misses:

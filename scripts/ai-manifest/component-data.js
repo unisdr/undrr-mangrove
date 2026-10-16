@@ -655,12 +655,12 @@ export const COMPONENT_DATA = {
   },
   'components-cards-book-card': {
     description:
-      'Unboxed publication teaser: complete natural-ratio cover with one square border and a title below. No outer raised surface or cover zoom.',
+      'Publication teaser with a complete natural-ratio cover, one square border and a title below. Unboxed by default; publication surface tokens retain theme control. No cover zoom.',
   },
 
   'components-cards-horizontal-book-card': {
     description:
-      'Unboxed publication listing: complete natural-ratio cover with one square border beside title and summary, stacked on mobile and mirrored in RTL. No outer raised surface.',
+      'Publication listing with complete natural-ratio covers and one square border. Beside text on desktop, stacked on mobile and mirrored in RTL. Unboxed by default; surface tokens retain theme control.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -2700,9 +2700,9 @@ npm run build</code></pre>
   },
   'components-syndicated-search': {
     summary:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics.',
+      'Search with facets, result lists, photo cards or publication catalogues. Book mode preserves artwork URLs; use publication filters and explicit grid columns.',
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
     hydration: {
       note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns { config }, plus a labels key only when a valid data-labels attribute is present, so destructure defensively. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
       selector: '[data-mg-search-widget]',
@@ -2717,7 +2717,8 @@ npm run build</code></pre>
         'data-min-search-length': 'Minimum query length before a search runs.',
         'data-default-query': 'Query the widget starts with.',
         'data-default-sort': 'Initial sort key.',
-        'data-display-mode': 'Result layout: list, card or card-book.',
+        'data-display-mode':
+          'Result layout: list, card or card-book. Book mode preserves supplied artwork URLs; use publication filters and explicit columns for a cover catalogue.',
         'data-grid-columns': 'Columns in the card grid.',
         'data-query-append': 'Extra query string appended to every search.',
         'data-facets':

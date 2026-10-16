@@ -105,9 +105,42 @@ on hover. The vertical caption follows with a 10px gap; the horizontal listing
 uses a 15px gap at the default root font size. Links and keyboard focus remain
 visible, including on white covers and in RTL.
 
+### Theme-owned publication surfaces
+
+The unboxed treatment is the shared default, not a restriction on theme identity.
+Both publication variants use these tokens from `tokens/mangrove.yaml`:
+
+| Token                                 | Default       | Purpose                        |
+| ------------------------------------- | ------------- | ------------------------------ |
+| `--mg-card-publication-background`    | `transparent` | Outer surface fill             |
+| `--mg-card-publication-padding`       | `0px`         | Outer inset                    |
+| `--mg-card-publication-border-radius` | `0px`         | Outer surface corners          |
+| `--mg-card-publication-shadow`        | `none`        | Elevation at rest              |
+| `--mg-card-publication-shadow-hover`  | `none`        | Linked-card elevation on hover |
+
+**Migration:** general `--mg-card-background`, `--mg-card-padding`,
+`--mg-card-border-radius`, `--mg-card-shadow` and `--mg-card-shadow-hover` now
+control enclosed photo/icon surfaces independently of publications. To restore
+an enclosed publication surface within a site section, set these tokens on its
+wrapper (or put equivalent values in the brand token layer):
+
+```css
+.publication-list {
+  --mg-card-publication-background: var(--mg-card-background);
+  --mg-card-publication-padding: var(--mg-card-padding);
+  --mg-card-publication-border-radius: var(--mg-card-border-radius);
+  --mg-card-publication-shadow: var(--mg-card-shadow);
+  --mg-card-publication-shadow-hover: var(--mg-card-shadow-hover);
+}
+```
+
+The cover retains its natural proportions and square border. Surface padding
+and cover-to-caption gaps are separate. Unlinked cards keep the resting shadow
+on hover. The secondary accent retains a leading inset from `--mg-card-padding`.
+
 ## Changelog
 
-- **1.6.0**, 2026-10-16: Remove the outer publication card surface and padding; retain a single square cover border, natural cover proportions and clear caption spacing. Publication covers no longer zoom or fade on hover.
+- **1.6.0**, 2026-10-16: Remove the outer publication card surface and padding; retain a single square cover border, natural cover proportions and clear caption spacing. Publication covers no longer zoom or fade on hover. Add five publication surface tokens so themes can restore enclosure independently of photo cards.
 
 - **1.5.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `mg-card--secondary` no longer paints its title in the orange accent (2.65 on the card surface, 2.37 on DELTA's). The title takes the interactive colour, and the accent becomes a 4px rule on the card's leading edge instead. `--mg-color-secondary` is unchanged. This is a visible change wherever the modifier is used, in all five themes.
 - **1.4.1**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.

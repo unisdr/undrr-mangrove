@@ -1,5 +1,7 @@
 import {
   checkPublicationSurface,
+  checkPublicationOverride,
+  publicationSurfaceOverrides,
   publicationCoverFixture,
 } from './cardGeometryChecks';
 import { HorizontalBookCard } from './HorizontalBookCard';
@@ -175,4 +177,20 @@ export const NaturalCoverRatio = {
     return <HorizontalBookCard {...args} data={data} />;
   },
   play: checkPublicationSurface,
+};
+
+export const ThemedSurface = {
+  name: 'Theme-owned publication surface',
+  render: (args, { globals: { locale } }) => (
+    <div style={publicationSurfaceOverrides}>
+      <HorizontalBookCard
+        {...args}
+        data={getCaptionForLocale(locale).contentdata.map(item => ({
+          ...item,
+          imgback: publicationCoverFixture,
+        }))}
+      />
+    </div>
+  ),
+  play: checkPublicationOverride,
 };
