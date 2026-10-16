@@ -668,7 +668,13 @@ These deterministic states use the same results, progress and drawer components 
 <Canvas of={MotionStories.InitialLoading} meta={MotionStories} />
 <Canvas of={MotionStories.RefreshingResults} meta={MotionStories} />
 <Canvas of={MotionStories.ResultsEntry} meta={MotionStories} />
-<Canvas of={MotionStories.FilterDrawer} meta={MotionStories} />
+<div style={{ maxWidth: '375px' }}>
+  <Canvas
+    of={MotionStories.FilterDrawer}
+    meta={MotionStories}
+    story={{ inline: false, height: '600px' }}
+  />
+</div>
 
 After paging, the widget scrolls back to its results (instantly under `prefers-reduced-motion`) and moves focus to the results count, or to the results area when the count is hidden, instead of leaving it on a pager button that has been replaced.
 
@@ -907,6 +913,7 @@ UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pe
 
 ## Changelog
 
+- **1.4.32**, 2026-10-16: Isolate the open filter-drawer documentation example in a narrow iframe so its body scroll lock and focus management cannot affect the surrounding docs page. Search-grid book cards now fill their row height while retaining intrinsic cover proportions.
 - **1.4.31**, 2026-10-16: Keep dropdown dismissal backdrops inside the mobile filter drawer so taps reach filter and sort options. Desktop dropdowns retain their document-body backdrop, including in iframe consumers.
 
 - **1.4.30**, 2026-10-15 ([#1329](https://github.com/unisdr/undrr-mangrove/issues/1329)): Clear all restores configured defaults, including hidden scopes, while preserving the no-argument programmatic clear contract. Compare complete default groups and preserve meaningful AND constraints in chips and shared URLs. Restore per-anchor same-document history snapshots without losing host state or overwriting the first typed-away anchor entry; document reload and host-state fallbacks and reserved names. Cover non-default page sizes and isolate widget test URLs.
