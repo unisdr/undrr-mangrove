@@ -46,6 +46,28 @@ try {
           })
         )
       );
+      const groupedDeadline = await page
+        .locator('[data-content-type="opportunity"] time')
+        .evaluate(time => {
+          const group = time.parentElement;
+          if (
+            group.tagName !== 'SPAN' ||
+            !group.textContent.includes('Closing date:')
+          )
+            return false;
+          const label = document.createRange();
+          label.selectNodeContents(group.firstChild);
+          return (
+            Math.abs(
+              label.getBoundingClientRect().top -
+                time.getBoundingClientRect().top
+            ) < 2
+          );
+        });
+      assert(
+        groupedDeadline,
+        `${theme}: deadline label and date must share one metadata item and line`
+      );
       const typography = await page.evaluate(() => {
         const probe = document.createElement('span');
         probe.style.cssText =

@@ -14,7 +14,7 @@ Family files own presentation specifications and profile projections. The shared
 
 ## Drupal integration
 
-Drupal is a major consumer. Its explicit bundle-to-archetype/profile bindings stay in Mangrove at `stories/Integrations/Drupal/contentPatterns.js` and are published as `DRUPAL_CONTENT_PATTERNS` from the ContentTeaser entry. News maps to Article/news and blog to Article/commentary. Bindings may evolve without reorganizing the pattern library. They select profiles only; production field adapters and domain/link policy still need implementation and review.
+Drupal is a major consumer. Its explicit bundle-to-archetype/profile bindings stay in Mangrove at `stories/Integrations/Drupal/contentPatterns.js` and are published as `DRUPAL_CONTENT_PATTERNS` from the ContentTeaser entry. News maps to Article/news and blog to Article/commentary. These are provisional bundle defaults, not authoritative per-record classifications. Gutenberg blocks can compose report pages and collection directories as well as topic pages; production adapters must discriminate by content purpose before adopting these bindings. Page references demonstrate composition rather than establishing Drupal entity identity. Bindings may evolve without reorganizing the pattern library. They select profiles only; production field adapters and domain/link policy still need implementation and review.
 
 National platform provisionally maps to Organization/coordination-platform, preserving its existing teaser selection. An activity-led portal may map to Landing page instead; the consumer's purpose should determine that choice.
 

@@ -82,12 +82,12 @@ function normaliseLabels(values) {
 
 function TeaserDate({ value }) {
   return (
-    <>
+    <span>
       {value.label && <>{value.label} </>}
       <time dateTime={value.dateTime} dir="auto">
         {value.text}
       </time>
-    </>
+    </span>
   );
 }
 TeaserDate.propTypes = { value: dateType.isRequired };

@@ -620,3 +620,15 @@ describe('Archetype and profile selection', () => {
       expect(commentaryHtml).toContain(author);
   });
 });
+
+test('a closing-date label and its time occupy one metadata flex item', () => {
+  const { container } = render(
+    <ContentTeaser content={teaserFixtures.vacancy} />
+  );
+  const time = container.querySelector('time');
+  expect(time.parentElement.tagName).toBe('SPAN');
+  expect(time.parentElement).toHaveTextContent('Closing date: 30 Nov 2026');
+  expect(time.parentElement.parentElement).toHaveClass(
+    'mg-content-teaser__before-title'
+  );
+});

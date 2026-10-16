@@ -2287,7 +2287,7 @@ npm run build</code></pre>
     summary:
       'Full-page references grouped by archetype: topic under Landing page, report under Publication, and collection index under Collection.',
     description:
-      'Three UNDRR landing page shapes: topic or initiative (hero, route cards, supporting band), report or publication (feature band and a reading column with contents), and collection index (grouped rows of covers).',
+      'Full-page composition references: topic or initiative under Landing page, report under Publication and collection index under Collection. These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models.',
   },
 
   'example-page-template-example': {

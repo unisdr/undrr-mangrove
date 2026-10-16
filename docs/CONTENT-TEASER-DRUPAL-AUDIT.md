@@ -46,19 +46,19 @@ Display Suite lists `field_date_time` in publication content but not in its conf
 
 The same audit was extended to every selected node bundle. All rows below except people use `teaser_3_9`. Fields are in the configured region order; the pattern preserves that hierarchy rather than exposing all available entity fields.
 
-| Drupal bundle → normalized type | Left region | Before title | After title |
+| Drupal bundle → archetype/profile | Left region | Before title | After title |
 | --- | --- | --- | --- |
-| `blog` → `blog` | `field_image`, landscape thumbnail | `field_blog_type`, `field_publication_date`, `field_authors` | `body` |
-| `organization` → `organization` | `field_image`, full media | `field_simple_country` | `body`, `field_organization_type` |
-| `collections` → `collection` | `field_image`, landscape media | `field_collection_type`, `collection_freshness` | `body` |
-| `vacancy` → `vacancy` | None | bundle label, `field_city_additional_location`, `field_closing_date` | `body` |
-| `hazard_information_profile` → `hazard-profile` | None | `field_hip_cluster_type`, `field_hip_notation` | `body` |
-| `conference_event` → `conference-session` | `field_image`, landscape thumbnail | `field_event_bucket`, `field_date_time`, `field_exhibit_date`, `field_room_location`, `field_format` | `body`, `field_conference_event_type_term`, `field_conference_theme` |
-| `commitment` → `commitment` | `field_image`, landscape media | `field_geographic_scope`, `field_status`, `published_at` | `body` |
-| `landing_page_gutenberg` → `landing-page` | `field_image`, landscape media | bundle label | `body` |
-| `national_platform` → `national-platform` | None | bundle label | `body` |
-| `terminology` → `terminology` | None | bundle label | `body` |
-| `people` → `person` | None | No configured DS fields | `body` in core content region |
+| `blog` → `article / commentary` | `field_image`, landscape thumbnail | `field_blog_type`, `field_publication_date`, `field_authors` | `body` |
+| `organization` → `organization / general` | `field_image`, full media | `field_simple_country` | `body`, `field_organization_type` |
+| `collections` → `collection / default` | `field_image`, landscape media | `field_collection_type`, `collection_freshness` | `body` |
+| `vacancy` → `opportunity / job` | None | bundle label, `field_city_additional_location`, `field_closing_date` | `body` |
+| `hazard_information_profile` → `reference-entry / hazard-profile` | None | `field_hip_cluster_type`, `field_hip_notation` | `body` |
+| `conference_event` → `event / programme-session` | `field_image`, landscape thumbnail | `field_event_bucket`, `field_date_time`, `field_exhibit_date`, `field_room_location`, `field_format` | `body`, `field_conference_event_type_term`, `field_conference_theme` |
+| `commitment` → `commitment / default` | `field_image`, landscape media | `field_geographic_scope`, `field_status`, `published_at` | `body` |
+| `landing_page_gutenberg` → `landing-page / default` | `field_image`, landscape media | bundle label | `body` |
+| `national_platform` → `organization / coordination-platform` | None | bundle label | `body` |
+| `terminology` → `reference-entry / definition` | None | bundle label | `body` |
+| `people` → `person / default` | None | No configured DS fields | `body` in core content region |
 
 ### Content-specific formatter rules
 
@@ -90,3 +90,5 @@ The audited teaser hierarchy is a presentation projection owned by each `stories
 ## Archetype/profile integration boundary
 
 The audited Drupal bundle names below remain source identities, not the pattern hierarchy. Mangrove retains their provisional bindings in `stories/Integrations/Drupal/contentPatterns.js`, exported as `DRUPAL_CONTENT_PATTERNS` (`DRUPAL_TEASER_TYPES` is a draft alias with descriptor values). News/blog select Article news/commentary; event/conference_event select Event general/programme-session; terminology/hazard_information_profile select Reference entry definition/hazard-profile; vacancy selects Opportunity/job. National platform provisionally selects Organization/coordination-platform, preserving its labels, summary and absent media; an activity-led portal may instead use Landing page after consumer review. Remaining bundles select their matching archetype's default/general profile. No source field order or omission rule changes in this consolidation. These are editable consumer bindings, not canonical CMS-independent schemas or production field adapters.
+
+The bundle bindings are provisional defaults, not a per-node classification rule. Gutenberg page compositions may serve a report, a directory or a topic; production adapters must establish content purpose before choosing an archetype/profile. A Storybook page reference demonstrates composition and does not prove that its Drupal entity has the same identity.

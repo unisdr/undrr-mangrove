@@ -1,3 +1,4 @@
+import { DrupalPatternTable } from './DrupalPatternTable';
 import { Meta, Canvas } from '@storybook/addon-docs/blocks';
 import LinkTo from '@storybook/addon-links/react';
 import * as TeaserStories from './ContentTeaser.stories';
@@ -24,23 +25,7 @@ Use these patterns for structured search results, related content and listings. 
 
 All metadata is optional. The title and resolved destination are always required. Fields absent from a pattern's hierarchy are omitted even if present on an upstream record. The caller selects labels and supplies translated text; Mangrove does not infer a type label or taxonomy visibility from the theme.
 
-| Archetype / profile                    | Drupal bundle                  | Before title                                                 | After title/summary                         | Media           |
-| -------------------------------------- | ------------------------------ | ------------------------------------------------------------ | ------------------------------------------- | --------------- |
-| `article / news`                       | `article / news`               | Type/labels, release date                                    | Summary, sources, optional language         | Landscape image |
-| `publication`                          | `publication`                  | Selected labels, published date                              | Symbol, summary, sources, optional language | Complete cover  |
-| `resource`                             | `resource`                     | Resource type/labels, location, delivery                     | Summary, sources, optional language         | None            |
-| `event / general`                      | `event / general`              | Type/labels, city, occurrence range, delivery                | Summary, optional language                  | None            |
-| `article / commentary`                 | `article / commentary`         | Type/labels, published date, authors                         | Summary                                     | Landscape image |
-| `organization`                         | `organization`                 | Country/location                                             | Summary, organization type                  | Complete logo   |
-| `collection`                           | `collections`                  | Type/labels, freshness                                       | Summary                                     | Landscape image |
-| `opportunity / job`                    | `opportunity / job`            | Type/labels, location, closing date, optional status         | Summary                                     | None            |
-| `reference-entry / hazard-profile`     | `hazard_information_profile`   | Classification, notation                                     | Summary                                     | None            |
-| `event / programme-session`            | `conference_event`             | Bucket, schedules, exhibition ranges, room hierarchy, format | Summary, type/theme links                   | Landscape image |
-| `commitment`                           | `commitment`                   | Geographic scope, status, published date                     | Summary                                     | Landscape image |
-| `landing-page`                         | `landing_page_gutenberg`       | Type/labels                                                  | Summary                                     | Landscape image |
-| `organization / coordination-platform` | `national_platform`            | Type/labels                                                  | Summary                                     | None            |
-| `reference-entry / definition`         | `reference-entry / definition` | Type/labels                                                  | Summary                                     | None            |
-| `person`                               | `people`                       | None                                                         | Summary                                     | None            |
+<DrupalPatternTable />
 
 The exported `DRUPAL_CONTENT_PATTERNS` maps bundle identifiers to `{ type, profile }` selections in the Mangrove Drupal integration layer. `DRUPAL_TEASER_TYPES` is a draft compatibility alias to that same descriptor map; it no longer returns type strings. Spread a binding into the normalized content record. Use an own-property lookup before selecting a mapped value. It does not extract Drupal fields, sanitize body HTML, choose labels or resolve URLs. Unknown bundles keep the existing renderer during migration. Taxonomy-term results remain outside this node-pattern contract.
 
@@ -136,6 +121,8 @@ Approve the canonical content contract and domain policy, verify live source ada
 ## Changelog
 
 ### 0.1.0 (16 October 2026)
+
+- Generate adapter selection cells from the Drupal bindings and keep date-role labels with their values as one metadata flex item.
 
 - Unify metadata typography across dates, authors, sources and other supporting fields with a themeable size token; keep summaries at body size.
 

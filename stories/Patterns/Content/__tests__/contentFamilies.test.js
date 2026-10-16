@@ -1,3 +1,6 @@
+import React from 'react';
+import { render, screen, within } from '@testing-library/react';
+import { DrupalPatternTable } from '../../ContentTeaser/DrupalPatternTable';
 import { CONTENT_FAMILIES, CONTENT_FAMILY_IDS } from '../contentFamilies';
 import { resolveTeaserPattern } from '../../ContentTeaser/contentTeaserPatterns';
 import { DRUPAL_CONTENT_PATTERNS } from '../../../Integrations/Drupal/contentPatterns';
@@ -78,4 +81,24 @@ test('AI discovery distinguishes archetypes, profiles, bindings and non-callable
   ).toBe(
     'https://example.org/mangrove/?path=/story/patterns-content-teaser--hazard-profile'
   );
+});
+
+test('adapter documentation keeps actual bundle keys distinct from archetype/profile selections', () => {
+  render(React.createElement(DrupalPatternTable));
+  const rows = screen.getAllByRole('row').slice(1);
+  expect(rows).toHaveLength(15);
+  for (const [bundle, type, profile] of [
+    ['news', 'article', 'news'],
+    ['blog', 'article', 'commentary'],
+    ['event', 'event', 'general'],
+    ['vacancy', 'opportunity', 'job'],
+    ['terminology', 'reference-entry', 'definition'],
+  ]) {
+    const row = rows.find(
+      row => within(row).getAllByRole('cell')[1].textContent === bundle
+    );
+    expect(within(row).getAllByRole('cell')[0]).toHaveTextContent(
+      `${type} / ${profile}`
+    );
+  }
 });
