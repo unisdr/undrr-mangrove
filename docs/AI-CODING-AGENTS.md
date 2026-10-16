@@ -17,9 +17,13 @@ visual polish. Shared components own behaviour and geometry; themes own surface
 expression. Keep new visual defaults themeable, document changed token routing,
 and verify an override as well as the default across all five themes.
 
+### Apply the editorial spelling policy
+
+For UI copy, examples, documentation and changelogs, follow the [Editorial manual](EDITORIAL-MANUAL.md#spelling): Oxford `-ize`/`-ization` forms such as organization, organize, normalize and localize, alongside British forms such as colour, behaviour, centre and programme. Keep source field names, API identifiers and proper names intact. Check linked Storybook labels when correcting spelling.
+
 ### Separate archetypes, profiles, presentations and consumer mappings
 
-Organise content patterns around reader needs, not a list of CMS bundles. Reuse Article for news/commentary, Event for general events/programme sessions, Reference entry for definitions/hazard profiles, and Opportunity for jobs. Profiles own editorial differences; presentations select page/teaser/card content; layout supplies geometry. Group existing full-page examples beneath their owning content archetype in Storybook: Article, Publication, Collection or Landing page. Pin existing CSF IDs when changing titles so shared story/docs URLs survive. Hub home is a Landing page variant; persistent hub navigation also composes with detail pages and does not redefine their content types. Do not expose old page-pattern names as competing top-level content families.
+Organize content patterns around reader needs, not a list of CMS bundles. Reuse Article for news/commentary, Event for general events/programme sessions, Reference entry for definitions/hazard profiles, and Opportunity for jobs. Profiles own editorial differences; presentations select page/teaser/card content; layout supplies geometry. Group existing full-page examples beneath their owning content archetype in Storybook: Article, Publication, Collection or Landing page. Pin existing CSF IDs when changing titles so shared story/docs URLs survive. Hub home is a Landing page variant; persistent hub navigation also composes with detail pages and does not redefine their content types. Do not expose old page-pattern names as competing top-level content families.
 
 Keep Drupal bindings in Mangrove's `stories/Integrations/Drupal/contentPatterns.js`: Drupal is a major consumer. Change those provisional bindings when consumer needs change, without importing Drupal knowledge into the renderer or creating an archetype for every bundle. Preserve audited metadata and omission rules when consolidating profiles. Do not treat a teaser projection as a canonical schema, or a full-page/card stub as an implemented component. Update `content-patterns.json` generation and documentation alongside registry changes.
 
@@ -29,7 +33,7 @@ Before implementing a CMS content pattern, inspect its entity view display, layo
 
 ### Content families and presentation stubs
 
-Organise editorial patterns under `stories/Patterns/Content/{Family}/`. Each family's `patterns.js` records its provisional domain meaning and separate full-page, teaser and card presentations. The shared teaser renderer consumes only the family's teaser projection; do not expand that input into a universal domain model. Reconcile canonical contracts with schema work before adoption. Status `reference` links an existing example; `experimental` identifies implemented provisional work; `stub` reserves a presentation that is not designed or implemented. Never publish a stub as a callable component or fabricate an import. Update the family registry and generated `content-patterns.json` discovery metadata together when a presentation graduates. Keep existing story routes compatible while connecting them to their content family.
+Organize editorial patterns under `stories/Patterns/Content/{Family}/`. Each family's `patterns.js` records its provisional domain meaning and separate full-page, teaser and card presentations. The shared teaser renderer consumes only the family's teaser projection; do not expand that input into a universal domain model. Reconcile canonical contracts with schema work before adoption. Status `reference` links an existing example; `experimental` identifies implemented provisional work; `stub` reserves a presentation that is not designed or implemented. Never publish a stub as a callable component or fabricate an import. Update the family registry and generated `content-patterns.json` discovery metadata together when a presentation graduates. Keep existing story routes compatible while connecting them to their content family.
 
 ### Review the component family, not just the first screenshot
 

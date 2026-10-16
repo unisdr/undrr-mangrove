@@ -2420,7 +2420,7 @@ async function main() {
 
 ## Links
 
-Content families organise full-page, teaser and card presentations. Read content-patterns.json before choosing a presentation: experimental teasers are implemented, references are examples, and stubs are not designed or implemented. Never invent a callable component or import for a stub. Teaser inputs are projections, not canonical content schemas.
+Content families organize full-page, teaser and card presentations. Read content-patterns.json before choosing a presentation: experimental teasers are implemented, references are examples, and stubs are not designed or implemented. Never invent a callable component or import for a stub. Teaser inputs are projections, not canonical content schemas.
 
 - Storybook: ${DOCS_BASE}
 - Repository (public mirror of ${REPO_URL.replace('https://github.com/', '')}, which is not publicly readable): ${PUBLIC_REPO_URL}

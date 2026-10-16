@@ -21,7 +21,7 @@ export const Resource = { args: { content: teaserFixtures.resource } };
 export const Event = { args: { content: teaserFixtures.event } };
 export const Blog = { args: { content: teaserFixtures.blog } };
 export const Organization = {
-  name: 'Organisation',
+  name: 'Organization',
   args: { content: teaserFixtures.organization },
 };
 export const Collection = { args: { content: teaserFixtures.collection } };

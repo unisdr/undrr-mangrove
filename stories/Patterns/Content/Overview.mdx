@@ -6,7 +6,7 @@ import { CONTENT_FAMILIES } from './contentFamilies';
 
 # Content patterns
 
-Content archetypes organise patterns by reader need rather than CMS bundle. **Article** covers news and commentary; **Event** covers general events and programme sessions; **Reference entry** covers definitions and hazard profiles; **Opportunity** starts with a job profile. Organisation includes general and coordination-platform profiles.
+Content archetypes organize patterns by reader need rather than CMS bundle. **Article** covers news and commentary; **Event** covers general events and programme sessions; **Reference entry** covers definitions and hazard profiles; **Opportunity** starts with a job profile. Organization includes general and coordination-platform profiles.
 
 Keep three decisions separate: **archetype/profile** describes editorial meaning, **presentation** selects a full page, teaser or card, and **layout** defines geometry such as a horizontal listing. A profile is not another card variant. Existing page examples appear beneath their owning archetype: Article, Publication, Collection and Landing page. Hub home is a Landing page variant; persistent hub navigation also supports detail pages without redefining their content types. Existing story and docs URLs remain available through explicit stable IDs.
 
@@ -14,9 +14,9 @@ Family files own presentation specifications and profile projections. The shared
 
 ## Drupal integration
 
-Drupal is a major consumer. Its explicit bundle-to-archetype/profile bindings stay in Mangrove at `stories/Integrations/Drupal/contentPatterns.js` and are published as `DRUPAL_CONTENT_PATTERNS` from the ContentTeaser entry. News maps to Article/news and blog to Article/commentary. Bindings may evolve without reorganising the pattern library. They select profiles only; production field adapters and domain/link policy still need implementation and review.
+Drupal is a major consumer. Its explicit bundle-to-archetype/profile bindings stay in Mangrove at `stories/Integrations/Drupal/contentPatterns.js` and are published as `DRUPAL_CONTENT_PATTERNS` from the ContentTeaser entry. News maps to Article/news and blog to Article/commentary. Bindings may evolve without reorganizing the pattern library. They select profiles only; production field adapters and domain/link policy still need implementation and review.
 
-National platform provisionally maps to Organisation/coordination-platform, preserving its existing teaser selection. An activity-led portal may map to Landing page instead; the consumer's purpose should determine that choice.
+National platform provisionally maps to Organization/coordination-platform, preserving its existing teaser selection. An activity-led portal may map to Landing page instead; the consumer's purpose should determine that choice.
 
 ## Presentation coverage
 
@@ -69,4 +69,4 @@ The generated `content-patterns.json` catalogue records every family's model and
 
 ### 0.1.0 (16 October 2026)
 
-- Organise content patterns by family, connect existing references and experimental teasers, and reserve explicit full-page/card stubs.
+- Organize content patterns by family, connect existing references and experimental teasers, and reserve explicit full-page/card stubs.

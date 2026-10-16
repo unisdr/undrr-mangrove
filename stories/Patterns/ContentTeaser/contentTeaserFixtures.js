@@ -1,4 +1,4 @@
-// Illustrative normalised records, not a claim about the live Drupal API.
+// Illustrative normalized records, not a claim about the live Drupal API.
 const photo = {
   src: '/images/sample_image-md.jpg',
   alt: 'A farmer seated beside a harvested field',
@@ -28,7 +28,7 @@ export const teaserFixtures = {
     identifier: 'UNDRR/2026/1',
     labels: [{ label: 'Guidance', link: '/publications/guidance' }],
     summary: 'Evidence and practical guidance for resilient development.',
-    sources: ['UNDRR', 'Partner organisation'],
+    sources: ['UNDRR', 'Partner organization'],
     language: 'English',
     lang: 'en',
   },
@@ -87,8 +87,8 @@ Object.assign(teaserFixtures, {
     image: { src: '/images/undrr-logo-blue.svg', alt: '' },
     location: { label: 'Switzerland', link: '/countries/switzerland' },
     organizationType: [
-      'United Nations and international organisations',
-      'Regional organisations',
+      'United Nations and international organizations',
+      'Regional organizations',
     ],
     summary:
       'Supporting countries and communities to understand and reduce disaster risk.',

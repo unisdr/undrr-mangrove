@@ -5,7 +5,7 @@ export const resourcePatterns = {
   model: {
     status: 'provisional',
     intent:
-      'A reusable resource with format, availability and source organisations.',
+      'A reusable resource with format, availability and source organizations.',
   },
   presentations: {
     fullPage: {
@@ -34,7 +34,7 @@ export const resourcePatterns = {
     default: {
       name: 'Default',
       intent:
-        'A reusable resource with format, availability and source organisations.',
+        'A reusable resource with format, availability and source organizations.',
       presentations: {
         teaser: {
           status: 'experimental',

@@ -1,17 +1,17 @@
 /** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
 export const organizationPatterns = {
   id: 'organization',
-  name: 'Organisation',
+  name: 'Organization',
   model: {
     status: 'provisional',
     intent:
-      'An organisation with identity, complete logo, locations and categories.',
+      'An organization with identity, complete logo, locations and categories.',
   },
   presentations: {
     fullPage: {
       status: 'stub',
       intent:
-        'A full organisation page. Information hierarchy, content requirements, actions and responsive behaviour have not been designed.',
+        'A full organization page. Information hierarchy, content requirements, actions and responsive behaviour have not been designed.',
     },
     teaser: {
       status: 'experimental',
@@ -19,14 +19,14 @@ export const organizationPatterns = {
         'Horizontal listing/search presentation. Profiles select editorial metadata; layout is shared. This input is not a canonical domain model.',
       reference: {
         kind: 'Patterns/Content teaser',
-        story: 'Organisation',
+        story: 'Organization',
         id: 'patterns-content-teaser--organization',
       },
     },
     card: {
       status: 'stub',
       intent:
-        'A compact organisation presentation. Content selection and mapping to shared card primitives have not been designed.',
+        'A compact organization presentation. Content selection and mapping to shared card primitives have not been designed.',
     },
   },
   defaultProfile: 'general',
@@ -34,13 +34,13 @@ export const organizationPatterns = {
     general: {
       name: 'General',
       intent:
-        'An organisation with identity, complete logo, locations and categories.',
+        'An organization with identity, complete logo, locations and categories.',
       presentations: {
         teaser: {
           status: 'experimental',
           reference: {
             kind: 'Patterns/Content teaser',
-            story: 'Organisation',
+            story: 'Organization',
             id: 'patterns-content-teaser--organization',
           },
           layout: {

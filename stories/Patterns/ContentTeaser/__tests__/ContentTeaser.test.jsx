@@ -265,7 +265,7 @@ describe('Complete indexed content coverage', () => {
         .compareDocumentPosition(container.querySelector('h3'))
     ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
-  test('multiple source organisations survive static HTML without becoming links', () => {
+  test('multiple source organizations survive static HTML without becoming links', () => {
     const doc = new DOMParser().parseFromString(
       renderToStaticMarkup(
         <ContentTeaser content={teaserFixtures.publication} />
@@ -274,7 +274,7 @@ describe('Complete indexed content coverage', () => {
     );
     expect(
       [...doc.querySelectorAll('li')].map(item => item.textContent)
-    ).toEqual(['UNDRR', 'Partner organisation']);
+    ).toEqual(['UNDRR', 'Partner organization']);
     expect(doc.querySelector('li a')).toBeNull();
   });
   test('metadata links are independent siblings of the primary title link', () => {
@@ -299,7 +299,7 @@ describe('Complete indexed content coverage', () => {
       screen.getByRole('link', { name: teaserFixtures.publication.title })
     ).toHaveAttribute('href', teaserFixtures.publication.link);
   });
-  test('organisation logo keeps its source while organisation type follows summary', () => {
+  test('organization logo keeps its source while organization type follows summary', () => {
     const { container } = render(
       <ContentTeaser content={teaserFixtures.organization} />
     );
@@ -399,7 +399,7 @@ describe('Complete indexed content coverage', () => {
         content={{
           ...teaserFixtures.person,
           image: teaserFixtures.news.image,
-          sources: ['Hidden organisation'],
+          sources: ['Hidden organization'],
           published: teaserFixtures.news.published,
           location: 'Hidden location',
         }}
@@ -423,7 +423,7 @@ describe('Complete indexed content coverage', () => {
 });
 
 describe('Red-team regression cases', () => {
-  test('multi-value locations, organisation categories and commitment statuses retain order', () => {
+  test('multi-value locations, organization categories and commitment statuses retain order', () => {
     const { container, rerender } = render(
       <ContentTeaser
         content={{ ...teaserFixtures.resource, location: ['Africa', 'Asia'] }}
@@ -489,7 +489,7 @@ describe('Red-team regression cases', () => {
     );
   });
   test.each(['updated', 'created'])(
-    'visible %s freshness requires a caller-localised role label',
+    'visible %s freshness requires a caller-localized role label',
     kind => {
       const content = {
         ...teaserFixtures.collection,

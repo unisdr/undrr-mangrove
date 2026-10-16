@@ -5,7 +5,7 @@ export const publicationPatterns = {
   model: {
     status: 'provisional',
     intent:
-      'A published document with bibliographic identity, complete cover and source organisations.',
+      'A published document with bibliographic identity, complete cover and source organizations.',
   },
   presentations: {
     fullPage: {
@@ -39,7 +39,7 @@ export const publicationPatterns = {
     default: {
       name: 'Default',
       intent:
-        'A published document with bibliographic identity, complete cover and source organisations.',
+        'A published document with bibliographic identity, complete cover and source organizations.',
       presentations: {
         teaser: {
           status: 'experimental',

@@ -259,7 +259,7 @@ function validateDateRoles(content) {
   const requireLabel = (date, path) => {
     if (!text(date?.label))
       throw new TypeError(
-        `ContentTeaser requires a caller-localised ${path}.label to identify the date's meaning.`
+        `ContentTeaser requires a caller-localized ${path}.label to identify the date's meaning.`
       );
   };
   if (content.type === 'opportunity' && validDate(content.deadline))
@@ -282,7 +282,7 @@ function validateDateRoles(content) {
 /**
  * Experimental horizontal content teasers selected by archetype and editorial
  * profile. Shared card geometry, native links and server-renderable content;
- * source adapters supply localised metadata, attribution and resolved URLs.
+ * source adapters supply localized metadata, attribution and resolved URLs.
  */
 export function ContentTeaser({ content, headingLevel = 3, className }) {
   const { type, profile, title, shortTitle, link, image, lang } = content;
@@ -363,7 +363,7 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
 }
 
 ContentTeaser.propTypes = {
-  /** Normalised content; all visible strings are caller-localised plain text. Labels may have resolved links. */
+  /** Normalized content; all visible strings are caller-localized plain text. Labels may have resolved links. */
   content: PropTypes.shape({
     type: PropTypes.oneOf(CONTENT_FAMILY_IDS).isRequired,
     /** Editorial profile within the archetype; omitted selects its documented default. */
