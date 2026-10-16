@@ -51,6 +51,14 @@ export function buildContentPatterns({ docsBase, packageName }) {
             status: presentation.status,
             intent: presentation.intent,
           };
+          if (presentation.additionalReferences)
+            result.additionalReferences = presentation.additionalReferences.map(
+              reference => ({
+                name: reference.story,
+                intent: reference.intent,
+                referenceUrl: `${base}?path=/story/${reference.id}`,
+              })
+            );
           if (presentation.reference)
             result.referenceUrl = `${base}?path=/story/${presentation.reference.id}`;
           if (presentation.status === 'experimental' && name === 'teaser') {

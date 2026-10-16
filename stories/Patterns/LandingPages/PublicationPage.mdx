@@ -1,0 +1,23 @@
+import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import LinkTo from '@storybook/addon-links/react';
+import * as Stories from './PublicationPage.stories';
+
+<Meta title="Patterns/Content/Publication/Full page" />
+
+# Publication full-page reference
+
+A long report or publication with a masthead, contents navigation and reading sections.
+
+This is a presentation of the <LinkTo kind="Patterns/Content/Publication" story="docs">Publication archetype</LinkTo>, not another content type. Its domain contract remains provisional.
+
+<Canvas of={Stories.ReportLanding} />
+
+<Controls of={Stories.ReportLanding} />
+
+For composition and Drupal Gutenberg guidance, see [Building landing pages](?path=/docs/patterns-building-landing-pages--docs). Shared reference implementation and comparison notes remain in the [topic-page guide](?path=/docs/patterns-landing-pages--docs).
+
+## Changelog
+
+### 0.1.0 (16 October 2026)
+
+- Place this existing full-page reference beneath its content archetype; preserve its story URL.

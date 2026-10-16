@@ -13,7 +13,7 @@ export const publicationPatterns = {
       intent:
         'Existing report/publication page reference; it is not a complete bibliographic detail-page contract.',
       reference: {
-        kind: 'Patterns/Landing pages',
+        kind: 'Patterns/Content/Publication/Full page',
         story: 'Report or publication',
         id: 'patterns-landing-pages--report-landing',
       },

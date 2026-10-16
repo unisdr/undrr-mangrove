@@ -9,11 +9,20 @@ export const landingPagePatterns = {
   },
   presentations: {
     fullPage: {
+      additionalReferences: [
+        {
+          kind: 'Patterns/Content/Landing page/Full page/Content hub',
+          story: 'Hub home',
+          id: 'patterns-content-hub--hub-home',
+          intent:
+            'Hub-home variant with persistent identity and section navigation; detail-page examples demonstrate the shared navigation composition.',
+        },
+      ],
       status: 'reference',
       intent:
         'Existing topic/initiative landing-page reference; family-specific contract alignment remains open.',
       reference: {
-        kind: 'Patterns/Landing pages',
+        kind: 'Patterns/Content/Landing page/Full page/Topic or initiative',
         story: 'Topic or initiative',
         id: 'patterns-landing-pages--topic-landing',
       },

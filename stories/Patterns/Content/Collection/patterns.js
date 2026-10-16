@@ -8,11 +8,20 @@ export const collectionPatterns = {
   },
   presentations: {
     fullPage: {
+      additionalReferences: [
+        {
+          kind: 'Patterns/Content/Collection/Full page/Collection index',
+          story: 'Collection index',
+          id: 'patterns-landing-pages--index-landing',
+          intent:
+            'A directory into several grouped collections, distinct from a curated single-collection page.',
+        },
+      ],
       status: 'reference',
       intent:
         'Existing collection-page reference with listing behaviour; canonical content-contract alignment remains open.',
       reference: {
-        kind: 'Patterns/Collection page',
+        kind: 'Patterns/Content/Collection/Full page/Curated collection',
         story: 'Collection page',
         id: 'patterns-collection-page--typical',
       },

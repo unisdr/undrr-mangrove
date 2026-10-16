@@ -1,16 +1,18 @@
 import LinkTo from '@storybook/addon-links/react';
 import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
 import * as Stories from './LandingPages.stories';
+import * as PublicationStories from './PublicationPage.stories';
+import * as IndexStories from './CollectionIndex.stories';
 
 <Meta of={Stories} />
 
-# Landing page patterns
+# Topic or initiative page
 
-This existing reference belongs to <LinkTo kind="Patterns/Content/Landing page" story="docs">the landing page content family</LinkTo>, alongside its other presentation patterns.
+This full-page presentation belongs to <LinkTo kind="Patterns/Content/Landing page" story="docs">the landing page content family</LinkTo>, alongside its other presentation patterns.
 
 > **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
-These examples compare three common UNDRR landing page structures side by side:
+The topic page is a Landing page presentation. The publication and collection-index comparisons below belong to their respective content families. These examples compare:
 where the title sits, whether in-page navigation is needed, and how content is
 grouped below the fold. Copy is illustrative; structure follows
 [Building landing pages](?path=/docs/patterns-building-landing-pages--docs)
@@ -36,14 +38,14 @@ between sections, graduate to a [Content hub](?path=/docs/patterns-content-hub--
 One long document with stable sections. A coloured masthead carries title and
 lede, and a contents sidebar helps readers jump to specific sections.
 
-<Canvas of={Stories.ReportLanding} />
+<Canvas of={PublicationStories.ReportLanding} />
 
 ## Collection index
 
 A directory to many items, not a subject page. Group covers into labelled rows
 that link onward; skip the hero because the listings are the content.
 
-<Canvas of={Stories.IndexLanding} />
+<Canvas of={IndexStories.IndexLanding} />
 
 <Controls of={Stories.TopicLanding} />
 
@@ -88,7 +90,7 @@ hydration APIs are introduced here.
 
 ## Changelog
 
-- **1.0.4**, 2026-10-16: Connect the existing page reference to its content family and presentation-status documentation.
+- **1.0.4**, 2026-10-16: Group topic, publication and collection-index examples under their owning content families; preserve existing story and docs IDs.
 
 - **1.0.3**, 2026-09-29 ([undrr/web-backlog#3109](https://gitlab.com/undrr/web-backlog/-/work_items/3109)): The structure now cites [Building landing pages](?path=/docs/patterns-building-landing-pages--docs), which replaces the Gutenberg content guide on assets.undrr.org, and a new section maps each example onto the Drupal Gutenberg blocks that build it. Documentation only.
 - **1.0.2**, 2026-09-20 ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276)): The report reading column opts into `mg-content`, so its inline report link is visibly distinguished without changing the navigation links around it.

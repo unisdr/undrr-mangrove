@@ -2150,7 +2150,7 @@ npm run build</code></pre>
     summary:
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page.',
     description:
-      'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
+      'Landing page hub-home variant, plus persistent identity and section navigation shared with detail pages. Detail pages retain their own editorial meaning. Composes HubHeader with shipped cards, hero and contents components.',
     vanillaModule: {
       note: 'For static HubHeader markup on pages without React. js/hub-header.js enhances every [data-mg-js-hub-header] on load: it keeps the marked section in view and sets data-overflow-start and data-overflow-end on the nav for the edge fades. With data-mg-hub-header-detect-current it also marks the current section from the URL, so identical markup can be copied to every page of the hub: an exact match gets aria-current="page", otherwise the longest section whose path contains the page gets mg-hub-header__nav-item--ancestor and no aria-current. A section linking to the hub home or to / only matches exactly. Markup that already marks a section is left alone. For headers inserted later, import { mgHubHeader } from ".../js/hub-header.js" and call mgHubHeader(scope); initialized headers are skipped and the returned function undoes the call. Without JavaScript the links work and nothing is marked.',
       selector: '[data-mg-js-hub-header]',
@@ -2278,14 +2278,14 @@ npm run build</code></pre>
 
   'patterns-article-story': {
     summary:
-      'A news or event article page: headline, header image, reading body and related content cards.',
+      'Article full-page reference within the Article archetype: headline, hero image, reading body and related content.',
     description:
-      'A news or event article page: headline, header image, reading body and related content cards. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
+      'Article full-page reference within the Article archetype: headline, hero image, reading body and related content. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
   },
 
   'patterns-landing-pages': {
     summary:
-      'Three UNDRR landing page shapes: topic or initiative, report or publication, and collection index.',
+      'Full-page references grouped by archetype: topic under Landing page, report under Publication, and collection index under Collection.',
     description:
       'Three UNDRR landing page shapes: topic or initiative (hero, route cards, supporting band), report or publication (feature band and a reading column with contents), and collection index (grouped rows of covers).',
   },

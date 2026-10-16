@@ -13,7 +13,7 @@ export const articlePatterns = {
       intent:
         'Existing article-page reference; a shared article domain contract and adapter are still provisional.',
       reference: {
-        kind: 'Patterns/Article story',
+        kind: 'Patterns/Content/Article/Full page',
         story: 'Large, prominent image',
         id: 'patterns-article-story--large-image',
       },

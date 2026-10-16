@@ -1,9 +1,12 @@
+import LinkTo from '@storybook/addon-links/react';
 import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
 import * as Stories from './ContentHub.stories';
 
 <Meta of={Stories} />
 
-# Content hubs
+# Content hub composition
+
+The **hub home is a Landing page variant**: it introduces a subject and routes readers onward. <LinkTo kind="Patterns/Content/Landing page" story="docs">Landing page patterns</LinkTo> owns this full-page reference. Persistent hub identity and section navigation also carry through to detail pages; those pages retain their own editorial content meaning. This composition does not define a separate CMS content type or turn every detail page into a landing page.
 
 > **Note:** Tracked on [#1112](https://github.com/unisdr/undrr-mangrove/issues/1112). Review against the [component checklist](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
@@ -194,6 +197,8 @@ other sub-brands too.
 - Can shared content belong to several hubs without duplicating its canonical page?
 
 ## Changelog
+
+- **1.1.2**, 2026-10-16: Group hub-home and navigation-composition examples under Landing page; distinguish the home variant from detail-page content and retain existing URLs.
 
 - **1.2.1**, 2026-10-15 ([#1277](https://github.com/unisdr/undrr-mangrove/issues/1277)): The how-to reporting reading column opts into the documented `mg-content` editorial pattern; hub navigation, cards and resource lists keep their own presentation.
 - **1.2.0**, 2026-09-24: `js/hub-header.js` enhances static hub header markup without React: it scrolls the marked section into view on load and once web fonts arrive (a later resize only updates the fades, so a reader's own scrolling is kept), drives the edge fades and, with `data-mg-hub-header-detect-current`, marks the current section from the URL. `HubHeader` runs the same script, so the scrolling and fade logic that lived in the ContentHub story now ships with the component.

@@ -26,6 +26,14 @@ function Presentation({ name, presentation }) {
           </LinkTo>
         </p>
       )}
+      {presentation.additionalReferences?.map(reference => (
+        <p key={reference.id}>
+          <LinkTo kind={reference.kind} story={reference.story}>
+            {reference.story}
+          </LinkTo>
+          : {reference.intent}
+        </p>
+      ))}
       {presentation.status === 'stub' && (
         <p>
           This reserves a place for future work. It has no component, rendering
@@ -38,6 +46,14 @@ function Presentation({ name, presentation }) {
 const presentationType = PropTypes.shape({
   status: PropTypes.oneOf(['stub', 'reference', 'experimental']).isRequired,
   intent: PropTypes.string.isRequired,
+  additionalReferences: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      kind: PropTypes.string.isRequired,
+      story: PropTypes.string.isRequired,
+      intent: PropTypes.string.isRequired,
+    })
+  ),
   reference: PropTypes.shape({
     id: PropTypes.string.isRequired,
     kind: PropTypes.string.isRequired,
