@@ -4,7 +4,9 @@
 // The presence of an element with [data-mg-preview-access] in the body
 // activates the gate. CSS hides the page on parse via :has(); this script
 // layers a modal over it and asks for a PIN. On success, the gate is marked
-// unlocked and the unlock is persisted in sessionStorage.
+// unlocked, an `mg-preview-access:unlock` event is dispatched on it, and the
+// unlock is persisted in sessionStorage (default) or, with
+// data-mg-preview-persist="local", in localStorage.
 //
 // Not a security mechanism. The PIN lives in the DOM. Treat this as a
 // "wet paint" sign: strong, unmissable, but trivial to bypass for anyone
@@ -26,6 +28,10 @@ const DEFAULTS = {
 };
 
 const STORAGE_PREFIX = 'mg-preview-access:';
+const SESSION_VALUE = 'unlocked';
+const UNLOCK_EVENT = 'mg-preview-access:unlock';
+const PERSIST_MODES = ['session', 'local'];
+const DAY_MS = 24 * 60 * 60 * 1000;
 const TITLE_ID = 'mg-preview-access-title';
 const BODY_ID = 'mg-preview-access-body';
 const ERROR_ID = 'mg-preview-access-error';
@@ -56,12 +62,27 @@ function safeContactUrl(value) {
   return DEFAULTS.contactUrl;
 }
 
+/**
+ * Parse data-mg-preview-max-age (days). Returns a positive number of days, or
+ * null for "no expiry" (missing, zero, negative or non-numeric values).
+ */
+function parseMaxAge(value) {
+  if (value === null || value === '') return null;
+  const days = Number(value);
+  return Number.isFinite(days) && days > 0 ? days : null;
+}
+
 function readConfig(el) {
+  const persist = (el.getAttribute('data-mg-preview-persist') || '')
+    .trim()
+    .toLowerCase();
   return {
     id:
       el.getAttribute('data-mg-preview-id') ||
       (typeof window !== 'undefined' ? window.location.pathname : 'default'),
     pin: el.getAttribute('data-mg-preview-pin') || DEFAULTS.pin,
+    persist: PERSIST_MODES.includes(persist) ? persist : 'session',
+    maxAge: parseMaxAge(el.getAttribute('data-mg-preview-max-age')),
     eyebrow: el.getAttribute('data-mg-preview-eyebrow') || DEFAULTS.eyebrow,
     title: el.getAttribute('data-mg-preview-title') || DEFAULTS.title,
     message: el.getAttribute('data-mg-preview-message') || DEFAULTS.message,
@@ -76,24 +97,113 @@ function readConfig(el) {
   };
 }
 
-function isUnlocked(id) {
+/**
+ * Short, non-cryptographic fingerprint of the PIN (32-bit FNV-1a, hex). Stored
+ * with a local unlock so that changing the PIN relocks every browser. The PIN
+ * is already in the DOM, so this only avoids writing it to storage verbatim;
+ * it is not a security measure.
+ */
+function pinFingerprint(pin) {
+  let hash = 0x811c9dc5;
+  const str = String(pin);
+  for (let i = 0; i < str.length; i += 1) {
+    hash ^= str.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16);
+}
+
+/**
+ * A local unlock is valid when it was made with the current PIN and, if a
+ * max age is set, is not older than that. Anything else (old format, other
+ * PIN, expired, unparseable) is treated as locked.
+ */
+function isValidLocalEntry(raw, config) {
+  let entry;
   try {
-    return sessionStorage.getItem(STORAGE_PREFIX + id) === 'unlocked';
+    entry = JSON.parse(raw);
+  } catch (e) {
+    return false;
+  }
+  if (!entry || entry.pin !== pinFingerprint(config.pin)) return false;
+  if (config.maxAge !== null) {
+    const at = Number(entry.at);
+    if (!Number.isFinite(at)) return false;
+    if (Date.now() - at > config.maxAge * DAY_MS) return false;
+  }
+  return true;
+}
+
+function hasLocalUnlock(config) {
+  const key = STORAGE_PREFIX + config.id;
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return false;
+    if (isValidLocalEntry(raw, config)) return true;
+    // Expired or made with another PIN: drop it so it cannot linger.
+    localStorage.removeItem(key);
+  } catch (e) {
+    // Storage unavailable (private mode, blocked): treat as locked.
+  }
+  return false;
+}
+
+function hasSessionUnlock(config) {
+  try {
+    return sessionStorage.getItem(STORAGE_PREFIX + config.id) === SESSION_VALUE;
   } catch (e) {
     return false;
   }
 }
 
-function persistUnlock(id) {
+/**
+ * The session flag is honoured in both modes, so a tab that is already
+ * unlocked stays unlocked when a site switches to persist="local".
+ */
+function isUnlocked(config) {
+  if (config.persist === 'local' && hasLocalUnlock(config)) return true;
+  return hasSessionUnlock(config);
+}
+
+function persistSession(id) {
   try {
-    sessionStorage.setItem(STORAGE_PREFIX + id, 'unlocked');
+    sessionStorage.setItem(STORAGE_PREFIX + id, SESSION_VALUE);
   } catch (e) {
     // Private mode etc. — best effort.
   }
 }
 
+function persistUnlock(config) {
+  if (config.persist === 'local') {
+    try {
+      localStorage.setItem(
+        STORAGE_PREFIX + config.id,
+        JSON.stringify({ pin: pinFingerprint(config.pin), at: Date.now() })
+      );
+      return;
+    } catch (e) {
+      // localStorage blocked or full: fall back to this tab only.
+    }
+  }
+  persistSession(config.id);
+}
+
 function markUnlocked(gate) {
   gate.classList.add('mg-preview-access--unlocked');
+}
+
+/**
+ * Tell the host page the gate is open. Bubbles, so a listener on document
+ * registered before this script runs also hears the storage-restore case.
+ * `source` is "pin" (just entered) or "storage" (restored on init).
+ */
+function dispatchUnlock(gate, config, source) {
+  gate.dispatchEvent(
+    new CustomEvent(UNLOCK_EVENT, {
+      bubbles: true,
+      detail: { id: config.id, persist: config.persist, source },
+    })
+  );
 }
 
 function escapeText(value) {
@@ -160,29 +270,55 @@ function setSiblingsInert(overlay, on) {
   });
 }
 
+/**
+ * Focus an element that may not be focusable on its own (<main>, a heading,
+ * <body>). A temporary tabindex="-1" is added when it has none and removed on
+ * blur, so the page's tab order is left as it was.
+ */
+function focusElement(el) {
+  if (!el || typeof el.focus !== 'function') return;
+  if (!el.hasAttribute('tabindex')) {
+    el.setAttribute('tabindex', '-1');
+    el.addEventListener('blur', () => el.removeAttribute('tabindex'), {
+      once: true,
+    });
+  }
+  el.focus({ preventScroll: true });
+}
+
+/**
+ * Where focus goes after unlock. A real previously focused element wins.
+ * <body> is not a real target: the gate mounts on load, when body nearly
+ * always holds focus. Next comes the main landmark (or the #main skip-link
+ * target), then the first h1, and body only as a last resort.
+ */
+function focusTargetAfterUnlock(gate) {
+  const saved = previousFocus.get(gate);
+  if (saved && saved !== document.body && saved.isConnected) return saved;
+  return (
+    document.querySelector('main, [role="main"]') ||
+    document.getElementById('main') ||
+    document.querySelector('h1') ||
+    document.body
+  );
+}
+
 function unlockGate(gate, overlay, config) {
-  persistUnlock(config.id);
+  persistUnlock(config);
+  // Reveal first: the CSS gate hides content with visibility: hidden, and
+  // hidden elements cannot take focus.
   markUnlocked(gate);
   setSiblingsInert(overlay, false);
   overlay.remove();
   overlays.delete(gate);
 
-  // Return focus to a known landmark so keyboard and screen reader users are
-  // not dropped on document.body with no announcement of the state change.
-  // The previously focused element (often body itself before mount) is the
-  // safest fallback; otherwise focus the now-revealed <main> or first heading.
-  const restore =
-    previousFocus.get(gate) ||
-    document.querySelector('main, [role="main"]') ||
-    document.querySelector('h1, h2') ||
-    document.body;
+  // Move focus to the revealed content so keyboard and screen reader users
+  // are not dropped on document.body with no sign that the page changed.
+  focusElement(focusTargetAfterUnlock(gate));
   previousFocus.delete(gate);
-  if (restore && typeof restore.focus === 'function') {
-    if (restore === document.body && !restore.hasAttribute('tabindex')) {
-      restore.setAttribute('tabindex', '-1');
-    }
-    restore.focus({ preventScroll: true });
-  }
+
+  // Dispatch last, so listeners see the final state (overlay gone, focus set).
+  dispatchUnlock(gate, config, 'pin');
 }
 
 function bindHandlers(overlay, gate, config) {
@@ -232,8 +368,9 @@ export function mgPreviewAccess(scope) {
 
     const config = readConfig(gate);
 
-    if (isUnlocked(config.id)) {
+    if (isUnlocked(config)) {
       markUnlocked(gate);
+      dispatchUnlock(gate, config, 'storage');
       return;
     }
 
