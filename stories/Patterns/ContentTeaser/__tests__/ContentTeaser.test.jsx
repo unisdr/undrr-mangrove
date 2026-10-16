@@ -119,8 +119,61 @@ describe('Content teaser contract', () => {
       'src',
       teaserFixtures.publication.image.src
     );
-    expect(container.firstChild).toHaveClass('mg-card__book');
+    expect(container.firstChild).toHaveClass('mg-card__hc', 'mg-card-book__hc');
     expect(screen.getAllByRole('link')).toHaveLength(1);
+  });
+  test.each(['news', 'publication'])(
+    '%s date precedes the heading as configured in Display Suite',
+    type => {
+      const { container } = render(
+        <ContentTeaser content={teaserFixtures[type]} />
+      );
+      expect(
+        container
+          .querySelector('time')
+          .compareDocumentPosition(container.querySelector('h3'))
+      ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    }
+  );
+  test.each(['resource', 'event'])(
+    '%s omits media and publication dates even when present upstream',
+    type => {
+      const { container } = render(
+        <ContentTeaser
+          content={{
+            ...teaserFixtures[type],
+            image: teaserFixtures.news.image,
+            published: teaserFixtures.news.published,
+            source: 'Hidden event attribution',
+          }}
+        />
+      );
+      expect(container.querySelector('img')).toBeNull();
+      expect(container).not.toHaveTextContent('13 October 2026');
+      if (type === 'event')
+        expect(container).not.toHaveTextContent('Hidden event attribution');
+      expect(
+        container
+          .querySelector('.mg-card__meta')
+          .compareDocumentPosition(container.querySelector('h3'))
+      ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    }
+  );
+  test('publication symbol follows the title and precedes the summary', () => {
+    const { container } = render(
+      <ContentTeaser content={teaserFixtures.publication} />
+    );
+    const paragraphs = [...container.querySelectorAll('p')];
+    expect(paragraphs[0]).toHaveTextContent('UNDRR/2026/1');
+    expect(paragraphs[1]).toHaveClass('mg-card__summary');
+  });
+  test('an empty event creates no empty metadata container', () => {
+    const { container } = render(
+      <ContentTeaser
+        content={{ type: 'event', title: 'Event', link: '/event', event: {} }}
+      />
+    );
+    expect(container.querySelector('.mg-card__meta')).toBeNull();
   });
   test.each([
     'javascript:alert(1)',

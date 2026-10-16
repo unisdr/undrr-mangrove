@@ -52,6 +52,9 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
     published,
     event,
     resourceType,
+    location,
+    delivery,
+    identifier,
     source,
     language,
     lang,
@@ -66,18 +69,27 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
     throw new TypeError('ContentTeaser headingLevel must be between 2 and 6.');
   }
   const Heading = `h${headingLevel}`;
-  const imageSrc = resolveTeaserUrl(image?.src);
+  const imageSrc = ['news', 'publication'].includes(type)
+    ? resolveTeaserUrl(image?.src)
+    : null;
   const labelItems = [
-    ...new Set([typeLabel, ...(labels || [])].filter(Boolean)),
+    ...new Set(
+      [
+        typeLabel,
+        type === 'resource' && resourceType,
+        ...(labels || []),
+      ].filter(Boolean)
+    ),
   ];
   return (
     <article
       lang={lang}
       className={[
         'mg-card',
-        'mg-card__vc',
+        'mg-card__hc',
+        'mg-card-book__hc',
         'mg-content-teaser',
-        type === 'publication' && 'mg-card__book',
+
         className,
       ]
         .filter(Boolean)
@@ -94,45 +106,50 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
         </div>
       )}
       <div className="mg-card__content">
-        {labelItems.length > 0 && (
-          <div className="mg-card__meta">
+        {(labelItems.length > 0 ||
+          (['news', 'publication'].includes(type) && published) ||
+          (type === 'event' && (event?.start || event?.location || delivery)) ||
+          (type === 'resource' && (location || delivery))) && (
+          <div className="mg-card__meta mg-content-teaser__before-title">
             {labelItems.map(label => (
               <span className="mg-card__label" key={label}>
                 {label}
               </span>
             ))}
+            {type === 'resource' && location && <span>{location}</span>}
+            {type === 'event' && event?.location && (
+              <span>{event.location}</span>
+            )}
+            {type === 'event' && event?.start && (
+              <span>
+                <TeaserDate value={event.start} />
+                {event.end && (
+                  <>
+                    {' '}
+                    – <TeaserDate value={event.end} />
+                  </>
+                )}
+                {event.timeZone && <> ({event.timeZone})</>}
+              </span>
+            )}
+            {['resource', 'event'].includes(type) && delivery && (
+              <span>{delivery}</span>
+            )}
+            {['news', 'publication'].includes(type) && published && (
+              <TeaserDate value={published} />
+            )}
           </div>
         )}
         <Heading className="mg-card__title">
-          <a href={href}>{shortTitle?.trim() || title}</a>
+          <a href={href}>{(type === 'news' && shortTitle?.trim()) || title}</a>
         </Heading>
-        {type === 'event' && event?.start && (
-          <p className="mg-content-teaser__metadata">
-            <TeaserDate value={event.start} />
-            {event.end && (
-              <>
-                {' '}
-                – <TeaserDate value={event.end} />
-              </>
-            )}
-            {event.timeZone && <> ({event.timeZone})</>}
-          </p>
-        )}
-        {type !== 'event' && published && (
-          <p className="mg-content-teaser__metadata">
-            <TeaserDate value={published} />
-          </p>
-        )}
-        {type === 'event' && event?.location && (
-          <p className="mg-content-teaser__metadata">{event.location}</p>
-        )}
-        {type === 'resource' && resourceType && (
-          <p className="mg-content-teaser__metadata">{resourceType}</p>
+        {type === 'publication' && identifier && (
+          <p className="mg-content-teaser__metadata">{identifier}</p>
         )}
         {summary && <p className="mg-card__summary">{summary}</p>}
-        {(source || language) && (
+        {((type !== 'event' && source) || language) && (
           <p className="mg-content-teaser__metadata">
-            {[source, language].filter(Boolean).join(' · ')}
+            {[type !== 'event' && source, language].filter(Boolean).join(' · ')}
           </p>
         )}
       </div>
@@ -162,6 +179,9 @@ ContentTeaser.propTypes = {
       location: PropTypes.string,
     }),
     resourceType: PropTypes.string,
+    location: PropTypes.string,
+    delivery: PropTypes.string,
+    identifier: PropTypes.string,
     source: PropTypes.string,
     language: PropTypes.string,
     lang: PropTypes.string,

@@ -38,7 +38,7 @@ try {
         .locator('.mg-card__image')
         .evaluateAll(images => Promise.all(images.map(img => img.decode())));
       const geometry = await page.evaluate(() => {
-        const cover = document.querySelector('.mg-card__book img');
+        const cover = document.querySelectorAll('.mg-card__image')[1];
         const image = cover.getBoundingClientRect();
         return {
           overflow: document.documentElement.scrollWidth > innerWidth,
@@ -47,6 +47,21 @@ try {
           textOutsideCards: [
             ...document.querySelectorAll('.mg-content-teaser'),
           ].some(card => card.scrollWidth > card.clientWidth + 1),
+          horizontal: [
+            ...document.querySelectorAll(
+              '.mg-content-teaser:has(.mg-card__visual)'
+            ),
+          ].every(card => {
+            const visual = card
+              .querySelector('.mg-card__visual')
+              .getBoundingClientRect();
+            const text = card
+              .querySelector('.mg-card__content')
+              .getBoundingClientRect();
+            return (
+              Math.abs(visual.top - text.top) < 2 && visual.right <= text.left
+            );
+          }),
           loaded: [...document.images].every(
             img => img.complete && img.naturalWidth > 0
           ),
@@ -55,6 +70,12 @@ try {
       assert.equal(geometry.overflow, false, `${theme}: viewport overflow`);
       assert.equal(geometry.textOutsideCards, false, `${theme}: text overflow`);
       assert.equal(geometry.loaded, true);
+      if (!mobile)
+        assert.equal(
+          geometry.horizontal,
+          true,
+          `${theme}: expected side-by-side media and text`
+        );
       assert(
         Math.abs(geometry.naturalRatio - geometry.renderedRatio) < 0.01,
         `${theme}: cover cropped`

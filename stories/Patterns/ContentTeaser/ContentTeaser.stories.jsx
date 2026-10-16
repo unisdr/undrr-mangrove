@@ -9,7 +9,7 @@ export default {
   parameters: { layout: 'padded', docs: { source: { html: true } } },
   decorators: [
     (Story, context) => (
-      <div style={{ maxWidth: context.parameters.teaserWidth || '22rem' }}>
+      <div style={{ maxWidth: context.parameters.teaserWidth || '52rem' }}>
         <Story />
       </div>
     ),
@@ -39,7 +39,7 @@ export const MinimumContent = {
 export const MissingCovers = {
   parameters: { teaserWidth: '48rem' },
   render: () => (
-    <div className="mg-grid mg-grid__col-2">
+    <div>
       {[
         teaserFixtures.publication,
         {
@@ -74,7 +74,7 @@ export const Arabic = {
 export const MixedContent = {
   parameters: { teaserWidth: '70rem' },
   render: () => (
-    <div className="mg-grid mg-grid__col-4">
+    <div>
       {Object.values(teaserFixtures).map(content => (
         <ContentTeaser key={content.type} content={content} />
       ))}

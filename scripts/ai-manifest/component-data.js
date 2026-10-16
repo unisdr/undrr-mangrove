@@ -2263,8 +2263,12 @@ npm run build</code></pre>
     summary:
       'Experimental structured news, publication, resource and event teaser patterns.',
     description:
-      'Experimental news, publication, resource and event teaser patterns. Plain-text structured content, resolved native links and semantic dates compose shared card geometry. No Drupal HTML or domain inference.',
-    cssClasses: ['mg-content-teaser', 'mg-content-teaser__metadata'],
+      'Experimental horizontal news, publication, resource and event teasers based on Drupal Display Suite field order and media visibility. Structured plain text, resolved native links and semantic dates; no domain inference.',
+    cssClasses: [
+      'mg-content-teaser',
+      'mg-content-teaser__before-title',
+      'mg-content-teaser__metadata',
+    ],
   },
 
   'patterns-article-story': {

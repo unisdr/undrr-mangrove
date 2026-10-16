@@ -7,7 +7,7 @@ const cover = { src: '/images/teaser-publication-cover.svg', alt: '' };
 export const teaserFixtures = {
   news: {
     type: 'news',
-    typeLabel: 'News',
+    typeLabel: 'Update',
     title: 'Communities strengthen resilience to floods',
     link: 'https://www.undrr.org/news',
     image: photo,
@@ -18,11 +18,12 @@ export const teaserFixtures = {
   },
   publication: {
     type: 'publication',
-    typeLabel: 'Publication',
+    typeLabel: 'Report',
     title: 'Understanding disaster risk',
     link: 'https://www.undrr.org/publications',
     image: cover,
     published: { dateTime: '2026', text: '2026' },
+    identifier: 'UNDRR/2026/1',
     summary: 'Evidence and practical guidance for resilient development.',
     source: 'UNDRR',
     language: 'English',
@@ -30,19 +31,20 @@ export const teaserFixtures = {
   },
   resource: {
     type: 'resource',
-    typeLabel: 'Resource',
     title: 'A practical guide to local risk assessment',
     link: 'https://www.preventionweb.net/knowledge-base',
     resourceType: 'Training toolkit',
+    location: 'Global',
+    delivery: 'Online',
     summary: 'Tools for identifying hazards, exposure and vulnerability.',
     source: 'PreventionWeb',
   },
   event: {
     type: 'event',
-    typeLabel: 'Event',
+    typeLabel: 'Workshop',
     title: 'Building resilient cities together',
     link: 'https://www.undrr.org/events',
-    image: photo,
+    delivery: 'Online',
     event: {
       start: {
         dateTime: '2026-11-04T09:00:00+01:00',
@@ -53,7 +55,7 @@ export const teaserFixtures = {
         text: '5 November 2026, 17:00',
       },
       timeZone: 'Europe/Geneva (UTC+01:00)',
-      location: 'Geneva, Switzerland and online',
+      location: 'Geneva, Switzerland',
     },
     summary: 'Exchange practical approaches to reducing disaster risk.',
   },

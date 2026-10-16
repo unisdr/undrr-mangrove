@@ -17,6 +17,10 @@ visual polish. Shared components own behaviour and geometry; themes own surface
 expression. Keep new visual defaults themeable, document changed token routing,
 and verify an override as well as the default across all five themes.
 
+### Ground CMS content patterns in source configuration
+
+Before implementing a CMS content pattern, inspect its entity view display, layout template, field formatters, conditional visibility and theme overrides in the source repository. Record the source revision, visible field order, hidden fields and deliberate departures in the pattern documentation. A generic card example does not establish parity with a Drupal teaser. The [content teaser audit](CONTENT-TEASER-DRUPAL-AUDIT.md) is the baseline for news, publication, resource and event teasers.
+
 ### Review the component family, not just the first screenshot
 
 - Check optional content: labels present/absent, media absent, long titles, summaries and actions. A first title should not inherit spacing intended to separate metadata.

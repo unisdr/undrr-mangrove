@@ -13,7 +13,16 @@
     gap: var(--mg-spacing-75);
   }
 
+  .mg-content-teaser__before-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--mg-spacing-50) var(--mg-spacing-100);
+    font-size: var(--mg-font-size-300);
+  }
+
   .mg-card__label {
+    margin: 0;
     cursor: inherit;
   }
 
