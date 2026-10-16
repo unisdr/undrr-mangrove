@@ -14,6 +14,36 @@ const themes = [
   'DELTA Resilience Theme',
 ];
 try {
+  // Inline open-drawer examples lock the whole docs document, even when
+  // desktop CSS hides the drawer. Exercise docs as well as isolated stories.
+  for (const width of [390, 1280]) {
+    const page = await browser.newPage({ viewport: { width, height: 900 } });
+    await page.goto(
+      `${base}/iframe.html?id=components-syndicated-search--docs&viewMode=docs`
+    );
+    const example = page.locator(
+      'iframe[src*="components-syndicated-search--filter-drawer"]'
+    );
+    await example.scrollIntoViewIfNeeded();
+    const drawerFrame = example.contentFrame();
+    await drawerFrame.locator('.mg-search__drawer').waitFor();
+    assert.equal(
+      await drawerFrame.locator('body').evaluate(el => el.style.overflow),
+      'hidden',
+      'The open drawer must still lock its own document'
+    );
+    assert.notEqual(
+      await page.locator('body').evaluate(el => getComputedStyle(el).overflowY),
+      'hidden',
+      'The example must not lock the surrounding docs'
+    );
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.mouse.move(width / 2, 200);
+    await page.mouse.wheel(0, 600);
+    await page.waitForFunction(() => window.scrollY > 0);
+    console.log(`${engine}: docs scrolling at ${width}px: passed`);
+    await page.close();
+  }
   for (const theme of themes) {
     for (const mobile of [true, false]) {
       for (const reducedMotion of ['no-preference', 'reduce']) {

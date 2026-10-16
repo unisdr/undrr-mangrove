@@ -48,6 +48,7 @@ See [Accessibility](https://mangrove.undrr.org/?path=/docs/getting-started-acces
 ## Stories and documentation
 
 - [ ] Stories use CSF3 format (no `Template.bind({})`)
+- [ ] Docs examples that mount open modals/drawers or change document scrolling/focus render in an isolated iframe (`<Canvas story={{ inline: false, height: '600px' }} />`), with a suitable preview width; loading and interacting with the example must leave the surrounding docs scrollable
 - [ ] MDX docs follow the standard structure (overview, when to use, formatting, behaviors, CSS/JS references, changelog)
 - [ ] MDX includes the review checklist reference after `<Meta>` (see [component guide, step 5](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-step-by-step--docs))
 - [ ] One changelog version entry added to the component's MDX file for the PR (see [changelog format](https://mangrove.undrr.org/?path=/docs/contributing-component-standards--docs)). Extend that entry with nested bullets when the same PR adds more work; do not bump the component version more than once within one PR.

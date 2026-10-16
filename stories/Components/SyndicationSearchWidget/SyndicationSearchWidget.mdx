@@ -668,7 +668,13 @@ These deterministic states use the same results, progress and drawer components 
 <Canvas of={MotionStories.InitialLoading} meta={MotionStories} />
 <Canvas of={MotionStories.RefreshingResults} meta={MotionStories} />
 <Canvas of={MotionStories.ResultsEntry} meta={MotionStories} />
-<Canvas of={MotionStories.FilterDrawer} meta={MotionStories} />
+<div style={{ maxWidth: '375px' }}>
+  <Canvas
+    of={MotionStories.FilterDrawer}
+    meta={MotionStories}
+    story={{ inline: false, height: '600px' }}
+  />
+</div>
 
 After paging, the widget scrolls back to its results (instantly under `prefers-reduced-motion`) and moves focus to the results count, or to the results area when the count is hidden, instead of leaving it on a pager button that has been replaced.
 
@@ -906,6 +912,8 @@ On screens ≤800px, the sidebar is replaced with a drawer that slides in from t
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
 ## Changelog
+
+- **1.4.32**, 2026-10-16: Isolate the open filter-drawer documentation example in a narrow iframe so its body scroll lock and focus management cannot affect the surrounding docs page.
 
 - **1.4.31**, 2026-10-16: Keep dropdown dismissal backdrops inside the mobile filter drawer so taps reach filter and sort options. Desktop dropdowns retain their document-body backdrop, including in iframe consumers.
 
