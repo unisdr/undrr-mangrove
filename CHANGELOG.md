@@ -12,6 +12,27 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 ## Unreleased
 
 - **Breaking, pending the Drupal migration:** Retired the FontAwesome icon-font fallback, `fa-*` aliases (including `.fa-before` and `.fa-2x`), React `fa-*` icon names, `$mgIconFontPath` and the published `fonts/mangrove-icon-set/` assets. SVG icons continue through `mg-icon-*`. This must ship in a release that explicitly announces the breaking change, after [undrr/web-backlog#3185](https://gitlab.com/undrr/web-backlog/-/issues/3185) is deployed and verified in production. See [migration and release gate](docs/ICON-FONT-RETIREMENT.md) and [unisdr/undrr-mangrove#906](https://github.com/unisdr/undrr-mangrove/issues/906).
+- Established `release/3.0` as an integration branch with build/test coverage, isolated Storybook artifacts and Chromatic previews. Stable Pages/dist publication remains on main and npm remains tag/manual. Scope and release gates: [unisdr/undrr-mangrove#1379](https://github.com/unisdr/undrr-mangrove/issues/1379).
+
+
+## 2.1.1, 2026-10-16
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.1.1) for full details.
+
+Mangrove 2.1.1 fixes syndicated-search filter selection, aligns book-card search results and keeps the documentation page scrollable. It changes no public component APIs.
+
+### Breaking and visible changes
+
+- **Search book cards:** cards fill their search-grid row while retaining cover proportions. Review search-specific height overrides; standalone book cards retain content height. ([#1375](https://github.com/unisdr/undrr-mangrove/pull/1375))
+
+### Bug fixes and hardening
+
+- **Mobile search filters:** tapping a filter or sort option inside the drawer now selects it instead of dismissing the list without changing the value. Dropdown dismissal backdrops stay inside the drawer's stacking context, preserving desktop behavior and iframe ownership. ([#1374](https://github.com/unisdr/undrr-mangrove/pull/1374))
+
+### Documentation and discoverability
+
+- **Search docs scrolling:** the open filter-drawer example runs in a narrow iframe so its body scroll lock and focus handling cannot affect the surrounding docs page. Add review guidance for examples with document-wide side effects. ([#1375](https://github.com/unisdr/undrr-mangrove/pull/1375))
+- **Browser regression coverage:** check docs scrolling and search book-card row heights, cover proportions, standalone sizing and mobile containment alongside touch, mouse and keyboard selection across all five themes. ([#1374](https://github.com/unisdr/undrr-mangrove/pull/1374), [#1375](https://github.com/unisdr/undrr-mangrove/pull/1375))
 
 ## 2.1.0, 2026-10-15
 

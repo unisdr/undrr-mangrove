@@ -31,6 +31,18 @@ automatic bumps. In an actively evolving component library, strict automation
 would trigger too many major bumps for scoped component-level breaks. Manual
 versioning keeps release signaling intentional.
 
+## Mangrove 3.0 integration branch
+
+The provisional scope and release gates are tracked in [unisdr/undrr-mangrove#1379](https://github.com/unisdr/undrr-mangrove/issues/1379). `main` remains the 2.x line; `release/3.0` collects agreed 3.0 work through reviewed feature PRs. The Sass module migration remains targeted at 2.2.0 and comes forward through a main sync. The existing React Aria ComboBox pilot is a scope/evidence source, not a promise to migrate every component or a change to its current release target.
+
+Periodically merge `origin/main` into `release/3.0`, especially after a 2.x release and before integration/prerelease review. Fix ordinary bugs on main first and merge them forward. Preserve the shared branch's history rather than routinely rebasing it. Resolve conflicts, record the sync in the tracker and run the affected checks.
+
+Pushes to `release/3.0` and PRs targeting it run the normal build/test workflow. The `storybook-3.0-preview` artifact contains the built Storybook and its `dist/` copy; download and serve it with `node scripts/serve-storybook.mjs <extracted-directory> 6099`. Chromatic provides hosted previews for matching visual changes. Use the exact workflow commit and candidate asset URLs when recording consumer verification.
+
+These builds do not deploy stable Pages or update the stable dist branch. The public fork/CDN paths described above remain unchanged. npm still publishes only on a version tag or explicit workflow dispatch: this branch is not itself a prerelease publication channel. When a prerelease is approved, choose a `3.0.0-…` version/tag, publish under npm's `next` tag and use isolated versioned assets. Keep historical versioned assets available. Do not bump or tag a stable 3.0 release until the tracker gates and final main-branch transition are agreed.
+
+The icon-retirement draft must remain unmerged until the Drupal rollout and exact-candidate verification recorded in [undrr/web-backlog#3185](https://gitlab.com/undrr/web-backlog/-/issues/3185) are complete. A draft flag and a tracker checklist do not enforce branch protection or external dependencies; maintainers must verify the gates before merging.
+
 ## Release steps
 
 ### 1. Prepare the release
@@ -417,9 +429,9 @@ https://assets.undrr.org/testing/static/mangrove/latest/css/style.css
 https://assets.undrr.org/testing/static/mangrove/latest/components/MegaMenu.js
 
 # Versioned (from tagged releases)
-https://assets.undrr.org/mangrove/2.1.0/css/style.css
-https://assets.undrr.org/mangrove/2.1.0/components/MegaMenu.js
-https://assets.undrr.org/mangrove/2.1.0/js/tabs.js
+https://assets.undrr.org/mangrove/2.1.1/css/style.css
+https://assets.undrr.org/mangrove/2.1.1/components/MegaMenu.js
+https://assets.undrr.org/mangrove/2.1.1/js/tabs.js
 ```
 
 ## CI/CD configuration
