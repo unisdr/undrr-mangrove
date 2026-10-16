@@ -858,12 +858,60 @@ $search-input-padding-x: mg-rem(44);
   // The book card's existing start alignment keeps cover rows intrinsic.
   .mg-card__book {
     block-size: 100%;
+    max-width: none;
+    inline-size: 100%;
   }
 
   // Remove list-style dividers in grid/card mode
   .mg-search__result {
+    inline-size: 100%;
+    min-inline-size: 0;
     padding-bottom: 0;
     border-bottom: 0;
+  }
+}
+
+// A catalogue aligns captions through a shared media stage, without cropping
+// supplied artwork or inventing a cover for a result that has none. Only search
+// galleries use this staging; standalone publication teasers remain intrinsic.
+.mg-search__results-grid--book {
+  @media (min-width: $mg-breakpoint-tablet) {
+    &:has(.mg-card__visual) {
+      .mg-card__book > .mg-card__visual,
+      .mg-card__book:not(:has(.mg-card__visual))::before {
+        inline-size: 100%;
+        block-size: var(--mg-search-book-cover-height);
+      }
+
+      .mg-card__book:not(:has(.mg-card__visual))::before {
+        content: "";
+      }
+
+      .mg-card__book > .mg-card__visual {
+        aspect-ratio: auto;
+        border: 0;
+        align-items: flex-end;
+        justify-content: flex-start;
+
+        > a {
+          display: flex;
+          align-items: flex-end;
+          justify-content: flex-start;
+          inline-size: 100%;
+          block-size: 100%;
+        }
+
+        img {
+          align-self: flex-end;
+          inline-size: auto;
+          block-size: auto;
+          max-inline-size: 100%;
+          max-block-size: 100%;
+          object-fit: contain;
+          border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
+        }
+      }
+    }
   }
 }
 

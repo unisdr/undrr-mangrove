@@ -38,7 +38,10 @@ Icons use CSS classes (Font Awesome, custom icon fonts, etc). Add visual interes
 
 <Canvas of={StatsCardStories.Compact} />
 
-Use the compact variant when space is limited.
+Use the compact variant when space is limited. It uses 15px padding (10px on
+small screens) and a 5px gap at the default root font size. Child margins do not
+add extra space around values, labels, icons or summaries. Spacing scales with
+the shared spacing tokens.
 
 ### Highlighted
 
@@ -160,6 +163,8 @@ createHydrator({
 See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **1.4.8**, 2026-10-16: Reduce compact card padding and internal gaps; remove stacked value, icon, label and summary margins so compact statistics use a denser rhythm.
 
 - **1.4.7**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Inline-link hover feedback uses shared motion tokens and changes instantly under reduced motion.
 

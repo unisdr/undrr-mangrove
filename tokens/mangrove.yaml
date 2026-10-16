@@ -537,6 +537,38 @@ card:
   shadow: { $type: shadow, $value: '{shadow.raised}' }
   shadow-hover: { $type: shadow, $value: '{shadow.raised-hover}' }
   icon-badge-radius: { $type: dimension, $value: '20%' }
+  # Publications default to an unboxed cover and caption. Surface expression
+  # remains theme-owned, independently of the enclosed photo-card defaults.
+  publication:
+    background:
+      $type: color
+      $value: transparent
+      $format: literal
+      $description: Background of book and horizontal book publication teasers.
+    padding:
+      $type: dimension
+      $value: '0px'
+      $description: Outer publication teaser inset; cover-to-caption gaps are separate.
+    border-radius:
+      $type: dimension
+      $value: '0px'
+      $description: Outer publication surface radius; complete cover artwork remains square.
+    shadow:
+      $type: shadow
+      $value: none
+      $description: Publication surface elevation at rest.
+    shadow-hover:
+      $type: shadow
+      $value: none
+      $description: Linked publication surface elevation on hover.
+
+# Shared publication stages in search grids align captions without cropping.
+search:
+  book-cover-height:
+    $type: dimension
+    $value: 320
+    $format: rem
+    $description: Desktop search book-grid media stage; missing media reserves this space only in multi-column layouts.
 
 # Notice actions sit on the notice's tinted surface, not the page, so a brand
 # whose outline secondary colour only clears 4.5:1 on white can darken it here

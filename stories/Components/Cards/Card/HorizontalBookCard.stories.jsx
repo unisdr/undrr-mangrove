@@ -1,3 +1,9 @@
+import {
+  checkPublicationSurface,
+  checkPublicationOverride,
+  publicationSurfaceOverrides,
+  publicationCoverFixture,
+} from './cardGeometryChecks';
 import { HorizontalBookCard } from './HorizontalBookCard';
 
 const getCaptionForLocale = locale => {
@@ -159,4 +165,32 @@ export const ButtonOnlyHorizontalBookCard = {
   },
 
   name: 'Button only, no card link',
+};
+
+export const NaturalCoverRatio = {
+  name: 'Complete cover without outer frame',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      imgback: publicationCoverFixture,
+    }));
+    return <HorizontalBookCard {...args} data={data} />;
+  },
+  play: checkPublicationSurface,
+};
+
+export const ThemedSurface = {
+  name: 'Theme-owned publication surface',
+  render: (args, { globals: { locale } }) => (
+    <div style={publicationSurfaceOverrides}>
+      <HorizontalBookCard
+        {...args}
+        data={getCaptionForLocale(locale).contentdata.map(item => ({
+          ...item,
+          imgback: publicationCoverFixture,
+        }))}
+      />
+    </div>
+  ),
+  play: checkPublicationOverride,
 };

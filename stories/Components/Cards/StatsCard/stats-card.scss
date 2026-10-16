@@ -145,10 +145,19 @@
 /* Variant: Compact */
 .mg-stats-card--compact {
   .mg-stats-card-item {
-    padding: var(--mg-spacing-300);
+    padding: var(--mg-spacing-150);
+    gap: var(--mg-spacing-50);
 
     @include devicebreak(small) {
-      padding: var(--mg-spacing-200);
+      padding: var(--mg-spacing-100);
+    }
+
+    // Compact spacing is owned by the gap, without child margins stacking up.
+    &__icon,
+    &__value,
+    &__bottom-label,
+    &__summary {
+      margin: 0;
     }
 
     &__value {

@@ -99,6 +99,10 @@ export function SearchResults({
   const cardGridCols = isCardMode
     ? Math.min(Math.max(gridColumns ?? resultsPerPage, 2), 6)
     : undefined;
+  const bookMediaGrid =
+    displayMode === 'card-book' && visibleTeaserFields?.image !== false
+      ? ' mg-search__results-grid--book'
+      : '';
   const hiddenFieldClasses = useMemo(
     () => buildHiddenFieldClasses(visibleTeaserFields),
     [visibleTeaserFields]
@@ -379,7 +383,7 @@ export function SearchResults({
       {/* Results list or grid */}
       {isCardMode ? (
         <div
-          className={`mg-search__results-grid mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}${enter}`.trim()}
+          className={`mg-search__results-grid${bookMediaGrid} mg-grid mg-grid__col-${cardGridCols} ${hiddenFieldClasses}${enter}`.trim()}
           role="list"
           aria-label={labels.searchResultsLabel}
         >

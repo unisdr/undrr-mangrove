@@ -81,9 +81,13 @@ Renders search results as vertical cards in a responsive grid. `gridColumns` con
 
 ## Card book display
 
-Renders search results as vertical book cards in a grid. Uses `mg-card__vc mg-card__book` classes. Drupal image styles are automatically rewritten to `por` (3:4 portrait) to match the book card aspect ratio.
+Renders publication teasers in a grid using `mg-card__vc mg-card__book`. Book mode preserves supplied image URLs; the endpoint must provide complete, uncropped cover artwork. It does not infer artwork roles or turn general content into publications. Use an explicit publication filter and set `gridColumns` independently of page size: two columns suit a typical sidebar search, while wider catalogues can support more. Hide summaries and redundant content-type labels through `visibleTeaserFields` when browsing covers.
+
+Desktop covers retain their natural proportions within a shared media stage, bottom-aligned without an extra frame around the stage. The `--mg-search-book-cover-height` token defaults to 20rem and aligns captions even when artwork is missing. Missing media leaves empty space without a fabricated image; that space collapses on mobile. Explicitly hiding images, or receiving a result set with no artwork at all, disables the staging. This is specific to search grids; standalone book cards keep their natural cover height.
 
 <Canvas of={DisplayModesStories.CardBookDisplay} meta={DisplayModesStories} />
+
+<Canvas of={DisplayModesStories.BookGridEdgeCases} meta={DisplayModesStories} />
 
 ## Hidden teaser fields
 
@@ -912,6 +916,8 @@ On screens ≤800px, the sidebar is replaced with a drawer that slides in from t
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
 ## Changelog
+
+- **1.5.0**, 2026-10-16: Book display preserves supplied artwork URLs instead of forcing portrait crops. Publication examples use an explicit content filter, independent column count and concise metadata. Search-only cover stages align desktop captions and collapse missing-artwork space on mobile; no-image configurations remain unstaged.
 
 - **1.4.32**, 2026-10-16: Isolate the open filter-drawer documentation example in a narrow iframe so its body scroll lock and focus management cannot affect the surrounding docs page. Search-grid book cards now fill their row height while retaining intrinsic cover proportions.
 - **1.4.31**, 2026-10-16: Keep dropdown dismissal backdrops inside the mobile filter drawer so taps reach filter and sort options. Desktop dropdowns retain their document-body backdrop, including in iframe consumers.

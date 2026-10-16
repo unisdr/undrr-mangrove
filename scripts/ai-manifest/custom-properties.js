@@ -186,7 +186,7 @@ export const PROPERTY_DOCS = {
   '--mg-card-border':
     'Colour of the 2px border on .mg-card__icon--bordered. The borderColor prop sets it as an inline style.',
   '--mg-card-icon-size':
-    'Size of the card visual on the variants that own it, such as the horizontal card. The iconSize prop sets it as an inline style.',
+    'Size of the card visual on the variants that own it, such as the horizontal card. Set it in CSS on the card or an ancestor; iconSize supplies image attributes and does not set this property.',
   '--mg-icon-bg':
     'Background colour of .mg-card__icon-wrap--colored. The iconColor prop sets it as an inline style; unset, the badge paints no fill.',
   '--mg-icon-fg':

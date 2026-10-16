@@ -104,7 +104,23 @@ See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-witho
 | `button`      | String | CTA button label                                                                                        |
 | `buttonLink`  | String | CTA destination. Defaults to `link`; set it to give an unlinked card a button                           |
 
+## Image edges
+
+Photo images meet the card edges, with rounding only at the outer corners. Text
+and controls remain inset by `--mg-card-padding`. Without labels, the title
+starts at that inset without extra metadata spacing; cards without images keep the
+same text inset. Horizontal photos sit above the content below 640px, then fill
+the leading edge beside it (mirrored in RTL). Book and horizontal book cards
+use an unboxed publication teaser with one square cover border, keeping artwork intact.
+
+This is the default for existing React and HTML cards; no markup change is
+needed. Review site overrides that add padding to the card or round every image
+corner: photo cards now apply padding to `.mg-card__content` instead of the
+outer `.mg-card` surface.
+
 ## Changelog
+
+- **1.6.0**, 2026-10-16: Photo media reaches the outer card edges while text and controls remain inset. Responsive horizontal media fills the leading edge, including in RTL. Titles without labels use a single content inset. Publication teasers use a single cover border; icon cards keep their inset content. Existing HTML classes and props remain supported.
 
 - **1.5.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `mg-card--secondary` no longer paints its title in the orange accent (2.65 on the card surface, 2.37 on DELTA's). The title takes the interactive colour, and the accent becomes a 4px rule on the card's leading edge instead. `--mg-color-secondary` is unchanged. This is a visible change wherever the modifier is used, in all five themes.
 - **1.4.1**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.

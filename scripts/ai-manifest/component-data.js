@@ -484,7 +484,7 @@ export const COMPONENT_DATA = {
   // --- Cards ---
   'components-cards-vertical-card': {
     description:
-      'Card with stacked image, labels, title, summary, and optional CTA button. Four color variants.',
+      'Card with an edge-to-edge top photo, inset labels, title, summary, and optional CTA button. Four color variants. Text-only cards retain their inset.',
     cssClasses: [
       'mg-card',
       'mg-card__vc',
@@ -587,7 +587,7 @@ export const COMPONENT_DATA = {
 
   'components-cards-horizontal-card': {
     description:
-      'Side-by-side card with image left and content right. Labels, title, summary, and CTA button.',
+      'Responsive card with an edge-to-edge leading photo (mirrored in RTL; above content on mobile) and inset labels, title, summary, and CTA button.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -628,7 +628,7 @@ export const COMPONENT_DATA = {
     summary:
       'Card with icon or image, title, summary and optional CTA. Vertical or horizontal orientation, in default, centered or negative (dark) variants.',
     description:
-      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
+      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small (recommended for navigation glyphs), medium, large, full. Small glyphs do not reserve an illustration frame. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
     hydration: {
       note: "The whole card set comes from one JSON attribute, so renderedHtml is only a preview of the markup the component produces. Render an empty data-mg-icon-card container carrying data-items and hydrate it. Malformed JSON is swallowed and renders an empty set, so validate the attribute server-side. The orientation prop has no data attribute, so the horizontal layout is React-only. Each item's summaryText accepts inline HTML and is sanitised with DOMPurify.",
       selector: '[data-mg-icon-card]',
@@ -654,12 +654,13 @@ export const COMPONENT_DATA = {
     },
   },
   'components-cards-book-card': {
-    description: 'Minimal card for publications: cover image and title only.',
+    description:
+      'Publication teaser with a complete natural-ratio cover, one square border and a title below. Unboxed by default; publication surface tokens retain theme control. No cover zoom.',
   },
 
   'components-cards-horizontal-book-card': {
     description:
-      'Horizontal card for publications: cover image left, title and summary right.',
+      'Publication listing with complete natural-ratio covers and one square border. Beside text on desktop, stacked on mobile and mirrored in RTL. Unboxed by default; surface tokens retain theme control.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -695,8 +696,10 @@ export const COMPONENT_DATA = {
   },
 
   'components-cards-stats-card': {
+    summary:
+      'Grid of statistics with optional icons, labels, summaries and links. Compact, highlighted and negative variants support different densities and surfaces.',
     description:
-      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact, highlighted, negative.',
+      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact (reduced padding and gaps without stacked child margins), highlighted, negative.',
     hydration: {
       note: 'The figures come from one JSON attribute, so renderedHtml is a preview of the markup, not a template to fill in. Render an empty data-mg-stats-card container carrying data-stats and hydrate it. Malformed JSON is swallowed and renders an empty card, so validate the attribute server-side.',
       selector: '[data-mg-stats-card]',
@@ -2699,9 +2702,9 @@ npm run build</code></pre>
   },
   'components-syndicated-search': {
     summary:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics.',
+      'Search with facets, result lists, photo cards or publication catalogues. Book mode preserves artwork URLs; use publication filters and explicit grid columns.',
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
     hydration: {
       note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns { config }, plus a labels key only when a valid data-labels attribute is present, so destructure defensively. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
       selector: '[data-mg-search-widget]',
@@ -2716,7 +2719,8 @@ npm run build</code></pre>
         'data-min-search-length': 'Minimum query length before a search runs.',
         'data-default-query': 'Query the widget starts with.',
         'data-default-sort': 'Initial sort key.',
-        'data-display-mode': 'Result layout: list, card or card-book.',
+        'data-display-mode':
+          'Result layout: list, card or card-book. Book mode preserves supplied artwork URLs; use publication filters and explicit columns for a cover catalogue.',
         'data-grid-columns': 'Columns in the card grid.',
         'data-query-append': 'Extra query string appended to every search.',
         'data-facets':

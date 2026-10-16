@@ -65,9 +65,9 @@ const PUBLISH_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
  * This strips existing variant classes and injects the correct variant
  * for the requested display mode.
  *
- * Also rewrites Drupal image style paths so the image aspect ratio matches
- * the card variant: `landscape_16_9` (16:9) for vertical cards, `por` (3:4)
- * for book cards. The itok token is not validated for anonymous requests.
+ * Photo mode rewrites Drupal image styles to landscape_16_9. Book mode
+ * preserves supplied artwork URLs: a portrait derivative can crop cover text,
+ * and display mode alone does not identify an image as publication artwork.
  *
  * @param {string} html - Teaser HTML string
  * @param {string} displayMode - Display mode: 'list', 'card', or 'card-book'
@@ -94,16 +94,9 @@ export function swapCardVariant(html, displayMode) {
     );
   }
 
-  // Rewrite Drupal image styles to match the card aspect ratio.
-  // Teaser HTML may arrive with any image style (landscape_16_9, por, etc.).
-  // Card mode needs 16:9 (landscape_16_9), book card mode needs 3:4 (por).
-  // The itok token is not validated for anonymous image style requests.
-  if (displayMode === 'card-book') {
-    result = result.replace(
-      /\/styles\/[^/]+\/public\//g,
-      '/styles/por/public/'
-    );
-  } else {
+  // Only photo cards request a crop. The endpoint must supply complete
+  // publication artwork; do not guess an original URL or force a portrait crop.
+  if (displayMode === 'card') {
     result = result.replace(
       /\/styles\/[^/]+\/public\//g,
       '/styles/landscape_16_9/public/'
