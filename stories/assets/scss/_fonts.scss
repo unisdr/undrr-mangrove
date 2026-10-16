@@ -3,7 +3,7 @@
 @use "../fonts/roboto-condensed/roboto-condensed" as *;
 @use "../fonts/noto-kufi-arabic/noto-kufi-arabic" as *;
 @use "../fonts/noto-sans-arabic/noto-sans-arabic" as *;
-@use "variables" as *;
+@use "config" as *;
 
 // The font entry point. This file owns everything about type FACES: the asset
 // paths, the `@font-face` declarations, and the script routing that re-points
@@ -43,20 +43,6 @@
 // Legacy @import consumers are routed through _fonts.import.scss to preserve
 // pre-import URL assignments. The shared Drupal import list and the published
 // per-component recipe are covered by __tests__/font-roles.test.js.
-
-/* Roboto */
-
-
-/* Roboto Condensed */
-
-
-/* Arabic Fonts */
-
-/* Noto Kufi Arabic - for headings in Arabic */
-
-
-/* Noto Sans Arabic - for body text in Arabic */
-
 
 @mixin mg-font-roles-arabic {
   --mg-font-family-text: #{mg-font-stack($mg-font-face-arabic-sans)};

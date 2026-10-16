@@ -6,7 +6,7 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/ErrorPages/ErrorPage.mdx
  */
-@use "../../assets/scss/variables" as *;
+@use "../../assets/scss/config" as *;
 
 .mg-error-page {
   min-height: 100vh;

@@ -1,43 +1,6 @@
-// Compatibility for legacy consumers assigning hooks before @import.
-// Legacy pre-import overrides. @use consumers configure variables with `with`.
+// Legacy globals configure forwarded modules on first load (Sass semantics).
 @use "sass:meta";
 @use "legacy-warnings";
-
-$mgIconFontPath: null !default;
-$mg-font-tag: null !default;
-$mg-font-face-sans: null !default;
-$mg-font-face-sans-condensed: null !default;
-$mg-font-face-mono: null !default;
-$mg-font-face-arabic-display: null !default;
-$mg-font-face-arabic-sans: null !default;
-$mg-tabs-border-bottom: null !default;
-
-@forward "variables" with (
-  $mgIconFontPath: $mgIconFontPath !default,
-  $mg-font-tag: $mg-font-tag !default,
-  $mg-font-face-sans: $mg-font-face-sans !default,
-  $mg-font-face-sans-condensed: $mg-font-face-sans-condensed !default,
-  $mg-font-face-mono: $mg-font-face-mono !default,
-  $mg-font-face-arabic-display: $mg-font-face-arabic-display !default,
-  $mg-font-face-arabic-sans: $mg-font-face-arabic-sans !default,
-  $mg-tabs-border-bottom: $mg-tabs-border-bottom !default
-);
-
-$font-path-roboto: null !default;
-$font-path-roboto-condensed: null !default;
-$font-path-noto-kufi-arabic: null !default;
-$font-path-noto-sans-arabic: null !default;
-$FontName: null !default;
-$font-version: null !default;
-
-@forward "font-paths" with (
-  $FontName: $FontName !default,
-  $font-version: $font-version !default,
-  $font-path-roboto: $font-path-roboto !default,
-  $font-path-roboto-condensed: $font-path-roboto-condensed !default,
-  $font-path-noto-kufi-arabic: $font-path-noto-kufi-arabic !default,
-  $font-path-noto-sans-arabic: $font-path-noto-sans-arabic !default
-);
 @forward "style-delta";
 
 // Evaluate in the legacy caller scope, after all module forwards.

@@ -4,8 +4,8 @@
 @use "theme-irp" as *;
 @forward "fonts";
 @use "fonts" as *;
-@use "breakpoints" as *;
-@use "mixins" as *;
+@forward "breakpoints";
+@forward "mixins";
 @use "utility" as *;
 @use "foundational" as *;
 @use "components" as *;

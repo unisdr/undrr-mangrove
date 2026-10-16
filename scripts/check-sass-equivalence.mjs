@@ -29,6 +29,8 @@ const bundles = [
   'style-preventionweb',
 ];
 const results = [];
+const consumers = [];
+const helperApis = [];
 try {
   const baseline = join(temporary, 'baseline');
   mkdirSync(baseline);
@@ -66,14 +68,88 @@ try {
       `${bundle}: ${result.exact ? 'EXACT' : 'EQUIVALENT (four approved selector-list permutations)'}; ${result.bytes} bytes`
     );
   }
+  // Review-time consumer comparisons: keep the actual Drupal import order,
+  // both variable preludes, and sub-brand wrappers in the evidence boundary.
+  const partials = [
+    'fonts',
+    'breakpoints',
+    'mixins',
+    'foundational',
+    'utility',
+    '../../Atom/Tag/tag',
+    '../../Components/Cards/Card/card',
+    '../../Components/Hero/hero',
+    '../../Components/Tab/tab',
+    '../../Components/Breadcrumbs/breadcrumbs',
+  ];
+  const compileConsumer = (cwd, source) =>
+    sass.compileString(source, {
+      loadPaths: [join(cwd, 'stories/assets/scss')],
+      style: 'compressed',
+      logger: sass.Logger.silent,
+    }).css;
+  const recipes = [];
+  for (const mode of ['use', 'import']) {
+    for (const theme of ['', 'irp', 'mcr', 'preventionweb', 'delta']) {
+      recipes.push({
+        name: `drupal-${mode}-${theme || 'default'}`,
+        source:
+          `@${mode} "variables"${mode === 'use' ? ' as *' : ''};` +
+          (theme ? `@import "theme-${theme}";` : '') +
+          partials.map(partial => `@import "${partial}";`).join(''),
+      });
+    }
+    recipes.push({
+      name: `intervening-override-${mode}`,
+      source:
+        `@${mode} "variables"${mode === 'use' ? ' as *' : ''};` +
+        ':root{--mg-color-text:1 2 3;}' +
+        partials.map(partial => `@import "${partial}";`).join(''),
+    });
+  }
+  for (const { name, source } of recipes) {
+    const before = compileConsumer(baseline, source);
+    const after = compileConsumer(root, source);
+    if (before !== after) throw new Error(`Consumer output changed: ${name}`);
+    consumers.push({
+      name,
+      bytes: Buffer.byteLength(after),
+      exact: true,
+      beforeSha256: sha256(before),
+      afterSha256: sha256(after),
+    });
+    console.log(`${name}: EXACT; ${Buffer.byteLength(after)} bytes`);
+  }
+  // Concrete public helper calls that worked before migration, in both APIs.
+  // Do not forward unrelated component internals merely to expand this audit.
+  const helperProbe = `.consumer-probe {
+    width: mg-rem(16); font-size: $mg-font-size-300;
+    @include mg-focus-ring; @include mg-focus-ring-inset;
+    @include mg-list-unmarked; @include mg-card-image-zoom;
+    @include mg-typography("small"); @include mg-font-roles-latin;
+    @include mg-tokens-tabs; @include mg-tokens-mangrove;
+    @include devicebreak(medium) { height: mg-rem(32); }
+  }`;
+  for (const bundle of bundles) {
+    for (const mode of ['use', 'import']) {
+      const source =
+        `@${mode} "${bundle}"${mode === 'use' ? ' as *' : ''};` + helperProbe;
+      const before = compileConsumer(baseline, source);
+      const after = compileConsumer(root, source);
+      helperApis.push({ bundle, mode, ...compareSassCss(before, after) });
+      console.log(`${bundle} ${mode}: shared helper API restored`);
+    }
+  }
   if (process.env.SASS_EQUIVALENCE_REPORT)
     writeFileSync(
       process.env.SASS_EQUIVALENCE_REPORT,
-      JSON.stringify({ baselineRef: ref, sass: sass.info, results }, null, 2) +
-        '\n'
+      JSON.stringify(
+        { baselineRef: ref, sass: sass.info, results, consumers, helperApis },
+        null,
+        2
+      ) + '\n'
     );
-  // Verify that the compatibility files contain forwards rather than quietly
-  // retaining a parallel legacy implementation.
+  // Public module entries must not retain a parallel legacy import graph.
   const entries = bundles.map(bundle =>
     join(root, 'stories/assets/scss', `${bundle}.scss`)
   );

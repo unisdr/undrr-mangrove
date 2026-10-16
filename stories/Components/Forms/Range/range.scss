@@ -8,7 +8,6 @@
  */
 @use "../../../assets/scss/mixins" as *;
 
-
 @mixin mg-range-thumb {
   appearance: none;
   background-color: rgb(var(--mg-color-interactive));

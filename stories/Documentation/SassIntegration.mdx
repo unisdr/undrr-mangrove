@@ -98,7 +98,7 @@ Each theme entry point follows the same import order:
 
 ### Module configuration and legacy consumers
 
-Use `as *` for concise member references such as `mg-rem(16)` and `@include mg-focus-ring`. Each component declares its own dependencies. `variables` forwards the generated Sass scale and tab tokens so existing public member paths remain available. Shared placeholders remain in `mixins`; an extending stylesheet must `@use` the module defining its placeholder (`form-base` for `%mg-form-input-base`).
+Use `as *` for concise member references such as `mg-rem(16)` and `@include mg-focus-ring`. Each component declares its own dependencies. `variables` forwards the generated Sass scale and tab tokens so existing public member paths remain available. All seven full entries also forward shared `mixins` and `breakpoints` helpers, including `mg-focus-ring` and `devicebreak`, for both module and legacy consumers. Shared placeholders remain in `mixins`; an extending stylesheet must `@use` the module defining its placeholder (`form-base` for `%mg-form-input-base`).
 
 Configure hooks **before the first module that loads them**. A complete bundle forwards the hooks from `variables` and `font-paths`:
 
@@ -116,7 +116,9 @@ Configure hooks **before the first module that loads them**. A complete bundle f
 
 For a per-component build, configure `variables` with the face, icon and tab hooks first, configure `fonts` with font asset paths, then load the component recipe below. All four `$font-path-*` hooks remain available: `roboto`, `roboto-condensed`, `noto-kufi-arabic` and `noto-sans-arabic`. The legacy `$FontName` and `$font-version` hooks also remain shared across the Roboto font modules. Changing a face still requires loading that font yourself. Paths and published package locations are unchanged.
 
-Existing `@import` consumers can keep assignments before importing `variables`, `fonts` or any of the seven bundles. Import-only `.import.scss` bridges pass those values into the same modules and retain removed-variable warnings; they contain no parallel stylesheet implementation. They retain Sass's upstream `@import` deprecation warning. Use module configuration for new integrations. Sass modules load once: reconfiguring an already loaded module is an error, and importing the same bundle twice no longer duplicates its CSS. Configure each hook once, before loading a component or bundle that depends on it.
+Existing `@import` consumers can keep assignments before importing `variables`, `fonts` or any of the seven bundles. Tiny import-only `.import.scss` bridges rely on Sass's standard legacy global forwarding to configure the same modules on first load. They inspect the caller scope for removed-variable warnings, whose text is centralised, and retain Sass's upstream `@import` deprecation warning. Use module configuration for new integrations.
+
+Configure each hook **before its owner first loads**. Explicit `@use ... with (...)` after that still errors. A late legacy global assignment is instead ignored for the already loaded owner, following Sass's implicit-import semantics. For example, `@use 'variables' with ($mg-tabs-border-bottom: false); @import 'style';` preserves the initial setting; assigning a new face after loading `variables` does not reconfigure it. Mixed modern/legacy loading can compile, but legacy imports can re-emit CSS from the imported module and its dependencies. Only repeated `@use` references share one CSS emission per compilation; repeated legacy imports are not deduplicated.
 
 Run `yarn test:sass-equivalence` to compile all seven bundles against the pre-migration commit with the same installed Sass compiler. See `docs/SASS-MODULE-MIGRATION.md` for the comparison boundary and evidence.
 
@@ -333,7 +335,7 @@ If you only need specific components, import the partials directly. The full lis
 @use 'scss/Components/Tab/tab' as *;
 ```
 
-Component stylesheets depend on `_variables.scss` for `mg-rem()`, the type scale and the `:root` token block — including the five `--mg-font-family-*` roles, which every component reads and none declares a fallback for — and on `_breakpoints.scss` and `_mixins.scss` for `devicebreak()` and the focus ring. Each component loads these dependencies itself. Load and configure shared modules first when overriding hooks, and include `fonts` to load faces and script routing.
+This supported per-component recipe explicitly loads public `variables`, `fonts` and `foundational` before the selected components. `variables` emits the base palette, tab tokens and five `--mg-font-family-*` roles; components read those roles without fallbacks. Its public Sass API remains available through forwards. Internally, helper-only dependencies use the CSS-free `config` module for `mg-rem()`, faces, configuration and scale values so later legacy component imports cannot re-emit root defaults over caller overrides. `config` is an internal implementation detail; loading a bare component does not supply the complete foundation CSS. Components also load `breakpoints` / `mixins` when they need `devicebreak()` or the focus ring. Configure the public shared modules before loading components.
 
 `_fonts.scss` earns its place in that list twice over: it declares the `@font-face` blocks, and it carries the Arabic script map that re-points the roles. Drop it and the roles still resolve, but only to their Latin faces — Arabic text asks for Roboto, which has no Arabic coverage, and every glyph falls back to whatever the reader's OS supplies. Nothing warns you. Sass loads the font module once, so repeated `@use` references share the same 32 `@font-face` blocks.
 

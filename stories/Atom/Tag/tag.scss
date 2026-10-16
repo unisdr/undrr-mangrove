@@ -7,7 +7,7 @@
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Tag/Tag.mdx
  */
 @use "../../assets/scss/mixins" as *;
-@use "../../assets/scss/variables" as *;
+@use "../../assets/scss/config" as *;
 
 // Compact taxonomy labels. Keep legacy theme overrides and container markup.
 // :where() gives auto-styled children the same specificity as .mg-tag, so

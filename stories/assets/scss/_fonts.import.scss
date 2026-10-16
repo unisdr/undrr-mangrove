@@ -1,17 +1,2 @@
-// Preserve legacy pre-import font asset URL overrides.
-$font-path-roboto: null !default;
-$font-path-roboto-condensed: null !default;
-$font-path-noto-kufi-arabic: null !default;
-$font-path-noto-sans-arabic: null !default;
-$FontName: null !default;
-$font-version: null !default;
-
-@forward "font-paths" with (
-  $FontName: $FontName !default,
-  $font-version: $font-version !default,
-  $font-path-roboto: $font-path-roboto !default,
-  $font-path-roboto-condensed: $font-path-roboto-condensed !default,
-  $font-path-noto-kufi-arabic: $font-path-noto-kufi-arabic !default,
-  $font-path-noto-sans-arabic: $font-path-noto-sans-arabic !default
-);
+// Legacy globals configure forwarded modules on first load (Sass semantics).
 @forward "fonts";

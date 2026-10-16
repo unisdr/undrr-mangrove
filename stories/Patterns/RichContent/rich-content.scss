@@ -9,7 +9,6 @@
  */
 @use "../../assets/scss/mixins" as *;
 
-
 // The pattern's scroll wrapper is editorial structure, not a component
 // island. Root classes never exclude the root's own content.
 @mixin mg-editorial-element($element) {

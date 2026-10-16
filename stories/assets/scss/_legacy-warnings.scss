@@ -20,7 +20,7 @@ $legacy-roles: (
   "mg-font-family-condensed": "ui",
   "mg-font-family-icons": "",
   "mg-font-family-arabic-headings": "heading",
-  "mg-font-family-arabic-body": "text"
+  "mg-font-family-arabic-body": "text",
 );
 $legacy-names: map.keys($legacy-roles);
 

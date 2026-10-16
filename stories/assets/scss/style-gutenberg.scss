@@ -14,8 +14,8 @@
 @use "variables" as *;
 @forward "fonts";
 @use "fonts" as *;
-@use "breakpoints" as *;
-@use "mixins" as *;
+@forward "breakpoints";
+@forward "mixins";
 @use "utility" as *;
 
 // @import './base';

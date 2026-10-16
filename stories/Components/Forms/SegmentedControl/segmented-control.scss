@@ -9,8 +9,7 @@
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Forms/SegmentedControl/SegmentedControl.mdx
  */
 @use "../../../assets/scss/mixins" as *;
-@use "../../../assets/scss/variables" as *;
-
+@use "../../../assets/scss/config" as *;
 
 // The control is a presentation layer over a native radio group: a fieldset, a
 // legend and one <input type="radio"> per segment, each followed by its own

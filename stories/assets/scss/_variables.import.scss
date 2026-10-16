@@ -1,26 +1,7 @@
-// Legacy pre-import overrides. @use consumers configure variables with `with`.
+// Legacy globals configure forwarded modules on first load (Sass semantics).
 @use "sass:meta";
 @use "legacy-warnings";
-
-$mgIconFontPath: null !default;
-$mg-font-tag: null !default;
-$mg-font-face-sans: null !default;
-$mg-font-face-sans-condensed: null !default;
-$mg-font-face-mono: null !default;
-$mg-font-face-arabic-display: null !default;
-$mg-font-face-arabic-sans: null !default;
-$mg-tabs-border-bottom: null !default;
-
-@forward "variables" with (
-  $mgIconFontPath: $mgIconFontPath !default,
-  $mg-font-tag: $mg-font-tag !default,
-  $mg-font-face-sans: $mg-font-face-sans !default,
-  $mg-font-face-sans-condensed: $mg-font-face-sans-condensed !default,
-  $mg-font-face-mono: $mg-font-face-mono !default,
-  $mg-font-face-arabic-display: $mg-font-face-arabic-display !default,
-  $mg-font-face-arabic-sans: $mg-font-face-arabic-sans !default,
-  $mg-tabs-border-bottom: $mg-tabs-border-bottom !default
-);
+@forward "variables";
 
 // Evaluate in the legacy caller scope, after all module forwards.
 @each $_name in legacy-warnings.$legacy-names {

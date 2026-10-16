@@ -58,5 +58,177 @@
       "beforeSha256": "3f84560cf6c1a7f0250e1f945e9c650e4b737294afcc4d6d87ae229c41c29d07",
       "afterSha256": "4a2a4875d0ede7b09bc8c8e0f563b34a5a04b3067d234b1805a564cef1381444"
     }
+  ],
+  "consumers": [
+    {
+      "name": "drupal-use-default",
+      "bytes": 99774,
+      "exact": true,
+      "beforeSha256": "233a430627a70922b045dc0c04a91394d565168b8a6cd2f4e6eb944ee8810714",
+      "afterSha256": "233a430627a70922b045dc0c04a91394d565168b8a6cd2f4e6eb944ee8810714"
+    },
+    {
+      "name": "drupal-use-irp",
+      "bytes": 102355,
+      "exact": true,
+      "beforeSha256": "95952e4fee2e4a7eccfe631405d90a8d65a020ad6059ab749f180cd49e280ea4",
+      "afterSha256": "95952e4fee2e4a7eccfe631405d90a8d65a020ad6059ab749f180cd49e280ea4"
+    },
+    {
+      "name": "drupal-use-mcr",
+      "bytes": 102727,
+      "exact": true,
+      "beforeSha256": "3725400f795abbea18cedb077c99c1b1e43e2b24b66bfd3ef3f900ced05d0063",
+      "afterSha256": "3725400f795abbea18cedb077c99c1b1e43e2b24b66bfd3ef3f900ced05d0063"
+    },
+    {
+      "name": "drupal-use-preventionweb",
+      "bytes": 102381,
+      "exact": true,
+      "beforeSha256": "9044fa6ff2fb291ce5670c3a95d83364d38505a9d4ddf7fe42e628e45bb3df6d",
+      "afterSha256": "9044fa6ff2fb291ce5670c3a95d83364d38505a9d4ddf7fe42e628e45bb3df6d"
+    },
+    {
+      "name": "drupal-use-delta",
+      "bytes": 103353,
+      "exact": true,
+      "beforeSha256": "8a1dda51c2cadcb71ac697d7a29c29b09dd726922b5bd2bd1f8a7788e83be011",
+      "afterSha256": "8a1dda51c2cadcb71ac697d7a29c29b09dd726922b5bd2bd1f8a7788e83be011"
+    },
+    {
+      "name": "intervening-override-use",
+      "bytes": 99802,
+      "exact": true,
+      "beforeSha256": "c9d3313b50972ec505316baa5601cf09e834b2f7b6f0cb2a78da099551161551",
+      "afterSha256": "c9d3313b50972ec505316baa5601cf09e834b2f7b6f0cb2a78da099551161551"
+    },
+    {
+      "name": "drupal-import-default",
+      "bytes": 99774,
+      "exact": true,
+      "beforeSha256": "233a430627a70922b045dc0c04a91394d565168b8a6cd2f4e6eb944ee8810714",
+      "afterSha256": "233a430627a70922b045dc0c04a91394d565168b8a6cd2f4e6eb944ee8810714"
+    },
+    {
+      "name": "drupal-import-irp",
+      "bytes": 102355,
+      "exact": true,
+      "beforeSha256": "95952e4fee2e4a7eccfe631405d90a8d65a020ad6059ab749f180cd49e280ea4",
+      "afterSha256": "95952e4fee2e4a7eccfe631405d90a8d65a020ad6059ab749f180cd49e280ea4"
+    },
+    {
+      "name": "drupal-import-mcr",
+      "bytes": 102727,
+      "exact": true,
+      "beforeSha256": "3725400f795abbea18cedb077c99c1b1e43e2b24b66bfd3ef3f900ced05d0063",
+      "afterSha256": "3725400f795abbea18cedb077c99c1b1e43e2b24b66bfd3ef3f900ced05d0063"
+    },
+    {
+      "name": "drupal-import-preventionweb",
+      "bytes": 102381,
+      "exact": true,
+      "beforeSha256": "9044fa6ff2fb291ce5670c3a95d83364d38505a9d4ddf7fe42e628e45bb3df6d",
+      "afterSha256": "9044fa6ff2fb291ce5670c3a95d83364d38505a9d4ddf7fe42e628e45bb3df6d"
+    },
+    {
+      "name": "drupal-import-delta",
+      "bytes": 103353,
+      "exact": true,
+      "beforeSha256": "8a1dda51c2cadcb71ac697d7a29c29b09dd726922b5bd2bd1f8a7788e83be011",
+      "afterSha256": "8a1dda51c2cadcb71ac697d7a29c29b09dd726922b5bd2bd1f8a7788e83be011"
+    },
+    {
+      "name": "intervening-override-import",
+      "bytes": 99802,
+      "exact": true,
+      "beforeSha256": "c9d3313b50972ec505316baa5601cf09e834b2f7b6f0cb2a78da099551161551",
+      "afterSha256": "c9d3313b50972ec505316baa5601cf09e834b2f7b6f0cb2a78da099551161551"
+    }
+  ],
+  "helperApis": [
+    {
+      "bundle": "style",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-all",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-all",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-delta",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-delta",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-gutenberg",
+      "mode": "use",
+      "exact": true,
+      "selectorPermutations": 0
+    },
+    {
+      "bundle": "style-gutenberg",
+      "mode": "import",
+      "exact": true,
+      "selectorPermutations": 0
+    },
+    {
+      "bundle": "style-irp",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-irp",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-mcr",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-mcr",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-preventionweb",
+      "mode": "use",
+      "exact": false,
+      "selectorPermutations": 4
+    },
+    {
+      "bundle": "style-preventionweb",
+      "mode": "import",
+      "exact": false,
+      "selectorPermutations": 4
+    }
   ]
 }
