@@ -6,7 +6,8 @@ const photo = {
 const cover = { src: '/images/teaser-publication-cover.svg', alt: '' };
 export const teaserFixtures = {
   news: {
-    type: 'news',
+    type: 'article',
+    profile: 'news',
     typeLabel: 'Update',
     title: 'Communities strengthen resilience to floods',
     link: 'https://www.undrr.org/news',
@@ -18,6 +19,7 @@ export const teaserFixtures = {
   },
   publication: {
     type: 'publication',
+    profile: 'default',
     typeLabel: 'Report',
     title: 'Understanding disaster risk',
     link: 'https://www.undrr.org/publications',
@@ -32,6 +34,7 @@ export const teaserFixtures = {
   },
   resource: {
     type: 'resource',
+    profile: 'default',
     title: 'A practical guide to local risk assessment',
     link: 'https://www.preventionweb.net/knowledge-base',
     resourceType: 'Training toolkit',
@@ -42,6 +45,7 @@ export const teaserFixtures = {
   },
   event: {
     type: 'event',
+    profile: 'general',
     typeLabel: 'Workshop',
     title: 'Building resilient cities together',
     link: 'https://www.undrr.org/events',
@@ -64,7 +68,8 @@ export const teaserFixtures = {
 
 Object.assign(teaserFixtures, {
   blog: {
-    type: 'blog',
+    type: 'article',
+    profile: 'commentary',
     title: 'Why local knowledge belongs in risk planning',
     link: '/blog/local-knowledge',
     image: photo,
@@ -76,6 +81,7 @@ Object.assign(teaserFixtures, {
   },
   organization: {
     type: 'organization',
+    profile: 'general',
     title: 'United Nations Office for Disaster Risk Reduction',
     link: 'https://www.undrr.org/about-undrr',
     image: { src: '/images/undrr-logo-blue.svg', alt: '' },
@@ -89,6 +95,7 @@ Object.assign(teaserFixtures, {
   },
   collection: {
     type: 'collection',
+    profile: 'default',
     typeLabel: 'Collection',
     title: 'Knowledge for resilient cities',
     link: '/collections/resilient-cities',
@@ -105,7 +112,8 @@ Object.assign(teaserFixtures, {
       'A curated collection of research, tools and experiences in urban resilience.',
   },
   vacancy: {
-    type: 'vacancy',
+    type: 'opportunity',
+    profile: 'job',
     typeLabel: 'Vacancy',
     title: 'Programme management officer',
     link: '/vacancies/programme-officer',
@@ -119,7 +127,8 @@ Object.assign(teaserFixtures, {
       'Contribute to programmes supporting disaster risk reduction and resilient development.',
   },
   'hazard-profile': {
-    type: 'hazard-profile',
+    type: 'reference-entry',
+    profile: 'hazard-profile',
     title: 'Example flood hazard profile',
     link: '/hazards/example-flood',
     classification: [{ label: 'Hydrological', link: '/hazards/hydrological' }],
@@ -128,7 +137,8 @@ Object.assign(teaserFixtures, {
       'A reference definition describing the hazard, its drivers and associated impacts.',
   },
   'conference-session': {
-    type: 'conference-session',
+    type: 'event',
+    profile: 'programme-session',
     title: 'From risk knowledge to local action',
     link: '/programme/local-action',
     image: photo,
@@ -167,6 +177,7 @@ Object.assign(teaserFixtures, {
   },
   commitment: {
     type: 'commitment',
+    profile: 'default',
     title: 'Strengthening community preparedness',
     link: '/commitments/community-preparedness',
     image: photo,
@@ -178,6 +189,7 @@ Object.assign(teaserFixtures, {
   },
   'landing-page': {
     type: 'landing-page',
+    profile: 'default',
     typeLabel: 'Landing',
     title: 'Understanding disaster risk',
     link: '/understanding-risk',
@@ -186,7 +198,8 @@ Object.assign(teaserFixtures, {
       'Explore the evidence, approaches and tools for reducing disaster risk.',
   },
   'national-platform': {
-    type: 'national-platform',
+    type: 'organization',
+    profile: 'coordination-platform',
     typeLabel: 'National platform',
     title: 'A national platform for disaster risk reduction',
     link: '/national-platforms/example',
@@ -194,7 +207,8 @@ Object.assign(teaserFixtures, {
       'A national coordination mechanism bringing partners together to reduce disaster risk.',
   },
   terminology: {
-    type: 'terminology',
+    type: 'reference-entry',
+    profile: 'definition',
     typeLabel: 'Terminology',
     title: 'Disaster risk',
     link: '/terminology/disaster-risk',
@@ -203,6 +217,7 @@ Object.assign(teaserFixtures, {
   },
   person: {
     type: 'person',
+    profile: 'default',
     title: 'Amira Khan',
     link: '/people/example-profile',
     summary:

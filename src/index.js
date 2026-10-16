@@ -62,6 +62,7 @@ export { default as ProgressBar } from '../stories/Components/ProgressBar/Progre
 
 export {
   ContentTeaser,
+  DRUPAL_CONTENT_PATTERNS,
   DRUPAL_TEASER_TYPES,
 } from '../stories/Patterns/ContentTeaser/ContentTeaser';
 

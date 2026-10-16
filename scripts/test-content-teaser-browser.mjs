@@ -115,7 +115,7 @@ try {
         '2'
       );
       const topics = page.locator(
-        '[data-content-type="conference-session"] .mg-content-teaser__metadata-link'
+        '[data-content-type="event"][data-content-profile="programme-session"] .mg-content-teaser__metadata-link'
       );
       assert.equal(await topics.count(), 2);
       const firstTopic = await topics.nth(0).boundingBox();

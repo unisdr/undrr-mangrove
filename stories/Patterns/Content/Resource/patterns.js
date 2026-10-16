@@ -1,4 +1,4 @@
-/** Content family and presentation status; stubs expose no renderable component. */
+/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
 export const resourcePatterns = {
   id: 'resource',
   name: 'Resource',
@@ -16,21 +16,39 @@ export const resourcePatterns = {
     teaser: {
       status: 'experimental',
       intent:
-        'Horizontal listing/search projection, with audited metadata hierarchy and media rules. This input is not the canonical content model.',
+        'Horizontal listing/search presentation. Profiles select editorial metadata; layout is shared. This input is not a canonical domain model.',
       reference: {
         kind: 'Patterns/Content teaser',
         story: 'Resource',
         id: 'patterns-content-teaser--resource',
       },
-      layout: {
-        before: ['labels', 'location', 'delivery'],
-        after: ['summary', 'sources', 'language'],
-      },
     },
     card: {
       status: 'stub',
       intent:
-        'A compact resource card. Content selection and mapping to shared card primitives have not been designed.',
+        'A compact resource presentation. Content selection and mapping to shared card primitives have not been designed.',
+    },
+  },
+  defaultProfile: 'default',
+  profiles: {
+    default: {
+      name: 'Default',
+      intent:
+        'A reusable resource with format, availability and source organisations.',
+      presentations: {
+        teaser: {
+          status: 'experimental',
+          reference: {
+            kind: 'Patterns/Content teaser',
+            story: 'Resource',
+            id: 'patterns-content-teaser--resource',
+          },
+          layout: {
+            before: ['labels', 'location', 'delivery'],
+            after: ['summary', 'sources', 'language'],
+          },
+        },
+      },
     },
   },
 };

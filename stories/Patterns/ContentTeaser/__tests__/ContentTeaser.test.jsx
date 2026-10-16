@@ -3,7 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { axe } from 'jest-axe';
 import { ContentTeaser, resolveTeaserUrl } from '../ContentTeaser';
-import { DRUPAL_TEASER_TYPES } from '../contentTeaserPatterns';
+import { DRUPAL_TEASER_TYPES } from '../../../Integrations/Drupal/contentPatterns';
 import { teaserFixtures } from '../contentTeaserFixtures';
 
 describe('Content teaser contract', () => {
@@ -224,8 +224,14 @@ describe('Complete indexed content coverage', () => {
         'vacancy',
       ].sort()
     );
-    expect(Object.values(DRUPAL_TEASER_TYPES).sort()).toEqual(
-      Object.keys(teaserFixtures).sort()
+    expect(
+      Object.values(DRUPAL_TEASER_TYPES)
+        .map(binding => `${binding.type}/${binding.profile}`)
+        .sort()
+    ).toEqual(
+      Object.values(teaserFixtures)
+        .map(content => `${content.type}/${content.profile}`)
+        .sort()
     );
   });
   test.each(Object.keys(teaserFixtures))(
@@ -233,7 +239,12 @@ describe('Complete indexed content coverage', () => {
     async type => {
       const { container } = render(
         <ContentTeaser
-          content={{ type, title: 'Minimal result', link: '/minimal' }}
+          content={{
+            type: teaserFixtures[type].type,
+            profile: teaserFixtures[type].profile,
+            title: 'Minimal result',
+            link: '/minimal',
+          }}
         />
       );
       expect(screen.getByRole('link')).toHaveTextContent('Minimal result');
@@ -568,5 +579,44 @@ describe('Red-team regression cases', () => {
     );
     expect(container).toHaveTextContent('آخر تحديث ١ سبتمبر ٢٠٢٦');
     expect(container).not.toHaveTextContent('Last updated');
+  });
+});
+
+describe('Archetype and profile selection', () => {
+  test.each(['commentary', 'toString'])(
+    'incompatible Event profile %s fails explicitly',
+    profile => {
+      expect(() =>
+        renderToStaticMarkup(
+          <ContentTeaser
+            content={{
+              type: 'event',
+              profile,
+              title: 'Example',
+              link: '/example',
+            }}
+          />
+        )
+      ).toThrow(TypeError);
+    }
+  );
+  test('omitted Article profile uses news, while commentary preserves author selection', () => {
+    const article = {
+      ...teaserFixtures.blog,
+      profile: undefined,
+      shortTitle: 'Brief title',
+    };
+    const defaultHtml = renderToStaticMarkup(
+      <ContentTeaser content={article} />
+    );
+    expect(defaultHtml).toContain('Brief title');
+    for (const author of article.authors)
+      expect(defaultHtml).not.toContain(author);
+    const commentaryHtml = renderToStaticMarkup(
+      <ContentTeaser content={{ ...article, profile: 'commentary' }} />
+    );
+    expect(commentaryHtml).toContain(article.title);
+    for (const author of article.authors)
+      expect(commentaryHtml).toContain(author);
   });
 });

@@ -65,7 +65,8 @@ export const ClosedVacancy = {
 export const MinimumContent = {
   args: {
     content: {
-      type: 'news',
+      type: 'article',
+      profile: 'news',
       title: 'A result without optional fields',
       link: '/news',
     },
@@ -101,7 +102,8 @@ export const Arabic = {
     <div dir="rtl">
       <ContentTeaser
         content={{
-          type: 'news',
+          type: 'article',
+          profile: 'news',
           title: 'مجتمعات أكثر قدرة على الصمود أمام الكوارث',
           typeLabel: 'أخبار',
           link: '/ar/news',
@@ -135,7 +137,8 @@ export const MissingOptionalFields = {
         <li key={type}>
           <ContentTeaser
             content={{
-              type,
+              type: teaserFixtures[type].type,
+              profile: teaserFixtures[type].profile,
               title: `A ${type} result with only required fields`,
               link: `/examples/${type}`,
             }}

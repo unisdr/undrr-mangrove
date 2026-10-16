@@ -2,8 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { resolveCardLink } from '../../Components/Cards/Card/cardParts';
 import { CONTENT_FAMILY_IDS } from '../Content/contentFamilies';
-import { TEASER_PATTERNS } from './contentTeaserPatterns';
-export { DRUPAL_TEASER_TYPES } from './contentTeaserPatterns';
+import { resolveTeaserPattern } from './contentTeaserPatterns';
+export {
+  DRUPAL_CONTENT_PATTERNS,
+  DRUPAL_TEASER_TYPES,
+} from '../../Integrations/Drupal/contentPatterns';
 
 // Sources resolve destinations before rendering, including current-site eligibility.
 export function resolveTeaserUrl(value) {
@@ -259,11 +262,11 @@ function validateDateRoles(content) {
         `ContentTeaser requires a caller-localised ${path}.label to identify the date's meaning.`
       );
   };
-  if (content.type === 'vacancy' && validDate(content.deadline))
+  if (content.type === 'opportunity' && validDate(content.deadline))
     requireLabel(content.deadline, 'deadline');
   if (content.type === 'collection' && validDate(content.freshness?.date))
     requireLabel(content.freshness.date, 'freshness.date');
-  if (content.type === 'conference-session') {
+  if (content.type === 'event' && content.profile === 'programme-session') {
     const exhibitions = (content.session?.exhibitions || []).filter(validRange);
     if (exhibitions.length) {
       exhibitions.forEach(range =>
@@ -277,19 +280,17 @@ function validateDateRoles(content) {
 }
 
 /**
- * Experimental horizontal content teasers for all fifteen indexed Drupal node
- * bundles. Shared card geometry, native links and server-renderable content;
+ * Experimental horizontal content teasers selected by archetype and editorial
+ * profile. Shared card geometry, native links and server-renderable content;
  * source adapters supply localised metadata, attribution and resolved URLs.
  */
 export function ContentTeaser({ content, headingLevel = 3, className }) {
-  const { type, title, shortTitle, link, image, lang } = content;
-  const pattern = Object.hasOwn(TEASER_PATTERNS, type)
-    ? TEASER_PATTERNS[type]
-    : null;
+  const { type, profile, title, shortTitle, link, image, lang } = content;
+  const pattern = resolveTeaserPattern(type, profile);
   const href = resolveTeaserUrl(link);
   if (!pattern || !title?.trim() || !href)
     throw new TypeError(
-      'ContentTeaser requires a supported type, title and resolved HTTP(S) or root-relative link.'
+      'ContentTeaser requires a supported type/profile, title and resolved HTTP(S) or root-relative link.'
     );
   if (![2, 3, 4, 5, 6].includes(headingLevel))
     throw new TypeError('ContentTeaser headingLevel must be between 2 and 6.');
@@ -302,6 +303,7 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
     <article
       lang={lang}
       data-content-type={type}
+      data-content-profile={profile}
       className={[
         'mg-card',
         'mg-card__hc',
@@ -335,7 +337,9 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
           </div>
         )}
         <Heading className="mg-card__title">
-          <a href={href}>{(type === 'news' && shortTitle?.trim()) || title}</a>
+          <a href={href}>
+            {(pattern.useShortTitle && shortTitle?.trim()) || title}
+          </a>
         </Heading>
         {after.map(({ field, value }) =>
           ['sources', 'authors'].includes(field) ? (
@@ -362,6 +366,8 @@ ContentTeaser.propTypes = {
   /** Normalised content; all visible strings are caller-localised plain text. Labels may have resolved links. */
   content: PropTypes.shape({
     type: PropTypes.oneOf(CONTENT_FAMILY_IDS).isRequired,
+    /** Editorial profile within the archetype; omitted selects its documented default. */
+    profile: PropTypes.string,
     title: PropTypes.string.isRequired,
     shortTitle: PropTypes.string,
     link: PropTypes.string.isRequired,

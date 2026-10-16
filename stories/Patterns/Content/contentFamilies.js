@@ -1,53 +1,41 @@
-/** Family catalogue. Presentation projections are distinct from canonical domain contracts. */
-import { newsPatterns } from './News/patterns.js';
+/** Source-independent archetypes. CMS bindings live in Integrations/Drupal. */
+import { articlePatterns } from './Article/patterns.js';
 import { publicationPatterns } from './Publication/patterns.js';
 import { resourcePatterns } from './Resource/patterns.js';
 import { eventPatterns } from './Event/patterns.js';
-import { blogPatterns } from './Blog/patterns.js';
 import { organizationPatterns } from './Organization/patterns.js';
 import { collectionPatterns } from './Collection/patterns.js';
-import { vacancyPatterns } from './Vacancy/patterns.js';
-import { hazardProfilePatterns } from './HazardProfile/patterns.js';
-import { conferenceSessionPatterns } from './ConferenceSession/patterns.js';
+import { opportunityPatterns } from './Opportunity/patterns.js';
+import { referenceEntryPatterns } from './ReferenceEntry/patterns.js';
 import { commitmentPatterns } from './Commitment/patterns.js';
 import { landingPagePatterns } from './LandingPage/patterns.js';
-import { nationalPlatformPatterns } from './NationalPlatform/patterns.js';
-import { terminologyPatterns } from './Terminology/patterns.js';
 import { personPatterns } from './Person/patterns.js';
 
 export const CONTENT_FAMILIES = [
-  newsPatterns,
+  articlePatterns,
   publicationPatterns,
   resourcePatterns,
   eventPatterns,
-  blogPatterns,
   organizationPatterns,
   collectionPatterns,
-  vacancyPatterns,
-  hazardProfilePatterns,
-  conferenceSessionPatterns,
+  opportunityPatterns,
+  referenceEntryPatterns,
   commitmentPatterns,
   landingPagePatterns,
-  nationalPlatformPatterns,
-  terminologyPatterns,
   personPatterns,
 ];
 
-// Literal IDs keep component PropTypes discoverable through react-docgen.
+// Literal IDs keep PropTypes discoverable through react-docgen.
 export const CONTENT_FAMILY_IDS = [
-  'news',
+  'article',
   'publication',
   'resource',
   'event',
-  'blog',
   'organization',
   'collection',
-  'vacancy',
-  'hazard-profile',
-  'conference-session',
+  'opportunity',
+  'reference-entry',
   'commitment',
   'landing-page',
-  'national-platform',
-  'terminology',
   'person',
 ];

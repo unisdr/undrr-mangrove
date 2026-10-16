@@ -17,6 +17,12 @@ visual polish. Shared components own behaviour and geometry; themes own surface
 expression. Keep new visual defaults themeable, document changed token routing,
 and verify an override as well as the default across all five themes.
 
+### Separate archetypes, profiles, presentations and consumer mappings
+
+Organise content patterns around reader needs, not a list of CMS bundles. Reuse Article for news/commentary, Event for general events/programme sessions, Reference entry for definitions/hazard profiles, and Opportunity for jobs. Profiles own editorial differences; presentations select page/teaser/card content; layout supplies geometry. Existing Article story routes remain references, not a second Article family.
+
+Keep Drupal bindings in Mangrove's `stories/Integrations/Drupal/contentPatterns.js`: Drupal is a major consumer. Change those provisional bindings when consumer needs change, without importing Drupal knowledge into the renderer or creating an archetype for every bundle. Preserve audited metadata and omission rules when consolidating profiles. Do not treat a teaser projection as a canonical schema, or a full-page/card stub as an implemented component. Update `content-patterns.json` generation and documentation alongside registry changes.
+
 ### Ground CMS content patterns in source configuration
 
 Before implementing a CMS content pattern, inspect its entity view display, layout template, field formatters, conditional visibility and theme overrides in the source repository. Record the source revision, visible field order, hidden fields and deliberate departures in the pattern documentation. A generic card example does not establish parity with a Drupal teaser. The [content teaser audit](CONTENT-TEASER-DRUPAL-AUDIT.md) is the baseline for all 15 indexed node bundles. Keep publication dates, collection freshness, occurrence ranges and vacancy deadlines distinct. Preserve source/author list structure and optional taxonomy links; source adapters own field extraction, domain visibility and URL resolution.

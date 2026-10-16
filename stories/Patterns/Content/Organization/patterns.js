@@ -1,4 +1,4 @@
-/** Content family and presentation status; stubs expose no renderable component. */
+/** Source-independent archetype; profiles own presentation projections, not CMS schemas. */
 export const organizationPatterns = {
   id: 'organization',
   name: 'Organisation',
@@ -16,23 +16,60 @@ export const organizationPatterns = {
     teaser: {
       status: 'experimental',
       intent:
-        'Horizontal listing/search projection, with audited metadata hierarchy and media rules. This input is not the canonical content model.',
+        'Horizontal listing/search presentation. Profiles select editorial metadata; layout is shared. This input is not a canonical domain model.',
       reference: {
         kind: 'Patterns/Content teaser',
         story: 'Organisation',
         id: 'patterns-content-teaser--organization',
       },
-      layout: {
-        image: true,
-        logo: true,
-        before: ['location'],
-        after: ['summary', 'organizationType'],
-      },
     },
     card: {
       status: 'stub',
       intent:
-        'A compact organisation card. Content selection and mapping to shared card primitives have not been designed.',
+        'A compact organisation presentation. Content selection and mapping to shared card primitives have not been designed.',
+    },
+  },
+  defaultProfile: 'general',
+  profiles: {
+    general: {
+      name: 'General',
+      intent:
+        'An organisation with identity, complete logo, locations and categories.',
+      presentations: {
+        teaser: {
+          status: 'experimental',
+          reference: {
+            kind: 'Patterns/Content teaser',
+            story: 'Organisation',
+            id: 'patterns-content-teaser--organization',
+          },
+          layout: {
+            image: true,
+            logo: true,
+            before: ['location'],
+            after: ['summary', 'organizationType'],
+          },
+        },
+      },
+    },
+    'coordination-platform': {
+      name: 'Coordination platform',
+      intent:
+        'A national coordination platform with its own identity and explanatory content.',
+      presentations: {
+        teaser: {
+          status: 'experimental',
+          reference: {
+            kind: 'Patterns/Content teaser',
+            story: 'National platform',
+            id: 'patterns-content-teaser--national-platform',
+          },
+          layout: {
+            before: ['labels'],
+            after: ['summary'],
+          },
+        },
+      },
     },
   },
 };

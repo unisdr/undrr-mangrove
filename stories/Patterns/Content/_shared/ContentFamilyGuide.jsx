@@ -64,6 +64,30 @@ export function ContentFamilyGuide({ family }) {
         presentation={family.presentations.fullPage}
       />
       <Presentation name="Teaser" presentation={family.presentations.teaser} />
+      <section>
+        <h2>Editorial profiles</h2>
+        <p>
+          Profiles select meaning and metadata within this archetype. They are
+          independent of presentation (page, teaser, card) and layout. Each
+          teaser profile below is experimental; it does not establish a working
+          full page or card.
+        </p>
+        <ul>
+          {Object.entries(family.profiles).map(([id, profile]) => (
+            <li key={id}>
+              <strong>{profile.name}</strong> ({id}
+              {id === family.defaultProfile ? '; default' : ''}):{' '}
+              {profile.intent}{' '}
+              <LinkTo
+                kind={profile.presentations.teaser.reference.kind}
+                story={profile.presentations.teaser.reference.story}
+              >
+                Open teaser
+              </LinkTo>
+            </li>
+          ))}
+        </ul>
+      </section>
       <Presentation name="Card" presentation={family.presentations.card} />
       <p>
         <LinkTo kind="Patterns/Content/Overview" story="docs">
@@ -75,6 +99,8 @@ export function ContentFamilyGuide({ family }) {
 }
 ContentFamilyGuide.propTypes = {
   family: PropTypes.shape({
+    defaultProfile: PropTypes.string.isRequired,
+    profiles: PropTypes.object.isRequired,
     model: PropTypes.shape({
       status: PropTypes.string.isRequired,
       intent: PropTypes.string.isRequired,

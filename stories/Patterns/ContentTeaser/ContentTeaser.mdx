@@ -24,33 +24,36 @@ Use these patterns for structured search results, related content and listings. 
 
 All metadata is optional. The title and resolved destination are always required. Fields absent from a pattern's hierarchy are omitted even if present on an upstream record. The caller selects labels and supplies translated text; Mangrove does not infer a type label or taxonomy visibility from the theme.
 
-| Normalised type      | Drupal bundle                | Before title                                                 | After title/summary                         | Media           |
-| -------------------- | ---------------------------- | ------------------------------------------------------------ | ------------------------------------------- | --------------- |
-| `news`               | `news`                       | Type/labels, release date                                    | Summary, sources, optional language         | Landscape image |
-| `publication`        | `publication`                | Selected labels, published date                              | Symbol, summary, sources, optional language | Complete cover  |
-| `resource`           | `resource`                   | Resource type/labels, location, delivery                     | Summary, sources, optional language         | None            |
-| `event`              | `event`                      | Type/labels, city, occurrence range, delivery                | Summary, optional language                  | None            |
-| `blog`               | `blog`                       | Type/labels, published date, authors                         | Summary                                     | Landscape image |
-| `organization`       | `organization`               | Country/location                                             | Summary, organisation type                  | Complete logo   |
-| `collection`         | `collections`                | Type/labels, freshness                                       | Summary                                     | Landscape image |
-| `vacancy`            | `vacancy`                    | Type/labels, location, closing date, optional status         | Summary                                     | None            |
-| `hazard-profile`     | `hazard_information_profile` | Classification, notation                                     | Summary                                     | None            |
-| `conference-session` | `conference_event`           | Bucket, schedules, exhibition ranges, room hierarchy, format | Summary, type/theme links                   | Landscape image |
-| `commitment`         | `commitment`                 | Geographic scope, status, published date                     | Summary                                     | Landscape image |
-| `landing-page`       | `landing_page_gutenberg`     | Type/labels                                                  | Summary                                     | Landscape image |
-| `national-platform`  | `national_platform`          | Type/labels                                                  | Summary                                     | None            |
-| `terminology`        | `terminology`                | Type/labels                                                  | Summary                                     | None            |
-| `person`             | `people`                     | None                                                         | Summary                                     | None            |
+| Archetype / profile                    | Drupal bundle                  | Before title                                                 | After title/summary                         | Media           |
+| -------------------------------------- | ------------------------------ | ------------------------------------------------------------ | ------------------------------------------- | --------------- |
+| `article / news`                       | `article / news`               | Type/labels, release date                                    | Summary, sources, optional language         | Landscape image |
+| `publication`                          | `publication`                  | Selected labels, published date                              | Symbol, summary, sources, optional language | Complete cover  |
+| `resource`                             | `resource`                     | Resource type/labels, location, delivery                     | Summary, sources, optional language         | None            |
+| `event / general`                      | `event / general`              | Type/labels, city, occurrence range, delivery                | Summary, optional language                  | None            |
+| `article / commentary`                 | `article / commentary`         | Type/labels, published date, authors                         | Summary                                     | Landscape image |
+| `organization`                         | `organization`                 | Country/location                                             | Summary, organisation type                  | Complete logo   |
+| `collection`                           | `collections`                  | Type/labels, freshness                                       | Summary                                     | Landscape image |
+| `opportunity / job`                    | `opportunity / job`            | Type/labels, location, closing date, optional status         | Summary                                     | None            |
+| `reference-entry / hazard-profile`     | `hazard_information_profile`   | Classification, notation                                     | Summary                                     | None            |
+| `event / programme-session`            | `conference_event`             | Bucket, schedules, exhibition ranges, room hierarchy, format | Summary, type/theme links                   | Landscape image |
+| `commitment`                           | `commitment`                   | Geographic scope, status, published date                     | Summary                                     | Landscape image |
+| `landing-page`                         | `landing_page_gutenberg`       | Type/labels                                                  | Summary                                     | Landscape image |
+| `organization / coordination-platform` | `national_platform`            | Type/labels                                                  | Summary                                     | None            |
+| `reference-entry / definition`         | `reference-entry / definition` | Type/labels                                                  | Summary                                     | None            |
+| `person`                               | `people`                       | None                                                         | Summary                                     | None            |
 
-The exported `DRUPAL_TEASER_TYPES` maps bundle identifiers to these type names. Use an own-property lookup before selecting a mapped value. It does not extract Drupal fields, sanitise body HTML, choose labels or resolve URLs. Unknown bundles keep the existing renderer during migration. Taxonomy-term results remain outside this node-pattern contract.
+The exported `DRUPAL_CONTENT_PATTERNS` maps bundle identifiers to `{ type, profile }` selections in the Mangrove Drupal integration layer. `DRUPAL_TEASER_TYPES` is a draft compatibility alias to that same descriptor map; it no longer returns type strings. Spread a binding into the normalised content record. Use an own-property lookup before selecting a mapped value. It does not extract Drupal fields, sanitise body HTML, choose labels or resolve URLs. Unknown bundles keep the existing renderer during migration. Taxonomy-term results remain outside this node-pattern contract.
 
 ## Shared content contract
+
+Select a source-independent `type` and optional editorial `profile`. Omitting a profile selects the archetype's documented `defaultProfile`; an unknown or incompatible profile throws. General/default profiles have their own audited omission rules.
 
 Pass one `content` record and a contextual `headingLevel` (default 3, supported 2–6). All strings are plain text, including summaries, attribution and metadata. HTML is escaped. Supply localised display strings and HTML-valid machine-readable dates; no browser-locale or client-clock decisions occur during rendering.
 
 | Field                      | Meaning                                                                                                                                                                                                                                                                                                                                       |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `type`, `title`, `link`    | Required supported normalised type, non-empty full title and resolved HTTP(S) or root-relative destination. Invalid required inputs throw. Relative URLs require confirmed availability on the consuming site.                                                                                                                                |
+| `profile`                  | Optional editorial profile within `type`. See the archetype guide for defaults; incompatible or unknown values throw.                                                                                                                                                                                                                         |
 | `shortTitle`               | Optional news editorial title, falling back to the full title. Other patterns use `title`.                                                                                                                                                                                                                                                    |
 | `image: { src, alt }`      | Optional image on the patterns listed above. Supply meaningful alt text or an explicit empty string when redundant with the title. No image means no frame or reserved column. Cover and logo URLs are preserved; no derived crop is invented.                                                                                                |
 | `typeLabel`, `labels`      | Optional translated type label and ordered labels. Labels accept strings or `{ label, link? }`. Resolved links retain native keyboard behaviour; unsupported link schemes degrade to text. Duplicate label/destination pairs are omitted. Select relevant taxonomy values upstream, including domain visibility.                              |
@@ -117,7 +120,7 @@ Static React rendering includes complete titles, destinations and metadata. Nati
 
 ## CSS and JavaScript references
 
-- Published React import: `import { ContentTeaser, DRUPAL_TEASER_TYPES } from "@undrr/undrr-mangrove/components/ContentTeaser.js"`. The repository barrel `src/index.js` also re-exports them for repository development; the published npm package has no root entry.
+- Published React import: `import { ContentTeaser, DRUPAL_CONTENT_PATTERNS } from "@undrr/undrr-mangrove/components/ContentTeaser.js"`. The repository barrel `src/index.js` also re-exports them for repository development; the published npm package has no root entry.
 - Pattern selection: each `Content/{Family}/patterns.js` owns its teaser projection alongside full-page/card status. `contentTeaserPatterns.js` assembles those projections for the shared renderer.
 - Styles: `content-teaser.scss` adds wrapping, metadata rhythm, list semantics, independent metadata-link focus and logo framing. It uses shared `--mg-card-*`, `--mg-card-publication-*` and spacing tokens; no new colour or surface defaults.
 - No hydration registration: the complete teaser markup needs no client initialisation.
