@@ -1,30 +1,30 @@
 {
-  "baselineRef": "378dcdcc2d9adfd9e8d56b5ad1f585f8eca0e4c1",
+  "baselineRef": "ed107d51fa5e76d99ea8381f020d96cde4f057a6",
   "sass": "dart-sass\t1.105.1\t(Sass Compiler)\t[Dart]\ndart2js\t3.13.5\t(Dart Compiler)\t[Dart]",
   "results": [
     {
       "bundle": "style",
-      "bytes": 397633,
+      "bytes": 397689,
       "exact": false,
       "selectorPermutations": 4,
-      "beforeSha256": "77a987aa75f9944063e1533ab4a1f04a18b117c08d1f640c634f622a8ea29d1e",
-      "afterSha256": "5df71f385293697ff959c8e1069fba6dfe3683a51d49b3e7bd0246782e427212"
+      "beforeSha256": "641f8780f5e0341539d4b63974f786d491532ddf3dcd7d311058bb2c39e9d61c",
+      "afterSha256": "6863196ed868d6fb04ada80ef53e8903b4f65ff6cf80e333476f5ff5158ef6f5"
     },
     {
       "bundle": "style-all",
-      "bytes": 409353,
+      "bytes": 409409,
       "exact": false,
       "selectorPermutations": 4,
-      "beforeSha256": "7a86e22e8de0de982932b7a88563fac49c02819415fb930e073e43773ceccddd",
-      "afterSha256": "de4e2571e663beb1788980bc1ee2357166e4089411c3d1ca6647ef5888cf4e25"
+      "beforeSha256": "fc78040f13a9d7a7f3b4aae75fbef230aca1fc3fc6f4c4b8aaf4c4c29e2d5208",
+      "afterSha256": "e2e2f7f504fe8a8787507381d5d86df04f228c3709d1a486e81b8d89d65d44a8"
     },
     {
       "bundle": "style-delta",
-      "bytes": 401212,
+      "bytes": 401268,
       "exact": false,
       "selectorPermutations": 4,
-      "beforeSha256": "2f0c88cf13d7fbf543a36158b010bd6305cd938dcac736609fd821a1305dc228",
-      "afterSha256": "e2909780e2d3587b96197ef97df49782157ba3568a434136e8e9819f54580112"
+      "beforeSha256": "d7ad2ebdf421c97ef17beb70bf8046f005857227ff6175924785c0ce32f072f0",
+      "afterSha256": "6ab16987d94940687a6d69e16f4ab8dc39978f78a56034d01a98987381b2fc27"
     },
     {
       "bundle": "style-gutenberg",
@@ -36,27 +36,27 @@
     },
     {
       "bundle": "style-irp",
-      "bytes": 400214,
+      "bytes": 400270,
       "exact": false,
       "selectorPermutations": 4,
-      "beforeSha256": "e2fa0ae0728f9cdc1b8107f112bd79d306bf8845dc9c39003b4f12a6ab99db4f",
-      "afterSha256": "ca356775e6a442abe5979191efbdb2245a75ae593f62d90bfec481634829d132"
+      "beforeSha256": "dc98dccbefa913b28e8c4a1d964b9e5676e498d7f1df06cd5280214eadc3d09b",
+      "afterSha256": "07c7688abfdb49b2d024787cb381a7fc1968e37aeb20d51e2291461da837c4d0"
     },
     {
       "bundle": "style-mcr",
-      "bytes": 400586,
+      "bytes": 400642,
       "exact": false,
       "selectorPermutations": 4,
-      "beforeSha256": "8c26ebeb396aedce392467d51eb4dd82ce3b32b27105d91fcb544f1f6e09a8ab",
-      "afterSha256": "6c6d05e6f3250c5a51a64e30ca7a86951630baf0722437be9c7e6ec3305ac28c"
+      "beforeSha256": "69cc92a7d16f23ae29273f9dddc43ef5a3ef0a5543f3462dc006fb6808952479",
+      "afterSha256": "58d88271f545d13d94f8ee187a16a613faffbf05a3fe06802552c4af707d1d8d"
     },
     {
       "bundle": "style-preventionweb",
-      "bytes": 400240,
+      "bytes": 400296,
       "exact": false,
       "selectorPermutations": 4,
-      "beforeSha256": "3f84560cf6c1a7f0250e1f945e9c650e4b737294afcc4d6d87ae229c41c29d07",
-      "afterSha256": "4a2a4875d0ede7b09bc8c8e0f563b34a5a04b3067d234b1805a564cef1381444"
+      "beforeSha256": "e2165b01f52c09f7f68a792c65d9b9fd45fb6395ab37f53a0526c8d9cc73f8b0",
+      "afterSha256": "85d16993243f118a8996009e36cd41847ba0af41bbc92a6896c3e43e7fe6ebb0"
     }
   ],
   "consumers": [
@@ -229,6 +229,29 @@
       "mode": "import",
       "exact": false,
       "selectorPermutations": 4
+    }
+  ],
+  "reassignments": [
+    {
+      "name": "tab",
+      "bytes": 36455,
+      "exact": true,
+      "beforeSha256": "2154b3b1f5d98250921a136a6c6d78b20bcdfdcedca4df70aaad17b309086584",
+      "afterSha256": "2154b3b1f5d98250921a136a6c6d78b20bcdfdcedca4df70aaad17b309086584"
+    },
+    {
+      "name": "tag",
+      "bytes": 20673,
+      "exact": true,
+      "beforeSha256": "c89748caaadd0e7a8a756e39a5ba8784c0e1ddc20ef06f341ed0ce94a6375277",
+      "afterSha256": "c89748caaadd0e7a8a756e39a5ba8784c0e1ddc20ef06f341ed0ce94a6375277"
+    },
+    {
+      "name": "arabic-face",
+      "bytes": 30296,
+      "exact": true,
+      "beforeSha256": "b81324d818df30498fb1fa4ac4d756903c768c36139448565a1c623a2824b293",
+      "afterSha256": "b81324d818df30498fb1fa4ac4d756903c768c36139448565a1c623a2824b293"
     }
   ]
 }

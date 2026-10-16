@@ -8,26 +8,26 @@ Public `variables` remains the root-emitting wrapper: data-viz roots precede bra
 
 ## Reproduce the CSS comparison
 
-The baseline is unmodified commit `378dcdcc2d9adfd9e8d56b5ad1f585f8eca0e4c1`, captured before implementation. The checked-in [machine-readable evidence](sass-module-equivalence.json) records both compressed CSS SHA-256 values for every bundle, using Dart Sass 1.105.1.
+The refreshed baseline is unmodified v2.1.1 / `origin/main` commit `ed107d51fa5e76d99ea8381f020d96cde4f057a6`, merged into this feature branch without rewriting its existing work. All release changes are retained, including the search book-card CSS. The checked-in [machine-readable evidence](sass-module-equivalence.json) records both compressed CSS SHA-256 values for every bundle, using Dart Sass 1.105.1.
 
 ```sh
 yarn test:sass-equivalence
 # Optionally record the result or compare a different baseline commit:
 SASS_EQUIVALENCE_REPORT=/tmp/sass-equivalence.json \
-  node scripts/check-sass-equivalence.mjs 378dcdcc2d9adfd9e8d56b5ad1f585f8eca0e4c1
+  node scripts/check-sass-equivalence.mjs ed107d51fa5e76d99ea8381f020d96cde4f057a6
 ```
 
 The command archives the baseline into a temporary directory, generates its tokens from its own sources, and compiles baseline and current sources with the same installed compiler. It regenerates tokens in the current checkout as well and cleans up the temporary tree. It requires that Git commit locally and installed dependencies; it does not fetch or modify the baseline. This is a migration review guard: subsequent intentional CSS changes should be compared with an appropriate review baseline rather than treated as migration regressions forever.
 
 | Bundle | Compressed bytes | Comparison |
 | --- | ---: | --- |
-| `style` | 397633 | Four selector-list permutations |
-| `style-all` | 409353 | Four selector-list permutations |
-| `style-delta` | 401212 | Four selector-list permutations |
+| `style` | 397689 | Four selector-list permutations |
+| `style-all` | 409409 | Four selector-list permutations |
+| `style-delta` | 401268 | Four selector-list permutations |
 | `style-gutenberg` | 103141 | **Exact byte equality** |
-| `style-irp` | 400214 | Four selector-list permutations |
-| `style-mcr` | 400586 | Four selector-list permutations |
-| `style-preventionweb` | 400240 | Four selector-list permutations |
+| `style-irp` | 400270 | Four selector-list permutations |
+| `style-mcr` | 400642 | Four selector-list permutations |
+| `style-preventionweb` | 400296 | Four selector-list permutations |
 
 Six bundles have the same four differences from Sass's module-scoped `@extend`. These are permutations within existing comma-separated selector lists, with identical membership:
 
@@ -37,7 +37,7 @@ Six bundles have the same four differences from Sass's module-scoped `@extend`. 
 
 The comparator parses CSS with PostCSS, permits only these three named selector sets at matching rule positions, and then requires exact compressed text equality after restoring those four selector strings. PostCSS's comma parser handles nested functional selectors. It never sorts rules, declarations, at-rules, or arbitrary selector lists. Positive comparator tests exercise all four approved permutations together; adversarial tests reject changed URLs, declarations, declaration order, rule order, media conditions, extra rules and selector membership alongside those permitted permutations. The exact-four guard remains narrow.
 
-Thus all declaration values and ordering, cascade rule order, theme blocks, font-face counts and URLs match the baseline. The six full bundles retain 33 font-face rules (32 text faces plus the icon font); Gutenberg retains its 32 text faces. No visual redesign or token changes are included. The existing CSS-version synchroniser corrected the stale source banner from 2.0.1 to package version 2.1.0; compressed CSS excludes that comment.
+Thus all declaration values and ordering, cascade rule order, theme blocks, font-face counts and URLs match the baseline. The six full bundles retain 33 font-face rules (32 text faces plus the icon font); Gutenberg retains its 32 text faces. No visual redesign or token changes are included. Package version 2.1.1 is inherited from main; no version bump, tag or publication is part of this migration. The existing CSS-version synchroniser updates the source banner to that package version; compressed CSS excludes the comment. Each full bundle is 56 bytes larger than the earlier pre-release evidence due to legitimate 2.1.1 CSS, while Gutenberg is unchanged.
 
 ## Consumer compatibility
 
@@ -51,20 +51,26 @@ The supported base recipe explicitly loads public `variables`, `fonts` and `foun
 
 The review-time guard now compares complete Drupal recipes against the baseline, using both actual preludes (`@use "variables" as *` followed by legacy partials, and all-legacy imports), the original ten-partial list, default plus IRP/MCR/PreventionWeb/DELTA wrappers, and intervening caller root overrides. All twelve consumer outputs are exactly equal. The default Drupal recipe is restored from the reviewed regression's 221,056 compressed bytes to **99,774 bytes** (baseline equality); override recipes are 99,802 bytes. This establishes compatibility for those recipes, not arbitrary compositions. The same guard compiles concrete shared-helper calls against baseline for both APIs across all seven entries; only the existing four bundle permutations are allowed.
 
-Configure supported hooks before their owner first loads. Explicit `@use ... with (...)` after load still errors. Late implicit legacy global configuration is ignored for an already loaded owner under Sass semantics; the old bridges' explicit pass-through configuration had rejected some of these mixed-loading cases unnecessarily. Mixed modern/legacy use is tested, including configured `variables` followed by a legacy full entry, and already loaded font paths followed by a late legacy assignment. Repeated `@use` references emit CSS once per compilation; **legacy imports can still re-emit transitive CSS**. This is not a promise of deduplicated repeated legacy imports or identical error behaviour for late configuration. Legacy callers retain Sass's upstream `@import` warning; all seven modern entries compile without Sass deprecation warnings. The pre-existing search teaser-class removal warning remains intentionally visible.
+Configure supported hooks before their owner first loads for predictable composition. Explicit `@use ... with (...)` after load still errors. Unrelated globals assigned after a namespaced module load do not reconfigure that module merely because a legacy import follows. Assignments to imported or used module members are reassignment and may affect subsequent module evaluation, but never already-emitted CSS. A complete legacy `variables` / `breakpoints` / `mixins` prelude followed by tab-border, retained tag-variable or custom Arabic-face reassignment remains supported; three additional exact baseline comparisons and regression tests cover these cases. The retained `$mg-font-tag` alias is read in explicit consumer CSS; Tag itself continues to use runtime CSS type tokens. Mixed modern/legacy use remains tested, including configured `variables` followed by a legacy full entry and namespaced font paths followed by an unrelated global assignment. Repeated `@use` references emit CSS once per compilation; **legacy imports can still re-emit transitive CSS**. This is not a promise of deduplicated repeated legacy imports or identical error behaviour for late configuration. Legacy callers retain Sass's upstream `@import` warning; all seven modern entries compile without Sass deprecation warnings. The pre-existing search teaser-class removal warning remains intentionally visible.
+
+The supported equivalence boundary is the documented **top-level module and legacy recipes and component subsets**. Selector-nested full-bundle imports can change parent-selector evaluation: `.scope { @import "style-gutenberg"; }` changes two Card hover selectors because module CSS evaluates before nesting. Arbitrary scoped/full-bundle import equivalence is not promised. The strict seven-bundle guard does not certify mixed repeated full-entry compositions beyond its named probes.
+
+No known direct Mangrove Sass consumers were identified. Actual Drupal and microsite integrations use versioned CDN compiled CSS; local theme Sass is separate. Sass remains an optional public contract for prospective consumers. The twelve historical Drupal-style recipe comparisons are contract probes, not evidence of a deployed consumer setup or downstream project build. No downstream build was required or run.
 
 ## Validation
 
-Final correction validation (Dart Sass 1.105.1, Node 24.18.0):
+Refreshed integration validation (Dart Sass 1.105.1, Node 24.18.0):
 
-- Seven-bundle review comparison passes: Gutenberg exact; only the four approved selector-list permutations in six bundles. All seven output hashes and byte counts are unchanged from reviewed migration head `e616d1537f053c0e29008d7858d40859ce6c69c7`.
-- Twelve complete Drupal consumer outputs match baseline exactly, including both variable preludes, four sub-brands and intervening root overrides. Fourteen baseline/current full-entry helper probes pass across both APIs.
-- Full Jest: **170 suites pass, 3776 tests pass, one skipped**. This supersedes the pre-correction 3737-test result. Final focused Sass module/package/helper/configuration, comparator and documentation/path checks: **5 suites, 79 tests pass**.
+- Seven-bundle review comparison passes: Gutenberg exact; only the four approved selector-list permutations in six bundles. Evidence is regenerated against the real integrated v2.1.1 baseline, including release CSS; no comparison solely against the old `378dcdcc` base is used for this gate.
+- Twelve complete Drupal consumer outputs match baseline exactly, including both variable preludes, four sub-brands and intervening root overrides. Fourteen baseline/current full-entry helper probes pass across both APIs. Three imported-member reassignment probes also match exactly.
+- Full Jest: **170 suites pass, 3779 tests pass, one skipped**. Final focused Sass module/package/helper/configuration, comparator and documentation/path checks: **5 suites, 156 tests pass**.
 - `yarn build` passes: Sass, Storybook, webpack, AI manifest and documentation copy. `yarn validate-manifest` passes; existing curated-HTML unverifiability notices remain.
 - The actual CI sequence from `.github/workflows/storybook.yml` passes after staging the intended changes: **`yarn lint`, `yarn prettier:check`, `git diff --exit-code`**. There are 21 existing `react/no-danger` warnings and zero errors; lint coverage also passes for all 520 source files. The ten SCSS formatting failures from the reviewed CI log are corrected.
-- Automated assembled-source Sass tests pass, and a separate check against the complete production assembly passes for all seven public paths with modern/legacy face, four font paths, icon/tab/tag and shared font-metadata hooks, shared helpers, source/package output equality and all four aliases in both loading modes. The new config and import bridges are included at unchanged assembled paths; this does not verify a future registry release.
-- Built Storybook spot checks pass: desktop Tabs switch selected panels, all five theme classes retain Latin Roboto Condensed chrome and route Arabic RTL chrome to Noto Sans Arabic, mobile Details opens at 375px without horizontal overflow, and the corrected Sass integration documentation renders. The repository screenshot helper produced desktop Tabs and mobile Details images, both visually inspected; local evidence is in `/tmp/mangrove-683-corrections-browser/`. No page errors were reported in the checked pages.
+- Automated assembled-source Sass tests pass. A prior separate check against the complete production assembly passed for all seven public paths with modern/legacy face, four font paths, icon/tab/tag and shared font-metadata hooks, shared helpers, source/package output equality and all four aliases in both loading modes. The new config and import bridges are included at unchanged assembled paths; this does not verify a future registry release.
+- Prior built Storybook spot checks remain representative evidence because refreshed CSS matches v2.1.1 under the strict comparator: desktop Tabs switch selected panels, all five theme classes retain Latin Roboto Condensed chrome and route Arabic RTL chrome to Noto Sans Arabic, mobile Details opens at 375px without horizontal overflow, and the corrected Sass integration documentation renders. The repository screenshot helper produced desktop Tabs and mobile Details images, both visually inspected; local evidence is in `/tmp/mangrove-683-corrections-browser/`. No page errors were reported in the checked pages.
 
 Browser checks are representative, not an exhaustive interaction run of every story. The baseline guard is review-time evidence for this migration and these named consumers, not a permanent restriction on future intentional CSS work or a claim about all possible consumer compositions. No dependable compilation/watch speedup is claimed.
 
 GitHub visibility limitation: this organisation suppresses normal queue listing/search endpoints. Review uses exact-number issue/PR requests and the dedicated REST pulls endpoint; no claim of complete queue visibility is made.
+
+Remote CI remains a separate merge gate monitored by the coordinator. The earlier Build and Deploy run was cancelled, not green; prior Chromatic passed. Exact-head refreshed CI, including Storybook play tests, must complete before landing.

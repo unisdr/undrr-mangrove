@@ -203,7 +203,7 @@ test.each([
 });
 
 test.each(BUNDLES)(
-  '%s accepts mixed loading and ignores late implicit legacy configuration',
+  '%s accepts mixed loading without unrelated globals reconfiguring modules',
   bundle => {
     const defaults = compile(`@use '${bundle}'; @import '${bundle}';`);
     expect(
@@ -221,6 +221,56 @@ test.each(BUNDLES)(
           decl.prop === 'border-bottom'
       )
     ).toHaveLength(0);
+  }
+);
+
+test.each([
+  ['tab', '$mg-tabs-border-bottom: false;', '../../Components/Tab/tab'],
+  ['tag', '$mg-font-tag: 2rem;', '../../Atom/Tag/tag'],
+  [
+    'arabic-face',
+    '$mg-font-face-arabic-sans: ("Custom Arabic", serif);',
+    'fonts',
+  ],
+])(
+  'legacy imported-member reassignment affects subsequent %s evaluation',
+  (name, assignment, partial) => {
+    const prelude =
+      '@import "variables"; @import "breakpoints"; @import "mixins";';
+    const before = compile(prelude);
+    const css = compile(
+      prelude +
+        assignment +
+        `@import "${partial}";` +
+        (name === 'tag'
+          ? '.reassignment-probe { font-size: $mg-font-tag; }'
+          : '')
+    );
+    // Reassignment does not change already-emitted foundation declarations.
+    // Subsequent @extend may legitimately add selectors to earlier rules.
+    const roots = output =>
+      declarations(output)
+        .filter(decl => decl.parent.selector === ':root')
+        .map(decl => [decl.prop, decl.value]);
+    expect(roots(css).slice(0, roots(before).length)).toEqual(roots(before));
+    if (name === 'tab') {
+      expect(
+        declarations(css).filter(
+          decl =>
+            decl.parent.selector === '.mg-tabs__list:after' &&
+            decl.prop === 'border-bottom'
+        )
+      ).toHaveLength(0);
+    } else if (name === 'tag') {
+      expect(css).toContain('.reassignment-probe{font-size:2rem}');
+      expect(css).toContain('font-size:var(--mg-font-size-250)');
+    } else {
+      expect(
+        declarations(css)
+          .filter(decl => decl.prop === '--mg-font-family-ui')
+          .map(decl => decl.value)
+      ).toContain('"Custom Arabic", serif');
+    }
   }
 );
 

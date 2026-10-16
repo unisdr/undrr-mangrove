@@ -17,7 +17,7 @@ import * as sass from 'sass';
 import { compareSassCss } from './compare-sass-css.mjs';
 
 const root = process.cwd();
-const ref = process.argv[2] || '378dcdcc2d9adfd9e8d56b5ad1f585f8eca0e4c1';
+const ref = process.argv[2] || 'ed107d51fa5e76d99ea8381f020d96cde4f057a6';
 const temporary = mkdtempSync(join(tmpdir(), 'mangrove-sass-equivalence-'));
 const bundles = [
   'style',
@@ -31,6 +31,7 @@ const bundles = [
 const results = [];
 const consumers = [];
 const helperApis = [];
+const reassignments = [];
 try {
   const baseline = join(temporary, 'baseline');
   mkdirSync(baseline);
@@ -120,6 +121,38 @@ try {
     });
     console.log(`${name}: EXACT; ${Buffer.byteLength(after)} bytes`);
   }
+  // Imported module members remain assignable after the complete legacy prelude.
+  const legacyPrelude =
+    '@import "variables"; @import "breakpoints"; @import "mixins";';
+  for (const [name, assignment, partial] of [
+    ['tab', '$mg-tabs-border-bottom: false;', '../../Components/Tab/tab'],
+    ['tag', '$mg-font-tag: 2rem;', '../../Atom/Tag/tag'],
+    [
+      'arabic-face',
+      '$mg-font-face-arabic-sans: ("Custom Arabic", serif);',
+      'fonts',
+    ],
+  ]) {
+    const source =
+      legacyPrelude +
+      assignment +
+      `@import "${partial}";` +
+      (name === 'tag'
+        ? '.reassignment-probe { font-size: $mg-font-tag; }'
+        : '');
+    const before = compileConsumer(baseline, source);
+    const after = compileConsumer(root, source);
+    if (before !== after)
+      throw new Error(`Imported reassignment changed: ${name}`);
+    reassignments.push({
+      name,
+      bytes: Buffer.byteLength(after),
+      exact: true,
+      beforeSha256: sha256(before),
+      afterSha256: sha256(after),
+    });
+    console.log(`imported reassignment ${name}: EXACT`);
+  }
   // Concrete public helper calls that worked before migration, in both APIs.
   // Do not forward unrelated component internals merely to expand this audit.
   const helperProbe = `.consumer-probe {
@@ -144,7 +177,14 @@ try {
     writeFileSync(
       process.env.SASS_EQUIVALENCE_REPORT,
       JSON.stringify(
-        { baselineRef: ref, sass: sass.info, results, consumers, helperApis },
+        {
+          baselineRef: ref,
+          sass: sass.info,
+          results,
+          consumers,
+          helperApis,
+          reassignments,
+        },
         null,
         2
       ) + '\n'
