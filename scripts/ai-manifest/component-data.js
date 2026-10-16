@@ -484,7 +484,7 @@ export const COMPONENT_DATA = {
   // --- Cards ---
   'components-cards-vertical-card': {
     description:
-      'Card with stacked image, labels, title, summary, and optional CTA button. Four color variants.',
+      'Card with an edge-to-edge top photo, inset labels, title, summary, and optional CTA button. Four color variants. Text-only cards retain their inset.',
     cssClasses: [
       'mg-card',
       'mg-card__vc',
@@ -587,7 +587,7 @@ export const COMPONENT_DATA = {
 
   'components-cards-horizontal-card': {
     description:
-      'Side-by-side card with image left and content right. Labels, title, summary, and CTA button.',
+      'Responsive card with an edge-to-edge leading photo (mirrored in RTL; above content on mobile) and inset labels, title, summary, and CTA button.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',

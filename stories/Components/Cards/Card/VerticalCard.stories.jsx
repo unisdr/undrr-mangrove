@@ -1,3 +1,4 @@
+import { checkPhotoCardEdges } from './cardGeometryChecks';
 import { expect } from 'storybook/test';
 import ScrollContainer from '../../ScrollContainer/ScrollContainer';
 import { scrollCardExamples } from '../../ScrollContainer/ScrollContainerExamples';
@@ -100,6 +101,7 @@ export default {
 };
 
 export const DefaultVerticalCard = {
+  play: checkPhotoCardEdges,
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
 
@@ -140,6 +142,7 @@ export const PlainTitleVerticalCard = {
 };
 
 export const NoImageVerticalCard = {
+  play: checkPhotoCardEdges,
   render: (args, { globals: { locale } }) => {
     const caption = getCaptionForLocale(locale);
     const noImageData = caption.contentdata.map(item => ({

@@ -159,7 +159,22 @@ Linked and unlinked cards frequently sit in the same row. They should read as on
 
 > **Implementation note (for contributors):** The card-wide click area uses a CSS `::before` pseudo-element on the title `<a>`, stretched to cover the full card. Inline links in the summary have `z-index: 2` to layer above the stretched link overlay.
 
+## Image edges
+
+Photo images meet the card edges, with rounding only at the outer corners. Text
+and controls remain inset by `--mg-card-padding`; cards without images keep the
+same text inset. Horizontal photos sit above the content below 640px, then fill
+the leading edge beside it (mirrored in RTL). Book and horizontal book cards
+retain their inset, framed covers so publication artwork stays intact.
+
+This is the default for existing React and HTML cards; no markup change is
+needed. Review site overrides that add padding to the card or round every image
+corner: photo cards now apply padding to `.mg-card__content` instead of the
+outer `.mg-card` surface.
+
 ## Changelog
+
+- **1.7.0**, 2026-10-16: Photo media reaches the outer card edges while text and controls remain inset. Responsive horizontal media fills the leading edge, including in RTL. Publication covers and icon cards retain their inset treatment; existing HTML classes and props remain supported.
 
 - **1.6.1**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Shared card hover transitions use the fast motion token and standard easing.
 
