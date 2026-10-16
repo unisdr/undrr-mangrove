@@ -56,11 +56,11 @@ try {
             hits: Array.from({ length: 4 }, (_, index) => ({
               _id: String(index),
               _source: {
-                type: 'news',
+                type: 'publication',
                 field_domain_access: ['www_undrr_org'],
                 teaser: `<div class="mg-card mg-card__hc">${
                   index > 1
-                    ? '<div class="mg-card__visual"><img class="mg-card__image" src="/test-cover.svg" alt="Test publication cover" /></div>'
+                    ? `<div class="mg-card__visual"><img class="mg-card__image" src="/test-cover-${index}.svg" alt="Test publication cover" /></div>`
                     : ''
                 }<div class="mg-card__content"><h3 class="mg-card__title"><a href="#result-${index}">Publication ${index}</a></h3><p>${
                   index % 2
@@ -79,10 +79,12 @@ try {
     await page.route('**/api/**', route =>
       route.fulfill({ json: { results: [] } })
     );
-    await page.route('**/test-cover.svg', route =>
+    await page.route('**/test-cover-*.svg', route =>
       route.fulfill({
         contentType: 'image/svg+xml',
-        body: '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="80"><rect width="60" height="80" fill="navy"/></svg>',
+        body: route.request().url().endsWith('3.svg')
+          ? '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="160"><rect width="240" height="160" fill="navy"/></svg>'
+          : '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="240"><rect width="160" height="240" fill="navy"/></svg>',
       })
     );
     await page.goto(
@@ -102,18 +104,48 @@ try {
       Math.max(...heights) - Math.min(...heights) < 1,
       'Search book cards must fill their grid row'
     );
-    const coverRatios = await cards
-      .locator('.mg-card__visual')
-      .evaluateAll(elements =>
-        elements.map(el => {
-          const rect = el.getBoundingClientRect();
-          return rect.width / rect.height;
-        })
-      );
-    assert.equal(coverRatios.length, 2);
+    const covers = cards.locator('.mg-card__visual img');
+    await covers.evaluateAll(images =>
+      Promise.all(images.map(image => image.decode()))
+    );
+    const coverGeometry = await covers.evaluateAll(images =>
+      images.map(image => {
+        const rect = image.getBoundingClientRect();
+        const style = getComputedStyle(image);
+        const width =
+          rect.width -
+          parseFloat(style.borderLeftWidth) -
+          parseFloat(style.borderRightWidth);
+        const height =
+          rect.height -
+          parseFloat(style.borderTopWidth) -
+          parseFloat(style.borderBottomWidth);
+        return {
+          ratio: width / height,
+          naturalRatio: image.naturalWidth / image.naturalHeight,
+        };
+      })
+    );
+    assert.equal(coverGeometry.length, 2);
     assert(
-      coverRatios.every(ratio => Math.abs(ratio - 3 / 4) < 0.01),
-      'Cover proportions must remain 3:4'
+      coverGeometry.every(
+        ({ ratio, naturalRatio }) => Math.abs(ratio - naturalRatio) < 0.01
+      ),
+      'Portrait and landscape artwork must retain natural proportions'
+    );
+    assert(
+      Math.abs(coverGeometry[0].naturalRatio - coverGeometry[1].naturalRatio) >
+        0.1
+    );
+    const captions = await cards
+      .locator('.mg-card__content')
+      .evaluateAll(elements =>
+        elements.map(el => el.getBoundingClientRect().top)
+      );
+    assert(
+      Math.abs(captions[0] - captions[1]) < 1 &&
+        Math.abs(captions[2] - captions[3]) < 1,
+      'Search book captions align within rows, including missing artwork'
     );
     const standaloneHeight = await cards.first().evaluate(el => {
       const wrapper = document.createElement('div');
