@@ -62,25 +62,29 @@ story sources. Keep `scripts/serve-storybook.mjs` after removing the old runner.
 
 ## Verification evidence
 
-The original 3.0 Webpack baseline and Vite build were compared in the same
-checkout. The stack now targets 2.2 on main, excluding the icon-font retirement
-and 3.0 preview-branch changes. Fresh verification on that base is recorded below.
+Fresh verification compares the default Webpack build on the main-based spike
+with the full Vite migration on the same 2.2 base (`c207baa5`). The stack excludes
+the icon-font retirement and 3.0 preview-branch changes.
 
 | Check | Result |
 | --- | --- |
-| Complete `index.json` | Exact equality: 651 entries |
+| Complete `index.json` | Exact equality: 662 entries |
 | Raw component manifest | Same 89 component IDs, props and story metadata/snippets |
+| Packaged consumer assets | All 291 files identical after normalizing only the JS build timestamp; no added or removed files; package metadata identical; legacy icon font retained |
 | Published AI output | 88 components: 71 vanilla HTML, 17 React-only |
-| Old runner on Webpack baseline | 92 suites, 512 tests passed |
-| Vitest Browser Mode | Same 92 files and 512 story tests passed, including the live consent check |
+| Vitest Browser Mode | 92 files and 523 story tests passed, including the live consent check |
 | Search-selection browser gate | Passed across five themes and normal/reduced motion |
 | Motion/forced-colour browser gate | 30 theme/media/viewport combinations passed, seven components each |
 | Rich-content browser gate | 20 theme/viewport/direction combinations plus combined media passed |
 | Theme gate | Cold lazy loading, five themes, delayed-response race, failed chunk recovery and docs-only toolbar changes passed |
 | Development theme Sass updates | Active MCR2030 theme retained after adding/removing a CSS probe; exactly one managed stylesheet |
-| Jest unit suite | 169 suites, 3720 tests passed; one existing skipped test |
+| Jest unit suite | 170 suites, 3779 tests passed; one existing skipped test |
 | Lint, formatting, immutable install and manifest validation | Passed |
 | Source panels | Tag renders formatted HTML; Container retains JSX source |
+
+Earlier 3.0 verification also passed the old runner on Webpack (512 tests),
+matching all 512 migrated story tests on that base. The larger 2.2 counts above
+include the additional stories and unit tests now on main.
 
 The lazy strategy reduced the main preview entry from the spike's roughly
 3.56 MB (752 KB gzip) to 1.56 MB (459 KB gzip). Theme chunks are approximately
@@ -121,12 +125,15 @@ Resolved findings:
 - The rich-content audit's URL flag was a string, allowing simultaneous axe
   runs. The typed boolean fixes the overlap while preserving the explicit audit.
 - The root Vitest config is explicitly included in lint and formatting checks.
+- Linux CI exposed a mobile MegaMenu assertion racing the first zero-opacity
+  entry-animation frame. The story now waits for its existing visibility
+  assertion to pass, without changing runtime motion, skipping tests or adding
+  a fixed delay.
 
 The complete theme gate also passed through a `/preview/` proxy, exercising
 relative lazy-chunk URLs and manager/iframe navigation. No known local
-blockers remain. The first full Jest run had one docs-copy subprocess failure;
-the targeted file and the subsequent complete 169-suite run passed without
-changing that code.
+blockers remain. All four production browser gates and the complete 170-suite
+Jest run passed again after rebasing to the 2.2 base.
 
 Before merging, review Chromatic's visual diff. Local browser and computed-style
 checks cannot replace that review or physical-device testing.
