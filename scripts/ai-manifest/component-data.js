@@ -2259,6 +2259,14 @@ npm run build</code></pre>
     ],
   },
 
+  'patterns-content-teaser': {
+    summary:
+      'Experimental structured news, publication, resource and event teaser patterns.',
+    description:
+      'Experimental news, publication, resource and event teaser patterns. Plain-text structured content, resolved native links and semantic dates compose shared card geometry. No Drupal HTML or domain inference.',
+    cssClasses: ['mg-content-teaser', 'mg-content-teaser__metadata'],
+  },
+
   'patterns-article-story': {
     summary:
       'A news or event article page: headline, header image, reading body and related content cards.',

@@ -60,5 +60,7 @@ export {
 export { SkipLink } from '../stories/Utilities/SkipLink/SkipLink';
 export { default as ProgressBar } from '../stories/Components/ProgressBar/ProgressBar';
 
+export { ContentTeaser } from '../stories/Patterns/ContentTeaser/ContentTeaser';
+
 // Import global styles
 import '../stories/assets/scss/style.scss';

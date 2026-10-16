@@ -46,6 +46,7 @@
     "lint:check": "stylelint './stories/**/*.scss' && eslint ./src ./stories ./scripts ./.storybook && yarn run lint:coverage",
     "test": "jest",
     "//test-storybook": "Runs every story's play function in a real browser. It needs a Storybook already being served: `yarn build && yarn serve-storybook & yarn test-storybook`. The `--url` here matches `serve-storybook`, so pointing at a dev server instead is an explicit `yarn test-storybook --url http://127.0.0.1:6006` rather than something that happens by accident. See docs/TESTING.md and unisdr/undrr-mangrove#1244. The timeout is raised from the 15s default because the CookieConsentBanner rendering check waits on three live CDN assets; the runner has no per-test timeout hook, so it is global, and the workflow's timeout-minutes is what actually caps a hang.",
+    "test:content-teaser-browser": "node scripts/test-content-teaser-browser.mjs",
     "test:search-selection-browser": "node scripts/test-search-selection-browser.mjs",
     "test:motion-browser": "node scripts/test-motion-browser.mjs",
     "test:rich-content-browser": "node scripts/test-rich-content-browser.mjs",

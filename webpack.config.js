@@ -157,6 +157,7 @@ export default [
       FormErrorSummary:
         './stories/Components/Forms/FormErrorSummary/FormErrorSummary.jsx',
       FormAction: './stories/Components/Forms/FormAction/FormAction.jsx',
+      ContentTeaser: './stories/Patterns/ContentTeaser/ContentTeaser.jsx',
       VerticalCard: './stories/Components/Cards/Card/VerticalCard.jsx',
       HorizontalCard: './stories/Components/Cards/Card/HorizontalCard.jsx',
       BookCard: './stories/Components/Cards/Card/BookCard.jsx',

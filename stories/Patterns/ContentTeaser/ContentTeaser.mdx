@@ -1,0 +1,88 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as TeaserStories from './ContentTeaser.stories';
+
+<Meta of={TeaserStories} />
+
+> If you are creating or modifying this pattern, see the [review checklist](https://mangrove.undrr.org/?path=/docs/contributing-build-a-component-review-checklist--docs).
+
+# Content teaser
+
+**Experimental, for review in [#1381](https://github.com/unisdr/undrr-mangrove/issues/1381).** News, publication, resource and event teasers describe content hierarchy and omission rules. They compose the shared card classes; they are not four new visual variants. Drupal is one source of content, alongside future non-Drupal consumers.
+
+## When to use
+
+Use these patterns for structured search results, related content and listings. Keep the existing syndicated search renderer in production until field mapping, link policy, parity and server output are agreed. This draft does not replace indexed teaser HTML or change Elasticsearch queries.
+
+<Canvas of={TeaserStories.MixedContent} />
+
+<Canvas of={TeaserStories.News} />
+<Canvas of={TeaserStories.Publication} />
+<Canvas of={TeaserStories.Resource} />
+<Canvas of={TeaserStories.Event} />
+
+## Content contract
+
+Pass one `content` record and a contextual `headingLevel` (default 3, supported 2–6). All strings are plain text, including summary. HTML is escaped, not interpreted. Supply translated display strings; the component does not guess a language, date format or time zone from the browser environment.
+
+| Field                           | Requirement and meaning                                                                                                                                                                                                                                                                                               |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`                          | Required: `news`, `publication`, `resource` or `event`. Drives content rules, not domain selection.                                                                                                                                                                                                                   |
+| `title`, `link`                 | Required non-empty title and already-resolved HTTP(S) or root-relative destination. Invalid required inputs throw. Never pass a Drupal internal route identifier.                                                                                                                                                     |
+| `shortTitle`                    | Optional editorial title for constrained listings; falls back to the full title. No automatic truncation or clamping.                                                                                                                                                                                                 |
+| `image: { src, alt }`           | Optional image. Supply meaningful alt text, or an explicit empty string for an image redundant with the title. Photos fill the standard landscape card; publications show the complete cover at its natural ratio. No image means no empty frame.                                                                     |
+| `typeLabel`, `labels`           | Optional translated type and category labels above the title. Keep labels brief; select at most two category labels in the source adapter. Omit redundant labels in a homogeneous listing.                                                                                                                            |
+| `summary`                       | Optional editorial plain-text summary below the key metadata. Omit rather than invent a placeholder. Consumers select concise summaries; the pattern does not silently shorten content.                                                                                                                               |
+| `published: { dateTime, text }` | Optional publication date for news, publications and resources. `dateTime` is an HTML-valid year, date or timestamp; `text` is its localised visible equivalent. Do not substitute modification time.                                                                                                                 |
+| `event`                         | Optional `{ start, end, timeZone, location }`. Start/end use the same date shape. Start is needed to show a range. Provide the end's full readable date; do not assume the event is on one day. Display time zones when times are shown; date-only events can omit them. Publication dates never replace event dates. |
+| `resourceType`                  | Optional format or resource category, shown only on resources (for example, Training toolkit).                                                                                                                                                                                                                        |
+| `source`, `language`            | Optional visible attribution and content-language label, after the summary. Supply any necessary prefixes in the strings. Source is attribution, not a link destination or domain authority.                                                                                                                          |
+| `lang`                          | Optional BCP 47 language of the record's visible text, including its labels. Surrounding page controls retain their own language.                                                                                                                                                                                     |
+
+This proposal reuses `title`, `image`, `summary`, `labels` and `link` from the existing [card schema work](https://github.com/unisdr/undrr-mangrove/pull/885). The pattern-specific fields are provisional additions, not a second canonical schema. This pattern deliberately accepts a plain-text subset of the card schema’s HTML-capable summary; search highlight markup needs a separate reviewed contract before integration. [#891](https://github.com/unisdr/undrr-mangrove/pull/891) proposes schema-aligned component props; this draft deliberately avoids renaming the legacy `VerticalCard`/`BookCard` APIs. Reconcile these additions with the schema source before graduation.
+
+## Formatting and omission rules
+
+News leads with a title and publication date. Publications lead with a complete cover and title, then publication date, summary and attribution. Resources add the useful resource format. Events prioritise their occurrence range, explicit time zone and location over a publication date. Missing optional fields create no empty paragraphs or metadata rows.
+
+<Canvas of={TeaserStories.MinimumContent} />
+<Canvas of={TeaserStories.MissingCovers} />
+<Canvas of={TeaserStories.Arabic} />
+
+The caller owns the result list and responsive column count. Use semantic lists for a collection and choose a width suitable for the summaries. This pattern does not impose search gallery cover staging or match the heights of unrelated images. All five themes retain their shared card geometry and theme-owned photo/publication surfaces.
+
+## Drupal adapter boundary
+
+Map Drupal fields to this record before rendering; do not send entity objects or Display Suite HTML to the pattern. The fixture records are illustrative, not a verified live API mapping. Before adopting this in search, inventory representative Drupal news, publication, resource and event teasers across domains and languages, including any conditional taxonomy fields.
+
+The current search fallback reads `title`, highlighted `body`, `url`, `published_at`, `event_start` and `event_end`; these are candidates for mapping, not evidence that they contain all required editorial data. Search display modes also consume images. In particular:
+
+- Confirm the authoritative short-title field and plain-text summary extraction. A body field may contain HTML; decoding it into a teaser summary belongs in a source adapter, not this component.
+- Map complete publication artwork separately from photographic derivatives. Preserve original cover URLs rather than forcing a portrait crop.
+- Confirm date precision, event start/end offsets, time zones, location and online-event labels against Drupal source fields.
+- Preserve editorial source attribution and language. Decide which site-specific taxonomy labels genuinely belong in shared teasers.
+- Map Drupal content type identifiers to the four normalised types explicitly; other types retain the existing renderer during migration.
+
+`link` is deliberately a resolved input. The proposed policy is to keep readers on the current site when the content is published there, then use an agreed deterministic fallback. The fallback order, domain aliases, authoritative external URLs and ownership of resolution remain open. Do not infer a primary domain from `field_domain_access[0]` or from the attribution string. A root-relative link is valid only when the adapter has confirmed availability on the consuming site.
+
+## Behaviour and accessibility
+
+The title is a native anchor inside a semantic heading and article. Shared card focus, hover, stretched-link and reduced-motion behaviour apply; there is no extra JavaScript interaction or new motion. The default heading depth is suitable below a results section heading; callers can select another depth. Metadata labels are text, without duplicate tab stops. Text wraps without a fixed height. RTL follows the document direction and shared card rules.
+
+React can render this pattern to static HTML containing the complete title, destination and metadata; links work with JavaScript disabled. Drupal can also implement the same semantic class contract in Twig without a JavaScript runtime. This draft verifies static React output, **not** a Drupal SSR integration. If a future consumer hydrates an interactive React tree, it must use the matching React SSR/hydration pipeline rather than hydrating `renderToStaticMarkup` output. Crawlers and people using non-JavaScript output need usable content and navigation; a machine-only placeholder is not the acceptance criterion.
+
+## CSS and JavaScript references
+
+- React: `ContentTeaser.jsx`; exported through the package root and `components/ContentTeaser.js` build entry.
+- Styles: `content-teaser.scss` adds wrapping and metadata rhythm to shared `mg-card` classes. No new public token defaults or colour overrides.
+- Existing `--mg-card-*` and `--mg-card-publication-*` theme tokens continue to own the surfaces.
+- No hydration registration: static card markup needs no client initialisation.
+
+## Review gates before production adoption
+
+Confirm the Drupal inventory and field mappings, approve the content contract and link policy, then add source adapters and parity fixtures. Compare content, native link destinations, translated dates, keyboard access, all five themes, no-JavaScript output and representative result payload/render performance. Define measurable thresholds before removing indexed HTML. Index freshness, prompt unpublishing, federation and Views replacement remain separate work.
+
+## Changelog
+
+### 0.1.0 (16 October 2026)
+
+- Add experimental structured news, publication, resource and event patterns with native links, semantic dates, optional media and plain-text summaries.

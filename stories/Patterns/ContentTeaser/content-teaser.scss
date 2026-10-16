@@ -1,0 +1,35 @@
+/**
+ * Content teaser patterns compose shared card geometry with semantic metadata.
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Patterns/ContentTeaser/ContentTeaser.mdx
+ */
+.mg-content-teaser {
+  min-inline-size: 0;
+  inline-size: 100%;
+  overflow-wrap: anywhere;
+
+  > .mg-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mg-spacing-75);
+  }
+
+  .mg-card__label {
+    cursor: inherit;
+  }
+
+  .mg-card__title {
+    margin: 0;
+    padding: 0;
+    font-family: var(--mg-font-family-ui);
+  }
+
+  .mg-card__summary,
+  .mg-content-teaser__metadata {
+    margin: 0;
+    padding: 0;
+  }
+
+  .mg-content-teaser__metadata {
+    font-size: var(--mg-font-size-300);
+  }
+}
