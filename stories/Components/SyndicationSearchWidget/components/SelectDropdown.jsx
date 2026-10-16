@@ -274,10 +274,11 @@ export function SelectDropdown({
       </button>
 
       {/* Invisible backdrop to capture clicks outside (prevents click-through) */}
-      {/* Rendered via portal to escape sidebar stacking context, into the
-          body of the document the dropdown is mounted in (not the global
-          one when it renders inside an iframe). The container is mounted
-          by the time the dropdown can open. */}
+      {/* Desktop selects escape the sidebar stacking context. In the mobile
+          drawer, keep the backdrop inside its stacking context: a body-level
+          modal backdrop would sit above the drawer and intercept option taps.
+          Both targets belong to the mounted select's document (including
+          iframe consumers). */}
       {isOpen &&
         createPortal(
           <div
@@ -286,7 +287,8 @@ export function SelectDropdown({
             onMouseDown={handleBackdropClick}
             aria-hidden="true"
           />,
-          getOwnerDocument(containerRef.current).body
+          containerRef.current.closest('.mg-search__drawer') ||
+            getOwnerDocument(containerRef.current).body
         )}
 
       {/* Dropdown panel */}

@@ -300,6 +300,24 @@ describe('Widget parts mounted in an iframe', () => {
     expect(document.querySelector('.mg-select__backdrop')).toBeNull();
   });
 
+  it('keeps a drawer dropdown backdrop inside the iframe drawer', () => {
+    render(
+      <SearchProvider config={{ visibleFilters: [] }}>
+        <MobileFilterDrawer isOpen onClose={() => {}} widgetId="w" />
+      </SearchProvider>,
+      { container: frame.container }
+    );
+    const drawer = frame.container.querySelector('.mg-search__drawer');
+    fireEvent.click(drawer.querySelector('.mg-select__trigger'));
+    expect(
+      drawer.querySelector(':scope > .mg-select__backdrop')
+    ).not.toBeNull();
+    expect(
+      frame.frameDoc.body.querySelector(':scope > .mg-select__backdrop')
+    ).toBeNull();
+    expect(document.querySelector('.mg-select__backdrop')).toBeNull();
+  });
+
   it('locks scroll on and listens for Escape in the iframe document', () => {
     const onClose = jest.fn();
     render(
