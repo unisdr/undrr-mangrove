@@ -958,7 +958,7 @@ export const COMPONENT_DATA = {
     summary:
       'Page-level gate that hides an unfinished page behind a PIN prompt until a reviewer enters the code. Editorial signalling, not a security mechanism.',
     description:
-      'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. Unlock persists in sessionStorage for the browser session. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM. The React export renders a static preview of the modal for docs; pass `live` to run the real body-level gate, which appends the overlay to document.body and restores the body siblings on unmount.',
+      'Page-level gate that hides an unfinished page behind a PIN-prompt modal until a reviewer enters the right code. Drop <div data-mg-preview-access> into a page and load js/preview-access.js. By default the unlock persists in sessionStorage for the tab; data-mg-preview-persist="local" keeps it in localStorage across tabs and visits, with optional data-mg-preview-max-age (days), and a PIN change invalidates the local entry. Existing session unlocks still count in both modes, including after local expiry or a PIN change; open pages are not relocked automatically. Dispatches a bubbling mg-preview-access:unlock CustomEvent (detail: id, persist, source "pin" or "storage") on the trigger, and moves focus to <main> after unlock. CSS-first anti-flash via :has(). Editorial signalling only — not a security mechanism, since the PIN sits in the DOM. The React export renders a static preview of the modal for docs; pass `live` to run the real body-level gate, which appends the overlay to document.body and restores the body siblings on unmount.',
     cssClasses: [
       'mg-preview-access--unlocked',
       'mg-preview-access__overlay',
@@ -987,6 +987,13 @@ export const COMPONENT_DATA = {
      data-mg-preview-eyebrow="DELTA Resilience · Preview"
      data-mg-preview-title="This page is a preview"
      data-mg-preview-message="The DELTA Resilience country dashboard is in active development and is not yet ready for public review. Enter the preview PIN to continue, or contact UNDRR if you need access."></div>`,
+      },
+      {
+        name: 'Remembered across tabs and visits for 30 days',
+        html: `<div data-mg-preview-access
+     data-mg-preview-id="gar-2026-preview"
+     data-mg-preview-persist="local"
+     data-mg-preview-max-age="30"></div>`,
       },
     ],
   },

@@ -239,7 +239,7 @@ const VANILLA_SCRIPTS = [
     selector: '[data-mg-preview-access]',
     initFunction: 'mgPreviewAccess(scope)',
     description:
-      'Password gate and preview notice bar for staging and pre-publication review.',
+      'Page-level editorial PIN gate with session or optional local persistence, max-age in days and a bubbling mg-preview-access:unlock event. Not access control.',
   },
   {
     name: 'UNDRR shared constants',
@@ -2485,7 +2485,7 @@ Mangrove provides standalone vanilla JavaScript utilities under \`/js/\` (\`${cd
 - **Table of Contents** (\`js/table-of-contents.js\`): Call \`mgTableOfContents(scope)\` to generate an article TOC with scrollspy tracking.
 - **On This Page Nav** (\`js/on-this-page-nav.js\`): Call \`mgOnThisPageNav(scope)\` for in-page jump nav with horizontal scrolling.
 - **Switch pending** (\`js/switch-pending.js\`): Call \`mgSwitchPendingInit(scope)\` for new \`[data-mg-switch-pending]\` switches, or \`mgSwitchPending(input, { save })\` for one switch. Call \`mgSwitchPendingDestroy(scope)\` before removing them.
-- **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize password gating for staging environments.
+- **Preview Access** (\`js/preview-access.js\`): Call \`mgPreviewAccess(scope)\` to initialize the PIN preview gate. Add \`data-mg-preview-persist="local"\` (optionally \`data-mg-preview-max-age\` in days) to remember an unlock across tabs and visits, and listen for the bubbling \`mg-preview-access:unlock\` event rather than polling the \`mg-preview-access--unlocked\` class.
 - **Shared constants** (\`js/undrr.js\`): Key codes and breakpoints on \`window.UNDRR\`. It does not bundle the other modules.
 
 ### CSS utilities
