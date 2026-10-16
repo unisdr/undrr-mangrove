@@ -76,3 +76,8 @@ The same audit was extended to every selected node bundle. All rows below except
 ### Search scope boundary
 
 The selected node set is blog, collections, commitment, conference_event, event, hazard_information_profile, landing_page_gutenberg, national_platform, news, organization, people, publication, resource, terminology and vacancy. The repository also contains conference and focal-point view displays, but those bundles are not selected in this index; their runtime teaser and search eligibility are not claimed as covered. Taxonomy-term results likewise retain their existing renderer until a separate contract is reviewed.
+
+
+## Red-team contract checks
+
+Storage configuration confirms unlimited cardinality for resource country/region, organisation type and commitment status. These inputs preserve ordered arrays as well as scalar shorthand; adapters must not discard extra values. Displayed collection freshness and closing dates require localised role labels. Exhibition ranges require labels, and schedules displayed alongside exhibitions require their own labels. Native text boundaries supplement visual CSS gaps, including for multiple after-title taxonomy links. Combined session `topics` is a presentation-only list; canonical session-type and theme taxonomies remain distinct.

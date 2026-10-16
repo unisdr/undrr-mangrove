@@ -28,6 +28,15 @@ const dateType = PropTypes.shape({
   text: PropTypes.string.isRequired,
   label: PropTypes.string,
 });
+const labelledDateType = PropTypes.shape({
+  dateTime: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+});
+const textValuesType = PropTypes.oneOfType([
+  PropTypes.string,
+  PropTypes.arrayOf(PropTypes.string),
+]);
 const labelType = PropTypes.oneOfType([
   PropTypes.string,
   PropTypes.shape({
@@ -40,6 +49,12 @@ const rangeType = PropTypes.shape({
   end: dateType,
   timeZone: PropTypes.string,
   label: PropTypes.string,
+});
+const labelledRangeType = PropTypes.shape({
+  start: dateType,
+  end: dateType,
+  timeZone: PropTypes.string,
+  label: PropTypes.string.isRequired,
 });
 const validDate = date => Boolean(date?.dateTime && date?.text?.trim());
 const validRange = range => validDate(range?.start);
@@ -91,27 +106,35 @@ function TeaserRange({ value }) {
 TeaserRange.propTypes = { value: rangeType.isRequired };
 
 function TeaserLabels({ items, compact = true }) {
-  return items.map(item => {
-    const link = resolveTeaserUrl(item.link);
-    return link ? (
-      <a
-        key={`${item.label}-${link}`}
-        href={link}
-        className={[
-          compact && 'mg-card__label',
-          'mg-content-teaser__metadata-link',
-        ]
-          .filter(Boolean)
-          .join(' ')}
-      >
-        {item.label}
-      </a>
-    ) : (
-      <span key={item.label} className={compact ? 'mg-card__label' : undefined}>
-        {item.label}
-      </span>
-    );
-  });
+  return (
+    <span className="mg-content-teaser__group">
+      {items.map((item, index) => {
+        const link = resolveTeaserUrl(item.link);
+        return (
+          <React.Fragment key={JSON.stringify([item.label, link])}>
+            {index > 0 && ' '}
+            {link ? (
+              <a
+                href={link}
+                className={[
+                  compact && 'mg-card__label',
+                  'mg-content-teaser__metadata-link',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <span className={compact ? 'mg-card__label' : undefined}>
+                {item.label}
+              </span>
+            )}
+          </React.Fragment>
+        );
+      })}
+    </span>
+  );
 }
 TeaserLabels.propTypes = {
   compact: PropTypes.bool,
@@ -121,8 +144,11 @@ TeaserLabels.propTypes = {
 function TeaserAttribution({ items }) {
   return (
     <ul className="mg-content-teaser__attribution">
-      {items.map(item => (
-        <li key={item}>{item}</li>
+      {items.map((item, index) => (
+        <React.Fragment key={item}>
+          {index > 0 && ' '}
+          <li>{item}</li>
+        </React.Fragment>
       ))}
     </ul>
   );
@@ -144,6 +170,8 @@ function fieldValue(content, field) {
       content.type === 'event' ? content.event?.location : content.location,
     ]);
   }
+  if (field === 'organizationType' || field === 'status')
+    return normaliseLabels([content[field]]);
   if (field === 'classification' || field === 'topics')
     return normaliseLabels(content[field] || []);
   if (field === 'published' || field === 'deadline')
@@ -170,15 +198,36 @@ function fieldValue(content, field) {
 }
 
 function TeaserField({ field, value }) {
-  if (['labels', 'location', 'classification', 'topics'].includes(field))
-    return <TeaserLabels items={value} compact={field !== 'location'} />;
+  if (
+    [
+      'labels',
+      'location',
+      'classification',
+      'topics',
+      'organizationType',
+      'status',
+    ].includes(field)
+  )
+    return (
+      <TeaserLabels
+        items={value}
+        compact={['labels', 'classification', 'topics'].includes(field)}
+      />
+    );
   if (field === 'published' || field === 'deadline')
     return <TeaserDate value={value} />;
   if (field === 'event') return <TeaserRange value={value} />;
   if (field === 'schedule' || field === 'exhibitions')
-    return value.map(range => (
-      <TeaserRange key={JSON.stringify(range)} value={range} />
-    ));
+    return (
+      <span className="mg-content-teaser__group">
+        {value.map((range, index) => (
+          <React.Fragment key={JSON.stringify(range)}>
+            {index > 0 && ' '}
+            <TeaserRange value={range} />
+          </React.Fragment>
+        ))}
+      </span>
+    );
   if (field === 'freshness')
     return (
       <span data-freshness-kind={value.kind}>
@@ -202,6 +251,30 @@ function selectedFields(content, fields) {
     );
 }
 
+function validateDateRoles(content) {
+  const requireLabel = (date, path) => {
+    if (!text(date?.label))
+      throw new TypeError(
+        `ContentTeaser requires a caller-localised ${path}.label to identify the date's meaning.`
+      );
+  };
+  if (content.type === 'vacancy' && validDate(content.deadline))
+    requireLabel(content.deadline, 'deadline');
+  if (content.type === 'collection' && validDate(content.freshness?.date))
+    requireLabel(content.freshness.date, 'freshness.date');
+  if (content.type === 'conference-session') {
+    const exhibitions = (content.session?.exhibitions || []).filter(validRange);
+    if (exhibitions.length) {
+      exhibitions.forEach(range =>
+        requireLabel(range, 'session.exhibitions[]')
+      );
+      (content.session?.schedule || [])
+        .filter(validRange)
+        .forEach(range => requireLabel(range, 'session.schedule[]'));
+    }
+  }
+}
+
 /**
  * Experimental horizontal content teasers for all fifteen indexed Drupal node
  * bundles. Shared card geometry, native links and server-renderable content;
@@ -219,6 +292,7 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
     );
   if (![2, 3, 4, 5, 6].includes(headingLevel))
     throw new TypeError('ContentTeaser headingLevel must be between 2 and 6.');
+  validateDateRoles(content);
   const Heading = `h${headingLevel}`;
   const imageSrc = pattern.image ? resolveTeaserUrl(image?.src) : null;
   const before = selectedFields(content, pattern.before);
@@ -251,8 +325,11 @@ export function ContentTeaser({ content, headingLevel = 3, className }) {
       <div className="mg-card__content">
         {before.length > 0 && (
           <div className="mg-card__meta mg-content-teaser__before-title">
-            {before.map(({ field, value }) => (
-              <TeaserField key={field} field={field} value={value} />
+            {before.map(({ field, value }, index) => (
+              <React.Fragment key={field}>
+                {index > 0 && ' '}
+                <TeaserField field={field} value={value} />
+              </React.Fragment>
             ))}
           </div>
         )}
@@ -303,27 +380,27 @@ ContentTeaser.propTypes = {
       label: PropTypes.string,
     }),
     resourceType: PropTypes.string,
-    location: labelType,
+    location: PropTypes.oneOfType([labelType, PropTypes.arrayOf(labelType)]),
     delivery: PropTypes.string,
     identifier: PropTypes.string,
     sources: PropTypes.arrayOf(PropTypes.string),
     authors: PropTypes.arrayOf(PropTypes.string),
     /** Compatibility input for the first experimental draft; prefer sources. */
     source: PropTypes.string,
-    organizationType: PropTypes.string,
+    organizationType: textValuesType,
     scope: PropTypes.string,
-    status: PropTypes.string,
-    deadline: dateType,
+    status: textValuesType,
+    deadline: labelledDateType,
     freshness: PropTypes.shape({
       kind: PropTypes.oneOf(['updated', 'created']).isRequired,
-      date: dateType.isRequired,
+      date: labelledDateType.isRequired,
     }),
     classification: PropTypes.arrayOf(labelType),
     topics: PropTypes.arrayOf(labelType),
     session: PropTypes.shape({
       bucket: PropTypes.string,
       schedule: PropTypes.arrayOf(rangeType),
-      exhibitions: PropTypes.arrayOf(rangeType),
+      exhibitions: PropTypes.arrayOf(labelledRangeType),
       room: PropTypes.string,
       format: PropTypes.string,
     }),

@@ -114,6 +114,25 @@ try {
         await metadataLink.evaluate(el => getComputedStyle(el).zIndex),
         '2'
       );
+      const topics = page.locator(
+        '[data-content-type="conference-session"] .mg-content-teaser__metadata-link'
+      );
+      assert.equal(await topics.count(), 2);
+      const firstTopic = await topics.nth(0).boundingBox();
+      const secondTopic = await topics.nth(1).boundingBox();
+      if (Math.abs(firstTopic.y - secondTopic.y) < 2) {
+        assert(
+          Math.max(
+            secondTopic.x - (firstTopic.x + firstTopic.width),
+            firstTopic.x - (secondTopic.x + secondTopic.width)
+          ) > 0,
+          `${theme}: topic links touch or overlap`
+        );
+      }
+      assert.equal(
+        await topics.first().locator('..').textContent(),
+        'Risk governance Local action'
+      );
       await page.screenshot({
         path: `${output}/${index}-${mobile ? 'mobile-rtl-forced' : 'desktop'}.png`,
         fullPage: true,

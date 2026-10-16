@@ -2267,6 +2267,7 @@ npm run build</code></pre>
     cssClasses: [
       'mg-content-teaser',
       'mg-content-teaser__before-title',
+      'mg-content-teaser__group',
       'mg-content-teaser__metadata',
       'mg-content-teaser__metadata-link',
       'mg-content-teaser__attribution',

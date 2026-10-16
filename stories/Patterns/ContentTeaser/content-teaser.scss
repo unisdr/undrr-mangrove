@@ -48,6 +48,14 @@
   }
 }
 
+.mg-content-teaser__group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  max-inline-size: 100%;
+  gap: var(--mg-spacing-50) var(--mg-spacing-100);
+}
+
 .mg-content-teaser__attribution {
   @include mg-list-unmarked;
 

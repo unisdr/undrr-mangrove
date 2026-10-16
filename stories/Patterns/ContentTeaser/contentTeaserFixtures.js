@@ -35,7 +35,7 @@ export const teaserFixtures = {
     title: 'A practical guide to local risk assessment',
     link: 'https://www.preventionweb.net/knowledge-base',
     resourceType: 'Training toolkit',
-    location: 'Global',
+    location: ['Global', 'Africa'],
     delivery: 'Online',
     summary: 'Tools for identifying hazards, exposure and vulnerability.',
     sources: ['PreventionWeb'],
@@ -80,7 +80,10 @@ Object.assign(teaserFixtures, {
     link: 'https://www.undrr.org/about-undrr',
     image: { src: '/images/undrr-logo-blue.svg', alt: '' },
     location: { label: 'Switzerland', link: '/countries/switzerland' },
-    organizationType: 'United Nations and international organisations',
+    organizationType: [
+      'United Nations and international organisations',
+      'Regional organisations',
+    ],
     summary:
       'Supporting countries and communities to understand and reduce disaster risk.',
   },
@@ -133,6 +136,7 @@ Object.assign(teaserFixtures, {
       bucket: 'Technical session',
       schedule: [
         {
+          label: 'Session:',
           start: {
             dateTime: '2026-11-04T09:00:00+01:00',
             text: '4 Nov 2026, 09:00',
@@ -158,6 +162,7 @@ Object.assign(teaserFixtures, {
     summary: 'A practical exchange between local leaders and risk specialists.',
     topics: [
       { label: 'Risk governance', link: '/programme/themes/risk-governance' },
+      { label: 'Local action', link: '/programme/themes/local-action' },
     ],
   },
   commitment: {
@@ -166,7 +171,7 @@ Object.assign(teaserFixtures, {
     link: '/commitments/community-preparedness',
     image: photo,
     scope: 'National',
-    status: 'In progress',
+    status: ['In progress', 'Ongoing'],
     published: { dateTime: '2026-09-01', text: '1 September 2026' },
     summary:
       'A voluntary commitment to strengthen local capacity and preparedness.',
