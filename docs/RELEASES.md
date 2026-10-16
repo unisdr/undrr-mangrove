@@ -41,7 +41,7 @@ Pushes to `release/3.0` and PRs targeting it run the normal build/test workflow.
 
 These builds do not deploy stable Pages or update the stable dist branch. The public fork/CDN paths described above remain unchanged. npm still publishes only on a version tag or explicit workflow dispatch: this branch is not itself a prerelease publication channel. When a prerelease is approved, choose a `3.0.0-…` version/tag, publish under npm's `next` tag and use isolated versioned assets. Keep historical versioned assets available. Do not bump or tag a stable 3.0 release until the tracker gates and final main-branch transition are agreed.
 
-The icon-retirement draft must remain unmerged until the Drupal rollout and exact-candidate verification recorded in [undrr/web-backlog#3185](https://gitlab.com/undrr/web-backlog/-/issues/3185) are complete. A draft flag and a tracker checklist do not enforce branch protection or external dependencies; maintainers must verify the gates before merging.
+Icon retirement may merge into `release/3.0` after code review and green CI, with preview publication isolated, so Drupal can test a shared SVG-only candidate. Promotion to main and stable 3.0 publication remain blocked until the Drupal rollout and exact-candidate production verification recorded in [undrr/web-backlog#3185](https://gitlab.com/undrr/web-backlog/-/issues/3185) are complete. A tracker checklist does not enforce branch protection or external dependencies; maintainers must verify the integration and stable-release gates separately.
 
 ## Release steps
 
@@ -284,7 +284,7 @@ Follow the normal [Release steps](#release-steps) 1–5 (version bump, CDN links
 
 ### 2. Assemble the package exactly as CI does
 
-The `npm-publish.yml` workflow does **not** publish the repo root. It runs `scripts/assemble-npm-package.mjs`, which builds a curated `npm-package/` directory from `dist/` (compiled `components/`, `css/`, `js/`, `fonts/`, `error-pages/`, the `scss/` sources, and a slimmed `package.json`). Run the same script from the repo root after a clean `yarn build`:
+The `npm-publish.yml` workflow does **not** publish the repo root. It runs `scripts/assemble-npm-package.mjs`, which builds a curated `npm-package/` directory from `dist/` (compiled `components/`, `css/`, `js/`, `error-pages/`, the `scss/` sources, and a slimmed `package.json`). Run the same script from the repo root after a clean `yarn build`:
 
 ```bash
 yarn pack:assemble   # replaces npm-package/ (gitignored)
@@ -411,7 +411,6 @@ Published npm packages include:
 - `/js/**/*`: compiled vanilla JavaScript files
 - `/scss/**/*`: source SCSS files
 - `/error-pages/**/*`: static error page templates
-- `/fonts/**/*`: Mangrove icon font
 
 The layout and the slimmed `package.json` are produced by `scripts/assemble-npm-package.mjs`, used by both the publish workflow and `yarn pack:assemble` / `yarn pack:preview`. Change that script, not the workflow, to change what is published.
 

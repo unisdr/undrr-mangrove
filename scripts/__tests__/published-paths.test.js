@@ -44,7 +44,6 @@ describe('the published-path model', () => {
       'js',
       'scss',
       'error-pages',
-      'fonts',
       'docs',
     ]) {
       expect([...paths].some(entry => entry.startsWith(`${dir}/`))).toBe(true);
@@ -57,7 +56,6 @@ describe('the published-path model', () => {
       "['dist/assets/js', 'js']",
       "['dist/assets/css', 'css']",
       "['dist/assets/error-pages', 'error-pages']",
-      "['dist/fonts', 'fonts']",
       "['dist/components', 'components']",
       "['dist/docs', 'docs']",
     ]) {
@@ -72,6 +70,13 @@ describe('the published-path model', () => {
     // Development-only files never reach the tarball, in either direction.
     expect([...paths].some(entry => entry.includes('__tests__/'))).toBe(false);
     expect([...paths].some(entry => /\.(test|spec)\./.test(entry))).toBe(false);
+  });
+
+  test('does not publish the retired icon font', () => {
+    expect([...paths].some(entry => entry.startsWith('fonts/'))).toBe(false);
+    expect([...paths].some(entry => entry.includes('mangrove-icon-set'))).toBe(
+      false
+    );
   });
 
   test('names the SCSS entry point and the vanilla modules as published', () => {
@@ -113,7 +118,6 @@ describe('the published-path model', () => {
         ['assets/js', 'js'],
         ['assets/css', 'css'],
         ['assets/error-pages', 'error-pages'],
-        ['fonts', 'fonts'],
         ['components', 'components'],
         ['docs', 'docs'],
       ]) {

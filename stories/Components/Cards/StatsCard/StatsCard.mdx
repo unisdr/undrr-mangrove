@@ -76,7 +76,7 @@ Add a `link` prop to make entire stat cards clickable. Cursor changes to pointer
 | `value`       | string/number | Yes      | The main statistic value (e.g., "1,500+", "45%")       |
 | `bottomLabel` | string        | No       | Label that appears below the value                     |
 | `label`       | string        | No       | Optional label above the value                         |
-| `icon`        | string        | No       | Optional icon class (e.g., "mg-icon fa-globe")         |
+| `icon`        | string        | No       | Optional icon class (e.g., "mg-icon mg-icon-globe")    |
 | `summaryText` | string        | No       | Optional descriptive text (supports inline HTML links) |
 | `link`        | string        | No       | URL to make the entire stat card clickable             |
 
@@ -160,6 +160,8 @@ createHydrator({
 See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **1.4.8**, 2026-10-16 ([unisdr/undrr-mangrove#906](https://github.com/unisdr/undrr-mangrove/issues/906)): Updated icon examples to the SVG namespace before icon-font retirement.
 
 - **1.4.7**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Inline-link hover feedback uses shared motion tokens and changes instantly under reduced motion.
 

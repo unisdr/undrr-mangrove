@@ -39,7 +39,6 @@ Package contents:
 - `css/` compiled theme stylesheets
 - `js/` vanilla JS utilities
 - `scss/` source Sass files
-- `fonts/` Mangrove icon font
 - `error-pages/` static error page templates
 
 ## Choose an integration path

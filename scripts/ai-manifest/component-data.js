@@ -1862,9 +1862,9 @@ npm run build</code></pre>
   // --- Icons ---
   'components-icons': {
     summary:
-      'Mangrove icon set. Use span elements with mg-icon and mg-icon-{name} classes; icons render from SVG data URIs via CSS mask-image.',
+      'Mangrove SVG icon set. Use mg-icon and mg-icon-{name} classes or the React Icon component; icons inherit colour through currentColor.',
     description:
-      'Mangrove icon set. Use span elements with mg-icon and mg-icon-{name} classes. Icons render from SVG data URIs via CSS mask-image; the icon font is retained only as a fallback for legacy fa-* selectors. The React Icon component accepts five name formats: a bare name ("globe") and a legacy mg- prefixed name ("mg-globe") both resolve to "mg-icon mg-icon-globe"; an already-qualified "mg-icon-globe" resolves to the same pair; a legacy "fa-globe" resolves to "mg-icon fa-globe", keeping the FontAwesome class rather than renaming it; and any name containing a space is treated as a full class string and passed through unchanged. A size prop appends mg-icon--{size}.',
+      'Mangrove SVG icon set. Use span elements with mg-icon and mg-icon-{name} classes. Icons render from SVG data URIs via CSS mask-image. No icon font or FontAwesome fa-* aliases are shipped. The React Icon component accepts a bare name ("globe"), a legacy Mangrove name ("mg-globe"), or a qualified name ("mg-icon-globe"), all resolving to "mg-icon mg-icon-globe". A name containing spaces is passed through as a full class string; use Mangrove classes. A size prop appends mg-icon--{size}.',
     cssClasses: ['mg-icon'],
     examples: [
       {

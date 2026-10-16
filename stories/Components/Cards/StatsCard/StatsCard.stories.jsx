@@ -96,14 +96,14 @@ const getCaptionForLocale = locale => {
               link: 'https://mcr2030.undrr.org/cities',
             },
             {
-              icon: 'mg-icon fa-handshake',
+              icon: 'mg-icon mg-icon-handshake',
               value: '١٢٠+',
               bottomLabel: 'المنظمات الشريكة',
               summaryText: 'دعم التنفيذ في جميع أنحاء العالم.',
               link: 'https://mcr2030.undrr.org/partners',
             },
             {
-              icon: 'mg-icon fa-map',
+              icon: 'mg-icon mg-icon-map',
               value: '٥',
               summaryText: 'خارطة طريق منظمة لمراحل المرونة للمدن.',
               link: 'https://mcr2030.undrr.org/roadmap',
@@ -205,14 +205,14 @@ const getCaptionForLocale = locale => {
               link: 'https://mcr2030.undrr.org/cities',
             },
             {
-              icon: 'mg-icon fa-handshake',
+              icon: 'mg-icon mg-icon-handshake',
               value: '120+',
               bottomLabel: 'Partner organizations',
               summaryText: 'Supporting implementation worldwide.',
               link: 'https://mcr2030.undrr.org/partners',
             },
             {
-              icon: 'mg-icon fa-map',
+              icon: 'mg-icon mg-icon-map',
               value: '5',
               summaryText:
                 '<a href="https://mcr2030.undrr.org/roadmap">The roadmap</a> guides cities through resilience stages.',

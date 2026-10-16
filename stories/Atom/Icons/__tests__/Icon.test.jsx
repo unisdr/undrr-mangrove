@@ -13,12 +13,6 @@ describe('Icon', () => {
     expect(container.firstChild).toHaveClass('mg-icon', 'mg-icon-globe');
   });
 
-  it('renders fa- prefix as mg-icon fa-{name}', () => {
-    const { container } = render(<Icon name="fa-globe" />);
-    expect(container.firstChild).toHaveClass('mg-icon', 'fa-globe');
-    expect(container.firstChild).not.toHaveClass('mg-icon-fa-globe');
-  });
-
   it('renders mg-icon- prefix as mg-icon mg-icon-{name}', () => {
     const { container } = render(<Icon name="mg-icon-globe" />);
     expect(container.firstChild).toHaveClass('mg-icon', 'mg-icon-globe');
@@ -30,8 +24,8 @@ describe('Icon', () => {
   });
 
   it('passes through a full class string unchanged', () => {
-    const { container } = render(<Icon name="mg-icon fa-globe" />);
-    expect(container.firstChild.className).toBe('mg-icon fa-globe');
+    const { container } = render(<Icon name="mg-icon mg-icon-globe" />);
+    expect(container.firstChild.className).toBe('mg-icon mg-icon-globe');
   });
 
   // --------------------------------------------------
@@ -66,11 +60,6 @@ describe('Icon', () => {
 
   it('always renders aria-hidden="true"', () => {
     const { container } = render(<Icon name="globe" />);
-    expect(container.firstChild).toHaveAttribute('aria-hidden', 'true');
-  });
-
-  it('renders aria-hidden="true" for fa- icons too', () => {
-    const { container } = render(<Icon name="fa-globe" />);
     expect(container.firstChild).toHaveAttribute('aria-hidden', 'true');
   });
 

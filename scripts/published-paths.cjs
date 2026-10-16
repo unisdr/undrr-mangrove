@@ -14,7 +14,7 @@
  *    directory becomes which top-level package directory), the `scss/` copy
  *    that flattens `stories/**\/*.scss`, `PACKAGE_FILES` and `isDevOnly()`.
  * 2. `webpack.config.js` — the CopyPlugin patterns that fill `dist/assets`,
- *    `dist/fonts` and `dist/assets/error-pages`, and the `entry` map of the
+ *    `dist/assets/error-pages`, and the `entry` map of the
  *    component build, whose keys become `components/<Key>.js`.
  * 3. `package.json` — the `scss` script's Sass directory compile
  *    (`stories/assets/scss` -> `stories/assets/css`), whose output becomes
@@ -118,11 +118,10 @@ function publishedPaths() {
   // components/ — one ES module per webpack entry.
   for (const name of componentEntryNames()) paths.add(`components/${name}.js`);
 
-  // js/, fonts/, error-pages/ — CopyPlugin copies these trees verbatim into
+  // js/, error-pages/ — CopyPlugin copies these trees verbatim into
   // dist/, and assemble-npm-package.mjs lifts them to the package root.
   const verbatim = [
     ['stories/assets/js', 'js'],
-    ['stories/assets/fonts/mangrove-icon-set', 'fonts/mangrove-icon-set'],
     ['stories/Components/ErrorPages/static', 'error-pages'],
   ];
   for (const [from, to] of verbatim) {
