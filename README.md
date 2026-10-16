@@ -21,7 +21,7 @@ Mangrove is the component library and design system of the United Nations Office
 ```html
 <link
   rel="stylesheet"
-  href="https://assets.undrr.org/mangrove/2.1.0/css/style.css"
+  href="https://assets.undrr.org/mangrove/2.1.1/css/style.css"
 />
 ```
 

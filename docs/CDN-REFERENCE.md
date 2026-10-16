@@ -33,7 +33,7 @@ Base URL: `https://assets.undrr.org/mangrove/{version}/`
 The DELTA Resilience theme never had a legacy variant. See the [v1.4 release notes](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-1.4.md#migration-root-font-size-change) for what they did and the [v2.0 release notes](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/RELEASE-2.0.md) for the migration off them.
 
 ```html
-<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.1.0/css/style.css" />
+<link rel="stylesheet" href="https://assets.undrr.org/mangrove/2.1.1/css/style.css" />
 ```
 
 ### JavaScript modules
@@ -57,7 +57,7 @@ That table is the complete list. **There is no `/js/main.js` and no combined bun
 
 ```html
 <script type="module">
-  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.1.0/js/tabs.js';
+  import { mgTabs } from 'https://assets.undrr.org/mangrove/2.1.1/js/tabs.js';
   mgTabs();
 </script>
 ```
@@ -108,7 +108,7 @@ React 19 removed UMD builds. Use import maps with esm.sh:
   import { createRoot } from 'react-dom/client';
 
   const MegaMenuModule = await import(
-    'https://assets.undrr.org/mangrove/2.1.0/components/MegaMenu.js'
+    'https://assets.undrr.org/mangrove/2.1.1/components/MegaMenu.js'
   );
 
   let MegaMenu = MegaMenuModule?.default ?? MegaMenuModule;
@@ -184,7 +184,7 @@ Base URL: `https://assets.undrr.org/logos/`
 Pin exact versions:
 
 ```
-https://assets.undrr.org/mangrove/2.1.0/css/style.css
+https://assets.undrr.org/mangrove/2.1.1/css/style.css
 ```
 
 ### Latest (testing only)

@@ -13,6 +13,25 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 _Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
 
+## 2.1.1, 2026-10-16
+
+See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.1.1) for full details.
+
+Mangrove 2.1.1 fixes syndicated-search filter selection, aligns book-card search results and keeps the documentation page scrollable. It changes no public component APIs.
+
+### Breaking and visible changes
+
+- **Search book cards:** cards fill their search-grid row while retaining cover proportions. Review search-specific height overrides; standalone book cards retain content height. ([#1375](https://github.com/unisdr/undrr-mangrove/pull/1375))
+
+### Bug fixes and hardening
+
+- **Mobile search filters:** tapping a filter or sort option inside the drawer now selects it instead of dismissing the list without changing the value. Dropdown dismissal backdrops stay inside the drawer's stacking context, preserving desktop behavior and iframe ownership. ([#1374](https://github.com/unisdr/undrr-mangrove/pull/1374))
+
+### Documentation and discoverability
+
+- **Search docs scrolling:** the open filter-drawer example runs in a narrow iframe so its body scroll lock and focus handling cannot affect the surrounding docs page. Add review guidance for examples with document-wide side effects. ([#1375](https://github.com/unisdr/undrr-mangrove/pull/1375))
+- **Browser regression coverage:** check docs scrolling and search book-card row heights, cover proportions, standalone sizing and mobile containment alongside touch, mouse and keyboard selection across all five themes. ([#1374](https://github.com/unisdr/undrr-mangrove/pull/1374), [#1375](https://github.com/unisdr/undrr-mangrove/pull/1375))
+
 ## 2.1.0, 2026-10-15
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.1.0) for full details.
