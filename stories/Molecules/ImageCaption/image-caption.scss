@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Images/ImageCaptionCredit/ImageCaptionCredit.mdx
  */
+@use "../../assets/scss/breakpoints" as *;
+
 /* image caption start */
 .mg-image-caption {
   border-bottom: 2px solid rgb(var(--mg-color-black));

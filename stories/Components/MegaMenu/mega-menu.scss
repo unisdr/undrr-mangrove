@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/MegaMenu/MegaMenu.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/variables" as *;
+
 .mg-mega-wrapper {
   position: relative;
   background: rgb(var(--mg-color-white));

@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Footer/Footer.mdx
  */
+@use "../../assets/scss/variables" as *;
+
 .mg-footer {
   --mg-gutenberg-spacer: 0;
 }

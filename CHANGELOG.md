@@ -61,6 +61,8 @@ Mangrove 2.1.0 extends collection publishing, event search and citation workflow
 
 ### Repository maintenance
 
+- **Sass modules:** migrated all seven bundles and component/font dependencies to `@use` / `@forward`, with concise internal member access, explicit placeholder dependencies and unchanged published paths. Import-only bridges preserve legacy pre-import configuration and removed-variable warnings; new builds use `with` for font faces, asset paths and tab configuration. Seven-bundle comparison against the pre-migration commit preserves all declarations and cascade order, allowing only four selector-list permutations from upstream `@extend`. ([#683](https://github.com/unisdr/undrr-mangrove/issues/683))
+
 - **Build/test tooling:** Updated Storybook test-runner to 0.26.0, Yarn to 4.18.1, actions/cache to v6, actions/setup-node to v7 and the Chromatic action to v18. These maintenance changes do not add a consumer runtime API. ([#1340](https://github.com/unisdr/undrr-mangrove/pull/1340), [#1343](https://github.com/unisdr/undrr-mangrove/pull/1343), [#1344](https://github.com/unisdr/undrr-mangrove/pull/1344), [#1346](https://github.com/unisdr/undrr-mangrove/pull/1346), [#1347](https://github.com/unisdr/undrr-mangrove/pull/1347))
 - **Quality enforcement:** A timing-policy ratchet and deterministic browser checks cover reduced motion, forced colours, component state and rich-content boundaries without adding QA fixtures to the published AI catalogue. ([#1365](https://github.com/unisdr/undrr-mangrove/pull/1365), [#1371](https://github.com/unisdr/undrr-mangrove/pull/1371))
 

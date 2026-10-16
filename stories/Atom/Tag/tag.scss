@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Atom/Tag/Tag.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/variables" as *;
+
 // Compact taxonomy labels. Keep legacy theme overrides and container markup.
 // :where() gives auto-styled children the same specificity as .mg-tag, so
 // explicit modifiers win regardless of which markup a Drupal view emits.

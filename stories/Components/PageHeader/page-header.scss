@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/PageHeader/PageHeader.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/variables" as *;
+
 .mg-page-header {
   // Base styles for page header
 

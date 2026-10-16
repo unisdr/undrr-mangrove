@@ -6,6 +6,10 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Tab/Tab.mdx
  */
+@use "../../assets/scss/breakpoints" as *;
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/variables" as *;
+
 .mg-tabs__list {
   background: var(--mg-color-tabbar-background);
   width: 100%;

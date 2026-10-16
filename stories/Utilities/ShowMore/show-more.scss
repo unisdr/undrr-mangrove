@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Utilities/ShowMore/ShowMore.mdx
  */
+@use "../../assets/scss/variables" as *;
+
 :root {
   --mg-show-more-height: 200px;
 }

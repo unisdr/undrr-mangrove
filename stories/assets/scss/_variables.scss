@@ -4,7 +4,7 @@
  * Storybook:    https://mangrove.undrr.org/
  * LLMs context: https://mangrove.undrr.org/llms.txt
  * Repository:   https://github.com/PreventionWeb/undrr-mangrove
- * Version: 2.0.1
+ * Version: 2.1.0
  *
  *   ██╗   ██╗███╗   ██╗██████╗ ██████╗ ██████╗
  *   ██║   ██║████╗  ██║██╔══██╗██╔══██╗██╔══██╗
@@ -29,63 +29,21 @@
  */
 @use "sass:math";
 @use "sass:meta";
-@import "./tokens-tabs";
+@forward "tokens-tabs";
+@use "tokens-tabs" as *;
 
 // Data-visualisation palettes: categorical, sequential and Sendai target
 // ramps. A distinct concern from brand tokens, sourced from the DLDTS design
-// system. @import must precede rule blocks, hence its position here.
-@import "./tokens-data-viz";
+// system. Module dependencies precede rule blocks.
+@use "tokens-data-viz" as *;
 
 // Brand tokens. The palette, the spacing/type/width scales, the semantic
 // tier and every component token a brand can restyle are generated from
 // tokens/mangrove.yaml (the brand-neutral base) merged with tokens/undrr.yaml
 // (UNDRR identity). Editing a value here would be overwritten; edit the YAML
 // and run `yarn build:tokens`.
-@import "./generated/tokens-mangrove";
-
-// --- Mangrove 2.0 upgrade guard (build-time) ---
-// Color and spacing tokens are now CSS custom properties. Assigning the old
-// SCSS variables ($mg-color-* / $mg-spacing-*) before importing Mangrove no
-// longer changes anything — it is a silent no-op. If a consumer still defines
-// one of the commonly-overridden token variables, warn loudly at compile time
-// rather than let their brand colors quietly revert to the defaults.
-// See docs/RELEASE-2.0.md (breaking change #1). This fires only for consumer
-// overrides — Mangrove itself no longer defines these SCSS variables.
-@each $_legacy in "mg-color-interactive", "mg-color-interactive-active",
-  "mg-color-button-background", "mg-color-button-background--hover",
-  "mg-border-color-button", "mg-color-tag", "mg-color-form-check",
-  "mg-color-form-focus", "mg-color-hero", "mg-color-hero--secondary",
-  "mg-spacing-150", "mg-spacing-300"
-{
-  @if meta.variable-exists($_legacy) {
-    @warn "Mangrove 2.0: `$#{$_legacy}` no longer has any effect — color and spacing tokens are CSS custom properties now. Move the override into a `.mg-theme-* { --#{$_legacy}: ...; }` block (or `:root`). See docs/RELEASE-2.0.md.";
-  }
-}
-
-// The same guard for the font-family variables removed by the role model
-// (unisdr/undrr-mangrove#1098). Separate loop because each name maps to a
-// different replacement role and the message has to say which.
-// $mg-font-family is the one a consumer is most likely to have set: it carried
-// 22 declarations before the migration.
-@each $_legacy,
-  $_role
-    in (
-      "mg-font-family": "text",
-      "mg-font-family-headings": "ui",
-      "mg-font-family-condensed": "ui",
-      "mg-font-family-icons": "",
-      "mg-font-family-arabic-headings": "heading",
-      "mg-font-family-arabic-body": "text"
-    )
-{
-  @if meta.variable-exists($_legacy) {
-    @if $_role == "" {
-      @warn "Mangrove 2.0: `$#{$_legacy}` no longer exists and has no replacement — it had no stylesheet consumer, and icons.scss names the FontAwesome family directly. See docs/RELEASE-2.0.md.";
-    } @else {
-      @warn "Mangrove 2.0: `$#{$_legacy}` no longer has any effect — font families are role custom properties now. Move the override into a `.mg-theme-* { --mg-font-family-#{$_role}: ...; }` block (or `:root`). See docs/RELEASE-2.0.md.";
-    }
-  }
-}
+@forward "generated/tokens-mangrove";
+@use "generated/tokens-mangrove" as *;
 
 // Root font-size anchor: fixed at the browser-standard 16px root (1rem = 16px),
 // used by mg-rem() to convert intended pixel values to rem at build time. The
@@ -161,9 +119,8 @@ $mg-font-tag: $mg-font-size-250 !default;
 // common case for the licensed brand faces the `!default` escape hatch exists
 // to admit. `meta.inspect()` renders the list the way Sass wrote it.
 
-// It lives here, and _fonts.scss calls it rather than importing `sass:meta`
-// itself: both files are pulled into one scope by the legacy `@import` chain,
-// and two `@use "sass:meta"` rules in that scope collide.
+// It lives here so both role definitions and the fonts module preserve
+// quoted family names in exactly the same way.
 // See unisdr/undrr-mangrove#1098.
 @function mg-font-stack($stack) {
   @return meta.inspect($stack);

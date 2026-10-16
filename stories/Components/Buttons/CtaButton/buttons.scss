@@ -7,5 +7,5 @@
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/CtaButton/CtaButton.mdx
  */
 // buttons.scss — DEPRECATED, use cta-button.scss
-@import "./cta-button";
+@forward "./cta-button";
 @warn "buttons.scss is deprecated. Import cta-button.scss instead.";

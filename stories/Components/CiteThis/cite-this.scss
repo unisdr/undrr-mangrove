@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/CiteThis/CiteThis.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/variables" as *;
+
 
 .mg-cite-this {
   max-inline-size: 48rem;

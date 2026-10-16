@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Buttons/ShareButtons/ShareButtons.mdx
  */
+@use "../../../assets/scss/mixins" as *;
+@use "../../../assets/scss/variables" as *;
+
 .mg-share {
   max-inline-size: mg-rem(400);
   min-inline-size: 0;

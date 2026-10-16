@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Boilerplate/Boilerplate.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/variables" as *;
+
 // Boilerplate component styles
 // We use the 'mg-' prefix for our CSS classes to namespace them
 // Sass variables are handled by the import from _components.scss

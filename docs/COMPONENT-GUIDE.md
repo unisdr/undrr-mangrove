@@ -77,7 +77,7 @@ Every component stylesheet must begin with a docblock comment containing a conci
 **Then add the import to `stories/assets/scss/_components.scss`:**
 
 ```scss
-@import "../../Components/{Category}/{ComponentName}/component-name";
+@use "../../Components/{Category}/{ComponentName}/component-name";
 ```
 
 This is required — without it, your styles won't be included in any theme's compiled CSS.

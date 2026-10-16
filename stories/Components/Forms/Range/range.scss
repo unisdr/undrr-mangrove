@@ -6,6 +6,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Forms/Range/Range.mdx
  */
+@use "../../../assets/scss/mixins" as *;
+
 
 @mixin mg-range-thumb {
   appearance: none;

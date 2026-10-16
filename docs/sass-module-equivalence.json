@@ -1,0 +1,62 @@
+{
+  "baselineRef": "378dcdcc2d9adfd9e8d56b5ad1f585f8eca0e4c1",
+  "sass": "dart-sass\t1.105.1\t(Sass Compiler)\t[Dart]\ndart2js\t3.13.5\t(Dart Compiler)\t[Dart]",
+  "results": [
+    {
+      "bundle": "style",
+      "bytes": 397633,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "77a987aa75f9944063e1533ab4a1f04a18b117c08d1f640c634f622a8ea29d1e",
+      "afterSha256": "5df71f385293697ff959c8e1069fba6dfe3683a51d49b3e7bd0246782e427212"
+    },
+    {
+      "bundle": "style-all",
+      "bytes": 409353,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "7a86e22e8de0de982932b7a88563fac49c02819415fb930e073e43773ceccddd",
+      "afterSha256": "de4e2571e663beb1788980bc1ee2357166e4089411c3d1ca6647ef5888cf4e25"
+    },
+    {
+      "bundle": "style-delta",
+      "bytes": 401212,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "2f0c88cf13d7fbf543a36158b010bd6305cd938dcac736609fd821a1305dc228",
+      "afterSha256": "e2909780e2d3587b96197ef97df49782157ba3568a434136e8e9819f54580112"
+    },
+    {
+      "bundle": "style-gutenberg",
+      "bytes": 103141,
+      "exact": true,
+      "selectorPermutations": 0,
+      "beforeSha256": "3a0de46d9885e822a5b55326c4dc53da4dd4624e177c0d2bbf3f4506167ea8f7",
+      "afterSha256": "3a0de46d9885e822a5b55326c4dc53da4dd4624e177c0d2bbf3f4506167ea8f7"
+    },
+    {
+      "bundle": "style-irp",
+      "bytes": 400214,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "e2fa0ae0728f9cdc1b8107f112bd79d306bf8845dc9c39003b4f12a6ab99db4f",
+      "afterSha256": "ca356775e6a442abe5979191efbdb2245a75ae593f62d90bfec481634829d132"
+    },
+    {
+      "bundle": "style-mcr",
+      "bytes": 400586,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "8c26ebeb396aedce392467d51eb4dd82ce3b32b27105d91fcb544f1f6e09a8ab",
+      "afterSha256": "6c6d05e6f3250c5a51a64e30ca7a86951630baf0722437be9c7e6ec3305ac28c"
+    },
+    {
+      "bundle": "style-preventionweb",
+      "bytes": 400240,
+      "exact": false,
+      "selectorPermutations": 4,
+      "beforeSha256": "3f84560cf6c1a7f0250e1f945e9c650e4b737294afcc4d6d87ae229c41c29d07",
+      "afterSha256": "4a2a4875d0ede7b09bc8c8e0f563b34a5a04b3067d234b1805a564cef1381444"
+    }
+  ]
+}

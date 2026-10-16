@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Forms/TextInput/TextInput.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/variables" as *;
+
 // Shared BEM-scoped form styles for Mangrove form components.
 // All form components import this partial for consistent base styling.
 

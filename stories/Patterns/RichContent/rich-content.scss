@@ -7,6 +7,8 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Patterns/RichContent/RichContent.mdx
  */
+@use "../../assets/scss/mixins" as *;
+
 
 // The pattern's scroll wrapper is editorial structure, not a component
 // island. Root classes never exclude the root's own content.

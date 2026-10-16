@@ -6,6 +6,9 @@
  * Full documentation:
  * https://github.com/PreventionWeb/undrr-mangrove/blob/main/stories/Components/Hero/Hero.mdx
  */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/variables" as *;
+
 // The veil between the photograph and the copy, in two layers.
 
 // The lower layer is the brand tint that has always been here: the hero

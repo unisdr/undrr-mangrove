@@ -55,7 +55,7 @@ The token sources (`tokens/*.yaml`) are not published — the package ships the 
 
 In Mangrove 2.0, colour, spacing, radius, and component tokens are **CSS custom properties** generated from `tokens/*.yaml`. Override them in selectors, not Sass. See the <LinkTo kind="getting-started-integration-theming-guide" story="docs">Theming guide</LinkTo>.
 
-Sass variables remain only for compile-time needs (`@media`, `@if`, `@font-face`, interpolation): breakpoints, type scale, font faces, and a few constants. Other legacy `$mg-*` variables are removed; assigning them appears to compile but has no effect. Watch `_variables.scss` warnings in your build log.
+Sass variables remain only for compile-time needs (`@media`, `@if`, `@font-face`, interpolation): breakpoints, type scale, font faces, and a few constants. Other legacy `$mg-*` variables are removed; assigning them appears to compile but has no effect. Legacy import consumers receive build warnings for removed variables; module consumers must configure supported hooks with `with`, so Sass rejects unknown names.
 
 ## SCSS file structure
 
@@ -86,15 +86,39 @@ scss/assets/scss/
 Each theme entry point follows the same import order:
 
 ```scss
-@import './variables'; // SCSS variables + the :root custom property block
-@import './theme-{name}'; // .mg-theme-{name} { } token overrides (omitted in the default)
-@import './fonts';
-@import './breakpoints';
-@import './mixins';
-@import './utility';
-@import './foundational';
-@import './components';
+@use './variables' as *; // SCSS variables + the :root custom property block
+@use './theme-{name}' as *; // .mg-theme-{name} { } token overrides (omitted in the default)
+@use './fonts' as *;
+@use './breakpoints' as *;
+@use './mixins' as *;
+@use './utility' as *;
+@use './foundational' as *;
+@use './components' as *;
 ```
+
+### Module configuration and legacy consumers
+
+Use `as *` for concise member references such as `mg-rem(16)` and `@include mg-focus-ring`. Each component declares its own dependencies. `variables` forwards the generated Sass scale and tab tokens so existing public member paths remain available. Shared placeholders remain in `mixins`; an extending stylesheet must `@use` the module defining its placeholder (`form-base` for `%mg-form-input-base`).
+
+Configure hooks **before the first module that loads them**. A complete bundle forwards the hooks from `variables` and `font-paths`:
+
+```scss
+@use '@undrr/undrr-mangrove/scss/assets/scss/style-all' with (
+  $mg-font-face-sans: (
+    'Frutiger 55 Roman',
+    sans-serif,
+  ),
+  $font-path-roboto: '/local/fonts/roboto',
+  $mgIconFontPath: '/local/fonts/icons',
+  $mg-tabs-border-bottom: false
+);
+```
+
+For a per-component build, configure `variables` with the face, icon and tab hooks first, configure `fonts` with font asset paths, then load the component recipe below. All four `$font-path-*` hooks remain available: `roboto`, `roboto-condensed`, `noto-kufi-arabic` and `noto-sans-arabic`. The legacy `$FontName` and `$font-version` hooks also remain shared across the Roboto font modules. Changing a face still requires loading that font yourself. Paths and published package locations are unchanged.
+
+Existing `@import` consumers can keep assignments before importing `variables`, `fonts` or any of the seven bundles. Import-only `.import.scss` bridges pass those values into the same modules and retain removed-variable warnings; they contain no parallel stylesheet implementation. They retain Sass's upstream `@import` deprecation warning. Use module configuration for new integrations. Sass modules load once: reconfiguring an already loaded module is an error, and importing the same bundle twice no longer duplicates its CSS. Configure each hook once, before loading a component or bundle that depends on it.
+
+Run `yarn test:sass-equivalence` to compile all seven bundles against the pre-migration commit with the same installed Sass compiler. See `docs/SASS-MODULE-MIGRATION.md` for the comparison boundary and evidence.
 
 Generated token partials are build output. `yarn scss` runs `yarn build:tokens` first, so fresh clones compile without a separate token step.
 
@@ -171,7 +195,7 @@ Type is the one place where the SCSS layer and the custom-property layer both ma
 | `--mg-font-family-ui`      | `$mg-font-face-sans-condensed` | `$mg-font-face-arabic-sans`    |
 | `--mg-font-family-code`    | `$mg-font-face-mono`           | `$mg-font-face-mono`           |
 
-Latin resolves exactly as it did before the roles existed, and no new `font-family` declaration matches a Latin element, so a theme that sets its own face on `h1`–`h3` keeps it. To re-point a role for one brand, override the custom property in a `.mg-theme-*` block — but a role can only point at a face Mangrove already loads. To introduce a typeface Mangrove does not ship, assign the face variable before the import and load the font yourself; quote any family name that is not a plain CSS identifier. Note that faces sit outside the brand mixins, so a Sass override applies to every brand in `style-all.css`.
+Latin resolves exactly as it did before the roles existed, and no new `font-family` declaration matches a Latin element, so a theme that sets its own face on `h1`–`h3` keeps it. To re-point a role for one brand, override the custom property in a `.mg-theme-*` block — but a role can only point at a face Mangrove already loads. To introduce a typeface Mangrove does not ship, configure the face with `@use ... with (...)` and load the font yourself; quote any family name that is not a plain CSS identifier. Note that faces sit outside the brand mixins, so a Sass override applies to every brand in `style-all.css`.
 
 The six 1.x font variables — `$mg-font-family`, `-condensed`, `-headings`, `-icons`, `-arabic-headings`, `-arabic-body` — were removed in 2.0. See [breaking change #8](?path=/docs/getting-started-release-notes-v2-0--docs) in the v2.0 release notes for what to do if you set any of them.
 
@@ -296,22 +320,22 @@ If you only need specific components, import the partials directly. The full lis
 
 ```scss
 // Import base dependencies first
-@import 'scss/assets/scss/variables';
-@import 'scss/assets/scss/fonts';
-@import 'scss/assets/scss/breakpoints';
-@import 'scss/assets/scss/mixins';
-@import 'scss/assets/scss/foundational';
+@use 'scss/assets/scss/variables' as *;
+@use 'scss/assets/scss/fonts' as *;
+@use 'scss/assets/scss/breakpoints' as *;
+@use 'scss/assets/scss/mixins' as *;
+@use 'scss/assets/scss/foundational' as *;
 
 // Then import only the components you need
-@import 'scss/Components/Buttons/CtaButton/buttons';
-@import 'scss/Components/Cards/Card/card';
-@import 'scss/Components/Forms/form-base';
-@import 'scss/Components/Tab/tab';
+@use 'scss/Components/Buttons/CtaButton/buttons' as *;
+@use 'scss/Components/Cards/Card/card' as *;
+@use 'scss/Components/Forms/form-base' as *;
+@use 'scss/Components/Tab/tab' as *;
 ```
 
-Component stylesheets depend on `_variables.scss` for `mg-rem()`, the type scale and the `:root` token block — including the five `--mg-font-family-*` roles, which every component reads and none declares a fallback for — and on `_breakpoints.scss` and `_mixins.scss` for `devicebreak()` and the focus ring. Import those first or the build fails.
+Component stylesheets depend on `_variables.scss` for `mg-rem()`, the type scale and the `:root` token block — including the five `--mg-font-family-*` roles, which every component reads and none declares a fallback for — and on `_breakpoints.scss` and `_mixins.scss` for `devicebreak()` and the focus ring. Each component loads these dependencies itself. Load and configure shared modules first when overriding hooks, and include `fonts` to load faces and script routing.
 
-`_fonts.scss` earns its place in that list twice over: it declares the `@font-face` blocks, and it carries the Arabic script map that re-points the roles. Drop it and the roles still resolve, but only to their Latin faces — Arabic text asks for Roboto, which has no Arabic coverage, and every glyph falls back to whatever the reader's OS supplies. Nothing warns you. Import it exactly once: Sass's legacy `@import` re-emits, so a second import would duplicate all 32 `@font-face` blocks.
+`_fonts.scss` earns its place in that list twice over: it declares the `@font-face` blocks, and it carries the Arabic script map that re-points the roles. Drop it and the roles still resolve, but only to their Latin faces — Arabic text asks for Roboto, which has no Arabic coverage, and every glyph falls back to whatever the reader's OS supplies. Nothing warns you. Sass loads the font module once, so repeated `@use` references share the same 32 `@font-face` blocks.
 
 This import list is checked by a test that compiles it and asserts both halves: the roles defined ahead of their first use, and the Arabic map present. If you shorten it, expect Times New Roman or an unstyled Arabic page.
 
@@ -370,12 +394,12 @@ export default defineConfig({
 With `includePaths` configured, imports resolve relative to the package root:
 
 ```scss
-@import 'scss/assets/scss/variables';
-@import 'scss/assets/scss/breakpoints';
-@import 'scss/assets/scss/mixins';
+@use 'scss/assets/scss/variables' as *;
+@use 'scss/assets/scss/breakpoints' as *;
+@use 'scss/assets/scss/mixins' as *;
 ```
 
-The alternative is to put `node_modules` itself on the load path and name the package in each import — `@import '@undrr/undrr-mangrove/scss/assets/scss/variables'`. That is the form the rest of Mangrove's documentation uses. Dart Sass does not search `node_modules` by default, so one of the two is required either way; bundler Sass loaders usually add it for you.
+The alternative is to put `node_modules` itself on the load path and name the package in each import — `@use '@undrr/undrr-mangrove/scss/assets/scss/variables' as *`. That is the form the rest of Mangrove's documentation uses. Dart Sass does not search `node_modules` by default, so one of the two is required either way; bundler Sass loaders usually add it for you.
 
 ## Migrating from 1.x
 
@@ -386,7 +410,7 @@ The alternative is to put `node_modules` itself on the load path and name the pa
 | `rgba($mg-color-interactive, 0.5)`                  | `rgb(var(--mg-color-interactive) / 0.5)`                                            |
 | `padding: $mg-spacing-150`                          | `padding: var(--mg-spacing-150)`                                                    |
 | `darken($mg-color-interactive, 10%)`                | a computed literal, or a second token — Sass colour functions cannot take a `var()` |
-| `@import "./variables-irp"`                         | `@import "./theme-irp"`                                                             |
+| `@import "./variables-irp"`                         | `@use "./theme-irp"`                                                                |
 | `$mg-html-font-size: 10`                            | not supported; serve a 16px root                                                    |
 
 Referencing a removed variable fails the build. Assigning one does not, so check your Sass log for `Mangrove 2.0:` warnings before assuming an override took effect. The complete list of breaking changes is in the [v2.0 release notes](?path=/docs/getting-started-release-notes-v2-0--docs).
