@@ -410,3 +410,20 @@ export const ScrollingCards = {
     </ScrollContainer>
   ),
 };
+
+export const NoLabels = {
+  name: 'Without labels',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      label1: null,
+      label2: null,
+    }));
+    return (
+      <div style={{ maxWidth: '300px' }}>
+        <VerticalCard {...args} data={data} />
+      </div>
+    );
+  },
+  play: checkPhotoCardEdges,
+};

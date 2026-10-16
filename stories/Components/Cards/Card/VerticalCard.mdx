@@ -162,10 +162,11 @@ Linked and unlinked cards frequently sit in the same row. They should read as on
 ## Image edges
 
 Photo images meet the card edges, with rounding only at the outer corners. Text
-and controls remain inset by `--mg-card-padding`; cards without images keep the
+and controls remain inset by `--mg-card-padding`. Without labels, the title
+starts at that inset without extra metadata spacing; cards without images keep the
 same text inset. Horizontal photos sit above the content below 640px, then fill
 the leading edge beside it (mirrored in RTL). Book and horizontal book cards
-retain their inset, framed covers so publication artwork stays intact.
+use an unboxed publication teaser with one square cover border, keeping artwork intact.
 
 This is the default for existing React and HTML cards; no markup change is
 needed. Review site overrides that add padding to the card or round every image
@@ -174,7 +175,7 @@ outer `.mg-card` surface.
 
 ## Changelog
 
-- **1.7.0**, 2026-10-16: Photo media reaches the outer card edges while text and controls remain inset. Responsive horizontal media fills the leading edge, including in RTL. Publication covers and icon cards retain their inset treatment; existing HTML classes and props remain supported.
+- **1.7.0**, 2026-10-16: Photo media reaches the outer card edges while text and controls remain inset. Responsive horizontal media fills the leading edge, including in RTL. Titles without labels use a single content inset. Publication teasers use a single cover border; icon cards keep their inset content. Existing HTML classes and props remain supported.
 
 - **1.6.1**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Shared card hover transitions use the fast motion token and standard easing.
 

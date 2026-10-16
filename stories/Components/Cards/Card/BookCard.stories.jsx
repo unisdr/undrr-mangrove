@@ -1,3 +1,7 @@
+import {
+  checkPublicationSurface,
+  publicationCoverFixture,
+} from './cardGeometryChecks';
 import { BookCard } from './BookCard';
 
 const getCaptionForLocale = locale => {
@@ -158,4 +162,16 @@ export const MixedTitleLengths = {
       </div>
     );
   },
+};
+
+export const NaturalCoverRatio = {
+  name: 'Complete cover without outer frame',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      imgback: publicationCoverFixture,
+    }));
+    return <BookCard {...args} data={data} />;
+  },
+  play: checkPublicationSurface,
 };

@@ -628,7 +628,7 @@ export const COMPONENT_DATA = {
     summary:
       'Card with icon or image, title, summary and optional CTA. Vertical or horizontal orientation, in default, centered or negative (dark) variants.',
     description:
-      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small, medium, large, full. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
+      'Card with icon or image, title, summary, and optional CTA. Variants: default, centered, negative (dark background). Orientation: vertical (icon above the content) or horizontal (icon beside it, for route rows); horizontal sizes the visual itself, so imageScale does not apply. Image scale options: small (recommended for navigation glyphs), medium, large, full. Small glyphs do not reserve an illustration frame. Supports custom icon background/foreground colors (iconColor, iconFgColor), border color, and label position (top or content area).',
     hydration: {
       note: "The whole card set comes from one JSON attribute, so renderedHtml is only a preview of the markup the component produces. Render an empty data-mg-icon-card container carrying data-items and hydrate it. Malformed JSON is swallowed and renders an empty set, so validate the attribute server-side. The orientation prop has no data attribute, so the horizontal layout is React-only. Each item's summaryText accepts inline HTML and is sanitised with DOMPurify.",
       selector: '[data-mg-icon-card]',
@@ -654,12 +654,13 @@ export const COMPONENT_DATA = {
     },
   },
   'components-cards-book-card': {
-    description: 'Minimal card for publications: cover image and title only.',
+    description:
+      'Unboxed publication teaser: complete natural-ratio cover with one square border and a title below. No outer raised surface or cover zoom.',
   },
 
   'components-cards-horizontal-book-card': {
     description:
-      'Horizontal card for publications: cover image left, title and summary right.',
+      'Unboxed publication listing: complete natural-ratio cover with one square border beside title and summary, stacked on mobile and mirrored in RTL. No outer raised surface.',
     cssClasses: [
       'mg-card',
       'mg-card__hc',
@@ -696,7 +697,7 @@ export const COMPONENT_DATA = {
 
   'components-cards-stats-card': {
     description:
-      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact, highlighted, negative.',
+      'Grid of numeric statistics with optional icons, dual labels (label above the value, bottomLabel below it), descriptions, and call-to-action links. Variants: default, compact (reduced padding and gaps without stacked child margins), highlighted, negative.',
     hydration: {
       note: 'The figures come from one JSON attribute, so renderedHtml is a preview of the markup, not a template to fill in. Render an empty data-mg-stats-card container carrying data-stats and hydrate it. Malformed JSON is swallowed and renders an empty card, so validate the attribute server-side.',
       selector: '[data-mg-stats-card]',

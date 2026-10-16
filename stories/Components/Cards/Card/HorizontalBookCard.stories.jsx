@@ -1,3 +1,7 @@
+import {
+  checkPublicationSurface,
+  publicationCoverFixture,
+} from './cardGeometryChecks';
 import { HorizontalBookCard } from './HorizontalBookCard';
 
 const getCaptionForLocale = locale => {
@@ -159,4 +163,16 @@ export const ButtonOnlyHorizontalBookCard = {
   },
 
   name: 'Button only, no card link',
+};
+
+export const NaturalCoverRatio = {
+  name: 'Complete cover without outer frame',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      imgback: publicationCoverFixture,
+    }));
+    return <HorizontalBookCard {...args} data={data} />;
+  },
+  play: checkPublicationSurface,
 };

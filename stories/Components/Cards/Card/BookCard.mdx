@@ -7,7 +7,7 @@ import * as BookCardStories from './BookCard.stories';
 
 # Book card
 
-A compact card variant for publications and brochures. Displays a portrait cover image (3:4 aspect ratio) with a title below. Designed to fit 5-6 across in a row on desktop.
+A compact card variant for publications and brochures. Displays a complete cover at its natural aspect ratio with a title below. Designed to fit 5-6 across in a row on desktop.
 
 ## When to use
 
@@ -17,7 +17,7 @@ A compact card variant for publications and brochures. Displays a portrait cover
 
 ## Anatomy
 
-- **Cover image**: 3:4 aspect ratio with subtle border
+- **Cover image**: natural aspect ratio with a subtle square border
 - **Title**: Linked heading with smaller font than other card variants
 
 The entire card is clickable via a stretched link on the title.
@@ -80,7 +80,17 @@ See [Vertical card](?path=/docs/components-cards-vertical-card--docs#cards-witho
 | `imgback` | String | Cover image URL                                                                                         |
 | `imgalt`  | String | Alt text for the cover image                                                                            |
 
+## Publication surface
+
+The complete cover has one subtle square border, without a second raised card
+surface around it. Covers keep their natural proportions and do not crop or zoom
+on hover. The vertical caption follows with a 10px gap; the horizontal listing
+uses a 15px gap at the default root font size. Links and keyboard focus remain
+visible, including on white covers and in RTL.
+
 ## Changelog
+
+- **1.6.0**, 2026-10-16: Remove the outer publication card surface and padding; retain a single square cover border, natural cover proportions and clear caption spacing. Publication covers no longer zoom or fade on hover.
 
 - **1.5.0**, 2026-09-18 ([#1249](https://github.com/unisdr/undrr-mangrove/pull/1249)): Fixes [#1196](https://github.com/unisdr/undrr-mangrove/issues/1196). `mg-card--secondary` no longer paints its title in the orange accent (2.65 on the card surface, 2.37 on DELTA's). The title takes the interactive colour, and the accent becomes a 4px rule on the card's leading edge instead. `--mg-color-secondary` is unchanged. This is a visible change wherever the modifier is used, in all five themes.
 - **1.4.1**, 2026-09-17 ([#1190](https://github.com/unisdr/undrr-mangrove/pull/1190)): Links inside a card summary (`.mg-card__text-link`, and any anchor in `.mg-card__summary`) are underlined at rest instead of only on `:hover`. At 2.09:1 against the body colour, the interactive blue could not distinguish them on its own (WCAG 1.4.1 Use of Colour), and `link-in-text-block` was the most frequent axe violation in the 2.0 pre-release sweep. The underline thickens on hover. Button-styled links are excluded. Card titles are untouched: a linked title has always been underlined, and the `--plain-title` and empty-`href` opt-outs that remove that underline still do.

@@ -35,6 +35,10 @@ RTL layout is **automatic**. Select "Arabic" from the locale toolbar (globe icon
 
 ## Usage
 
+For navigation cards, use `imageScale: 'small'`: a 72px visual with a 58px glyph,
+without a large illustration frame. Use the proportional medium, large and full
+scales when the visual is an illustration that should dominate the card.
+
 ### Default (left-aligned)
 
 <Canvas of={IconCardStories.Default} />
@@ -294,6 +298,8 @@ createHydrator({
 See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
 ## Changelog
+
+- **1.5.0**, 2026-10-16: Navigation examples use small icons, and small glyphs no longer reserve a proportional illustration frame. Explicit medium, large and full scales remain available for illustrations.
 
 - **1.4.3**, 2026-09-18 ([#1247](https://github.com/unisdr/undrr-mangrove/pull/1247), [#1240](https://github.com/unisdr/undrr-mangrove/issues/1240)): The repository entry point exports `IconCard` correctly. `src/index.js` re-exported a default that this component does not have, so the binding was `undefined` and rendering it threw `Element type is invalid`; it now uses the named form, matching the component and its hydration barrel. A new test asserts that no export from the entry point is `undefined`. Note that the published npm tarball ships neither `src/` nor `dist/` and its `main` points at a file it does not contain, so `import { IconCard } from '@undrr/undrr-mangrove'` does not resolve for an npm consumer either before or after this change; use `@undrr/undrr-mangrove/components/IconCard.js`, or hydrate through `IconCard.hydrate.js`, which was never affected.
 - **1.4.2**, 2026-09-18 ([#1216](https://github.com/unisdr/undrr-mangrove/pull/1216), [#1200](https://github.com/unisdr/undrr-mangrove/issues/1200)): `.mg-card__icon--bordered` gives `--mg-card-border` a fallback of `rgb(var(--mg-color-interactive))`, so the class paints a border in the theme's accent colour when nothing sets the property. It was the only input hook in `card.scss` without a fallback, and an unset custom property drops the whole `border` declaration: a consumer writing the markup by hand got the extra padding and no border at all. React callers are unaffected: `borderColor` still sets the property inline and still wins. Documented the component's four custom properties and their defaults, including that none of them are theme tokens and none appear in `tokens.json`.

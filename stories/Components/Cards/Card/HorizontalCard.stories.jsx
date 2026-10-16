@@ -201,3 +201,20 @@ export const NoImageHorizontalCard = {
   },
   play: checkPhotoCardEdges,
 };
+
+export const NoLabels = {
+  name: 'Without labels',
+  render: (args, { globals: { locale } }) => {
+    const data = getCaptionForLocale(locale).contentdata.map(item => ({
+      ...item,
+      label1: null,
+      label2: null,
+    }));
+    return (
+      <div style={{ maxWidth: '900px' }}>
+        <HorizontalCard {...args} data={data} />
+      </div>
+    );
+  },
+  play: checkPhotoCardEdges,
+};

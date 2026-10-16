@@ -147,6 +147,12 @@
   }
 
   &__hc.mg-card-book__hc {
+    > .mg-card__content {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      min-inline-size: 0;
+    }
+
     .mg-card__visual {
       align-self: flex-start;
       border: 1px solid rgb(var(--mg-color-neutral-600) / 0.2);
@@ -160,11 +166,16 @@
 
     &:has(.mg-card__visual) {
       grid-template-rows: unset;
-      gap: 0 var(--mg-spacing-100);
+      gap: var(--mg-spacing-150);
 
       @media (min-width: $mg-breakpoint-mobile) {
-        grid-template-columns: 160px 1fr;
-        grid-template-rows: 1fr auto;
+        grid-template-columns: 160px minmax(0, 1fr);
+        grid-template-rows: auto;
+
+        > .mg-card__content {
+          grid-column: 2;
+          grid-row: 1;
+        }
       }
     }
   }
@@ -333,6 +344,19 @@
   }
 }
 
+// Without metadata, the title starts at the content inset. Do not stack the
+// media gap and the title's label-separation padding above the first text.
+.mg-card__vc:not(.mg-card__book),
+.mg-card__hc:not(.mg-card-book__hc) {
+  > .mg-card__content:has(> .mg-card__title:first-child) {
+    padding-block-start: var(--mg-card-padding);
+
+    > .mg-card__title {
+      padding-block-start: 0;
+    }
+  }
+}
+
 // RTL chevron — flip direction
 [dir="rtl"] .mg-card__title a::after {
   transform: rotate(225deg);
@@ -489,6 +513,47 @@ span.mg-card__label {
   }
 }
 
+// Publication teasers: the cover is the object, without a second raised frame.
+.mg-card.mg-card__book,
+.mg-card.mg-card-book__hc {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+
+  &:hover {
+    box-shadow: none;
+  }
+
+  > .mg-card__visual {
+    aspect-ratio: auto;
+    border-radius: 0;
+    outline: none;
+  }
+
+  .mg-card__image {
+    block-size: auto;
+    object-fit: contain;
+  }
+
+  &:hover .mg-card__image {
+    opacity: 1;
+    transform: none;
+  }
+
+  .mg-card__title:first-child {
+    padding-block-start: 0;
+  }
+
+  &.mg-card--secondary {
+    padding-inline-start: var(--mg-card-padding);
+  }
+}
+
+.mg-card__book {
+  gap: var(--mg-spacing-100);
+}
+
 // END of CARD
 
 // Icon Card variant
@@ -548,6 +613,11 @@ span.mg-card__label {
     &:has(.mg-card__image--full),
     &:has(.mg-card__icon-wrap--full) {
       aspect-ratio: 1/1;
+    }
+
+    // Small glyphs and fixed-size badges do not need the illustration frame.
+    &:has(.mg-card__icon-wrap--small) {
+      aspect-ratio: auto;
     }
 
     // Fixed-size badges do not need the full illustration frame.
