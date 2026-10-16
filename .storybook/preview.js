@@ -3,7 +3,9 @@ import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
 import { transformSource } from './docsSource';
 
-import themeStyles from './themeStyles';
+import { addons } from 'storybook/preview-api';
+import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
+import { applyTheme, themeNames } from './themeStyles';
 
 // RTL languages
 const rtlLanguages = ['arabic'];
@@ -104,47 +106,31 @@ const setDirection = (Story, context) => {
   return <Story {...context} />;
 };
 
-// Maps toolbar theme names to the CSS class applied to <body> so that
-// .mg-theme-* CSS custom property overrides take effect at runtime.
-const themeClasses = {
-  'PreventionWeb Theme': 'mg-theme-preventionweb',
-  'IRP Theme': 'mg-theme-irp',
-  'MCR2030 Theme': 'mg-theme-mcr',
-  'DELTA Resilience Theme': 'mg-theme-delta',
+// Docs-only pages do not run story decorators/loaders. Listen to the public
+// globals channel as well so toolbar changes update their CSS and body class.
+const channel = addons.getChannel();
+const updateTheme = ({ globals }) => {
+  applyTheme(globals.theme).catch(error =>
+    console.error('Theme loading failed', error)
+  );
 };
-
-const allThemeClasses = Object.values(themeClasses);
-
-// Load the default theme at module init so MDX docs-only pages render with
-// component CSS even before any story-bound decorator has run.
-let activeThemeStyle = themeStyles['Global UNDRR Theme'];
-activeThemeStyle.use();
-
-const themeDecorator = (Story, context) => {
-  const selectedTheme = context.globals.theme;
-
-  React.useEffect(() => {
-    const newThemeStyle = themeStyles[selectedTheme];
-    if (newThemeStyle && newThemeStyle !== activeThemeStyle) {
-      activeThemeStyle.unuse();
-      newThemeStyle.use();
-      activeThemeStyle = newThemeStyle;
-    }
-
-    // Apply the sub-brand class so .mg-theme-* CSS custom property overrides
-    // take effect. Remove all theme classes first, then add the new one.
-    document.body.classList.remove(...allThemeClasses);
-    const themeClass = themeClasses[selectedTheme];
-    if (themeClass) {
-      document.body.classList.add(themeClass);
-    }
-  }, [selectedTheme]);
-
-  return <Story {...context} />;
-};
+channel.on(GLOBALS_UPDATED, updateTheme);
+const initialThemeReady = applyTheme();
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => channel.off(GLOBALS_UPDATED, updateTheme));
+}
 
 /** @type { import('storybook').Preview } */
 const preview = {
+  beforeAll: async () => {
+    await initialThemeReady;
+  },
+  loaders: [
+    async ({ globals }) => {
+      await applyTheme(globals.theme);
+      return {};
+    },
+  ],
   parameters: {
     // `@storybook/addon-a11y` is registered in main.js with no configuration,
     // so it ran axe's default rule set. That set includes `best-practice`
@@ -156,12 +142,13 @@ const preview = {
     // sort. Scoping to the WCAG tags makes it mean what people already assume
     // it means. See unisdr/undrr-mangrove#1273.
     //
-    // `test` is deliberately left unset, which defaults to `'todo'`: the
+    // `test: 'todo'` preserves the existing advisory policy: the
     // addon reports in the panel and beside the test runner's output but does
     // not fail a build. Turning it to `'error'` is a decision for #1273,
     // after the existing findings have been triaged — not a side effect of
     // switching the test runner on.
     a11y: {
+      test: 'todo',
       // `runOnly` is an axe *run* option, so it belongs under `options` —
       // putting it in `config` is accepted silently and changes nothing.
       options: {
@@ -292,7 +279,7 @@ const preview = {
       defaultValue: 'Global UNDRR Theme',
       toolbar: {
         icon: 'paintbrush',
-        items: Object.keys(themeStyles).map(name => ({
+        items: themeNames.map(name => ({
           value: name,
           title: name,
         })),
@@ -302,7 +289,7 @@ const preview = {
     },
   },
 
-  decorators: [getLangCode, sbFrameReset, setDirection, themeDecorator],
+  decorators: [getLangCode, sbFrameReset, setDirection],
 
   tags: ['autodocs'],
 };

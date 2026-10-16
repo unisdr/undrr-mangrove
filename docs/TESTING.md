@@ -112,57 +112,53 @@ it('loads data on mount', async () => {
 });
 ```
 
-## Play functions with the Storybook test runner
+## Play functions with Vitest Browser Mode
 
-A story's `play` function runs in a real browser, so it can assert the things
-jsdom cannot represent: computed style, box geometry, scroll overflow, focus
-order after a real click. Most of the play functions in this library exist for
-exactly that reason — a jsdom copy of them would pass on a completely unstyled
-component.
+`yarn test-storybook` runs each story's render check and existing `play`
+assertions in real headless Chromium through `@storybook/addon-vitest` and
+Vitest's Playwright provider. Computed styles, box geometry, overflow and
+keyboard focus are tested in the browser. Jest unit tests remain a separate
+`yarn test` command using jsdom.
 
-The test runner drives a headless Chromium over a served Storybook. It runs
-every story twice over: a smoke test that the story renders without error, and,
-where one exists, the `play` function with its assertions.
-
-```bash
-# Build the Storybook the runner will drive
-yarn build
-
-# Serve it, then run the play functions against it
-yarn serve-storybook &
+```sh
+# Generate the Sass tokens once in a fresh checkout
+yarn scss
+# Install Chromium once per machine (CI also installs its system libraries)
+yarn playwright install --with-deps chromium
+# Run all stories, without building or serving Storybook
 yarn test-storybook
-
-# One story or one file
+# Filter by file or test name
 yarn test-storybook Table.stories
-
-# Stop the server when you are done
-kill %1
+yarn test-storybook -t 'Rendering check'
+# Keep a browser test session watching for changes
+yarn test-storybook:watch
 ```
 
-Arguments go straight after the script name. Yarn 4 does not need `npm`'s `--`
-separator and passes one through literally, so `yarn test-storybook -- Table`
-hands the runner a bare `--` and does not filter anything.
+Arguments go directly after the Yarn script name. The Storybook testing widget
+uses the same Vitest project. Storybook 10.6 applies preview/addon annotations
+automatically; do not add a second `setProjectAnnotations` setup file.
 
-`yarn test-storybook` needs a Storybook already running; it will not start one.
-`yarn serve-storybook` serves the built Storybook on port **6099** and
-`yarn test-storybook` points there, so the two pair up with no arguments. 6006
-is deliberately left to `yarn storybook`: sharing the port would make the server
-fail on `EADDRINUSE` while the runner quietly tested the dev server instead of
-the build. To run the play functions against a dev server on purpose:
+Storybook's global loader awaits the selected theme's lazy Sass chunk before
+rendering and assertions. Theme toolbar changes also update docs-only pages.
 
-```bash
-yarn storybook           # in one shell
-yarn test-storybook --url http://127.0.0.1:6006
+### Checks against the production build
+
+Vitest tests source modules, so the standalone browser gates still exercise
+the built site, its asset delivery and iframe integration:
+
+```sh
+yarn build
+yarn serve-storybook                       # port 6099, in another terminal
+yarn test:search-selection-browser
+yarn test:motion-browser
+yarn test:rich-content-browser
 ```
 
-The runner needs its browser once per machine:
+Port 6006 belongs to `yarn storybook`. The built-site server fails on
+`EADDRINUSE` so these gates cannot silently test a development server.
 
-```bash
-yarn run playwright install --with-deps chromium
-```
-
-CI runs the same commands in the `Build and Deploy` workflow, on every push to a
-pull request. A failing assertion fails the build.
+CI runs both the Vitest story suite and the production-build gates. A failed
+assertion fails the build.
 
 ### What cannot be asserted this way
 
@@ -175,8 +171,8 @@ they call, and one here does.
 and `getComputedStyle('#cc-main').position`. That is a deliberate trade: it is
 the only check in the repository that can tell a working consent bar from a
 broken one, and measured over three full runs it took about 978ms with no
-flakes behind Cloudflare. It is also the reason the runner's test timeout is
-raised to 60 seconds.
+flakes behind Cloudflare. Vitest's story test and hook timeouts are 60 seconds to preserve this live
+integration check.
 
 **Know what it costs before you debug a mystery red build.** `storybook.yml`
 has no `paths:` filter on its pull-request trigger, so this story gates *every*
@@ -190,11 +186,11 @@ is in the CDN bundle or in this story's selectors, not in the component.
 If a story genuinely cannot run headlessly, give it the `!test` tag and record
 the reason in the story rather than leaving a silent failure.
 
-## Storybook Vite evaluation
+## Storybook builder migration
 
-The opt-in [Vite builder spike](STORYBOOK-VITE-SPIKE.md) documents commands,
-parity evidence and remaining migration checks for #1355. The default builder
-and test runner remain unchanged.
+The [Vite migration report](STORYBOOK-VITE-SPIKE.md) records the #1355 spike,
+the 3.0 cutover and verification evidence. Storybook uses Vite; the published
+library bundles continue to use Webpack.
 
 ## Visual testing with Chromatic
 

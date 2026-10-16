@@ -22,7 +22,7 @@ GitHub Actions run on `unisdr/undrr-mangrove` again (2.0.1 was the first release
 
 - **The asset library** (`assets.undrr.org/mangrove/latest/`) is rebuilt from the fork's `dist` branch, not this repository's, whenever the GitLab [shared-web-assets](https://gitlab.com/undrr/common/shared-web-assets/) pipeline runs.
 
-If Actions stop on `unisdr/undrr-mangrove` again, run the pull request checks locally before merging (`yarn lint:check`, `yarn prettier:check`, `yarn test`, `yarn build`, `yarn validate-manifest` and, for component changes, `yarn test-storybook` against the built site; see `storybook.yml` for the exact steps), and publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable), as 2.0.0 was, without a provenance attestation.
+If Actions stop on `unisdr/undrr-mangrove` again, run the pull request checks locally before merging (`yarn lint:check`, `yarn prettier:check`, `yarn test`, `yarn build`, `yarn validate-manifest` and, for component changes, `yarn test-storybook` in Chromium Browser Mode plus the built-site browser gates; see `storybook.yml` for the exact steps), and publish with the [break-glass steps](#break-glass-fully-local-release-ciactions-unavailable), as 2.0.0 was, without a provenance attestation.
 
 ### Why not automated semantic-release?
 

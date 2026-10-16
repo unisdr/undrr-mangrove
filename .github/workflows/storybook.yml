@@ -25,10 +25,11 @@ on:
       - '.storybook/**'
       - '.github/workflows/storybook.yml'
       - 'package.json'
+      - 'yarn.lock'
+      - 'vitest.config.js'
       - 'webpack.config.js'
       - 'babel.config.js'
       - '.babelrc*'
-      # yarn.lock and tsconfig.json changes without package.json are rare enough to skip
       # Trigger the action only when files change in the paths defined here
     branches: ['main']
   # Allows you to run this workflow manually from the Actions tab
@@ -85,7 +86,7 @@ jobs:
           mv docs-build-temp _site
           cp dist _site -r
       # Jest first: it is the cheap suite, and it runs before the browser
-      # download and the 458 browser tests so an ordinary unit failure is
+      # download and browser tests so an ordinary unit failure is
       # reported in a couple of minutes instead of behind them.
       - name: Run tests with Jest 🧪
         run: |
@@ -109,19 +110,20 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
-      - name: Install the browser the test runner drives
+      - name: Install Chromium for Vitest and the built-site gates
         # The system libraries are apt packages outside the cached directory,
         # so they are installed either way; only the browser download is
-        # skipped on a cache hit. Resolve playwright-core's CLI explicitly:
-        # it is supplied transitively by the Storybook test runner, and Yarn 4
-        # does not expose undeclared transitive binaries via `yarn run`.
+        # skipped on a cache hit. playwright-core is an explicit dependency
+        # shared by the built-site gates and Vitest's Playwright provider.
         run: |
           playwright_cli=$(yarn node -p "require('path').join(require.resolve('playwright-core/package.json'), '..', 'cli.js')")
           yarn node "$playwright_cli" install-deps chromium
           if [ "${{ steps.playwright-cache.outputs.cache-hit }}" != 'true' ]; then
             yarn node "$playwright_cli" install chromium
           fi
-      - name: Run Storybook play functions 🎭
+      - name: Run Storybook stories in Vitest Browser Mode
+        run: yarn test-storybook
+      - name: Run browser gates against the production Storybook
         # 6099, not 6006: 6006 is `yarn storybook`'s port. The trap is the
         # teardown — without it the server outlived the step and was left
         # running for the rest of the job.
@@ -131,10 +133,10 @@ jobs:
           trap 'kill "$server" 2>/dev/null || true' EXIT
           curl --retry 30 --retry-delay 1 --retry-connrefused --silent --fail \
             --output /dev/null http://127.0.0.1:6099/index.json
+          yarn test:storybook-themes
           yarn test:search-selection-browser
           yarn test:motion-browser
           yarn test:rich-content-browser
-          yarn test-storybook --maxWorkers=2
       - name: Archive motion browser screenshots and results
         if: always()
         uses: actions/upload-artifact@v7
