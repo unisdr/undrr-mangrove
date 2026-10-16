@@ -8,6 +8,8 @@ import remarkGfm from 'remark-gfm';
 const currentFilePath = fileURLToPath(import.meta.url);
 const currentDirPath = path.dirname(currentFilePath);
 
+const viteSpike = process.env.MANGROVE_STORYBOOK_BUILDER === 'vite';
+
 export default {
   staticDirs: ['../stories/assets'],
   stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -29,7 +31,7 @@ export default {
     '@whitespace/storybook-addon-html',
     'storybook-addon-rtl',
     '@storybook/addon-a11y',
-    '@storybook/addon-webpack5-compiler-babel',
+    ...(!viteSpike ? ['@storybook/addon-webpack5-compiler-babel'] : []),
     '@chromatic-com/storybook',
   ],
 
@@ -103,8 +105,15 @@ export default {
     return config;
   },
 
+  ...(viteSpike && {
+    viteFinal: async config => {
+      const { configureViteSpike } = await import('./viteSpike.js');
+      return configureViteSpike(config);
+    },
+  }),
+
   framework: {
-    name: '@storybook/react-webpack5',
+    name: viteSpike ? '@storybook/react-vite' : '@storybook/react-webpack5',
     options: {},
   },
 
