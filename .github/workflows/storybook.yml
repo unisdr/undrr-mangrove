@@ -131,6 +131,7 @@ jobs:
           trap 'kill "$server" 2>/dev/null || true' EXIT
           curl --retry 30 --retry-delay 1 --retry-connrefused --silent --fail \
             --output /dev/null http://127.0.0.1:6099/index.json
+          yarn test:search-selection-browser
           yarn test:motion-browser
           yarn test:rich-content-browser
           yarn test-storybook --maxWorkers=2
