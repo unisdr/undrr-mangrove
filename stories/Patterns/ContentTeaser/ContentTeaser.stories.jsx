@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect, within } from 'storybook/test';
 import { ContentTeaser } from './ContentTeaser';
-import { teaserFixtures } from './contentTeaserFixtures';
+import { teaserFixtures, timedEventFixture } from './contentTeaserFixtures';
 
 export default {
   title: 'Patterns/Content teaser',
@@ -19,6 +19,10 @@ export const News = { args: { content: teaserFixtures.news } };
 export const Publication = { args: { content: teaserFixtures.publication } };
 export const Resource = { args: { content: teaserFixtures.resource } };
 export const Event = { args: { content: teaserFixtures.event } };
+export const EventWithTimes = {
+  name: 'Event with times and time zone',
+  args: { content: timedEventFixture },
+};
 export const Blog = { args: { content: teaserFixtures.blog } };
 export const Organization = {
   name: 'Organization',

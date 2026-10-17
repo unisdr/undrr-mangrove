@@ -88,7 +88,8 @@ describe('Content teaser contract', () => {
       'datetime',
       teaserFixtures.event.event.start.dateTime
     );
-    expect(container).toHaveTextContent('Europe/Geneva');
+    expect(container).toHaveTextContent('4–5 November 2026');
+    expect(container).not.toHaveTextContent('UTC');
     expect(container).not.toHaveTextContent('13 October');
   });
   test('date-only and incomplete events do not invent a time zone or range', () => {
@@ -632,3 +633,41 @@ test('a closing-date label and its time occupy one metadata flex item', () => {
     'mg-content-meta__before-title'
   );
 });
+
+test.each([
+  ['4', '5 November 2026', '2026-11-04', '2026-11-05', '4–5 November 2026'],
+  [
+    '30 November',
+    '2 December 2026',
+    '2026-11-30',
+    '2026-12-02',
+    '30 November–2 December 2026',
+  ],
+  [
+    '31 December 2026',
+    '2 January 2027',
+    '2026-12-31',
+    '2027-01-02',
+    '31 December 2026–2 January 2027',
+  ],
+])(
+  'localized range %s to %s preserves both machine-readable endpoints',
+  (start, end, startDate, endDate, visible) => {
+    const { container } = render(
+      <ContentTeaser
+        content={{
+          ...teaserFixtures.event,
+          event: {
+            start: { dateTime: startDate, text: start },
+            end: { dateTime: endDate, text: end },
+          },
+        }}
+      />
+    );
+    expect(container).toHaveTextContent(visible);
+    const dates = container.querySelectorAll('time');
+    expect(dates).toHaveLength(2);
+    expect(dates[0]).toHaveAttribute('datetime', startDate);
+    expect(dates[1]).toHaveAttribute('datetime', endDate);
+  }
+);

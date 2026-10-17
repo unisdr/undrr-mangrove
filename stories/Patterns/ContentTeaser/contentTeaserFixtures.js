@@ -51,15 +51,8 @@ export const teaserFixtures = {
     link: 'https://www.undrr.org/events',
     delivery: 'Online',
     event: {
-      start: {
-        dateTime: '2026-11-04T09:00:00+01:00',
-        text: '4 November 2026, 09:00',
-      },
-      end: {
-        dateTime: '2026-11-05T17:00:00+01:00',
-        text: '5 November 2026, 17:00',
-      },
-      timeZone: 'Europe/Geneva (UTC+01:00)',
+      start: { dateTime: '2026-11-04', text: '4' },
+      end: { dateTime: '2026-11-05', text: '5 November 2026' },
       location: 'Geneva, Switzerland',
     },
     summary: 'Exchange practical approaches to reducing disaster risk.',
@@ -224,3 +217,20 @@ Object.assign(teaserFixtures, {
       'A contributor working on disaster risk reduction and community resilience.',
   },
 });
+
+// Detailed participation view: retain timed endpoints and explicit zone context.
+export const timedEventFixture = {
+  ...teaserFixtures.event,
+  event: {
+    start: {
+      dateTime: '2026-11-04T09:00:00+01:00',
+      text: '4 November 2026, 9 a.m.',
+    },
+    end: {
+      dateTime: '2026-11-05T17:00:00+01:00',
+      text: '5 November 2026, 5 p.m.',
+    },
+    timeZone: 'Europe/Geneva (UTC+01:00)',
+    location: 'Geneva, Switzerland',
+  },
+};

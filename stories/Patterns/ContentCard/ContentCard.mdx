@@ -27,7 +27,7 @@ Definition, hazard-profile and coordination-platform cards are **Mangrove propos
 
 ## Decision dates and publication dates
 
-Event cards show the supplied occurrence range; programme-session cards show supplied session and exhibition schedules. Job cards show the closing date. All use native `time` elements and caller-localized role labels, such as “Event dates:”, “Session:” or “Closing date:”. Missing dates produce no placeholder and are never replaced by publication dates.
+Event cards show the supplied occurrence range (for example, “4–5 November 2026”); programme-session cards show supplied session and exhibition schedules. Job cards show the closing date. All use native `time` elements and caller-localized role labels, such as “Event dates:”, “Session:” or “Closing date:”. Missing dates produce no placeholder and are never replaced by publication dates.
 
 For the two-date variant, also supply `published: { label: 'Published on:', dateTime: '2026-10-13', text: '13 October 2026' }`. Both roles must be labelled. This is optional metadata within the same profile, not another editorial profile or layout. Publication follows the decision date and supplied status. A valid card date without a role label throws; incomplete dates are omitted. These additions apply to Event and Opportunity/job cards; they do not enable publication dates in unrelated card projections.
 

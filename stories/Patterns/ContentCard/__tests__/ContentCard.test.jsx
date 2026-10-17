@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { axe } from 'jest-axe';
 import { ContentCard } from '../ContentCard';
 import { ContentTeaser } from '../../ContentTeaser/ContentTeaser';
+import { timedEventFixture } from '../../ContentTeaser/contentTeaserFixtures';
 import {
   cardFixtures,
   mixedLanguageCards,
@@ -287,7 +288,10 @@ test('optional publication and explicit states do not invent or replace missing 
 });
 
 test('labels remain caller-localized and date ranges preserve time zones', () => {
-  const source = cardsWithPublishedDates[0];
+  const source = {
+    ...cardsWithPublishedDates[0],
+    event: { ...timedEventFixture.event, label: 'Event dates:' },
+  };
   const { container } = render(
     <ContentCard
       content={{

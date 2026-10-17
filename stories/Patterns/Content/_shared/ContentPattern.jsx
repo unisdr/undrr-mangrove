@@ -82,8 +82,8 @@ function TeaserRange({ value }) {
       <TeaserDate value={value.start} />
       {validDate(value.end) && (
         <>
-          {' '}
-          – <TeaserDate value={value.end} />
+          {'–'}
+          <TeaserDate value={value.end} />
         </>
       )}
       {value.timeZone && <> ({value.timeZone})</>}

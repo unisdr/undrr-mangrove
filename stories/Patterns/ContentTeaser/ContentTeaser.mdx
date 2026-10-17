@@ -29,6 +29,16 @@ All metadata is optional. The title and resolved destination are always required
 
 The separately exported `DRUPAL_CONTENT_PATTERNS` maps bundle identifiers to `{ type, profile }` selections in the Mangrove Drupal integration layer. Spread a binding into the normalized content record. Use an own-property lookup before selecting a mapped value. It does not extract Drupal fields, sanitize body HTML, choose labels or resolve URLs. Unknown bundles keep the existing renderer during migration. Taxonomy-term results remain outside this node-pattern contract.
 
+## Event date ranges
+
+Use concise date ranges for discovery listings: **4–5 November 2026**. Show the month once within the same month, include both months when they differ and include both years when crossing a year boundary. Use an unspaced en dash. Include times and an explicit time zone when readers need them to plan participation, as in programme sessions or a detailed event view.
+
+The caller supplies localized endpoint text and complete machine-readable dates; the renderer does not parse or abbreviate display strings. For the compact example, `start` is `{ dateTime: '2026-11-04', text: '4' }` and `end` is `{ dateTime: '2026-11-05', text: '5 November 2026' }`. Each endpoint retains its own native `time` element. Keep the full schedule in the source record when supplying a date-only listing projection.
+
+<Canvas of={TeaserStories.Event} />
+
+<Canvas of={TeaserStories.EventWithTimes} />
+
 ## Shared content contract
 
 Select a source-independent `type` and optional editorial `profile`. Omitting a profile selects the archetype's documented `defaultProfile`; an unknown or incompatible profile throws. General/default profiles have their own audited omission rules.
@@ -132,3 +142,5 @@ Approve the canonical content contract and domain policy, verify live source ada
 
 - Organize specifications under content families with separate full-page, teaser and card status; keep the shared renderer and existing story routes.
 - Add experimental horizontal content patterns for all 15 indexed Drupal node bundles, with audited field order and media rules, structured attribution, optional taxonomy links, semantic dates and plain-text summaries.
+
+- Use a compact date-only event listing example, preserve a separate timed example and join range endpoints with an unspaced en dash.
