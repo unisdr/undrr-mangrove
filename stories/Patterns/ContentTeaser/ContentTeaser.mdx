@@ -76,7 +76,7 @@ This proposal reuses `title`, `image`, `summary`, `labels` and `link` from [#885
 
 ## Omission and responsive behaviour
 
-No metadata or image creates no empty container. Resource/event images and hidden people profile fields remain omitted even if supplied. Minimum records still have useful native heading links. The shared horizontal layout places configured media beside text on wider screens, then stacks it at narrow widths; media-free records use the whole reading width. Themes own the shared horizontal book-card surfaces.
+No metadata or image creates no empty container. Resource/event images and hidden people profile fields remain omitted even if supplied. Minimum records still have useful native heading links. The shared horizontal layout places configured media beside text on wider screens, then stacks it at narrow widths; media-free records use the whole reading width. Horizontal content teasers use the standard card enclosure by default, through independent `--mg-content-teaser-*` surface tokens. Text is inset, photographs meet the leading edge (top edge on narrow screens) and complete covers/logos remain inset and uncropped. Forced colours use an explicit boundary. Publication book cards retain their separate surface defaults.
 
 Use `ul.mg-content-teaser-list` with one teaser per `li` for a responsive reading list. The class preserves list semantics, spaces rows and removes duplicate card bottom margins. Choose a suitable reading width rather than forcing these detailed teasers into a narrow card gallery. Covers are not forced into equal-height stages.
 
@@ -125,7 +125,7 @@ Static React rendering includes complete titles, destinations and metadata. Nati
 
 - Published React import: `import { ContentTeaser } from "@undrr/undrr-mangrove/components/ContentTeaser.js"`; Drupal bindings use `import { DRUPAL_CONTENT_PATTERNS } from "@undrr/undrr-mangrove/components/DrupalContentPatterns.js"`. The repository barrel `src/index.js` also re-exports them for repository development; the published npm package has no root entry.
 - Pattern selection: each `Content/{Family}/patterns.js` owns its teaser projection alongside full-page/card status. `contentTeaserPatterns.js` assembles those projections for the shared renderer.
-- Styles: `content-teaser.scss` adds wrapping, metadata rhythm, list semantics, independent metadata-link focus and logo framing. It uses shared `--mg-card-*`, `--mg-card-publication-*` and spacing tokens; horizontal surfaces use independent `--mg-content-teaser-*` tokens; publication-only overrides do not style unrelated results. Shared metadata uses `--mg-content-meta-font-size`.
+- Styles: `content-teaser.scss` adds wrapping, metadata rhythm, list semantics, independent metadata-link focus and logo framing. The independent `--mg-content-teaser-*` surface tokens default to the standard card tokens; publication-only overrides do not style these results. `--mg-content-teaser-padding` controls the inner text and complete-media inset, with zero outer padding for edge-aligned photographs. Shared metadata uses `--mg-content-meta-font-size`.
 - No hydration registration: the complete teaser markup needs no client initialization.
 
 ## Review gates before production adoption
@@ -146,3 +146,5 @@ Approve the canonical content contract and domain policy, verify live source ada
 - Use a compact date-only event listing example, preserve a separate timed example and join range endpoints with an unspaced en dash.
 
 - Match linked category labels to the resting label style; retain native taxonomy links, hover underlines and keyboard-focus underlines with a visible focus ring. Other metadata links and title links remain underlined.
+
+- Enclose horizontal teasers using themeable standard-card surface defaults, inset text and complete covers/logos, and edge-aligned photographs. Preserve forced-colour boundaries and native focus rings.

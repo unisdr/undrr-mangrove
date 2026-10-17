@@ -55,6 +55,8 @@
 }
 
 .mg-content-card.mg-content-pattern--logo > .mg-card__visual {
+  // Brand marks need clear space; photographs intentionally meet the edge.
+  padding: var(--mg-card-padding);
   outline: none;
 }
 

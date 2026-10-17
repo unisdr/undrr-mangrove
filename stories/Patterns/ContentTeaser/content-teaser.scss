@@ -3,6 +3,7 @@
  * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Patterns/ContentTeaser/ContentTeaser.mdx
  */
 @use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
 
 .mg-content-teaser,
 .mg-content-card {
@@ -117,14 +118,62 @@
   }
 }
 
-// Horizontal listing surfaces have their own contract, independent of book cards.
+// Enclosed listing surfaces follow horizontal cards, independently of book-card
+// publication tokens. Clip only photographs so native focus rings stay visible.
 .mg-card.mg-content-teaser {
   background: var(--mg-content-teaser-background);
-  padding: var(--mg-content-teaser-padding);
+  padding: 0;
+  gap: 0;
   border-radius: var(--mg-content-teaser-border-radius);
   box-shadow: var(--mg-content-teaser-shadow);
 
+  > .mg-card__content {
+    padding: var(--mg-content-teaser-padding);
+  }
+
+  &:has(> .mg-card__visual) {
+    gap: 0;
+  }
+
+  > .mg-card__visual {
+    margin: var(--mg-content-teaser-padding);
+
+    @media (min-width: $mg-breakpoint-mobile) {
+      margin-inline-end: 0;
+      max-inline-size: none;
+    }
+  }
+
+  &[data-content-media="photo"] {
+    > .mg-card__visual {
+      align-self: stretch;
+      margin: 0;
+      max-inline-size: none;
+      border: 0;
+      aspect-ratio: 16 / 9;
+      border-start-start-radius: var(--mg-content-teaser-border-radius);
+      border-start-end-radius: var(--mg-content-teaser-border-radius);
+
+      @media (min-width: $mg-breakpoint-mobile) {
+        aspect-ratio: auto;
+        border-start-end-radius: 0;
+        border-end-start-radius: var(--mg-content-teaser-border-radius);
+      }
+    }
+
+    .mg-card__image {
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+    }
+  }
+
   &:hover {
     box-shadow: var(--mg-content-teaser-shadow-hover);
+  }
+
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
   }
 }

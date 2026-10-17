@@ -2280,7 +2280,7 @@ npm run build</code></pre>
     summary:
       'Shared experimental teaser renderer; content families own separate page, teaser and card presentations.',
     description:
-      'Shared experimental horizontal teaser renderer driven by content-family specifications. Its input is a presentation projection, not a canonical domain model. Cards use the separate ContentCard renderer and field projection. See content-patterns.json for family-specific full-page, teaser and card status; stubs are not implemented.',
+      'Shared experimental horizontal teaser renderer with an enclosed standard-card surface, inset text, edge-aligned photographs and complete inset covers/logos. Independent content-teaser surface tokens default to the standard card tokens. Content-family specifications select fields. Its input is a presentation projection, not a canonical domain model. Cards use the separate ContentCard renderer and field projection. See content-patterns.json for family-specific full-page, teaser and card status; stubs are not implemented.',
     cssClasses: [
       'mg-content-teaser',
       'mg-content-meta__before-title',

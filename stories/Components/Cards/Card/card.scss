@@ -230,6 +230,7 @@
 
   // Stretched link overlay (covers entire card)
   &__title a::before {
+    cursor: pointer;
     bottom: 0;
     content: "";
     left: 0;
@@ -439,6 +440,17 @@ $card-variant-colours: (
 // unlinked label offering a click it cannot answer.
 span.mg-card__label {
   cursor: auto;
+}
+
+// A stretched native title link makes the surface clickable. Unlinked labels
+// must not sit above it as dead click targets; real label links stay independent.
+.mg-card:not(.mg-card--no-link):has(.mg-card__title a[href]:not([href=""])) {
+  cursor: pointer;
+
+  span.mg-card__label {
+    cursor: inherit;
+    pointer-events: none;
+  }
 }
 
 // Whole-card hover affordances belong to cards that are clickable. Doubled

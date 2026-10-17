@@ -108,31 +108,46 @@ try {
         `${theme}: metadata should be secondary to summary`
       );
       if (!mobile) {
-        const override = await cards.first().evaluate(async card => {
-          const summary = card.querySelector('.mg-card__summary');
-          const originalSummarySize = getComputedStyle(summary).fontSize;
+        const original = await cards.first().evaluate(card => {
+          const summarySize = getComputedStyle(
+            card.querySelector('.mg-card__summary')
+          ).fontSize;
+          const metadataSize = getComputedStyle(
+            card.querySelector('.mg-card__label')
+          ).fontSize;
           card.style.setProperty('--mg-content-meta-font-size', '19px');
-          // Reduced-motion styles retain near-zero transitions; allow them to settle.
-          await new Promise(resolve =>
-            requestAnimationFrame(() => requestAnimationFrame(resolve))
-          );
-          const metadata = [
-            ...card.querySelectorAll(
-              'time, .mg-content-meta__attribution li, .mg-card__label'
-            ),
-          ];
-          const result =
-            metadata.every(el => getComputedStyle(el).fontSize === '19px') &&
-            getComputedStyle(summary).fontSize === originalSummarySize;
-          card.style.removeProperty('--mg-content-meta-font-size');
-          await new Promise(resolve =>
-            requestAnimationFrame(() => requestAnimationFrame(resolve))
-          );
-          return result;
+          return { summarySize, metadataSize };
         });
-        assert(
-          override,
-          `${theme}: metadata token override must preserve summary size`
+        // Poll computed values rather than assuming a fixed number of frames
+        // settles reduced-motion transitions while build/browser jobs compete.
+        await page.waitForFunction(
+          expected => {
+            const card = document.querySelector('.mg-content-teaser');
+            return (
+              [
+                ...card.querySelectorAll(
+                  'time, .mg-content-meta__attribution li, .mg-card__label'
+                ),
+              ].every(el => getComputedStyle(el).fontSize === '19px') &&
+              getComputedStyle(card.querySelector('.mg-card__summary'))
+                .fontSize === expected.summarySize
+            );
+          },
+          original,
+          { timeout: 5000 }
+        );
+        await cards
+          .first()
+          .evaluate(card =>
+            card.style.removeProperty('--mg-content-meta-font-size')
+          );
+        await page.waitForFunction(
+          expected =>
+            getComputedStyle(
+              document.querySelector('.mg-content-teaser .mg-card__label')
+            ).fontSize === expected.metadataSize,
+          original,
+          { timeout: 5000 }
         );
       }
       const geometry = await page.evaluate(() => {
@@ -158,8 +173,16 @@ try {
             const text = card
               .querySelector('.mg-card__content')
               .getBoundingClientRect();
+            const media = card.dataset.contentMedia;
+            const content = card.querySelector('.mg-card__content');
+            const expectedTop =
+              text.top +
+              (media === 'photo'
+                ? 0
+                : parseFloat(getComputedStyle(content).paddingTop));
             return (
-              Math.abs(visual.top - text.top) < 2 && visual.right <= text.left
+              Math.abs(visual.top - expectedTop) < 2 &&
+              visual.right <= text.left
             );
           }),
           loaded: [...document.images].every(
@@ -170,6 +193,77 @@ try {
       assert.equal(geometry.overflow, false, `${theme}: viewport overflow`);
       assert.equal(geometry.textOutsideCards, false, `${theme}: text overflow`);
       assert.equal(geometry.loaded, true);
+      const surface = await cards.first().evaluate(card => {
+        const content = card.querySelector('.mg-card__content');
+        const visual = card.querySelector('.mg-card__visual');
+        const outer = card.getBoundingClientRect();
+        const image = visual.getBoundingClientRect();
+        return {
+          padding: parseFloat(getComputedStyle(content).paddingInlineStart),
+          shadow: getComputedStyle(card).boxShadow,
+          outline: getComputedStyle(card).outlineStyle,
+          edge:
+            Math.abs(outer.top - image.top) < 1 &&
+            Math.min(
+              Math.abs(outer.left - image.left),
+              Math.abs(outer.right - image.right)
+            ) < 1,
+          clipped: getComputedStyle(visual).overflow === 'hidden',
+        };
+      });
+      assert(surface.padding > 0, `${theme}: teaser text needs an inset`);
+      assert(surface.edge, `${theme}: photo should meet the card edge`);
+      assert(
+        surface.clipped,
+        `${theme}: only the photo should clip at the radius`
+      );
+      if (mobile) assert.notEqual(surface.outline, 'none');
+      else assert.notEqual(surface.shadow, 'none');
+      const firstLabel = cards.first().locator('span.mg-card__label').first();
+      await firstLabel.scrollIntoViewIfNeeded();
+      const labelHit = await firstLabel.evaluate(label => {
+        const rect = label.getBoundingClientRect();
+        const hit = document.elementFromPoint(
+          rect.x + rect.width / 2,
+          rect.y + rect.height / 2
+        );
+        return {
+          cursor: getComputedStyle(hit).cursor,
+          destination: hit.closest('a')?.getAttribute('href'),
+        };
+      });
+      assert.equal(labelHit.cursor, 'pointer');
+      assert.equal(labelHit.destination, 'https://www.undrr.org/news');
+      if (!mobile) {
+        const isolated = await cards.first().evaluate(async card => {
+          const before = getComputedStyle(card).backgroundColor;
+          card.style.setProperty(
+            '--mg-card-publication-background',
+            'rgb(255, 0, 255)'
+          );
+          await new Promise(resolve =>
+            requestAnimationFrame(() => requestAnimationFrame(resolve))
+          );
+          const unchanged = getComputedStyle(card).backgroundColor === before;
+          card.style.removeProperty('--mg-card-publication-background');
+          card.style.setProperty(
+            '--mg-content-teaser-background',
+            'rgb(1, 2, 3)'
+          );
+          await new Promise(resolve =>
+            requestAnimationFrame(() => requestAnimationFrame(resolve))
+          );
+          const overridden =
+            getComputedStyle(card).backgroundColor === 'rgb(1, 2, 3)';
+          card.style.removeProperty('--mg-content-teaser-background');
+          return unchanged && overridden;
+        });
+        assert(
+          isolated,
+          `${theme}: teaser surfaces must have independent token overrides`
+        );
+      }
+
       if (!mobile)
         assert.equal(
           geometry.horizontal,
@@ -242,6 +336,24 @@ try {
       );
       await page.close();
     }
+  }
+  for (const story of [
+    'no-link-vertical-card',
+    'button-only-vertical-card',
+    'legacy-empty-href-markup',
+  ]) {
+    const page = await browser.newPage();
+    await page.goto(
+      `${base}/iframe.html?id=components-cards-vertical-card--${story}&viewMode=story`
+    );
+    const card = page.locator('.mg-card').first();
+    await card.waitFor();
+    assert.notEqual(
+      await card.evaluate(el => getComputedStyle(el).cursor),
+      'pointer',
+      `${story}: unlinked card surface must not imply navigation`
+    );
+    await page.close();
   }
   console.log(
     'Content teaser browser checks passed: five themes, desktop and 320px RTL/forced colours, reduced motion, native focus and complete covers.'

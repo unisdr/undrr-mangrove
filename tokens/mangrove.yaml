@@ -570,11 +570,11 @@ content-meta:
     $description: Dates, attribution and supporting metadata in content teasers and cards; summaries retain body size.
 
 content-teaser:
-  background: { $type: color, $value: 'transparent', $format: literal, $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
-  padding: { $type: dimension, $value: '0px', $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
-  border-radius: { $type: dimension, $value: '0px', $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
-  shadow: { $type: shadow, $value: 'none', $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
-  shadow-hover: { $type: shadow, $value: 'none', $description: 'Independent content-teaser surface; publication surfaces do not determine this value.' }
+  background: { $type: color, $value: '{card.background}', $format: literal, $description: 'Content teaser surface, defaulting to the standard card background independently of publication surfaces.' }
+  padding: { $type: dimension, $value: '{card.padding}', $description: 'Content inset and complete-cover/logo inset inside the enclosed horizontal teaser; photographs meet the outer edge.' }
+  border-radius: { $type: dimension, $value: '{card.border-radius}', $description: 'Content teaser enclosure radius, defaulting to the standard card radius.' }
+  shadow: { $type: shadow, $value: '{card.shadow}', $description: 'Content teaser soft enclosure, defaulting to the standard card surface at rest.' }
+  shadow-hover: { $type: shadow, $value: '{card.shadow-hover}', $description: 'Content teaser soft enclosure on hover, defaulting to the standard card hover surface.' }
 
 content-card:
   title-font-size: { $type: dimension, $value: '{font-size.500}', $format: literal, $description: 'Title size in vertical content card layouts.' }

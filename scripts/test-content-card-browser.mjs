@@ -65,6 +65,18 @@ try {
             naturalRatio: cover.naturalWidth / cover.naturalHeight,
             photoRatio: photo.width / photo.height,
             logoFit: getComputedStyle(logo).objectFit,
+            logoInset: (() => {
+              const stage = logo.parentElement;
+              const image = logo.getBoundingClientRect();
+              const outer = stage.getBoundingClientRect();
+              const style = getComputedStyle(stage);
+              return (
+                parseFloat(style.paddingInlineStart) > 0 &&
+                parseFloat(style.paddingInlineEnd) > 0 &&
+                image.left > outer.left &&
+                image.right < outer.right
+              );
+            })(),
             vacancyHasHiddenFields: Boolean(
               vacancy.querySelector('img,.mg-card__summary,.mg-card__meta')
             ),
@@ -89,6 +101,11 @@ try {
           `${theme}/${layout}: photo should remain landscape`
         );
         assert.equal(geometry.logoFit, 'contain');
+        assert.equal(
+          geometry.logoInset,
+          true,
+          `${theme}/${layout}: logo needs clear space on both sides`
+        );
         assert.equal(geometry.vacancyHasHiddenFields, false);
         const vacancy = page.locator('[data-content-type="opportunity"]');
         assert.equal(await vacancy.locator('time').count(), 1);
