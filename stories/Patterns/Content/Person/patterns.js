@@ -16,7 +16,7 @@ export const personPatterns = {
     fullPage: {
       status: 'stub',
       intent:
-        'A full person page. Information hierarchy, content requirements, actions and responsive behaviour have not been designed.',
+        'A full person page. The full-page information hierarchy, detailed content selection, actions and responsive behaviour have not been designed.',
     },
     teaser: {
       status: 'experimental',

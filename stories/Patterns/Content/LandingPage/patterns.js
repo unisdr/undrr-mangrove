@@ -9,7 +9,7 @@ export const landingPagePatterns = {
     readerNeeds: [
       'Understand the page’s purpose and whether it addresses the reader’s needs.',
       'Identify prioritized routes to relevant content, services or actions.',
-      'Explore related material and retain orientation across a hub where persistent navigation is appropriate. The CMS editor used to assemble the page does not determine its archetype.',
+      'Explore related material and retain orientation across a hub where persistent navigation is appropriate.',
     ],
   },
   presentations: {

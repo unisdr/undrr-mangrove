@@ -6,7 +6,7 @@ import { CONTENT_FAMILIES } from './contentFamilies';
 
 # Content patterns
 
-Content archetypes organize patterns by reader need rather than CMS bundle. **Article** covers news and commentary; **Event** covers general events and programme sessions; **Reference entry** covers definitions and hazard profiles; **Opportunity** starts with a job profile. Organization includes general and coordination-platform profiles.
+Content archetypes organize patterns by reader need rather than CMS bundle. The registry and guides also call an archetype a content family. **Article** covers news and commentary; **Event** covers general events and programme sessions; **Reference entry** covers definitions and hazard profiles; **Opportunity** starts with a job profile. Organization includes general and coordination-platform profiles.
 
 Keep three decisions separate: **archetype/profile** describes editorial meaning, **presentation** selects a full page, teaser or card, and **layout** defines geometry such as a horizontal listing. A profile is not another card variant. Existing page examples appear beneath their owning archetype: Article, Publication, Collection and Landing page. Hub home is a Landing page variant; persistent hub navigation also supports detail pages without redefining their content types. Existing story and docs URLs remain available through explicit stable IDs.
 
@@ -67,6 +67,12 @@ For example, Resource has implemented experimental teaser and card presentations
   Shared teaser implementation and contract reference
 </LinkTo>
 
+## Adoption decisions
+
+Audited Drupal field selection establishes provenance, not suitability for every listing. Before adopting compact cards for event or job discovery, assess whether readers need occurrence dates, deadlines or availability to choose a result. Revise the card selection or use the richer teaser where those details are essential. The current experimental cards preserve the audited omissions; the archetype’s broader reader needs remain design criteria.
+
+Resource, Event and Publication can overlap in subject matter. Classify by the reader’s main task: using or learning from a resource, participating at a scheduled time, or identifying and reading a published document. The authoring tool does not determine an archetype. Publication and privacy decisions apply across all presentations, including commitment funding, beneficiary and contact information.
+
 ## AI and integration
 
 The generated `content-patterns.json` catalogue records every family's model and presentation status separately from the usable component catalogue. Stubs carry no import or component entry. AI agents must preserve those status distinctions and must not fabricate a working page from a stub. Drupal bindings are included in the discovery catalogue; field adapters, domain policy and canonical schema decisions remain explicit production gates.
@@ -75,6 +81,6 @@ The generated `content-patterns.json` catalogue records every family's model and
 
 ### 0.1.0 (16 October 2026)
 
-- Organize content patterns by family, connect existing references and experimental teasers, reserve explicit full-page stubs, and implement card field projections with vertical/book layouts.
+- Organize content patterns by family, connect existing references and experimental teasers, reserve explicit full-page stubs and implement card field projections with vertical and book layouts.
 
 - Describe all archetypes through provisional reader and functional needs informed by Drupal content definitions, independently of presentation field selection.

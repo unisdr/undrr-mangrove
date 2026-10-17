@@ -9,14 +9,14 @@ export const resourcePatterns = {
     readerNeeds: [
       'Understand the intended use, audience and provider, and assess relevance to a task or learning goal.',
       'Assess format, delivery, location and access; include level and duration when relevant to learning resources.',
-      'Reach the resource or provider and understand the next step. Dated participation belongs with Event; a document whose bibliographic identity is central belongs with Publication.',
+      'Reach the resource or provider and understand the next step.',
     ],
   },
   presentations: {
     fullPage: {
       status: 'stub',
       intent:
-        'A full resource page. Information hierarchy, content requirements, actions and responsive behaviour have not been designed.',
+        'A full resource page. The full-page information hierarchy, detailed content selection, actions and responsive behaviour have not been designed.',
     },
     teaser: {
       status: 'experimental',

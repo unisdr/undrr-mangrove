@@ -16,7 +16,7 @@ export const referenceEntryPatterns = {
     fullPage: {
       status: 'stub',
       intent:
-        'A full reference-entry page. Information hierarchy, content requirements, actions and responsive behaviour have not been designed.',
+        'A full reference-entry page. The full-page information hierarchy, detailed content selection, actions and responsive behaviour have not been designed.',
     },
     teaser: {
       status: 'experimental',

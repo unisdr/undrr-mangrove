@@ -16,7 +16,7 @@ export const opportunityPatterns = {
     fullPage: {
       status: 'stub',
       intent:
-        'A full opportunity page. Information hierarchy, content requirements, actions and responsive behaviour have not been designed.',
+        'A full opportunity page. The full-page information hierarchy, detailed content selection, actions and responsive behaviour have not been designed.',
     },
     teaser: {
       status: 'experimental',

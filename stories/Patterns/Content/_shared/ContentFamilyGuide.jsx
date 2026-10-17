@@ -97,8 +97,9 @@ export function ContentFamilyGuide({ family, children, cardExamples }) {
           Profiles select meaning and metadata within this archetype. They are
           independent of presentation (page, teaser, card) and layout. The
           implemented teaser profiles are experimental; their contracts remain
-          provisional. Card layouts select their own fields and do not establish
-          a working full page.
+          provisional. Card presentations select their own fields; vertical and
+          book layouts share that selection. Neither establishes a working full
+          page.
         </p>
         <ul>
           {Object.entries(family.profiles).map(([id, profile]) => (

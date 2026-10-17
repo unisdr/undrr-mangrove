@@ -16,7 +16,7 @@ export const eventPatterns = {
     fullPage: {
       status: 'stub',
       intent:
-        'A full event page. Information hierarchy, content requirements, actions and responsive behaviour have not been designed.',
+        'A full event page. The full-page information hierarchy, detailed content selection, actions and responsive behaviour have not been designed.',
     },
     teaser: {
       status: 'experimental',
@@ -107,7 +107,7 @@ export const eventPatterns = {
     'programme-session': {
       name: 'Programme session',
       intent:
-        'A programme session with schedules, exhibition dates, room hierarchy and distinct taxonomies.',
+        'A scheduled contribution within a larger programme, with its own purpose and participation context.',
       presentations: {
         teaser: {
           status: 'experimental',

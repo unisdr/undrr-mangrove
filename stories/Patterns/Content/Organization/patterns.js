@@ -16,7 +16,7 @@ export const organizationPatterns = {
     fullPage: {
       status: 'stub',
       intent:
-        'A full organization page. Information hierarchy, content requirements, actions and responsive behaviour have not been designed.',
+        'A full organization page. The full-page information hierarchy, detailed content selection, actions and responsive behaviour have not been designed.',
     },
     teaser: {
       status: 'experimental',
@@ -58,7 +58,7 @@ export const organizationPatterns = {
     general: {
       name: 'General',
       intent:
-        'An organization with identity, complete logo, locations and categories.',
+        'An organization described through its mandate, activities and areas of work.',
       presentations: {
         teaser: {
           status: 'experimental',

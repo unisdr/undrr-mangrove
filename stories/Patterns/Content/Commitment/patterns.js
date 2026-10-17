@@ -9,14 +9,14 @@ export const commitmentPatterns = {
     readerNeeds: [
       'Understand who is responsible, what is promised, where it applies and the intended timeframe.',
       'Assess status, deliverables, beneficiaries and alignment with relevant goals when published.',
-      'Follow public progress reports and supporting evidence. Respect publication decisions for funding, donor, beneficiary and contact details.',
+      'Follow public progress reports and supporting evidence.',
     ],
   },
   presentations: {
     fullPage: {
       status: 'stub',
       intent:
-        'A full commitment page. Information hierarchy, content requirements, actions and responsive behaviour have not been designed.',
+        'A full commitment page. The full-page information hierarchy, detailed content selection, actions and responsive behaviour have not been designed.',
     },
     teaser: {
       status: 'experimental',
