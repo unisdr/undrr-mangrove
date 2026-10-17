@@ -11,9 +11,9 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
-_Notable cross-cutting changes between releases land here. Per-component changes belong in the component's MDX changelog._
-
 ### Repository maintenance
+
+- Migrated Storybook to the Vite builder and its supported Vitest Browser Mode integration with Playwright Chromium. Themes load in separate cached chunks; story assertions await the selected CSS, while production-site theme, search, motion and rich-content gates remain in CI. The published library bundle build and Jest unit tests retain their existing toolchains. See [#1355](https://github.com/unisdr/undrr-mangrove/issues/1355).
 
 - **Sass modules:** migrated all seven bundles and component/font dependencies to `@use` / `@forward`, with concise internal member access, explicit placeholder dependencies and unchanged published paths. Import-only bridges preserve legacy pre-import configuration and removed-variable warnings; new builds use `with` for font faces, asset paths and tab configuration. Public `variables` retains ordered root declarations while internal CSS-free configuration prevents legacy partial imports resetting caller overrides. Full entries retain shared mixin/breakpoint helpers. Configure before first load for predictable composition: explicit late `with` errors and unrelated globals do not reconfigure loaded modules. Imported/used member reassignment can affect subsequent evaluation, but not already-emitted CSS; legacy imports may still duplicate CSS. Equivalence covers documented top-level bundles and subsets; selector-nested full-bundle imports may change parent-selector evaluation. Seven-bundle comparison against the integrated 2.1.1 release baseline preserves all declarations and cascade order, allowing only four selector-list permutations from upstream `@extend`. ([#683](https://github.com/unisdr/undrr-mangrove/issues/683))
 

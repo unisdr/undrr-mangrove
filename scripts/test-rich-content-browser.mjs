@@ -28,7 +28,7 @@ async function open(page, story, theme, rtl) {
   url.searchParams.set('viewMode', 'story');
   url.searchParams.set(
     'globals',
-    `theme:${theme};locale:${rtl ? 'arabic' : 'english'};a11y.manual:true`
+    `theme:${theme};locale:${rtl ? 'arabic' : 'english'};a11y.manual:!true`
   );
   await page.goto(url.href);
   await page
