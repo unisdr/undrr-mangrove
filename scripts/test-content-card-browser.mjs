@@ -97,6 +97,46 @@ try {
           await page.locator('[data-content-type="event"] time').count(),
           6
         );
+        const category = page
+          .locator('[data-content-type="resource"] .mg-card__label[href]')
+          .first();
+        assert.equal(
+          await category.evaluate(
+            el => getComputedStyle(el).textDecorationLine
+          ),
+          'none'
+        );
+        assert.equal(
+          await page
+            .locator('[data-content-type="resource"] .mg-card__title a')
+            .evaluate(el => getComputedStyle(el).textDecorationLine),
+          'underline'
+        );
+        await category.hover();
+        assert.equal(
+          await category.evaluate(
+            el => getComputedStyle(el).textDecorationLine
+          ),
+          'underline'
+        );
+        await page.mouse.move(0, 0);
+        // Keyboard focus adds an underline and retains the shared focus ring.
+        await page.locator('body').evaluate(el => {
+          el.tabIndex = -1;
+          el.focus();
+        });
+        await page.keyboard.press('Tab');
+        await category.focus();
+        const focusedCategory = await category.evaluate(el => {
+          const style = getComputedStyle(el);
+          return {
+            decoration: style.textDecorationLine,
+            ring: style.outlineStyle !== 'none' || style.boxShadow !== 'none',
+          };
+        });
+        assert.equal(focusedCategory.decoration, 'underline');
+        assert.equal(focusedCategory.ring, true);
+        await category.blur();
         // Forced colours intentionally replace authored background colours.
         if (!mobile) {
           const originalBackground = await page.evaluate(() => {

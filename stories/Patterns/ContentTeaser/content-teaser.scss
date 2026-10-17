@@ -84,6 +84,18 @@
   }
 }
 
+// Category links share the resting label treatment. Other metadata links keep
+// their ordinary underline; categories reveal theirs on hover and keyboard focus.
+.mg-content-meta__metadata-link.mg-card__label {
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+}
+
 .mg-content-pattern--logo > .mg-card__visual {
   border: 0;
 }

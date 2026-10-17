@@ -45,6 +45,8 @@ The profile supplies a default media role. A caller can supply `image.kind` (`ph
 
 <Canvas of={Stories.ResourceCover} />
 
+Linked category labels use the same resting treatment as unlinked labels. Hover and keyboard focus reveal an underline, with a visible focus ring for keyboard navigation. Ordinary metadata links and the primary title retain their underline.
+
 ## Missing media and labels
 
 <Canvas of={Stories.MissingMedia} />
@@ -77,3 +79,5 @@ Shared metadata uses the UI font and `--mg-content-meta-font-size`. Card title s
 - Share field semantics, URL checks, metadata styling and field-based date-role validation with teasers. Keep source integration bindings in their own published data entry.
 
 - Add decision dates and supplied status to event and job cards, plus a two-date variant with separately labelled publication dates in both layouts.
+
+- Match linked category labels to the resting label style; retain native taxonomy links, hover underlines and keyboard-focus underlines with a visible focus ring. Other metadata links and title links remain underlined.
