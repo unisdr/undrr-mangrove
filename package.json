@@ -46,6 +46,8 @@
     "lint:check": "stylelint './stories/**/*.scss' && eslint ./src ./stories ./scripts ./.storybook && eslint vitest.config.js && yarn run lint:coverage",
     "test": "jest",
     "//test-storybook": "Runs all stories and play functions in Vitest Browser Mode with Playwright Chromium. Run yarn scss first in a fresh checkout; no Storybook server is needed. The 60s timeout preserves the live CookieConsentBanner integration check. Jest unit tests remain separate.",
+    "test:content-card-browser": "node scripts/test-content-card-browser.mjs",
+    "test:content-teaser-browser": "node scripts/test-content-teaser-browser.mjs",
     "test:search-selection-browser": "node scripts/test-search-selection-browser.mjs",
     "test:motion-browser": "node scripts/test-motion-browser.mjs",
     "test:rich-content-browser": "node scripts/test-rich-content-browser.mjs",

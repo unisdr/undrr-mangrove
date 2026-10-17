@@ -134,6 +134,8 @@ jobs:
           curl --retry 30 --retry-delay 1 --retry-connrefused --silent --fail \
             --output /dev/null http://127.0.0.1:6099/index.json
           yarn test:storybook-themes
+          TEASER_STORYBOOK_URL=http://127.0.0.1:6099 yarn test:content-card-browser
+          TEASER_STORYBOOK_URL=http://127.0.0.1:6099 yarn test:content-teaser-browser
           yarn test:search-selection-browser
           yarn test:motion-browser
           yarn test:rich-content-browser

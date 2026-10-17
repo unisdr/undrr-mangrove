@@ -2157,7 +2157,7 @@ npm run build</code></pre>
     summary:
       'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page.',
     description:
-      'A named group of pages inside the parent site — a programme, a monitor, a guidance collection — carrying the same identity and section links on every page so readers move sideways without returning to a landing page. Composes HubHeader with shipped cards, hero and contents components.',
+      'Landing page hub-home variant, plus persistent identity and section navigation shared with detail pages. Detail pages retain their own editorial meaning. Composes HubHeader with shipped cards, hero and contents components.',
     vanillaModule: {
       note: 'For static HubHeader markup on pages without React. js/hub-header.js enhances every [data-mg-js-hub-header] on load: it keeps the marked section in view and sets data-overflow-start and data-overflow-end on the nav for the edge fades. With data-mg-hub-header-detect-current it also marks the current section from the URL, so identical markup can be copied to every page of the hub: an exact match gets aria-current="page", otherwise the longest section whose path contains the page gets mg-hub-header__nav-item--ancestor and no aria-current. A section linking to the hub home or to / only matches exactly. Markup that already marks a section is left alone. For headers inserted later, import { mgHubHeader } from ".../js/hub-header.js" and call mgHubHeader(scope); initialized headers are skipped and the returned function undoes the call. Without JavaScript the links work and nothing is marked.',
       selector: '[data-mg-js-hub-header]',
@@ -2266,18 +2266,52 @@ npm run build</code></pre>
     ],
   },
 
+  'patterns-content-card': {
+    summary:
+      'Compact content cards with separately selected metadata and vertical/book layouts across content archetypes.',
+    description:
+      'Experimental card presentation selected by archetype/profile, separate from teaser and full-page projections. Vertical and book are geometry choices over the same card field selection. Drupal card modes inform selection; event and job cards deliberately add labelled decision dates, supplied status and optional separately labelled publication dates. Missing dates have no fallback and status is never clock-derived. Profiles without a source card mode are explicit Mangrove proposals. Complete covers and logos are preserved. See content-patterns.json for profile references, layout inputs and status.',
+    cssClasses: [
+      'mg-content-card',
+      'mg-content-card--vertical',
+      'mg-content-card--book',
+      'mg-content-pattern--logo',
+      'mg-content-card-grid',
+      'mg-content-meta__before-title',
+      'mg-content-meta__group',
+      'mg-content-meta__metadata-link',
+    ],
+  },
+
+  'patterns-content-teaser': {
+    summary:
+      'Shared experimental teaser renderer; content families own separate page, teaser and card presentations.',
+    description:
+      'Shared experimental horizontal teaser renderer with an enclosed standard-card surface, inset text, edge-aligned photographs and complete inset covers/logos. Independent content-teaser surface tokens default to the standard card tokens. Content-family specifications select fields. Its input is a presentation projection, not a canonical domain model. Cards use the separate ContentCard renderer and field projection. See content-patterns.json for family-specific full-page, teaser and card status; stubs are not implemented.',
+    cssClasses: [
+      'mg-content-teaser',
+      'mg-content-meta__before-title',
+      'mg-content-meta__group',
+      'mg-content-meta__metadata',
+      'mg-content-meta__metadata-link',
+      'mg-content-meta__attribution',
+      'mg-content-pattern--logo',
+      'mg-content-teaser-list',
+    ],
+  },
+
   'patterns-article-story': {
     summary:
-      'A news or event article page: headline, header image, reading body and related content cards.',
+      'Article full-page reference within the Article archetype: headline, hero image, reading body and related content.',
     description:
-      'A news or event article page: headline, header image, reading body and related content cards. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
+      'Article full-page reference within the Article archetype: headline, hero image, reading body and related content. imageProminence controls the header treatment: bleeds full width (large), stays in the reading column (compact), or runs a two-column Hero split band (split). heroImage controls whether the header shows the same image used for teasers/social cards, a different one, or none. Composes VerticalCard, TableOfContents and mg-reading.',
   },
 
   'patterns-landing-pages': {
     summary:
-      'Three UNDRR landing page shapes: topic or initiative, report or publication, and collection index.',
+      'Full-page references grouped by archetype: topic under Landing page, report under Publication, and collection index under Collection.',
     description:
-      'Three UNDRR landing page shapes: topic or initiative (hero, route cards, supporting band), report or publication (feature band and a reading column with contents), and collection index (grouped rows of covers).',
+      'Full-page composition references: topic or initiative under Landing page, report under Publication and collection index under Collection. These demonstrate composition, not a one-to-one mapping from Drupal bundles to domain models.',
   },
 
   'example-page-template-example': {

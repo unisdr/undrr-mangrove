@@ -1,9 +1,12 @@
+import LinkTo from '@storybook/addon-links/react';
 import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
 import * as Stories from './ArticleStory.stories';
 
 <Meta of={Stories} />
 
-# Article story
+# Article full-page reference
+
+This existing reference belongs to <LinkTo kind="Patterns/Content/Article" story="docs">the Article archetype</LinkTo>, alongside its other presentation patterns.
 
 > **Note:** Reference design for [undrr/web-backlog#3060](https://gitlab.com/undrr/web-backlog/-/work_items/3060). Review against the [component checklist](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/REVIEW-CHECKLIST.md).
 
@@ -62,6 +65,8 @@ story-only `mg-demo-article-*` sizing classes. "Editors' recommendations"
 remains plain markup.
 
 ## Changelog
+
+- **1.0.3**, 2026-10-16 ([#1383](https://github.com/unisdr/undrr-mangrove/pull/1383)): Place the full-page reference beneath its content archetype in navigation, preserving its story and docs IDs.
 
 - **1.0.2**, 2026-09-23: The embedded video title reads "This is how timely early warnings save lives, UNDRR" instead of setting "UNDRR" off with an em dash, following the dash rules in the [Editorial manual](https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs#punctuation).
 - **1.0.1**, 2026-09-20 ([#1276](https://github.com/unisdr/undrr-mangrove/pull/1276)): The reading column opts into `mg-content`, the rich-content boundary. Paragraph links are therefore visibly underlined without changing the separately styled navigation and sharing links.

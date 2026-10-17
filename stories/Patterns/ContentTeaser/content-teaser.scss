@@ -1,0 +1,174 @@
+/**
+ * Content teaser patterns compose shared card geometry with semantic metadata.
+ * https://github.com/unisdr/undrr-mangrove/blob/main/stories/Patterns/ContentTeaser/ContentTeaser.mdx
+ */
+@use "../../assets/scss/mixins" as *;
+@use "../../assets/scss/config" as *;
+
+.mg-content-teaser,
+.mg-content-card {
+  min-inline-size: 0;
+  inline-size: 100%;
+  overflow-wrap: anywhere;
+
+  > .mg-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mg-spacing-75);
+  }
+
+  .mg-content-meta__before-title,
+  .mg-content-meta__metadata,
+  .mg-content-meta__attribution {
+    font-family: var(--mg-font-family-ui);
+    font-size: var(--mg-content-meta-font-size);
+    line-height: var(--mg-font-line-height-700);
+  }
+
+  .mg-content-meta__before-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--mg-spacing-50) var(--mg-spacing-100);
+  }
+
+  .mg-card__label {
+    margin: 0;
+    font-size: inherit;
+  }
+
+  .mg-card__title {
+    margin: 0;
+    padding: 0;
+    font-family: var(--mg-font-family-ui);
+  }
+
+  .mg-card__summary,
+  .mg-content-meta__metadata {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.mg-content-meta__group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  max-inline-size: 100%;
+  gap: var(--mg-spacing-50) var(--mg-spacing-100);
+}
+
+.mg-content-meta__attribution {
+  @include mg-list-unmarked;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mg-spacing-50) var(--mg-spacing-100);
+  margin: 0;
+  padding: 0;
+}
+
+.mg-content-meta__metadata-link {
+  display: inline-block;
+  position: relative;
+  z-index: 2; // Above the title's stretched link, within the card stacking context.
+  min-block-size: var(--mg-spacing-250);
+  text-decoration: underline;
+
+  &:focus-visible {
+    @include mg-focus-ring;
+  }
+}
+
+// Category links share the resting label treatment. Other metadata links keep
+// their ordinary underline; categories reveal theirs on hover and keyboard focus.
+.mg-content-meta__metadata-link.mg-card__label {
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+}
+
+.mg-content-pattern--logo > .mg-card__visual {
+  border: 0;
+}
+
+.mg-content-teaser-list {
+  @include mg-list-unmarked;
+
+  display: grid;
+  gap: var(--mg-spacing-200);
+  margin: 0;
+  padding: 0;
+
+  > li {
+    min-inline-size: 0;
+  }
+
+  .mg-content-teaser {
+    margin-block-end: 0;
+  }
+}
+
+// Enclosed listing surfaces follow horizontal cards, independently of book-card
+// publication tokens. Clip only photographs so native focus rings stay visible.
+.mg-card.mg-content-teaser {
+  background: var(--mg-content-teaser-background);
+  padding: 0;
+  gap: 0;
+  border-radius: var(--mg-content-teaser-border-radius);
+  box-shadow: var(--mg-content-teaser-shadow);
+
+  > .mg-card__content {
+    padding: var(--mg-content-teaser-padding);
+  }
+
+  &:has(> .mg-card__visual) {
+    gap: 0;
+  }
+
+  > .mg-card__visual {
+    margin: var(--mg-content-teaser-padding);
+
+    @media (min-width: $mg-breakpoint-mobile) {
+      margin-inline-end: 0;
+      max-inline-size: none;
+    }
+  }
+
+  &[data-content-media="photo"] {
+    > .mg-card__visual {
+      align-self: stretch;
+      margin: 0;
+      max-inline-size: none;
+      border: 0;
+      aspect-ratio: 16 / 9;
+      border-start-start-radius: var(--mg-content-teaser-border-radius);
+      border-start-end-radius: var(--mg-content-teaser-border-radius);
+
+      @media (min-width: $mg-breakpoint-mobile) {
+        aspect-ratio: auto;
+        border-start-end-radius: 0;
+        border-end-start-radius: var(--mg-content-teaser-border-radius);
+      }
+    }
+
+    .mg-card__image {
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &:hover {
+    box-shadow: var(--mg-content-teaser-shadow-hover);
+  }
+
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+}

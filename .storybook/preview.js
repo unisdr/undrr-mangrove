@@ -248,6 +248,7 @@ const preview = {
           'Design decisions',
           'Components',
           'Patterns',
+          ['Content', ['Overview', '*'], '*'],
           'Utilities',
         ],
         includeName: true,

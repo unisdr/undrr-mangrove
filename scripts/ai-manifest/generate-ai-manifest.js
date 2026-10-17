@@ -44,6 +44,10 @@ import { createRequire } from 'module';
 import htmlExamples, { REQUIRES_REACT } from './component-data.js';
 import cssUtilities from './css-utilities.js';
 import {
+  buildContentPatterns,
+  validateContentReferences,
+} from './content-patterns.js';
+import {
   selectPublishedComponents,
   propTypesCoverage,
 } from './catalog-components.js';
@@ -269,6 +273,8 @@ const VANILLA_SCRIPTS = [
 const COMPONENT_IDS = {
   CtaButton: 'components-buttons-buttons',
   VerticalCard: 'components-cards-vertical-card',
+  ContentCard: 'patterns-content-card',
+  ContentTeaser: 'patterns-content-teaser',
   HorizontalCard: 'components-cards-horizontal-card',
   BookCard: 'components-cards-book-card',
   HorizontalBookCard: 'components-cards-horizontal-book-card',
@@ -314,6 +320,29 @@ const COMPONENT_IDS = {
 
 function buildSampleProps(React) {
   return {
+    ContentCard: {
+      layout: 'book',
+      content: {
+        type: 'publication',
+        profile: 'default',
+        title: 'Understanding disaster risk',
+        link: '/publications/disaster-risk',
+        typeLabel: 'Report',
+        image: { src: '/images/teaser-publication-cover.svg', alt: '' },
+      },
+    },
+    ContentTeaser: {
+      content: {
+        type: 'article',
+        profile: 'news',
+        title: 'Communities strengthen resilience',
+        link: '/news/community-resilience',
+        typeLabel: 'News',
+        summary:
+          'Local knowledge and shared planning help communities prepare for changing risks.',
+      },
+    },
+
     Chips: { label: 'Flood' },
     CtaButton: { label: 'Take action' },
     TextInput: {
@@ -2395,6 +2424,18 @@ async function main() {
   });
   const releasesJson = JSON.stringify(releasesData, null, 2);
   fs.writeFileSync(path.join(buildDir, 'releases.json'), releasesJson);
+  validateContentReferences(
+    JSON.parse(fs.readFileSync(path.join(buildDir, 'index.json'), 'utf8'))
+      .entries
+  );
+  fs.writeFileSync(
+    path.join(buildDir, 'content-patterns.json'),
+    JSON.stringify(
+      buildContentPatterns({ docsBase: DOCS_BASE, packageName: pkg.name }),
+      null,
+      2
+    )
+  );
   fs.writeFileSync(path.join(outputDir, 'releases.json'), releasesJson);
 
   // -------------------------------------------------------------------------
@@ -2411,10 +2452,14 @@ async function main() {
 
 ## Links
 
+Content families organize full-page, teaser and card presentations. Read content-patterns.json before choosing a presentation: experimental teaser and card presentations are implemented, references are examples, and stubs are not designed or implemented. Card field selection is separate from teaser selection; vertical and book are card layouts. Never invent a callable component or import for a stub. Teaser inputs are projections, not canonical content schemas.
+
 - Storybook: ${DOCS_BASE}
 - Repository (public mirror of ${REPO_URL.replace('https://github.com/', '')}, which is not publicly readable): ${PUBLIC_REPO_URL}
 - Report a problem with a component or a guide: ${PUBLIC_ISSUES_URL}
 - npm: https://www.npmjs.com/package/${pkg.name}
+- Content families and presentation status (machine-readable): ${DOCS_BASE}content-patterns.json
+- Content pattern overview: ${DOCS_BASE}?path=/docs/patterns-content-overview--docs
 - Release changelog (machine-readable): ${DOCS_BASE}releases.json
 - Project changelog (markdown): ${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md
 - v2.0 Release notes: ${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs
@@ -2646,12 +2691,12 @@ Icons:
 - stories/Molecules/     SectionHeader, FooterNavigation, BodyColumn
 - stories/Components/    MegaMenu, Cards, Charts, Map, Gallery
 - stories/Utilities/     CSS utilities, loaders, show/more
-- stories/Patterns/      Full-page compositions (ArticleStory, ContentHub, LandingPages) — demonstrate assembling components into a page, not reusable exports themselves. See "Composing a page pattern" below.
+- stories/Patterns/      Full-page compositions (ArticleStory, ContentHub, LandingPages) — demonstrate assembling components into a page. ContentTeaser and ContentCard are explicit reusable-export exceptions. See "Composing a page pattern" below.
 - stories/assets/scss/   Theme stylesheets and design tokens
 
 ### Composing a page pattern
 
-stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions) are not components: nothing there is exported from the npm package or hydrated. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
+Full-page examples under stories/Patterns/* (ArticleStory, ContentHub, LandingPages) are compositions rather than published components. ContentTeaser and ContentCard are explicit exceptions: their reusable renderers are published as components/ContentTeaser.js and components/ContentCard.js. Drupal bindings are data in components/DrupalContentPatterns.js; canonical models and full-page stubs are not callable exports. Each one demonstrates how existing components and layout primitives assemble into a full page. Before laying out a new pattern, pick the right layout system for the shape you need — reusing the wrong one is the most expensive mistake to unwind:
 
 - **mg-grid** (\`stories/Atom/Layout/Grid/grid.scss\`, classes \`mg-grid mg-grid__col-{2..6}\`): equal-fraction repeating columns — every numbered track is \`1fr\`. Use it for repeating card grids. \`mg-grid--article\` (below) is a different, asymmetric variant on the same base class — the numbered/span classes are still equal-fraction only.
 - **mg-grid's \`--article\` variant** (\`mg-grid mg-grid--article\`, defined in \`stories/Atom/Layout/Grid/grid.scss\`): the asymmetric rail/article split — a flexible \`minmax(0, 1fr)\` column plus a fixed 16rem rail. This is what \`mg-reading--with-contents\` (\`stories/Utilities/PagePatterns/page-patterns.scss\`) pairs with for a long-form reading column with a sticky table-of-contents rail from 48rem up, stacking above the article below that; \`page-patterns.scss\` itself only supplies the item-placement rules (which child is the sidebar vs. the article), not the column shape. Reach for \`mg-grid--article\` directly if you need the same asymmetric shape outside that pattern.
@@ -2720,6 +2765,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         changelog: `${PUBLIC_REPO_BLOB_MAIN}CHANGELOG.md`,
         releaseNotesV2: `${DOCS_BASE}?path=/docs/getting-started-release-notes-v2-0--docs`,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
         utilities: `${DOCS_BASE}ai-components/utilities.json`,
         tokens: `${DOCS_BASE}tokens.json`,
         editorialManual: `${DOCS_BASE}llms-editorial-manual.txt`,
@@ -2754,6 +2800,7 @@ stories/Patterns/* (ArticleStory, ContentHub, LandingPages, and future additions
         total: customPropertyCount,
         components: Object.keys(customProperties.byComponent).length,
         componentIndex: `${DOCS_BASE}ai-components/index.json`,
+        contentPatterns: `${DOCS_BASE}content-patterns.json`,
       },
       conventions: {
         cssPrefix: 'mg-',
