@@ -35,10 +35,6 @@
   .mg-card__label {
     margin: 0;
     font-size: inherit;
-
-    &:not(a) {
-      cursor: inherit;
-    }
   }
 
   .mg-card__title {
@@ -73,7 +69,6 @@
 }
 
 .mg-content-meta__metadata-link {
-  cursor: pointer;
   display: inline-block;
   position: relative;
   z-index: 2; // Above the title's stretched link, within the card stacking context.

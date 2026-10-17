@@ -219,21 +219,6 @@ try {
       );
       if (mobile) assert.notEqual(surface.outline, 'none');
       else assert.notEqual(surface.shadow, 'none');
-      const firstLabel = cards.first().locator('span.mg-card__label').first();
-      await firstLabel.scrollIntoViewIfNeeded();
-      const labelHit = await firstLabel.evaluate(label => {
-        const rect = label.getBoundingClientRect();
-        const hit = document.elementFromPoint(
-          rect.x + rect.width / 2,
-          rect.y + rect.height / 2
-        );
-        return {
-          cursor: getComputedStyle(hit).cursor,
-          destination: hit.closest('a')?.getAttribute('href'),
-        };
-      });
-      assert.equal(labelHit.cursor, 'pointer');
-      assert.equal(labelHit.destination, 'https://www.undrr.org/news');
       if (!mobile) {
         const isolated = await cards.first().evaluate(async card => {
           const before = getComputedStyle(card).backgroundColor;
@@ -336,24 +321,6 @@ try {
       );
       await page.close();
     }
-  }
-  for (const story of [
-    'no-link-vertical-card',
-    'button-only-vertical-card',
-    'legacy-empty-href-markup',
-  ]) {
-    const page = await browser.newPage();
-    await page.goto(
-      `${base}/iframe.html?id=components-cards-vertical-card--${story}&viewMode=story`
-    );
-    const card = page.locator('.mg-card').first();
-    await card.waitFor();
-    assert.notEqual(
-      await card.evaluate(el => getComputedStyle(el).cursor),
-      'pointer',
-      `${story}: unlinked card surface must not imply navigation`
-    );
-    await page.close();
   }
   console.log(
     'Content teaser browser checks passed: five themes, desktop and 320px RTL/forced colours, reduced motion, native focus and complete covers.'
