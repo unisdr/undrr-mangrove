@@ -13,7 +13,7 @@ version, update `package.json`, tag, and let CI publish.
 
 GitHub Actions run on `unisdr/undrr-mangrove` again (2.0.1 was the first release published through CI since the organisation was flagged), but mangrove.undrr.org and the CDN still deploy from the public fork [`PreventionWeb/undrr-mangrove`](https://github.com/PreventionWeb/undrr-mangrove). So a release uses both:
 
-- **`unisdr/undrr-mangrove`:** pull requests are reviewed and merged here, and their checks run here ("Build and Deploy", "PR Title Check", and Chromatic when a pull request is opened). Pushing a `v*` tag runs "Publish to NPM Registry", which publishes with a provenance attestation through npm's trusted publisher. Its "Build and Deploy" also deploys Storybook to `unisdr.github.io/undrr-mangrove`, which has no custom domain; that copy is not the public site.
+- **`unisdr/undrr-mangrove`:** pull requests are reviewed and merged here, and their checks run here ("Build and Deploy", "PR Title Check", and Chromatic when a draft pull request is marked ready for review or a maintainer requests a manual run). Pushing a `v*` tag runs "Publish to NPM Registry", which publishes with a provenance attestation through npm's trusted publisher. Its "Build and Deploy" also deploys Storybook to `unisdr.github.io/undrr-mangrove`, which has no custom domain; that copy is not the public site.
 - **`PreventionWeb/undrr-mangrove`:** after merging, sync the fork. Its "Build and Deploy" workflow publishes Storybook to mangrove.undrr.org, and "Build and Push dist to dist branch" rebuilds its `dist` branch. npm publishing and Chromatic are disabled on the fork.
 
   ```bash
