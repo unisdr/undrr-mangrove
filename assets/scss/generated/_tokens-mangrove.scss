@@ -581,6 +581,68 @@ $mg-font-line-height-700: 1.5em;
   // Linked publication surface elevation on hover.
   --mg-card-publication-shadow-hover: none;
 
+  // content-meta.font-size
+  // Dates, attribution and supporting metadata in content teasers and cards;
+  // summaries retain body size.
+  --mg-content-meta-font-size: var(--mg-font-size-250);
+
+  // content-teaser.background
+  // Content teaser surface, defaulting to the standard card background
+  // independently of publication surfaces.
+  --mg-content-teaser-background: var(--mg-card-background);
+
+  // content-teaser.padding
+  // Content inset and complete-cover/logo inset inside the enclosed
+  // horizontal teaser; photographs meet the outer edge.
+  --mg-content-teaser-padding: var(--mg-card-padding);
+
+  // content-teaser.border-radius
+  // Content teaser enclosure radius, defaulting to the standard card radius.
+  --mg-content-teaser-border-radius: var(--mg-card-border-radius);
+
+  // content-teaser.shadow
+  // Content teaser soft enclosure, defaulting to the standard card surface at
+  // rest.
+  --mg-content-teaser-shadow: var(--mg-card-shadow);
+
+  // content-teaser.shadow-hover
+  // Content teaser soft enclosure on hover, defaulting to the standard card
+  // hover surface.
+  --mg-content-teaser-shadow-hover: var(--mg-card-shadow-hover);
+
+  // content-card.title-font-size
+  // Title size in vertical content card layouts.
+  --mg-content-card-title-font-size: var(--mg-font-size-500);
+
+  // content-card.book-title-font-size
+  // Title size in book card layouts.
+  --mg-content-card-book-title-font-size: var(--mg-font-size-300);
+
+  // content-card.book.background
+  // Independent content-card surface; publication surfaces do not determine
+  // this value.
+  --mg-content-card-book-background: transparent;
+
+  // content-card.book.padding
+  // Independent content-card surface; publication surfaces do not determine
+  // this value.
+  --mg-content-card-book-padding: 0px;
+
+  // content-card.book.border-radius
+  // Independent content-card surface; publication surfaces do not determine
+  // this value.
+  --mg-content-card-book-border-radius: 0px;
+
+  // content-card.book.shadow
+  // Independent content-card surface; publication surfaces do not determine
+  // this value.
+  --mg-content-card-book-shadow: none;
+
+  // content-card.book.shadow-hover
+  // Independent content-card surface; publication surfaces do not determine
+  // this value.
+  --mg-content-card-book-shadow-hover: none;
+
   // search.book-cover-height
   // Desktop search book-grid media stage; missing media reserves this space
   // only in multi-column layouts.

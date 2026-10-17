@@ -100,3 +100,5 @@
 
 // Opt-in editorial defaults follow component styles; classed islands opt out.
 @use "../../Patterns/RichContent/rich-content" as *;
+@use "../../Patterns/ContentTeaser/content-teaser";
+@use "../../Patterns/ContentCard/content-card";
