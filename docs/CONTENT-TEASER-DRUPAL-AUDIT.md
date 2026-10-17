@@ -124,17 +124,23 @@ Inspected at the same Drupal revision `226b54812725eb648faa8e09b21b59a338ddf26b`
 | `blog` | Image, landscape 16:9 | Blog type, linked | Node title | Article/commentary |
 | `publication` | Image, landscape 16:9 in Drupal | Publication type; ARISE resource type only on its domain, both unlinked | Node title | Publication/default; deliberately preserve the complete cover |
 | `resource` | Image, landscape 16:9 | Resource type, linked | Node title | Resource/default; resource images are eligible in cards even though hidden in teasers |
-| `event` | Image, landscape 16:9 | Event type, unlinked | Node title | Event/general; occurrence range and location are omitted in cards |
-| `conference_event` | Image, landscape 16:9 | Content bucket; event-type terms, linked | Node title | Event/programme-session; `session.types` remains distinct from theme/topic labels |
+| `event` | Image, landscape 16:9 | Event type, unlinked | Node title | Event/general; deliberately add occurrence dates, supplied status and optional labelled publication date; location remains omitted |
+| `conference_event` | Image, landscape 16:9 | Content bucket; event-type terms, linked | Node title | Event/programme-session; deliberately add session/exhibition schedules, supplied status and optional labelled publication date; `session.types` remains distinct from theme/topic labels |
 | `organization` | Image, landscape 16:9 in Drupal | Organization type, unlinked | Node title | Organization/general; deliberately contain complete logos |
 | `collections` | Image, landscape 16:9 | Bundle label | Node title | Collection/default; freshness and summary remain teaser fields |
 | `commitment` | Image, landscape 16:9 | None | Node title | Commitment/default; ECA summary is in the unrendered `content` region and is omitted |
 | `landing_page_gutenberg` | Image, landscape 16:9 | None | Node title | Landing page/default |
 | `people` | Image, landscape 16:9 | None | Node title | Person/default; unlike its teaser, its card may have an image |
-| `vacancy` | None | None | Node title | Opportunity/job; deadline, status, location and summary are hidden in this presentation |
+| `vacancy` | None | None | Node title | Opportunity/job; deliberately add closing deadline, supplied status and optional labelled publication date; location and summary remain hidden |
 
 No explicit `card` display exists for `terminology`, `hazard_information_profile` or `national_platform`. Mangrove supplies explicit experimental proposals for Definition (label, title, brief definition), Hazard profile (classification, identifier, title) and Coordination platform (labels and title). They are not claims of active Drupal parity.
 
 The book layout is constructed in Mangrove over the same compact field selection as the vertical card. Drupal's Gutenberg `undrr-card.es6.js` and book-card sample markup establish `mg-card__book` and complete-cover use; there is no separate configured node book view mode in this audit. Photographs keep a landscape stage, publication covers keep their complete ratio and logos are contained. Missing images produce no media region. Unlike the richer teaser, a card does not automatically display dates, authors, source attribution, taxonomy themes or a body summary merely because the normalized record contains them.
 
 These source-view selections are not canonical content schemas. Per-node archetype classification, conditional domain visibility, taxonomy destinations and image-source choice remain adapter responsibilities. Source card evidence promotes card status only; the seven unimplemented full-page presentations stay stubs.
+
+### Decision-date departure (17 October 2026)
+
+The event, programme-session and job card selections intentionally extend the audited source modes. Occurrence ranges, distinct session/exhibition schedules and closing deadlines support participation or application decisions. Optional publication dates follow those decision dates and supplied status; all card dates require caller-localized role labels. Missing dates create no placeholder or publication-date fallback. Adapters provide explicit localized availability states and own time-zone/deadline evaluation; rendering does not use the wall clock or disable archived links.
+
+Both layouts share these additions. Their `departures` notes are included in `content-patterns.json`. This is a Mangrove design decision, not a claim that the Drupal card modes already render these fields. The external-system comparison and its interpretation are documented in the Content overview.

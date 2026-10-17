@@ -21,9 +21,23 @@ Complete publication covers remain uncropped and use publication surface tokens.
 
 ## Source evidence and proposals
 
-Drupal has explicit `card` displays for 12 of the 15 supported bundles. These generally contain only an image, selected category labels and a title. Vacancy has only a title. Summary, dates, authors and source attribution remain omitted where the card display hides them, even if present on the input record.
+Drupal has explicit `card` displays for 12 of the 15 supported bundles. These generally contain only an image, selected category labels and a title. Drupal vacancy cards have only a title. Mangrove deliberately adds event occurrence dates, programme schedules, job closing dates and supplied status to support discovery decisions. Those cards can also show a supplied publication date. Other unselected summaries, dates, authors and source attribution stay hidden even when present on the record.
 
 Definition, hazard-profile and coordination-platform cards are **Mangrove proposals**, because those Drupal bundles have no explicit card display in the audited configuration. Their profile specifications say so. The book layout is a Mangrove construction, informed by Drupal's Gutenberg book card, rather than a claim that Drupal has 15 matching book display modes.
+
+## Decision dates and publication dates
+
+Event cards show the supplied occurrence range; programme-session cards show supplied session and exhibition schedules. Job cards show the closing date. All use native `time` elements and caller-localized role labels, such as “Event dates:”, “Session:” or “Closing date:”. Missing dates produce no placeholder and are never replaced by publication dates.
+
+For the two-date variant, also supply `published: { label: 'Published on:', dateTime: '2026-10-13', text: '13 October 2026' }`. Both roles must be labelled. This is optional metadata within the same profile, not another editorial profile or layout. Publication follows the decision date and supplied status. A valid card date without a role label throws; incomplete dates are omitted. These additions apply to Event and Opportunity/job cards; they do not enable publication dates in unrelated card projections.
+
+<Canvas of={Stories.DatesWithPublished} />
+
+<Canvas of={Stories.DatesWithPublishedBook} />
+
+Supply localized `status` when known, such as “Applications open”, “Applications closed” or “Event ended”. The source adapter owns status and deadline/time-zone policy. The renderer does not infer availability from its clock, reinterpret date-only deadlines or disable native links to archived details.
+
+<Canvas of={Stories.DateStates} />
 
 ## Asset meaning
 
@@ -61,3 +75,5 @@ Shared metadata uses the UI font and `--mg-content-meta-font-size`. Card title s
 
 - Add vertical and book card layouts for all 15 profiles, with separate field projections audited from Drupal's card displays and explicit proposals for three missing displays.
 - Share field semantics, URL checks, metadata styling and field-based date-role validation with teasers. Keep source integration bindings in their own published data entry.
+
+- Add decision dates and supplied status to event and job cards, plus a two-date variant with separately labelled publication dates in both layouts.

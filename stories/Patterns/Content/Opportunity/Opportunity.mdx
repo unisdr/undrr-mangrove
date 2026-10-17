@@ -18,6 +18,13 @@ import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
       <Canvas of={CardStories.Job} />
       <h3>Book</h3>
       <Canvas of={CardStories.JobBook} />
+      <h3>Decision and publication dates</h3>
+      <p>
+        See the shared card examples for separately labelled decision and
+        publication dates, including both layouts and supplied availability
+        states.
+      </p>
+      <Canvas of={CardStories.JobWithPublished} />
     </>
   }
 >
@@ -29,3 +36,5 @@ import * as TeaserStories from '../../ContentTeaser/ContentTeaser.stories';
 ### 0.1.0 (16 October 2026)
 
 - Define the source-independent archetype, its editorial profiles and presentation coverage. Keep Drupal bindings in Mangrove's integration layer and group each presentation with its previews. Add experimental vertical/book card layouts from audited selections, with explicit proposals where no Drupal card display exists.
+
+- Include decision dates, supplied status and optional labelled publication dates in card presentations as deliberate improvements on the Drupal selection.

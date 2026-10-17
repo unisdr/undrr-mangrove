@@ -4,7 +4,12 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { axe } from 'jest-axe';
 import { ContentCard } from '../ContentCard';
 import { ContentTeaser } from '../../ContentTeaser/ContentTeaser';
-import { cardFixtures, mixedLanguageCards } from '../contentCardFixtures';
+import {
+  cardFixtures,
+  mixedLanguageCards,
+  cardsWithPublishedDates,
+  datedCardStates,
+} from '../contentCardFixtures';
 import { CONTENT_FAMILIES } from '../../Content/contentFamilies';
 import {
   CONTENT_FIELDS,
@@ -37,16 +42,15 @@ test.each(cases)(
   }
 );
 
-test('card selection omits teaser-only data, including unlabelled hidden dates', () => {
+test('unselected fields stay hidden while a missing deadline creates no placeholder', () => {
   const content = {
     ...cardFixtures.vacancy,
-    deadline: { dateTime: '2026-11-01', text: 'Hidden closing date' },
-    published: { dateTime: '2026', text: 'Hidden year' },
+    deadline: undefined,
     image: cardFixtures.news.image,
   };
   const { container } = render(<ContentCard content={content} />);
   expect(container.querySelector('time,img,p,.mg-card__meta')).toBeNull();
-  expect(container).not.toHaveTextContent('Hidden');
+  expect(container).not.toHaveTextContent(content.summary);
 });
 
 test('vertical and book layouts share card selection; teaser keeps its richer hierarchy', () => {
@@ -166,13 +170,15 @@ test.each(['resource', 'event', 'person'])(
   }
 );
 
-test('programme cards retain session-type links without promoting theme topics or schedules', () => {
+test('programme cards retain session-type links and distinct schedules without promoting theme topics', () => {
   const content = cardFixtures['conference-session'];
   const { container } = render(<ContentCard content={content} />);
   expect(
     screen.getByRole('link', { name: 'Technical session' })
   ).toHaveAttribute('href', '/programme/technical-sessions');
-  expect(container.querySelector('time')).toBeNull();
+  expect(container.querySelectorAll('time')).toHaveLength(4);
+  expect(container).toHaveTextContent('Session:');
+  expect(container).toHaveTextContent('Exhibition:');
   expect(container).not.toHaveTextContent('Risk governance');
 });
 
@@ -193,4 +199,106 @@ test('asset meaning can preserve a resource cover without revealing media hidden
     />
   );
   expect(container.querySelector('img')).toBeNull();
+});
+
+test.each(['vertical', 'book'])(
+  '%s cards label primary and optional publication dates independently',
+  async layout => {
+    const { container } = render(
+      <div>
+        {cardsWithPublishedDates.map(content => (
+          <ContentCard
+            key={content.profile}
+            content={content}
+            layout={layout}
+          />
+        ))}
+      </div>
+    );
+    const cards = [...container.querySelectorAll('article')];
+    for (const [index, card] of cards.entries()) {
+      const content = cardsWithPublishedDates[index];
+      const times = [...card.querySelectorAll('time')];
+      expect(times.at(-1)).toHaveAttribute(
+        'datetime',
+        content.published.dateTime
+      );
+      expect(times.at(-1).parentElement).toHaveTextContent(
+        'Published on: 13 October 2026'
+      );
+      expect(times[0]).toHaveAttribute(
+        'datetime',
+        content.event?.start.dateTime ||
+          content.session?.schedule[0].start.dateTime ||
+          content.deadline.dateTime
+      );
+      expect(times[0].closest('p')).toHaveTextContent(
+        content.event?.label ||
+          content.session?.schedule[0].label ||
+          content.deadline.label
+      );
+    }
+    expect(await axe(container)).toHaveNoViolations();
+  }
+);
+
+test.each(cardsWithPublishedDates.map(content => [content.profile, content]))(
+  '%s rejects ambiguous date roles',
+  (_, content) => {
+    expect(() =>
+      renderToStaticMarkup(
+        <ContentCard
+          content={{
+            ...content,
+            published: { ...content.published, label: undefined },
+          }}
+        />
+      )
+    ).toThrow('published.label');
+    const noPrimaryLabel = { ...content };
+    if (content.event)
+      noPrimaryLabel.event = { ...content.event, label: undefined };
+    if (content.deadline)
+      noPrimaryLabel.deadline = { ...content.deadline, label: undefined };
+    if (content.session)
+      noPrimaryLabel.session = {
+        ...content.session,
+        schedule: content.session.schedule.map(range => ({
+          ...range,
+          label: undefined,
+        })),
+      };
+    expect(() =>
+      renderToStaticMarkup(<ContentCard content={noPrimaryLabel} />)
+    ).toThrow(/label/);
+  }
+);
+
+test('optional publication and explicit states do not invent or replace missing decision dates', () => {
+  const content = { ...cardsWithPublishedDates[2], deadline: undefined };
+  const { container, rerender } = render(<ContentCard content={content} />);
+  expect(container.querySelectorAll('time')).toHaveLength(1);
+  expect(container).toHaveTextContent('Published on:');
+  expect(container).not.toHaveTextContent('Closing date:');
+  rerender(<ContentCard content={datedCardStates[1]} />);
+  expect(container).toHaveTextContent('Applications closed');
+  expect(container).toHaveTextContent('Closing date: 30 September 2026');
+  expect(container).not.toHaveTextContent('Published on:');
+});
+
+test('labels remain caller-localized and date ranges preserve time zones', () => {
+  const source = cardsWithPublishedDates[0];
+  const { container } = render(
+    <ContentCard
+      content={{
+        ...source,
+        event: { ...source.event, label: 'Veranstaltung:' },
+        published: { ...source.published, label: 'Veröffentlicht am:' },
+      }}
+    />
+  );
+  expect(container).toHaveTextContent('Veranstaltung:');
+  expect(container).toHaveTextContent('Veröffentlicht am:');
+  expect(container).toHaveTextContent(source.event.timeZone);
+  expect(container.querySelectorAll('time')).toHaveLength(3);
 });

@@ -266,6 +266,26 @@ function validateDateRoles(fields, rendererName) {
   const selected = Object.fromEntries(
     fields.map(({ field, value }) => [field, value])
   );
+  // Card dates always name their role. Mixed-role teaser dates must do so too.
+  const labelAllDates =
+    rendererName === 'ContentCard' ||
+    Boolean(
+      selected.published &&
+      (selected.event ||
+        selected.deadline ||
+        selected.schedule?.length ||
+        selected.exhibitions?.length)
+    );
+  if (labelAllDates) {
+    if (selected.published) requireLabel(selected.published, 'published');
+    if (selected.event) requireLabel(selected.event, 'event');
+    selected.schedule?.forEach(range =>
+      requireLabel(range, 'session.schedule[]')
+    );
+    selected.exhibitions?.forEach(range =>
+      requireLabel(range, 'session.exhibitions[]')
+    );
+  }
   if (selected.deadline) requireLabel(selected.deadline, 'deadline');
   if (selected.freshness)
     requireLabel(selected.freshness.date, 'freshness.date');

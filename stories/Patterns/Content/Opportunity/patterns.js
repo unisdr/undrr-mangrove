@@ -31,7 +31,7 @@ export const opportunityPatterns = {
     card: {
       status: 'experimental',
       intent:
-        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+        'Show the closing deadline and supplied status to support application decisions; optionally show a separately labelled publication date.',
       reference: {
         kind: 'Patterns/Content card',
         story: 'Job',
@@ -51,6 +51,9 @@ export const opportunityPatterns = {
         },
       },
       basis: 'audited-card-selection',
+      departures: [
+        'Add decision dates, supplied status and an optional labelled publication date beyond the Drupal card selection.',
+      ],
     },
   },
   defaultProfile: 'job',
@@ -76,7 +79,7 @@ export const opportunityPatterns = {
         card: {
           status: 'experimental',
           intent:
-            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+            'Show the closing deadline and supplied status to support application decisions; optionally show a separately labelled publication date.',
           reference: {
             kind: 'Patterns/Content card',
             story: 'Job',
@@ -85,7 +88,7 @@ export const opportunityPatterns = {
           fields: {
             media: 'none',
             before: [],
-            after: [],
+            after: ['deadline', 'status', 'published'],
           },
           layouts: ['vertical', 'book'],
           layoutReferences: {
@@ -101,6 +104,9 @@ export const opportunityPatterns = {
             },
           },
           basis: 'audited-card-selection',
+          departures: [
+            'Add decision dates, supplied status and an optional labelled publication date beyond the Drupal card selection.',
+          ],
         },
       },
     },

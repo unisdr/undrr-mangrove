@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ContentCard } from './ContentCard';
-import { cardFixtures, mixedLanguageCards } from './contentCardFixtures';
+import {
+  cardFixtures,
+  mixedLanguageCards,
+  cardsWithPublishedDates,
+  datedCardStates,
+} from './contentCardFixtures';
 
 export default {
   title: 'Patterns/Content card',
@@ -194,4 +199,31 @@ export const ResourceCover = {
       image: { ...cardFixtures.publication.image, kind: 'cover' },
     },
   },
+};
+
+export const DatesWithPublished = {
+  name: 'Decision dates and publication dates',
+  parameters: { cardGrid: true },
+  render: ({ layout }) => (
+    <Grid records={cardsWithPublishedDates} layout={layout} />
+  ),
+};
+export const DatesWithPublishedBook = {
+  ...DatesWithPublished,
+  name: 'Decision dates and publication dates, book layout',
+  args: { layout: 'book' },
+};
+export const DateStates = {
+  name: 'Open, closed and past dates',
+  parameters: { cardGrid: true },
+  render: ({ layout }) => <Grid records={datedCardStates} layout={layout} />,
+};
+
+export const EventWithPublished = {
+  name: 'Event with publication date',
+  args: { content: cardsWithPublishedDates[0] },
+};
+export const JobWithPublished = {
+  name: 'Job with publication date',
+  args: { content: cardsWithPublishedDates[2] },
 };

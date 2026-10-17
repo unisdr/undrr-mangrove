@@ -84,6 +84,12 @@ test('AI discovery distinguishes archetypes, profiles, bindings and non-callable
   expect(publication.presentations.teaser.projection.after).toContain(
     'summary'
   );
+  const eventCard = catalog.families.find(family => family.id === 'event')
+    .profiles.general.presentations.card;
+  expect(eventCard.projection.after).toEqual(['event', 'status', 'published']);
+  expect(eventCard.departures).toEqual([
+    expect.stringContaining('optional labelled publication date'),
+  ]);
   expect(catalog.integrations.drupal.bindings).toEqual(DRUPAL_CONTENT_PATTERNS);
   for (const family of catalog.families) {
     for (const presentation of Object.values(family.presentations)) {

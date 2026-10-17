@@ -43,6 +43,7 @@ export function buildContentPatterns({ docsBase, packageName }) {
                   {
                     status: presentation.status,
                     basis: presentation.basis,
+                    departures: presentation.departures,
                     intent: presentation.intent,
                     projection: presentation.fields,
                     referenceUrl: `${base}?path=/story/${presentation.reference.id}`,
@@ -70,6 +71,9 @@ export function buildContentPatterns({ docsBase, packageName }) {
             status: presentation.status,
             intent: presentation.intent,
             ...(presentation.basis ? { basis: presentation.basis } : {}),
+            ...(presentation.departures
+              ? { departures: presentation.departures }
+              : {}),
           };
           if (presentation.additionalReferences)
             result.additionalReferences = presentation.additionalReferences.map(

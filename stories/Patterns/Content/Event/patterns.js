@@ -31,7 +31,7 @@ export const eventPatterns = {
     card: {
       status: 'experimental',
       intent:
-        'Compact card selection; vertical and book are alternate layouts of this presentation.',
+        'Show occurrence dates or programme schedules and supplied status to support participation decisions; optionally show a separately labelled publication date.',
       reference: {
         kind: 'Patterns/Content card',
         story: 'Event',
@@ -51,6 +51,9 @@ export const eventPatterns = {
         },
       },
       basis: 'audited-card-selection',
+      departures: [
+        'Add decision dates, supplied status and an optional labelled publication date beyond the Drupal card selection.',
+      ],
     },
   },
   defaultProfile: 'general',
@@ -76,7 +79,7 @@ export const eventPatterns = {
         card: {
           status: 'experimental',
           intent:
-            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+            'Show occurrence dates or programme schedules and supplied status to support participation decisions; optionally show a separately labelled publication date.',
           reference: {
             kind: 'Patterns/Content card',
             story: 'Event',
@@ -85,7 +88,7 @@ export const eventPatterns = {
           fields: {
             media: 'photo',
             before: ['labels'],
-            after: [],
+            after: ['event', 'status', 'published'],
           },
           layouts: ['vertical', 'book'],
           layoutReferences: {
@@ -101,6 +104,9 @@ export const eventPatterns = {
             },
           },
           basis: 'audited-card-selection',
+          departures: [
+            'Add decision dates, supplied status and an optional labelled publication date beyond the Drupal card selection.',
+          ],
         },
       },
     },
@@ -125,7 +131,7 @@ export const eventPatterns = {
         card: {
           status: 'experimental',
           intent:
-            'Compact card selection; vertical and book are alternate layouts of this presentation.',
+            'Show occurrence dates or programme schedules and supplied status to support participation decisions; optionally show a separately labelled publication date.',
           reference: {
             kind: 'Patterns/Content card',
             story: 'Programme session',
@@ -134,7 +140,7 @@ export const eventPatterns = {
           fields: {
             media: 'photo',
             before: ['sessionBucket', 'sessionTypes'],
-            after: [],
+            after: ['schedule', 'exhibitions', 'status', 'published'],
           },
           layouts: ['vertical', 'book'],
           layoutReferences: {
@@ -150,6 +156,9 @@ export const eventPatterns = {
             },
           },
           basis: 'audited-card-selection',
+          departures: [
+            'Add decision dates, supplied status and an optional labelled publication date beyond the Drupal card selection.',
+          ],
         },
       },
     },

@@ -65,8 +65,8 @@ try {
             naturalRatio: cover.naturalWidth / cover.naturalHeight,
             photoRatio: photo.width / photo.height,
             logoFit: getComputedStyle(logo).objectFit,
-            vacancyHasExtraFields: Boolean(
-              vacancy.querySelector('time,img,p,.mg-card__meta')
+            vacancyHasHiddenFields: Boolean(
+              vacancy.querySelector('img,.mg-card__summary,.mg-card__meta')
             ),
           };
         });
@@ -89,7 +89,14 @@ try {
           `${theme}/${layout}: photo should remain landscape`
         );
         assert.equal(geometry.logoFit, 'contain');
-        assert.equal(geometry.vacancyHasExtraFields, false);
+        assert.equal(geometry.vacancyHasHiddenFields, false);
+        const vacancy = page.locator('[data-content-type="opportunity"]');
+        assert.equal(await vacancy.locator('time').count(), 1);
+        assert.match(await vacancy.innerText(), /Closing date:/);
+        assert.equal(
+          await page.locator('[data-content-type="event"] time').count(),
+          6
+        );
         // Forced colours intentionally replace authored background colours.
         if (!mobile) {
           const originalBackground = await page.evaluate(() => {
@@ -143,6 +150,9 @@ try {
     'unlabelled',
     'mixed-language',
     'resource-cover',
+    'dates-with-published',
+    'dates-with-published-book',
+    'date-states',
   ]) {
     const page = await browser.newPage({
       viewport: { width: 320, height: 1000 },
@@ -174,6 +184,24 @@ try {
           .evaluate(el => getComputedStyle(el).direction),
         'ltr'
       );
+    }
+    if (story.startsWith('dates-with-published')) {
+      const cards = page.locator('article');
+      assert.equal(await cards.count(), 3);
+      for (const card of await cards.all()) {
+        assert.match(await card.innerText(), /Published on:/);
+        assert.match(
+          await card.innerText(),
+          /Event dates:|Session:|Closing date:/
+        );
+      }
+    }
+    if (story === 'date-states') {
+      assert.match(
+        await page.locator('body').innerText(),
+        /Applications closed/
+      );
+      assert.match(await page.locator('body').innerText(), /Event ended/);
     }
     await page.screenshot({ path: `${output}/${story}.png`, fullPage: true });
     await page.close();

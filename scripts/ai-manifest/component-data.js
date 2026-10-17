@@ -2263,7 +2263,7 @@ npm run build</code></pre>
     summary:
       'Compact content cards with separately selected metadata and vertical/book layouts across content archetypes.',
     description:
-      'Experimental card presentation selected by archetype/profile, separate from teaser and full-page projections. Vertical and book are geometry choices over the same card field selection. Audited Drupal card modes hide most summaries/dates; profiles without a source card mode are explicit Mangrove proposals. Complete covers and logos are preserved. See content-patterns.json for profile references, layout inputs and status.',
+      'Experimental card presentation selected by archetype/profile, separate from teaser and full-page projections. Vertical and book are geometry choices over the same card field selection. Drupal card modes inform selection; event and job cards deliberately add labelled decision dates, supplied status and optional separately labelled publication dates. Missing dates have no fallback and status is never clock-derived. Profiles without a source card mode are explicit Mangrove proposals. Complete covers and logos are preserved. See content-patterns.json for profile references, layout inputs and status.',
     cssClasses: [
       'mg-content-card',
       'mg-content-card--vertical',
