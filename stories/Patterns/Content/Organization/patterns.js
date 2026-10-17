@@ -5,7 +5,12 @@ export const organizationPatterns = {
   model: {
     status: 'provisional',
     intent:
-      'An organization with identity, complete logo, locations and categories.',
+      'An entity involved in disaster risk reduction, described through its identity, mandate, activities and relationships. A coordination platform emphasizes its country, remit and hosting body.',
+    readerNeeds: [
+      'Identify the organization, its role, geographic scope and areas of work.',
+      'Understand relevant affiliations, partnerships and contributions; distinguish a coordination platform from its host.',
+      'Find published websites, participation routes or appropriate public contact information.',
+    ],
   },
   presentations: {
     fullPage: {

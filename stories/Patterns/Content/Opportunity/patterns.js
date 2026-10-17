@@ -5,7 +5,12 @@ export const opportunityPatterns = {
   model: {
     status: 'provisional',
     intent:
-      'An opportunity to participate or apply; the initial job profile preserves location, deadline and application status.',
+      'An invitation to apply, contribute or take part, with conditions and a decision window. Jobs are the initial editorial profile.',
+    readerNeeds: [
+      'Assess the role or opportunity, offering organization, location and participation conditions.',
+      'Understand eligibility, deadlines and current availability before investing in an application.',
+      'Find application instructions and supporting details; distinguish a closing deadline from a publication date.',
+    ],
   },
   presentations: {
     fullPage: {

@@ -2,6 +2,26 @@
 
 Inspected 16 October 2026 in `/Users/khawkins/Documents/git/drupal-base`, HEAD `226b54812725eb648faa8e09b21b59a338ddf26b`. The files below were unmodified in that working copy. Coverage is the 15 node bundles explicitly selected by `config/default/search_api.index.multidomain.yml`; taxonomy terms are a separate datasource. This is a source-configuration audit, not proof of active production configuration or rendered runtime parity. Drupal was read only; changes are confined to Mangrove.
 
+## Archetype meaning and reader needs
+
+The narrative review also inspected `config/default/node.type.{bundle}.yml` descriptions and `config/default/field.field.node.{bundle}.*.yml` labels and definitions for the same 15 bundles at the revision above. These provide starting evidence for the provisional `model.intent` and `model.readerNeeds` in Mangrove’s content families. They do not establish a canonical schema, active runtime behaviour or completed functionality.
+
+| Archetype | Evidence informing its narrative and needs |
+| --- | --- |
+| Article | News includes press releases, features, op-eds and research briefs; community voices adds attributed perspectives. Authors, sources and dates inform trust and context. Bundle bindings remain defaults, not definitive editorial classification. |
+| Publication | Documents include educational materials, policies, statements and resolutions. Identifiers, authors, issuing organizations, languages and downloads support discovery, reading and citation; policy periods and statement dates have distinct meanings. |
+| Resource | Academic programmes, on-demand training and case studies introduce use, delivery, level and duration needs beyond a generic document link. Dated participation is an Event concern. |
+| Event | Calendar entries include registration, venue, language and accessibility. Programme sessions add parent-event context, rooms, speakers, interpretation, distinct exhibition schedules, live access and recordings. |
+| Organization | Mission, DRR activities, affiliations and public websites establish identity and contribution. National platform definitions add country and hosting-body context for the coordination-platform profile. |
+| Collection | Descriptions, collection types and related content establish a curated set. Freshness and browsing needs also draw on the existing Mangrove collection reference. |
+| Opportunity | Job descriptions, offering organizations, locations, closing dates and attachments support an informed application decision. Eligibility and application instructions are reader needs to resolve from available content, not new implemented controls. |
+| Reference entry | Terminology supports definitions and related links. Hazard profiles explicitly cover scientific background, drivers, impacts, management and frameworks, with identifiers, classification and sources. |
+| Commitment | Initiative definitions, implementing entities, scope, deliverables, status and progress reports support accountability. Privacy flags around funding, beneficiaries, donors and focal points are a reason to preserve publication decisions, not expose every source field. |
+| Landing page | The source bundle describes an authoring mechanism. Mangrove’s topic, initiative and hub references establish reader orientation and wayfinding; editor configuration and internal review notes do not define reader-facing content meaning. |
+| Person | Biography, role, affiliation, activities and public professional links support identity and contribution. Personal information requires an explicit publication decision. |
+
+These are interpretations for design, not a requirement to reproduce Drupal. Each presentation still selects its own information: a full-page need does not make a field mandatory in a teaser or card. Other consumers can map to the same archetypes, and future research can revise the narratives and needs without changing the shared layout primitives.
+
 ## Shared layout
 
 All four `config/default/core.entity_view_display.node.{news,publication,resource,event}.teaser.yml` files select Display Suite `teaser_3_9`. `docroot/themes/custom/undrr_common/templates/layout/teaser-3-9.html.twig` uses `mg-card mg-card__hc mg-card-book__hc`, an optional `mg-card__visual` from the left region, and `mg-card__content` containing first/main regions. It does not select vertical cards or a four-column card gallery. The pattern therefore defaults to a responsive horizontal reading-list teaser, using the same shared class contract, including for news photographs.

@@ -5,7 +5,12 @@ export const publicationPatterns = {
   model: {
     status: 'provisional',
     intent:
-      'A published document with bibliographic identity, complete cover and source organizations.',
+      'A published document with a stable bibliographic identity, including reports, educational materials, policies, statements and resolutions.',
+    readerNeeds: [
+      'Assess the subject, document type, issuing organizations, language and relevance.',
+      'Identify authors, publication dates, identifiers and editions for attribution and citation; distinguish policy periods or statement dates from publication dates.',
+      'Read or download available documents and supporting materials, with clear format and access information.',
+    ],
   },
   presentations: {
     fullPage: {

@@ -4,7 +4,13 @@ export const collectionPatterns = {
   name: 'Collection',
   model: {
     status: 'provisional',
-    intent: 'A curated collection whose freshness reflects its linked content.',
+    intent:
+      'A deliberately assembled set of related content, with an explanation of its scope and why the items belong together.',
+    readerNeeds: [
+      'Understand the collection’s purpose, selection and coverage before exploring its members.',
+      'Browse related items and assess their relevance; use filtering or grouping when the collection warrants it.',
+      'Understand freshness and completeness where known, and distinguish a single collection from an index of collections.',
+    ],
   },
   presentations: {
     fullPage: {

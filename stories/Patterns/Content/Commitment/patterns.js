@@ -5,7 +5,12 @@ export const commitmentPatterns = {
   model: {
     status: 'provisional',
     intent:
-      'A voluntary commitment with geographic scope, progress status and publication metadata.',
+      'An initiative undertaken by one or more entities to contribute to disaster risk reduction, with a scope, intended outcomes and evidence of progress.',
+    readerNeeds: [
+      'Understand who is responsible, what is promised, where it applies and the intended timeframe.',
+      'Assess status, deliverables, beneficiaries and alignment with relevant goals when published.',
+      'Follow public progress reports and supporting evidence. Respect publication decisions for funding, donor, beneficiary and contact details.',
+    ],
   },
   presentations: {
     fullPage: {

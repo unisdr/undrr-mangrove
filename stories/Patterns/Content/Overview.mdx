@@ -51,6 +51,12 @@ National platform provisionally maps to Organization/coordination-platform, pres
   </tbody>
 </table>
 
+## Understanding an archetype
+
+Drupal is a starting reference for the meaning of content and the tasks it supports, alongside Mangrove’s existing page patterns. Each family guide records a narrative and provisional reader and functional needs. Node type descriptions and available fields inform those needs; teaser and card display configuration informs what a particular presentation selects.
+
+These are distinct kinds of evidence. A hidden teaser field can still matter on a full page. An available CMS field is not automatically public, mandatory or useful in every presentation. Reader needs can extend beyond the current Drupal implementation, and multiple bundles can map to one archetype or profile. Keep the consumer mapping in Mangrove while allowing it to evolve independently.
+
 ## Building a presentation
 
 Start from the content family's meaning and the reader's task. Define required and optional information, omission rules and source mapping for that presentation. Compose shared components after those decisions. An existing horizontal teaser does not establish the layout, fields or actions of a full page; a generic vertical card does not establish a content-specific card pattern.
@@ -70,3 +76,5 @@ The generated `content-patterns.json` catalogue records every family's model and
 ### 0.1.0 (16 October 2026)
 
 - Organize content patterns by family, connect existing references and experimental teasers, reserve explicit full-page stubs, and implement card field projections with vertical/book layouts.
+
+- Describe all archetypes through provisional reader and functional needs informed by Drupal content definitions, independently of presentation field selection.

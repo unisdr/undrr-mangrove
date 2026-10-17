@@ -5,7 +5,12 @@ export const landingPagePatterns = {
   model: {
     status: 'provisional',
     intent:
-      'An editorial entry point that introduces a subject and offers routes to related material.',
+      'An orientation and wayfinding page for a topic, initiative or audience. A content hub is a variant for ongoing exploration with a consistent context and navigation.',
+    readerNeeds: [
+      'Understand the page’s purpose and whether it addresses the reader’s needs.',
+      'Identify prioritized routes to relevant content, services or actions.',
+      'Explore related material and retain orientation across a hub where persistent navigation is appropriate. The CMS editor used to assemble the page does not determine its archetype.',
+    ],
   },
   presentations: {
     fullPage: {

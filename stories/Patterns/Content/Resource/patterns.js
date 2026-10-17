@@ -5,7 +5,12 @@ export const resourcePatterns = {
   model: {
     status: 'provisional',
     intent:
-      'A reusable resource with format, availability and source organizations.',
+      'Something readers can use, learn from or apply, including practical tools, case studies, academic programmes and on-demand learning. Its purpose and delivery matter more than its source system.',
+    readerNeeds: [
+      'Understand the intended use, audience and provider, and assess relevance to a task or learning goal.',
+      'Assess format, delivery, location and access; include level and duration when relevant to learning resources.',
+      'Reach the resource or provider and understand the next step. Dated participation belongs with Event; a document whose bibliographic identity is central belongs with Publication.',
+    ],
   },
   presentations: {
     fullPage: {

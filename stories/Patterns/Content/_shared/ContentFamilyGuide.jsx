@@ -78,6 +78,20 @@ export function ContentFamilyGuide({ family, children, cardExamples }) {
         input is a presentation projection, not the complete domain record.
       </p>
       <section>
+        <h2>Reader and functional needs</h2>
+        <p>
+          Provisional design requirements informed by Drupal content definitions
+          and field configuration. These guide future presentations; they are
+          not a required field list or a claim that every function is
+          implemented.
+        </p>
+        <ul>
+          {family.model.readerNeeds.map(need => (
+            <li key={need}>{need}</li>
+          ))}
+        </ul>
+      </section>
+      <section>
         <h2>Editorial profiles</h2>
         <p>
           Profiles select meaning and metadata within this archetype. They are
@@ -143,6 +157,7 @@ ContentFamilyGuide.propTypes = {
     model: PropTypes.shape({
       status: PropTypes.string.isRequired,
       intent: PropTypes.string.isRequired,
+      readerNeeds: PropTypes.arrayOf(PropTypes.string).isRequired,
     }).isRequired,
     presentations: PropTypes.shape({
       fullPage: presentationType.isRequired,

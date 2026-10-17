@@ -5,7 +5,12 @@ export const personPatterns = {
   model: {
     status: 'provisional',
     intent:
-      'A person with identity and biographical content; individual presentations choose which profile fields to expose.',
+      'A public profile that establishes a person’s identity, role, affiliations and relevant experience or contributions.',
+    readerNeeds: [
+      'Identify the person and understand their role, organization and expertise.',
+      'Explore their biography, activities and contributions where published.',
+      'Follow relevant public professional links while respecting the intended visibility of personal information.',
+    ],
   },
   presentations: {
     fullPage: {

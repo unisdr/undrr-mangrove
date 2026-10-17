@@ -29,6 +29,8 @@ Keep Drupal bindings in Mangrove's `stories/Integrations/Drupal/contentPatterns.
 
 ### Ground CMS content patterns in source configuration
 
+Use CMS node type descriptions and field definitions as evidence for archetype narratives and reader needs, alongside existing Mangrove patterns. Record the interpretation and provenance in the source audit. These needs are provisional design requirements, not a mandatory schema or proof of implemented functionality. Available fields are not automatically public; preserve publication and privacy decisions. Keep source meaning separate from presentation selection: a hidden teaser field can still matter on a full page, and a reader need may extend beyond the current CMS implementation.
+
 Before implementing a CMS content pattern, inspect its entity view display, layout template, field formatters, conditional visibility and theme overrides in the source repository. Record the source revision, visible field order, hidden fields and deliberate departures in the pattern documentation. A generic card example does not establish parity with a Drupal teaser. The [content teaser audit](CONTENT-TEASER-DRUPAL-AUDIT.md) is the baseline for all 15 indexed node bundles. Keep publication dates, collection freshness, occurrence ranges and vacancy deadlines distinct. Preserve source/author list structure and optional taxonomy links; source adapters own field extraction, domain visibility and URL resolution.
 
 ### Content families and presentation stubs

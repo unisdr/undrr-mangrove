@@ -5,7 +5,12 @@ export const articlePatterns = {
   model: {
     status: 'provisional',
     intent:
-      'An editorial article, including reported news and attributed commentary. Profiles describe editorial purpose rather than a source CMS bundle.',
+      'An editorial account that reports, explains or interprets a subject. News, research briefs and attributed commentary share this purpose while differing in voice and evidence.',
+    readerNeeds: [
+      'Understand the subject, editorial purpose and publication context before opening the full account.',
+      'Distinguish reporting from opinion and identify authors, sources and relevant dates.',
+      'Read the account and follow supporting evidence or related coverage where supplied.',
+    ],
   },
   presentations: {
     fullPage: {

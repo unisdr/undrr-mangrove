@@ -15,7 +15,7 @@ export function buildContentPatterns({ docsBase, packageName }) {
   return {
     version: 2,
     status: 'experimental',
-    note: 'Content families own distinct presentation projections. Canonical models are provisional. A stub is not designed or implemented and has no callable component or import.',
+    note: 'Content families own distinct presentation projections. Canonical models and reader needs are provisional; reader needs describe design requirements, not implemented functionality or required fields. A stub is not designed or implemented and has no callable component or import.',
     integrations: {
       drupal: {
         status: 'provisional',

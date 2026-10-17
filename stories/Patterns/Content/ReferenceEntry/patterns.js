@@ -5,7 +5,12 @@ export const referenceEntryPatterns = {
   model: {
     status: 'provisional',
     intent:
-      'An explanatory reference entry, including a term definition or a classified hazard profile.',
+      'An explanation intended for lookup and reuse, from a concise term definition to an authoritative hazard profile with scientific evidence and risk context.',
+    readerNeeds: [
+      'Find and understand the term or hazard, its scope, synonyms and classification where relevant.',
+      'Identify authoritative sources and stable identifiers for attribution and citation.',
+      'Explore related concepts. Hazard profiles may also explain drivers, impacts, monitoring, risk management and relationships between hazards.',
+    ],
   },
   presentations: {
     fullPage: {

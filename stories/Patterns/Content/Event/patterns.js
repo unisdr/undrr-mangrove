@@ -5,7 +5,12 @@ export const eventPatterns = {
   model: {
     status: 'provisional',
     intent:
-      'An event with occurrence dates, location and participation information.',
+      'A scheduled opportunity to attend or participate, from a standalone conference or training course to a session within a larger programme.',
+    readerNeeds: [
+      'Understand the purpose, audience, organizers and relationship to a parent event or programme.',
+      'Plan participation using occurrence dates, time zone, venue or online format, languages and accessibility information where relevant.',
+      'Find registration or joining instructions, then recordings and materials when available. Programme sessions may need distinct session and exhibition schedules, rooms and speaker information.',
+    ],
   },
   presentations: {
     fullPage: {
