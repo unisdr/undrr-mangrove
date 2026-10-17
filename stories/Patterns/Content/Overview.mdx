@@ -73,6 +73,23 @@ Audited Drupal field selection establishes provenance, not suitability for every
 
 Resource, Event and Publication can overlap in subject matter. Classify by the reader’s main task: using or learning from a resource, participating at a scheduled time, or identifying and reading a published document. The authoring tool does not determine an archetype. Publication and privacy decisions apply across all presentations, including commitment funding, beneficiary and contact information.
 
+## Provisional contract alignment
+
+The earlier [content-contract proposal #881](https://github.com/unisdr/undrr-mangrove/issues/881), [schema PR #885](https://github.com/unisdr/undrr-mangrove/pull/885) and [prop-alignment draft #891](https://github.com/unisdr/undrr-mangrove/pull/891) remain proposals to reconcile. Their component contracts and the editorial archetypes in this guide describe different levels:
+
+| Boundary              | Responsibility                                                                                                                                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Content model         | Editorial meaning and relationships, such as an event’s occurrence and participation information. Canonical models remain provisional.                                                  |
+| Presentation contract | Selected card or teaser information, omission rules and date-role constraints. The current normalized inputs are experimental projections.                                              |
+| Component interface   | Rendering inputs and options such as heading level and vertical or book layout. Layout does not change content meaning or field selection.                                              |
+| Consumer adapter      | Source extraction, per-record classification, publication visibility, localization and destination policy. Drupal bindings select profiles but do not implement these responsibilities. |
+
+The proposed next step is to formalize the implemented card and teaser projections, reusing shared image, link, attribution and date definitions while retaining profile-specific constraints. Validate real Drupal adapter fixtures against those contracts, then verify that accepted records render correctly in both layouts, including omission and accessibility behaviour. This would provide a concrete consumer for the schema work; the current illustrative fixtures and renderer tests do not establish a production adapter or complete that adoption gate.
+
+Reconcile differences explicitly before adopting the older card schema: one record versus an `items` collection, plain-text versus HTML summaries, linked label values and cardinality, permitted root-relative destinations and distinct date roles. Keep semantic date values separate from localized display labels and text. Do not weaken a presentation’s constraints simply to match the older generic component schema.
+
+Keep full-page contracts provisional until their information architecture and content selection are designed. The `content-patterns.json` catalogue describes needs, selection and implementation status; it is not a validating content schema. Broad legacy prop renames and their migration/versioning decisions belong to a separate reviewed change. Standalone contracts can initially live in Mangrove and be published as JSON for consumers without a React runtime; a separate package is a later ownership and versioning decision.
+
 ## External design references
 
 The comparison below uses published guidance reviewed on 17 October 2026. The application to Mangrove is our interpretation, not evidence that these systems use the same archetype model or that Mangrove’s patterns have been user-tested.
@@ -95,3 +112,5 @@ The generated `content-patterns.json` catalogue records every family's model and
 - Organize content patterns by family, connect existing references and experimental teasers, reserve explicit full-page stubs and implement card field projections with vertical and book layouts.
 
 - Describe all archetypes through provisional reader and functional needs informed by Drupal content definitions, independently of presentation field selection.
+
+- Record the provisional boundaries and adoption path for the earlier content-contract proposals, without publishing a canonical schema or migrating legacy props.
