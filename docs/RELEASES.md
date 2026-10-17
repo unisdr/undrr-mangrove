@@ -86,7 +86,7 @@ This updates CDN URLs in README.md, MDX docs, and story files from the old versi
 
 #### Re-point the `latest` guidance
 
-`yarn update-cdn-version` rewrites *pinned* version URLs. It does not touch `assets.undrr.org/mangrove/latest/`, and neither does any test: `scripts/__tests__/docs-package-paths.test.js` skips `latest/` on purpose, because the tag is a moving pointer at the newest stable release and cannot be resolved against this branch's sources. So `latest/` guidance is checked here, by hand, every release.
+`yarn update-cdn-version` rewrites *pinned* version URLs. It does not touch `assets.undrr.org/mangrove/latest/`, and neither does any test: `scripts/__tests__/docs-package-paths.test.js` skips `latest/` on purpose, because `latest/` is a copy of the PreventionWeb fork's `dist` branch as of the last shared-web-assets production deployment and cannot be resolved against this branch's sources. So `latest/` guidance is checked here, by hand, every release.
 
 A release that changes the major is the one that matters. When `latest` moves to a new major, every `latest/` URL in the docs silently starts serving a different tree: paths that 404ed begin resolving, and paths that resolved begin 404ing. Work through this list:
 
