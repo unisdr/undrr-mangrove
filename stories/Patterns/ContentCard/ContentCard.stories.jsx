@@ -134,8 +134,8 @@ export const PersonBook = {
 
 const Grid = ({ records, layout }) => (
   <ul className="mg-content-card-grid">
-    {records.map((content, index) => (
-      <li key={`${content.type}/${content.profile}/${index}`}>
+    {records.map(content => (
+      <li key={content.link}>
         <ContentCard content={content} layout={layout} />
       </li>
     ))}

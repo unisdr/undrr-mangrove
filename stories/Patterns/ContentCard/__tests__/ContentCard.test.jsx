@@ -144,8 +144,8 @@ test.each(['sideways', 'horizontal'])(
 test('resolved defaults and mixed-language direction are present in static output', () => {
   const { container } = render(
     <div dir="ltr">
-      {mixedLanguageCards.map((content, index) => (
-        <ContentCard key={index} content={content} />
+      {mixedLanguageCards.map(content => (
+        <ContentCard key={content.link} content={content} />
       ))}
     </div>
   );
