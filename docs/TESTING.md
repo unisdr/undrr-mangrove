@@ -198,7 +198,8 @@ Visual testing is handled automatically through our CI/CD pipeline.
 
 ### Quick overview
 
-- Chromatic runs on PRs and main branch pushes
+- Open visual-change PRs as drafts. Chromatic runs when a draft is marked ready for review, and on matching main/develop pushes. Routine PR pushes and reopening do not request snapshots.
+- After a material visual revision, run **Chromatic Visual Testing** from the Actions tab and select the PR branch, or use `gh workflow run chromatic.yml --ref <branch>`. Manual dispatch becomes available once this workflow change is on the default branch. Review the selected commit and the run's Chromatic link; a manual run does not add a PR comment.
 - Visual changes are highlighted for review
 - Changes on main are auto-accepted as baseline
 - Skip with `[skip chromatic]` in commit message
@@ -367,7 +368,7 @@ After `yarn build`, serve the built Storybook with `yarn serve-storybook`, then 
 
 Deterministic `Quality/Motion` fixtures cover Loader, ProgressBar, Gallery, MegaMenu, SyndicationSearchWidget, Drawer and Details. The gate emulates reduced motion, forced colours and both together **before mounting** each fixture, across all five brand themes at desktop LTR and 375px RTL. It checks loading shapes, normal-motion rotation, static labelled Loaders under reduced motion, static dashed indeterminate progress, explicit instant Gallery scrolling even with consumer smooth-scroll CSS, keyboard access and focus return, and visible menu destinations. Search states use local context fixtures with explicit complete/fail controls; media requests are local and external network requests are blocked.
 
-`artifacts/motion/` contains screenshots and a JSON result log; override its location with `MOTION_ARTIFACT_DIR`. CI uploads these artifacts even when the gate fails. The existing Storybook workflow runs the gate on every pull-request update, and Chromatic also reruns on synchronisation and reopening. Screenshots support review; computed-style and interaction assertions decide pass/fail.
+`artifacts/motion/` contains screenshots and a JSON result log; override its location with `MOTION_ARTIFACT_DIR`. CI uploads these artifacts even when the gate fails. The existing Storybook workflow runs the gate on every pull-request update. Chromatic runs when a draft PR is marked ready for review; request a manual run on its branch after material visual revisions. Screenshots support review; computed-style and interaction assertions decide pass/fail.
 
 Stylelint's `mangrove/no-unapproved-motion-timing` rule rejects new literal transition/animation times, including longhands, vendor prefixes, variable fallbacks and transition mixins. `scripts/motion-timing-baseline.json` permits only the recorded legacy declaration counts. Prune removed timings with `node scripts/prune-motion-baseline.mjs --write` when migrating them; baseline changes require reviewed justification. The prune command can only remove exemptions and cannot grow the baseline. Zero lifecycle delays, the exact foundational reduced-motion reset and component properties for repeating progress cycles are intentional exceptions. Run `yarn test scripts/__tests__/stylelint-motion.test.js` for adversarial examples.
 
