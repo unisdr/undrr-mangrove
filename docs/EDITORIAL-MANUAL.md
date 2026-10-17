@@ -1,4 +1,4 @@
-> Copy of docs/EDITORIAL-MANUAL.md from Mangrove 2.1.1, generated at build time; edit docs/EDITORIAL-MANUAL.md in unisdr/undrr-mangrove, not this file. Rendered: https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs
+> Copy of docs/EDITORIAL-MANUAL.md from Mangrove 2.2.0, generated at build time; edit docs/EDITORIAL-MANUAL.md in unisdr/undrr-mangrove, not this file. Rendered: https://mangrove.undrr.org/?path=/docs/contributing-editorial-manual--docs
 
 # Editorial manual for Mangrove
 
