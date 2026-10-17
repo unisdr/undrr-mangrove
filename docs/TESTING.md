@@ -199,10 +199,12 @@ Visual testing is handled automatically through our CI/CD pipeline.
 ### Quick overview
 
 - Open visual-change PRs as drafts. Chromatic runs when a draft is marked ready for review, and on matching main/develop pushes. Routine PR pushes and reopening do not request snapshots.
-- After a material visual revision, run **Chromatic Visual Testing** from the Actions tab and select the PR branch, or use `gh workflow run chromatic.yml --ref <branch>`. Manual dispatch becomes available once this workflow change is on the default branch. Review the selected commit and the run's Chromatic link; a manual run does not add a PR comment.
+- After a material visual revision, run **Chromatic Visual Testing** from the Actions tab and select the PR branch, or use `gh workflow run chromatic.yml --ref <branch>`. Manual dispatch becomes available once this workflow change is on the default branch; select a branch that contains the updated workflow. Review the selected commit and the run's Chromatic link; a manual run does not add a PR comment.
 - Visual changes are highlighted for review
 - Changes on main are auto-accepted as baseline
-- Skip with `[skip chromatic]` in commit message
+- Automatic builds honour `[skip chromatic]` in a push commit message or a ready-for-review PR title. Deliberate manual dispatch does not read those markers.
+- Review builds check out the exact PR head commit; manual builds use the selected branch commit. Both pass explicit branch and commit metadata to Chromatic for baseline selection.
+- Matching paths include story/theme sources, design tokens, token generation and the dependency lockfile.
 
 ## Accessibility testing
 
