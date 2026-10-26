@@ -4919,7 +4919,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.71.1"
     "@vitest/browser": "npm:4.1.12"
     "@vitest/browser-playwright": "npm:4.1.12"
-    "@whitespace/storybook-addon-html": "npm:9.0.0"
+    "@whitespace/storybook-addon-html": "patch:@whitespace/storybook-addon-html@npm%3A9.0.0#~/.yarn/patches/@whitespace-storybook-addon-html-npm-9.0.0-b18b29dbe9.patch"
     autoprefixer: "npm:10.6.1"
     axe-core: "npm:4.14.0"
     babel-jest: "npm:30.5.2"
@@ -5479,6 +5479,16 @@ __metadata:
     prettier: ^3.7.1
     storybook: ^10
   checksum: 10/accb1b3b064894a38d89dd274d9d86dcf7c0e89f5be298ea8f9fa9f27cd6bc5c9a855b61f226748e8063a5e04fefd4854a122b1ded0343fe162aa6153fbeb5d2
+  languageName: node
+  linkType: hard
+
+"@whitespace/storybook-addon-html@patch:@whitespace/storybook-addon-html@npm%3A9.0.0#~/.yarn/patches/@whitespace-storybook-addon-html-npm-9.0.0-b18b29dbe9.patch":
+  version: 9.0.0
+  resolution: "@whitespace/storybook-addon-html@patch:@whitespace/storybook-addon-html@npm%3A9.0.0#~/.yarn/patches/@whitespace-storybook-addon-html-npm-9.0.0-b18b29dbe9.patch::version=9.0.0&hash=800aec"
+  peerDependencies:
+    prettier: ^3.7.1
+    storybook: ^10
+  checksum: 10/25dfb77154c69f818faff0f0810884b9e8d7ae3c4a3ebfff0043026a60d25e636f9456d6fe9f7c45b109d40212112245071740d9e3358615b47b034593046e0a
   languageName: node
   linkType: hard
 

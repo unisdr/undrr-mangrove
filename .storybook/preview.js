@@ -175,16 +175,9 @@ const preview = {
       disable: true,
     },
     html: {
-      prettier: {
-        tabWidth: 2,
-        useTabs: false,
-        removeComments: true,
-        htmlWhitespaceSensitivity: 'css',
-        printWidth: 80,
-        semi: true,
-        singleQuote: true,
-        trailingComma: 'es5',
-      },
+      // Addon 9 does not read html.prettier. Its whitespace policy is patched
+      // through Yarn to match docsSourceRender.js and preserve inline spacing.
+      removeComments: true,
     },
     docs: {
       source: {

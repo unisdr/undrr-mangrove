@@ -23,15 +23,16 @@ yarn build
 yarn validate-manifest
 yarn serve-storybook                       # port 6099, in another terminal
 yarn test:storybook-themes
+yarn test:storybook-html
 yarn test:search-selection-browser
 yarn test:motion-browser
 yarn test:rich-content-browser
 ```
 
-Set `THEME_STORYBOOK_URL`, `SEARCH_STORYBOOK_URL`, `MOTION_STORYBOOK_URL`
-or `CONTENT_STORYBOOK_URL` to test a different production server. A served
-build is required for these four gates, while Vitest runs directly from the
-story sources. Keep `scripts/serve-storybook.mjs` after removing the old runner.
+Set `THEME_STORYBOOK_URL`, `SEARCH_STORYBOOK_URL`, `MOTION_STORYBOOK_URL`,
+`HTML_STORYBOOK_URL` or `CONTENT_STORYBOOK_URL` to test a different production
+server. A served build is required for these production gates, while Vitest
+runs directly from the story sources. Keep `scripts/serve-storybook.mjs` after removing the old runner.
 
 ## Implementation
 
@@ -153,3 +154,21 @@ superseded by this migration.
 - [React Vite migration](https://storybook.js.org/docs/get-started/frameworks/react-vite#how-do-i-migrate-from-the-react-webpack-framework)
 - [Vite CSS without automatic injection](https://vite.dev/guide/features.html#disabling-css-injection-into-the-page)
 - [Vitest addon setup](https://storybook.js.org/docs/writing-tests/integrations/vitest-addon)
+
+## Copyable HTML regression gate
+
+`yarn test:storybook-html` opens the production manager's HTML panel, copies
+its generated markup through the clipboard, renders it as a consumer would,
+and compares inline text with the original story. The existing Rich content
+editorial specimen covers links, emphasis, strong text, code and punctuation.
+This gate runs in CI alongside the theme and other production browser gates.
+
+`@whitespace/storybook-addon-html` 9.0.0 hardcodes Prettier's
+`htmlWhitespaceSensitivity: 'ignore'` and ignores `html.prettier` settings.
+That formatting adds visible spaces before punctuation when copied HTML is
+rendered. A version-pinned Yarn patch changes the setting to `'css'`, matching
+the docs-source renderer. Comment removal uses the addon's supported
+`html.removeComments` parameter. Keep the patch until an upstream release
+preserves inline whitespace; remove it when upgrading and rerun this gate.
+The addon still reads live story DOM, while docs source still renders the
+undecorated story. This fix does not consolidate those different contracts.
