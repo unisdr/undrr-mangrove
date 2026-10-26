@@ -126,7 +126,7 @@
     "babel-plugin-polyfill-corejs3": "1.0.0",
     "classnames": "^2.5.1",
     "copy-webpack-plugin": "14.0.0",
-    "core-js": "3.50.0",
+    "core-js": "3.51.0",
     "css-loader": "7.1.5",
     "css-minimizer-webpack-plugin": "8.0.0",
     "eslint": "10.12.0",
