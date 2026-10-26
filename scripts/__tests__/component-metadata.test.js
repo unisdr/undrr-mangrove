@@ -1,0 +1,165 @@
+import { normalizeComponentMetadata } from '../ai-manifest/component-metadata';
+
+const fixture = () => ({
+  v: 0,
+  meta: { docgen: 'react-docgen', extra: 'retained' },
+  components: {
+    example: {
+      id: 'example',
+      name: 'Example',
+      path: './stories/Example.stories.jsx',
+      jsDocTags: { param: ['{string} props.label - Visible label'] },
+      description: 'Example description',
+      import: 'import { Example } from "example";',
+      reactDocgen: {
+        description: 'Docblock',
+        props: {
+          mode: {
+            description: 'Mode',
+            required: true,
+            type: { name: 'enum', value: [{ value: '"a"' }, { value: '"b"' }] },
+            defaultValue: { value: '"a"', computed: false },
+          },
+          fields: {
+            type: {
+              name: 'shape',
+              value: {
+                value: {
+                  name: 'arrayOf',
+                  value: {
+                    name: 'union',
+                    value: [{ name: 'string' }, { name: 'number' }],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      stories: [
+        { id: 'example--default', name: 'Default', snippet: '<Example />' },
+      ],
+      docs: {
+        'example--docs': {
+          content: '## Changelog\n- **1.0**, 2026-10-26: Added.',
+        },
+      },
+      futureUpstreamField: { nested: [1, 2, 3] },
+    },
+  },
+});
+
+describe('component metadata boundary', () => {
+  it('preserves all input fields, including unknown upstream data, without mutating input', () => {
+    const source = fixture();
+    const normalized = normalizeComponentMetadata(source);
+    expect(normalized).toEqual(source);
+    normalized.components.example.reactDocgen.props.mode.required = false;
+    expect(source.components.example.reactDocgen.props.mode.required).toBe(
+      true
+    );
+  });
+  it('accepts documented CSS/story-only entries without inventing props or snippets', () => {
+    const source = {
+      v: 0,
+      components: {
+        css: {
+          id: 'css',
+          name: 'CSS',
+          path: './stories/Css.stories.jsx',
+          error: { name: 'No component found' },
+        },
+      },
+    };
+    expect(normalizeComponentMetadata(source)).toEqual(source);
+  });
+  it.each([
+    [
+      'an index instead of metadata',
+      value => {
+        delete value.components;
+        value.entries = {};
+      },
+      'manifest.components',
+    ],
+    [
+      'an unknown version',
+      value => {
+        value.v = 1;
+      },
+      'manifest.v',
+    ],
+    [
+      'an empty map',
+      value => {
+        value.components = {};
+      },
+      'nonempty component map',
+    ],
+    [
+      'a changed component identity',
+      value => {
+        value.components.example.id = 'other';
+      },
+      'map key',
+    ],
+    [
+      'duplicate story identity',
+      value => {
+        value.components.example.stories.push({
+          id: 'example--default',
+          name: 'Duplicate',
+        });
+      },
+      'unique',
+    ],
+    [
+      'missing changelog source',
+      value => {
+        delete value.components.example.docs['example--docs'].content;
+      },
+      '.content',
+    ],
+    [
+      'malformed prop defaults',
+      value => {
+        value.components.example.reactDocgen.props.mode.defaultValue.value = {};
+      },
+      '.defaultValue.value',
+    ],
+    [
+      'malformed nested type',
+      value => {
+        value.components.example.reactDocgen.props.fields.type.value.value.value =
+          [];
+      },
+      '.value.value.value',
+    ],
+    [
+      'malformed JSDoc tags',
+      value => {
+        value.components.example.jsDocTags.param = 'lost';
+      },
+      '.jsDocTags.param',
+    ],
+    [
+      'malformed source snippet',
+      value => {
+        value.components.example.stories[0].snippet = null;
+      },
+      '.snippet',
+    ],
+  ])(
+    'rejects %s with a field-specific source error',
+    (_name, mutate, expected) => {
+      const source = fixture();
+      mutate(source);
+      expect(() =>
+        normalizeComponentMetadata(source, { source: 'candidate.json' })
+      ).toThrow(expected);
+      expect(() =>
+        normalizeComponentMetadata(source, { source: 'candidate.json' })
+      ).toThrow('candidate.json');
+    }
+  );
+});
