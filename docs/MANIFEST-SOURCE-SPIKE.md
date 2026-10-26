@@ -101,7 +101,7 @@ its expected path, with a fresh standalone output directory.
 | Raw component metadata | Same 91 records and fields; only extraction `meta.durationMs` differs |
 | Published catalogue | Same 90 components: 73 vanilla HTML, 17 React-only |
 | Rendered examples | Same 37 auto-rendered and 28 curated HTML entries |
-| Adapter contract, complete public output and validation diagnostics | 105-file parity passes; only declared generation timestamps ignored |
+| Adapter contract, complete public output and validation diagnostics | 106-file parity passes; only declared generation timestamps ignored |
 | Standard generation/validation | Pass |
 | Standalone generation/validation | Pass |
 
