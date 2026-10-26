@@ -11,6 +11,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- Isolate CI builds by ref while serializing Pages deployments, add React/Storybook dependency consistency checks, remove three obsolete minimatch resolutions, and exclude assembled package output from Jest discovery.
+
 - Update React and React DOM to 19.3.1, with a single installed version of each. Remove the obsolete brace-expansion resolution, which no longer matches any installed dependency.
 
 - Apply security patches for DOMPurify, ip-address, serialize-javascript, fast-uri and Zod. Align Storybook packages on 10.6.3 and Vitest packages on 4.1.12 so the development and browser-test servers use patched versions.

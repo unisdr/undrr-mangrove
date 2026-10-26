@@ -37,15 +37,20 @@ const config = {
     // The Pages workflow renames docs-build-temp to _site before running tests.
     '/_site/',
     '/storybook-static/',
+    '<rootDir>/npm-package/',
     // Local git worktrees (agent and manual) are full checkouts of the repo;
     // without this, one run can pick up thousands of duplicate test files.
     '/\\.claude/',
     '/\\.worktrees/',
   ],
 
-  // The same worktrees also contain package.json files, which jest-haste-map
-  // reports as duplicate module names.
-  modulePathIgnorePatterns: ['/\\.claude/', '/\\.worktrees/'],
+  // Worktrees and assembled packages contain duplicate package.json names.
+  // Keep the root staging directory out of the module map as well as tests.
+  modulePathIgnorePatterns: [
+    '/\\.claude/',
+    '/\\.worktrees/',
+    '<rootDir>/npm-package/',
+  ],
 
   // A map from regular expressions to paths to transformers
   transform: {

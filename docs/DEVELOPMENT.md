@@ -90,6 +90,26 @@ Typical flow:
 3. Run `yarn test` and `yarn lint`.
 4. Open a PR to `main` with linked issues and passing CI.
 
+### Dependency maintenance
+
+Run `yarn check:dependencies` after dependency updates. It checks for compatible
+duplicate React packages, requires React and React DOM to resolve to one matching
+version, and checks every locked Storybook framework/addon/CLI package against
+the core version. Storybook's independently versioned `global` and `icons`
+support packages are exempt. Update each framework family together rather than
+leaving older nested copies in the lockfile.
+
+Before retaining a version-specific resolution, check that a dependency still
+requests that exact range. Removing an obsolete resolution should leave
+`yarn.lock` unchanged under `yarn install --immutable`.
+
+CI builds run independently for each ref. A newer commit cancels the previous
+build of that same ref; it does not cancel other PRs or an active Pages
+deployment. Only the deployment job shares the `pages` concurrency lock.
+
+The assembled `npm-package/` directory is excluded from Jest's test discovery and
+module map. Tests can still read its files explicitly to verify package output.
+
 ### Commit message convention
 
 Use conventional commits for readable history and PR-title validation:
