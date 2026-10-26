@@ -61,8 +61,12 @@ properties; absent or falsy locale globals normalize to English as before. Set
 `DIRECTION_STORYBOOK_URL` for another server or a deployment under a path prefix.
 The gate runs in CI with the existing production browser checks.
 
-The production gate waits for Storybook's `docsRendered` event and the selected
-manager toolbar title before another docs toolbar interaction. A first preview
-attribute update can precede docs reinitialization and the manager's globals
-replay; it is not a completion signal. Language/direction assertions and their
-timeouts remain unchanged.
+The production gate waits for inline story render phases to finish before
+changing globals, and for `docsRendered`, finished inline renders and the
+selected manager toolbar title afterwards. `docsRendered` alone covers the
+shell; it does not guarantee that its stories have finished. Storybook can
+reload the preview when tearing down a pending inline render, replaying older
+manager globals into that replacement document. The test reads Storybook's
+`__STORYBOOK_PREVIEW__.storyRenders` diagnostic state for this readiness check;
+verify that diagnostic shape when upgrading Storybook. No fixed delay, retry,
+relaxed language/direction assertion or longer timeout is used.

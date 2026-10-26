@@ -49,6 +49,7 @@ const expectLanguage = async (frame, locale, lang, dir, canvas = true) => {
   }
 };
 const select = async (page, toolbar, option) => {
+  await settlePreviewStories(page);
   await page.getByRole('button', { name: toolbar }).click();
   const docsId = new URL(page.url()).searchParams
     .get('path')
@@ -71,7 +72,10 @@ const select = async (page, toolbar, option) => {
     }, docsId);
   }
   await page.getByRole('option', { name: option, exact: true }).click();
-  if (docsId) await page.evaluate(() => window.__directionDocsRendered);
+  if (docsId) {
+    await page.evaluate(() => window.__directionDocsRendered);
+    await settlePreviewStories(page);
+  }
   const selectedTitle = new RegExp(
     `${option.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`
   );
@@ -80,6 +84,18 @@ const select = async (page, toolbar, option) => {
     .getByRole('button', { name: selectedTitle })
     .waitFor();
 };
+// docsRendered covers the shell, not its inline stories. Changing globals
+// while an inline render is pending can make Storybook's teardown reload the
+// preview. These fixtures all mount stories; await their actual final phases.
+const settlePreviewStories = page =>
+  page.waitForFunction(() => {
+    const preview = document.getElementById('storybook-preview-iframe')
+      ?.contentWindow?.__STORYBOOK_PREVIEW__;
+    return (
+      preview?.storyRenders.length > 0 &&
+      preview.storyRenders.every(render => render.phase === 'finished')
+    );
+  });
 const browser = await chromium.launch({ headless: true });
 const deadline = setTimeout(() => {
   console.error('Direction browser gate exceeded two minutes');
@@ -114,6 +130,7 @@ try {
       'locale:english;addonRtl:ltr'
     )
   );
+  await settlePreviewStories(page);
   const frame = await (
     await page.locator('#storybook-preview-iframe').elementHandle()
   ).contentFrame();
@@ -155,6 +172,7 @@ try {
   await page.goto(
     urlFor('/docs/brand-brand-identity--docs', 'locale:arabic;addonRtl:ltr')
   );
+  await settlePreviewStories(page);
   const docs = await (
     await page.locator('#storybook-preview-iframe').elementHandle()
   ).contentFrame();
@@ -176,6 +194,7 @@ try {
   await page.goto(
     urlFor('/docs/components-tabs--docs', 'locale:english;addonRtl:ltr')
   );
+  await settlePreviewStories(page);
   const embeddedDocs = await (
     await page.locator('#storybook-preview-iframe').elementHandle()
   ).contentFrame();
