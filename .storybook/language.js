@@ -17,17 +17,23 @@ export const resolveLanguage = ({ locale = 'english', addonRtl } = {}) => ({
   dir: locale === 'arabic' || addonRtl === 'rtl' ? 'rtl' : 'ltr',
 });
 
-export const applyLanguage = (globals, canvas) => {
+export const applyLanguage = (
+  globals,
+  canvas,
+  { previewDocument = true } = {}
+) => {
   const language = resolveLanguage(globals);
   const elements = new Set([
-    document.documentElement,
-    document.getElementById('storybook-root'),
+    ...(previewDocument
+      ? [document.documentElement, document.getElementById('storybook-root')]
+      : []),
     canvas,
   ]);
   elements.forEach(element => {
     element?.setAttribute('lang', language.lang);
     element?.setAttribute('dir', language.dir);
   });
+  if (!previewDocument) return;
   window.UNDRR = window.UNDRR || {};
   window.UNDRR.langCode = language.locale;
   window.UNDRR.dir = language.dir;

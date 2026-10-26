@@ -23,7 +23,9 @@ never change the language or translated story content.
 `.storybook/language.js` resolves the language and direction once for preview
 loaders, story layout effects and the globals listener used by docs-only pages.
 It writes `lang` and `dir` to the preview document, `#storybook-root` if present,
-and the active canvas. `window.UNDRR.langCode` retains the English-language
+and the active canvas. Embedded docs canvases write only their own attributes;
+the globals listener owns the docs document and runtime so an older canvas
+render cannot overwrite a newer toolbar selection. `window.UNDRR.langCode` retains the English-language
 locale name; `window.UNDRR.dir` retains the resolved direction. Unrelated
 `window.UNDRR` properties remain intact. The existing delayed `load` signal for
 vanilla story integrations is retained with cleanup.

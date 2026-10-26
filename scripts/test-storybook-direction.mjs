@@ -13,21 +13,41 @@ const urlFor = (route, globals, iframe = false) => {
   url.searchParams.set('globals', globals);
   return url.href;
 };
-const expectLanguage = (frame, locale, lang, dir, canvas = true) =>
-  frame.waitForFunction(
-    ({ locale, lang, dir, canvas }) => {
-      const html = document.documentElement;
-      const root = document.getElementById('storybook-root');
-      return (
-        html.lang === lang &&
-        html.dir === dir &&
-        window.UNDRR?.langCode === locale &&
-        window.UNDRR?.dir === dir &&
-        (!canvas || (root?.lang === lang && root?.dir === dir))
-      );
-    },
-    { locale, lang, dir, canvas }
-  );
+const expectLanguage = async (frame, locale, lang, dir, canvas = true) => {
+  try {
+    await frame.waitForFunction(
+      ({ locale, lang, dir, canvas }) => {
+        const html = document.documentElement;
+        const root = document.getElementById('storybook-root');
+        return (
+          html.lang === lang &&
+          html.dir === dir &&
+          window.UNDRR?.langCode === locale &&
+          window.UNDRR?.dir === dir &&
+          (!canvas || (root?.lang === lang && root?.dir === dir))
+        );
+      },
+      { locale, lang, dir, canvas }
+    );
+  } catch (cause) {
+    const actual = await frame.evaluate(() => ({
+      url: location.href,
+      html: {
+        lang: document.documentElement.lang,
+        dir: document.documentElement.dir,
+      },
+      root: {
+        lang: document.getElementById('storybook-root')?.lang,
+        dir: document.getElementById('storybook-root')?.dir,
+      },
+      runtime: window.UNDRR,
+    }));
+    throw new Error(
+      `Language contract mismatch: expected ${JSON.stringify({ locale, lang, dir, canvas })}; actual ${JSON.stringify(actual)}`,
+      { cause }
+    );
+  }
+};
 const select = async (page, toolbar, option) => {
   await page.getByRole('button', { name: toolbar }).click();
   await page.getByRole('option', { name: option, exact: true }).click();

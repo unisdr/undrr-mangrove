@@ -11,7 +11,12 @@ import { applyLanguage } from './language';
 
 const getLangCode = (Story, context) => {
   React.useLayoutEffect(() => {
-    applyLanguage(context.globals, context.canvasElement);
+    // Embedded docs canvases can finish rendering an older globals snapshot
+    // after the docs globals listener has applied a newer toolbar selection.
+    // They own only their canvas; the listener owns the docs document/runtime.
+    applyLanguage(context.globals, context.canvasElement, {
+      previewDocument: context.viewMode !== 'docs',
+    });
   });
 
   React.useEffect(() => {
@@ -64,8 +69,10 @@ const preview = {
     await initialThemeReady;
   },
   loaders: [
-    async ({ globals, canvasElement }) => {
-      applyLanguage(globals, canvasElement);
+    async ({ globals, canvasElement, viewMode }) => {
+      applyLanguage(globals, canvasElement, {
+        previewDocument: viewMode !== 'docs',
+      });
       await applyTheme(globals.theme);
       return {};
     },

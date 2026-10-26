@@ -54,4 +54,16 @@ describe('Storybook language contract', () => {
     expect(document.documentElement.lang).toBe('en');
     expect(window.UNDRR.langCode).toBe('unknown');
   });
+  it('does not let a stale embedded docs canvas overwrite newer document globals', () => {
+    document.body.innerHTML = '<div id="storybook-root"></div>';
+    const canvas = document.createElement('section');
+    applyLanguage({ locale: 'english', addonRtl: 'rtl' });
+    applyLanguage({ locale: 'english', addonRtl: 'ltr' }, canvas, {
+      previewDocument: false,
+    });
+    expect(canvas.dir).toBe('ltr');
+    expect(document.documentElement.dir).toBe('rtl');
+    expect(document.getElementById('storybook-root').dir).toBe('rtl');
+    expect(window.UNDRR).toEqual({ langCode: 'english', dir: 'rtl' });
+  });
 });
