@@ -127,7 +127,7 @@ const MyComponent = () => (
 
 ### Arrow button labels
 
-When `showArrows` is enabled, the buttons use `aria-label="Scroll left"` and `aria-label="Scroll right"`. They are automatically `disabled` when no further scrolling is available in that direction.
+When `showArrows` is enabled, the buttons use the selected catalogue's `scrollLeftLabel` and `scrollRightLabel` (English defaults: "Scroll left" and "Scroll right"). They are automatically `disabled` when no further scrolling is available in that direction.
 
 ### Container semantics
 
@@ -200,7 +200,38 @@ createHydrator({
 
 See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
+## Runtime UI translations
+
+`lang` selects the existing English, Arabic, Spanish, French, Japanese, Russian
+or Simplified Chinese catalogue. Regional tags such as `fr-CA` select their
+primary language. Explicit `labels` override the catalogue field by field;
+existing dedicated label props keep precedence. Unsupported languages use
+English defaults while preserving the supplied HTML language metadata and
+inherited direction. `dir` explicitly overrides automatic direction.
+
+See [UI translations](?path=/docs/contributing-ui-translations--docs) for the
+shared contract and contributor workflow. Interface language does not translate
+consumer content such as titles, captions, navigation items or result content.
+
+The published `components/ScrollContainer.js` module exports `getScrollContainerLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+For React hydration, `data-lang` takes precedence over the nearest `lang`
+attribute on the container or its ancestors. An explicit empty language stops
+inheritance. A valid `dir` on the container takes precedence over inferred
+direction. `data-labels` accepts a JSON object of label overrides; existing
+individual label attributes still win. Static fallback markup needs translated
+text supplied by the server.
+
+`labels.ariaLabel` supplies the default region name; `ariaLabel` or
+`data-aria-label` supplies a content-specific override. `labels.navigationLabel`
+is the arrow-navigation name template, with `{label}` replaced by that region
+name. Its English default is `{label} navigation`; the selected catalogue also
+translates both arrow names. Give each rail a distinct content-specific name.
+
 ## Changelog
+
+- **1.4**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance. Translates the default region and arrow-navigation names, including the `{label}` navigation template.
 
 - **1.3.5**, 2026-09-20 ([#1273](https://github.com/unisdr/undrr-mangrove/issues/1273)): The overflow region is now reachable by Tab with a visible focus indicator, so keyboard users can use the browser's native horizontal scroll keys even when its items contain no links or controls. Arrow navigation now has an accessible name derived from the new `ariaLabel` / `data-aria-label` option. Give each container a unique label on pages with more than one so landmark navigation can distinguish them.
 

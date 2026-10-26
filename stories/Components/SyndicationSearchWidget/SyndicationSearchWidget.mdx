@@ -821,12 +821,12 @@ See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/m
 
 ## UI labels
 
-Every user-visible string can be overridden via `labels`. Unspecified keys fall
-back to `DEFAULT_LABELS`.
+Select built-in interface copy with `lang`, then override individual strings via `labels`. Unspecified keys use the selected catalogue, then English `DEFAULT_LABELS`.
 
 ```jsx
 <SyndicationSearchWidget
   config={config}
+  lang="fr"
   labels={{
     searchPlaceholder: 'Rechercher…',
     submitSearchText: 'Rechercher',
@@ -838,29 +838,30 @@ back to `DEFAULT_LABELS`.
 />
 ```
 
-The full list of keys and their English defaults is in `DEFAULT_LABELS` (exported from `SearchContext.jsx`). See the **Translations** stories for complete label sets in Spanish, French, Japanese, Simplified Chinese, Arabic, and Russian.
+The full list of keys and their English defaults is in `DEFAULT_LABELS` (exported from `SearchContext.jsx`). The same runtime catalogue supplies Spanish, French, Japanese, Simplified Chinese, Arabic and Russian through `lang`; consumers can also call the published `getSyndicationSearchWidgetLabels` resolver.
 
 ### Drupal / server-rendered usage
 
-In a Drupal Twig template, supply translated labels via the `data-labels` JSON attribute:
+In a Drupal Twig template, select built-in copy with `data-lang` or inherited HTML language, and supply optional overrides through `data-labels`:
 
 ```html
 <div
   data-mg-search-widget
   data-search-endpoint="/search-endpoint"
+  data-lang="fr"
   data-labels='{"searchPlaceholder":"Rechercher…","submitSearchText":"Rechercher","noResults":"Aucun résultat trouvé pour \"{query}\"."}'
 ></div>
 ```
 
-`fromElement` parses the JSON and passes it through as the `labels` prop. Unspecified keys fall back to English.
+`fromElement` returns language metadata and optional JSON label overrides alongside `config`. Forward all extracted props to retain language selection. Unspecified label keys use the selected catalogue, then English.
 
-> **Important:** Function-valued labels (needed for Arabic/Russian plural forms)
-> cannot be expressed in JSON. Use a custom JS labels object, or accept fallback
-> plural strings and handle pluralization server-side.
+> Built-in Arabic and Russian plural functions are bundled and work when `lang`
+> selects their catalogue, including through hydration. Custom function-valued
+> overrides cannot be expressed in JSON; supply them through JavaScript.
 
 > **Drupal Twig note:** Use single quotes for the `data-labels` attribute value so that the JSON's double quotes remain unescaped. If any translated string itself contains an apostrophe (common in French), encode it as `’` (the Unicode right single quotation mark) in the JSON, or escape it as `&#39;` in the HTML attribute.
 
-> **RTL layout:** Supplying Arabic labels via `data-labels` or the `labels` prop translates the text content only. The widget's CSS currently uses physical properties and does not flip for right-to-left scripts. RTL layout support is tracked as a separate issue.
+> **RTL layout:** `lang="ar"` sets Arabic UI copy and RTL direction. Passing custom `labels` alone does not select a language or direction. An explicit `dir` overrides automatic direction. This translation contract does not change the widget's existing layout behaviour.
 
 ### `labels` prop vs `config` prop
 
@@ -915,7 +916,38 @@ On screens ≤800px, the sidebar is replaced with a drawer that slides in from t
 
 UX patterns informed by [Pencil & Paper's mobile filter analysis](https://www.pencilandpaper.io/articles/ux-pattern-analysis-mobile-filters).
 
+## Runtime UI translations
+
+`lang` selects the existing English, Arabic, Spanish, French, Japanese, Russian
+or Simplified Chinese catalogue. Regional tags such as `fr-CA` select their
+primary language. Explicit `labels` override the catalogue field by field;
+existing dedicated label props keep precedence. Unsupported languages use
+English defaults while preserving the supplied HTML language metadata and
+inherited direction. `dir` explicitly overrides automatic direction.
+
+See [UI translations](?path=/docs/contributing-ui-translations--docs) for the
+shared contract and contributor workflow. Interface language does not translate
+consumer content such as titles, captions, navigation items or result content.
+
+The published `components/SyndicationSearchWidget.js` module exports `getSyndicationSearchWidgetLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+For React hydration, `data-lang` takes precedence over the nearest `lang`
+attribute on the container or its ancestors. An explicit empty language stops
+inheritance. A valid `dir` on the container takes precedence over inferred
+direction. `data-labels` accepts a JSON object of label overrides; existing
+individual label attributes still win. Static fallback markup needs translated
+text supplied by the server.
+
+Built-in plural functions remain available when hydration selects Arabic or
+Russian; custom function overrides need JavaScript rather than JSON. Selecting
+`lang` changes interface labels independently of `_language` content filters,
+taxonomy data and date formatting. External search/facet portal wrappers receive
+the widget's language and direction.
+
 ## Changelog
+
+- **1.6**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **1.5.0**, 2026-10-16: Book display preserves supplied artwork URLs instead of forcing portrait crops. Publication examples use an explicit content filter, independent column count and concise metadata. Search-only cover stages align desktop captions and collapse missing-artwork space on mobile; no-image configurations remain unstaged.
 

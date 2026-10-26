@@ -1,3 +1,4 @@
+import { getLanguageProps } from '../../../src/i18n';
 /**
  * @file SyndicationSearchWidget.jsx
  * @description UNDRR Syndication Search Widget - React 19 component.
@@ -51,6 +52,8 @@ import ActiveFilters from './components/ActiveFilters';
 import FacetsSidebar from './components/FacetsSidebar';
 import MobileFilterDrawer from './components/MobileFilterDrawer';
 
+export { getSyndicationSearchWidgetLabels } from './_labels';
+
 /**
  * SyndicationSearchWidget component.
  * Main entry point for the UNDRR Syndication Search Widget.
@@ -59,16 +62,16 @@ import MobileFilterDrawer from './components/MobileFilterDrawer';
  * @param {Object} props.config - Widget configuration
  * @param {Object} [props.labels] - UI label overrides; merged with DEFAULT_LABELS
  */
-export function SyndicationSearchWidget({ config, labels }) {
+export function SyndicationSearchWidget({ config, labels, lang, dir }) {
   // The widget root, attached by the inner component. Target selectors and
   // other document lookups resolve against its ownerDocument, so a widget
   // mounted inside an iframe (a block editor canvas) finds elements in that
   // iframe rather than in the window its script runs in.
   const rootRef = useRef(null);
   return (
-    <SearchProvider config={config} labels={labels}>
+    <SearchProvider config={config} labels={labels} lang={lang}>
       <WidgetRootContext value={rootRef}>
-        <SyndicationSearchWidgetInner />
+        <SyndicationSearchWidgetInner lang={lang} dir={dir} />
       </WidgetRootContext>
     </SearchProvider>
   );
@@ -219,11 +222,11 @@ SyndicationSearchWidget.propTypes = {
      */
     analyticsRegionPrefix: PropTypes.string,
   }).isRequired,
-  /**
-   * UI label overrides merged with DEFAULT_LABELS.
-   * Pass any subset to translate or customise individual strings.
-   * Dynamic strings use `{placeholder}` tokens — see `interpolateLabel`.
-   */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.object,
 };
 
@@ -234,7 +237,7 @@ export const SearchWidget = SyndicationSearchWidget;
  * Inner component that has access to search context.
  * Implements the React 19 patterns for concurrent rendering.
  */
-function SyndicationSearchWidgetInner() {
+function SyndicationSearchWidgetInner({ lang, dir }) {
   const config = useSearchConfig();
   const state = useSearchState();
   const dispatch = useSearchDispatch();
@@ -414,6 +417,7 @@ function SyndicationSearchWidgetInner() {
 
   return (
     <div
+      {...getLanguageProps(lang, dir)}
       ref={rootRef}
       id={widgetId}
       className={`mg-search-widget ${isLoading || isPending ? 'mg-search-widget--loading' : ''}`}
@@ -493,7 +497,10 @@ function SyndicationSearchWidgetInner() {
           therefore live input state) still flows. */}
       {searchPortaled &&
         createPortal(
-          <div className="mg-search__form-external">
+          <div
+            {...getLanguageProps(lang, dir)}
+            className="mg-search__form-external"
+          >
             <SearchForm
               value={inputValue}
               onChange={setInputValue}
@@ -512,6 +519,7 @@ function SyndicationSearchWidgetInner() {
       {facetsPortaled &&
         createPortal(
           <div
+            {...getLanguageProps(lang, dir)}
             className="mg-search__facets-external"
             data-vf-google-analytics-region={analyticsRegion(config, 'facets')}
           >

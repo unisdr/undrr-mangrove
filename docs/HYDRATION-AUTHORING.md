@@ -108,8 +108,21 @@ export default function alertBannerFromElement(container) {
 
 - **Export a named default function.** The name should be `{componentName}FromElement` for grep-ability.
 - **Use `container.dataset`** for data attributes. The browser auto-converts `data-my-prop` to `dataset.myProp`.
-- **Provide defaults for every optional prop.** The function must return a valid props object even when every attribute is missing.
+- **Return valid props when attributes are absent.** Let the component supply defaults where appropriate. In particular, omit missing label overrides so the selected language catalogue can supply them.
 - **Keep it pure.** No side effects, no DOM mutation, no API calls. This function is called _before_ the container is cleared.
+
+For components with a built-in label catalogue, spread
+`languageFromElement(container)` from `src/i18n.js` into the returned props. It
+selects `data-lang` before the nearest HTML `lang`, including the container
+itself, and preserves empty boundaries. Read from the container's own tree,
+never from global `document.documentElement`. The helper also forwards a valid
+`dir` attribute from the container itself, allowing that explicit direction to
+override the catalogue's inferred direction; it does not copy ancestor `dir`
+or read `data-dir`. Existing label attributes remain
+explicit overrides; do not fill them with English text when absent. Test local,
+ancestor, nested and unsupported languages alongside existing label attributes.
+See [UI translations](UI-TRANSLATIONS.md) for direction, React rendering and the
+boundary between hydration and separate vanilla JavaScript modules.
 
 ### 2. Create the barrel file
 

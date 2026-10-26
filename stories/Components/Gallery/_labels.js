@@ -1,10 +1,5 @@
-/**
- * @file _labels.js
- * @description Translated label sets for the Gallery component.
- *
- * Imported by Gallery.stories.jsx for the global locale toolbar.
- * Never import from .stories files.
- */
+/** Runtime UI labels for Gallery; shared by production and Storybook. */
+import { createLabelResolver } from '../../../src/i18n';
 
 // ---------------------------------------------------------------------------
 // Spanish (es)
@@ -65,3 +60,20 @@ export const LABELS_RU = {
   nextLabel: 'Следующий элемент',
   loadingLabel: 'Загрузка медиа',
 };
+
+export const DEFAULT_GALLERY_LABELS = {
+  galleryAriaLabel: 'Gallery',
+  prevLabel: 'Previous item',
+  nextLabel: 'Next item',
+  loadingLabel: 'Loading media',
+};
+
+export const getGalleryLabels = createLabelResolver(DEFAULT_GALLERY_LABELS, {
+  en: DEFAULT_GALLERY_LABELS,
+  ar: LABELS_AR,
+  es: LABELS_ES,
+  fr: LABELS_FR,
+  ja: LABELS_JA,
+  ru: LABELS_RU,
+  zh: LABELS_ZH,
+});

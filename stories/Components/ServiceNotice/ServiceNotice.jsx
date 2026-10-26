@@ -1,12 +1,12 @@
+import { getLanguageProps } from '../../../src/i18n';
+import { getServiceNoticeLabels } from './_labels';
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Notice } from '../Notice/Notice';
-import { DEFAULT_SERVICE_NOTICE_LABELS } from './_labels';
 
-export { DEFAULT_SERVICE_NOTICE_LABELS };
-
-const EMPTY_LABELS = {};
+export { getServiceNoticeLabels } from './_labels';
+export { DEFAULT_SERVICE_NOTICE_LABELS } from './_labels';
 
 // Only http(s) status links render, so a javascript: or data: URL from CMS
 // or hydration data can never become a clickable href. The base falls back
@@ -38,14 +38,16 @@ export const ServiceNotice = ({
   statusUrlLabel: customStatusUrlLabel,
   countdownSeconds = null,
   maxAutoRetries = 3,
-  labels = EMPTY_LABELS,
+  lang,
+  dir,
+  labels,
   className,
   ...props
 }) => {
   const isOffline = status === 'offline';
-  const t = { ...DEFAULT_SERVICE_NOTICE_LABELS, ...labels };
-  const retryLabel = customRetryLabel || t.retryLabel;
-  const statusUrlLabel = customStatusUrlLabel || t.statusUrlLabel;
+  const t = getServiceNoticeLabels(lang, labels);
+  const retryLabel = customRetryLabel ?? t.retryLabel;
+  const statusUrlLabel = customStatusUrlLabel ?? t.statusUrlLabel;
   const statusText = isOffline ? t.statusOffline : t.statusDegraded;
   const safeStatusUrl = statusUrl && isSafeUrl(statusUrl) ? statusUrl : null;
 
@@ -160,6 +162,7 @@ export const ServiceNotice = ({
 
   return (
     <Notice
+      {...getLanguageProps(lang, dir)}
       {...props}
       role={null}
       variant={isOffline ? 'negative' : 'warning'}
@@ -218,7 +221,11 @@ ServiceNotice.propTypes = {
   countdownSeconds: PropTypes.number,
   /** Automatic retries before the countdown stops and only manual retry remains */
   maxAutoRetries: PropTypes.number,
-  /** Translated UI strings */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     retryLabel: PropTypes.string,
     statusUrlLabel: PropTypes.string,

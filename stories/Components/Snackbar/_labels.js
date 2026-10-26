@@ -1,10 +1,5 @@
-/**
- * @file _labels.js
- * @description Translated label sets for Snackbar.
- *
- * Imported by Snackbar.stories.jsx for the global locale toolbar. Never import
- * from .stories files.
- */
+/** Runtime UI labels for Snackbar; shared by production and Storybook. */
+import { createLabelResolver } from '../../../src/i18n';
 
 // ---------------------------------------------------------------------------
 // Spanish (es)
@@ -53,3 +48,18 @@ export const LABELS_RU = {
   closeLabel: 'Закрыть',
   closeAriaLabel: 'Закрыть уведомление',
 };
+
+export const DEFAULT_SNACKBAR_LABELS = {
+  closeLabel: 'Close',
+  closeAriaLabel: 'Close notification',
+};
+
+export const getSnackbarLabels = createLabelResolver(DEFAULT_SNACKBAR_LABELS, {
+  en: DEFAULT_SNACKBAR_LABELS,
+  ar: LABELS_AR,
+  es: LABELS_ES,
+  fr: LABELS_FR,
+  ja: LABELS_JA,
+  ru: LABELS_RU,
+  zh: LABELS_ZH,
+});

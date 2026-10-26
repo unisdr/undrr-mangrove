@@ -120,7 +120,32 @@ An `aria-label` or `aria-labelledby` you set yourself is never overridden.
 
 <Controls />
 
+## Runtime UI translations
+
+`lang` selects the existing English, Arabic, Spanish, French, Japanese, Russian
+or Simplified Chinese catalogue. Regional tags such as `fr-CA` select their
+primary language. Explicit `labels` override the catalogue field by field;
+existing dedicated label props keep precedence. Unsupported languages use
+English defaults while preserving the supplied HTML language metadata and
+inherited direction. `dir` explicitly overrides automatic direction.
+
+See [UI translations](?path=/docs/contributing-ui-translations--docs) for the
+shared contract and contributor workflow. Interface language does not translate
+consumer content such as titles, captions, navigation items or result content.
+
+The published `components/CopyButton.js` module exports `getCopyButtonLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+For React hydration, `data-lang` takes precedence over the nearest `lang`
+attribute on the container or its ancestors. An explicit empty language stops
+inheritance. A valid `dir` on the container takes precedence over inferred
+direction. `data-labels` accepts a JSON object of label overrides; existing
+individual label attributes still win. Static fallback markup needs translated
+text supplied by the server.
+
 ## Changelog
+
+- **1.1**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **1.0.3**, 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/CopyButton.js` instead of the package root. The root has never resolved on any published version (the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain), and 2.0.0 stops advertising it, so the subpath is the only form that works. Documentation only; the component is unchanged.
 - **1.0.2**, 2026-09-18 ([#1191](https://github.com/unisdr/undrr-mangrove/pull/1191)): Fixed the standalone vanilla integration snippet. It pointed at `dist/js/copy-button.min.js`, which the CDN does not serve, and loaded the ES module without `type="module"`, so copying it threw `SyntaxError: Unexpected token 'export'`.

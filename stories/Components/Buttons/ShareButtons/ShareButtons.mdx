@@ -105,11 +105,41 @@ createHydrator({
 });
 ```
 
-`fromElement` extracts labels and sharing config from data attributes, with sensible English defaults for any missing attributes.
+`fromElement` extracts language, label overrides and sharing config from data attributes. Missing UI labels use the selected catalogue; without a language, the existing English hydration defaults remain.
 
 See the [Hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/main/docs/HYDRATION.md) for the full API and integration details.
 
+## Runtime UI translations
+
+`lang` selects the existing English, Arabic, Spanish, French, Japanese, Russian
+or Simplified Chinese catalogue. Regional tags such as `fr-CA` select their
+primary language. Explicit `labels` override the catalogue field by field;
+existing dedicated label props keep precedence. Unsupported languages use
+English defaults while preserving the supplied HTML language metadata and
+inherited direction. `dir` explicitly overrides automatic direction.
+
+See [UI translations](?path=/docs/contributing-ui-translations--docs) for the
+shared contract and contributor workflow. Interface language does not translate
+consumer content such as titles, captions, navigation items or result content.
+
+The published `components/ShareButtons.js` module exports `getShareButtonsLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+For React hydration, `data-lang` takes precedence over the nearest `lang`
+attribute on the container or its ancestors. An explicit empty language stops
+inheritance. A valid `dir` on the container takes precedence over inferred
+direction. `data-labels` accepts a JSON object of label overrides; existing
+individual label attributes still win. Static fallback markup needs translated
+text supplied by the server.
+
+Hydration without a language retains its prior `Share this` / `Link copied`
+fallback labels. Supplying a language uses that runtime catalogue; explicit
+`data-main-label`, `data-on-copy-label` and `data-labels` still take precedence.
+The QR dialog receives the same language and direction as the share row.
+
 ## Changelog
+
+- **1.11**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **1.10**, 2026-09-25: Replaced the custom QR overlay with a native dialog. It now has an accessible name and description, browser-managed modal focus and Escape handling, and focus restoration to the QR trigger. Moved dialog styling to themeable tokens and reused the shared close icon button while retaining translated labels, QR copy and download actions, and backdrop dismissal.
 

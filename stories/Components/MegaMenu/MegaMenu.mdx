@@ -220,7 +220,7 @@ motion/transparency, increased contrast, and forced colors.
 This is a drop-in update: existing `sections`, logo/timing props, Drupal
 attributes, and hydration entry points are unchanged. `labels` also accepts
 `backLabel`, `allSectionsLabel`, `closeLabel`, `overviewLabel`,
-`toggleMobileNavLabel`; omitted keys use English defaults. Legacy `menuLabel`
+`toggleMobileNavLabel`; omitted keys use the selected catalogue, then English defaults. Legacy `menuLabel`
 is still accepted but no longer displayed.
 
 <Canvas of={MegaMenuStories.ProgressiveMobile} />
@@ -254,7 +254,32 @@ Inactive desktop panels also become inert and hidden from assistive technology i
 
 <Canvas of={MegaMenuStories.MotionReview} />
 
+## Runtime UI translations
+
+`lang` selects the existing English, Arabic, Spanish, French, Japanese, Russian
+or Simplified Chinese catalogue. Regional tags such as `fr-CA` select their
+primary language. Explicit `labels` override the catalogue field by field;
+existing dedicated label props keep precedence. Unsupported languages use
+English defaults while preserving the supplied HTML language metadata and
+inherited direction. `dir` explicitly overrides automatic direction.
+
+See [UI translations](?path=/docs/contributing-ui-translations--docs) for the
+shared contract and contributor workflow. Interface language does not translate
+consumer content such as titles, captions, navigation items or result content.
+
+The published `components/MegaMenu.js` module exports `getMegaMenuLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
+For React hydration, `data-lang` takes precedence over the nearest `lang`
+attribute on the container or its ancestors. An explicit empty language stops
+inheritance. A valid `dir` on the container takes precedence over inferred
+direction. `data-labels` accepts a JSON object of label overrides; existing
+individual label attributes still win. Static fallback markup needs translated
+text supplied by the server.
+
 ## Changelog
+
+- **1.5**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **1.4.8**, 2026-10-26 ([#1402](https://github.com/unisdr/undrr-mangrove/pull/1402)): Anchored the mobile hamburger vertically and kept it visible beside a horizontally scrollable navigation strip. The bottom divider stays visible beneath the opaque hamburger and logo surfaces. Mouse users can click and drag the rail to scroll without opening a section; ordinary clicks and touch taps open the selected section. Both branded and unbranded labels now open their section directly, with Back returning to all sections and Close restoring focus to the opener.
 

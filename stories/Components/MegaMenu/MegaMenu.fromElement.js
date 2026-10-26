@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
 /**
  * Extract MegaMenu props from a DOM container.
  *
@@ -18,6 +19,10 @@
 export default function megaMenuFromElement(container) {
   const { dataset } = container;
   const props = {
+    ...languageFromElement(container),
+    ...(labelsFromElement(container)
+      ? { labels: labelsFromElement(container) }
+      : {}),
     delay: dataset.delay ? parseInt(dataset.delay, 10) : 300,
     hoverDelay: dataset.hoverDelay ? parseInt(dataset.hoverDelay, 10) : 180,
   };

@@ -6,6 +6,11 @@ A step-by-step tutorial for building a new component in Mangrove from scratch. F
 
 For component motion, follow [Motion and animation](MOTION.md): purpose, timing tokens, reduced motion, progress indicators, forced colours and RTL.
 
+For built-in interface copy, follow [UI translations](UI-TRANSLATIONS.md):
+runtime `lang` selection, component-owned catalogues, explicit label overrides,
+HTML language boundaries and hydration. Keep consumer content separate from
+translated control labels, and exercise the runtime contract in locale stories.
+
 ## Decision tree: what files do I need?
 
 ```

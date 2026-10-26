@@ -1,9 +1,7 @@
+import { getLanguageProps } from '../../../src/i18n';
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  getUserFeedbackLabels,
-  resolveUserFeedbackLanguage,
-} from './UserFeedback.labels';
+import { getUserFeedbackLabels } from './UserFeedback.labels';
 
 export {
   DEFAULT_USER_FEEDBACK_LABELS,
@@ -22,6 +20,7 @@ const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
 const UserFeedback = ({
   feedbackUrl = 'https://www.undrr.org/contact/website-feedback',
   lang,
+  dir,
   labels,
   onResponse,
   className,
@@ -30,8 +29,6 @@ const UserFeedback = ({
   const [response, setResponse] = useState(null);
   const confirmationRef = useRef(null);
   const resolvedLabels = getUserFeedbackLabels(lang, labels);
-  const language =
-    lang === undefined ? undefined : resolveUserFeedbackLanguage(lang);
 
   useEffect(() => {
     if (response) confirmationRef.current?.focus();
@@ -52,8 +49,7 @@ const UserFeedback = ({
         className
       )}
       aria-label={resolvedLabels.question}
-      lang={lang}
-      dir={language && (language === 'ar' ? 'rtl' : 'ltr')}
+      {...getLanguageProps(lang, dir)}
       data-vf-google-analytics-region="undrr-feedback-container"
       {...args}
     >
@@ -116,9 +112,11 @@ const UserFeedback = ({
 UserFeedback.propTypes = {
   /** Destination for both detailed-feedback links. */
   feedbackUrl: PropTypes.string,
-  /** HTML language tag. Labels support en, ar, es, fr, ja, ru, zh; others use English defaults. */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
   lang: PropTypes.string,
-  /** Copy overrides. Missing keys use the selected language, then English. */
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     question: PropTypes.string,
     yes: PropTypes.string,

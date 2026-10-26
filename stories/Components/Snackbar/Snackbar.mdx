@@ -125,7 +125,26 @@ function MyComponent() {
 
 - [Form validation example](?path=/docs/example-form-validation--docs&args=errorDisplay:toast) — working form that uses Snackbar for toast errors alongside inline field errors
 
+## Runtime UI translations
+
+`lang` selects the existing English, Arabic, Spanish, French, Japanese, Russian
+or Simplified Chinese catalogue. Regional tags such as `fr-CA` select their
+primary language. Explicit `labels` override the catalogue field by field;
+existing dedicated label props keep precedence. Unsupported languages use
+English defaults while preserving the supplied HTML language metadata and
+inherited direction. `dir` explicitly overrides automatic direction.
+
+See [UI translations](?path=/docs/contributing-ui-translations--docs) for the
+shared contract and contributor workflow. Interface language does not translate
+consumer content such as titles, captions, navigation items or result content.
+
+Snackbar's React wrapper uses this contract in repository examples. It has
+no published `components/Snackbar.js` entry; production vanilla markup still
+uses its documented authored labels and data attributes.
+
 ## Changelog
+
+- **2.1**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **2.0.0**, 2026-09-16 ([#1164](https://github.com/unisdr/undrr-mangrove/pull/1164)): **Breaking (visual):** the toast now renders through Notice instead of its own filled colour styles, so it matches Notice and ServiceNotice. Hardcoded severity colours, `SnackbarIcons.jsx` and the custom close-button styles are removed. The body mounts only while open (staying hidden and inert through the slide-out), focus returns to its previous element on close, auto-dismissing toasts no longer take focus, and the redundant `aria-live` wrapper is gone. The props API is unchanged; `severity` now defaults to `info`, and `info`/`success` toasts announce politely (`role="status"`) instead of as alerts.
 - **1.4**, 2026-09-01 ([#1086](https://github.com/unisdr/undrr-mangrove/pull/1086)): Aligned the action with the shared 44px target, button radius and motion tokens; replaced physical message spacing with logical spacing for RTL; removed a duplicate error-state rule and redundant per-language story exports in favour of the global locale toolbar.

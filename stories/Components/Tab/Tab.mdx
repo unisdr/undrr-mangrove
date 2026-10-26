@@ -434,11 +434,10 @@ When you pass elements explicitly via `scope`, the skip attribute is ignored —
 
 ### React usage
 
-The `<Tab>` component renders the same HTML as above and calls `mgTabsRuntime()` on mount. It's available from the Mangrove source but not published as a precompiled bundle on the CDN.
+The `<Tab>` component renders the same HTML as above and calls `mgTabsRuntime()` on mount. It is published as `components/Tab.js` in npm and on the CDN. The bundle imports the browser tabs runtime and requires a DOM at import time; load it on the client rather than during server rendering.
 
 ```jsx
-// Requires the full Mangrove source tree (not available from the npm package alone)
-import { Tab } from 'stories/Components/Tab/Tab';
+import { Tab } from '@undrr/undrr-mangrove/components/Tab.js';
 
 const tabdata = [
   { text: 'Overview', text_id: 'overview', data: '<p>Overview content</p>' },
@@ -536,7 +535,25 @@ In version 2.5, the ID of stacked tab trigger elements changed. If you have CSS 
 
 You can also select triggers by class (`.mg-tabs__link`) — this works in all versions.
 
+## Runtime UI translations
+
+`lang` selects the existing English, Arabic, Spanish, French, Japanese, Russian
+or Simplified Chinese catalogue. Regional tags such as `fr-CA` select their
+primary language. Explicit `labels` override the catalogue field by field;
+existing dedicated label props keep precedence. Unsupported languages use
+English defaults while preserving the supplied HTML language metadata and
+inherited direction. `dir` explicitly overrides automatic direction.
+
+See [UI translations](?path=/docs/contributing-ui-translations--docs) for the
+shared contract and contributor workflow. Interface language does not translate
+consumer content such as titles, captions, navigation items or result content.
+
+The published `components/Tab.js` module exports `getTabLabels(lang, labels)`
+for consumers needing the same strings outside React.
+
 ## Changelog
+
+- **2.12**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **2.11.4**, 2026-10-26: Added the existing Arabic RTL story to the docs so its fixed locale can be reviewed alongside examples that follow the preview toolbars; component behaviour is unchanged.
 

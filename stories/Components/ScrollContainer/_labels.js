@@ -1,15 +1,12 @@
-/**
- * @file _labels.js
- * @description Translated label sets for the ScrollContainer component.
- *
- * Imported by ScrollContainer.stories.js for the global locale toolbar.
- * Never import from .stories files.
- */
+/** Runtime UI labels for ScrollContainer; shared by production and Storybook. */
+import { createLabelResolver } from '../../../src/i18n';
 
 // ---------------------------------------------------------------------------
 // Spanish (es)
 // ---------------------------------------------------------------------------
 export const LABELS_ES = {
+  ariaLabel: 'Contenido desplazable',
+  navigationLabel: 'Navegación de {label}',
   scrollLeftLabel: 'Desplazar a la izquierda',
   scrollRightLabel: 'Desplazar a la derecha',
 };
@@ -18,6 +15,8 @@ export const LABELS_ES = {
 // French (fr)
 // ---------------------------------------------------------------------------
 export const LABELS_FR = {
+  ariaLabel: 'Contenu défilant',
+  navigationLabel: 'Navigation : {label}',
   scrollLeftLabel: 'Faire défiler à gauche',
   scrollRightLabel: 'Faire défiler à droite',
 };
@@ -26,6 +25,8 @@ export const LABELS_FR = {
 // Japanese (ja)
 // ---------------------------------------------------------------------------
 export const LABELS_JA = {
+  ariaLabel: 'スクロール可能なコンテンツ',
+  navigationLabel: '{label}のナビゲーション',
   scrollLeftLabel: '左にスクロール',
   scrollRightLabel: '右にスクロール',
 };
@@ -34,6 +35,8 @@ export const LABELS_JA = {
 // Simplified Chinese (zh)
 // ---------------------------------------------------------------------------
 export const LABELS_ZH = {
+  ariaLabel: '可滚动内容',
+  navigationLabel: '{label}导航',
   scrollLeftLabel: '向左滚动',
   scrollRightLabel: '向右滚动',
 };
@@ -42,6 +45,8 @@ export const LABELS_ZH = {
 // Arabic (ar) — Modern Standard Arabic
 // ---------------------------------------------------------------------------
 export const LABELS_AR = {
+  ariaLabel: 'محتوى قابل للتمرير',
+  navigationLabel: 'التنقل في {label}',
   scrollLeftLabel: 'التمرير لليسار',
   scrollRightLabel: 'التمرير لليمين',
 };
@@ -50,6 +55,28 @@ export const LABELS_AR = {
 // Russian (ru)
 // ---------------------------------------------------------------------------
 export const LABELS_RU = {
+  ariaLabel: 'Прокручиваемое содержимое',
+  navigationLabel: 'Навигация: {label}',
   scrollLeftLabel: 'Прокрутить влево',
   scrollRightLabel: 'Прокрутить вправо',
 };
+
+export const DEFAULT_SCROLL_LABELS = {
+  ariaLabel: 'Scrollable content',
+  navigationLabel: '{label} navigation',
+  scrollLeftLabel: 'Scroll left',
+  scrollRightLabel: 'Scroll right',
+};
+
+export const getScrollContainerLabels = createLabelResolver(
+  DEFAULT_SCROLL_LABELS,
+  {
+    en: DEFAULT_SCROLL_LABELS,
+    ar: LABELS_AR,
+    es: LABELS_ES,
+    fr: LABELS_FR,
+    ja: LABELS_JA,
+    ru: LABELS_RU,
+    zh: LABELS_ZH,
+  }
+);

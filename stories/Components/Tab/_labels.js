@@ -1,8 +1,5 @@
-/**
- * @file _labels.js
- * @description Translated label sets for the Tab component.
- * Imported by Tab.stories.jsx for the global locale toolbar.
- */
+/** Runtime UI labels for Tab; shared by production and Storybook. */
+import { createLabelResolver } from '../../../src/i18n';
 
 export const LABELS_ES = {
   tabListLabel: 'Secciones',
@@ -33,3 +30,18 @@ export const LABELS_RU = {
   tabListLabel: 'Разделы',
   filterPlaceholder: 'Фильтр разделов…',
 };
+
+export const DEFAULT_TAB_LABELS = {
+  filterPlaceholder: 'Filter sections…',
+  tabListLabel: 'Sections',
+};
+
+export const getTabLabels = createLabelResolver(DEFAULT_TAB_LABELS, {
+  en: DEFAULT_TAB_LABELS,
+  ar: LABELS_AR,
+  es: LABELS_ES,
+  fr: LABELS_FR,
+  ja: LABELS_JA,
+  ru: LABELS_RU,
+  zh: LABELS_ZH,
+});
