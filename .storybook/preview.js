@@ -7,69 +7,18 @@ import { addons } from 'storybook/preview-api';
 import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
 import { applyTheme, themeNames } from './themeStyles';
 
-// RTL languages
-const rtlLanguages = ['arabic'];
+import { applyLanguage } from './language';
 
-// Language code mapping
-const langArr = {
-  english: 'en',
-  arabic: 'ar',
-  french: 'fr',
-  japanese: 'ja',
-  russian: 'ru',
-  spanish: 'es',
-  chinese: 'zh',
-};
-
-// Decorator to set language and text direction based on locale global
 const getLangCode = (Story, context) => {
-  const activeLang = context.globals.locale || 'english';
+  React.useLayoutEffect(() => {
+    applyLanguage(context.globals, context.canvasElement);
+  });
 
   React.useEffect(() => {
-    const langCode = langArr[activeLang] || 'en';
-    const direction =
-      rtlLanguages.includes(activeLang) || context.globals.addonRtl === 'rtl'
-        ? 'rtl'
-        : 'ltr';
-
-    // Set lang on html element
-    const htmlElem = document.documentElement;
-    htmlElem.setAttribute('lang', langCode);
-
-    // Set dir on both html and #storybook-root (where RTL addon sets it)
-    htmlElem.setAttribute('dir', direction);
-    const storybookRoot = document.getElementById('storybook-root');
-    if (storybookRoot) {
-      storybookRoot.setAttribute('dir', direction);
-    }
-
-    window.UNDRR = window.UNDRR || {};
-    window.UNDRR.langCode = activeLang;
-    window.UNDRR.dir = direction;
-
-    // Dispatch load event for components that listen for it
-    const loadEventTimer = setTimeout(() => {
-      window.dispatchEvent(new Event('load'));
-    }, 10);
-
-    return () => clearTimeout(loadEventTimer);
-  }, [activeLang, context.globals.addonRtl]);
-
-  // The RTL addon writes canvas.dir during every render, including theme/args
-  // changes. Apply locale attributes after each render so it cannot reset an
-  // Arabic canvas to LTR. Keep the manual RTL toggle for other languages.
-  React.useLayoutEffect(() => {
-    const canvas = context.canvasElement;
-    if (canvas) {
-      canvas.setAttribute('lang', langArr[activeLang] || 'en');
-      canvas.setAttribute(
-        'dir',
-        rtlLanguages.includes(activeLang) || context.globals.addonRtl === 'rtl'
-          ? 'rtl'
-          : 'ltr'
-      );
-    }
-  });
+    // Preserve the existing initialization signal for vanilla components.
+    const timer = setTimeout(() => window.dispatchEvent(new Event('load')), 10);
+    return () => clearTimeout(timer);
+  }, [context.globals.locale, context.globals.addonRtl]);
 
   return <Story {...context} />;
 };
@@ -92,32 +41,21 @@ const sbFrameReset = (Story, context) => {
   return <Story {...context} />;
 };
 
-// Legacy RTL addon support - allows manual RTL toggle to override locale
-const setDirection = (Story, context) => {
-  React.useEffect(() => {
-    const input = parent.document.querySelector('[aria-controls="rtl-status"]');
-    if (input?.checked) {
-      document.documentElement.setAttribute('dir', 'rtl');
-      window.UNDRR = window.UNDRR || {};
-      window.UNDRR.dir = 'rtl';
-    }
-  }, []);
-
-  return <Story {...context} />;
-};
-
 // Docs-only pages do not run story decorators/loaders. Listen to the public
-// globals channel as well so toolbar changes update their CSS and body class.
+// globals channel as well so toolbar changes update theme, language and direction.
 const channel = addons.getChannel();
-const updateTheme = ({ globals }) => {
+const updatePreviewGlobals = ({ globals }) => {
+  applyLanguage(globals);
   applyTheme(globals.theme).catch(error =>
     console.error('Theme loading failed', error)
   );
 };
-channel.on(GLOBALS_UPDATED, updateTheme);
+channel.on(GLOBALS_UPDATED, updatePreviewGlobals);
 const initialThemeReady = applyTheme();
 if (import.meta.hot) {
-  import.meta.hot.dispose(() => channel.off(GLOBALS_UPDATED, updateTheme));
+  import.meta.hot.dispose(() =>
+    channel.off(GLOBALS_UPDATED, updatePreviewGlobals)
+  );
 }
 
 /** @type { import('storybook').Preview } */
@@ -126,7 +64,8 @@ const preview = {
     await initialThemeReady;
   },
   loaders: [
-    async ({ globals }) => {
+    async ({ globals, canvasElement }) => {
+      applyLanguage(globals, canvasElement);
       await applyTheme(globals.theme);
       return {};
     },
@@ -247,7 +186,23 @@ const preview = {
     },
   },
 
+  initialGlobals: {
+    addonRtl: 'ltr',
+  },
+
   globalTypes: {
+    addonRtl: {
+      name: 'Direction',
+      description: 'Text direction',
+      toolbar: {
+        icon: 'transfer',
+        items: [
+          { value: 'ltr', title: 'Locale direction' },
+          { value: 'rtl', title: 'Force right-to-left' },
+        ],
+        dynamicTitle: true,
+      },
+    },
     locale: {
       name: 'Locale',
       description: 'locale',
@@ -281,7 +236,7 @@ const preview = {
     },
   },
 
-  decorators: [getLangCode, sbFrameReset, setDirection],
+  decorators: [getLangCode, sbFrameReset],
 
   tags: ['autodocs'],
 };

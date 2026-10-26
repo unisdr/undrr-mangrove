@@ -11,6 +11,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- Replace the Storybook RTL addon with a native direction toolbar, retain existing `addonRtl` links, and share locale/direction handling across stories and docs-only pages.
+
 - Replace the external Storybook HTML addon with a small local live-DOM panel, share whitespace-preserving formatting with docs snippets, and add production clipboard and update regression checks.
 
 - Isolate CI builds by ref while serializing Pages deployments, add React/Storybook dependency consistency checks, remove three obsolete minimatch resolutions, and exclude assembled package output from Jest discovery.
