@@ -12,7 +12,9 @@
 .mg-mega-wrapper {
   position: relative;
   background: rgb(var(--mg-color-white));
-  box-shadow: inset 0 -1px 0 rgb(var(--mg-color-neutral-600) / 0.24);
+
+  // Paint below the header so opaque logo/trigger surfaces cannot cover it.
+  box-shadow: 0 1px 0 rgb(var(--mg-color-neutral-600) / 0.24);
   z-index: var(--mg-z-index-nav);
 }
 
