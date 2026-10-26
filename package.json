@@ -81,7 +81,9 @@
     "test-storybook:watch": "vitest --project=storybook",
     "test:storybook-direction": "node scripts/test-storybook-direction.mjs",
     "test:storybook-html": "node scripts/test-storybook-html.mjs",
-    "test:storybook-themes": "node scripts/test-storybook-themes.mjs"
+    "test:storybook-themes": "node scripts/test-storybook-themes.mjs",
+    "extract:source-metadata": "node scripts/ai-manifest/extract-source-metadata.mjs",
+    "generate-ai-manifest:source": "yarn extract:source-metadata && node scripts/ai-manifest/generate-ai-manifest.js --build-dir=.cache/manifest-source"
   },
   "keywords": [],
   "author": "",
