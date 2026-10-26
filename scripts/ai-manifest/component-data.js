@@ -1297,7 +1297,7 @@ npm run build</code></pre>
     summary:
       'Standalone page-usefulness prompt, generally placed as the sibling immediately before Footer. Response storage and consent remain product-owned.',
     description:
-      'Standalone page-usefulness prompt generally paired as the sibling immediately before Footer. Response storage and consent remain product-owned: keep the response callback separate from the report link, so a product can send the binary response to its own analytics service without Mangrove owning storage or consent decisions.',
+      'Standalone page-usefulness prompt generally paired as the sibling immediately before Footer. The lang prop selects built-in translations; explicit labels override them and unsupported languages fall back to English. Response storage and consent remain product-owned: keep the response callback separate from the report link, so a product can send the binary response to its own analytics service without Mangrove owning storage or consent decisions.',
     cssClasses: [
       'mg-user-feedback',
       'mg-user-feedback__prompt',
@@ -1312,6 +1312,8 @@ npm run build</code></pre>
       modules: hydrationModules('UserFeedback'),
       dataAttributes: {
         'data-mg-user-feedback': 'Marks the container to hydrate (required).',
+        'data-lang':
+          'Language tag (en, ar, es, fr, ja, ru, zh), including regional variants. Defaults to the nearest HTML lang attribute, then English. Explicit label attributes override the selected translation.',
         'data-feedback-url':
           'Where the "report an issue" link points (default https://www.undrr.org/contact/website-feedback).',
         'data-question': 'The prompt, e.g. "Is this page useful?".',
@@ -1330,11 +1332,9 @@ npm run build</code></pre>
         name: 'UserFeedback',
         selector: '[data-mg-user-feedback]',
         markup: `<div data-mg-user-feedback
+  data-lang="fr"
   data-feedback-url="/contact/website-feedback"
-  data-question="Is this page useful?"
-  data-yes-label="Yes"
-  data-no-label="No"
-  data-report-issue-label="Report an issue on this page"></div>`,
+></div>`,
       }),
     },
   },

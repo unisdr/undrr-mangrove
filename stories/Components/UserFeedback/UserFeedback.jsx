@@ -1,17 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import {
+  getUserFeedbackLabels,
+  resolveUserFeedbackLanguage,
+} from './UserFeedback.labels';
 
-export const DEFAULT_USER_FEEDBACK_LABELS = {
-  question: 'Is this page useful?',
-  yes: 'Yes',
-  no: 'No',
-  reportIssue: 'Report an issue on this page',
-  confirmationBeforeLink:
-    'Thank you for your feedback. If you would like, you can also',
-  confirmationSeparator: ' ',
-  confirmationLink: 'tell us more',
-  confirmationAfterLink: '.',
-};
+export {
+  DEFAULT_USER_FEEDBACK_LABELS,
+  getUserFeedbackLabels,
+} from './UserFeedback.labels';
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
 
@@ -24,14 +21,17 @@ const joinClasses = (...classes) => classes.filter(Boolean).join(' ');
  */
 const UserFeedback = ({
   feedbackUrl = 'https://www.undrr.org/contact/website-feedback',
-  labels = {},
+  lang,
+  labels,
   onResponse,
   className,
   ...args
 }) => {
   const [response, setResponse] = useState(null);
   const confirmationRef = useRef(null);
-  const resolvedLabels = { ...DEFAULT_USER_FEEDBACK_LABELS, ...labels };
+  const resolvedLabels = getUserFeedbackLabels(lang, labels);
+  const language =
+    lang === undefined ? undefined : resolveUserFeedbackLanguage(lang);
 
   useEffect(() => {
     if (response) confirmationRef.current?.focus();
@@ -52,6 +52,8 @@ const UserFeedback = ({
         className
       )}
       aria-label={resolvedLabels.question}
+      lang={language}
+      dir={language && (language === 'ar' ? 'rtl' : 'ltr')}
       data-vf-google-analytics-region="undrr-feedback-container"
       {...args}
     >
@@ -114,7 +116,9 @@ const UserFeedback = ({
 UserFeedback.propTypes = {
   /** Destination for both detailed-feedback links. */
   feedbackUrl: PropTypes.string,
-  /** Localised visible copy. Missing keys fall back to English. */
+  /** Language tag (en, ar, es, fr, ja, ru, zh); unsupported tags use English. */
+  lang: PropTypes.string,
+  /** Copy overrides. Missing keys use the selected language, then English. */
   labels: PropTypes.shape({
     question: PropTypes.string,
     yes: PropTypes.string,

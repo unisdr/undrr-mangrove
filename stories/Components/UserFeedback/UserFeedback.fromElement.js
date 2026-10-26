@@ -1,11 +1,12 @@
 /**
  * Extract UserFeedback props from a hydration container.
  *
- * All label attributes are optional; the React component supplies English
- * defaults for omitted values.
+ * Label attributes override the language selected by data-lang or HTML lang.
  */
 export default function userFeedbackFromElement(container) {
   const { dataset } = container;
+  const lang =
+    dataset.lang ?? container.closest('[lang]')?.getAttribute('lang');
   const labels = {
     question: dataset.question,
     yes: dataset.yesLabel,
@@ -18,6 +19,7 @@ export default function userFeedbackFromElement(container) {
   };
 
   return {
+    ...(lang == null ? {} : { lang }),
     feedbackUrl:
       dataset.feedbackUrl || 'https://www.undrr.org/contact/website-feedback',
     labels: Object.fromEntries(

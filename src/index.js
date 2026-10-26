@@ -47,6 +47,7 @@ export {
 export {
   default as UserFeedback,
   DEFAULT_USER_FEEDBACK_LABELS,
+  getUserFeedbackLabels,
 } from '../stories/Components/UserFeedback/UserFeedback';
 export {
   ServiceNotice,
