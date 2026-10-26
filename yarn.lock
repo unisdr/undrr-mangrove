@@ -7050,14 +7050,14 @@ __metadata:
   linkType: hard
 
 "dompurify@npm:^3.4.16":
-  version: 3.4.16
-  resolution: "dompurify@npm:3.4.16"
+  version: 3.4.17
+  resolution: "dompurify@npm:3.4.17"
   dependencies:
     "@types/trusted-types": "npm:^2.0.7"
   dependenciesMeta:
     "@types/trusted-types":
       optional: true
-  checksum: 10/a571d0e2bede4f739666afd640398a86854abd27c71ce0724910249e2fd2ca7ddb8098a9ab579d3a5b39058419af694421f8fe859a81fd6d8acda16019a8ab9d
+  checksum: 10/ae03c068bd351d1201a24a9667cb302c65939f45a0c357edec8b84133108e19ac74f355c2d8b0f30baadadd7f0be2db300d269aa80d3ee15872712ca9ff4e1a8
   languageName: node
   linkType: hard
 
@@ -8155,9 +8155,9 @@ __metadata:
   linkType: hard
 
 "fast-uri@npm:^3.0.1":
-  version: 3.1.8
-  resolution: "fast-uri@npm:3.1.8"
-  checksum: 10/d3dfa29fd2e5fa2371833699f3f78c975b79f65e52e0ce37604db10dffb85b5b448b5075e93453272cb95fb1c6a759495164e60649ffd69e59ec43f20d44f791
+  version: 3.1.9
+  resolution: "fast-uri@npm:3.1.9"
+  checksum: 10/4276cf58661e68b4fefcbc3308a2c8429e5664d2a77b393a79c1cdbe9e5ba80617d27c7ce6685194ae40e4816df73dbd72a0324e5012d94a7e9cf85ee711f658
   languageName: node
   linkType: hard
 
@@ -9093,10 +9093,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ip-address@npm:^10.7.3":
-  version: 10.7.3
-  resolution: "ip-address@npm:10.7.3"
-  checksum: 10/04655aa25ad682bb26ecb82281c9d3ecd99da8ecde9c95146f0a96685de90a359432d905bf6c53b5732fed0bfb1f93763cd3c91c3f266eec96cc41bfea987197
+"ip-address@npm:^10.7.5":
+  version: 10.7.5
+  resolution: "ip-address@npm:10.7.5"
+  checksum: 10/30e328a30851fa944260acd6a618c9a32e7a8f16ff033bab0e7da46beb8572fc9c77514a57e777ba9e0c4e571bab24842c10d2bab96b2856ab602e4ecdd669e1
   languageName: node
   linkType: hard
 
@@ -14276,7 +14276,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"storybook@npm:10.6.1, storybook@npm:^10.6.1":
+"storybook@npm:10.6.1":
   version: 10.6.1
   resolution: "storybook@npm:10.6.1"
   dependencies:
@@ -14311,6 +14311,44 @@ __metadata:
   bin:
     storybook: ./dist/bin/dispatcher.js
   checksum: 10/166d5da2e8004bdde166bc49d3572f6a8e1495eb86b628ffc078049f5494f9b6a9d45fef93500758e8102c132add81ab1875f7afc608491b037734394e219f29
+  languageName: node
+  linkType: hard
+
+"storybook@npm:^10.6.1":
+  version: 10.6.4
+  resolution: "storybook@npm:10.6.4"
+  dependencies:
+    "@storybook/global": "npm:^5.0.0"
+    "@storybook/icons": "npm:^2.0.2"
+    "@testing-library/dom": "npm:^10.4.1"
+    "@testing-library/jest-dom": "npm:6.9.1"
+    "@testing-library/user-event": "npm:^14.6.3"
+    "@vitest/expect": "npm:3.2.4"
+    "@vitest/spy": "npm:3.2.4"
+    "@webcontainer/env": "npm:^1.1.1"
+    esbuild: "npm:^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0 || ^0.26.0 || ^0.27.0 || ^0.28.0"
+    jsonc-parser: "npm:^3.3.1"
+    open: "npm:^10.2.0"
+    oxc-parser: "npm:^0.127.0"
+    oxc-resolver: "npm:11.21.2"
+    recast: "npm:^0.23.5"
+    semver: "npm:^7.7.3"
+    use-sync-external-store: "npm:^1.5.0"
+    ws: "npm:^8.21.1"
+  peerDependencies:
+    "@types/react": ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    prettier: ^2 || ^3
+    vite-plus: ^0.1.15 || ^0.2.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    prettier:
+      optional: true
+    vite-plus:
+      optional: true
+  bin:
+    storybook: ./dist/bin/dispatcher.js
+  checksum: 10/12bbba26d9df53550517e5a9fded6fc942318c9aa2c4590b932df8196351d24934dd8c29b5210c2adc6a8e211591c7fe0a6f9c89e2d6b4d4d901a0b2f1491053
   languageName: node
   linkType: hard
 
