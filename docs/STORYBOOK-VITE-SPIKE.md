@@ -155,20 +155,16 @@ superseded by this migration.
 - [Vite CSS without automatic injection](https://vite.dev/guide/features.html#disabling-css-injection-into-the-page)
 - [Vitest addon setup](https://storybook.js.org/docs/writing-tests/integrations/vitest-addon)
 
-## Copyable HTML regression gate
+## Live HTML panel
 
-`yarn test:storybook-html` opens the production manager's HTML panel, copies
-its generated markup through the clipboard, renders it as a consumer would,
-and compares inline text with the original story. The existing Rich content
-editorial specimen covers links, emphasis, strong text, code and punctuation.
-This gate runs in CI alongside the theme and other production browser gates.
+The repository-local addon in `.storybook/addons/html/` replaces
+`@whitespace/storybook-addon-html`. It preserves the HTML tab and bookmarked
+`storybook/html/panel` ID. Its formatter is shared with docs-source HTML;
+there is no dependency patch. See [the maintenance contract](STORYBOOK-HTML-ADDON.md)
+for scope, supported parameters and limits.
 
-`@whitespace/storybook-addon-html` 9.0.0 hardcodes Prettier's
-`htmlWhitespaceSensitivity: 'ignore'` and ignores `html.prettier` settings.
-That formatting adds visible spaces before punctuation when copied HTML is
-rendered. A version-pinned Yarn patch changes the setting to `'css'`, matching
-the docs-source renderer. Comment removal uses the addon's supported
-`html.removeComments` parameter. Keep the patch until an upstream release
-preserves inline whitespace; remove it when upgrading and rerun this gate.
-The addon still reads live story DOM, while docs source still renders the
-undecorated story. This fix does not consolidate those different contracts.
+`yarn test:storybook-html` opens the production manager, copies generated
+markup through the clipboard, renders it as a consumer would, and compares
+inline text with the original story. It also checks all five themes, RTL,
+live tab interactions, sidebar navigation, stopping/restarting capture and
+Controls edits. This gate runs in CI alongside the other production gates.

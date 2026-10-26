@@ -23,7 +23,6 @@ on:
       - 'docs/**'
       - 'tokens/**'
       - '.storybook/**'
-      - '.yarn/patches/**'
       - '.github/workflows/storybook.yml'
       - 'package.json'
       - 'yarn.lock'

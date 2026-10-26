@@ -118,7 +118,6 @@
     "@typescript-eslint/parser": "^8.71.1",
     "@vitest/browser": "4.1.12",
     "@vitest/browser-playwright": "4.1.12",
-    "@whitespace/storybook-addon-html": "patch:@whitespace/storybook-addon-html@npm%3A9.0.0#~/.yarn/patches/@whitespace-storybook-addon-html-npm-9.0.0-b18b29dbe9.patch",
     "autoprefixer": "10.6.1",
     "axe-core": "4.14.0",
     "babel-jest": "30.5.2",

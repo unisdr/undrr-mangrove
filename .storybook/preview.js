@@ -175,8 +175,6 @@ const preview = {
       disable: true,
     },
     html: {
-      // Addon 9 does not read html.prettier. Its whitespace policy is patched
-      // through Yarn to match docsSourceRender.js and preserve inline spacing.
       removeComments: true,
     },
     docs: {

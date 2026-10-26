@@ -11,7 +11,7 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
-- Preserve inline spacing and punctuation in copied Storybook HTML examples with a pinned addon patch and a production clipboard regression gate.
+- Replace the external Storybook HTML addon with a small local live-DOM panel, share whitespace-preserving formatting with docs snippets, and add production clipboard and update regression checks.
 
 - Isolate CI builds by ref while serializing Pages deployments, add React/Storybook dependency consistency checks, remove three obsolete minimatch resolutions, and exclude assembled package output from Jest discovery.
 
