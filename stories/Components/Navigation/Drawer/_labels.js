@@ -13,7 +13,6 @@ export const LABELS_AR = { closeLabel: 'إغلاق' };
 export const LABELS_RU = { closeLabel: 'Закрыть' };
 
 export const getDrawerLabels = createLabelResolver(DEFAULT_DRAWER_LABELS, {
-  en: DEFAULT_DRAWER_LABELS,
   ar: LABELS_AR,
   es: LABELS_ES,
   fr: LABELS_FR,

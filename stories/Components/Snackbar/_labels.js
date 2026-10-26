@@ -55,7 +55,6 @@ export const DEFAULT_SNACKBAR_LABELS = {
 };
 
 export const getSnackbarLabels = createLabelResolver(DEFAULT_SNACKBAR_LABELS, {
-  en: DEFAULT_SNACKBAR_LABELS,
   ar: LABELS_AR,
   es: LABELS_ES,
   fr: LABELS_FR,

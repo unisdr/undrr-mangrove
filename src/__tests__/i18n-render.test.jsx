@@ -8,6 +8,8 @@ import {
 } from '@testing-library/react';
 import { CopyButton } from '../../stories/Components/Buttons/CopyButton/CopyButton';
 import { ServiceNotice } from '../../stories/Components/ServiceNotice/ServiceNotice';
+import copyButtonFromElement from '../../stories/Components/Buttons/CopyButton/CopyButton.fromElement';
+import serviceNoticeFromElement from '../../stories/Components/ServiceNotice/ServiceNotice.fromElement';
 import { Drawer } from '../../stories/Components/Navigation/Drawer/Drawer';
 import { Gallery } from '../../stories/Components/Gallery/Gallery';
 import { Tab } from '../../stories/Components/Tab/Tab';
@@ -209,52 +211,134 @@ it('SearchProvider changes UI language and plural functions independently of con
   expect(screen.getByText('en')).toBeInTheDocument();
 });
 
-it('search external form and facets retain widget language and explicit direction', async () => {
-  const searchTarget = document.body.appendChild(document.createElement('div'));
-  const facetsTarget = document.body.appendChild(document.createElement('div'));
-  searchTarget.id = 'translated-search';
-  facetsTarget.id = 'translated-facets';
-  const originalFetch = global.fetch;
-  global.fetch = jest.fn().mockResolvedValue({
-    ok: true,
-    json: async () => ({
-      results: [{ tid: '1', name: 'Example term', vocabulary: 'hazards' }],
-      hits: { hits: [], total: { value: 0 } },
-      aggregations: {},
-    }),
-  });
-  try {
+it.each([
+  ['fr-CA', undefined, 'Rechercher…'],
+  ['he-IL', { searchPlaceholder: 'חיפוש' }, 'חיפוש'],
+])(
+  'search external controls retain explicit direction for %s',
+  async (lang, labels, placeholder) => {
+    const searchTarget = document.body.appendChild(
+      document.createElement('div')
+    );
+    const facetsTarget = document.body.appendChild(
+      document.createElement('div')
+    );
+    searchTarget.dir = 'ltr';
+    facetsTarget.dir = 'ltr';
+    searchTarget.id = 'translated-search';
+    facetsTarget.id = 'translated-facets';
+    const originalFetch = global.fetch;
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        results: [{ tid: '1', name: 'Example term', vocabulary: 'hazards' }],
+        hits: { hits: [], total: { value: 0 } },
+        aggregations: {},
+      }),
+    });
+    try {
+      render(
+        <SyndicationSearchWidget
+          lang={lang}
+          labels={labels}
+          dir="rtl"
+          config={{
+            searchTarget: '#translated-search',
+            facetsTarget: '#translated-facets',
+            showFacets: true,
+            facets: [],
+            enableHashSync: false,
+          }}
+        />
+      );
+      await waitFor(() =>
+        expect(
+          searchTarget.querySelector('.mg-search__form-external')
+        ).not.toBeNull()
+      );
+      for (const target of [searchTarget, facetsTarget]) {
+        const wrapper = target.firstElementChild;
+        expect(wrapper).toHaveAttribute('lang', lang);
+        expect(wrapper).toHaveAttribute('dir', 'rtl');
+      }
+      expect(
+        searchTarget.querySelector('input[type="search"]')
+      ).toHaveAttribute('placeholder', placeholder);
+    } finally {
+      cleanup();
+      searchTarget.remove();
+      facetsTarget.remove();
+      global.fetch = originalFetch;
+    }
+  }
+);
+
+it.each([
+  { ariaLabel: '' },
+  { labels: { ariaLabel: '' } },
+  { ariaLabel: '', labels: { ariaLabel: '' } },
+])(
+  'CopyButton retains its translated accessible name for empty overrides: %j',
+  props => {
+    render(<CopyButton lang="fr" {...props} />);
+    expect(
+      screen.getByRole('button', { name: 'Copier dans le presse-papiers' })
+    ).toBeInTheDocument();
+  }
+);
+
+it.each([
+  { retryLabel: '', statusUrlLabel: '' },
+  { labels: { retryLabel: '', statusUrlLabel: '' } },
+])(
+  'ServiceNotice retains translated action names for empty overrides: %j',
+  props => {
     render(
-      <SyndicationSearchWidget
-        lang="fr-CA"
-        dir="rtl"
-        config={{
-          searchTarget: '#translated-search',
-          facetsTarget: '#translated-facets',
-          showFacets: true,
-          facets: [],
-          enableHashSync: false,
-        }}
+      <ServiceNotice
+        lang="fr"
+        title="Example service"
+        onRetry={() => {}}
+        statusUrl="https://example.org/status"
+        {...props}
       />
     );
-    await waitFor(() =>
-      expect(
-        searchTarget.querySelector('.mg-search__form-external')
-      ).not.toBeNull()
-    );
-    for (const target of [searchTarget, facetsTarget]) {
-      const wrapper = target.firstElementChild;
-      expect(wrapper).toHaveAttribute('lang', 'fr-CA');
-      expect(wrapper).toHaveAttribute('dir', 'rtl');
-    }
-    expect(searchTarget.querySelector('input[type="search"]')).toHaveAttribute(
-      'placeholder',
-      'Rechercher…'
-    );
-  } finally {
-    cleanup();
-    searchTarget.remove();
-    facetsTarget.remove();
-    global.fetch = originalFetch;
+    expect(
+      screen.getByRole('button', { name: 'Réessayer la connexion' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /Voir la page de statut/ })
+    ).toBeInTheDocument();
   }
+);
+
+it('empty CMS naming attributes keep translated controls identifiable after hydration', () => {
+  const copy = document.createElement('div');
+  copy.lang = 'fr';
+  copy.setAttribute('aria-label', '');
+  copy.dataset.tooltipLabel = '';
+  copy.dataset.labels = '{"ariaLabel":""}';
+  const service = document.createElement('div');
+  service.lang = 'fr';
+  service.dataset.retry = '';
+  service.dataset.retryLabel = '';
+  service.dataset.statusUrl = 'https://example.org/status';
+  service.dataset.statusUrlLabel = '';
+  render(
+    <>
+      <CopyButton {...copyButtonFromElement(copy)} />
+      <ServiceNotice {...serviceNoticeFromElement(service)} />
+    </>
+  );
+  expect(
+    screen.getByRole('button', { name: 'Copier dans le presse-papiers' })
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole('button', { name: 'Réessayer la connexion' })
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole('link', { name: /Voir la page de statut/ })
+  ).toBeInTheDocument();
+  expect(
+    document.querySelector('.mg-copy-button__feedback')
+  ).toBeEmptyDOMElement();
 });

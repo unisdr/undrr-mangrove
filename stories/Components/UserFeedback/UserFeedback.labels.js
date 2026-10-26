@@ -79,7 +79,6 @@ export const DEFAULT_USER_FEEDBACK_LABELS = {
 export const getUserFeedbackLabels = createLabelResolver(
   DEFAULT_USER_FEEDBACK_LABELS,
   {
-    en: DEFAULT_USER_FEEDBACK_LABELS,
     ar: LABELS_AR,
     es: LABELS_ES,
     fr: LABELS_FR,

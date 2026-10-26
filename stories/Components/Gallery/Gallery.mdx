@@ -279,26 +279,12 @@ See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/m
 
 ## Runtime UI translations
 
-`lang` selects the existing English, Arabic, Spanish, French, Japanese, Russian
-or Simplified Chinese catalogue. Regional tags such as `fr-CA` select their
-primary language. Explicit `labels` override the catalogue field by field;
-existing dedicated label props keep precedence. Unsupported languages use
-English defaults while preserving the supplied HTML language metadata and
-inherited direction. `dir` explicitly overrides automatic direction.
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
 
-See [UI translations](?path=/docs/contributing-ui-translations--docs) for the
-shared contract and contributor workflow. Interface language does not translate
-consumer content such as titles, captions, navigation items or result content.
-
-The published `components/Gallery.js` module exports `getGalleryLabels(lang, labels)`
+`components/Gallery.js` exports `getGalleryLabels(lang, labels)`
 for consumers needing the same strings outside React.
-
-For React hydration, `data-lang` takes precedence over the nearest `lang`
-attribute on the container or its ancestors. An explicit empty language stops
-inheritance. A valid `dir` on the container takes precedence over inferred
-direction. `data-labels` accepts a JSON object of label overrides; existing
-individual label attributes still win. Static fallback markup needs translated
-text supplied by the server.
 
 ## Changelog
 

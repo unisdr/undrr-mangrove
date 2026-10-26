@@ -15,10 +15,11 @@ import { languageFromElement, labelsFromElement } from '../../../../src/i18n';
  */
 export default function shareButtonsFromElement(container) {
   const { dataset } = container;
+  const language = languageFromElement(container);
   return {
-    ...languageFromElement(container),
+    ...language,
     labels: {
-      ...(languageFromElement(container).lang === undefined
+      ...(language.lang === undefined
         ? { mainLabel: 'Share this', onCopy: 'Link copied' }
         : {}),
       ...labelsFromElement(container),

@@ -135,7 +135,6 @@ export const DEFAULT_SHARE_LABELS = {
 };
 
 export const getShareButtonsLabels = createLabelResolver(DEFAULT_SHARE_LABELS, {
-  en: DEFAULT_SHARE_LABELS,
   ar: LABELS_AR,
   es: LABELS_ES,
   fr: LABELS_FR,

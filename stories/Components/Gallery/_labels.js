@@ -69,7 +69,6 @@ export const DEFAULT_GALLERY_LABELS = {
 };
 
 export const getGalleryLabels = createLabelResolver(DEFAULT_GALLERY_LABELS, {
-  en: DEFAULT_GALLERY_LABELS,
   ar: LABELS_AR,
   es: LABELS_ES,
   fr: LABELS_FR,

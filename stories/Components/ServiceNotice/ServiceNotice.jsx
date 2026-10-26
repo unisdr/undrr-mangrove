@@ -46,8 +46,12 @@ export const ServiceNotice = ({
 }) => {
   const isOffline = status === 'offline';
   const t = getServiceNoticeLabels(lang, labels);
-  const retryLabel = customRetryLabel ?? t.retryLabel;
-  const statusUrlLabel = customStatusUrlLabel ?? t.statusUrlLabel;
+  const retryLabel =
+    customRetryLabel || t.retryLabel || getServiceNoticeLabels(lang).retryLabel;
+  const statusUrlLabel =
+    customStatusUrlLabel ||
+    t.statusUrlLabel ||
+    getServiceNoticeLabels(lang).statusUrlLabel;
   const statusText = isOffline ? t.statusOffline : t.statusDegraded;
   const safeStatusUrl = statusUrl && isSafeUrl(statusUrl) ? statusUrl : null;
 

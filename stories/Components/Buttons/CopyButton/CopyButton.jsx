@@ -26,7 +26,9 @@ export const CopyButton = ({
   size,
 }) => {
   const t = getCopyButtonLabels(lang, labels);
-  const ariaLabel = customAriaLabel ?? t.ariaLabel;
+  // The icon-only button always needs a non-empty accessible name.
+  const ariaLabel =
+    customAriaLabel || t.ariaLabel || getCopyButtonLabels(lang).ariaLabel;
   const copiedLabel = customCopiedLabel ?? t.copiedLabel;
   const tooltipLabel = customTooltipLabel ?? t.tooltipLabel;
   const [status, setStatus] = useState('idle');

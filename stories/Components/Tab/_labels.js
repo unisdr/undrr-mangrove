@@ -37,7 +37,6 @@ export const DEFAULT_TAB_LABELS = {
 };
 
 export const getTabLabels = createLabelResolver(DEFAULT_TAB_LABELS, {
-  en: DEFAULT_TAB_LABELS,
   ar: LABELS_AR,
   es: LABELS_ES,
   fr: LABELS_FR,

@@ -665,7 +665,6 @@ export const DEFAULT_LABELS = {
 export const getSyndicationSearchWidgetLabels = createLabelResolver(
   DEFAULT_LABELS,
   {
-    en: DEFAULT_LABELS,
     ar: LABELS_AR,
     es: LABELS_ES,
     fr: LABELS_FR,

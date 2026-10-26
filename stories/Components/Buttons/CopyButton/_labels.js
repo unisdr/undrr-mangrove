@@ -63,7 +63,6 @@ export const LABELS_RU = {
 export const getCopyButtonLabels = createLabelResolver(
   DEFAULT_COPY_BUTTON_LABELS,
   {
-    en: DEFAULT_COPY_BUTTON_LABELS,
     ar: LABELS_AR,
     es: LABELS_ES,
     fr: LABELS_FR,

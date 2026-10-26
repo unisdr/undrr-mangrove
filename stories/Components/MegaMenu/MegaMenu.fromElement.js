@@ -18,11 +18,10 @@ import { languageFromElement, labelsFromElement } from '../../../src/i18n';
  */
 export default function megaMenuFromElement(container) {
   const { dataset } = container;
+  const labels = labelsFromElement(container);
   const props = {
     ...languageFromElement(container),
-    ...(labelsFromElement(container)
-      ? { labels: labelsFromElement(container) }
-      : {}),
+    ...(labels ? { labels } : {}),
     delay: dataset.delay ? parseInt(dataset.delay, 10) : 300,
     hoverDelay: dataset.hoverDelay ? parseInt(dataset.hoverDelay, 10) : 180,
   };

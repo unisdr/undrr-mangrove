@@ -71,7 +71,6 @@ export const DEFAULT_SCROLL_LABELS = {
 export const getScrollContainerLabels = createLabelResolver(
   DEFAULT_SCROLL_LABELS,
   {
-    en: DEFAULT_SCROLL_LABELS,
     ar: LABELS_AR,
     es: LABELS_ES,
     fr: LABELS_FR,

@@ -62,7 +62,11 @@ Label precedence, from lowest to highest, is:
 For example, CopyButton's `ariaLabel`, `copiedLabel` and `tooltipLabel` and
 ServiceNotice's `retryLabel` and `statusUrlLabel` retain their precedence over
 the corresponding `labels` keys. Omit an override to use the catalogue value.
-Follow each component's label types; the search widget also supports
+Public resolvers merge override values as supplied. When rendering, CopyButton
+and ServiceNotice also fall back to non-empty catalogue names for empty naming
+inputs; an icon-only action must remain identifiable. Optional
+confirmation and tooltip text can intentionally be empty. Follow each
+component's label types; the search widget also supports
 function-valued labels for plural-sensitive messages.
 
 ScrollContainer's `ariaLabel` identifies the content of the row and overrides
@@ -92,7 +96,11 @@ stop HTML language inheritance and do not silently select an ancestor's language
 This separation matters for mixed-language pages and Arabic font routing.
 Keep language and direction on each rendered language boundary, including
 detached dialogs and portal contents that cannot inherit from the component's
-main DOM root. See the [accessibility guide](ACCESSIBILITY.md) for broader
+main DOM root. For an unsupported custom language, pass `dir` explicitly when
+search or facet controls portal into a host with a different direction; DOM
+inheritance follows the portal host, not the widget's ancestors. This avoids
+adding browser-dependent direction inference to the rendering contract.
+See the [accessibility guide](ACCESSIBILITY.md) for broader
 language and direction requirements.
 
 ## HTML and React hydration
@@ -183,9 +191,8 @@ import { createLabelResolver } from '../../../src/i18n';
 
 export const DEFAULT_EXAMPLE_LABELS = { closeLabel: 'Close' };
 const LABELS_FR = { closeLabel: 'Fermer' };
-// Abbreviated example: add each supported language's own catalogue here.
+// English comes from the defaults; add each supported translation here.
 export const getExampleLabels = createLabelResolver(DEFAULT_EXAMPLE_LABELS, {
-  en: DEFAULT_EXAMPLE_LABELS,
   fr: LABELS_FR,
 });
 ```

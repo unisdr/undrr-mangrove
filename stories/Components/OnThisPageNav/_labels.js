@@ -32,7 +32,6 @@ export const DEFAULT_ON_THIS_PAGE_LABELS = {
 export const getOnThisPageNavLabels = createLabelResolver(
   DEFAULT_ON_THIS_PAGE_LABELS,
   {
-    en: DEFAULT_ON_THIS_PAGE_LABELS,
     ar: LABELS_AR,
     es: LABELS_ES,
     fr: LABELS_FR,

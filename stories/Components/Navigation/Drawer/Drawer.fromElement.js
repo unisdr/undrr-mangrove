@@ -24,6 +24,7 @@ import { languageFromElement, labelsFromElement } from '../../../../src/i18n';
  */
 export default function drawerFromElement(container) {
   const { dataset } = container;
+  const labels = labelsFromElement(container);
 
   const isFloatingPanel =
     dataset.isFloatingPanel === 'true' ||
@@ -54,14 +55,9 @@ export default function drawerFromElement(container) {
     bodyHtml: bodyHtml || undefined,
     footerHtml: footerEl ? footerEl.innerHTML.trim() : undefined,
     labels:
-      dataset.closeLabel !== undefined || labelsFromElement(container)
-        ? {
-            ...labelsFromElement(container),
-            ...(dataset.closeLabel === undefined
-              ? {}
-              : { closeLabel: dataset.closeLabel }),
-          }
-        : undefined,
+      dataset.closeLabel === undefined
+        ? labels
+        : { ...labels, closeLabel: dataset.closeLabel },
     controlsId: container.id || undefined,
     className: dataset.className || undefined,
   };

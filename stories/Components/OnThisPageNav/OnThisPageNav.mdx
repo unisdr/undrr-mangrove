@@ -354,20 +354,13 @@ Auto-generated IDs from non-Latin headings preserve the original characters. Pro
 
 ## Runtime UI translations
 
-`lang` selects the existing English, Arabic, Spanish, French, Japanese, Russian
-or Simplified Chinese catalogue. Regional tags such as `fr-CA` select their
-primary language. Explicit `labels` override the catalogue field by field;
-existing dedicated label props keep precedence. Unsupported languages use
-English defaults while preserving the supplied HTML language metadata and
-inherited direction. `dir` explicitly overrides automatic direction.
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
 
-See [UI translations](?path=/docs/contributing-ui-translations--docs) for the
-shared contract and contributor workflow. Interface language does not translate
-consumer content such as titles, captions, navigation items or result content.
-
-OnThisPageNav's React wrapper uses this contract in repository examples. It has
-no published `components/OnThisPageNav.js` entry; production vanilla markup still
-uses its documented authored labels and data attributes.
+OnThisPageNav's repository wrapper follows this contract; there is no published
+`components/OnThisPageNav.js` entry or React hydration adapter. Production vanilla
+markup keeps its documented authored labels and data attributes.
 
 ## Changelog
 

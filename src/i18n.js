@@ -9,7 +9,7 @@ const DIRECTIONS = {
   zh: 'ltr',
 };
 
-export function normalizeLanguage(lang = 'en') {
+function normalizeLanguage(lang = 'en') {
   return String(lang).trim().toLowerCase().split(/[-_]/)[0];
 }
 
@@ -29,13 +29,15 @@ export function createLabelResolver(defaultLabels, translations) {
 
 /** Preserve native metadata; unsupported languages keep inherited direction. */
 export function getLanguageProps(lang, dir) {
+  const language = normalizeLanguage(lang);
+  const inferredDir =
+    lang !== undefined && Object.hasOwn(DIRECTIONS, language)
+      ? DIRECTIONS[language]
+      : undefined;
+  const direction = dir === undefined ? inferredDir : dir;
   return {
     ...(lang === undefined ? {} : { lang }),
-    ...(dir !== undefined
-      ? { dir }
-      : lang !== undefined && Object.hasOwn(DIRECTIONS, normalizeLanguage(lang))
-        ? { dir: DIRECTIONS[normalizeLanguage(lang)] }
-        : {}),
+    ...(direction === undefined ? {} : { dir: direction }),
   };
 }
 

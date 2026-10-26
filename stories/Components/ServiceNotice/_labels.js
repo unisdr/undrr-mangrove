@@ -90,7 +90,6 @@ export const LABELS_RU = {
 export const getServiceNoticeLabels = createLabelResolver(
   DEFAULT_SERVICE_NOTICE_LABELS,
   {
-    en: DEFAULT_SERVICE_NOTICE_LABELS,
     ar: LABELS_AR,
     es: LABELS_ES,
     fr: LABELS_FR,
