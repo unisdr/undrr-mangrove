@@ -27,8 +27,15 @@ a deployable Storybook site. Generation still needs `dist/components/`, compiled
 CSS, tokens, source MDX/changelogs and curated integration guidance.
 
 To extract only inputs, use `yarn extract:source-metadata`. The extraction CLI
-accepts `--output-dir=...` and `--config-dir=...`. It requires a fresh/empty output directory and refuses to write into an
-existing Storybook site directory. For repeated local runs, choose a fresh
+accepts `--output-dir=...` and `--config-dir=...`; run these commands from the
+repository root, as with the conventional generator. It requires a fresh/empty
+real output directory and refuses symlink destinations and existing Storybook
+site directories. Metadata is validated and fully serialized before files are
+written to a private sibling staging directory. The complete extraction is
+published by directory rename; concurrent writers cannot mix output or
+overwrite files created during preset loading. Unsupported manifest filenames
+and serialization failures leave the destination unchanged. For repeated local
+runs, choose a fresh
 `--output-dir` and pass it to the generator, or remove the generated
 `.cache/manifest-source` directory before rerunning the default command. This
 prevents files for removed components from surviving in a reused catalogue. The subsequent generator's existing
@@ -126,3 +133,16 @@ repeated local comparisons. The candidate PR adds the same generation,
 validation and parity sequence after the conventional build in CI, without
 changing which output is deployed. It depends on the adapter/parity foundation
 PR and should be reviewed/merged after it.
+
+## Red-team review
+
+The review reproduced three destination failures in the initial candidate:
+files created during asynchronous preset loading could be overwritten, a
+manifest key containing `../` could escape its destination, and an unsupported
+later payload could fail after writing partial metadata. The extractor now
+validates manifest basenames, serializes all payloads before touching output,
+and publishes a complete privately staged directory. It rechecks freshness
+before publication and refuses symlink destinations. Regression cases exercise
+all three failures, concurrent writers and preservation of pre-existing files.
+These checks do not make project presets untrusted input; the candidate still
+executes trusted repository configuration as described above.

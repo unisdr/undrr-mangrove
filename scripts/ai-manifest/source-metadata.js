@@ -23,26 +23,34 @@ export const extractSourceMetadata = async ({
 }) => {
   const started = performance.now();
   const target = path.resolve(outputDir);
-  // Never mix this input-only directory with an existing deployable site.
-  try {
-    await fs.access(path.join(target, 'iframe.html'));
-    throw new Error(
-      `Refusing source extraction into a Storybook site: ${target}`
-    );
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
-  }
-  let existing = [];
-  try {
-    existing = await fs.readdir(target);
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
-  }
-  if (existing.length) {
-    throw new Error(
-      `Source extraction requires a fresh output directory: ${target}`
-    );
-  }
+  // Check before loading trusted presets and again before publication: they
+  // may take seconds to resolve, during which another process can use target.
+  const requireFreshTarget = async () => {
+    let stat;
+    try {
+      stat = await fs.lstat(target);
+    } catch (error) {
+      if (error.code === 'ENOENT') return;
+      throw error;
+    }
+    if (stat.isSymbolicLink() || !stat.isDirectory()) {
+      throw new Error(
+        `Source extraction output must be a real directory: ${target}`
+      );
+    }
+    const existing = await fs.readdir(target);
+    if (existing.includes('iframe.html')) {
+      throw new Error(
+        `Refusing source extraction into a Storybook site: ${target}`
+      );
+    }
+    if (existing.length) {
+      throw new Error(
+        `Source extraction requires a fresh output directory: ${target}`
+      );
+    }
+  };
+  await requireFreshTarget();
   const { presets, configType } = await loadPresets(path.resolve(configDir));
   const generator = await presets.apply('storyIndexGenerator');
   const index = await generator.getIndex();
@@ -82,20 +90,40 @@ export const extractSourceMetadata = async ({
     buildsPreview: false,
     buildsManager: false,
   };
-  await fs.mkdir(path.join(target, 'manifests'), { recursive: true });
-  await fs.writeFile(
-    path.join(target, 'index.json'),
-    JSON.stringify(index, null, 2)
-  );
+  // Validate every filename and serialize every payload before touching the
+  // destination. A broken future preset must not escape or partially publish.
+  const outputs = new Map([
+    ['index.json', JSON.stringify(index, null, 2)],
+    ['source-extraction.json', JSON.stringify(receipt, null, 2)],
+  ]);
   for (const [name, value] of Object.entries(manifests)) {
-    await fs.writeFile(
-      path.join(target, 'manifests', `${name}.json`),
-      JSON.stringify(value, null, 2)
-    );
+    if (!/^[A-Za-z0-9_-]+$/.test(name)) {
+      throw new Error(`Unsupported source manifest name: ${name}`);
+    }
+    const serialized = JSON.stringify(value, null, 2);
+    if (serialized === undefined) {
+      throw new Error(`Source manifest is not JSON serializable: ${name}`);
+    }
+    outputs.set(`manifests/${name}.json`, serialized);
   }
-  await fs.writeFile(
-    path.join(target, 'source-extraction.json'),
-    JSON.stringify(receipt, null, 2)
+  await fs.mkdir(path.dirname(target), { recursive: true });
+  const staging = await fs.mkdtemp(
+    path.join(path.dirname(target), '.manifest-source-')
   );
+  try {
+    await fs.mkdir(path.join(staging, 'manifests'));
+    for (const [filename, contents] of outputs) {
+      await fs.writeFile(path.join(staging, filename), contents, {
+        flag: 'wx',
+      });
+    }
+    await requireFreshTarget();
+    // Rename publishes a complete extraction. If another writer populated the
+    // target since preflight, renaming a directory onto it fails without
+    // overwriting its files. Cleanup only ever removes our private staging dir.
+    await fs.rename(staging, target);
+  } finally {
+    await fs.rm(staging, { recursive: true, force: true });
+  }
   return receipt;
 };
