@@ -30,9 +30,9 @@ Does the component need React?
           + fromElement tests + AI manifest SAMPLE_PROPS (optional)
 ```
 
-A webpack entry is what publishes a component. The npm tarball ships
-`dist/components/`, not `src/`, so an export added to `src/index.js` alone
-reaches no consumer — see unisdr/undrr-mangrove#1252.
+A webpack entry is what publishes a component. The build writes `dist/components/`; the npm tarball publishes those bundles
+as `components/`, without `src/`. An export added to `src/index.js` alone
+reaches no npm consumer — see unisdr/undrr-mangrove#1252.
 
 ## Reference component: Pager
 

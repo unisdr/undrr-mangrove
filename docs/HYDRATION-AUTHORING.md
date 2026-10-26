@@ -109,7 +109,7 @@ export default function alertBannerFromElement(container) {
 - **Export a named default function.** The name should be `{componentName}FromElement` for grep-ability.
 - **Use `container.dataset`** for data attributes. The browser auto-converts `data-my-prop` to `dataset.myProp`.
 - **Return valid props when attributes are absent.** Let the component supply defaults where appropriate. In particular, omit missing label overrides so the selected language catalogue can supply them.
-- **Keep it pure.** No side effects, no DOM mutation, no API calls. This function is called _before_ the container is cleared.
+- **Keep extraction read-only.** Do not make API calls or introduce DOM mutations. This function runs _before_ the container is cleared. ServiceNotice has an established compatibility exception: it consumes and removes legacy `mg-notice--compact` / `mg-notice--overlay` host classes so the hydration container is not styled as a second notice. Prefer its `data-is-compact` / `data-is-overlay` attributes in new markup; do not copy that cleanup into unrelated adapters.
 
 For components with a built-in label catalogue, spread
 `languageFromElement(container)` from `src/i18n.js` into the returned props. It

@@ -124,21 +124,23 @@ With `data-retry` present, the retry button and every automatic retry dispatch a
 
 The container must carry `data-mg-service-notice`. Everything else is optional.
 
-| Attribute                | Maps to            | Notes                                                                                                                                              |
-| ------------------------ | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `data-title`             | `title`            | Plain text. Falls back to the text of a child `.mg-notice__title`.                                                                                 |
-| `data-description`       | `description`      | Plain text. Falls back to the text of a child `.mg-notice__description`.                                                                           |
-| `data-status`            | `status`           | `offline`; any other value gives `degraded`.                                                                                                       |
-| `data-heading-level`     | `headingLevel`     | `h2` to `h6`.                                                                                                                                      |
-| `data-is-compact`        | `isCompact`        | `"true"` (preferred). The `mg-notice--compact` class on the container also works; it is removed on hydration so the container is not styled twice. |
-| `data-is-overlay`        | `isOverlay`        | `"true"` (preferred). The `mg-notice--overlay` class on the container also works; it is removed on hydration so the container is not styled twice. |
-| `data-retry`             | `onRetry`          | Boolean attribute. Renders the retry button and dispatches `mg-service-notice:retry`.                                                              |
-| `data-retry-label`       | `retryLabel`       | Retry button text.                                                                                                                                 |
-| `data-status-url`        | `statusUrl`        | http or https only; other schemes are ignored.                                                                                                     |
-| `data-status-url-label`  | `statusUrlLabel`   | Status link text.                                                                                                                                  |
-| `data-countdown-seconds` | `countdownSeconds` | Needs `data-retry`.                                                                                                                                |
-| `data-max-auto-retries`  | `maxAutoRetries`   | Defaults to 3.                                                                                                                                     |
-| `data-labels`            | `labels`           | JSON object of translated strings, using the keys listed under Translations.                                                                       |
+| Attribute                | Maps to            | Notes                                                                                                                                                               |
+| ------------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-lang`              | `lang`             | UI language tag. Overrides the nearest HTML `lang`, then falls back to English. See the [shared translation guide](?path=/docs/contributing-ui-translations--docs). |
+| `dir`                    | `dir`              | Explicit `ltr`, `rtl` or `auto` on the hydration container overrides inferred direction.                                                                            |
+| `data-title`             | `title`            | Plain text. Falls back to the text of a child `.mg-notice__title`.                                                                                                  |
+| `data-description`       | `description`      | Plain text. Falls back to the text of a child `.mg-notice__description`.                                                                                            |
+| `data-status`            | `status`           | `offline`; any other value gives `degraded`.                                                                                                                        |
+| `data-heading-level`     | `headingLevel`     | `h2` to `h6`.                                                                                                                                                       |
+| `data-is-compact`        | `isCompact`        | `"true"` (preferred). The `mg-notice--compact` class on the container also works; it is removed on hydration so the container is not styled twice.                  |
+| `data-is-overlay`        | `isOverlay`        | `"true"` (preferred). The `mg-notice--overlay` class on the container also works; it is removed on hydration so the container is not styled twice.                  |
+| `data-retry`             | `onRetry`          | Boolean attribute. Renders the retry button and dispatches `mg-service-notice:retry`.                                                                               |
+| `data-retry-label`       | `retryLabel`       | Retry button text.                                                                                                                                                  |
+| `data-status-url`        | `statusUrl`        | http or https only; other schemes are ignored.                                                                                                                      |
+| `data-status-url-label`  | `statusUrlLabel`   | Status link text.                                                                                                                                                   |
+| `data-countdown-seconds` | `countdownSeconds` | Needs `data-retry`.                                                                                                                                                 |
+| `data-max-auto-retries`  | `maxAutoRetries`   | Defaults to 3.                                                                                                                                                      |
+| `data-labels`            | `labels`           | JSON object of translated strings, using the keys listed under Translations.                                                                                        |
 
 | Event                     | Dispatched on           | When                                                                                        |
 | ------------------------- | ----------------------- | ------------------------------------------------------------------------------------------- |
@@ -250,7 +252,7 @@ function MapWidget() {
 
 ## Translations
 
-Labels are provided for the six UN official languages. The non-English strings are drafts and need native-speaker review before release.
+Built-in labels support `en`, `ar`, `es`, `fr`, `ja`, `ru` and `zh`. The non-English strings are drafts and need native-speaker review before release.
 
 Pass overrides with the `labels` prop, or the `data-labels` JSON attribute when hydrating. The keys are `retryLabel`, `statusUrlLabel`, `opensInNewTab`, `statusDegraded`, `statusOffline`, `countdownPrefix`, `countdownAnnouncement` (with a `{seconds}` token) and `autoRetryStopped`.
 
@@ -265,6 +267,15 @@ for consumers needing the same strings outside React.
 
 Dedicated `retryLabel` and `statusUrlLabel` props take precedence. Empty control
 names fall back to the selected catalogue so actions remain identifiable.
+
+An Arabic notice on an English page sets its own language boundary:
+
+```jsx
+<ServiceNotice lang="ar" title="الخدمة غير متاحة" onRetry={retryService} />
+```
+
+For hydration, put `data-lang="ar"` on the host. Product-supplied titles and
+descriptions must also be translated; selecting UI copy does not translate them.
 
 ## Changelog
 
