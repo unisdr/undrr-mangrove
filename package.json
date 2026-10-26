@@ -28,6 +28,7 @@
     "build": "NODE_ENV=production yarn run scss && storybook build -o docs-build-temp --stats-json && webpack --progress && node scripts/ai-manifest/generate-ai-manifest.js && node scripts/copy-docs-to-dist.mjs",
     "generate-ai-manifest": "node scripts/ai-manifest/generate-ai-manifest.js",
     "validate-manifest": "node scripts/ai-manifest/generate-ai-manifest.js --validate",
+    "check:dependencies": "yarn dedupe react react-dom --check && node scripts/check-dependency-versions.mjs",
     "build:analyze": "ANALYZE=true NODE_ENV=production webpack --progress",
     "dev": "NODE_ENV=development yarn run scss-watch & yarn run storybook",
     "storybook": "NODE_ENV=development storybook dev -p 6006",
@@ -198,11 +199,8 @@
     "serialize-javascript": "^7.1.4",
     "picomatch@^4.0.2": "^4.0.4",
     "picomatch@^4.0.3": "^4.0.4",
-    "minimatch@^8.0.2": "^8.0.6",
     "minimatch@^9.0.0": "^9.0.7",
     "minimatch@^9.0.4": "^9.0.7",
-    "minimatch@^9.0.5": "^9.0.7",
-    "minimatch@^10.1.1": "^10.2.3",
     "minimatch@^10.2.2": "^10.2.3"
   },
   "repository": {

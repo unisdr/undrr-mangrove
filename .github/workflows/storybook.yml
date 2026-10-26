@@ -38,13 +38,13 @@ permissions:
   contents: write
   pages: write
   id-token: write
-# Allow one concurrent deployment
-concurrency:
-  group: 'pages'
-  cancel-in-progress: false
 jobs:
   build:
-    concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
+    # Different PRs build independently. A newer commit replaces only the
+    # previous build of the same ref, without interrupting a Pages deployment.
+    concurrency:
+      group: ci-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     # A hung browser test would otherwise sit on a runner until GitHub's
     # six-hour default. A full run of this job is about ten minutes.
@@ -65,6 +65,8 @@ jobs:
           cache: 'yarn'
       - name: Install Dependencies
         run: yarn install --immutable
+      - name: Check dependency consistency
+        run: yarn check:dependencies
       - name: Lint with ESLint and stylelint
         run: yarn run lint:check
       - name: Verify lint leaves the tree unchanged
@@ -169,7 +171,11 @@ jobs:
         uses: actions/upload-pages-artifact@v5
   # Deployment job
   deploy:
-    if: github.ref == 'refs/heads/main' # only deploy if branch is master
+    if: github.ref == 'refs/heads/main'
+    # Serialize publication only; PR checks must not share this lock.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
