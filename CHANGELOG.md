@@ -11,6 +11,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- Apply security patches for DOMPurify, ip-address, serialize-javascript, fast-uri and Zod. Align Storybook packages on 10.6.3 and Vitest packages on 4.1.12 so the development and browser-test servers use patched versions.
+
 ## 2.2.0, 2026-10-17
 
 See the [GitHub Release](https://github.com/unisdr/undrr-mangrove/releases/tag/v2.2.0) for full details.
