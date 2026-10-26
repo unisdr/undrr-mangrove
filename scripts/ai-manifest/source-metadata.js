@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
+import { normalizeComponentMetadata } from './component-metadata.js';
 
 const loadSourcePresets = async configDir => {
   // This is an opt-in research boundary, not a replacement public contract.
@@ -31,6 +32,17 @@ export const extractSourceMetadata = async ({
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
   }
+  let existing = [];
+  try {
+    existing = await fs.readdir(target);
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+  if (existing.length) {
+    throw new Error(
+      `Source extraction requires a fresh output directory: ${target}`
+    );
+  }
   const { presets, configType } = await loadPresets(path.resolve(configDir));
   const generator = await presets.apply('storyIndexGenerator');
   const index = await generator.getIndex();
@@ -53,6 +65,12 @@ export const extractSourceMetadata = async ({
       'Source extraction produced no component metadata; production input was not changed.'
     );
   }
+  // Presets return JS objects with optional undefined fields. Apply the same
+  // JSON serialization boundary as Storybook before validating its JSON input.
+  manifests.components = normalizeComponentMetadata(
+    JSON.parse(JSON.stringify(manifests.components)),
+    { source: 'source preset extraction' }
+  );
   const receipt = {
     mode: 'source-presets',
     presetConfigType: configType,

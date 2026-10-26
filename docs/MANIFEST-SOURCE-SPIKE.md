@@ -27,8 +27,11 @@ a deployable Storybook site. Generation still needs `dist/components/`, compiled
 CSS, tokens, source MDX/changelogs and curated integration guidance.
 
 To extract only inputs, use `yarn extract:source-metadata`. The extraction CLI
-accepts `--output-dir=...` and `--config-dir=...`. It refuses to write into an
-existing Storybook site directory. The subsequent generator's existing
+accepts `--output-dir=...` and `--config-dir=...`. It requires a fresh/empty output directory and refuses to write into an
+existing Storybook site directory. For repeated local runs, choose a fresh
+`--output-dir` and pass it to the generator, or remove the generated
+`.cache/manifest-source` directory before rerunning the default command. This
+prevents files for removed components from surviving in a reused catalogue. The subsequent generator's existing
 `--build-dir` selects the standalone input/output directory.
 
 ## Why reuse the source preset chain
@@ -79,6 +82,47 @@ engine, not just renaming this command.
 
 ## Evidence
 
-Measurements and the exact parity commands are recorded below after the
-contract/parity tooling is applied. Treat local wall times as observations on
-a shared machine, not a controlled performance benchmark.
+Evaluated on 2026-10-26 from the same isolated checkout, with Storybook 10.6.3,
+Node 24.18.0 and Yarn 4.18.1. Both paths used the same sources, curated data,
+compiled CSS and component bundles. No baseline output is read by the source
+extractor. The candidate also succeeded after removing `docs-build-temp` from
+its expected path, with a fresh standalone output directory.
+
+| Check | Result |
+| --- | --- |
+| Full source story index | Exact equality: 742 entries |
+| Raw component metadata | Same 91 records and fields; only extraction `meta.durationMs` differs |
+| Published catalogue | Same 90 components: 73 vanilla HTML, 17 React-only |
+| Rendered examples | Same 37 auto-rendered and 28 curated HTML entries |
+| Adapter contract, complete public output and validation diagnostics | 105-file parity passes; only declared generation timestamps ignored |
+| Standard generation/validation | Pass |
+| Standalone generation/validation | Pass |
+
+One local wall-time observation with common inputs already built:
+
+| Phase | Wall time |
+| --- | --- |
+| Storybook static site build plus catalogue generation | 25.71 s |
+| Source extraction plus catalogue generation | 11.06 s |
+| Source extraction alone, within that candidate run | 6.79 s |
+
+A separate fresh full `yarn build` took 65.24 s, but that includes CSS and
+component-bundle preparation and is **not** directly comparable with the
+catalogue-only command. These are single observations on a shared machine,
+with warm caches for the phase comparison, not a controlled benchmark or a CI
+performance guarantee. Neither timing includes the separate validation run.
+
+After a regular build, reproduce full parity with the foundation PR's tooling:
+
+```sh
+yarn extract:source-metadata
+node scripts/ai-manifest/snapshot-manifest-output.mjs .cache/manifest-parity/site
+node scripts/ai-manifest/snapshot-manifest-output.mjs .cache/manifest-parity/source --build-dir=.cache/manifest-source
+node scripts/ai-manifest/compare-manifest-output.mjs .cache/manifest-parity/site .cache/manifest-parity/source
+```
+
+Snapshot destinations must not already exist, so use fresh destinations on
+repeated local comparisons. The candidate PR adds the same generation,
+validation and parity sequence after the conventional build in CI, without
+changing which output is deployed. It depends on the adapter/parity foundation
+PR and should be reviewed/merged after it.
