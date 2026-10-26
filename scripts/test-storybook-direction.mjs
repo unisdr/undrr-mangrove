@@ -143,9 +143,52 @@ try {
   await expectLanguage(docs, 'english', 'en', 'ltr', false);
   await select(page, /Text direction/, 'Force right-to-left');
   await expectLanguage(docs, 'english', 'en', 'rtl', false);
+  // Tabs docs embeds real inline canvases, including one with fixed Arabic
+  // story globals. Its override must not leak into the docs host or siblings.
+  await page.goto(
+    urlFor('/docs/components-tabs--docs', 'locale:english;addonRtl:ltr')
+  );
+  const embeddedDocs = await (
+    await page.locator('#storybook-preview-iframe').elementHandle()
+  ).contentFrame();
+  const expectCanvases = async (lang, dir) => {
+    await embeddedDocs.waitForFunction(
+      ({ lang, dir }) => {
+        const ordinary = document.getElementById(
+          'story--components-tabs--centred-group-inner'
+        );
+        const fixed = document.getElementById(
+          'story--components-tabs--right-to-left-inner'
+        );
+        return (
+          ordinary?.lang === lang &&
+          ordinary?.dir === dir &&
+          fixed?.lang === 'ar' &&
+          fixed?.dir === 'rtl'
+        );
+      },
+      { lang, dir }
+    );
+  };
+  await expectCanvases('en', 'ltr');
+  await expectLanguage(embeddedDocs, 'english', 'en', 'ltr', false);
+  await select(page, /locale English/, 'Arabic');
+  await expectCanvases('ar', 'rtl');
+  await expectLanguage(embeddedDocs, 'arabic', 'ar', 'rtl', false);
+  await select(page, /locale Arabic/, 'English');
+  await expectCanvases('en', 'ltr');
+  await select(page, /Text direction/, 'Force right-to-left');
+  await expectCanvases('en', 'rtl');
+  await expectLanguage(embeddedDocs, 'english', 'en', 'rtl', false);
+  await select(page, /Global theme for components/, 'PreventionWeb Theme');
+  await embeddedDocs
+    .locator('style[data-mangrove-theme="PreventionWeb Theme"]')
+    .waitFor({ state: 'attached' });
+  await expectCanvases('en', 'rtl');
+  await expectLanguage(embeddedDocs, 'english', 'en', 'rtl', false);
   assert.equal(await page.locator('#storybook-preview-iframe').count(), 1);
   console.log(
-    'Direction gate passed: bookmarked globals, native toolbar, nine locale/override cases, five themes, args rerenders and docs-only updates.'
+    'Direction gate passed: bookmarked globals, native toolbar, nine locale/override cases, five themes, args rerenders, docs-only updates and independent inline story overrides.'
   );
 } finally {
   clearTimeout(deadline);

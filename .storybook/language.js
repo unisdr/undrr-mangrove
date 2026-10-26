@@ -9,13 +9,18 @@ export const LANGUAGE_CODES = {
   chinese: 'zh',
 };
 
-export const resolveLanguage = ({ locale = 'english', addonRtl } = {}) => ({
-  locale,
-  lang: LANGUAGE_CODES[locale] || 'en',
-  // Preserve the existing additive override and bookmarked addonRtl URLs:
-  // Arabic stays RTL; other locales can opt into RTL without changing language.
-  dir: locale === 'arabic' || addonRtl === 'rtl' ? 'rtl' : 'ltr',
-});
+export const resolveLanguage = ({ locale, addonRtl } = {}) => {
+  const activeLocale = locale || 'english';
+  return {
+    locale: activeLocale,
+    lang: Object.hasOwn(LANGUAGE_CODES, activeLocale)
+      ? LANGUAGE_CODES[activeLocale]
+      : 'en',
+    // Preserve the existing additive override and bookmarked addonRtl URLs:
+    // Arabic stays RTL; other locales can opt into RTL without changing language.
+    dir: activeLocale === 'arabic' || addonRtl === 'rtl' ? 'rtl' : 'ltr',
+  };
+};
 
 export const applyLanguage = (
   globals,

@@ -74,6 +74,14 @@ horizontal. Panels stay mounted so form values persist.
 
 <Canvas of={TabStories.StackedSingleOpen} meta={TabStories} />
 
+### Right-to-left example
+
+This example fixes its story locale to Arabic, so its language and direction
+remain Arabic/RTL while other examples follow the preview toolbars. It reuses
+the same component and demonstrates a deliberate reading-direction condition.
+
+<Canvas of={TabStories.RightToLeft} meta={TabStories} />
+
 ## Interactions
 
 **Horizontal tabs:**
@@ -529,6 +537,8 @@ In version 2.5, the ID of stacked tab trigger elements changed. If you have CSS 
 You can also select triggers by class (`.mg-tabs__link`) — this works in all versions.
 
 ## Changelog
+
+- **2.11.4**, 2026-10-26: Added the existing Arabic RTL story to the docs so its fixed locale can be reviewed alongside examples that follow the preview toolbars; component behaviour is unchanged.
 
 - **2.11.3**, 2026-10-15 ([#1357](https://github.com/unisdr/undrr-mangrove/issues/1357)): Stacked-tab indicator rotation uses the medium motion token and standard easing, retaining its reduced-motion gate.
 

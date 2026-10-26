@@ -54,6 +54,9 @@ yarn test:storybook-html
 
 The direction gate drives the real manager menus and checks all seven supported
 locales, manual RTL overrides, Arabic direction after Controls/theme rerenders,
-all five themes, and cold docs-only links followed by toolbar changes. Set
+all five themes, cold docs-only links followed by toolbar changes, and inline
+docs canvases with an independent fixed-Arabic story override. Unsupported
+locale names use English language attributes without reading inherited object
+properties; absent or falsy locale globals normalize to English as before. Set
 `DIRECTION_STORYBOOK_URL` for another server or a deployment under a path prefix.
 The gate runs in CI with the existing production browser checks.

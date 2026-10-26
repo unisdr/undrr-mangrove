@@ -66,4 +66,20 @@ describe('Storybook language contract', () => {
     expect(document.getElementById('storybook-root').dir).toBe('rtl');
     expect(window.UNDRR).toEqual({ langCode: 'english', dir: 'rtl' });
   });
+  it.each(['toString', 'constructor', '__proto__'])(
+    'treats inherited key %s as an unsupported locale',
+    locale => {
+      applyLanguage({ locale });
+      expect(document.documentElement.lang).toBe('en');
+      expect(window.UNDRR).toEqual({ langCode: locale, dir: 'ltr' });
+    }
+  );
+  it.each([undefined, null, '', false, 0])(
+    'normalizes falsy locale %s to English',
+    locale => {
+      applyLanguage({ locale });
+      expect(document.documentElement.lang).toBe('en');
+      expect(window.UNDRR).toEqual({ langCode: 'english', dir: 'ltr' });
+    }
+  );
 });
