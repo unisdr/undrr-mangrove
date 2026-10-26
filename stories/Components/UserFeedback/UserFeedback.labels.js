@@ -61,3 +61,39 @@ export const LABELS_RU = {
   confirmationLink: 'рассказать нам подробнее',
   confirmationAfterLink: '.',
 };
+export const DEFAULT_USER_FEEDBACK_LABELS = {
+  question: 'Is this page useful?',
+  yes: 'Yes',
+  no: 'No',
+  reportIssue: 'Report an issue on this page',
+  confirmationBeforeLink:
+    'Thank you for your feedback. If you would like, you can also',
+  confirmationSeparator: ' ',
+  confirmationLink: 'tell us more',
+  confirmationAfterLink: '.',
+};
+
+const TRANSLATIONS = {
+  en: DEFAULT_USER_FEEDBACK_LABELS,
+  ar: LABELS_AR,
+  es: LABELS_ES,
+  fr: LABELS_FR,
+  ja: LABELS_JA,
+  ru: LABELS_RU,
+  zh: LABELS_ZH,
+};
+
+const EMPTY_LABELS = {};
+
+export function resolveUserFeedbackLanguage(lang = 'en') {
+  const language = String(lang).trim().toLowerCase().split(/[-_]/)[0];
+  return Object.hasOwn(TRANSLATIONS, language) ? language : undefined;
+}
+
+export function getUserFeedbackLabels(lang, labels = EMPTY_LABELS) {
+  return {
+    ...DEFAULT_USER_FEEDBACK_LABELS,
+    ...TRANSLATIONS[resolveUserFeedbackLanguage(lang)],
+    ...labels,
+  };
+}
