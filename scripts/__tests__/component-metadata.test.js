@@ -179,10 +179,50 @@ it('keeps TypeScript and extra docgen data in parity even when current output us
   expect(contract.components.example.reactDocgen.props).toEqual(
     source.components.example.reactDocgen.props
   );
-  expect(contract.components.example.reactDocgen).not.toHaveProperty(
-    'definedInFile'
-  );
+  expect(contract.components.example.reactDocgen.definedInFile).toBeTruthy();
   expect(normalized.components.example.reactDocgen.definedInFile).toBe(
     '/checkout/Example.tsx'
   );
+});
+
+it.each([
+  '../escaped',
+  '/absolute',
+  'nested/file',
+  'nested\\file',
+  '__proto__',
+  'constructor',
+  'index',
+  'utilities',
+  'tokens',
+  'releases',
+])(
+  'rejects component identifier %s before it becomes an output filename or map key',
+  id => {
+    const source = fixture();
+    const component = source.components.example;
+    source.components = Object.fromEntries([[id, { ...component, id }]]);
+    expect(() => normalizeComponentMetadata(source)).toThrow(
+      /identifier|reserved/
+    );
+  }
+);
+
+it('rejects a story associated with a different component', () => {
+  const source = fixture();
+  source.components.example.stories[0].id = 'other--default';
+  expect(() => normalizeComponentMetadata(source)).toThrow(
+    'scoped to component example'
+  );
+});
+
+it('compares source association after normalizing the checkout prefix', () => {
+  const source = fixture();
+  source.components.example.reactDocgen.definedInFile = `${process.cwd()}/stories/Example.jsx`;
+  const original = componentMetadataContract(source);
+  expect(original.components.example.reactDocgen.definedInFile).toBe(
+    'stories/Example.jsx'
+  );
+  source.components.example.reactDocgen.definedInFile = `${process.cwd()}/stories/Other.jsx`;
+  expect(componentMetadataContract(source)).not.toEqual(original);
 });

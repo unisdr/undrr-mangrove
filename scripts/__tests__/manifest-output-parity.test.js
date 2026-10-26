@@ -29,6 +29,13 @@ const fixture = directory => {
       components: [{ id: 'example' }],
     });
   }
+  write(directory, 'navigation-index.json', {
+    v: 5,
+    entries: {
+      'example--default': { id: 'example--default' },
+      'standalone--docs': { id: 'standalone--docs' },
+    },
+  });
   write(directory, 'metadata-contract.json', {
     components: { example: { stories: [{ id: 'example--default' }] } },
   });
@@ -123,5 +130,45 @@ it('detects changed story identity even when published examples would look ident
   });
   expect(compareManifestOutput(baseline, candidate).differences).toContain(
     'Changed metadata-contract.json'
+  );
+});
+
+it('detects new root artefacts and nested component guidance rather than silently omitting them', () => {
+  write(candidate, 'new-guidance.json', { content: 'new' });
+  write(candidate, 'ai-components/examples/example.html', '<p>New example</p>');
+  expect(compareManifestOutput(baseline, candidate).differences).toEqual(
+    expect.arrayContaining([
+      'Added new-guidance.json',
+      'Added ai-components/examples/example.html',
+    ])
+  );
+});
+
+it('cannot accept matching snapshots that both omit a metadata component file', () => {
+  for (const directory of [baseline, candidate])
+    fs.unlinkSync(path.join(directory, 'ai-components/example.json'));
+  expect(compareManifestOutput(baseline, candidate).differences).toEqual(
+    expect.arrayContaining([
+      'Baseline missing component output ai-components/example.json',
+      'Candidate missing component output ai-components/example.json',
+    ])
+  );
+});
+
+it('compares unknown generated binary files byte-for-byte', () => {
+  fs.writeFileSync(path.join(baseline, 'example.bin'), Buffer.from([0x80]));
+  fs.writeFileSync(path.join(candidate, 'example.bin'), Buffer.from([0x81]));
+  expect(compareManifestOutput(baseline, candidate).differences).toContain(
+    'Changed example.bin'
+  );
+});
+
+it('detects dropped navigation entries even when no published component references them', () => {
+  const filename = path.join(candidate, 'navigation-index.json');
+  const navigation = JSON.parse(fs.readFileSync(filename));
+  delete navigation.entries['standalone--docs'];
+  fs.writeFileSync(filename, JSON.stringify(navigation));
+  expect(compareManifestOutput(baseline, candidate).differences).toContain(
+    'Changed navigation-index.json'
   );
 });

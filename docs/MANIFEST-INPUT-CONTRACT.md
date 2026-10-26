@@ -14,7 +14,8 @@ removes the full Storybook build nor establishes Storybook 11 compatibility.
 ## Audited consumers
 
 The baseline uses envelope `v: 0`. An unsupported version, empty map, mismatched
-component key/ID, duplicate story ID or malformed consumed field fails with its
+component key/ID, unsafe/reserved component filename, a story scoped to another
+component, duplicate story ID or malformed consumed field fails with its
 source filename and field path. CSS-only and story-only records can legitimately
 have no docgen metadata and may carry Storybook extraction diagnostics; the
 adapter does not turn those known cases into invented prop tables.
@@ -57,21 +58,29 @@ node scripts/ai-manifest/compare-manifest-output.mjs /tmp/ai-baseline /tmp/ai-ca
 ```
 
 Destinations must not already exist. The snapshot tool reruns generation and
-validation and refuses either failure. `--build-dir=DIR` selects the navigation
+validation in fresh temporary staging copied from only the metadata/navigation
+inputs; an omitted candidate output cannot inherit an older generated file. It
+refuses either subprocess failure and creates the destination exclusively, so a
+destination created during generation is not overwritten. The required metadata
+contract is written last so an interrupted copy cannot appear complete. `--build-dir=DIR` selects the navigation
 index/output directory; `--generator=FILE` permits an earlier generator entry
 point when checking an adapter change. Run both commands in the same checkout
 so absolute paths in validation diagnostics do not create unrelated differences.
 
-Snapshots contain the generated `ai-components/*.json`, root `llms*.txt`,
-`llms.json`, `tokens.json`, `releases.json` and `content-patterns.json`, plus
-`metadata-contract.json` and the validation exit code/stdout/stderr. The metadata
+Snapshots contain all newly generated files (including nested/new output names),
+excluding only the read-only navigation `index.json` and `manifests/` inputs, plus
+`metadata-contract.json`, the complete source navigation index in
+`navigation-index.json`, and the validation exit code/stdout/stderr. The metadata
 projection includes consumed fields, complete prop/docgen records (including
 TypeScript types not yet published by the generator) and stable story identity,
-while excluding absolute docgen file locations, extraction error locations and timings.
+with docgen source-file paths made relative to the current checkout so a changed
+source association remains detectable. Extraction error locations and timings
+remain outside this consumed-field projection.
 Unknown input fields are still preserved by the runtime adapter.
 
-The comparison checks exact file sets, all JSON values and text, and validation
-diagnostics. Object-key formatting is immaterial; array order remains material.
+The comparison checks exact recursive file sets, all JSON values and other
+file bytes, and validation diagnostics. Each metadata component must have its
+own detail file, even if both compared snapshots omit the same file. Object-key formatting is immaterial; array order remains material.
 Only the known top-level `generatedAt` fields in index, utilities, tokens,
 releases and `llms.json` are ignored, after verifying they are valid timestamps.
 Nested timestamps and rendered markup are not normalized. Changed component

@@ -4,10 +4,18 @@
  * Unconsumed upstream fields are retained so adaptation cannot hide data loss.
  */
 import fs from 'node:fs';
+import path from 'node:path';
 
 const object = value =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
 const own = (value, key) => Object.hasOwn(value, key);
+const componentIdPattern = /^[a-z0-9][a-z0-9_-]*$/;
+const reservedComponentIds = new Set([
+  'index',
+  'utilities',
+  'tokens',
+  'releases',
+]);
 
 export function normalizeComponentMetadata(
   value,
@@ -66,6 +74,11 @@ export function normalizeComponentMetadata(
       string(component[field], `${where}.${field}`, true);
     if (component.id !== key)
       fail(`${where}.id`, `equal to its map key (${key})`);
+    // IDs become catalogue filenames and ordinary-map lookup keys downstream.
+    if (!componentIdPattern.test(key) || own(Object.prototype, key))
+      fail(`${where}.id`, 'a safe lowercase component identifier');
+    if (reservedComponentIds.has(key))
+      fail(`${where}.id`, 'different from reserved catalogue filenames');
     optionalString(component, 'description', where);
     optionalString(component, 'import', where);
     if (own(component, 'jsDocTags')) {
@@ -108,6 +121,8 @@ export function normalizeComponentMetadata(
         const storyPath = `${where}.stories[${index}]`;
         record(story, storyPath);
         string(story.id, `${storyPath}.id`, true);
+        if (!story.id.startsWith(`${component.id}--`))
+          fail(`${storyPath}.id`, `scoped to component ${component.id}`);
         string(story.name, `${storyPath}.name`, true);
         optionalString(story, 'snippet', storyPath);
         if (storyIds.has(story.id))
@@ -161,11 +176,20 @@ export function componentMetadataContract(manifest) {
           reactDocgen:
             component.reactDocgen === undefined
               ? undefined
-              : Object.fromEntries(
-                  Object.entries(component.reactDocgen).filter(
-                    ([name]) => name !== 'definedInFile'
-                  )
-                ),
+              : {
+                  ...component.reactDocgen,
+                  ...(typeof component.reactDocgen.definedInFile === 'string'
+                    ? {
+                        definedInFile: path
+                          .relative(
+                            process.cwd(),
+                            path.resolve(component.reactDocgen.definedInFile)
+                          )
+                          .split(path.sep)
+                          .join('/'),
+                      }
+                    : {}),
+                },
           stories: component.stories?.map(story => ({
             id: story.id,
             name: story.name,

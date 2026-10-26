@@ -21,25 +21,24 @@ const requiredFiles = [
   'content-patterns.json',
   'validation.json',
   'metadata-contract.json',
+  'navigation-index.json',
 ];
 
 export function outputFiles(directory) {
-  const files = fs
-    .readdirSync(directory)
-    .filter(name =>
-      /^(?:llms(?:-[\w-]+)?\.txt|llms\.json|tokens\.json|releases\.json|content-patterns\.json|validation\.json|metadata-contract\.json)$/.test(
-        name
-      )
-    );
-  const components = path.join(directory, 'ai-components');
-  if (fs.existsSync(components)) {
-    files.push(
-      ...fs
-        .readdirSync(components)
-        .filter(name => name.endsWith('.json'))
-        .map(name => `ai-components/${name}`)
-    );
-  }
+  const files = [];
+  const visit = relative => {
+    for (const entry of fs.readdirSync(path.join(directory, relative), {
+      withFileTypes: true,
+    })) {
+      const filename = relative ? `${relative}/${entry.name}` : entry.name;
+      // These are the two read-only Storybook inputs copied into fresh staging.
+      if (filename === 'index.json' || filename === 'manifests') continue;
+      if (entry.isDirectory()) visit(filename);
+      else if (entry.isFile()) files.push(filename);
+      else throw new Error(`Snapshot contains a non-regular file: ${filename}`);
+    }
+  };
+  visit('');
   return files.sort();
 }
 
@@ -53,6 +52,20 @@ export function compareManifestOutput(baselineDirectory, candidateDirectory) {
     if (!candidateFiles.includes(filename))
       differences.push(`Candidate missing required ${filename}`);
   }
+  for (const [label, directory, files] of [
+    ['Baseline', baselineDirectory, baselineFiles],
+    ['Candidate', candidateDirectory, candidateFiles],
+  ]) {
+    if (!files.includes('metadata-contract.json')) continue;
+    const contract = JSON.parse(
+      fs.readFileSync(path.join(directory, 'metadata-contract.json'), 'utf8')
+    );
+    for (const id of Object.keys(contract.components || {})) {
+      const filename = `ai-components/${id}.json`;
+      if (!files.includes(filename))
+        differences.push(`${label} missing component output ${filename}`);
+    }
+  }
   for (const filename of new Set([...baselineFiles, ...candidateFiles])) {
     if (!baselineFiles.includes(filename)) {
       differences.push(`Added ${filename}`);
@@ -63,9 +76,9 @@ export function compareManifestOutput(baselineDirectory, candidateDirectory) {
       continue;
     }
     const read = directory => {
-      const text = fs.readFileSync(path.join(directory, filename), 'utf8');
-      if (!filename.endsWith('.json')) return text;
-      const data = JSON.parse(text);
+      const content = fs.readFileSync(path.join(directory, filename));
+      if (!filename.endsWith('.json')) return content;
+      const data = JSON.parse(content.toString('utf8'));
       if (timestampFiles.has(filename)) {
         if (
           typeof data.generatedAt !== 'string' ||
