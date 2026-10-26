@@ -50,7 +50,35 @@ const expectLanguage = async (frame, locale, lang, dir, canvas = true) => {
 };
 const select = async (page, toolbar, option) => {
   await page.getByRole('button', { name: toolbar }).click();
+  const docsId = new URL(page.url()).searchParams
+    .get('path')
+    ?.match(/^\/docs\/(.+)$/)?.[1];
+  // A docs globals update can reinitialize the preview and replay manager
+  // globals. Wait for Storybook's render completion, not the first transient
+  // lang/dir write, before starting another toolbar interaction.
+  if (docsId) {
+    await page.evaluate(id => {
+      const channel = window.__STORYBOOK_ADDONS_CHANNEL__;
+      window.__directionDocsRendered = new Promise(resolve => {
+        const rendered = storyId => {
+          if (storyId === id) {
+            channel.off('docsRendered', rendered);
+            resolve();
+          }
+        };
+        channel.on('docsRendered', rendered);
+      });
+    }, docsId);
+  }
   await page.getByRole('option', { name: option, exact: true }).click();
+  if (docsId) await page.evaluate(() => window.__directionDocsRendered);
+  const selectedTitle = new RegExp(
+    `${option.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`
+  );
+  await page
+    .getByRole('region', { name: 'Toolbar', exact: true })
+    .getByRole('button', { name: selectedTitle })
+    .waitFor();
 };
 const browser = await chromium.launch({ headless: true });
 const deadline = setTimeout(() => {
