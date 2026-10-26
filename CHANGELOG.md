@@ -11,6 +11,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- Update React and React DOM to 19.3.1, with a single installed version of each. Remove the obsolete brace-expansion resolution, which no longer matches any installed dependency.
+
 - Apply security patches for DOMPurify, ip-address, serialize-javascript, fast-uri and Zod. Align Storybook packages on 10.6.3 and Vitest packages on 4.1.12 so the development and browser-test servers use patched versions.
 
 ## 2.2.0, 2026-10-17
