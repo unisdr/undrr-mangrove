@@ -11,6 +11,8 @@ This file collects only cross-cutting library-wide notes that don't fit either l
 
 ## Unreleased
 
+- Add an opt-in source-preset extraction candidate for generating the AI catalogue without a Storybook site build, with complete output/validation parity checks; retain the existing production build and experimental metadata dependency.
+
 - Replace the Storybook RTL addon with a native direction toolbar, retain existing `addonRtl` links, and share locale/direction handling across stories and docs-only pages.
 
 - Validate the Storybook metadata input before AI catalogue generation and add full output/validation parity snapshots for evaluating replacement extractors. The existing metadata and bundle build dependencies remain.

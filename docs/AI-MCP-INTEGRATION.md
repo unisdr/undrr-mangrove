@@ -296,7 +296,7 @@ copy-docs-to-dist.mjs   → dist/docs/EDITORIAL-MANUAL.md, dist/docs/llms-*.txt
 
 `generate-ai-manifest.js` auto-renders React components from `dist/` using `renderToStaticMarkup`, then merges four data sources: the Storybook manifest (props, types), auto-rendered HTML, curated data from `component-data.js` (descriptions, CSS classes, flags, page templates), and release/changelog data from `CHANGELOG.md` via `parse-changelog.js`. Components that render cleanly in Node.js get auto-generated HTML. Components needing browser APIs fall back to curated HTML examples. When run with `--validate`, it checks for stale curated keys, accessibility anti-patterns, and PropTypes coverage.
 
-The pipeline lives in `scripts/ai-manifest/`. Its Storybook input now passes through a preserving, validated adapter in `component-metadata.js`. See the [input contract and parity workflow](MANIFEST-INPUT-CONTRACT.md) before changing metadata extraction; `index.json` does not replace prop/docgen information or attached MDX changelogs.
+The pipeline lives in `scripts/ai-manifest/`. Its Storybook input now passes through a preserving, validated adapter in `component-metadata.js`. See the [input contract and parity workflow](MANIFEST-INPUT-CONTRACT.md) before changing metadata extraction; `index.json` does not replace prop/docgen information or attached MDX changelogs. An [opt-in source-only extraction candidate](MANIFEST-SOURCE-SPIKE.md) can generate the same catalogue without building the site, while retaining the experimental Storybook preset dependency; the normal build remains the default.
 
 To regenerate by hand:
 
