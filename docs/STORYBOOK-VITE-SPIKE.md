@@ -23,15 +23,16 @@ yarn build
 yarn validate-manifest
 yarn serve-storybook                       # port 6099, in another terminal
 yarn test:storybook-themes
+yarn test:storybook-html
 yarn test:search-selection-browser
 yarn test:motion-browser
 yarn test:rich-content-browser
 ```
 
-Set `THEME_STORYBOOK_URL`, `SEARCH_STORYBOOK_URL`, `MOTION_STORYBOOK_URL`
-or `CONTENT_STORYBOOK_URL` to test a different production server. A served
-build is required for these four gates, while Vitest runs directly from the
-story sources. Keep `scripts/serve-storybook.mjs` after removing the old runner.
+Set `THEME_STORYBOOK_URL`, `SEARCH_STORYBOOK_URL`, `MOTION_STORYBOOK_URL`,
+`HTML_STORYBOOK_URL` or `CONTENT_STORYBOOK_URL` to test a different production
+server. A served build is required for these production gates, while Vitest
+runs directly from the story sources. Keep `scripts/serve-storybook.mjs` after removing the old runner.
 
 ## Implementation
 
@@ -153,3 +154,17 @@ superseded by this migration.
 - [React Vite migration](https://storybook.js.org/docs/get-started/frameworks/react-vite#how-do-i-migrate-from-the-react-webpack-framework)
 - [Vite CSS without automatic injection](https://vite.dev/guide/features.html#disabling-css-injection-into-the-page)
 - [Vitest addon setup](https://storybook.js.org/docs/writing-tests/integrations/vitest-addon)
+
+## Live HTML panel
+
+The repository-local addon in `.storybook/addons/html/` replaces
+`@whitespace/storybook-addon-html`. It preserves the HTML tab and bookmarked
+`storybook/html/panel` ID. Its formatter is shared with docs-source HTML;
+there is no dependency patch. See [the maintenance contract](STORYBOOK-HTML-ADDON.md)
+for scope, supported parameters and limits.
+
+`yarn test:storybook-html` opens the production manager, copies generated
+markup through the clipboard, renders it as a consumer would, and compares
+inline text with the original story. It also checks all five themes, RTL,
+live tab interactions, sidebar navigation, stopping/restarting capture and
+Controls edits. This gate runs in CI alongside the other production gates.

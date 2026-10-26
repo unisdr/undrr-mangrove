@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import remarkGfm from 'remark-gfm';
 
 export default {
@@ -17,7 +18,7 @@ export default {
       },
     },
     '@storybook/addon-links',
-    '@whitespace/storybook-addon-html',
+    fileURLToPath(new URL('./addons/html/preset.js', import.meta.url)),
     'storybook-addon-rtl',
     '@storybook/addon-a11y',
     '@storybook/addon-vitest',

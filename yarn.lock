@@ -4919,7 +4919,6 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.71.1"
     "@vitest/browser": "npm:4.1.12"
     "@vitest/browser-playwright": "npm:4.1.12"
-    "@whitespace/storybook-addon-html": "npm:9.0.0"
     autoprefixer: "npm:10.6.1"
     axe-core: "npm:4.14.0"
     babel-jest: "npm:30.5.2"
@@ -5469,16 +5468,6 @@ __metadata:
   version: 1.1.1
   resolution: "@webcontainer/env@npm:1.1.1"
   checksum: 10/c3cd2c207bc2948dce91fa900aa1c6541832075021b720bda01043596359142bc7dd75670608aa7b6f5075d6ae63748a0f90b24e554e1a04ee69b968551eef66
-  languageName: node
-  linkType: hard
-
-"@whitespace/storybook-addon-html@npm:9.0.0":
-  version: 9.0.0
-  resolution: "@whitespace/storybook-addon-html@npm:9.0.0"
-  peerDependencies:
-    prettier: ^3.7.1
-    storybook: ^10
-  checksum: 10/accb1b3b064894a38d89dd274d9d86dcf7c0e89f5be298ea8f9fa9f27cd6bc5c9a855b61f226748e8063a5e04fefd4854a122b1ded0343fe162aa6153fbeb5d2
   languageName: node
   linkType: hard
 

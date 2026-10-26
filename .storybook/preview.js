@@ -175,16 +175,7 @@ const preview = {
       disable: true,
     },
     html: {
-      prettier: {
-        tabWidth: 2,
-        useTabs: false,
-        removeComments: true,
-        htmlWhitespaceSensitivity: 'css',
-        printWidth: 80,
-        semi: true,
-        singleQuote: true,
-        trailingComma: 'es5',
-      },
+      removeComments: true,
     },
     docs: {
       source: {

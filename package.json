@@ -79,6 +79,7 @@
     "docker-test": "docker exec -it undrr-mangrove-client-1 bash -c \"yarn test\"",
     "test:sass-equivalence": "node scripts/check-sass-equivalence.mjs",
     "test-storybook:watch": "vitest --project=storybook",
+    "test:storybook-html": "node scripts/test-storybook-html.mjs",
     "test:storybook-themes": "node scripts/test-storybook-themes.mjs"
   },
   "keywords": [],
@@ -117,7 +118,6 @@
     "@typescript-eslint/parser": "^8.71.1",
     "@vitest/browser": "4.1.12",
     "@vitest/browser-playwright": "4.1.12",
-    "@whitespace/storybook-addon-html": "9.0.0",
     "autoprefixer": "10.6.1",
     "axe-core": "4.14.0",
     "babel-jest": "30.5.2",
