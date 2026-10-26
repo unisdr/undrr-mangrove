@@ -105,7 +105,7 @@
     "@storybook/addon-docs": "^10.6.1",
     "@storybook/addon-links": "^10.6.1",
     "@storybook/addon-themes": "^10.6.1",
-    "@storybook/addon-vitest": "10.6.1",
+    "@storybook/addon-vitest": "10.6.2",
     "@storybook/cli": "^10.6.1",
     "@storybook/react": "^10.6.1",
     "@storybook/react-vite": "10.6.1",
