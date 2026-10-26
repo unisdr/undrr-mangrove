@@ -22,9 +22,7 @@
   align-items: flex-start;
   z-index: var(--mg-z-index-nav);
 
-  // In the default variant this class is on the nav <ul> itself (the branded
-  // variant puts it on a wrapping <div> and uses &__nav for the list), so it
-  // is a list class and carries the house rule.
+  // Plain HTML consumers can use this class directly on a navigation list.
   @include mg-list-unmarked;
 
   padding: 0;
@@ -36,17 +34,38 @@
   }
 
   // Kept max-width based to avoid a Firefox glitch with .mg-container-full-width.
-  @media screen and (max-width: $mg-breakpoint-tablet) {
-    padding-left: mg-rem(40); // space for the icon button
-    overflow-x: hidden; // primarily for mobile
+  @media screen and (width < $mg-breakpoint-tablet) {
+    position: relative;
+    padding-inline-start: mg-rem(40); // space for the icon button
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  // React keeps the hamburger outside the scrolling rail in both variants.
+  // Avoid sticky flex children: WebKit can scroll them out of view in RTL.
+  @media screen and (width < $mg-breakpoint-tablet) {
+    &:has(> .mg-mega-topbar__nav) {
+      padding-inline-start: 0;
+      overflow: hidden;
+    }
+
+    > .mg-mega-topbar-mobile__icon-button {
+      position: relative;
+      inset: auto;
+      width: mg-rem(40);
+      flex-shrink: 0;
+      align-self: stretch;
+      background: rgb(var(--mg-color-white));
+    }
   }
 
   // --- Branded variant (with inline logo) ---
   &--branded {
     align-items: center;
 
-    @media screen and (max-width: $mg-breakpoint-tablet) {
-      padding-left: 0; // logo replaces the left padding
+    @media screen and (width < $mg-breakpoint-tablet) {
+      padding-inline-start: 0; // logo replaces the left padding
       overflow-x: hidden;
     }
 
@@ -71,6 +90,10 @@
     display: flex;
     justify-content: flex-end;
     flex: 1;
+
+    @media screen and (width < $mg-breakpoint-tablet) {
+      justify-content: flex-start;
+    }
 
     @include mg-list-unmarked;
 
@@ -109,11 +132,12 @@
 
     @include mg-list-unmarked;
 
-    // Clip overflow on mobile so the scrolling content hint works correctly.
-    // pointer-events is left as auto here — it is restricted only when JS has
-    // initialised the full mega menu (see .mg-mega-wrapper--js-active below).
-    @media screen and (max-width: $mg-breakpoint-tablet) {
-      overflow: hidden;
+    // The branded rail scrolls independently of the logo and hamburger.
+    @media screen and (width < $mg-breakpoint-tablet) {
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scrollbar-width: none;
+      justify-content: flex-start;
       flex: 1;
       min-width: 0;
     }
@@ -148,6 +172,7 @@
       }
     }
 
+    flex-shrink: 0;
     font-size: var(--mg-font-size-300);
     color: rgb(var(--mg-color-interactive));
     font-weight: bold;
@@ -688,6 +713,7 @@
 .mg-mega-topbar-mobile__icon-button {
   // Mobile-first: Display by default
   position: absolute;
+  inset-block: 0;
 
   // Anchored to both edges of the topbar rather than assumed to be
   // viewport-wide: a `100vw` overlay overhangs and is clipped by the parent's
@@ -701,7 +727,8 @@
   color: rgb(var(--mg-color-interactive));
   font-size: mg-rem(20);
   width: auto;
-  height: 100%;
+  height: auto;
+  min-height: mg-rem(44);
   padding: var(--mg-spacing-100);
   border: none;
   cursor: pointer;
@@ -793,24 +820,8 @@
   box-shadow: 3px 0 6px -2px rgb(0 0 0 / 0.15);
 }
 
-// Full JS mega menu — sidebar handles mobile nav, so topbar items must NOT be
-// interactive on small screens. This class is added by the React component on
-// mount (useEffect), so it is absent when JS fails or has not yet hydrated,
-// preserving a clickable fallback for server-rendered nav markup.
-.mg-mega-wrapper--js-active {
-  @media screen and (max-width: $mg-breakpoint-tablet) {
-    .mg-mega-topbar__nav {
-      pointer-events: none;
-    }
-
-    .mg-mega-topbar__item {
-      pointer-events: none;
-    }
-  }
-}
-
 // Mobile progressive navigation: one stable surface at every depth. Existing
-// desktop classes and the full-strip opening target remain compatible.
+// desktop classes remain compatible; the rail opens individual sections.
 .mg-mega-mobile-sidebar--progressive {
   position: fixed;
   inset: 0 0 auto;
@@ -1094,7 +1105,7 @@
 
 // Existing plain HTML navigation needs no hamburger gutter or JS enhancement.
 // Keep overflow local to the rail so every destination remains reachable.
-@media screen and (max-width: $mg-breakpoint-tablet) {
+@media screen and (width < $mg-breakpoint-tablet) {
   .mg-mega-topbar:not(
     .mg-mega-topbar--branded,
     :has(.mg-mega-topbar-mobile__icon-button)

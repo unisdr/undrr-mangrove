@@ -64,6 +64,7 @@ const MegaMenu = ({
   const { navLabel, closeMobileNavLabel } = resolvedLabels;
   const sidebarId = useId();
   const wrapperRef = useRef(null);
+  const [initialSection, setInitialSection] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [retained, setRetained] = useState(false);
   const present = showSidebar || retained;
@@ -115,7 +116,7 @@ const MegaMenu = ({
   const openTimeoutRef = useRef(null);
 
   // Signal that JS has mounted and the sidebar is available to handle mobile nav.
-  // This adds --js-active so the CSS can safely hide pointer events on mobile items.
+  // Retain the enhancement marker for consumers of the navigation markup.
   useEffect(() => {
     setJsActive(true);
   }, []);
@@ -231,11 +232,18 @@ const MegaMenu = ({
     >
       <TopBar
         isMobile={isMobile}
+        openMobileSection={index => {
+          setInitialSection(index);
+          setShowSidebar(true);
+        }}
         sidebarId={sidebarId}
         labels={resolvedLabels}
         sections={sections}
         handleItemHover={handleItemHover}
-        toggleShowSidebar={() => setShowSidebar(prev => !prev)}
+        toggleShowSidebar={() => {
+          setInitialSection(null);
+          setShowSidebar(prev => !prev);
+        }}
         showSidebar={showSidebar}
         activeItem={activeItem}
         activateItem={setActiveItem}
@@ -261,6 +269,7 @@ const MegaMenu = ({
 
       {/* Keep the controller mounted so close and reopen reset predictably. */}
       <Sidebar
+        initialSection={initialSection}
         id={sidebarId}
         labels={resolvedLabels}
         onClose={() => setShowSidebar(false)}

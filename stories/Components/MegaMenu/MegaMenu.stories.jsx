@@ -641,7 +641,7 @@ export const ProgressiveMobile = {
     docs: {
       description: {
         story:
-          'At widths below 900px, tap anywhere on the navigation strip. Open a section, continue into a nested group, then use the labelled back control or Close. Existing section data is used unchanged.',
+          'At widths below 900px, scroll the navigation strip and tap a label to open its section, or use the hamburger for all sections. Open a section, continue into a nested group, then use the labelled back control or Close. Existing section data is used unchanged.',
       },
     },
   },
