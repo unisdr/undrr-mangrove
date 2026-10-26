@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useRailDrag } from './useRailDrag';
 import { TopBarItem } from './TopBarItem';
 import { TopBarMobileIconButton } from './TopBarMobileIconButton.jsx';
 
@@ -21,6 +22,7 @@ export function TopBar({
   logoWidth,
   logoHeight,
 }) {
+  const railDrag = useRailDrag(isMobile);
   const pendingPanelFocusRef = useRef(null);
   useEffect(() => {
     if (pendingPanelFocusRef.current === activeItem) {
@@ -116,7 +118,7 @@ export function TopBar({
           onClick={() => toggleShowSidebar()}
         />
 
-        <ul className="mg-mega-topbar__nav">
+        <ul className="mg-mega-topbar__nav" {...railDrag}>
           {/* Mobile labels open the corresponding section in the dialog. */}
           {menuItems}
         </ul>
@@ -133,7 +135,9 @@ export function TopBar({
         isOpen={showSidebar}
         onClick={() => toggleShowSidebar()}
       />
-      <ul className="mg-mega-topbar__nav">{menuItems}</ul>
+      <ul className="mg-mega-topbar__nav" {...railDrag}>
+        {menuItems}
+      </ul>
     </div>
   );
 }

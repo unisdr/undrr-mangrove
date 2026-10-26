@@ -207,7 +207,7 @@ See the [hydration guide](https://github.com/PreventionWeb/undrr-mangrove/blob/m
 
 ## Mobile progressive navigation
 
-Below 900px, the nav strip scrolls horizontally. Tap a label to open its
+Below 900px, the nav strip scrolls horizontally with native touch swipes or mouse click-and-drag. Dragging does not open a section. Tap a label to open its
 section in the bounded overlay; the hamburger opens all sections. Groups drill into nested
 levels on the same surface with labeled Back/Close controls. Section headings
 link directly to landing pages; banner content appears inline under links.
@@ -256,7 +256,7 @@ Inactive desktop panels also become inert and hidden from assistive technology i
 
 ## Changelog
 
-- **1.4.8**, 2026-10-26: Anchored the mobile hamburger vertically and kept it visible beside a horizontally scrollable navigation strip. The bottom divider stays visible beneath the opaque hamburger and logo surfaces. Both branded and unbranded labels now open their section directly, with Back returning to all sections and Close restoring focus to the opener.
+- **1.4.8**, 2026-10-26 ([#1402](https://github.com/unisdr/undrr-mangrove/pull/1402)): Anchored the mobile hamburger vertically and kept it visible beside a horizontally scrollable navigation strip. The bottom divider stays visible beneath the opaque hamburger and logo surfaces. Mouse users can click and drag the rail to scroll without opening a section; ordinary clicks and touch taps open the selected section. Both branded and unbranded labels now open their section directly, with Back returning to all sections and Close restoring focus to the opener.
 
 - **1.4.7**, 2026-10-16: The mobile motion story waits for visible content after category navigation, avoiding a race with the entry animation's zero-opacity frame in browser tests. Component behaviour and consumer APIs are unchanged.
 

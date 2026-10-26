@@ -139,6 +139,17 @@
       overflow-x: auto;
       overscroll-behavior-inline: contain;
       scrollbar-width: none;
+      cursor: grab;
+      user-select: none;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      .mg-mega-topbar__item-link {
+        cursor: inherit;
+      }
+
       justify-content: flex-start;
       flex: 1;
       min-width: 0;

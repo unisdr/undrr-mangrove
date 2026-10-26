@@ -625,7 +625,7 @@ try {
             .locator(mobile ? '.mg-mega-mobile-sidebar' : '.mg-mega-content')
             .first();
           if (mobile) await menuToggle.click();
-          const resources = page.getByRole('button', {
+          const resources = (mobile ? panel : page).getByRole('button', {
             name: 'Resources',
             exact: true,
           });
@@ -690,7 +690,7 @@ try {
             );
             await menuToggle.click();
             await visible(
-              page.getByRole('button', { name: 'Resources', exact: true })
+              panel.getByRole('button', { name: 'Resources', exact: true })
             );
             await page.keyboard.press('Escape');
             assert(

@@ -50,6 +50,48 @@ for (const engine of [chromium, webkit]) {
         await page.locator('.mg-mega-topbar__nav').evaluate(element => {
           element.scrollLeft = 0;
         });
+        // Real mouse gestures must scroll without activating the pressed label.
+        const railBox = await page
+          .locator('.mg-mega-topbar__nav')
+          .boundingBox();
+        const startX =
+          direction === 'rtl' ? railBox.x + 12 : railBox.x + railBox.width - 12;
+        const endX = startX + (direction === 'rtl' ? 70 : -70);
+        // Leaving before the threshold must not retain a gesture after an
+        // outside release, or capture a later drag that starts outside.
+        const railY = railBox.y + railBox.height / 2;
+        const outsideY = railBox.y + railBox.height + 25;
+        await page.mouse.move(startX, railY);
+        await page.mouse.down();
+        await page.mouse.move(startX, outsideY);
+        await page.mouse.up();
+        await page.mouse.down();
+        await page.mouse.move(endX, railY, { steps: 8 });
+        await page.mouse.up();
+        assert(
+          await page
+            .locator('.mg-mega-topbar__nav')
+            .evaluate(element => element.scrollLeft === 0),
+          'outside-origin drag must not scroll the rail'
+        );
+        await page.mouse.move(startX, railBox.y + railBox.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(endX, railBox.y + railBox.height / 2, {
+          steps: 8,
+        });
+        await page.mouse.move(endX, railBox.y + railBox.height + 25);
+        await page.mouse.up();
+        assert(
+          await page
+            .locator('.mg-mega-topbar__nav')
+            .evaluate(element => Math.abs(element.scrollLeft) > 20),
+          'mouse drag scrolls the rail'
+        );
+        assert.equal(
+          await page.getByRole('dialog').isVisible(),
+          false,
+          'drag does not open a section'
+        );
         const before = await button.boundingBox();
         const rail = page.locator('.mg-mega-topbar__nav');
         const nav = await page.locator('.mg-mega-topbar').boundingBox();
@@ -74,7 +116,7 @@ for (const engine of [chromium, webkit]) {
         const item = page.locator('.mg-mega-topbar__item-link').nth(2);
         await item.scrollIntoViewIfNeeded();
         const title = await item.innerText();
-        await item.tap();
+        await item.click();
         await page
           .getByRole('dialog')
           .getByRole('heading', { name: title, exact: true })
@@ -95,6 +137,15 @@ for (const engine of [chromium, webkit]) {
           await item.evaluate(element => element === document.activeElement),
           'Close restores the section opener'
         );
+        await item.tap();
+        await page
+          .getByRole('dialog')
+          .getByRole('heading', { name: title, exact: true })
+          .waitFor();
+        await page
+          .getByRole('dialog')
+          .getByRole('button', { name: 'Close mobile navigation' })
+          .tap();
         await button.tap();
         await page
           .getByRole('dialog')
