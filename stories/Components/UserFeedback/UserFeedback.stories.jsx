@@ -33,10 +33,6 @@ export default {
 
 export const Default = {};
 
-export const Arabic = {
-  args: { lang: 'ar' },
-};
-
 export const ArabicConfirmation = {
   args: { lang: 'ar' },
   play: async ({ canvasElement }) => {

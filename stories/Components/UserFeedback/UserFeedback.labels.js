@@ -87,7 +87,7 @@ const EMPTY_LABELS = {};
 
 export function resolveUserFeedbackLanguage(lang = 'en') {
   const language = String(lang).trim().toLowerCase().split(/[-_]/)[0];
-  return Object.hasOwn(TRANSLATIONS, language) ? language : 'en';
+  return Object.hasOwn(TRANSLATIONS, language) ? language : undefined;
 }
 
 export function getUserFeedbackLabels(lang, labels = EMPTY_LABELS) {

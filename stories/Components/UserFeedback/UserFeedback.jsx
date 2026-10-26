@@ -52,7 +52,7 @@ const UserFeedback = ({
         className
       )}
       aria-label={resolvedLabels.question}
-      lang={language}
+      lang={lang}
       dir={language && (language === 'ar' ? 'rtl' : 'ltr')}
       data-vf-google-analytics-region="undrr-feedback-container"
       {...args}
@@ -116,7 +116,7 @@ const UserFeedback = ({
 UserFeedback.propTypes = {
   /** Destination for both detailed-feedback links. */
   feedbackUrl: PropTypes.string,
-  /** Language tag (en, ar, es, fr, ja, ru, zh); unsupported tags use English. */
+  /** HTML language tag. Labels support en, ar, es, fr, ja, ru, zh; others use English defaults. */
   lang: PropTypes.string,
   /** Copy overrides. Missing keys use the selected language, then English. */
   labels: PropTypes.shape({

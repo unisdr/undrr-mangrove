@@ -82,7 +82,7 @@ describe('UserFeedback', () => {
     fireEvent.click(screen.getByRole('button', { name: 'موافق' }));
 
     expect(onResponse).toHaveBeenCalledWith('yes');
-    expect(region).toHaveAttribute('lang', 'ar');
+    expect(region).toHaveAttribute('lang', 'ar-EG');
     expect(screen.getByText(/شكراً لملاحظاتك/)).toHaveFocus();
     expect(screen.getByRole('link', { name: 'المزيد' })).toBeInTheDocument();
     expect(region).toHaveAccessibleName('هل كانت هذه الصفحة مفيدة؟');
@@ -103,16 +103,60 @@ describe('UserFeedback', () => {
     expect(
       screen.getByRole('button', { name: 'D’accord' })
     ).toBeInTheDocument();
-    expect(screen.getByRole('region')).toHaveAttribute('lang', 'fr');
+    expect(screen.getByRole('region')).toHaveAttribute('lang', 'fr-CA');
   });
 
   it('uses English for unsupported languages and preserves direction overrides', () => {
     render(<UserFeedback lang="de-DE" dir="rtl" />);
 
     expect(screen.getByRole('button', { name: 'Yes' })).toBeInTheDocument();
-    expect(screen.getByRole('region')).toHaveAttribute('lang', 'en');
+    expect(screen.getByRole('region')).toHaveAttribute('lang', 'de-DE');
     expect(screen.getByRole('region')).toHaveAttribute('dir', 'rtl');
   });
+
+  it('preserves a custom language tag without rewriting its direction', () => {
+    render(
+      <UserFeedback
+        lang="de-DE"
+        labels={{
+          question: 'Ist diese Seite hilfreich?',
+          yes: 'Ja',
+          no: 'Nein',
+        }}
+      />
+    );
+
+    const region = screen.getByRole('region', {
+      name: 'Ist diese Seite hilfreich?',
+    });
+    expect(region).toHaveAttribute('lang', 'de-DE');
+    expect(region).not.toHaveAttribute('dir');
+    expect(screen.getByRole('button', { name: 'Ja' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Nein' })).toBeInTheDocument();
+  });
+
+  it.each([
+    ['he-IL', 'האם הדף שימושי?', 'כן'],
+    ['ur-PK', 'کیا یہ صفحہ مفید ہے؟', 'جی ہاں'],
+  ])(
+    'preserves inherited RTL for custom %s hydration labels',
+    (lang, question, yes) => {
+      const parent = document.createElement('section');
+      parent.lang = lang;
+      parent.dir = 'rtl';
+      document.body.appendChild(parent);
+      const container = parent.appendChild(document.createElement('div'));
+      container.dataset.question = question;
+      container.dataset.yesLabel = yes;
+      render(<UserFeedback {...fromElement(container)} />, { container });
+
+      const region = screen.getByRole('region', { name: question });
+      expect(region).toHaveAttribute('lang', lang);
+      expect(region).not.toHaveAttribute('dir');
+      expect(region.closest('[dir]')).toBe(parent);
+      expect(screen.getByRole('button', { name: yes })).toBeInTheDocument();
+    }
+  );
 
   it('composes Japanese confirmation without inserting English spaces', () => {
     render(<UserFeedback lang="ja-JP" />);
