@@ -26,7 +26,7 @@ adapter does not turn those known cases into invented prop tables.
 | `path` | Excludes `stories/Quality/` records from published output and the PropTypes denominator. |
 | `description`, `reactDocgen.description` | Description/summary fallback after curated text. |
 | `jsDocTags.param[]` | Fallback prop descriptions parsed from JSDoc. |
-| `reactDocgen.props.*.type` | Recursively flattens `name` and enum/union/shape/arrayOf/objectOf/instanceOf values. Unknown type names remain printable. |
+| `reactDocgen.props.*.type` | Recursively flattens `name` and enum/union/shape/arrayOf/objectOf/instanceOf values. Unknown type names remain printable; some existing TypeScript records have only `tsType`, which is retained while current public output keeps its existing `unknown` fallback. |
 | `reactDocgen.props.*.required`, `.defaultValue.value`, `.description` | Published prop contract; presence of props also determines coverage. |
 | `stories[].name`, `.snippet` | Generated React source examples. Story IDs are preserved and checked separately for parity. |
 | `import` | Counts discarded Storybook import hints; actual public imports are resolved from built bundle exports. |
@@ -65,8 +65,9 @@ so absolute paths in validation diagnostics do not create unrelated differences.
 Snapshots contain the generated `ai-components/*.json`, root `llms*.txt`,
 `llms.json`, `tokens.json`, `releases.json` and `content-patterns.json`, plus
 `metadata-contract.json` and the validation exit code/stdout/stderr. The metadata
-projection includes consumed fields and stable story identity, while excluding
-unconsumed absolute docgen locations, extraction error locations and timings.
+projection includes consumed fields, complete prop/docgen records (including
+TypeScript types not yet published by the generator) and stable story identity,
+while excluding absolute docgen file locations, extraction error locations and timings.
 Unknown input fields are still preserved by the runtime adapter.
 
 The comparison checks exact file sets, all JSON values and text, and validation

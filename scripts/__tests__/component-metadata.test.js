@@ -1,4 +1,7 @@
-import { normalizeComponentMetadata } from '../ai-manifest/component-metadata';
+import {
+  normalizeComponentMetadata,
+  componentMetadataContract,
+} from '../ai-manifest/component-metadata';
 
 const fixture = () => ({
   v: 0,
@@ -161,5 +164,25 @@ describe('component metadata boundary', () => {
         normalizeComponentMetadata(source, { source: 'candidate.json' })
       ).toThrow('candidate.json');
     }
+  );
+});
+
+it('keeps TypeScript and extra docgen data in parity even when current output uses unknown type', () => {
+  const source = fixture();
+  source.components.example.reactDocgen.definedInFile = '/checkout/Example.tsx';
+  source.components.example.reactDocgen.props.typed = {
+    required: false,
+    tsType: { name: 'signature', raw: '() => void' },
+  };
+  const normalized = normalizeComponentMetadata(source);
+  const contract = componentMetadataContract(normalized);
+  expect(contract.components.example.reactDocgen.props).toEqual(
+    source.components.example.reactDocgen.props
+  );
+  expect(contract.components.example.reactDocgen).not.toHaveProperty(
+    'definedInFile'
+  );
+  expect(normalized.components.example.reactDocgen.definedInFile).toBe(
+    '/checkout/Example.tsx'
   );
 });

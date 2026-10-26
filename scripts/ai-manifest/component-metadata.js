@@ -141,7 +141,7 @@ export function readComponentMetadata(filename) {
   return normalizeComponentMetadata(input, { source: filename });
 }
 
-/** Fields that affect generation/validation, plus stable story identity. */
+/** Audited inputs and complete prop/docgen data, plus stable story identity. */
 export function componentMetadataContract(manifest) {
   return {
     v: manifest.v,
@@ -161,28 +161,11 @@ export function componentMetadataContract(manifest) {
           reactDocgen:
             component.reactDocgen === undefined
               ? undefined
-              : {
-                  description: component.reactDocgen.description,
-                  props:
-                    component.reactDocgen.props === undefined
-                      ? undefined
-                      : Object.fromEntries(
-                          Object.entries(component.reactDocgen.props).map(
-                            ([name, prop]) => [
-                              name,
-                              {
-                                description: prop.description,
-                                type: prop.type,
-                                required: prop.required,
-                                defaultValue:
-                                  prop.defaultValue === undefined
-                                    ? undefined
-                                    : { value: prop.defaultValue.value },
-                              },
-                            ]
-                          )
-                        ),
-                },
+              : Object.fromEntries(
+                  Object.entries(component.reactDocgen).filter(
+                    ([name]) => name !== 'definedInFile'
+                  )
+                ),
           stories: component.stories?.map(story => ({
             id: story.id,
             name: story.name,
