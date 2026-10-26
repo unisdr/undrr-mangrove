@@ -118,7 +118,7 @@
     "@vitest/browser-playwright": "4.1.11",
     "@whitespace/storybook-addon-html": "9.0.0",
     "autoprefixer": "10.6.1",
-    "axe-core": "4.12.1",
+    "axe-core": "4.14.0",
     "babel-jest": "30.5.2",
     "babel-loader": "10.1.1",
     "babel-plugin-macros": "3.1.0",

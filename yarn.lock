@@ -4841,7 +4841,7 @@ __metadata:
     "@vitest/browser-playwright": "npm:4.1.11"
     "@whitespace/storybook-addon-html": "npm:9.0.0"
     autoprefixer: "npm:10.6.1"
-    axe-core: "npm:4.12.1"
+    axe-core: "npm:4.14.0"
     babel-jest: "npm:30.5.2"
     babel-loader: "npm:10.1.1"
     babel-plugin-macros: "npm:3.1.0"
@@ -5800,6 +5800,13 @@ __metadata:
   version: 4.12.1
   resolution: "axe-core@npm:4.12.1"
   checksum: 10/08c2ff348524b57dfb68f4e866b1a6363147203b721c734ed00090c16eb911cd015cf71fd96a8bafe42609715f649d21b2e188fae622ac8ef6144b144582f6c4
+  languageName: node
+  linkType: hard
+
+"axe-core@npm:4.14.0":
+  version: 4.14.0
+  resolution: "axe-core@npm:4.14.0"
+  checksum: 10/b41f9c5fb670b3e1812ba203b17570efa026071e6c722cd8384bacbe5f2be1578fc5d7544acf06df7758eb755c7d23629df922e86cc0655d656784157c0d8df5
   languageName: node
   linkType: hard
 
