@@ -1,37 +1,25 @@
+import { getLanguageProps } from '../../../../src/i18n';
+import { getShareButtonsLabels } from './_labels';
 import React from 'react';
 import { useState, useEffect, useId, useRef } from 'react';
 import PropTypes from 'prop-types';
 import QRCode from 'qrcode';
 import LinkUrls from './links.json';
 
+export { getShareButtonsLabels } from './_labels';
+export { DEFAULT_SHARE_LABELS } from './_labels';
+
 const defaults = {
   defaultSharingTextBody: 'Check out this link: ',
   defaultSharingTextSubject: 'Sharing Link',
-};
-
-export const DEFAULT_SHARE_LABELS = {
-  mainLabel: 'Share this',
-  onCopy: 'Copied',
-  qrCodeTitle: 'QR code',
-  qrCodeDescription:
-    'This QR code contains the link below. You can copy the image or add it to your printed or display materials.',
-  closeModal: 'Close modal',
-  copyImage: 'Copy image',
-  downloadImage: 'Download image',
-  closeMessage: 'Close message',
-  shareUsingDevice: 'Share using your device',
-  shareOnLinkedIn: 'Share on LinkedIn',
-  shareOnFacebook: 'Share on Facebook',
-  shareOnX: 'Share on X',
-  shareViaEmail: 'Share via Email',
-  generateQRCode: 'Generate QR Code',
-  copyToClipboard: 'Copy to Clipboard',
 };
 
 /**
  * QR Code Modal Component
  */
 const QRCodeModal = ({
+  lang,
+  dir,
   isOpen,
   onClose,
   qrCodeDataUrl,
@@ -110,6 +98,7 @@ const QRCodeModal = ({
 
   return (
     <dialog
+      {...getLanguageProps(lang, dir)}
       ref={modalRef}
       data-vf-google-analytics-region="share-qr-code"
       className="mg-share__dialog"
@@ -205,13 +194,15 @@ const QRCodeModal = ({
  *  @param {string} SharingTextBody - body of the Email that will be prefilled and appended with LINK to the site
  */
 const ShareButtons = ({
-  labels = {},
+  lang,
+  dir,
+  labels,
   SharingSubject,
   SharingTextBody,
   // CustomUrl,
   ...props
 }) => {
-  const l = { ...DEFAULT_SHARE_LABELS, ...labels };
+  const l = getShareButtonsLabels(lang, labels);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState(null);
   const qrButtonRef = useRef(null);
@@ -369,6 +360,7 @@ const ShareButtons = ({
   return (
     <>
       <section
+        {...getLanguageProps(lang, dir)}
         data-vf-google-analytics-region="share-this"
         className="mg-share"
         {...props}
@@ -455,6 +447,8 @@ const ShareButtons = ({
       </section>
 
       <QRCodeModal
+        lang={lang}
+        dir={dir}
         isOpen={qrModalOpen}
         onClose={closeQRModal}
         qrCodeDataUrl={qrCodeDataUrl}
@@ -539,8 +533,11 @@ QRCodeModal.propTypes = {
 };
 
 ShareButtons.propTypes = {
-  /** Translated labels. All keys are optional — unspecified keys fall back to
-   * the English defaults in DEFAULT_SHARE_LABELS. */
+  /** UI language tag; selects the built-in catalogue, with English fallback. */
+  lang: PropTypes.string,
+  /** Explicit text direction; otherwise known catalogue languages select their direction. */
+  dir: PropTypes.oneOf(['ltr', 'rtl', 'auto']),
+  /** Explicit UI label overrides; omitted keys use the selected catalogue, then English. */
   labels: PropTypes.shape({
     mainLabel: PropTypes.string,
     onCopy: PropTypes.string,

@@ -101,6 +101,8 @@ Render a container with component data. `fromElement` selects the language from
 (including `<html>`). If neither supplies a language, English is used. An empty
 language explicitly falls back to English rather than inheriting an ancestor.
 All label attributes remain optional overrides of the selected translation.
+`data-labels` can supply a JSON object of overrides; individual label attributes
+take precedence. A valid `dir` on the container overrides inferred direction.
 
 ```html
 <div
@@ -164,7 +166,17 @@ When JavaScript is unavailable, render the initial prompt as useful static HTML 
 - Logical alignment supports RTL, labels wrap at narrow widths, and existing button tokens provide focus, forced-colour and reduced-motion behavior.
 - Existing `data-vf-google-analytics-region` and `data-mg-user-feedback-*` hooks preserve the source pattern's analytics integration points.
 
+## Shared UI translation contract
+
+UserFeedback now uses the same resolver mechanics as the other component
+catalogues. See [UI translations](?path=/docs/contributing-ui-translations--docs)
+for language matching, explicit overrides, HTML metadata, hydration and
+translation maintenance. Its existing `getUserFeedbackLabels` export remains
+compatible.
+
 ## Changelog
+
+- **1.2**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance.
 
 - **1.1**, 2026-10-26 ([unisdr/undrr-mangrove#1427](https://github.com/unisdr/undrr-mangrove/issues/1427)): Exposes the existing translations through `lang` and the published `getUserFeedbackLabels` resolver. Hydration supports `data-lang` and inherited HTML language, with English fallback, existing label overrides and custom-language metadata preserved. Storybook uses the same runtime translations.
 - **1.0.2**, 2026-09-19 ([#1252](https://github.com/unisdr/undrr-mangrove/issues/1252)): The React example imports `@undrr/undrr-mangrove/components/UserFeedback.js` instead of the package root. The root has never resolved on any published version (the tarball ships no `dist/` and no `src/`, and its `main` named a file it does not contain), and 2.0.0 stops advertising it, so the subpath is the only form that works. The binding also changes: the published bundle exports this component as its **default**, with no named `UserFeedback`, so `import UserFeedback from …` is correct and the braced form would give `undefined`. Documentation only; the component is unchanged.

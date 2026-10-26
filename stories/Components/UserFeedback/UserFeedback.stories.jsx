@@ -1,25 +1,11 @@
+import { withLanguage } from '../../../.storybook/withLanguage';
 import UserFeedback from './UserFeedback';
 import { expect, userEvent, within } from 'storybook/test';
-
-const LOCALE_LANGUAGES = {
-  english: 'en',
-  arabic: 'ar',
-  chinese: 'zh',
-  french: 'fr',
-  japanese: 'ja',
-  russian: 'ru',
-  spanish: 'es',
-};
 
 export default {
   title: 'Components/User feedback',
   component: UserFeedback,
-  render: (args, { globals }) => (
-    <UserFeedback
-      {...args}
-      lang={args.lang ?? LOCALE_LANGUAGES[globals.locale]}
-    />
-  ),
+  decorators: [withLanguage],
   parameters: {
     layout: 'fullscreen',
     docs: {

@@ -1,3 +1,6 @@
+/** Runtime UI labels for UserFeedback; shared by production and Storybook. */
+import { createLabelResolver } from '../../../src/i18n';
+
 export const LABELS_ES = {
   question: '¿Te ha resultado útil esta página?',
   yes: 'Sí',
@@ -73,27 +76,14 @@ export const DEFAULT_USER_FEEDBACK_LABELS = {
   confirmationAfterLink: '.',
 };
 
-const TRANSLATIONS = {
-  en: DEFAULT_USER_FEEDBACK_LABELS,
-  ar: LABELS_AR,
-  es: LABELS_ES,
-  fr: LABELS_FR,
-  ja: LABELS_JA,
-  ru: LABELS_RU,
-  zh: LABELS_ZH,
-};
-
-const EMPTY_LABELS = {};
-
-export function resolveUserFeedbackLanguage(lang = 'en') {
-  const language = String(lang).trim().toLowerCase().split(/[-_]/)[0];
-  return Object.hasOwn(TRANSLATIONS, language) ? language : undefined;
-}
-
-export function getUserFeedbackLabels(lang, labels = EMPTY_LABELS) {
-  return {
-    ...DEFAULT_USER_FEEDBACK_LABELS,
-    ...TRANSLATIONS[resolveUserFeedbackLanguage(lang)],
-    ...labels,
-  };
-}
+export const getUserFeedbackLabels = createLabelResolver(
+  DEFAULT_USER_FEEDBACK_LABELS,
+  {
+    ar: LABELS_AR,
+    es: LABELS_ES,
+    fr: LABELS_FR,
+    ja: LABELS_JA,
+    ru: LABELS_RU,
+    zh: LABELS_ZH,
+  }
+);

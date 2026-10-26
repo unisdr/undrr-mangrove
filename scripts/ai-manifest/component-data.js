@@ -399,6 +399,9 @@ export const COMPONENT_DATA = {
       selector: '[data-mg-copy-button]',
       modules: hydrationModules('CopyButton'),
       dataAttributes: {
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-copy-button': 'Marks the container to hydrate (required).',
         'data-text-to-copy':
           'Text written to the clipboard. data-text and data-copy-text are accepted aliases.',
@@ -455,10 +458,15 @@ export const COMPONENT_DATA = {
       'mg-share__visually-hidden',
     ],
     hydration: {
-      note: 'The share row is rendered in renderedHtml but inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. Only these four strings can be set from the DOM — the other thirteen labels (the QR modal copy and every social button aria-label) stay English on the hydration path, because there is no data-labels attribute; use the React labels prop if you need them translated. Omitted attributes fall back to values fromElement supplies, not always to the component defaults: data-sharing-body defaults to an empty string, so the email body has no lead-in text unless you set it. The component reads the current page URL itself — a link[rel="shortlink"] in the head if there is one, otherwise window.location.href — so there is no URL attribute.',
+      note: 'The share row is rendered in renderedHtml but inert: no share opens, the QR modal never appears and the copy button does nothing. Render an empty data-mg-share-buttons container and hydrate it. data-lang or inherited HTML lang selects the built-in UI catalogue, including the QR dialog and social button names. data-labels provides partial overrides; individual label attributes win. Omitted attributes fall back to values fromElement supplies, not always to the component defaults: data-sharing-body defaults to an empty string, so the email body has no lead-in text unless you set it. The component reads the current page URL itself — a link[rel="shortlink"] in the head if there is one, otherwise window.location.href — so there is no URL attribute.',
       selector: '[data-mg-share-buttons]',
       modules: hydrationModules('ShareButtons'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-share-buttons': 'Marks the container to hydrate (required).',
         'data-main-label':
           'Heading above the share row (default "Share this").',
@@ -1311,6 +1319,9 @@ npm run build</code></pre>
       selector: '[data-mg-user-feedback]',
       modules: hydrationModules('UserFeedback'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides; individual label attributes take precedence.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
         'data-mg-user-feedback': 'Marks the container to hydrate (required).',
         'data-lang':
           'Language tag (en, ar, es, fr, ja, ru, zh), including regional variants. Defaults to the nearest HTML lang attribute, then English. Explicit label attributes override the selected translation.',
@@ -1369,6 +1380,9 @@ npm run build</code></pre>
           'https://assets.undrr.org/mangrove/{{version}}/components/ServiceNotice.js',
       },
       dataAttributes: {
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-service-notice': 'Marks the container to hydrate (required).',
         'data-title':
           'Heading text (plain text). Falls back to the text of a child .mg-notice__title.',
@@ -2667,6 +2681,11 @@ npm run build</code></pre>
       selector: '[data-mg-gallery]',
       modules: hydrationModules('Gallery'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-gallery': 'Marks the container to hydrate (required).',
         'data-media':
           'JSON array of media objects (required): { id, type, src, alt, title, description, thumbnail, poster, embedUrl, html }. The caption text comes from description; there is no caption key. type is "image" (default), "video", "embed" or "html". Invalid or empty JSON throws during render.',
@@ -2701,10 +2720,15 @@ npm run build</code></pre>
     description:
       'Horizontally scrolling rail for a row of cards or media, with optional arrow controls, drag scrolling, scroll snapping and equal-height items.',
     hydration: {
-      note: 'Unusually, this hydrator reads your server-rendered content rather than a JSON attribute: put the items inside a .mg-scroll__content wrapper in the container and each child becomes a slide. Without that wrapper the whole container innerHTML becomes a single item. The markup is re-rendered from HTML strings, so any event handlers bound to it before hydration are lost, and it is re-injected unsanitised — unlike Drawer, this component does not run DOMPurify, so only ever hand it markup you control. renderedHtml scrolls natively and snapping works from the stylesheet; the arrow markup is present but dead until hydration. The scrollLeftLabel and scrollRightLabel strings have no data attribute, so a hydrated container keeps the English arrow labels.',
+      note: 'Unusually, this hydrator reads your server-rendered content rather than a JSON attribute: put the items inside a .mg-scroll__content wrapper in the container and each child becomes a slide. Without that wrapper the whole container innerHTML becomes a single item. The markup is re-rendered from HTML strings, so any event handlers bound to it before hydration are lost, and it is re-injected unsanitised — unlike Drawer, this component does not run DOMPurify, so only ever hand it markup you control. renderedHtml scrolls natively and snapping works from the stylesheet; the arrow markup is present but dead until hydration. data-lang or inherited HTML lang selects translated arrow and navigation names. data-labels overrides ariaLabel, navigationLabel (with a {label} token), scrollLeftLabel and scrollRightLabel; data-aria-label supplies a content-specific region name.',
       selector: '[data-mg-scroll-container]',
       modules: hydrationModules('ScrollContainer'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win. Keys: ariaLabel, navigationLabel (with {label}), scrollLeftLabel and scrollRightLabel.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-scroll-container':
           'Marks the container to hydrate (required).',
         'data-height': 'Container height as a CSS value (default "auto").',
@@ -2745,12 +2769,15 @@ npm run build</code></pre>
     summary:
       'Search with facets, result lists, photo cards or publication catalogues. Book mode preserves artwork URLs; use publication filters and explicit grid columns.',
     description:
-      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. UI strings are translatable through the labels prop; most of them can also be set from a data-labels JSON attribute, but function-valued plural forms cannot be serialized to JSON and need the prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
+      'Search interface over the UNDRR syndication API: query box, facets, active filters, result list or cards, pager and search metrics. Book grids preserve supplied artwork URLs and use a shared desktop media stage; choose publication filters, explicit columns and concise fields for a cover catalogue. Teaser HTML is inserted directly into the result article when metrics are disabled; the metrics-enabled view keeps a separate teaser container alongside the scoring panel. Loading uses the shared flush ProgressBar in the results region and inline Loader on refresh. Skeletons remain static; optional motion uses shared timing tokens, with a dashed progress strip under reduced motion and visible outlines in forced colours. lang selects the bundled UI catalogue, independently of content-language filters. labels and data-labels provide explicit overrides. Built-in plural functions are bundled and work through hydration; custom functions require a JavaScript labels prop. The widget renders the search response as unsanitised HTML so Elasticsearch highlight markup survives, which puts the configured searchEndpoint inside its trust boundary: point it only at a service trusted to return safe HTML.',
     hydration: {
-      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns { config }, plus a labels key only when a valid data-labels attribute is present, so destructure defensively. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
+      note: 'The widget queries an Elasticsearch-backed API and owns all of its state, so renderedHtml is only the empty initial shell — no results, facets or pager are in it. Render an empty data-mg-search-widget container and hydrate it. fromElement returns config plus optional lang, dir and labels, so forward the full extracted props to retain language selection. Only attributes you set are included in config, so every unset option keeps its default. Malformed JSON in any of the JSON attributes is ignored and that option falls back to its default.',
       selector: '[data-mg-search-widget]',
       modules: hydrationModules('SyndicationSearchWidget'),
       dataAttributes: {
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         'data-mg-search-widget': 'Marks the container to hydrate (required).',
         'data-search-endpoint':
           "Search API URL. Trust boundary: the widget renders this endpoint's HTML unsanitised, because Elasticsearch highlight markup (<em> around matched terms) has to survive. Point it only at a service trusted to return safe HTML; if you point it at your own service, you own what it returns.",
@@ -2846,6 +2873,11 @@ npm run build</code></pre>
       selector: '[data-mg-mega-menu]',
       modules: hydrationModules('MegaMenu'),
       dataAttributes: {
+        'data-lang':
+          'UI language tag, selected before nearest HTML lang, then English. Supports en, ar, es, fr, ja, ru and zh with regional variants.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides inferred direction.',
+        'data-labels':
+          'JSON object of UI label overrides; omitted keys use the selected catalogue, then English.',
         'data-mg-mega-menu': 'Marks the container to hydrate (required).',
         'data-sections':
           "JSON array of menu sections: [{ title, items: [{ title, url }] }]. Note the item keys are title and url, not label and href. Required unless a consumer wrapper passes the sections prop itself — sections has no default and is required, so hydrating with neither throws and leaves the container empty. Invalid JSON is swallowed and also leaves the container empty. Trust boundary: a section's bannerDescription is rendered as unsanitised HTML (unlike TextCta, Drawer and the cards, MegaMenu does not run DOMPurify), so sanitise that field where you build this array.",
@@ -3047,6 +3079,11 @@ npm run build</code></pre>
       selector: '[data-mg-drawer]',
       modules: hydrationModules('Drawer'),
       dataAttributes: {
+        'data-labels':
+          'JSON object of UI label overrides. Missing keys use the selected catalogue, then English. Existing individual label attributes win.',
+        dir: 'Explicit direction on the hydration container: ltr, rtl or auto. Overrides the direction inferred from a supported UI language.',
+        'data-lang':
+          'UI language tag: en, ar, es, fr, ja, ru or zh, including regional tags. Takes precedence over nearest HTML lang, then English. Preserves custom language metadata.',
         id: 'Required, so data-mg-drawer-trigger buttons can find the drawer.',
         'data-mg-drawer': 'Marks the container to hydrate (required).',
         'data-position':

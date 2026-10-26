@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
 /**
  * Extract UserFeedback props from a hydration container.
  *
@@ -5,8 +6,6 @@
  */
 export default function userFeedbackFromElement(container) {
   const { dataset } = container;
-  const lang =
-    dataset.lang ?? container.closest('[lang]')?.getAttribute('lang');
   const labels = {
     question: dataset.question,
     yes: dataset.yesLabel,
@@ -19,11 +18,14 @@ export default function userFeedbackFromElement(container) {
   };
 
   return {
-    ...(lang == null ? {} : { lang }),
+    ...languageFromElement(container),
     feedbackUrl:
       dataset.feedbackUrl || 'https://www.undrr.org/contact/website-feedback',
-    labels: Object.fromEntries(
-      Object.entries(labels).filter(([, value]) => value !== undefined)
-    ),
+    labels: {
+      ...labelsFromElement(container),
+      ...Object.fromEntries(
+        Object.entries(labels).filter(([, value]) => value !== undefined)
+      ),
+    },
   };
 }

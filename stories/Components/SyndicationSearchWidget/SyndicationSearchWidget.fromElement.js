@@ -1,3 +1,4 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
 /**
  * Extract SyndicationSearchWidget config from a DOM container.
  *
@@ -128,14 +129,11 @@ export default function syndicationSearchWidgetFromElement(container) {
   const ssrResults = container.querySelector('[data-mg-search-ssr]');
   if (ssrResults) config.ssrResults = ssrResults;
 
-  let labels;
-  if (dataset.labels) {
-    try {
-      labels = JSON.parse(dataset.labels);
-    } catch {
-      /* ignore malformed JSON */
-    }
-  }
+  const labels = labelsFromElement(container);
 
-  return labels ? { config, labels } : { config };
+  return {
+    config,
+    ...(labels ? { labels } : {}),
+    ...languageFromElement(container),
+  };
 }

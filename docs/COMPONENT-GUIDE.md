@@ -6,6 +6,11 @@ A step-by-step tutorial for building a new component in Mangrove from scratch. F
 
 For component motion, follow [Motion and animation](MOTION.md): purpose, timing tokens, reduced motion, progress indicators, forced colours and RTL.
 
+For built-in interface copy, follow [UI translations](UI-TRANSLATIONS.md):
+runtime `lang` selection, component-owned catalogues, explicit label overrides,
+HTML language boundaries and hydration. Keep consumer content separate from
+translated control labels, and exercise the runtime contract in locale stories.
+
 ## Decision tree: what files do I need?
 
 ```
@@ -25,9 +30,9 @@ Does the component need React?
           + fromElement tests + AI manifest SAMPLE_PROPS (optional)
 ```
 
-A webpack entry is what publishes a component. The npm tarball ships
-`dist/components/`, not `src/`, so an export added to `src/index.js` alone
-reaches no consumer — see unisdr/undrr-mangrove#1252.
+A webpack entry is what publishes a component. The build writes `dist/components/`; the npm tarball publishes those bundles
+as `components/`, without `src/`. An export added to `src/index.js` alone
+reaches no npm consumer — see unisdr/undrr-mangrove#1252.
 
 ## Reference component: Pager
 

@@ -352,7 +352,19 @@ The component supports RTL layouts automatically:
 
 Auto-generated IDs from non-Latin headings preserve the original characters. Provide explicit `id` attributes on headings if you need specific URL fragments.
 
+## Runtime UI translations
+
+Use `lang` for built-in copy and `labels` for individual overrides. The
+[shared translation guide](?path=/docs/contributing-ui-translations--docs)
+explains language matching, fallback, direction and hydration precedence.
+
+OnThisPageNav's repository wrapper follows this contract; there is no published
+`components/OnThisPageNav.js` entry or React hydration adapter. Production vanilla
+markup keeps its documented authored labels and data attributes.
+
 ## Changelog
+
+- **1.7**, 2026-10-26 ([unisdr/undrr-mangrove#1428](https://github.com/unisdr/undrr-mangrove/issues/1428)): Adopts the shared runtime UI translation contract, preserving explicit label overrides and language metadata. Storybook uses the production language selection; contributor guidance describes catalogue maintenance. The React wrapper updates its accessible name when language changes.
 
 - **1.6.0**, 2026-10-14 ([undrr/web-backlog#2728](https://gitlab.com/undrr/web-backlog/-/work_items/2728)): The script publishes the bar's height as `--mg-on-this-page-nav-block-size` while it is sticky, and the stylesheet sets the page's `scroll-padding-top` to the offset plus that height, so focus, anchors and other components' `scrollIntoView` land below the bar. New `mg-on-this-page-nav--align-container` modifier lines the links up with an `mg-container` content column. At the foot of the page the last link is marked: a short last section can never scroll up into the band the scroll-spy watches, so the previous section stayed marked even straight after following the last link. The check also runs on load and whenever the scroll-spy reports, which happens after the scroll event and used to take the mark straight back, and only applies on pages that scroll at least 120px (or a quarter of the viewport). Listeners and observers are removed by `mgOnThisPageNavDestroy`. Set `--mg-on-this-page-nav-offset` on `:root` for the scroll padding to include it. The scroll padding gives way to a site's own `html { scroll-padding-top }`, and `--mg-on-this-page-nav-scroll-padding-base` lets a site keep its padding and add the bar. In right-to-left pages each fade sits only on a side with links hidden behind it (a new `mg-on-this-page-nav--has-right-overflow` class, set by the script, joins `--has-left-overflow`), and the trailing (left) edge when nothing is hidden. 2.0.1 faded the first link when the list did not overflow.
 - **1.5.4**, 2026-09-19 ([#1267](https://github.com/unisdr/undrr-mangrove/issues/1267)): The React usage snippet imported `@undrr/undrr-mangrove/js/on-this-page-nav` without the extension. Node ESM does not add one, and the package ships no `exports` map that could, so the specifier failed with `ERR_MODULE_NOT_FOUND` against a packed tarball; under a bundler it worked, which is the wrong way round for a vanilla module. It now names `js/on-this-page-nav.js`. Documentation only; the module is unchanged.

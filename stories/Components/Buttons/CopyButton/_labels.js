@@ -1,3 +1,6 @@
+/** Runtime UI labels for CopyButton; shared by production and Storybook. */
+import { createLabelResolver } from '../../../../src/i18n';
+
 export const DEFAULT_COPY_BUTTON_LABELS = {
   ariaLabel: 'Copy to clipboard',
   copiedLabel: 'Copied to clipboard.',
@@ -56,3 +59,15 @@ export const LABELS_RU = {
   failedLabel:
     'Не удалось скопировать. Выделите текст и скопируйте его вручную.',
 };
+
+export const getCopyButtonLabels = createLabelResolver(
+  DEFAULT_COPY_BUTTON_LABELS,
+  {
+    ar: LABELS_AR,
+    es: LABELS_ES,
+    fr: LABELS_FR,
+    ja: LABELS_JA,
+    ru: LABELS_RU,
+    zh: LABELS_ZH,
+  }
+);

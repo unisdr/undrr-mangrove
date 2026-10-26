@@ -1,9 +1,5 @@
-/**
- * @file _labels.js
- * @description Translated label sets for ShareButtons.
- *
- * Imported by ShareButtons.stories.jsx for the locale toolbar decorator.
- */
+/** Runtime UI labels for ShareButtons; shared by production and Storybook. */
+import { createLabelResolver } from '../../../../src/i18n';
 
 export const LABELS_ES = {
   mainLabel: 'Compartir',
@@ -118,3 +114,31 @@ export const LABELS_RU = {
   generateQRCode: 'Создать QR-код',
   copyToClipboard: 'Скопировать в буфер обмена',
 };
+
+export const DEFAULT_SHARE_LABELS = {
+  mainLabel: 'Share this',
+  onCopy: 'Copied',
+  qrCodeTitle: 'QR code',
+  qrCodeDescription:
+    'This QR code contains the link below. You can copy the image or add it to your printed or display materials.',
+  closeModal: 'Close modal',
+  copyImage: 'Copy image',
+  downloadImage: 'Download image',
+  closeMessage: 'Close message',
+  shareUsingDevice: 'Share using your device',
+  shareOnLinkedIn: 'Share on LinkedIn',
+  shareOnFacebook: 'Share on Facebook',
+  shareOnX: 'Share on X',
+  shareViaEmail: 'Share via Email',
+  generateQRCode: 'Generate QR Code',
+  copyToClipboard: 'Copy to Clipboard',
+};
+
+export const getShareButtonsLabels = createLabelResolver(DEFAULT_SHARE_LABELS, {
+  ar: LABELS_AR,
+  es: LABELS_ES,
+  fr: LABELS_FR,
+  ja: LABELS_JA,
+  ru: LABELS_RU,
+  zh: LABELS_ZH,
+});

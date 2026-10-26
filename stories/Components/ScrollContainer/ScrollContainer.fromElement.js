@@ -1,3 +1,5 @@
+import { languageFromElement, labelsFromElement } from '../../../src/i18n';
+import { getScrollContainerLabels } from './_labels';
 const CONTENT_CLASS = 'mg-scroll__content';
 
 /**
@@ -52,7 +54,11 @@ function findOwnContent(container) {
  */
 export default function scrollContainerFromElement(container) {
   const { dataset } = container;
+  const language = languageFromElement(container);
+  const labels = labelsFromElement(container);
   const props = {
+    ...language,
+    ...(labels ? { labels } : {}),
     height: dataset.height || 'auto',
     minWidth: dataset.minWidth || 'auto',
     itemWidth: dataset.itemWidth || 'auto',
@@ -60,7 +66,9 @@ export default function scrollContainerFromElement(container) {
     showArrows: dataset.showArrows === 'true',
     stretchItems: dataset.stretchItems === 'true',
     stepSize: dataset.stepSize ? parseInt(dataset.stepSize, 10) : null,
-    ariaLabel: dataset.ariaLabel || 'Scrollable content',
+    ariaLabel:
+      dataset.ariaLabel ??
+      getScrollContainerLabels(language.lang, labels).ariaLabel,
   };
 
   // Extract children as HTML strings from server-rendered content.
