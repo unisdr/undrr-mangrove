@@ -49,6 +49,7 @@
     "test:content-card-browser": "node scripts/test-content-card-browser.mjs",
     "test:content-teaser-browser": "node scripts/test-content-teaser-browser.mjs",
     "test:search-selection-browser": "node scripts/test-search-selection-browser.mjs",
+    "test:megamenu-mobile-browser": "node scripts/test-megamenu-mobile-browser.mjs",
     "test:motion-browser": "node scripts/test-motion-browser.mjs",
     "test:rich-content-browser": "node scripts/test-rich-content-browser.mjs",
     "test-storybook": "vitest run --project=storybook",

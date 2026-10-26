@@ -6,6 +6,7 @@ const EMPTY_PATH = [];
 // behaviour, rather than application-menu roles and roving tabindex.
 export function Sidebar({
   sections,
+  initialSection = null,
   open,
   present = open,
   onClose,
@@ -50,10 +51,13 @@ export function Sidebar({
       openerRef.current = null;
       return;
     }
-    setPath(EMPTY_PATH);
-    historyRef.current = [];
+    setPath(initialSection === null ? EMPTY_PATH : [initialSection]);
+    historyRef.current =
+      initialSection === null ? [] : [{ index: initialSection, scrollTop: 0 }];
     returningRef.current = null;
+    const activeOpener = document.activeElement;
     const opener =
+      (activeOpener?.closest('.mg-mega-topbar') ? activeOpener : null) ||
       dialogRef.current
         .closest('.mg-mega-wrapper')
         ?.querySelector('.mg-mega-topbar-mobile__icon-button') ||
@@ -72,7 +76,7 @@ export function Sidebar({
       document.body.style.overflow = previousOverflow;
       if (opener?.isConnected) opener.focus();
     };
-  }, [open]);
+  }, [open, initialSection]);
 
   useLayoutEffect(() => {
     if (!present) {
